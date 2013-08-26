@@ -1,5 +1,12 @@
+<<<<<<< HEAD
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<dirs>
+<entry loc="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6" stamp="1338856020359"/>
+</dirs>
+=======
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <dirs>
 <entry loc="/usr/lib/jvm/java-7-openjdk-i386" stamp="1360105805000"/>
 <entry loc="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6" stamp="1338856020359"/>
 </dirs>
+>>>>>>> 08446399ad3aacf564be7bf1246f5461be88f3a1

@@ -1,0 +1,63 @@
+/*
+XOWA: the extensible offline wiki application
+Copyright (C) 2012 gnosygnu@gmail.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+package gplx.xowa.xtns.refs; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+public class Xtn_references_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
+	public Xop_root_tkn Xtn_root() {return null;}
+	public boolean Xtn_literal() {return false;}
+	public byte[] Group() {return group;} public Xtn_references_nde Group_(byte[] v) {group = v; return this;} private byte[] group = ByteAry_.Empty;
+	public int List_idx() {return list_idx;} public Xtn_references_nde List_idx_(int v) {list_idx = v; return this;} private int list_idx;
+	public void Xatr_parse(Xow_wiki wiki, byte[] src, Xop_xatr_itm xatr, Object xatr_key_obj) {
+		if (xatr_key_obj == null) return;
+		ByteVal xatr_key = (ByteVal)xatr_key_obj;
+		switch (xatr_key.Val()) {
+			case Xatr_id_group:		{
+				group = xatr.Val_as_bry(src);
+				if (ByteAry_.Match(group, Bry_group)) group = ByteAry_.Empty;  // HACK: reflist returns <references group>
+				break;
+			}
+		}
+	}	static byte[] Bry_group = ByteAry_.new_ascii_("group");
+	private static Xop_ctx inner_ctx;
+	public void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde) {
+		Xop_xatr_itm.Xatr_parse(wiki.App(), this, wiki.Lang().Xatrs_references(), wiki, src, xnde);
+		if (xnde.CloseMode() == Xop_xnde_tkn.CloseMode_pair) {
+			int itm_bgn = xnde.Tag_open_end(), itm_end = xnde.Tag_close_bgn();
+			if (inner_ctx == null)	inner_ctx = Xop_ctx.new_sub_(wiki);
+			else					inner_ctx.Clear();
+			inner_ctx.Para().Enabled_n_();
+			byte[] references_src = ByteAry_.Mid(src, itm_bgn, itm_end);
+			Xop_root_tkn root = tkn_mkr.Root(src);
+			wiki.Parser().Parse_page_all(root, inner_ctx, tkn_mkr, references_src, Xop_parser_.Doc_bgn_char_0);
+			int xnde_subs = root.Subs_len();
+			ctx.Ref_nested_(true);
+			for (int i = 0; i < xnde_subs; i++) {
+				Xop_tkn_itm tkn = root.Subs_get(i);
+				if (tkn.Tkn_tid() == Xop_tkn_itm_.Tid_xnde) {
+					Xop_xnde_tkn ref_xnde = (Xop_xnde_tkn)tkn;
+					if (ref_xnde.Tag().Id() == Xop_xnde_tag_.Tid_ref) {
+						Xtn_ref_nde ref_itm = new Xtn_ref_nde().Head_(true).Group_(group);
+						ref_itm.Xtn_compile(ctx, wiki, tkn_mkr, root.Root_src(), ref_xnde);
+					}
+				}
+			}
+			ctx.Ref_nested_(false);
+		}
+		list_idx = ctx.Page().Ref_mgr().Grps_get(group).Grp_seal();	// NOTE: needs to be sealed at end; else inner refs will end up in new group; EX: <references><ref>don't seal prematurely</ref></references>
+	}
+	public static final byte Xatr_id_group = 0;
+}

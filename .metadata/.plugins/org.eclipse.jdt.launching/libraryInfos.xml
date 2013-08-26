@@ -1,3 +1,27 @@
+<<<<<<< HEAD
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<libraryInfos>
+<libraryInfo home="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6" version="1.6.0_32">
+<bootpath>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\resources.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\rt.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\sunrsasign.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\jsse.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\jce.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\charsets.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\modules\jdk.boot.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\ext"/>
+<entry path="C:\WINDOWS\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+</libraryInfos>
+=======
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <libraryInfos>
 <libraryInfo home="/usr/lib/jvm/java-7-openjdk-i386/jre" version="1.7.0_09">
@@ -64,3 +88,4 @@
 </endorsedDirs>
 </libraryInfo>
 </libraryInfos>
+>>>>>>> 08446399ad3aacf564be7bf1246f5461be88f3a1

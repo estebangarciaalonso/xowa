@@ -1,0 +1,112 @@
+/*
+XOWA: the extensible offline wiki application
+Copyright (C) 2012 gnosygnu@gmail.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+package gplx.xowa; import gplx.*;
+public class Xowh_portal_mgr implements GfoInvkAble {
+	public Xowh_portal_mgr(Xow_wiki wiki) {
+		this.wiki = wiki;
+		sidebar_mgr = new Xowh_sidebar_mgr(wiki);
+	}	Xow_wiki wiki;
+	public Xowh_sidebar_mgr Sidebar_mgr() {return sidebar_mgr;} private Xowh_sidebar_mgr sidebar_mgr;
+	ByteAryFmtr div_personal_fmtr = ByteAryFmtr.new_("~{portal_personal_subj_href};~{portal_personal_subj_text};~{portal_personal_talk_cls};~{portal_personal_talk_href};~{portal_personal_talk_cls};", "portal_personal_subj_href", "portal_personal_subj_text", "portal_personal_subj_cls", "portal_personal_talk_href", "portal_personal_talk_cls");
+	ByteAryFmtr div_ns_fmtr = ByteAryFmtr.new_("~{portal_ns_subj_href};~{portal_ns_subj_cls};~{portal_ns_talk_href};~{portal_ns_talk_cls}", "portal_ns_subj_href", "portal_ns_subj_cls", "portal_ns_talk_href", "portal_ns_talk_cls");
+	ByteAryFmtr div_view_fmtr = ByteAryFmtr.new_("", "portal_view_read_cls", "portal_view_edit_cls", "portal_view_html_cls", "search_text");
+	ByteAryFmtr div_logo_fmtr = ByteAryFmtr.new_("", "portal_nav_main_href", "portal_logo_url");
+	ByteAryFmtr div_wikis_fmtr = ByteAryFmtr.new_("");
+	public ByteAryFmtr Div_home_fmtr() {return div_home_fmtr;} ByteAryFmtr div_home_fmtr = ByteAryFmtr.new_("");
+	public Xowh_portal_mgr Init_assert() {if (init_needed) Init(); return this;}
+	void Init() {
+		init_needed = false;
+		if (missing_ns_cls == null) Missing_ns_cls_(wiki.App().User().Wiki().Html_mgr().Portal_mgr().Missing_ns_cls());
+		ByteAryFmtr_eval_mgr eval_mgr = wiki.Eval_mgr();
+		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
+		Init_fmtr(tmp_bfr, eval_mgr, div_view_fmtr);
+		Init_fmtr(tmp_bfr, eval_mgr, div_ns_fmtr);
+		byte[] wiki_user_name = wiki.User().Name();
+		div_personal_bry = Init_fmtr(tmp_bfr, eval_mgr, div_personal_fmtr, ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, wiki.Ns_mgr().Get_by_id(Xow_ns_.Id_user).Name_db_w_colon(), wiki_user_name), wiki_user_name, Ns_cls_by_id(wiki.Ns_mgr(), Xow_ns_.Id_user), ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, wiki.Ns_mgr().Get_by_id(Xow_ns_.Id_user_talk).Name_db_w_colon(), wiki_user_name), Ns_cls_by_id(wiki.Ns_mgr(), Xow_ns_.Id_user_talk));
+		byte[] main_page_href_bry = tmp_bfr.Add(Xoh_href_parser.Href_site_bry).Add(wiki.Key_bry()).Add(Xoh_href_parser.Href_wiki_bry).XtoAryAndClear();	// NOTE: build /site/en.wikipedia.org/wiki/ href; no Main_Page, as that will be inserted by Xoh_href_parser
+		div_logo_bry = Init_fmtr(tmp_bfr, eval_mgr, div_logo_fmtr, main_page_href_bry, wiki.App().Url_converter_fsys().Encode_http(wiki.App().User().Fsys_mgr().Wiki_root_dir().GenSubFil_nest(wiki.Key_str(), "html", "logo.png")));
+		div_home_bry = Init_fmtr(tmp_bfr, eval_mgr, div_home_fmtr);
+		div_wikis_fmtr.Eval_mgr_(eval_mgr);
+		tmp_bfr.Mkr_rls();
+		sidebar_mgr.Init();
+	}	boolean init_needed = true;
+	byte[] Init_fmtr(ByteAryBfr tmp_bfr, ByteAryFmtr_eval_mgr eval_mgr, ByteAryFmtr fmtr, Object... fmt_args) {
+		fmtr.Eval_mgr_(eval_mgr);
+		fmtr.Bld_bfr_many(tmp_bfr, fmt_args);
+		byte[] rv = tmp_bfr.XtoAryAndClear();
+		fmtr.Fmt_(rv);
+		return rv;
+	}
+	public byte[] Div_personal_bry() {return div_personal_bry;} private byte[] div_personal_bry = ByteAry_.Empty;
+	public byte[] Div_ns_bry(Bry_bfr_mkr bfr_mkr, Xoa_ttl ttl, Xow_ns_mgr ns_mgr) {
+		Xow_ns ns = ttl.Ns();
+		byte[] subj_cls = Ns_cls_by_ord(ns_mgr, ns.Ord_subj_id()), talk_cls = Ns_cls_by_ord(ns_mgr, ns.Ord_talk_id());
+		if		(ns.Id_talk())
+			talk_cls = Xowh_portal_mgr.Cls_selected_y;
+		else
+			subj_cls = Xowh_portal_mgr.Cls_selected_y;
+		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
+		div_ns_fmtr.Bld_bfr_many(tmp_bfr, ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, ttl.Subj_txt()), subj_cls, ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, ttl.Talk_txt()), talk_cls);
+		return tmp_bfr.Mkr_rls().XtoAryAndClear();
+	}
+	byte[] Ns_cls_by_ord(Xow_ns_mgr ns_mgr, int ns_ord) {
+		Xow_ns ns = ns_mgr.Get_by_ord(ns_ord);
+		return ns == null || ns.Exists() ? ByteAry_.Empty : missing_ns_cls;
+	}
+	byte[] Ns_cls_by_id(Xow_ns_mgr ns_mgr, int ns_id) {
+		Xow_ns ns = ns_mgr.Get_by_id(ns_id);
+		return ns == null || ns.Exists() ? ByteAry_.Empty : missing_ns_cls;			
+	}
+	public byte[] Div_view_bry(Bry_bfr_mkr bfr_mkr, byte output_tid, byte[] search_text) {
+		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
+		byte[] read_cls = ByteAry_.Empty, edit_cls = ByteAry_.Empty, html_cls = ByteAry_.Empty;
+		switch (output_tid) {
+			case Xoh_wiki_article.Tid_view_read: read_cls = Cls_selected_y; break;
+			case Xoh_wiki_article.Tid_view_edit: edit_cls = Cls_selected_y; break;
+			case Xoh_wiki_article.Tid_view_html: html_cls = Cls_selected_y; break;
+		}
+		div_view_fmtr.Bld_bfr_many(tmp_bfr, read_cls, edit_cls, html_cls, search_text);
+		return tmp_bfr.Mkr_rls().XtoAryAndClear();
+	}	public static final byte[] Cls_selected_y = ByteAry_.new_ascii_("selected"), Cls_new = ByteAry_.new_ascii_("new"), Cls_display_none = ByteAry_.new_ascii_("xowa_display_none");
+	public byte[] Div_logo_bry() {return div_logo_bry;} private byte[] div_logo_bry = ByteAry_.Empty;
+	public byte[] Div_home_bry() {return div_home_bry;} private byte[] div_home_bry = ByteAry_.Empty;
+	public byte[] Div_wikis_bry(Bry_bfr_mkr bfr_mkr) {
+		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
+		div_wikis_fmtr.Bld_bfr_many(tmp_bfr);
+		return tmp_bfr.Mkr_rls().XtoAryAndClear();
+	}
+	public byte[] Missing_ns_cls() {return missing_ns_cls;} public Xowh_portal_mgr Missing_ns_cls_(byte[] v) {missing_ns_cls = v; return this;} private byte[] missing_ns_cls = ByteAry_.Empty;
+	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
+		if		(ctx.Match(k, Invk_div_personal_))					div_personal_fmtr.Fmt_(m.ReadBry("v"));
+		else if	(ctx.Match(k, Invk_div_ns_))						div_ns_fmtr.Fmt_(m.ReadBry("v"));
+		else if	(ctx.Match(k, Invk_div_view_))						div_view_fmtr.Fmt_(m.ReadBry("v"));
+		else if	(ctx.Match(k, Invk_div_logo_))						div_logo_fmtr.Fmt_(m.ReadBry("v"));
+		else if	(ctx.Match(k, Invk_div_home_))						div_home_fmtr.Fmt_(m.ReadBry("v"));
+		else if	(ctx.Match(k, Invk_div_wikis_))						div_wikis_fmtr.Fmt_(m.ReadBry("v"));
+		else if	(ctx.Match(k, Invk_missing_ns_cls))					return String_.new_utf8_(missing_ns_cls);
+		else if	(ctx.Match(k, Invk_missing_ns_cls_))				missing_ns_cls = m.ReadBry("v");
+		else if	(ctx.Match(k, Invk_missing_ns_cls_list))			return Options_missing_ns_cls_list;
+		else	return GfoInvkAble_.Rv_unhandled;
+		return this;
+	}
+	static final String Invk_div_personal_ = "div_personal_", Invk_div_view_ = "div_view_", Invk_div_ns_ = "div_ns_", Invk_div_home_ = "div_home_", Invk_div_wikis_ = "div_wikis_"
+		, Invk_missing_ns_cls = "missing_ns_cls", Invk_missing_ns_cls_ = "missing_ns_cls_", Invk_missing_ns_cls_list = "missing_ns_cls_list"
+		;
+	public static final String Invk_div_logo_ = "div_logo_";
+	private static KeyVal[] Options_missing_ns_cls_list = KeyVal_.Ary(KeyVal_.new_("", "Show as blue link"), KeyVal_.new_("new", "Show as red link"), KeyVal_.new_("xowa_display_none", "Hide")); 
+}

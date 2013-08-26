@@ -481,6 +481,8 @@ Command-line arguments:  -os win32 -ws win32 -arch x86 -product org.eclipse.epp.
 
 !ENTRY org.eclipse.jdt.core 4 0 2013-03-06 20:41:57.796
 !MESSAGE Invalid ZIP archive: lib/swt.jar [in 150_gfui]
+<<<<<<< HEAD
+=======
 !SESSION 2013-08-25 22:58:47.491 -----------------------------------------------
 eclipse.buildId=M20120208-0800
 java.version=1.7.0_09
@@ -907,3 +909,4 @@ org.eclipse.ui.PartInitException: Could not create view: com.android.ide.eclipse
 !MESSAGE Could not find view: com.android.ide.eclipse.ddms.views.LogCatView
 !SUBENTRY 1 unknown 0 0 2013-08-25 22:59:03.162
 !MESSAGE OK
+>>>>>>> 08446399ad3aacf564be7bf1246f5461be88f3a1

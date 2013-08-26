@@ -1,0 +1,909 @@
+!SESSION 2013-02-10 22:41:28.716 -----------------------------------------------
+eclipse.buildId=M20120208-0800
+java.version=1.6.0_32
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86 -product org.eclipse.epp.package.jee.product -data C:\xowa\dev -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.osgi 2 0 2013-02-10 22:41:42.560
+!MESSAGE While loading class "org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase$DeltaVisitor", thread "Thread[Worker-2,5,main]" timed out waiting (5000ms) for thread "Thread[main,6,main]" to finish starting bundle "org.eclipse.cdt.core_5.3.2.201202111925 [790]". To avoid deadlock, thread "Thread[Worker-2,5,main]" is proceeding but "org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase$DeltaVisitor" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "reference:file:plugins/org.eclipse.cdt.core_5.3.2.201202111925.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase.doHandleResourceMove(ResourceChangeHandlerBase.java:188)
+	at org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase.resourceChanged(ResourceChangeHandlerBase.java:148)
+	at org.eclipse.cdt.managedbuilder.core.ResourceChangeHandler2.resourceChanged(ResourceChangeHandler2.java:171)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:156)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 25 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase.doHandleResourceMove(ResourceChangeHandlerBase.java:188)
+	at org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase.resourceChanged(ResourceChangeHandlerBase.java:148)
+	at org.eclipse.cdt.managedbuilder.core.ResourceChangeHandler2.resourceChanged(ResourceChangeHandler2.java:171)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:156)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY org.eclipse.osgi 2 0 2013-02-10 22:41:47.607
+!MESSAGE While loading class "org.eclipse.cdt.internal.core.model.CElementDelta", thread "Thread[Worker-2,5,main]" timed out waiting (5000ms) for thread "Thread[main,6,main]" to finish starting bundle "org.eclipse.cdt.core_5.3.2.201202111925 [790]". To avoid deadlock, thread "Thread[Worker-2,5,main]" is proceeding but "org.eclipse.cdt.internal.core.model.CElementDelta" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "reference:file:plugins/org.eclipse.cdt.core_5.3.2.201202111925.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.internal.core.model.DeltaProcessor.processResourceDelta(DeltaProcessor.java:429)
+	at org.eclipse.cdt.internal.core.model.CModelManager.resourceChanged(CModelManager.java:886)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:156)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 24 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.internal.core.model.DeltaProcessor.processResourceDelta(DeltaProcessor.java:429)
+	at org.eclipse.cdt.internal.core.model.CModelManager.resourceChanged(CModelManager.java:886)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:156)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY org.eclipse.osgi 2 0 2013-02-10 22:41:52.607
+!MESSAGE While loading class "org.eclipse.cdt.internal.core.model.Util", thread "Thread[Worker-2,5,main]" timed out waiting (5000ms) for thread "Thread[main,6,main]" to finish starting bundle "org.eclipse.cdt.core_5.3.2.201202111925 [790]". To avoid deadlock, thread "Thread[Worker-2,5,main]" is proceeding but "org.eclipse.cdt.internal.core.model.Util" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "reference:file:plugins/org.eclipse.cdt.core_5.3.2.201202111925.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.internal.core.model.CModelManager.firePostChangeDelta(CModelManager.java:1044)
+	at org.eclipse.cdt.internal.core.model.CModelManager.fire(CModelManager.java:1016)
+	at org.eclipse.cdt.internal.core.model.CModelManager.fire(CModelManager.java:973)
+	at org.eclipse.cdt.internal.core.model.CModelManager.resourceChanged(CModelManager.java:892)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:156)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 26 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.internal.core.model.CModelManager.firePostChangeDelta(CModelManager.java:1044)
+	at org.eclipse.cdt.internal.core.model.CModelManager.fire(CModelManager.java:1016)
+	at org.eclipse.cdt.internal.core.model.CModelManager.fire(CModelManager.java:973)
+	at org.eclipse.cdt.internal.core.model.CModelManager.resourceChanged(CModelManager.java:892)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:156)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY org.eclipse.osgi 2 0 2013-02-10 22:41:57.623
+!MESSAGE While loading class "org.eclipse.cdt.core.model.ElementChangedEvent", thread "Thread[Worker-2,5,main]" timed out waiting (5001ms) for thread "Thread[main,6,main]" to finish starting bundle "org.eclipse.cdt.core_5.3.2.201202111925 [790]". To avoid deadlock, thread "Thread[Worker-2,5,main]" is proceeding but "org.eclipse.cdt.core.model.ElementChangedEvent" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "reference:file:plugins/org.eclipse.cdt.core_5.3.2.201202111925.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.internal.core.model.CModelManager.notifyListeners(CModelManager.java:1084)
+	at org.eclipse.cdt.internal.core.model.CModelManager.firePostChangeDelta(CModelManager.java:1051)
+	at org.eclipse.cdt.internal.core.model.CModelManager.fire(CModelManager.java:1016)
+	at org.eclipse.cdt.internal.core.model.CModelManager.fire(CModelManager.java:973)
+	at org.eclipse.cdt.internal.core.model.CModelManager.resourceChanged(CModelManager.java:892)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:156)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 27 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.internal.core.model.CModelManager.notifyListeners(CModelManager.java:1084)
+	at org.eclipse.cdt.internal.core.model.CModelManager.firePostChangeDelta(CModelManager.java:1051)
+	at org.eclipse.cdt.internal.core.model.CModelManager.fire(CModelManager.java:1016)
+	at org.eclipse.cdt.internal.core.model.CModelManager.fire(CModelManager.java:973)
+	at org.eclipse.cdt.internal.core.model.CModelManager.resourceChanged(CModelManager.java:892)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:156)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY org.eclipse.osgi 2 0 2013-02-10 22:42:02.623
+!MESSAGE While loading class "org.eclipse.cdt.internal.core.model.CModelManager$1", thread "Thread[Worker-2,5,main]" timed out waiting (5000ms) for thread "Thread[main,6,main]" to finish starting bundle "org.eclipse.cdt.core_5.3.2.201202111925 [790]". To avoid deadlock, thread "Thread[Worker-2,5,main]" is proceeding but "org.eclipse.cdt.internal.core.model.CModelManager$1" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "reference:file:plugins/org.eclipse.cdt.core_5.3.2.201202111925.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.internal.core.model.CModelManager.notifyListeners(CModelManager.java:1094)
+	at org.eclipse.cdt.internal.core.model.CModelManager.firePostChangeDelta(CModelManager.java:1051)
+	at org.eclipse.cdt.internal.core.model.CModelManager.fire(CModelManager.java:1016)
+	at org.eclipse.cdt.internal.core.model.CModelManager.fire(CModelManager.java:973)
+	at org.eclipse.cdt.internal.core.model.CModelManager.resourceChanged(CModelManager.java:892)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:156)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 27 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.internal.core.model.CModelManager.notifyListeners(CModelManager.java:1094)
+	at org.eclipse.cdt.internal.core.model.CModelManager.firePostChangeDelta(CModelManager.java:1051)
+	at org.eclipse.cdt.internal.core.model.CModelManager.fire(CModelManager.java:1016)
+	at org.eclipse.cdt.internal.core.model.CModelManager.fire(CModelManager.java:973)
+	at org.eclipse.cdt.internal.core.model.CModelManager.resourceChanged(CModelManager.java:892)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:156)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY org.eclipse.osgi 2 0 2013-02-10 22:42:07.623
+!MESSAGE While loading class "org.eclipse.cdt.internal.core.settings.model.ResourceChangeHandler$RcMoveHandler", thread "Thread[Worker-2,5,main]" timed out waiting (5000ms) for thread "Thread[main,6,main]" to finish starting bundle "org.eclipse.cdt.core_5.3.2.201202111925 [790]". To avoid deadlock, thread "Thread[Worker-2,5,main]" is proceeding but "org.eclipse.cdt.internal.core.settings.model.ResourceChangeHandler$RcMoveHandler" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "reference:file:plugins/org.eclipse.cdt.core_5.3.2.201202111925.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.internal.core.settings.model.ResourceChangeHandler.createResourceMoveHandler(ResourceChangeHandler.java:276)
+	at org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase.resourceChanged(ResourceChangeHandlerBase.java:147)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:156)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 24 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.internal.core.settings.model.ResourceChangeHandler.createResourceMoveHandler(ResourceChangeHandler.java:276)
+	at org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase.resourceChanged(ResourceChangeHandlerBase.java:147)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:156)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SESSION 2013-02-21 17:50:46.500 -----------------------------------------------
+eclipse.buildId=M20120208-0800
+java.version=1.6.0_32
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86 -product org.eclipse.epp.package.jee.product -data C:\xowa\dev -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.osgi 2 0 2013-02-21 17:50:57.609
+!MESSAGE While loading class "org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase$DeltaVisitor", thread "Thread[Worker-2,5,main]" timed out waiting (5000ms) for thread "Thread[main,6,main]" to finish starting bundle "org.eclipse.cdt.core_5.3.2.201202111925 [790]". To avoid deadlock, thread "Thread[Worker-2,5,main]" is proceeding but "org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase$DeltaVisitor" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "reference:file:plugins/org.eclipse.cdt.core_5.3.2.201202111925.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase.doHandleResourceMove(ResourceChangeHandlerBase.java:188)
+	at org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase.resourceChanged(ResourceChangeHandlerBase.java:148)
+	at org.eclipse.cdt.managedbuilder.core.ResourceChangeHandler2.resourceChanged(ResourceChangeHandler2.java:171)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.resources.File.create(File.java:174)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.writeClassFileContents(AbstractImageBuilder.java:844)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.writeClassFile(AbstractImageBuilder.java:823)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.acceptResult(AbstractImageBuilder.java:187)
+	at org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:508)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:364)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.compile(BatchImageBuilder.java:178)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:301)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.build(BatchImageBuilder.java:60)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.buildAll(JavaBuilder.java:254)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.build(JavaBuilder.java:173)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:728)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:199)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:239)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:292)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:295)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:351)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:374)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:143)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 45 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:476)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase.doHandleResourceMove(ResourceChangeHandlerBase.java:188)
+	at org.eclipse.cdt.core.settings.model.util.ResourceChangeHandlerBase.resourceChanged(ResourceChangeHandlerBase.java:148)
+	at org.eclipse.cdt.managedbuilder.core.ResourceChangeHandler2.resourceChanged(ResourceChangeHandler2.java:171)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:395)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1530)
+	at org.eclipse.core.internal.resources.File.create(File.java:174)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.writeClassFileContents(AbstractImageBuilder.java:844)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.writeClassFile(AbstractImageBuilder.java:823)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.acceptResult(AbstractImageBuilder.java:187)
+	at org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:508)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:364)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.compile(BatchImageBuilder.java:178)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:301)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.build(BatchImageBuilder.java:60)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.buildAll(JavaBuilder.java:254)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.build(JavaBuilder.java:173)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:728)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:199)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:239)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:292)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:295)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:351)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:374)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:143)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SESSION 2013-03-06 20:41:53.093 -----------------------------------------------
+eclipse.buildId=M20120208-0800
+java.version=1.6.0_32
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86 -product org.eclipse.epp.package.jee.product -data C:\xowa\dev -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.jdt.core 4 0 2013-03-06 20:41:57.796
+!MESSAGE Invalid ZIP archive: lib/swt.jar [in 150_gfui]
+!SESSION 2013-08-25 22:58:47.491 -----------------------------------------------
+eclipse.buildId=M20120208-0800
+java.version=1.7.0_09
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os linux -ws gtk -arch x86 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.ui 4 4 2013-08-25 22:59:01.379
+!MESSAGE Could not create view: 'com.android.ide.eclipse.ddms.views.LogCatView'.
+
+!ENTRY org.eclipse.ui 4 0 2013-08-25 22:59:03.108
+!MESSAGE Problems occurred restoring workbench.
+!SUBENTRY 1 unknown 0 0 2013-08-25 22:59:03.109
+!MESSAGE OK
+!SUBENTRY 1 unknown 0 0 2013-08-25 22:59:03.109
+!MESSAGE OK
+!SUBENTRY 1 unknown 0 0 2013-08-25 22:59:03.109
+!MESSAGE OK
+!SUBENTRY 1 unknown 0 0 2013-08-25 22:59:03.109
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.ui 4 0 2013-08-25 22:59:03.109
+!MESSAGE Unable to restore perspective: Workspace - Debug.
+!SUBENTRY 2 org.eclipse.ui 0 0 2013-08-25 22:59:03.109
+!MESSAGE Problems occurred restoring perspective.
+!SUBENTRY 3 org.eclipse.ui 0 0 2013-08-25 22:59:03.109
+!MESSAGE 
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.110
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.110
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.110
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.110
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.110
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.110
+!MESSAGE OK
+!SUBENTRY 2 org.eclipse.ui 4 4 2013-08-25 22:59:03.111
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.LogCatView
+!STACK 1
+org.eclipse.ui.PartInitException: Could not create view: com.android.ide.eclipse.ddms.views.LogCatView
+	at org.eclipse.ui.internal.ViewFactory.createView(ViewFactory.java:158)
+	at org.eclipse.ui.internal.Perspective.createReferences(Perspective.java:1249)
+	at org.eclipse.ui.internal.Perspective.restoreState(Perspective.java:1219)
+	at org.eclipse.ui.internal.WorkbenchPage$17.runWithException(WorkbenchPage.java:3293)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.application.WorkbenchAdvisor.openWindows(WorkbenchAdvisor.java:803)
+	at org.eclipse.ui.internal.Workbench$33.runWithException(Workbench.java:1600)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2609)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2499)
+	at org.eclipse.ui.internal.Workbench$7.run(Workbench.java:679)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:668)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:123)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:344)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:622)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:577)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1410)
+!SUBENTRY 3 org.eclipse.ui 4 0 2013-08-25 22:59:03.135
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.LogCatView
+!SUBENTRY 2 org.eclipse.ui 4 4 2013-08-25 22:59:03.135
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.DeviceView
+!STACK 1
+org.eclipse.ui.PartInitException: Could not create view: com.android.ide.eclipse.ddms.views.DeviceView
+	at org.eclipse.ui.internal.ViewFactory.createView(ViewFactory.java:158)
+	at org.eclipse.ui.internal.Perspective.createReferences(Perspective.java:1249)
+	at org.eclipse.ui.internal.Perspective.restoreState(Perspective.java:1219)
+	at org.eclipse.ui.internal.WorkbenchPage$17.runWithException(WorkbenchPage.java:3293)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.application.WorkbenchAdvisor.openWindows(WorkbenchAdvisor.java:803)
+	at org.eclipse.ui.internal.Workbench$33.runWithException(Workbench.java:1600)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2609)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2499)
+	at org.eclipse.ui.internal.Workbench$7.run(Workbench.java:679)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:668)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:123)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:344)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:622)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:577)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1410)
+!SUBENTRY 3 org.eclipse.ui 4 0 2013-08-25 22:59:03.136
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.DeviceView
+!SUBENTRY 2 org.eclipse.ui 4 4 2013-08-25 22:59:03.136
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.ThreadView
+!STACK 1
+org.eclipse.ui.PartInitException: Could not create view: com.android.ide.eclipse.ddms.views.ThreadView
+	at org.eclipse.ui.internal.ViewFactory.createView(ViewFactory.java:158)
+	at org.eclipse.ui.internal.Perspective.createReferences(Perspective.java:1249)
+	at org.eclipse.ui.internal.Perspective.restoreState(Perspective.java:1219)
+	at org.eclipse.ui.internal.WorkbenchPage$17.runWithException(WorkbenchPage.java:3293)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.application.WorkbenchAdvisor.openWindows(WorkbenchAdvisor.java:803)
+	at org.eclipse.ui.internal.Workbench$33.runWithException(Workbench.java:1600)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2609)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2499)
+	at org.eclipse.ui.internal.Workbench$7.run(Workbench.java:679)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:668)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:123)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:344)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:622)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:577)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1410)
+!SUBENTRY 3 org.eclipse.ui 4 0 2013-08-25 22:59:03.139
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.ThreadView
+!SUBENTRY 2 org.eclipse.ui 4 4 2013-08-25 22:59:03.139
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.HeapView
+!STACK 1
+org.eclipse.ui.PartInitException: Could not create view: com.android.ide.eclipse.ddms.views.HeapView
+	at org.eclipse.ui.internal.ViewFactory.createView(ViewFactory.java:158)
+	at org.eclipse.ui.internal.Perspective.createReferences(Perspective.java:1249)
+	at org.eclipse.ui.internal.Perspective.restoreState(Perspective.java:1219)
+	at org.eclipse.ui.internal.WorkbenchPage$17.runWithException(WorkbenchPage.java:3293)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.application.WorkbenchAdvisor.openWindows(WorkbenchAdvisor.java:803)
+	at org.eclipse.ui.internal.Workbench$33.runWithException(Workbench.java:1600)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2609)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2499)
+	at org.eclipse.ui.internal.Workbench$7.run(Workbench.java:679)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:668)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:123)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:344)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:622)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:577)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1410)
+!SUBENTRY 3 org.eclipse.ui 4 0 2013-08-25 22:59:03.141
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.HeapView
+!SUBENTRY 2 org.eclipse.ui 4 4 2013-08-25 22:59:03.141
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.AllocTrackerView
+!STACK 1
+org.eclipse.ui.PartInitException: Could not create view: com.android.ide.eclipse.ddms.views.AllocTrackerView
+	at org.eclipse.ui.internal.ViewFactory.createView(ViewFactory.java:158)
+	at org.eclipse.ui.internal.Perspective.createReferences(Perspective.java:1249)
+	at org.eclipse.ui.internal.Perspective.restoreState(Perspective.java:1219)
+	at org.eclipse.ui.internal.WorkbenchPage$17.runWithException(WorkbenchPage.java:3293)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.application.WorkbenchAdvisor.openWindows(WorkbenchAdvisor.java:803)
+	at org.eclipse.ui.internal.Workbench$33.runWithException(Workbench.java:1600)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2609)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2499)
+	at org.eclipse.ui.internal.Workbench$7.run(Workbench.java:679)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:668)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:123)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:344)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:622)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:577)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1410)
+!SUBENTRY 3 org.eclipse.ui 4 0 2013-08-25 22:59:03.142
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.AllocTrackerView
+!SUBENTRY 2 org.eclipse.ui 4 4 2013-08-25 22:59:03.145
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.NetworkStatsView
+!STACK 1
+org.eclipse.ui.PartInitException: Could not create view: com.android.ide.eclipse.ddms.views.NetworkStatsView
+	at org.eclipse.ui.internal.ViewFactory.createView(ViewFactory.java:158)
+	at org.eclipse.ui.internal.Perspective.createReferences(Perspective.java:1249)
+	at org.eclipse.ui.internal.Perspective.restoreState(Perspective.java:1219)
+	at org.eclipse.ui.internal.WorkbenchPage$17.runWithException(WorkbenchPage.java:3293)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.application.WorkbenchAdvisor.openWindows(WorkbenchAdvisor.java:803)
+	at org.eclipse.ui.internal.Workbench$33.runWithException(Workbench.java:1600)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2609)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2499)
+	at org.eclipse.ui.internal.Workbench$7.run(Workbench.java:679)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:668)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:123)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:344)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:622)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:577)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1410)
+!SUBENTRY 3 org.eclipse.ui 4 0 2013-08-25 22:59:03.146
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.NetworkStatsView
+!SUBENTRY 2 org.eclipse.ui 4 4 2013-08-25 22:59:03.147
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.FileExplorerView
+!STACK 1
+org.eclipse.ui.PartInitException: Could not create view: com.android.ide.eclipse.ddms.views.FileExplorerView
+	at org.eclipse.ui.internal.ViewFactory.createView(ViewFactory.java:158)
+	at org.eclipse.ui.internal.Perspective.createReferences(Perspective.java:1249)
+	at org.eclipse.ui.internal.Perspective.restoreState(Perspective.java:1219)
+	at org.eclipse.ui.internal.WorkbenchPage$17.runWithException(WorkbenchPage.java:3293)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.application.WorkbenchAdvisor.openWindows(WorkbenchAdvisor.java:803)
+	at org.eclipse.ui.internal.Workbench$33.runWithException(Workbench.java:1600)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2609)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2499)
+	at org.eclipse.ui.internal.Workbench$7.run(Workbench.java:679)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:668)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:123)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:344)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:622)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:577)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1410)
+!SUBENTRY 3 org.eclipse.ui 4 0 2013-08-25 22:59:03.148
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.FileExplorerView
+!SUBENTRY 2 org.eclipse.ui 4 4 2013-08-25 22:59:03.149
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.EmulatorControlView
+!STACK 1
+org.eclipse.ui.PartInitException: Could not create view: com.android.ide.eclipse.ddms.views.EmulatorControlView
+	at org.eclipse.ui.internal.ViewFactory.createView(ViewFactory.java:158)
+	at org.eclipse.ui.internal.Perspective.createReferences(Perspective.java:1249)
+	at org.eclipse.ui.internal.Perspective.restoreState(Perspective.java:1219)
+	at org.eclipse.ui.internal.WorkbenchPage$17.runWithException(WorkbenchPage.java:3293)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.application.WorkbenchAdvisor.openWindows(WorkbenchAdvisor.java:803)
+	at org.eclipse.ui.internal.Workbench$33.runWithException(Workbench.java:1600)
+	at org.eclipse.ui.internal.StartupThreading$StartupRunnable.run(StartupThreading.java:31)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3563)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3212)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2609)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2499)
+	at org.eclipse.ui.internal.Workbench$7.run(Workbench.java:679)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:668)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:123)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:344)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:622)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:577)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1410)
+!SUBENTRY 3 org.eclipse.ui 4 0 2013-08-25 22:59:03.152
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.EmulatorControlView
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.153
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.153
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.153
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.154
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.154
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.154
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.154
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.155
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.155
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.155
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.155
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.156
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.156
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.157
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.157
+!MESSAGE OK
+!SUBENTRY 2 unknown 0 0 2013-08-25 22:59:03.157
+!MESSAGE OK
+!SUBENTRY 2 org.eclipse.ui 4 4 2013-08-25 22:59:03.157
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.LogCatView
+!STACK 1
+org.eclipse.ui.PartInitException: Could not create view: com.android.ide.eclipse.ddms.views.LogCatView
+	at org.eclipse.ui.internal.ViewFactory.createView(ViewFactory.java:158)
+	at org.eclipse.ui.internal.Perspective.createReferences(Perspective.java:1249)
+	at org.eclipse.ui.internal.FastViewManager.restoreState(FastViewManager.java:925)
+	at org.eclipse.ui.internal.Perspective.restoreState(Perspective.java:1363)
+	at org.eclipse.ui.internal.WorkbenchPage.restoreState(WorkbenchPage.java:3341)
+	at org.eclipse.ui.internal.WorkbenchWindow.restoreState(WorkbenchWindow.java:2232)
+	at org.eclipse.ui.internal.Workbench.doRestoreState(Workbench.java:3687)
+	at org.eclipse.ui.internal.Workbench.access$32(Workbench.java:3629)
+	at org.eclipse.ui.internal.Workbench$60.run(Workbench.java:2329)
+	at org.eclipse.ui.internal.Workbench.runStartupWithProgress(Workbench.java:2026)
+	at org.eclipse.ui.internal.Workbench.restoreState(Workbench.java:2327)
+	at org.eclipse.ui.internal.Workbench.access$30(Workbench.java:2298)
+	at org.eclipse.ui.internal.Workbench$54.run(Workbench.java:2144)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.ui.internal.Workbench.restoreState(Workbench.java:2088)
+	at org.eclipse.ui.internal.WorkbenchConfigurer.restoreState(WorkbenchConfigurer.java:183)
+	at org.eclipse.ui.application.WorkbenchAdvisor$1.run(WorkbenchAdvisor.java:781)
+!SUBENTRY 3 org.eclipse.ui 4 0 2013-08-25 22:59:03.161
+!MESSAGE Could not create view: com.android.ide.eclipse.ddms.views.LogCatView
+!SUBENTRY 2 org.eclipse.ui 4 0 2013-08-25 22:59:03.161
+!MESSAGE Could not find view: com.android.ide.eclipse.ddms.views.LogCatView
+!SUBENTRY 1 unknown 0 0 2013-08-25 22:59:03.162
+!MESSAGE OK

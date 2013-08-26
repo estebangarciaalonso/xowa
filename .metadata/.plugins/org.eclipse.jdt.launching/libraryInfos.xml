@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<libraryInfos>
+<libraryInfo home="/usr/lib/jvm/java-7-openjdk-i386/jre" version="1.7.0_09">
+<bootpath>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/resources.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/rt.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/sunrsasign.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/jsse.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/jce.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/charsets.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/netx.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/plugin.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/rhino.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/jfr.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/ext"/>
+<entry path="/usr/java/packages/lib/ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+<libraryInfo home="/usr/lib/jvm/java-7-openjdk-i386" version="1.7.0_09">
+<bootpath>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/resources.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/rt.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/sunrsasign.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/jsse.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/jce.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/charsets.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/netx.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/plugin.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/rhino.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/jfr.jar"/>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/ext"/>
+<entry path="/usr/java/packages/lib/ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="/usr/lib/jvm/java-7-openjdk-i386/jre/lib/endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+<libraryInfo home="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6" version="1.6.0_32">
+<bootpath>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\resources.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\rt.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\sunrsasign.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\jsse.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\jce.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\charsets.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\modules\jdk.boot.jar"/>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\ext"/>
+<entry path="C:\WINDOWS\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="C:\000\100_bin\100_os\200_runtime\100_java\100_jre_1_6\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+</libraryInfos>

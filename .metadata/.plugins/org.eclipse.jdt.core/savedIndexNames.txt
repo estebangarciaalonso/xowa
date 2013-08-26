@@ -1,0 +1,2 @@
+INDEX VERSION 1.126+/home/lnxusr/dev/xowa/.metadata/.plugins/org.eclipse.jdt.core
+3221696045.index

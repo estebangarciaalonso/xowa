@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ public class Xoa_hive_mgr {
 		ByteAryBfr tmp_bfr = app.Utl_bry_bfr_mkr().Get_m001();
 		byte[] tmp_bry = tmp_bfr.Bry(); bry_len.Val_zero_();
 		Io_url file = Xow_fsys_mgr.Url_fil(hive_root, fil_idx, fil_ext_bry);
-		tmp_bry = Io_mgr._.LoadFilByt_reuse(file, tmp_bry, bry_len);
+		tmp_bry = Io_mgr._.LoadFilBry_reuse(file, tmp_bry, bry_len);
 		xdat_rdr.Clear().Parse(tmp_bry, bry_len.Val(), file);
 		tmp_bfr.Mkr_rls().Clear();
 		return xdat_rdr;

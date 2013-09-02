@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -293,6 +293,18 @@ public class Xoh_lnki_wtr_tst {
 		,	"<a href=\"/wiki/File:A.png\" class=\"image\" title=\"a\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
 		);
 		fxt.Hctx().Lnki_title_(false);
+	}
+	@Test   public void Href_anchor_leading_space() {	// PURPOSE: space before anchor should be preserved, not " " -> "#"
+		fxt.tst_Parse_page_all_str("[[A #b]]", "<a href=\"/wiki/A#b\">A #b</a>");
+	}
+	@Test   public void Href_anchor_leading_space_ns() {	// PURPOSE: same as above, but with ns; DATE:2013-08-29
+		fxt.tst_Parse_page_all_str("[[Help:A   #b]]", "<a href=\"/wiki/Help:A#b\">Help:A #b</a>");
+	}
+	@Test   public void Href_anchor_leading_ns_lc() {	// PURPOSE: same as above but with lc title
+		fxt.tst_Parse_page_all_str("[[Help:a#b]]", "<a href=\"/wiki/Help:A#b\">Help:A#b</a>");
+	}
+	@Test   public void Href_anchor_leading_space_ns_lc() {	// PURPOSE: same as above but with lc title
+		fxt.tst_Parse_page_all_str("[[Help:a #b]]", "<a href=\"/wiki/Help:A#b\">Help:A #b</a>");
 	}
 	void Tst_img_title(String raw, String expd_ttl) {
 		String actl = fxt.Parse_page_wiki_str(raw);

@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -96,7 +96,7 @@ public class Xobc_core_calc_stats extends Xob_itm_basic_base implements Xob_cmd 
 	int Calc_count_articles_fil(Xow_ns ns, Io_url fil) {
 		if (String_.Eq(fil.NameAndExt(), Xow_dir_info_.Name_reg_fil)) return 0;
 		int rv = 0;
-		byte[] bry = Io_mgr._.LoadFilByt(fil);
+		byte[] bry = Io_mgr._.LoadFilBry(fil);
 		Xob_xdat_file xdat_file = new Xob_xdat_file().Parse(bry, bry.length, fil);
 		Xodb_page page = Xodb_page.tmp_();
 		int count = xdat_file.Count();

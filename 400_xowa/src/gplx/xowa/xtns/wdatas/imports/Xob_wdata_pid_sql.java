@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.wdatas.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.wdatas.*;
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*;
 public class Xob_wdata_pid_sql extends Xob_wdata_pid_base {
-	Xodb_mgr_sql db_mgr; Xodb_tbl_wdata_pids tbl; Db_stmt stmt; Db_provider provider;
+	Xodb_mgr_sql db_mgr; Xodb_wdata_pids_tbl tbl; Db_stmt stmt; Db_provider provider;
 	@Override public String Wkr_key() {return KEY;} public static final String KEY = "import.sql.wdata.pid";	
 	@Override public void Pid_bgn() {
 		db_mgr = wiki.Db_mgr_as_sql();

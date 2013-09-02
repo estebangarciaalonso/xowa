@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -20,11 +20,14 @@ import org.junit.*;
 public class Xowh_portal_mgr_tst {
 	@Before public void init() {fxt.Init();} private Xowh_portal_mgr_fxt fxt = new Xowh_portal_mgr_fxt();
 	@Test  public void Div_ns_bry() {
-		fxt.Test_div_ns_bry("A"			, "/wiki/A;selected;/wiki/Talk:A;");
+		fxt.Test_div_ns_bry("A"			, "/wiki/A;selected;/wiki/Talk:A;xowa_display_none");
 		fxt.Test_div_ns_bry("Talk:A"	, "/wiki/A;;/wiki/Talk:A;selected");
 	}
 	@Test  public void Div_personal_bry() {
-		fxt.Test_div_personal_bry("/wiki/User:anonymous;anonymous;;/wiki/User_talk:anonymous;;");
+		fxt.Test_div_personal_bry("/wiki/User:anonymous;anonymous;xowa_display_none;/wiki/User_talk:anonymous;xowa_display_none;");
+	}
+	@Test  public void Missing_ns_cls() {
+		fxt.Test_missing_ns_cls("xowa_display_none");
 	}
 }
 class Xowh_portal_mgr_fxt {
@@ -41,5 +44,8 @@ class Xowh_portal_mgr_fxt {
 	}
 	public void Test_div_personal_bry(String expd) {
 		Tfds.Eq(expd, String_.new_ascii_(wiki.Html_mgr().Portal_mgr().Div_personal_bry()));
+	}
+	public void Test_missing_ns_cls(String expd) {
+		Tfds.Eq(expd, String_.new_ascii_(wiki.Html_mgr().Portal_mgr().Missing_ns_cls()));
 	}
 }

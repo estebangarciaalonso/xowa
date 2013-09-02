@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ public class Xodb_mgr_sql implements Xodb_mgr, GfoInvkAble {
 		this.wiki = wiki;
 		load_mgr = new Xodb_load_mgr_sql(this);
 		save_mgr = new Xodb_save_mgr_sql(this);
-		tbl_text = new Xodb_tbl_text(this);
+		tbl_text = new Xodb_text_tbl(this);
 		fsys_mgr.Ctor(wiki.App().Fsys_mgr().Bin_db_dir(), wiki.Fsys_mgr().Root_dir(), wiki.Key_str());
 	}
 	public byte Tid() {return Tid_sql;} public static final byte Tid_sql = 1;
@@ -33,18 +33,18 @@ public class Xodb_mgr_sql implements Xodb_mgr, GfoInvkAble {
 	public Xodb_fsys_mgr Fsys_mgr() {return fsys_mgr;} private Xodb_fsys_mgr fsys_mgr = new Xodb_fsys_mgr();
 	public Xodb_load_mgr Load_mgr() {return load_mgr;} private Xodb_load_mgr_sql load_mgr;
 	public Xodb_save_mgr Save_mgr() {return save_mgr;} private Xodb_save_mgr_sql save_mgr;
-	public Xodb_tbl_xowa_cfg Tbl_xowa_cfg() {return tbl_cfg;} private Xodb_tbl_xowa_cfg tbl_cfg = new Xodb_tbl_xowa_cfg();
-	public Xodb_tbl_xowa_ns Tbl_xowa_ns() {return tbl_ns;} private Xodb_tbl_xowa_ns tbl_ns = new Xodb_tbl_xowa_ns();
-	public Xodb_tbl_xowa_db Tbl_xowa_db() {return tbl_db;} private Xodb_tbl_xowa_db tbl_db = new Xodb_tbl_xowa_db();
-	public Xodb_tbl_page Tbl_page() {return tbl_page;} private Xodb_tbl_page tbl_page = new Xodb_tbl_page();
-	public Xodb_tbl_text Tbl_text() {return tbl_text;} private Xodb_tbl_text tbl_text;
-	public Xodb_tbl_site_stats Tbl_site_stats() {return tbl_site_stats;} private Xodb_tbl_site_stats tbl_site_stats = new Xodb_tbl_site_stats();
-	public Xodb_tbl_wdata_qids Tbl_wdata_qids() {return tbl_wdata_qids;} private Xodb_tbl_wdata_qids tbl_wdata_qids = new Xodb_tbl_wdata_qids();
-	public Xodb_tbl_wdata_pids Tbl_wdata_pids() {return tbl_wdata_pids;} private Xodb_tbl_wdata_pids tbl_wdata_pids = new Xodb_tbl_wdata_pids();
-	public Xodb_tbl_category Tbl_category() {return tbl_category;} private Xodb_tbl_category tbl_category = new Xodb_tbl_category();
-	public Xodb_tbl_categorylinks Tbl_categorylinks() {return tbl_categorylinks;} private Xodb_tbl_categorylinks tbl_categorylinks = new Xodb_tbl_categorylinks();
-	public Xodb_tbl_search_title_main Tbl_search_title_main() {return tbl_search_title_main;} private Xodb_tbl_search_title_main tbl_search_title_main = new Xodb_tbl_search_title_main();
-	public Xodb_tbl_search_title_link Tbl_search_title_link() {return tbl_search_title_link;} private Xodb_tbl_search_title_link tbl_search_title_link = new Xodb_tbl_search_title_link();
+	public Xodb_xowa_cfg_tbl Tbl_xowa_cfg() {return tbl_cfg;} private Xodb_xowa_cfg_tbl tbl_cfg = new Xodb_xowa_cfg_tbl();
+	public Xodb_xowa_ns_tbl Tbl_xowa_ns() {return tbl_ns;} private Xodb_xowa_ns_tbl tbl_ns = new Xodb_xowa_ns_tbl();
+	public Xodb_xowa_db_tbl Tbl_xowa_db() {return tbl_db;} private Xodb_xowa_db_tbl tbl_db = new Xodb_xowa_db_tbl();
+	public Xodb_page_tbl Tbl_page() {return tbl_page;} private Xodb_page_tbl tbl_page = new Xodb_page_tbl();
+	public Xodb_text_tbl Tbl_text() {return tbl_text;} private Xodb_text_tbl tbl_text;
+	public Xodb_site_stats_tbl Tbl_site_stats() {return tbl_site_stats;} private Xodb_site_stats_tbl tbl_site_stats = new Xodb_site_stats_tbl();
+	public Xodb_wdata_qids_tbl Tbl_wdata_qids() {return tbl_wdata_qids;} private Xodb_wdata_qids_tbl tbl_wdata_qids = new Xodb_wdata_qids_tbl();
+	public Xodb_wdata_pids_tbl Tbl_wdata_pids() {return tbl_wdata_pids;} private Xodb_wdata_pids_tbl tbl_wdata_pids = new Xodb_wdata_pids_tbl();
+	public Xodb_category_tbl Tbl_category() {return tbl_category;} private Xodb_category_tbl tbl_category = new Xodb_category_tbl();
+	public Xodb_categorylinks_tbl Tbl_categorylinks() {return tbl_categorylinks;} private Xodb_categorylinks_tbl tbl_categorylinks = new Xodb_categorylinks_tbl();
+	public Xodb_search_title_main_tbl Tbl_search_title_main() {return tbl_search_title_main;} private Xodb_search_title_main_tbl tbl_search_title_main = new Xodb_search_title_main_tbl();
+	public Xodb_search_title_link_tbl Tbl_search_title_link() {return tbl_search_title_link;} private Xodb_search_title_link_tbl tbl_search_title_link = new Xodb_search_title_link_tbl();
 	public byte State() {return state;} private byte state = State_init; public static final byte State_init = 0, State_make = 1, State_load = 2;
 	public DateAdp Dump_date_query() {
 		DateAdp rv = wiki.Props().Modified_latest();
@@ -77,17 +77,17 @@ public class Xodb_mgr_sql implements Xodb_mgr, GfoInvkAble {
 		tbl_page.Insert(page_stmt, page_id, ns_id, ttl_wo_ns, redirect, modified_on, text.length, random_int, file_idx);
 		tbl_text.Insert(text_stmt, page_id, text, data_storage_format);
 	}
-	public boolean Ctg_select_v1(Xoctg_view_ctg view_ctg, Db_provider ctg_provider, Xodb_itm_category ctg) {
-		Db_qry_select qry = Db_qry_.select_().Cols_(Xodb_tbl_categorylinks.Fld_cl_from)
-			.From_(Xodb_tbl_categorylinks.Tbl_name)
-			.Where_(Db_crt_.eq_(Xodb_tbl_categorylinks.Fld_cl_to_id, ctg.Id()))
+	public boolean Ctg_select_v1(Xoctg_view_ctg view_ctg, Db_provider ctg_provider, Xodb_category_itm ctg) {
+		Db_qry_select qry = Db_qry_.select_().Cols_(Xodb_categorylinks_tbl.Fld_cl_from)
+			.From_(Xodb_categorylinks_tbl.Tbl_name)
+			.Where_(Db_crt_.eq_(Xodb_categorylinks_tbl.Fld_cl_to_id, ctg.Id()))
 		;
 		ListAdp rslts = ListAdp_.new_();
 		DataRdr rdr = DataRdr_.Null;
 		try {
 			rdr = ctg_provider.Exec_qry_as_rdr(qry);
 			while (rdr.MoveNextPeer()) {
-				int page_id = rdr.ReadInt(Xodb_tbl_categorylinks.Fld_cl_from);
+				int page_id = rdr.ReadInt(Xodb_categorylinks_tbl.Fld_cl_from);
 				Xodb_page itm = new Xodb_page().Id_(page_id);
 				rslts.Add(itm);
 			}

@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@ public class Db_mgr_fxt {
 	public Db_mgr_fxt Exec_run(Xobd_parser_wkr wkr) {bldr_fxt.Run(wkr); return this;}
 	public void Init_page_insert(IntRef page_id_next, int ns_id, String[] ttls) {
 		Xow_wiki wiki = this.Wiki();
-		Xodb_tbl_page tbl_page = wiki.Db_mgr_as_sql().Tbl_page();
+		Xodb_page_tbl tbl_page = wiki.Db_mgr_as_sql().Tbl_page();
 		Db_stmt stmt = Db_stmt_.Null;
 		try {
 			stmt = tbl_page.Insert_stmt(wiki.Db_mgr_as_sql().Fsys_mgr().Page_provider());

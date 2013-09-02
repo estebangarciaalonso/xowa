@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,9 @@ import java.util.GregorianCalendar;
 import gplx.dbs.*;
 public class Db_data_rdr extends DataRdr_base implements DataRdr {
 	@Override public String NameOfNode() {return commandText;} public String XtoStr() {return commandText;} private String commandText;
-		@Override public int FieldCount() {return fieldCount;}
+		private ResultSet rdr;
+	private int fieldCount;
+	@Override public int FieldCount() {return fieldCount;}
 	@Override public String KeyAt(int i) {
 		String rv = null; 
 		try {rv = rdr.getMetaData().getColumnLabel(i + ListAdp_.Base1);}
@@ -41,7 +43,7 @@ public class Db_data_rdr extends DataRdr_base implements DataRdr {
 		try {rv = rdr.getObject(key);} catch(Exception exc) {throw Err_.new_("could not read val from dataReader; key not found or rdr may not be open").Add("key", key).Add("sql", commandText);}
 		return rv;
 	}
-	@Override public DateAdp ReadDate(String key)	{
+	@Override public DateAdp ReadDate(String key) {
 		Object o = this.Read(key);
 		Timestamp ts = (Timestamp)o;
 		GregorianCalendar g = new GregorianCalendar();		
@@ -49,6 +51,13 @@ public class Db_data_rdr extends DataRdr_base implements DataRdr {
 		return DateAdp_.dateTime_(g);
 	}
 	@Override public DecimalAdp ReadDecimal(String key) {return DecimalAdp_.db_(this.Read(key));}
+	@Override public gplx.ios.Input_stream_adp ReadInputStream(String key) {
+		try {
+			java.io.InputStream input_stream = rdr.getBinaryStream(key);
+			return gplx.ios.Input_stream_adp_.new_stream_(input_stream);
+		}
+		catch (SQLException e) {return gplx.ios.Input_stream_adp_.Null;}
+	}
 	
 	public boolean MoveNextPeer() {
 		try {return rdr.next();}
@@ -62,8 +71,6 @@ public class Db_data_rdr extends DataRdr_base implements DataRdr {
 		catch (SQLException e) {Err_.err_(e, "reader dispose failed").Add("commandText", commandText);}
 		this.EnvVars().Clear();
 	}
-	ResultSet rdr;
-	int fieldCount;
 	@gplx.Internal protected Db_data_rdr ctor_db_data_rdr(ResultSet rdr, String commandText) {
 		this.rdr = rdr; this.commandText = commandText; this.Parse_set(false);
 		try {fieldCount = this.rdr.getMetaData().getColumnCount();}

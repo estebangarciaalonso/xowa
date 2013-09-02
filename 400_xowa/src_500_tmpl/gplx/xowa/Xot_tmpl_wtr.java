@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -101,5 +101,7 @@ class Xot_tmpl_wtr {
 			}
 		}
 	}
-	private static final ByteTrieMgr_slim nowiki_trie = ByteTrieMgr_slim.cs_().Add(Xop_xnde_wkr.Bry_lt, Xop_xnde_wkr.Bry_escape_lt).Add(Xop_xnde_wkr.Bry_brack_bgn, Xop_xnde_wkr.Bry_escape_brack_bgn).Add(Xop_xnde_wkr.Bry_pipe, ByteAry_.new_utf8_("&#x7c;")).Add(Xop_xnde_wkr.Bry_apos, ByteAry_.new_utf8_("&apos;")).Add(":", ByteAry_.new_utf8_("&#x3A;")).Add("_", ByteAry_.new_utf8_("&#95;"));
+	private static final ByteTrieMgr_slim nowiki_trie = ByteTrieMgr_slim.cs_().Add(Xop_xnde_wkr.Bry_lt, Xop_xnde_wkr.Bry_escape_lt)
+	.Add(Xop_xnde_wkr.Bry_brack_bgn, Xop_xnde_wkr.Bry_escape_brack_bgn).Add(Xop_xnde_wkr.Bry_pipe, ByteAry_.new_utf8_("&#x7c;")).Add(Xop_xnde_wkr.Bry_apos, ByteAry_.new_utf8_("&apos;"))
+	.Add(":", ByteAry_.new_utf8_("&#x3A;")).Add("_", ByteAry_.new_utf8_("&#95;")).Add("*", ByteAry_.new_utf8_("&#42;"));
 }

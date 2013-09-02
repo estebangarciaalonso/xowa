@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.files.*;
 public class Xof_xfer_queue {
-	ListAdp list = ListAdp_.new_(); OrderedHash dirty = OrderedHash_.new_(); ByteAryRef dirty_key = ByteAryRef.null_();		
-	public IntRef Elem_id() {return elem_id;} IntRef elem_id = IntRef.neg1_();
+	private ListAdp list = ListAdp_.new_(); private OrderedHash dirty = OrderedHash_.new_(); private ByteAryRef dirty_key = ByteAryRef.null_();		
+	public IntRef Elem_id() {return elem_id;} private IntRef elem_id = IntRef.neg1_();
 	public int Count() {return list.Count();}
 	public void Clear() {
 		dirty.Clear();
@@ -53,7 +54,7 @@ public class Xof_xfer_queue {
 					wtr.Html_atr_set("xowa_file_div_" + xfer_itm.Html_dynamic_id(), "style", "width:" + xfer_itm.Html_w() + "px;");
 				}
 				if (xfer_itm.Html_dynamic_tid() == Xof_xfer_itm.Html_dynamic_tid_gallery) {
-					int vpad = ((gplx.xowa.xtns.gallery.Xtn_gallery_dynamic_data)xfer_itm.Misc).Calc_vpad(xfer_itm.Html_h());
+					int vpad = ((gplx.xowa.xtns.gallery.Xtn_gallery_dynamic_data)xfer_itm.Gallery_data()).Calc_vpad(xfer_itm.Html_h());
 					wtr.Html_atr_set("xowa_file_gallery_div_" + xfer_itm.Html_dynamic_id(), "style", "margin:" + vpad + "px auto;");
 				}
 				else if (xfer_itm.Html_dynamic_tid() == Xof_xfer_itm.Html_dynamic_tid_vid) {
@@ -68,5 +69,8 @@ public class Xof_xfer_queue {
 		}
 		this.Clear();
 	}
-	static final String GRP_KEY = "xowa.xfer.queue";
+	public void Exec_fsdb(Xog_win_wtr wtr, Xow_wiki wiki) {
+		wiki.File_mgr().Fsdb_mgr().Bin_find(wtr, list);
+	}
+	private static final String GRP_KEY = "xowa.xfer.queue";
 }

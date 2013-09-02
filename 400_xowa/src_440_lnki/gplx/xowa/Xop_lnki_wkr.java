@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -80,12 +80,14 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 			else {
 				Arg_itm_tkn name_tkn = arg.Val_tkn();
 				byte[] name_bry = ByteAry_.Mid(src, name_tkn.Dat_bgn(), name_tkn.Dat_end());
+				name_bry = ctx.App().Url_converter_url_ttl().Decode(name_bry);
 				if (Pf_xtn_rel2abs.Rel2abs_ttl(name_bry, 0, name_bry.length)) { // Linker.php|normalizeSubpageLink
 					ByteAryBfr tmp_bfr = ctx.App().Utl_bry_bfr_mkr().Get_b512();
 					name_bry = Pf_xtn_rel2abs.Rel2abs(tmp_bfr, name_bry, ctx.Page().Page_ttl().Raw());
 					tmp_bfr.Mkr_rls();
 				}
-				Xoa_ttl ttl = Xoa_ttl.new_(ctx.Wiki(), ctx.Msg_log(), name_bry, src, name_tkn.Dat_bgn(), name_tkn.Dat_end());
+				Xoa_ttl ttl = Xoa_ttl.parse_(ctx.Wiki(), name_bry);
+				//Xoa_ttl ttl = Xoa_ttl.new_(ctx.Wiki(), ctx.Msg_log(), name_bry, src, name_tkn.Dat_bgn(), name_tkn.Dat_end());
 				if (ttl == null) {lnki.TypeId_toText(); return false;}
 				lnki.Ttl_(ttl);
 				lnki.NmsId_(lnki.Ttl().Ns().Id());

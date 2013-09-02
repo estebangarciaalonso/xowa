@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -68,7 +68,7 @@ class Sql_file_parser_fxt {
 		Io_url trg_fil = Io_url_.new_fil_("mem/test.csv");
 		parser.Src_fil_(src_fil).Trg_fil_gen_(Io_url_gen_.fil_(trg_fil));
 		parser.Parse(Gfo_usr_dlg_base.test_());
-		byte[] actl = Io_mgr._.LoadFilByt(trg_fil);
+		byte[] actl = Io_mgr._.LoadFilBry(trg_fil);
 		Tfds.Eq(expd, String_.new_utf8_(actl));
 	}	
 }

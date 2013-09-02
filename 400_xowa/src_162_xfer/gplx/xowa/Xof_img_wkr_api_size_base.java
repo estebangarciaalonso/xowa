@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -99,22 +99,4 @@ class Xof_img_wkr_api_size_base_wmf extends Xof_img_wkr_api_size_base {
 		,	Bry_xml_descriptionurl	= ByteAry_.new_ascii_("descriptionurl=\"")
 		;
 	public static final String GRP_KEY = "xowa.file.wmf.api";
-}
-class Xof_img_wkr_api_size_base_mok extends Xof_img_wkr_api_size_base {
-	public Xof_img_wkr_api_size_base_mok Ini(String wiki_str, String ttl_str, String redirect_str, int orig_w, int orig_h, boolean pass) {
-		this.wiki_str = wiki_str; this.ttl_str = ttl_str; this.redirect_str = redirect_str; this.orig_w = orig_w; this.orig_h = orig_h; this.fail = !pass;
-		return this;
-	}	String wiki_str = ""; String ttl_str = ""; String redirect_str = ""; int orig_w; int orig_h; boolean fail = false;
-	public void Clear() {wiki_str = ttl_str = redirect_str = ""; orig_w = orig_h = 0;}
-	@Override public boolean Api_query_size_exec(Xof_img_wkr_api_size_base_rslts rv, Xow_wiki wiki, byte[] ttl, int width, int height, Xog_win_wtr gui_wtr, byte[] repo_wiki_key) {
-		if (!ByteAry_.Eq(ttl, ByteAry_.new_utf8_(ttl_str))) return false;
-		if (!String_.Eq(wiki_str, String_.new_ascii_(repo_wiki_key))) return false;
-		if (fail) return false;
-		rv.Orig_w_(orig_w);
-		rv.Orig_h_(orig_h);
-		rv.Reg_wiki_(repo_wiki_key);
-		rv.Reg_page_(String_.Eq(redirect_str, "") ? ttl : ByteAry_.new_utf8_(redirect_str));
-		return true;
-	}
-	public static final Xof_img_wkr_api_size_base_mok _ = new Xof_img_wkr_api_size_base_mok(); Xof_img_wkr_api_size_base_mok() {}
 }

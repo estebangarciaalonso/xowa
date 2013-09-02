@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.wikis.*;
+import gplx.xowa.wikis.*; import gplx.xowa.files.*;
 public interface Xofw_wiki_finder {
 	void Find(ListAdp repo_pairs, Xof_xfer_itm file);
 	boolean Locate(Xofw_file_finder_rslt rv, ListAdp repo_pairs, byte[] ttl_bry);

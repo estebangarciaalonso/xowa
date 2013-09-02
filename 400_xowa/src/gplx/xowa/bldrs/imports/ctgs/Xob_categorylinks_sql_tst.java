@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -35,13 +35,13 @@ public class Xob_categorylinks_sql_tst {
 		fxt.Exec_run(new Xob_category_registry_sql(fxt.Bldr(), fxt.Wiki()));
 		fxt.Exec_run(new Xob_categorylinks_sql(fxt.Bldr(), fxt.Wiki()));
 		Db_provider provider = fxt.Wiki().Db_mgr_as_sql().Fsys_mgr().Category_provider();
-		Db_tst_qry.tbl_(Xodb_tbl_category.Tbl_name, Xodb_tbl_category.Fld_cat_id)
-			.Cols_(Xodb_tbl_category.Fld_cat_id, Xodb_tbl_category.Fld_cat_subcats, Xodb_tbl_category.Fld_cat_files, Xodb_tbl_category.Fld_cat_pages)
+		Db_tst_qry.tbl_(Xodb_category_tbl.Tbl_name, Xodb_category_tbl.Fld_cat_id)
+			.Cols_(Xodb_category_tbl.Fld_cat_id, Xodb_category_tbl.Fld_cat_subcats, Xodb_category_tbl.Fld_cat_files, Xodb_category_tbl.Fld_cat_pages)
 			.Rows_add_vals(1, 0, 0, 2)
 			.Rows_add_vals(2, 0, 1, 0)
 			.Test(provider);
-		Db_tst_qry.tbl_(Xodb_tbl_categorylinks.Tbl_name, Xodb_tbl_categorylinks.Fld_cl_from)
-			.Cols_(Xodb_tbl_categorylinks.Fld_cl_from, Xodb_tbl_categorylinks.Fld_cl_to_id, Xodb_tbl_categorylinks.Fld_cl_sortkey, Xodb_tbl_categorylinks.Fld_cl_type_id)
+		Db_tst_qry.tbl_(Xodb_categorylinks_tbl.Tbl_name, Xodb_categorylinks_tbl.Fld_cl_from)
+			.Cols_(Xodb_categorylinks_tbl.Fld_cl_from, Xodb_categorylinks_tbl.Fld_cl_to_id, Xodb_categorylinks_tbl.Fld_cl_sortkey, Xodb_categorylinks_tbl.Fld_cl_type_id)
 			.Rows_add_vals(3, 2, "File:2a"	, Xoa_ctg_mgr.Tid_file)
 			.Rows_add_vals(4, 1, "1b"		, Xoa_ctg_mgr.Tid_page)
 			.Rows_add_vals(5, 1, "1a"		, Xoa_ctg_mgr.Tid_page)

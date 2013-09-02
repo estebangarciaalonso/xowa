@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -71,7 +71,7 @@ class Xoctg_pagelist_mgr_fxt {
 		for (int i = 0; i < len; i++) {
 			String ttl = ary[i];
 			Xodb_page page = new Xodb_page();
-			Xodb_itm_category ctg_xtn = Xodb_itm_category.load_(0, 0, hidden, 0, 0, 0);
+			Xodb_category_itm ctg_xtn = Xodb_category_itm.load_(0, 0, hidden, 0, 0, 0);
 			page.Xtn_(ctg_xtn);
 			page.Ttl_wo_ns_(ByteAry_.new_ascii_(ttl));
 			init_ctgs.AddMany(page);

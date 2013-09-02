@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@ public class Xowd_hive_mgr {
 			reg_mgr.Update_add(fil_idx, key);
 		}
 		Io_url url = fsys_mgr.Url_ns_fil(dir_tid, ns.Id(), fil_idx);
-		byte[] bry = Io_mgr._.LoadFilByt(url);
+		byte[] bry = Io_mgr._.LoadFilBry(url);
 		Xob_xdat_file xdat = new Xob_xdat_file();
 		if (bry != ByteAry_.Empty)
 			xdat.Parse(bry, bry.length, url);
@@ -58,7 +58,7 @@ public class Xowd_hive_mgr {
 			reg_mgr.Update_add(fil_idx, key);
 		}
 		Io_url url = fsys_mgr.Url_site_fil(dir_tid, fil_idx);
-		byte[] bry = Io_mgr._.LoadFilByt(url);
+		byte[] bry = Io_mgr._.LoadFilBry(url);
 		Xob_xdat_file xdat = new Xob_xdat_file();
 		if (bry != ByteAry_.Empty)
 			xdat.Parse(bry, bry.length, url);
@@ -77,7 +77,7 @@ public class Xowd_hive_mgr {
 		if (new_key != null)
 			reg_save = reg_mgr.Update_change(fil_idx, old_key, new_key);
 		Io_url url = fsys_mgr.Url_ns_fil(dir_tid, ns.Id(), fil_idx);
-		byte[] bry = Io_mgr._.LoadFilByt(url);
+		byte[] bry = Io_mgr._.LoadFilBry(url);
 		Xob_xdat_file xdat = new Xob_xdat_file();
 		if (bry != ByteAry_.Empty)
 			xdat.Parse(bry, bry.length, url);

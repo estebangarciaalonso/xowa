@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,17 @@ package gplx.xowa; import gplx.*;
 public class Xop_redirect_mgr {
 	public Xop_redirect_mgr(Xow_wiki wiki) {this.wiki = wiki; this.log_mgr = wiki.App().Msg_log();} private Xow_wiki wiki; Gfo_msg_log log_mgr; ByteTrieMgr_slim trie;
 	public boolean Is_redirect(byte[] text, int text_len) {return this.Extract_redirect(text, text_len) != null;}
+	public Xoa_ttl Extract_redirect_loop(byte[] src) {
+		Xoa_ttl rv = null;
+		for (int i = 0; i < Extract_redirect_loop_max; i++) {
+			rv = Extract_redirect(src, src.length);
+			if (rv != null) return rv;
+		}
+		return null;
+	}
+	public Xoa_ttl Extract_redirect(byte[] src) {return Extract_redirect(src, src.length);}
+	public static final Xoa_ttl Extract_redirect_is_null = null;
+	public static final int Extract_redirect_loop_max = 4;
 	public Xoa_ttl Extract_redirect(byte[] src, int src_len) {
 		if (src_len == 0) return Redirect_null_ttl;
 		int bgn = Xop_lxr_.Find_fwd_while_non_ws(src, 0, src_len);

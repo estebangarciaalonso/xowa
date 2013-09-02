@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -64,7 +64,7 @@ public class Xof_meta_mgr implements GfoInvkAble {
 	}	Gfo_fld_wtr wtr = Gfo_fld_wtr.xowa_();
 	Xof_meta_fil Load(byte[] md5) {
 		Io_url fil_url = Xof_meta_fil.Bld_url(root_dir, md5, depth);
-		byte[] bry = Io_mgr._.LoadFilByt(fil_url); if (bry == ByteAry_.Empty) return null;
+		byte[] bry = Io_mgr._.LoadFilBry(fil_url); if (bry == ByteAry_.Empty) return null;
 		rdr.Ini(bry, 0);
 		Xof_meta_fil rv = Bld_new(root, depth - 1, this, md5, 0);	// NOTE: need to register file before loading it; defect wherein 2 files with same hash prefix would skip one b/c Loaded file was not registered; EX.WS: en.wikiquote.org/The Hitchhiker's Guide to the Galaxy; NMMP_dolphin_with_locator.jpeg, da6f95736ed249f371f30bf5f1205fbd; Hoags_object.jpg, daed4a54e48e4266bd2f2763b7c4018c
 		rv.Load(rdr, parser);

@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -36,7 +36,7 @@ public class Wmf_dump_list_parser_tst {
 		,	fxt.itm("enwiki", "20130708", "n", "Error", "2013-07-17 00:32:33")
 		);
 //			Wmf_dump_list_parser parser = new Wmf_dump_list_parser();
-//			byte[] src = Io_mgr._.LoadFilByt("dump.htm");
+//			byte[] src = Io_mgr._.LoadFilBry("dump.htm");
 //			Wmf_dump_itm[] itms = parser.Parse(src);
 //			int len = itms.length;
 //			ByteAryBfr bfr = ByteAryBfr.new_();

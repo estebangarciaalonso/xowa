@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@ public class Xoctg_hiddencat_parser_sql_tst {
 	}
 	void Init_ctgs(int... ctgs) {
 		int len = ctgs.length;
-		Xodb_tbl_category tbl = fxt.Wiki().Db_mgr_as_sql().Tbl_category();
+		Xodb_category_tbl tbl = fxt.Wiki().Db_mgr_as_sql().Tbl_category();
 		Db_provider provider =  fxt.Wiki().Db_mgr_as_sql().Fsys_mgr().Category_provider();
 		Db_stmt stmt = tbl.Insert_stmt(provider);
 		for (int i = 0; i < len; i++) {
@@ -49,11 +49,11 @@ public class Xoctg_hiddencat_parser_sql_tst {
 	}
 	void Tst_ctg_hidden(boolean expd_hidden, int... ctgs) {
 		int len = ctgs.length;
-		Xodb_tbl_category tbl = fxt.Wiki().Db_mgr_as_sql().Tbl_category();
+		Xodb_category_tbl tbl = fxt.Wiki().Db_mgr_as_sql().Tbl_category();
 		Db_provider provider =  fxt.Wiki().Db_mgr_as_sql().Fsys_mgr().Category_provider();
 		for (int i = 0; i < len; i++) {
 			int ctg_id = ctgs[i];
-			Xodb_itm_category ctg_itm = tbl.Select(provider, ctg_id);
+			Xodb_category_itm ctg_itm = tbl.Select(provider, ctg_id);
 			Tfds.Eq(expd_hidden, ctg_itm.Hidden(), Int_.XtoStr(ctg_id));
 		}
 	}

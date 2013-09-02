@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,31 @@ public class Xoctg_html_mgr_tst {
 		fxt	.Init_itm_page("A1");
 		fxt	.Ctg().Grp_by_tid(Xoa_ctg_mgr.Tid_page).Itms()[0].Id_missing_(true);
 		fxt	.Test_html_page(Xoa_ctg_mgr.Tid_page, Byte_ascii.Ltr_A, "\n            <li class=\"xowa-missing-category-entry\"><span title=\"id not found: #0 might be talk/user page\">A1 (missing)</li>");
+	}
+	@Test   public void Visited_doesnt_work_for_space() {// PURPOSE: xowa-visited not inserted for pages with space
+		byte[] page_bry = ByteAry_.new_ascii_("A 1");
+		Xoa_url url = Xoa_url.new_(ByteAry_.new_ascii_("en.wikipedia.org"), page_bry);
+		fxt.Wiki().App().User().History_mgr().Add(url, page_bry);
+		fxt	.Init_itm_page("A_1").Init_ctg_name_("Ctg_1").Init_ctg_pages_(0, 1)
+			.Test_html_all(Xoa_ctg_mgr.Tid_page, String_.Concat_lines_nl_skipLast
+			(	""
+			,	"<div id=\"mw-pages\">"
+			,	"  <h2>Pages in category \"Ctg_1\"</h2>"
+			,	"  <p>The following page is in this category, out of 0 total.</p>"
+			,	"  <div lang=\"en\" dir=\"ltr\" class=\"mw-content-ltr\">"
+			,	"    <table style=\"width: 100%;\">"
+			,	"      <tr style=\"vertical-align: top;\">"
+			,	"        <td style=\"width: 33%;\">"
+			,	"          <h3>A</h3>"
+			,	"          <ul>"
+			,	"            <li><a class=\"xowa-visited\" href=\"/wiki/A_1\" title=\"A 1\">A 1</a></li>"
+			,	"          </ul>"
+			,	"        </td>"
+			,	"      </tr>"
+			,	"    </table>"
+			,	"  </div>"
+			,	"</div>"
+			));
 	}
 	@Test   public void Page_all() {
 		fxt	.Init_itm_page("A1").Init_ctg_name_("Ctg_1").Init_ctg_pages_(0, 1)
@@ -193,7 +218,8 @@ class Xoh_ctg_page_fxt {
 			ctg = new Xoctg_view_ctg();
 		}
 		return this;
-	}	Xoa_app app; Xow_wiki wiki; Xoctg_html_mgr ctg_html;
+	}	private Xoa_app app; private Xoctg_html_mgr ctg_html;
+	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki; 
 	public Xoctg_view_ctg Ctg() {return ctg;} private Xoctg_view_ctg ctg;
 	public void Test_bld_rslts_lnk(boolean next, String ctg_str, String expd) {			
 		byte[] actl = ctg_html.Fmtr(Xoa_ctg_mgr.Tid_page).Grp_max_(0).Bld_bwd_fwd(wiki, Xoa_ttl.parse_(wiki, ByteAry_.new_ascii_(ctg_str)), ctg.Grp_by_tid(Xoa_ctg_mgr.Tid_page));

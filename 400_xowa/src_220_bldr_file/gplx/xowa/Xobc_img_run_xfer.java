@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.ios.*; import gplx.gfui.*; import gplx.xowa.bldrs.*; 
+import gplx.ios.*; import gplx.gfui.*; import gplx.xowa.bldrs.*; import gplx.xowa.files.*;
 public class Xobc_img_run_xfer extends Xob_itm_basic_base implements Xob_cmd, GfoInvkAble {
 	public Xobc_img_run_xfer(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
 	public String Cmd_key() {return KEY;} public static final String KEY = "img.run_xfer";

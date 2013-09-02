@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -148,6 +148,9 @@ public class Xot_invk_wkr_tst {
 	}
 	@Test  public void Nowiki_underscore() {	// PURPOSE: nowiki did not handle __DISAMBIG__; DATE:2013-07-28
 		fxt.tst_Parse_page_all_str("<nowiki>__DISAMBIG__</nowiki>"	, "__DISAMBIG__");
+	}
+	@Test  public void Nowiki_asterisk() {	// PURPOSE: nowiki should noop lists; DATE:2013-08-26
+		fxt.tst_Parse_page_all_str("<nowiki>*a</nowiki>", "*a");
 	}
 	@Test  public void LnkiWithPipe_basic() {	// PURPOSE: pipe in link should not count towards tmpl: WP:{{H:title|dotted=no|pronunciation:|[[File:Loudspeaker.svg|11px|link=|alt=play]]}}
 		fxt.tst_Parse_tmpl_str_test("{{{1}}}{{{2}}}"									, "{{test|[[b=c|d]]}}"			, "[[b=c|d]]{{{2}}}");

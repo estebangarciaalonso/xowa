@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -114,6 +114,12 @@ public class Url_encoder implements Url_encoder_interface {
 		rv.Itms_ini(Byte_ascii.Percent);
 		mediawiki_base(rv);
 		rv.Itms_raw_diff(Byte_ascii.Space, Byte_ascii.Plus);
+		return rv;
+	}
+	public static Url_encoder new_http_url_ttl_() {
+		Url_encoder rv = new Url_encoder();
+		rv.Itms_ini(Byte_ascii.Percent);
+		mediawiki_base(rv);
 		return rv;
 	}
 	public static Url_encoder new_http_url_space_is_space() {

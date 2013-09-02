@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -711,7 +711,7 @@ public class Xop_xnde_wkr_tst {
 	}
 	@Test   public void Javascript_in_math() {
 		fxt.App().File_mgr().Math_mgr().Renderer_is_mathjax_(false);
-		fxt.tst_Parse_page_all_str("<math><script>alert('fail');</script></math>", "<img id='xowa_math_img_0' src='' width='' height=''/><span id='xowa_math_txt_0'>&lt;script&gt;alert('fail');&lt;/script&gt;</span>");
+		fxt.tst_Parse_page_all_str("<math><script>alert('fail');</script></math>", "<img id='xowa_math_img_0' src='' width='' height=''/><span id='xowa_math_txt_0'>&lt;script>alert('fail');</script></span>");
 		fxt.App().File_mgr().Math_mgr().Renderer_is_mathjax_(true);
 	}
 	@Test   public void Anchor_nested() {

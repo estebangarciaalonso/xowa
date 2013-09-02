@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ class Xog_history_stack {
 	public Xog_history_itm Cur_itm() {return list.Count() == 0 ? Xog_history_itm.Null : (Xog_history_itm)list.FetchAt(list_pos);}
 	public Xog_history_itm Add(Xoa_page page) {
 		byte[] wiki_key = page.Wiki().Domain_bry();
-		byte[] page_key = page.Page_ttl().Page_db();	// get page_name only (no anchor; no query args)
+		byte[] page_key = page.Page_ttl().Full_url();	// get page_name only (no anchor; no query args)
 		byte[] anch_key = page.Url().Anchor_bry();
 		byte[] redirect_force = page.Url().Redirect_force() ? Bool_.Y_bry : Bool_.N_bry;
 		byte[] key = Xog_history_itm.Build_key(wiki_key, page_key, anch_key, redirect_force);

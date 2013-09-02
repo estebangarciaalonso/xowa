@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -57,7 +57,7 @@ public class GfsCore implements GfoInvkAble {
 	public Object ExecFile_ignoreMissing(GfoInvkAble root, Io_url url) {
 		if (!Io_mgr._.ExistsFil(url)) return null; 
 		if (msgParser == null) throw Err_.new_("msgParser is null");
-		return Exec_bry(Io_mgr._.LoadFilByt(url), root);
+		return Exec_bry(Io_mgr._.LoadFilBry(url), root);
 	}
 	public Object Exec_bry(byte[] bry) {return Exec_bry(bry, root);}
 	public Object Exec_bry(byte[] bry, GfoInvkAble root) {

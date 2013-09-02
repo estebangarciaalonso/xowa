@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.gfui.*;
-class Xof_url_bldr {
+public class Xof_url_bldr {
 	ByteAryBfr bfr = ByteAryBfr.reset_(400);
 	public byte Dir_spr() {return dir_spr;} public Xof_url_bldr Dir_spr_(byte v) {dir_spr = v; return this;} private byte dir_spr;
 	public byte[] Root() {return root;} public Xof_url_bldr Root_(byte[] v) {root = v; return this;} private byte[] root;
@@ -151,19 +151,4 @@ class Xof_url_bldr {
 	public static final byte[] Bry_reg = ByteAry_.new_ascii_("reg.csv"), Bry_px = ByteAry_.new_ascii_("px"), Bry_px_dash = ByteAry_.new_ascii_("px-"), Bry_thumb = ByteAry_.new_ascii_("thumb"), Bry_mid = ByteAry_.new_ascii_("mid-"), Bry_lossy_page1 = ByteAry_.new_ascii_("lossy-page1-"), Bry_page1 = ByteAry_.new_ascii_("page1-"), Bry_seek = ByteAry_.new_ascii_("seek%3D"), Bry_file = ByteAry_.new_ascii_("file");
 	public static final Xof_url_bldr Temp = new Xof_url_bldr();
 	private static final Url_encoder encoder_src_http = Url_encoder.new_http_url_(); // NOTE: changed from new_html_href_mw_ to new_url_ on 2012-11-19; issues with A%2Cb becoming A%252Cb
-}
-class Xof_url_ {
-	public static final int Null_size_deprecated = -1, Null_size = 0;
-	public static int Width_adjust_by_upright(int width, double upright) {		
-		if 		(upright == -1) return width;
-		else if (upright ==  1) upright = .75f;
-		int rv = (int)(width * upright);  
-		return Round_10p2(rv);
-	}
-	private static int Round_10p2(int v) {
-		int mod = v % 10;
-		if (mod > 4) 	v += 10 - mod;
-		else			v -= mod;
-		return v;
-	}
 }

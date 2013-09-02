@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -206,7 +206,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
 		byte[] tmp_bry = tmp_bfr.Bry();
 		if (cancelable.Canceled()) return false;
-		tmp_bry = Io_mgr._.LoadFilByt_reuse(url, tmp_bry, tmp_len);
+		tmp_bry = Io_mgr._.LoadFilBry_reuse(url, tmp_bry, tmp_len);
 		if (cancelable.Canceled()) return false;
 		if (tmp_bry.length == 0)
 			wiki.App().Usr_dlg().Warn_many("", "file.empty", "hive file is empty: ~{0}", url.Raw());
@@ -514,7 +514,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 			this.Load_ttl(page, ns, ttl);
 
 			Load_ctg_v2_main(ctg_temp, page.Ttl_wo_ns());
-			Xodb_itm_category ctg_itm = Xodb_itm_category.load_(page.Id(), page.Db_file_idx(), ctg_temp.Hidden(), ctg_temp.Total_by_tid(Xoa_ctg_mgr.Tid_subc), ctg_temp.Total_by_tid(Xoa_ctg_mgr.Tid_file), ctg_temp.Total_by_tid(Xoa_ctg_mgr.Tid_page)); 
+			Xodb_category_itm ctg_itm = Xodb_category_itm.load_(page.Id(), page.Db_file_idx(), ctg_temp.Hidden(), ctg_temp.Total_by_tid(Xoa_ctg_mgr.Tid_subc), ctg_temp.Total_by_tid(Xoa_ctg_mgr.Tid_file), ctg_temp.Total_by_tid(Xoa_ctg_mgr.Tid_page)); 
 			page.Xtn_(ctg_itm);
 			rv[i] = page;
 		}

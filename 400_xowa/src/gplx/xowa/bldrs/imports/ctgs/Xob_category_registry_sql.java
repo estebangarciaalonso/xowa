@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -31,17 +31,17 @@ public class Xob_category_registry_sql implements Xob_cmd {
 		Xodb_mgr_sql db_mgr = Xodb_mgr_sql.Get_or_load(wiki);
 		Db_provider provider = db_mgr.Fsys_mgr().Core_provider();
 		Db_qry_select qry = Db_qry_select.new_()
-			.Cols_(Xodb_tbl_page.Fld_page_title, Xodb_tbl_page.Fld_page_id)
-			.From_(Xodb_tbl_page.Tbl_name)
-			.Where_(Db_crt_.eq_(Xodb_tbl_page.Fld_page_ns, Xow_ns_.Id_category))
-			.OrderBy_asc_(Xodb_tbl_page.Fld_page_title);
+			.Cols_(Xodb_page_tbl.Fld_page_title, Xodb_page_tbl.Fld_page_id)
+			.From_(Xodb_page_tbl.Tbl_name)
+			.Where_(Db_crt_.eq_(Xodb_page_tbl.Fld_page_ns, Xow_ns_.Id_category))
+			.OrderBy_asc_(Xodb_page_tbl.Fld_page_title);
 		DataRdr rdr = DataRdr_.Null;
 		Gfo_usr_dlg usr_dlg = wiki.App().Usr_dlg();
 		try {
 			rdr = qry.Exec_qry_as_rdr(provider);
 			while (rdr.MoveNextPeer()) {
-				byte[] page_ttl = rdr.ReadBryByStr(Xodb_tbl_page.Fld_page_title);
-				int page_id = rdr.ReadInt(Xodb_tbl_page.Fld_page_id);
+				byte[] page_ttl = rdr.ReadBryByStr(Xodb_page_tbl.Fld_page_title);
+				int page_id = rdr.ReadInt(Xodb_page_tbl.Fld_page_id);
 				if (rslt_wtr.FlushNeeded(page_ttl.length + 2 + 5)) rslt_wtr.Flush(usr_dlg);
 				rslt_wtr.Bfr().Add(page_ttl).Add_byte_pipe().Add_base85_len_5(page_id).Add_byte_nl();
 			}

@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.gfui.*;
+import gplx.gfui.*; import gplx.xowa.files.*;
 public class Xof_xfer_mgr {
 	public Xof_xfer_mgr(Xof_file_mgr file_mgr) {this.file_mgr = file_mgr;} private Xof_file_mgr file_mgr;
 	public Xof_xfer_rslt Rslt() {return rslt;} private Xof_xfer_rslt rslt = new Xof_xfer_rslt();
@@ -24,7 +24,7 @@ public class Xof_xfer_mgr {
 	public Xof_xfer_mgr Force_orig_y_() {return Force_orig_(Bool_.Y);} public Xof_xfer_mgr Force_orig_n_() {return Force_orig_(Bool_.N);}
 	public void Atrs_by_itm(Xof_xfer_itm xfer_itm, Xof_repo_itm src_repo, Xof_repo_itm trg_repo) {
 		this.xfer_itm = xfer_itm;
-		this.lnki_w = xfer_itm.Lnki_w(); this.lnki_h = xfer_itm.Lnki_h(); this.lnki_thumbable = xfer_itm.Lnki_thumbable(); this.lnki_seek = xfer_itm.Lnki_seek(); lnki_upright = xfer_itm.Lnki_upright();
+		this.lnki_w = xfer_itm.Lnki_w(); this.lnki_h = xfer_itm.Lnki_h(); this.lnki_thumbable = xfer_itm.Lnki_thumbable(); this.lnki_seek = xfer_itm.Lnki_thumbtime(); lnki_upright = xfer_itm.Lnki_upright();
 		this.ttl = xfer_itm.Ttl(); this.md5 = xfer_itm.Md5(); this.ext = xfer_itm.Ext();
 		orig_file_len = xfer_itm.Orig_file_len();
 		this.src_repo = src_repo; src_repo_is_wmf = src_repo.Wmf_fsys();

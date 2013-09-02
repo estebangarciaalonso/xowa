@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -44,6 +44,7 @@ class DataRdr_null implements DataRdr {
 	public byte ReadByte(String key) {return Byte_.MinValue;}			public byte ReadByteOr(String key, byte or) {return or;}
 	public DecimalAdp ReadDecimal(String key) {return DecimalAdp_.Zero;}public DecimalAdp ReadDecimalOr(String key, DecimalAdp or) {return or;}
 	public DateAdp ReadDate(String key) {return DateAdp_.MinValue;}		public DateAdp ReadDateOr(String key, DateAdp or) {return or;}
+	public gplx.ios.Input_stream_adp ReadInputStream(String key) {return gplx.ios.Input_stream_adp_.Null;}
 	public boolean MoveNextPeer() {return false;}
 	public DataRdr Subs() {return this;}
 	public DataRdr Subs_byName(String name) {return this;}

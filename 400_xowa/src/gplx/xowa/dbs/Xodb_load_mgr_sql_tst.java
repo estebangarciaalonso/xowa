@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -51,7 +51,7 @@ class Xodb_load_mgr_sql_fxt {
 	public Xodb_page[] pages_(Xodb_page... ary) {return ary;}
 	public Xodb_page ctg_(int id, String ttl, boolean hidden, int count_subcs, int count_files, int count_pages) {
 		Xodb_page rv = new Xodb_page().Ns_id_(Xow_ns_.Id_category).Id_(id).Ttl_wo_ns_(ByteAry_.new_ascii_(ttl));
-		Xodb_itm_category ctg = Xodb_itm_category.load_(id, 0, hidden, count_subcs, count_files, count_pages);
+		Xodb_category_itm ctg = Xodb_category_itm.load_(id, 0, hidden, count_subcs, count_files, count_pages);
 		rv.Xtn_(ctg);
 		return rv;
 	}
@@ -66,7 +66,7 @@ class Xodb_load_mgr_sql_fxt {
 		for (int i = 0; i < len; i++) {
 			Xodb_page page = ary[i];
 			db_mgr.Tbl_page().Insert(page_stmt, page.Id(), page.Ns_id(), page.Ttl_wo_ns(), false, modified, 10, page.Id(), 0);
-			Xodb_itm_category ctg_itm = (Xodb_itm_category)page.Xtn(); 
+			Xodb_category_itm ctg_itm = (Xodb_category_itm)page.Xtn(); 
 			db_mgr.Tbl_category().Insert(category_stmt, ctg_itm.Id(), ctg_itm.Count_pages(), ctg_itm.Count_subcs(), ctg_itm.Count_files(), Bool_.Xto_byte(ctg_itm.Hidden()), 0);
 		}
 		p.Txn_mgr().Txn_end_all();
@@ -85,7 +85,7 @@ class Xodb_load_mgr_sql_fxt {
 		int len = ary.length;
 		for (int i = 0; i < len; i++) {
 			Xodb_page page = ary[i];
-			Xodb_itm_category ctg_itm = (Xodb_itm_category)page.Xtn();
+			Xodb_category_itm ctg_itm = (Xodb_category_itm)page.Xtn();
 			bfr.Add_int_variable(page.Id()).Add_byte_pipe();
 			bfr.Add(page.Ttl_wo_ns()).Add_byte_pipe();
 			bfr.Add_byte(Bool_.Xto_byte(ctg_itm.Hidden())).Add_byte_nl();
@@ -99,9 +99,9 @@ class Xodb_load_mgr_sql_fxt {
 //			Xodb_mgr_sql db_mgr = wiki.Db_mgr_as_sql();
 //			Db_provider p = db_mgr.Fsys_mgr().Core_provider();
 //			p.Txn_mgr().Txn_bgn_if_none();
-//			Xodb_tbl_categorylinks ctg_tbl = db_mgr.Tbl_categorylinks(); 
+//			Xodb_categorylinks_tbl ctg_tbl = db_mgr.Tbl_categorylinks(); 
 //			Db_stmt ctg_stmt = ctg_tbl.Insert_stmt(p);
-//			Xodb_tbl_page page_tbl = db_mgr.Tbl_page(); 
+//			Xodb_page_tbl page_tbl = db_mgr.Tbl_page(); 
 //			Db_stmt page_stmt = page_tbl.Insert_stmt();
 //			DateAdp modified_on = Tfds.Now_time0_add_min(0);
 //			int page_id = next_id.Val_add_post();

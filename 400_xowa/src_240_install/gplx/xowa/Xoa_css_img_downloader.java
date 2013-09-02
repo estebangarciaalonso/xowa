@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ public class Xoa_css_img_downloader {
 	}	private Gfo_usr_dlg usr_dlg; private Xof_download_wkr download_wkr; private byte[] stylesheet_prefix;
 	public void Chk(byte[] wiki_domain, Io_url css_fil) {
 		ListAdp img_list = ListAdp_.new_();
-		byte[] old_bry = Io_mgr._.LoadFilByt(css_fil);
+		byte[] old_bry = Io_mgr._.LoadFilBry(css_fil);
 		byte[] rel_url_prefix = ByteAry_.Add(Bry_fwd_slashes, wiki_domain);
 		byte[] new_bry = Convert_to_local_urls(rel_url_prefix, old_bry, img_list);
 		Io_url img_dir = css_fil.OwnerDir();

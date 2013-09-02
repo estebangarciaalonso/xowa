@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.xtns.math.*;
 public class Xof_file_mgr implements GfoInvkAble {
 	public void Init_app(Xoa_app app, Gfo_usr_dlg usr_dlg) {
 		this.app = app;
@@ -37,6 +38,5 @@ public class Xof_file_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_math))				return math_mgr;
 		else if	(ctx.Match(k, Invk_download))			return download_mgr;
 		else											return GfoInvkAble_.Rv_unhandled;
-//			return this;
 	}	private static final String Invk_repos = "repos", Invk_img_mgr= "img_mgr", Invk_ext_rules = "ext_rules", Invk_math = "math", Invk_download = "download";
 }

@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ public class ByteAry_fil {
 	public int Raw_max() {return raw_max;} private int raw_max = Io_mgr.Len_mb;
 	public ByteAry_fil Ini_file(Io_url fil) {
 		this.fil = fil;
-		raw_bry = Io_mgr._.LoadFilByt_reuse(fil, raw_bry, raw_len);
+		raw_bry = Io_mgr._.LoadFilBry_reuse(fil, raw_bry, raw_len);
 		return this;
 	}
 	public Object Xto_itms(Class<?> itm_type) {

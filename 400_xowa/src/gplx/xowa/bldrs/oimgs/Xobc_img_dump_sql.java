@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import gplx.ios.*; import gplx.xowa.bldrs.*; import gplx.dbs.*; import gplx.xowa.dbs.*;
+import gplx.ios.*; import gplx.xowa.bldrs.*; import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*;
 public class Xobc_img_dump_sql extends Xob_itm_dump_base implements Xob_cmd, GfoInvkAble, Sql_file_parser_cmd {
 	private Db_provider provider = null; private Db_stmt stmt = null;
-	private Xodb_tbl_image tbl_image = new Xodb_tbl_image();
+	private Xodb_image_tbl tbl_image = new Xodb_image_tbl();
 	private byte[] cur_ttl; private int cur_size, cur_width, cur_height, cur_bits;
 	private int commit_count = 10000;
 	public Xobc_img_dump_sql(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
@@ -39,7 +39,7 @@ public class Xobc_img_dump_sql extends Xob_itm_dump_base implements Xob_cmd, Gfo
 		Xodb_mgr_sql db_mgr = wiki.Db_mgr_as_sql();
 		provider = db_mgr.Fsys_mgr().Get_or_make("oimg_image").Provider();
 		provider.Txn_mgr().Txn_bgn_if_none();
-		tbl_image = new Xodb_tbl_image();
+		tbl_image = new Xodb_image_tbl();
 		tbl_image.Create_table(provider);
 		stmt = tbl_image.Insert_stmt(provider);		
 	}

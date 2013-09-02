@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -110,7 +110,7 @@ public class Xodb_fsys_mgr {
 		int file_idx = files_ary_len;
 		Io_url url = Create_sqlite3(src_dir, trg_dir, trg_name, file_idx);
 		Xodb_file rv = Xodb_file.make_(file_idx, file_tid, url.NameAndExt()).Connect_(Db_connect_.sqlite_(url));
-		gplx.xowa.dbs.tbls.Xodb_tbl_xowa_cfg.Insert_str(rv.Provider(), "db.meta", "type_name", Xodb_file.Tid_to_name(file_tid));
+		gplx.xowa.dbs.tbls.Xodb_xowa_cfg_tbl.Insert_str(rv.Provider(), "db.meta", "type_name", Xodb_file.Tid_to_name(file_tid));
 		files_ary = (Xodb_file[])Array_.Resize(files_ary, files_ary_len + 1);
 		files_ary[files_ary_len] = rv;
 		++files_ary_len;

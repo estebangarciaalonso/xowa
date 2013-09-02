@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -49,6 +49,6 @@ public class Xog_history_mgr {
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, itm.Page_key());
 		return wiki.Data_mgr().Get_page(ttl, false);
 	}
-	private static byte[] Build_page_key(Xoa_page page) {return Build_page_key(page.Wiki().Domain_bry(), page.Page_ttl().Page_db());}
+	private static byte[] Build_page_key(Xoa_page page) {return Build_page_key(page.Wiki().Domain_bry(), page.Page_ttl().Full_url());}
 	private static byte[] Build_page_key(byte[] wiki_key, byte[] page_key) {return ByteAry_.Add_w_dlm(Byte_ascii.Pipe, wiki_key, page_key);}
 }

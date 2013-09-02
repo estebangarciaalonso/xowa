@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -55,7 +55,7 @@ public class Xou_history_mgr implements GfoInvkAble {// app.user.history
 		if (load_chk) return;
 		load_chk = true;
 		itms.Clear();
-		Xou_history_itm_srl.Load(Io_mgr._.LoadFilByt(app.User().Fsys_mgr().App_data_history_fil()), itms);
+		Xou_history_itm_srl.Load(Io_mgr._.LoadFilBry(app.User().Fsys_mgr().App_data_history_fil()), itms);
 		itms.SortBy(sorter);
 	}
 	public void Save(Xoa_app app) {

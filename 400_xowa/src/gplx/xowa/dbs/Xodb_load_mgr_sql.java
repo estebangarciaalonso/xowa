@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -46,14 +46,14 @@ public class Xodb_load_mgr_sql implements Xodb_load_mgr {
 	public void Load_ttls_by_ids(Cancelable cancelable, ListAdp rv, int bgn, int end) {db_mgr.Tbl_page().Select_by_id_list(cancelable, rv, bgn, end);}
 	public boolean Load_ctg_v1(Xoctg_view_ctg rv, byte[] ctg_bry) {
 		int cat_page_id = db_mgr.Tbl_page().Select_id(Xow_ns_.Id_category, ctg_bry); if (cat_page_id == Xodb_mgr_sql.Page_id_null) return false;
-		Xodb_itm_category ctg = db_mgr.Tbl_category().Select(fsys_mgr.Category_provider(), cat_page_id); if (ctg == Xodb_itm_category.Null) return false;
+		Xodb_category_itm ctg = db_mgr.Tbl_category().Select(fsys_mgr.Category_provider(), cat_page_id); if (ctg == Xodb_category_itm.Null) return false;
 		Db_provider p = fsys_mgr.Get_by_db_idx(ctg.File_idx()).Provider();
 		return db_mgr.Ctg_select_v1(rv, p, ctg);
 	}
 	public boolean Load_ctg_v2(Xoctg_data_ctg rv, byte[] ctg_bry) {throw Err_.not_implemented_();}
 	public void Load_ctg_v2a(Xoctg_view_ctg rv, Xoctg_url ctg_url, byte[] ctg_ttl, int load_max) {
 		int cat_page_id = db_mgr.Tbl_page().Select_id(Xow_ns_.Id_category, ctg_ttl); if (cat_page_id == Xodb_mgr_sql.Page_id_null) return;
-		Xodb_itm_category ctg = db_mgr.Tbl_category().Select(fsys_mgr.Category_provider(), cat_page_id); if (ctg == Xodb_itm_category.Null) return;
+		Xodb_category_itm ctg = db_mgr.Tbl_category().Select(fsys_mgr.Category_provider(), cat_page_id); if (ctg == Xodb_category_itm.Null) return;
 		Db_provider p = fsys_mgr.Get_by_db_idx(ctg.File_idx()).Provider();
 		ListAdp list = ListAdp_.new_();
 		Load_ctg_v2a_db_retrieve(rv, ctg_url, cat_page_id, load_max, p, list);
@@ -73,7 +73,7 @@ public class Xodb_load_mgr_sql implements Xodb_load_mgr {
 		}
 		db_mgr.Tbl_page().Select_by_id_list(Cancelable_.Never, list);
 	}
-	void Load_ctg_v2a_ui_sift(Xoctg_view_ctg rv, Xodb_itm_category ctg, ListAdp list) {
+	void Load_ctg_v2a_ui_sift(Xoctg_view_ctg rv, Xodb_category_itm ctg, ListAdp list) {
 		int len = list.Count();
 		Xow_wiki wiki = this.db_mgr.Wiki();
 		byte prv_tid = Byte_.MaxValue_127;

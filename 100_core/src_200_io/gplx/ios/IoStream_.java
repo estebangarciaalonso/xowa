@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
@@ -160,6 +161,12 @@ class IoStream_base implements IoStream {
 			catch (IOException e) {throw Err_.err_key_(e, IoEngineArgs._.Err_IoException, "file truncate failed").Add("url", url);}
 		}
 		rv.length = file.length();
+		return rv;
+	}
+	public static IoStream_base new_(Object stream) {
+		IoStream_base rv = new IoStream_base();
+//		rv.stream = (System.IO.Stream)stream;
+		rv.url = Io_url_.Null;
 		return rv;
 	}
 	}

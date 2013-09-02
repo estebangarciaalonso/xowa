@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,12 @@ public class Xop_lnki_wkr_tst {
 	}
 	@Test  public void HtmlRef() {
 		fxt.tst_Parse_page_wiki("[[a&amp;b]]", fxt.tkn_lnki_().Trg_tkn_(fxt.tkn_arg_nde_().Val_tkn_(fxt.tkn_arg_itm_(fxt.tkn_txt_(2, 3), fxt.tkn_html_ref_("&amp;"), fxt.tkn_txt_(8, 9)))));
+	}
+	@Test  public void Url_encode() {	// PURPOSE:title should automatically do url decoding; DATE:2013-08-26
+		fxt.tst_Parse_page_all_str("[[A%20b]]", "<a href=\"/wiki/A_b\">A b</a>");
+	}
+	@Test  public void Url_encode_plus() {	// PURPOSE:do not decode plus; DATE:2013-08-26
+		fxt.tst_Parse_page_all_str("[[A+b]]", "<a href=\"/wiki/A%2Bb\">A+b</a>");
 	}
 	@Test  public void Caption() {
 		fxt.tst_Parse_page_wiki("[[a|b]]"	, fxt.tkn_lnki_().Trg_tkn_(fxt.tkn_arg_val_txt_(2, 3)).Caption_tkn_(fxt.tkn_arg_val_txt_(4, 5)));
@@ -274,7 +280,7 @@ public class Xop_lnki_wkr_tst {
 		fxt.Page_ttl_("A");
 		fxt.tst_Parse_page_wiki_str
 			(	"[[b/../c]]"				
-			,	"<a href=\"/wiki/c\">c</a>"
+			,	"<a href=\"/wiki/C\">c</a>"
 			);
 	}
 	@Test  public void Subpage_slash() {

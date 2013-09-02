@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.users.history.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.dynamicPageList.*;
+import gplx.xowa.users.history.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.dynamicPageList.*; import gplx.xowa.xtns.math.*;
 public class Xoh_html_wtr {
 	Xow_wiki wiki; Xoa_app app; Xop_ctx ctx; Xoa_page page; Xop_root_tkn root; 
 	gplx.xowa.xtns.refs.Xoh_ref_wtr ref_wtr = new gplx.xowa.xtns.refs.Xoh_ref_wtr();  Url_encoder href_encoder; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
@@ -203,8 +203,13 @@ public class Xoh_html_wtr {
 			if (hctx.Lnki_title()) bfr.Add(Xoh_consts.A_bgn_lnki_0).Add(lnki_ttl.Page_txt());	// NOTE: use Page_txt to (a) replace underscores with spaces; (b) get title casing; EX:[[roman_empire]] -> Roman empire
 			if (hctx.Lnki_visited() && history_mgr.Has(wiki_key, ttl_bry)) bfr.Add(A_xowa_visited);
 			bfr.Add(Xoh_consts.__end_quote);
-			if (lnki_ttl.Anch_bgn() != -1 && !lnki_ttl.Ns().Id_main())				// anchor exists and not main_ns
-				ttl_bry = ByteAry_.Add(ttl_bry, Bry_anchor, lnki_ttl.Anch_txt());	// manually add anchor; else "Help:A#b" becomes "Help:A". note that lnki.Ttl_ary() uses .Full_txt (wiki + page but no anchor) to captialize 1st letter of page otherwise "Help:A#b" shows as "Help:A" (so Help:a -> Help:A); DATE:2013-06-21
+			if (lnki_ttl.Anch_bgn() != -1 && !lnki_ttl.Ns().Id_main()) {	// anchor exists and not main_ns; anchor must be manually added
+				byte[] anch_txt = lnki_ttl.Anch_txt();
+				byte anch_spr = (anch_txt.length > 0 && anch_txt[0] == Byte_ascii.Hash)	// 1st char is #; occurs when page_txt has trailing space; causes 1st letter of anch_txt to start at # instead of 1st letter
+				? Byte_ascii.Space	// ASSUME: 1 space ("Help:A #b"); does not handle multiple spaces like ("Help:A   #b"); needs change to Xoa_ttl 
+				: Byte_ascii.Hash;	// Anch_txt bgns at 1st letter, so add # for caption; 
+				ttl_bry = ByteAry_.Add_w_dlm(anch_spr, ttl_bry, anch_txt);	// manually add anchor; else "Help:A#b" becomes "Help:A". note that lnki.Ttl_ary() uses .Full_txt (wiki + page but no anchor) to captialize 1st letter of page otherwise "Help:A#b" shows as "Help:A" (so Help:a -> Help:A); DATE:2013-06-21				
+			}
 			Lnki_caption(opts, bfr, src, lnki, ttl_bry, true, depth);
 			bfr.Add(Xoh_consts.A_end);
 		}
@@ -427,26 +432,7 @@ public class Xoh_html_wtr {
 				break;
 			}
 			case Xop_xnde_tag_.Tid_math:
-				ByteAryBfr tmp_bfr = app.Utl_bry_bfr_mkr().Get_k004();
-				Bfr_escape(tmp_bfr, src, xnde.Tag_open_end(), xnde.Tag_close_bgn(), app, false, false);	// escape <>" to prevent javascript injection; both mathjax and latex seems to work; DATE:2013-04-19
-				byte[] math_bry = tmp_bfr.XtoAryAndClear();
-				boolean enabled = app.File_mgr().Math_mgr().Enabled();
-				boolean renderer_is_latex = !app.File_mgr().Math_mgr().Renderer_is_mathjax();
-				if (renderer_is_latex && app.File_mgr().Math_mgr().Find_itm(tmp_math_itm, page.Wiki().Key_str(), math_bry)) {
-					bfr.Add(Bry_img_head_src);
-					bfr.Add_str(tmp_math_itm.Png_url().To_http_file_str());
-					bfr.Add(Bry_tag_inline_end_quote);
-				}
-				else {
-					int id = page.File_math().Count();
-					Xof_math_itm new_math_itm = tmp_math_itm.Clone().Id_(id);
-					ByteAryFmtr math_fmtr = renderer_is_latex ? math_fmtr_latex : math_fmtr_mathjax;
-					math_fmtr.Bld_bfr_many(tmp_bfr, id, math_bry);
-					bfr.Add_bfr_and_clear(tmp_bfr);
-					if (enabled && renderer_is_latex)	// NOTE: only generate images if math is enabled; otherwise "downloading" prints at bottom of screen, but no action (also a lot of file IO)
-						page.File_math().Add(new_math_itm);
-				}
-				tmp_bfr.Mkr_rls();
+				app.File_mgr().Math_mgr().Html_wtr().Write(this, ctx, opts, bfr, src, xnde, depth);
 				break;
 			case Xop_xnde_tag_.Tid_syntaxHighlight:			gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde.To_html(this, ctx, opts, bfr, src, xnde, depth); break;
 			case Xop_xnde_tag_.Tid_score:					gplx.xowa.xtns.scores.Xtn_score.To_html(this, ctx, opts, bfr, src, xnde, depth); break;
@@ -494,7 +480,7 @@ public class Xoh_html_wtr {
 				}
 				break;
 		}
-	}	Xof_math_itm tmp_math_itm = new Xof_math_itm();
+	}
 	void Write_xnde(ByteAryBfr bfr, Xoh_opts opts, Xop_xnde_tkn xnde, Xop_xnde_tag tag, int tag_id, byte[] src, int depth) {
 		byte[] name = tag.Name_bry();
 		boolean at_bgn = true;
@@ -535,8 +521,6 @@ public class Xoh_html_wtr {
 		if (ws_bfr.Bry_len() > 0) bfr.Add_bfr_and_clear(ws_bfr);				// dump any leftover ws to bfr; handles "<b>c </b>" -> "<b>c</b> "
 		ws_bfr.Mkr_rls();
 	}
-	ByteAryFmtr math_fmtr_latex		= ByteAryFmtr.new_("<img id='xowa_math_img_~{math_idx}' src='' width='' height=''/><span id='xowa_math_txt_~{math_idx}'>~{math_text}</span>", "math_idx", "math_text");
-	ByteAryFmtr math_fmtr_mathjax	= ByteAryFmtr.new_("<span id='xowa_math_txt_~{math_idx}'>~{math_text}</span>", "math_idx", "math_text");
 	private static Xop_xatr_whitelist_mgr whitelist_mgr = new Xop_xatr_whitelist_mgr().Ini();
 	public void Xnde_atrs(int tag_id, Xoh_opts opts, byte[] src, int bgn, int end, Xop_xatr_itm[] ary, ByteAryBfr bfr) {
 		if (ary == null) return;	// NOTE: some nodes will have null xatrs b/c of whitelist; EX: <pre style="overflow:auto">a</pre>; style is not on whitelist so not xatr generated, but xatr_bgn will != -1
@@ -715,10 +699,6 @@ public class Xoh_html_wtr {
 			}
 		}
 	}
-	private static final byte[]
-		  Bry_img_head_src = ByteAry_.new_ascii_("<img src=\"")
-		, Bry_tag_inline_end_quote = ByteAry_.new_ascii_("\" />")
-		;
 	public BoolRef Queue_add_ref() {return queue_add_ref;} BoolRef queue_add_ref = BoolRef.false_();
 	void Xnde_dynamic_page_list(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {		
 		Xtn_dynamicPageList_nde nde = (Xtn_dynamicPageList_nde)xnde.Xnde_data();

@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.ios.*; import gplx.xowa.apps.*; import gplx.xowa.wikis.*; import gplx.xowa.users.*;  import gplx.xowa.cfgs.*; import gplx.xowa.ctgs.*;
-import gplx.xowa.html.tocs.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*;
+import gplx.xowa.html.tocs.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.math.*;
 import gplx.xowa.fmtrs.*;
 public class Xoa_app implements GfoInvkAble {
 	public Xoa_app(Gfo_usr_dlg_xowa usr_dlg, Io_url root_dir, Io_url user_dir, String bin_dir_name) {
@@ -115,6 +115,7 @@ public class Xoa_app implements GfoInvkAble {
 
 	public Url_encoder			Url_converter_id()			{return url_converter_id;} Url_encoder url_converter_id = Url_encoder.new_html_id_();
 	public Url_encoder			Url_converter_url()			{return url_converter_url;} Url_encoder url_converter_url = Url_encoder.new_http_url_();
+	public Url_encoder			Url_converter_url_ttl()		{return url_converter_url_ttl;} Url_encoder url_converter_url_ttl = Url_encoder.new_http_url_ttl_();
 	public Url_encoder			Url_converter_href()		{return url_converter_href;} Url_encoder url_converter_href = Url_encoder.new_html_href_mw_();
 	public Url_encoder			Url_converter_comma()		{return url_converter_comma;} Url_encoder url_converter_comma = Url_encoder.url_comma();
 	public Url_encoder			Url_converter_gfs()			{return url_converter_gfs;} Url_encoder url_converter_gfs = Url_encoder.new_gfs_();

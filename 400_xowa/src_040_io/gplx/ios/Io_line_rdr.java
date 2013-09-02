@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -137,7 +137,7 @@ public class Io_line_rdr {
 		Io_url url = urls[url_idx];
 		usr_dlg.Prog_many(GRP_KEY, "load", "loading dump file: ~{0}", url.NameAndExt());
 		if (file_skip_line0) {
-			byte[] stream_bry = Io_mgr._.LoadFilByt(url);
+			byte[] stream_bry = Io_mgr._.LoadFilBry(url);
 			int stream_bry_len = stream_bry.length;
 			int nl_pos = ByteAry_.FindFwd(stream_bry, Byte_ascii.NewLine, 0, stream_bry_len);
 			if (nl_pos == ByteAry_.NotFound)

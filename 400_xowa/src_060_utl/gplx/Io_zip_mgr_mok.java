@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx;
 public class Io_zip_mgr_mok implements Io_zip_mgr {
 	public void Zip_fil(Io_url src_fil, Io_url trg_fil) {
-		byte[] src_bry = Io_mgr._.LoadFilByt(src_fil);
+		byte[] src_bry = Io_mgr._.LoadFilBry(src_fil);
 		byte[] zip_bry = Zip_bry(src_bry, 0, src_bry.length);
 		Io_mgr._.SaveFilByt(trg_fil, zip_bry);
 	}

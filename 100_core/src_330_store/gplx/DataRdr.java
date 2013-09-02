@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -40,6 +40,7 @@ public interface DataRdr extends SrlMgr, RlsAble {
 	byte ReadByte(String key);				byte ReadByteOr(String key, byte or);
 	DecimalAdp ReadDecimal(String key);		DecimalAdp ReadDecimalOr(String key, DecimalAdp or);
 	DateAdp ReadDate(String key);			DateAdp ReadDateOr(String key, DateAdp or);
+	gplx.ios.Input_stream_adp ReadInputStream(String key);
 
 	boolean MoveNextPeer();
 	DataRdr Subs();

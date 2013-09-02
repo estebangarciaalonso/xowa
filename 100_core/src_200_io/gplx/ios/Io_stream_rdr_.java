@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -91,7 +91,7 @@ class Io_stream_rdr_file extends Io_stream_rdr_base {
 				stream = Wrap_stream(new java.io.ByteArrayInputStream(ByteAry_.Empty));
 			else {
 				if (src_url.Info().EngineKey() == gplx.ios.IoEngine_.MemKey)
-					stream = Wrap_stream(new java.io.ByteArrayInputStream(Io_mgr._.LoadFilByt(src_url.Xto_api())));
+					stream = Wrap_stream(new java.io.ByteArrayInputStream(Io_mgr._.LoadFilBry(src_url.Xto_api())));
 				else
 					stream = Wrap_stream(new java.io.FileInputStream(src_url.Xto_api()));
 			}

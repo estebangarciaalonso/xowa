@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -72,15 +72,16 @@ public class Io_mgr {	// exists primarily to gather all cmds under gplx namespac
 	public String						LoadFilStr(String url) {return LoadFilStr_args(Io_url_.new_fil_(url)).Exec();}
 	public String						LoadFilStr(Io_url url) {return LoadFilStr_args(url).Exec();}
 	public IoEngine_xrg_loadFilStr		LoadFilStr_args(Io_url url) {return IoEngine_xrg_loadFilStr.new_(url);}
-	public byte[]						LoadFilByt(String url) {return LoadFilByt_reuse(Io_url_.new_fil_(url), ByteAry_.Empty, IntRef.zero_());}
-	public byte[]						LoadFilByt(Io_url url) {return LoadFilByt_reuse(url, ByteAry_.Empty, IntRef.zero_());}
-	public void							LoadFilBfr(Io_url url, ByteAryBfr bfr) {
+	public byte[]						LoadFilBry(String url) {return LoadFilBry_reuse(Io_url_.new_fil_(url), ByteAry_.Empty, IntRef.zero_());}
+	public byte[]						LoadFilBry(Io_url url) {return LoadFilBry_reuse(url, ByteAry_.Empty, IntRef.zero_());}
+	public void							LoadFilBry(Io_url url, ByteAryBfr bfr) {
 		IntRef len = IntRef.zero_();
-		byte[] bry = LoadFilByt_reuse(url, ByteAry_.Empty, len);
+		byte[] bry = LoadFilBry_reuse(url, ByteAry_.Empty, len);
 		bfr.Bry_init(bry, len.Val());
 	}
-	public byte[]						LoadFilByt_reuse(Io_url url, byte[] ary, IntRef aryLen) {
-		if (!ExistsFil(url)) {aryLen.Val_(0); return ByteAry_.Empty;}
+	public static final byte[] LoadFilBry_fail = ByteAry_.Empty;
+	public byte[]						LoadFilBry_reuse(Io_url url, byte[] ary, IntRef aryLen) {
+		if (!ExistsFil(url)) {aryLen.Val_(0); return LoadFilBry_fail;}
 		IoStream stream = IoStream_.Null;
 		try {
 			stream = OpenStreamRead(url);

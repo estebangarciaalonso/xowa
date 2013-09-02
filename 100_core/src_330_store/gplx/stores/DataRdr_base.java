@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -177,7 +177,8 @@ public abstract class DataRdr_base implements SrlMgr {
 		Object val = Read(key); if (val == null) return or;
 		try {return (byte[])val;} 
 		catch (Exception exc) {Err_dataRdr_ReadFailed_useOr(exc, byte[].class, key, val, or); return or;}
-	}		
+	}
+	public gplx.ios.Input_stream_adp ReadInputStream(String key) {return gplx.ios.Input_stream_adp_.Null;}
 	public boolean SrlBoolOr(String key, boolean or) {return ReadBoolOr(key, or);}
 	public byte SrlByteOr(String key, byte or) {return ReadByteOr(key, or);}
 	public int SrlIntOr(String key, int or) {return ReadIntOr(key, or);}

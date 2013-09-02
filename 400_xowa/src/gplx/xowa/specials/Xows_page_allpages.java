@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -180,7 +180,7 @@ class Xos_pagelist_html_itm_fmtr implements ByteAryFmtrArg {
 			Xoa_ttl ttl = Xows_page_allpages.ttl_(wiki, init_ns, ttl_itm);
 			byte[] href = href_parser.Build_to_bry(ttl, wiki);
 			byte[] title = Xoh_html_wtr.Ttl_to_title(ttl.Full_txt());
-			byte[] cls = Xoh_lnki_wtr.Lnki_cls_visited(history_mgr, wiki_key, ttl.Page_db());
+			byte[] cls = Xoh_lnki_wtr.Lnki_cls_visited(history_mgr, wiki_key, ttl.Page_txt());	// NOTE: must be ttl.Page_txt() in order to match Xou_history_mgr.Add
 			ByteAryFmtr fmtr = ttl_itm.Type_redirect() ? itm_redirect : itm_normal;
 			fmtr.Bld_bfr_many(bfr, itm_pct, href, title, ttl.Full_txt(), cls);
 		}

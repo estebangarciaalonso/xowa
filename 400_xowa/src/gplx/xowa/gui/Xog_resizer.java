@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -36,8 +36,13 @@ public class Xog_resizer {
 		int bar_dim = btn_dim > txt_dim ? btn_dim : txt_dim;
 		if (txt_dim < 25) 	{txt_dif = (25 - txt_dim) / 2;}
 		else				{btn_dif = (txt_dim - 25) / 2;}
-		int menu_bar_adj = app.Gui_mgr().Menu_mgr().Window_mnu_mgr().Get_or_new("main_win").Enabled() ? 20 : 0;
-		Exec_win_resize_elem(layout.Go_bwd_btn()		, go_bwd_btn			, new Rect_ref(0, 0, btn_dim							, btn_dim				), null, Xog_resizer.Layout_init);
+		boolean menu_bar_enabled = app.Gui_mgr().Menu_mgr().Window_mnu_mgr().Get_or_new("main_win").Enabled();
+		int menu_bar_adj = menu_bar_enabled ? 20 : 0;
+		RectAdp prv_elem_rect = (Op_sys.Cur().Tid_is_wnt() && Op_sys.Cur().Sub_tid() == Op_sys.Sub_tid_win_7) && menu_bar_enabled
+			? Prv_elem_rect_win_7	// NOTE: if windows 7 and menu bar enabled, shift everything up by 1 pixel; else ugly gap at top border of url box; only affects win 7; DATE:2013-08-31
+			: Prv_elem_rect_initial
+			;
+		Exec_win_resize_elem(layout.Go_bwd_btn()		, go_bwd_btn			, new Rect_ref(0, 0, btn_dim							, btn_dim				), prv_elem_rect, Xog_resizer.Layout_right_top);
 		Exec_win_resize_elem(layout.Go_fwd_btn()		, go_fwd_btn			, new Rect_ref(0, 0, btn_dim							, btn_dim				), go_bwd_btn, Xog_resizer.Layout_right_top);
 		Exec_win_resize_elem(layout.Url_box()			, url_box				, new Rect_ref(0, 0, main_w - (btn_dim * 5) - 200		, txt_dim				), go_fwd_btn, Xog_resizer.Layout_right_top);
 		Exec_win_resize_elem(layout.Url_exec_btn()		, url_exec_btn			, new Rect_ref(0, 0, btn_dim							, btn_dim				), url_box, Xog_resizer.Layout_right_top);
@@ -61,7 +66,9 @@ public class Xog_resizer {
 			GfuiElem_.Y_adj(btn_dif, find_fwd_btn, find_bwd_btn);			
 		}
 	}
-	private static void Exec_win_resize_elem(Xog_layout_box box, GfuiElem cur_elem, Rect_ref cur_elem_rect, GfuiElem prv_elem, byte layout) {
+	private static RectAdp Prv_elem_rect_initial = RectAdp_.Zero, Prv_elem_rect_win_7 = RectAdp_.new_(0, -1, 0, 0);
+	private static void Exec_win_resize_elem(Xog_layout_box box, GfuiElem cur_elem, Rect_ref cur_elem_rect, GfuiElem prv_elem, byte layout) {Exec_win_resize_elem(box, cur_elem, cur_elem_rect, prv_elem.Rect(), layout);}
+	private static void Exec_win_resize_elem(Xog_layout_box box, GfuiElem cur_elem, Rect_ref cur_elem_rect, RectAdp prv_elem_rect, byte layout) {
 		if (ClassAdp_.Eq_typeSafe(cur_elem, GfuiTextBox.class)) {
 			try {
 				GfuiTextBox cur_box = (GfuiTextBox)cur_elem;
@@ -72,8 +79,7 @@ public class Xog_resizer {
 			cur_elem_rect.X_(box.X_abs()).Y_(box.Y_abs()).W_(box.W_abs()).H_(box.H_abs());
 		else {
 			box.Adj_size(cur_elem_rect);
-			if (prv_elem != null)	// null for 1st elem (which doesn't have preceding elem)
-				Set_pos_by_prv(layout, cur_elem_rect, Rect_ref.rectAdp_(prv_elem.Rect()));
+			Set_pos_by_prv(layout, cur_elem_rect, Rect_ref.rectAdp_(prv_elem_rect));
 			box.Adj_pos(cur_elem_rect);
 		}
 		cur_elem.Rect_set(cur_elem_rect.XtoRectAdp());

@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.ios.*; import gplx.xowa.bldrs.*; 
+import gplx.ios.*; import gplx.xowa.bldrs.*; import gplx.xowa.xtns.math.*;
 public class Xobc_math_run extends Xob_itm_basic_base implements Xob_cmd, GfoInvkAble {
 	public Xobc_math_run(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
 	public String Cmd_key() {return KEY;} public static final String KEY = "math.run";
@@ -33,7 +33,7 @@ public class Xobc_math_run extends Xob_itm_basic_base implements Xob_cmd, GfoInv
 		Io_url errors_dir = tmp_dir.GenSubDir("errors");
 		dump_url_gen = Io_url_gen_.dir_(errors_dir);
 		Io_mgr._.DeleteDirDeep_ary(errors_dir);
-	}	Io_url tmp_dir; ByteAryBfr url_bfr = ByteAryBfr.new_(); Xof_math_mgr math_mgr;
+	}	Io_url tmp_dir; ByteAryBfr url_bfr = ByteAryBfr.new_(); private Xof_math_mgr math_mgr;
 	public void Cmd_run() {
 		Io_line_rdr rdr = new Io_line_rdr(bldr.Usr_dlg(), Io_mgr._.QueryDir_fils(rdr_dir));
 		int count = 0;

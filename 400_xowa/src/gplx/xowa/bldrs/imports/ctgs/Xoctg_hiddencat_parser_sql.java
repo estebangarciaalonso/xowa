@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ public class Xoctg_hiddencat_parser_sql extends Xoctg_hiddencat_parser_base {
 		tbl = db_mgr.Tbl_category();
 		stmt = tbl.Update_stmt(provider);
 	}
-	private Xodb_tbl_category tbl; private Db_stmt stmt;
+	private Xodb_category_tbl tbl; private Db_stmt stmt;
 	@Override public void Exec_hook(ByteAryBfr file_bfr, int cur_id, boolean cur_is_hiddencat) {
 		if (cur_is_hiddencat)
 			tbl.Update(stmt, cur_id, cur_is_hiddencat ? Bool_.Y_byte : Bool_.N_byte);

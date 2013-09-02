@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.gfui.*; import gplx.xowa.gui.*; import gplx.xowa.gui.history.*;
+import gplx.gfui.*; import gplx.xowa.gui.*; import gplx.xowa.gui.history.*; import gplx.xowa.xtns.math.*; import gplx.xowa.files.*;
 public class Xog_win implements GfoInvkAble, GfoEvObj {
 	public Xog_win(Xoa_app app, Xoa_gui_mgr mgr) {this.app = app; js_cbk = new Xoa_xowa_exec(app);}
 	public GfuiWin			Win() {return win;} GfuiWin win;
@@ -323,7 +323,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		if (cur_view_tid != Xoh_wiki_article.Tid_view_edit) return;
 		byte[] new_raw = Eval_elem_value_edit_box_bry();
 		Xow_wiki wiki = page.Wiki();
-		Xoa_page new_page = new Xoa_page(wiki, page.Page_ttl());
+		Xoa_page new_page = new Xoa_page(wiki, page.Page_ttl()).Page_id_(page.Page_id());	// NOTE: page_id needed for sqlite (was not needed for xdat)
 		new_page.Data_raw_(new_raw);
 		wiki.ParsePage_root(new_page, true);		// refresh html
 		ByteAryBfr tmp_bfr = app.Utl_bry_bfr_mkr().Get_m001();

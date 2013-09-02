@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -50,7 +50,7 @@ public class Xoa_maint_mgr implements GfoInvkAble {
 	public boolean Wmf_status_parse() {
 		Wmf_dump_list_parser parser = new Wmf_dump_list_parser();
 		Hash_adp_bry itms_hash = new Hash_adp_bry(true);		
-		Wmf_dump_itm[] itms = parser.Parse(Io_mgr._.LoadFilByt(wmf_dump_status_url));
+		Wmf_dump_itm[] itms = parser.Parse(Io_mgr._.LoadFilBry(wmf_dump_status_url));
 		int len = itms.length;
 		for (int i = 0; i < len; i++) {
 			Wmf_dump_itm itm = itms[i];

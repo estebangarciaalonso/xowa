@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="tst"/>
-	<classpathentry kind="src" path="xtn"/>
 	<classpathentry kind="src" path="src_100_tkn"/>
 	<classpathentry kind="src" path="src_200_type"/>
 	<classpathentry kind="src" path="src_300_gdoc"/>

@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ public class Xoctg_pagelist_wtr {
 		int len = page_ary.length;
 		for (int i = 0; i < len; i++) {
 			Xodb_page page = page_ary[i];
-			Xodb_itm_category ctg_xtn = (Xodb_itm_category)page.Xtn();				
+			Xodb_category_itm ctg_xtn = (Xodb_category_itm)page.Xtn();				
 			Xoctg_pagelist_grp list = ctg_xtn != null && ctg_xtn.Hidden() ? pagelist_mgr.Grp_hidden() : pagelist_mgr.Grp_normal(); 
 			list.Itms().Itms_add(page);
 		}

@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ public class Xog_mnu_itm extends Xog_mnu_base {
 	public String Text() {return text;} private String text;
 	public String Shortcut() {return shortcut;} private String shortcut;
 	public String Cmd() {return cmd;} private String cmd;
+	public String Msg_prefix_() {return msg_prefix;} private String msg_prefix;
 	public String[] Img_nest() {return img_nest;} private String[] img_nest = String_.Ary_empty;
 	public Xog_mnu_itm Init(String text, String shortcut, String img, String cmd) {return Init(text, shortcut, Img_nest_of(img), cmd);}
 	private Xog_mnu_itm Init(String text, String shortcut, String[] img_nest, String cmd) {
@@ -37,6 +38,8 @@ public class Xog_mnu_itm extends Xog_mnu_base {
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_text))			return text;
 		else if	(ctx.Match(k, Invk_text_))			text = m.ReadStr("v");
+		else if	(ctx.Match(k, Invk_msg_prefix))		return msg_prefix;
+		else if	(ctx.Match(k, Invk_msg_prefix_))	msg_prefix = m.ReadStr("v");
 		else if	(ctx.Match(k, Invk_shortcut))		return shortcut;
 		else if	(ctx.Match(k, Invk_shortcut_))		shortcut = m.ReadStr("v");
 		else if	(ctx.Match(k, Invk_cmd))			return cmd;
@@ -46,7 +49,9 @@ public class Xog_mnu_itm extends Xog_mnu_base {
 		else	return super.Invk(ctx, ikey, k, m);
 		return this;
 	}
-	private static final String Invk_text = "text", Invk_text_ = "text_", Invk_shortcut = "shortcut", Invk_shortcut_ = "shortcut_", Invk_cmd = "cmd", Invk_cmd_ = "cmd_", Invk_img = "img", Invk_img_ = "img_";
+	private static final String Invk_text = "text", Invk_text_ = "text_", Invk_shortcut = "shortcut", Invk_shortcut_ = "shortcut_", Invk_cmd = "cmd", Invk_cmd_ = "cmd_", Invk_img = "img", Invk_img_ = "img_"
+	, Invk_msg_prefix = "msg_prefix", Invk_msg_prefix_ = "msg_prefix_"
+	;
 	public static final byte Tid_null = 0, Tid_spr = 1, Tid_grp = 2, Tid_btn = 3;
 	private static String[] Img_nest_of(String img) {return String_.Len_eq_0(img) ? String_.Ary_empty : String_.Split(img, "/");}
 	public static final Xog_mnu_itm Null = new Xog_mnu_itm(Tid_null, "null");

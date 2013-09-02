@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.files.*;
 class Pf_url_filepath extends Pf_func_base {
 	@Override public boolean Func_require_colon_arg() {return true;}
 	@Override public int Id() {return Xol_kwd_grp_.Id_url_filepath;}

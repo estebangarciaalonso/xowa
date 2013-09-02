@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ public class IoEngine_xrg_downloadFil {
 		this.Src_(src); this.Trg_(trg_mem);
 		download_fmt.Init(src, prog_fmt_hdr);	// NOTE: must set src else NULL error
 		boolean pass = IoEnginePool._.Fetch(trg_engine_key).DownloadFil(this);
-		return pass ? Io_mgr._.LoadFilByt(trg_mem) : null;
+		return pass ? Io_mgr._.LoadFilBry(trg_mem) : null;
 	}	Io_url trg_mem = Io_url_.mem_fil_("mem/download.tmp");
 	public boolean Exec_meta(String src) {
 		this.Src_(src); this.Trg_(trg_mem);	// NOTE: set Trg_ else error in download proc

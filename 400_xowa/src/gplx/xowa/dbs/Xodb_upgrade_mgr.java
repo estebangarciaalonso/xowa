@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -51,7 +51,7 @@ class Xodb_upgrade_mgr {
 //			}			
 //		}
 //		private static void Fix_category_version(Db_provider p, Xodb_mgr_sql db_mgr) {
-//			Db_qry qry = Db_qry_.select_().From_(Xodb_tbl_categorylinks.Tbl_name).Cols_(Xodb_tbl_categorylinks.Fld_cl_type_id).Where_(Db_crt_.eq_(Xodb_tbl_categorylinks.Fld_cl_type_id, ));
+//			Db_qry qry = Db_qry_.select_().From_(Xodb_categorylinks_tbl.Tbl_name).Cols_(Xodb_categorylinks_tbl.Fld_cl_type_id).Where_(Db_crt_.eq_(Xodb_categorylinks_tbl.Fld_cl_type_id, ));
 //			Db_stmt stmt = Db_stmt_.Null;
 //			DataRdr rdr = DataRdr_.Null; 
 //			int types = 0;

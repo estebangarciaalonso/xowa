@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
-import gplx.ios.*;
+import gplx.ios.*; import gplx.xowa.files.*;
 public class Xof_xfer_queue_bldr_wmf_tst {
 	Xof_xfer_queue_bldr_fxt fxt = new Xof_xfer_queue_bldr_fxt();
 	@Before public void init() {fxt.Clear(true);}

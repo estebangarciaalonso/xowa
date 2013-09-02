@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.users.*; import gplx.xowa.html.*; import gplx.xowa.users.history.*; import gplx.xowa.specials.*; import gplx.xowa.xtns.*; import gplx.xowa.dbs.*;
+import gplx.xowa.users.*; import gplx.xowa.html.*; import gplx.xowa.users.history.*; import gplx.xowa.specials.*; import gplx.xowa.xtns.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*;
 import gplx.xowa.setup.maints.*;
 public class Xow_wiki implements GfoInvkAble {
 	public Xow_wiki(Xoa_app app, Io_url wiki_dir, Xow_ns_mgr ns_mgr, Xol_lang lang) {
@@ -28,7 +28,7 @@ public class Xow_wiki implements GfoInvkAble {
 		fsys_mgr = new Xow_fsys_mgr(this, wiki_dir);
 		redirect_mgr = new Xop_redirect_mgr(this);
 		data_mgr = new Xow_data_mgr(this);
-		file_mgr = new Xowf_file_mgr(this);
+		file_mgr = new Xow_file_mgr(this);
 		parser = Xop_parser.new_(this);
 		ctx = Xop_ctx.new_(this);
 		props.SiteName_(wiki_tid).ServerName_(domain_bry);
@@ -110,7 +110,7 @@ public class Xow_wiki implements GfoInvkAble {
 	public HashAdp If_exists_regy() {return if_exists_regy;} HashAdp if_exists_regy = HashAdp_.new_bry_();
 
 	public Xow_xwiki_mgr Xwiki_mgr() {return xwiki_mgr;} private Xow_xwiki_mgr xwiki_mgr;
-	public Xowf_file_mgr File_mgr() {return file_mgr;} private Xowf_file_mgr file_mgr;
+	public Xow_file_mgr File_mgr() {return file_mgr;} private Xow_file_mgr file_mgr;
 	public Xoh_html_wtr Html_wtr() {return html_wtr;} private Xoh_html_wtr html_wtr;
 	public Xow_cfg_wiki_core Cfg_wiki_core() {return cfg_wiki_core;} private Xow_cfg_wiki_core cfg_wiki_core;
 	public Xow_bldr_props Bldr_props() {return bldr_props;} private Xow_bldr_props bldr_props;
@@ -136,7 +136,8 @@ public class Xow_wiki implements GfoInvkAble {
 		if (init_needed) Init_wiki(app.User());
 //			app.Gui_mgr().Main_win().History_mgr().Update_html_doc_pos();
 		Xoa_page page = data_mgr.Get_page(url, ttl, false);						// get page from data_mgr
-		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_page_changed(page);		// notify scribunto about page changed
+		if (page != Xoa_page.Null)
+			gplx.xowa.xtns.scribunto.Scrib_engine.Engine_page_changed(page);	// notify scribunto about page changed
 		ctx.Tab().Clear();
 		if (page == null) {														// page doesn't exist
 			if (ttl.Ns().Id_file()) {

@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@ package gplx;
 public class Long_ {
 	public static final long MinValue = Long.MIN_VALUE;		
 	public static final long MaxValue = Long.MAX_VALUE;		
+	public static final long Neg1 = -1;
 	public static final int Log10Ary_len = 21;
 	public static long[] Log10Ary = new long[] 
   			{ 1, 10, 100, 1000, 10000

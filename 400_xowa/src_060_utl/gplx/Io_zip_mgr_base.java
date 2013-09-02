@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@ import java.io.*;
 import java.util.zip.*;
 public class Io_zip_mgr_base implements Io_zip_mgr {
 	public void Zip_fil(Io_url src_fil, Io_url trg_fil) {
-		byte[] src_bry = Io_mgr._.LoadFilByt(src_fil);
+		byte[] src_bry = Io_mgr._.LoadFilBry(src_fil);
 		byte[] trg_bry = Zip_bry(src_bry, 0, src_bry.length);
 		Io_mgr._.SaveFilByt(trg_fil, trg_bry);
 	}

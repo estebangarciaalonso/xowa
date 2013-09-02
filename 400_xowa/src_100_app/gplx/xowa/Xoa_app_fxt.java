@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,8 @@ public class Xoa_app_fxt {
 		Gfo_log_wtr_base._.Log_dir_(user_dir.GenSubDir_nest("tmp", "current"));			
 		Xoa_app app = new Xoa_app(Gfo_usr_dlg_xowa.test_xowa_(), root_dir, user_dir, op_sys);
 		app.Setup_mgr().Dump_mgr().Data_storage_format_(gplx.ios.Io_stream_.Tid_file);	// TEST: set data_storage_format to file, else bldr tests will fails (expects plain text)
+		GfsCore._.Clear();								// NOTE: must clear
+		GfsCore._.AddCmd(app, Xoa_gfs_mgr.Invk_app);	// NOTE: must add app to GfsCore; app.Gfs_mgr() always adds current app to GfsCore; note this causes old test to leave behind GfsCore for new test
 		return app;
 	}
 	public static Xow_wiki wiki_tst_(Xoa_app app) {return wiki_(app, "en.wikipedia.org");}

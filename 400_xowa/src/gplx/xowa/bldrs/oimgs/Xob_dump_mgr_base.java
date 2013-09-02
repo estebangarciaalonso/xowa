@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@ package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xo
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*;
 public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xob_cmd, GfoInvkAble {
 	private int commit_interval = 1000, progress_interval = 250, cleanup_interval = 2500;
-	private Xob_parse_all_db_sql page_src; private Xodb_tbl_xowa_cfg tbl_cfg;
+	private Xob_parse_all_db_sql page_src; private Xodb_xowa_cfg_tbl tbl_cfg;
 	private int[] ns_ary; private byte[] prv_ttl = ByteAry_.Empty; private int prv_ns = -1; private boolean prv_ns_dirty = false;
 	protected Xop_parser parser; protected Xop_ctx ctx; protected Xop_root_tkn root; private Xodb_file db_file;
 	@gplx.Virtual public String Cmd_key() {return KEY;} public static final String KEY = "parse.all";
@@ -34,13 +34,13 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 		page_src = new Xob_parse_all_db_sql().Init(wiki, 990, this.Init_redirect());
 		ns_ary = Init_ns_ary();						
 		db_file = Init_db_file();
-		tbl_cfg = new Xodb_tbl_xowa_cfg().Provider_(db_file.Provider());
+		tbl_cfg = new Xodb_xowa_cfg_tbl().Provider_(db_file.Provider());
 		Init_bmk(tbl_cfg);
 	}
 	public abstract byte Init_redirect();
 	public abstract int[] Init_ns_ary();
 	public abstract Xodb_file Init_db_file();
-	private void Init_bmk(Xodb_tbl_xowa_cfg tbl_cfg) {
+	private void Init_bmk(Xodb_xowa_cfg_tbl tbl_cfg) {
 		String prv_ttl_str = tbl_cfg.Select_val("bldr.parse_all", "prv_ttl");
 		if (prv_ttl_str != null) {	// previous bmk found;
 			prv_ttl = ByteAry_.new_utf8_(prv_ttl_str);

@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.xowa.files.*;
 public class Xowh_gallery_mgr {
 	public void Write_html(Xoa_app app, Xow_wiki wiki, Xop_ctx ctx, Xoa_page page, Xoh_html_wtr wtr, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		Xtn_gallery_nde mgr = (Xtn_gallery_nde)xnde.Xnde_data();
@@ -42,7 +43,7 @@ public class Xowh_gallery_mgr {
 				Xop_lnki_tkn lnki = ctx.Tkn_mkr().Lnki(itm.Lnki_bgn(), itm.Lnki_end()).Ttl_(itm.Lnki()).Width_(itm_w).Height_(itm_h);
 				Xof_xfer_itm xfer_itm = wtr.Lnki_wtr().Lnki_eval(page, lnki, wtr.Queue_add_ref());
 				int elem_id = xfer_itm.Html_dynamic_id();
-				xfer_itm.Misc = new Xtn_gallery_dynamic_data().Init(mgr.Itm_height());
+				xfer_itm.Gallery_data_(new Xtn_gallery_dynamic_data().Init(mgr.Itm_height()));
 				xfer_itm.Html_dynamic_tid_(Xof_xfer_itm.Html_dynamic_tid_gallery);
 				byte[] html_src = xfer_itm.Html_view_src();
 				int html_w = xfer_itm.Html_w();

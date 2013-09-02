@@ -1,77 +1,15 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<section name="org.eclipse.ui.internal.QuickAccess">
-		<item value="true" key="org.eclipse.ui.internal.quickaccess.QuickAccessDialogDIALOG_USE_PERSISTED_SIZE"/>
-		<item value="375" key="org.eclipse.ui.internal.quickaccess.QuickAccessDialogDIALOG_WIDTH"/>
-		<item value="false" key="org.eclipse.ui.internal.quickaccess.QuickAccessDialogDIALOG_USE_PERSISTED_LOCATION"/>
-		<item value="440" key="org.eclipse.ui.internal.quickaccess.QuickAccessDialogDIALOG_HEIGHT"/>
-		<list key="orderedProviders">
+	<section name="PreferencesImportWizard">
+		<item value="C:\prefs.epf" key=""/>
+		<list key="WizardPreferencesExportPage1.STORE_DESTINATION_NAMES_ID">
+			<item value="C:\prefs.epf"/>
 		</list>
-		<list key="textArray">
-		</list>
-		<list key="orderedElements">
-		</list>
-		<list key="textEntries">
-		</list>
-	</section>
-	<section name="WorkbenchPreferenceDialogSettings">
-		<item value="27" key="DIALOG_Y_ORIGIN"/>
-		<item value="199" key="DIALOG_X_ORIGIN"/>
-	</section>
-	<section name="org.eclipse.ui.preferences.keysPreferencePage">
-		<item value="true" key="uncategorizedFilter"/>
-		<item value="true" key="internalFilter"/>
-		<item value="true" key="actionSetFilter"/>
 	</section>
 	<section name="ImportExportAction">
-		<item value="org.eclipse.ui.wizards.import.ExternalProject" key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID"/>
-		<item value="org.eclipse.jdt.internal.ui.fatjarpackager.JarPackageWizard" key="ImportExportPage.STORE_SELECTED_EXPORT_WIZARD_ID"/>
+		<item value="org.eclipse.ui.wizards.import.Preferences" key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID"/>
 		<list key="ImportExportPage.STORE_EXPANDED_IMPORT_CATEGORIES">
 			<item value="org.eclipse.ui.Basic"/>
-			<item value="org.eclipse.jst.j2ee.internal"/>
-		</list>
-		<list key="ImportExportPage.STORE_EXPANDED_EXPORT_CATEGORIES">
-			<item value="org.eclipse.jdt.ui.Java"/>
 		</list>
 	</section>
 </section>
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<section name="Workbench">
-	<section name="org.eclipse.ui.internal.QuickAccess">
-		<item value="true" key="org.eclipse.ui.internal.quickaccess.QuickAccessDialogDIALOG_USE_PERSISTED_SIZE"/>
-		<item value="375" key="org.eclipse.ui.internal.quickaccess.QuickAccessDialogDIALOG_WIDTH"/>
-		<item value="false" key="org.eclipse.ui.internal.quickaccess.QuickAccessDialogDIALOG_USE_PERSISTED_LOCATION"/>
-		<item value="440" key="org.eclipse.ui.internal.quickaccess.QuickAccessDialogDIALOG_HEIGHT"/>
-		<list key="orderedProviders">
-		</list>
-		<list key="textArray">
-		</list>
-		<list key="orderedElements">
-		</list>
-		<list key="textEntries">
-		</list>
-	</section>
-	<section name="WorkbenchPreferenceDialogSettings">
-		<item value="27" key="DIALOG_Y_ORIGIN"/>
-		<item value="199" key="DIALOG_X_ORIGIN"/>
-	</section>
-	<section name="org.eclipse.ui.preferences.keysPreferencePage">
-		<item value="true" key="uncategorizedFilter"/>
-		<item value="true" key="internalFilter"/>
-		<item value="true" key="actionSetFilter"/>
-	</section>
-	<section name="ImportExportAction">
-		<item value="org.eclipse.ui.wizards.import.ExternalProject" key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID"/>
-		<item value="org.eclipse.jdt.internal.ui.fatjarpackager.JarPackageWizard" key="ImportExportPage.STORE_SELECTED_EXPORT_WIZARD_ID"/>
-		<list key="ImportExportPage.STORE_EXPANDED_IMPORT_CATEGORIES">
-			<item value="org.eclipse.ui.Basic"/>
-			<item value="org.eclipse.jst.j2ee.internal"/>
-		</list>
-		<list key="ImportExportPage.STORE_EXPANDED_EXPORT_CATEGORIES">
-			<item value="org.eclipse.jdt.ui.Java"/>
-		</list>
-	</section>
-</section>
->>>>>>> 08446399ad3aacf564be7bf1246f5461be88f3a1

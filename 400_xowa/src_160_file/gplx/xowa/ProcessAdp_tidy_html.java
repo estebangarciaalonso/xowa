@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ public class ProcessAdp_tidy_html extends ProcessAdp { 	@Override public Process
 	public void Run_tidy_html(ByteAryBfr src_bfr, ByteAryBfr trg_bfr) {
 		Io_mgr._.SaveFilBfr(tidy_source, src_bfr);
 		this.Run(tidy_source.Raw(), tidy_target.Raw());
-		Io_mgr._.LoadFilBfr(tidy_target, trg_bfr);
+		Io_mgr._.LoadFilBry(tidy_target, trg_bfr);
 	}
 	public static final String Args_fmt = String_.Concat	// see https://meta.wikimedia.org/wiki/Data_dumps; missing numeric-entities:yes; enclose-text: yes
 	(	"-utf8 "						// otherwise defaults to ascii

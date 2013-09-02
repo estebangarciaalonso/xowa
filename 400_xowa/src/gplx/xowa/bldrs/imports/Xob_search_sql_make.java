@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -65,8 +65,8 @@ class Xob_search_sql_cmd implements GfoInvkAble {
 		OrderedHash hash = OrderedHash_.new_();
 		int page_count = 0;
 		while (page_rdr.MoveNextPeer()) {
-			int page_id = page_rdr.ReadInt(Xodb_tbl_page.Fld_page_id);
-			byte[] ttl = page_rdr.ReadBry(Xodb_tbl_page.Fld_page_title);
+			int page_id = page_rdr.ReadInt(Xodb_page_tbl.Fld_page_id);
+			byte[] ttl = page_rdr.ReadBry(Xodb_page_tbl.Fld_page_title);
 			byte[][] words = Xob_search_base.Split(lang, hash, bfr, ttl);
 			int words_len = words.length;
 			for (int i = 0; i < words_len; i++) {

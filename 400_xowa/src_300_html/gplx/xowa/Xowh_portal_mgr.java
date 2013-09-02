@@ -1,5 +1,5 @@
 /*
-XOWA: the extensible offline wiki application
+XOWA: the XOWA Offline Wiki Application
 Copyright (C) 2012 gnosygnu@gmail.com
 
 This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 	public Xowh_portal_mgr(Xow_wiki wiki) {
 		this.wiki = wiki;
 		sidebar_mgr = new Xowh_sidebar_mgr(wiki);
+		missing_ns_cls = ByteAry_.Eq(wiki.Key_bry(), Xow_wiki_type_.Key_home_bry) ? Missing_ns_cls_hide : null;	// if home wiki, set missing_ns to application default; if any other wiki, set to null; will be overriden during init
 	}	Xow_wiki wiki;
 	public Xowh_sidebar_mgr Sidebar_mgr() {return sidebar_mgr;} private Xowh_sidebar_mgr sidebar_mgr;
 	ByteAryFmtr div_personal_fmtr = ByteAryFmtr.new_("~{portal_personal_subj_href};~{portal_personal_subj_text};~{portal_personal_talk_cls};~{portal_personal_talk_href};~{portal_personal_talk_cls};", "portal_personal_subj_href", "portal_personal_subj_text", "portal_personal_subj_cls", "portal_personal_talk_href", "portal_personal_talk_cls");
@@ -31,7 +32,8 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 	public Xowh_portal_mgr Init_assert() {if (init_needed) Init(); return this;}
 	void Init() {
 		init_needed = false;
-		if (missing_ns_cls == null) Missing_ns_cls_(wiki.App().User().Wiki().Html_mgr().Portal_mgr().Missing_ns_cls());
+		if (missing_ns_cls == null)	// if missing_ns_cls not set for wiki, use the home wiki's
+			Missing_ns_cls_(wiki.App().User().Wiki().Html_mgr().Portal_mgr().Missing_ns_cls());
 		ByteAryFmtr_eval_mgr eval_mgr = wiki.Eval_mgr();
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
 		Init_fmtr(tmp_bfr, eval_mgr, div_view_fmtr);
@@ -90,7 +92,7 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 		div_wikis_fmtr.Bld_bfr_many(tmp_bfr);
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();
 	}
-	public byte[] Missing_ns_cls() {return missing_ns_cls;} public Xowh_portal_mgr Missing_ns_cls_(byte[] v) {missing_ns_cls = v; return this;} private byte[] missing_ns_cls = ByteAry_.Empty;
+	public byte[] Missing_ns_cls() {return missing_ns_cls;} public Xowh_portal_mgr Missing_ns_cls_(byte[] v) {missing_ns_cls = v; return this;} private byte[] missing_ns_cls;	// NOTE: must be null due to Init check above
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_div_personal_))					div_personal_fmtr.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_div_ns_))						div_ns_fmtr.Fmt_(m.ReadBry("v"));
@@ -109,4 +111,5 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 		;
 	public static final String Invk_div_logo_ = "div_logo_";
 	private static KeyVal[] Options_missing_ns_cls_list = KeyVal_.Ary(KeyVal_.new_("", "Show as blue link"), KeyVal_.new_("new", "Show as red link"), KeyVal_.new_("xowa_display_none", "Hide")); 
+	private static final byte[] Missing_ns_cls_hide = ByteAry_.new_ascii_("xowa_display_none");
 }

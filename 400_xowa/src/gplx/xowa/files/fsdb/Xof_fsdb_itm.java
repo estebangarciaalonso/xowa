@@ -17,55 +17,41 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 public class Xof_fsdb_itm {
-	public byte[]		Ttl() {return ttl;} public Xof_fsdb_itm Ttl_(byte[] v) {this.ttl = v; return this;} private byte[] ttl;
-	public byte[]		Md5() {return md5;} public Xof_fsdb_itm Md5_(byte[] v) {md5 = v; return this;} private byte[] md5;
-	public Xof_ext		Ext() {return ext;} public Xof_fsdb_itm Ext_(Xof_ext v) {ext = v; return this;} private Xof_ext ext;
-	public byte			Lnki_type() {return lnki_type;} private byte lnki_type;
-	public int			Lnki_w() {return lnki_w;} private int lnki_w;
+	public byte[]		Lnki_ttl() {return lnki_ttl;} public Xof_fsdb_itm Lnki_ttl_(byte[] v) {lnki_ttl = v; return this;} private byte[] lnki_ttl;
+	public byte[]		Lnki_md5() {return lnki_md5;} public Xof_fsdb_itm Lnki_md5_(byte[] v) {lnki_md5 = v; return this;} private byte[] lnki_md5;
+	public Xof_ext		Lnki_ext() {return lnki_ext;} public Xof_fsdb_itm Lnki_ext_(Xof_ext v) {lnki_ext = v; return this;} private Xof_ext lnki_ext;
+	public byte			Lnki_type() {return lnki_type;} public Xof_fsdb_itm Lnki_type_(byte v) {this.lnki_type = v; return this;} private byte lnki_type;
+	public boolean			Lnki_type_is_thumb() {return Xop_lnki_type.Id_is_thumb_like(lnki_type);}
+	public int			Lnki_w() {return lnki_w;} public Xof_fsdb_itm Lnki_w_(int v) {lnki_w = v; return this;} private int lnki_w;
 	public int			Lnki_h() {return lnki_h;} private int lnki_h;
 	public double		Lnki_upright() {return lnki_upright;} private double lnki_upright;
 	public int			Lnki_thumbtime() {return lnki_thumbtime;} private int lnki_thumbtime;
-	public String		Lnki_elem_id() {return lnki_elem_id;} public Xof_fsdb_itm Lnki_elem_id_(String v) {lnki_elem_id = v; return this;} private String lnki_elem_id;
-	public Xof_fsdb_itm	Atrs_by_lnki_for_fsdb(Xof_fsdb_itm_key_bldr reg_key_bldr, byte[] ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, int lnki_thumbtime) {
-		this.reg_key = reg_key_bldr.Bld(ttl, lnki_type, lnki_w, lnki_h, lnki_upright, lnki_thumbtime);
-		this.ttl = ttl; this.lnki_type = lnki_type; this.lnki_w = lnki_w; this.lnki_h = lnki_h; this.lnki_upright = lnki_upright; this.lnki_thumbtime = lnki_thumbtime;
+	public byte[] Lnki_key() {return lnki_key;} public Xof_fsdb_itm Lnki_key_(byte[] v) {lnki_key = v; return this;} private byte[] lnki_key;
+	public Xof_fsdb_itm	Init_by_lnki(Xof_fsdb_itm_key_bldr lnki_key_bldr, byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, int lnki_thumbtime) {
+		this.lnki_key = lnki_key_bldr.Bld_as_bry(lnki_ttl, lnki_type, lnki_w, lnki_h, lnki_upright, lnki_thumbtime);
+		this.lnki_ttl = lnki_ttl; this.lnki_type = lnki_type; this.lnki_w = lnki_w; this.lnki_h = lnki_h; this.lnki_upright = lnki_upright; this.lnki_thumbtime = lnki_thumbtime;
 		return this;
 	}
-	public int Lnki_html_id() {return lnki_html_id;} private int lnki_html_id;
-	public int Lnki_html_id_len() {return lnki_html_id_len;} private int lnki_html_id_len;
-	public ListAdp Lnki_html_id_list() {return lnki_html_id_list;} private ListAdp lnki_html_id_list;
-	public void Link_html_id_add(int html_id) {
-		switch (lnki_html_id_len) {
-			case 0: lnki_html_id = html_id; break;
-			case 1: lnki_html_id_list = ListAdp_.new_(); lnki_html_id_list.Add(IntRef.new_(lnki_html_id)); break;
-			default: lnki_html_id_list.Add(IntRef.new_(lnki_html_id)); break;
-		}
-		++lnki_html_id_len;
-	}
-	public byte[] Reg_key() {return reg_key;} private byte[] reg_key;
-	public byte Reg_status() {return reg_status;} public Xof_fsdb_itm Reg_status_(byte v) {this.reg_status = v; return this;} private byte reg_status = Reg_status_unknown;
-	public String Reg_url() {return reg_url;} public Xof_fsdb_itm Reg_url_(String v) {this.reg_url = v; return this;} private String reg_url;
-	public String Reg_img_src() {
-		return null;
-	}
-	public int Orig_w() {return orig_w;} public Xof_fsdb_itm Orig_w_(int v) {orig_w = v; return this;} private int orig_w;
-	public int Orig_h() {return orig_h;} public Xof_fsdb_itm Orig_h_(int v) {orig_h = v; return this;} private int orig_h;
-	public byte[] Actl_wiki() {return actl_wiki;} public Xof_fsdb_itm Actl_wiki_(byte[] v) {actl_wiki = v; return this;} private byte[] actl_wiki;
-	public int Actl_img_w() {return actl_img_w;} public Xof_fsdb_itm Actl_img_w_(int v) {actl_img_w = v; return this;} private int actl_img_w;
-	public int Actl_img_h() {return actl_img_h;} public Xof_fsdb_itm Actl_img_h_(int v) {actl_img_h = v; return this;} private int actl_img_h;
-	public boolean Redirected() {return redirected;} boolean redirected;
-	public byte[] Redirected_src() {return redirected_src;} byte[] redirected_src;
-	public byte[] Redirected_trg() {return redirected_trg;} byte[] redirected_trg;
-	public void Redirect_(byte[] src, byte[] trg) {
-		redirected = true; redirected_src = src; redirected_trg = trg;
+	public int Orig_w() {return orig_w;} private int orig_w;
+	public int Orig_h() {return orig_h;} private int orig_h;
+	public Xof_fsdb_itm Orig_size_(int w, int h) {orig_w = w; orig_h = h; return this;} 
+	public byte[] Orig_wiki() {return orig_wiki;} public Xof_fsdb_itm Orig_wiki_(byte[] v) {orig_wiki = v; return this;} private byte[] orig_wiki;
+	public boolean Orig_redirected() {return orig_redirected;} boolean orig_redirected;
+	public byte[] Orig_redirected_src() {return orig_redirected_src;} byte[] orig_redirected_src;
+	public byte[] Orig_redirected_trg() {return orig_redirected_trg;} byte[] orig_redirected_trg;
+	public void Orig_redirect_(byte[] src, byte[] trg) {
+		orig_redirected = true; orig_redirected_src = src; orig_redirected_trg = trg;
 	} 
-
-	public byte Db_status() {return db_status;} public void Db_status_(byte v) {db_status = v;} private byte db_status;
-	public int Db_dir_id() {return db_dir_id;} public Xof_fsdb_itm Db_dir_id_(int v) {db_dir_id = v; return this;} private int db_dir_id;
-	public int Db_fil_id() {return db_fil_id;} public void Db_fil_id_(int v) {db_fil_id = v;} private int db_fil_id; 
-	public int Db_img_id() {return db_img_id;} public Xof_fsdb_itm Db_img_id_(int v) {db_img_id = v; return this;} private int db_img_id;
-	public byte[] Db_data() {return db_data;} public Xof_fsdb_itm Db_data_(byte[] v) {db_data = v; return this;} private byte[] db_data;
-	public boolean Db_img_is_orig() {return db_img_is_orig;} public Xof_fsdb_itm Db_img_is_orig_(boolean v) {db_img_is_orig = v; return this;} private boolean db_img_is_orig;
-	public static final byte Reg_status_unknown = 0, Reg_status_present = 1, Reg_status_deleted = 2, Reg_status_missing = 3;
-	public static final byte Db_status_vlm_found = 1, Db_status_dir_found = 2, Db_status_fil_found = 3, Db_status_img_found = 4, Db_status_bin_found = 5; 
+	public String Html_url_rel() {return html_url_rel;} public Xof_fsdb_itm Html_url_rel_(String v) {html_url_rel = v; return this;} private String html_url_rel;
+	public Io_url Html_url_abs() {return html_url_abs;} public Xof_fsdb_itm Html_url_abs_(Io_url v) {html_url_abs = v; return this;} private Io_url html_url_abs;
+	public int Html_w() {return html_w;} private int html_w;
+	public int Html_h() {return html_h;} private int html_h;
+	public Xof_fsdb_itm Html_size_(int w, int h) {html_w = w; html_h = h; return this;} 
+	public byte Rslt_reg() {return rslt_reg;} public Xof_fsdb_itm Rslt_reg_(byte v) {this.rslt_reg = v; return this;} private byte rslt_reg = Xof_reg_wkr_.Tid_null;
+	public byte Rslt_qry() {return rslt_qry;} public Xof_fsdb_itm Rslt_qry_(byte v) {this.rslt_qry = v; return this;} private byte rslt_qry;
+	public byte Rslt_bin() {return rslt_bin;} public Xof_fsdb_itm Rslt_bin_(byte v) {this.rslt_bin = v; return this;} private byte rslt_bin;
+	public byte Rslt_cnv() {return rslt_cnv;} public Xof_fsdb_itm Rslt_cnv_(byte v) {this.rslt_cnv = v; return this;} private byte rslt_cnv;
+}
+class Xof_reg_wkr_ {
+	public static final byte Tid_null = Byte_.MaxValue_127, Tid_noop = 0, Tid_found_url = 1, Tid_missing_reg = 2, Tid_missing_qry = 3, Tid_missing_bin = 4;
 }

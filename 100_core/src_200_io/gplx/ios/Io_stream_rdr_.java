@@ -17,10 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.ios; import gplx.*;
 public class Io_stream_rdr_ {
-	public static Io_stream_rdr file_(Io_url url)		{return new Io_stream_rdr_file().Src_url_(url);}
-	public static Io_stream_rdr zip_(Io_url url)		{return new Io_stream_rdr_zip().Src_url_(url);}
-	public static Io_stream_rdr gzip_(Io_url url)		{return new Io_stream_rdr_gzip().Src_url_(url);}
-	public static Io_stream_rdr bzip2_(Io_url url)		{return new Io_stream_rdr_bzip2().Src_url_(url);}
+	public static Io_stream_rdr file_(Io_url url)				{return new Io_stream_rdr_file().Url_(url);}
+	public static Io_stream_rdr file_(java.io.InputStream strm)	{return new Io_stream_rdr_file().Under_(strm);}	
+	public static Io_stream_rdr zip_(Io_url url)				{return new Io_stream_rdr_zip().Url_(url);}
+	public static Io_stream_rdr gzip_(Io_url url)				{return new Io_stream_rdr_gzip().Url_(url);}
+	public static Io_stream_rdr bzip2_(Io_url url)				{return new Io_stream_rdr_bzip2().Url_(url);}
 	public static Io_stream_rdr new_by_url_(Io_url url) {
 		String ext = url.Ext();
 		if		(String_.Eq(ext, Io_stream_.Ext_zip)) 	return gplx.ios.Io_stream_rdr_.zip_(url);
@@ -42,31 +43,71 @@ public class Io_stream_rdr_ {
 		ByteAryBfr rv = ByteAryBfr.new_();
 		try {
 			rdr.Open();
-			return Load_all(rdr, rv);
+			return Load_all_as_bry(rv, rdr);
 		}
 		finally {rdr.Rls();}
 	}
-	public static byte[] Load_all(Io_stream_rdr rdr, ByteAryBfr rv) {
+	public static String Load_all_as_str(Io_stream_rdr rdr) {return String_.new_utf8_(Load_all_as_bry(rdr));}
+	public static byte[] Load_all_as_bry(Io_stream_rdr rdr) {return Load_all_as_bry(ByteAryBfr.new_(), rdr);}
+	public static byte[] Load_all_as_bry(ByteAryBfr rv, Io_stream_rdr rdr) {
+		Load_all_to_bfr(rv, rdr);
+		return rv.XtoAryAndClear();
+	}
+	public static void Load_all_to_bfr(ByteAryBfr rv, Io_stream_rdr rdr) {
 		byte[] bry = new byte[4096];
 		while (true) {
 			int read = rdr.Read(bry, 0, 4096);
-			if (read == gplx.ios.Io_stream_rdr_.Read_done) break; 
+			if (read < gplx.ios.Io_stream_rdr_.Read_done_compare) break; 
 			rv.Add_mid(bry, 0, read);
 		}
-		return rv.XtoAryAndClear();
 	}
+	public static final Io_stream_rdr Null = new Io_stream_rdr_null();
+	public static Io_stream_rdr mem_(String v) {return mem_(ByteAry_.new_utf8_(v));}
+	public static Io_stream_rdr mem_(byte[] v) {return new Io_stream_rdr_adp(new java.io.ByteArrayInputStream(v));}	
 	public static final int Read_done = -1;
+	public static final int Read_done_compare = 1;
 }
-abstract class Io_stream_rdr_base implements Io_stream_rdr {
-	java.io.InputStream stream;
+class Io_stream_rdr_null implements Io_stream_rdr {
+	public Object Under() {return null;}
+	public byte Tid() {return Io_stream_.Tid_null;}
+	public Io_url Url() {return Io_url_.Null;} public Io_stream_rdr Url_(Io_url v) {return this;}
+	public void Open_mem(byte[] v) {}
+	public Io_stream_rdr Open() {return this;}
+	public int Read(byte[] bry, int bgn, int len) {return Io_stream_rdr_.Read_done;}
+	public long Skip(long len) {return Io_stream_rdr_.Read_done;}
+	public void Rls() {}
+}
+class Io_stream_rdr_adp implements Io_stream_rdr {
+	private java.io.InputStream strm;	
+	public Io_stream_rdr_adp(java.io.InputStream strm) {this.strm = strm;} 
+	public Object Under() {return strm;}
+	public byte Tid() {return Io_stream_.Tid_file;}
+	public Io_url Url() {return url;} public Io_stream_rdr Url_(Io_url v) {this.url = v; return this;} private Io_url url;
+	public void Open_mem(byte[] v) {}
+	public Io_stream_rdr Open() {return this;}
+	public int Read(byte[] bry, int bgn, int len) {
+		try {return strm.read(bry, bgn, len);}	
+		catch (Exception exc) {Err_.Noop(exc); throw Err_.new_fmt_("read failed: bgn={0} len={1}", bgn, len);}
+	}
+	public long Skip(long len) {
+		try {return strm.skip(len);}	
+		catch (Exception exc) {Err_.Noop(exc); throw Err_.new_fmt_("skip failed: len={0}", len);}
+	}	
+	public void Rls() {
+		try {strm.close();} 
+		catch (Exception exc) {Err_.Noop(exc); throw Err_.new_fmt_("close failed: url={0}", url.Xto_api());}
+	}
+}
+abstract class Io_stream_rdr_base implements Io_stream_rdr {	
 	public abstract byte Tid();
-	public Io_url Src_url() {return src_url;} public Io_stream_rdr Src_url_(Io_url v) {this.src_url = v; return this;} Io_url src_url;
+	public Object Under() {return stream;} public Io_stream_rdr Under_(java.io.InputStream v) {this.stream = v; return this;} protected java.io.InputStream stream;
+	public Io_url Url() {return url;} public Io_stream_rdr Url_(Io_url v) {this.url = v; return this;} protected Io_url url;
 	public void Open_mem(byte[] v) {
 		stream = Wrap_stream(new java.io.ByteArrayInputStream(v));
 	}
 	public Io_stream_rdr Open() {
-		try {stream = Wrap_stream(new java.io.FileInputStream(src_url.Xto_api()));}
-		catch (Exception exc) {throw Err_.new_fmt_("open failed: url={0}", src_url.Xto_api());}
+		try {stream = Wrap_stream(new java.io.FileInputStream(url.Xto_api()));}
+		catch (Exception exc) {throw Err_.new_fmt_("open failed: url={0}", url.Xto_api());}
 		return this;
 	}
 	public int Read(byte[] bry, int bgn, int len) {
@@ -79,7 +120,7 @@ abstract class Io_stream_rdr_base implements Io_stream_rdr {
 	}
 	public void Rls() {
 		try {stream.close();}
-		catch (Exception e) {throw Err_.new_fmt_("close failed: url={0}", src_url.Xto_api());}
+		catch (Exception e) {throw Err_.new_fmt_("close failed: url={0}", url.Xto_api());}
 	}
 	public abstract java.io.InputStream Wrap_stream(java.io.InputStream stream);
 }
@@ -87,31 +128,31 @@ class Io_stream_rdr_file extends Io_stream_rdr_base {
 	@Override public byte Tid() {return Io_stream_.Tid_file;}
 	public Io_stream_rdr Open() {
 		try {
-			if (!Io_mgr._.Exists(src_url))
+			if (!Io_mgr._.Exists(url))
 				stream = Wrap_stream(new java.io.ByteArrayInputStream(ByteAry_.Empty));
 			else {
-				if (src_url.Info().EngineKey() == gplx.ios.IoEngine_.MemKey)
-					stream = Wrap_stream(new java.io.ByteArrayInputStream(Io_mgr._.LoadFilBry(src_url.Xto_api())));
+				if (url.Info().EngineKey() == gplx.ios.IoEngine_.MemKey)
+					stream = Wrap_stream(new java.io.ByteArrayInputStream(Io_mgr._.LoadFilBry(url.Xto_api())));
 				else
-					stream = Wrap_stream(new java.io.FileInputStream(src_url.Xto_api()));
+					stream = Wrap_stream(new java.io.FileInputStream(url.Xto_api()));
 			}
 		}
-		catch (Exception exc) {throw Err_.new_fmt_("open failed: url={0}", src_url.Xto_api());}
+		catch (Exception exc) {throw Err_.new_fmt_("open failed: url={0}", url.Xto_api());}
 		return this;
 	}
 	@Override public java.io.InputStream Wrap_stream(java.io.InputStream stream) {return stream;}
 }
 class Io_stream_rdr_zip implements Io_stream_rdr {
 	@Override public byte Tid() {return Io_stream_.Tid_zip;}
-	public Io_url Src_url() {return src_url;} public Io_stream_rdr Src_url_(Io_url v) {this.src_url = v; return this;} Io_url src_url;
-	java.util.zip.ZipInputStream zip_stream;
+	public Io_url Url() {return url;} public Io_stream_rdr Url_(Io_url v) {this.url = v; return this;} Io_url url;
+	public Object Under() {return zip_stream;} private java.util.zip.ZipInputStream zip_stream;
 	public void Src_bfr_(ByteAryBfr v) {this.src_bfr = v;} ByteAryBfr src_bfr;
 	public void Open_mem(byte[] v) {
 		Wrap_stream(new java.io.ByteArrayInputStream(v));
 	}
 	public Io_stream_rdr Open() {
-		try {Wrap_stream(new java.io.FileInputStream(src_url.Xto_api()));}
-		catch (Exception exc) {throw Err_.new_fmt_("open failed: url={0}", src_url.Xto_api());}
+		try {Wrap_stream(new java.io.FileInputStream(url.Xto_api()));}
+		catch (Exception exc) {throw Err_.new_fmt_("open failed: url={0}", url.Xto_api());}
 		return this;
 	}
 	void Wrap_stream(java.io.InputStream input_stream) {zip_stream = new java.util.zip.ZipInputStream(input_stream);}
@@ -135,7 +176,7 @@ class Io_stream_rdr_zip implements Io_stream_rdr {
 	}
 	public void Rls() {
 		try {zip_stream.close();}
-		catch (Exception e) {throw Err_.new_fmt_("close failed: url={0}", src_url.Xto_api());}
+		catch (Exception e) {throw Err_.new_fmt_("close failed: url={0}", url.Xto_api());}
 	}
 }
 class Io_stream_rdr_gzip extends Io_stream_rdr_base {

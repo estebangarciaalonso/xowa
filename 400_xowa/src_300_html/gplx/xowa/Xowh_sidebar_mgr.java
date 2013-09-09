@@ -26,7 +26,7 @@ public class Xowh_sidebar_mgr implements GfoInvkAble {
 			ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
 			Xoa_ttl ttl = Xoa_ttl.parse_(wiki, CONST_sidebar_ttl);
 			Xoa_page sidebar_page = wiki.Data_mgr().Get_page(ttl, false);
-			if (sidebar_page == null) {html_bry = ByteAry_.Empty; return;}
+			if (sidebar_page.Missing()) {html_bry = ByteAry_.Empty; return;}
 			Parse(tmp_bfr, sidebar_page.Data_raw());
 			Bld_html(tmp_bfr);
 			html_bry = tmp_bfr.Mkr_rls().XtoAryAndClear();

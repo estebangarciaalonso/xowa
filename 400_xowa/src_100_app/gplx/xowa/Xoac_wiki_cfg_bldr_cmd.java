@@ -31,7 +31,7 @@ public class Xoac_wiki_cfg_bldr_cmd {
 		if (sect_pos_end == String_.NotFound)
 			throw Err_.new_("section_fail: " + wiki + " " + key);
 		try {
-			return sb.Add(String_.MidByPos(src, 0, sect_pos_bgn)).Add(sect_txt_all).Add(String_.MidByPos(src, sect_pos_end + String_.Len(sect_txt_end), String_.Len(text))).XtoStrAndClear();
+			return sb.Add(String_.Mid(src, 0, sect_pos_bgn)).Add(sect_txt_all).Add(String_.Mid(src, sect_pos_end + String_.Len(sect_txt_end), String_.Len(text))).XtoStrAndClear();
 		} catch (Exception e) {Err_.Noop(e); throw Err_.new_("section_fail: " + wiki + " " + key);}
 	}
 }

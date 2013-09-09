@@ -31,7 +31,7 @@ public class ConsoleAdp implements GfoInvkAble, ConsoleDlg {
 		ClearTempText();
 		if (String_.Has(s, "\r")) s = String_.Replace(s, "\r", " ");
 		if (String_.Has(s, "\n")) s = String_.Replace(s, "\n", " ");
-		if (String_.Len(s) >= charsPerLineMax) s = String_.MidByPos(s, 0, charsPerLineMax - String_.Len("...") - 1) + "...";	// NOTE: >= and -1 needed b/c line needs to be 1 less than max; ex: default cmd is 80 width, but writing 80 chars will automatically create lineBreak
+		if (String_.Len(s) >= charsPerLineMax) s = String_.Mid(s, 0, charsPerLineMax - String_.Len("...") - 1) + "...";	// NOTE: >= and -1 needed b/c line needs to be 1 less than max; ex: default cmd is 80 width, but writing 80 chars will automatically create lineBreak
 		tempText = s;
 		WriteText_lang(s);
 	}	String tempText;

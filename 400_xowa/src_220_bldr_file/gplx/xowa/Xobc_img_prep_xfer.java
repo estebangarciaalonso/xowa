@@ -33,7 +33,7 @@ public class Xobc_img_prep_xfer extends Xob_itm_basic_base implements Xob_cmd, G
 		temp_dir = wiki.Fsys_mgr().Tmp_dir().GenSubDir(KEY);
 		Io_mgr._.DeleteDirDeep(temp_dir);
 	
-		if (commons_url == null) commons_url = wiki.Fsys_mgr().Root_dir().OwnerDir().GenSubDir_nest("commons.wikimedia.org");
+		if (commons_url == null) commons_url = wiki.Fsys_mgr().Root_dir().OwnerDir().GenSubDir_nest(Xow_wiki_.Domain_commons_str);
 		link_dir = wiki.Fsys_mgr().Tmp_dir().GenSubDir_nest(Xobc_lnki_wkr_file.KEY, "make");
 		wiki_1_dir = wiki.Fsys_mgr().Tmp_dir().GenSubDir_nest(Xobc_img_merge_ttl_sql.KEY, "make");
 		wiki_0_dir = commons_url.GenSubDir_nest("tmp", Xobc_img_merge_ttl_sql.KEY, "make");

@@ -20,15 +20,15 @@ import org.junit.*;
 public class Xow_wiki_type_tst {
 	Xow_wiki_type_fxt fxt = new Xow_wiki_type_fxt();
 	@Before public void init() {fxt.Clear();}
-	@Test  public void Parse_en_wikipedia() 			{fxt.Wiki_tid_(Xow_wiki_type_.Tid_wikipedia).Lang_key_("en").tst("en.wikipedia.org");}
-	@Test  public void Parse_fr_wikipedia() 			{fxt.Wiki_tid_(Xow_wiki_type_.Tid_wikipedia).Lang_key_("fr").tst("fr.wikipedia.org");}
-	@Test  public void Parse_en_wiktionary() 			{fxt.Wiki_tid_(Xow_wiki_type_.Tid_wiktionary).Lang_key_("en").tst("en.wiktionary.org");}
+	@Test  public void Parse_en_wikipedia() 		{fxt.Wiki_tid_(Xow_wiki_type_.Tid_wikipedia).Lang_key_("en").tst("en.wikipedia.org");}
+	@Test  public void Parse_fr_wikipedia() 		{fxt.Wiki_tid_(Xow_wiki_type_.Tid_wikipedia).Lang_key_("fr").tst("fr.wikipedia.org");}
+	@Test  public void Parse_en_wiktionary() 		{fxt.Wiki_tid_(Xow_wiki_type_.Tid_wiktionary).Lang_key_("en").tst("en.wiktionary.org");}
 	@Test  public void Parse_commons() 				{fxt.Wiki_tid_(Xow_wiki_type_.Tid_commons).Lang_key_("").tst("commons.wikimedia.org");}
 	@Test  public void Parse_species() 				{fxt.Wiki_tid_(Xow_wiki_type_.Tid_species).Lang_key_("").tst("species.wikimedia.org");}
-	@Test  public void Parse_home() 					{fxt.Wiki_tid_(Xow_wiki_type_.Tid_home).Lang_key_("").tst("home");}
+	@Test  public void Parse_home() 				{fxt.Wiki_tid_(Xow_wiki_type_.Tid_home).Lang_key_("").tst("home");}
 	@Test  public void En()							{tst_Extract_lang("en.wikipedia.org", "en");}
 	@Test  public void Fr()							{tst_Extract_lang("fr.wikipedia.org", "fr");}
-	@Test  public void Commons()						{tst_Extract_lang("commons.wikimedia.org", null);}
+	@Test  public void Commons()					{tst_Extract_lang("commons.wikimedia.org", null);}
 	void tst_Extract_lang(String raw, String expd) {Tfds.Eq(expd, String_.new_utf8_(Xow_wiki_type_.Extract_lang(ByteAry_.new_utf8_(raw))));}
 }
 class Xow_wiki_type_fxt {

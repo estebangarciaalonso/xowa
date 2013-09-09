@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.fsdb; import gplx.*;
 import gplx.dbs.*; import gplx.cache.*;
 public class Fsdb_vlm_db_data implements CompareAble {
+	private Gfo_cache_mgr dir_cache = new Gfo_cache_mgr();
 	public int Id() {return id;} private int id;
 	public String Key() {return key;} private String key;
 	public Io_url Url() {return url;} private Io_url url;
@@ -31,36 +32,10 @@ public class Fsdb_vlm_db_data implements CompareAble {
 		provider = p;
 		Fsdb_dir_tbl.Create_table(p);
 		Fsdb_fil_tbl.Create_table(p);
-		Fsdb_xtn_thm_tbl.Create_table(p);
 		Fsdb_bin_tbl.Create_table(p);
 		Fsdb_cfg_tbl.Create_table(p);
-	}
-	private Gfo_cache_mgr dir_cache = new Gfo_cache_mgr();
-	public void Img_insert(Fsdb_xtn_thm_itm rv, String dir, String fil, int ext_id, int width, int thumbtime, boolean img_is_orig, int height, DateAdp modified, String sha1, byte[] bin) {
-		int dir_id = -1;
-		Object dir_id_obj = dir_cache.Get_val_or_null(dir);
-		if (dir_id_obj == null) {
-			dir_id = Fsdb_cfg_tbl.Update_next_id(provider);
-			Fsdb_dir_tbl.Insert(provider, dir_id, dir, 0);
-			dir_cache.Add(dir, IntRef.new_(dir_id));
-		}
-		else
-			dir_id = ((IntRef)dir_id_obj).Val();
-		int fil_id = Fsdb_fil_tbl.Select_itm_by_name(provider, dir_id, fil).Id();
-		if (fil_id == 0) {
-			fil_id = Fsdb_cfg_tbl.Update_next_id(provider);
-			Fsdb_fil_tbl.Insert(provider, fil_id, dir_id, fil, 1, ext_id, -1, "", "");
-		}
-		int img_id = Img_insert(dir_id, fil_id, ext_id, width, thumbtime, img_is_orig, height, modified, sha1, bin);
-		rv.Id_(img_id).Owner_(fil_id).Dir_id_(dir_id);
-	}
-	public int Img_insert(int dir_id, int fil_id, int ext_id, int width, int thumbtime, boolean img_is_orig, int height, DateAdp modified, String sha1, byte[] bin) {return Img_insert(Fsdb_xtn_thm_tbl.Insert_stmt(provider), Fsdb_bin_tbl.Insert_stmt(provider), dir_id, fil_id, ext_id, width, thumbtime, img_is_orig, height, modified, sha1, bin);}
-	public int Img_insert(Db_stmt img_stmt, Db_stmt bin_stmt, int dir_id, int fil_id, int ext_id, int width, int thumbtime, boolean img_is_orig, int height, DateAdp modified, String sha1, byte[] bin) {
-		int img_id = Fsdb_cfg_tbl.Update_next_id(provider);
-		String modified_str = modified == null ? "" : modified.XtoStr_fmt(DateAdp_.Fmt_iso8561_date_time);
-		Fsdb_xtn_thm_tbl.Insert(img_stmt, img_id, fil_id, width, thumbtime, img_is_orig, height, bin.length, modified_str, sha1);
-		Fsdb_bin_tbl.Insert(bin_stmt, img_id, bin);
-		return img_id;
+		Fsdb_xtn_thm_tbl.Create_table(p);
+		Fsdb_xtn_img_tbl.Create_table(p);
 	}
 	public void Fil_delete(Db_provider p, int fil_id) {
 		Fsdb_xtn_thm_itm[] itms = Fsdb_xtn_thm_tbl.Select_itms_by_owner(p, fil_id);
@@ -70,13 +45,38 @@ public class Fsdb_vlm_db_data implements CompareAble {
 			Fsdb_xtn_thm_tbl.Delete_by_id(stmt, itms[i].Id());
 		Fsdb_fil_tbl.Delete_by_id(p, fil_id);
 	}
-	public void Img_delete(Db_provider p, int img_id) {
-		Fsdb_xtn_thm_tbl.Delete_by_id(p, img_id);
-		Fsdb_bin_tbl.Delete(p, img_id);
+	public void Thm_delete(Db_provider p, int thm_id) {
+		Fsdb_xtn_thm_tbl.Delete_by_id(p, thm_id);
+		Fsdb_bin_tbl.Delete(p, thm_id);
 	}
-	public void Update_fil_bin(int fil_id, boolean img_is_orig, int sub_id, byte[] data) {
-		Fsdb_xtn_thm_tbl.Update(provider, sub_id, fil_id, 0, 0, img_is_orig, 0, data.length, "", "");
-		Fsdb_bin_tbl.Update(provider, sub_id, data);
+	public void Thm_insert(Fsdb_xtn_thm_itm rv, String dir, String fil, int ext_id, int width, int thumbtime, int height, DateAdp modified, String hash, int bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+		int dir_id = Dir_id__get_by_mem_or_db(dir);
+		int fil_id = Fsdb_fil_tbl.Select_itm_by_name(provider, dir_id, fil).Id();
+		if (fil_id == 0) {
+			fil_id = Fsdb_cfg_tbl.Update_next_id(provider);
+			Fsdb_fil_tbl.Insert(provider, fil_id, dir_id, fil, Fsdb_xtn_tid_.Tid_thm, ext_id, bin_len, modified, hash);
+		}
+		int thm_id = Fsdb_cfg_tbl.Update_next_id(provider);
+		Fsdb_xtn_thm_tbl.Insert(provider, thm_id, fil_id, width, thumbtime, height, bin_len, modified, hash);
+		rv.Id_(thm_id).Owner_(fil_id).Dir_id_(dir_id);
+		Fsdb_bin_tbl.Insert_rdr(provider, thm_id, Fsdb_bin_tbl.Owner_tid_thm, bin_len, bin_rdr);
+	}
+	public int Thm_insert(Db_stmt img_stmt, Db_stmt bin_stmt, int dir_id, int fil_id, int ext_id, int width, int thumbtime, int height, DateAdp modified, String hash, int bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+		int thm_id = Fsdb_cfg_tbl.Update_next_id(provider);
+		Fsdb_xtn_thm_tbl.Insert(img_stmt, thm_id, fil_id, width, thumbtime, height, bin_len, modified, hash);
+		Fsdb_bin_tbl.Insert_rdr(bin_stmt, thm_id, Fsdb_bin_tbl.Owner_tid_thm, bin_len, bin_rdr);
+		return thm_id;
+	}
+	public void Img_insert(Fsdb_xtn_thm_itm rv, String dir, String fil, int ext_id, DateAdp modified, String hash, int bin_len, gplx.ios.Io_stream_rdr bin_rdr, int img_w, int img_h, int img_bits) {
+		int dir_id = Dir_id__get_by_mem_or_db(dir);
+		int fil_id = Fsdb_fil_tbl.Select_itm_by_name(provider, dir_id, fil).Id();
+		if (fil_id == 0) {
+			fil_id = Fsdb_cfg_tbl.Update_next_id(provider);
+			Fsdb_fil_tbl.Insert(provider, fil_id, dir_id, fil, Fsdb_xtn_tid_.Tid_img, ext_id, bin_len, modified, hash);
+		}
+		Fsdb_xtn_img_tbl.Insert(provider, fil_id, img_w, img_h, img_bits);
+		if (bin_len > 0) // bin-less entries can be created; EX: create stub for png of 4800,4000;
+			Fsdb_bin_tbl.Insert_rdr(provider, fil_id, Fsdb_bin_tbl.Owner_tid_thm, bin_len, bin_rdr);
 	}
 	public int compareTo(Object obj) {
 		Fsdb_vlm_db_data comp = (Fsdb_vlm_db_data)obj;
@@ -91,6 +91,27 @@ public class Fsdb_vlm_db_data implements CompareAble {
 	}
 	public static Io_url url_root_(Io_url dir) {return dir.GenSubFil(Name_data_root);}
 	public void Rls() {provider.Rls();}
+	private int Dir_id__get_by_mem_or_db(String dir) {
+		int rv = -1;
+		Object rv_obj = dir_cache.Get_val_or_null(dir);
+		if (rv_obj == null) {
+			rv = Fsdb_cfg_tbl.Update_next_id(provider);
+			Fsdb_dir_tbl.Insert(provider, rv, dir, 0);	// 0: always assume root owner
+			dir_cache.Add(dir, IntRef.new_(rv));
+		}
+		else
+			rv = ((IntRef)rv_obj).Val();
+		return rv;
+	}
 	private static final String Name_data_root = "data.sqlite3";
 	private static final byte[] Path_bgn_0 = ByteAry_.Empty;
 }
+//class Xof_fsdb_mok {
+//	private Hash_adp_bry hash = new Hash_adp_bry(true);
+//	private ByteAryBfr tmp_bfr = ByteAryBfr.new_();
+//	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int w, int thumbtime, boolean is_orig, int h, int bin_len, DateAdp modified, String hash, gplx.ios.Io_stream_rdr rdr) {
+////		tmp_bfr.Add(dir).Add_byte_pipe().Add(fil).Add_byte_pipe();
+//	}
+//	public void Thm_select() {
+//	}
+//}

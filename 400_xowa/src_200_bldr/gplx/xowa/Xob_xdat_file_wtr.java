@@ -52,7 +52,7 @@ public class Xob_xdat_file_wtr {
 		if (this.Fil_len() > fil_max)		// NOTE: data can exceed proscribed len; EX: wikt:Category for Italian nouns is 1 MB+
 			usr_dlg.Log_many(GRP_KEY, "flush_err", "--ctg exceeds len: expd_len=~{0} actl_len=~{1} url=~{2}", this.Fil_len(), fil_max, fil_url.Xto_api());
 		try {
-			wtr.Trg_url_(fil_url).Open();
+			wtr.Url_(fil_url).Open();
 			if (idx_pos > 0)				// write idx; NOTE: if idx written, then .xdat; else .csv
 				FlushIdx(wtr);
 			wtr.Write(bfr.Bry(), 0, bfr.Bry_len());	// write data;

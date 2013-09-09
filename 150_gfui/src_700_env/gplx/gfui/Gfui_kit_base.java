@@ -134,7 +134,7 @@ class Base_HtmlBox extends GxwTextMemo_lang implements Gxw_html {		public String
 		int q0 = String_.FindFwd(txt, "\"", key_pos);	if (q0 == String_.NotFound) return null;
 		int q1 = String_.FindFwd(txt, "\"", q0 + 1);	if (q1 == String_.NotFound) return null;
 		if (!Int_.Between(pos, q0, q1)) return null;	// current pos is not between nearest quotes
-		return String_.MidByPos(txt, q0 + 1, q1);
+		return String_.Mid(txt, q0 + 1, q1);
 	}
 	public boolean Html_doc_find(String elem_id, String find, boolean dir_fwd, boolean case_match, boolean wrap_find) {
 //			String txt = this.TextVal();

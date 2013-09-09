@@ -20,13 +20,16 @@ import gplx.dbs.*; import gplx.fsdb.*; import gplx.xowa.files.bins.*; import gpl
 public class Xof_fsdb_mgr implements RlsAble {
 	private Fsdb_mnt_itm[] mnt_itms; private int mnt_itms_len;
 	private Db_provider mnt_regy_provider = null; private Db_provider img_regy_provider = null;
+	private Io_url file_dir;
 	public Xof_qry_mgr Qry_mgr() {return qry_mgr;} private Xof_qry_mgr qry_mgr = new Xof_qry_mgr();
-	public Xof_bin_mgr Bin_mgr() {return bin_mgr;} private Xof_bin_mgr bin_mgr = new Xof_bin_mgr();
-	public void Init_by_wiki(Xow_wiki wiki) {Init_by_wiki(wiki.App().Fsys_mgr().File_dir().GenSubDir(wiki.Domain_str()), wiki.Rls_list());}
-	public void Init_by_wiki(Io_url root_dir, ListAdp rls_list) {// TEST
+	public Xof_bin_mgr Bin_mgr() {return bin_mgr;} private Xof_bin_mgr bin_mgr;
+	public void Init_by_wiki(Xow_wiki wiki) {Init_by_wiki(wiki.App().Fsys_mgr().File_dir(), wiki.App().Fsys_mgr().File_dir().GenSubDir(wiki.Domain_str()), wiki.Rls_list(), wiki.App().File_mgr().Repos());}
+	public void Init_by_wiki(Io_url file_dir, Io_url root_dir, ListAdp rls_list, Xof_repo_mgr repo_mgr) {// TEST
+		this.file_dir = file_dir;
 		Init_img_regy_provider(root_dir);
 		Init_mnt_regy_provider(root_dir);
 		rls_list.Add(this);
+		bin_mgr = new Xof_bin_mgr(repo_mgr);
 	}
 	public Fsdb_vlm_db_data Vlm_find(byte[] ttl) {
 		Fsdb_vlm_db_data rv = null;
@@ -37,42 +40,60 @@ public class Xof_fsdb_mgr implements RlsAble {
 		}
 		return null;
 	}
-	public void Bin_find(Xog_win_wtr win_wtr, ListAdp lnki_list) {Bin_find(win_wtr, Bin_find__to_hash(lnki_list));}
-	public void Bin_find(Xog_win_wtr win_wtr, OrderedHash itm_hash) {
+	public void Reg_select(Xog_win_wtr win_wtr, ListAdp lnki_list) {Reg_select(win_wtr, Reg_select__to_hash(lnki_list));}
+	public void Reg_select(Xog_win_wtr win_wtr, OrderedHash itm_hash) {
 		int itm_hash_len = itm_hash.Count();
-		Xof_tbl_reg.Search(img_regy_provider, itm_hash, itm_hash_len);
+		Xof_tbl_reg.Select(img_regy_provider, itm_hash, itm_hash_len);
 		ListAdp fsdb_list = ListAdp_.new_();
 		for (int i = 0; i < itm_hash_len; i++) {
 			Xof_fsdb_itm itm = (Xof_fsdb_itm)itm_hash.FetchAt(i);
 			Itm_process(win_wtr, itm, fsdb_list);
 		}
-		if (fsdb_list.Count() == 0) return;	// all items found; return;
-		Xof_fsdb_itm[] fsdb_itms = (Xof_fsdb_itm[])fsdb_list.XtoAryAndClear(Xof_fsdb_itm.class);
-		for (int i = 0; i < mnt_itms_len; i++) {
-			Xof_fsdb_itm fsdb_itm = fsdb_itms[i];
-			if (qry_mgr.Calc(fsdb_itm))
-				bin_mgr.Find(fsdb_itm);
+		int itms_len = fsdb_list.Count(); if (itms_len == 0) return;	// all items found; return;
+		Reg_search(fsdb_list, itms_len);
+	}
+	private void Reg_search(ListAdp itms_list, int itms_len) {
+		for (int i = 0; i < itms_len; i++) {
+			Xof_fsdb_itm itm = (Xof_fsdb_itm)itms_list.FetchAt(i);
+			switch (itm.Rslt_reg()) {
+				case Xof_reg_wkr_.Tid_missing_qry:
+				case Xof_reg_wkr_.Tid_missing_bin:	continue;	// already missing; do not try to find again
+			}
+			if (qry_mgr.Find(itm)) {
+				if (bin_mgr.Find(itm)) {
+					String rel_url = itm.Html_url_abs().GenRelUrl_orEmpty(file_dir);
+					this.Reg_insert(itm.Lnki_key(), itm.Html_w(), itm.Html_h(), rel_url, Xof_reg_wkr_.Tid_found_url, 0, 1, 0, 0, 0);
+					break;
+				}
+				else {
+					itm.Rslt_bin_(Xof_bin_wkr_.Tid_not_found);
+					this.Reg_insert(itm.Lnki_key(), itm.Html_w(), itm.Html_h(), "", Xof_reg_wkr_.Tid_missing_bin, 0, 1, 0, 0, 0);
+				}
+			}
+			else {
+				this.Reg_insert(itm.Lnki_key(), itm.Html_w(), itm.Html_h(), "", Xof_reg_wkr_.Tid_missing_qry, 0, 1, 0, 0, 0);
+			}
 		}
-		// update reg
 	}
 	private void Itm_process(Xog_win_wtr win_wtr, Xof_fsdb_itm itm, ListAdp fsdb_list) {
-		switch (itm.Reg_status()) {
-			case Xof_fsdb_itm.Reg_status_present:	win_wtr.Html_img_update("xowa_file_img_" + "", "", itm.Actl_img_w(), itm.Actl_img_h()); break;
-			case Xof_fsdb_itm.Reg_status_missing:	break;
-			case Xof_fsdb_itm.Reg_status_unknown:
-			case Xof_fsdb_itm.Reg_status_deleted:	fsdb_list.Add(itm); break;
-			default:								throw Err_.unhandled(itm.Reg_status());
+		switch (itm.Rslt_reg()) {
+			case Xof_reg_wkr_.Tid_found_url:		win_wtr.Html_img_update("xowa_file_img_" + "", "", itm.Html_w(), itm.Html_h()); break;
+			case Xof_reg_wkr_.Tid_missing_qry:
+			case Xof_reg_wkr_.Tid_missing_bin:		break;
+			case Xof_reg_wkr_.Tid_missing_reg:
+			case Xof_reg_wkr_.Tid_null:				fsdb_list.Add(itm); break;
+			default:								throw Err_.unhandled(itm.Rslt_reg());
 		}
 	}
-	private OrderedHash Bin_find__to_hash(ListAdp list) {
+	private OrderedHash Reg_select__to_hash(ListAdp list) {
 		OrderedHash rv = OrderedHash_.new_bry_();
 		int list_len = list.Count();
 		Xof_fsdb_itm_key_bldr key_bldr = new Xof_fsdb_itm_key_bldr();
 		Xof_fsdb_itm tmp_itm = new Xof_fsdb_itm();
 		for (int i = 0; i < list_len; i++) {
 			Xof_xfer_itm xfer_itm = (Xof_xfer_itm)list.FetchAt(i);				
-			tmp_itm.Atrs_by_lnki_for_fsdb(key_bldr, xfer_itm.Ttl(), xfer_itm.Lnki_type(), xfer_itm.Lnki_w(), xfer_itm.Lnki_h(), xfer_itm.Lnki_upright(), xfer_itm.Lnki_thumbtime());				
-			byte[] reg_key = tmp_itm.Reg_key();
+			tmp_itm.Init_by_lnki(key_bldr, xfer_itm.Ttl(), xfer_itm.Lnki_type(), xfer_itm.Lnki_w(), xfer_itm.Lnki_h(), xfer_itm.Lnki_upright(), xfer_itm.Lnki_thumbtime());				
+			byte[] reg_key = tmp_itm.Lnki_key();
 			Xof_fsdb_itm itm = (Xof_fsdb_itm)rv.Fetch(reg_key);
 			if (itm == null) {
 //					tmp_itm.Link_html_id_add(xfer_itm.Html_dynamic_id());
@@ -85,17 +106,20 @@ public class Xof_fsdb_mgr implements RlsAble {
 		}
 		return rv;
 	}
-	public void Reg_insert(String key, String url, byte status, long size, long viewed, int mnt_id, int img_id) {
+	public void Reg_insert(byte[] key, int w, int h, String url, byte status, long size, long viewed, int mnt_id, int tid_id, int img_id) {
 		Db_stmt stmt = Db_stmt_.Null;
 		try {
 			stmt = Xof_tbl_reg.Insert_stmt(img_regy_provider);
-			Xof_tbl_reg.Insert(stmt, key, url, status, size, viewed, mnt_id, img_id);
+			Xof_tbl_reg.Insert(stmt, String_.new_utf8_(key), url, w, h, status, size, viewed, mnt_id, tid_id, img_id);
 		} finally {stmt.Rls();}
 	}
 	public int Thm_insert_idx() {return fsdb_insert_idx;} private int fsdb_insert_idx = 0;
-	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int w, boolean is_orig, int h, byte[] data) {Thm_insert(rv, dir, fil, Xof_ext_.Id_unknown, w, Xop_lnki_tkn.Thumbtime_null, is_orig, h, DateAdp_.MinValue, "", data);}
-	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int w, int thumbtime, boolean is_orig, int h, DateAdp modified, String md5, byte[] data) {
-		mnt_itms[fsdb_insert_idx].Thm_insert(rv, dir, fil, ext_id, w, thumbtime, is_orig, h, modified, md5, data);
+	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int w, int h, int bin_len, gplx.ios.Io_stream_rdr rdr) {Thm_insert(rv, dir, fil, Xof_ext_.Id_unknown, w, Xop_lnki_tkn.Thumbtime_null, h, Fsdb_xtn_thm_tbl.Modified_null, Fsdb_xtn_thm_tbl.Hash_null, bin_len, rdr);}
+	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int w, int thumbtime, int h, DateAdp modified, String hash, int bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+		mnt_itms[fsdb_insert_idx].Thm_insert(rv, dir, fil, ext_id, w, thumbtime, h, modified, hash, bin_len, bin_rdr);
+	}
+	public void Img_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, int bin_len, gplx.ios.Io_stream_rdr bin_rdr, int img_w, int img_h, int img_bits) {
+		mnt_itms[fsdb_insert_idx].Img_insert(rv, dir, fil, ext_id, modified, hash, bin_len, bin_rdr, img_w, img_h, img_bits);
 	}
 	public void Rls() {
 		img_regy_provider.Rls();

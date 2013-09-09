@@ -60,7 +60,7 @@ public class Xop_tkn_mkr {
 	public Xop_ignore_tkn Ignore(int bgn, int end, byte ignore_type)						{return new Xop_ignore_tkn(bgn, end, ignore_type);}
 	public Xop_bry_tkn Bry(int bgn, int end, byte[] bry)									{return new Xop_bry_tkn(bgn, end, bry);}
 	public Xop_under_tkn Under(int bgn, int end, int v)										{return new Xop_under_tkn(bgn, end, v);}
-	public gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd Xowa_cmd_nde()							{return new gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd();}
+	public gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd Xowa_cmd_nde()								{return new gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd();}
 	public gplx.xowa.xtns.poems.Xtn_poem_nde Poem_nde()										{return new gplx.xowa.xtns.poems.Xtn_poem_nde();}
 	public Xtn_ref_nde Ref_nde()															{return new Xtn_ref_nde();}
 	public Xtn_references_nde References_nde()												{return new Xtn_references_nde();}
@@ -73,6 +73,7 @@ public class Xop_tkn_mkr {
 	public gplx.xowa.xtns.categoryList.Xtn_categorylist_nde CategoryList_nde()				{return new gplx.xowa.xtns.categoryList.Xtn_categorylist_nde();}
 	public gplx.xowa.xtns.dynamicPageList.Xtn_dynamicPageList_nde DynamicPageList_nde()		{return new gplx.xowa.xtns.dynamicPageList.Xtn_dynamicPageList_nde();}
 	public gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde SyntaxHighlight()			{return new gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde();}
+	public gplx.xowa.xtns.templateData.Xtn_templateData_nde TemplateData()					{return new gplx.xowa.xtns.templateData.Xtn_templateData_nde();}
 	public gplx.xowa.xtns.scores.Xtn_score Score_nde()										{return new gplx.xowa.xtns.scores.Xtn_score();}
 	public gplx.xowa.xtns.inputBox.Xtn_inputbox_nde Inputbox_nde()							{return new gplx.xowa.xtns.inputBox.Xtn_inputbox_nde();}
 	public gplx.xowa.xtns.translates.Xop_translate_xnde Translate()							{return new gplx.xowa.xtns.translates.Xop_translate_xnde();}

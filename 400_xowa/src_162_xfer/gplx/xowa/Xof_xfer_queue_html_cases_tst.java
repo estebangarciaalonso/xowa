@@ -36,7 +36,7 @@ public class Xof_xfer_queue_html_cases_tst {
 				);
 		fxt.tst();
 	}
-	@Test  public void Png_encode() {	// PURPOSE: make sure \s is converted to _; also ' should not be encoded on trg
+	@Test  public void Png_encode() {	// PURPOSE: make sure \s is converted to _; also ' should not be encoded on trg; done
 		fxt	.ini_page_create_commons			("File:A'b c.png");
 		fxt	.Lnki_orig_("A'b c.png")
 			.Src(	fxt.img_("mem/src/commons.wikimedia.org/9/9c/A%27b_c.png", 90, 80))

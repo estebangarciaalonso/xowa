@@ -59,7 +59,7 @@ public class Wdata_itemByTitle_page implements Xows_page {
 		Xoa_ttl wdata_ttl = Xoa_ttl.parse_(wiki, page_bry);					if (wdata_ttl == null) {usr_dlg.Warn_many("", "", "ttl is invalid; ttl:~{0}", String_.new_utf8_(page_bry)); return false;}
 		Wdata_doc doc = wdata_mgr.Pages_get(wiki, wdata_ttl); 				if (doc == null) {usr_dlg.Warn_many("", "", "ttl cannot be found in wikidata; ttl:~{0}", String_.new_utf8_(wdata_ttl.Raw())); return false;}		
 		byte[] qid_bry = doc.Qid();
-		Xoa_page qid_page = wdata_mgr.Wdata_wiki().Data_mgr().Redirect(page, qid_bry); 	if (qid_page == null) {usr_dlg.Warn_many("", "", "qid cannot be found in wikidata; qid:~{0}", String_.new_utf8_(qid_bry)); return false;}
+		Xoa_page qid_page = wdata_mgr.Wdata_wiki().Data_mgr().Redirect(page, qid_bry); 	if (qid_page.Missing()) {usr_dlg.Warn_many("", "", "qid cannot be found in wikidata; qid:~{0}", String_.new_utf8_(qid_bry)); return false;}
 		return true;
 	}
 	private static ByteAryFmtr html_fmtr = ByteAryFmtr.new_(String_.Concat_lines_nl

@@ -19,7 +19,7 @@ package gplx.xowa.fmtrs; import gplx.*; import gplx.xowa.*;
 import org.junit.*;
 public class Xoa_fmtr_itm_tst {
 	@Before public void init() {fxt.Clear();} private Xoa_fmtr_itm_fxt fxt = new Xoa_fmtr_itm_fxt();
-	@Test    public void Basic() {
+	@Test   public void Basic() {
 		fxt.Init_src("app.wikis;");
 		fxt.Init_fmt("domain=~{<>domain;<>};");
 		fxt.Test_run("domain=en.wikipedia.org;");

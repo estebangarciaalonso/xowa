@@ -50,6 +50,12 @@ public class Xof_ext {
 			default: return false;
 		}
 	}
+	public boolean Orig_is_not_image()	{
+		switch (id) {
+			case Xof_ext_.Id_djvu: case Xof_ext_.Id_pdf: case Xof_ext_.Id_ogv: case Xof_ext_.Id_ogg: return true;
+			default: return false;
+		}
+	}
 	public int Id_view() {
 		switch (id) {
 			case Xof_ext_.Id_svg:																			return Xof_ext_.Id_png;

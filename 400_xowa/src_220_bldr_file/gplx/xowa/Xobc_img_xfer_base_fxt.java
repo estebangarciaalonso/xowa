@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.ios.*;
+import gplx.ios.*; import gplx.xowa.files.cnvs.*;
 class Xobc_img_xfer_base_fxt {
 	public Xow_wiki En_wiki() {return en_wiki;} private Xow_wiki en_wiki;
 	public Xow_wiki Commons() {return commons;} private Xow_wiki commons;
@@ -31,7 +31,7 @@ class Xobc_img_xfer_base_fxt {
 		Io_mgr._.InitEngine_mem();
 		Xoa_app app = Xoa_app_fxt.app_();
 		en_wiki = Xoa_app_fxt.wiki_tst_(app);
-		commons = Xoa_app_fxt.wiki_(app, "commons.wikimedia.org");
+		commons = Xoa_app_fxt.wiki_(app, Xow_wiki_.Domain_commons_str);
 		mock_wkr.Clear_commons();	// assume all files are in repo 0
 		en_wiki.File_mgr().Repo_mgr().Page_finder_(mock_wkr);
 		en_wiki.Db_mgr().Load_mgr().Clear();
@@ -39,17 +39,17 @@ class Xobc_img_xfer_base_fxt {
 		app.Wiki_mgr().Add(commons);
 		
 		Xof_file_mgr file_mgr = app.File_mgr();
-		file_mgr.Img_mgr().Wkr_resize_img_(new Xof_img_wkr_resize_img_test());
+		file_mgr.Img_mgr().Wkr_resize_img_(Xof_img_wkr_resize_img_mok._);
 		file_mgr.Img_mgr().Wkr_query_img_size_(new Xof_img_wkr_query_img_size_test());
 
 		byte[] src_commons = ByteAry_.new_ascii_("src_commons");
 		byte[] src_en_wiki = ByteAry_.new_ascii_("src_en_wiki");
 		byte[] trg_commons = ByteAry_.new_ascii_("trg_commons");
 		byte[] trg_en_wiki = ByteAry_.new_ascii_("trg_en_wiki");
-		App_repo_add(file_mgr, src_commons, "mem/src/commons.wikimedia.org/", "commons.wikimedia.org", false);
-		App_repo_add(file_mgr, src_en_wiki, "mem/src/en.wikipedia.org/", "en.wikipedia.org", false);
-		App_repo_add(file_mgr, trg_commons, "mem/trg/commons.wikimedia.org/", "commons.wikimedia.org", true);
-		App_repo_add(file_mgr, trg_en_wiki, "mem/trg/en.wikipedia.org/", "en.wikipedia.org", true);
+		App_repo_add(file_mgr, src_commons, "mem/src/commons.wikimedia.org/", Xow_wiki_.Domain_commons_str, false);
+		App_repo_add(file_mgr, src_en_wiki, "mem/src/en.wikipedia.org/", Xow_wiki_.Domain_enwiki_str, false);
+		App_repo_add(file_mgr, trg_commons, "mem/trg/commons.wikimedia.org/", Xow_wiki_.Domain_commons_str, true);
+		App_repo_add(file_mgr, trg_en_wiki, "mem/trg/en.wikipedia.org/", Xow_wiki_.Domain_enwiki_str, true);
 		Xowf_repo_mgr wiki_repo_mgr = en_wiki.File_mgr().Repo_mgr();
 		Xofw_repo_pair pair = null;
 		pair = wiki_repo_mgr.Add_repo(src_commons, trg_commons);

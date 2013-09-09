@@ -25,53 +25,54 @@ public class Fsdb_vlm_db_data_tst {
 	@After public void term() {if (Xo_test.Db_skip) return; fxt.Rls();}
 	@Test   public void Insert() {
 		if (Xo_test.Db_skip) return;
-		fxt.Exec_img_insert("enwiki", "A.png", Bool_.Y, 1000, 800, "a");
+		fxt.Exec_thm_insert("enwiki", "A.png", 1000, 800, "a");
 		Fsdb_dir_itm dir = fxt.Test_dir_select("enwiki", 1, 0);
 		Fsdb_fil_itm fil = fxt.Test_fil_select(dir.Id(), "A.png", 2);
-		Fsdb_xtn_thm_itm img = fxt.Test_img_select(fil.Id(), 1000, 3, Bool_.Y, 1000, 800);
+		Fsdb_xtn_thm_itm img = fxt.Test_thm_select(fil.Id(), 1000, 3, 1000, 800);
 		fxt.Test_bin_select(img.Id(), "a");
 		fxt.Test_cfg_select_next_id(4);
 	}
 	@Test   public void Insert_many() {
 		if (Xo_test.Db_skip) return;
-		fxt.Exec_img_insert("enwiki", "A.png", Bool_.Y, 1000, 800, "a");		// create orig; ignore;
-		fxt.Exec_img_insert("enwiki", "A.png", Bool_.N,  500, 400, "a500");		// create thumb for retrieval
-		fxt.Exec_img_insert("enwiki", "B.png", Bool_.Y,  500, 840, "b500");		// create another thumb with same w, but dif name
+		fxt.Exec_thm_insert("enwiki", "A.png", 1000, 800, "a");		// create orig; ignore;
+		fxt.Exec_thm_insert("enwiki", "A.png",  500, 400, "a500");		// create thumb for retrieval
+		fxt.Exec_thm_insert("enwiki", "B.png",  500, 840, "b500");		// create another thumb with same w, but dif name
 		Fsdb_dir_itm dir = fxt.Test_dir_select("enwiki", 1, 0);
 		Fsdb_fil_itm fil = fxt.Test_fil_select(dir.Id(), "A.png", 2);
-		Fsdb_xtn_thm_itm img = fxt.Test_img_select(fil.Id(), 500, 4, Bool_.N, 500, 400);
+		Fsdb_xtn_thm_itm img = fxt.Test_thm_select(fil.Id(), 500, 4, 500, 400);
 		fxt.Test_bin_select(img.Id(), "a500");
 		fxt.Test_cfg_select_next_id(7);
 	}
 	@Test   public void Img_delete() {
 		if (Xo_test.Db_skip) return;
 		Fsdb_xtn_thm_itm img_400 = Fsdb_xtn_thm_itm.new_(), img_200 = Fsdb_xtn_thm_itm.new_();
-		fxt.Exec_img_insert(img_400, "enwiki", "A.png", Bool_.N, 400, 200, "400,200");
-		fxt.Exec_img_insert(img_200, "enwiki", "A.png", Bool_.N, 200, 100, "200,100");
-		fxt.Test_img_exists(img_400.Id(), Bool_.Y);
-		fxt.Exec_img_delete(img_400.Id());				// del 400
-		fxt.Test_img_exists(img_400.Id(), Bool_.N);		// chk 400 deleted
-		fxt.Test_img_exists(img_200.Id(), Bool_.Y);		// chk 200 exists
-		fxt.Exec_img_delete(img_200.Id());				// del 200
-		fxt.Test_img_exists(img_200.Id(), Bool_.N);		// chk 200 deleted
+		fxt.Exec_thm_insert(img_400, "enwiki", "A.png", 400, 200, "400,200");
+		fxt.Exec_thm_insert(img_200, "enwiki", "A.png", 200, 100, "200,100");
+		fxt.Test_thm_exists(img_400.Id(), Bool_.Y);
+		fxt.Exec_thm_delete(img_400.Id());				// del 400
+		fxt.Test_thm_exists(img_400.Id(), Bool_.N);		// chk 400 deleted
+		fxt.Test_thm_exists(img_200.Id(), Bool_.Y);		// chk 200 exists
+		fxt.Exec_thm_delete(img_200.Id());				// del 200
+		fxt.Test_thm_exists(img_200.Id(), Bool_.N);		// chk 200 deleted
 		fxt.Test_fil_exists(img_200.Owner(), Bool_.Y);	// chk fil still exists
 	}
 	@Test   public void Fil_delete() {
 		if (Xo_test.Db_skip) return;
 		Fsdb_xtn_thm_itm img_400 = Fsdb_xtn_thm_itm.new_(), img_200 = Fsdb_xtn_thm_itm.new_();
-		fxt.Exec_img_insert(img_400, "enwiki", "A.png", Bool_.N, 400, 200, "400,200");
-		fxt.Exec_img_insert(img_200, "enwiki", "A.png", Bool_.N, 200, 100, "200,100");
-		fxt.Test_img_exists(img_400.Id(), Bool_.Y);
-		fxt.Test_img_exists(img_200.Id(), Bool_.Y);
+		fxt.Exec_thm_insert(img_400, "enwiki", "A.png", 400, 200, "400,200");
+		fxt.Exec_thm_insert(img_200, "enwiki", "A.png", 200, 100, "200,100");
+		fxt.Test_thm_exists(img_400.Id(), Bool_.Y);
+		fxt.Test_thm_exists(img_200.Id(), Bool_.Y);
 		fxt.Exec_fil_delete(img_400.Owner());			// del fil
-		fxt.Test_img_exists(img_400.Id(), Bool_.N);		// chk 400 deleted
-		fxt.Test_img_exists(img_200.Id(), Bool_.N);		// chk 200 deleted
+		fxt.Test_thm_exists(img_400.Id(), Bool_.N);		// chk 400 deleted
+		fxt.Test_thm_exists(img_200.Id(), Bool_.N);		// chk 200 deleted
 		fxt.Test_fil_exists(img_200.Owner(), Bool_.N);	// chk fil deleted
 	}
-//		@Test   public void Bin_select() {
-//			if (Xo_test.Db_skip) return;
-//			Fsdb_xtn_thm_itm img_400 = Fsdb_xtn_thm_itm.new_();
-//			fxt.Exec_img_insert(img_400, "enwiki", "A.png", Bool_.N, 400, 200, "400,200");
-//			fxt.Test_bin_select_stream(img_400.Id(), 1, "400,200");
-//		}
+	@Test   public void Bin_select() {
+		if (Xo_test.Db_skip) return;
+		if (!Sqlite_engine_.Cfg_read_binary_stream_supported) return;
+		Fsdb_xtn_thm_itm thm = Fsdb_xtn_thm_itm.new_();
+		fxt.Exec_thm_insert(thm, "enwiki", "A.png", 400, 200, "400,200");
+		fxt.Test_bin_select_to_fsys(thm.Id(), Io_url_.mem_fil_("mem/test.png"), "400,200");
+	}
 }

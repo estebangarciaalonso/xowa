@@ -20,7 +20,7 @@ import org.junit.*; import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.
 public class Xoctg_hiddencat_parser_sql_tst {
 	@Before public void init() {if (Xo_test.Db_skip) return; fxt.Ctor_fsys();} Db_mgr_fxt fxt = new Db_mgr_fxt();
 	@After public void term() {if (Xo_test.Db_skip) return; fxt.Rls();} 
-	@Test    public void Basic() {
+	@Test   public void Basic() {
 		if (Xo_test.Db_skip) return; 
 		fxt.Init_db_sqlite();
 		Init_ctgs(1, 2, 3);

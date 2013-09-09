@@ -96,8 +96,8 @@ public class String__tst {
 		err_MidByPos("abc", 1, 5);
 //			err_MidByPos("abc", 0, 4);
 	}
-	void tst_MidByPos(String s, int bgn, int end, String expd) {Tfds.Eq(expd, String_.MidByPos(s, bgn, end));}
-	void err_MidByPos(String s, int bgn, int end) {try {String_.MidByPos(s, bgn, end);} catch (Exception exc) {Tfds.Err_classMatch(exc, Err.class); return;} Tfds.Fail_expdError();}
+	void tst_MidByPos(String s, int bgn, int end, String expd) {Tfds.Eq(expd, String_.Mid(s, bgn, end));}
+	void err_MidByPos(String s, int bgn, int end) {try {String_.Mid(s, bgn, end);} catch (Exception exc) {Tfds.Err_classMatch(exc, Err.class); return;} Tfds.Fail_expdError();}
 	@Test  public void TrimEnd() {
 		tst_TrimEnd("a", "a");
 		tst_TrimEnd("a ", "a");

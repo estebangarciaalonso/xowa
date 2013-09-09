@@ -118,7 +118,7 @@ class Gfui_svg_util {
 		int end = String_.FindFwd(xml, "\"", bgn); if (end == -1) return -1;
 		int px = String_.FindBwd(xml, "px", end);	// handle width="20px"
 		if (px != -1) end = px;
-		String str = String_.MidByPos(xml, bgn, end);
+		String str = String_.Mid(xml, bgn, end);
 		pos_ref.Val_(end);
 		return Double_.parse_(str);
 	}

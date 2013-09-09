@@ -22,7 +22,7 @@ public class Io_zip_mgr_base implements Io_zip_mgr {
 	public void Zip_fil(Io_url src_fil, Io_url trg_fil) {
 		byte[] src_bry = Io_mgr._.LoadFilBry(src_fil);
 		byte[] trg_bry = Zip_bry(src_bry, 0, src_bry.length);
-		Io_mgr._.SaveFilByt(trg_fil, trg_bry);
+		Io_mgr._.SaveFilBry(trg_fil, trg_bry);
 	}
 		public void Zip_dir(Io_url src_dir, Io_url trg_fil) {
 		try {

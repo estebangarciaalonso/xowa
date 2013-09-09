@@ -31,7 +31,7 @@ public class Io_stream_zip_mgr {
 		if (type == Io_stream_.Tid_file) return val;
 		Io_stream_rdr rdr = Rdr(type);
 		rdr.Open_mem(val);
-		return Io_stream_rdr_.Load_all(rdr, bfr);
+		return Io_stream_rdr_.Load_all_as_bry(bfr, rdr);
 	}
 	Io_stream_wtr Wtr(byte type) {
 		switch (type) {

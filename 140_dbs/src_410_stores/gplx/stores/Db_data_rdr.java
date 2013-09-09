@@ -51,12 +51,12 @@ public class Db_data_rdr extends DataRdr_base implements DataRdr {
 		return DateAdp_.dateTime_(g);
 	}
 	@Override public DecimalAdp ReadDecimal(String key) {return DecimalAdp_.db_(this.Read(key));}
-	@Override public gplx.ios.Input_stream_adp ReadInputStream(String key) {
+	@Override public gplx.ios.Io_stream_rdr ReadRdr(String key) {
 		try {
-			java.io.InputStream input_stream = rdr.getBinaryStream(key);
-			return gplx.ios.Input_stream_adp_.new_stream_(input_stream);
+			java.io.InputStream input_stream = rdr.getBinaryStream(key);			
+			return gplx.ios.Io_stream_rdr_.file_(input_stream);
 		}
-		catch (SQLException e) {return gplx.ios.Input_stream_adp_.Null;}
+		catch (SQLException e) {return gplx.ios.Io_stream_rdr_.Null;}
 	}
 	
 	public boolean MoveNextPeer() {

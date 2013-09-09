@@ -51,5 +51,9 @@ public class Sqlite_engine_ {
 		Db_connect connect = exists ? Db_connect_sqlite.load_(url) : Db_connect_sqlite.make_(url); 
 		return Db_provider_.new_(connect);
 	}
-	public static final int Stmt_arg_max = 999;
+	public static final int Stmt_arg_max = 999;		// 999 is max number of variables allowed by sqlite
+	public static final boolean Cfg_read_binary_stream_supported = true;	
+	public static String X_date_to_str(DateAdp v) {return v == Date_null ? "" : v.XtoStr_fmt_iso_8561();}
+	public static final DateAdp Date_null = null;
+	public static final byte Wildcard_byte = Byte_ascii.Hash;
 }

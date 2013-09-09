@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.xowa.gui.*; import gplx.xowa.html.*; import gplx.xowa.xtns.refs.*;
 public class Xoa_page {
+	Xoa_page() {}	// called by Null
 	public Xoa_page(Xow_wiki wiki, Xoa_ttl page_ttl) {
 		this.wiki = wiki; this.page_ttl = page_ttl;
 		Page_ttl_(page_ttl);
@@ -31,6 +32,7 @@ public class Xoa_page {
 	public void			Page_tid_normal_() {page_tid = Tid_normal;}
 	public Xol_lang		Lang() {return lang;} public Xoa_page Lang_(Xol_lang v) {lang = v; return this;} private Xol_lang lang;
 	public byte[] Search_text() {return search_text;} public Xoa_page Search_text_(byte[] v) {search_text = v; return this;} private byte[] search_text = ByteAry_.Empty;
+	public boolean Missing() {return missing;} public Xoa_page Missing_() {missing = true; return this;} private boolean missing;
 
 	public Xop_root_tkn Root() {return root;} public Xoa_page Root_(Xop_root_tkn v) {root = v; return this;} private Xop_root_tkn root;
 	public byte[] Data_raw() {return data_raw;} public Xoa_page Data_raw_(byte[] v) {data_raw = v; return this;} private byte[] data_raw = ByteAry_.Empty;
@@ -149,7 +151,6 @@ public class Xoa_page {
 //			redirect_list.Clear();
 		tocFlag_toc = tocFlag_toc_force = tocFlag_toc_no = false;
 	}
-	public static final Xoa_page Null = null;
 	public static final byte Tid_normal = 0, Tid_create = 1;
 	public static Xoa_page blank_page_(Xow_wiki wiki, Xoa_ttl ttl) {
 		Xoa_page rv = new Xoa_page(wiki, ttl);
@@ -160,4 +161,5 @@ public class Xoa_page {
 	}
 	public static final byte[] Bry_main_page = ByteAry_.new_ascii_("Main_Page");
 	public static final int Page_len_max = 2048 * Io_mgr.Len_kb;	// REF.MW: DefaultSettings.php; $wgMaxArticleSize = 2048;
+	public static final Xoa_page Null = new Xoa_page().Missing_();
 }

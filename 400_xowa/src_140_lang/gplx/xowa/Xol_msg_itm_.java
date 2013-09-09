@@ -232,8 +232,14 @@ public static final int
 , Id_xowa_wikidata_inTime = 211
 , Id_ctg_tbl_hidden = 212
 , Id_ctg_help_page = 213
-	;
-	public static final int Id__max = 214;
+, Id_statistics_title = 214
+, Id_statistics_header_pages = 215
+, Id_statistics_articles = 216
+, Id_statistics_pages = 217
+, Id_statistics_pages_desc = 218
+, Id_statistics_header_ns = 219	
+;
+	public static final int Id__max = 220;
 	public static Xol_msg_itm new_(int id, String key, String val) {return new_(id, ByteAry_.new_utf8_(key), ByteAry_.new_utf8_(val));}
 	public static Xol_msg_itm new_(int id, byte[] key, byte[] val) {
 		Xol_msg_itm rv = new Xol_msg_itm(id, key);
@@ -461,6 +467,12 @@ case Xol_msg_itm_.Id_xowa_wikidata_bc: return new_(Xol_msg_itm_.Id_xowa_wikidata
 case Xol_msg_itm_.Id_xowa_wikidata_inTime: return new_(Xol_msg_itm_.Id_xowa_wikidata_inTime, "xowa-wikidata-inTime", "in ~{0}");
 case Xol_msg_itm_.Id_ctg_tbl_hidden: return new_(Xol_msg_itm_.Id_ctg_tbl_hidden, "hidden-category-category", "Hidden categories");
 case Xol_msg_itm_.Id_ctg_help_page: return new_(Xol_msg_itm_.Id_ctg_help_page, "pagecategorieslink", "Special:Categories");
+case Xol_msg_itm_.Id_statistics_title: return new_(Xol_msg_itm_.Id_statistics_title, "statistics", "Statistics");
+case Xol_msg_itm_.Id_statistics_header_pages: return new_(Xol_msg_itm_.Id_statistics_header_pages, "statistics-header-pages", "Page statistics");
+case Xol_msg_itm_.Id_statistics_articles: return new_(Xol_msg_itm_.Id_statistics_articles, "statistics-articles", "Content pages");
+case Xol_msg_itm_.Id_statistics_pages: return new_(Xol_msg_itm_.Id_statistics_pages, "statistics-pages", "Pages");
+case Xol_msg_itm_.Id_statistics_pages_desc: return new_(Xol_msg_itm_.Id_statistics_pages_desc, "statistics-pages-desc", "All pages in the wiki, including talk pages, redirects, etc.");
+case Xol_msg_itm_.Id_statistics_header_ns: return new_(Xol_msg_itm_.Id_statistics_header_ns, "statistics-header-ns", "Name"+"space statistics");
 			default: throw Err_.unhandled(id);
 		}
 	}
@@ -478,8 +490,8 @@ case Xol_msg_itm_.Id_ctg_help_page: return new_(Xol_msg_itm_.Id_ctg_help_page, "
 
 		// search for itm
 		byte msg_src = Xol_msg_itm.Src_null; byte[] msg_val = ByteAry_.Empty;
-		Xoa_page msg_page = ttl == null ? null : wiki.Data_mgr().Get_page(ttl, false);	// find page with ttl of "MediaWiki:message_name/lang_code"
-		if (msg_page == null) {															// page not found; check lang
+		Xoa_page msg_page = ttl == null ? Xoa_page.Null : wiki.Data_mgr().Get_page(ttl, false);	// find page with ttl of "MediaWiki:message_name/lang_code"
+		if (msg_page.Missing()) {															// page not found; check lang
 			Xol_msg_itm msg_itm_in_lang = lang.Msg_mgr().Itm_by_key_or_null(msg_key);
 			if (msg_itm_in_lang != null) return msg_itm_in_lang;						// msg found; return it;
 			msg_itm_in_lang = wiki.App().Lang_mgr().Lang_en().Msg_mgr().Itm_by_key_or_null(msg_key);

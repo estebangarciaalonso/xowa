@@ -67,6 +67,7 @@ public class Xow_ns {
 	public boolean		Is_content()			{return id == Xow_ns_.Id_main;}									// ASSUME: only Main
 	public boolean		Is_includable()			{return true;}													// ASSUME: always true (be transcluded?)
 	public boolean		Is_movable()			{return id > Xow_ns_.Id_special;}								// ASSUME: only Special, Media cannot move (be renamed?)
+	public boolean		Is_meta()				{return id < Xow_ns_.Id_main;}									// ASSUME: only Special, Media
 	public boolean		Alias()					{return alias;} private boolean alias;
 	public int		Count()					{return count;} public Xow_ns Count_(int v) {count = v; return this;} private int count;
 	public byte[]	Gen_ttl(byte[] page)	{return id == Xow_ns_.Id_main ? page : ByteAry_.Add(name_db_w_colon, page);}

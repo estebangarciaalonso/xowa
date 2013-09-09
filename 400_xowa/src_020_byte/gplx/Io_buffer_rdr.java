@@ -62,7 +62,7 @@ public class Io_buffer_rdr implements RlsAble {	//_20120115
 		Io_mgr._.AppendFilStr(Io_url_.new_any_(urlStr), msg + text + "\n");
 	}
 	public static Io_buffer_rdr new_(Io_stream_rdr rdr, int bfr_len) {
-		Io_buffer_rdr rv = new Io_buffer_rdr(rdr, rdr.Src_url(), bfr_len);
+		Io_buffer_rdr rv = new Io_buffer_rdr(rdr, rdr.Url(), bfr_len);
 		rdr.Open();
 		rv.Bfr_load(0, bfr_len);
 		return rv;

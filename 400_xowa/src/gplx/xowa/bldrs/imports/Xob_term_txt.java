@@ -20,6 +20,6 @@ public class Xob_term_txt extends Xob_term_base {
 	public Xob_term_txt(Xob_bldr bldr, Xow_wiki wiki) {this.Ctor(bldr, wiki); this.wiki = wiki;} private Xow_wiki wiki;
 	@Override public String Cmd_key() {return KEY;} public static final String KEY = "core.term";
 	@Override public void Cmd_end_hook() {
-		Io_mgr._.SaveFilByt(wiki.Fsys_mgr().Cfg_wiki_core_fil(), wiki.Cfg_wiki_core().Build_gfs());
+		Io_mgr._.SaveFilBry(wiki.Fsys_mgr().Cfg_wiki_core_fil(), wiki.Cfg_wiki_core().Build_gfs());
 	}
 }

@@ -79,7 +79,7 @@ public class Xow_wiki implements GfoInvkAble {
 	public Xodb_mgr Db_mgr() {return db_mgr;} private Xodb_mgr db_mgr;
 	public Xodb_mgr_sql Db_mgr_as_sql() {return (Xodb_mgr_sql)db_mgr;}
 	public Xows_mgr Special_mgr() {return special_mgr;} private Xows_mgr special_mgr;
-	public byte[] Commons_wiki_key() {return commons_wiki_key;} private byte[] commons_wiki_key = ByteAry_.new_ascii_("commons.wikimedia.org");
+	public byte[] Commons_wiki_key() {return commons_wiki_key;} private byte[] commons_wiki_key = Xow_wiki_.Domain_commons_bry;
 	public Xob_hive_mgr Hive_mgr() {return hive_mgr;} private Xob_hive_mgr hive_mgr;
 	public Xow_msg_mgr Msg_mgr() {return msg_mgr;} private Xow_msg_mgr msg_mgr;
 	public Xow_fragment_mgr Fragment_mgr() {return fragment_mgr;} private Xow_fragment_mgr fragment_mgr;
@@ -99,7 +99,7 @@ public class Xow_wiki implements GfoInvkAble {
 		byte[] rv = (byte[])page_cache.Get_by_bry(ttl.Full_url());
 		if (rv == null) {
 			Xoa_page page = data_mgr.Get_page(ttl, true);
-			if (page != Xoa_page.Null) {
+			if (!page.Missing()) {
 				rv = page.Data_raw();
 				page_cache.Add_bry_obj(ttl.Full_url(), rv);
 			}
@@ -134,12 +134,11 @@ public class Xow_wiki implements GfoInvkAble {
 	public Xoa_page GetPageByTtl(Xoa_url url, Xoa_ttl ttl) {return GetPageByTtl(url, ttl, lang);}
 	private Xoa_page GetPageByTtl(Xoa_url url, Xoa_ttl ttl, Xol_lang lang) {
 		if (init_needed) Init_wiki(app.User());
-//			app.Gui_mgr().Main_win().History_mgr().Update_html_doc_pos();
 		Xoa_page page = data_mgr.Get_page(url, ttl, false);						// get page from data_mgr
-		if (page != Xoa_page.Null)
+		if (!page.Missing())
 			gplx.xowa.xtns.scribunto.Scrib_engine.Engine_page_changed(page);	// notify scribunto about page changed
 		ctx.Tab().Clear();
-		if (page == null) {														// page doesn't exist
+		if (page.Missing()) {													// page doesn't exist
 			if (ttl.Ns().Id_file()) {
 				Xow_wiki commons_wiki = app.Wiki_mgr().Get_by_key_or_null(commons_wiki_key);
 				if (commons_wiki != null
@@ -147,9 +146,9 @@ public class Xow_wiki implements GfoInvkAble {
 					return commons_wiki.GetPageByTtl(url, ttl, this.lang);
 			}
 			else
-				return Xoa_page.Null;			
+				return page.Missing_();
 		}
-		if (page == Xoa_page.Null) return Xoa_page.Null;	// NOTE: commons can return null page
+		if (page.Missing()) return page;	// NOTE: commons can return null page
 		page.Lang_(lang);
 		ParsePage(page, false);	// NOTE: do not clear page b/c reused for search
 		return page;

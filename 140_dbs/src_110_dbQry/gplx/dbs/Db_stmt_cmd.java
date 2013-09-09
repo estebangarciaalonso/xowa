@@ -71,6 +71,10 @@ class Db_stmt_cmd implements Db_stmt {
 		try {stmt.setString(++val_idx, v);} catch (Exception e) {throw Err_.err_(e, "failed to add value: type={0} val={1}", "String", v);}	
 		return this;
 	}
+	public Db_stmt Val_rdr_(gplx.ios.Io_stream_rdr v, int rdr_len) {
+		try {stmt.setBinaryStream(++val_idx, (java.io.InputStream)v.Under(), rdr_len);} catch (Exception e) {throw Err_.err_(e, "failed to add value: type={0} val={1}", "rdr", v);}	
+		return this;
+	}
 	public boolean Exec_insert() {			
 		try {boolean rv = stmt.execute(); return rv;} catch (Exception e) {throw Err_.err_(e, "failed to exec prepared statement: sql={0} err={1}", sql, Err_.Message_gplx_brief(e));}	
 	}

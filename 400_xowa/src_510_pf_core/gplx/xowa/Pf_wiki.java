@@ -80,7 +80,7 @@ class Pf_rev_props extends Pf_func_base {
 				if (argx.length > 0) {
 					Xoa_ttl argx_ttl = Xoa_ttl.parse_(ctx.Wiki(), argx);
 					Xoa_page argx_page = ctx.Wiki().Data_mgr().Get_page(argx_ttl, false);
-					if (argx_page != Xoa_page.Null) {
+					if (!argx_page.Missing()) {
 						bb.Add_int_variable(argx_page.Data_raw().length);
 						return;
 					}

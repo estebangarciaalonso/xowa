@@ -152,6 +152,11 @@ public class Xot_invk_wkr_tst {
 	@Test  public void Nowiki_asterisk() {	// PURPOSE: nowiki should noop lists; DATE:2013-08-26
 		fxt.tst_Parse_page_all_str("<nowiki>*a</nowiki>", "*a");
 	}
+	@Test  public void Nowiki_space() {	// PURPOSE: nowiki should noop space (else pre); DATE:2013-09-03
+		fxt.Ctx().Para().Enabled_y_();
+		fxt.tst_Parse_page_all_str("a\n<nowiki> </nowiki>b", "<p>a\n b\n</p>\n");
+		fxt.Ctx().Para().Enabled_n_();
+	}
 	@Test  public void LnkiWithPipe_basic() {	// PURPOSE: pipe in link should not count towards tmpl: WP:{{H:title|dotted=no|pronunciation:|[[File:Loudspeaker.svg|11px|link=|alt=play]]}}
 		fxt.tst_Parse_tmpl_str_test("{{{1}}}{{{2}}}"									, "{{test|[[b=c|d]]}}"			, "[[b=c|d]]{{{2}}}");
 	}

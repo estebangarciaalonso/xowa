@@ -29,20 +29,20 @@ public class Xof_url_bldr {
 	public int Seek() {return seek;} public Xof_url_bldr Seek_(int v) {seek = v; return this;} private int seek = -1;
 	public Xof_url_bldr Wmf_fsys_(boolean v) {wmf_fsys = v; return this;} private boolean wmf_fsys;
 	public boolean Thumb() {return thumb;} public Xof_url_bldr Thumb_(boolean v) {thumb = v; return this;} private boolean thumb;
-	public Xof_url_bldr Set_src_file_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, int seek) {
-		this.wmf_fsys = true; this.thumb = mode == Xof_repo_itm.Mode_thumb;
-		this.dir_spr = repo.Dir_spr(); this.root = repo.Root(); this.ttl = repo.Gen_name_src(ttl); this.area = repo.Mode_names()[mode];
-		this.md5 = md5; this.ext = ext; this.width = width; this.seek = seek;
-		this.tarball = repo.Tarball();
-		return this;
-	}	boolean tarball;
 	public Xof_url_bldr Set_trg_html_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, int seek) {
 		this.wmf_fsys = false; this.thumb = mode == Xof_repo_itm.Mode_thumb;
 		this.dir_spr = Byte_ascii.Slash; this.root = repo.Root_http(); this.ttl = repo.Gen_name_trg(ttl, md5, ext); this.area = repo.Mode_names()[mode];
 		this.md5 = md5; this.ext = ext; this.width = width; this.seek = seek;
 		this.repo_file_depth = repo.Dir_depth();
 		return this;
-	}	int repo_file_depth;
+	}	private int repo_file_depth;
+	public Xof_url_bldr Set_src_file_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, int seek) {
+		this.wmf_fsys = true; this.thumb = mode == Xof_repo_itm.Mode_thumb;
+		this.dir_spr = repo.Dir_spr(); this.root = repo.Root(); this.ttl = repo.Gen_name_src(ttl); this.area = repo.Mode_names()[mode];
+		this.md5 = md5; this.ext = ext; this.width = width; this.seek = seek;
+		this.tarball = repo.Tarball();
+		return this;
+	}	private boolean tarball;
 	public Xof_url_bldr Set_trg_file_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, int seek) {
 		this.wmf_fsys = false; this.thumb = mode == Xof_repo_itm.Mode_thumb;
 		this.dir_spr = repo.Dir_spr(); this.root = repo.Root(); this.ttl = repo.Gen_name_trg(ttl, md5, ext); this.area = repo.Mode_names()[mode];

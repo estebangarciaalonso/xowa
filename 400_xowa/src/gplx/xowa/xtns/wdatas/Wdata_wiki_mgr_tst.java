@@ -24,6 +24,12 @@ public class Wdata_wiki_mgr_tst {
 		fxt.Test_link("en", "q1", "q1_en");
 		fxt.Test_link("en", "q2", null);
 	}
+	@Test  public void Case_sensitive() {	// PURPOSE: wikidata lkp should be case_sensitive; a vs A DATE:2013-09-03
+		Wdata_wiki_mgr_fxt fxt = new Wdata_wiki_mgr_fxt().Init();
+		fxt.Init_links_add("enwiki", "q1", "q1_lc");
+		fxt.Test_link("en", "q1", "q1_lc");
+		fxt.Test_link("en", "Q1", null);	// Q1 should not match q1
+	}
 	@Test   public void Write_json_as_html() {
 		Wdata_wiki_mgr_fxt fxt = new Wdata_wiki_mgr_fxt().Init();
 		fxt.Test_write_json_as_html("{'a':'b','c':['d','e'],'f':{'g':'<h>'}}", String_.Concat_lines_nl_skipLast

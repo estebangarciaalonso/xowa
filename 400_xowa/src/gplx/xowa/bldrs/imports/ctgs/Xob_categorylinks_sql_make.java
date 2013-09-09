@@ -26,7 +26,7 @@ public class Xob_categorylinks_sql_make implements Io_make_cmd {
 		name_id_rdr = New_registry_rdr(wiki, usr_dlg);
 		cur_cat_file_max = wiki.App().Setup_mgr().Dump_mgr().Db_categorylinks_max();
 
-		Reset_ctg(db_mgr);
+		db_mgr.Delete_by_tid(Xodb_file.Tid_category);
 		Xodb_fsys_mgr fsys_mgr = db_mgr.Fsys_mgr();
 		Xodb_file category_file = fsys_mgr.Get_tid_root(Xodb_file.Tid_core);
 		if (cur_cat_file_max > 0) {
@@ -127,20 +127,6 @@ public class Xob_categorylinks_sql_make implements Io_make_cmd {
 		return new Io_line_rdr(usr_dlg, urls).Key_gen_(Io_line_rdr_key_gen_.first_pipe);
 	}	Io_line_rdr name_id_rdr;
 	private static final byte[] Ttl_last = null, Ttl_first = ByteAry_.Empty;
-	private static void Reset_ctg(Xodb_mgr_sql db_mgr) {
-		Xodb_file[] ary = db_mgr.Fsys_mgr().Ary();
-		int len = ary.length;
-		for (int i = 0; i < len; i++) {
-			Xodb_file file = ary[i] ;
-			if (file.Tid() != Xodb_file.Tid_category) continue;
-			file.Rls();
-			gplx.dbs.Db_connect_sqlite sqlite = (gplx.dbs.Db_connect_sqlite)file.Connect();
-			Io_mgr._.DeleteFil_args(sqlite.Url()).MissingFails_off().Exec();
-			file.Cmd_mode_(Db_cmd_mode.Delete);
-		}
-		db_mgr.Tbl_xowa_db().Commit_all(db_mgr.Fsys_mgr().Core_provider(), ary);
-		db_mgr.Init_load(db_mgr.Fsys_mgr().Core_provider().ConnectInfo());
-	}
 }
 /*
 NOTE_1: categorylinks row size: 34 + 20 + 12 + (ctg_sortkey.length * 2)

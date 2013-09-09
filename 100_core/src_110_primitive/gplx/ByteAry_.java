@@ -262,6 +262,12 @@ public class ByteAry_ {
 		}
 		return ByteAry_.Mid(src, txt_bgn, txt_end);
 	}
+	public static boolean Has(byte[] src, byte lkp) {
+		int len = src.length;
+		for (int i = 0; i < len; i++)
+			if (src[i] == lkp) return true;
+		return false;
+	}
 	public static boolean HasAtEnd(byte[] src, byte[] lkp) {int src_len = src.length; return HasAtEnd(src, lkp, src_len - lkp.length, src_len);}
 	public static boolean HasAtEnd(byte[] src, byte[] lkp, int src_bgn, int src_end) {
 		int lkp_len = lkp.length;

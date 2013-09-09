@@ -41,7 +41,7 @@ public class Xosrh_core implements GfoInvkAble, Xows_page {
 		Xoa_page find_page = page;
 		if (!ByteAry_.Eq(search_bry, Bry_page_name))				// do not lookup page else stack overflow; happens when going directly to Special:Search (from history)
 			find_page = wiki.Data_mgr().Get_page(page_ttl, false);	// lookup page
-		if (find_page == Xoa_page.Null || url.Search_fulltext()) {	// page not found, or explicit_search invoked
+		if (find_page.Missing() || url.Search_fulltext()) {	// page not found, or explicit_search invoked
 			ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_k004();
 			int page_idx = args_mgr.Page_idx();
 			Sort_tid(args_mgr.Sort_tid());

@@ -443,6 +443,7 @@ public class Xoh_html_wtr {
 			case Xop_xnde_tag_.Tid_references:				ref_wtr.Xnde_references(this, ctx, opts, bfr, src, xnde, depth); break;
 			case Xop_xnde_tag_.Tid_translate:				gplx.xowa.xtns.translates.Xop_translate_xnde.To_html(this, ctx, opts, bfr, src, xnde, depth); break;
 			case Xop_xnde_tag_.Tid_languages:				gplx.xowa.xtns.translates.Xop_languages_xnde.To_html(this, ctx, opts, bfr, src, xnde, depth); break;
+			case Xop_xnde_tag_.Tid_templateData:			gplx.xowa.xtns.templateData.Xtn_templateData_nde.To_html(this, ctx, opts, bfr, src, xnde, depth); break;
 			case Xop_xnde_tag_.Tid_timeline: {
 				bfr.Add_str("<pre class='xowa-timeline'>");
 				bfr.Add_mid(src, xnde.Src_bgn(), xnde.Src_end());

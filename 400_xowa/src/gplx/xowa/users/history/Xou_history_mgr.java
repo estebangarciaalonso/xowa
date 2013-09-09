@@ -65,7 +65,7 @@ public class Xou_history_mgr implements GfoInvkAble {// app.user.history
 		itms.SortBy(sorter);
 		if (itms_len > current_itms_max) itms = Archive(app);
 		byte[] ary = Xou_history_itm_srl.Save(itms);
-		Io_mgr._.SaveFilByt(app.User().Fsys_mgr().App_data_history_fil(), ary);
+		Io_mgr._.SaveFilBry(app.User().Fsys_mgr().App_data_history_fil(), ary);
 	}
 	public OrderedHash Archive(Xoa_app app) {
 		itms.SortBy(sorter);
@@ -79,7 +79,7 @@ public class Xou_history_mgr implements GfoInvkAble {// app.user.history
 		}
 		byte[] ary = Xou_history_itm_srl.Save(archive_itms);
 		Io_url url = app.User().Fsys_mgr().App_data_history_fil().GenNewNameOnly(DateAdp_.Now().XtoStr_fmt_yyyyMMdd_HHmmss_fff());
-		Io_mgr._.SaveFilByt(url, ary);
+		Io_mgr._.SaveFilBry(url, ary);
 		return current_itms;
 	}	int current_itms_max = 512, current_itms_reset = 256;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {

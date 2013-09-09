@@ -43,8 +43,8 @@ public class Xodb_mgr_sql implements Xodb_mgr, GfoInvkAble {
 	public Xodb_wdata_pids_tbl Tbl_wdata_pids() {return tbl_wdata_pids;} private Xodb_wdata_pids_tbl tbl_wdata_pids = new Xodb_wdata_pids_tbl();
 	public Xodb_category_tbl Tbl_category() {return tbl_category;} private Xodb_category_tbl tbl_category = new Xodb_category_tbl();
 	public Xodb_categorylinks_tbl Tbl_categorylinks() {return tbl_categorylinks;} private Xodb_categorylinks_tbl tbl_categorylinks = new Xodb_categorylinks_tbl();
-	public Xodb_search_title_main_tbl Tbl_search_title_main() {return tbl_search_title_main;} private Xodb_search_title_main_tbl tbl_search_title_main = new Xodb_search_title_main_tbl();
-	public Xodb_search_title_link_tbl Tbl_search_title_link() {return tbl_search_title_link;} private Xodb_search_title_link_tbl tbl_search_title_link = new Xodb_search_title_link_tbl();
+	public Xodb_search_title_word_tbl Tbl_search_title_word() {return tbl_search_title_word;} private Xodb_search_title_word_tbl tbl_search_title_word = new Xodb_search_title_word_tbl();
+	public Xodb_search_title_page_tbl Tbl_search_title_page() {return tbl_search_title_page;} private Xodb_search_title_page_tbl tbl_search_title_page = new Xodb_search_title_page_tbl();
 	public byte State() {return state;} private byte state = State_init; public static final byte State_init = 0, State_make = 1, State_load = 2;
 	public DateAdp Dump_date_query() {
 		DateAdp rv = wiki.Props().Modified_latest();
@@ -94,7 +94,7 @@ public class Xodb_mgr_sql implements Xodb_mgr, GfoInvkAble {
 		}	finally {rdr.Rls();}
 		int rslts_len = rslts.Count();
 		rslts.SortBy(Xodb_page_sorter.IdAsc);
-		tbl_page.Select_by_id_list(Cancelable_.Never, rslts, 0, rslts_len);
+		tbl_page.Select_by_id_list(Cancelable_.Never, false, rslts, 0, rslts_len);
 		rslts.SortBy(Xodb_page_sorter.NmsId_TtlAsc);
 		boolean rv = false;
 		for (int i = 0; i < rslts.Count(); i++) {
@@ -140,6 +140,21 @@ public class Xodb_mgr_sql implements Xodb_mgr, GfoInvkAble {
 		category_version = version_is_1 ? Xoa_ctg_mgr.Version_1 : Xoa_ctg_mgr.Version_2;
 		tbl_cfg.Insert_str(grp, key, Byte_.XtoStr(category_version));
 	}
+	public void Delete_by_tid(byte tid) {
+		Xodb_file[] ary = fsys_mgr.Ary();
+		int len = ary.length;
+		for (int i = 0; i < len; i++) {
+			Xodb_file file = ary[i] ;
+			if (file.Tid() != tid) continue;
+			file.Rls();
+			gplx.dbs.Db_connect_sqlite sqlite = (gplx.dbs.Db_connect_sqlite)file.Connect();
+			Io_mgr._.DeleteFil_args(sqlite.Url()).MissingFails_off().Exec();
+			file.Cmd_mode_(Db_cmd_mode.Delete);
+		}
+		tbl_db.Commit_all(fsys_mgr.Core_provider(), ary);
+		this.Init_load(fsys_mgr.Core_provider().ConnectInfo());
+	}
+
 	public static final String Grp_wiki_init = "wiki.init";
 	public static final int Page_id_null = -1;
 	public static Io_url Find_core_url(Xow_wiki wiki) {

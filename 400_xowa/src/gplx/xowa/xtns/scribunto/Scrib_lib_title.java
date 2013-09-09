@@ -113,13 +113,13 @@ class Scrib_lib_title implements Scrib_lib {
 			|| !ttl.Ns().Id_file_or_media()
 			) return Scrib_kv_utl.base1_obj_(false);
 		Xoa_page file_page = wiki.Data_mgr().Get_page(ttl, false);
-		return Scrib_kv_utl.base1_obj_(file_page != Xoa_page.Null);
-		}
-		public KeyVal[] GetContent(KeyVal[] values) {
+		return Scrib_kv_utl.base1_obj_(!file_page.Missing());
+	}
+	public KeyVal[] GetContent(KeyVal[] values) {
 		byte[] ttl_bry = Scrib_kv_utl.Val_to_bry(values, 0);
 		Xow_wiki wiki = engine.Wiki();
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry); if (ttl == null) return Scrib_kv_utl.base1_obj_(null);
-		Xoa_page page = wiki.Data_mgr().Get_page(ttl, false); if (page == Xoa_page.Null) return Scrib_kv_utl.base1_obj_(null);
+		Xoa_page page = wiki.Data_mgr().Get_page(ttl, false); if (page.Missing()) return Scrib_kv_utl.base1_obj_(null);
 		return Scrib_kv_utl.base1_obj_(String_.new_utf8_(page.Data_raw()));
 	}
 	public KeyVal[] GetCurrentTitle(KeyVal[] values) {

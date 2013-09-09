@@ -29,7 +29,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 		qids_cache.Clear();
 		pids_cache.Clear();
 		docs_cache.Clear();
-	}	Hash_adp_bry qids_cache = new Hash_adp_bry(false), pids_cache = new Hash_adp_bry(false), docs_cache = new Hash_adp_bry(false);
+	}	private Hash_adp_bry qids_cache = new Hash_adp_bry(true), pids_cache = new Hash_adp_bry(true), docs_cache = new Hash_adp_bry(true);
 	public void Qids_add(ByteAryBfr bfr, byte[] lang_key, byte wiki_tid, byte[] ns_num, byte[] ttl, byte[] qid) {
 		Xob_bz2_file.Build_alias_by_lang_tid(bfr, lang_key, wiki_tid_ref.Val_(wiki_tid));
 		byte[] qids_key = bfr.Add_byte(Byte_ascii.Pipe).Add(ns_num).Add_byte(Byte_ascii.Pipe).Add(ttl).XtoAry();
@@ -141,7 +141,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 	Json_doc Get_json(byte[] qid_bry) {
 		if (!enabled) return null;
 		Xoa_ttl qid_ttl = Xoa_ttl.parse_(this.Wdata_wiki(), qid_bry); if (qid_ttl == null) {app.Usr_dlg().Warn_many("", "", "invalid qid for ttl: ~{0}", String_.new_utf8_(qid_bry)); return null;}
-		Xoa_page qid_page = this.Wdata_wiki().Data_mgr().Get_page(qid_ttl, false); if (qid_page == null) return null;
+		Xoa_page qid_page = this.Wdata_wiki().Data_mgr().Get_page(qid_ttl, false); if (qid_page.Missing()) return null;
 		byte[] src = qid_page.Data_raw();
 		return parser.Parse(src);
 	}	

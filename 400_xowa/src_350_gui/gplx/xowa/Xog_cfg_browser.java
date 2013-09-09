@@ -24,7 +24,7 @@ public class Xog_cfg_browser implements GfoInvkAble {
 	public boolean Link_hover_full() {return link_hover_full;} public Xog_cfg_browser Link_hover_full_(boolean v) {link_hover_full = v; return this;} private boolean link_hover_full;
 	public boolean Content_editable() {return content_editable;} public Xog_cfg_browser Content_editable_(boolean v) {content_editable = v; return this;} private boolean content_editable;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_content_editable))		return content_editable;
+		if		(ctx.Match(k, Invk_content_editable))		return Yn.XtoStr(content_editable);
 		else if	(ctx.Match(k, Invk_content_editable_))		content_editable = m.ReadYn_toggle("v", content_editable);
 		else if	(ctx.Match(k, Invk_link_hover_full_))		link_hover_full = m.ReadYn("v");
 		else	return GfoInvkAble_.Rv_unhandled;

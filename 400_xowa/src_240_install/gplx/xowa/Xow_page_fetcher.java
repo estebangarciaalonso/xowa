@@ -24,7 +24,7 @@ class Xow_page_fetcher_wiki implements Xow_page_fetcher {
 	public byte[] Fetch(int ns_id, byte[] ttl_bry) {
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ns_id, ttl_bry);
 		Xoa_page page = wiki.Data_mgr().Get_page(ttl, false);	// go through data_mgr in case of redirects
-		return page == null ? null : page.Data_raw();
+		return page.Missing() ? null : page.Data_raw();
 	}
 }
 class Xow_page_fetcher_mok implements Xow_page_fetcher {

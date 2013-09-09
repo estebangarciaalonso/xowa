@@ -74,7 +74,7 @@ class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 		wiki.Init_assert();
 		bldr.Cmd_mgr().Clear();
 		bldr.Pause_at_end_(false);
-		Io_url src_url = wiki.Bldr_props().Src_rdr().Src_url();
+		Io_url src_url = wiki.Bldr_props().Src_rdr().Url();
 		if (install_mgr.Dump_mgr().Wiki_storage_type_is_sql())
 			Process_sql(bldr);
 		else

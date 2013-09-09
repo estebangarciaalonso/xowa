@@ -30,6 +30,7 @@ public interface Db_stmt extends RlsAble {
 	Db_stmt Val_bry_by_str_(String v);
 	Db_stmt Val_str_by_bry_(byte[] v);
 	Db_stmt Val_str_(String v);
+	Db_stmt Val_rdr_(gplx.ios.Io_stream_rdr rdr, int rdr_len);
 	boolean Exec_insert();
 	int Exec_update();
 	int Exec_delete();

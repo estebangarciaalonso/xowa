@@ -51,13 +51,13 @@ class ErrProcData {
 		ErrProcData rv = new ErrProcData().Raw_(raw);
 				// ex:'gplx.Err.new_(Err.java:92)'
 		int sigEnd = String_.FindFwd(raw, "("); if (sigEnd == String_.NotFound) return rv;
-		rv.signatureRaw = String_.MidByPos(raw, 0, sigEnd);
+		rv.signatureRaw = String_.Mid(raw, 0, sigEnd);
 		int filBgn = sigEnd + 1; // 1="("
 		int filEnd = String_.FindFwd(raw, ":", filBgn); if (filEnd == String_.NotFound) return rv;
-		rv.sourceFileRaw = String_.MidByPos(raw, filBgn, filEnd);
+		rv.sourceFileRaw = String_.Mid(raw, filBgn, filEnd);
 		int linBgn = filEnd + 1; // 1=":"
 		int linEnd = String_.FindFwd(raw, ")", linBgn); if (linEnd == String_.NotFound) return rv;
-		String linRaw = String_.MidByPos(raw, linBgn, linEnd);
+		String linRaw = String_.Mid(raw, linBgn, linEnd);
 		rv.sourceLine = Int_.parse_(linRaw);
 		rv.ideAddress = String_.Concat("(", rv.sourceFileRaw, ":", Int_.XtoStr(rv.sourceLine), ")");
 				return rv;

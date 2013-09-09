@@ -70,7 +70,7 @@ public class Xof_xfer_queue {
 		this.Clear();
 	}
 	public void Exec_fsdb(Xog_win_wtr wtr, Xow_wiki wiki) {
-		wiki.File_mgr().Fsdb_mgr().Bin_find(wtr, list);
+		wiki.File_mgr().Fsdb_mgr().Reg_select(wtr, list);
 	}
 	private static final String GRP_KEY = "xowa.xfer.queue";
 }

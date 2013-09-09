@@ -17,5 +17,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 public class Xof_bin_wkr_ {
-	public static final byte Tid_null = 0, Tid_fsdb = 1, Tid_inet = 2, Tid_fsys_wmf = 3, Tid_fsys_xowa = 4, Tid_fsys_dir = 5; 
+	public static final byte Tid_null = Byte_.MaxValue_127, Tid_noop = 1, Tid_not_found = 2, Tid_fsdb = 3, Tid_inet = 4, Tid_fsys_wmf = 5, Tid_fsys_xowa = 6, Tid_fsys_dir = 7;
 }

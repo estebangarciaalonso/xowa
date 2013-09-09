@@ -22,13 +22,13 @@ public class Fsdb_fil_tbl {
 		Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); 
 		Sqlite_engine_.Idx_create(p, Idx_name, Idx_owner);
 	}
-	public static void Insert(Db_provider p, int id, int owner_id, String name, int xtn_id, int ext_id, long size, String modified, String hash) {
+	public static void Insert(Db_provider p, int id, int owner_id, String name, int xtn_id, int ext_id, long size, DateAdp modified, String hash) {
 		Db_stmt stmt = Insert_stmt(p);
 		try {Insert(stmt, id, owner_id, name, xtn_id, ext_id, size, modified, hash);}
 		finally {stmt.Rls();}
 	}
 	private static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_fil_id, Fld_fil_owner, Fld_fil_name, Fld_fil_xtn_id, Fld_fil_ext_id, Fld_fil_size, Fld_fil_modified, Fld_fil_hash);}
-	private static void Insert(Db_stmt stmt, int id, int owner_id, String name, int xtn_id, int ext_id, long size, String modified, String hash) {
+	private static void Insert(Db_stmt stmt, int id, int owner_id, String name, int xtn_id, int ext_id, long size, DateAdp modified, String hash) {
 		stmt.Clear()
 		.Val_int_(id)
 		.Val_int_(owner_id)
@@ -36,7 +36,7 @@ public class Fsdb_fil_tbl {
 		.Val_int_(xtn_id)
 		.Val_int_(ext_id)
 		.Val_long_(size)
-		.Val_str_(modified)
+		.Val_str_(Sqlite_engine_.X_date_to_str(modified))
 		.Val_str_(hash)
 		.Exec_insert();
 	}	

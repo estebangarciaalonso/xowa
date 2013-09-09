@@ -25,7 +25,7 @@ public class Pf_url_filepath_tst {
 		Xoa_app app = fxt.App(); en_wiki = fxt.Wiki();
 		mock_wkr.Clear_commons();	// assume all files are in repo 0
 		en_wiki.File_mgr().Repo_mgr().Page_finder_(mock_wkr);
-		commons_wiki = Xoa_app_fxt.wiki_(app, "commons.wikimedia.org");
+		commons_wiki = Xoa_app_fxt.wiki_(app, Xow_wiki_.Domain_commons_str);
 		commons_wiki.Db_mgr().Load_mgr().Clear();
 		en_wiki.Db_mgr().Load_mgr().Clear();
 		app.Wiki_mgr().Add(commons_wiki);

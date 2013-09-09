@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.apps.*;
+import gplx.xowa.apps.*; import gplx.xowa.files.cnvs.*;
 public class Xof_img_mgr {
 	public Xof_img_wkr_query_img_size			Wkr_query_img_size() {return wkr_query_img_size;} public Xof_img_mgr Wkr_query_img_size_(Xof_img_wkr_query_img_size v) {wkr_query_img_size = v; return this;} private Xof_img_wkr_query_img_size wkr_query_img_size;
 	public Xof_img_wkr_resize_img				Wkr_resize_img() {return wkr_resize_img;} public Xof_img_mgr Wkr_resize_img_(Xof_img_wkr_resize_img v) {wkr_resize_img = v; return this;} private Xof_img_wkr_resize_img wkr_resize_img;

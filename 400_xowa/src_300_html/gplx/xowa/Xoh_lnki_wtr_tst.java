@@ -313,7 +313,7 @@ public class Xoh_lnki_wtr_tst {
 		if (title_bgn != String_.NotFound) {
 			title_bgn += String_.Len(" title=\"");
 			int title_end = String_.FindFwd(actl, "\"", title_bgn);
-			if (title_end != String_.NotFound) actl_ttl = String_.MidByPos(actl, title_bgn, title_end);
+			if (title_end != String_.NotFound) actl_ttl = String_.Mid(actl, title_bgn, title_end);
 		}
 		Tfds.Eq(expd_ttl, actl_ttl, actl);
 	}

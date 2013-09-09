@@ -62,12 +62,12 @@ public class Xpath_ {
 		String headBgnFind = "<" + nodeName + " "; int headBgnFindLen = String_.Len(headBgnFind);
 		int headBgn = String_.FindFwd(xml, headBgnFind, pos);						if (headBgn == String_.NotFound) return null;
 		int headEnd = String_.FindFwd(xml, ">", headBgn + headBgnFindLen);			if (headEnd == String_.NotFound) throw xmlErr;
-		String atrXml = String_.MidByPos(xml, headBgn, headEnd);
+		String atrXml = String_.Mid(xml, headBgn, headEnd);
 		KeyValHash rv = ExtractNodeVals(atrXml, xmlErr);
 		boolean noInnerText = String_.CharAt(xml, headEnd - 1) == '/';				// if />, then no inner text
 		if (!noInnerText) {
 			int tail = String_.FindFwd(xml, "</" + nodeName + ">", headBgn);		if (tail == String_.NotFound) throw xmlErr.Hdr_("could not find tailPos").Add("headBgn", headBgn);
-			String innerText = String_.MidByPos(xml, headEnd + 1, tail);
+			String innerText = String_.Mid(xml, headEnd + 1, tail);
 			rv.Add(InnetTextKey, innerText);
 		}
 		posRef.Val_(headEnd);
@@ -87,8 +87,8 @@ public class Xpath_ {
 				spPos--;
 			}
 			if (spPos == String_.NotFound) throw xmlErr.Hdr_("could not find hdr").Add("eqPos", eqPos);
-			String key = String_.MidByPos(xml, spPos + 1, eqPos);
-			String val = String_.MidByPos(xml, q0Pos + 1, q1Pos);
+			String key = String_.Mid(xml, spPos + 1, eqPos);
+			String val = String_.Mid(xml, q0Pos + 1, q1Pos);
 			rv.Add(key, val);
 			pos = q1Pos;
 		}

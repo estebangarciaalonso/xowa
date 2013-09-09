@@ -177,12 +177,7 @@ public class String_ implements GfoInvkAble {
 	}
 
 	public static String new_charAry_(char[] ary, int bgn, int len) {return new String(ary, bgn, len);}
-	public static String MidByLenSafe(String s, int bgn, int len) {
-		if (bgn + len >= Len(s)) len = Len(s) - bgn;
-		return Mid_lang(s, bgn, len);
-	}
-	public static String MidByLen(String s, int bgn, int len) {return Mid_lang(s, bgn, len);}
-	public static String MidByPos(String s, int bgn, int end) {
+	public static String Mid(String s, int bgn, int end) {
 		try {return Mid_lang(s, bgn, end - bgn);}
 		catch (Exception e) {
 			int len = s == null ? 0 : Len(s);
@@ -194,9 +189,14 @@ public class String_ implements GfoInvkAble {
 			throw err;
 		}
 	}
+	public static String MidByLenSafe(String s, int bgn, int len) {
+		if (bgn + len >= Len(s)) len = Len(s) - bgn;
+		return Mid_lang(s, bgn, len);
+	}
+	public static String MidByLen(String s, int bgn, int len) {return Mid_lang(s, bgn, len);}
 	public static String GetStrBefore(String s, String spr) {
 		int sprPos = String_.FindFwd(s, spr); if (sprPos == String_.NotFound) throw Err_.new_("could not find spr").Add("s", s).Add("spr", spr);
-		return MidByPos(s, 0, sprPos);
+		return Mid(s, 0, sprPos);
 	}
 	public static String GetStrAfter(String s, String spr) {
 		int sprPos = String_.FindFwd(s, spr); if (sprPos == String_.NotFound) throw Err_.new_("could not find spr").Add("s", s).Add("spr", spr);
@@ -487,9 +487,9 @@ public class String_ implements GfoInvkAble {
 	public static String Extract_after_bwd(String src, String dlm) {
 		int dlm_pos = String_.FindBwd(src, dlm); if (dlm_pos == String_.NotFound) return String_.Empty;
 		int src_len = String_.Len(src); if (dlm_pos == src_len - 1) return String_.Empty;
-		return String_.MidByPos(src, dlm_pos + 1, src_len);
+		return String_.Mid(src, dlm_pos + 1, src_len);
 	}
 	public static String Replace_by_pos(String v, int del_bgn, int del_end, String repl) {
-		return String_.MidByPos(v, 0, del_bgn) + repl + String_.MidByPos(v, del_end, String_.Len(v));
+		return String_.Mid(v, 0, del_bgn) + repl + String_.Mid(v, del_end, String_.Len(v));
 	}
 }

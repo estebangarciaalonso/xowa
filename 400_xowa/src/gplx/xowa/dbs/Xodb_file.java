@@ -47,6 +47,7 @@ public class Xodb_file {
 			case Tid_category:	return "category";
 			case Tid_wikidata:	return "wikidata";
 			case Tid_temp:		return "temp";
+			case Tid_search:	return "search";
 			default:			throw Err_.unhandled(v);
 		}
 	}

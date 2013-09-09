@@ -79,7 +79,7 @@ public class Xoa_css_extractor {
 		Css_stylesheet_wiki_generate_section(bfr, Ttl_vector_css);
 		byte[] bry = bfr.XtoAryAndClear();
 		bry = ByteAry_.Replace(bry, gplx.xowa.bldrs.xmls.Xob_xml_parser_.Bry_tab_ent, gplx.xowa.bldrs.xmls.Xob_xml_parser_.Bry_tab);
-		Io_mgr._.SaveFilByt(trg_fil, bry);
+		Io_mgr._.SaveFilBry(trg_fil, bry);
 		return true;
 	}	static final byte[] Ttl_common_css = ByteAry_.new_ascii_("Common.css"), Ttl_vector_css = ByteAry_.new_ascii_("Vector.css");
 	private boolean Css_stylesheet_wiki_generate_section(ByteAryBfr bfr, byte[] ttl) {
@@ -172,7 +172,7 @@ public class Xoa_css_extractor {
 		if (css_url == null)
 			Failover(trg_fil);
 		else {
-			Io_mgr._.SaveFilByt(trg_fil, css_url);
+			Io_mgr._.SaveFilBry(trg_fil, css_url);
 			css_img_downloader.Chk(wiki_domain, trg_fil);
 		}
 	}

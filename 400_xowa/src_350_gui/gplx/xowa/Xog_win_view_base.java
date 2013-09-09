@@ -33,7 +33,7 @@ public abstract class Xog_win_view_base implements GfoInvkAble {
 	public void Launch() {
 		Xow_wiki home_wiki = app.User().Wiki();
 		Xoa_page launch_page = Launch_page(home_wiki, app.Sys_cfg().Launch_url());
-		if (launch_page == null)
+		if (launch_page.Missing())
 			//launch_page = Launch_page(home_wiki, app.User().Cfg_mgr().Startup_mgr().Page_url());
 			launch_page = Launch_page(home_wiki, Xoa_sys_cfg.Launch_url_dflt);
 		Show_page(launch_page);

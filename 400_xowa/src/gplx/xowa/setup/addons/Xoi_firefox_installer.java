@@ -51,7 +51,7 @@ public class Xoi_firefox_installer implements GfoInvkAble {
 		int end = String_.FindFwd(src, "\n", bgn + String_.Len(find));	// look for '\n'; note that this will trim any comments; EX: pref("key", "val"); // comment will be lost
 		if (end == String_.NotFound) return src;	// nl not found; return;
 		String repl = String_.Format("{0}, \"{1}\");", find, val);	// EX: 'pref("key", "val");'
-		return 		String_.MidByPos(src, 0, bgn)
+		return 		String_.Mid(src, 0, bgn)
 				+	repl
 				+	String_.Mid(src, end);
 	}

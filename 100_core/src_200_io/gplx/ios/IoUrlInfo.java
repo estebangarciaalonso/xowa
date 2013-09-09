@@ -217,7 +217,7 @@ class IoUrlInfo_alias extends IoUrlInfo_base {
 				srcDirSpr_byte = Op_sys.Wnt.Fsys_dir_spr_byte();
 			}
 		}
-		if (srcRootName == null) srcRootName = lnx ? "root" : String_.MidByPos(srcDir, 0, String_.FindFwd(srcDir, ":"));
+		if (srcRootName == null) srcRootName = lnx ? "root" : String_.Mid(srcDir, 0, String_.FindFwd(srcDir, ":"));
 		if (srcRootDir == null) srcRootDir = lnx ? "/" : srcDir;
 	}
 	void TrgDir_set(String v) {

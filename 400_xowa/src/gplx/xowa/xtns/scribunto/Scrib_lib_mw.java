@@ -57,7 +57,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		Xoa_ttl ttl = Xoa_ttl.parse_(cur_wiki, ByteAry_.new_utf8_(mod_name));// NOTE: should have Module: prefix
 		if (ttl == null) return Scrib_lib_mw.Rslts_none;
 		Xoa_page page = cur_wiki.Data_mgr().Get_page(ttl, false);
-		if (page == Xoa_page.Null) return Scrib_lib_mw.Rslts_none;
+		if (page.Missing()) return Scrib_lib_mw.Rslts_none;
 		Scrib_mod mod = new Scrib_mod(engine, mod_name);
 		return Scrib_kv_utl.base1_obj_(mod.LoadString(String_.new_utf8_(page.Data_raw())));
 	}

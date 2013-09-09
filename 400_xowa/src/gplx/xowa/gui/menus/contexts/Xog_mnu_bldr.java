@@ -66,7 +66,7 @@ public class Xog_mnu_bldr {
 		if (String_.Len(shortcut) != 1) return text;
 		int pos = String_.FindFwd(String_.Lower(text), String_.Lower(shortcut));
 		if (pos == String_.NotFound) return text;
-		return String_.MidByPos(text, 0, pos) + "&" + String_.Mid(text, pos); 
+		return String_.Mid(text, 0, pos) + "&" + String_.Mid(text, pos); 
 	}
 	private static final byte[] Bry_menu = ByteAry_.new_ascii_("menu-"), Bry_text = ByteAry_.new_ascii_("text"), Bry_shortcut = ByteAry_.new_ascii_("shortcut");
 }

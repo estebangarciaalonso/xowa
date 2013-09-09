@@ -64,7 +64,7 @@ class Sql_file_parser_fxt {
 	public Sql_file_parser_fxt Init_cmd_(Sql_file_parser_cmd cmd) {parser.Fld_cmd_(cmd); return this;}
 	public void Test_parse(String raw_str, String expd) {
 		Io_url src_fil = Io_url_.new_fil_("mem/test.sql");
-		Io_mgr._.SaveFilByt(src_fil, ByteAry_.new_utf8_(raw_str));
+		Io_mgr._.SaveFilBry(src_fil, ByteAry_.new_utf8_(raw_str));
 		Io_url trg_fil = Io_url_.new_fil_("mem/test.csv");
 		parser.Src_fil_(src_fil).Trg_fil_gen_(Io_url_gen_.fil_(trg_fil));
 		parser.Parse(Gfo_usr_dlg_base.test_());

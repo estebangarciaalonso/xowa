@@ -16,74 +16,100 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.fsdb; import gplx.*;
-import gplx.dbs.*;
+import gplx.dbs.*; import gplx.ios.*;
 public class Fsdb_bin_tbl {
 	public static void Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
-	public static void Insert(Db_provider p, int id, byte[] data) {
+	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_bin_owner_id, Fld_bin_owner_tid, Fld_bin_data);}
+	public static void Insert_rdr(Db_provider p, int id, byte tid, int bin_len, Io_stream_rdr bin_rdr) {
 		Db_stmt stmt = Insert_stmt(p);
-		try {Insert(stmt, id, data);}
+		try {Insert_rdr(stmt, id, tid, bin_len, bin_rdr);}
 		finally {stmt.Rls();}
 	}
-	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_bin_owner, Fld_bin_data);}
-	public static void Insert(Db_stmt stmt, int id, byte[] data) {
+	public static void Insert_rdr(Db_stmt stmt, int id, byte tid, int bin_len, Io_stream_rdr bin_rdr) {
 		stmt.Clear()
 		.Val_int_(id)
-		.Val_bry_(data)
-		.Exec_insert();
-	}	
-	public static void Update(Db_provider p, int id, byte[] data) {
-		Db_stmt stmt = Update_stmt(p);
-		try {Update(stmt, id, data);}
-		finally {stmt.Rls();}
-	}
-	private static Db_stmt Update_stmt(Db_provider p) {return Db_stmt_.new_update_(p, Tbl_name, String_.Ary(Fld_bin_owner), Fld_bin_data);}
-	private static void Update(Db_stmt stmt, int id, byte[] data) {
-		stmt.Clear()
-		.Val_int_(id)
-		.Val_bry_(data)
-		.Exec_update();
+		.Val_byte_(tid);
+		if (Sqlite_engine_.Cfg_read_binary_stream_supported)
+			stmt.Val_rdr_(bin_rdr, bin_len);
+		else
+			stmt.Val_bry_(Io_stream_rdr_.Load_all_as_bry(ByteAryBfr.new_(), bin_rdr));
+		stmt.Exec_insert();
 	}	
 	public static void Delete(Db_provider p, int id) {
 		Db_stmt stmt = Delete_stmt(p);
 		try {Delete(stmt, id);}
 		finally {stmt.Rls();}
 	}
-	private static Db_stmt Delete_stmt(Db_provider p) {return Db_stmt_.new_delete_(p, Tbl_name, Fld_bin_owner);}
+	private static Db_stmt Delete_stmt(Db_provider p) {return Db_stmt_.new_delete_(p, Tbl_name, Fld_bin_owner_id);}
 	private static void Delete(Db_stmt stmt, int id) {
 		stmt.Clear()
 		.Val_int_(id)
 		.Exec_delete();
 	}	
-	public static Fsdb_bin_itm Select_itm(Db_provider p, int owner) {
-		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_(Fld_bin_data).Where_(Db_crt_.eq_(Fld_bin_owner, owner));
+	public static Io_stream_rdr Select_as_rdr(Db_provider p, int owner) {
+		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_(Fld_bin_data).Where_(Db_crt_.eq_(Fld_bin_owner_id, owner));
 		DataRdr rdr = DataRdr_.Null;
 		try {
 			rdr = p.Exec_qry_as_rdr(qry);
 			if (rdr.MoveNextPeer()) {
-				return new Fsdb_bin_itm(owner, rdr.ReadBry(Fld_bin_data));
+				if (Sqlite_engine_.Cfg_read_binary_stream_supported)
+					return rdr.ReadRdr(Fld_bin_data);
+				else
+					return gplx.ios.Io_stream_rdr_.mem_(rdr.ReadBry(Fld_bin_data));
 			}
 			else
-				return Fsdb_bin_itm.Null;
+				return gplx.ios.Io_stream_rdr_.Null;
 		}
 		finally {rdr.Rls();}
 	}
-	public static gplx.ios.Input_stream_adp Select_stream(Db_provider p, int owner) {
-		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_(Fld_bin_data).Where_(Db_crt_.eq_(Fld_bin_owner, owner));
+	public static boolean Select_to_fsys(Db_provider p, int owner, Io_url url, byte[] bfr, int flush) {
+		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_(Fld_bin_data).Where_(Db_crt_.eq_(Fld_bin_owner_id, owner));
 		DataRdr rdr = DataRdr_.Null;
 		try {
 			rdr = p.Exec_qry_as_rdr(qry);
-			if (rdr.MoveNextPeer()) 
-				return rdr.ReadInputStream(Fld_bin_data);
+			if (rdr.MoveNextPeer()) {
+				if (Sqlite_engine_.Cfg_read_binary_stream_supported)
+					return Select_to_fsys__stream(rdr, url, bfr, flush);
+				else {
+					byte[] bry = rdr.ReadBry(Fld_bin_data);
+					Io_mgr._.SaveFilBry(url, bry);
+					return true;
+				}
+			}
 			else
-				return gplx.ios.Input_stream_adp_.Null;
+				return false;
 		}
 		finally {rdr.Rls();}
 	}
-	public static final String Tbl_name = "fsdb_bin", Fld_bin_owner = "bin_owner", Fld_bin_data = "bin_data";
+	public static boolean Select_to_fsys__stream(DataRdr rdr, Io_url url, byte[] bfr, int flush) {
+		Io_stream_rdr db_stream = Io_stream_rdr_.Null;
+		IoStream fs_stream = IoStream_.Null;
+		try {
+			db_stream = rdr.ReadRdr(Fld_bin_data); if (db_stream == Io_stream_rdr_.Null) return false;
+			fs_stream = Io_mgr._.OpenStreamWrite(url);
+			int pos = 0, flush_nxt = flush;
+			while (true) {
+				int read = db_stream.Read(bfr, pos, bfr.length); if (read == Io_stream_rdr_.Read_done) break;
+				fs_stream.Write(bfr, 0, read);
+				if (pos > flush_nxt) {
+					fs_stream.Flush();
+					flush_nxt += flush;
+				}
+			}
+			fs_stream.Flush();
+			return true;
+		} finally {
+			db_stream.Rls();
+			fs_stream.Rls();
+		}
+	}
+	public static final String Tbl_name = "fsdb_bin", Fld_bin_owner_id = "bin_owner_id", Fld_bin_owner_tid = "bin_owner_tid", Fld_bin_data = "bin_data";
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS fsdb_bin"
-	,	"( bin_owner             integer             NOT NULL    PRIMARY KEY"
+	,	"( bin_owner_id          integer             NOT NULL    PRIMARY KEY"
+	,	", bin_owner_tid         byte                NOT NULL"
 	,	", bin_data              mediumblob          NOT NULL"
 	,	");"
 	);
+	public static final byte Owner_tid_fil = 1, Owner_tid_thm = 2;
 }

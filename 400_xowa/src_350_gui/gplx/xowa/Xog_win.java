@@ -140,7 +140,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	void Exec_link_clicked(String anchor_raw) {
 		String url = url_box.Text();
 		int pos = String_.FindFwd(url, gplx.xowa.html.Xoh_html_tag.Const_anchor);
-		if (pos != ByteAry_.NotFound) url = String_.MidByPos(url, 0, pos);
+		if (pos != ByteAry_.NotFound) url = String_.Mid(url, 0, pos);
 		String anchor_str = Xog_win_utl_.Parse_evt_location_changing(anchor_raw);
 		byte[] anchor_bry = ByteAry_.new_utf8_(anchor_str);
 		if (anchor_str != null) {							// link has anchor
@@ -156,7 +156,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		int bgn_pos = String_.FindFwd(body, find_text);
 		if (bgn_pos != String_.NotFound) {	// text found; delete entire line
 			int end_pos = String_.FindFwd(body, ";\n", bgn_pos);
-			body = String_.MidByPos(body, 0, bgn_pos) + String_.MidByPos(body, end_pos + 2, String_.Len(body));
+			body = String_.Mid(body, 0, bgn_pos) + String_.Mid(body, end_pos + 2, String_.Len(body));
 		}
 		body += append_text;
 		return body;
@@ -387,7 +387,6 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			Xow_wiki wiki = url.Wiki();
 			wiki.Init_assert();	// NOTE: must assert that wiki is inited before parsing; occurs b/c lang (with lang-specific ns) are only loaded on init, and parse Xoa_ttl.parse_ will fail below; EX:pt.wikipedia.org/wiki/Wikipedia:Página principal
 			wiki.View_data().Clear();
-//				wiki.Ctx().Clear();
 			Xoa_ttl ttl = Xoa_ttl.parse_(wiki, url.Page_bry());
 			gui_wtr.Prog_one(GRP_KEY, "view.load", "loading: ~{0}", String_.new_utf8_(ttl.Raw()));
 			try {
@@ -401,22 +400,26 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 				app.Log_wtr().Queue_enabled_(false);
 				return;
 			}
-			if (new_page == Xoa_page.Null) {
+			if (new_page.Missing()) {
 				if (ByteAry_.Eq(url.Page_bry(), Xoa_page.Bry_main_page)) {	// HACK: handle missing Main Page; EX: nl.wikivoyage.org
 					url.Page_bry_(wiki.Props().Main_page());
 					ttl = Xoa_ttl.parse_(wiki, url.Page_bry());
 					new_page = wiki.GetPageByTtl(url, ttl);
 					wiki.Ctx().Page_(new_page);
 				}
-				if (new_page == Xoa_page.Null) {
+				if (new_page.Missing()) {
 					if (wiki.Db_mgr().Save_mgr().Create_enabled()) {
 						new_page = Xoa_page.blank_page_(wiki, ttl);
 						cur_view_tid = Xoh_wiki_article.Tid_view_edit;
 						history_mgr.Add(new_page);	// NOTE: must put new_page on stack b/c pressing back will pop whatever's last
 						Exec_show_wiki_page(new_page, false);
 					}
-					else
-						gui_wtr.Prog_one(GRP_KEY, "view.find.fail", "could not find: ~{0}", String_.new_utf8_(url.Raw()));
+					else {
+						if (new_page.Redirect_list().Count() > 0)
+							gui_wtr.Prog_many(GRP_KEY, "view.find.fail", "could not find: ~{0} (redirected from ~{1})", String_.new_utf8_(new_page.Url().Page_bry()), String_.new_utf8_((byte[])new_page.Redirect_list().FetchAt(0)));
+						else
+							gui_wtr.Prog_one(GRP_KEY, "view.find.fail", "could not find: ~{0}", String_.new_utf8_(url.Raw()));
+					}
 					app.Log_wtr().Queue_enabled_(false);
 					return;
 				}
@@ -465,14 +468,14 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		Exec_page_refresh();
 	}
 	public void Exec_page_view(byte v) {
-		if (cur_view_tid == Xoh_wiki_article.Tid_view_edit && v == Xoh_wiki_article.Tid_view_read && page != Xoa_page.Null)
+		if (cur_view_tid == Xoh_wiki_article.Tid_view_edit && v == Xoh_wiki_article.Tid_view_read && !page.Missing())
 			Exec_page_reload(); // NOTE: if moving from "Edit" to "Read", reload page (else Preview changes will still show)
 		cur_view_tid = v;
-		if (page == Xoa_page.Null) return;
+		if (page.Missing()) return;
 		Exec_show_wiki_page(page, false);
 	}
 	public void Exec_page_stack(Xoa_page new_page) {
-		if (new_page == Xoa_page.Null) return;
+		if (new_page.Missing()) return;
 		boolean new_page_is_same = ByteAry_.Eq(page.Page_ttl().Full_txt(), new_page.Page_ttl().Full_txt());
 		Exec_show_wiki_page(new_page, true, new_page_is_same);
 		Exec_reload_imgs();
@@ -601,7 +604,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		if (url == null) return ByteAry_.new_ascii_("missing");
 		Xoa_ttl ttl = Xoa_ttl.parse_(url.Wiki(), url.Page_bry());
 		Xoa_page new_page = url.Wiki().GetPageByTtl(url, ttl);
-		if (new_page == Xoa_page.Null) {return ByteAry_.Empty;}
+		if (new_page.Missing()) {return ByteAry_.Empty;}
 		page = new_page;
 		history_mgr.Add(new_page);			
 		return output_html

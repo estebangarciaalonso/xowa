@@ -70,8 +70,8 @@ public class Gfui_html_cfg implements GfoInvkAble {
 	}
 	public static void Html_window_vpos_parse(String v, StringRef scroll_top, StringRef node_path) {
 		int pipe_pos = String_.FindFwd(v, "|");
-		scroll_top.Val_(String_.MidByPos(v, 0, pipe_pos));
-		String node_path_val = String_.MidByPos(v, pipe_pos + 1, String_.Len(v));
+		scroll_top.Val_(String_.Mid(v, 0, pipe_pos));
+		String node_path_val = String_.Mid(v, pipe_pos + 1, String_.Len(v));
 		node_path_val = "'" + String_.Replace(node_path_val, ",", "','") + "'";
 		node_path.Val_(node_path_val);
 	}

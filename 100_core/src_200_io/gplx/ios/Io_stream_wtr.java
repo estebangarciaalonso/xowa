@@ -18,9 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.ios; import gplx.*;
 public interface Io_stream_wtr extends RlsAble {
 	byte Tid();
-	Io_url Trg_url(); Io_stream_wtr Trg_url_(Io_url v);
+	Io_url Url(); Io_stream_wtr Url_(Io_url v);
 	void Trg_bfr_(ByteAryBfr v);
 	Io_stream_wtr Open();
+
 	void Write(byte[] bry, int bgn, int len);
 	void Flush();
 }

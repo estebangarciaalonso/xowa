@@ -28,7 +28,7 @@ public class Xoa_css_img_downloader {
 		byte[] new_bry = Convert_to_local_urls(rel_url_prefix, old_bry, img_list);
 		Io_url img_dir = css_fil.OwnerDir();
 		Download_fils(img_dir, img_list.XtoStrAry());
-		Io_mgr._.SaveFilByt(css_fil, new_bry);
+		Io_mgr._.SaveFilBry(css_fil, new_bry);
 	}
 	public byte[] Convert_to_local_urls(byte[] rel_url_prefix, byte[] src, ListAdp list) {
 		try {

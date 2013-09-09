@@ -115,8 +115,9 @@ public class Xop_xnde_tag_ {
 , Tid_form = 91
 , Tid_translate = 92
 , Tid_languages = 93
+, Tid_templateData = 94
 	;
-	public static final int _MaxLen = 94;
+	public static final int _MaxLen = 95;
 	public static final Xop_xnde_tag[] Ary = new Xop_xnde_tag[_MaxLen];
 	private static Xop_xnde_tag new_(int id, String name) {
 		Xop_xnde_tag rv = new Xop_xnde_tag(id, name);
@@ -218,5 +219,6 @@ public class Xop_xnde_tag_ {
 , Tag_form = new_(Tid_form, "form").Restricted_()
 , Tag_translate = new_(Tid_translate, "translate").Xtn_()
 , Tag_languages = new_(Tid_languages, "languages").Xtn_()
+, Tag_templateData = new_(Tid_templateData, "templateData").Xtn_()
 		;
 }

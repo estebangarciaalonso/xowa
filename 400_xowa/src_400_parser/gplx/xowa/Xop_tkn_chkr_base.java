@@ -44,7 +44,7 @@ public class Xop_tkn_chkr_base implements Tst_chkr {
 		err += mgr.Tst_val(src_bgn == -1, path, "src_bgn",  src_bgn, actl.Src_bgn());
 		err += mgr.Tst_val(src_end == -1, path, "src_end", src_end, actl.Src_end());
 		if (raw != null) {
-			String raw_actl = raw_src == null ? mgr.Vars_get_bry_as_str("raw_bry", actl.Src_bgn(), actl.Src_end()) : String_.MidByPos(raw_src, actl.Src_bgn(), actl.Src_end());
+			String raw_actl = raw_src == null ? mgr.Vars_get_bry_as_str("raw_bry", actl.Src_bgn(), actl.Src_end()) : String_.Mid(raw_src, actl.Src_bgn(), actl.Src_end());
 			err += mgr.Tst_val(raw == null, path, "raw", raw, raw_actl);
 		}
 		return err;

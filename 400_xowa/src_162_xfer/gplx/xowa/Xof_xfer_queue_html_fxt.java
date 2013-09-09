@@ -38,7 +38,7 @@ public class Xof_xfer_queue_html_fxt extends Xof_xfer_queue_base_fxt {
 	public Xof_xfer_queue_html_fxt Html_orig_src_(String v) {html_orig_src = v; return this;} private String html_orig_src;
 	public Xof_xfer_queue_html_fxt ini_page_api(String wiki_str, String ttl_str, String redirect_str, int orig_w, int orig_h) {return ini_page_api(wiki_str, ttl_str, redirect_str, orig_w, orig_h, true);}
 	public Xof_xfer_queue_html_fxt ini_page_api(String wiki_str, String ttl_str, String redirect_str, int orig_w, int orig_h, boolean pass) {
-		String wiki_key = String_.Eq(wiki_str, "commons") ? "commons.wikimedia.org" : "en.wikipedia.org";
+		String wiki_key = String_.Eq(wiki_str, "commons") ? Xow_wiki_.Domain_commons_str : Xow_wiki_.Domain_enwiki_str;
 		this.Api_size().Ini(wiki_key, ttl_str, redirect_str, orig_w, orig_h, pass);
 		return this;
 	}

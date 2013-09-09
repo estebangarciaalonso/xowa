@@ -38,7 +38,7 @@ public class Xow_data_mgr implements GfoInvkAble {
 		Xodb_page db_page = Xodb_page.tmp_();
 		while (true) {
 			boolean exists = wiki.Db_mgr().Load_mgr().Load_ttl(db_page, ns, ttl.Page_db());
-			if (!exists) return Xoa_page.Null;
+			if (!exists) return rv.Missing_();
 			wiki.App().Gui_wtr().Prog_many(GRP_KEY, "file_load", "loading page for ~{0}", String_.new_utf8_(ttl.Raw()));
 			wiki.Db_mgr().Load_mgr().Load_page(db_page, ns, !called_from_tmpl);
 			byte[] bry = db_page.Text();

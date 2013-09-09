@@ -68,6 +68,7 @@ public class DateAdp implements CompareAble, GfoInvkAble {
 	public String XtoStr_fmt_yyyyMMdd_HHmm()		{return XtoStr_fmt("yyyyMMdd_HHmm");}
 	public String XtoStr_fmt_yyyy_MM_dd_HH_mm()		{return XtoStr_fmt("yyyy-MM-dd HH:mm");}
 	public String XtoStr_fmt_yyyy_MM_dd_HH_mm_ss()	{return XtoStr_fmt("yyyy-MM-dd HH:mm:ss");}
+	public String XtoStr_fmt_iso_8561()				{return XtoStr_fmt("yyyy-MM-dd HH:mm:ss");}
 		public Calendar UnderDateTime() 		{return under;} Calendar under;
 	public int Year() {return under.get(Calendar.YEAR);}
 	public int Month() {return under.get(Calendar.MONTH) + Month_base0adj;}
@@ -123,7 +124,7 @@ public class DateAdp implements CompareAble, GfoInvkAble {
 	public String XtoStr_tz()	{
         SimpleDateFormat sdf = new SimpleDateFormat("Z");
 		String time_zone = sdf.format(under.getTime());
-		return String_.MidByPos(time_zone, 0, 3) + ":" + String_.MidByPos(time_zone, 3, String_.Len(time_zone));
+		return String_.Mid(time_zone, 0, 3) + ":" + String_.Mid(time_zone, 3, String_.Len(time_zone));
 	}
 	public boolean Eq(DateAdp v)			{DateAdp comp = v; return Object_.Eq(under.getTimeInMillis(), comp.under.getTimeInMillis());}
 	public int Diff_days(DateAdp prev)		{

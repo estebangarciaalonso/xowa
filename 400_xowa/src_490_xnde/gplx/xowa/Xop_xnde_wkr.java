@@ -583,6 +583,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 					case Xop_xnde_tag_.Tid_score:					xnde_data = tkn_mkr.Score_nde(); break;
 					case Xop_xnde_tag_.Tid_translate:				xnde_data = tkn_mkr.Translate(); break;
 					case Xop_xnde_tag_.Tid_languages:				xnde_data = tkn_mkr.Languages(); break;
+					case Xop_xnde_tag_.Tid_templateData:			xnde_data = tkn_mkr.TemplateData(); break;
 				}
 				if (xnde_data != null) { 
 					xnde_data.Xtn_compile(ctx, ctx.Wiki(), tkn_mkr, src, xnde);

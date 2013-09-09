@@ -91,7 +91,7 @@ public class Nearby_mgr implements Xows_page {
 			if (visited.Has(ttl_bry)) continue;
 			visited.Add_bry_bry(ttl_bry);
 			Xoa_page page = wiki.Data_mgr().Get_page(ttl, false);
-			if (page == Xoa_page.Null) continue;
+			if (page.Missing()) continue;
 			wiki.ParsePage(page, true);
 			OrderedHash lnkis = OrderedHash_.new_bry_();
 			Collect_lnkis(lnkis, page.Root());
@@ -130,7 +130,7 @@ public class Nearby_mgr implements Xows_page {
 		if (visited.Has(ttl_bry)) return;
 		visited.Add_bry_bry(ttl_bry);
 		Xoa_page page = wiki.Data_mgr().Get_page(ttl, false);
-		if (page == Xoa_page.Null) return;
+		if (page.Missing()) return;
 		++pages_count;
 		wiki.ParsePage(page, true);
 		OrderedHash lnkis = OrderedHash_.new_bry_();

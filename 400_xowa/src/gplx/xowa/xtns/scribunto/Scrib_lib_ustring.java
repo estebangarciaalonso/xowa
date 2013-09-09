@@ -120,7 +120,7 @@ class Scrib_lib_ustring implements Scrib_lib {
 			}
 		}
 		else if (op_is_match)	// if op_is_match, and no captures, extract find_txt; note that UstringLibrary.php says "$arr[] = $m[0][0];" which means get the 1st match; EX: "aaaa", "a" will have four matches; get 1st
-			tmp_list.Add(String_.MidByPos(text, rslt.Find_bgn(), rslt.Find_end()));
+			tmp_list.Add(String_.Mid(text, rslt.Find_bgn(), rslt.Find_end()));
 	}
 	static final int Base1 = 1, End_adj = 1;
 }
@@ -172,14 +172,14 @@ class Scrib_lib_ustring_gsub_mgr {
 		for (int i = 0; i < len; i++) {
 			if (limit > -1 && repl_count == limit) break;
 			RegxMatch rslt = rslts[i];
-			tmp_bfr.Add_str(String_.MidByPos(text, pos, rslt.Find_bgn()));	// NOTE: regx returns char pos (not bry); must add as String, not bry; DATE:2013-07-17
+			tmp_bfr.Add_str(String_.Mid(text, pos, rslt.Find_bgn()));	// NOTE: regx returns char pos (not bry); must add as String, not bry; DATE:2013-07-17
 			Exec_repl_itm(text_bry, rslt);
 			pos = rslt.Find_end();
 			++repl_count;
 		}
 		int text_len = String_.Len(text);
 		if (pos < text_len)
-			tmp_bfr.Add_str(String_.MidByPos(text, pos, text_len));			// NOTE: regx returns char pos (not bry); must add as String, not bry; DATE:2013-07-17
+			tmp_bfr.Add_str(String_.Mid(text, pos, text_len));			// NOTE: regx returns char pos (not bry); must add as String, not bry; DATE:2013-07-17
 		return tmp_bfr.XtoStrAndClear();
 	}
 	void Exec_repl_itm(byte[] text_bry, RegxMatch rslt) {

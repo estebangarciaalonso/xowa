@@ -105,11 +105,11 @@ public class Io_mgr {	// exists primarily to gather all cmds under gplx namespac
 			stream.Write(val, bgn, len);
 		}	finally {stream.Rls();}
 	}
-	public void SaveFilBfr(Io_url url, ByteAryBfr bfr) {SaveFilByt(url, bfr.Bry(), bfr.Bry_len()); bfr.Clear();}
-	public void SaveFilByt(String urlStr, byte[] val) {SaveFilByt(Io_url_.new_fil_(urlStr), val);}
-	public void SaveFilByt(Io_url url, byte[] val) {SaveFilByt(url, val, val.length);}
-	public void SaveFilByt(Io_url url, byte[] val, int len) {SaveFilByt(url, val, 0, len);}
-	public void SaveFilByt(Io_url url, byte[] val, int bgn, int len) {
+	public void SaveFilBfr(Io_url url, ByteAryBfr bfr) {SaveFilBry(url, bfr.Bry(), bfr.Bry_len()); bfr.Clear();}
+	public void SaveFilBry(String urlStr, byte[] val) {SaveFilBry(Io_url_.new_fil_(urlStr), val);}
+	public void SaveFilBry(Io_url url, byte[] val) {SaveFilBry(url, val, val.length);}
+	public void SaveFilBry(Io_url url, byte[] val, int len) {SaveFilBry(url, val, 0, len);}
+	public void SaveFilBry(Io_url url, byte[] val, int bgn, int len) {
 		IoStream stream = IoStream_.Null;
 		try {
 			stream = OpenStreamWrite(url);

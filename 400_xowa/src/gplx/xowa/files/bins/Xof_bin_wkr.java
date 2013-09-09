@@ -19,5 +19,5 @@ package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xow
 import gplx.xowa.files.fsdb.*;
 public interface Xof_bin_wkr {
 	byte Tid();
-	boolean Get_bin(Xof_fsdb_itm itm, Io_url trg_url, boolean is_thumb);
+	boolean Get_bin(Xof_fsdb_itm itm, Io_url bin_url, boolean is_thumb, int w);
 }

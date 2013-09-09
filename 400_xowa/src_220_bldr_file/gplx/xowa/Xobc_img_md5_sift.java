@@ -119,7 +119,7 @@ class Io_sort_fil_md5 implements Io_sort_cmd { // 123|bgn|end|1
 	void Flush() {
 		Io_url url = url_gen.Nxt_url();
 		usr_dlg.Prog_one(GRP_KEY, "make", "making ~{0}", url.NameAndExt());
-		Io_mgr._.SaveFilByt(url, bfr.Bry(), bfr.Bry_len());
+		Io_mgr._.SaveFilBry(url, bfr.Bry(), bfr.Bry_len());
 		bfr.Clear();
 	}
 	private static final String GRP_KEY = "xowa.bldr.sort_md5";

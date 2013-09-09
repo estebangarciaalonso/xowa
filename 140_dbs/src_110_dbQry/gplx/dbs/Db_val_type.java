@@ -30,5 +30,6 @@ public class Db_val_type {
 		, Bry		= 9
 		, Varchar	= 10
 		, Nvarchar	= 11
+		, Rdr		= 12
 		;
 }

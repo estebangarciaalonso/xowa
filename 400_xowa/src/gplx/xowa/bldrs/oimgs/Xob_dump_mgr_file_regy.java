@@ -30,7 +30,7 @@ public class Xob_dump_mgr_file_regy extends Xob_itm_basic_base implements Xob_cm
 		Xodb_tbl_oimg_lnki_regy tbl_lnki_regy = new Xodb_tbl_oimg_lnki_regy().Create_table(provider);
 		tbl_lnki_regy.Create_data(usr_dlg, provider);
 		Xodb_tbl_oimg_file_regy tbl_file_regy = new Xodb_tbl_oimg_file_regy().Create_table(provider);
-		Xow_wiki commons_wiki = bldr.App().Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_("commons.wikimedia.org"));
+		Xow_wiki commons_wiki = bldr.App().Wiki_mgr().Get_by_key_or_make(Xow_wiki_.Domain_commons_bry);
 		commons_wiki .Init_assert();
 		tbl_file_regy.Create_data(usr_dlg, provider, wiki, commons_wiki);
 	}

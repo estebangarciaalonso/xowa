@@ -18,14 +18,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 public class Xof_fsdb_itm_key_bldr {
 	private ByteAryBfr bfr = ByteAryBfr.reset_(255);
-	public byte[] Bld(byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, double lnki_seek) {
+	public byte[] Bld_as_bry(byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, double lnki_thumbtime) {
+		Bld(lnki_ttl, lnki_type, lnki_w, lnki_h, lnki_upright, lnki_thumbtime);
+		return bfr.XtoAryAndClear();
+	}
+	public String Bld_as_str(byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, double lnki_thumbtime) {
+		Bld(lnki_ttl, lnki_type, lnki_w, lnki_h, lnki_upright, lnki_thumbtime);
+		return bfr.XtoStrAndClear();
+	}
+	private void Bld(byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, double lnki_thumbtime) {
 		bfr.Add(lnki_ttl);
 		Bfr_add_int		(lnki_type		, Xop_lnki_type.Id_null);
 		Bfr_add_int		(lnki_w			, Xop_lnki_tkn.Width_null);
 		Bfr_add_int		(lnki_h			, Xop_lnki_tkn.Height_null);
 		Bfr_add_double	(lnki_upright	, Xop_lnki_tkn.Upright_null);
-		Bfr_add_double	(lnki_seek		, Xop_lnki_tkn.Thumbtime_null);
-		return bfr.XtoAryAndClear();
+		Bfr_add_double	(lnki_thumbtime	, Xop_lnki_tkn.Thumbtime_null);	
 	}
 	private void Bfr_add_int(int val, int skip) {
 		bfr.Add_byte_pipe();

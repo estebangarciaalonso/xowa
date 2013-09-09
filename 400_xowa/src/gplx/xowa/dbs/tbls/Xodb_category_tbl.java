@@ -60,7 +60,7 @@ public class Xodb_category_tbl {
 	public void Select_by_cat_id_in(Cancelable cancelable, OrderedHash rv, Db_provider p, int bgn, int end) {
 		Xodb_in_wkr_category_id wkr = new Xodb_in_wkr_category_id();
 		wkr.Init(rv);
-		wkr.Select_in(p, cancelable, rv, bgn, end);
+		wkr.Select_in(p, cancelable, bgn, end);
 	}
 	public static Xodb_category_itm Read_ctg(DataRdr rdr) {
 		return Xodb_category_itm.load_

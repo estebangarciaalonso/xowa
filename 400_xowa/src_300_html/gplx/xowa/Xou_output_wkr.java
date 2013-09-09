@@ -136,10 +136,9 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		byte render_tid = Render_tid(wiki.Wiki_tid(), ns_id, page.Page_ttl().Page_db());
 		switch (render_tid) {
 			case Render_tid_pre:
-				bfr.Add(Xoh_consts.Pre_bgn_overflow);
 				Xoh_html_wtr.Bfr_escape(tmp_bfr, data_raw, 0, data_raw.length, page.Wiki().App(), true, false);
-				bfr.Add(tmp_bfr.XtoAryAndClear());				
-				bfr.Add(Xoh_consts.Pre_end);
+				app.Html_mgr().Page_mgr().Content_code_fmtr().Bld_bfr_many(bfr, tmp_bfr);
+				tmp_bfr.Clear();
 				break;
 			case Render_tid_json:
 				app.Wiki_mgr().Wdata_mgr().Write_json_as_html(bfr, data_raw);

@@ -56,7 +56,7 @@ public class Xob_ctg_v1_sql_tst {
 		,	";"
 		));
 	}
-	@Test    public void Ignore_dupes() {	// PURPOSE: ignore dupe ctgs
+	@Test   public void Ignore_dupes() {	// PURPOSE: ignore dupe ctgs
 		if (Xo_test.Db_skip) return;
 		fxt.Init_db_sqlite();
 		fxt.doc_ary_

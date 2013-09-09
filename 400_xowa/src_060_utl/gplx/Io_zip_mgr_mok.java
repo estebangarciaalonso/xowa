@@ -20,7 +20,7 @@ public class Io_zip_mgr_mok implements Io_zip_mgr {
 	public void Zip_fil(Io_url src_fil, Io_url trg_fil) {
 		byte[] src_bry = Io_mgr._.LoadFilBry(src_fil);
 		byte[] zip_bry = Zip_bry(src_bry, 0, src_bry.length);
-		Io_mgr._.SaveFilByt(trg_fil, zip_bry);
+		Io_mgr._.SaveFilBry(trg_fil, zip_bry);
 	}
 	public void Zip_dir(Io_url src_dir, Io_url trg_fil) {}
 	public byte[] Zip_bry(byte[] src, int bgn, int len)			{return ByteAry_.Add(Bry_zipped, ByteAry_.Mid(src, bgn, len));}

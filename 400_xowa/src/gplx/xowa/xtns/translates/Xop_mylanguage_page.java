@@ -27,7 +27,7 @@ public class Xop_mylanguage_page implements Xows_page {
 		if (!lang_is_english)
 			trg_bry = ByteAry_.Add_w_dlm(Xoa_ttl.Subpage_spr, page_bry, lang_key);
 		Xoa_page found_page = wiki.Data_mgr().Redirect(page, trg_bry);
-		if (found_page == Xoa_page.Null && !lang_is_english)	// foreign lang does not exist; default to english
+		if (found_page.Missing() && !lang_is_english)	// foreign lang does not exist; default to english
 			wiki.Data_mgr().Redirect(page, page_bry);
 	}
 }

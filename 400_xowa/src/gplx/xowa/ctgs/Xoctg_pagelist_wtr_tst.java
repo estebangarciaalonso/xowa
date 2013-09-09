@@ -20,7 +20,7 @@ import org.junit.*;
 import gplx.xowa.dbs.tbls.*;
 public class Xoctg_pagelist_wtr_tst {
 	@Before public void init() {fxt.Clear();} private Xoctg_pagelist_mgr_fxt fxt = new Xoctg_pagelist_mgr_fxt();
-	@Test    public void Basic() {
+	@Test   public void Basic() {
 		fxt.Init_ctg_hidden("A", "B", "C");
 		fxt.Init_ctg_normal("D", "E", "F");
 		fxt.Test_print_hidden(String_.Concat_lines_nl

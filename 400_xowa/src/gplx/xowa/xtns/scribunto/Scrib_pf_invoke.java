@@ -33,7 +33,7 @@ public class Scrib_pf_invoke extends Pf_func_base {
 			byte[] mod_ttl_bry = tmp_bfr.Add(module_ns.Name_db_w_colon()).Add(mod_name).Mkr_rls().XtoAryAndClear();
 			Xoa_ttl mod_ttl = Xoa_ttl.parse_(wiki, mod_ttl_bry);
 			Xoa_page mod_page = wiki.Data_mgr().Get_page(mod_ttl, false);
-			if (mod_page == Xoa_page.Null) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;}		// {{#invoke:missing_mod}}
+			if (mod_page.Missing()) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;}		// {{#invoke:missing_mod}}
 			mod_raw = mod_page.Data_raw();
 		}
 		else

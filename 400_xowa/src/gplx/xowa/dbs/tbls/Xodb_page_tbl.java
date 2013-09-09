@@ -49,7 +49,7 @@ public class Xodb_page_tbl {
 		return Xodb_mgr_sql.Page_id_null;
 	}
 	public DataRdr Select_all(Db_provider p) {
-		Db_qry_select qry = Db_qry_select.new_().From_(Tbl_name).Cols_(Fld_page_id, Fld_page_id).OrderBy_asc_(Fld_page_id);
+		Db_qry_select qry = Db_qry_select.new_().From_(Tbl_name).Cols_(Fld_page_id, Fld_page_title).OrderBy_asc_(Fld_page_id);
 		return p.Exec_qry_as_rdr(qry);
 	}
 	public boolean Select_by_id(Xodb_page rv, int page_id) {
@@ -125,9 +125,10 @@ public class Xodb_page_tbl {
 		}
 		finally {rdr.Rls();}
 		rslt_count.Val_(rslt_idx);
-	}	
-	public boolean Select_by_id_list(Cancelable cancelable, ListAdp rv) {return Select_by_id_list(cancelable, rv, 0, rv.Count());}
-	public boolean Select_by_id_list(Cancelable cancelable, ListAdp rv, int bgn, int end) {
+	}
+	public boolean Select_by_id_list(Cancelable cancelable, ListAdp rv)						{return Select_by_id_list(cancelable, false, rv, 0, rv.Count());}
+	public boolean Select_by_id_list(Cancelable cancelable, boolean skip_table_read, ListAdp rv)	{return Select_by_id_list(cancelable, skip_table_read, rv, 0, rv.Count());}
+	public boolean Select_by_id_list(Cancelable cancelable, boolean skip_table_read, ListAdp rv, int bgn, int end) {
 		Xodb_page[] page_ary = (Xodb_page[])rv.XtoAry(Xodb_page.class);
 		int len = page_ary.length; if (len == 0) return false;
 		int[] id_ary = new int[len];  
@@ -138,14 +139,14 @@ public class Xodb_page_tbl {
 		}
 		try {
 			provider.Txn_mgr().Txn_bgn_if_none();
-			for (int i = 0; i < len; i += 999) {	// 999 is max number of variables allowed by sqlite
+			for (int i = 0; i < len; i += Sqlite_engine_.Stmt_arg_max) {
 				int grp_end = i + 998; if (grp_end > len) grp_end = len;
-				Select_by_id_list_grp(cancelable, page_ary, id_ary, i, grp_end);
+				Select_by_id_list_grp(cancelable, skip_table_read, page_ary, id_ary, i, grp_end);
 			}			
 		}	finally {provider.Txn_mgr().Txn_end_all();}
 		return true;		
 	}
-	void Select_by_id_list_grp(Cancelable cancelable, Xodb_page[] page_ary, int[] id_ary, int id_ary_bgn, int id_ary_end) {
+	void Select_by_id_list_grp(Cancelable cancelable, boolean skip_table_read, Xodb_page[] page_ary, int[] id_ary, int id_ary_bgn, int id_ary_end) {
 		DataRdr rdr = DataRdr_.Null; 
 		Db_stmt stmt = Db_stmt_.Null;
 		try {
@@ -163,7 +164,8 @@ public class Xodb_page_tbl {
 				if (!hash.Has(p.Id()))	// NOTE: must check if file already exists b/c dynamicPageList currently allows dupes; DATE:2013-07-22
 					hash.Add(p.Id(), p);
 			}
-			stmt = Db_stmt_.new_select_in_(provider, Tbl_name, Fld_page_id, slice_ary);
+			String[] flds = skip_table_read ? Flds_ary_search_suggest : Flds_ary_all;
+			stmt = Db_stmt_.new_select_in_(provider, Tbl_name, Fld_page_id, slice_ary, flds);
 			for (int i = id_ary_bgn; i < id_ary_end; i++) {
 				if (cancelable.Canceled()) return;
 				int v = id_ary[i];
@@ -173,7 +175,10 @@ public class Xodb_page_tbl {
 			Xodb_page stub = new Xodb_page();
 			while (rdr.MoveNextPeer()) {
 				if (cancelable.Canceled()) return;
-				Read_page(stub, rdr);
+				if (skip_table_read)
+					Read_page_for_search_suggest(stub, rdr);
+				else
+					Read_page(stub, rdr);
 				Xodb_page page = (Xodb_page)hash.Fetch(stub.Id());
 				page.Copy(stub);
 			}
@@ -266,12 +271,12 @@ public class Xodb_page_tbl {
 	public void Select_by_id_in(Cancelable cancelable, OrderedHash rv, int bgn, int end) {
 		Xodb_in_wkr_page_id wkr = new Xodb_in_wkr_page_id();
 		wkr.Init(rv);
-		wkr.Select_in(provider, cancelable, rv, bgn, end);
+		wkr.Select_in(provider, cancelable, bgn, end);
 	}
 	public void Select_by_ttl_in(Cancelable cancelable, OrderedHash rv, int ns_id, int bgn, int end) {
 		Xodb_in_wkr_page_title wkr = new Xodb_in_wkr_page_title();
 		wkr.Init(rv, ns_id);
-		wkr.Select_in(provider, cancelable, rv, bgn, end);
+		wkr.Select_in(provider, cancelable, bgn, end);
 	}
 	private static final String Page_touched_fmt = "yyyyMMddHHmmss";
 	private static String Xto_touched_str(DateAdp v) {return v.XtoStr_fmt(Page_touched_fmt);}
@@ -366,32 +371,5 @@ class Xodb_in_wkr_category_id extends Xodb_in_wkr_base {
 			Xodb_page page = (Xodb_page)hash.Fetch(ctg_data.Id());
 			page.Xtn_(ctg_data);
 		}
-	}
-}
-abstract class Xodb_in_wkr_base {
-	public abstract int Interval();
-	public abstract void Fill_stmt(Db_stmt stmt, int bgn, int end);
-	public abstract Db_qry Build_qry(int bgn, int end);
-	public abstract void Eval_rslts(Cancelable cancelable, DataRdr rdr);
-	public void Select_in(Db_provider provider, Cancelable cancelable, OrderedHash hash, int full_bgn, int full_end) {
-		DataRdr rdr = DataRdr_.Null; 
-		Db_stmt stmt = Db_stmt_.Null;
-		try {
-			int interval = Interval();
-			for (int i = full_bgn; i < full_end; i += interval) {
-				int part_end = i + interval;
-				if (part_end > full_end) part_end = full_end;
-				stmt = provider.Prepare(Build_qry(i, part_end));
-				Fill_stmt(stmt, i, part_end);
-				rdr = stmt.Exec_select();
-				Eval_rslts(cancelable, rdr);
-			}
-		}	finally {rdr.Rls(); stmt.Rls();}
-	}
-	public static Object[] In_ary(int len) {
-		Object[] rv = new Object[len];
-		for (int i = 0; i < len; i++)
-			rv[i] = "";
-		return rv;
 	}
 }

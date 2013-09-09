@@ -71,10 +71,10 @@ public class Pf_msg_mgr {
 			tmp_bfr.Add_byte(Byte_ascii.Slash).Add(page_lang.Key_bry());		// "/fr"
 		byte[] ttl_bry = tmp_bfr.XtoAryAndClear();
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);							// find page with ttl of "MediaWiki:message_name/lang_code"
-		Xoa_page msg_page = ttl == null ? null : wiki.Data_mgr().Get_page(ttl, false);
+		Xoa_page msg_page = ttl == null ? Xoa_page.Null : wiki.Data_mgr().Get_page(ttl, false);
 		boolean found = false;
 		byte[] msg_val = ByteAry_.Empty;
-		if (msg_page == null) {													// page not found
+		if (msg_page.Missing()) {													// page not found
 			msg_val = msg_itm.Val();
 			if (ByteAry_.Len_eq_0(msg_val)) {									// no msg in lang.gfs; this is not good; set .Val to "<msg_key>" in order to avoids subsequent lookups
 				tmp_bfr.Add_byte(Byte_ascii.Lt).Add(msg_key).Add_byte(Byte_ascii.Gt);

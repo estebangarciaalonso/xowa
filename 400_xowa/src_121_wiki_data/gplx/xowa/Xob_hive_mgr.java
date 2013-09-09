@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.specials.*;
+import gplx.xowa.specials.*; import gplx.xowa.specials.allPages.*;
 public class Xob_hive_mgr {
 	public Xob_hive_mgr(Xow_wiki wiki) {this.wiki = wiki; this.fsys_mgr = wiki.Fsys_mgr();} private Xow_wiki wiki; Xow_fsys_mgr fsys_mgr;
 	public void Clear() {regy.Clear(); xdat.Clear();}

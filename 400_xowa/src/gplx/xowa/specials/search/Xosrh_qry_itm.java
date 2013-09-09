@@ -46,12 +46,18 @@ class Xosrh_qry_itm {
 	}
 	private static ListAdp Search_word(Xow_wiki wiki, Cancelable cancelable, ByteAryBfr tmp_bfr, byte[] search_word, int results_max) {
 		ListAdp rv = ListAdp_.new_();
+		if (wiki.Db_mgr().Tid() == gplx.xowa.dbs.Xodb_mgr_sql.Tid_sql
+			&& wiki.App().Gui_mgr().Search_suggest_mgr().Auto_wildcard()) {	// HACK: auto-asterisk words for sqlite; DATE:2013-09-05
+			if (!ByteAry_.HasAtEnd(search_word, new byte[] {Byte_ascii.Asterisk}))
+				search_word = ByteAry_.Add(search_word, Byte_ascii.Asterisk);
+			if (!ByteAry_.HasAtBgn(search_word, new byte[] {Byte_ascii.Asterisk}))
+				search_word = ByteAry_.Add(Byte_ascii.Asterisk, search_word);
+		}
 		wiki.Db_mgr().Load_mgr().Load_search(cancelable, rv, search_word, results_max);
 		return rv;
-	}	int results_max;
+	}
 	public void Search(Cancelable cancelable, ByteAryBfr tmp_bfr, byte[] src, Xow_wiki wiki, int results_max) {
 		if (cancelable.Canceled()) return;
-		this.results_max = results_max;
 		switch (tid) {
 			case Xosrh_qry_itm.Tid_null: return;
 			case Xosrh_qry_itm.Tid_word:

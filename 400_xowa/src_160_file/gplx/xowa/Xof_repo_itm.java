@@ -32,7 +32,7 @@ public class Xof_repo_itm implements GfoInvkAble {
 	public int Ttl_max() {return ttl_max;} public Xof_repo_itm Ttl_max_(int v) {ttl_max = v; return this;} private int ttl_max = 180;
 	public byte[][] Mode_names() {return mode_names;} private byte[][] mode_names = new byte[][] {ByteAry_.new_utf8_("orig"), ByteAry_.new_utf8_("thumb")};
 	public Xoft_rule_grp Ext_rules() {return ext_rules;} public Xof_repo_itm Ext_rules_(Xoft_rule_grp v) {ext_rules = v; return this;} private Xoft_rule_grp ext_rules;
-	public int Dir_depth() {return file_depth;} public Xof_repo_itm Dir_depth_(int v) {file_depth = v; return this;} private int file_depth = 4;
+	public int Dir_depth() {return dir_depth;} public Xof_repo_itm Dir_depth_(int v) {dir_depth = v; return this;} private int dir_depth = 4;
 	public boolean Primary() {return primary;} public Xof_repo_itm Primary_(boolean v) {primary = v; return this;} private boolean primary;
 	public Xof_repo_itm Root_str_(String v) {
 		this.root_str = v;

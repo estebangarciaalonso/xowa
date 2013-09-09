@@ -30,7 +30,7 @@ class Upgrader_v00_02_01 {
 		gplx.xowa.bldrs.xmls.Xob_siteinfo_parser.Siteinfo_parse(wiki, usr_dlg, siteinfo_str);	// NOTE: this also resets the namespaces on the wiki; not necessary, but is benign
 		usr_dlg.Note_many(GRP_KEY, "siteinfo.save", "saving siteinfo");
 		byte[] wiki_core_bry = wiki.Cfg_wiki_core().Build_gfs();
-		Io_mgr._.SaveFilByt(wiki.Fsys_mgr().Cfg_wiki_core_fil(), wiki_core_bry);
+		Io_mgr._.SaveFilBry(wiki.Fsys_mgr().Cfg_wiki_core_fil(), wiki_core_bry);
 		usr_dlg.Note_many(GRP_KEY, "siteinfo.end", "siteinfo.end for ~{0}", wiki.Key_str());
 
 		Io_url old_wikistats_url = wiki.Fsys_mgr().Root_dir().GenSubFil_nest("cfg", "wiki.gfs");
@@ -47,7 +47,7 @@ class Upgrader_v00_02_01 {
 		byte[] new_wikistats_bry = ByteAry_.Replace_between(old_wikistats_bry, ByteAry_.new_ascii_("props.main_page_('"), ByteAry_.new_ascii_("');\n"), ByteAry_.Empty);
 		if (!ByteAry_.Eq(old_wikistats_bry, new_wikistats_bry)) {
 			usr_dlg.Note_many(GRP_KEY, "wiki_stats.remove_mainpage", "removing mainpages");
-			Io_mgr._.SaveFilByt(new_wikistats_url, new_wikistats_bry);
+			Io_mgr._.SaveFilBry(new_wikistats_url, new_wikistats_bry);
 		}
 		usr_dlg.Note_many(GRP_KEY, "run.end", "migrate.end for ~{0}", wiki.Key_str());
 		usr_dlg.Note_many("", "", "");

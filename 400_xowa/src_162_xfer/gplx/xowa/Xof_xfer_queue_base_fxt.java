@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.ios.*;
+import gplx.ios.*; import gplx.xowa.files.cnvs.*;
 public class Xof_xfer_queue_base_fxt {
 	public Xof_img_wkr_api_size_base_mok Api_size() {return api_size;} private Xof_img_wkr_api_size_base_mok api_size = Xof_img_wkr_api_size_base_mok._;
 	public Xof_repo_itm Src_commons_repo() {return src_commons_repo;} private Xof_repo_itm src_commons_repo;
@@ -25,13 +25,13 @@ public class Xof_xfer_queue_base_fxt {
 		Io_mgr._.InitEngine_mem();
 		if (app == null) {
 			app = Xoa_app_fxt.app_();
-			en_wiki = Xoa_app_fxt.wiki_(app, "en.wikipedia.org");
-			commons = Xoa_app_fxt.wiki_(app, "commons.wikimedia.org");
+			en_wiki = Xoa_app_fxt.wiki_(app, Xow_wiki_.Domain_enwiki_str);
+			commons = Xoa_app_fxt.wiki_(app, Xow_wiki_.Domain_commons_str);
 			app.Wiki_mgr().Add(commons);
 			app.Wiki_mgr().Add(en_wiki);
 			
 			Xof_file_mgr file_mgr = app.File_mgr();
-			file_mgr.Img_mgr().Wkr_resize_img_(new Xof_img_wkr_resize_img_test());
+			file_mgr.Img_mgr().Wkr_resize_img_(Xof_img_wkr_resize_img_mok._);
 			file_mgr.Img_mgr().Wkr_query_img_size_(new Xof_img_wkr_query_img_size_test());
 			file_mgr.Download_mgr().Api_size_wkr_(api_size);
 
@@ -39,10 +39,10 @@ public class Xof_xfer_queue_base_fxt {
 			byte[] src_en_wiki = ByteAry_.new_ascii_("src_en_wiki");
 			byte[] trg_commons = ByteAry_.new_ascii_("trg_commons");
 			byte[] trg_en_wiki = ByteAry_.new_ascii_("trg_en_wiki");
-			src_commons_repo = Ini_repo_add(file_mgr, src_commons, "mem/src/commons.wikimedia.org/", "commons.wikimedia.org", false);
-			src_en_wiki_repo = Ini_repo_add(file_mgr, src_en_wiki, "mem/src/en.wikipedia.org/"		, "en.wikipedia.org", false);
-			Ini_repo_add(file_mgr, trg_commons, "mem/trg/commons.wikimedia.org/", "commons.wikimedia.org", true).Primary_(true);
-			Ini_repo_add(file_mgr, trg_en_wiki, "mem/trg/en.wikipedia.org/"		, "en.wikipedia.org", true).Primary_(true);
+			src_commons_repo = Ini_repo_add(file_mgr, src_commons, "mem/src/commons.wikimedia.org/", Xow_wiki_.Domain_commons_str, false);
+			src_en_wiki_repo = Ini_repo_add(file_mgr, src_en_wiki, "mem/src/en.wikipedia.org/"		, Xow_wiki_.Domain_enwiki_str, false);
+			Ini_repo_add(file_mgr, trg_commons, "mem/trg/commons.wikimedia.org/", Xow_wiki_.Domain_commons_str, true).Primary_(true);
+			Ini_repo_add(file_mgr, trg_en_wiki, "mem/trg/en.wikipedia.org/"		, Xow_wiki_.Domain_enwiki_str, true).Primary_(true);
 			Xowf_repo_mgr wiki_repo_mgr = en_wiki.File_mgr().Repo_mgr();
 			Xofw_repo_pair pair = null;
 			pair = wiki_repo_mgr.Add_repo(src_commons, trg_commons);

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_wiki_stats_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before	public void setup()						{fxt.Reset();}
 	@Test  public void SiteName()					{fxt.tst_Parse_tmpl_str_test("{{SITENAME}}"				, "{{test}}", "Wikipedia");}
 	@Test  public void ServerName()					{fxt.tst_Parse_tmpl_str_test("{{SERVERNAME}}"			, "{{test}}", "en.wikipedia.org");}

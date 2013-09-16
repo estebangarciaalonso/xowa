@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_rev_props_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before	public void setup()						{fxt.Reset(); fxt.Wiki().Ctx().Page_revData().User_(ByteAry_.new_ascii_("user")).ProtectionLevel_(ByteAry_.new_ascii_("normal"));}
 	@After public void teardown()				{}
 	@Test  public void RevisionID()					{fxt.Wiki().Ctx().Page().Page_id_(1); fxt.tst_Parse_tmpl_str_test("{{REVISIONID}}"				, "{{test}}", "1");}

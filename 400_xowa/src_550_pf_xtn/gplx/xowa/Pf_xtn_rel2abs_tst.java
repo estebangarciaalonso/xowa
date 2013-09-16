@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_xtn_rel2abs_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()					{fxt.Reset();}
 	@Test   public void Slash_lvl3()			{fxt.tst_Parse_tmpl_str_test("{{#rel2abs:/d|a/b/c}}"				, "{{test}}"			, "a/b/c/d");}
 	@Test   public void Cur_lvl1()				{fxt.tst_Parse_tmpl_str_test("{{#rel2abs:./d|a}}"					, "{{test}}"			, "a/d");}

@@ -111,4 +111,49 @@ public class Xop_lxr_ {
 		}
 		return cur;
 	}
+	public static int Find_fwd_non_ws(byte[] src, int bgn, int end) {
+		for (int i = bgn; i < end; i++) {
+			byte b = src[i];
+			switch (b) {
+				case Byte_ascii.Space:
+				case Byte_ascii.Tab:
+				case Byte_ascii.NewLine:
+				case Byte_ascii.CarriageReturn:
+					break;
+				default:
+					return i;
+			}
+		}
+		return end;
+	}
+	public static int Find_fwd_skip_ws(byte[] src, int bgn, int end, byte find) {
+		for (int i = bgn; i < end; i++) {
+			byte b = src[i];
+			switch (b) {
+				case Byte_ascii.Space:
+				case Byte_ascii.Tab:
+				case Byte_ascii.NewLine:
+				case Byte_ascii.CarriageReturn:
+					break;
+				default:
+					return (b == find) ? i : ByteAry_.NotFound;
+			}
+		}
+		return ByteAry_.NotFound;
+	}
+	public static byte FindFwdNextNonWs(byte[] src, int src_len, int cur_pos) {
+		for (int i = cur_pos; i < src_len; i++) {
+			byte b = src[i];
+			switch (b) {
+				case Byte_ascii.Space:
+				case Byte_ascii.Tab:
+				case Byte_ascii.NewLine:
+				case Byte_ascii.CarriageReturn:
+					break;
+				default:
+					return b;
+			}
+		}
+		return Byte_ascii.Nil;
+	}
 }

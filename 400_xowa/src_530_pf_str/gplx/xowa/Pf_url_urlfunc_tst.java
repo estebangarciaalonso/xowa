@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_url_urlfunc_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()				{fxt.Reset();}
 	@Test  public void Localurl()			{fxt.tst_Parse_tmpl_str_test("{{localurl:a&b! c}}"							, "{{test}}", "/wiki/A%26b!_c");}
 	@Test  public void Fullurl()			{fxt.tst_Parse_tmpl_str_test("{{fullurl:a&b! c}}"							, "{{test}}", "//en.wikipedia.org/wiki/A%26b!_c");}

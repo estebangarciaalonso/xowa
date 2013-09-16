@@ -114,7 +114,7 @@ class Xoa_css_img_downloader_fxt {
 	public void Clear() {
 		downloader = new Xoa_css_img_downloader();
 		downloader.Ctor(Gfo_usr_dlg_xowa.test_(), new Xof_download_wkr_test(), ByteAry_.Empty);
-	}	Xoa_css_img_downloader downloader;
+	}	private Xoa_css_img_downloader downloader;
 	public void Test_css_convert(String raw, String expd, String... expd_img_ary) {
 		ListAdp actl_img_list = ListAdp_.new_();
 		byte[] actl_bry = downloader.Convert_to_local_urls(ByteAry_.new_ascii_("mem/en.wikipedia.org"), ByteAry_.new_utf8_(raw), actl_img_list);

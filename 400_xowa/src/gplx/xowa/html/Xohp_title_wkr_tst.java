@@ -28,7 +28,7 @@ public class Xohp_title_wkr_tst {
 	}
 }
 class Xohp_title_wkr_fxt {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	ByteAryBfr bfr = ByteAryBfr.new_();
 	Xohp_title_wkr title_wkr = new Xohp_title_wkr();
 	public Xohp_title_wkr_fxt Clear() {return this;}

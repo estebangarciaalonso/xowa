@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xop_subst_tst {
-	Xop_fxt fxt = new Xop_fxt(); 
+	private Xop_fxt fxt = new Xop_fxt(); 
 	@Before public void init() {
 		fxt.Reset();
 		fxt.ini_defn_clear();

@@ -21,7 +21,7 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 		this.wiki = wiki;
 		sidebar_mgr = new Xowh_sidebar_mgr(wiki);
 		missing_ns_cls = ByteAry_.Eq(wiki.Key_bry(), Xow_wiki_type_.Key_home_bry) ? Missing_ns_cls_hide : null;	// if home wiki, set missing_ns to application default; if any other wiki, set to null; will be overriden during init
-	}	Xow_wiki wiki;
+	}	private Xow_wiki wiki;
 	public Xowh_sidebar_mgr Sidebar_mgr() {return sidebar_mgr;} private Xowh_sidebar_mgr sidebar_mgr;
 	ByteAryFmtr div_personal_fmtr = ByteAryFmtr.new_("~{portal_personal_subj_href};~{portal_personal_subj_text};~{portal_personal_talk_cls};~{portal_personal_talk_href};~{portal_personal_talk_cls};", "portal_personal_subj_href", "portal_personal_subj_text", "portal_personal_subj_cls", "portal_personal_talk_href", "portal_personal_talk_cls");
 	ByteAryFmtr div_ns_fmtr = ByteAryFmtr.new_("~{portal_ns_subj_href};~{portal_ns_subj_cls};~{portal_ns_talk_href};~{portal_ns_talk_cls}", "portal_ns_subj_href", "portal_ns_subj_cls", "portal_ns_talk_href", "portal_ns_talk_cls");

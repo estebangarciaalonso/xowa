@@ -51,7 +51,7 @@ public class Xobc_img_run_xfer extends Xob_itm_basic_base implements Xob_cmd, Gf
 		time_bgn = Env_.TickCount();
 		xfer_itm.Clear();
 		Xofo_file row = new Xofo_file();
-		Xowf_repo_mgr wiki_repo_mgr = wiki.File_mgr().Repo_mgr();
+		Xow_repo_mgr wiki_repo_mgr = wiki.File_mgr().Repo_mgr();
 		Xof_repo_itm src_repo, trg_repo;
 		Xofo_lnki_parser lnki_parser = new Xofo_lnki_parser();
 		Xof_meta_mgr trg_meta_mgr = wiki.File_mgr().Meta_mgr();
@@ -68,12 +68,12 @@ public class Xobc_img_run_xfer extends Xob_itm_basic_base implements Xob_cmd, Gf
 				row.Load_by_xfer_rdr(fld_rdr, lnki_parser, rdr, link_list);
 				int repo_id = row.Repo_id();
 				if (repo_id == -1) repo_id = 0;		// HACK: xfer_itm not found in either File ns; assume 0 (which should be commons)
-				Xofw_repo_pair repo_pair = wiki_repo_mgr.Repos_get_at(repo_id);
+				Xof_repo_pair repo_pair = wiki_repo_mgr.Repos_get_at(repo_id);
 				src_repo = repo_pair.Src(); trg_repo = repo_pair.Trg();
 				xfer_itm.Atrs_by_orig(row.Orig_w(), row.Orig_h(), row.Orig_size());
 				xfer_itm.Atrs_by_ttl(row.Name(), row.Redirect());
 				xfer_itm.Trg_repo_idx_(repo_id);
-				xfer_itm.Atrs_by_meta(trg_meta_mgr.Get_itm_or_new(xfer_itm.Ttl(), xfer_itm.Md5()), trg_repo, wiki.Html_mgr().Img_thumb_width());
+				xfer_itm.Atrs_by_meta(trg_meta_mgr.Get_itm_or_new(xfer_itm.Lnki_ttl(), xfer_itm.Lnki_md5()), trg_repo, wiki.Html_mgr().Img_thumb_width());
 				xfer_itm.Meta_itm().Load_orig_(xfer_itm.Orig_w(), xfer_itm.Orig_h());
 				if (row.Redirect_exists()) {	// write redirect row; note that rdr has name/redirect reversed
 					byte[] redirect_ttl = row.Name();
@@ -82,7 +82,7 @@ public class Xobc_img_run_xfer extends Xob_itm_basic_base implements Xob_cmd, Gf
 				}
 
 				Xofo_lnki[] lnks = row.Links(); int lnks_len = lnks.length;
-				ext_stats[xfer_itm.Ext().Id()].Update_file(row, lnks_len);
+				ext_stats[xfer_itm.Lnki_ext().Id()].Update_file(row, lnks_len);
 				boolean thumb_pass = false, skip = false; //byte orig_pass = Bool_.__byte;
 				for (int i = 0; i < lnks_len; i++) {
 					Xofo_lnki lnk = lnks[i];
@@ -98,7 +98,7 @@ public class Xobc_img_run_xfer extends Xob_itm_basic_base implements Xob_cmd, Gf
 				if (thumb_pass)
 					bldr.Usr_dlg().Prog_many(GRP_KEY, "xfer_passed", "pass|~{0}|~{1}", Int_.XtoStr_PadBgn_space(count++, 7), String_.new_utf8_(row.Name()));
 				else {
-					bldr.Usr_dlg().Note_many(GRP_KEY, "xfer_failed", "fail|~{0}|~{1}|~{2}|~{3}", Int_.XtoStr_PadBgn_space(count++, 7), xfer.Rslt().Err_msg(), String_.new_utf8_(xfer_itm.Md5(), 0, 2) , String_.new_utf8_(row.Name()));
+					bldr.Usr_dlg().Note_many(GRP_KEY, "xfer_failed", "fail|~{0}|~{1}|~{2}|~{3}", Int_.XtoStr_PadBgn_space(count++, 7), xfer.Rslt().Err_msg(), String_.new_utf8_(xfer_itm.Lnki_md5(), 0, 2) , String_.new_utf8_(row.Name()));
 					if (dump_bfr.Bry_len() > dump_fil_len) Io_mgr._.AppendFilBfr(dump_url_gen.Nxt_url(), dump_bfr);
 //						if		(orig_pass == Bool_.Y_byte && thumb_pass)	mode = Xof_meta_itm.Mode_both_exists;
 //						else if (orig_pass == Bool_.Y_byte)					mode = Xof_meta_itm.Mode_orig_exists;
@@ -113,7 +113,7 @@ public class Xobc_img_run_xfer extends Xob_itm_basic_base implements Xob_cmd, Gf
 				}
 			}
 			catch (Exception exc) {
-				bldr.Usr_dlg().Note_many(GRP_KEY, "xfer_error", "fail|~{0}|~{1}|~{2}", Int_.XtoStr_PadBgn_space(count++, 7), String_.new_utf8_(xfer_itm.Md5(), 0, 2) + "|" + String_.new_utf8_(row.Name()), Err_.Message_lang(exc));
+				bldr.Usr_dlg().Note_many(GRP_KEY, "xfer_error", "fail|~{0}|~{1}|~{2}", Int_.XtoStr_PadBgn_space(count++, 7), String_.new_utf8_(xfer_itm.Lnki_md5(), 0, 2) + "|" + String_.new_utf8_(row.Name()), Err_.Message_lang(exc));
 				if (dump_bfr.Bry_len() > dump_fil_len) Io_mgr._.AppendFilBfr(dump_url_gen.Nxt_url(), dump_bfr);
 				row.Write_bldr(fld_wtr);							
 				fail_count++;

@@ -18,6 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files; import gplx.*; import gplx.xowa.*;
 import gplx.gfui.*;
 public class Xof_xfer_itm_ {
+	public static void Calc_xfer_size(Int_2_ref rv, int thumb_default_w, int file_w, int file_h, int lnki_w, int lnki_h, boolean lnki_thumb, double lnki_upright, Xof_ext ext, byte exec_tid) {
+		boolean ext_is_svg = ext.Id_is_svg();
+		boolean limit_size = !ext_is_svg || (ext_is_svg && exec_tid == gplx.xowa.files.fsdb.Xof_exec_tid.Tid_wiki_file);
+		Calc_xfer_size(rv, thumb_default_w, file_w, file_h, lnki_w, lnki_h, lnki_thumb, lnki_upright, limit_size);
+	}
 	public static void Calc_xfer_size(Int_2_ref rv, int thumb_default_w, int file_w, int file_h, int lnki_w, int lnki_h, boolean lnki_thumb, double lnki_upright) {Calc_xfer_size(rv, thumb_default_w, file_w, file_h, lnki_w, lnki_h, lnki_thumb, lnki_upright, true);}
 	public static void Calc_xfer_size(Int_2_ref rv, int thumb_default_w, int file_w, int file_h, int lnki_w, int lnki_h, boolean lnki_thumb, double lnki_upright, boolean thumb_width_must_be_lt_file_width) {
 		int rv_w = lnki_w, rv_h = lnki_h;

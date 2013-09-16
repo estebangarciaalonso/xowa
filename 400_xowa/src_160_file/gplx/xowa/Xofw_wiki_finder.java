@@ -33,7 +33,7 @@ class Xofw_wiki_wkr_mock implements Xofw_wiki_finder {
 	public Xofw_wiki_wkr_mock Repo_idx_(int v) {this.repo_idx = v; return this;}
 	public Xofw_wiki_wkr_mock Redirect_(String if_ttl_str, String then_redirect_str) {this.if_ttl = ByteAry_.new_utf8_(if_ttl_str); this.then_redirect = ByteAry_.new_utf8_(then_redirect_str); return this;} private byte[] if_ttl, then_redirect;
 	public void Find(ListAdp repo_pairs, Xof_xfer_itm file) {
-		byte[] ttl = file.Ttl();
+		byte[] ttl = file.Lnki_ttl();
 		if (ByteAry_.Eq(ttl, if_ttl) && repo_idx != -1)	{file.Atrs_by_ttl(ttl, then_redirect);	file.Trg_repo_idx_(repo_idx);}
 		else							{file.Atrs_by_ttl(ttl, ByteAry_.Empty);	file.Trg_repo_idx_(Xof_meta_itm.Repo_unknown);}	// FUTURE: this should be missing, but haven't implemented unknown yet
 	}
@@ -47,10 +47,10 @@ class Xofw_wiki_wkr_mock implements Xofw_wiki_finder {
 class Xofw_wiki_wkr_base implements Xofw_wiki_finder {
 	public Xofw_wiki_wkr_base(Xow_wiki wiki, Xoa_wiki_mgr wiki_mgr) {this.wiki = wiki; this.wiki_mgr = wiki_mgr;} private Xow_wiki wiki; Xoa_wiki_mgr wiki_mgr;
 	public void Find(ListAdp repo_pairs, Xof_xfer_itm file) {
-		byte[] ttl_bry = file.Ttl();
+		byte[] ttl_bry = file.Lnki_ttl();
 		int repo_pairs_len = repo_pairs.Count();
 		for (int i = 0; i < repo_pairs_len; i++) {
-			Xofw_repo_pair repo_pair = (Xofw_repo_pair)repo_pairs.FetchAt(i);
+			Xof_repo_pair repo_pair = (Xof_repo_pair)repo_pairs.FetchAt(i);
 			byte[] wiki_key = repo_pair.Src().Wiki_key();
 			if (repo_pair.Src().Wmf_api()) continue;
 			Xow_wiki repo_wiki = wiki_mgr.Get_by_key_or_null(wiki_key);
@@ -73,7 +73,7 @@ class Xofw_wiki_wkr_base implements Xofw_wiki_finder {
 		rv.Init(ttl_db_key);
 		int repo_pairs_len = repo_pairs.Count();
 		for (int i = 0; i < repo_pairs_len; i++) {
-			Xofw_repo_pair repo_pair = (Xofw_repo_pair)repo_pairs.FetchAt(i);
+			Xof_repo_pair repo_pair = (Xof_repo_pair)repo_pairs.FetchAt(i);
 			byte[] src_wiki_key = repo_pair.Src().Wiki_key();
 			Xow_wiki src_wiki = wiki_mgr.Get_by_key_or_null(src_wiki_key);
 			if (src_wiki == null) continue;		// src_wiki defined as repo_pair in cfg, but it has not been downloaded; continue; EX: commons set up but not downloaded

@@ -77,6 +77,52 @@ public class Xob_wdata_qid_base_tst {
 		.Run(new Xob_wdata_qid_txt().Ctor(fxt.Bldr(), this.fxt.Wiki()))
 		;
 	}
+	@Test  public void Links_w_name() {	// PURPOSE: wikidata changed links node from "enwiki:A" to "enwiki:{name:A,badges:[]}"; DATE:2013-09-14
+		String q1_str = String_.Concat_lines_nl
+		(	"{ \"entity\":\"q1\""
+		,	", \"links\":"
+		,	"  { \"enwiki\":\"q1_en\""
+		,	"  , \"frwiki\":\"q1_fr\""
+		,	"  }"
+		,	"}"
+		);
+		String q2_str = String_.Concat_lines_nl
+		(	"{ \"entity\":[\"item\",2]"
+		,	", \"links\":"
+		,	"  { \"enwiki\":{\"name\":\"q2_en\",\"badges\":[]}"
+		,	"  , \"frwiki\":{\"name\":\"q2_fr\",\"badges\":[]}"
+		,	"  }"
+		,	"}"
+		);
+		fxt.doc_ary_
+		(	fxt.doc_wo_date_(1, "q1", q1_str)
+		,	fxt.doc_wo_date_(2, "q2", q2_str)
+		)
+		.Fil_expd(ttl_(fxt.Wiki(), "enwiki", "000", 0)
+		,	"!!!!*|!!!!*|"
+		,	"Q1_en|q1"
+		,	"Q2_en|q2"
+		,	""
+		)
+		.Fil_expd
+		(	reg_(fxt.Wiki(), "enwiki", "000")
+		,	"0|Q1_en|Q2_en|2"
+		,	""
+		)
+		.Fil_expd(ttl_(fxt.Wiki(), "frwiki", "000", 0)
+		,	"!!!!*|!!!!*|"
+		,	"Q1_fr|q1"
+		,	"Q2_fr|q2"
+		,	""
+		)
+		.Fil_expd
+		(	reg_(fxt.Wiki(), "frwiki", "000")
+		,	"0|Q1_fr|Q2_fr|2"
+		,	""
+		)
+		.Run(new Xob_wdata_qid_txt().Ctor(fxt.Bldr(), this.fxt.Wiki()))
+		;
+	}
 	public static Io_url reg_(Xow_wiki wdata, String wiki, String ns_id) {
 		return Wdata_idx_wtr.dir_qid_(wdata, wiki, ns_id).GenSubFil(Xow_dir_info_.Name_reg_fil);
 	}

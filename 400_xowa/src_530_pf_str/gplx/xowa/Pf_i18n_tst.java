@@ -35,7 +35,7 @@ class Pf_i18n_fxt {
 		wiki = Xoa_app_fxt.wiki_(app, lang_key + ".wikipedia.org", lang);
 		fxt = new Xop_fxt(app, wiki);
 		return this;
-	}	Xoa_app app; Xop_fxt fxt; Xol_lang lang; Xow_wiki wiki;
+	}	private Xoa_app app; private Xop_fxt fxt; Xol_lang lang; Xow_wiki wiki;
 	public Pf_i18n_fxt Reg_func(String name, boolean case_match, String word) {
 		Io_url url = Io_url_.mem_fil_("mem/xowa/user/test_user/lang/xowa/" + lang_key + ".gfs");
 		String func = "keywords.load_text('" + name + "|" + (case_match ? "1" : "0") + "|" + name + "~" + word + "~');";

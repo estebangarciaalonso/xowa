@@ -21,7 +21,7 @@ public class Xof_qry_mgr {
 	private Xof_qry_wkr[] wkrs = null; private int wkrs_len;
 	private Int_2_ref actl_size = new Int_2_ref();
 	public void Wkrs_(Xof_qry_wkr... wkrs) {this.wkrs = wkrs; wkrs_len = wkrs.length;}
-	public boolean Find(Xof_fsdb_itm itm) {
+	public boolean Find(byte exec_tid, Xof_fsdb_itm itm) {
 		boolean rv = false;
 		for (int i = 0; i < wkrs_len; i++) {
 			Xof_qry_wkr wkr = wkrs[i];
@@ -35,11 +35,9 @@ public class Xof_qry_mgr {
 			itm.Rslt_qry_(Xof_qry_wkr_.Tid_missing);
 			return false;	// not found in any wkr; exit;
 		}
-		int lnki_w = itm.Lnki_w(), lnki_h = itm.Lnki_h();
-		boolean lnki_thumb = Xof_xfer_itm.Lnki_thumbable_calc(itm.Lnki_type(), lnki_w, lnki_h);
-		boolean limit_size = !itm.Lnki_ext().Id_is_svg();// || (itm.Ext().Id_is_svg() && caller_is_file_page);
-		Xof_xfer_itm_.Calc_xfer_size(actl_size, Xof_img_mgr.Thumb_w_img_const, itm.Orig_w(), itm.Orig_h(), lnki_w, lnki_h, lnki_thumb, itm.Lnki_upright(), limit_size);
-		itm.Html_size_(actl_size.Val_0(), actl_size.Val_1());
+		if (ByteAry_.Len_gt_0(itm.Orig_redirect()))
+			itm.Init_by_redirect(itm.Orig_redirect());
+		itm.Html_size_calc(actl_size, exec_tid);
 		return true;
 	}
 }

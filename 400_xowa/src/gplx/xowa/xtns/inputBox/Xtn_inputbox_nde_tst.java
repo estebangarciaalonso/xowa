@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.inputBox; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
 public class Xtn_inputbox_nde_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Basic() {
 		fxt.tst_Parse_page_wiki_str("a<inputbox>b</inputbox>c", "ac");
 	}

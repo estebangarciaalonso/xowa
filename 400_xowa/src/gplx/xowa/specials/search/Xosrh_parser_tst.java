@@ -98,7 +98,7 @@ class Xosearch_parser_fxt {
 		}
 		matches.Clear();
 		return this;
-	}	Xosrh_parser parser; OrderedHash matches;
+	}	private Xosrh_parser parser; OrderedHash matches;
 	public void Init_match(String name, int... ids) {
 		int len = ids.length;
 		ListAdp id_vals = ListAdp_.new_();

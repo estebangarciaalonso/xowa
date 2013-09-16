@@ -21,7 +21,7 @@ public class Xobc_utl_make_lang implements GfoInvkAble {
 		this.app = app;
 		kwd_mgr = new Xobc_utl_make_lang_kwds(app);
 		lang_parser = new Xol_mw_lang_parser(app.Msg_log());
-	}	Xoa_app app; Xol_mw_lang_parser lang_parser;
+	}	private Xoa_app app; Xol_mw_lang_parser lang_parser;
 	public Xobc_utl_make_lang_kwds Kwd_mgr() {return kwd_mgr;} private Xobc_utl_make_lang_kwds kwd_mgr;
 	public void Bld_all() {
 		Io_url lang_root = app.User().Fsys_mgr().Root_dir().GenSubDir("lang");
@@ -45,5 +45,5 @@ public class Xobc_utl_make_lang implements GfoInvkAble {
 			byte[] key_bry = itm.Key_bry();
 			manual_text_hash.Add(key_bry, new byte[][] {key_bry, text});
 		}
-	}	OrderedHash manual_text_hash = OrderedHash_.new_bry_();
+	}	private OrderedHash manual_text_hash = OrderedHash_.new_bry_();
 }

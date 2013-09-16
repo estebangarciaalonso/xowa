@@ -67,7 +67,7 @@ public class Xoa_page {
 		Hdrs_reg(hdr, src);
 		hdrs_ary[hdrs_len] = hdr;
 		hdrs_len = new_len;
-	}	Xop_hdr_tkn[] hdrs_ary = new Xop_hdr_tkn[0]; int hdrs_max, hdrs_len; HashAdp hdrs_hash = HashAdp_.new_(); ByteAryBfr hdrs_bfr = ByteAryBfr.reset_(255); ByteAryRef hdrs_ref = ByteAryRef.null_();
+	}	private Xop_hdr_tkn[] hdrs_ary = new Xop_hdr_tkn[0]; int hdrs_max, hdrs_len; HashAdp hdrs_hash = HashAdp_.new_(); ByteAryBfr hdrs_bfr = ByteAryBfr.reset_(255); ByteAryRef hdrs_ref = ByteAryRef.null_();
 	public void Hdrs_reg(Xop_hdr_tkn hdr, byte[] src) {
 		if (hdrs_len == 0) hdr.Hdr_html_first_y_();
 		Xoa_app app = wiki.App();

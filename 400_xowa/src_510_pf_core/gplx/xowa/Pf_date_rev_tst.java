@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_date_rev_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before	public void setup()						{fxt.Reset(); fxt.Ctx().Page().Page_date_(DateAdp_.new_(2012, 1, 2, 3, 4, 5, 6));}
 	@After public void teardown()				{}
 	@Test  public void Rev_year()					{fxt.tst_Parse_tmpl_str_test("{{REVISIONYEAR}}"			, "{{test}}", "2012");}

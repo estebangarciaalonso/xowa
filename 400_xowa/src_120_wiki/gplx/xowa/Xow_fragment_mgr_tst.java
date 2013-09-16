@@ -61,7 +61,7 @@ class Xow_fragment_mgr_fxt {
 			Xoa_app app = Xoa_app_fxt.app_();
 			wiki = Xoa_app_fxt.wiki_tst_(app);
 		}
-	}	Xow_wiki wiki;
+	}	private Xow_wiki wiki;
 	public void Test_fragment(String key, String expd) {
 		wiki.Fragment_mgr().Evt_lang_changed(wiki.Lang());
 		byte[] actl = (byte[])GfoInvkAble_.InvkCmd(wiki.Fragment_mgr(), key);

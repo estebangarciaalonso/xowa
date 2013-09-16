@@ -48,7 +48,7 @@ public class Xop_parser {
 		boolean only_include_chk = ByteAry_.FindFwd(src, ByteAry_.new_ascii_("onlyinclude"), 0, src.length) != ByteAry_.NotFound;
 		if (only_include_chk) tmpl_props.OnlyInclude_exists = true;
 		tmpl.Init_by_new(ns, name, src, root, tmpl_props.OnlyInclude_exists);
-	}	Xot_compile_data tmpl_props = new Xot_compile_data();
+	}	private Xot_compile_data tmpl_props = new Xot_compile_data();
 	public void Parse_page_all_clear(Xop_root_tkn root, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, byte[] src) {
 		ctx.Page().Clear(); ctx.App().Msg_log().Clear();
 		Parse_page_all(root, ctx, tkn_mkr, src, Xop_parser_.Doc_bgn_bos);

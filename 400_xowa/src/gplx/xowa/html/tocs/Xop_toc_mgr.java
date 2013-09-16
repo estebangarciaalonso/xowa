@@ -21,7 +21,7 @@ public class Xop_toc_mgr implements ByteAryFmtrArg {
 		path_ary = new Xop_toc_itm[32];
 		for (int i = 0; i < 32; i++)
 			path_ary[i] = new Xop_toc_itm();
-	}	Xoa_page page; byte[] src; Xop_toc_itm[] path_ary; ByteAryBfr path_bfr = new ByteAryBfr(32);	// assume 6 max levels * 5 max heading (9999.); add 2 for good measure 		
+	}	private Xoa_page page; byte[] src; Xop_toc_itm[] path_ary; ByteAryBfr path_bfr = new ByteAryBfr(32);	// assume 6 max levels * 5 max heading (9999.); add 2 for good measure 		
 	public void Clear() {
 		for (int i = 0; i < 32; i++)
 			path_ary[i].Lvl_idx_(0);

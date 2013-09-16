@@ -101,7 +101,7 @@ public class Xoctg_idx_mgr implements GfoInvkAble {
 		// Tfds.Write(arg_is_from, dir_fwd, String_.new_utf8_(find), String_.new_utf8_(tmp_cur_itm.Sortkey()), String_.new_utf8_(tmp_prv_itm.Sortkey()));
 		if (comp_cur == CompareAble_.Same) return tmp_cur_itm;
 		return (arg_is_from && dir_fwd) || (!arg_is_from && !dir_fwd) ? tmp_cur_itm : tmp_prv_itm;	// see note above
-	}	Xoctg_idx_itm tmp_cur_itm = new Xoctg_idx_itm(), tmp_prv_itm = new Xoctg_idx_itm(); Gfo_fld_rdr fld_rdr = Gfo_fld_rdr.xowa_();
+	}	private Xoctg_idx_itm tmp_cur_itm = new Xoctg_idx_itm(), tmp_prv_itm = new Xoctg_idx_itm(); Gfo_fld_rdr fld_rdr = Gfo_fld_rdr.xowa_();
 	public void Find(ListAdp rv, byte[] src, boolean arg_is_from, byte[] find, int find_count, Xoctg_view_itm last_plus_one) {
 		int tmp_pos = 0; int src_len = src.length;
 		last_plus_one.Clear();

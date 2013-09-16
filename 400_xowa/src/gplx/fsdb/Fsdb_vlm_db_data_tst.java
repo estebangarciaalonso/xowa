@@ -21,10 +21,10 @@ import gplx.dbs.*; import gplx.xowa.*;
 public class Fsdb_vlm_db_data_tst {
 	private Fsdb_vlm_db_data_fxt fxt = new Fsdb_vlm_db_data_fxt();
 //		private Fsdb_xtn_thm_itm tmp_img = Fsdb_xtn_thm_itm.new_();
-	@Before public void init() {if (Xo_test.Db_skip) return; fxt.Init_db();}
-	@After public void term() {if (Xo_test.Db_skip) return; fxt.Rls();}
+	@Before public void init() {if (Xo_test.Db_skip()) return; fxt.Init_db();}
+	@After public void term() {if (Xo_test.Db_skip()) return; fxt.Rls();}
 	@Test   public void Insert() {
-		if (Xo_test.Db_skip) return;
+		if (Xo_test.Db_skip()) return;
 		fxt.Exec_thm_insert("enwiki", "A.png", 1000, 800, "a");
 		Fsdb_dir_itm dir = fxt.Test_dir_select("enwiki", 1, 0);
 		Fsdb_fil_itm fil = fxt.Test_fil_select(dir.Id(), "A.png", 2);
@@ -33,7 +33,7 @@ public class Fsdb_vlm_db_data_tst {
 		fxt.Test_cfg_select_next_id(4);
 	}
 	@Test   public void Insert_many() {
-		if (Xo_test.Db_skip) return;
+		if (Xo_test.Db_skip()) return;
 		fxt.Exec_thm_insert("enwiki", "A.png", 1000, 800, "a");		// create orig; ignore;
 		fxt.Exec_thm_insert("enwiki", "A.png",  500, 400, "a500");		// create thumb for retrieval
 		fxt.Exec_thm_insert("enwiki", "B.png",  500, 840, "b500");		// create another thumb with same w, but dif name
@@ -44,7 +44,7 @@ public class Fsdb_vlm_db_data_tst {
 		fxt.Test_cfg_select_next_id(7);
 	}
 	@Test   public void Img_delete() {
-		if (Xo_test.Db_skip) return;
+		if (Xo_test.Db_skip()) return;
 		Fsdb_xtn_thm_itm img_400 = Fsdb_xtn_thm_itm.new_(), img_200 = Fsdb_xtn_thm_itm.new_();
 		fxt.Exec_thm_insert(img_400, "enwiki", "A.png", 400, 200, "400,200");
 		fxt.Exec_thm_insert(img_200, "enwiki", "A.png", 200, 100, "200,100");
@@ -57,7 +57,7 @@ public class Fsdb_vlm_db_data_tst {
 		fxt.Test_fil_exists(img_200.Owner(), Bool_.Y);	// chk fil still exists
 	}
 	@Test   public void Fil_delete() {
-		if (Xo_test.Db_skip) return;
+		if (Xo_test.Db_skip()) return;
 		Fsdb_xtn_thm_itm img_400 = Fsdb_xtn_thm_itm.new_(), img_200 = Fsdb_xtn_thm_itm.new_();
 		fxt.Exec_thm_insert(img_400, "enwiki", "A.png", 400, 200, "400,200");
 		fxt.Exec_thm_insert(img_200, "enwiki", "A.png", 200, 100, "200,100");
@@ -69,7 +69,7 @@ public class Fsdb_vlm_db_data_tst {
 		fxt.Test_fil_exists(img_200.Owner(), Bool_.N);	// chk fil deleted
 	}
 	@Test   public void Bin_select() {
-		if (Xo_test.Db_skip) return;
+		if (Xo_test.Db_skip()) return;
 		if (!Sqlite_engine_.Cfg_read_binary_stream_supported) return;
 		Fsdb_xtn_thm_itm thm = Fsdb_xtn_thm_itm.new_();
 		fxt.Exec_thm_insert(thm, "enwiki", "A.png", 400, 200, "400,200");

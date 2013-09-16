@@ -16,14 +16,26 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns; import gplx.*; import gplx.xowa.*;
+import gplx.xowa.xtns.gallery.*;
 public class Xow_xtn_mgr implements GfoInvkAble {
+	private Hash_adp_bry regy = new Hash_adp_bry(true);
+	public Xtn_gallery_mgr Xtn_gallery() {return xtn_gallery;} private Xtn_gallery_mgr xtn_gallery;
 	public Xow_xtn_mgr Ctor_by_app(Xoa_app app) {
 		this.app = app;
 		Add(new gplx.xowa.xtns.scribunto.Xow_xtn_scribunto());
 		Add(new gplx.xowa.xtns.scores.Xow_xtn_score());
 		return this;
-	}	Xoa_app app;
-	public Xow_xtn_mgr Ctor_by_wiki(Xow_wiki wiki) {this.wiki = wiki; this.app = wiki.App(); return this;} private Xow_wiki wiki;
+	}	private Xoa_app app;
+	public Xow_xtn_mgr Ctor_by_wiki(Xow_wiki wiki) {
+		this.wiki = wiki;
+		this.app = wiki.App();
+		xtn_gallery = new Xtn_gallery_mgr();
+		return this;
+	}	private Xow_wiki wiki;
+	public Xow_xtn_mgr Init_by_wiki(Xow_wiki wiki) {
+		xtn_gallery.Parser().Init_by_wiki(wiki);
+		return this;
+	}
 	public Xow_xtn_itm Get_or_fail(byte[] key) {Object rv = regy.Fetch(key); if (rv == null) throw Err_.new_fmt_("unknown xtn: ~{0}", String_.new_utf8_(key)); return (Xow_xtn_itm)rv;}
 	public Xow_xtn_itm Get_or_new(byte[] key) {
 		Object rv_obj = regy.Get_by_bry(key);
@@ -39,7 +51,6 @@ public class Xow_xtn_mgr implements GfoInvkAble {
 		xtn.Xtn_init_by_app(app);
 		regy.Add(xtn.Xtn_key(), xtn);
 	}
-	Hash_adp_bry regy = new Hash_adp_bry(true);
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_get))				return Get_or_fail(m.ReadBry("v"));
 		else return GfoInvkAble_.Rv_unhandled;

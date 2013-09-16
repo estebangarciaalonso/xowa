@@ -54,5 +54,5 @@ public class Xoctg_view_ctg {
 		data_grp.Find(view_grp.Itms_list(), data_grp.Src(), url_bmk_fwd != Bool_.N_byte, url_bmk, 200, tmp_last_plus_one);
 		view_grp.Itms_last_sortkey_(tmp_last_plus_one.Sortkey());
 		view_grp.Itms_make();
-	}	Xoctg_view_itm tmp_last_plus_one = new Xoctg_view_itm();
+	}	private Xoctg_view_itm tmp_last_plus_one = new Xoctg_view_itm();
 }

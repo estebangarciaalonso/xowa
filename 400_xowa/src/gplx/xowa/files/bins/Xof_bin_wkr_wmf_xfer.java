@@ -20,11 +20,14 @@ import gplx.ios.*; import gplx.xowa.files.fsdb.*;
 public class Xof_bin_wkr_wmf_xfer implements Xof_bin_wkr {
 	private gplx.ios.IoEngine_xrg_downloadFil download = IoEngine_xrg_downloadFil.new_("", Io_url_.Null); 
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
-	public Xof_bin_wkr_wmf_xfer(Xof_repo_itm repo) {this.repo = repo;} private Xof_repo_itm repo;
-	public byte Tid() {return Xof_bin_wkr_.Tid_inet;}
-	public boolean Get_bin(Xof_fsdb_itm itm, Io_url bin_url, boolean is_thumb, int w) {
+	public Xof_bin_wkr_wmf_xfer(Xow_repo_mgr repo_mgr) {this.repo_mgr = repo_mgr;} private Xow_repo_mgr repo_mgr;
+	public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_inet;}
+	public boolean Bin_wkr_get(Xof_fsdb_itm itm, Io_url bin_url, boolean is_thumb, int w) {
 		byte mode = is_thumb ? Xof_repo_itm.Mode_thumb : Xof_repo_itm.Mode_orig;
-		String src = url_bldr.Set_src_file_(mode, repo, itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), w, itm.Lnki_thumbtime()).Xto_str();
-		return download.Src_(src).Trg_(bin_url).Exec();
+		Xof_repo_pair repo_itm = repo_mgr.Repos_get_by_wiki(itm.Orig_wiki());
+		String queue_msg = String_.Format("downloading ~{0} of ~{1}: ~{2};", 0, 0, String_.new_utf8_(itm.Lnki_ttl()));
+		download.Prog_fmt_hdr_(queue_msg);
+		String src = url_bldr.Set_src_file_(mode, repo_itm.Src(), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), w, itm.Lnki_thumbtime()).Xto_str();
+		download.Init(src, bin_url); return download.Exec();
 	}
 }

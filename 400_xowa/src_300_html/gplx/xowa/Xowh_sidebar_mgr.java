@@ -96,7 +96,7 @@ public class Xowh_sidebar_mgr implements GfoInvkAble {
 			html_grp_fmtr_arg.Grp_(grp, html_itm_fmtr);
 			html_grp_fmtr.Bld_bfr_many(bfr, grp.Id(), grp.Text(), html_grp_fmtr_arg);
 		}
-	}	Xowh_sidebar_grp_fmtr_arg html_grp_fmtr_arg = new Xowh_sidebar_grp_fmtr_arg();
+	}	private Xowh_sidebar_grp_fmtr_arg html_grp_fmtr_arg = new Xowh_sidebar_grp_fmtr_arg();
 	ByteAryFmtr html_grp_fmtr = ByteAryFmtr.new_(String_.Concat_lines_nl
 	(	"<div class=\"portal\" id='~{grp_id}'>"
 	,	"  <h3>~{grp_text}</h3>"

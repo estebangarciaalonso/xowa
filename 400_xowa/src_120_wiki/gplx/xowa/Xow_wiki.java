@@ -236,6 +236,7 @@ public class Xow_wiki implements GfoInvkAble {
 		html_wtr.Hctx().Toc_show_(true).Lnki_title_(true).Lnki_visited_(true);
 		this.Copy_cfg(app.User().Wiki());
 		File_repos_assert(app, this);
+		xtn_mgr.Init_by_wiki(this);
 	}
 	public void Rls() {
 		if (rls_list == null) return;
@@ -248,13 +249,13 @@ public class Xow_wiki implements GfoInvkAble {
 	void Copy_cfg(Xow_wiki wiki) {html_mgr.Copy_cfg(wiki.Html_mgr());}
 	private static void File_repos_assert(Xoa_app app, Xow_wiki wiki) {
 		byte[] wiki_key = wiki.Key_bry();
-		Xof_repo_mgr repo_mgr = app.File_mgr().Repos(); 
+		Xoa_repo_mgr repo_mgr = app.File_mgr().Repo_mgr(); 
 		Xof_repo_itm repo_itm = repo_mgr.Get_by(wiki_key);
 		if (repo_itm == null) {
 			repo_itm = new Xof_repo_itm(repo_mgr, wiki_key).Wiki_key_(wiki_key);
 			repo_mgr.Add(repo_itm);
 		}
-		Xowf_repo_mgr pair_mgr = wiki.File_mgr().Repo_mgr();
+		Xow_repo_mgr pair_mgr = wiki.File_mgr().Repo_mgr();
 		if (pair_mgr.Repos_len() == 0) {
 			Xof_repo_itm repo_src = repo_mgr.Get_by(File_repo_xowa_null);
 			if (repo_src == null) {

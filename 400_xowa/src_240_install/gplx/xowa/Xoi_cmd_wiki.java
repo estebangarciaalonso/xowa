@@ -214,7 +214,7 @@ class Xoi_cmd_wiki_zip implements Gfo_thread_cmd {
 		app.Gui_wtr().Prog_none(GRP_KEY, "clear", "");
 		app.Gui_wtr().Note_none(GRP_KEY, "clear", "");
 		running = false;
-	}	Xow_wiki wiki;
+	}	private Xow_wiki wiki;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_process_async))			Process_async();
 		else if	(ctx.Match(k, Invk_owner))					return owner;

@@ -57,7 +57,7 @@ public class Xow_lang_mgr {
 			rv.Name_(key);
 		}
 		return rv;
-	}	OrderedHash hash = OrderedHash_.new_bry_();
+	}	private OrderedHash hash = OrderedHash_.new_bry_();
 	public void Grps_sort() {hash.SortBy(Xow_lang_grp_sorter_sort_idx._);}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_get))	return Grps_get_or_new(m.ReadBry("v"));
@@ -87,7 +87,7 @@ public class Xow_lang_mgr {
 		}
 		html_bldr.Init(this, wiki, ttl_list, ttl_list_len, qid);
 		html_bldr.XferAry(bfr, -1);
-	}	Xow_lang_itm[] itms = null; Xow_lang_html html_bldr = new Xow_lang_html();
+	}	private Xow_lang_itm[] itms = null; Xow_lang_html html_bldr = new Xow_lang_html();
 	public static Xow_lang_mgr dflt_() {
 		return new Xow_lang_mgr();
 	}
@@ -97,7 +97,7 @@ class Xow_lang_html implements ByteAryFmtrArg {
 	public Xow_lang_html Init(Xow_lang_mgr lang_mgr, Xow_wiki wiki, ListAdp ttl_list, int ttl_list_len, byte[] qid) {
 		this.lang_mgr = lang_mgr; this.wiki = wiki; this.ttl_list = ttl_list; this.ttl_list_len = ttl_list_len; this.qid = qid;
 		return this;
-	}	Xow_lang_mgr lang_mgr; Xow_wiki wiki; ListAdp ttl_list; int ttl_list_len; byte[] qid;
+	}	private Xow_lang_mgr lang_mgr; Xow_wiki wiki; ListAdp ttl_list; int ttl_list_len; byte[] qid;
 	public void XferAry(ByteAryBfr bfr, int idx) {
 		switch (stage) {
 			case 0: {
@@ -152,5 +152,5 @@ class Xow_lang_html implements ByteAryFmtrArg {
 				stage = 2;
 				break;
 		}
-	}	Xow_lang_grp grp; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	}	private Xow_lang_grp grp; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
 }

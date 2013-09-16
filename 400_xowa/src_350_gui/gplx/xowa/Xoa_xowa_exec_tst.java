@@ -28,7 +28,7 @@ public class Xoa_xowa_exec_tst {
 class Xoa_xowa_exec_fxt {
 	public void Clear() {
 		fxt = new Xop_fxt();
-	}	Xop_fxt fxt;
+	}	private Xop_fxt fxt;
 	public Xop_fxt Fxt() {return fxt;}
 	public void Test_get_title(String ttl, Object... expd) {
 		Xoa_app app = fxt.App();

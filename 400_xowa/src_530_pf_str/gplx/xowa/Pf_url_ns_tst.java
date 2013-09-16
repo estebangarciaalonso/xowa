@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_url_ns_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()				{fxt.Reset();}
 	@Test  public void Ns_0()				{fxt.tst_Parse_tmpl_str_test("{{ns:0}}"						, "{{test}}", "");}
 	@Test  public void Ns_10()				{fxt.tst_Parse_tmpl_str_test("{{ns:10}}"					, "{{test}}", "Template");}

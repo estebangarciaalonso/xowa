@@ -27,7 +27,7 @@ public class Xog_win_view_adp extends Xog_win_view_base {
 		find_box = new Gfui_box_text_adp(find, win_box);
 		prog_box = new Gfui_box_text_adp(info, win_box);
 		html_box = new Gfui_box_html_adp(html, win_box);
-	}	Xog_win win_mgr;
+	}	private Xog_win win_mgr;
 	@Override public Xoa_page Page() {return win_mgr.Page();} @Override public void Page_(Xoa_page v) {win_mgr.Page_(v);}
 	@Override public Xog_history_mgr History_mgr() {return page_stack;} private Xog_history_mgr page_stack;
 	@Override public Gfui_box_win Win_box() {return win_box;} Gfui_box_win win_box;
@@ -52,7 +52,7 @@ class Gfui_box_win_adp implements Gfui_box_win {
 	}
 	public void Focus_box_(Gfui_box box) {box.Focus();}
 	public void Focus() {under.Focus();}
-	public int Subs_len() {return hash.Count();} OrderedHash hash = OrderedHash_.new_();
+	public int Subs_len() {return hash.Count();} private OrderedHash hash = OrderedHash_.new_();
 	public Gfui_box Subs_get_at(int i) {return (Gfui_box)hash.FetchAt(i);}
 	public Gfui_box Subs_get_by(String key) {return (Gfui_box)hash.Fetch(key);}
 	public void Subs_add(Gfui_box sub) {hash.Add(sub.Id(), sub);}

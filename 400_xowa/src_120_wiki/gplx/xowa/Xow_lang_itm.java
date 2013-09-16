@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 public class Xow_lang_itm {
 	public Xow_lang_itm(Xow_lang_grp html_grp, Xow_xwiki_itm xwiki, Xoac_lang_itm lang) {
 		this.html_grp = html_grp; this.xwiki = xwiki; this.lang = lang;
-	}	Xow_lang_grp html_grp; Xow_xwiki_itm xwiki; Xoac_lang_itm lang;
+	}	private Xow_lang_grp html_grp; Xow_xwiki_itm xwiki; Xoac_lang_itm lang;
 	public byte[] Lang_key() {return lang.Key_bry();}
 	public byte[] Lang_domain() {return xwiki.Domain();}
 	public byte[] Lang_name() {return lang.Local_name_bry();}

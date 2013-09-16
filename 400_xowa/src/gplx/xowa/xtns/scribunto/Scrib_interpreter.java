@@ -46,7 +46,7 @@ class Scrib_interpreter {
 		return this.CallFunction(engine.Lib_mw().Mod().Fncs_get_id("executeModule"), Scrib_kv_utl.base1_obj_(new Scrib_fnc("", mod_id)));
 	}
 	public void Cbks_clear() {cbks.Clear();}
-	public int Cbks_len() {return cbks.Count();} OrderedHash cbks = OrderedHash_.new_();
+	public int Cbks_len() {return cbks.Count();} private OrderedHash cbks = OrderedHash_.new_();
 	public Scrib_cbk Cbks_add(GfoInvkAble invk, String name, String func) {
 		Scrib_cbk cbk = new Scrib_cbk(invk, name, func);
 		String key = cbk.Key();

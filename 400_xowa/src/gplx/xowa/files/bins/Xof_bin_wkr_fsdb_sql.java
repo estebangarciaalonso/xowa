@@ -17,16 +17,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.dbs.*; import gplx.cache.*; import gplx.fsdb.*; import gplx.xowa.files.fsdb.*;
-public class Xof_bin_wkr_fsdb implements Xof_bin_wkr {
+public class Xof_bin_wkr_fsdb_sql implements Xof_bin_wkr {
 	private Db_provider provider;
 	private byte[] select_bfr;
 	private int select_flush = Io_mgr.Len_mb;
-	public int Select_bfr_len() {return select_bfr_len;} public Xof_bin_wkr_fsdb Select_bfr_len_(int v) {select_bfr_len = v; return this;} private int select_bfr_len = 4096 * 16;
+	public int Select_bfr_len() {return select_bfr_len;} public Xof_bin_wkr_fsdb_sql Select_bfr_len_(int v) {select_bfr_len = v; return this;} private int select_bfr_len = 4096 * 16;
 	public Gfo_cache_mgr Dir_cache() {return dir_cache;} private Gfo_cache_mgr dir_cache = new Gfo_cache_mgr();
 	public Gfo_cache_mgr Fil_cache() {return fil_cache;} private Gfo_cache_mgr fil_cache = new Gfo_cache_mgr();
-	public Xof_bin_wkr_fsdb(Xof_fsdb_mgr fsdb_mgr) {this.fsdb_mgr = fsdb_mgr;} private Xof_fsdb_mgr fsdb_mgr;
-	public byte Tid() {return Xof_bin_wkr_.Tid_fsdb;}
-	public boolean Get_bin(Xof_fsdb_itm itm, Io_url bin_url, boolean is_thumb, int w) {
+	public Xof_bin_wkr_fsdb_sql(Xof_fsdb_mgr_sql fsdb_mgr) {this.fsdb_mgr = fsdb_mgr;} private Xof_fsdb_mgr_sql fsdb_mgr;
+	public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsdb;}
+	public boolean Bin_wkr_get(Xof_fsdb_itm itm, Io_url bin_url, boolean is_thumb, int w) {
 		if (select_bfr == null) select_bfr = new byte[select_bfr_len];
 		byte[] ttl_bry = itm.Lnki_ttl();
 		String wiki = String_.new_utf8_(itm.Orig_wiki());

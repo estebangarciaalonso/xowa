@@ -72,7 +72,7 @@ public class Xow_lang_grp implements GfoInvkAble {
 			,	"      <td style='width: 10%; padding-bottom: 5px;'>~{lang_name}</td><td style='width: 20%; padding-bottom: 5px;'><a hreflang=\"~{lang_code}\" title=\"~{pagename_translation}\" href=\"~{lang_href}\">~{pagename_translation}</a></td><td style='width: 3%; padding-bottom: 5px;'></td>"
 			));
 		return rv;
-	}	Xow_lang_grp() {}
+	}	private Xow_lang_grp() {}
 	Xow_lang_mgr lang_mgr;
 }
 class Xow_lang_itm_sorter_page_name implements gplx.lists.ComparerAble {

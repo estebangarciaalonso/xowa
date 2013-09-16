@@ -42,7 +42,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 		wiki_wkr = new Xou_output_wkr(Xoh_wiki_article.Tid_view_edit, Bool_.Y, Bool_.Y);
 		hsrc_wkr = new Xou_output_wkr(Xoh_wiki_article.Tid_view_html, Bool_.Y, Bool_.N);
 		html_wkr = new Xou_output_wkr(Xoh_wiki_article.Tid_view_read, Bool_.N, Bool_.N);
-	}	Xoa_app app;
+	}	private Xoa_app app;
 	Xou_output_wkr wiki_wkr, hsrc_wkr, html_wkr;
 	public boolean Html_capable() {return html_capable;} public Xoh_wiki_article Html_capable_(boolean v) {html_capable = v; return this;} private boolean html_capable;
 	public ByteAryFmtr Page_read_fmtr() {return page_read_fmtr;}

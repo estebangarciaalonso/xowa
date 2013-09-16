@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_xtn_ifexist_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()					{fxt.Reset();}
 	@Test  public void Basic_pass()				{fxt.tst_Parse_tmpl_str_test("{{#ifexist: Abc | exists | doesn't exist }}"		, "{{test}}"	, "doesn't exist");}
 	@Test  public void Empty()					{fxt.tst_Parse_tmpl_str_test("{{#ifexist:|y|n}}"								, "{{test}}"	, "n");}	// NOTE: {{autolink}} can pass in ""

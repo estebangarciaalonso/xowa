@@ -42,7 +42,7 @@ class Xob_sql_join_wkr_ctg_hidden implements Xob_sql_join_wkr {
 		this.app = app; this.wiki = wiki;
 		this.dump_url_gen = Io_url_gen_.dir_(temp_dir.GenSubDir("dump"));
 		this.src_sql_dir = src_sql_dir;
-	}	Xoa_app app = null; Xow_wiki wiki = null; Io_url src_sql_dir;
+	}	private Xoa_app app = null; Xow_wiki wiki = null; Io_url src_sql_dir;
 	public Io_url_gen Dump_url_gen() {return dump_url_gen;} Io_url_gen dump_url_gen;
 	public Io_line_rdr New_main_rdr() {
 		Io_url[] urls = Io_mgr._.QueryDir_fils(src_sql_dir);

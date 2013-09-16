@@ -163,7 +163,7 @@ class Xowh_sidebar_mgr_fxt {
 			bfr = ByteAryBfr.reset_(Io_mgr.Len_kb);
 //			}
 		return this;
-	}	Xoa_app app; Xow_wiki wiki; Xowh_sidebar_mgr sidebar_mgr; ByteAryBfr bfr;
+	}	private Xoa_app app; Xow_wiki wiki; Xowh_sidebar_mgr sidebar_mgr; ByteAryBfr bfr;
 	public Xow_wiki Wiki() {return wiki;}
 	public Xowh_sidebar_itm nav_grp_(String text, String title, Xowh_sidebar_itm... itms) {return new Xowh_sidebar_itm(Xowh_sidebar_itm.Tid_grp).Text_(ByteAry_.new_ascii_(text)).Title_(ByteAry_.new_ascii_(title));}
 	public Xowh_sidebar_itm nav_itm_(String text, String title, String accesskey, String href) {return new Xowh_sidebar_itm(Xowh_sidebar_itm.Tid_itm).Text_(ByteAry_.new_ascii_(text)).Title_(ByteAry_.new_ascii_(title)).Accesskey_(ByteAry_.new_ascii_(accesskey)).Href_(ByteAry_.new_ascii_(href));}

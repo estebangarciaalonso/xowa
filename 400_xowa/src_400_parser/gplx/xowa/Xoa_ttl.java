@@ -91,7 +91,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 		Xoa_ttl rv = new Xoa_ttl();
 		boolean pass = rv.Parse(wiki, msg_log, raw, src, bgn, end);
 		return pass ? rv : null;
-	}	Xoa_ttl() {} static ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	}	private Xoa_ttl() {} static ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
 	private static final Url_encoder anchor_encoder = Url_encoder.new_html_id_(); static final ByteAryBfr anchor_encoder_bfr = ByteAryBfr.reset_(32);
 	boolean Parse(Xow_wiki wiki, Gfo_msg_log msg_log, byte[] raw, byte[] src, int bgn, int end) {
 		/* This proc will

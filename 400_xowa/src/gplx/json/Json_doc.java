@@ -42,7 +42,11 @@ public class Json_doc {
 		Json_itm rv = Find_nde(root, qry_bry, qry_bry.length - 1, 0); if (rv == null) return null;
 		return (Json_grp)rv;
 	}
-	Json_itm Find_nde(Json_itm_nde owner, byte[][] paths, int paths_last, int paths_idx) {
+	public Json_itm Find_nde(byte[] key) {
+		tmp_qry_bry[0] = key;
+		return Find_nde(root, tmp_qry_bry, 0, 0);
+	}
+	private Json_itm Find_nde(Json_itm_nde owner, byte[][] paths, int paths_last, int paths_idx) {
 		byte[] path = paths[paths_idx];
 		int subs_len = owner.Subs_len();
 		for (int i = 0; i < subs_len; i++) {

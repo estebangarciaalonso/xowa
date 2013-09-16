@@ -57,7 +57,7 @@ public class Db_mgr_fxt {
 		Tfds.Eq_date(expd.Modified_on(), actl.Modified_on());
 		Tfds.Eq(expd.Type_redirect(), actl.Type_redirect());
 		Tfds.Eq(expd.Text_len(), actl.Text_len());
-	}	Xodb_page actl = new Xodb_page();
+	}	private Xodb_page actl = new Xodb_page();
 	public void Test_load_page(int ns_id, int page_id, String expd) {
 		Xow_wiki wiki = bldr_fxt.Wiki();
 		Xow_ns ns = wiki.Ns_mgr().Get_by_id(ns_id);

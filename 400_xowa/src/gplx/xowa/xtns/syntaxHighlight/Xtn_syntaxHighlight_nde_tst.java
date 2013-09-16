@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.syntaxHighlight; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
 public class Xtn_syntaxHighlight_nde_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Test   public void Basic() {
 		fxt.tst_Parse_page_all_str("<syntaxHighlight>abc</syntaxHighlight>", "<pre style=\"overflow:auto;\">abc</pre>");
 	}

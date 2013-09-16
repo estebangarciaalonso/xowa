@@ -30,7 +30,7 @@ public class Xot_defn_trace_brief_tst {
 	@Test  public void Basic_a_b()				{fxt.tst_("{{leaf_a}} {{leaf_b}}"			, "0001 leaf_a", "0001 leaf_b");}
 }
 class Xot_defn_trace_fxt {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	public Xop_ctx Ctx() {return fxt.Ctx();}
 	public void ini_defn_clear() {fxt.ini_defn_clear();}
 	public void ini_defn_add(String name, String raw) {fxt.ini_defn_add(name, raw);}

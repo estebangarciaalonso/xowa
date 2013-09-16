@@ -26,7 +26,7 @@ public abstract class Xob_search_base extends Xob_itm_dump_base implements Xobd_
 		this.Init_dump(this.Wkr_key(), make_dir);
 		lang = wiki.Lang(); // wiki.App().Lang_mgr().Lang_en();	// NOTE: was .Lang_en which is wrong (should match lang of wiki); DATE:2013-05-11
 		tmp_wtr_mgr = new Xob_tmp_wtr_mgr(new Xob_tmp_wtr_wkr__ttl(temp_dir, dump_fil_len));
-	}	Xob_tmp_wtr_mgr tmp_wtr_mgr;
+	}	private Xob_tmp_wtr_mgr tmp_wtr_mgr;
 	public void Wkr_run(Xodb_page page) {
 		if (page.Ns_id() != Xow_ns_.Id_main) return; // limit to main ns for now
 		byte[] ttl = page.Ttl_wo_ns();

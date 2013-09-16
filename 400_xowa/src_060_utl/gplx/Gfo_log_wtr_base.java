@@ -29,7 +29,7 @@ public class Gfo_log_wtr_base implements Gfo_log_wtr {
 			}
 			fil.Flush();
 		}
-	}	OrderedHash queued_list = OrderedHash_.new_();
+	}	private OrderedHash queued_list = OrderedHash_.new_();
 	public Io_url Log_dir() {return log_dir;}
 	public void Log_dir_(Io_url log_dir) {
 		this.log_dir = log_dir;

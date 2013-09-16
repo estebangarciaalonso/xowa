@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_xtn_switch_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()				{fxt.Reset();}
 	@Test  public void Basic_a()			{fxt.tst_Parse_tmpl_str_test("{{#switch:a|a=1|b=2|3}}"					, "{{test}}"			, "1");}
 	@Test  public void Basic_b()			{fxt.tst_Parse_tmpl_str_test("{{#switch:b|a=1|b=2|3}}"					, "{{test}}"			, "2");}

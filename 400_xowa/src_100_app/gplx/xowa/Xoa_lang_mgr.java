@@ -22,7 +22,7 @@ public class Xoa_lang_mgr implements GfoInvkAble {
 		this.app = app;
 		mw_converter = new Xobc_utl_make_lang(app);
 		lang_en = Lang_en_make(app); this.Add(lang_en);
-	}	Xoa_app app; Xol_lang lang_en;
+	}	private Xoa_app app; Xol_lang lang_en;
 	public static Xol_lang Lang_en_make(Xoa_app app) {
 		Xol_lang rv = new Xol_lang(app, Xol_lang_.Key_en);
 		Xol_lang_.Lang_init(rv);

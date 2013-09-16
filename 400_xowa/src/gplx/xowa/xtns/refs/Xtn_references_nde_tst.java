@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.refs; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
 public class Xtn_references_nde_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {fxt.Ctx().Page().Ref_mgr().Grps_clear();}
 	@Test  public void Basic() {
 		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast

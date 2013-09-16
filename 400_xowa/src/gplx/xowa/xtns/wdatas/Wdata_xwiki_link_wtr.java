@@ -46,7 +46,7 @@ public class Wdata_xwiki_link_wtr implements ByteAryFmtrArg {
 				if (external_links_mgr_enabled && external_links_mgr.Langs_hide(xwiki_key, 0, lang_pos + 1)) continue;
 				tmp_bfr.Add_mid(xwiki_key, 0, lang_pos + 1);
 				tmp_bfr.Add_byte(Byte_ascii.Colon);
-				tmp_bfr.Add(kv.Val().Data_bry());
+				tmp_bfr.Add(Wdata_doc_.Link_extract(kv));
 				Xoa_ttl lang_ttl = Xoa_ttl.parse_(wiki, tmp_bfr.XtoAryAndClear());
 				if (lang_ttl == null) continue;								// invalid ttl
 				Xow_xwiki_itm xwiki_itm = lang_ttl.Wik_itm();

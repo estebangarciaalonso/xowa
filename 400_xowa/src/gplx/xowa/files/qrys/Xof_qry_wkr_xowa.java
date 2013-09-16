@@ -32,7 +32,7 @@ public class Xof_qry_wkr_xowa {
 		itm.Orig_wiki_(wiki.Domain_bry());
 		Xoa_ttl redirect_ttl = wiki.Redirect_mgr().Extract_redirect_loop(page.Data_raw());
 		if (redirect_ttl != Xop_redirect_mgr.Extract_redirect_is_null)
-			itm.Orig_redirect_(ttl, redirect_ttl.Full_txt());
+			itm.Orig_redirect_(redirect_ttl.Full_txt());
 		Xodb_image_itm img = img_meta_wkr.Find(wiki, ttl);
 		if (img == Xodb_image_itm.Null) return false;	// ttl not found in image db; exit
 		itm.Orig_size_(img.Width(), img.Height());

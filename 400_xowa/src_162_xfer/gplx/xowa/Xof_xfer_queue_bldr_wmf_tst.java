@@ -274,7 +274,7 @@ class Xof_xfer_queue_bldr_fxt extends Xof_xfer_queue_html_fxt {	Xof_xfer_itm xfe
 		bldr = Xoa_app_fxt.bldr_(this.App());
 		wkr = new Xobc_img_run_xfer(bldr, this.En_wiki());
 		GfoInvkAble_.InvkCmd_val(wkr, Xobc_img_run_xfer.Invk_rdr_dir_, "mem/rdr/");
-	}	Xob_bldr bldr; Xobc_img_run_xfer wkr;
+	}	private Xob_bldr bldr; Xobc_img_run_xfer wkr;
 	@gplx.New public void tst() {
 		ini_src_fils();
 		Io_mgr._.SaveFilStr(wkr.Rdr_dir().GenSubFil("0000.csv"), rdr);

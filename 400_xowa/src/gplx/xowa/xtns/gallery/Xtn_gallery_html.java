@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.xowa.files.*;
-public class Xowh_gallery_mgr {
+public class Xtn_gallery_html {
 	public void Write_html(Xoa_app app, Xow_wiki wiki, Xop_ctx ctx, Xoa_page page, Xoh_html_wtr wtr, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		Xtn_gallery_nde mgr = (Xtn_gallery_nde)xnde.Xnde_data();
 		int itms_len = mgr.Itms_len();
@@ -35,12 +35,16 @@ public class Xowh_gallery_mgr {
 		int gallery_w = (itm_box_w + 8) * gallery_multiplier; // 8=Gallery Box borders; REF.MW:ImageGallery.php|GB_BORDERS; TODO:CFG
 		ByteAryBfr itm_bfr = ByteAryBfr.new_(), caption_bfr = ByteAryBfr.new_();
 		for (int i = 0; i < itms_len; i++) {
-			Xtn_gallery_itm_data itm = mgr.Itms_get(i);
-			if (itm.Html_root() != null)
-				wtr.Write_tkn(opts, caption_bfr, itm.Html_data(), depth + 1, itm.Html_root(), Xoh_html_wtr.Sub_idx_null, itm.Html_root());
-			byte[] caption_bry = caption_bfr.XtoAryAndClear();
-			if (itm.Lnki() != null && itm.Lnki().Ns().Id_file()) {	// && fileDownloadEnabled
-				Xop_lnki_tkn lnki = ctx.Tkn_mkr().Lnki(itm.Lnki_bgn(), itm.Lnki_end()).Ttl_(itm.Lnki()).Width_(itm_w).Height_(itm_h);
+			Xtn_gallery_itm itm = mgr.Itms_get(i);
+			byte[] lnki_caption = itm.Caption_bry();
+			if (lnki_caption != null) {
+				Xop_root_tkn caption_root = wiki.Parser().Parse_recurse(ctx, lnki_caption, true);
+				wtr.Write_tkn(opts, caption_bfr, caption_root.Root_src(), depth + 1, caption_root, Xoh_html_wtr.Sub_idx_null, caption_root);
+				lnki_caption = caption_bfr.XtoAryAndClear();
+			}
+			Xoa_ttl itm_ttl = itm.Ttl();
+			if (itm_ttl != null && itm_ttl.Ns().Id_file()) {	// && fileDownloadEnabled
+				Xop_lnki_tkn lnki = ctx.Tkn_mkr().Lnki(itm.Ttl_bgn(), itm.Ttl_end()).Ttl_(itm_ttl).Width_(itm_w).Height_(itm_h);
 				Xof_xfer_itm xfer_itm = wtr.Lnki_wtr().Lnki_eval(page, lnki, wtr.Queue_add_ref());
 				int elem_id = xfer_itm.Html_dynamic_id();
 				xfer_itm.Gallery_data_(new Xtn_gallery_dynamic_data().Init(mgr.Itm_height()));
@@ -55,22 +59,30 @@ public class Xowh_gallery_mgr {
 				}
 				int	min_thumb_height = gallery_itm_h > 17 ? gallery_itm_h : 17;					// $minThumbHeight =  $thumb->height > 17 ? $thumb->height : 17;
 				int v_pad = (int)Math_.Floor((30 + mgr.Itm_height() - min_thumb_height) / 2);	// $vpad = floor(( self::THUMB_PADDING + $this->mHeights - $minThumbHeight ) /2);
-				byte[] lnki_href = app.Href_parser().Build_to_bry(itm.Lnki(), wiki);
-				html_gallery_itm_img.Bld_bfr(itm_bfr
-					, ByteAryFmtrArg_.int_(itm_box_w), ByteAryFmtrArg_.int_(itm_div_w)
-					, ByteAryFmtrArg_.int_(v_pad)
-					, ByteAryFmtrArg_.int_(elem_id)
-					, ByteAryFmtrArg_.bry_(lnki.Ttl().Page_txt())
-					, ByteAryFmtrArg_.bry_(lnki_href)
-					, ByteAryFmtrArg_.bry_(html_src)
-					, ByteAryFmtrArg_.int_(gallery_itm_w), ByteAryFmtrArg_.int_(gallery_itm_h)
-					, ByteAryFmtrArg_.bry_(caption_bry));
+				byte[] lnki_ttl = lnki.Ttl().Page_txt();
+				Xoa_ttl lnki_link_ttl = itm_ttl;
+				if (itm.Link_bgn() != ByteAry_.NotFound)
+					lnki_link_ttl = Xoa_ttl.parse_(wiki, ByteAry_.Mid(src, itm.Link_bgn(), itm.Link_end()));
+				byte[] lnki_href = app.Href_parser().Build_to_bry(lnki_link_ttl, wiki);
+				byte[] lnki_alt = itm.Alt_bgn() == ByteAry_.NotFound ? lnki_ttl : ByteAry_.Mid(src, itm.Alt_bgn(), itm.Alt_end()); 
+				html_gallery_itm_img.Bld_bfr_many(itm_bfr
+					, itm_box_w, itm_div_w
+					, v_pad
+					, elem_id
+					, lnki_ttl
+					, lnki_href
+					, html_src
+					, gallery_itm_w, gallery_itm_h
+					, lnki_caption
+					, lnki_alt
+					);
 			}
 			else {
-				html_gallery_itm_txt.Bld_bfr(itm_bfr
-					, ByteAryFmtrArg_.int_(itm_box_w), ByteAryFmtrArg_.int_(itm_div_h)
-					, ByteAryFmtrArg_.bry_(ByteAry_.Mid(src, itm.Lnki_bgn(), itm.Lnki_end()))
-					, ByteAryFmtrArg_.bry_(caption_bry));
+				html_gallery_itm_txt.Bld_bfr_many(itm_bfr
+					, itm_box_w, itm_div_h
+					, ByteAry_.Mid(src, itm.Ttl_bgn(), itm.Ttl_end())
+					, lnki_caption
+					);
 			}
 		}
 		html_gallery_box.Bld_bfr(bfr, ByteAryFmtrArg_.fmtr_(gallery_style, ByteAryFmtrArg_.int_(gallery_w)), ByteAryFmtrArg_.bfr_(itm_bfr));
@@ -89,7 +101,7 @@ public class Xowh_gallery_mgr {
 		,	"      <div class=\"thumb\" style=\"width:~{itm_div_width}px;\">"
 		,	"        <div id=\"xowa_file_gallery_div_~{img_id}\" style=\"margin:~{itm_margin}px auto;\">"
 		,	"          <a href=\"~{img_href}\" class=\"image\">"
-		,	"            <img id=\"xowa_file_img_~{img_id}\" alt=\"~{img_ttl}\" src=\"~{html_src}\" width=\"~{img_width}\" height=\"~{img_height}\" />"
+		,	"            <img id=\"xowa_file_img_~{img_id}\" alt=\"~{img_alt}\" src=\"~{html_src}\" width=\"~{img_width}\" height=\"~{img_height}\" />"
 		,	"          </a>"
 		,	"        </div>"
 		,	"      </div>"
@@ -98,7 +110,7 @@ public class Xowh_gallery_mgr {
 		,	"    </div>"
 		,	"  </li>"
 		,	""
-		),	"itm_box_width", "itm_div_width", "itm_margin", "img_id", "img_ttl", "img_href", "html_src", "img_width", "img_height", "itm_caption"
+		),	"itm_box_width", "itm_div_width", "itm_margin", "img_id", "img_ttl", "img_href", "html_src", "img_width", "img_height", "itm_caption", "img_alt"
 		)
 	, html_gallery_itm_txt = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
 		(	"  <li class=\"gallerybox\" style=\"width:~{itm_box_width};\">"

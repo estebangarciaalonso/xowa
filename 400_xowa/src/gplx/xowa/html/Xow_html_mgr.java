@@ -43,7 +43,7 @@ public class Xow_html_mgr implements GfoInvkAble {
 	public boolean Img_suppress_missing_src() {return img_suppress_missing_src;} public Xow_html_mgr Img_suppress_missing_src_(boolean v) {img_suppress_missing_src = v; return this;} private boolean img_suppress_missing_src = true;
 	public Xohp_ctg_grp_mgr Ctg_mgr() {return ctg_mgr;} private Xohp_ctg_grp_mgr ctg_mgr = new Xohp_ctg_grp_mgr();
 	public Xoctg_html_mgr Ns_ctg() {return ns_ctg;} private Xoctg_html_mgr ns_ctg = new Xoctg_html_mgr();
-	public Xowh_gallery_mgr Gallery_mgr() {return gallery_mgr;} private Xowh_gallery_mgr gallery_mgr = new Xowh_gallery_mgr();
+	public Xtn_gallery_html Gallery_mgr() {return gallery_mgr;} private Xtn_gallery_html gallery_mgr = new Xtn_gallery_html();
 	public Xoh_imgs_mgr Imgs_mgr() {return imgs_mgr;} private Xoh_imgs_mgr imgs_mgr;
 	public ByteAryFmtr Lnki_full_image() {return lnki_full_image;} ByteAryFmtr lnki_full_image = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
 		(	"<a href=\"~{href}\"~{anchor_class}~{anchor_rel}~{anchor_title} xowa_title=\"~{lnki_title}\"><img id=\"xowa_file_img_~{elem_id}\" alt=\"~{alt}\" src=\"~{src}\" width=\"~{width}\" height=\"~{height}\"~{img_class} /></a>"

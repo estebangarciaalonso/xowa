@@ -30,10 +30,10 @@ public class Xof_xfer_itm {
 	public int			Orig_file_len() {return orig_file_len;} private int orig_file_len;
 	public Xof_xfer_itm Atrs_by_orig(int w, int h, int orig_file_len) {this.orig_w = w; this.orig_h = h; this.orig_file_len = orig_file_len; return this;}
 
-	public byte[]		Ttl() {return ttl;} private byte[] ttl;
-	public byte[]		Md5() {return md5;} private byte[] md5;
+	public byte[]		Lnki_ttl() {return ttl;} private byte[] ttl;
+	public Xof_ext		Lnki_ext() {return ext;} private Xof_ext ext;
+	public byte[]		Lnki_md5() {return md5;} private byte[] md5;
 	public byte[]		Redirect() {return redirect;} private byte[] redirect;
-	public Xof_ext		Ext() {return ext;} private Xof_ext ext;
 	public Xof_xfer_itm Atrs_by_ttl(byte[] lnki_ttl, byte[] redirect) {
 		this.redirect = redirect;
 		ttl = redirect == Xop_redirect_mgr.Redirect_null_bry ? ByteAry_.Copy(lnki_ttl) : redirect;

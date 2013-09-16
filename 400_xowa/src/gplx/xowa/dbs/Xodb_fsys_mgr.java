@@ -115,7 +115,7 @@ public class Xodb_fsys_mgr {
 		files_ary[files_ary_len] = rv;
 		++files_ary_len;
 		return rv;
-	}	Xodb_file[] files_ary = new Xodb_file[0]; int files_ary_len = 0;
+	}	private Xodb_file[] files_ary = new Xodb_file[0]; int files_ary_len = 0;
 	public void Rls() {
 		for (int i = 0; i < files_ary_len; i++)
 			files_ary[i].Rls();

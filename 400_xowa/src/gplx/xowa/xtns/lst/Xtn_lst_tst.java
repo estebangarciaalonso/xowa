@@ -73,7 +73,7 @@ class Xtn_lst_fxt {
 		fxt.Reset();
 		Io_mgr._.InitEngine_mem();
 		return this;
-	}	Xop_fxt fxt;
+	}	private Xop_fxt fxt;
 	public Xtn_lst_fxt Page_txt_(String v) {page_txt = v; return this;} private String page_txt;
 	public void Test_lst(String func, String expd) {
 		fxt.ini_page_create("section_test", page_txt);

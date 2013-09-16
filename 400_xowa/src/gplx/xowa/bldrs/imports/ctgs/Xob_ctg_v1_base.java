@@ -22,7 +22,7 @@ public abstract class Xob_ctg_v1_base extends Xob_itm_dump_base implements Xobd_
 	public Xob_ctg_v1_base Ctor(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki); return this;}
 	public abstract String Wkr_key();
 	public abstract Io_sort_cmd Make_sort_cmd();
-	public OrderedHash Wkr_hooks() {return wkr_hooks;} OrderedHash wkr_hooks = OrderedHash_.new_bry_();
+	public OrderedHash Wkr_hooks() {return wkr_hooks;} private OrderedHash wkr_hooks = OrderedHash_.new_bry_();
 	public void Wkr_bgn(Xob_bldr bldr) {
 		this.Init_dump(this.Wkr_key(), wiki.Fsys_mgr().Site_dir().GenSubDir(Xow_dir_info_.Name_category));
 		ByteAryBfr tmp_bfr = bldr.App().Utl_bry_bfr_mkr().Get_b512();

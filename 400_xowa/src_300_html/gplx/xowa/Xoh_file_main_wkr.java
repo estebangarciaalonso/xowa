@@ -55,11 +55,12 @@ public class Xoh_file_main_wkr implements ByteAryFmtrArg {
 	Xof_xfer_itm xfer_itm;
 	public void XferAry(ByteAryBfr bfr, int idx) {
 		alts.Ini_(opt);
-		if (xfer_itm.Ext().Id_is_image())
-			opt.Html_main_img().Bld_bfr_many(bfr, xfer_itm.Orig_w(), xfer_itm.Orig_h(), xfer_itm.Html_orig_src(), file_size_bry, xfer_itm.Ext().Mime_type(), elem_id_val, xfer_itm.Html_w(), xfer_itm.Html_h(), xfer_itm.Html_view_src(), ttl.Full_txt(), wiki.App().Url_converter_url().Encode(ttl.Page_url()), alts);
-		else if (xfer_itm.Ext().Id_is_video())	// NOTE: video must precede audio else File:***.ogg will not show thumbs
+		Xof_ext ext = xfer_itm.Lnki_ext();
+		if (ext.Id_is_image())
+			opt.Html_main_img().Bld_bfr_many(bfr, xfer_itm.Orig_w(), xfer_itm.Orig_h(), xfer_itm.Html_orig_src(), file_size_bry, ext.Mime_type(), elem_id_val, xfer_itm.Html_w(), xfer_itm.Html_h(), xfer_itm.Html_view_src(), ttl.Full_txt(), wiki.App().Url_converter_url().Encode(ttl.Page_url()), alts);
+		else if (ext.Id_is_video())	// NOTE: video must precede audio else File:***.ogg will not show thumbs
 			opt.Html_main_vid().Bld_bfr_many(bfr, elem_id_val, xfer_itm.Html_view_src(), Xoh_lnki_wtr.Bry_class_internal, ttl.Page_db(), xfer_itm.Html_view_src(), xfer_itm.Html_w(), xfer_itm.Html_h(), ByteAry_.Empty, xfer_itm.Html_orig_src(), xfer_itm.Html_w(), xfer_itm.Html_w(), play_btn_icon);
-		else if (xfer_itm.Ext().Id_is_audio())
+		else if (ext.Id_is_audio())
 			opt.Html_main_aud().Bld_bfr_many(bfr, xfer_itm.Html_orig_src(), ttl.Page_db(), xfer_itm.Html_w(), xfer_itm.Html_w(), play_btn_icon);
 	}
 }

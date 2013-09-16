@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xop_redirect_mgr_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Basic()					{tst_Redirect("#REDIRECT [[a]]", "A");}
 	@Test  public void Basic_colon()			{tst_Redirect("#REDIRECT:[[a]]", "A");}
 	@Test  public void Ns_help()				{tst_Redirect("#REDIRECT [[Help:a]]", "Help:A");}

@@ -19,12 +19,12 @@ package gplx.xowa.specials.search; import gplx.*; import gplx.xowa.*; import gpl
 class Xog_search_suggest_cmd implements GfoInvkAble, Cancelable {
 	public Xog_search_suggest_cmd(Xoa_app app, Xog_search_suggest_mgr mgr) {
 		this.app = app; this.mgr = mgr;
-	}	Xoa_app app; Xog_search_suggest_mgr mgr; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); ListAdp rslts_1 = ListAdp_.new_(), rslts_2 = ListAdp_.new_();
+	}	private Xoa_app app; Xog_search_suggest_mgr mgr; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); ListAdp rslts_1 = ListAdp_.new_(), rslts_2 = ListAdp_.new_();
 	public void Init(Xow_wiki wiki, byte[] search_bry, byte[] cbk_func, int max_results, byte search_mode, int all_pages_extend, int all_pages_min) {
 		this.wiki = wiki; this.search_bry = search_bry; this.cbk_func = cbk_func; this.max_results = max_results;
 		this.search_mode_all_pages = search_mode == Xog_search_suggest_mgr.Tid_search_mode_all_pages; this.all_pages_extend = all_pages_extend; this.all_pages_min = all_pages_min;
 		searcher = new Xosrh_page_mgr();
-	}	Xow_wiki wiki; byte[] search_bry, cbk_func; Xosrh_page_mgr searcher; int max_results, all_pages_extend, all_pages_min;
+	}	private Xow_wiki wiki; byte[] search_bry, cbk_func; Xosrh_page_mgr searcher; int max_results, all_pages_extend, all_pages_min;
 	boolean search_mode_all_pages;
 	public byte[] Search_bry() {return search_bry;}
 	public boolean Canceled() {return canceled;}

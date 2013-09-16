@@ -27,7 +27,7 @@ class Gfui_box_win_mok implements Gfui_box_win {
 	public Gfui_box Focus_box() {return focus_box;} public void Focus_box_(Gfui_box box) {focus_box = box;} Gfui_box focus_box;
 	public String Text() {return text;} public void Text_(String v) {text = v;} private String text = "";
 	public void Focus() {focus_box = this;}
-	public int Subs_len() {return hash.Count();} OrderedHash hash = OrderedHash_.new_();
+	public int Subs_len() {return hash.Count();} private OrderedHash hash = OrderedHash_.new_();
 	public Gfui_box Subs_get_at(int i) {return (Gfui_box)hash.FetchAt(i);}
 	public Gfui_box Subs_get_by(String key) {return (Gfui_box)hash.Fetch(key);}
 	public void Subs_add(Gfui_box sub) {hash.Add(sub.Id(), sub);}

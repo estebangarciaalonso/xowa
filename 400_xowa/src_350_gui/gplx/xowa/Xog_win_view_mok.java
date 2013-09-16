@@ -19,14 +19,13 @@ package gplx.xowa; import gplx.*;
 import gplx.xowa.gui.history.*;
 public class Xog_win_view_mok extends Xog_win_view_base implements Xog_win_view {
 	public Xog_win_view_mok(Xoa_app app) {
-		this.app = app;
 		this.Ctor(app);
 		win_box = new Gfui_box_win_mok("main_win");
 		url_box = new Gfui_box_text_mok(win_box, "url_box");
 		html_box = new Gfui_box_html_mok(win_box, "html_box");
 		find_box = new Gfui_box_text_mok(win_box, "find_box");
 		prog_box = new Gfui_box_text_mok(win_box, "prog_box");
-	}	Xoa_app app;	
+	}
 	@Override public Xoa_page Page() {return page;} @Override public void Page_(Xoa_page v) {page = v;} private Xoa_page page;
 	@Override public Xog_history_mgr History_mgr() {return history_mgr;} private Xog_history_mgr history_mgr = new Xog_history_mgr();
 	@Override public Gfui_box_win Win_box()		{return win_box;} Gfui_box_win win_box;

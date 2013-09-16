@@ -46,7 +46,7 @@ class Xoa_cfg_mgr_fxt {
 			app = Xoa_app_fxt.app_();
 			cfg_mgr = app.Cfg_mgr();
 //			}
-	}	Xoa_app app; Xoa_cfg_mgr cfg_mgr;
+	}	private Xoa_app app; Xoa_cfg_mgr cfg_mgr;
 	public void Init_cfg_all(String key, String val) {Init_cfg(key, val, Xoa_cfg_grp_tid.Key_all_bry);}
 	public void Init_cfg_app(String key, String val) {Init_cfg(key, val, Xoa_cfg_grp_tid.Key_app_bry);}
 	void Init_cfg(String key, String val, byte[] tid) {

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xop_list_wkr_tst {		
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void List_1() {
 		fxt.tst_Parse_page_wiki("\n*a"
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)

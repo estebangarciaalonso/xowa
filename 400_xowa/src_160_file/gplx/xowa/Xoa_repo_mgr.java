@@ -16,8 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-public class Xof_repo_mgr implements GfoInvkAble {
-	public Xof_repo_mgr(Xoa_app app) {this.app = app;}
+public class Xoa_repo_mgr implements GfoInvkAble {
+	public Xoa_repo_mgr(Xoa_app app) {this.app = app;}
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public int Count() {return hash.Count();}
 	public Xof_repo_itm Get_at(int i)		{return (Xof_repo_itm)hash.FetchAt(i);}
@@ -38,7 +38,15 @@ public class Xof_repo_mgr implements GfoInvkAble {
 		}
 		return null;
 	}
-	public Xof_repo_itm Add(Xof_repo_itm itm) {hash.Add(itm.Key(), itm); return itm;} OrderedHash hash = OrderedHash_.new_bry_();
+	public Xof_repo_itm Get_by_wiki_key(byte[] key)	{
+		int len = hash.Count();
+		for (int i = 0; i < len; i++) {
+			Xof_repo_itm repo = (Xof_repo_itm)hash.FetchAt(i);
+			if (ByteAry_.Eq(key, repo.Wiki_key())) return repo;
+		}
+		return null;
+	}
+	public Xof_repo_itm Add(Xof_repo_itm itm) {hash.Add(itm.Key(), itm); return itm;} private OrderedHash hash = OrderedHash_.new_bry_();
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_set))			return Set(m.ReadStr("key"), m.ReadStr("url"), m.ReadStr("wiki"));
 		else	return GfoInvkAble_.Rv_unhandled;

@@ -29,8 +29,8 @@ public class Xop_fxt {
 		this.app = app;
 		this.wiki = wiki;
 		app.Wiki_mgr().Add(wiki);
-		app.File_mgr().Repos().Set("src:wiki", "mem/wiki/repo/src/", wiki.Key_str()).Ext_rules_(Xoft_rule_grp.Grp_app_default).Dir_depth_(2);
-		app.File_mgr().Repos().Set("trg:wiki", "mem/wiki/repo/trg/", wiki.Key_str()).Ext_rules_(Xoft_rule_grp.Grp_app_default).Dir_depth_(2).Primary_(true);
+		app.File_mgr().Repo_mgr().Set("src:wiki", "mem/wiki/repo/src/", wiki.Key_str()).Ext_rules_(Xoft_rule_grp.Grp_app_default).Dir_depth_(2);
+		app.File_mgr().Repo_mgr().Set("trg:wiki", "mem/wiki/repo/trg/", wiki.Key_str()).Ext_rules_(Xoft_rule_grp.Grp_app_default).Dir_depth_(2).Primary_(true);
 		wiki.File_mgr().Repo_mgr().Add_repo(ByteAry_.new_utf8_("src:wiki"), ByteAry_.new_utf8_("trg:wiki"));
 		ctx = wiki.Ctx();
 		mock_wkr.Clear_commons();	// assume all files are in repo 0
@@ -41,7 +41,7 @@ public class Xop_fxt {
 		html_wtr = new Xoh_html_wtr(wiki);
 		wiki.Html_mgr().Img_suppress_missing_src_(false);
 		Page_ttl_(Ttl_str);
-	}	Xofw_wiki_wkr_mock mock_wkr = new Xofw_wiki_wkr_mock();
+	}	private Xofw_wiki_wkr_mock mock_wkr = new Xofw_wiki_wkr_mock();
 	public static final String Ttl_str = "Test page";
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;

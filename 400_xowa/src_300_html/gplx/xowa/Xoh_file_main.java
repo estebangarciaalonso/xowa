@@ -21,7 +21,7 @@ class Xoh_file_main_alts implements ByteAryFmtrArg {
 	public Xoh_file_main_alts Ini_(Xoh_file_page opt) {
 		this.opt = opt;
 		return this;
-	}	Xoh_file_page opt; Xof_xfer_itm xfer_itm = new Xof_xfer_itm();
+	}	private Xoh_file_page opt; Xof_xfer_itm xfer_itm = new Xof_xfer_itm();
 	public void XferAry(ByteAryBfr bfr, int idx) {
 		Int_2_ref[] size_alts = opt.Size_alts();
 		int len = size_alts.length;

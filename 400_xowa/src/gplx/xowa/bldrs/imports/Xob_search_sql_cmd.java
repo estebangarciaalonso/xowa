@@ -30,7 +30,7 @@ public class Xob_search_sql_cmd extends Xob_itm_basic_base implements Xob_cmd {
 		Xodb_fsys_mgr db_fs = wiki.Db_mgr_as_sql().Fsys_mgr();
 		Xodb_file page_db = db_fs.Get_tid_root(Xodb_file.Tid_core);
 		wiki.Db_mgr_as_sql().Delete_by_tid(Xodb_file.Tid_search);
-		Xodb_file search_db = db_fs.Get_or_make(Xodb_file.Tid_search, Int_.MaxValue);
+		Xodb_file search_db = db_fs.Make(Xodb_file.Tid_search);
 		DataRdr page_rdr = DataRdr_.Null;
 		Db_provider search_provider = search_db.Provider();
 		Xodb_tbl_search_title_temp search_temp_tbl = new Xodb_tbl_search_title_temp().Create_table(search_provider);

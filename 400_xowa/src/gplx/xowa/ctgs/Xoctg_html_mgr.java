@@ -29,7 +29,7 @@ public class Xoctg_html_mgr implements GfoInvkAble {
 			Bld_html_v2(wiki, page, bfr);
 		else
 			Bld_html_v1(wiki, page, bfr);
-	}	Xoctg_url url_ctg = new Xoctg_url();
+	}	private Xoctg_url url_ctg = new Xoctg_url();
 	void Bld_html_v2(Xow_wiki wiki, Xoa_page page, ByteAryBfr bfr) {
 		byte[] ttl_bry = page.Page_ttl().Page_db();
 		Xoctg_view_ctg view_ctg = new Xoctg_view_ctg().Name_(page.Page_ttl().Page_txt());

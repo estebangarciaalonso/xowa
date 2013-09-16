@@ -48,6 +48,7 @@ public class Scrib_lib_ustring_tst {
 		Exec_gsub_regx_func("abcd", "[a]"	, "Abcd;1");
 		Exec_gsub_regx("a"	, "(a)"			, 1, "%%%1", "%a;1");
 		Exec_gsub_regx("à{b}c", "{b}"		, 1, "b", "àbc;1");		// utf8
+		Exec_gsub_regx("àbc", "^%s*(.-)%s*$", 1, "%1", "àbc;1");	// utf8; regx is for trim line
 	}
 	@Test  public void Gmatch_init() {
 		fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_init, Object_.Ary("abcabc", "a(b)")					, "a(b);\n  false");

@@ -22,7 +22,7 @@ class Sql_fld_mgr {
 	public Sql_fld_itm Get_by_key(String fld) {return Get_by_key(ByteAry_.new_utf8_(fld));}
 	public Sql_fld_itm Get_by_key(byte[] fld) {
 		return (Sql_fld_itm)hash.Fetch(fld);
-	}	OrderedHash hash = OrderedHash_.new_bry_();
+	}	private OrderedHash hash = OrderedHash_.new_bry_();
 	public Sql_fld_mgr Parse(byte[] raw) {
 		hash.Clear();
 		int bgn = ByteAry_.FindFwd(raw, Tkn_create_table); if (bgn == ByteAry_.NotFound) throw Err_.new_("could not find 'CREATE TABLE'");

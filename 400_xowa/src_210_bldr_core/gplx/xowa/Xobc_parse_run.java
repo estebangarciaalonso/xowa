@@ -40,7 +40,7 @@ public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoIn
 		redirect_mgr = wiki.Redirect_mgr();
 		Xot_invk_tkn.Cache_enabled = true;
 		bldr.App().Wiki_mgr().Wdata_mgr().Enabled_(false);
-	}	Xop_parser parser; Xop_ctx ctx; Gfo_msg_log msg_log; Xoad_wtr_dump log_dump; Xop_root_tkn root;
+	}	private Xop_parser parser; Xop_ctx ctx; Gfo_msg_log msg_log; Xoad_wtr_dump log_dump; Xop_root_tkn root;
 	public boolean Tmpl_on() {return tmpl_on;} public Xobc_parse_run Tmpl_on_(boolean v) {tmpl_on = v; return this;} private boolean tmpl_on;
 	Xobc_lnki_wkr_file img_dump; Xobc_xnde_math_dump math_dump; Xobc_lnki_wkr_ctg ctg_dump;
 	public void Cmd_run() {
@@ -92,7 +92,7 @@ public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoIn
 			compress_idx = 0;
 //				Io_mgr._.AppendFilStr("C:\\dump.txt", Xop_xnde_wkr.TEMP_TIMELINE.XtoStrAndClear());
 		}
-	}	Xodb_page_raw_parser raw_parser = new Xodb_page_raw_parser(); Xodb_page raw_page = new Xodb_page();
+	}	private Xodb_page_raw_parser raw_parser = new Xodb_page_raw_parser(); Xodb_page raw_page = new Xodb_page();
 	void Free() {
 		ctx.App().Free_mem(true);
 		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_invalidate();
@@ -133,7 +133,7 @@ public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoIn
 			bldr.Usr_dlg().Warn_many(GRP_KEY, "parse", "failed to parse ~{0} error ~{1}", String_.new_utf8_(ttl_bry), Err_.Message_lang(exc));
 			ctx.App().Utl_bry_bfr_mkr().Clear();
 		}
-	}	Xop_redirect_mgr redirect_mgr;
+	}	private Xop_redirect_mgr redirect_mgr;
 	void Tmpl_load(Xow_wiki wiki) {
 		Xodb_page_raw_parser raw_parser = new Xodb_page_raw_parser();
 		Io_url dir = wiki.Fsys_mgr().Tmp_dir().GenSubDir_nest(Xobc_parse_dump_templates.KEY, "dump");

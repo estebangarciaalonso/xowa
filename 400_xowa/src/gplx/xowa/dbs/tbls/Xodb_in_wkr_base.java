@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.dbs.tbls; import gplx.*; import gplx.xowa.*; import gplx.xowa.dbs.*;
 import gplx.dbs.*;
-abstract class Xodb_in_wkr_base {
+public abstract class Xodb_in_wkr_base {
 	public abstract int Interval();
 	public abstract void Fill_stmt(Db_stmt stmt, int bgn, int end);
 	public abstract Db_qry Build_qry(int bgn, int end);

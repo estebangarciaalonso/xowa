@@ -98,7 +98,7 @@ public class Xtn_dynamicPageList_nde_tst {
 	private static final String Itm_html_null = null;
 }
 class Xtn_dynamic_page_list_fxt {	
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	public void Clear() {
 		fxt.Reset();
 		warns = String_.Ary_empty;

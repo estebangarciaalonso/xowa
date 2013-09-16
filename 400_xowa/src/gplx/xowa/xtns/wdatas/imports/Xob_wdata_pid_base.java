@@ -36,7 +36,7 @@ public abstract class Xob_wdata_pid_base extends Xob_itm_dump_base implements Xo
 			bldr.Usr_dlg().Warn_many(GRP_KEY, "json.invalid", "json is invalid: ns=~{0} id=~{1}", page.Ns_id(), String_.new_utf8_(page.Ttl_wo_ns()));
 			return;
 		}
-		byte[] qid = doc.Get_val_as_bry_or(Wdata_doc_consts.Key_atr_entity_bry, null);
+		byte[] qid = Wdata_doc_.Entity_extract(doc);
 		Json_itm_nde label_nde = Json_itm_nde.cast_(doc.Get_grp(Wdata_doc_consts.Key_atr_label_bry)); if (label_nde == null) return; // no labels; ignore
 		int len = label_nde.Subs_len();
 		for (int i = 0; i < len; i++) {

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xop_comm_lxr_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 //		@Test  public void Basic() {
 //			fxt.tst_Parse_page_tmpl("a<!-- b -->c", fxt.tkn_txt_(0, 1), fxt.tkn_comment_(1, 11), fxt.tkn_txt_(11, 12));
 //		}

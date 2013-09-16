@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_intl_grammar_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()					{fxt.Reset();}
 	@Test  public void English() {// for now, mark unimplemented langs by returning not_found; {{:grammar}}; wait for users to report
 		fxt.tst_Parse_tmpl_str_test("{{grammar:a|b}}"						, "{{test}}"	, "{{:grammar}}");

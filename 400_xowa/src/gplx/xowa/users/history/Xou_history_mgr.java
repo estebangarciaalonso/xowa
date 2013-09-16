@@ -19,7 +19,7 @@ package gplx.xowa.users.history; import gplx.*; import gplx.xowa.*; import gplx.
 public class Xou_history_mgr implements GfoInvkAble {// app.user.history
 	public Xou_history_mgr(Xou_user user) {this.app = user.App();} private Xoa_app app; boolean load_chk = false; //boolean enabled = true;
 	Xou_history_html html_mgr = new Xou_history_html(); Xou_history_sorter sorter = new Xou_history_sorter().Sort_fld_(Xou_history_itm.Fld_view_end).Ascending_(false);
-	public int Count() {return itms.Count();} OrderedHash itms = OrderedHash_.new_bry_();		
+	public int Count() {return itms.Count();} private OrderedHash itms = OrderedHash_.new_bry_();		
 	public void Clear() {itms.Clear();}
 	@gplx.Internal protected Xou_history_itm Get_at(int i) {return (Xou_history_itm)itms.FetchAt(i);}		
 	public String Get_at_last(Xoa_app app) {

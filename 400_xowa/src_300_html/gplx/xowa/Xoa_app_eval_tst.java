@@ -33,7 +33,7 @@ class Xoa_app_eval_fxt {
 			fmtr.Eval_mgr_(eval);
 			Xoa_gfs_mgr.Msg_parser_init();
 		}
-	}	Xoa_app app; ByteAryFmtr fmtr; Xoa_app_eval eval;
+	}	private Xoa_app app; ByteAryFmtr fmtr; Xoa_app_eval eval;
 	public void Eval_test(String raw, String expd) {
 		Tfds.Eq(fmtr.Fmt_(raw).Bld_str_many(), expd);
 	}

@@ -74,11 +74,21 @@ public class Pf_msg_mgr {
 		Xoa_page msg_page = ttl == null ? Xoa_page.Null : wiki.Data_mgr().Get_page(ttl, false);
 		boolean found = false;
 		byte[] msg_val = ByteAry_.Empty;
-		if (msg_page.Missing()) {													// page not found
+		if (msg_page.Missing()) {												// page not found
 			msg_val = msg_itm.Val();
 			if (ByteAry_.Len_eq_0(msg_val)) {									// no msg in lang.gfs; this is not good; set .Val to "<msg_key>" in order to avoids subsequent lookups
-				tmp_bfr.Add_byte(Byte_ascii.Lt).Add(msg_key).Add_byte(Byte_ascii.Gt);
-				msg_val = tmp_bfr.XtoAryAndClear();
+				byte[] found_itm = null;
+				if (!ByteAry_.Eq(page_lang.Key_bry(), Xol_lang_.Key_en)) {		// if not english, try to use english; la.wikipedia.org/wiki/Fasciculus:HannibalFrescoCapitolinec1510.jpg; DATE:2013-09-10
+					Xol_lang en_lang = wiki.App().Lang_mgr().Get_by_key_or_load(Xol_lang_.Key_en);
+					Xol_msg_itm en_lang_itm = en_lang.Msg_mgr().Itm_by_key_or_null(msg_key);						
+					if (en_lang_itm != null) found_itm = en_lang_itm.Val();
+				}
+				if (found_itm == null) {
+					tmp_bfr.Add_byte(Byte_ascii.Lt).Add(msg_key).Add_byte(Byte_ascii.Gt);
+					msg_val = tmp_bfr.XtoAryAndClear();
+				}
+				else
+					msg_val = found_itm;
 			}
 		}
 		else {																	// page found; dump entire contents

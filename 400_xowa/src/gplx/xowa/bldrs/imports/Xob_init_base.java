@@ -26,7 +26,7 @@ public abstract class Xob_init_base implements Xob_cmd, GfoInvkAble {
 		if (wdata_enabled == Bool_.__byte) wdata_enabled = wiki.Wiki_tid() == Xow_wiki_type_.Tid_wikidata ? Bool_.Y_byte : Bool_.N_byte;	// if wdata_enabled not explicitly set, set it to y if wiki is "www.wikidata.org"
 		if (wdata_enabled == Bool_.Y_byte)		// if wdata_enabled, auto-add wdata_wkrs bldr
 			this.Cmd_ini_wdata(bldr, wiki);
-	}	byte wdata_enabled = Bool_.__byte;
+	}	private byte wdata_enabled = Bool_.__byte;
 	public void Cmd_bgn(Xob_bldr bldr) {}
 	public void Cmd_run() {						// parse site_info
 		gplx.ios.Io_stream_rdr src_rdr = wiki.Bldr_props().Src_rdr();

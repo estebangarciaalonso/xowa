@@ -52,7 +52,7 @@ public class Xoad_wtr_dump {
 			dump_itms.Add(path_bry, rv);
 		}
 		return rv;
-	}	OrderedHash dump_itms = OrderedHash_.new_bry_();
+	}	private OrderedHash dump_itms = OrderedHash_.new_bry_();
 }
 class Xoad_dump_itm {
 	ByteAryBfr bfr = new ByteAryBfr(4096);
@@ -148,7 +148,7 @@ class App_log_wtr_html implements ByteAryFmtrArg {
 		html = html_bfr.XtoAryAndClear();
 		msg_log.Clear();
 		this.page = null; this.msg_log = null;
-	}	Xoa_page page; Gfo_msg_log msg_log;
+	}	private Xoa_page page; Gfo_msg_log msg_log;
 	byte[] BuildExcerpt(Gfo_msg_data eny) {
 		if (eny.Src_bgn() == -1) return ByteAry_.Empty; // added via String message; no src excerpt available;
 		byte[] src = eny.Src_bry();

@@ -24,6 +24,17 @@ public class Json_itm_nde extends Json_itm_base implements Json_grp {
 	@Override public byte[] Data_bry() {return null;}
 	public int Subs_len() {return subs_len;} private int subs_len = 0, subs_max = 0;
 	public Json_itm Subs_get_at(int i) {return subs[i];}
+	public Json_itm Subs_get_by_key(byte[] key) {
+		for (int i = 0; i < subs_len; i++) {
+			Json_itm itm = subs[i];
+			if (itm.Tid() == Json_itm_.Tid_kv) {
+				Json_itm_kv itm_as_kv = (Json_itm_kv)itm;
+				if (ByteAry_.Eq(key, itm_as_kv.Key().Data_bry()))
+					return itm;
+			}
+		}
+		return null;
+	}
 	public Json_itm_nde Subs_add_many(Json_itm... ary) {
 		int len = ary.length;
 		for (int i = 0; i < len; i++)

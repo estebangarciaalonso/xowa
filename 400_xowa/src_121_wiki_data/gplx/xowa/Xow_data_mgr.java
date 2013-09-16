@@ -20,8 +20,8 @@ import gplx.lists.*; /*ComparerAble*/ import gplx.xowa.bldrs.imports.ctgs.*;
 import gplx.xowa.dbs.*;
 public class Xow_data_mgr implements GfoInvkAble {
 	public Xow_data_mgr(Xow_wiki wiki) {
-		this.wiki = wiki; this.fsys_mgr = wiki.Fsys_mgr(); this.redirect_mgr = wiki.Redirect_mgr();
-	}	Xow_fsys_mgr fsys_mgr; Xop_redirect_mgr redirect_mgr;
+		this.wiki = wiki; this.redirect_mgr = wiki.Redirect_mgr();
+	}	private Xop_redirect_mgr redirect_mgr;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	public Xoa_page Get_page(Xoa_ttl ttl, boolean called_from_tmpl) {Xoa_url url = new Xoa_url(); wiki.App().Url_parser().Parse(url, ttl.Raw()); return Get_page(url, ttl, called_from_tmpl);}
 	public Xoa_page Get_page(Xoa_url url, Xoa_ttl ttl, boolean called_from_tmpl) {

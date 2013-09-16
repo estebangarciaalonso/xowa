@@ -22,7 +22,7 @@ public class Xow_fsys_mgr {
 		ns_dir		= root_dir.GenSubDir(Xow_dir_info_.Name_ns);
 		site_dir	= root_dir.GenSubDir(Xow_dir_info_.Name_site);
 		tmp_dir		= root_dir.GenSubDir("tmp");
-	}	Xow_wiki wiki;
+	}	private Xow_wiki wiki;
 	public Io_url Root_dir()	{return root_dir;}	Io_url root_dir;
 	public Io_url Ns_dir()		{return ns_dir;}	Io_url ns_dir;
 	public Io_url Site_dir()	{return site_dir;}	Io_url site_dir;

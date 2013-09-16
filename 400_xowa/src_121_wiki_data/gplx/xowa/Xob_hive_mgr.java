@@ -114,7 +114,7 @@ public class Xob_hive_mgr {
 		xdat.Parse(xdat_bry, xdat_bry.length, xdat_url);
 		xdat.Find(xdat_itm, key, Xodb_page_.Txt_ttl_pos, Byte_ascii.Tab, false);
 		Find_nearby_add_fwd(list, dir_tid, ns, include_redirects, count, xdat_idx, xdat_itm.Itm_idx());
-	}	Xob_xdat_itm xdat_itm = new Xob_xdat_itm(); //Int_2_ref find_nearby_rslt = new Int_2_ref();
+	}	private Xob_xdat_itm xdat_itm = new Xob_xdat_itm(); //Int_2_ref find_nearby_rslt = new Int_2_ref();
 	void Find_nearby_add_bwd(ListAdp list, byte dir_tid, Xow_ns ns, boolean include_redirects, int total, int fil_bgn, int row_bgn) {
 		if (--row_bgn < 0) {
 			--fil_bgn;
@@ -186,5 +186,5 @@ public class Xob_hive_mgr {
 		xdat.Insert(tmp_bfr, row);
 		xdat.Save(xdat_url);
 		tmp_bfr.Mkr_rls();
-	}	Xob_xdat_file xdat = new Xob_xdat_file(); Io_zip_mgr zip_mgr = Io_zip_mgr_base._;
+	}	private Xob_xdat_file xdat = new Xob_xdat_file(); Io_zip_mgr zip_mgr = Io_zip_mgr_base._;
 }

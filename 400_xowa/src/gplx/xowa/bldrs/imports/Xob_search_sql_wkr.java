@@ -23,7 +23,7 @@ public class Xob_search_sql_wkr extends Xob_search_base implements Io_make_cmd {
 	@Override public gplx.ios.Io_make_cmd Make_cmd_site() {return this;}
 	public Io_sort_cmd Make_dir_(Io_url v) {return this;}	// noop	
 	public void Sort_bgn() {
-		Xodb_file search_db = db_mgr.Fsys_mgr().Get_or_make(Xodb_file.Tid_search, Int_.MaxValue);
+		Xodb_file search_db = db_mgr.Fsys_mgr().Make(Xodb_file.Tid_search);
 		provider = search_db.Provider();
 		provider.Txn_mgr().Txn_bgn_if_none();
 	}	private Db_provider provider; private int search_id = 0;

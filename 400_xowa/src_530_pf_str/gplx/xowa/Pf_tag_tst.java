@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_tag_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()			{fxt.Reset();}
 	@Test  public void Basic()			{fxt.tst_Parse_tmpl_str_test("{{#tag:div|a|atr1=val1|atr2=val2}}"					, "{{test}}"	, "<div atr1=\"val1\" atr2=\"val2\">a</div>");}
 //		@Test  public void Missing_val()	{fxt.ini_Msg(Mwl_tag_rsc._.Invalid).tst_Parse_tmpl_str_test("{{#tag:div|a|atr1=}}"	, "{{test}}"	, "");}	// see {{Reflist|colwidth=30em}} -> <ref group=a>a</ref>{{#tag:references||group=}} -> ""

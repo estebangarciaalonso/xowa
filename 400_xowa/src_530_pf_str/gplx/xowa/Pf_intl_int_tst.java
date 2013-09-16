@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_intl_int_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {fxt.Reset();}
 	@Test  public void Month_en()				{fxt.tst_Parse_tmpl_str_test("{{int:january}}"								, "{{test}}"	, "January");}
 	@Test  public void Month_en_upper()			{fxt.tst_Parse_tmpl_str_test("{{int:JANUARY}}"								, "{{test}}"	, "January");}
@@ -32,6 +32,16 @@ public class Pf_intl_int_tst {
 		fxt.Ctx().Page().Lang_(fr_lang); 
 		fxt.tst_Parse_tmpl_str_test("{{int:Lang}}", "{{test}}"	, "fr");
 		fxt.Ctx().Page().Lang_(en_lang);	// NOTE: must reset back to en_lang, else rest of tests will look up under fr
+	}
+	@Test  public void Unknown_defaults_to_english() {	// PURPOSE: if key does not exist in non-english language, use English; EX: la.wikipedia.org/wiki/Fasciculus:HannibalFrescoCapitolinec1510.jpg; DATE:2013-09-10
+		Xol_lang en_lang = fxt.Wiki().Lang();	// NOTE: needed for reset; see below;
+		Xol_lang fr_lang = fxt.App().Lang_mgr().Get_by_key_or_new(ByteAry_.new_ascii_("fr"));
+		byte[] msg_key = ByteAry_.new_ascii_("en_only_key");
+		Xol_msg_itm msg_itm = en_lang.Msg_mgr().Itm_by_key_or_new(msg_key);
+		msg_itm.Atrs_set(ByteAry_.new_ascii_("en_only_val"), true, false);
+		fxt.Ctx().Page().Lang_(fr_lang); 
+		fxt.tst_Parse_tmpl_str_test("{{int:en_only_key}}", "{{test}}"	, "en_only_val");
+		fxt.Ctx().Page().Lang_(en_lang);		// NOTE: must reset back to en_lang, else rest of tests will look up under fr
 	}
 	@Test  public void Tmpl_txt() {
 		Xol_lang lang = fxt.Ctx().Page().Lang();

@@ -20,7 +20,7 @@ class Xoctg_fmtr_grp implements ByteAryFmtrArg {
 	public void Init_from_all(Xow_wiki wiki, Xol_lang lang, Xoctg_view_ctg ctg, Xoctg_fmtr_all mgr, Xoctg_view_grp itms_list) {
 		this.wiki = wiki; this.mgr = mgr; this.itms_fmtr = mgr.Fmtr_itm(); this.itms_list = itms_list; len = itms_list.Len();
 		itms_fmtr.Init_from_all(wiki, lang, ctg, mgr, itms_list, len);
-	}	Xow_wiki wiki; Xoctg_fmtr_itm itms_fmtr; Xoctg_view_grp itms_list; int len; Xoctg_fmtr_all mgr;
+	}	private Xow_wiki wiki; Xoctg_fmtr_itm itms_fmtr; Xoctg_view_grp itms_list; int len; Xoctg_fmtr_all mgr;
 	public void XferAry(ByteAryBfr bfr, int xfer_idx) {
 		if (mgr.Grps_enabled()) {
 			if (len == 0) return;

@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.files.*;
+import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
 public class Xof_xfer_queue {
 	private ListAdp list = ListAdp_.new_(); private OrderedHash dirty = OrderedHash_.new_(); private ByteAryRef dirty_key = ByteAryRef.null_();		
 	public IntRef Elem_id() {return elem_id;} private IntRef elem_id = IntRef.neg1_();
@@ -40,7 +40,7 @@ public class Xof_xfer_queue {
 			Xof_xfer_itm xfer_itm = (Xof_xfer_itm)list.FetchAt(i);
 			meta_mgr = xfer_itm.Meta_itm().Owner_fil().Owner_mgr();
 			Add_dirty_if_new(meta_mgr); // only add if new
-			String queue_msg = wtr.Prog_many(GRP_KEY, "download.bgn", "downloading ~{0} of ~{1}: ~{2};", i + ListAdp_.Base1, xfer_len, xfer_itm.Ttl());
+			String queue_msg = wtr.Prog_many(GRP_KEY, "download.bgn", "downloading ~{0} of ~{1}: ~{2};", i + ListAdp_.Base1, xfer_len, xfer_itm.Lnki_ttl());
 			wiki.App().File_mgr().Download_mgr().Download_wkr().Download_xrg().Prog_fmt_hdr_(queue_msg);
 			wiki.File_mgr().Repo_mgr().Xfer_by_meta(xfer_itm, this);
 			xfer_itm.Atrs_by_meta(xfer_itm.Meta_itm(), xfer_itm.Meta_itm().Repo_itm(wiki), wiki.Html_mgr().Img_thumb_width());
@@ -70,7 +70,8 @@ public class Xof_xfer_queue {
 		this.Clear();
 	}
 	public void Exec_fsdb(Xog_win_wtr wtr, Xow_wiki wiki) {
-		wiki.File_mgr().Fsdb_mgr().Reg_select(wtr, list);
+		wiki.File_mgr().Fsdb_mgr().Init_by_wiki(wiki);
+		wiki.File_mgr().Fsdb_mgr().Reg_select(wtr, gplx.xowa.files.fsdb.Xof_exec_tid.Tid_wiki_page, list);
 	}
 	private static final String GRP_KEY = "xowa.xfer.queue";
 }

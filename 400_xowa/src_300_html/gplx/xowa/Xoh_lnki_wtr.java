@@ -21,7 +21,7 @@ public class Xoh_lnki_wtr {
 	public Xoh_lnki_wtr(Xow_wiki wiki, Xoh_html_wtr html_wtr) {
 		this.wiki = wiki; this.html_wtr = html_wtr; bfr_mkr = wiki.Utl_bry_bfr_mkr();
 		this.cfg = wiki.Html_mgr();
-	}	Xow_html_mgr cfg; boolean lnki_title_enabled;
+	}	private Xow_html_mgr cfg; boolean lnki_title_enabled;
 	Xow_wiki wiki; Xoh_html_wtr html_wtr; ByteAryFmtrArg_html_fmtr media_alt_fmtr = new ByteAryFmtrArg_html_fmtr(), caption_fmtr = new ByteAryFmtrArg_html_fmtr(); Bry_bfr_mkr bfr_mkr; Xoa_url tmp_url = new Xoa_url();
 	Xoa_page page;
 	public void Write_or_queue(Xoa_page page, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, int depth) {
@@ -44,7 +44,7 @@ public class Xoh_lnki_wtr {
 			return Queue_add_manual(queue,  tmp_xfer_itm);
 		}
 		return rv;
-	}	Xof_xfer_itm tmp_xfer_itm = new Xof_xfer_itm();
+	}	private Xof_xfer_itm tmp_xfer_itm = new Xof_xfer_itm();
 	public static Xof_xfer_itm Queue_add_manual(Xof_xfer_queue queue, Xof_xfer_itm xfer_itm) {
 		int elem_id = queue.Elem_id().Val_add();
 		Xof_xfer_itm rv = xfer_itm.Clone().Html_dynamic_atrs_(elem_id, Xof_xfer_itm.Html_dynamic_tid_img);
@@ -84,19 +84,20 @@ public class Xoh_lnki_wtr {
 		byte[] lnki_alt_text = Alt_text(src, lnki, depth);
 		byte[] content = ByteAry_.Empty;
 		byte[] lnki_ttl = lnki.Ttl().Page_txt();
-		if (cfg.Img_suppress_missing_src()							// option to suppress src when file is missing
-			&& !xfer_itm.Html_pass()								// file is missing
-			&& !xfer_itm.Ext().Id_is_media()) {						// file is media; never suppress; src needs to be available for "click" on play; note that most media will be missing (not downloaded)
-			html_orig_src = html_view_src = ByteAry_.Empty;			// null out src
+		Xof_ext lnki_ext = xfer_itm.Lnki_ext();
+		if (cfg.Img_suppress_missing_src()						// option to suppress src when file is missing
+			&& !xfer_itm.Html_pass()							// file is missing
+			&& !lnki_ext.Id_is_media()) {						// file is media; never suppress; src needs to be available for "click" on play; note that most media will be missing (not downloaded)
+			html_orig_src = html_view_src = ByteAry_.Empty;		// null out src
 		}
 
 		if (lnki.NmsId() == Xow_ns_.Id_media) {	// REF.MW:Linker.php|makeMediaLinkObj; NOTE: regardless of ext (ogg vs jpeg) and literal status (Media vs :Media), [[Media]] links are always rendered the same way; see Beethoven; EX: [[:Media:De-Ludwig_van_Beethoven.ogg|listen]]); [[File:Beethoven 3.jpg|The [[Media:BeethovenWithLyreGuitar( W. J. Mahler - 1804).jpg|complete painting]]...]]
 			cfg.Lnki_full_media().Bld_bfr_many(bfr, html_view_src, lnki.Ttl().Page_txt(), Caption(src, lnki, Xoh_opts.root_(), depth, html_orig_src));
 			return;
 		}
-		if (xfer_itm.Ext().Id_is_media()) {
-			if		(xfer_itm.Ext().Id() == Xof_ext_.Id_ogv || xfer_itm.Html_pass()			// NOTE: xfer_itm.Html_pass() checks for video .ogg files (ext = .ogg and thumb is available); EX: WWI;
-					|| (xfer_itm.Ext().Id_is_ogg() && xfer_itm.Meta_itm().State_new())) {	// NOTE: State_new() will always assume that ogg is video; needed for 1st load and dynamic updates
+		if (lnki_ext.Id_is_media()) {
+			if		(lnki_ext.Id() == Xof_ext_.Id_ogv || xfer_itm.Html_pass()			// NOTE: xfer_itm.Html_pass() checks for video .ogg files (ext = .ogg and thumb is available); EX: WWI;
+				||	(lnki_ext.Id_is_ogg() && xfer_itm.Meta_itm().State_new())) {	// NOTE: State_new() will always assume that ogg is video; needed for 1st load and dynamic updates
 				xfer_itm.Html_dynamic_tid_(Xof_xfer_itm.Html_dynamic_tid_vid);
 				if (Xop_lnki_type.Id_is_thumb_like(lnki.Lnki_type())) {
 					content = Video(src, opts, lnki, xfer_itm, depth, elem_id, true, lnki_href, html_view_src, html_orig_src, lnki_alt_text);
@@ -107,7 +108,7 @@ public class Xoh_lnki_wtr {
 					return;
 				}
 			}
-			else if	(xfer_itm.Ext().Id_is_audio()) {
+			else if	(lnki_ext.Id_is_audio()) {
 				content = Audio(src, opts, lnki, depth, elem_id, lnki_href, html_orig_src, lnki_alt_text);
 				if (lnki.Media_icon())
 					cfg.Lnki_thumb_core().Bld_bfr_many(bfr, div_width, lnki_halign_bry, content, elem_id);

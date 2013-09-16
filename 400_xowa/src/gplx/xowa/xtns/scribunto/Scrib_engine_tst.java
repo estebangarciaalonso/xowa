@@ -136,7 +136,7 @@ class Scrib_engine_fxt {
 		engine.When_page_changed(wiki.Ctx().Page());
 		expd_server_rcvd_list.Clear();
 		return this;
-	}	Xoa_app app; Xow_wiki wiki; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	}	private Xoa_app app; Xow_wiki wiki; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
 	public Scrib_engine Engine() {return engine;} Scrib_engine engine;
 	public Process_server_mock Server() {return server;} Process_server_mock server;
 	public KeyVal kv_(Object key, Object val) {return KeyVal_.obj_(key, val);}

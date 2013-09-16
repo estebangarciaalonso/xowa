@@ -49,7 +49,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 			XferAry(bfr, 0);
 		this.page = null;
 		return bfr.XtoAryAndClear();
-	}	Xoa_page page; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); App_log_wtr_html log_wtr = new App_log_wtr_html();
+	}	private Xoa_page page; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); App_log_wtr_html log_wtr = new App_log_wtr_html();
 	private static byte[] Bry_mathjax_script, Bry_mathjax_script_bgn = ByteAry_.new_ascii_("<script src=\""), Bry_mathjax_script_end = ByteAry_.new_ascii_("bin/any/javascript/xowa/mathjax/xowa_mathjax.js\"></script>");
 	private static byte[] Bry_xowa_root_dir;
 	public static byte[] Page_name(ByteAryBfr tmp_bfr, Xoa_ttl ttl, byte[] display_ttl) {

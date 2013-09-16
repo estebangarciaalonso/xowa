@@ -25,7 +25,7 @@ public class Xow_hive_mgr_fxt {
 		}
 		hive_mgr.Clear();
 		Io_mgr._.InitEngine_mem();
-	}	Xob_hive_mgr hive_mgr; Xoa_app app;
+	}	private Xob_hive_mgr hive_mgr; Xoa_app app;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	public void Find_nearby(String key, int count, boolean include_redirects, String... expd) {
 		ListAdp list = ListAdp_.new_();

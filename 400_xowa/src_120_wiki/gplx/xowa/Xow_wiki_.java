@@ -23,6 +23,6 @@ public class Xow_wiki_ {
 	;
 	public static final byte[] 
 	  Domain_commons_bry = ByteAry_.new_ascii_(Domain_commons_str)
-	, Domain_enwiki_bry  = ByteAry_.new_ascii_(Domain_enwiki_str)
+	, Domain_en_wiki_bry  = ByteAry_.new_ascii_(Domain_enwiki_str)
 	;
 }

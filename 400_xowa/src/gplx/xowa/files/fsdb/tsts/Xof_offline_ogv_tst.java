@@ -15,26 +15,26 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
+package gplx.xowa.files.fsdb.tsts; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
 import org.junit.*;
 import gplx.fsdb.*;
 public class Xof_offline_ogv_tst {
-	@Before public void init() {if (Xo_test.Db_skip) return; fxt.Reset();} private Xof_file_fxt fxt = new Xof_file_fxt();
-	@After public void term() {if (Xo_test.Db_skip) return; fxt.Rls();}
+	@Before public void init() {if (fxt.Db_skip()) return; fxt.Reset();} private Xof_file_fxt fxt = new Xof_file_fxt();
+	@After public void term() {if (fxt.Db_skip()) return; fxt.Rls();}
 	@Test   public void Copy_orig() {
-		if (Xo_test.Db_skip) return;
+		if (fxt.Db_skip()) return;
 		fxt.Init_qry_xowa(Xof_fsdb_arg_init_qry.new_().Init_commons("A.ogv", 440, 400));
 		fxt.Init_bin_fsdb(Xof_fsdb_arg_init_bin.new_().Init_commons_thumb("A.ogv", 440, 400));
-		fxt.Test_get(Xof_fsdb_arg_exec_get.new_().Init_orig("A.ogv").Rslt_reg_missing_reg().Rslt_qry_mock_().Rslt_bin_fsdb_().Rslt_cnv_n_());
+		fxt.Exec_get(Xof_fsdb_arg_exec_get.new_().Init_orig("A.ogv").Rslt_reg_missing_reg().Rslt_qry_mock_().Rslt_bin_fsdb_().Rslt_cnv_n_());
 		fxt.Test_fsys("mem/root/common/thumb/d/0/A.ogv/440px.jpg", "440,400");
-		fxt.Test_regy_pass(fxt.Key_bldr().Bld_as_str("A.ogv"));
+		fxt.Test_regy_pass("A.ogv");
 	}
 	@Test   public void Copy_orig_w_thumbtime() {
-		if (Xo_test.Db_skip) return;
+		if (fxt.Db_skip()) return;
 		fxt.Init_qry_xowa(Xof_fsdb_arg_init_qry.new_().Init_commons("A.ogv", 440, 400));
 		fxt.Init_bin_fsdb(Xof_fsdb_arg_init_bin.new_().Init_commons_thumb("A.ogv", 440, 400, 10));
-		fxt.Test_get(Xof_fsdb_arg_exec_get.new_().Init_orig("A.ogv").Lnki_thumbtime_(10).Rslt_reg_missing_reg().Rslt_qry_mock_().Rslt_bin_fsdb_().Rslt_cnv_n_());
+		fxt.Exec_get(Xof_fsdb_arg_exec_get.new_().Init_orig("A.ogv").Lnki_thumbtime_(10).Rslt_reg_missing_reg().Rslt_qry_mock_().Rslt_bin_fsdb_().Rslt_cnv_n_());
 		fxt.Test_fsys("mem/root/common/thumb/d/0/A.ogv/440px@10.jpg", "440,400");
-		fxt.Test_regy_pass(fxt.Key_bldr().Bld_as_str(ByteAry_.new_ascii_("A.ogv"), Xop_lnki_type.Id_none, Xop_lnki_tkn.Width_null, Xop_lnki_tkn.Height_null, Xop_lnki_tkn.Upright_null, 10));
+		fxt.Test_regy_pass("A.ogv");
 	}
 }

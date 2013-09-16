@@ -50,5 +50,5 @@ public class Xou_history_html implements ByteAryFmtrArg, Xows_page {
 			Xou_history_itm itm = mgr.Get_at(i);
 			html_itm.Bld_bfr_many(bfr, itm.Wiki(), itm.Page(), itm.View_count(), itm.View_end().XtoStr_fmt_yyyy_MM_dd_HH_mm());
 		}		
-	}	Xou_history_mgr mgr; Xoa_app app;
+	}	private Xou_history_mgr mgr; Xoa_app app;
 }

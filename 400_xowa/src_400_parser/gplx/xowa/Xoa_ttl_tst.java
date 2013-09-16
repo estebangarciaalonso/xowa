@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xoa_ttl_tst {
-	Xop_fxt fxt = new Xop_fxt(); //Mwl_parser_fxt fxt = new Mwl_parser_fxt();
+	private Xop_fxt fxt = new Xop_fxt(); //Mwl_parser_fxt fxt = new Mwl_parser_fxt();
 	@Before public void init() {
 		fxt.Wiki().Xwiki_mgr().Add_full(ByteAry_.new_utf8_("fr"), ByteAry_.new_utf8_("fr.wikipedia.org"));
 		test_raw = "Test page";

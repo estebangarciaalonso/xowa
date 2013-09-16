@@ -76,7 +76,7 @@ public class Xobd_rdr implements Xob_cmd {
 		for (int i = 0; i < wkr_ary_len; i++)
 			wkr_ary[i].Wkr_print();
 	}
-	public void Wkr_add(Xobd_wkr wkr) {wkrs.Add(wkr.Wkr_key(), wkr);} OrderedHash wkrs = OrderedHash_.new_();
+	public void Wkr_add(Xobd_wkr wkr) {wkrs.Add(wkr.Wkr_key(), wkr);} private OrderedHash wkrs = OrderedHash_.new_();
 	public Xobd_wkr Wkr_get(String key) {return (Xobd_wkr)wkrs.Fetch(key);}
 	public Xobd_parser Page_parser_assert() {
 		if (page_parser == null) {
@@ -84,7 +84,7 @@ public class Xobd_rdr implements Xob_cmd {
 			this.Wkr_add(page_parser);
 		}
 		return page_parser;
-	}	Xobd_parser page_parser;
+	}	private Xobd_parser page_parser;
 	public static Io_url Find_fil_by(Io_url dir, String filter) {
 		Io_url[] fil_ary = Io_mgr._.QueryDir_args(dir).FilPath_(filter).ExecAsUrlAry();
 		int fil_ary_len = fil_ary.length;

@@ -182,7 +182,7 @@ class MockObj {
 }
 class TstObj implements SrlMgr {
 	public boolean	Type_rdr() {return false;}
-	public OrderedHash Atrs() {return atrs;} OrderedHash atrs = OrderedHash_.new_();
+	public OrderedHash Atrs() {return atrs;} private OrderedHash atrs = OrderedHash_.new_();
 	public Object StoreRoot(SrlObj root, String key) {return null;}
 	public boolean	SrlBoolOr(String key, boolean v)					{Atrs_add(key, v, BoolClassXtn._); return v;}
 	public byte	SrlByteOr(String key, byte v)					{Atrs_add(key, v, ByteClassXtn._); return v;}

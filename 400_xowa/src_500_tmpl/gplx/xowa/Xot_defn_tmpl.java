@@ -26,7 +26,7 @@ public class Xot_defn_tmpl implements Xot_defn {
 	public void Init_by_new(Xow_ns ns, byte[] name, byte[] data_raw, Xop_root_tkn root, boolean onlyInclude) {
 		this.ns = ns; this.name = name; this.data_raw = data_raw; this.root = root; this.onlyInclude_exists = onlyInclude;
 		ns_id = ns.Id();
-	}	Xow_ns ns; int ns_id;
+	}	private Xow_ns ns; int ns_id;
 	public void Init_by_raw(Xop_root_tkn root, boolean onlyInclude_exists) {
 		this.root = root; this.onlyInclude_exists = onlyInclude_exists;
 	}

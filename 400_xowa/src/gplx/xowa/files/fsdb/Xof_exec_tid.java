@@ -16,11 +16,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
-public class Xof_fsdb_itm_comparer_ttl implements gplx.lists.ComparerAble {
-	public int compare(Object lhsObj, Object rhsObj) {
-		Xof_xfer_itm lhs = (Xof_xfer_itm)lhsObj;
-		Xof_xfer_itm rhs = (Xof_xfer_itm)rhsObj;
-		return ByteAry_.Compare(lhs.Ttl(), rhs.Ttl());
-	}
-	public static final Xof_fsdb_itm_comparer_ttl _ = new Xof_fsdb_itm_comparer_ttl();
+public class Xof_exec_tid {
+	public static final byte Tid_null = 0, Tid_wiki_page = 1, Tid_wiki_file = 2, Tid_app = 3;
 }

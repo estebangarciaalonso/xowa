@@ -29,7 +29,7 @@ public class Xof_qry_wrk_mock implements Xof_qry_wkr {
 	}
 	public Xof_qry_wrk_mock Add_redirect(byte[] ttl, byte[] redirect) {
 		Xof_fsdb_itm itm = Get_or_new(ttl);
-		itm.Orig_redirect_(ttl, redirect);
+		itm.Orig_redirect_(redirect);
 		return this;
 	}
 	private Xof_fsdb_itm Get_or_new(byte[] ttl) {
@@ -45,8 +45,8 @@ public class Xof_qry_wrk_mock implements Xof_qry_wkr {
 		byte[] ttl = itm.Lnki_ttl();
 		Xof_fsdb_itm reg = (Xof_fsdb_itm)hash.Fetch(ttl); if (reg == null) return false;
 		itm.Orig_wiki_(reg.Orig_wiki());
-		if (reg.Orig_redirected())
-			itm.Orig_redirect_(reg.Orig_redirected_src(), reg.Orig_redirected_trg());
+		if (reg.Orig_redirect() != null)
+			itm.Orig_redirect_(reg.Orig_redirect());
 		itm.Orig_size_(reg.Orig_w(), reg.Orig_h());
 		return true;
 	}

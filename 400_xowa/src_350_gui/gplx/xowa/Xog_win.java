@@ -365,7 +365,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	}
 	void Exec_cancel_restart() {
 		Exec_url_exec(restart_url);		
-	}	Xoa_url restart_url;
+	}	private Xoa_url restart_url;
 	void Exec_url_exec(Xoa_url url) {			
 		if (reload_imgs_thread.IsAlive()) {
 			restart_url = url;
@@ -561,7 +561,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		this.gui_wtr = new Gfo_usr_dlg_xowa();
 		gui_wtr.Ini(kit, this);
 		gui_wtr.Ui_wkr_(app.Usr_dlg().Ui_wkr());
-	}	Xog_win_view_adp win_mgr = new Xog_win_view_adp();
+	}	private Xog_win_view_adp win_mgr = new Xog_win_view_adp();
 	void Exec_context_copy() {
 		win.Kit().Clipboard().Copy(Html_doc_selected_get());
 	}
@@ -699,7 +699,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		}
 		rv.Wiki_(app.Wiki_mgr().Get_by_key_or_make(tmp_href.Wiki()));
 		return rv;
-	}	Xoh_href tmp_href = new Xoh_href();
+	}	private Xoh_href tmp_href = new Xoh_href();
 	byte[] Eval_elem_value_edit_box_bry() {return ByteAry_.new_utf8_(Eval_elem_value_edit_box_str());}
 	String Eval_elem_value_edit_box_str() {return html_box.Html_elem_atr_get_str(Id_xowa_edit_data_box, Gfui_html.Atr_value);}
 	String Eval_elem_value(String elem_id) {return html_box.Html_elem_atr_get_str(elem_id, Gfui_html.Atr_value);}		

@@ -20,18 +20,18 @@ import gplx.xowa.files.fsdb.*;
 public class Xow_file_mgr implements GfoInvkAble {
 	public Xow_file_mgr(Xow_wiki wiki) {
 		this.wiki = wiki;
-		repo_mgr = new Xowf_repo_mgr(wiki);
+		repo_mgr = new Xow_repo_mgr(wiki);
 		meta_mgr = new Xof_meta_mgr(wiki);
 	}	private Xow_wiki wiki;
-	public Xowf_repo_mgr Repo_mgr() {return repo_mgr;} private Xowf_repo_mgr repo_mgr;
+	public Xow_repo_mgr Repo_mgr() {return repo_mgr;} private Xow_repo_mgr repo_mgr;
 	public Xof_meta_mgr  Meta_mgr() {return meta_mgr;} private Xof_meta_mgr meta_mgr;
 	public Xof_cfg_download Cfg_download() {return cfg_download;} private Xof_cfg_download cfg_download = new Xof_cfg_download();
-	public Xof_fsdb_mgr Fsdb_mgr() {return fsdb_mgr;} private Xof_fsdb_mgr fsdb_mgr = new Xof_fsdb_mgr();
+	public Xof_fsdb_mgr_sql Fsdb_mgr() {return fsdb_mgr;} private Xof_fsdb_mgr_sql fsdb_mgr = new Xof_fsdb_mgr_sql();
 	public boolean Find_meta(Xof_xfer_itm xfer_itm) {
 		xfer_itm.Trg_repo_idx_(Xof_meta_itm.Repo_unknown);
-		byte[] xfer_itm_ttl = xfer_itm.Ttl();
+		byte[] xfer_itm_ttl = xfer_itm.Lnki_ttl();
 		xfer_itm.Atrs_by_ttl(xfer_itm_ttl, ByteAry_.Empty);
-		Xof_meta_itm meta_itm = meta_mgr.Get_itm_or_new(xfer_itm_ttl, xfer_itm.Md5());
+		Xof_meta_itm meta_itm = meta_mgr.Get_itm_or_new(xfer_itm_ttl, xfer_itm.Lnki_md5());
 		xfer_itm.Atrs_by_meta_only(meta_itm);
 		if (meta_itm.State_new()) {														// meta_itm is brand new
 			xfer_itm.Atrs_by_meta(meta_itm, repo_mgr.Repos_get_at(0).Trg(), wiki.Html_mgr().Img_thumb_width());	// default to 1st repo to prevent null_ref in xfer_mgr; questionable, but all wikis must have at least 1 repo

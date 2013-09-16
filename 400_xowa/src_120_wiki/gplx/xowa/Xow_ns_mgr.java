@@ -101,16 +101,16 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 		KeyVal kv = KeyVal_.new_(name, IntVal.new_(ns_id));
 		aliases.AddReplace(name, kv);
 		return this;
-	}	OrderedHash aliases = OrderedHash_.new_();
+	}	private OrderedHash aliases = OrderedHash_.new_();
 	public void Aliases_clear() {aliases.Clear();}
 	
 	public Xow_ns Ns_main()					{return ns_main;}		Xow_ns ns_main;
-	public Xow_ns Ns_template()				{return ns_template;}	Xow_ns ns_template;
+	public Xow_ns Ns_template()				{return ns_template;}	private Xow_ns ns_template;
 	public Xow_ns Ns_file()					{return ns_file;}		Xow_ns ns_file;
-	public Xow_ns Ns_category()				{return ns_category;}	Xow_ns ns_category;
-	public Xow_ns Ns_portal()				{return ns_portal;}	Xow_ns ns_portal;
-	public Xow_ns Ns_project()				{return ns_project;}	Xow_ns ns_project;
-	public Xow_ns Ns_mediawiki()			{return ns_mediawiki;}	Xow_ns ns_mediawiki;
+	public Xow_ns Ns_category()				{return ns_category;}	private Xow_ns ns_category;
+	public Xow_ns Ns_portal()				{return ns_portal;}	private Xow_ns ns_portal;
+	public Xow_ns Ns_project()				{return ns_project;}	private Xow_ns ns_project;
+	public Xow_ns Ns_mediawiki()			{return ns_mediawiki;}	private Xow_ns ns_mediawiki;
 	public Xow_ns Get_by_id(int id)			{return (Xow_ns)id_hash.Fetch(ns_hash_lkp.Val_(id));} IntRef ns_hash_lkp = IntRef.zero_();
 	public Xow_ns Get_by_ord(int ord)		{return ords[ord];}
 	public int Id_count()					{return id_hash.Count();}

@@ -18,10 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.imports.ctgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.imports.*;
 import org.junit.*; import gplx.dbs.*; import gplx.xowa.specials.search.*; import gplx.xowa.bldrs.imports.ctgs.*;
 public class Xob_ctg_v1_sql_tst {
-	@Before public void init() {if (Xo_test.Db_skip) return; fxt.Ctor_fsys();} Db_mgr_fxt fxt = new Db_mgr_fxt();
-	@After public void term() {if (Xo_test.Db_skip) return; fxt.Rls();} 
+	@Before public void init() {if (Xo_test.Db_skip()) return; fxt.Ctor_fsys();} Db_mgr_fxt fxt = new Db_mgr_fxt();
+	@After public void term() {if (Xo_test.Db_skip()) return; fxt.Rls();} 
 	@Test   public void Basic() {
-		if (Xo_test.Db_skip) return; 
+		if (Xo_test.Db_skip()) return; 
 		fxt.Init_db_sqlite();
 		fxt.doc_ary_
 		(	fxt.doc_wo_date_(1, "A"				, "[[Category:Ctg_0]] [[Category:Ctg_1]]")
@@ -57,7 +57,7 @@ public class Xob_ctg_v1_sql_tst {
 		));
 	}
 	@Test   public void Ignore_dupes() {	// PURPOSE: ignore dupe ctgs
-		if (Xo_test.Db_skip) return;
+		if (Xo_test.Db_skip()) return;
 		fxt.Init_db_sqlite();
 		fxt.doc_ary_
 		(	fxt.doc_wo_date_(1, "A"				, "[[Category:Ctg_0]] [[Category:Ctg_0]]")

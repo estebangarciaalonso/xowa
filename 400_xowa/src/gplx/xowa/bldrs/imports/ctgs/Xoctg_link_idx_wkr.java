@@ -53,14 +53,14 @@ public class Xoctg_link_idx_wkr extends Xob_idx_base {	// NOTE: similar function
 		Write_grp(prv_name, make_link_mgr);
 		make_link_mgr.Flush();
 		make_main_mgr.Flush();
-	}	Xoctg_idx_data_link link_data = new Xoctg_idx_data_link();
+	}	private Xoctg_idx_data_link link_data = new Xoctg_idx_data_link();
 	@Override public void Cmd_end() {
 		if (delete_temp) Io_mgr._.DeleteDirDeep_ary(src_link_dir, make_main_mgr.Src_dir());
 	}	boolean delete_temp = true;
 	void Write_grp(byte[] cur_name, Xoctg_make_link_mgr make_link_mgr) {
 		make_main_mgr.Grps_write(cur_name, make_link_mgr.Subc_grp().Count(), make_link_mgr.File_grp().Count(), make_link_mgr.Page_grp().Count());
 		make_link_mgr.Grps_write(cur_name);
-	}	Xoctg_make_main_mgr make_main_mgr;
+	}	private Xoctg_make_main_mgr make_main_mgr;
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_src_link_dir_))				src_link_dir = m.ReadIoUrl("v");
 		else if	(ctx.Match(k, Invk_make_fil_max_))				make_fil_max = m.ReadInt("v");

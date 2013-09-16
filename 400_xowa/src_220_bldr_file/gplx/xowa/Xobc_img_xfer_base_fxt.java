@@ -50,8 +50,8 @@ class Xobc_img_xfer_base_fxt {
 		App_repo_add(file_mgr, src_en_wiki, "mem/src/en.wikipedia.org/", Xow_wiki_.Domain_enwiki_str, false);
 		App_repo_add(file_mgr, trg_commons, "mem/trg/commons.wikimedia.org/", Xow_wiki_.Domain_commons_str, true);
 		App_repo_add(file_mgr, trg_en_wiki, "mem/trg/en.wikipedia.org/", Xow_wiki_.Domain_enwiki_str, true);
-		Xowf_repo_mgr wiki_repo_mgr = en_wiki.File_mgr().Repo_mgr();
-		Xofw_repo_pair pair = null;
+		Xow_repo_mgr wiki_repo_mgr = en_wiki.File_mgr().Repo_mgr();
+		Xof_repo_pair pair = null;
 		pair = wiki_repo_mgr.Add_repo(src_commons, trg_commons);
 		pair.Src().Fsys_is_wnt_(true).Wmf_fsys_(!src_local);
 		pair.Trg().Fsys_is_wnt_(true);
@@ -66,7 +66,7 @@ class Xobc_img_xfer_base_fxt {
 	}
 	@gplx.Virtual public void Ini_hook(Xoa_app app, Xow_wiki wiki) {}
 	void App_repo_add(Xof_file_mgr file_mgr, byte[] key, String root, String wiki, boolean trg) {
-		Xof_repo_itm repo = file_mgr.Repos().Set(String_.new_utf8_(key), root, wiki).Ext_rules_(Xoft_rule_grp.Grp_app_default);
+		Xof_repo_itm repo = file_mgr.Repo_mgr().Set(String_.new_utf8_(key), root, wiki).Ext_rules_(Xoft_rule_grp.Grp_app_default);
 		if (trg) {
 			byte[][] ary = repo.Mode_names();
 			ary[0] = ByteAry_.new_ascii_("raw");
@@ -108,7 +108,7 @@ class Xobc_img_run_xfer_fxt extends Xobc_img_xfer_base_fxt {
 		bldr = Xoa_app_fxt.bldr_(app);
 		wkr = new Xobc_img_run_xfer(bldr, wiki);
 		GfoInvkAble_.InvkCmd_val(wkr, Xobc_img_run_xfer.Invk_rdr_dir_, "mem/rdr/");
-	}	Xob_bldr bldr; Xobc_img_run_xfer wkr;
+	}	private Xob_bldr bldr; Xobc_img_run_xfer wkr;
 	public void tst() {
 		ini_src_fils();
 		Io_mgr._.SaveFilStr(wkr.Rdr_dir().GenSubFil("0000.csv"), rdr);

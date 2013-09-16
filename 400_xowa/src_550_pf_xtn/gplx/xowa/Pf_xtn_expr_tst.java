@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_xtn_expr_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()				{fxt.Reset();}
 	@Test  public void Null()				{fxt.tst_Parse_tmpl_str_test("{{#expr:}}"									, "{{test}}"	, "");}
 	@Test  public void Num_len1()			{fxt.tst_Parse_tmpl_str_test("{{#expr:1}}"									, "{{test}}"	, "1");}

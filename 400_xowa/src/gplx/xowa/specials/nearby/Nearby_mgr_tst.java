@@ -53,7 +53,7 @@ class Nearby_mgr_fxt {
 		Io_mgr._.InitEngine_mem();
 		nearby_mgr.Results_max_(1);
 		return this;
-	} 	Xop_fxt fxt; Nearby_mgr nearby_mgr; Hash_adp_bry excluded; ByteAryBfr tmp_bfr;
+	} 	private Xop_fxt fxt; Nearby_mgr nearby_mgr; Hash_adp_bry excluded; ByteAryBfr tmp_bfr;
 	public void Init_page(String ttl, String text) {fxt.ini_page_create(ttl, text);}
 	public Nearby_mgr_fxt Init_results_max(int v) {nearby_mgr.Results_max_(v); return this;}
 	public void Test_find(String src, String trg, String... expd) {

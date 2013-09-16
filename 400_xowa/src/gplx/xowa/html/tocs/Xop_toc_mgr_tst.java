@@ -423,7 +423,7 @@ public class Xop_toc_mgr_tst {
 	}
 }
 class Xop_toc_mgr_fxt {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	Xop_toc_mgr toc_mgr = new Xop_toc_mgr();
 	ByteAryBfr tmp = ByteAryBfr.new_();
 	public void Test_html_toc(String raw, String expd) {

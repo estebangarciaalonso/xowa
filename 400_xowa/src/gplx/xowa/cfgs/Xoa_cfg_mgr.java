@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.cfgs; import gplx.*; import gplx.xowa.*;
 public class Xoa_cfg_mgr implements GfoInvkAble {
-	public Xoa_cfg_mgr(Xoa_app app) {this.app = app;} OrderedHash hash = OrderedHash_.new_bry_();
+	public Xoa_cfg_mgr(Xoa_app app) {this.app = app;} private OrderedHash hash = OrderedHash_.new_bry_();
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public Xoa_cfg_itm Get_itm_or_null(byte[] grp_key, byte[] itm_key) {
 		Xoa_cfg_grp grp = (Xoa_cfg_grp)hash.Fetch(grp_key); 

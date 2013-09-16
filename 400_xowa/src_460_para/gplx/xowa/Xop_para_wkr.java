@@ -29,7 +29,7 @@ public class Xop_para_wkr implements Xop_ctx_wkr {
 		if (paraEnabled) {
 			Prv_para_new(0);
 		}
-	}	Xop_root_tkn root; byte[] src; int src_len; boolean paraEnabled;
+	}	private Xop_root_tkn root; byte[] src; int src_len; boolean paraEnabled;
 	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_tkn_itm tkn) {
 		if (((Xop_pre_tkn)tkn).Pre_enable() != Bool_.N_byte)
 			ctx.Subs_add(tkn_mkr.Para_pre_end(bgn_pos, tkn));

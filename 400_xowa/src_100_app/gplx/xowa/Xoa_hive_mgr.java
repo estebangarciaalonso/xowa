@@ -24,7 +24,7 @@ public class Xoa_hive_mgr {
 		if (!hive_url.Eq(regy_mgr.Fil()))
 			regy_mgr.Init(hive_url);
 		return regy_mgr.Files_find(ttl);
-	}	Xowd_regy_mgr regy_mgr = new Xowd_regy_mgr(); IntRef bry_len = IntRef.zero_(); Xob_xdat_file xdat_rdr = new Xob_xdat_file(); Xob_xdat_itm xdat_itm = new Xob_xdat_itm();
+	}	private Xowd_regy_mgr regy_mgr = new Xowd_regy_mgr(); IntRef bry_len = IntRef.zero_(); Xob_xdat_file xdat_rdr = new Xob_xdat_file(); Xob_xdat_itm xdat_itm = new Xob_xdat_itm();
 	public Xowd_regy_mgr Regy_mgr() {return regy_mgr;}
 	public Xob_xdat_file Get_rdr(Io_url hive_root, byte[] fil_ext_bry, int fil_idx) {
 		ByteAryBfr tmp_bfr = app.Utl_bry_bfr_mkr().Get_m001();

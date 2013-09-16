@@ -162,7 +162,6 @@ class Scrib_lib_ustring_gsub_mgr {
 		else throw Err_.unhandled(ClassAdp_.NameOf_type(repl_type));
 	}
 	String Exec_repl(String text, String regx, int limit) {
-		byte[] text_bry = ByteAry_.new_utf8_(text);
 		RegxAdp regx_mgr = RegxAdp_.new_(regx);
 		RegxMatch[] rslts = regx_mgr.Match_all(text, 0);
 		if (rslts.length == 0) return text;	// PHP: If matches are found, the new subject will be returned, otherwise subject will be returned unchanged.; http://php.net/manual/en/function.preg-replace-callback.php
@@ -173,7 +172,7 @@ class Scrib_lib_ustring_gsub_mgr {
 			if (limit > -1 && repl_count == limit) break;
 			RegxMatch rslt = rslts[i];
 			tmp_bfr.Add_str(String_.Mid(text, pos, rslt.Find_bgn()));	// NOTE: regx returns char pos (not bry); must add as String, not bry; DATE:2013-07-17
-			Exec_repl_itm(text_bry, rslt);
+			Exec_repl_itm(text, rslt);
 			pos = rslt.Find_end();
 			++repl_count;
 		}
@@ -182,7 +181,7 @@ class Scrib_lib_ustring_gsub_mgr {
 			tmp_bfr.Add_str(String_.Mid(text, pos, text_len));			// NOTE: regx returns char pos (not bry); must add as String, not bry; DATE:2013-07-17
 		return tmp_bfr.XtoStrAndClear();
 	}
-	void Exec_repl_itm(byte[] text_bry, RegxMatch rslt) {
+	void Exec_repl_itm(String text, RegxMatch rslt) {
 		switch (repl_tid) {
 			case Repl_tid_string:
 				int len = repl_bry.length;
@@ -201,7 +200,7 @@ class Scrib_lib_ustring_gsub_mgr {
 										int idx = b - Byte_ascii.Num_0 - ListAdp_.Base1;
 										if (idx < rslt.Groups().length) {	// retrieve numbered capture; TODO: support more than 9 captures
 											RegxGroup grp = rslt.Groups()[idx];
-											tmp_bfr.Add_mid(text_bry, grp.Bgn(), grp.End());
+											tmp_bfr.Add_str(String_.Mid(text, grp.Bgn(), grp.End()));	// NOTE: grp.Bgn() / .End() is for String pos (bry pos will fail for utf8 strings)
 										}
 										else {
 											tmp_bfr.Add_byte(Byte_ascii.Percent);
@@ -226,14 +225,14 @@ class Scrib_lib_ustring_gsub_mgr {
 				}
 				break;
 			case Repl_tid_table: {
-				String find_str = String_.new_utf8_(text_bry, rslt.Find_bgn(), rslt.Find_end());
+				String find_str = String_.Mid(text, rslt.Find_bgn(), rslt.Find_end());	// NOTE: rslt.Bgn() / .End() is for String pos (bry pos will fail for utf8 strings)
 				Object actl_repl_obj = repl_hash.Fetch(find_str);
 				if (actl_repl_obj != null)
 					tmp_bfr.Add((byte[])actl_repl_obj);
 				break;
 			}
 			case Repl_tid_luacbk: {
-				String find_str = String_.new_utf8_(text_bry, rslt.Find_bgn(), rslt.Find_end());
+				String find_str = String_.Mid(text, rslt.Find_bgn(), rslt.Find_end());
 				KeyVal[] rslts = engine.Interpreter().CallFunction(repl_func.Id(), Scrib_kv_utl.base1_obj_(find_str));
 				tmp_bfr.Add_str(Scrib_kv_utl.Val_to_str(rslts, 0));
 				break;

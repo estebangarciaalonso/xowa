@@ -132,7 +132,7 @@ class Xows_page_allpages_fxt {
 		expd_ttls = null;
 		expd_display_ttl = null;
 		return this;
-	}	Xoa_app app;
+	}	private Xoa_app app;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki; Xows_page_allpages allpages;
 	public Xows_page_allpages_fxt Init_arg_(String key, String val) {init_args.Add(new Gfo_url_arg(ByteAry_.new_ascii_(key), ByteAry_.new_ascii_(val))); return this;} ListAdp init_args = ListAdp_.new_();
 	public Xows_page_allpages_fxt Expd_arg_(String key, String val) {expd_args.Add(new Gfo_url_arg(ByteAry_.new_ascii_(key), ByteAry_.new_ascii_(val))); return this;} ListAdp expd_args = ListAdp_.new_();
@@ -185,7 +185,7 @@ class Xows_page_allpages_fxt {
 			Tfds.Eq_ary_str(Xto_str_ary(init_url.Args()), Xto_str_ary(expd_args_ary));
 		}
 		return this;
-	}	Xoa_url init_url = new Xoa_url();
+	}	private Xoa_url init_url = new Xoa_url();
 	public Xows_page_allpages_fxt Test_build_html(String expd) {
 		Exec_build();
 		allpages.Build_html(wiki.Ctx().Page());

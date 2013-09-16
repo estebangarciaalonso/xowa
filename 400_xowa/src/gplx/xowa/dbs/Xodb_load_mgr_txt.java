@@ -21,7 +21,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 	public Xodb_load_mgr_txt(Xow_wiki wiki) {
 		this.wiki = wiki;
 		this.fsys_mgr = wiki.Fsys_mgr();
-	}	Xow_wiki wiki; Xow_fsys_mgr fsys_mgr;
+	}	private Xow_wiki wiki; Xow_fsys_mgr fsys_mgr;
 	Xob_xdat_file tmp_xdat_file = new Xob_xdat_file(); Xob_xdat_itm tmp_xdat_itm = new Xob_xdat_itm(); 
 	public void Load_init			(Xow_wiki wiki) {}
 	public void Load_page(Xodb_page rv, Xow_ns ns, boolean timestamp_enabled) {Load_page(rv, rv.Db_file_idx(), rv.Db_row_idx(), ns, timestamp_enabled, tmp_xdat_file, tmp_xdat_itm);}
@@ -356,7 +356,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 			site_regys[regy_tid] = rv;
 		}
 		return rv;
-	}	Xowd_regy_mgr[] site_regys = new Xowd_regy_mgr[Xow_dir_info_.Regy_tid_max]; 
+	}	private Xowd_regy_mgr[] site_regys = new Xowd_regy_mgr[Xow_dir_info_.Regy_tid_max]; 
 	Xowd_regy_mgr Get_regy_by_ns(Xow_ns ns) {
 		int ns_ord = ns.Ord();
 		Xowd_regy_mgr rv = ns_regys[ns_ord];
@@ -367,7 +367,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 			ns_regys[ns_ord] = rv;
 		}
 		return rv;
-	}	Xowd_regy_mgr[] ns_regys = new Xowd_regy_mgr[Xow_ns_mgr_.Ordinal_max];
+	}	private Xowd_regy_mgr[] ns_regys = new Xowd_regy_mgr[Xow_ns_mgr_.Ordinal_max];
 	public void Load_ttls_starting_with(Cancelable cancelable, ListAdp rslt_list, Xodb_page rslt_nxt, Xodb_page rslt_prv, IntRef rslt_count, Xow_ns ns, byte[] key, int max_results, int min_page_len, int browse_len, boolean include_redirects, boolean fetch_prv_item) {
 		byte dir_tid = Xow_dir_info_.Tid_ttl;
 		Xob_xdat_file cur_xdat_file = new Xob_xdat_file();

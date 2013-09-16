@@ -22,7 +22,7 @@ public class Scrib_mod {
 	public String Name() {return name;} private String name;
 	public byte[] Text_bry() {return text_bry;} private byte[] text_bry;
 	public void Fncs_clear() {hash.Clear();}
-	public int Fncs_len() {return hash.Count();} OrderedHash hash = OrderedHash_.new_();
+	public int Fncs_len() {return hash.Count();} private OrderedHash hash = OrderedHash_.new_();
 	public Scrib_fnc Fncs_get_at(int i) {return (Scrib_fnc)hash.FetchAt(i);}
 	public Scrib_fnc Fncs_get_by_key(String key) {return (Scrib_fnc)hash.Fetch(key);}
 	public void Fncs_add(Scrib_fnc prc) {hash.Add(prc.Key(), prc);}

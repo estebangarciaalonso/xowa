@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xow_mainpage_finder_tst {
-	@Before public void init() {fxt.Clear();}	Xow_mainpage_finder_fxt fxt = new Xow_mainpage_finder_fxt();
+	@Before public void init() {fxt.Clear();}	private Xow_mainpage_finder_fxt fxt = new Xow_mainpage_finder_fxt();
 	@Test   public void Mediawiki() {
 		fxt.Init_mediawiki_page("Mainpage_by_mediawiki");
 		fxt.Test_mainpage("Mainpage_by_mediawiki");
@@ -58,7 +58,7 @@ class Xow_mainpage_finder_fxt {
 		fxt.Wiki().Lang().Msg_mgr().Clear();	// need to clear out lang
 		fxt.Wiki().Msg_mgr().Clear();			// need to clear out wiki.Msgs
 		fxt.Reset();
-	}	Xop_fxt fxt = new Xop_fxt();
+	}	private Xop_fxt fxt = new Xop_fxt();
 	public void Init_siteinfo(String mainpage_val) {
 		fxt.Wiki().Props().Main_page_(ByteAry_.new_ascii_(mainpage_val));
 	}

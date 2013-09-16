@@ -80,7 +80,7 @@ public class Xog_layout implements GfoInvkAble {
 		prog_box.Adj_text(win.Prog_box());
 		note_box.Adj_text(win.Info_box());
 		Visible_(false, win.Find_box(), win.Find_bwd_btn(), win.Find_fwd_btn(), win.Find_close_btn());
-	}	Xog_win win;
+	}	private Xog_win win;
 	public int Box_height_calc(Gfui_kit kit, GfuiElem url_box) {
 		if (box_height > 0) return box_height;
 		float font_height = kit.Calc_font_height(url_box, "I");

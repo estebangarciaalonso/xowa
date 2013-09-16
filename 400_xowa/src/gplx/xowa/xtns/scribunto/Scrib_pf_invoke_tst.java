@@ -78,7 +78,7 @@ class Scrib_pf_invoke_fxt {
 		init_tmpl = init_page = null;
 		fxt.ini_page_create("Module:" + "Mod_0", "");
 		this.Init_lua_rcvd_loadModule(); 
-	}	Xop_fxt fxt; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); Scrib_engine engine; Process_server_mock server; Scrib_lua_rsp_bldr rsp_bldr = new Scrib_lua_rsp_bldr();
+	}	private Xop_fxt fxt; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); Scrib_engine engine; Process_server_mock server; Scrib_lua_rsp_bldr rsp_bldr = new Scrib_lua_rsp_bldr();
 	public Xop_fxt Parser_fxt() {return fxt;}
 	public Scrib_engine_fxt Engine_fxt() {return engine_fxt;} Scrib_engine_fxt engine_fxt;
 	public Scrib_engine Engine() {return engine;}

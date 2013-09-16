@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xof_repo_itm implements GfoInvkAble {
-	public Xof_repo_itm(Xof_repo_mgr mgr, byte[] key) {this.mgr = mgr; this.key = key;} private Xof_repo_mgr mgr;
+	public Xof_repo_itm(Xoa_repo_mgr mgr, byte[] key) {this.mgr = mgr; this.key = key;} private Xoa_repo_mgr mgr;
 	public byte[] Key() {return key;} private byte[] key;
 	public boolean Wmf_fsys() {return wmf_fsys;} public Xof_repo_itm Wmf_fsys_(boolean v) {wmf_fsys = v; return this;} private boolean wmf_fsys;
 	public boolean Wmf_api() {return wmf_api;} public Xof_repo_itm Wmf_api_(boolean v) {wmf_api = v; return this;} private boolean wmf_api;
@@ -86,7 +86,6 @@ public class Xof_repo_itm implements GfoInvkAble {
 		}
 		return rv;
 	}
-	public static final byte Mode_orig = 0, Mode_thumb = 1, Mode_nil = Byte_.MaxValue_127;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_owner))				return mgr;
 		else if	(ctx.Match(k, Invk_fsys_))				fsys_is_wnt = String_.Eq(m.ReadStr("v"), "wnt");
@@ -99,4 +98,6 @@ public class Xof_repo_itm implements GfoInvkAble {
 	}	private static final String Invk_owner = "owner", Invk_fsys_ = "fsys_", Invk_ext_rules_ = "ext_rules_", Invk_primary_ = "primary_", Invk_wmf_api_ = "wmf_api_", Invk_tarball_ = "tarball_";
 	public Xof_repo_itm Ext_rules_(byte[] ext_rules_key) {ext_rules = mgr.App().File_mgr().Ext_rules().Get_or_new(ext_rules_key); return this;}
 	public static final int Thumb_default_null = -1;
+	public static final byte Mode_orig = 0, Mode_thumb = 1, Mode_nil = Byte_.MaxValue_127;
+	public static final byte Repo_remote = 0, Repo_local = 1, Repo_unknown = 126, Repo_null = Byte_.MaxValue_127;
 }

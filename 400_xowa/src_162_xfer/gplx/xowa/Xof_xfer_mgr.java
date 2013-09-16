@@ -25,7 +25,7 @@ public class Xof_xfer_mgr {
 	public void Atrs_by_itm(Xof_xfer_itm xfer_itm, Xof_repo_itm src_repo, Xof_repo_itm trg_repo) {
 		this.xfer_itm = xfer_itm;
 		this.lnki_w = xfer_itm.Lnki_w(); this.lnki_h = xfer_itm.Lnki_h(); this.lnki_thumbable = xfer_itm.Lnki_thumbable(); this.lnki_seek = xfer_itm.Lnki_thumbtime(); lnki_upright = xfer_itm.Lnki_upright();
-		this.ttl = xfer_itm.Ttl(); this.md5 = xfer_itm.Md5(); this.ext = xfer_itm.Ext();
+		this.ttl = xfer_itm.Lnki_ttl(); this.md5 = xfer_itm.Lnki_md5(); this.ext = xfer_itm.Lnki_ext();
 		orig_file_len = xfer_itm.Orig_file_len();
 		this.src_repo = src_repo; src_repo_is_wmf = src_repo.Wmf_fsys();
 		this.trg_repo = trg_repo;
@@ -49,7 +49,7 @@ public class Xof_xfer_mgr {
 		else if (ext.Id_is_video()&& !meta_itm.Thumbs_indicates_oga())	Make_vid();
 		else															Make_other();
 		return rslt.Pass();
-	}	Xow_wiki wiki; Xof_img_wkr_api_size_base_rslts rslts = new Xof_img_wkr_api_size_base_rslts();
+	}	private Xow_wiki wiki; Xof_img_wkr_api_size_base_rslts rslts = new Xof_img_wkr_api_size_base_rslts();
 	boolean Make_img() {
 		String src_str; Io_url trg_url;
 		// BLOCK: thumb
@@ -91,8 +91,8 @@ public class Xof_xfer_mgr {
 		boolean found = wiki.App().File_mgr().Download_mgr().Api_size_wkr().Api_query_size(rslts, wiki, ttl, lnki_w, lnki_h);
 		if (found) {
 			if (rslts.Reg_wiki() != null) {
-				src_repo = wiki.App().File_mgr().Repos().Get_by_wmf(rslts.Reg_wiki());
-				trg_repo = wiki.App().File_mgr().Repos().Get_primary(rslts.Reg_wiki());
+				src_repo = wiki.App().File_mgr().Repo_mgr().Get_by_wmf(rslts.Reg_wiki());
+				trg_repo = wiki.App().File_mgr().Repo_mgr().Get_primary(rslts.Reg_wiki());
 				if (ByteAry_.Eq(rslts.Reg_wiki(), wiki.Key_bry()))
 					xfer_itm.Trg_repo_idx_(Xof_meta_itm.Repo_same);
 				else
@@ -249,8 +249,8 @@ public class Xof_xfer_mgr {
 			boolean pass = wiki.App().File_mgr().Download_mgr().Api_size_wkr().Api_query_size(rslts, wiki, ttl, lnki_w, lnki_h);
 			if (pass) {
 				if (rslts.Reg_wiki() != null) {
-					src_repo = wiki.App().File_mgr().Repos().Get_by_wmf(rslts.Reg_wiki());
-					trg_repo = wiki.App().File_mgr().Repos().Get_primary(rslts.Reg_wiki());
+					src_repo = wiki.App().File_mgr().Repo_mgr().Get_by_wmf(rslts.Reg_wiki());
+					trg_repo = wiki.App().File_mgr().Repo_mgr().Get_primary(rslts.Reg_wiki());
 					if (ByteAry_.Eq(rslts.Reg_wiki(), wiki.Key_bry()))
 						xfer_itm.Trg_repo_idx_(Xof_meta_itm.Repo_same);
 					else

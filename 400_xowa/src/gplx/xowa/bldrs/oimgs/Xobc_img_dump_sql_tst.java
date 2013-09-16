@@ -21,7 +21,7 @@ import gplx.ios.*;
 public class Xobc_img_dump_sql_tst {
 	@Before public void init() {fxt.Init();} private Xobc_img_dump_sql_fxt fxt = new Xobc_img_dump_sql_fxt();
 	@After public void term() {fxt.Term();} 
-	@Test    public void Basic() {
+	@Test   public void Basic() {
 		fxt.Run(String_.Concat
 		(	"INSERT INTO `image` VALUES"
 		,	" ('B.jpg',10,1,2,3,16)"

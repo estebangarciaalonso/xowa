@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public class Cfg_nde_root implements GfoInvkAble {
 	public int Root_len() {return root.Nde_subs_len();}
-	public Cfg_nde_obj Root_get_at(int i) {return (Cfg_nde_obj)root.Nde_subs_get_at(i);} OrderedHash grps = OrderedHash_.new_bry_();
+	public Cfg_nde_obj Root_get_at(int i) {return (Cfg_nde_obj)root.Nde_subs_get_at(i);} private OrderedHash grps = OrderedHash_.new_bry_();
 	public Cfg_nde_obj Root_get(byte[] key) {return (Cfg_nde_obj)root.Nde_subs_get(key);}
 	public Cfg_nde_obj Grps_get(byte[] key) {return (Cfg_nde_obj)grps.Fetch(key);}
 	public Cfg_nde_root Root_(Cfg_nde_obj obj, byte[] typ, byte[][] atrs) {root = obj; grp_type = typ; grp_atrs = atrs; return this;} Cfg_nde_obj root; byte[] grp_type; byte[][] grp_atrs;

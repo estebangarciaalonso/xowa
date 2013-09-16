@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xoad_wtr_dump_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	Gfo_msg_log msg_log = new Gfo_msg_log("test"); App_log_wtr_html wtr = new App_log_wtr_html();
 	@Test  public void Basic() {
 		Gfo_msg_grp nde = Gfo_msg_grp_.new_(Xoa_app_.Nde, "dir");

@@ -21,16 +21,16 @@ public class Prefs_mgr_tst {
 	Prefs_mgr_fxt fxt = new Prefs_mgr_fxt();
 	@Before public void init() {fxt.Clear();}	
 	@Test   public void Get_basic_pass() {
-		fxt.Test_get("<input xowa_prop='app.user.name'></input> text", "<input xowa_prop='app.user.name' id='xowa_prop_0' value='test_user'></input> text");
+		fxt.Exec_get("<input xowa_prop='app.user.name'></input> text", "<input xowa_prop='app.user.name' id='xowa_prop_0' value='test_user'></input> text");
 	}
 	@Test   public void Get_basic_fail() {
-		fxt.Test_get("<input xowa_prop='fail.prop'></input>", "<input xowa_prop='fail.prop' id='xowa_prop_0' value='Error'></input>");
+		fxt.Exec_get("<input xowa_prop='fail.prop'></input>", "<input xowa_prop='fail.prop' id='xowa_prop_0' value='Error'></input>");
 	}
 	@Test   public void Get_eval_pass() {
-		fxt.Test_get("~{<>app.user.name;<>}", "test_user");
+		fxt.Exec_get("~{<>app.user.name;<>}", "test_user");
 	}
 	@Test   public void Get_eval_fail() {
-		fxt.Test_get("~{<>fail.prop;<>}", "~{<>fail.prop;<>}key not found -- key='fail' []");
+		fxt.Exec_get("~{<>fail.prop;<>}", "~{<>fail.prop;<>}key not found -- key='fail' []");
 	}
 	@Test   public void Set() {
 		fxt.Init_elem_atr_val("xowa_prop_0", "abc");
@@ -39,9 +39,9 @@ public class Prefs_mgr_tst {
 	}
 	@Test   public void Get_checkbox() {
 		fxt.App().File_mgr().Download_mgr().Enabled_(true);
-		fxt.Test_get("a <input type='checkbox' xowa_prop='app.files.download.enabled'></input> b", "a <input type='checkbox' xowa_prop='app.files.download.enabled' id='xowa_prop_0' checked='checked'></input> b");
+		fxt.Exec_get("a <input type='checkbox' xowa_prop='app.files.download.enabled'></input> b", "a <input type='checkbox' xowa_prop='app.files.download.enabled' id='xowa_prop_0' checked='checked'></input> b");
 		fxt.App().File_mgr().Download_mgr().Enabled_(false);
-		fxt.Test_get("a <input type='checkbox' xowa_prop='app.files.download.enabled'></input> b", "a <input type='checkbox' xowa_prop='app.files.download.enabled' id='xowa_prop_0'></input> b");
+		fxt.Exec_get("a <input type='checkbox' xowa_prop='app.files.download.enabled'></input> b", "a <input type='checkbox' xowa_prop='app.files.download.enabled' id='xowa_prop_0'></input> b");
 	}
 	@Test   public void Set_checkbox() {
 		fxt.Init_elem_atr_checked("xowa_prop_0", "true");
@@ -53,7 +53,7 @@ public class Prefs_mgr_tst {
 		Tfds.Eq(false, fxt.App().File_mgr().Download_mgr().Enabled());
 	}
 	@Test   public void Get_textarea() {
-		fxt.Test_get("<textarea xowa_prop='app.user.name'></textarea>", "<textarea xowa_prop='app.user.name' id='xowa_prop_0'>test_user</textarea>");
+		fxt.Exec_get("<textarea xowa_prop='app.user.name'></textarea>", "<textarea xowa_prop='app.user.name' id='xowa_prop_0'>test_user</textarea>");
 	}
 	@Test   public void Set_textarea() {
 		fxt.Init_elem_atr_val("xowa_prop_0", "abc");
@@ -61,7 +61,7 @@ public class Prefs_mgr_tst {
 		Tfds.Eq("abc", fxt.App().Gui_mgr().Html_mgr().Auto_focus_id());
 	}
 	@Test   public void Get_select() {
-		fxt.Test_get
+		fxt.Exec_get
 		(	"<select xowa_prop='app.files.math.renderer' xowa_prop_list='app.files.math.renderer_list'></select>", String_.Concat_lines_nl
 		(	"<select xowa_prop='app.files.math.renderer' xowa_prop_list='app.files.math.renderer_list' id='xowa_prop_0'>"
 		,	"  <option value='mathjax' selected='selected'>MathJax</option>"
@@ -78,7 +78,7 @@ public class Prefs_mgr_tst {
 		Tfds.Eq(false, fxt.App().File_mgr().Math_mgr().Renderer_is_mathjax());
 	}
 	@Test   public void Get_io_file() {
-		fxt.Test_get
+		fxt.Exec_get
 		(	"<input type='xowa_io' xowa_prop='app.fsys.apps.media' xowa_io_msg='Select program for Web Browser'></input>", String_.Concat_lines_nl
 		(	"<input type='xowa_io' xowa_prop='app.fsys.apps.media' xowa_io_msg='Select program for Web Browser' id='xowa_prop_0' value=''></input>"
 		,	"<button id='xowa_prop_0_io' class='options_button' onclick='xowa_io_select(\"file\", \"xowa_prop_0\", \"Select program for Web Browser\");'>...</button>"
@@ -109,7 +109,7 @@ class Prefs_mgr_fxt {
 		html_box.Html_elem_atr_add(elem_id, gplx.gfui.Gfui_html.Atr_innerHTML, v);
 		return this;
 	}
-	public Prefs_mgr_fxt Test_get(String src_str, String expd) {
+	public Prefs_mgr_fxt Exec_get(String src_str, String expd) {
 		String actl = String_.new_utf8_(prefs_mgr.Props_get(ByteAry_.new_utf8_(src_str)));
 		Tfds.Eq_str_lines(expd, actl);
 		return this;

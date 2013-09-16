@@ -42,12 +42,12 @@ public class Xop_xatr_whitelist_mgr_tst {
 class Xop_xatr_whitelist_fxt {
 	public void Clear() {
 		if (whitelist_mgr == null) whitelist_mgr = new Xop_xatr_whitelist_mgr().Ini();
-	}	Xop_xatr_whitelist_mgr whitelist_mgr;
+	}	private Xop_xatr_whitelist_mgr whitelist_mgr;
 	public void Whitelist(byte tag_id, String key_str, boolean expd) {
 		byte[] key_bry = ByteAry_.new_ascii_(key_str);
 		atr_itm.Key_rng_(0, key_bry.length);
 		Tfds.Eq(expd, whitelist_mgr.Chk(tag_id, key_bry, atr_itm), key_str);
-	}	Xop_xatr_itm atr_itm = new Xop_xatr_itm(0, 0);
+	}	private Xop_xatr_itm atr_itm = new Xop_xatr_itm(0, 0);
 	public void Scrub_style_pass(String style_val_str) {Scrub_style(style_val_str, style_val_str);}
 	public void Scrub_style_fail(String val_str) {Scrub_style(val_str, "");}
 	public void Scrub_style(String val_str, String expd) {

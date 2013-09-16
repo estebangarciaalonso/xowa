@@ -43,8 +43,8 @@ public class Xof_xfer_queue_base_fxt {
 			src_en_wiki_repo = Ini_repo_add(file_mgr, src_en_wiki, "mem/src/en.wikipedia.org/"		, Xow_wiki_.Domain_enwiki_str, false);
 			Ini_repo_add(file_mgr, trg_commons, "mem/trg/commons.wikimedia.org/", Xow_wiki_.Domain_commons_str, true).Primary_(true);
 			Ini_repo_add(file_mgr, trg_en_wiki, "mem/trg/en.wikipedia.org/"		, Xow_wiki_.Domain_enwiki_str, true).Primary_(true);
-			Xowf_repo_mgr wiki_repo_mgr = en_wiki.File_mgr().Repo_mgr();
-			Xofw_repo_pair pair = null;
+			Xow_repo_mgr wiki_repo_mgr = en_wiki.File_mgr().Repo_mgr();
+			Xof_repo_pair pair = null;
 			pair = wiki_repo_mgr.Add_repo(src_commons, trg_commons);
 			pair.Src().Fsys_is_wnt_(true).Wmf_fsys_(src_repo_is_wmf).Tarball_(!src_repo_is_wmf);
 			pair.Trg().Fsys_is_wnt_(true);
@@ -72,7 +72,7 @@ public class Xof_xfer_queue_base_fxt {
 		wiki.Db_mgr().Save_mgr().Data_create(page_ttl, page_raw);
 	}
 	Xof_repo_itm Ini_repo_add(Xof_file_mgr file_mgr, byte[] key, String root, String wiki, boolean trg) {
-		Xof_repo_itm repo = file_mgr.Repos().Set(String_.new_utf8_(key), root, wiki).Ext_rules_(Xoft_rule_grp.Grp_app_default).Dir_depth_(2);
+		Xof_repo_itm repo = file_mgr.Repo_mgr().Set(String_.new_utf8_(key), root, wiki).Ext_rules_(Xoft_rule_grp.Grp_app_default).Dir_depth_(2);
 		if (trg) {
 			byte[][] ary = repo.Mode_names();
 			ary[0] = ByteAry_.new_ascii_("raw");

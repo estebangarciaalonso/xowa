@@ -49,7 +49,7 @@ public class Xoi_cmd_dumpfile_tst {
 class Xoi_cmd_dumpfile_fxt {
 	public void Clear() {
 		dumpfile.Clear();
-	}	Xoi_cmd_dumpfile dumpfile = new Xoi_cmd_dumpfile();
+	}	private Xoi_cmd_dumpfile dumpfile = new Xoi_cmd_dumpfile();
 	public Xoi_cmd_dumpfile_fxt Exec_parse_msg(String url, String domain, String args) {
 		GfoMsg m = GfoMsg_.new_parse_("").Add("url", url).Add("domain", domain).Add("args", args);
 		dumpfile.Parse_msg(m);

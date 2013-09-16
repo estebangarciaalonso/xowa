@@ -36,7 +36,7 @@ public abstract class Xob_wdata_qid_base extends Xob_itm_dump_base implements Xo
 			bldr.Usr_dlg().Warn_many(GRP_KEY, "json.invalid", "json is invalid: ns=~{0} id=~{1}", page.Ns_id(), String_.new_utf8_(page.Ttl_wo_ns()));
 			return;
 		}
-		byte[] qid = doc.Get_val_as_bry_or(Wdata_doc_consts.Key_atr_entity_bry, null);
+		byte[] qid = Wdata_doc_.Entity_extract(doc);
 		Json_itm_nde links_nde = Json_itm_nde.cast_(doc.Get_grp(Wdata_doc_consts.Key_atr_links_bry)); if (links_nde == null) return; // no links; ignore
 		int len = links_nde.Subs_len(); if (len == 0) return;	// no subs; return;
 		Wdata_qid_data data_core = null;
@@ -45,7 +45,7 @@ public abstract class Xob_wdata_qid_base extends Xob_itm_dump_base implements Xo
 		for (int i = 0; i < len; i++) {
 			Json_itm_kv kv = (Json_itm_kv)links_nde.Subs_get_at(i);
 			byte[] xwiki_key = kv.Key().Data_bry();
-			byte[] ttl_bry = kv.Val().Data_bry();
+			byte[] ttl_bry = Wdata_doc_.Link_extract(kv);
 			Wdata_qid_data data = new Wdata_qid_data(xwiki_key, ttl_bry);
 			links.Add(data);
 			if (i == 0) data_core = data;

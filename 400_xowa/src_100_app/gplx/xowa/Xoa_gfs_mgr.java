@@ -21,7 +21,7 @@ public class Xoa_gfs_mgr implements GfoInvkAble, GfoInvkRootWkr {
 		this.app = app;
 		GfsCore._.AddCmd(app, Invk_app);
 		eval_mgr = new Xoa_app_eval(app);
-	}	Xoa_app app;
+	}	private Xoa_app app;
 	public Xoa_app_eval Eval_mgr() {return eval_mgr;} private Xoa_app_eval eval_mgr;
 	public static boolean Fail_if_unhandled = false;
 	void Run_url_by_type(String type) {

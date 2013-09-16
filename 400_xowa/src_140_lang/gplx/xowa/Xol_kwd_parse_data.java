@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-class Xol_kwd_parse_data {
+public class Xol_kwd_parse_data {
 	public static byte[] Strip(ByteAryBfr tmp, byte[] raw, ByteRef rslt) {
 		int raw_len = raw.length;
 		boolean dirty = false;

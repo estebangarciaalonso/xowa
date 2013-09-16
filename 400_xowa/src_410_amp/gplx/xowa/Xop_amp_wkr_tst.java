@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xop_amp_wkr_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Named() {
 		fxt.tst_Parse_page_wiki("&amp;"				, fxt.tkn_html_ref_("&amp;"));								// basic
 		fxt.tst_Parse_page_wiki("a&amp;"			, fxt.tkn_txt_(0, 1), fxt.tkn_html_ref_("&amp;"));			// basic_bgn

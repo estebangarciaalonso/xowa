@@ -44,7 +44,7 @@ public class Xob_search_base_tst {
 		)
 		.Run(new Xob_search_txt(fxt.Bldr(), this.fxt.Wiki()))
 		;
-	}	Xob_fxt fxt = new Xob_fxt().Ctor_mem();
+	}	private Xob_fxt fxt = new Xob_fxt().Ctor_mem();
 	void tst_Split(String raw, String... expd) {
 		OrderedHash list = OrderedHash_.new_(); ByteAryBfr bfr = ByteAryBfr.new_();
 		byte[][] actl_bry = Xob_search_base.Split(fxt.App().Lang_mgr().Lang_en(), list, bfr, ByteAry_.new_utf8_(raw));

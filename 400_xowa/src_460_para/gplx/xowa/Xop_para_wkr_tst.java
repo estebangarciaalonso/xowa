@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xop_para_wkr_tst {
-	Xop_fxt fxt = new Xop_fxt(); String raw;
+	private Xop_fxt fxt = new Xop_fxt(); String raw;
 	@Before public void init() {fxt.Reset(); fxt.Ctx().Para().Enabled_y_();}
 	@After public void teardown() {fxt.Ctx().Para().Enabled_n_();}
 	@Test  public void Nl_0() {
@@ -312,6 +312,7 @@ public class Xop_para_wkr_tst {
 			));
 	}
 	@Test  public void Pre_xnde_gallery() {	// PURPOSE: <gallery> should invalidate pre; EX.WP: Mary, Queen of Scots
+		fxt.Wiki().Xtn_mgr().Xtn_gallery().Parser().Init_by_wiki(fxt.Wiki());
 		raw = String_.Concat_lines_nl_skipLast
 			(	" <gallery>"
 			,	"File:A.png|b"

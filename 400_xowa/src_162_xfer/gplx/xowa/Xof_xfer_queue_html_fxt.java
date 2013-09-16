@@ -29,7 +29,7 @@ public class Xof_xfer_queue_html_fxt extends Xof_xfer_queue_base_fxt {
 		Xow_wiki wiki = this.En_wiki();
 		xfer_itm = wiki.Html_wtr().Lnki_wtr().Lnki_eval(queue, ByteAry_.new_utf8_(lnki_ttl), thumb ? Xop_lnki_type.Id_thumb : Xop_lnki_type.Id_null, lnki_w, lnki_h, upright, seek_time, false, queue_add_ref);
 		return this;
-	}	Xof_xfer_itm xfer_itm = new Xof_xfer_itm(); BoolRef queue_add_ref = BoolRef.false_();
+	}	private Xof_xfer_itm xfer_itm = new Xof_xfer_itm(); BoolRef queue_add_ref = BoolRef.false_();
 	Xof_xfer_queue queue = new Xof_xfer_queue();
 	public Xof_xfer_queue_html_fxt Src(Io_fil... v) {return (Xof_xfer_queue_html_fxt)Src_base(v);}
 	public Xof_xfer_queue_html_fxt Trg(Io_fil... v) {return (Xof_xfer_queue_html_fxt)Trg_base(v);}
@@ -54,5 +54,5 @@ public class Xof_xfer_queue_html_fxt extends Xof_xfer_queue_base_fxt {
 		if (this.Html_w() != -1)			Tfds.Eq(this.Html_w(), xfer_itm.Html_w());
 		if (this.Html_h() != -1)			Tfds.Eq(this.Html_h(), xfer_itm.Html_h());
 		queue.Clear();
-	}	Xog_win_wtr note_wtr = Xog_win_wtr_null._;
+	}	private Xog_win_wtr note_wtr = Xog_win_wtr_null._;
 }

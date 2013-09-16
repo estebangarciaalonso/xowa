@@ -47,7 +47,7 @@ public class Xobc_img_prep_xfer extends Xob_itm_basic_base implements Xob_cmd, G
 		xfer.Links_(link_list);
 		if (dump_bfr.Bry_len() > dump_fil_len) {Io_mgr._.AppendFilByt(dump_url_gen.Nxt_url(), dump_bfr.Bry(), dump_bfr.Bry_len()); dump_bfr.Clear();}
 		xfer.Write_bldr(fld_wtr);
-	}	Xofo_lnki_parser lnki_parser = new Xofo_lnki_parser();
+	}	private Xofo_lnki_parser lnki_parser = new Xofo_lnki_parser();
 	public void Cmd_end() {}
 	public void Cmd_print() {}
 	public void Cmd_run() {

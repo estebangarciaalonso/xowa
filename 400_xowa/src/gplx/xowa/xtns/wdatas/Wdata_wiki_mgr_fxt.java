@@ -31,7 +31,7 @@ public class Wdata_wiki_mgr_fxt {
 			parser_fxt.Reset();
 		}
 		return this;
-	}	Xoa_app app; Xow_wiki wiki; Wdata_wiki_mgr wdata_mgr; Wdata_doc_bldr page_bldr; Xop_fxt parser_fxt;
+	}	private Xoa_app app; Xow_wiki wiki; Wdata_wiki_mgr wdata_mgr; Wdata_doc_bldr page_bldr; Xop_fxt parser_fxt;
 	public Xoa_app App() {return app;}
 	public Wdata_doc_bldr page_bldr_(String qid) {return page_bldr.Qid_(qid);}
 	public Wdata_prop_itm_core prop_novalue_(int pid) {return Wdata_prop_itm_core.new_novalue_(pid);}

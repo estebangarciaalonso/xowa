@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.poems; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
 public class Xtn_poem_nde_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Lines() {	// NOTE: first \n (poem\n) and last \n (\n</poem>)ignored
 		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<poem>"

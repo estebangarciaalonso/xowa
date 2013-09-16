@@ -22,7 +22,7 @@ public class Xodb_save_mgr_txt implements Xodb_save_mgr {
 		this.load_mgr = load_mgr;
 		this.fsys_mgr = wiki.Fsys_mgr();
 		this.redirect_mgr = wiki.Redirect_mgr();
-	}	Xow_wiki wiki; Xow_fsys_mgr fsys_mgr; Xodb_load_mgr_txt load_mgr; Xop_redirect_mgr redirect_mgr;
+	}	private Xow_wiki wiki; Xow_fsys_mgr fsys_mgr; Xodb_load_mgr_txt load_mgr; Xop_redirect_mgr redirect_mgr;
 	public boolean Create_enabled() {return create_enabled;} public void Create_enabled_(boolean v) {create_enabled = v;} private boolean create_enabled;
 	public boolean Update_modified_on_enabled() {return update_modified_on_enabled;} public void Update_modified_on_enabled_(boolean v) {update_modified_on_enabled = v;} private boolean update_modified_on_enabled;
 	public int Page_id_next() {return page_id_next;} public void Page_id_next_(int v) {page_id_next = v;}  int page_id_next = 0;

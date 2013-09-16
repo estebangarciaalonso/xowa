@@ -28,7 +28,7 @@ class Xol_lnki_trail_mgr_fxt {
 		app = Xoa_app_fxt.app_();
 		lang = new Xol_lang(app, ByteAry_.new_utf8_("fr"));
 		lnki_trail_mgr = lang.Lnki_trail_mgr();
-	}	Xoa_app app; Xol_lang lang; Xol_lnki_trail_mgr lnki_trail_mgr;
+	}	private Xoa_app app; Xol_lang lang; Xol_lnki_trail_mgr lnki_trail_mgr;
 	public void Test_add_bulk(String raw, String... expd_ary) {
 		lnki_trail_mgr.Add_bulk(ByteAry_.new_utf8_(raw));
 		int expd_len = expd_ary.length;

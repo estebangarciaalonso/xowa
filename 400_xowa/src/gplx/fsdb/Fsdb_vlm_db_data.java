@@ -23,7 +23,7 @@ public class Fsdb_vlm_db_data implements CompareAble {
 	public String Key() {return key;} private String key;
 	public Io_url Url() {return url;} private Io_url url;
 	public byte[] Rng_bgn() {return rng_bgn;} public Fsdb_vlm_db_data Rng_bgn_(byte[] v) {rng_bgn = v; return this;} private byte[] rng_bgn;
-	public Db_provider Provider() {return provider;} private Db_provider provider;
+	public Db_provider Provider() {return provider;} private Db_provider provider = Db_provider_.Null;
 	public Fsdb_vlm_db_data Init(Io_url url, int id, String key, byte[] rng_bgn) {
 		this.id = id; this.key = key; this.url = url; this.rng_bgn = rng_bgn;
 		return this;
@@ -67,7 +67,7 @@ public class Fsdb_vlm_db_data implements CompareAble {
 		Fsdb_bin_tbl.Insert_rdr(bin_stmt, thm_id, Fsdb_bin_tbl.Owner_tid_thm, bin_len, bin_rdr);
 		return thm_id;
 	}
-	public void Img_insert(Fsdb_xtn_thm_itm rv, String dir, String fil, int ext_id, DateAdp modified, String hash, int bin_len, gplx.ios.Io_stream_rdr bin_rdr, int img_w, int img_h, int img_bits) {
+	public void Img_insert(Fsdb_xtn_img_itm rv, String dir, String fil, int ext_id, DateAdp modified, String hash, int bin_len, gplx.ios.Io_stream_rdr bin_rdr, int img_w, int img_h, int img_bits) {
 		int dir_id = Dir_id__get_by_mem_or_db(dir);
 		int fil_id = Fsdb_fil_tbl.Select_itm_by_name(provider, dir_id, fil).Id();
 		if (fil_id == 0) {

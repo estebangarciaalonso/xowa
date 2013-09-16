@@ -51,5 +51,5 @@ public class Xoac_wiki_cfg_bldr_mgr implements GfoInvkAble {
 			hash.Add(wiki, rv);
 		}
 		return rv;
-	}	OrderedHash hash = OrderedHash_.new_();
+	}	private OrderedHash hash = OrderedHash_.new_();
 }

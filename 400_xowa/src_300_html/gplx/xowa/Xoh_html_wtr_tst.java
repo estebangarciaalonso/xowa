@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xoh_html_wtr_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Hr_basic()					{fxt.tst_Parse_page_wiki_str("----"				, "<hr/>");}
 	@Test  public void Hr_extended()				{fxt.tst_Parse_page_wiki_str("--------"			, "<hr/>");}
 	@Test  public void Lnki_basic()					{fxt.tst_Parse_page_wiki_str("[[a]]"				, "<a href=\"/wiki/A\">a</a>");}

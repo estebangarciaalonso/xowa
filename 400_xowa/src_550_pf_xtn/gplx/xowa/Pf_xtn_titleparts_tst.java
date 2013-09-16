@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_xtn_titleparts_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()				{fxt.Reset();}
 	@Test  public void Len1()				{fxt.tst_Parse_tmpl_str_test("{{#titleparts:a/b/c/d|1}}"			, "{{test}}", "A");}
 	@Test  public void Len2()				{fxt.tst_Parse_tmpl_str_test("{{#titleparts:a/b/c/d|2}}"			, "{{test}}", "A/b");}

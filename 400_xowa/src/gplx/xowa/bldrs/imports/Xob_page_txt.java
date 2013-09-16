@@ -29,7 +29,7 @@ public class Xob_page_txt extends Xob_itm_dump_base implements Xobd_wkr, GfoInvk
 		this.Init_dump(KEY, make_dir);
 		this.data_rpt_typ = stat_mgr.GetOrNew(Xow_dir_info_.Tid_page);
 		ttl_wtr_mgr = new Xob_tmp_wtr_mgr(new Xob_tmp_wtr_wkr__ttl(temp_dir, dump_fil_len));			
-	}	Xow_fsys_mgr fsys_mgr; Xop_redirect_mgr redirect_mgr;
+	}	private Xow_fsys_mgr fsys_mgr; Xop_redirect_mgr redirect_mgr;
 	int page_file_len = 512 * Io_mgr.Len_kb, title_file_len = 64 * Io_mgr.Len_kb; Xob_tmp_wtr_mgr ttl_wtr_mgr;
 	Xob_xdat_file_wtr[] page_wtr_regy = new Xob_xdat_file_wtr[Ns_ordinal_max]; static final int Ns_ordinal_max = Xow_ns_mgr_.Ordinal_max;	// ASSUME: no more than 128 ns in a wiki
 	Xob_stat_type data_rpt_typ; Xob_stat_mgr stat_mgr = new Xob_stat_mgr(); byte page_storage_type;		

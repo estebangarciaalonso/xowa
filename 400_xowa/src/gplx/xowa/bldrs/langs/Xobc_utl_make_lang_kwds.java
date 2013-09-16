@@ -89,9 +89,9 @@ public class Xobc_utl_make_lang_kwds implements GfoInvkAble, Xol_lang_transform 
 			Xol_lang_srl.Load_keywords(kwd_mgr, kwds);
 		}
 	}
-	public void Parse_add_words(byte[] langs_bry, byte[] kwds) {Parse(langs_bry, kwds, add_words_hash);}	OrderedHash add_words_hash = OrderedHash_.new_bry_();
-	public void Parse_prepend_hash(byte[] langs_bry, byte[] kwds) {Parse(langs_bry, kwds, prepend_hash);}	OrderedHash prepend_hash = OrderedHash_.new_bry_();
-	public void Parse_keep_trailing_colon(byte[] langs_bry, byte[] kwds) {Parse(langs_bry, kwds, trailing_colons);}	OrderedHash trailing_colons = OrderedHash_.new_bry_();
+	public void Parse_add_words(byte[] langs_bry, byte[] kwds) {Parse(langs_bry, kwds, add_words_hash);}	private OrderedHash add_words_hash = OrderedHash_.new_bry_();
+	public void Parse_prepend_hash(byte[] langs_bry, byte[] kwds) {Parse(langs_bry, kwds, prepend_hash);}	private OrderedHash prepend_hash = OrderedHash_.new_bry_();
+	public void Parse_keep_trailing_colon(byte[] langs_bry, byte[] kwds) {Parse(langs_bry, kwds, trailing_colons);}	private OrderedHash trailing_colons = OrderedHash_.new_bry_();
 	void Parse(byte[] langs_bry, byte[] kwds, OrderedHash hash) {
 		Xobcl_kwd_row[] itms = Parse(kwds);
 		OrderedHash langs = app.Lang_mgr().Xto_hash(langs_bry);
@@ -160,7 +160,7 @@ class Xobcl_kwd_lang {
 			grps_hash.AddReplace(grp.Key(), grp);	// NOTE: AddReplace instead of Add b/c kwds may be expanded; EX: lst is added to all langs but de requires #lst~#section~Abschnitt~; DATE:2013-06-02
 		}
 	}
-	public Xobcl_kwd_row Grps_get_by_key(byte[] key) {return (Xobcl_kwd_row)grps_hash.Fetch(key);} OrderedHash grps_hash = OrderedHash_.new_bry_();
+	public Xobcl_kwd_row Grps_get_by_key(byte[] key) {return (Xobcl_kwd_row)grps_hash.Fetch(key);} private OrderedHash grps_hash = OrderedHash_.new_bry_();
 	public byte[] Key_bry() {return key_bry;} private byte[] key_bry;
 	public Xobcl_kwd_row[] Grps() {return grps;} private Xobcl_kwd_row[] grps;
 }

@@ -65,7 +65,7 @@ public class Xop_tkn_mkr {
 	public Xtn_ref_nde Ref_nde()															{return new Xtn_ref_nde();}
 	public Xtn_references_nde References_nde()												{return new Xtn_references_nde();}
 	public gplx.xowa.xtns.gallery.Xtn_gallery_nde Gallery_nde()								{return new gplx.xowa.xtns.gallery.Xtn_gallery_nde();}
-	public gplx.xowa.xtns.gallery.Xtn_gallery_itm_data Gallery_itm()						{return new gplx.xowa.xtns.gallery.Xtn_gallery_itm_data();}
+	public gplx.xowa.xtns.gallery.Xtn_gallery_itm Gallery_itm()						{return new gplx.xowa.xtns.gallery.Xtn_gallery_itm();}
 	public gplx.xowa.xtns.imageMap.Xop_imageMap_xnde ImageMap_nde()							{return new gplx.xowa.xtns.imageMap.Xop_imageMap_xnde();}
 	public gplx.xowa.xtns.hiero.Xtn_hiero_nde Hiero_nde()									{return new gplx.xowa.xtns.hiero.Xtn_hiero_nde();}
 	public gplx.xowa.xtns.lst.Xtn_pages_nde Pages_nde()										{return new gplx.xowa.xtns.lst.Xtn_pages_nde();}
@@ -132,7 +132,7 @@ public class Xop_tkn_mkr {
 //			}
 //			txt_tkns[txt_tkns_len] = sub;
 //			txt_tkns_len = new_len;
-//		}	Xop_txt_tkn[] txt_tkns = new Xop_txt_tkn[0]; int txt_tkns_len, txt_tkns_max;
+//		}	private Xop_txt_tkn[] txt_tkns = new Xop_txt_tkn[0]; int txt_tkns_len, txt_tkns_max;
 //		Xop_txt_tkn[] Resize(Xop_txt_tkn[] src, int cur_len, int new_len) {
 //			Xop_txt_tkn[] rv = new Xop_txt_tkn[new_len];
 //			for (int i = 0; i < cur_len; i++)
@@ -147,7 +147,7 @@ public class Xop_tkn_mkr {
 //			}
 //			space_tkns[space_tkns_len] = sub;
 //			space_tkns_len = new_len;
-//		}	Xop_space_tkn[] space_tkns = new Xop_space_tkn[0]; int space_tkns_len, space_tkns_max;
+//		}	private Xop_space_tkn[] space_tkns = new Xop_space_tkn[0]; int space_tkns_len, space_tkns_max;
 //		Xop_space_tkn[] Resize(Xop_space_tkn[] src, int cur_len, int new_len) {
 //			Xop_space_tkn[] rv = new Xop_space_tkn[new_len];
 //			for (int i = 0; i < cur_len; i++)

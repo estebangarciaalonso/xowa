@@ -28,7 +28,7 @@ public class Xof_meta_fil {
 			itms.Add(ttl, rv);
 		}
 		return rv;
-	}	OrderedHash itms = OrderedHash_.new_bry_();
+	}	private OrderedHash itms = OrderedHash_.new_bry_();
 	public Xof_meta_itm Get_or_null(byte[] ttl) {return (Xof_meta_itm)itms.Fetch(ttl);}
 	public void Save(Gfo_fld_wtr wtr) {
 		int itms_len = itms.Count();

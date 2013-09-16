@@ -821,4 +821,17 @@ public class ByteAry_ {
 		}
 		return ary;
 	}
+	public static int Find_bwd_non_ws(byte[] src, int bgn, int end) { // get pos of 1st char that is not ws; 
+		if (bgn >= src.length) return ByteAry_.NotFound;
+		for (int i = bgn; i >= end; i--) {
+			byte b = src[i];
+			switch (b) {
+				case Byte_ascii.Space: case Byte_ascii.Tab: case Byte_ascii.NewLine: case Byte_ascii.CarriageReturn:
+					break;
+				default:
+					return i;
+			}
+		}
+		return ByteAry_.NotFound;
+	}
 }

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_xtn_ifexpr_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()					{fxt.Reset();}
 	@Test  public void Basic_y()				{fxt.tst_Parse_tmpl_str_test("{{#ifexpr: 1 > 0 |y|n}}"					, "{{test}}"	, "y");}
 	@Test  public void Basic_n()				{fxt.tst_Parse_tmpl_str_test("{{#ifexpr: 1 < 0 |y|n}}"					, "{{test}}"	, "n");}

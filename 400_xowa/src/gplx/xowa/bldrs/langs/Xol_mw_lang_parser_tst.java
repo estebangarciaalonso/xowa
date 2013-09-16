@@ -153,7 +153,7 @@ public class Xol_mw_lang_parser_tst {
 	}
 }
 class Xol_mw_lang_parser_fxt {
-	Xoa_app app; Xow_wiki wiki; Xop_fxt fxt;
+	Xoa_app app; Xow_wiki wiki; private Xop_fxt fxt;
 	Xol_mw_lang_parser parser = new Xol_mw_lang_parser(new Gfo_msg_log("test")); ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
 	public void Clear() {
 		if (app == null) {

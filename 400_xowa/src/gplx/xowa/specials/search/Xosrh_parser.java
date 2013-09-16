@@ -21,7 +21,7 @@ class Xosrh_parser {
 		this.src = src;
 		Xosrh_qry_tkn[] tkns = Xosrh_scanner._.Scan(src);
 		return Parse_itm_or(make_ctx.Init(tkns));
-	}	Xosrh_parser_ctx make_ctx = new Xosrh_parser_ctx(); byte[] src;
+	}	private Xosrh_parser_ctx make_ctx = new Xosrh_parser_ctx(); byte[] src;
 	Xosrh_qry_itm Parse_itm_or(Xosrh_parser_ctx make_ctx) {
 		Xosrh_qry_itm lhs = Parse_itm_and(make_ctx);
 		while (make_ctx.Cur_tid(Xosrh_qry_tkn.Tid_or)) {
@@ -78,7 +78,7 @@ class Xosrh_parser_ctx {
 		ary_len = ary.length; 
 		this.pos = 0;
 		return this;
-	}	Xosrh_qry_tkn[] ary; int pos = 0; int ary_len;
+	}	private Xosrh_qry_tkn[] ary; int pos = 0; int ary_len;
 	public boolean Cur_tid(byte tid) {return pos < ary_len ? tid == ary[pos].Tid(): tid == Xosrh_qry_tkn.Tid_eos;}
 	public Xosrh_qry_tkn Move_next() {
 		Xosrh_qry_tkn rv = null; 

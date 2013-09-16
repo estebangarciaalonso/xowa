@@ -166,7 +166,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		cur_wiki.Parser().Parse_page_tmpl(tmp_root, tmp_ctx, tmp_ctx.Tkn_mkr(), text_bry);
 		tmp_root.Tmpl_evaluate(tmp_ctx, text_bry, mock_frame, tmp_bfr);
 		return Scrib_kv_utl.base1_obj_(tmp_bfr.XtoStrAndClear());
-	}	Xop_root_tkn tmp_root; Xop_ctx tmp_ctx;
+	}	private Xop_root_tkn tmp_root; Xop_ctx tmp_ctx;
 	public KeyVal[] CallParserFunction(KeyVal[] values) {
 		String frame_id = Scrib_kv_utl.Val_to_str(values, 0);
 		Xot_invk owner_frame = String_.Eq(frame_id, "current") ? engine.Cur_frame_invoke() : engine.Cur_frame_owner();

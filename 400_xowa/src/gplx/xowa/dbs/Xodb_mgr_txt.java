@@ -22,7 +22,7 @@ public class Xodb_mgr_txt implements Xodb_mgr {
 		this.wiki = wiki;
 		load_mgr = new Xodb_load_mgr_txt(wiki);
 		save_mgr = new Xodb_save_mgr_txt(wiki, load_mgr);
-	}	Xow_wiki wiki;
+	}	private Xow_wiki wiki;
 	public byte Tid() {return Tid_txt;} public static final byte Tid_txt = 0;
 	public String Tid_name() {return "xdat";}
 	public byte Data_storage_format() {return data_storage_format;} public void Data_storage_format_(byte v) {data_storage_format = v;} private byte data_storage_format = gplx.ios.Io_stream_.Tid_file;

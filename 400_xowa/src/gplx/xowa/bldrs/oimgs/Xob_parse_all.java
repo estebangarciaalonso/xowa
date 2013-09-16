@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.dbs.*;
 public class Xob_parse_all extends Xob_itm_basic_base implements Xob_cmd, GfoInvkAble {
-	private int commit_interval = 1000, progress_interval = 250, cleanup_interval = 2500;
+	private int commit_interval = 1000, progress_interval = 250, select_interval = 2500;
 	private Xob_parse_all_db_sql page_src; private Xodb_xowa_cfg_tbl tbl_cfg;
 	private int[] ns_ary; private byte[] prv_ttl = ByteAry_.Empty; private int prv_ns = -1; private boolean prv_ns_dirty = false;
 	private Xop_parser parser; private Xop_ctx ctx; private Xop_root_tkn root; private Xop_redirect_mgr redirect_mgr; private Gfo_msg_log msg_log;  private Xoad_wtr_dump log_dump;
@@ -118,7 +118,7 @@ public class Xob_parse_all extends Xob_itm_basic_base implements Xob_cmd, GfoInv
 				Commit(ns, ttl);
 			else if ((exec_count % progress_interval) == 0)
 				usr_dlg.Prog_many("", "", "parse progress: count=~{0} last=~{1} ns=~{2}", exec_count, String_.new_utf8_(ttl), ns.Id());
-			if ((exec_count % cleanup_interval) == 0)
+			if ((exec_count % select_interval) == 0)
 				Free();
 			if (ctx.App().Tmpl_result_cache().Count() > 50000) 
 				ctx.App().Tmpl_result_cache().Clear();
@@ -149,10 +149,10 @@ public class Xob_parse_all extends Xob_itm_basic_base implements Xob_cmd, GfoInv
 		if		(ctx.Match(k, Invk_prv_ttl_))				prv_ttl = m.ReadBry("v");
 		else if	(ctx.Match(k, Invk_commit_interval_))		commit_interval = m.ReadInt("v");
 		else if	(ctx.Match(k, Invk_progress_interval_))		progress_interval = m.ReadInt("v");
-		else if	(ctx.Match(k, Invk_cleanup_interval_))		cleanup_interval = m.ReadInt("v");
+		else if	(ctx.Match(k, Invk_select_interval_))		select_interval = m.ReadInt("v");
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
-	}	private static final String Invk_prv_ttl_ = "prv_ttl_", Invk_progress_interval_ = "progress_interval_", Invk_commit_interval_ = "commit_interval_", Invk_cleanup_interval_ = "cleanup_interval_";
+	}	private static final String Invk_prv_ttl_ = "prv_ttl_", Invk_progress_interval_ = "progress_interval_", Invk_commit_interval_ = "commit_interval_", Invk_select_interval_ = "select_interval_";
 	public static int exec_count; int exec_errors;
 	private static final String GRP_KEY = "xowa.bldr.parse";
 }

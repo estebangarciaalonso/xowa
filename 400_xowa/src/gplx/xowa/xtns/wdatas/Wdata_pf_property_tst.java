@@ -95,7 +95,7 @@ class Wdata_pf_property_data_fxt {
 		expd_id_int = -1;
 		expd_q = expd_of = null;
 		return this;
-	}	Xoa_app app; Wdata_wiki_mgr wdata_mgr; Wdata_doc_bldr page_bldr; Xop_fxt parser_fxt;
+	}	private Xoa_app app; Wdata_wiki_mgr wdata_mgr; Wdata_doc_bldr page_bldr; Xop_fxt parser_fxt;
 	public Wdata_pf_property_data_fxt Expd_id_int_(int v) {expd_id_int = v; return this;} private int expd_id_int;
 	public Wdata_pf_property_data_fxt Expd_q_(String v) {expd_q = ByteAry_.new_ascii_(v); return this;} private byte[] expd_q;
 	public Wdata_pf_property_data_fxt Expd_of_(String v) {expd_of = ByteAry_.new_ascii_(v); return this;} private byte[] expd_of;

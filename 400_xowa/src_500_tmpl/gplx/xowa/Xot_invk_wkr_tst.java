@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xot_invk_wkr_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {fxt.Reset();}
 	@Test  public void Basic() {
 		fxt.tst_Parse_page_tmpl("{{a}}", fxt.tkn_tmpl_invk_w_name(0, 5, 2, 3));

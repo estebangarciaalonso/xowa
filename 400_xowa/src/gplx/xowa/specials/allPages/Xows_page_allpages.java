@@ -20,7 +20,7 @@ public class Xows_page_allpages implements GfoInvkAble, ByteAryFmtrArg, Xows_pag
 	public Xows_page_allpages(Xow_wiki wiki) {
 		this.wiki = wiki;
 		html_itm_fmtr = new Xos_pagelist_html_itm_fmtr(this, wiki);
-	}	Xos_pagelist_html_itm_fmtr html_itm_fmtr;
+	}	private Xos_pagelist_html_itm_fmtr html_itm_fmtr;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	public ByteAryFmtr Html_all() {return html_all;} ByteAryFmtr html_all = ByteAryFmtr.new_(String_.Concat_lines_nl
 		(	"<table class=\"mw-allpages-table-form\">"
@@ -105,7 +105,7 @@ public class Xows_page_allpages implements GfoInvkAble, ByteAryFmtrArg, Xows_pag
 		rslt_nxt = rslt_nxt2;
 		rslt_prv = rslt_prv2;
 		return true;
-	}	Xoa_url_arg_hash arg_hash = new Xoa_url_arg_hash();
+	}	private Xoa_url_arg_hash arg_hash = new Xoa_url_arg_hash();
 	private static final byte[] Bry_arg_from = ByteAry_.new_ascii_("from"), Bry_arg_ns = ByteAry_.new_ascii_("namespace"), Bry_arg_hideredirects = ByteAry_.new_ascii_("hideredirects");
 	public Xow_ns Init_ns() {return init_ns;} private Xow_ns init_ns;
 	public void Build_html(Xoa_page page) {
@@ -161,7 +161,7 @@ class Xos_pagelist_html_itm_fmtr implements ByteAryFmtrArg {
 		this.mgr = mgr; this.wiki = wiki; this.href_parser = wiki.App().Href_parser(); this.wiki_key = wiki.Key_bry();
 		this.itm_normal = mgr.Html_list_itm_normal(); this.itm_redirect = mgr.Html_list_itm_redirect();
 		history_mgr = wiki.App().User().History_mgr();
-	}	Xows_page_allpages mgr; Xow_wiki wiki; Xoh_href_parser href_parser; ByteAryFmtr itm_normal, itm_redirect; byte[] wiki_key; gplx.xowa.users.history.Xou_history_mgr history_mgr;
+	}	private Xows_page_allpages mgr; Xow_wiki wiki; Xoh_href_parser href_parser; ByteAryFmtr itm_normal, itm_redirect; byte[] wiki_key; gplx.xowa.users.history.Xou_history_mgr history_mgr;
 	public void Itm_idx_(int v) {itm_idx = v;} private int itm_idx;
 	public void XferAry_bgn() {
 		itms_per_grp = mgr.Itms_per_grp();

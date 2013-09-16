@@ -98,7 +98,7 @@ class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 		running = false;
 		wiki.Bldr_props().Src_fil_xml_(null).Src_fil_bz2_(null);	// reset file else error when going from Import/Script to Import/List
 		app.Gui_mgr().Kit().New_cmd_sync(this).Invk(GfsCtx.new_(), 0, Invk_open_wiki, GfoMsg_.Null);
-	}	Xow_wiki wiki;
+	}	private Xow_wiki wiki;
 	void Open_wiki(String wiki_key) {
 		Xog_win main_win = install_mgr.App().Gui_mgr().Main_win();
 		if (main_win.Page() == null) return; // will be null when invoked through cmd-line

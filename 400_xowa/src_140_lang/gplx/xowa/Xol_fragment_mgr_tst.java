@@ -98,7 +98,7 @@ class Xol_fragment_mgr_fxt {
 			lang = app.User().Lang();
 //				wiki = Xoa_app_fxt.wiki_tst_(app);
 		}
-	}	Xol_lang lang;
+	}	private Xol_lang lang;
 	public void Test_fragment(String key, String expd) {
 		byte[] actl = (byte[])GfoInvkAble_.InvkCmd(lang.Fragment_mgr(), key);
 		Tfds.Eq_str_lines(expd, String_.new_utf8_(actl));

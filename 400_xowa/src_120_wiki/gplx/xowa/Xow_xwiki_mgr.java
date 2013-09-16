@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 public class Xow_xwiki_mgr implements GfoInvkAble {
 	public Xow_xwiki_mgr(Xow_wiki wiki) {this.wiki = wiki;} private Xow_wiki wiki;
 	public Xow_lang_mgr Lang_mgr() {return lang_mgr;} private Xow_lang_mgr lang_mgr = Xow_lang_mgr.dflt_();
-	public int Len() {return list.Count();} OrderedHash list = OrderedHash_.new_bry_(); Hash_adp_bry hash = new Hash_adp_bry(false); 
+	public int Len() {return list.Count();} private OrderedHash list = OrderedHash_.new_bry_(); Hash_adp_bry hash = new Hash_adp_bry(false); 
 	public void Clear() {hash.Clear(); list.Clear();}
 	public Xow_xwiki_itm Get_at(int i)								{return (Xow_xwiki_itm)list.FetchAt(i);}
 	public Xow_xwiki_itm Get_by_key(byte[] key)						{return (Xow_xwiki_itm)hash.Get_by_bry(key);}
@@ -61,7 +61,7 @@ public class Xow_xwiki_mgr implements GfoInvkAble {
 			Xow_xwiki_itm itm = Add_bulk_row(lang_regy, row);
 			Add_itm(itm, null);
 		}
-	}	Xoa_url_parser url_parser = new Xoa_url_parser(); Xoa_url url = new Xoa_url();
+	}
 	public Xow_xwiki_itm Add_bulk_row(Hash_adp_bry lang_regy, byte[] row) {
 		byte[][] flds = ByteAry_.Split(row, Byte_ascii.Pipe); int flds_len = flds.length;
 		byte[] alias = ByteAry_.Empty, wiki_type_bry = ByteAry_.Empty;

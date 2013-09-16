@@ -121,8 +121,8 @@ class Xob_text_stmts_mgr {
 			long file_max = fsys_mgr.Tid_text_max();
 			if (file_max != Xodb_fsys_mgr.Heap_max_infinite && (file_len + text_len > file_max)) {	// file is "full"
 				file.Provider().Txn_mgr().Txn_end_all();	// close txn
-				++file_idx;
-				file = fsys_mgr.Get_or_make(Xodb_file.Tid_text, file_idx);
+				file = fsys_mgr.Make(Xodb_file.Tid_text);
+				file_idx = file.Id();
 				fsys_mgr.Tid_text_idx_(file_idx);
 			}
 			file.File_len_add(text_len);

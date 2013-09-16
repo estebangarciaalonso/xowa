@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 import org.junit.*;
 import gplx.intl.*;
 public class Pf_str_formatnum_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()				{fxt.Reset();}
 	@Test  public void Len_4()				{fxt.tst_Parse_tmpl_str_test("{{formatnum:1234}}"						, "{{test}}"	, "1,234");}
 	@Test  public void Len_7()				{fxt.tst_Parse_tmpl_str_test("{{formatnum:1234567}}"					, "{{test}}"	, "1,234,567");}

@@ -21,7 +21,7 @@ public class Xow_msg_mgr implements GfoInvkAble {
 		this.wiki = wiki;
 		this.lang = lang;
 		this.msg_mgr = new Xol_msg_mgr(wiki, false);
-	}	Xow_wiki wiki; Xol_lang lang; Xol_msg_mgr msg_mgr;
+	}	private Xow_wiki wiki; Xol_lang lang; Xol_msg_mgr msg_mgr;
 	public void Clear() {msg_mgr.Clear();}
 	public byte[] Val_by_id_args(int id, Object... args) {return Val_by_id_priv(id, args);}
 	public byte[] Val_by_id(int id) {return Val_by_id_priv(id, null);}

@@ -40,7 +40,7 @@ class Xosrh_page_mgr_fxt {
 			hive_mgr = new Xowd_hive_mgr(wiki, Xow_dir_info_.Tid_id);
 		}
 		return this;
-	}	Xoa_app app; Xow_wiki wiki; ByteAryBfr tmp_bfr; Xosrh_page_mgr page_mgr; Xowd_hive_mgr hive_mgr;
+	}	private Xoa_app app; Xow_wiki wiki; ByteAryBfr tmp_bfr; Xosrh_page_mgr page_mgr; Xowd_hive_mgr hive_mgr;
 	public Xosrh_page_mgr_fxt Init_site_ids(int bgn, int end) {
 		Xodb_page tmp_itm = new Xodb_page();
 		for (int i = bgn; i < end; i++) {

@@ -30,12 +30,11 @@ public class Fsdb_vlm_db_core {
 		return this;
 	}
 	private Fsdb_vlm_db_core Init_by_make(Io_url url) {
-		provider = Db_create(url);
 		Fsdb_vlm_db_data vlm = Fsdb_vlm_db_data.make_root_(url);
+		provider = vlm.Provider();
 		vlms = new Fsdb_vlm_db_data[] {vlm};
+		tbl_vlm.Create_table(provider);
+		tbl_vlm.Insert(provider, "", url.Raw(), "");
 		return this;
-	}
-	public static Db_provider Db_create(Io_url url) {
-		return null;
 	}
 }

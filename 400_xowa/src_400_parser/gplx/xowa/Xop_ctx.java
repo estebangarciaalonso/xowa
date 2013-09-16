@@ -24,23 +24,23 @@ public class Xop_ctx {
 		page = new Xoa_page(wiki, Xoa_ttl.parse_(wiki, Xoa_page.Bry_main_page));
 		wkrs = wkrs_(para, apos, xnde, list, lnki, hdr, amp, lnke, tblw, invk);
 		for (Xop_ctx_wkr wkr : wkrs) wkr.Ctor_ctx(this);			
-	}	Xop_ctx_wkr[] wkrs = new Xop_ctx_wkr[] {}; Xop_ctx_wkr[] wkrs_(Xop_ctx_wkr... ary) {return ary;}
+	}	private Xop_ctx_wkr[] wkrs = new Xop_ctx_wkr[] {}; Xop_ctx_wkr[] wkrs_(Xop_ctx_wkr... ary) {return ary;}
 	public Xoa_app				App()				{return app;} private Xoa_app app;
 	public Xow_wiki				Wiki()				{return wiki;} private Xow_wiki wiki;
 	public Xog_tab Tab() {return tab;} public Xop_ctx Tab_(Xog_tab v) {tab = v; return this;} private Xog_tab tab = new Xog_tab();
 	public Xol_lang				Lang()				{return wiki.Lang();}
 	public Xoa_page				Page()				{return page;} public Xop_ctx Page_(Xoa_page v) {page = v; return this;} private Xoa_page page;
 	public Xop_tkn_mkr			Tkn_mkr()			{return app.Tkn_mkr();}
-	public Xop_amp_wkr			Amp()				{return amp;}	Xop_amp_wkr  amp  = new Xop_amp_wkr();
-	public Xop_apos_wkr			Apos()				{return apos;}	Xop_apos_wkr apos = new Xop_apos_wkr();
-	public Xop_lnke_wkr			Lnke()				{return lnke;}	Xop_lnke_wkr lnke = new Xop_lnke_wkr();
-	public Xop_lnki_wkr			Lnki()				{return lnki;}	Xop_lnki_wkr lnki = new Xop_lnki_wkr();
-	public Xop_hdr_wkr			Hdr()				{return hdr;}	Xop_hdr_wkr  hdr  = new Xop_hdr_wkr();
-	public Xop_para_wkr			Para()				{return para;}	Xop_para_wkr para = new Xop_para_wkr();
-	public Xop_list_wkr			List()				{return list;}	Xop_list_wkr list = new Xop_list_wkr();
-	public Xop_tblw_wkr			Tblw()				{return tblw;}	Xop_tblw_wkr tblw = new Xop_tblw_wkr();
-	public Xop_xnde_wkr			Xnde()				{return xnde;}	Xop_xnde_wkr xnde = new Xop_xnde_wkr();
-	public Xot_invk_wkr			Invk()				{return invk;}	Xot_invk_wkr invk = new Xot_invk_wkr();
+	public Xop_amp_wkr			Amp()				{return amp;}	private Xop_amp_wkr  amp  = new Xop_amp_wkr();
+	public Xop_apos_wkr			Apos()				{return apos;}	private Xop_apos_wkr apos = new Xop_apos_wkr();
+	public Xop_lnke_wkr			Lnke()				{return lnke;}	private Xop_lnke_wkr lnke = new Xop_lnke_wkr();
+	public Xop_lnki_wkr			Lnki()				{return lnki;}	private Xop_lnki_wkr lnki = new Xop_lnki_wkr();
+	public Xop_hdr_wkr			Hdr()				{return hdr;}	private Xop_hdr_wkr  hdr  = new Xop_hdr_wkr();
+	public Xop_para_wkr			Para()				{return para;}	private Xop_para_wkr para = new Xop_para_wkr();
+	public Xop_list_wkr			List()				{return list;}	private Xop_list_wkr list = new Xop_list_wkr();
+	public Xop_tblw_wkr			Tblw()				{return tblw;}	private Xop_tblw_wkr tblw = new Xop_tblw_wkr();
+	public Xop_xnde_wkr			Xnde()				{return xnde;}	private Xop_xnde_wkr xnde = new Xop_xnde_wkr();
+	public Xot_invk_wkr			Invk()				{return invk;}	private Xot_invk_wkr invk = new Xot_invk_wkr();
 	public Xop_curly_wkr		Curly() 			{return curly;} private Xop_curly_wkr curly = new Xop_curly_wkr();
 	public byte[]				Src()				{return src;} private byte[] src; int src_len;
 	public Xop_root_tkn			Root()				{return root;} private Xop_root_tkn root;
@@ -111,7 +111,7 @@ public class Xop_ctx {
 		ary[aryLen] = tkn;
 		cur_tkn_tid = tkn.Tkn_tid();
 		aryLen = newLen;
-	}	Xop_tkn_itm[] ary = Xop_tkn_itm_.Ary_empty; int aryLen = 0, aryMax = 0;
+	}	private Xop_tkn_itm[] ary = Xop_tkn_itm_.Ary_empty; int aryLen = 0, aryMax = 0;
 	public int Stack_len() {return aryLen;}
 	public Xop_tkn_itm Stack_get(int i)		{return i < 0 || i >= aryLen ? null : ary[i];}
 	public Xop_tblw_tkn Stack_get_tblw() {

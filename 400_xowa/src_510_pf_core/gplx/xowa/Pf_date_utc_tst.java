@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Pf_date_utc_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before	public void setup()						{fxt.Reset(); Tfds.Now_set(DateAdp_.new_(2011, 12, 31, 22, 4, 5, 6));}	// ENV:Assumes Eastern Standard Time (-5)
 	@After public void teardown()				{Tfds.Now_enabled_n_();}
 	@Test  public void Utc_year()					{fxt.tst_Parse_tmpl_str_test("{{CURRENTYEAR}}"			, "{{test}}", "2012");}

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xop_xnde_include_tst {
-	Xop_fxt fxt = new Xop_fxt();
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()							{fxt.Reset();}
 	@Test  public void Tmpl_includeonly()				{fxt.tst_Parse_tmpl_str_test("a<includeonly>b</includeonly>c"						, "{{test}}", "abc");}
 	@Test  public void Tmpl_noinclude()					{fxt.tst_Parse_tmpl_str_test("a<noinclude>b</noinclude>c"							, "{{test}}", "ac");}

@@ -23,8 +23,8 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 		this.app = gui_mgr.App();
 		this.main_win = gui_mgr.Main_win();
 		cur_cmd = new Xog_search_suggest_cmd(app, this);
-	}	Xoa_app app; Xoa_gui_mgr gui_mgr; Xog_win main_win; Js_wtr wtr = new Js_wtr();
-	boolean enabled = true; int results_max = 10;
+	}	private Xoa_app app; Xoa_gui_mgr gui_mgr; Xog_win main_win; Js_wtr wtr = new Js_wtr();
+	private boolean enabled = true; private int results_max = 10; private boolean log_enabled = false;
 	public byte Search_mode() {return search_mode;} public Xog_search_suggest_mgr Search_mode_(byte v) {search_mode = v; return this;} private byte search_mode;
 	public int All_pages_extend() {return all_pages_extend;} private int all_pages_extend = 1000;	// look ahead by 1000
 	public int All_pages_min() {return all_pages_min;} private int all_pages_min = 10000;			// only look at pages > 10 kb
@@ -33,24 +33,29 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 		cur_cmd.Cancel();
 		long prv_time = Env_.TickCount();
 		while (cur_cmd.Working()) {
-			if (Env_.TickCount() - prv_time > 4000) {cur_cmd.Working_(false); break;}
+			if (Env_.TickCount() - prv_time > 4000) {
+				if (log_enabled) app.Usr_dlg().Log_many("", "", "search cancel timeout: word=~{0}", String_.new_utf8_(search_bry));
+				cur_cmd.Working_(false);
+				break;
+			}
 		}
 	}
 	public void Search(Xow_wiki wiki, byte[] search_bry, byte[] cbk_func) {
 		this.wiki = wiki; this.search_bry = search_bry; this.cbk_func = cbk_func;
 		ThreadAdp_.invk_(this, Invk_search_async).Start();
-	}	Xow_wiki wiki; byte[] search_bry, cbk_func;
+	}	private Xow_wiki wiki; private byte[] search_bry, cbk_func;
 	Object thread_guard = new Object();
 	void Search_async() {
 		if (search_bry.length == 0) return;
 		if (!enabled) return;
 		this.Cancel();
 		synchronized (thread_guard) {
+			if (log_enabled) app.Usr_dlg().Log_many("", "", "search bgn: word=~{0}", String_.new_utf8_(search_bry));
 			cur_cmd.Init(wiki, search_bry, cbk_func, results_max, search_mode, all_pages_extend, all_pages_min);
 			this.last_search_bry = search_bry;
 			cur_cmd.Search();
 		}
-	}	Xog_search_suggest_cmd cur_cmd; byte[] last_search_bry;
+	}	private Xog_search_suggest_cmd cur_cmd; byte[] last_search_bry;
 	public void Notify() {// EX: receiveSuggestions('search_word', ['result_1', 'result_2']);
 		byte[] search_bry = cur_cmd.Search_bry();
 		ListAdp found = cur_cmd.Results();
@@ -67,6 +72,7 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 				}
 			wtr.Add_brack_end();
 		wtr.Add_paren_end_semic();
+		if (log_enabled) app.Usr_dlg().Log_many("", "", "search end: word=~{0}", String_.new_utf8_(search_bry));
 		main_win.Html_box().Html_js_eval_script(wtr.Xto_str_and_clear());
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
@@ -85,6 +91,8 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_all_pages_min_))			all_pages_min = m.ReadInt("v");
 		else if	(ctx.Match(k, Invk_auto_wildcard))			return Yn.XtoStr(auto_wildcard);
 		else if	(ctx.Match(k, Invk_auto_wildcard_))			auto_wildcard = m.ReadYn("v");
+		else if	(ctx.Match(k, Invk_log_enabled))		return Yn.XtoStr(log_enabled);
+		else if	(ctx.Match(k, Invk_log_enabled_))		log_enabled = m.ReadYn("v");
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}
@@ -93,6 +101,7 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 	, Invk_all_pages_extend = "all_pages_extend", Invk_all_pages_extend_ = "all_pages_extend_"
 	, Invk_all_pages_min = "all_pages_min", Invk_all_pages_min_ = "all_pages_min_"
 	, Invk_auto_wildcard = "auto_wildcard", Invk_auto_wildcard_ = "auto_wildcard_"
+	, Invk_log_enabled = "log_enabled", Invk_log_enabled_ = "log_enabled_"
 	;
 	private static KeyVal[] Options_search_mode_list = KeyVal_.Ary(KeyVal_.new_("Search"), KeyVal_.new_("AllPages")); 
 	private static byte Search_mode_parse(String v) {

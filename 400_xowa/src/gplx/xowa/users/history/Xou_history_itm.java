@@ -22,7 +22,7 @@ class Xou_history_itm {
 		this.page = page;
 		this.key =  key_(wiki, page);
 		this.view_bgn = DateAdp_.Now();
-	}	Xou_history_itm() {}
+	}	private Xou_history_itm() {}
 	public byte[] Key() {return key;} private byte[] key;
 	public byte[] Wiki() {return wiki;} private byte[] wiki;
 	public byte[] Page() {return page;} private byte[] page;

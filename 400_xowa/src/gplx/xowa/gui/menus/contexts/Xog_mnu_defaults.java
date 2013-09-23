@@ -60,9 +60,9 @@ public class Xog_mnu_defaults {
 		Add_btn(Key_help_context_menu, "Configure menus", "c", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Options/Menus\");");
 		Add_btn(Key_help_about, "About XOWA", "a", "help/about.png", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:About\");");
 	}
-	void Add_grp(String key, String text, String shortcut, String img)				{Add_itm(Xog_mnu_itm.Tid_grp, key, text, shortcut, img, "");}
-	void Add_btn(String key, String text, String shortcut, String img, String cmd)	{Add_itm(Xog_mnu_itm.Tid_btn, key, text, shortcut, img, cmd);}
-	void Add_itm(byte tid, String key, String text, String shortcut, String img, String cmd) {
+	private void Add_grp(String key, String text, String shortcut, String img)				{Add_itm(Xog_mnu_itm.Tid_grp, key, text, shortcut, img, "");}
+	private void Add_btn(String key, String text, String shortcut, String img, String cmd)	{Add_itm(Xog_mnu_itm.Tid_btn, key, text, shortcut, img, cmd);}
+	private void Add_itm(byte tid, String key, String text, String shortcut, String img, String cmd) {
 		Xog_mnu_itm itm = new Xog_mnu_itm(tid, key).Init(text, shortcut, img, cmd);
 		hash.Add(key, itm);
 	}

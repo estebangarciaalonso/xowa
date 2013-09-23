@@ -16,8 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-public class Xobc_img_dump_sql_fxt {
-	Xobc_img_dump_sql cmd;
+public class Xob_image_sql_fxt {
+	Xob_image_sql cmd;
 	private Db_mgr_fxt fxt = new Db_mgr_fxt();
 	public void Init() {
 		fxt.Ctor_fsys();
@@ -26,8 +26,8 @@ public class Xobc_img_dump_sql_fxt {
 	public void Term() {
 		fxt.Rls();
 	}
-	public Xobc_img_dump_sql Run(String raw_sql) {return Run(raw_sql, new Xobc_img_dump_sql(fxt.Bldr(), fxt.Wiki()));}
-	public Xobc_img_dump_sql Run(String raw_sql, Xobc_img_dump_sql rv) {
+	public Xob_image_sql Run(String raw_sql) {return Run(raw_sql, new Xob_image_sql(fxt.Bldr(), fxt.Wiki()));}
+	public Xob_image_sql Run(String raw_sql, Xob_image_sql rv) {
 		this.cmd = rv;
 		cmd.Make_fil_len_(Io_mgr.Len_kb);
 		rv.Parser().Src_len_(Io_mgr.Len_kb);

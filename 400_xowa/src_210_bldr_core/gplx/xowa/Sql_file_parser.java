@@ -37,7 +37,7 @@ public class Sql_file_parser {
 		} 
 		return this;
 	}
-	void Identify_flds(byte[] raw) {
+	private void Identify_flds(byte[] raw) {
 		Sql_fld_mgr fld_mgr = new Sql_fld_mgr().Parse(raw);
 		flds_all = new Sql_fld_itm[fld_mgr.Count()];
 		int len = flds_req.length;
@@ -132,7 +132,7 @@ public class Sql_file_parser {
 		}
 		finally {rdr.Rls();}
 	}
-	void Commit_row(Gfo_usr_dlg usr_dlg, ByteAryBfr fil_bfr) {
+	private void Commit_row(Gfo_usr_dlg usr_dlg, ByteAryBfr fil_bfr) {
 		fil_bfr.Add_byte(Byte_ascii.NewLine);
 		if (fil_bfr.Bry_len() > trg_len) {
 			Io_url trg_fil = trg_fil_gen.Nxt_url();				
@@ -140,7 +140,7 @@ public class Sql_file_parser {
 			Io_mgr._.AppendFilByt(trg_fil, fil_bfr.XtoAryAndClear());
 		}
 	}
-	void Commit_fld(int fld_idx, ByteAryBfr val_bfr, ByteAryBfr fil_bfr, Sql_file_parser_data data) {
+	private void Commit_fld(int fld_idx, ByteAryBfr val_bfr, ByteAryBfr fil_bfr, Sql_file_parser_data data) {
 		Sql_fld_itm fld = flds_all[fld_idx];
 		if (fld != null) {
 			data.Cancel_row_n_();

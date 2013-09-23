@@ -37,7 +37,7 @@ class Scrib_fsys_mgr {
 		}
 		return lib_data;
 	}
-	void libs_init() {
+	private void libs_init() {
 		libs = OrderedHash_.new_();
 		Io_url[] fils = Io_mgr._.QueryDir_args(lib_dirs[0]).Recur_().ExecAsUrlAry();
 		int fils_len = fils.length;

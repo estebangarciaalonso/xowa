@@ -23,7 +23,7 @@ public class Io_sort_misc_tst {
 	@Test  public void Io_url_gen_dir() {
 		tst_Io_url_gen_dir("mem/dir/", "{0}.xdat", 4, 3, "0000.xdat", "0001.xdat", "0002.xdat");
 	}
-	void tst_Io_url_gen_dir(String dir_str, String fmt, int digits, int calls, String... expd) {
+	private void tst_Io_url_gen_dir(String dir_str, String fmt, int digits, int calls, String... expd) {
 		Io_url dir = Io_url_.mem_dir_(dir_str);
 		ListAdp actl_list = ListAdp_.new_();
 		Io_url_gen wkr = Io_url_gen_.dir_(dir, fmt, digits);
@@ -41,7 +41,7 @@ public class Io_sort_misc_tst {
 		tst_Io_line_rdr_fld_comparer(-1, "a", "ab");
 		tst_Io_line_rdr_fld_comparer( 1, "ab", "a");
 	}
-	void tst_Io_line_rdr_fld_comparer(int expd, String lhs_str, String rhs_str) {
+	private void tst_Io_line_rdr_fld_comparer(int expd, String lhs_str, String rhs_str) {
 		byte[] lhs = ByteAry_.new_utf8_(lhs_str), rhs = ByteAry_.new_utf8_(rhs_str);
 		Tfds.Eq(expd, ByteAry_.Compare(lhs, 0, lhs.length, rhs, 0, rhs.length));
 	}

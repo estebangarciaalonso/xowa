@@ -65,7 +65,7 @@ class Xoi_cmd_dumpfile_fxt {
 		Tfds.Eq(expd_domain, String_.new_utf8_(dumpfile.Domain()));
 		return this;
 	}
-	void Eq_url(String expd, Io_url actl) {
+	private void Eq_url(String expd, Io_url actl) {
 		if		(expd == null && actl == null) return;
 		else if	(expd != null && actl != null) {
 			Tfds.Eq(expd, actl.Raw());

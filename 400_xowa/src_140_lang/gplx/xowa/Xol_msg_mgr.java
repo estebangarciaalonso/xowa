@@ -70,7 +70,7 @@ public class Xol_msg_mgr implements GfoInvkAble {
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}	private static final String Invk_lang = Xol_lang_srl.Invk_lang, Invk_load_text = Xol_lang_srl.Invk_load_text;
-	void Itms_reg(Xol_msg_itm itm) {
+	private void Itms_reg(Xol_msg_itm itm) {
 		int id = itm.Id();
 		if (id >= itms_max) {
 			int new_max = (id + 1) * 2;  

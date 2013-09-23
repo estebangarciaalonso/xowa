@@ -86,7 +86,7 @@ public class Xob_make_cmd_site implements Io_make_cmd {
 		Io_mgr._.AppendFilBfr(reg_url, reg_bfr);
 		//fil_wtr.Rls(); cur_bfr.Rls(); fil_wtr.Rls(); reg_bfr.Rls(); reg_key_0.Rls(); reg_key_n.Rls();
 	}
-//		void Flush_large(byte[] bry, int itm_bgn, int itm_end, int itm_len) {
+//		private void Flush_large(byte[] bry, int itm_bgn, int itm_end, int itm_len) {
 //			++itm_count;
 //			this.Flush_reg();
 //			fil_wtr.Add_idx_direct(itm_len, Byte_.Zero);
@@ -100,7 +100,7 @@ public class Xob_make_cmd_site implements Io_make_cmd {
 //			}
 //			finally {stream.Rls();}
 //		}
-	void Flush_large(byte[] bry, int itm_bgn, int itm_end, int itm_len) {
+	private void Flush_large(byte[] bry, int itm_bgn, int itm_end, int itm_len) {
 		++itm_count;
 		this.Flush_reg();
 		fil_wtr.Add_idx_direct(itm_len, Byte_.Zero);
@@ -116,11 +116,11 @@ public class Xob_make_cmd_site implements Io_make_cmd {
 		}
 		finally {if (wtr != null) wtr.Rls();}
 	}
-	void Flush() {
+	private void Flush() {
 		Flush_reg();
 		Flush_fil();
 	}
-	void Flush_reg() {
+	private void Flush_reg() {
 		reg_bfr
 			.Add_int_variable(fil_count++).Add_byte(Byte_ascii.Pipe)
 			.Add_bfr(reg_key_0).Add_byte(Byte_ascii.Pipe)
@@ -129,7 +129,7 @@ public class Xob_make_cmd_site implements Io_make_cmd {
 		itm_count = 0;
 		reg_key_0.Clear();
 	}
-	void Flush_fil() {
+	private void Flush_fil() {
 		if (fil_wtr.Fil_idx() % 10 == 0)
 			usr_dlg.Prog_many("cmd_site", "prog", "saving: ~{0} ~{1}", reg_url.OwnerDir().NameOnly(), fil_wtr.Fil_url().NameOnly());			
 		fil_wtr.Flush(usr_dlg);

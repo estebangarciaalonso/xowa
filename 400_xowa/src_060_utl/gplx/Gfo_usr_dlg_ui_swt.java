@@ -31,7 +31,7 @@ public class Gfo_usr_dlg_ui_swt implements Gfo_usr_dlg_ui, GfoInvkAble {
 	public void Write_note(String text) {if (opt.Note_enabled()) Write(Invk_write_note, text);}
 	public void Write_warn(String text) {if (opt.Warn_enabled()) Write(Invk_write_warn, text);}
 	public void Write_stop(String text) {Write(Invk_write_stop, text);}
-	void Write(String invk, String text) {
+	private void Write(String invk, String text) {
 		GfoMsg m = GfoMsg_.new_cast_(invk).Add("v", text);
 		GfoInvkAble_.InvkCmd_msg(cmd_sync, invk, m);
 	}
@@ -42,7 +42,7 @@ public class Gfo_usr_dlg_ui_swt implements Gfo_usr_dlg_ui, GfoInvkAble {
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}
-	void Info_box_write(String v, boolean warn) {
+	private void Info_box_write(String v, boolean warn) {
 		if (info_box_is_warn) return;
 		info_box.Text_(v);
 		info_box_is_warn = warn;

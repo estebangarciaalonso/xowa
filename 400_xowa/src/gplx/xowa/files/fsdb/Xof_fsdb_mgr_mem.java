@@ -26,18 +26,18 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 	public Xof_bin_wkr Bin_wkr_fsdb() {return this;}
 	private Io_url fs_dir;
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
-	public void Init_by_wiki(Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr) {
+	public void Init_by_wiki(String wiki_domain, Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr) {
 		this.fs_dir = fs_dir;
 		bin_mgr = new Xof_bin_mgr(repo_mgr);
 	}
-	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int w, int thumbtime, int h, DateAdp modified, String hash, int bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int w, int h, int thumbtime, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		byte[] key = Key_bld_thm(dir, fil, w, thumbtime);
 		byte[] bin = gplx.ios.Io_stream_rdr_.Load_all_as_bry(bin_rdr);
 		Fsdb_xtn_thm_itm_mem itm = new Fsdb_xtn_thm_itm_mem();
 		itm.Init(key, dir, fil, w, h, thumbtime, bin);
 		bin_hash.Add(key, itm);
 	}
-	public void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, int bin_len, gplx.ios.Io_stream_rdr bin_rdr, int img_w, int img_h, int img_bits) {
+	public void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr, int img_w, int img_h) {
 		byte[] key = Key_bld_img(dir, fil);
 		byte[] bin = gplx.ios.Io_stream_rdr_.Load_all_as_bry(bin_rdr);
 		Fsdb_xtn_img_itm_mem itm = new Fsdb_xtn_img_itm_mem();
@@ -45,7 +45,7 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 		bin_hash.Add(key, itm);
 	}
 	public void Reg_insert(Xof_fsdb_itm fsdb_itm, byte repo_id, byte status) {
-		byte[] fsdb_itm_ttl = fsdb_itm.Orig_page();
+		byte[] fsdb_itm_ttl = fsdb_itm.Orig_ttl();
 		if (reg_hash.Has(fsdb_itm_ttl)) return;
 		Xof_reg_fil_itm regy_itm = new Xof_reg_fil_itm();
 		regy_itm.Ttl_(fsdb_itm_ttl).Status_(status).Orig_repo_(repo_id).Orig_redirect_(fsdb_itm.Orig_redirect()).Orig_ext_(fsdb_itm.Lnki_ext().Id()).Orig_w_(fsdb_itm.Orig_w()).Orig_h_(fsdb_itm.Orig_h());
@@ -71,10 +71,18 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 				itm.Init_by_redirect(reg_itm.Orig_redirect());
 			itm.Rslt_reg_(reg_itm.Status());
 		}
-		Xof_fsdb_mgr_utl._.Fsdb_search(this, fs_dir, win_wtr, exec_tid, itms, itms_len, bin_mgr.Repo_mgr(), url_bldr);
+		Xof_fsdb_mgr_utl._.Fsdb_search(this, fs_dir, win_wtr, exec_tid, itms, bin_mgr.Repo_mgr(), url_bldr);
 	}
 	public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsdb;}
-	public boolean Bin_wkr_get(Xof_fsdb_itm itm, Io_url bin_url, boolean is_thumb, int w) {
+	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(Xof_fsdb_itm itm, boolean is_thumb, int w) {
+		byte[] wiki = itm.Orig_wiki();
+		byte[] ttl = itm.Lnki_ttl();
+		int thumbtime = itm.Lnki_thumbtime(); 
+		byte[] key = is_thumb || itm.Lnki_ext().Orig_is_not_image() ? Key_bld_thm(wiki, ttl, w, thumbtime) : Key_bld_img(wiki, ttl);
+		Fsdb_xtn_thm_itm_mem mem_itm = (Fsdb_xtn_thm_itm_mem)bin_hash.Get_by_bry(key);
+		return mem_itm == null ? gplx.ios.Io_stream_rdr_.Null : gplx.ios.Io_stream_rdr_.mem_(mem_itm.Bin());
+	}
+	public boolean Bin_wkr_get_to_url(Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
 		byte[] wiki = itm.Orig_wiki();
 		byte[] ttl = itm.Lnki_ttl();
 		int thumbtime = itm.Lnki_thumbtime(); 

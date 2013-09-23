@@ -63,7 +63,7 @@ public class Wdata_doc_bldr {
 		wtr.Nde_end();
 		return wtr.Bld();
 	}	Json_doc_wtr wtr = new Json_doc_wtr();
-	void Xto_bry__list(byte[] key, ListAdp list) {
+	private void Xto_bry__list(byte[] key, ListAdp list) {
 		int len = list.Count();
 		if (len == 0) return;
 		wtr.Key(true, key);
@@ -75,7 +75,7 @@ public class Wdata_doc_bldr {
 		wtr.Nde_end();
 		list.Clear();
 	}
-	void Xto_bry__aliases() {
+	private void Xto_bry__aliases() {
 		int len = aliases.Count();
 		if (len == 0) return;
 		wtr.Key(true, Wdata_doc_consts.Key_atr_aliases_bry);
@@ -95,7 +95,7 @@ public class Wdata_doc_bldr {
 		wtr.Nde_end();
 		aliases.Clear();
 	}
-	void Xto_bry__claims() {
+	private void Xto_bry__claims() {
 		int len = props.Count();
 		if (len == 0) return;
 		wtr.Key(true, Wdata_doc_consts.Key_atr_claims_bry);

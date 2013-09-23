@@ -54,7 +54,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 	public byte[] Talk_url() {return Xoa_url_encoder._.Encode(this.Talk_txt());}
 	public byte[] Subj_url() {return Xoa_url_encoder._.Encode(this.Subj_txt());}
 	public int Qarg_bgn() {return qarg_bgn;} private int qarg_bgn = -1;
-	public byte[] Qarg_txt() {return ByteAry_.Mid(full_txt, this.Qarg_bgn(), full_txt.length);}
+	public byte[] Qarg_txt() {return this.Qarg_bgn() == -1 ? null : ByteAry_.Mid(full_txt, this.Qarg_bgn(), full_txt.length);}
 	public byte[] Base_txt_wo_qarg() {
 		int bgn = page_bgn;
 		int end = full_txt.length;

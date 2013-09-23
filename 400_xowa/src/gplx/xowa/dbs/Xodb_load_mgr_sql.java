@@ -19,12 +19,20 @@ package gplx.xowa.dbs; import gplx.*; import gplx.xowa.*;
 import gplx.dbs.*; import gplx.xowa.bldrs.imports.ctgs.*; import gplx.xowa.ctgs.*; import gplx.xowa.specials.search.*; import gplx.xowa.dbs.tbls.*;
 public class Xodb_load_mgr_sql implements Xodb_load_mgr {
 	public Xodb_load_mgr_sql(Xodb_mgr_sql db_mgr) {this.db_mgr = db_mgr; this.fsys_mgr = db_mgr.Fsys_mgr();} private Xodb_mgr_sql db_mgr; Xodb_fsys_mgr fsys_mgr;
+	public byte Search_version() {
+		if (search_provider == null) Search_version_init();
+		return search_version;
+	}	private byte search_version = gplx.xowa.specials.search.Xosrh_core.Version_null;
+	public void Search_version_refresh() {
+		search_provider = null;
+		Search_version_init();
+	}
 	public void Load_init(Xow_wiki wiki) {
 		Load_init_cfg(wiki);
 		db_mgr.Tbl_site_stats().Select(wiki);
 		db_mgr.Tbl_xowa_ns().Load(wiki.Ns_mgr());
 	}
-	void Load_init_cfg(Xow_wiki wiki) {
+	private void Load_init_cfg(Xow_wiki wiki) {
 		StringRef version_val = StringRef.null_();
 		String version_key = Xoa_gfs_mgr.Build_code(Xow_wiki.Invk_props, Xow_wiki_props.Invk_bldr_version);
 		KeyVal[] kv_ary = db_mgr.Tbl_xowa_cfg().Select_kvs(Xodb_mgr_sql.Grp_wiki_init, version_key, version_val);
@@ -59,7 +67,7 @@ public class Xodb_load_mgr_sql implements Xodb_load_mgr {
 		Load_ctg_v2a_db_retrieve(rv, ctg_url, cat_page_id, load_max, p, list);
 		Load_ctg_v2a_ui_sift(rv, ctg, list);
 	}
-	void Load_ctg_v2a_db_retrieve(Xoctg_view_ctg rv, Xoctg_url ctg_url, int cat_page_id, int load_max, Db_provider p, ListAdp list) {
+	private void Load_ctg_v2a_db_retrieve(Xoctg_view_ctg rv, Xoctg_url ctg_url, int cat_page_id, int load_max, Db_provider p, ListAdp list) {
 		int len = Xoa_ctg_mgr.Tid__max;
 		for (byte i = Xoa_ctg_mgr.Tid_subc; i < len; i++) {
 			boolean arg_is_from = ctg_url.Grp_fwds()[i] == Bool_.N_byte;
@@ -73,7 +81,7 @@ public class Xodb_load_mgr_sql implements Xodb_load_mgr {
 		}
 		db_mgr.Tbl_page().Select_by_id_list(Cancelable_.Never, list);
 	}
-	void Load_ctg_v2a_ui_sift(Xoctg_view_ctg rv, Xodb_category_itm ctg, ListAdp list) {
+	private void Load_ctg_v2a_ui_sift(Xoctg_view_ctg rv, Xodb_category_itm ctg, ListAdp list) {
 		int len = list.Count();
 		Xow_wiki wiki = this.db_mgr.Wiki();
 		byte prv_tid = Byte_.MaxValue_127;
@@ -100,15 +108,25 @@ public class Xodb_load_mgr_sql implements Xodb_load_mgr {
 		}
 	}
 	private Db_provider search_provider = null;
-	public void Load_search(Cancelable cancelable, ListAdp rv, byte[] search, int results_max) {
+	private void Search_version_init() {
 		if (search_provider == null) {
 			Xodb_file search_file = db_mgr.Fsys_mgr().Get_tid_root(Xodb_file.Tid_search);
-			search_provider = search_file == null ? Db_provider_.Null : search_file.Provider();
+			if (search_file == null) {
+				search_provider = Db_provider_.Null;
+				search_version = gplx.xowa.specials.search.Xosrh_core.Version_1;
+			}
+			else {
+				search_provider = search_file.Provider();
+				search_version = gplx.xowa.specials.search.Xosrh_core.Version_2;
+			}
 		}
-		if (search_provider == Db_provider_.Null)
+	}
+	public void Load_search(Cancelable cancelable, ListAdp rv, byte[] search, int results_max) {
+		if (search_provider == null) Search_version_init();
+		if (search_version == gplx.xowa.specials.search.Xosrh_core.Version_1)
 			db_mgr.Tbl_page().Select_by_search(cancelable, rv, search, results_max);
 		else {
-			db_mgr.Tbl_search_title_word().Select_by_word(cancelable, rv, search, results_max, db_mgr.Fsys_mgr().Get_tid_root(Xodb_file.Tid_search).Provider());
+			Xodb_search_title_word_tbl.Select_by_word(cancelable, rv, search, results_max, db_mgr.Fsys_mgr().Get_tid_root(Xodb_file.Tid_search).Provider());
 			db_mgr.Tbl_page().Select_by_id_list(cancelable, true, rv);
 		}
 	}

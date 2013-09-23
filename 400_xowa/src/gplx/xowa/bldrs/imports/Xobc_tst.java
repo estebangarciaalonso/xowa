@@ -205,7 +205,7 @@ public class Xobc_tst {
 			)
 			,	"a", "b", "c");
 	}
-	void tst_Parse(String raw, String... expd) {
+	private void tst_Parse(String raw, String... expd) {
 		Xoa_app app = Xoa_app_fxt.app_();	// NOTE: resets mem file system, so must happen first
 		Io_url url = Io_url_.mem_fil_("mem/raw_page.csv");
 		Io_mgr._.SaveFilStr(url, raw);

@@ -99,7 +99,7 @@ class Xol_case_mgr_fxt {
 		sb.Add("}}");
 		return sb.XtoStrAndClear();
 	}
-	void raw_ary(StringBldr sb, String[] ary) {
+	private void raw_ary(StringBldr sb, String[] ary) {
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++) {
 			String itm = ary[i];

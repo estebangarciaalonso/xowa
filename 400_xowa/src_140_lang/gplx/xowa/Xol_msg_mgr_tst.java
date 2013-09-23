@@ -57,7 +57,7 @@ class Xol_msg_mgr_fxt {
 		if (init_accesskey	!= null) new_msg_itm_("accesskey-test"	, init_accesskey);
 		Tfds.Eq(expd, String_.new_ascii_(wiki.Msg_mgr().Val_html_accesskey_and_title(ByteAry_.new_ascii_("test"))));
 	}
-	void new_msg_itm_(String key, String val) {
+	private void new_msg_itm_(String key, String val) {
 		Xol_msg_itm itm = wiki.Lang().Msg_mgr().Itm_by_key_or_new(ByteAry_.new_ascii_(key));
 		itm.Atrs_set(ByteAry_.new_ascii_(val), false, true);			
 	}

@@ -39,10 +39,10 @@ public class Xof_reg_fil_tbl {
 			Insert(stmt, id, ttl, status, orig_repo, orig_redirect, orig_ext, orig_w, orig_h);
 		}	finally {stmt.Rls();}
 	}
-	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_rf_id, Fld_rf_ttl, Fld_rf_status, Fld_rf_orig_repo, Fld_rf_orig_ext, Fld_rf_orig_w, Fld_rf_orig_h, Fld_rf_orig_redirect);}
+	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_rf_ttl, Fld_rf_status, Fld_rf_orig_repo, Fld_rf_orig_ext, Fld_rf_orig_w, Fld_rf_orig_h, Fld_rf_orig_redirect);}
 	public static void Insert(Db_stmt stmt, int id, byte[] ttl, byte status, byte orig_repo, byte[] orig_redirect, int orig_ext, int orig_w, int orig_h) {
 		stmt.Clear()
-		.Val_int_(id)
+//			.Val_int_(id)
 		.Val_str_by_bry_(ttl)
 		.Val_byte_(status)
 		.Val_byte_(orig_repo)

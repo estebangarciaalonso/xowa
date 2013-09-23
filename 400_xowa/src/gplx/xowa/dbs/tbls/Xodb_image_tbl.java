@@ -19,6 +19,7 @@ package gplx.xowa.dbs.tbls; import gplx.*; import gplx.xowa.*; import gplx.xowa.
 import gplx.dbs.*;
 public class Xodb_image_tbl {
 	public Xodb_image_tbl Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); return this;}
+	public Xodb_image_tbl Create_index(Db_provider p) {Sqlite_engine_.Idx_create(p, Idx_img_name); return this;}
 	public Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_img_name, Fld_img_size, Fld_img_width, Fld_img_height, Fld_img_bits);}
 	public void Insert(Db_stmt stmt, byte[] ttl, int size, int w, int h, int bits) {
 		stmt.Clear()
@@ -29,11 +30,25 @@ public class Xodb_image_tbl {
 		.Val_int_(bits)
 		.Exec_insert();
 	}
-	public static Db_stmt Select_ttl_stmt(Db_provider p) {return Db_stmt_.new_select_(p, Tbl_name, String_.Ary(""), Fld_img_name, Fld_img_size, Fld_img_width, Fld_img_height, Fld_img_bits);}
-	public static Object Select_ttl(Db_stmt stmt, String ttl) {
-		return stmt
-		.Val_str_(ttl)
-		.Exec_select();
+	public static Db_stmt Select_ttl_stmt(Db_provider p) {return Db_stmt_.new_select_(p, Tbl_name, String_.Ary(Fld_img_name), Fld_img_name, Fld_img_size, Fld_img_width, Fld_img_height, Fld_img_bits);}
+	public static Xodb_image_itm Select_itm(Db_stmt stmt, String ttl) {
+		DataRdr rdr = DataRdr_.Null;
+		try {
+			rdr = stmt.Val_str_(ttl).Exec_select();
+			return rdr.MoveNextPeer() ? load_(rdr) : Xodb_image_itm.Null;
+		}
+		finally {
+			rdr.Rls();
+		}
+	}
+	private static Xodb_image_itm load_(DataRdr rdr) {
+		Xodb_image_itm rv = new Xodb_image_itm();
+		rv.Name_(rdr.ReadBryByStr(Fld_img_name));
+		rv.Size_(rdr.ReadInt(Fld_img_size));
+		rv.Width_(rdr.ReadInt(Fld_img_width));
+		rv.Height_(rdr.ReadInt(Fld_img_height));
+		rv.Bits_(rdr.ReadByte(Fld_img_bits));
+		return rv;
 	}
 	public static final String Tbl_name = "image", Fld_img_name = "img_name", Fld_img_size = "img_size", Fld_img_width = "img_width", Fld_img_height = "img_height", Fld_img_bits = "img_bits";
 	private static final String Tbl_sql = String_.Concat_lines_nl
@@ -45,4 +60,7 @@ public class Xodb_image_tbl {
 	,	", img_bits        smallint        NOT NULL -- int(3)"
 	,	");"
 	);
+	private static final Db_idx_itm
+		Idx_img_name     	= Db_idx_itm.sql_("CREATE        INDEX IF NOT EXISTS image__img_name           ON image (img_name);")
+	;
 }

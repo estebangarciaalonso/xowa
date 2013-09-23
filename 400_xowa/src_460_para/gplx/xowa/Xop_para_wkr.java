@@ -43,7 +43,7 @@ public class Xop_para_wkr implements Xop_ctx_wkr {
 		}
 		this.Clear();
 	}
-	void Clear() {
+	private void Clear() {
 		cur_mode_(Mode_none);
 		para_stack = ParaStack_none;
 		prv_nl_pos = -1;
@@ -303,7 +303,7 @@ public class Xop_para_wkr implements Xop_ctx_wkr {
 		para_stack = ParaStack_none;
 		cur_mode = Mode_none;
 	}
-	void ParaStack_end(int cur_pos) {
+	private void ParaStack_end(int cur_pos) {
 		switch (para_stack) {
 			case ParaStack_none:	break;
 			case ParaStack_bgn:		prv_para.Para_end_(Xop_para_tkn.Para_typeId_none).Para_bgn_(Xop_para_tkn.Para_typeId_para); break;
@@ -338,12 +338,12 @@ public class Xop_para_wkr implements Xop_ctx_wkr {
 	}
 	public void Prv_nl_pos_(int v) {prv_nl_pos = v;}
 	public boolean Pre_at_line_bgn() {return pre_at_line_bgn;} private boolean pre_at_line_bgn = false;
-	void Dd_clear() {ctx.List().Dd_chk = false;}
+	private void Dd_clear() {ctx.List().Dd_chk = false;}
 	int prv_nl_pos = -1;
 	Xop_para_tkn prv_para = null;
 	public byte Cur_mode() {return cur_mode;}
 	byte cur_mode = Mode_none; int para_stack = ParaStack_none;
-	void cur_mode_(byte v) {cur_mode = v;}
+	private void cur_mode_(byte v) {cur_mode = v;}
 	static final int 
 		  ParaStack_none = 0	// false
 		, ParaStack_bgn  = 1	// <p>

@@ -44,6 +44,6 @@ public class Gfs_msg_bldr implements GfoMsgParser {
 		}			
 		return rv;
 	}
-        public static final Gfs_msg_bldr _ = new Gfs_msg_bldr(); Gfs_msg_bldr() {}
+	public static final Gfs_msg_bldr _ = new Gfs_msg_bldr(); Gfs_msg_bldr() {}
 	public static final String Tkn_mutator = "_";
 }

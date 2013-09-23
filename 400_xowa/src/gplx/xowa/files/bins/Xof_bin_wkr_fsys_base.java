@@ -22,7 +22,12 @@ public abstract class Xof_bin_wkr_fsys_base implements Xof_bin_wkr {
 	public Xof_url_bldr Url_bldr() {return url_bldr;} private Xof_url_bldr url_bldr;
 	public void Ctor(Xof_repo_itm repo, Xof_url_bldr url_bldr) {this.repo = repo; this.url_bldr = url_bldr;}
 	public abstract byte Bin_wkr_tid();
-	public boolean Bin_wkr_get(Xof_fsdb_itm itm, Io_url bin_url, boolean is_thumb, int w) {
+	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(Xof_fsdb_itm itm, boolean is_thumb, int w) {
+		byte mode = is_thumb ? Xof_repo_itm.Mode_thumb : Xof_repo_itm.Mode_orig;
+		Io_url src_url = this.Bin_wkr_get__src_url(mode, String_.new_utf8_(itm.Orig_wiki()), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), is_thumb, w, itm.Lnki_thumbtime());
+		return (src_url == Io_url_.Null) ? gplx.ios.Io_stream_rdr_.Null : gplx.ios.Io_stream_rdr_.file_(src_url);
+	}
+	public boolean Bin_wkr_get_to_url(Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
 		byte mode = is_thumb ? Xof_repo_itm.Mode_thumb : Xof_repo_itm.Mode_orig;
 		Io_url src_url = this.Bin_wkr_get__src_url(mode, String_.new_utf8_(itm.Orig_wiki()), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), is_thumb, w, itm.Lnki_thumbtime());
 		if (src_url == Io_url_.Null) return false;

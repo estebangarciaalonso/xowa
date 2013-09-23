@@ -20,14 +20,14 @@ import gplx.dbs.*;
 public class Xodb_search_title_word_tbl {
 	public static void Create_table(Db_provider p)						{Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
 	public static void Create_index(Gfo_usr_dlg usr_dlg, Db_provider p)	{Sqlite_engine_.Idx_create(usr_dlg, p, "search", Indexes_main);}
-	public Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_stw_word_id, Fld_stw_word);}
-	public void Insert(Db_stmt stmt, int word_id, byte[] word) {
+	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_stw_word_id, Fld_stw_word);}
+	public static void Insert(Db_stmt stmt, int word_id, byte[] word) {
 		stmt.Clear()
 		.Val_int_(word_id)
 		.Val_str_by_bry_(word)
 		.Exec_insert();
 	}	
-	public void Select_by_word(Cancelable cancelable, ListAdp rv, byte[] search, int results_max, Db_provider p) {
+	public static void Select_by_word(Cancelable cancelable, ListAdp rv, byte[] search, int results_max, Db_provider p) {
 		Db_qry_select qry = Db_qry_.select_()
 			.Cols_(Xodb_search_title_word_tbl.Fld_stw_word_id)
 			.From_(Xodb_search_title_word_tbl.Tbl_name, "w")

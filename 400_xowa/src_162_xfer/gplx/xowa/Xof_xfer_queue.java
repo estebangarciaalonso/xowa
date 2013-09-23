@@ -69,9 +69,21 @@ public class Xof_xfer_queue {
 		}
 		this.Clear();
 	}
-	public void Exec_fsdb(Xog_win_wtr wtr, Xow_wiki wiki) {
+	public void Exec1(Xog_win_wtr wtr, Xow_wiki wiki) {
 		wiki.File_mgr().Fsdb_mgr().Init_by_wiki(wiki);
-		wiki.File_mgr().Fsdb_mgr().Reg_select(wtr, gplx.xowa.files.fsdb.Xof_exec_tid.Tid_wiki_page, list);
+		wiki.File_mgr().Fsdb_mgr().Reg_select(wtr, gplx.xowa.files.fsdb.Xof_exec_tid.Tid_wiki_page, Xfer_itms_to_fsdb_itms(list));
+	}
+	private ListAdp Xfer_itms_to_fsdb_itms(ListAdp list) {
+		ListAdp rv = ListAdp_.new_();
+		int list_len = list.Count();
+		for (int i = 0; i < list_len; i++) {
+			Xof_xfer_itm xfer_itm = (Xof_xfer_itm)list.FetchAt(i);				
+			Xof_fsdb_itm fsdb_itm = new Xof_fsdb_itm();
+			fsdb_itm.Init_by_lnki(xfer_itm.Lnki_ttl(), xfer_itm.Lnki_ext(), xfer_itm.Lnki_md5(), xfer_itm.Lnki_type(), xfer_itm.Lnki_w(), xfer_itm.Lnki_h(), xfer_itm.Lnki_upright(), xfer_itm.Lnki_thumbtime());				
+			fsdb_itm.Html_ids_add(xfer_itm.Html_dynamic_id());
+			rv.Add(fsdb_itm);
+		}
+		return rv;
 	}
 	private static final String GRP_KEY = "xowa.xfer.queue";
 }

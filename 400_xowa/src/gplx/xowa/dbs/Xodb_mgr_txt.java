@@ -41,18 +41,22 @@ public class Xodb_mgr_txt implements Xodb_mgr {
 		}
 		return category_version;
 	}	byte category_version = Xoa_ctg_mgr.Version_null;
+	public byte Search_version() {return gplx.xowa.specials.search.Xosrh_core.Version_2;}
+	public void Search_version_refresh() {throw Err_.not_implemented_();}
 	public void Rls() {}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_data_storage_format))				return Xoi_dump_mgr.Wtr_tid_to_str(data_storage_format);
 		else if	(ctx.Match(k, Invk_data_storage_format_))				data_storage_format = Xoi_dump_mgr.Wtr_tid_parse(m.ReadStr("v"));
 		else if	(ctx.Match(k, Invk_category_version))					return this.Category_version();
 		else if	(ctx.Match(k, Invk_category_version_))					category_version = m.ReadByte("v");
+		else if	(ctx.Match(k, Invk_search_version))						return this.Search_version();
 		else if	(ctx.Match(k, Invk_tid_name))							return Tid_name();
 		return this;
 	}
 	public static final String
 	  Invk_data_storage_format = "data_storage_format", Invk_data_storage_format_ = "data_storage_format_"
 	, Invk_category_version = "category_version", Invk_category_version_ = "category_version_"
+	, Invk_search_version = "search_version"
 	, Invk_tid_name = "tid_name"
 	;
 }

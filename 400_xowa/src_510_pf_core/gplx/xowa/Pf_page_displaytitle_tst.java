@@ -21,5 +21,5 @@ public class Pf_page_displaytitle_tst {
 	@Before public void init() {fxt.Reset();} private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Basic()			{fxt.tst_Parse_tmpl_str_test("{{DISPLAYTITLE:a}}"			, "{{test}}", ""); tst_Display_ttl("a");}
 	@Test  public void Apos_italic()	{fxt.tst_Parse_tmpl_str_test("{{DISPLAYTITLE:''a''}}"		, "{{test}}", ""); tst_Display_ttl("<i>a</i>");}
-	void tst_Display_ttl(String expd) {Tfds.Eq(expd, String_.new_utf8_(fxt.Ctx().Tab().Display_ttl()));}
+	private void tst_Display_ttl(String expd) {Tfds.Eq(expd, String_.new_utf8_(fxt.Ctx().Tab().Display_ttl()));}
 }

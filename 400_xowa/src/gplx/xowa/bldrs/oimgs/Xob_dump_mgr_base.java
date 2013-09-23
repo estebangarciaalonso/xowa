@@ -21,7 +21,7 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 	private int commit_interval = 1000, progress_interval = 250, cleanup_interval = 2500;
 	private Xob_parse_all_db_sql page_src; private Xodb_xowa_cfg_tbl tbl_cfg;
 	private int[] ns_ary; private byte[] prv_ttl = ByteAry_.Empty; private int prv_ns = -1; private boolean prv_ns_dirty = false;
-	protected Xop_parser parser; protected Xop_ctx ctx; protected Xop_root_tkn root; private Xodb_file db_file;
+	protected Xop_parser parser; protected Xop_ctx ctx; protected Xop_root_tkn root;
 	@gplx.Virtual public String Cmd_key() {return KEY;} public static final String KEY = "parse.all";
 	public void Cmd_bgn(Xob_bldr bldr) {
 		parser = wiki.Parser();
@@ -33,13 +33,13 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 
 		page_src = new Xob_parse_all_db_sql().Init(wiki, 990, this.Init_redirect());
 		ns_ary = Init_ns_ary();						
-		db_file = Init_db_file();
-		tbl_cfg = new Xodb_xowa_cfg_tbl().Provider_(db_file.Provider());
+		Db_provider provider = Init_db_file();
+		tbl_cfg = new Xodb_xowa_cfg_tbl().Provider_(provider);
 		Init_bmk(tbl_cfg);
 	}
 	public abstract byte Init_redirect();
 	public abstract int[] Init_ns_ary();
-	public abstract Xodb_file Init_db_file();
+	public abstract Db_provider Init_db_file();
 	private void Init_bmk(Xodb_xowa_cfg_tbl tbl_cfg) {
 		String prv_ttl_str = tbl_cfg.Select_val("bldr.parse_all", "prv_ttl");
 		if (prv_ttl_str != null) {	// previous bmk found;
@@ -124,7 +124,7 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_end() {}
 	public void Cmd_print() {}		
-	void Free() {
+	private void Free() {
 		ctx.App().Free_mem(true);
 		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_invalidate();
 		Env_.GarbageCollect();

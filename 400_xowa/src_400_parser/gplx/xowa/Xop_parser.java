@@ -73,7 +73,7 @@ public class Xop_parser {
 		root.Root_src_(src);	// always set latest src; needed for Parse_all wherein src will first be raw and then parsed tmpl
 		Parse(root, ctx, tkn_mkr, src, Xop_parser_.Parse_tid_page_wiki, wiki_trie, doc_bgn_pos);
 	}
-	void Parse(Xop_root_tkn root, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, byte[] src, byte parse_type, ByteTrieMgr_fast trie, int doc_bgn_pos) {
+	private void Parse(Xop_root_tkn root, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, byte[] src, byte parse_type, ByteTrieMgr_fast trie, int doc_bgn_pos) {
 		int len = src.length; if (len == 0) return;	// nothing to parse;
 		ctx.Parse_tid_(parse_type);
 		int pos = doc_bgn_pos;

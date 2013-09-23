@@ -61,5 +61,5 @@ public class HierPosAryBldr_tst {
 		bldr.MoveNext();
 		tst_ary(0, 1);
 	}
-	void tst_ary(int... expd) {Tfds.Eq_ary(expd, bldr.XtoIntAry());}
+	private void tst_ary(int... expd) {Tfds.Eq_ary(expd, bldr.XtoIntAry());}
 }

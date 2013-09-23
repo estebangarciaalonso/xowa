@@ -45,7 +45,7 @@ class Pxd_parser {
 		Tokenize(src);
 		return Evaluate(errorBfr);
 	}
-	void Tokenize(byte[] src) { 
+	private void Tokenize(byte[] src) { 
 		this.src = src; src_len = src.length;
 		tkns = new Pxd_itm[src_len]; tkns_len = 0;		
 		tkn_type = Pxd_itm_.TypeId_null; tkn_bgn_pos = -1;
@@ -91,7 +91,7 @@ class Pxd_parser {
 		}
 		MakePrvTkn(cur_pos, Pxd_itm_.TypeId_null);
 	}
-	void MakePrvTkn(int cur_pos, int nxt_type) {
+	private void MakePrvTkn(int cur_pos, int nxt_type) {
 		Pxd_itm itm = null;
 		switch (tkn_type) {
 			case Pxd_itm_.TypeId_int:
@@ -139,7 +139,7 @@ class Pxd_parser {
 		}
 		return bldr.Bld();
 	}
-	void MakeDataAry() {
+	private void MakeDataAry() {
 		data_ary = new Pxd_itm[tkns_len]; data_ary_len = 0;
 		for (int i = 0; i < tkns_len; i++) {
 			Pxd_itm itm = tkns[i];

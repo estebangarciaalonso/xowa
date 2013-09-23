@@ -61,7 +61,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		else
 			return ttl.Full_txt();						// NOTE: include ns with ttl as per defect d88a87b3
 	}
-	void Fmt(Xoa_app app, Xow_wiki wiki, Xoh_wiki_article mgr, Xoa_page page, byte view_tid, ByteAryBfr bfr, ByteAryFmtr fmtr, Object page_data) {
+	private void Fmt(Xoa_app app, Xow_wiki wiki, Xoh_wiki_article mgr, Xoa_page page, byte view_tid, ByteAryBfr bfr, ByteAryFmtr fmtr, Object page_data) {
 		DateAdp page_modified_on_dte = page.Page_date();
 		byte[] page_modified_on_msg = page.Lang().Msg_mgr().Val_by_id_args(Xol_msg_itm_.Id_portal_lastmodified, tmp_bfr, page_modified_on_dte.XtoStr_fmt_yyyy_MM_dd(), page_modified_on_dte.XtoStr_fmt_HHmm());
 		byte[] html_content_editable = wiki.Gui_mgr().Cfg_browser().Content_editable() ? Content_editable_bry : ByteAry_.Empty;
@@ -185,7 +185,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 					? Render_tid_json : Render_tid_wikitext;
 		}
 	}	static final byte[] Ext_js = ByteAry_.new_ascii_(".js"), Ext_css = ByteAry_.new_ascii_(".css");
-	void Tidy(Xow_wiki wiki, ByteAryBfr bfr) {
+	private void Tidy(Xow_wiki wiki, ByteAryBfr bfr) {
 		Bry_bfr_mkr bfr_mkr = page.Wiki().App().Utl_bry_bfr_mkr();
 		ByteAryBfr tmp_src_bfr = bfr_mkr.Get_m001();
 		ByteAryBfr tmp_trg_bfr = bfr_mkr.Get_m001();

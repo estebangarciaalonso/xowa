@@ -46,7 +46,7 @@ public class Gfo_usr_dlg_base implements Gfo_usr_dlg {
 	String Bld_msg_none(String grp_key, String msg_key, String fmt) {
 		return fmt;
 	}
-	void Ui_wkr_parse(String s) {
+	private void Ui_wkr_parse(String s) {
 		if		(String_.Eq(s, "null"))			ui_wkr = Gfo_usr_dlg_ui_.Null;
 		else									throw Err_.unhandled(s);
 	}

@@ -123,36 +123,6 @@ public class Php_parser_tst {
 	@Test  public void Line_brack() {
 		fxt.tst_lines("$a['b'] = 'c';", fxt.line_assign_subs("a", String_.Ary("b"), fxt.itm_quote("c")));
 	}
-	void LoadMsg(Io_url fil) {
-		String raw = Io_mgr._.LoadFilStr(fil);
-//		String raw =
-//			"$a = array('ymd');\n" +
-//			"$dateFormats = array('mdy time' => 'H:i');\n" + 
-//			""
-//				;
-		byte[] raw_bry = ByteAry_.new_utf8_(raw);
-		Php_parser parser = new Php_parser();
-		Php_evaluator line_wkr = new Php_evaluator(new Gfo_msg_log("gplx.php")); 
-		parser.Parse_tkns(raw_bry, line_wkr);
-		Php_line[] actl = (Php_line[])line_wkr.List().XtoAry(Php_line.class);
-		int actl_len = actl.length;
-		boolean has = false;
-		for (int i = 0; i < actl_len; i++) {
-			Php_line_assign line = (Php_line_assign)actl[i];
-			String key = String_.new_utf8_(line.Key().Val_obj_bry());
-			if (String_.Eq(key, "messages")) {
-				has = true;
-			}
-			if (line.Val() == null) {
-				Tfds.Write(key);
-			}
-//			Tfds.Write(key);
-		}
-		if (!has) {
-			Tfds.Write(fil.Raw());
-//			Tfds.Write(fil.Raw() + "\n" + raw);
-		}		
-	}
 }
 class Php_parser_fxt {
 	Php_tkn_factory tkn_factory = new Php_tkn_factory();

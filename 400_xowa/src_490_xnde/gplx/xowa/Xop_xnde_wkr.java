@@ -361,7 +361,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		}
 		return false;
 	}
-	void Tblw_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, int tagId, int atrs_bgn, int atrs_end) {
+	private void Tblw_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, int tagId, int atrs_bgn, int atrs_end) {
 		byte wlxr_type = 0;
 		switch (tagId) {
 			case Xop_xnde_tag_.Tid_table:	wlxr_type = Xop_tblw_wkr.Tblw_type_tb; break;
@@ -372,7 +372,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		}
 		ctx.Tblw().MakeTkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, false, true, atrs_bgn, atrs_end);
 	}
-	void Tblw_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, int tagId) {
+	private void Tblw_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, int tagId) {
 		int typeId = 0;
 		byte wlxr_type = 0;
 		switch (tagId) {
@@ -453,7 +453,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		ctx.Msg_log().Add_itm_none(Xop_xnde_log.Escaped_xnde, src, bgn_pos, cur_pos - 1);
 		return cur_pos;
 	}
-	void EndTag(Xop_ctx ctx, Xop_root_tkn root, Xop_xnde_tkn bgn_nde, byte[] src, int src_len, int bgn_pos, int cur_pos, int tagId, boolean pop, Xop_xnde_tag endTag) {
+	private void EndTag(Xop_ctx ctx, Xop_root_tkn root, Xop_xnde_tkn bgn_nde, byte[] src, int src_len, int bgn_pos, int cur_pos, int tagId, boolean pop, Xop_xnde_tag endTag) {
 		bgn_nde.Src_end_(cur_pos);
 		bgn_nde.CloseMode_(Xop_xnde_tkn.CloseMode_pair);
 		bgn_nde.Tag_close_rng_(bgn_pos, cur_pos);
@@ -585,9 +585,16 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 					case Xop_xnde_tag_.Tid_languages:				xnde_data = tkn_mkr.Languages(); break;
 					case Xop_xnde_tag_.Tid_templateData:			xnde_data = tkn_mkr.TemplateData(); break;
 				}
-				if (xnde_data != null) { 
-					xnde_data.Xtn_compile(ctx, ctx.Wiki(), tkn_mkr, src, xnde);
-					xnde.Xnde_data_(xnde_data);
+				if (xnde_data != null) {
+					try {
+						xnde.Xnde_data_(xnde_data);	// NOTE: must set xnde_data, else null ref (html_wtr expects non-null nde)
+						xnde_data.Xtn_compile(ctx, ctx.Wiki(), tkn_mkr, src, xnde);
+					}
+					catch (Exception e) {
+						ctx.Wiki().App().Usr_dlg().Warn_many("", "", "failed to render extension: title=~{0} excerpt=~{1} err=~{2}", String_.new_utf8_(ctx.Page().Page_ttl().Full_txt())
+							, String_.new_utf8_(src, xnde.Tag_open_end(), xnde.Tag_close_bgn())
+							, Err_.Message_gplx_brief(e));
+					}
 				}
 				break;
 			}

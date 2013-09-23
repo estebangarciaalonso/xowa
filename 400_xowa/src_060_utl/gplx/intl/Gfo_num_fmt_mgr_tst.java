@@ -94,9 +94,9 @@ public class Gfo_num_fmt_mgr_tst {
 	}
 	Gfo_num_fmt_grp dat_(String dlm, int digits)				{return new Gfo_num_fmt_grp(ByteAry_.new_utf8_(dlm), digits, true);}
 	Gfo_num_fmt_grp dat_(String dlm, int digits, boolean repeat)	{return new Gfo_num_fmt_grp(ByteAry_.new_utf8_(dlm), digits, repeat);}
-	void tst_Fmt(String val, String expd) {Tfds.Eq(expd, String_.new_utf8_(mgr.Fmt(ByteAry_.new_utf8_(val))));}
-	void tst_Raw(String val, String expd) {Tfds.Eq(expd, String_.new_utf8_(mgr.Raw(ByteAry_.new_utf8_(val))));}
-	void ini_(String dec_dlm, Gfo_num_fmt_grp... ary) {
+	private void tst_Fmt(String val, String expd) {Tfds.Eq(expd, String_.new_utf8_(mgr.Fmt(ByteAry_.new_utf8_(val))));}
+	private void tst_Raw(String val, String expd) {Tfds.Eq(expd, String_.new_utf8_(mgr.Raw(ByteAry_.new_utf8_(val))));}
+	private void ini_(String dec_dlm, Gfo_num_fmt_grp... ary) {
 		mgr.Dec_dlm_(ByteAry_.new_utf8_(dec_dlm));
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++)

@@ -39,5 +39,5 @@ public class Xodb_category_itm {
 		rv.count_subcs = count_subcs;  rv.count_files = count_files; rv.count_pages = count_pages;
 		return rv;
 	}
-        public static final Xodb_category_itm Null = new Xodb_category_itm(); Xodb_category_itm() {}
+	public static final Xodb_category_itm Null = new Xodb_category_itm(); Xodb_category_itm() {}
 }

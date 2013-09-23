@@ -39,7 +39,7 @@ public class Xowc_xtn_pages implements GfoInvkAble {
 		else return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}	private static final String Invk_ns_names_ = "ns_names_";
-	void Ns_names_(byte[] page_name, byte[] page_talk_name, byte[] index_name, byte[] index_talk_name) {
+	private void Ns_names_(byte[] page_name, byte[] page_talk_name, byte[] index_name, byte[] index_talk_name) {
 		this.page_name = page_name; this.page_talk_name = page_talk_name; this.index_name = index_name; this.index_talk_name = index_talk_name;
 	}	byte[] page_name = ByteAry_.new_ascii_("Page"), page_talk_name = ByteAry_.new_ascii_("Page_talk"), index_name = ByteAry_.new_ascii_("Index"), index_talk_name = ByteAry_.new_ascii_("Index_talk");	// NOTE: default to en
 	public static final byte[] Key_pages = ByteAry_.new_ascii_("pages");

@@ -30,7 +30,7 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 	ByteAryFmtr div_wikis_fmtr = ByteAryFmtr.new_("");
 	public ByteAryFmtr Div_home_fmtr() {return div_home_fmtr;} ByteAryFmtr div_home_fmtr = ByteAryFmtr.new_("");
 	public Xowh_portal_mgr Init_assert() {if (init_needed) Init(); return this;}
-	void Init() {
+	private void Init() {
 		init_needed = false;
 		if (missing_ns_cls == null)	// if missing_ns_cls not set for wiki, use the home wiki's
 			Missing_ns_cls_(wiki.App().User().Wiki().Html_mgr().Portal_mgr().Missing_ns_cls());

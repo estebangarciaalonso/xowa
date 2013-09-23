@@ -33,7 +33,7 @@ public class Xoa_xowa_exec_wdata_labels_tst {
 		Tst_wikidata_label_get(String_.Ary("xowa_ui_lang", "q1"), String_.Ary("en_q1"));
 		Tst_wikidata_label_get(String_.Ary("fr;de", "q1"), String_.Ary("de_q1"));
 	}
-	void Tst_wikidata_label_get(String[] args, String[] expd) {
+	private void Tst_wikidata_label_get(String[] args, String[] expd) {
 		Xoa_xowa_exec exec = fxt.App().Gui_mgr().Main_win().Js_cbk();
 		GfoMsg msg = GfoMsg_.new_cast_(Xoa_xowa_exec.Invk_wikidata_get_label);
 		int args_len = args.length;

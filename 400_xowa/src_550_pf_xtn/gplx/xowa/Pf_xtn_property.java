@@ -20,5 +20,5 @@ class Pf_xtn_property extends Pf_func_base {
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {}	// NOOP: MW uses to save coordinates for API retrieval
 	@Override public int Id() {return Xol_kwd_grp_.Id_xtn_geodata_coordinates;}
 	@Override public Pf_func New(int id, byte[] name) {return new Pf_xtn_property().Name_(name);}
-        public static final Pf_xtn_property _ = new Pf_xtn_property(); Pf_xtn_property() {}
+	public static final Pf_xtn_property _ = new Pf_xtn_property(); Pf_xtn_property() {}
 }

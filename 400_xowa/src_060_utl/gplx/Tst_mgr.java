@@ -45,7 +45,7 @@ public class Tst_mgr {
 		results.Clear();
 		Tst_ary_inner(ownerPath, expd_ary, actl_ary);
 	}
-	void Tst_ary_inner(String ownerPath, Tst_chkr[] expd_ary, Object[] actl_ary) {
+	private void Tst_ary_inner(String ownerPath, Tst_chkr[] expd_ary, Object[] actl_ary) {
 		int expd_ary_len = expd_ary.length, actl_ary_len = actl_ary.length;
 		int max_len = expd_ary_len > actl_ary_len ? expd_ary_len : actl_ary_len;
 		int err = 0;

@@ -63,11 +63,11 @@ abstract class Xoi_cmd_base implements Gfo_thread_cmd {
 		return this;
 	}	private static final String Invk_process_async = "run_async", Invk_owner = "owner";
 }
-class Xoi_cmd_category2_download_page_props extends Xoi_cmd_wiki_download {	public Xoi_cmd_category2_download_page_props(Xoi_setup_mgr install_mgr, String wiki_key, String dump_date) {this.Ctor_download_(install_mgr, wiki_key, dump_date, Xob_bz2_file.Key_page_props);}
+class Xoi_cmd_category2_page_props extends Xoi_cmd_wiki_download {	public Xoi_cmd_category2_page_props(Xoi_setup_mgr install_mgr, String wiki_key, String dump_date) {this.Ctor_download_(install_mgr, wiki_key, dump_date, Xob_bz2_file.Key_page_props);}
 	@Override public String Download_file_ext() {return ".sql";}
 	public static final String KEY_category2 = "wiki.category2.download.page_props";
 }
-class Xoi_cmd_category2_download_categorylinks extends Xoi_cmd_wiki_download {	public Xoi_cmd_category2_download_categorylinks(Xoi_setup_mgr install_mgr, String wiki_key, String dump_date) {this.Ctor_download_(install_mgr, wiki_key, dump_date, Xob_bz2_file.Key_categorylinks);}
+class Xoi_cmd_category2_categorylinks extends Xoi_cmd_wiki_download {	public Xoi_cmd_category2_categorylinks(Xoi_setup_mgr install_mgr, String wiki_key, String dump_date) {this.Ctor_download_(install_mgr, wiki_key, dump_date, Xob_bz2_file.Key_categorylinks);}
 	@Override public String Download_file_ext() {return ".sql";}
 	public static final String KEY_category2 = "wiki.category2.download.categorylinks";
 }
@@ -89,5 +89,18 @@ class Xoi_cmd_category2_build extends Xoi_cmd_base {
 	@Override public void Process_async_done(Xoa_app app, Xow_wiki wiki, Xob_bldr bldr) {
 		app.Gui_wtr().Prog_many("", "", "category2 setup done");
 	}
-
+}
+class Xoi_cmd_search2_build extends Xoi_cmd_base {
+	public Xoi_cmd_search2_build(Xoi_setup_mgr install_mgr, String wiki_key) {this.Ctor(install_mgr, wiki_key);}
+	@Override public String Async_key() {return KEY;} public static final String KEY = "wiki.search2.build";
+	@Override public void Process_async_init(Xoa_app app, Xow_wiki wiki, Xob_bldr bldr) {
+		if (app.Setup_mgr().Dump_mgr().Wiki_storage_type_is_sql()) {
+			wiki.Db_mgr_as_sql().Category_version_update(false);
+			bldr.Cmd_mgr().Add_many(wiki, "import.sql.search_title.cmd");
+		}
+	}
+	@Override public void Process_async_done(Xoa_app app, Xow_wiki wiki, Xob_bldr bldr) {
+		app.Gui_wtr().Prog_many("", "", "search2 setup done");
+		wiki.Db_mgr().Search_version_refresh();
+	}
 }

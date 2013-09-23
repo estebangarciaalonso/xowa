@@ -20,8 +20,8 @@ import gplx.dbs.*;
 public class Xodb_search_title_page_tbl {
 	public static void Create_table(Db_provider p)						{Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
 	public static void Create_index(Gfo_usr_dlg usr_dlg, Db_provider p)	{Sqlite_engine_.Idx_create(usr_dlg, p, "search", Indexes_main);}
-	public Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_stp_word_id, Fld_stp_page_id);}
-	public void Insert(Db_stmt stmt, int word_id, int page_id) {
+	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_stp_word_id, Fld_stp_page_id);}
+	public static void Insert(Db_stmt stmt, int word_id, int page_id) {
 		stmt.Clear()
 		.Val_int_(word_id)
 		.Val_int_(page_id)

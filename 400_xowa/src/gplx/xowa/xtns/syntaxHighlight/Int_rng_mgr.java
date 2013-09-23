@@ -23,7 +23,7 @@ public interface Int_rng_mgr {
 class Int_rng_mgr_null implements Int_rng_mgr {
 	public boolean Match(int v) {return false;}
 	public boolean Parse(byte[] src) {return false;}
-        public static final Int_rng_mgr_null _ = new Int_rng_mgr_null(); Int_rng_mgr_null() {}
+	public static final Int_rng_mgr_null _ = new Int_rng_mgr_null(); Int_rng_mgr_null() {}
 }
 class Int_rng_mgr_base implements Int_rng_mgr {
 	private ListAdp itms = ListAdp_.new_();

@@ -43,6 +43,7 @@ public abstract class IoEngine_base implements IoEngine {
 	public abstract IoItmDir	QueryDirDeep(IoEngine_xrg_queryDir args);
 	public abstract void		XferDir(IoEngine_xrg_xferDir args);
 	public abstract boolean		DownloadFil(IoEngine_xrg_downloadFil xrg);
+	public abstract Io_stream_rdr DownloadFil_as_rdr(IoEngine_xrg_downloadFil xrg);
 
 	public void RecycleFil(IoEngine_xrg_recycleFil xrg) {
 		Io_url recycleUrl = xrg.RecycleUrl();

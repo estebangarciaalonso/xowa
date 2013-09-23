@@ -75,7 +75,7 @@ public class Xop_imageMap_xnde implements Xop_xnde_xtn {
 			++cur_pos;
 		}
 	}	boolean first = true;
-	void ParseLine(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, Xop_xnde_tkn xnde, int nl_0_pos, int nl_1_pos) {
+	private void ParseLine(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, Xop_xnde_tkn xnde, int nl_0_pos, int nl_1_pos) {
 		int line_len = nl_1_pos - nl_0_pos; 
 		if (line_len == 0 || src[nl_0_pos + 1] == Byte_ascii.Hash) return;
 		if (first) {

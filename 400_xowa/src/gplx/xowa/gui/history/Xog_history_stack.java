@@ -26,17 +26,19 @@ class Xog_history_stack {
 		byte[] wiki_key = page.Wiki().Domain_bry();
 		byte[] page_key = page.Page_ttl().Full_url();	// get page_name only (no anchor; no query args)
 		byte[] anch_key = page.Url().Anchor_bry();
+		byte[] qarg_key = page.Url().Args_all_as_bry();
 		byte[] redirect_force = page.Url().Redirect_force() ? Bool_.Y_bry : Bool_.N_bry;
-		byte[] key = Xog_history_itm.Build_key(wiki_key, page_key, anch_key, redirect_force);
+		byte[] key = Xog_history_itm.Build_key(wiki_key, page_key, anch_key, qarg_key, redirect_force);
 		Xog_history_itm cur_itm = this.Cur_itm(); 
 		if (	cur_itm != Xog_history_itm.Null
 			&&	ByteAry_.Eq(wiki_key, cur_itm.Wiki_key())	// do not add if last itm is same;
 			&&	ByteAry_.Eq(page_key, cur_itm.Page_key())
 			&&	ByteAry_.Eq(anch_key, cur_itm.Anch_key())
+			&&	ByteAry_.Eq(qarg_key, cur_itm.Qarg_key())
 			&&	ByteAry_.Eq(redirect_force, cur_itm.Redirect_force())
 			)
 			return Xog_history_itm.Null;
-		Xog_history_itm itm = new Xog_history_itm(key, wiki_key, page_key, anch_key, redirect_force, page.DocPos());
+		Xog_history_itm itm = new Xog_history_itm(key, wiki_key, page_key, anch_key, qarg_key, redirect_force, page.DocPos());
 		itm.Display_ttl_(page.Wiki().Ctx().Tab().Display_ttl());
 		Del_all_from(list_pos + 1);
 		list.Add(itm);

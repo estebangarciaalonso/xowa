@@ -36,6 +36,11 @@ public class Xou_history_mgr_tst {
 		fxt.Add_many("Category:A_B", "Category:A B", "Category:a B", "Category:_A B_");
 		fxt.List_tst("Category:A B");
 	}
+	@Test   public void Args() {
+		fxt.Clear();
+		fxt.Add_one("Special:AllPages", "?from=A");
+		fxt.List_tst("Special:AllPages?from=A");
+	}
 }
 class Xou_history_mgr_fxt {
 	Xoa_app app; Xow_wiki wiki;
@@ -53,12 +58,22 @@ class Xou_history_mgr_fxt {
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++) {
 			String itm = ary[i];
-			byte[] itm_bry = ByteAry_.new_utf8_(itm);
-			Xoa_ttl ttl = Xoa_ttl.parse_(wiki, itm_bry);
-			Xoa_page page = new Xoa_page(wiki, ttl);
-			page.Url_(Xoa_url.new_(wiki.Key_bry(), itm_bry));  // set url b/c history_mgr.Add uses url
-			under.Add(page);
+			Add_one(itm, null);
 		}
+		return this;
+	}
+	public Xou_history_mgr_fxt Add_one(String ttl_str, String arg_str) {
+		byte[] ttl_bry = ByteAry_.new_utf8_(ttl_str);
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
+		Xoa_page page = new Xoa_page(wiki, ttl);
+		byte[] url_bry = ttl_bry;
+		if (arg_str != null) url_bry = ByteAry_.Add(url_bry, ByteAry_.new_utf8_(arg_str));
+		Xoa_url url = new Xoa_url();
+		app.Url_parser().Parse(url, url_bry);
+		url.Wiki_bry_(wiki.Key_bry());
+		page.Url_(url);  // set url b/c history_mgr.Add uses url
+//			page.Url_(Xoa_url.new_(wiki.Key_bry(), url_bry));  // set url b/c history_mgr.Add uses url
+		under.Add(page);
 		return this;
 	}
 	public Xou_history_mgr_fxt List_tst(String... expd) {

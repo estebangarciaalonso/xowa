@@ -122,7 +122,7 @@ class Xoi_cmd_wiki_image_cfg extends Gfo_thread_cmd_replace implements Gfo_threa
 class Xoi_cmd_wiki_goto_page extends Gfo_thread_cmd_base implements Gfo_thread_cmd {
 	public Xoi_cmd_wiki_goto_page(Xoa_app app, String page) {this.app = app; this.page = page; this.Ctor(app.Usr_dlg(), app.Gui_mgr().Kit());} private Xoa_app app; String page;
 	@Override public void Async_run()	{kit.New_cmd_sync(this).Invk(GfsCtx.new_(), 0, Invk_goto_page, GfoMsg_.Null);}
-	void Goto_page(String page)			{app.Gui_mgr().Main_win().Exec_url_exec(page);}
+	private void Goto_page(String page)			{app.Gui_mgr().Main_win().Exec_url_exec(page);}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_goto_page))				Goto_page(page);
 		else	return super.Invk(ctx, ikey, k, m);
@@ -202,7 +202,7 @@ class Xoi_cmd_wiki_zip implements Gfo_thread_cmd {
 		return running;
 	}
 	boolean running, delete_dirs_page = true, notify_done = true;
-	void Process_async() {
+	private void Process_async() {
 		Xoa_app app = install_mgr.App();
 		Xob_bldr bldr = app.Bldr();
 		wiki = app.Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_(wiki_key));

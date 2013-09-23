@@ -23,7 +23,7 @@ public class Xol_lnki_trail_mgr implements GfoInvkAble {
 	public ByteTrieMgr_slim Trie() {return trie;} ByteTrieMgr_slim trie = ByteTrieMgr_slim.cs_();
 	public void Add(byte[] v) {trie.Add(v, v);}
 	public void Del(byte[] v) {trie.Del(v);}
-	void Add(String... ary) {
+	private void Add(String... ary) {
 		for (String itm_str : ary) {
 			byte[] itm = ByteAry_.new_utf8_(itm_str);
 			trie.Add(itm, itm);
@@ -37,7 +37,7 @@ public class Xol_lnki_trail_mgr implements GfoInvkAble {
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}	private static final String Invk_add_many = "add_many", Invk_add_range = "add_range", Invk_add_bulk = "add_bulk", Invk_clear = "clear";
-	void Add_bulk(GfoMsg m) {byte[] src = m.ReadBry("bulk"); Add_bulk(src);}
+	private void Add_bulk(GfoMsg m) {byte[] src = m.ReadBry("bulk"); Add_bulk(src);}
 	public void Add_bulk(byte[] src) {
 		int pos = 0, src_len = src.length;
 		while (true) {
@@ -47,14 +47,14 @@ public class Xol_lnki_trail_mgr implements GfoInvkAble {
 			if (pos >= src_len) break;
 		}
 	}
-	void Add_many(GfoMsg m) {
+	private void Add_many(GfoMsg m) {
 		int len = m.Args_count();
 		for (int i = 0; i < len; i++) {
 			KeyVal kv = m.Args_getAt(i);
 			Add(kv.Val_to_str_or_empty());
 		}
 	}
-	void Add_range(GfoMsg m) {
+	private void Add_range(GfoMsg m) {
 		byte bgn = Add_rng_extract(m, "bgn");
 		byte end = Add_rng_extract(m, "end");
 		for (byte i = bgn; i <= end; i++)

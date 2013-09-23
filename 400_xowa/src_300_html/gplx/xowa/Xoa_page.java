@@ -90,7 +90,7 @@ public class Xoa_page {
 		hdr.Hdr_toc_text_(gplx.xowa.html.tocs.Xop_toc_mgr.Toc_text(this, src, hdr));
 		raw_bfr.Mkr_rls(); enc_bfr.Mkr_rls();
 	}
-	void Hdrs_id_bld_recurse(ByteAryBfr raw_bfr, byte[] src, Xop_tkn_itm tkn) {
+	private void Hdrs_id_bld_recurse(ByteAryBfr raw_bfr, byte[] src, Xop_tkn_itm tkn) {
 		boolean txt_seen = false; int ws_pending = 0;
 		int subs_len = tkn.Subs_len();
 		for (int i = 0; i < subs_len; i++) {

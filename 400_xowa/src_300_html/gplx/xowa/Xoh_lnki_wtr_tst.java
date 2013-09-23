@@ -306,7 +306,7 @@ public class Xoh_lnki_wtr_tst {
 	@Test   public void Href_anchor_leading_space_ns_lc() {	// PURPOSE: same as above but with lc title
 		fxt.tst_Parse_page_all_str("[[Help:a #b]]", "<a href=\"/wiki/Help:A#b\">Help:A #b</a>");
 	}
-	void Tst_img_title(String raw, String expd_ttl) {
+	private void Tst_img_title(String raw, String expd_ttl) {
 		String actl = fxt.Parse_page_wiki_str(raw);
 		String actl_ttl = null;
 		int title_bgn = String_.FindFwd(actl, " title=\"");

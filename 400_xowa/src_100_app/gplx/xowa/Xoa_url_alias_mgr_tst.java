@@ -25,7 +25,7 @@ public class Xoa_url_alias_mgr_tst {
 		,	"d|en.wiktionary.org/wiki/~{0}"
 		), 	KeyVal_.new_("w:Earth", "en.wikipedia.org/wiki/Earth"), KeyVal_.new_("d:Earth", "en.wiktionary.org/wiki/Earth"), KeyVal_.new_("x:Earth", null));
 	}
-	void Add_bulk_tst(String raw_str, KeyVal... expd_ary) {
+	private void Add_bulk_tst(String raw_str, KeyVal... expd_ary) {
 		Xoa_app app = Xoa_app_fxt.app_();
 		Xoa_url_alias_mgr mgr = new Xoa_url_alias_mgr(app);
 		byte[] raw_bry = ByteAry_.new_ascii_(raw_str);

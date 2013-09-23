@@ -83,13 +83,13 @@ public class Xob_categorylinks_sql_make implements Io_make_cmd {
 		cur_cat_ttl = new_ctg_ttl;
 		return cur_cat_id;
 	}
-	void File_open(Xodb_file file) {
+	private void File_open(Xodb_file file) {
 		cl_provider = file.Provider();
 		cl_stmt = db_mgr.Tbl_categorylinks().Insert_stmt(cl_provider);
 		cl_provider.Txn_mgr().Txn_bgn_if_none();
 		cur_cat_file_idx = file.Id();
 	}
-	void File_close() {
+	private void File_close() {
 		cl_provider.Txn_mgr().Txn_end_all();
 		if (first_provider) {
 			cat_provider.Txn_mgr().Txn_bgn_if_none();

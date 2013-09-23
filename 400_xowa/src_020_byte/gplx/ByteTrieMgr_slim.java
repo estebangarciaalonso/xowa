@@ -182,7 +182,7 @@ class ByteHashItm_sorter {// quicksort
 		this.ary_len = ary_len;
 		Sort_recurse(0, ary_len - 1);
 	}
-	void Sort_recurse(int lo, int hi) {
+	private void Sort_recurse(int lo, int hi) {
 		int i = lo, j = hi;			
 		int mid = ary[lo + (hi-lo)/2].Key_byte()& 0xFF;				// get mid itm
 		while (i <= j) {											// divide into two lists

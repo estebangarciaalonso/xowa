@@ -38,7 +38,7 @@ public class Xoa_cfg_mgr implements GfoInvkAble {
 	public void Set_by_app(String grp_key, String val)				{Set(ByteAry_.new_utf8_(grp_key), Xoa_cfg_grp_tid.Key_app_bry, val);}
 	public void Set_by_all(String grp_key, String val)				{Set(ByteAry_.new_utf8_(grp_key), Xoa_cfg_grp_tid.Key_all_bry, val);}
 	public void Set_by_type(String grp_key, byte tid, String val)	{Set(ByteAry_.new_utf8_(grp_key), Xow_wiki_type_.Name_by_tid(tid), val);}
-	void Set(byte[] grp_key, byte[] tid_key, String val) {
+	private void Set(byte[] grp_key, byte[] tid_key, String val) {
 		Xoa_cfg_itm itm = Get_itm_or_make(grp_key, tid_key);
 		itm.Val_(val);
 	}

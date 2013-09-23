@@ -37,9 +37,9 @@ public class Xol_grammar_ {
 }
 class Xol_grammar__unimplemented implements Xol_grammar {
 	public boolean Grammar_eval(ByteAryBfr bfr, Xol_lang lang, byte[] word, byte[] type) {return false;}
-        public static final Xol_grammar__unimplemented _ = new Xol_grammar__unimplemented(); Xol_grammar__unimplemented() {}
+	public static final Xol_grammar__unimplemented _ = new Xol_grammar__unimplemented(); Xol_grammar__unimplemented() {}
 }
 class Xol_grammar__noop implements Xol_grammar {
 	public boolean Grammar_eval(ByteAryBfr bfr, Xol_lang lang, byte[] word, byte[] type) {bfr.Add(word); return true;}
-        public static final Xol_grammar__noop _ = new Xol_grammar__noop(); Xol_grammar__noop() {}
+	public static final Xol_grammar__noop _ = new Xol_grammar__noop(); Xol_grammar__noop() {}
 }

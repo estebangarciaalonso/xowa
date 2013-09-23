@@ -48,7 +48,7 @@ public class Gfs_bldr {
 	public Gfs_bldr Add_quote_xtn_end()			{bfr.Add(Bry_xquote_end); return this;}
 	public Gfs_bldr Add_quote_0()				{bfr.Add_byte(Byte_ascii.Apos); return this;}
 	public Gfs_bldr Add_term_nl()				{bfr.Add_byte(Byte_ascii.Semic).Add_byte(Byte_ascii.NewLine); return this;}
-	void Add_str_escape_apos(ByteAryBfr bfr, byte[] src) {
+	private void Add_str_escape_apos(ByteAryBfr bfr, byte[] src) {
 		int len = src.length;
 		for (int i = 0; i < len; i++) {
 			byte b = src[i];

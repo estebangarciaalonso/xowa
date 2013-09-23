@@ -70,7 +70,7 @@ public class Xoh_lnki_wtr {
 	}
 	Xop_link_parser tmp_link_parser = new Xop_link_parser();
 	Xohp_title_wkr anchor_title_wkr = new Xohp_title_wkr();
-	void Write_media(ByteAryBfr bfr, byte[] src, Xoh_opts opts, Xop_lnki_tkn lnki, int depth, Xof_xfer_itm xfer_itm) {
+	private void Write_media(ByteAryBfr bfr, byte[] src, Xoh_opts opts, Xop_lnki_tkn lnki, int depth, Xof_xfer_itm xfer_itm) {
 		lnki_title_enabled = html_wtr.Hctx().Lnki_title();
 		int elem_id = xfer_itm.Html_dynamic_id();
 		int div_width = xfer_itm.Html_w();

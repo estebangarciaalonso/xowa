@@ -131,7 +131,7 @@ class Xob_text_stmts_mgr {
 		else
 			return fsys_mgr.Get_or_make(Xodb_file.Tid_text, file_idx);
 	}
-	void Add(Db_stmt stmt, int stmt_idx) {
+	private void Add(Db_stmt stmt, int stmt_idx) {
 		int new_len = stmt_idx + 1;
 		if (new_len > text_stmts_max) {	// ary too small >>> expand
 			text_stmts_max = new_len * 2;

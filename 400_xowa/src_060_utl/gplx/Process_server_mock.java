@@ -60,7 +60,7 @@ class Process_server_mock_rcvd_val implements Process_server_mock_rcvd {
 		tmp_bfr.Add(Bry_rv_bgn).Add_int_variable(values_str.length).Add(Bry_rv_mid).Add(values_str).Add(Bry_rv_end);
 		return tmp_bfr.XtoStrAndClear();
 	}
-	void Bld_recursive(ByteAryBfr bfr, int depth, KeyVal[] ary) {
+	private void Bld_recursive(ByteAryBfr bfr, int depth, KeyVal[] ary) {
 		int len = ary.length;
 		for (int i = 0; i < len; i++) {
 			if (i != 0) bfr.Add_byte(Byte_ascii.Semic);

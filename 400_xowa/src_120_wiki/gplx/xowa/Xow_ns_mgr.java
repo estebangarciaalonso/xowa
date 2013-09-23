@@ -53,7 +53,7 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 		}
 		return rv;
 	}
-	void Hash_rebuild() {
+	private void Hash_rebuild() {
 		name_hash.Clear(); tmpl_hash.Clear();
 		for (int i = 0; i < ords_len; i++) {
 			Xow_ns ns = ords[i];
@@ -76,14 +76,14 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 			}
 		}
 	}
-	void Project_talk_fix(Xow_ns ns) {
+	private void Project_talk_fix(Xow_ns ns) {
 		byte[] ns_name = ns.Name_bry();
 		if (ByteAry_.FindFwd(ns.Name_bry(), Project_talk_fmt_arg)== ByteAry_.NotFound) return; // no $1 found; exit
 		Xow_ns project_ns = ords[ns.Ord_subj_id()];
 		if (project_ns == null) return;	// should warn or throw error; for now just exit
 		ns.Name_bry_(ByteAry_.Replace(ns_name, Project_talk_fmt_arg, project_ns.Name_bry()));
 	}	static final byte[] Project_talk_fmt_arg = ByteAry_.new_ascii_("$1");
-	void Hash_rebuild_add_itm(Hash_adp_bry hash, Xow_ns ns, byte[] key) {
+	private void Hash_rebuild_add_itm(Hash_adp_bry hash, Xow_ns ns, byte[] key) {
 		Xow_ns_mgr_name_itm ns_itm = new Xow_ns_mgr_name_itm(key, ns);
 		hash.AddReplace(key, ns_itm);
 		if (ByteAry_.FindFwd(key, Byte_ascii.Underline) != ByteAry_.NotFound)	// ns has _; add another entry for space; EX: Help_talk -> Help talk
@@ -207,7 +207,7 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 		Hash_rebuild();
 		return this;
 	}
-	void Ords_sort_add(int ns_id) {
+	private void Ords_sort_add(int ns_id) {
 		this.Add_new(ns_id, ByteAry_.XbyInt(ns_id), Xow_ns_.Case_match_1st, false);	// NOTE: name and case_match are mostly useless defaults; note that in theory this proc should not be called (all siteInfos should be well-formed) but just in case, create items now so that Get_by_ord() does not fail
 	}
 	class Xow_ns_mgr_name_itm {
@@ -224,7 +224,7 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 		return this;
 	}	private static final String Invk_add_alias_bulk = "add_alias_bulk";
 	public static final String Invk_load = "load", Invk_clear = "clear";
-	void Exec_add_alias_bulk(byte[] raw) {
+	private void Exec_add_alias_bulk(byte[] raw) {
 		byte[][] lines = ByteAry_.Split(raw, Byte_ascii.NewLine);
 		int lines_len = lines.length;
 		for (int i = 0; i < lines_len; i++) {

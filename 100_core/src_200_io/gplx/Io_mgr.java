@@ -127,4 +127,5 @@ public class Io_mgr {	// exists primarily to gather all cmds under gplx namespac
 	public IoEngine_xrg_downloadFil DownloadFil_args(String src, Io_url trg) {return IoEngine_xrg_downloadFil.new_(src, trg);}
 	public static final Io_mgr _ = new Io_mgr(); public Io_mgr() {}
 	public static final int Len_kb = 1024, Len_mb = 1048576, Len_gb = 1073741824, Len_gb_2 = 2147483647;
+	public static final long Len_null = -1;
 }

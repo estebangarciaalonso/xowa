@@ -156,7 +156,7 @@ public class Xow_xwiki_mgr implements GfoInvkAble {
 		Add_bulk_langs(grp_key, wiki_tid);
 	}
 	public void Add_bulk_langs(byte[] grp_key) {Add_bulk_langs(grp_key, wiki.Wiki_tid());}
-	void Add_bulk_langs(byte[] grp_key, byte wiki_tid) {
+	private void Add_bulk_langs(byte[] grp_key, byte wiki_tid) {
 		OrderedHash langs = wiki.App().Lang_mgr().Xto_hash(grp_key);
 		int len = langs.Count();
 		byte[] wiki_tid_name = Xow_wiki_type_.Name_by_tid(wiki_tid);
@@ -174,7 +174,7 @@ public class Xow_xwiki_mgr implements GfoInvkAble {
 		}
 		lang_mgr.Grps_sort();
 	}	private static final String GRP_KEY = "xowa.wiki.xwikis";
-	void Add_itm(Xow_xwiki_itm xwiki, Xoac_lang_itm lang) {
+	private void Add_itm(Xow_xwiki_itm xwiki, Xoac_lang_itm lang) {
 		if (	!hash.Has(xwiki.Key())		// only register xwiki / lang pair once
 			&&	lang != null)				// null lang should not be registered
 			lang_mgr.Itms_reg(xwiki, lang);

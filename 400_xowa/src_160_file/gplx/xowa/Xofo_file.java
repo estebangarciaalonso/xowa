@@ -55,7 +55,7 @@ class Xofo_file {
 		}
 		wtr.Write_dlm_row();
 	}
-	void Write_main(boolean reverse, Gfo_fld_wtr wtr) {
+	private void Write_main(boolean reverse, Gfo_fld_wtr wtr) {
 		if (reverse) {
 			wtr.Write_bry_escape_fld(redirect);
 			wtr.Write_bry_escape_fld(name);			
@@ -95,11 +95,11 @@ class Xofo_file {
 		Load_sql_atrs(fld_parser);
 		return this;
 	}
-	void Load_ttl_atrs(Gfo_fld_rdr fld_parser) {
+	private void Load_ttl_atrs(Gfo_fld_rdr fld_parser) {
 		name = fld_parser.Read_bry_escape();
 		redirect = fld_parser.Read_bry_escape();		
 	}
-	void Load_sql_atrs(Gfo_fld_rdr fld_parser) {
+	private void Load_sql_atrs(Gfo_fld_rdr fld_parser) {
 		name_ext = fld_parser.Read_bry_escape();
 		orig_size = fld_parser.Read_int();
 		orig_w = fld_parser.Read_int();

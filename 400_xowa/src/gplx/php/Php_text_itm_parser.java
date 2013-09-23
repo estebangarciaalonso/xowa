@@ -102,7 +102,7 @@ public class Php_text_itm_parser {
 		if (txt_bgn != -1) {rv.Add(new Php_text_itm_text(txt_bgn, raw_len)); txt_bgn = -1; rslt_val = Rslt_dirty;}
 		rslt.Val_(rslt_val);
 	}	static final byte[] CONST_utf_prefix = ByteAry_.new_ascii_("\\u00");
-	void Parse_utf16(ListAdp rv, byte[] src, int bgn, int src_len) {
+	private void Parse_utf16(ListAdp rv, byte[] src, int bgn, int src_len) {
 		int end = bgn + 4;
 		if (end >= src_len) throw Err_mgr._.fmt_auto_(GRP_KEY, "utf16_parse", String_.new_utf8_(src));
 		int v = Int_.Xto_int_hex(src, bgn, end);	// +2; skip "\" + "u"

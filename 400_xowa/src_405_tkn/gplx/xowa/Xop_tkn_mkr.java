@@ -124,7 +124,7 @@ public class Xop_tkn_mkr {
 //			return rv;
 ////			return new Xop_space_tkn(bgn, end);
 //		}
-//		void Txt_tkns_add(Xop_txt_tkn sub) {
+//		private void Txt_tkns_add(Xop_txt_tkn sub) {
 //			int new_len = txt_tkns_len + 1;
 //			if (new_len > txt_tkns_max) {
 //				txt_tkns_max = new_len * 2;
@@ -139,7 +139,7 @@ public class Xop_tkn_mkr {
 //				rv[i] = src[i];
 //			return rv;
 //		}
-//		void Space_tkns_add(Xop_space_tkn sub) {
+//		private void Space_tkns_add(Xop_space_tkn sub) {
 //			int new_len = space_tkns_len + 1;
 //			if (new_len > space_tkns_max) {
 //				space_tkns_max = new_len * 2;

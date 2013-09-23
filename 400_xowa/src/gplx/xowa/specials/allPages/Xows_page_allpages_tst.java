@@ -192,7 +192,7 @@ class Xows_page_allpages_fxt {
 		Tfds.Eq_str_lines(expd, String_.new_ascii_(wiki.Ctx().Page().Data_raw()));
 		return this;
 	}
-	void Exec_build() {
+	private void Exec_build() {
 		if (allpages.Itms_per_page() != init_itms_per_page) allpages.Itms_per_page_(init_itms_per_page);
 		init_url.Args_((Gfo_url_arg[])init_args.XtoAry(Gfo_url_arg.class));
 		init_args.Clear();

@@ -49,7 +49,7 @@ class Xoa_cfg_mgr_fxt {
 	}	private Xoa_app app; Xoa_cfg_mgr cfg_mgr;
 	public void Init_cfg_all(String key, String val) {Init_cfg(key, val, Xoa_cfg_grp_tid.Key_all_bry);}
 	public void Init_cfg_app(String key, String val) {Init_cfg(key, val, Xoa_cfg_grp_tid.Key_app_bry);}
-	void Init_cfg(String key, String val, byte[] tid) {
+	private void Init_cfg(String key, String val, byte[] tid) {
 		Xoa_cfg_itm itm = app.Cfg_mgr().Get_itm_or_make(ByteAry_.new_ascii_(key), tid);
 		itm.Val_(val);
 		itm.Db_customized_(false);
@@ -68,7 +68,7 @@ class Xoa_cfg_mgr_fxt {
 		Xow_wiki wiki = Exec_make_wiki(wiki_key_bry);
 		Test_cfg_get(wiki, prop_key, expd_val);
 	}
-	void Test_cfg_get(GfoInvkAble invk, String prop, String expd) {
+	private void Test_cfg_get(GfoInvkAble invk, String prop, String expd) {
 		Tfds.Eq(expd, Object_.XtoStr_OrNullStr(app.Cfg_mgr().Eval_get(invk, prop)));		
 	}
 	public void Test_cfg_itm(String wiki, String prop, boolean expd_customized, boolean expd_dirty) {

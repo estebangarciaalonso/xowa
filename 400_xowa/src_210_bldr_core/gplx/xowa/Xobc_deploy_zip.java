@@ -25,7 +25,7 @@ public class Xobc_deploy_zip extends Xob_itm_basic_base implements Xob_cmd {
 	public void Cmd_run() {Exec(bldr, Xow_dir_info_.Name_page);}
 	public void Cmd_end() {}
 	public void Cmd_print() {}
-	void Exec(Xob_bldr bldr, String type_name) {
+	private void Exec(Xob_bldr bldr, String type_name) {
 		Log("initing wiki");
 		try {wiki.Init_assert();}
 		catch (Exception exc) {Log("failed to init wiki: ~{0}", Err_.Message_gplx_brief(exc));}
@@ -38,7 +38,7 @@ public class Xobc_deploy_zip extends Xob_itm_basic_base implements Xob_cmd {
 			Zip_ns(bldr, ns_dir, type_name, ns_itm.Name_str());
 		}
 	}
-	void Zip_ns(Xob_bldr bldr, Io_url root_dir, String type_name, String ns_name) {
+	private void Zip_ns(Xob_bldr bldr, Io_url root_dir, String type_name, String ns_name) {
 		bldr.Usr_dlg().Prog_one(GRP_KEY, "scan", "scanning dir ~{0}", type_name);
 		Io_url[] fils = Io_mgr._.QueryDir_args(root_dir.GenSubDir(type_name)).Recur_().ExecAsUrlAry();
 		int fils_len = fils.length;
@@ -66,7 +66,7 @@ public class Xobc_deploy_zip extends Xob_itm_basic_base implements Xob_cmd {
 		else	return super.Invk(ctx, ikey, k, m);
 		return this;
 	}	private static final String Invk_delete_temp_ = "delete_temp_", Invk_delete_dirs_page_ = "delete_dirs_page_";
-	void Log(String fmt, Object... args) {
+	private void Log(String fmt, Object... args) {
 		bldr.App().Usr_dlg().Log_many(GRP_KEY, "deploy.zip.msg", fmt, args);
 	}
 	Io_zip_mgr zip_mgr = Io_zip_mgr_base._;

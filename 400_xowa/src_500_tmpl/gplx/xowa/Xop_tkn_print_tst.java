@@ -28,7 +28,7 @@ public class Xop_tkn_print_tst {
 	@Test  public void Tmpl_arg_prm()	{tst_Print("{{a|1|{{{1}}}}}");}
 	@Test  public void Tmpl_arg_tmpl()	{tst_Print("{{a|1|{{b}}}}");}
 	@Test  public void Tmpl_pf()		{tst_Print("{{#expr:1}}");}
-	void tst_Print(String raw) {
+	private void tst_Print(String raw) {
 		Xop_ctx ctx = fxt.Ctx();
 		byte[] raw_bry = ByteAry_.new_utf8_(raw);
 		Xot_defn_tmpl defn = fxt.run_Parse_tmpl(ByteAry_.Empty, raw_bry);

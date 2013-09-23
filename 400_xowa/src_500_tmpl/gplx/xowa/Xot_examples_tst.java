@@ -48,7 +48,7 @@ public class Xot_examples_tst {
 	@Test  public void Redirect() {
 		Init_tmpl_redirect(); fxt.tst_Parse_tmpl_str("{{Redirect|abc}}", "\"abc\" redirects here. For other uses, see [[abc (disambiguation)]].");
 	}
-	void Init_tmpl_main() {
+	private void Init_tmpl_main() {
 		fxt.ini_page_create("Template:Main", String_.Concat_lines_nl
 		(	"{{#ifeq:{{SUBJECTSPACE}}|Category|The main {{#ifeq:{{NAMESPACE:{{{1}}}}}||article|page}}{{#if:{{{2|}}}|s}} for this [[Wikipedia:Categorization|category]] {{#if:{{{2|}}}|are|is}}|Main {{#ifeq:{{NAMESPACE:{{{1}}}}}||article|page}}{{#if:{{{2|}}}|s}}:}} [[{{{1|{{PAGENAME}}}}}|{{{l1|{{{1|{{PAGENAME}}}}}}}}]]{{#if:{{{2| }}}"
 		,	" |{{#if:{{{3|}}}|,&#32;|&#32;and&#32;}}[[{{{2}}}|{{{l2|{{{2}}}}}}]]}}{{#if:{{{3|}}}"
@@ -62,14 +62,14 @@ public class Xot_examples_tst {
 		,	" |, and [[{{{10}}}|{{{l10|{{{10}}}}}}]]}}{{#if:{{{11| }}}|&#32; (too many parameters in &#123;&#123;[[Template:main|main]]&#125;&#125;)}}"
 		));
 	}
-	void Init_tmpl_for() {
+	private void Init_tmpl_for() {
 		fxt.ini_page_create("Template:For", "For {{#if:{{{1|}}}|{{{1}}}|other uses}}, see [[{{{2|{{PAGENAME}} (disambiguation)}}}]]{{#if:{{{3|}}}|{{#if:{{{4|}}}|, [[{{{3}}}]], {{#if:{{{5|}}}|[[{{{4}}}]], and [[{{{5}}}]]|and [[{{{4}}}]]}}|&#32;and [[{{{3}}}]]}}}}.");
 	}
-	void Init_tmpl_other_uses() {
+	private void Init_tmpl_other_uses() {
 		Init_tmpl_about();
 		fxt.ini_page_create("Template:Other uses", "{{#if:{{{2|}}}|{{about|||{{{1}}}|and|{{{2|}}}|_nocat=1}}|{{about|||{{{1|{{PAGENAME}} (disambiguation)}}}|_nocat=1}}}}");
 	}
-	void Init_tmpl_about() {
+	private void Init_tmpl_about() {
 		fxt.ini_page_create("Template:!", "|");
 		fxt.ini_page_create("Template:About", String_.Concat_lines_nl
 		(	"{{#if: {{{1|}}}|<!--"
@@ -90,7 +90,7 @@ public class Xot_examples_tst {
 		,	"-->{{#if:{{{_nocat|}}}||{{#if:{{{1|}}}{{{2|}}}||{{#if:{{{3|}}}|[[Category:Hatnote templates using unusual parameters|A{{PAGENAME}}]]}}}}{{#ifeq:{{str left|{{{1}}}|3}}|is |[[Category:Hatnote templates using unusual parameters|B{{PAGENAME}}]]}}}}"
 		));
 	}
-	void Init_tmpl_see_also() {
+	private void Init_tmpl_see_also() {
 		fxt.ini_page_create("Template:See also", String_.Concat_lines_nl
 		(	"See also: {{#if:{{{1<includeonly>|</includeonly>}}} |<!--then:-->[[{{{1}}}{{#if:{{{label 1|{{{l1|}}}}}}|{{!}}{{{label 1|{{{l1}}}}}}}}]] |<!--else:-->'''Error: [[Template:See also|Template must be given at least one article name]]'''"
 		,	"}}{{#if:{{{2|}}}|{{#if:{{{3|}}}|, |&nbsp;and }} [[{{{2}}}{{#if:{{{label 2|{{{l2|}}}}}}|{{!}}{{{label 2|{{{l2}}}}}}}}]]"
@@ -111,7 +111,7 @@ public class Xot_examples_tst {
 		,	"}}"
 		));
 	}
-	void Init_tmpl_redirect() {
+	private void Init_tmpl_redirect() {
 		fxt.ini_page_create("Template:Redirect", String_.Concat_lines_nl
 		(	"\"{{{1}}}\" redirects here. For {{#if:{{{2|}}}|{{{2}}}|other uses}}, see {{#if:{{{3|}}}|[[{{{3}}}]]{{#ifeq:{{{4|}}}|and|&#32;and {{#if:{{{5|}}}|[[{{{5}}}]]|[[{{{1}}} (disambiguation)]]}}}}|[[{{{1}}} (disambiguation)]]}}.<!--"
 		,	"-->{{#if:{{{2|}}}|{{#if:{{{4|}}}|<!--"

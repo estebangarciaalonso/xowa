@@ -24,7 +24,7 @@ public class Xol_kwd_parse_data_tst {
 	@Test  public void Space()			{Key_("upright ").Tst_strip("upright $1");}
 	@Test  public void Px()				{Key_("px").Tst_strip("$1px");}
 
-	void Clear() {
+	private void Clear() {
 		key = null;
 	}
 	Xol_kwd_parse_data_tst Key_(String v) {this.key = v; return this;} private String key;

@@ -126,7 +126,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 		MakeTkn_end(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos, rv, subLast);
 		return rv;
 	}
-	void PrvItm_compare() {
+	private void PrvItm_compare() {
 		int prvSymLen = prvSymAry.length;
 		prvSymMatch = curSymLen == prvSymLen; commonSymLen = 0;
 		for (int i = 0; i < curSymLen; i++) {
@@ -190,7 +190,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 		}
 		return curPos;
 	}
-	void Reset(int newListId) {
+	private void Reset(int newListId) {
 		posBldr.Init();
 		curSymLen = 0;
 		prvSymAry = ByteAry_.Empty;

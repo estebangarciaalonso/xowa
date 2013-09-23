@@ -128,7 +128,7 @@ public class Xoa_css_img_downloader {
 			pos_end = pos_question;	// remove query params; EX: img_name?key=val 
 		return ByteAry_.Mid(raw, pos_bgn, pos_end);
 	}
-	void Download_fils(Io_url css_dir, String[] ary) {
+	private void Download_fils(Io_url css_dir, String[] ary) {
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++) {
 			String src = ary[i];

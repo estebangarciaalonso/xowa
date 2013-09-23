@@ -22,19 +22,20 @@ public class Fsdb_fil_tbl {
 		Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); 
 		Sqlite_engine_.Idx_create(p, Idx_name, Idx_owner);
 	}
-	public static void Insert(Db_provider p, int id, int owner_id, String name, int xtn_id, int ext_id, long size, DateAdp modified, String hash) {
+	public static void Insert(Db_provider p, int id, int owner_id, String name, int xtn_id, int ext_id, long size, DateAdp modified, String hash, int bin_db_id) {
 		Db_stmt stmt = Insert_stmt(p);
-		try {Insert(stmt, id, owner_id, name, xtn_id, ext_id, size, modified, hash);}
+		try {Insert(stmt, id, owner_id, name, xtn_id, ext_id, size, modified, hash, bin_db_id);}
 		finally {stmt.Rls();}
 	}
-	private static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_fil_id, Fld_fil_owner, Fld_fil_name, Fld_fil_xtn_id, Fld_fil_ext_id, Fld_fil_size, Fld_fil_modified, Fld_fil_hash);}
-	private static void Insert(Db_stmt stmt, int id, int owner_id, String name, int xtn_id, int ext_id, long size, DateAdp modified, String hash) {
+	private static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_fil_id, Fld_fil_owner, Fld_fil_name, Fld_fil_xtn_id, Fld_fil_ext_id, Fld_fil_bin_db_id, Fld_fil_size, Fld_fil_modified, Fld_fil_hash);}
+	private static void Insert(Db_stmt stmt, int id, int owner_id, String name, int xtn_id, int ext_id, long size, DateAdp modified, String hash, int bin_db_id) {
 		stmt.Clear()
 		.Val_int_(id)
 		.Val_int_(owner_id)
 		.Val_str_(name)
 		.Val_int_(xtn_id)
 		.Val_int_(ext_id)
+		.Val_int_(bin_db_id)
 		.Val_long_(size)
 		.Val_str_(Sqlite_engine_.X_date_to_str(modified))
 		.Val_str_(hash)
@@ -61,40 +62,45 @@ public class Fsdb_fil_tbl {
 		.Exec_delete();
 	}	
 	public static Fsdb_fil_itm Select_itm_by_name(Db_provider p, int dir_id, String fil_name) {
-		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_(Fld_fil_id, Fld_fil_ext_id).Where_(gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_fil_owner, dir_id), Db_crt_.eq_(Fld_fil_name, fil_name)));
+		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_fil_owner, dir_id), Db_crt_.eq_(Fld_fil_name, fil_name)));
 		DataRdr rdr = DataRdr_.Null;
 		try {
 			rdr = p.Exec_qry_as_rdr(qry);
 			if (rdr.MoveNextPeer())
-				return new Fsdb_fil_itm(rdr.ReadInt(Fld_fil_id), dir_id, rdr.ReadInt(Fld_fil_ext_id), fil_name);
+				return load_(rdr);
 			else
 				return Fsdb_fil_itm.Null;
 		}
 		finally {rdr.Rls();}
 	}
 	public static Fsdb_fil_itm Select_itm_by_id(Db_provider p, int fil_id) {
-		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_(Fld_fil_id, Fld_fil_owner, Fld_fil_ext_id, Fld_fil_name).Where_(Db_crt_.eq_(Fld_fil_id, fil_id));
+		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(Db_crt_.eq_(Fld_fil_id, fil_id));
 		DataRdr rdr = DataRdr_.Null;
 		try {
 			rdr = p.Exec_qry_as_rdr(qry);
 			if (rdr.MoveNextPeer())
-				return new Fsdb_fil_itm(fil_id, rdr.ReadInt(Fld_fil_owner), rdr.ReadInt(Fld_fil_ext_id), rdr.ReadStr(Fld_fil_name));
+				return load_(rdr);
 			else
 				return Fsdb_fil_itm.Null;
 		}
 		finally {rdr.Rls();}
 	}
+	private static Fsdb_fil_itm load_(DataRdr rdr) {
+		return new Fsdb_fil_itm(rdr.ReadInt(Fld_fil_id), rdr.ReadInt(Fld_fil_owner), rdr.ReadInt(Fld_fil_ext_id), rdr.ReadStr(Fld_fil_name), rdr.ReadInt(Fld_fil_bin_db_id));
+	}
+
 	public static final String Tbl_name = "fsdb_fil", Fld_fil_id = "fil_id", Fld_fil_owner = "fil_owner", Fld_fil_name = "fil_name", Fld_fil_xtn_id = "fil_xtn_id", Fld_fil_ext_id = "fil_ext_id"
-	, Fld_fil_size = "fil_size", Fld_fil_modified = "fil_modified", Fld_fil_hash = "fil_hash"
+	, Fld_fil_size = "fil_size", Fld_fil_modified = "fil_modified", Fld_fil_hash = "fil_hash", Fld_fil_bin_db_id = "fil_bin_db_id"
 	;
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS fsdb_fil"
 	,	"( fil_id            integer             NOT NULL    PRIMARY KEY"
 	,	", fil_owner         integer             NOT NULL"
 	,	", fil_xtn_id        integer             NOT NULL"
-	,	", fil_ext_id        integer             NOT NULL"	// group ints at beginning of table
-	,	", fil_size          bigint              NOT NULL"
+	,	", fil_ext_id        integer             NOT NULL"
+	,	", fil_bin_db_id     integer             NOT NULL"	// group ints at beginning of table
 	,	", fil_name          varchar(255)        NOT NULL"
+	,	", fil_size          bigint              NOT NULL"
 	,	", fil_modified      varchar(14)         NOT NULL"	// stored as yyyyMMddHHmmss
 	,	", fil_hash          varchar(40)         NOT NULL"
 	,	");"

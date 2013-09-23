@@ -51,8 +51,8 @@ public class Scrib_lib_message_tst {
 	@Test  public void Init_message_for_lang() {
 		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_init_message_for_lang, Object_.Ary_empty						, "lang=en");
 	}
-	void Init_msg(String key, String val) {Init_msg(fxt.Engine().Wiki().Lang(), key, val);}
-	void Init_msg(Xol_lang lang, String key, String val) {
+	private void Init_msg(String key, String val) {Init_msg(fxt.Engine().Wiki().Lang(), key, val);}
+	private void Init_msg(Xol_lang lang, String key, String val) {
 		lang.Msg_mgr().Itm_by_key_or_new(ByteAry_.new_ascii_(key)).Atrs_set(ByteAry_.new_ascii_(val), false, false);
 	}
 	KeyVal[] keys_ary(String msg_key) {return keys_ary(msg_key, null, null);}

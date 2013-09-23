@@ -215,7 +215,7 @@ public class ByteAry_ {
 			return rv;
 		}	catch (Exception e) {
 			Err err = Err_.new_("").Add("bgn", bgn).Add("end", end);
-			if (src != null) err.Add("src", String_.new_utf8_(src));
+			if (src != null) err.Add("src", String_.new_utf8_len_safe_(src, bgn, 32));
 			if		(src == null)					err.Hdr_("src is null");
 			else if (bgn < 0 || bgn > src.length)	err.Hdr_("invalid bgn");
 			else if (end < 0 || end > src.length)	err.Hdr_("invalid end");

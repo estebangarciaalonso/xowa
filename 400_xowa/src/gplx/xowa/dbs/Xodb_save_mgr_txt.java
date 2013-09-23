@@ -57,7 +57,7 @@ public class Xodb_save_mgr_txt implements Xodb_save_mgr {
 	}
 	public void Data_update(Xoa_page page, byte[] text)		{Data_update_under(page, text, null);}
 	public void Data_rename(Xoa_page page, byte[] new_ttl)	{Data_update_under(page, null, new_ttl);}
-	void Data_update_under(Xoa_page page, byte[] text, byte[] new_ttl) {
+	private void Data_update_under(Xoa_page page, byte[] text, byte[] new_ttl) {
 		Xoa_ttl ttl = page.Page_ttl();
 		Xow_ns ns = ttl.Ns(); byte[] ttl_bry = ttl.Page_db();
 		Xodb_page db_page = Xodb_page.tmp_();
@@ -94,7 +94,7 @@ public class Xodb_save_mgr_txt implements Xodb_save_mgr {
 		Xowd_hive_mgr ttl_hive = new Xowd_hive_mgr(wiki, Xow_dir_info_.Tid_ttl);
 		ttl_hive.Update(ns, old_ttl, new_ttl, ttl_row_bry, Xodb_page_.Txt_ttl_pos, Byte_ascii.Pipe, true, true);
 	}
-	void Data_save(byte dir_tid, Xob_xdat_file xdat_file, Io_url url, ByteAryBfr tmp_bfr) {
+	private void Data_save(byte dir_tid, Xob_xdat_file xdat_file, Io_url url, ByteAryBfr tmp_bfr) {
 		xdat_file.Save(url);
 	}
 	Xodb_page tmp_page = new Xodb_page(); 

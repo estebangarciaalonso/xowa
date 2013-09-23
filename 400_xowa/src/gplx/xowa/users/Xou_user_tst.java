@@ -28,7 +28,7 @@ public class Xou_user_tst {
 		app.Init();														// run Init again
 		Fil_tst(user_system_cfg_url, "");								// check that it is still blank
 	}
-	void Fil_tst(Io_url url, String expd) {
+	private void Fil_tst(Io_url url, String expd) {
 		Tfds.Eq_str_lines(expd, Io_mgr._.LoadFilStr(url));
 	}
 }

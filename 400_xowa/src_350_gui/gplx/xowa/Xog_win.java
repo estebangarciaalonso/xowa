@@ -125,7 +125,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	public void Exec_bookmarks_add() {
 		app.User().Bookmarks_add(page); gui_wtr.Prog_many(GRP_KEY, "app_bookmarks_add", "bookmark added: ~{0}", String_.new_utf8_(page.Page_ttl().Full_txt_raw()));
 	}
-	void Exec_options_save() {
+	private void Exec_options_save() {
 		String font_name = html_box.Html_elem_atr_get_str("opt_window_font_name", Gfui_html.Atr_value);
 		String font_size = html_box.Html_elem_atr_get_str("opt_window_font_size", Gfui_html.Atr_value);
 		String css_xtn = html_box.Html_elem_atr_get_str("opt_html_css_xtn", Gfui_html.Atr_value);
@@ -137,7 +137,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		Io_mgr._.SaveFilStr(user_system_cfg, user_system_cfg_text);
 		Exec_page_refresh();
 	}
-	void Exec_link_clicked(String anchor_raw) {
+	private void Exec_link_clicked(String anchor_raw) {
 		String url = url_box.Text();
 		int pos = String_.FindFwd(url, gplx.xowa.html.Xoh_html_tag.Const_anchor);
 		if (pos != ByteAry_.NotFound) url = String_.Mid(url, 0, pos);
@@ -168,28 +168,28 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 //				app.User().History_mgr().Add(page);
 		return rv;
 	}
-	void Exec_eval(String s) {
+	private void Exec_eval(String s) {
 		String snippet = html_box.Html_elem_atr_get_str(s, Gfui_html.Atr_innerHTML);
 		app.Gfs_mgr().Run_str(snippet);
 	}
-	void Exec_link_click() {
+	private void Exec_link_click() {
 		if (page.Wiki().Gui_mgr().Cfg_browser().Content_editable()) {	// NOTE: Link_click is needed for content_editable is enabled; Link_click will be handled by SwtBrowser location changed
 			String href = html_box.Html_active_atr_get_str(Gfui_html.Atr_href, null); if (String_.Len_eq_0(href)) return; // NOTE: href can be null for images; EX: [[File:Loudspeaker.svg|11px|link=|alt=play]]; link= basically means don't link to image
 			Exec_navigate(href);
 		}
 	}
-	void Exec_link_print() {
+	private void Exec_link_print() {
 		String href = String_.Replace(String_.new_utf8_(app.Url_converter_href().Decode(ByteAry_.new_utf8_(html_box.Html_active_atr_get_str(Gfui_html.Atr_href, "")))), "_", " ");
 		String title = html_box.Html_active_atr_get_str(Gfui_html.Atr_title, "");
 		String val = String_.Trim(href + " " + title);
 		if (String_.Eq(val, prog_box.Text())) return;
 		gui_wtr.Prog_direct(val);
 	}
-	void Exec_html_box_focus() {
+	private void Exec_html_box_focus() {
 		html_box.Focus();
 		if (cur_view_tid != Xoh_wiki_article.Tid_view_read) html_box.Html_elem_focus(Id_xowa_edit_data_box);
 	}
-	void Exec_link_hover(String href) {
+	private void Exec_link_hover(String href) {
 		if (href == null || String_.Len(href) == 0 || String_.Eq(href, "file:///")) {
 			gui_wtr.Prog_direct("");	// clear out previous entry
 			return;
@@ -200,7 +200,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		gui_wtr.Prog_direct(tmp.XtoStrAndClear());
 		tmp.Mkr_rls();
 	}
-	void Exec_html_box_focus_previous_or_firstHeading() {
+	private void Exec_html_box_focus_previous_or_firstHeading() {
 		String html_doc_pos = page.DocPos();
 		if (html_doc_pos == null) {
 			String auto_focus_id = app.Gui_mgr().Html_mgr().Auto_focus_id();
@@ -224,10 +224,10 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			GfoInvkAble_.InvkCmd_val(async_cmd, Invk_html_box_select_by_id, page.Url().Anchor_str());
 		Exec_reload_imgs();
 	}
-	void Exec_search() {
+	private void Exec_search() {
 		Exec_url_exec(app.Gui_mgr().Win_opts().Search_box_fmtr().Bld_str_many(search_box.Text()));
 	}
-	void Exec_page_reload_imgs() {
+	private void Exec_page_reload_imgs() {
 		if (page.Url().Anchor_str() != null) GfoInvkAble_.InvkCmd_val(async_cmd, Invk_html_box_select_by_id, page.Url().Anchor_str());
 		if (gui_wtr.Canceled()) {gui_wtr.Prog_none(GRP_KEY, "imgs.done", ""); app.Log_wtr().Queue_enabled_(false); return;}
 		int xfer_len = 0;
@@ -255,7 +255,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		gui_wtr.Prog_none(GRP_KEY, "imgs.done", "");
 		app.Log_wtr().Queue_enabled_(false);
 	}
-	void Exec_navigate(String href) {
+	private void Exec_navigate(String href) {
 		Xoa_url url = Xto_url(href);
 		if (url != null) Exec_url_exec(url);
 	}
@@ -263,7 +263,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		if (!app.Term_cbk()) return; // NOTE: exit called by keyboard shortcut, or exit link; must call Term_cbk manually; Alt-F4/X button will call Term_cbk in closing event
 		app.Gui_mgr().Kit().Kit_term();
 	}
-	void Exec_page_edit_save(boolean draft) {
+	private void Exec_page_edit_save(boolean draft) {
 		if (cur_view_tid != Xoh_wiki_article.Tid_view_edit) return;
 		byte[] new_text = Eval_elem_value_edit_box_bry();
 //			new_text = ByteAry_.Replace(new_text, Xob_xml_parser_.Bry_tab, Xob_xml_parser_.Bry_tab_ent);	// DATE:2013-04-26; commented out; no need to actually force tabs from edit page to show up as &09;
@@ -293,7 +293,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		if (!draft)
 			Exec_reload_imgs();
 	}
-	void Exec_page_edit_rename() {
+	private void Exec_page_edit_rename() {
 		if (page.Wiki().Wiki_tid() != Xow_wiki_type_.Tid_home) {
 			gui_wtr.Warn_many(GRP_KEY, "edit.rename.valid_for_home_only", "Only pages in the home wiki can be renamed");
 			return;
@@ -319,7 +319,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		Exec_page_view(Xoh_wiki_article.Tid_view_read);
 		gui_wtr.Prog_one(GRP_KEY, "edit.rename.done", "renamed page to {0}", String_.new_utf8_(page.Page_ttl().Full_txt_raw()));
 	}
-	void Exec_page_edit_preview() {
+	private void Exec_page_edit_preview() {
 		if (cur_view_tid != Xoh_wiki_article.Tid_view_edit) return;
 		byte[] new_raw = Eval_elem_value_edit_box_bry();
 		Xow_wiki wiki = page.Wiki();
@@ -341,7 +341,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		Exec_html_box_select_by_id(Html_id_first_heading);
 		Exec_reload_imgs();
 	}
-	void Exec_url_box_paste_and_go() {
+	private void Exec_url_box_paste_and_go() {
 		String s = ClipboardAdp_.GetText();
 		url_box.Text_(s);
 		Exec_url_exec(s);
@@ -356,17 +356,17 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		Xoa_url_parser.Parse_url(tmp_url, app, page.Wiki(), bry, 0, bry.length);
 		Exec_url_exec(tmp_url);
 	}
-	void Exec_cancel_wait() {
+	private void Exec_cancel_wait() {
 		while (reload_imgs_thread.IsAlive()) {
 			ThreadAdp_.Sleep(10);
 		}
 		page.File_queue().Clear();
 		GfoInvkAble_.InvkCmd(sync_cmd, Invk_cancel_restart);
 	}
-	void Exec_cancel_restart() {
+	private void Exec_cancel_restart() {
 		Exec_url_exec(restart_url);		
 	}	private Xoa_url restart_url;
-	void Exec_url_exec(Xoa_url url) {			
+	private void Exec_url_exec(Xoa_url url) {			
 		if (reload_imgs_thread.IsAlive()) {
 			restart_url = url;
 			gui_wtr.Canceled_y_();
@@ -433,10 +433,10 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			Exec_reload_imgs();
 		}
 	}	ThreadAdp reload_imgs_thread = ThreadAdp.Null;
-	void Exec_reload_imgs() {
+	private void Exec_reload_imgs() {
 		reload_imgs_thread = ThreadAdp_.invk_(this, Invk_page_reload_imgs).Start();
 	}
-	void Exec_page_dbg(byte view_tid) {
+	private void Exec_page_dbg(byte view_tid) {
 		Xow_wiki wiki = page.Wiki();
 //			if (ByteAry_.Eq(wiki.Key_bry(), Xow_wiki_type_.Key_home_bry)) {	// OBSOLETE: code to quickly switch to en.wikipedia.org for testing; should probably remove, but may be useful for future testing
 //				wiki = app.Wiki_mgr().Default_wiki();
@@ -458,7 +458,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		history_mgr.Add(new_page);
 		cur_view_tid = old;
 	}		
-	void Exec_app_exec_cfg() {
+	private void Exec_app_exec_cfg() {
 		GfsCore._.ExecText(Eval_elem_value_edit_box_str());
 		gui_wtr.Prog_none(GRP_KEY, "cfg.end", "applied cfg");
 	}
@@ -480,8 +480,8 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		Exec_show_wiki_page(new_page, true, new_page_is_same);
 		Exec_reload_imgs();
 	}
-	void Exec_show_wiki_page(Xoa_page new_page, boolean reset_to_read) {Exec_show_wiki_page(new_page, reset_to_read, false);}
-	void Exec_show_wiki_page(Xoa_page new_page, boolean reset_to_read, boolean new_page_is_same) {
+	private void Exec_show_wiki_page(Xoa_page new_page, boolean reset_to_read) {Exec_show_wiki_page(new_page, reset_to_read, false);}
+	private void Exec_show_wiki_page(Xoa_page new_page, boolean reset_to_read, boolean new_page_is_same) {
 		if (reset_to_read) cur_view_tid = Xoh_wiki_article.Tid_view_read;
 		if (new_page.Url().Action_is_edit()) cur_view_tid = Xoh_wiki_article.Tid_view_edit;
 		if (page != null && !new_page_is_same) {	// if new_page_is_same, don't update DocPos; will "lose" current position
@@ -562,10 +562,10 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		gui_wtr.Ini(kit, this);
 		gui_wtr.Ui_wkr_(app.Usr_dlg().Ui_wkr());
 	}	private Xog_win_view_adp win_mgr = new Xog_win_view_adp();
-	void Exec_context_copy() {
+	private void Exec_context_copy() {
 		win.Kit().Clipboard().Copy(Html_doc_selected_get());
 	}
-	void Exec_context_find() {
+	private void Exec_context_find() {
 		app.Gui_mgr().Layout().Find_show();
 		find_box.Text_(Html_doc_selected_get());
 	}
@@ -581,9 +581,6 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		rv.TextMgr().Font_(ui_font);
 		rv.TipText_(new_tiptext(tiptext_id));
 		return rv;
-	}
-	void new_popup_itm(Gfui_kit kit, Gfui_mnu_grp mgr, Io_url img_dir, String text, String img_fil, GfoInvkAble invk, String cmd) {
-		mgr.Itms_add_cmd(text, kit.New_img_load(img_dir.GenSubFil(img_fil)), invk, cmd);
 	}
 	String new_tiptext(int id) {
 		return String_.new_utf8_(app.User().Lang().Msg_mgr().Val_by_id(app.User().Wiki(), id));

@@ -36,7 +36,7 @@ class Xodb_page_fxt {
 	}	private Xow_ns_mgr ns_mgr; Xodb_page tmp_page;
 	public void Test_ttl_(String ttl, int expd_ns, String expd_ttl) {
 		tmp_page.Ttl_(ByteAry_.new_ascii_(ttl), ns_mgr);
-            Tfds.Eq(expd_ns, tmp_page.Ns_id());
+	    Tfds.Eq(expd_ns, tmp_page.Ns_id());
 		Tfds.Eq(expd_ttl, String_.new_ascii_(tmp_page.Ttl_wo_ns()));
 	}
 }

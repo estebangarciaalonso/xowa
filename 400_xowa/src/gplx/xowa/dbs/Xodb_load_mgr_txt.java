@@ -96,7 +96,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 			}
 		}
 	}
-	void Find_ttls__add_itms(ListAdp rv, Xob_xdat_file rdr, Xob_xdat_itm xdat_itm) {
+	private void Find_ttls__add_itms(ListAdp rv, Xob_xdat_file rdr, Xob_xdat_itm xdat_itm) {
 		byte[] raw = rdr.Src();
 		int itm_bgn = xdat_itm.Itm_bgn(), itm_end = xdat_itm.Itm_end();
 		int pos = ByteAry_.FindFwd(raw, Byte_ascii.Pipe, itm_bgn, raw.length);
@@ -119,16 +119,16 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 		Load_ctg_v2_main(ctg, name);
 		return true;
 	}	int[] tmp_ctg_grp_lens = new int[3];
-	void Load_ctg_v2_data(Gfo_usr_dlg usr_dlg, Gfo_fld_rdr fld_rdr, Xoctg_data_ctg ctg, byte[] ctg_name, byte[] src, int[] tmp_grp_lens) {	// Name|subc_len|file_len|page_len|subc_bfr|file_bfr|page_bfr
+	private void Load_ctg_v2_data(Gfo_usr_dlg usr_dlg, Gfo_fld_rdr fld_rdr, Xoctg_data_ctg ctg, byte[] ctg_name, byte[] src, int[] tmp_grp_lens) {	// Name|subc_len|file_len|page_len|subc_bfr|file_bfr|page_bfr
 		fld_rdr.Bry_(src); fld_rdr.Read_bry_escape(); // 1st field is name; skip;
 		Load_ctg_v2_data_lens(fld_rdr, tmp_grp_lens);
 		Load_ctg_v2_data_mgrs(usr_dlg, ctg_name, src, fld_rdr.Pos(), tmp_grp_lens, ctg.Grp_mgrs());
 	}
-	void Load_ctg_v2_data_lens(Gfo_fld_rdr fld_rdr, int[] grp_lens) {
+	private void Load_ctg_v2_data_lens(Gfo_fld_rdr fld_rdr, int[] grp_lens) {
 		for (int i = 0; i < 3; i++)
 			grp_lens[i] = fld_rdr.Read_int_base85_len5();
 	}
-	void Load_ctg_v2_data_mgrs(Gfo_usr_dlg usr_dlg, byte[] ctg_name, byte[] src, int bgn, int[] grp_lens, Xoctg_idx_mgr[] grp_mgrs) {
+	private void Load_ctg_v2_data_mgrs(Gfo_usr_dlg usr_dlg, byte[] ctg_name, byte[] src, int bgn, int[] grp_lens, Xoctg_idx_mgr[] grp_mgrs) {
 		for (int i = 0; i < 3; i++) {
 			int grp_len = grp_lens[i]; if (grp_len == 0) continue;
 			int end = bgn + grp_len;
@@ -140,7 +140,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 			bgn = end;
 		}
 	}
-	void Load_ctg_v2_main(Xoctg_data_ctg rv, byte[] name) {
+	private void Load_ctg_v2_main(Xoctg_data_ctg rv, byte[] name) {
 		if (!Load_xdat_itm(tmp_xdat_itm, Xow_dir_info_.Tid_category2_main, name, true)) return;
 		if (tmp_xdat_itm.Missing()) return;
 		byte[] bry = tmp_xdat_itm.Itm_bry();
@@ -338,7 +338,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 		return rv;
 	}
 
-	void Load_page_parse(Xodb_page page, byte[] src, int src_len, int row_bgn, int row_end, boolean timestamp_enabled) { // \n\tdate5\tpage_title\tpage_text
+	private void Load_page_parse(Xodb_page page, byte[] src, int src_len, int row_bgn, int row_end, boolean timestamp_enabled) { // \n\tdate5\tpage_title\tpage_text
 		int timestamp_bgn = row_bgn + 5 + 1;
 		int timestamp_end = timestamp_bgn + 5;
 		if (timestamp_enabled) {
@@ -381,7 +381,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 		Special_allpages_query_fwd(rslt_list, rslt_nxt, rslt_count	, dir_tid, ns, include_redirects, browse_len, fil_idx, itm_idx    , cur_xdat_file, cur_xdat_itm, regy);
 		Special_allpages_query_bwd(rslt_list, rslt_prv				, dir_tid, ns, include_redirects, browse_len, fil_idx, itm_idx - 1, cur_xdat_file, cur_xdat_itm);
 	}
-	void Special_allpages_query_fwd(ListAdp rslt_list, Xodb_page rslt_nxt, IntRef rslt_count, byte dir_tid, Xow_ns ns, boolean include_redirects, int total, int fil_idx, int row_idx, Xob_xdat_file xdat_file, Xob_xdat_itm xdat_itm, Xowd_regy_mgr regy) {
+	private void Special_allpages_query_fwd(ListAdp rslt_list, Xodb_page rslt_nxt, IntRef rslt_count, byte dir_tid, Xow_ns ns, boolean include_redirects, int total, int fil_idx, int row_idx, Xob_xdat_file xdat_file, Xob_xdat_itm xdat_itm, Xowd_regy_mgr regy) {
 		int count = 0; ++total;
 		boolean loop = true;
 		int regy_len = regy.Files_ary().length;
@@ -417,7 +417,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 		if (rslt_nxt != null)
 			rslt_nxt.Copy(nxt_itm);
 	}
-	void Special_allpages_query_bwd(ListAdp rslt_list, Xodb_page rslt_prv, byte dir_tid, Xow_ns ns, boolean include_redirects, int total, int fil_idx, int row_idx, Xob_xdat_file xdat_file, Xob_xdat_itm xdat_itm) {
+	private void Special_allpages_query_bwd(ListAdp rslt_list, Xodb_page rslt_prv, byte dir_tid, Xow_ns ns, boolean include_redirects, int total, int fil_idx, int row_idx, Xob_xdat_file xdat_file, Xob_xdat_itm xdat_itm) {
 		if (row_idx < 0) {
 			--fil_idx;
 			row_idx = -1;

@@ -135,7 +135,7 @@ public class Xtn_dynamicPageList_nde implements Xop_xnde_xtn, Xop_xnde_atr_parse
 	public Xtn_dynamicPageList_itm[] Itms() {return itms;} Xtn_dynamicPageList_itm[] itms;
 	public void Xatr_parse(Xow_wiki wiki, byte[] src, Xop_xatr_itm xatr, Object xatr_key_obj) {
 	}
-	void Process(byte key_id, byte[] val) {
+	private void Process(byte key_id, byte[] val) {
 		switch (key_id) {
 			case Key_category: 				category_includes.Add(val); break;
 			case Key_notcategory:		 	category_excludes.Add(val); break;
@@ -186,7 +186,7 @@ public class Xtn_dynamicPageList_nde implements Xop_xnde_xtn, Xop_xnde_atr_parse
 		}
 		return CompareAble_.Same;
 	}
-	void Parse_ctg_date(byte[] val) {
+	private void Parse_ctg_date(byte[] val) {
 //			byte val_key = Keys_get_or(val, Key_false);
 //			if (val_key == Key_true)
 //				ctg_date = true;
@@ -212,7 +212,7 @@ public class Xtn_dynamicPageList_nde implements Xop_xnde_xtn, Xop_xnde_atr_parse
 			default:					throw Err_mgr._.unhandled_(key);
 		}
 	}
-	void Html_mode_(byte key) {
+	private void Html_mode_(byte key) {
 		switch (key) {
 			case Key_gallery: 			html_mode = Html_mode_gallery; break;
 			case Key_inline: 			html_mode = Html_mode_inline; break;

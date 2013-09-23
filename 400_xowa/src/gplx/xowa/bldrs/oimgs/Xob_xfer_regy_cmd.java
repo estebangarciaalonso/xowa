@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*;
-public class Xob_dump_mgr_xfer_regy extends Xob_itm_basic_base implements Xob_cmd {
-	public Xob_dump_mgr_xfer_regy(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+public class Xob_xfer_regy_cmd extends Xob_itm_basic_base implements Xob_cmd {
+	public Xob_xfer_regy_cmd(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
 	public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "oimg.xfer_regy";
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_bgn(Xob_bldr bldr) {}
@@ -27,7 +27,7 @@ public class Xob_dump_mgr_xfer_regy extends Xob_itm_basic_base implements Xob_cm
 		Xodb_fsys_mgr fsys_mgr = wiki.Db_mgr_as_sql().Fsys_mgr(); 
 		Xodb_file db_file = fsys_mgr.Get_or_make("oimg_lnki");
 		Db_provider provider = db_file.Provider();
-		Xodb_tbl_oimg_xfer_temp xfer_temp = new Xodb_tbl_oimg_xfer_temp().Create_table(provider);
+		Xob_xfer_temp_tbl xfer_temp = new Xob_xfer_temp_tbl().Create_table(provider);
 		Db_stmt trg_stmt = xfer_temp.Insert_stmt(provider);
 
 		provider.Txn_mgr().Txn_bgn_if_none();
@@ -49,10 +49,11 @@ public class Xob_dump_mgr_xfer_regy extends Xob_itm_basic_base implements Xob_cm
 			int file_w = rdr.ReadIntOr("ofr_width", -1);
 			int file_h = rdr.ReadIntOr("ofr_height", -1);
 			boolean lnki_thumb = Xof_xfer_itm.Lnki_thumbable_calc(lnki_type, lnki_w, lnki_h);
+			actl_size.Val_all_(-1, -1);
 			Xof_xfer_itm_.Calc_xfer_size(actl_size, thumb_w_img_const, file_w, file_h, lnki_w, lnki_h, lnki_thumb, upright);
-			xfer_temp.Insert(trg_stmt, lnki_id, wiki_id, page_id, ttl, ext_id, actl_size.Val_0(), actl_size.Val_1(), time);
+			xfer_temp.Insert(trg_stmt, lnki_id, wiki_id, page_id, ttl, ext_id, lnki_type, actl_size.Val_0(), actl_size.Val_1(), time);
 		}
-		Xodb_tbl_oimg_xfer_regy xfer_regy = new Xodb_tbl_oimg_xfer_regy().Create_table(provider);
+		Xob_xfer_regy_tbl xfer_regy = new Xob_xfer_regy_tbl().Create_table(provider);
 		xfer_regy.Create_data(usr_dlg, provider);
 		xfer_regy.Create_indexes(usr_dlg, provider);
 		provider.Txn_mgr().Txn_end_all();

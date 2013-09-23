@@ -31,7 +31,7 @@ class Xoctg_fmtr_all {
 	public ByteAryFmtr Html_itm_missing() {return html_itm_missing;} ByteAryFmtr html_itm_missing = ByteAryFmtr.new_();
 	public byte[] Url_arg_bgn() {return url_arg_bgn;} private byte[] url_arg_bgn = null;
 	public byte[] Url_arg_end() {return url_arg_end;} private byte[] url_arg_end = null;
-	void Ctor(byte tid) {
+	private void Ctor(byte tid) {
 		this.tid = tid;
 		switch (tid) {
 			case Xoa_ctg_mgr.Tid_subc: grps_enabled = Bool_.Y; msg_id_label = Xol_msg_itm_.Id_ctg_subc_label ; msg_id_stats = Xol_msg_itm_.Id_ctg_subc_count; div_id = Div_id_subc; url_arg_bgn = Url_arg_subc_bgn; url_arg_end = Url_arg_subc_end; this.fmtr_itm = Xoctg_fmtr_itm_subc._; break;
@@ -113,7 +113,7 @@ class Xoctg_fmtr_all {
 		Html_nav_bry(bfr, wiki, ttl, view_grp, Bool_.Y);
 		return bfr.Mkr_rls().XtoAryAndClear();
 	}
-	void Html_nav_bry(ByteAryBfr bfr, Xow_wiki wiki, Xoa_ttl ttl, Xoctg_view_grp view_grp, boolean fill_at_bgn) {
+	private void Html_nav_bry(ByteAryBfr bfr, Xow_wiki wiki, Xoa_ttl ttl, Xoctg_view_grp view_grp, boolean fill_at_bgn) {
 		ByteAryBfr href_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
 		wiki.App().Href_parser().Build_to_bfr(ttl, wiki, href_bfr);
 		byte[] arg_idx_lbl = null; byte[] arg_sortkey = null;

@@ -60,7 +60,7 @@ public class Xog_layout implements GfoInvkAble {
 		Visible_(false, win.Find_box(), win.Find_bwd_btn(), win.Find_fwd_btn(), win.Find_close_btn());
 		win.Html_box().Focus();
 	}
-	void Visible_(boolean v, GfuiElem... ary) {
+	private void Visible_(boolean v, GfuiElem... ary) {
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++)
 			ary[i].Visible_set(v);

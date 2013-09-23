@@ -32,24 +32,24 @@ class Prefs_html_wtr {
 		}
 		bfr.Add_mid(src, hnde.Tag_rhs_bgn(), hnde.Tag_rhs_end());		
 	}
-	void Write_input(ByteAryBfr bfr, Html_nde hnde, int prop_idx, Object prop_val) {
+	private void Write_input(ByteAryBfr bfr, Html_nde hnde, int prop_idx, Object prop_val) {
 		Write__id(bfr, prop_idx);						// " id='xowa_prop_123'"
 		Write__value_atr(bfr, prop_val);				// " value='abc'"
 		Write__nde_end(bfr);							// ">"
 	}
-	void Write_textarea(ByteAryBfr bfr, Html_nde hnde, int prop_idx, Object prop_val) {
+	private void Write_textarea(ByteAryBfr bfr, Html_nde hnde, int prop_idx, Object prop_val) {
 		Write__id(bfr, prop_idx);						// " id='xowa_prop_123'"
 		Write__nde_end(bfr);							// ">"
 		Write__prop_val_direct(bfr, prop_val);			// "abcde"
 	}
-	void Write_checkbox(ByteAryBfr bfr, Html_nde hnde, int prop_idx, Object prop_val) {
+	private void Write_checkbox(ByteAryBfr bfr, Html_nde hnde, int prop_idx, Object prop_val) {
 		Write__id(bfr, prop_idx);						// " id='xowa_prop_123'"
 		boolean prop_val_is_true = String_.Eq((String)prop_val, "y");
 		if (prop_val_is_true)
 			bfr.Add(Atr_stub_checked);					// " checked='checked'"
 		Write__nde_end(bfr);							// ">"
 	}
-	void Write_select(ByteAryBfr bfr, Html_nde hnde, int prop_idx, Object prop_val) {
+	private void Write_select(ByteAryBfr bfr, Html_nde hnde, int prop_idx, Object prop_val) {
 		KeyVal[] options_list = Get_select_options(hnde);
 		Write__id(bfr, prop_idx);						// " id='xowa_prop_123'"
 		Write__nde_end(bfr);							// ">"
@@ -67,14 +67,14 @@ class Prefs_html_wtr {
 			bfr.Add(Nde_stub_option_end);				// "</option>\n"
 		}
 	}
-	void Write_io(ByteAryBfr bfr, Html_nde hnde, int prop_idx, Object prop_val) {
+	private void Write_io(ByteAryBfr bfr, Html_nde hnde, int prop_idx, Object prop_val) {
 		Write__id(bfr, prop_idx);						// " id='xowa_prop_123'"
 		Write__value_atr(bfr, prop_val);				// " value='abc'"
 		Write__nde_end(bfr);							// ">"
 		Write__tag_end(bfr, hnde);						// "</input>\n"
 		Write_io_btn(bfr, hnde, prop_idx);
 	}
-	void Write_io_btn(ByteAryBfr bfr, Html_nde hnde, int prop_idx) {
+	private void Write_io_btn(ByteAryBfr bfr, Html_nde hnde, int prop_idx) {
 		bfr.Add_str("<button id='xowa_prop_").Add_int_variable(prop_idx).Add_str("_io").Add_byte(Byte_ascii.Apos);
 		bfr.Add_str(" class='options_button' onclick='xowa_io_select(\"file\", \"");
 		bfr.Add_str("xowa_prop_").Add_int_variable(prop_idx);
@@ -104,24 +104,24 @@ class Prefs_html_wtr {
 		try {return (KeyVal[])prefs_mgr.Eval(tmp_bfr.XtoAryAndClear());}
 		catch (Exception e) {Err_.Noop(e); return KeyVal_.Ary_empty;}
 	}
-	void Write__nde_end(ByteAryBfr bfr) {bfr.Add_byte(Byte_ascii.Gt);}
-	void Write__id(ByteAryBfr bfr, int prop_idx) {
+	private void Write__nde_end(ByteAryBfr bfr) {bfr.Add_byte(Byte_ascii.Gt);}
+	private void Write__id(ByteAryBfr bfr, int prop_idx) {
 		bfr.Add(Atr_stub_id);				// " id='xowa_prop_"
 		bfr.Add_int_variable(prop_idx);		// "123"
 		bfr.Add_byte(Byte_ascii.Apos);		// "'"
 	}
-	void Write__value_atr(ByteAryBfr bfr, Object prop_val) {
+	private void Write__value_atr(ByteAryBfr bfr, Object prop_val) {
 		bfr.Add(Atr_stub_value);				// " value='"
 		Write__prop_val_escape(bfr, prop_val);	// "abcde"
 		bfr.Add_byte(Byte_ascii.Apos);			// "'"
 	}
-	void Write__prop_val_escape(ByteAryBfr bfr, Object prop_val) {
+	private void Write__prop_val_escape(ByteAryBfr bfr, Object prop_val) {
 		bfr.Add(Html_util.Escape_for_atr_val_as_bry(Object_.XtoStr_OrEmpty(prop_val), Byte_ascii.Apos));	
 	}
-	void Write__prop_val_direct(ByteAryBfr bfr, Object prop_val) {
+	private void Write__prop_val_direct(ByteAryBfr bfr, Object prop_val) {
 		bfr.Add_str(Object_.XtoStr_OrEmpty(prop_val));	
 	}
-	void Write__tag_end(ByteAryBfr bfr, Html_nde hnde) {
+	private void Write__tag_end(ByteAryBfr bfr, Html_nde hnde) {
 		bfr.Add_mid(hnde.Src(), hnde.Tag_rhs_bgn(), hnde.Tag_rhs_end()); 	// "</input>"
 		bfr.Add_byte_nl();													// "\n"
 	}

@@ -205,5 +205,5 @@ class Xosrh_qry_ids {
 	public Xosrh_qry_ids(boolean not, ListAdp ids) {this.not = not; this.ids = ids;}
 	public boolean Not() {return not;} public Xosrh_qry_ids Not_(boolean v) {not = v; return this;} private boolean not;
 	public ListAdp Ids() {return ids;} public Xosrh_qry_ids Ids_(ListAdp v) {ids = v; return this;} ListAdp ids = ListAdp_.Null;
-        public static final Xosrh_qry_ids Null = new Xosrh_qry_ids(false, ListAdp_.Null);
+	public static final Xosrh_qry_ids Null = new Xosrh_qry_ids(false, ListAdp_.Null);
 }

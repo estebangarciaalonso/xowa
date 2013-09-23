@@ -42,7 +42,7 @@ class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 	}
 	boolean running;
 	public boolean Import_move_bz2_to_done() {return import_move_bz2_to_done;} public Xoi_cmd_wiki_import Import_move_bz2_to_done_(boolean v) {import_move_bz2_to_done = v; return this;} private boolean import_move_bz2_to_done = true;
-	void Process_txt(Xob_bldr bldr) {
+	private void Process_txt(Xob_bldr bldr) {
 		((gplx.xowa.bldrs.imports.Xobc_core_cleanup)bldr.Cmd_mgr().Add_cmd(wiki, "core.cleanup")).Delete_wiki_(true).Delete_sqlite3_(true);
 		bldr.Cmd_mgr().Add_cmd(wiki, "core.init");
 		bldr.Cmd_mgr().Add_cmd(wiki, "core.make_page");
@@ -53,7 +53,7 @@ class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 		bldr.Cmd_mgr().Add_cmd(wiki, "core.calc_stats");	
 		bldr.Cmd_mgr().Add_cmd(wiki, "core.term");
 	}	
-	void Process_sql(Xob_bldr bldr) {
+	private void Process_sql(Xob_bldr bldr) {
 		((gplx.xowa.bldrs.imports.Xobc_core_cleanup)bldr.Cmd_mgr().Add_cmd(wiki, "core.cleanup")).Delete_wiki_(true).Delete_sqlite3_(true);
 		bldr.Cmd_mgr().Add_cmd(wiki, "import.sql.init");
 		bldr.Cmd_mgr().Add_cmd(wiki, "import.sql.page");
@@ -62,11 +62,11 @@ class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 			bldr.Cmd_mgr().Add_cmd(wiki, "import.sql.category_registry");
 			bldr.Cmd_mgr().Add_cmd(wiki, "import.sql.categorylinks");
 		}
-//			if (wiki.Bldr_props().Category_version() == gplx.xowa.ctgs.Xoa_ctg_mgr.Version_2)
-//				bldr.Cmd_mgr().Add_cmd(wiki, "import.sql.hiddencat");
+		if (wiki.App().Setup_mgr().Dump_mgr().Search_version() == gplx.xowa.specials.search.Xosrh_core.Version_2)
+			bldr.Cmd_mgr().Add_cmd(wiki, "import.sql.search_title.wkr");
 		bldr.Cmd_mgr().Add_cmd(wiki, "import.sql.term");	
 	}	
-	void Process_async() {
+	private void Process_async() {
 		Xoa_app app = install_mgr.App();
 		app.Usr_dlg().Prog_one("", "", "preparing import: ~{0}", wiki_key);
 		Xob_bldr bldr = app.Bldr();
@@ -99,7 +99,7 @@ class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 		wiki.Bldr_props().Src_fil_xml_(null).Src_fil_bz2_(null);	// reset file else error when going from Import/Script to Import/List
 		app.Gui_mgr().Kit().New_cmd_sync(this).Invk(GfsCtx.new_(), 0, Invk_open_wiki, GfoMsg_.Null);
 	}	private Xow_wiki wiki;
-	void Open_wiki(String wiki_key) {
+	private void Open_wiki(String wiki_key) {
 		Xog_win main_win = install_mgr.App().Gui_mgr().Main_win();
 		if (main_win.Page() == null) return; // will be null when invoked through cmd-line
 		byte[] url = ByteAry_.Add(wiki.Key_bry(), Xoh_href_parser.Href_wiki_bry, wiki.Props().Main_page());

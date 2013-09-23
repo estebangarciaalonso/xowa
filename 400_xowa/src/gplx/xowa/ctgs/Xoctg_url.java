@@ -20,7 +20,7 @@ public class Xoctg_url {
 	public byte[]		All_idx() {return all_idx;} private byte[] all_idx;
 	public byte[][]		Grp_idxs() {return grp_idxs;} private byte[][] grp_idxs = new byte[3][];
 	public byte[]		Grp_fwds() {return grp_fwds;} private byte[] grp_fwds = new byte[3];
-	void Clear() {
+	private void Clear() {
 		all_idx = null;
 		for (int i = 0; i < 3; i++) {
 			grp_fwds[i] = Bool_.__byte;

@@ -33,7 +33,7 @@ class Sql_fld_mgr {
 		Parse_lines(ByteAry_.Mid(raw, bgn, end));
 		return this;
 	}
-	void Parse_lines(byte[] raw) {
+	private void Parse_lines(byte[] raw) {
 		byte[][] lines = ByteAry_.Split(raw, Byte_ascii.NewLine);
 		int lines_len = lines.length;
 		int fld_idx = 0;

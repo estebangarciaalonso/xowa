@@ -61,7 +61,7 @@ public class Prefs_mgr implements GfoInvkAble {
 		bfr.Add_mid(src, pos, src.length);
 		return bfr.XtoAryAndClear();
 	}	private ByteAryFmtr props_get_fmtr; 
-	void Props_set_and_reload() {
+	private void Props_set_and_reload() {
 		Props_set(app.Gui_mgr().Main_win().Page().Data_raw());
 		app.Gui_mgr().Main_win().Exec_page_reload();
 		app.Usr_dlg().Prog_direct("options saved (" + DateAdp_.Now().XtoStr_fmt("HH:mm:ss") + ")");
@@ -80,7 +80,7 @@ public class Prefs_mgr implements GfoInvkAble {
 		}
 		app.Cfg_mgr().Db_save_txt();
 	}
-	void Props_set_by_hnde(ByteAryBfr cmd_bfr, byte[] src, Html_nde hnde, int i) {
+	private void Props_set_by_hnde(ByteAryBfr cmd_bfr, byte[] src, Html_nde hnde, int i) {
 		byte[] eval_code = hnde.Atrs_val_by_key_bry(Bry_prop);
 		if 	(eval_code == null) eval_code = hnde.Atrs_val_by_key_bry(Bry_prop_set);
 		String hnde_val = null;

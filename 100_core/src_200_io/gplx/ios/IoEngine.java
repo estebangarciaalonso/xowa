@@ -45,6 +45,7 @@ public interface IoEngine {
 	IoItmDir	QueryDirDeep(IoEngine_xrg_queryDir args);
 	void		XferDir(IoEngine_xrg_xferDir args);
 	boolean		DownloadFil(IoEngine_xrg_downloadFil xrg);
+	Io_stream_rdr DownloadFil_as_rdr(IoEngine_xrg_downloadFil xrg);
 }
 class IoEngineUtl {
 	public int BufferLength() {return bufferLength;} public void BufferLength_set(int v) {bufferLength = v;} int bufferLength = 4096; // 0x1000	

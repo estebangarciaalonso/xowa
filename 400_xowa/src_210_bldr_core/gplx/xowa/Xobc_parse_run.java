@@ -62,7 +62,7 @@ public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoIn
 		wiki.Page_cache().Clear();
 	}
 	public void Cmd_print() {}
-	void Parse_ns(Xow_ns ns) {
+	private void Parse_ns(Xow_ns ns) {
 		cur_ns = ns;
 		Io_url ns_dir = wiki.Fsys_mgr().Ns_dir().GenSubDir_nest(ns.Num_str(), Xow_dir_info_.Name_page);
 		raw_parser.Init_ns(ns);
@@ -71,7 +71,7 @@ public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoIn
 		Free();
 		log_dump.Flush();
 	}	boolean ns_is_tmpl; int compress_max = 20, compress_idx = 0; Xow_ns cur_ns;
-	void Parse_dir(Io_url dir) {
+	private void Parse_dir(Io_url dir) {
 		Io_url[] itms = Io_mgr._.QueryDir_args(dir).DirInclude_().ExecAsUrlAry();
 		bldr.Usr_dlg().Prog_many(GRP_KEY, "load_dir", "loading dir: ~{0}", dir.NameAndExt());
 		int itms_len = itms.length;
@@ -81,7 +81,7 @@ public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoIn
 			else				Parse_fil(itm);
 		}
 	}
-	void Parse_fil(Io_url fil) {
+	private void Parse_fil(Io_url fil) {
 //			if (String_.Compare(fil.NameOnly(), "0000000927") <= CompareAble_.Same) return;
 		raw_parser.Reset_one(fil);
 		while (raw_parser.Read(raw_page)) {
@@ -93,7 +93,7 @@ public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoIn
 //				Io_mgr._.AppendFilStr("C:\\dump.txt", Xop_xnde_wkr.TEMP_TIMELINE.XtoStrAndClear());
 		}
 	}	private Xodb_page_raw_parser raw_parser = new Xodb_page_raw_parser(); Xodb_page raw_page = new Xodb_page();
-	void Free() {
+	private void Free() {
 		ctx.App().Free_mem(true);
 		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_invalidate();
 		Env_.GarbageCollect();
@@ -134,7 +134,7 @@ public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoIn
 			ctx.App().Utl_bry_bfr_mkr().Clear();
 		}
 	}	private Xop_redirect_mgr redirect_mgr;
-	void Tmpl_load(Xow_wiki wiki) {
+	private void Tmpl_load(Xow_wiki wiki) {
 		Xodb_page_raw_parser raw_parser = new Xodb_page_raw_parser();
 		Io_url dir = wiki.Fsys_mgr().Tmp_dir().GenSubDir_nest(Xobc_parse_dump_templates.KEY, "dump");
 		Io_url[] urls = Io_mgr._.QueryDir_fils(dir);

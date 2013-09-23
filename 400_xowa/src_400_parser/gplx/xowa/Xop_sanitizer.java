@@ -25,7 +25,7 @@ public class Xop_sanitizer {
 		trie_add("%3a"	, Tid_colon);
 		trie_add("%"	, Tid_percent);
 	}	private ByteTrieMgr_slim trie = ByteTrieMgr_slim.cs_(), amp_trie; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); Gfo_msg_log msg_log; IntRef ncr_val = IntRef.zero_(); BoolRef fail = BoolRef.false_();
-	void trie_add(String hook, byte tid) {trie.Add_stub(hook, tid);}
+	private void trie_add(String hook, byte tid) {trie.Add_stub(hook, tid);}
 	public byte[] Escape_id(byte[] src) {
 		boolean dirty = Escape_id(src, 0, src.length, tmp_bfr);
 		return dirty ? tmp_bfr.XtoAryAndClear() : src;

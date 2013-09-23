@@ -21,7 +21,7 @@ public class Io_zip_mgr_tst {
 	@Test  public void Zip_unzip() {
 		Zip_unzip_tst("abcdefghijklmnopqrstuvwxyz"); 
 	}
-	void Zip_unzip_tst(String s) {
+	private void Zip_unzip_tst(String s) {
 		Io_zip_mgr zip_mgr = Io_zip_mgr_base._;
 		byte[] src = ByteAry_.new_ascii_(s);
 		byte[] zip = zip_mgr.Zip_bry(src, 0, src.length);

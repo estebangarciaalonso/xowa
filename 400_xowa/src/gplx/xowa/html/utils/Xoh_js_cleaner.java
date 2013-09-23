@@ -75,7 +75,7 @@ public class Xoh_js_cleaner {
 		}	finally {if (bfr != null) bfr.Mkr_rls();}
 		return dirty ? bfr.XtoAryAndClear() : null;
 	}
-	void Ctor() {
+	private void Ctor() {
 		Reg_itm("<script");
 		Reg_itm("<iframe");
 		Reg_itm("<style");
@@ -181,5 +181,5 @@ public class Xoh_js_cleaner {
 		Reg_itm("seekSegmentTime");
 		ctor = false;
 	}
-	void Reg_itm(String s) {trie.Add_bry(ByteAry_.new_ascii_(s));} ByteTrieMgr_slim trie = new ByteTrieMgr_slim(false);
+	private void Reg_itm(String s) {trie.Add_bry(ByteAry_.new_ascii_(s));} ByteTrieMgr_slim trie = new ByteTrieMgr_slim(false);
 }

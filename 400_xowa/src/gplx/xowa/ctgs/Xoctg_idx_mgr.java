@@ -41,7 +41,7 @@ public class Xoctg_idx_mgr implements GfoInvkAble {
 		if (pipe_pos_cur != pipe_pos_prv)	// if last itm was not indexed, index it
 			Index_itm(ctg, src, pipe_pos_cur + 1, len);
 	}
-	void Index_itm(byte[] ctg, byte[] src, int bgn, int len) {
+	private void Index_itm(byte[] ctg, byte[] src, int bgn, int len) {
 		int end = ByteAry_.FindFwd(src, Byte_ascii.Pipe, bgn, len); if (end == ByteAry_.NotFound) throw Err_.new_fmt_("Ctg_idx_mgr could not find pipe.end; ctg={0} pos={1}", String_.new_ascii_(ctg), bgn);
 		fld_rdr.Pos_(bgn);
 		Xoctg_idx_itm itm = new Xoctg_idx_itm().Parse(fld_rdr, bgn);

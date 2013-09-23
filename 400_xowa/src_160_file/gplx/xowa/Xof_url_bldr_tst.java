@@ -35,7 +35,7 @@ class Xof_url_bldr_fxt {
 	public Xof_url_bldr_fxt Seek_(int v) {seek = v; return this;} private int seek = -1;
 	public Xof_url_bldr_fxt Expd_src_(String v) {expd_src = v; return this;} private String expd_src;
 	Xof_url_bldr url_bldr = new Xof_url_bldr();
-	void Clear() {
+	private void Clear() {
 		dir_spr = Byte_.Zero; ext = null; root = md5 = ttl = expd_src = null;
 		seek = -1;
 	}

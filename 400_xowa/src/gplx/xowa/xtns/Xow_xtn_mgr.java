@@ -47,7 +47,7 @@ public class Xow_xtn_mgr implements GfoInvkAble {
 		}
 		return (Xow_xtn_itm)rv_obj;
 	}
-	void Add(Xow_xtn_itm xtn) {
+	private void Add(Xow_xtn_itm xtn) {
 		xtn.Xtn_init_by_app(app);
 		regy.Add(xtn.Xtn_key(), xtn);
 	}

@@ -19,7 +19,7 @@ package gplx.xowa.bldrs.imports; import gplx.*; import gplx.xowa.*; import gplx.
 public class Xobc_core_batch implements GfoInvkAble {
 	public Xobc_core_batch(Xob_bldr bldr, byte[] raw) {this.bldr = bldr; fmtr.Fmt_(raw);} private Xob_bldr bldr;
 	ByteAryFmtr fmtr = ByteAryFmtr.keys_("bz2_fil", "wiki_key");
-	void Run() {
+	private void Run() {
 		Io_url[] bz2_fils = Io_mgr._.QueryDir_fils(bldr.App().Fsys_mgr().Wiki_dir().GenSubDir_nest(Dir_dump, "todo"));
 		ByteAryBfr bfr = ByteAryBfr.reset_(Io_mgr.Len_kb);
 		int bz2_fils_len = bz2_fils.length;

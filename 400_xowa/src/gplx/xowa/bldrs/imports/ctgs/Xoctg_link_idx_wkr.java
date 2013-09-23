@@ -57,7 +57,7 @@ public class Xoctg_link_idx_wkr extends Xob_idx_base {	// NOTE: similar function
 	@Override public void Cmd_end() {
 		if (delete_temp) Io_mgr._.DeleteDirDeep_ary(src_link_dir, make_main_mgr.Src_dir());
 	}	boolean delete_temp = true;
-	void Write_grp(byte[] cur_name, Xoctg_make_link_mgr make_link_mgr) {
+	private void Write_grp(byte[] cur_name, Xoctg_make_link_mgr make_link_mgr) {
 		make_main_mgr.Grps_write(cur_name, make_link_mgr.Subc_grp().Count(), make_link_mgr.File_grp().Count(), make_link_mgr.Page_grp().Count());
 		make_link_mgr.Grps_write(cur_name);
 	}	private Xoctg_make_main_mgr make_main_mgr;
@@ -113,7 +113,7 @@ class Xoctg_make_link_mgr {
 	public void Flush() {
 		make_cmd.Sort_end();
 	}
-	void Write_grp(ByteAryBfr make_fil_bfr, Xoctg_make_link_grp grp) {
+	private void Write_grp(ByteAryBfr make_fil_bfr, Xoctg_make_link_grp grp) {
 		if (grp.Bfr_len() == 0) return;
 		make_fil_bfr.Add_bfr_and_clear(grp.Bfr());		// NOTE: should have trailing pipe
 	}

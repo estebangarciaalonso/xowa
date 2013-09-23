@@ -21,22 +21,21 @@ public class Fsdb_xtn_img_tbl {
 	public static void Create_table(Db_provider p) {
 		Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); 
 	}
-	public static void Insert(Db_provider p, int id, int w, int h, int bits) {
+	public static void Insert(Db_provider p, int id, int w, int h) {
 		Db_stmt stmt = Insert_stmt(p);
-		try {Insert(stmt, id, w, h, bits);}
+		try {Insert(stmt, id, w, h);}
 		finally {stmt.Rls();}
 	}
-	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_img_id, Fld_img_w, Fld_img_h, Fld_img_bits);}
-	public static void Insert(Db_stmt stmt, int id, int w, int h, int bits) {
+	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_img_id, Fld_img_w, Fld_img_h);}
+	public static void Insert(Db_stmt stmt, int id, int w, int h) {
 		stmt.Clear()
 		.Val_int_(id)
 		.Val_int_(w)
 		.Val_int_(h)
-		.Val_int_(bits)
 		.Exec_insert();
 	}
 	public static Db_stmt Select_itm_by_id_stmt(Db_provider p) {
-		return Db_stmt_.new_select_(p, Tbl_name, String_.Ary(Fld_img_id), Fld_img_w, Fld_img_h, Fld_img_bits); 
+		return Db_stmt_.new_select_(p, Tbl_name, String_.Ary(Fld_img_id), Fld_img_w, Fld_img_h); 
 	}
 	public static Fsdb_xtn_img_itm Select_itm_by_id(Db_provider p, int id) {
 		Db_stmt stmt = Select_itm_by_id_stmt(p);
@@ -47,19 +46,18 @@ public class Fsdb_xtn_img_tbl {
 		try {
 			rdr = stmt.Val_int_(id).Exec_select();
 			if (rdr.MoveNextPeer())
-				return new Fsdb_xtn_img_itm().Init_by_load(id, rdr.ReadInt(Fld_img_w), rdr.ReadInt(Fld_img_h), rdr.ReadInt(Fld_img_bits));
+				return new Fsdb_xtn_img_itm().Init_by_load(id, rdr.ReadInt(Fld_img_w), rdr.ReadInt(Fld_img_h));
 			else
 				return Fsdb_xtn_img_itm.Null;
 		}
 		finally {rdr.Rls();}
 	}
-	public static final String Tbl_name = "fsdb_xtn_img", Fld_img_id = "img_id", Fld_img_w = "img_w", Fld_img_h = "img_h", Fld_img_bits = "img_bits";
+	public static final String Tbl_name = "fsdb_xtn_img", Fld_img_id = "img_id", Fld_img_w = "img_w", Fld_img_h = "img_h";
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS fsdb_xtn_img"
 	,	"( img_id            integer             NOT NULL    PRIMARY KEY"
 	,	", img_w             integer             NOT NULL"
 	,	", img_h             integer             NOT NULL"
-	,	", img_bits          smallint            NOT NULL"	
 	,	");"
 	);
 }

@@ -25,7 +25,7 @@ public class Xop_fxt {
 	public Xop_fxt(Xoa_app app, Xow_wiki wiki) {
 		this.ctor(app, wiki);
 	}
-	void ctor(Xoa_app app, Xow_wiki wiki) {
+	private void ctor(Xoa_app app, Xow_wiki wiki) {
 		this.app = app;
 		this.wiki = wiki;
 		app.Wiki_mgr().Add(wiki);
@@ -238,7 +238,7 @@ public class Xop_fxt {
 		html_wtr.Write_all(ctx, root, root.Root_src(), actl_bfr);
 		return actl_bfr.XtoStrAndClear();
 	}
-	void Parse_chk(byte[] raw_bry, Xop_root_tkn root, Tst_chkr[] expd_ary) {
+	private void Parse_chk(byte[] raw_bry, Xop_root_tkn root, Tst_chkr[] expd_ary) {
 		int subs_len = root.Subs_len();
 		Object[] actl_ary = new Object[subs_len];
 		for (int i = 0; i < subs_len; i++)
@@ -299,25 +299,6 @@ public class Xop_fxt {
 	}
 	public static String html_img_none(String trg, String alt, String src, String ttl) {
 		return String_.Format(String_.Concat_lines_nl_skipLast("<a href=\"/wiki/{0}\" class=\"image\" xowa_title=\"{3}\"><img id=\"xowa_file_img_0\" alt=\"{1}\" src=\"{2}\" width=\"9\" height=\"8\" /></a>"), trg, alt, src, ttl);
-	}
-	void utl_print_tkns(byte[] raw_bry, Xop_root_tkn root) {
-		int subs_len = root.Subs_len();
-		StringBldr sb = StringBldr.new_();
-		for (int i = 0; i < subs_len; i++) {
-			Xop_tkn_itm sub = root.Subs_get(i);
-			switch (sub.Tkn_tid()) {
-				case Xop_tkn_itm_.Tid_list:
-					Xop_list_tkn list_tkn = (Xop_list_tkn)sub;
-					sb.Add(Int_.XtoStr_PadBgn(i, 2)).Add(":list:bgn=").Add(list_tkn.List_bgn() == 1 ? "y" : "n").Add(list_tkn.List_itmTyp()).Add_line();
-					break;
-				case Xop_tkn_itm_.Tid_txt:
-					Xop_txt_tkn txt_tkn = (Xop_txt_tkn)sub;
-					byte[] xx = ByteAry_.Mid(raw_bry, txt_tkn.Src_bgn(), txt_tkn.Src_end());
-					sb.Add(Int_.XtoStr_PadBgn(i, 2)).Add(":text:text=").Add(String_.new_utf8_(xx)).Add_line();
-					break;
-			}
-		}
-		Tfds.Write(sb.toString());
 	}
 	Tst_mgr tst_mgr = new Tst_mgr(); Xop_tkn_mkr tkn_mkr;
 }

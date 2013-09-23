@@ -24,7 +24,7 @@ public class Xoa_gfs_mgr implements GfoInvkAble, GfoInvkRootWkr {
 	}	private Xoa_app app;
 	public Xoa_app_eval Eval_mgr() {return eval_mgr;} private Xoa_app_eval eval_mgr;
 	public static boolean Fail_if_unhandled = false;
-	void Run_url_by_type(String type) {
+	private void Run_url_by_type(String type) {
 		Io_url app_data_dir = app.User().Fsys_mgr().App_data_dir();
 		Io_url url = null;
 		if		(String_.Eq(type, "user_system_cfg"))	url = app_data_dir.GenSubFil_nest("cfg", "user_system_cfg.gfs");

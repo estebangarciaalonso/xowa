@@ -51,7 +51,7 @@ public class Gfo_thread_cmd_download implements Gfo_thread_cmd {
 	public void Async_prog_run(int async_sleep_sum) {}
 	public boolean Async_running() {return xrg.Prog_running();} 
 	public void Async_run() {ThreadAdp_.invk_(this, Invk_async_bgn).Start();}
-	void Download() {
+	private void Download() {
 		download_pass = true;
 		if (!xrg.Exec()) {
 			kit.Ask_ok(GRP_KEY, "download.fail", "download failed. Please select 'read from file' if you've already downloaded a dump: url=~{0} error=~{1}", src, Err_.Message_gplx_brief(xrg.Rslt_err()));

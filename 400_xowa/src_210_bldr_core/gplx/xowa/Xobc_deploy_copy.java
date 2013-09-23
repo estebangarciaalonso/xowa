@@ -34,7 +34,7 @@ public class Xobc_deploy_copy extends Xob_itm_basic_base implements Xob_cmd, Gfo
 		Copy_dir_root(src_root_dir, Xow_dir_info_.Name_site, Xow_dir_info_.Name_search_ttl);
 	}
 	public void Cmd_print() {}
-	void Copy_dir_ns(Io_url root, String name) {
+	private void Copy_dir_ns(Io_url root, String name) {
 		Io_url[] ns_dirs = Io_mgr._.QueryDir_args(root).DirOnly_().ExecAsUrlAry();
 		for (int i = 0; i < ns_dirs.length; i++) {
 			Io_url ns_dir = ns_dirs[i];
@@ -50,12 +50,12 @@ public class Xobc_deploy_copy extends Xob_itm_basic_base implements Xob_cmd, Gfo
 			Copy_dir(src_sub_dir, trg_root_dir.GenSubDir_nest(Xow_dir_info_.Name_ns, ns_dir.NameOnly(), dir_name));
 		}
 	}
-	void Copy_dir_root(Io_url src_root_dir, String... sub_dirs) {
+	private void Copy_dir_root(Io_url src_root_dir, String... sub_dirs) {
 		Io_url src = src_root_dir.GenSubDir_nest(sub_dirs);
 		Io_url trg = trg_root_dir.GenSubDir_nest(sub_dirs);
 		Copy_dir(src, trg);
 	}
-	void Copy_dir(Io_url src, Io_url trg) {
+	private void Copy_dir(Io_url src, Io_url trg) {
 		bldr.Usr_dlg().Prog_many(GRP_KEY, "copy", "copying to ~{1}", src.Xto_api(), trg.Xto_api());
 		Io_mgr._.CopyDirDeep(src, trg);
 	}

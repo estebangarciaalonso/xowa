@@ -29,7 +29,7 @@ public class Io_sort_cmd_img_tst {
 		,	"Abc.png|1|-1|-1|-1|"			
 		));
 	}
-	void tst_cmd(String raw, String expd) {
+	private void tst_cmd(String raw, String expd) {
 		Io_url src_fil = Io_url_.mem_fil_("mem/src.csv");
 		Io_url trg_fil = Io_url_.mem_fil_("mem/trg.csv");
 		Io_mgr._.SaveFilStr(src_fil, raw);

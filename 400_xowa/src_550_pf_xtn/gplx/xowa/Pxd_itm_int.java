@@ -67,12 +67,12 @@ class Pxd_itm_int extends Pxd_itm_base {
 				break;
 		}
 	}
-	void Eval_unknown_at_pos_3(Pxd_parser state) {	// int at pos 4
+	private void Eval_unknown_at_pos_3(Pxd_parser state) {	// int at pos 4
 		if (	state.Seg_idxs_chk(DateAdp_.SegIdx_year, DateAdp_.SegIdx_month, DateAdp_.SegIdx_day)	// check that ymd is set
 			&&	Match_sym(state, false, Pxd_itm_.TypeId_dash))											// check that preceding symbol is "-"
 			Pxd_itm_int_.Hour_err(state, this);															// mark as hour; handles strange fmts like November 2, 1991-06; DATE:2013-06-19
 	}
-	void Eval_unknown_at_pos_4(Pxd_parser state) {
+	private void Eval_unknown_at_pos_4(Pxd_parser state) {
 		if (	state.Seg_idxs_chk(DateAdp_.SegIdx_year
 				, DateAdp_.SegIdx_month, DateAdp_.SegIdx_day, DateAdp_.SegIdx_hour)						// check that ymdh is set
 			&&	Match_sym(state, false, Pxd_itm_.TypeId_dash))											// check that preceding symbol is "-"
@@ -84,7 +84,7 @@ class Pxd_itm_int extends Pxd_itm_base {
 		if (sym_idx < 0 || sym_idx > sym_tkns.length) return false;	// NOTE: was Data_ary_len; DATE:2013-06-19
 		return sym_tkns[sym_idx].Tkn_tid() == sym_tid;
 	}
-	void Eval_month_at_pos_0(Pxd_parser state) {
+	private void Eval_month_at_pos_0(Pxd_parser state) {
 		Pxd_itm[] data_ary = state.Data_ary();
 		if (state.Data_ary_len() < 2) return;
 		Pxd_itm_int itm_1 = Pxd_itm_int_.CastOrNull(data_ary[1]);
@@ -99,7 +99,7 @@ class Pxd_itm_int extends Pxd_itm_base {
 		}
 		Pxd_itm_int_.Year_err(state, this);
 	}
-	void Eval_day_at_pos_0(Pxd_parser state) {	// eval 1 as month; 2 as year, 0 as day
+	private void Eval_day_at_pos_0(Pxd_parser state) {	// eval 1 as month; 2 as year, 0 as day
 		Pxd_itm[] data_ary = state.Data_ary();
 		if (state.Data_ary_len() < 2) return;
 		Pxd_itm_int itm_1 = Pxd_itm_int_.CastOrNull(data_ary[1]);
@@ -114,7 +114,7 @@ class Pxd_itm_int extends Pxd_itm_base {
 		}
 		Pxd_itm_int_.Day_err(state, this);
 	}
-	void Eval_dmy_at_y(Pxd_parser state) {	// dmy format; cur is y (slot 2) 
+	private void Eval_dmy_at_y(Pxd_parser state) {	// dmy format; cur is y (slot 2) 
 		Pxd_itm[] data_ary = state.Data_ary();
 		if (state.Data_ary_len() < 3) return;	// since proc starts at y, assume at least d-m-y (not m-y) 
 		Pxd_itm_int itm_1 = Pxd_itm_int_.CastOrNull(data_ary[1]);
@@ -127,7 +127,7 @@ class Pxd_itm_int extends Pxd_itm_base {
 		}
 		Pxd_itm_int_.Year_err(state, this);
 	}
-	void Eval_month_at_pos_1(Pxd_parser state) {
+	private void Eval_month_at_pos_1(Pxd_parser state) {
 		Pxd_itm[] data_ary = state.Data_ary();
 		Pxd_itm_int itm_0 = Pxd_itm_int_.CastOrNull(data_ary[0]);
 		if (itm_0 != null) {
@@ -141,7 +141,7 @@ class Pxd_itm_int extends Pxd_itm_base {
 		}
 		Pxd_itm_int_.Day_err(state, this);
 	}
-	void Eval_month_at_pos_2(Pxd_parser state) {
+	private void Eval_month_at_pos_2(Pxd_parser state) {
 		Pxd_itm[] data_ary = state.Data_ary();
 		Pxd_itm_int itm_0 = Pxd_itm_int_.CastOrNull(data_ary[0]);
 		if (itm_0 != null) {
@@ -153,7 +153,7 @@ class Pxd_itm_int extends Pxd_itm_base {
 		}
 		Pxd_itm_int_.Year_err(state, this);
 	}
-	void Eval_unknown_at_pos_0(Pxd_parser state) {	// NOTE: assumes dmy format
+	private void Eval_unknown_at_pos_0(Pxd_parser state) {	// NOTE: assumes dmy format
 		Pxd_itm[] data_ary = state.Data_ary();
 		if (state.Data_ary_len() < 2) {state.Err_set(Pf_xtn_time_log.Invalid_year, ByteAryFmtrArg_.int_(val)); return;}
 		Pxd_itm_int itm_1 = Pxd_itm_int_.CastOrNull(data_ary[1]);
@@ -168,7 +168,7 @@ class Pxd_itm_int extends Pxd_itm_base {
 		}
 		Pxd_itm_int_.Day_err(state, this);	// parse current as day (dmy format)
 	}
-	void Eval_year_at_pos_0(Pxd_parser state) {
+	private void Eval_year_at_pos_0(Pxd_parser state) {
 		Pxd_itm[] data_ary = state.Data_ary();
 		if (state.Data_ary_len() < 2) return;
 		Pxd_itm_int itm_1 = Pxd_itm_int_.CastOrNull(data_ary[1]);
@@ -181,7 +181,7 @@ class Pxd_itm_int extends Pxd_itm_base {
 			if (Pxd_itm_int_.Day_err(state, itm_2)) return;		
 		}
 	}
-	void Eval_year_at_pos_2(Pxd_parser state) {
+	private void Eval_year_at_pos_2(Pxd_parser state) {
 		Pxd_itm[] data_ary = state.Data_ary();
 		Pxd_itm_int itm_0 = Pxd_itm_int_.CastOrNull(data_ary[0]);
 		Pxd_itm_int itm_1 = Pxd_itm_int_.CastOrNull(data_ary[1]);

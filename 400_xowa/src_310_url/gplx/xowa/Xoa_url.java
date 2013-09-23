@@ -68,6 +68,19 @@ public class Xoa_url {
 			if (trg_arg != null) trg_arg.Val_bry_(src_arg.Val_bry());
 		}
 	}
+	public byte[] Args_all_as_bry() {
+		int args_len = args.length;
+		if (args_len == 0) return ByteAry_.Empty;
+		ByteAryBfr bfr = ByteAryBfr.new_();
+		for (int i = 0; i < args_len; i++) {
+			Gfo_url_arg arg = args[i];
+			bfr.Add_byte(i == 0 ? Byte_ascii.Question : Byte_ascii.Amp);
+			bfr.Add(arg.Key_bry());
+			bfr.Add_byte(Byte_ascii.Eq);
+			bfr.Add(arg.Val_bry());
+		}
+		return bfr.XtoAryAndClear();
+	}
 	public String Anchor_str() {return anchor_bry == null ? null : String_.new_utf8_(anchor_bry);}
 	public static Xoa_url new_(byte[] wiki, byte[] page) {
 		Xoa_url rv = new Xoa_url();

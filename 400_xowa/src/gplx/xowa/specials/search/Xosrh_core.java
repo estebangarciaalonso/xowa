@@ -59,7 +59,7 @@ public class Xosrh_core implements GfoInvkAble, Xows_page {
 			page.Page_ttl_(page_ttl).Url_(Xoa_url.new_(wiki.Key_bry(), page_ttl.Full_txt())).Url_redirected_(true);
 		}
 	}	static final byte[] Bry_page_name = ByteAry_.new_ascii_("Special:Search");
-	void Sort_tid(byte v) {
+	private void Sort_tid(byte v) {
 		switch (v) {
 			case Xosrh_rslt_itm_sorter.Tid_none:
 				if (!ByteAry_.Eq(args_mgr.Search_bry(), page_mgr.Search_bry()))
@@ -77,6 +77,7 @@ public class Xosrh_core implements GfoInvkAble, Xows_page {
 		return this;
 	}	private static final String Invk_itms_per_page_ = "itms_per_page_", Invk_html = "html";
 	public static final byte Match_tid_all = 0, Match_tid_bgn = 1;
+	public static final byte Version_null = 0, Version_1 = 1, Version_2 = 2;
 }
 class Xosrh_args_mgr {
 	public byte[] Search_bry() {return search_bry;} public Xosrh_args_mgr Search_bry_(byte[] v) {search_bry = v; return this;} private byte[] search_bry;

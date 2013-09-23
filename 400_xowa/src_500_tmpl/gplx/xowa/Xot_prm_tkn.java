@@ -73,7 +73,7 @@ public class Xot_prm_tkn extends Xop_tkn_itm_base {
 		}
 		return true;
 	}
-	void Tmpl_write_missing(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr) {
+	private void Tmpl_write_missing(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr) {
 		if (dflt_tkn == null) {							// dflt absent; write orig; {{{1}}} or {{{key}}};
 			bfr.Add(Xop_curly_wkr.Hook_prm_bgn);
 			int subs_len = find_tkn.Subs_len();

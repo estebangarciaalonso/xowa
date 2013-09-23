@@ -17,15 +17,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*;
-public class Xob_dump_mgr_redirect extends Xob_dump_mgr_base {
+public class Xob_redirect_cmd extends Xob_dump_mgr_base {
 	private Db_provider provider; private Db_stmt stmt;
-	private Xodb_file db_file; private Xodb_tbl_redirect tbl_redirect;
+	private Xob_redirect_tbl tbl_redirect;
 	private Xodb_mgr_sql db_mgr; private Xop_redirect_mgr redirect_mgr; private Url_encoder encoder;		
-	public Xob_dump_mgr_redirect(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xob_redirect_cmd(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
 	@Override public String Cmd_key() {return KEY_redirect;} public static final String KEY_redirect = "oimg.redirect";
 	@Override public int[] Init_ns_ary() {return Int_.Ary(Xow_ns_.Id_file);}
 	@Override public byte Init_redirect() {return Bool_.Y_byte;}	// only look at redirects
-	@Override public Xodb_file Init_db_file() {
+	@Override public Db_provider Init_db_file() {
 		this.db_mgr = wiki.Db_mgr_as_sql();
 		Xoa_app app = bldr.App();
 		redirect_mgr = wiki.Redirect_mgr();
@@ -33,12 +33,11 @@ public class Xob_dump_mgr_redirect extends Xob_dump_mgr_base {
 		app.Usr_dlg().Prog_none("", "", "dropping index: page__title");
 		db_mgr.Fsys_mgr().Core_provider().Exec_sql("DROP INDEX IF EXISTS page__title");
 		Sqlite_engine_.Idx_create(app.Usr_dlg(), db_mgr.Fsys_mgr().Core_provider(), "page", Idx_page_title);
-		db_file = db_mgr.Fsys_mgr().Get_or_make(Db_name);
-		provider = db_file.Provider();
-		tbl_redirect = new Xodb_tbl_redirect().Create_table(provider);
+		provider = Sqlite_engine_.Provider_load_or_make_(db_mgr.Fsys_mgr().Trg_dir().GenSubFil(Db_name + ".sqlite3"));
+		tbl_redirect = new Xob_redirect_tbl().Create_table(provider);
 		stmt = tbl_redirect.Insert_stmt(provider);
 		provider.Txn_mgr().Txn_bgn_if_none();
-		return db_file;
+		return provider;
 	}
 	@Override public void Exec_page_hook(Xow_ns ns, Xodb_page page, byte[] page_src) {
 		Xoa_ttl redirect_ttl = redirect_mgr.Extract_redirect(page_src, page_src.length);

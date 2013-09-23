@@ -21,6 +21,6 @@ public class Xodb_image_itm {
 	public int Size() {return size;} public void Size_(int v) {this.size = v;} int size;
 	public int Width() {return width;} public void Width_(int v) {this.width = v;} int width;
 	public int Height() {return height;} public void Height_(int v) {this.height = v;} int height;
-	public byte Bits() {return bits;} public void Bytes_(byte v) {this.bits = v;} byte bits;
+	public byte Bits() {return bits;} public void Bits_(byte v) {this.bits = v;} byte bits;
 	public static final Xodb_image_itm Null = new Xodb_image_itm();
 }

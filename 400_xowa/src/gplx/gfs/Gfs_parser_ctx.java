@@ -38,7 +38,7 @@ class Gfs_parser_ctx {
 		cur_idf_bgn = bgn;
 		cur_idf_end = end;
 	}	int cur_idf_bgn = -1, cur_idf_end = -1;
-	void Held_word_clear() {cur_idf_bgn = -1; cur_idf_end = -1;}
+	private void Held_word_clear() {cur_idf_bgn = -1; cur_idf_end = -1;}
 
 	public Gfs_nde Make_nde(int tkn_bgn, int tkn_end) {	// "abc."; "abc("; "abc;"; "abc{"
 		Gfs_nde nde = new Gfs_nde().Name_rng_(cur_idf_bgn, cur_idf_end);
@@ -70,7 +70,7 @@ class Gfs_err_mgr {
 	public void Fail_invalid_lxr(Gfs_parser_ctx ctx, int pos, byte cur_lxr, byte c) {
 		Fail(ctx, Fail_msg_invalid_lxr, pos, KeyVal_.new_("char", Char_.XtoStr((char)c)), KeyVal_.new_("cur_lxr", Gfs_lxr_.Tid__name(cur_lxr)), KeyVal_.new_("prv_lxr", Gfs_lxr_.Tid__name(ctx.Prv_lxr())));
 	}
-	void Fail(Gfs_parser_ctx ctx, String msg, int pos, KeyVal... args) {
+	private void Fail(Gfs_parser_ctx ctx, String msg, int pos, KeyVal... args) {
 		byte[] src = ctx.Src(); int src_len = ctx.Src_len(); 
 		Fail_args_standard(src, src_len, pos);
 		int len = args.length;
@@ -80,7 +80,7 @@ class Gfs_err_mgr {
 		}
 		throw Err_.new_(Fail_msg(msg, tmp_fail_args));
 	}
-	void Fail_args_standard(byte[] src, int src_len, int pos) {
+	private void Fail_args_standard(byte[] src, int src_len, int pos) {
 		tmp_fail_args.Add("excerpt_bgn", Fail_excerpt_bgn(src, src_len, pos));		
 		tmp_fail_args.Add("excerpt_end", Fail_excerpt_end(src, src_len, pos));		
 		tmp_fail_args.Add("pos"	, pos);		

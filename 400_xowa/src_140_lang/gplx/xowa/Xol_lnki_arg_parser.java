@@ -90,13 +90,13 @@ public class Xol_lnki_arg_parser {
 		return Tid_caption;
 	}	private ByteTrieMgr_bwd_slim bwd_trie = ByteTrieMgr_bwd_slim.cs_();
 	ByteTrieMgr_fast size_trie = ByteTrieMgr_fast.cs_();
-	void Init_key_trie(byte[] key, byte v) {
+	private void Init_key_trie(byte[] key, byte v) {
 		ByteVal val = ByteVal.new_(v);
 		key_trie.Add(key, val);
 		int key_len = key.length;
 		if (key_len > key_trie_max) key_trie_max = key_len;
 	}
-	void Init_size_trie(ByteAryBfr tmp_bfr, Xol_kwd_grp list) {
+	private void Init_size_trie(ByteAryBfr tmp_bfr, Xol_kwd_grp list) {
 		if (list == null && Env_.Mode_testing()) return;	// TEST: allows partial parsing of $magicWords
 		size_trie.Clear(); bwd_trie.Clear();
 		for (int i = 0; i < 10; i++)

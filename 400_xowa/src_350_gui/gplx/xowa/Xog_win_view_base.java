@@ -48,7 +48,7 @@ public abstract class Xog_win_view_base implements GfoInvkAble {
 		Page_(Xoa_page.blank_page_(home_wiki, launch_ttl));	// set to blank page
 		return launch_wiki.GetPageByTtl(launch_url, launch_ttl).Url_(launch_url);	// FUTURE: .Url_() should not be called (needed for anchor); EX: en.wikipedia.org/Earth#Biosphere
 	}
-	void Show_page(Xoa_page new_page) {
+	private void Show_page(Xoa_page new_page) {
 //			if (reset_to_read) cur_view_tid = Xoh_wiki_article.Tid_view_read;
 //			if (new_page.Url().Action_is_edit()) cur_view_tid = Xoh_wiki_article.Tid_view_edit;
 //			if (page != null) page.DocPos_(html_box.Html_window_vpos());
@@ -67,7 +67,7 @@ public abstract class Xog_win_view_base implements GfoInvkAble {
 	}
 	public abstract void Exec_async(String cmd);
 	public abstract void Exec_sync(String cmd);
-	void Sync_font_if_needed(Xol_font_info wiki_font) {
+	private void Sync_font_if_needed(Xol_font_info wiki_font) {
 		FontAdp gui_font = this.Url_box().Font();
 		if (wiki_font.Name() != null && wiki_font.Eq(gui_font)) {
 			FontAdp new_font = FontAdp.new_(wiki_font.Name(), wiki_font.Size(), gplx.gfui.FontStyleAdp_.Plain);

@@ -121,7 +121,7 @@ class Xosearch_parser_fxt {
 			rv[i] = ((Xodb_page)list.FetchAt(i)).Id();
 		return rv;
 	}
-	void Test_match_assign_ids(byte[] src, Xosrh_qry_itm itm) {
+	private void Test_match_assign_ids(byte[] src, Xosrh_qry_itm itm) {
 		if (itm.Tid() == Xosrh_qry_itm.Tid_word) {
 			byte[] word = itm.Word();
 			ListAdp ids = (ListAdp)matches.Fetch(word);

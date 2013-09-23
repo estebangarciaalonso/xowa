@@ -26,5 +26,5 @@ class Xoa_xtn_null implements Xow_xtn_itm {
 	public void Xtn_init_by_app(Xoa_app app) {}
 	public void Xtn_init_by_wiki(Xow_wiki wiki) {}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {return this;}
-        public static final Xoa_xtn_null _ = new Xoa_xtn_null(); Xoa_xtn_null() {}
+	public static final Xoa_xtn_null _ = new Xoa_xtn_null(); Xoa_xtn_null() {}
 }

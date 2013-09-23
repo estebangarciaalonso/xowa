@@ -49,6 +49,7 @@ public class Sqlite_engine_ {
 			p.Txn_mgr().Txn_end_all();
 		}
 	}
+	public static Db_provider Provider_load_or_make_(Io_url url) {return Provider_load_or_make_(url, BoolRef.false_());}
 	public static Db_provider Provider_load_or_make_(Io_url url, BoolRef created) {
 		boolean exists = Io_mgr._.ExistsFil(url);
 		created.Val_(!exists);

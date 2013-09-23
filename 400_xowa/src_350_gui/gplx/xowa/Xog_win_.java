@@ -109,7 +109,7 @@ class Ipt_bnd_redirect_mgr implements GfoInvkAble {
 		}
 		list.Clear();
 	}
-	void Reg(String ipt_raw, String msg_raw) {
+	private void Reg(String ipt_raw, String msg_raw) {
 		IptArg[] ipt = IptArg_.parse_ary_(ipt_raw);
 		IptBnd_.cmd_to_(cfg, source, this, msg_raw, ipt);
 		hash.Add(msg_raw, msg_raw);
@@ -124,7 +124,7 @@ class Ipt_bnd_redirect_mgr implements GfoInvkAble {
 		}
 		return this;
 	}	private static final String Invk_reg = "reg";
-	void Exec_reg(String ipt_raw, String msg_raw) {
+	private void Exec_reg(String ipt_raw, String msg_raw) {
 		list.Add(KeyVal_.new_(ipt_raw, msg_raw));
 	}
 	ListAdp list = ListAdp_.new_();

@@ -117,7 +117,7 @@ public class Wdata_doc_parser {
 			default: throw Err_.unhandled(val_tid);
 		}		
 	}
-	void Warn(String fmt, Object... args) {usr_dlg.Warn_many("", "", fmt, args);}
+	private void Warn(String fmt, Object... args) {usr_dlg.Warn_many("", "", fmt, args);}
 	public static final OrderedHash Empty_ordered_hash_bry = OrderedHash_.new_bry_(), Empty_ordered_hash_generic = OrderedHash_.new_();
 	static final byte Prop_tid_m = 0, Prop_tid_q = 1, Prop_tid_g = 2, Prop_tid_rank = 3, Prop_tid_refs = 4;
 	private static final Hash_adp_bry Prop_key_hash = new Hash_adp_bry(false)

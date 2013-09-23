@@ -57,7 +57,7 @@ public class Scrib_engine {
 		Init_register(script_dir, lib_mw, lib_uri, lib_ustring, lib_language, lib_site, lib_title, lib_text, lib_message, lib_wikibase);
 		return this;
 	}
-	void Init_register(Io_url script_dir, Scrib_lib... ary) {
+	private void Init_register(Io_url script_dir, Scrib_lib... ary) {
 		int len = ary.length;
 		for (int i = 0; i < len; i++)
 			ary[i].Register(this, script_dir);

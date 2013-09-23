@@ -72,7 +72,7 @@ public class Pf_xtn_time_tst {
 		tst_Roman(1001, "MI");
 		tst_Roman(4000, "4000");
 	}
-	void tst_Roman(int v, String expd) {
+	private void tst_Roman(int v, String expd) {
 		ByteAryBfr bfr = new ByteAryBfr(16);
 		gplx.xowa.Pfxtp_roman.ToRoman(v, bfr);
 		String actl = bfr.XtoStrAndClear();

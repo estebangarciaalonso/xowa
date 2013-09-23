@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.dbs.*; import gplx.xowa.dbs.*;
-class Xodb_tbl_redirect {
-	public Xodb_tbl_redirect Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); return this;}
+class Xob_redirect_tbl {
+	public Xob_redirect_tbl Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); return this;}
 	public void Create_indexes(Gfo_usr_dlg usr_dlg, Db_provider p) {
-		Sqlite_engine_.Idx_create(usr_dlg, p, Xob_dump_mgr_redirect.Db_name, Idx_trg_id, Idx_trg_ttl);
+		Sqlite_engine_.Idx_create(usr_dlg, p, Xob_redirect_cmd.Db_name, Idx_trg_id, Idx_trg_ttl);
 	}
 	public void Update_redirects(Db_provider p, Io_url core_url, int max_redirected_depth) {
 		Sqlite_engine_.Db_attach(p, "join_db", core_url.Raw());	// link database with page table 

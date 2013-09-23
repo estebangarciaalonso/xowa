@@ -130,7 +130,7 @@ public class Wdata_wiki_mgr_fxt {
 		parser_fxt.Exec_parse_page_all_str(raw);
 		ByteAryBfr tmp_bfr = wiki.App().Utl_bry_bfr_mkr().Get_b512();
 		wiki.Html_mgr().Output_mgr().Wkr(Xoh_wiki_article.Tid_view_read).Wdata_lang_wtr().Page_(page).XferAry(tmp_bfr, 0);
-            Tfds.Eq_str_lines(expd, tmp_bfr.Mkr_rls().XtoStrAndClear());
+	    Tfds.Eq_str_lines(expd, tmp_bfr.Mkr_rls().XtoStrAndClear());
 	}
 	public void Test_xwiki_links(String ttl, String... expd) {
 		tmp_langs.Clear();

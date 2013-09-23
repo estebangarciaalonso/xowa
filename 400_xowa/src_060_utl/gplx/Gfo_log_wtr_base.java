@@ -20,7 +20,7 @@ public class Gfo_log_wtr_base implements Gfo_log_wtr {
 	public boolean Queue_enabled() {return queue_enabled;} public void Queue_enabled_(boolean v) {queue_enabled = v; if (!v) this.Flush();} private boolean queue_enabled;
 	public boolean Enabled() {return enabled;} public void Enabled_(boolean v) {enabled = v;} private boolean enabled = true;
 	public Io_url Session_dir() {return session_dir;}
-	void Flush() {
+	private void Flush() {
 		int queued_len = queued_list.Count();
 		for (int i = 0; i < queued_len; i++) {
 			Usr_log_fil fil = (Usr_log_fil)queued_list.FetchAt(i);
@@ -52,7 +52,7 @@ public class Gfo_log_wtr_base implements Gfo_log_wtr {
 		this.Log_msg_to_session("app term");
 		MoveCurrentToArchive(session_dir);
 	}	int archive_dirs_max = 8;
-	void MoveCurrentToArchive(Io_url dir) {Io_mgr._.MoveDirDeep(dir, dir.OwnerDir().GenSubDir(DateAdp_.Now().XtoStr_fmt_yyyyMMdd_HHmmss_fff()));}
+	private void MoveCurrentToArchive(Io_url dir) {Io_mgr._.MoveDirDeep(dir, dir.OwnerDir().GenSubDir(DateAdp_.Now().XtoStr_fmt_yyyyMMdd_HHmmss_fff()));}
 	public void Log_msg_to_url_fmt(Io_url url, String fmt, Object... args) {
 		if (!enabled) return;
 		String msg = Bld_msg(String_.new_utf8_(fmtr.Fmt_(fmt).Bld_bry_many(tmp_bfr, args)));
@@ -73,7 +73,7 @@ public class Gfo_log_wtr_base implements Gfo_log_wtr {
 		Log_msg(err_fil, line);
 	}	StringBldr sb = StringBldr.new_();
 	String Bld_msg(String s) {return sb.Add(DateAdp_.Now().XtoUtc().XtoStr_fmt_yyyyMMdd_HHmmss_fff()).Add(" ").Add(s).Add_line_nl().XtoStrAndClear();}
-	void Log_msg(Io_url url, String txt) {
+	private void Log_msg(Io_url url, String txt) {
 		if (queue_enabled) {
 			String url_raw = url == null ? "mem" : url.Raw();
 			Usr_log_fil fil = (Usr_log_fil)queued_list.Fetch(url_raw);

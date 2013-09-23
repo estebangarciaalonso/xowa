@@ -77,7 +77,7 @@ public class Xop_hdr_wkr implements Xop_ctx_wkr {
 			ctx.Page().Hdrs_add(hdr, src);
 		return cur_pos;
 	}
-	void Close_open_itms(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	private void Close_open_itms(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		int stack_pos = -1, stack_len = ctx.Stack_len(); boolean stop = false;
 		for (int i = 0; i < stack_len; i++) {				// loop over stack
 			Xop_tkn_itm prv_tkn = ctx.Stack_get(i);

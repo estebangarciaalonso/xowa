@@ -37,5 +37,5 @@ public class Xol_font_info implements GfoInvkAble, GfoEvMgrOwner {
 	}
 	private static final String Invk_name = "name", Invk_name_ = "name_", Invk_size = "size", Invk_size_ = "size_", Invk_style_ = "style_";
 	public static final String Font_changed = "font_changed";
-	void Font_changed_pub() {GfoEvMgr_.PubObj(this, Font_changed, "font", this);}
+	private void Font_changed_pub() {GfoEvMgr_.PubObj(this, Font_changed, "font", this);}
 }	

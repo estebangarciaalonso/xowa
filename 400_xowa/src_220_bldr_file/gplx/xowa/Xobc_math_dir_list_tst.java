@@ -58,7 +58,7 @@ class Xobc_math_dir_manifest {
 		ByteAryBfr dir_path = ByteAryBfr.new_();
 		Bld_dir(math_dir, dir_path, 0);
 	}
-	void Bld_dir(Io_url dir, ByteAryBfr dir_path, int depth) {
+	private void Bld_dir(Io_url dir, ByteAryBfr dir_path, int depth) {
 		Io_url[] subs = Io_mgr._.QueryDir_args(dir).DirInclude_().ExecAsUrlAry();
 		Array_.Sort(subs); // NOTE: file system should have sorted these urls already, but sort again, just in case; sorting is "marginal" cost since it should be magnitudes faster than reading from the actual file system
 		int subs_len = subs.length;
@@ -76,11 +76,11 @@ class Xobc_math_dir_manifest {
 		}
 		if (depth == flush_depth) Flush(dir_path);
 	}
-	void Write(Io_url fil) {
+	private void Write(Io_url fil) {
 		byte[] md5 = ByteAry_.new_ascii_(fil.NameOnly());
 		bfr.Add(md5).Add_byte_nl();
 	}
-	void Flush(ByteAryBfr dir_path) {
+	private void Flush(ByteAryBfr dir_path) {
 		Io_url fil = gen_dir.GenSubFil(dir_path.XtoStr() + ".txt");
 		Io_mgr._.SaveFilBfr(fil, bfr);
 	}

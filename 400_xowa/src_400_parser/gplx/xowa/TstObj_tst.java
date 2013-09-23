@@ -62,15 +62,15 @@ class Xop_rule_dat {
 }
 public class TstObj_tst {
 	@Test  public void Basic() {
-//			tst_(mock_().Val1_(1).Val2_("a"), mock_().Val1_(1).Val2_("b"));
+		tst_(mock_().Val1_(1).Val2_("a"), mock_().Val1_(1).Val2_("a"));
 //			tst_(mock_().Val1_(3).Val2_("a"), mock_().Val1_(1).Val2_("b"));
 	}
 	MockObj mock_() {return new MockObj();}
-	void tst_(MockObj expd, MockObj actl) {
+	private void tst_(MockObj expd, MockObj actl) {
 		TstObj expdChk = TstObj.new_(), actlChk = TstObj.new_();
 		expd.SrlObj_Srl(expdChk);
 		actl.SrlObj_Srl(actlChk);
-		Eval("", expdChk, actlChk, null);
+		Eval("", expdChk, actlChk, new Xop_rule_mgr());
 	}
 	private static void Max(int[] ary, int idx, String val) {
 		int len = String_.Len(val);
@@ -198,7 +198,7 @@ class TstObj implements SrlMgr {
 	}
 	public void	SrlList(String key, ListAdp list, SrlObj proto, String itmKey) {}
 	public String TypeKey() {return typeKey;} public void TypeKey_(String v) {typeKey = v;} private String typeKey;
-	void Atrs_add(String key, Object val, ClassXtn valType) {
+	private void Atrs_add(String key, Object val, ClassXtn valType) {
 		atrs.Add(key, new TstAtr().TypeKey_(typeKey).Key_(key).Val_(val).ValType_(valType));
 	}
 	public ListAdp Subs() {return subs;} ListAdp subs = ListAdp_.Null;

@@ -107,7 +107,7 @@ class Scrib_lib_ustring implements Scrib_lib {
 		AddCapturesFromMatch(tmp_list, rslt, text, false);
 		return Scrib_kv_utl.base1_many_(rslt.Find_end(), Scrib_kv_utl.base1_list_(tmp_list));
 	}
-	void AddCapturesFromMatch(ListAdp tmp_list, RegxMatch rslt, String text, boolean op_is_match) {// NOTE: this matches behavior in UstringLibrary.php!addCapturesFromMatch
+	private void AddCapturesFromMatch(ListAdp tmp_list, RegxMatch rslt, String text, boolean op_is_match) {// NOTE: this matches behavior in UstringLibrary.php!addCapturesFromMatch
 		RegxGroup[] grps = rslt.Groups();
 		int grps_len = grps.length;
 		if (grps_len > 0) {
@@ -138,7 +138,7 @@ class Scrib_lib_ustring_gsub_mgr {
 		Identify_repl(repl_obj);
 		return Scrib_kv_utl.base1_many_(Exec_repl(text, regx, limit), repl_count);
 	}
-	void Identify_repl(Object repl_obj) {
+	private void Identify_repl(Object repl_obj) {
 		Class<?> repl_type = repl_obj.getClass();
 		if		(Object_.Eq(repl_type, String.class)) {
 			repl_tid = Repl_tid_string;
@@ -181,7 +181,7 @@ class Scrib_lib_ustring_gsub_mgr {
 			tmp_bfr.Add_str(String_.Mid(text, pos, text_len));			// NOTE: regx returns char pos (not bry); must add as String, not bry; DATE:2013-07-17
 		return tmp_bfr.XtoStrAndClear();
 	}
-	void Exec_repl_itm(String text, RegxMatch rslt) {
+	private void Exec_repl_itm(String text, RegxMatch rslt) {
 		switch (repl_tid) {
 			case Repl_tid_string:
 				int len = repl_bry.length;

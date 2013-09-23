@@ -68,5 +68,5 @@ class Xoa_ttl_sorter implements gplx.lists.ComparerAble {
 		Xoa_ttl lhs = (Xoa_ttl)lhsObj, rhs = (Xoa_ttl)rhsObj;
 		return ByteAry_.Compare(lhs.Raw(), rhs.Raw());
 	}
-        public static final Xoa_ttl_sorter _ = new Xoa_ttl_sorter(); Xoa_ttl_sorter() {}
+	public static final Xoa_ttl_sorter _ = new Xoa_ttl_sorter(); Xoa_ttl_sorter() {}
 }

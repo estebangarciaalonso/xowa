@@ -317,7 +317,7 @@ public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_AT
 		}
 		return (Xop_xatr_itm[])xatrs.XtoAry(Xop_xatr_itm.class);
 	}
-	void Make(Gfo_msg_log log_mgr, byte[] src, int atr_end) {
+	private void Make(Gfo_msg_log log_mgr, byte[] src, int atr_end) {
 		Xop_xatr_itm xatr = null;
 		boolean key_bgn_exists = key_bgn != -1;
 		boolean val_bgn_exists = val_bgn != -1;

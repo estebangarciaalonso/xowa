@@ -133,7 +133,7 @@ public class Io_line_rdr {
 		bfr_len = read_len == load_len ? load_ary_len : old_bfr_len + read_len;	// stream.Read() may return less bytes than load_ary at EOF; if so, don't shrink bfr; just mark bfr_len less
 		return true;
 	}	IoStream stream;
-	void Open_fil() {
+	private void Open_fil() {
 		Io_url url = urls[url_idx];
 		usr_dlg.Prog_many(GRP_KEY, "load", "loading dump file: ~{0}", url.NameAndExt());
 		if (file_skip_line0) {

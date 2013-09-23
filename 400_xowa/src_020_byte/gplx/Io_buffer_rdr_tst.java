@@ -52,7 +52,7 @@ public class Io_buffer_rdr_tst {
 		rdr.Bfr_load_all();	// NOTE: change to zip_rdrs make eof detection difficult; force another load to ensure that file_pos goes past file_len
 		tst_Bfr("8", "9").tst_ReadDone(true);
 	}
-	void ini_Write(String s) {Io_mgr._.SaveFilStr(fil, s);}
+	private void ini_Write(String s) {Io_mgr._.SaveFilStr(fil, s);}
 	Io_buffer_rdr_tst tst_Bfr(String... expdAry) {
 		String[] actlAry = new String[rdr.Bfr_len()];
 		for (int i = 0; i < actlAry.length; i++)

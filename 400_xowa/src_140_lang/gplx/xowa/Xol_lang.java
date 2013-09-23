@@ -101,14 +101,15 @@ public class Xol_lang implements GfoInvkAble {
 		this.Evt_lang_changed();
 		return true;
 	}
-	void Exec_fallback_load(byte[] v) {
+	private void Exec_fallback_load(byte[] v) {
 		if (app.Lang_mgr().Fallback_regy().Has(v)) return;
+		if (ByteAry_.Eq(v, Xoa_lang_mgr.Fallback_false)) return;
 		app.Lang_mgr().Fallback_regy().Add(v, v);
 		fallback_bry = v;
 		Load_lang(v);
 		app.Lang_mgr().Fallback_regy().Del(v);
 	}
-	void Load_lang(byte[] v) {
+	private void Load_lang(byte[] v) {
 		app.Gfs_mgr().Run_url_for(this, Xol_lang_.xo_lang_fil_(app, String_.new_ascii_(v)));
 	}
 	private static final byte[] Dir_bry_ltr = ByteAry_.new_ascii_("ltr"), Dir_bry_rtl = ByteAry_.new_ascii_("rtl");

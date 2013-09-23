@@ -37,7 +37,7 @@ public class Xoctg_view_ctg {
 		Num_set(data_ctg, Xoa_ctg_mgr.Tid_file);
 		Num_set(data_ctg, Xoa_ctg_mgr.Tid_page);
 	}
-	void Num_set(Xoctg_data_ctg data_ctg, byte tid) {
+	private void Num_set(Xoctg_data_ctg data_ctg, byte tid) {
 		Xoctg_idx_mgr idx_mgr = data_ctg.Grp_by_tid(tid);
 		if (idx_mgr != null) Grp_by_tid(tid).Total_(idx_mgr.Total());
 	}
@@ -46,7 +46,7 @@ public class Xoctg_view_ctg {
 			Fill_grp(url_ctg, data_ctg, i);
 		}
 	}
-	void Fill_grp(Xoctg_url url_ctg, Xoctg_data_ctg data_ctg, byte i) {
+	private void Fill_grp(Xoctg_url url_ctg, Xoctg_data_ctg data_ctg, byte i) {
 		Xoctg_view_grp view_grp = Grp_by_tid(i);
 		Xoctg_idx_mgr data_grp = data_ctg.Grp_by_tid(i); if (data_grp == null) return; // no itms in grp
 		byte[] url_bmk = url_ctg.Grp_idxs()[i]; byte url_bmk_fwd = url_ctg.Grp_fwds()[i];

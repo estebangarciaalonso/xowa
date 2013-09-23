@@ -33,6 +33,7 @@ public class IoEngine_xrg_downloadFil {
 	public String Trg_engine_key() {return trg_engine_key;} public IoEngine_xrg_downloadFil Trg_engine_key_(String v) {trg_engine_key = v; return this;} private String trg_engine_key = IoEngine_.SysKey;
 	public Io_download_fmt Download_fmt() {return download_fmt;} Io_download_fmt download_fmt = new Io_download_fmt();
 	public boolean Exec() {return IoEnginePool._.Fetch(trg.Info().EngineKey()).DownloadFil(this);}
+	public Io_stream_rdr Exec_as_rdr() {return IoEnginePool._.Fetch(IoEngine_.SysKey).DownloadFil_as_rdr(this);}
 	public boolean Exec_meta_only() {return exec_meta_only;} private boolean exec_meta_only;
 	public byte[] Exec_as_bry(String src) {
 		this.Src_(src); this.Trg_(trg_mem);

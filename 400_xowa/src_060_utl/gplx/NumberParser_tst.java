@@ -57,23 +57,23 @@ public class NumberParser_tst {
 		Hex_tst("0x20"	, 32);
 		Hex_tst("x20"	, 0, false);
 	}
-	void tst_Int(String raw, int expd) {
+	private void tst_Int(String raw, int expd) {
 		byte[] raw_bry = ByteAry_.new_ascii_(raw);
 		int actl = parser.Parse(raw_bry, 0, raw_bry.length).AsInt(); 
 		Tfds.Eq(expd, actl, raw);
 	}
-	void tst_Dec(String raw, DecimalAdp expd) {
+	private void tst_Dec(String raw, DecimalAdp expd) {
 		byte[] raw_bry = ByteAry_.new_ascii_(raw);
 		DecimalAdp actl = parser.Parse(raw_bry, 0, raw_bry.length).AsDec(); 
 		Tfds.Eq(expd.XtoDecimal(), actl.XtoDecimal(), raw);
 	}
-	void tst_Err(String raw, boolean expd) {
+	private void tst_Err(String raw, boolean expd) {
 		byte[] raw_bry = ByteAry_.new_ascii_(raw);
 		boolean actl = parser.Parse(raw_bry, 0, raw_bry.length).HasErr(); 
 		Tfds.Eq(expd, actl, raw);
 	}
-	void Hex_tst(String raw, int expd_val) {Hex_tst(raw, expd_val, true);}
-	void Hex_tst(String raw, int expd_val, boolean expd_pass) {
+	private void Hex_tst(String raw, int expd_val) {Hex_tst(raw, expd_val, true);}
+	private void Hex_tst(String raw, int expd_val, boolean expd_pass) {
 		parser.Hex_enabled_(true);
 		byte[] raw_bry = ByteAry_.new_ascii_(raw);
 		int actl = parser.Parse(raw_bry, 0, raw_bry.length).AsInt();

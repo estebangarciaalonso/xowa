@@ -112,14 +112,14 @@ class Xop_xatr_whitelist_mgr {
 		return this;
 	}
 	Hash_adp_bry grp_hash = new Hash_adp_bry(true);
-	void Ini_grp(String key_str, String base_grp, String... cur_itms) {
+	private void Ini_grp(String key_str, String base_grp, String... cur_itms) {
 		byte[][] itms = ByteAry_.Ary(cur_itms);
 		if (base_grp != null)
 			itms = ByteAry_.Ary_add(itms, (byte[][])grp_hash.Get_by_bry(ByteAry_.new_ascii_(base_grp)));
 		byte[] key = ByteAry_.new_ascii_(key_str);
 		grp_hash.Add_bry_obj(key, itms);
 	}
-	void Ini_nde(int tag_tid, String... key_strs) {
+	private void Ini_nde(int tag_tid, String... key_strs) {
 		ListAdp keys = ListAdp_.new_();
 		int len = key_strs.length;
 		for (int i = 0; i < len; i++) {
@@ -145,7 +145,7 @@ class Xop_xatr_whitelist_mgr {
 			itm.Tags()[tag_tid] = 1;
 		}
 	}
-	void Ini_all_loose(String key_str) {
+	private void Ini_all_loose(String key_str) {
 		byte[] key_bry = ByteAry_.new_ascii_(key_str);
 		Ini_key_trie_add(key_bry, false);
 		Xop_xatr_whitelist_itm itm = Ini_key_trie_add(key_bry, false);

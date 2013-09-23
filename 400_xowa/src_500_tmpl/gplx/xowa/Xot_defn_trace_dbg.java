@@ -107,7 +107,7 @@ class Xot_defn_trace_dbg implements Xot_defn_trace {
 			Fmt(ctx, defn_tmpl.Data_raw(), root, Ary_eval_lbl, invk, false);
 		}
 	}	private ByteAryBfr bfr = new ByteAryBfr(128); ListAdp argKeys = ListAdp_.new_(); Xot_fmtr_prm prm_fmtr = new Xot_fmtr_prm();
-	void Fmt(Xop_ctx ctx, byte[] src, Xop_tkn_itm root, byte[] lbl, Xot_invk caller, boolean newLineArgs) {
+	private void Fmt(Xop_ctx ctx, byte[] src, Xop_tkn_itm root, byte[] lbl, Xot_invk caller, boolean newLineArgs) {
 		bfr.Add_byte_repeat(Byte_ascii.Space, indent).Add(lbl);
 		bfr.Add_byte_repeat(Byte_ascii.Space, indent);
 		prm_fmtr.Caller_(caller).NewLineArgs_(newLineArgs);

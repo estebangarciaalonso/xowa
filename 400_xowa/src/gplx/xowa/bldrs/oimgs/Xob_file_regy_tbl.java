@@ -17,22 +17,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.dbs.*; import gplx.xowa.dbs.*;
-class Xodb_tbl_oimg_file_regy {
-	public Xodb_tbl_oimg_file_regy Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); return this;}
+class Xob_file_regy_tbl {
+	public Xob_file_regy_tbl Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); return this;}
 	public void Create_data(Gfo_usr_dlg usr_dlg, Db_provider p, Xow_wiki cur_wiki, Xow_wiki commons_wiki) {
 		p.Exec_sql(Sql_create_data);
 		Sqlite_engine_.Idx_create(usr_dlg, p, "oimg", Idx_ttl);
 		Io_url wiki_dir = cur_wiki.Fsys_mgr().Root_dir();
 		Io_url commons_dir = commons_wiki.Fsys_mgr().Root_dir();
-		Create_data__update_page(p, Byte_.int_(0), cur_wiki.Db_mgr_as_sql().Fsys_mgr().Get_url(Xodb_file.Tid_core));
-		Create_data__update_page(p, Byte_.int_(1), commons_wiki.Db_mgr_as_sql().Fsys_mgr().Get_url(Xodb_file.Tid_core));
+		Create_data__update_page(p, Byte_.int_(Xof_repo_itm.Repo_local), cur_wiki.Db_mgr_as_sql().Fsys_mgr().Get_url(Xodb_file.Tid_core));
+		Create_data__update_page(p, Byte_.int_(Xof_repo_itm.Repo_remote), commons_wiki.Db_mgr_as_sql().Fsys_mgr().Get_url(Xodb_file.Tid_core));
 		Sqlite_engine_.Idx_create(usr_dlg, p, "oimg", Idx_page_id);
-		Create_data__update_redirect(p, Byte_.int_(0), wiki_dir.GenSubFil("oimg_redirect.sqlite3"));
-		Create_data__update_redirect(p, Byte_.int_(1), commons_dir.GenSubFil("oimg_redirect.sqlite3"));
+		Create_data__update_redirect(p, Byte_.int_(Xof_repo_itm.Repo_local), wiki_dir.GenSubFil("oimg_redirect.sqlite3"));
+		Create_data__update_redirect(p, Byte_.int_(Xof_repo_itm.Repo_remote), commons_dir.GenSubFil("oimg_redirect.sqlite3"));
 		p.Exec_sql(Sql_update_join_flds);
 		Sqlite_engine_.Idx_create(usr_dlg, p, "oimg", Idx_wiki_join_id, Idx_wiki_join_ttl, Idx_join_ttl);
-		Create_data__update_image(p, Byte_.int_(0), wiki_dir.GenSubFil("oimg_image.sqlite3"));
-		Create_data__update_image(p, Byte_.int_(1), commons_dir.GenSubFil("oimg_image.sqlite3"));
+		Create_data__update_image(p, Byte_.int_(Xof_repo_itm.Repo_local), wiki_dir.GenSubFil("oimg_image.sqlite3"));
+		Create_data__update_image(p, Byte_.int_(Xof_repo_itm.Repo_remote), commons_dir.GenSubFil("oimg_image.sqlite3"));
 	}
 	private void Create_data__update_page(Db_provider cur, byte wiki_tid, Io_url join) {
 		Sqlite_engine_.Db_attach(cur, "join_db", join.Raw());

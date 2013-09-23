@@ -23,7 +23,7 @@ public class Xog_cmds_view implements GfoInvkAble {
 	}
 	public void Font_increase() {Font_adj(1);}
 	public void Font_decrease() {Font_adj(-1);}
-	void Font_adj(int v) {
+	private void Font_adj(int v) {
 		float html_font_size = app.Html_mgr().Page_mgr().Font_size() + v;
 		if (html_font_size <= 0) return;	// font must be positive
 		app.Html_mgr().Page_mgr().Font_enabled_(true);

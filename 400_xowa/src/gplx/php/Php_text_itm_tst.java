@@ -23,7 +23,7 @@ public class Php_text_itm_tst {
 	@Test  public void Fmt() 		{Tst_("a$1b$2c", "a~{0}b~{1}c");}
 	@Test  public void Utf16() 		{Tst_("a\\u007Cd", "a|d");}
 	@Test  public void Utf8_nbsp()	{Tst_("a\\xc2\\xa0d", "a\\u00c2\\u00a0d");}
-	void Tst_(String raw_str, String expd) {
+	private void Tst_(String raw_str, String expd) {
 		Php_text_itm_parser parser = new Php_text_itm_parser();
 		ListAdp list = ListAdp_.new_();
 		byte[] raw = ByteAry_.new_utf8_(raw_str);

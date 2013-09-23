@@ -77,7 +77,7 @@ class Scrib_interpreter {
 		}
 		return KeyVal_.Ary_empty;
 	}	static final byte[] Dispatch_hdr = ByteAry_.new_ascii_("0000000000000000");	// itm_len + itm_chk in 8-len HexDec
-	void Dispatch_bld_send(ByteAryBfr bfr, Object[] ary) {
+	private void Dispatch_bld_send(ByteAryBfr bfr, Object[] ary) {
 		int len = ary.length; if (len % 2 != 0) throw Err_.new_fmt_("arguments must be factor of 2: {0}", len);
 		bfr.Add(Dispatch_hdr);
 		bfr.Add_byte(Byte_ascii.Curly_bgn);

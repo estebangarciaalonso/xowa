@@ -123,7 +123,7 @@ public class Html_parser {
 		cur_lhs_end = pos;
 		return true;
 	}
-	void Skip_ws() {
+	private void Skip_ws() {
 		while (pos < end) {
 			switch (src[pos]) {
 				case Byte_ascii.Space: case Byte_ascii.Tab: case Byte_ascii.NewLine: case Byte_ascii.CarriageReturn:

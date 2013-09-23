@@ -28,7 +28,7 @@ class Xof_file_fxt {
 		Xof_repo_fxt.Repos_init(app.File_mgr(), true, wiki);
 		fsdb_mgr = fsdb_mgr_new_(mem_tid);
 		qry_wkr_mock.Clear();
-		fsdb_mgr.Init_by_wiki(Xo_test.Url_file_enwiki(), Io_url_.mem_dir_("mem/root/"), wiki.File_mgr().Repo_mgr());
+		fsdb_mgr.Init_by_wiki(wiki.Domain_str(), Xo_test.Url_file_enwiki(), Io_url_.mem_dir_("mem/root/"), wiki.File_mgr().Repo_mgr());
 		fsdb_mgr.Qry_mgr().Wkrs_(qry_wkr_mock);
 		fsdb_mgr.Bin_mgr().Wkrs_(fsdb_mgr.Bin_wkr_fsdb());
 		fsdb_mgr.Bin_mgr().Resizer_(Xof_img_wkr_resize_img_mok._);
@@ -48,11 +48,15 @@ class Xof_file_fxt {
 		this.Init_bin_fsdb(Xof_fsdb_arg_init_bin.new_().Init_commons(Bool_.N, ttl, w, h));
 		this.Init_qry_xowa(Xof_fsdb_arg_init_qry.new_().Init_commons(ttl, w, h));
 	}
+	public void Init_qry_xowa__bin_fsdb__en_wiki_orig(String ttl, int w, int h) {
+		this.Init_bin_fsdb(Xof_fsdb_arg_init_bin.new_().Init_en_wiki(Bool_.N, ttl, w, h));
+		this.Init_qry_xowa(Xof_fsdb_arg_init_qry.new_().Init_en_wiki(ttl, w, h));
+	}
 	public void Init_bin_fsdb(Xof_fsdb_arg_init_bin arg) {
 		if (arg.Is_thumb())
-			fsdb_mgr.Thm_insert(tmp_thm, arg.Wiki(), arg.Ttl(), arg.Ext_id(), arg.W(), arg.Thumbtime(), arg.H(), arg.Modified(), arg.Hash(), arg.Bin().length, gplx.ios.Io_stream_rdr_.mem_(arg.Bin()));
+			fsdb_mgr.Thm_insert(tmp_thm, arg.Wiki(), arg.Ttl(), arg.Ext_id(), arg.W(), arg.H(), arg.Thumbtime(), arg.Modified(), arg.Hash(), arg.Bin().length, gplx.ios.Io_stream_rdr_.mem_(arg.Bin()));
 		else
-			fsdb_mgr.Img_insert(tmp_img, arg.Wiki(), arg.Ttl(), arg.Ext_id(), arg.Modified(), arg.Hash(), arg.Bin().length, gplx.ios.Io_stream_rdr_.mem_(arg.Bin()), arg.W(), arg.H(), Fsdb_xtn_img_itm.Bits_default);
+			fsdb_mgr.Img_insert(tmp_img, arg.Wiki(), arg.Ttl(), arg.Ext_id(), arg.Modified(), arg.Hash(), arg.Bin().length, gplx.ios.Io_stream_rdr_.mem_(arg.Bin()), arg.W(), arg.H());
 	}
 	public void Init_qry_xowa(Xof_fsdb_arg_init_qry arg) {
 		qry_wkr_mock.Add_wiki_size(arg.Ttl(), arg.Wiki(), arg.W(), arg.H());

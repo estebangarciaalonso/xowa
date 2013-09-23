@@ -76,7 +76,7 @@ public class Xop_apos_wkr implements Xop_ctx_wkr {
 		ctx.Subs_add(ctx.Tkn_mkr().Apos(curPos, curPos, 0, closeTyp, closeCmd, 0));
 		Reset();
 	}
-	void ConvertBoldToItal(Xop_ctx ctx, byte[] src) {
+	private void ConvertBoldToItal(Xop_ctx ctx, byte[] src) {
 		Xop_apos_tkn idxNeg1 = null, idxNeg2 = null, idxNone = null; // look at previous tkn for spaces; EX: "a '''" -> idxNeg1; " a'''" -> idxNeg2; "ab'''" -> idxNone
 	    int tknsLen = stack.Count(); 
 		for (int i = 0; i < tknsLen; i++) {
@@ -103,11 +103,11 @@ public class Xop_apos_wkr implements Xop_ctx_wkr {
 			apos.Apos_cmd_(newCmd);
 		}
 	}
-	void ConvertBoldToItal(Xop_ctx ctx, Xop_apos_tkn oldTkn) {
+	private void ConvertBoldToItal(Xop_ctx ctx, Xop_apos_tkn oldTkn) {
 		ctx.Msg_log().Add_itm_none(Xop_apos_log.Bold_converted_to_ital, ctx.Src(), oldTkn.Src_bgn(), oldTkn.Src_end());
 		oldTkn.Apos_tid_(Xop_apos_tkn_.Typ_ital).Apos_cmd_(Xop_apos_tkn_.Cmd_i_bgn).Apos_lit_(oldTkn.Apos_lit() + 1);// NOTE: Cmd_i_bgn may be overridden later
 	}
-	void Reset() {
+	private void Reset() {
 		boldCount = italCount = 0;
 		dualTkn = null;
 		stack.Clear();

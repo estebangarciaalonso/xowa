@@ -39,7 +39,7 @@ public class Bit__tst {
 		tst_Xto_int(ary_(11, 4, 5, 5, 6), ary_(2012, 6, 3, 23, 17), 2110135761);
 		tst_Xto_int(ary_(11, 4, 5, 5, 6), ary_(2012, 6, 3, 23, 18), 2110135762);
 	}
-	void tst_Xto_int(int[] seg_ary, int[] val_ary, int expd) {
+	private void tst_Xto_int(int[] seg_ary, int[] val_ary, int expd) {
 		int[] pow_ary = Bit_.Bld_pow_ary(seg_ary);
 		Tfds.Eq(expd, Bit_.Xto_int(pow_ary, val_ary));
 	}
@@ -50,7 +50,7 @@ public class Bit__tst {
 		tst_Xto_intAry(ary_(12, 4, 5, 5, 6), 2110135761, ary_(2012, 6, 3, 23, 17));
 		tst_Xto_intAry(ary_(12, 4, 5, 5, 6), 2110135762, ary_(2012, 6, 3, 23, 18));
 	}
-	void tst_Xto_intAry(int[] seg_ary, int val, int[] expd) {
+	private void tst_Xto_intAry(int[] seg_ary, int val, int[] expd) {
 		int[] pow_ary = Bit_.Bld_pow_ary(seg_ary);
 		Tfds.Eq_ary_str(expd, Bit_.Xto_intAry(pow_ary, val));
 	}
@@ -60,7 +60,7 @@ public class Bit__tst {
 		tst_Xto_int_date_short("20120604 2358", 117843450);
 		tst_Xto_int_date_short("20120605 0000", 117843968);
 	}
-	void tst_Xto_int_date_short(String date_str, int expd) {
+	private void tst_Xto_int_date_short(String date_str, int expd) {
 		DateAdp date = DateAdp_.parse_fmt(date_str, "yyyyMMdd HHmm");
 		int date_int = Bit_.Xto_int_date_short(date.XtoSegAry());
 		Tfds.Eq(expd, date_int);

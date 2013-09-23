@@ -23,7 +23,7 @@ public class Xtn_lstx extends Pf_func_base {
 	}
 	@Override public int Id() {return Xol_kwd_grp_.Id_lstx;}
 	@Override public Pf_func New(int id, byte[] name) {return new Xtn_lstx().Name_(name);}
-        public static final Xtn_lstx _ = new Xtn_lstx(); Xtn_lstx() {}
+	public static final Xtn_lstx _ = new Xtn_lstx(); Xtn_lstx() {}
 }
 class Pf_xtn_lst_log {
 	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "lst");

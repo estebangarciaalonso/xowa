@@ -119,7 +119,7 @@ public class Xof_meta_itm {
 		}
 		return thumb;
 	}
-	void Dirty() {if (owner_fil != null) owner_fil.Dirty_();}
+	private void Dirty() {if (owner_fil != null) owner_fil.Dirty_();}
 	public void Save(Gfo_fld_wtr wtr) {
 		wtr.Write_bry_escape_fld(ttl);
 		byte vrtl_repo_byte = Byte_.MaxValue_127;

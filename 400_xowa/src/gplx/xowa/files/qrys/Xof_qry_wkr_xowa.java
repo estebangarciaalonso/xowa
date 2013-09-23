@@ -17,13 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.qrys; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.xowa.dbs.tbls.*; import gplx.xowa.files.fsdb.*;
-public class Xof_qry_wkr_xowa {
+public class Xof_qry_wkr_xowa implements Xof_qry_wkr {
 	private Xof_wiki_finder wiki_finder;
 	private Xof_img_meta_wkr img_meta_wkr;
 	public Xof_qry_wkr_xowa(Xof_wiki_finder wiki_finder, Xof_img_meta_wkr img_meta_wkr) {
 		this.wiki_finder = wiki_finder;
 		this.img_meta_wkr = img_meta_wkr;
 	}
+	public byte Tid() {return Xof_qry_wkr_.Tid_xowa;}
 	public boolean Qry_file(Xof_fsdb_itm itm) {
 		byte[] ttl = itm.Lnki_ttl();
 		Xoa_page page = wiki_finder.Get_page(Xow_ns_.Id_file, ttl);

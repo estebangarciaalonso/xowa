@@ -111,7 +111,7 @@ class Xoctg_fmtr_itm_subc extends Xoctg_fmtr_itm_base {
 		bfr.Add_byte(Byte_ascii.Paren_end);
 		return bfr.Mkr_rls().XtoAryAndClear();
 	}
-	void Bld_contains_text_itm(ByteAryBfr bfr, int msg_id, int val) {
+	private void Bld_contains_text_itm(ByteAryBfr bfr, int msg_id, int val) {
 		if (val == 0) return;
 		if (bfr.Bry_len() > 1) bfr.Add(Bld_contains_text_itm_dlm);	// NOTE: 1 b/c Paren_bgn is always added
 		bfr.Add(msg_mgr.Val_by_id_args(msg_id, val));

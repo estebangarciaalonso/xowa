@@ -493,7 +493,7 @@ public class Xop_lnki_wkr_tst {
 		));
 		fxt.Ctx().Para().Enabled_n_();		
 	}
-	void Reg_xwiki_alias(String alias, String domain) {
+	private void Reg_xwiki_alias(String alias, String domain) {
 		Xop_fxt.Reg_xwiki_alias(fxt.Wiki(), alias, domain);
 	}
 	@Test  public void Thumb_first_align_trumps_all() {	// PURPOSE: if there are multiple alignment instructions, take the first EX:[[File:A.png|thumb|center|left]] DATE:20121226

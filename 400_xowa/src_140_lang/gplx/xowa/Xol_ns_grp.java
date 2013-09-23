@@ -38,7 +38,7 @@ public class Xol_ns_grp implements GfoInvkAble {
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}	private static final String Invk_lang = Xol_lang_srl.Invk_lang, Invk_load_text = Xol_lang_srl.Invk_load_text;
-	void Exec_load_text(byte[] bry) {
+	private void Exec_load_text(byte[] bry) {
 		ary = (Xow_ns[])Array_.Resize_add(ary, Xol_lang_srl.Load_ns_grps(bry));
 	}
 }

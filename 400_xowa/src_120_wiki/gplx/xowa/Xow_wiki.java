@@ -207,7 +207,7 @@ public class Xow_wiki implements GfoInvkAble {
 	public Xodb_mgr_sql Db_mgr_create_as_sql() {Xodb_mgr_sql rv = new Xodb_mgr_sql(this); db_mgr = rv; return rv;}
 	Io_url wiki_dir = Io_url_.Null;
 	public Xow_wiki Init_assert() {if (init_needed) Init_wiki(app.User()); return this;}
-	void Init_wiki(Xou_user user) {	// NOTE: (a) one-time initialization for all wikis; (b) not called by tests
+	private void Init_wiki(Xou_user user) {	// NOTE: (a) one-time initialization for all wikis; (b) not called by tests
 		if (app.Stage() == Xoa_app.Stage_launch_done) init_needed = false;	// NOTE: only mark inited if app fully launched; otherwise statements in xowa.gfs can fire and premature set home to inited; DATE:2013-03-24
 		app.Cfg_mgr().Init(this);
 		file_mgr.Cfg_download().Enabled_(app.File_mgr().Download_mgr().Enabled());	// default download to app global; can be overriden below
@@ -246,7 +246,7 @@ public class Xow_wiki implements GfoInvkAble {
 			rls.Rls();
 		}
 	}
-	void Copy_cfg(Xow_wiki wiki) {html_mgr.Copy_cfg(wiki.Html_mgr());}
+	private void Copy_cfg(Xow_wiki wiki) {html_mgr.Copy_cfg(wiki.Html_mgr());}
 	private static void File_repos_assert(Xoa_app app, Xow_wiki wiki) {
 		byte[] wiki_key = wiki.Key_bry();
 		Xoa_repo_mgr repo_mgr = app.File_mgr().Repo_mgr(); 

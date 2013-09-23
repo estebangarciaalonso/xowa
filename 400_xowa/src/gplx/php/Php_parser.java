@@ -51,7 +51,7 @@ public class Php_parser {
 		lxrs = (Php_lxr[])list.XtoAry(Php_lxr.class);
 		lxrs_len = list.Count();
 	}
-	void Init_lxr(ListAdp list, Php_lxr lxr) {
+	private void Init_lxr(ListAdp list, Php_lxr lxr) {
 		lxr.Lxr_ini(trie, parser_interrupts);
 		list.Add(lxr);
 	}

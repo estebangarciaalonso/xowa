@@ -27,7 +27,7 @@ public class Xoh_page_mgr implements GfoInvkAble {
 	}
 	public ByteAryFmtr Font_css_fmtr() {return font_css_fmtr;} private ByteAryFmtr font_css_fmtr = ByteAryFmtr.new_("    body {font-family: ~{font_name}; font-size: ~{font_size}px;}", "font_name", "font_size");
 	public ByteAryFmtr Content_code_fmtr() {return content_code_fmtr;} private ByteAryFmtr content_code_fmtr = ByteAryFmtr.new_("<pre>~{page_text}</pre>", "page_text");
-	void Font_css_fmtr_(byte[] bry) {
+	private void Font_css_fmtr_(byte[] bry) {
 		font_css_fmtr.Fmt_(bry);
 		Font_css_bry_update();
 	}

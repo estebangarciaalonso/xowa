@@ -105,7 +105,7 @@ public class Xoh_href_parser {
 		}
 		bfr.Add_bfr_and_clear(bfr_encoder);
 	}
-	void Build_to_bfr_page(Xoa_ttl ttl, byte[] ttl_full, int page_bgn) {
+	private void Build_to_bfr_page(Xoa_ttl ttl, byte[] ttl_full, int page_bgn) {
 		int anch_bgn = ByteAry_.FindFwd(ttl_full, Byte_ascii.Hash);	// NOTE: cannot use Anch_bgn b/c Anch_bgn has bug with whitespace
 		if (anch_bgn == ByteAry_.NotFound)	// no anchor; just add page
 			encoder.Encode(bfr_encoder, ttl_full, page_bgn, ttl_full.length);

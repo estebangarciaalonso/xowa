@@ -44,7 +44,7 @@ public class Xot_func_regy {
 			this.Add(name, grp.Case_match(), defn.Clone(id, name));
 		}
 	}
-	void Add(byte[] ary, boolean case_match, Xot_defn func) {
+	private void Add(byte[] ary, boolean case_match, Xot_defn func) {
 		if (case_match)
 			cs_trie.Add(ary, func);
 		else {
@@ -102,7 +102,7 @@ public class Xot_func_regy {
 			? rv		// name not found in ci, but name was found in cs; return cs; handles NAME"+"SPACENUMBER
 			: rv_alt;	// else return rv_alt
 	}
-	void LowerAry(byte[] src, int bgn, int end) {
+	private void LowerAry(byte[] src, int bgn, int end) {
 		int len = end - bgn;
 		if (len > lower_ary_len) {lower_ary = new byte[len]; lower_ary_len = len;}
 		lower_ary_len = len;

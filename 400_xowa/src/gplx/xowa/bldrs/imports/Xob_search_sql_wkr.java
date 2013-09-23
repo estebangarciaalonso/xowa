@@ -18,15 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.ios.*; import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*;
 public class Xob_search_sql_wkr extends Xob_search_base implements Io_make_cmd {
-	public Xob_search_sql_wkr(Xow_wiki wiki) {db_mgr = wiki.Db_mgr_as_sql();} private Xodb_mgr_sql db_mgr = null;
+	public Xob_search_sql_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);} private Xodb_mgr_sql db_mgr = null;
 	@Override public String Wkr_key() {return KEY;} public static final String KEY = "import.sql.search_title.wkr";
 	@Override public gplx.ios.Io_make_cmd Make_cmd_site() {return this;}
 	public Io_sort_cmd Make_dir_(Io_url v) {return this;}	// noop	
 	public void Sort_bgn() {
+		db_mgr = wiki.Db_mgr_as_sql();
 		Xodb_file search_db = db_mgr.Fsys_mgr().Make(Xodb_file.Tid_search);
 		provider = search_db.Provider();
 		provider.Txn_mgr().Txn_bgn_if_none();
-	}	private Db_provider provider; private int search_id = 0;
+		Xodb_search_title_word_tbl.Create_table(provider);
+		Xodb_search_title_page_tbl.Create_table(provider);
+		stmt_word = Xodb_search_title_word_tbl.Insert_stmt(provider);
+		stmt_page = Xodb_search_title_page_tbl.Insert_stmt(provider);
+	}	private Db_provider provider; private int search_id = 0; private Db_stmt stmt_word, stmt_page;
 	public byte Line_dlm() {return line_dlm;} public Xob_search_sql_wkr Line_dlm_(byte v) {line_dlm = v; return this;} private byte line_dlm = Byte_ascii.Nil;
 	private byte[] prv_word = ByteAry_.Empty;
 	public void Sort_do(Io_line_rdr rdr) {
@@ -34,17 +39,10 @@ public class Xob_search_sql_wkr extends Xob_search_base implements Io_make_cmd {
 		byte[] bry = rdr.Bfr();
 		byte[] cur_word = ByteAry_.Mid(bry, rdr.Key_pos_bgn(), rdr.Key_pos_end());
 		if (!ByteAry_.Eq(cur_word, prv_word)) {
-			provider.Exec_qry(Db_qry_.insert_("search_title_word")
-				.Arg_("search_id", ++search_id)
-				.Arg_("search_word", cur_word)
-			);
+			Xodb_search_title_word_tbl.Insert(stmt_word, ++search_id, cur_word);
 			prv_word = cur_word;
 		}
-		provider.Exec_qry(Db_qry_.insert_("search_title_page")
-			.Arg_("search_id", search_id)
-			.Arg_("page_id"	, Base85_utl.XtoIntByAry(bry, rdr.Key_pos_end() + 1, rdr.Key_pos_end() +  5)) // -1: ignore rdr_dlm
-			.Arg_("page_len", Base85_utl.XtoIntByAry(bry, rdr.Key_pos_end() + 6, rdr.Key_pos_end() + 10))
-		);
+		Xodb_search_title_page_tbl.Insert(stmt_page, search_id, Base85_utl.XtoIntByAry(bry, rdr.Key_pos_end() + 1, rdr.Key_pos_end() +  5)); // -1: ignore rdr_dlm
 	}
 	public void Sort_end() {
 		provider.Txn_mgr().Txn_end_all();

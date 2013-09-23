@@ -30,7 +30,7 @@ class Xop_lnke_lxr implements Xop_lxr {
 		}
 		Ctor_lxr_add(core_trie, "xowa-cmd", Xow_cfg_lnke.Tid_xowa);
 	}	static final byte[] Bry_relative_1 = ByteAry_.new_ascii_("[//"), Bry_relative_2 = ByteAry_.new_ascii_("[[//");
-	void Ctor_lxr_add(ByteTrieMgr_fast core_trie, String itm, byte tid) {
+	private void Ctor_lxr_add(ByteTrieMgr_fast core_trie, String itm, byte tid) {
 		byte[] protocol_ary = ByteAry_.new_ascii_(itm);
 		core_trie.Add(protocol_ary						, new Xop_lnke_lxr(Xop_lnke_tkn.Lnke_typ_text, protocol_ary, tid));
 		core_trie.Add(ByteAry_.new_ascii_("[" + itm)	, new Xop_lnke_lxr(Xop_lnke_tkn.Lnke_typ_brack, protocol_ary, tid));

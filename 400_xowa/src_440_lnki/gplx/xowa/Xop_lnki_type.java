@@ -26,7 +26,7 @@ public class Xop_lnki_type {
 			case Id_thumb:
 				return true;
 			default:
-				throw Err_.unhandled(id);
+				return Enm_.HasInt(id, Id_thumb);
 		}
 	}
 }

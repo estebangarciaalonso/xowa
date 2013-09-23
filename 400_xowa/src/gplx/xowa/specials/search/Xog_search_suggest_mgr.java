@@ -28,7 +28,7 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 	public byte Search_mode() {return search_mode;} public Xog_search_suggest_mgr Search_mode_(byte v) {search_mode = v; return this;} private byte search_mode;
 	public int All_pages_extend() {return all_pages_extend;} private int all_pages_extend = 1000;	// look ahead by 1000
 	public int All_pages_min() {return all_pages_min;} private int all_pages_min = 10000;			// only look at pages > 10 kb
-	public boolean Auto_wildcard() {return auto_wildcard;} private boolean auto_wildcard = true;			// automatically add wild-card; EX: Earth -> *Earth*
+	public boolean Auto_wildcard() {return auto_wildcard;} private boolean auto_wildcard = false;			// automatically add wild-card; EX: Earth -> *Earth*
 	public void Cancel() {
 		cur_cmd.Cancel();
 		long prv_time = Env_.TickCount();
@@ -45,35 +45,44 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 		ThreadAdp_.invk_(this, Invk_search_async).Start();
 	}	private Xow_wiki wiki; private byte[] search_bry, cbk_func;
 	Object thread_guard = new Object();
-	void Search_async() {
-		if (search_bry.length == 0) return;
+	private void Search_async() {
 		if (!enabled) return;
+		if (search_bry.length == 0) return;
 		this.Cancel();
 		synchronized (thread_guard) {
-			if (log_enabled) app.Usr_dlg().Log_many("", "", "search bgn: word=~{0}", String_.new_utf8_(search_bry));
+			if (ByteAry_.Eq(search_bry , last_search_bry)) {
+				if (log_enabled) app.Usr_dlg().Log_many("", "", "search repeated?: word=~{0}", String_.new_utf8_(search_bry));
+				return;
+			}
 			cur_cmd.Init(wiki, search_bry, cbk_func, results_max, search_mode, all_pages_extend, all_pages_min);
 			this.last_search_bry = search_bry;
+			if (log_enabled) app.Usr_dlg().Log_many("", "", "search bgn: word=~{0}", String_.new_utf8_(search_bry));
 			cur_cmd.Search();
 		}
 	}	private Xog_search_suggest_cmd cur_cmd; byte[] last_search_bry;
 	public void Notify() {// EX: receiveSuggestions('search_word', ['result_1', 'result_2']);
-		byte[] search_bry = cur_cmd.Search_bry();
-		ListAdp found = cur_cmd.Results();
-		if (!ByteAry_.Eq(search_bry, last_search_bry)) return;	// do not notify if search terms do not match
-		wtr.Add_str(cbk_func);
-		wtr.Add_paren_bgn();
-			wtr.Add_str_quote(search_bry).Add_comma();				
-			wtr.Add_brack_bgn();
-				int len = found.Count();
-				for (int i = 0; i < len; i++) {
-					Xodb_page p = (Xodb_page)found.FetchAt(i);
-					byte[] ttl = Xoa_ttl.Replace_unders(p.Ttl_wo_ns());
-					wtr.Add_str_arg(i, ttl);
-				}
-			wtr.Add_brack_end();
-		wtr.Add_paren_end_semic();
-		if (log_enabled) app.Usr_dlg().Log_many("", "", "search end: word=~{0}", String_.new_utf8_(search_bry));
-		main_win.Html_box().Html_js_eval_script(wtr.Xto_str_and_clear());
+		synchronized (thread_guard) {
+			byte[] search_bry = cur_cmd.Search_bry();
+			if (!ByteAry_.Eq(search_bry, last_search_bry)) {
+				if (log_enabled) app.Usr_dlg().Log_many("", "", "search does not match?: expd=~{0} actl=~{1}", String_.new_utf8_(last_search_bry), String_.new_utf8_(search_bry));
+				return;	// do not notify if search terms do not match
+			}
+			ListAdp found = cur_cmd.Results();
+			wtr.Add_str(cbk_func);
+			wtr.Add_paren_bgn();
+				wtr.Add_str_quote(search_bry).Add_comma();				
+				wtr.Add_brack_bgn();
+					int len = found.Count();
+					for (int i = 0; i < len; i++) {
+						Xodb_page p = (Xodb_page)found.FetchAt(i);
+						byte[] ttl = Xoa_ttl.Replace_unders(p.Ttl_wo_ns());
+						wtr.Add_str_arg(i, ttl);
+					}
+				wtr.Add_brack_end();
+			wtr.Add_paren_end_semic();
+			if (log_enabled) app.Usr_dlg().Log_many("", "", "search end: word=~{0}", String_.new_utf8_(search_bry));
+			main_win.Html_box().Html_js_eval_script(wtr.Xto_str_and_clear());
+		}
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_search_async))			Search_async();

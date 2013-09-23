@@ -72,7 +72,7 @@ public class Xob_xdat_file {
 		itm_ends[ary_len] = prv_pos + itm.length;
 		Src_rebuild(bfr, ary_len + 1, itm);
 	}
-	void Src_rebuild_hdr(ByteAryBfr bfr, int ary_len) {
+	private void Src_rebuild_hdr(ByteAryBfr bfr, int ary_len) {
 		int bgn = 0;
 		for (int i = 0; i < ary_len; i++) {
 			int end = itm_ends[i];
@@ -82,11 +82,11 @@ public class Xob_xdat_file {
 		}
 		bfr.Add_byte(Dlm_row);		
 	}
-	void Src_rebuild(ByteAryBfr bfr, int ary_len, byte[] new_itm) {
+	private void Src_rebuild(ByteAryBfr bfr, int ary_len, byte[] new_itm) {
 		Src_rebuild_hdr(bfr, ary_len);
 		Src_rebuild_brys(bfr, ary_len, new_itm);
 	}
-	void Src_rebuild_brys(ByteAryBfr bfr, int ary_len, byte[] new_itm) {
+	private void Src_rebuild_brys(ByteAryBfr bfr, int ary_len, byte[] new_itm) {
 		int bgn = itm_0_bgn;
 		boolean insert = new_itm != null;
 		int ary_end = insert ? ary_len - 1 : ary_len;

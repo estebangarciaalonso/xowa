@@ -128,7 +128,7 @@ public class Xob_parse_all extends Xob_itm_basic_base implements Xob_cmd, GfoInv
 			ctx.App().Utl_bry_bfr_mkr().Clear();
 		}
 	}
-	void Commit(Xow_ns ns, byte[] ttl) {
+	private void Commit(Xow_ns ns, byte[] ttl) {
 		tbl_cfg.Update("bldr.parse_all", "prv_ttl", String_.new_utf8_(prv_ttl));
 		if (prv_ns_dirty) {
 			tbl_cfg.Update("bldr.parse_all", "prv_ns", ns.Id());
@@ -139,7 +139,7 @@ public class Xob_parse_all extends Xob_itm_basic_base implements Xob_cmd, GfoInv
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_end() {}
 	public void Cmd_print() {}		
-	void Free() {
+	private void Free() {
 		ctx.App().Free_mem(true);
 		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_invalidate();
 		Env_.GarbageCollect();

@@ -40,7 +40,7 @@ public class Xop_apos_dat {
 				break;
 		}
 	}
-	void Ident_props(int aposLen) {
+	private void Ident_props(int aposLen) {
 		typ = aposLen;
 		switch (aposLen) {
 			case Xop_apos_tkn_.CmdLen_ital:	{

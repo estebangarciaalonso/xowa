@@ -50,7 +50,7 @@ class BinaryHeap_Io_line_rdr {
 		ary = null;
 		ary_len = 0;
 	}
-	void Add_move_up(int pos) {
+	private void Add_move_up(int pos) {
 		while (pos > 0) {
 			int owner = (pos - 1) / 2;
 			if (Compare(pos, owner) > CompareAble_.Less) break;
@@ -58,7 +58,7 @@ class BinaryHeap_Io_line_rdr {
 			pos = owner;
 		}
 	}
-	void Pop_move_down(int pos) {
+	private void Pop_move_down(int pos) {
 		int idx_last = ary_len - 1;
 		while (pos < ary_len / 2) {
 			int sub = 2 * pos + 1;
@@ -75,7 +75,7 @@ class BinaryHeap_Io_line_rdr {
 		return comparer.compare(lhs_itm, rhs_itm); 
 //			return ByteAry_.Compare(lhs.Bfr(), lhs.Key_pos_bgn(), lhs.Key_pos_end(), rhs.Bfr(), rhs.Key_pos_bgn(), rhs.Key_pos_end());
 	}	Io_sort_split_itm lhs_itm = new Io_sort_split_itm(), rhs_itm = new Io_sort_split_itm();
-	void Swap(int lhs_idx, int rhs_idx) {
+	private void Swap(int lhs_idx, int rhs_idx) {
 		Io_line_rdr tmp = ary[lhs_idx];
 		ary[lhs_idx] = ary[rhs_idx];
 		ary[rhs_idx] = tmp;

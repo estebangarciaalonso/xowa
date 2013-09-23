@@ -43,18 +43,18 @@ public class Scrib_pf_invoke_tst {
 		fxt.Init_lua_rcvd_expandTemplate(Scrib_engine.Frame_key_current	, "Template:Format", KeyVal_.int_(1, "a"));
 		fxt.Test_invoke("a");
 	}
-	void Init_preprocess() {
+	private void Init_preprocess() {
 		fxt.Init_tmpl("{{#invoke:Mod_0|Func_0|1|c|d}}");	// current
 		fxt.Init_page("{{test|null|1|a|b}}");				// parent
 		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_mw(), Scrib_lib_mw.Invk_preprocess);
 	}
-	void Exec_preprocess(String frame, String arg_idx, String expd) {
+	private void Exec_preprocess(String frame, String arg_idx, String expd) {
 		fxt.Parser_fxt().App().Tmpl_result_cache().Clear();
 		fxt.Init_lua_module();
 		fxt.Init_lua_rcvd_preprocess(frame, "{{#ifeq:" + arg_idx + "|{{{1}}}|{{{2}}}|{{{3}}}}}");
 		fxt.Test_invoke(expd);
 	}
-	void Init_expandTemplate() {
+	private void Init_expandTemplate() {
 		fxt.Init_tmpl("{{#invoke:Mod_0|Func_0|1|c|d}}");	// current
 		fxt.Init_page("{{test|null|1|a|b}}");				// parent
 		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_mw(), Scrib_lib_mw.Invk_expandTemplate);
@@ -155,7 +155,7 @@ class Scrib_pf_invoke_fxt {
 		if (init_tmpl != null) fxt.ini_defn_add("test", init_tmpl);
 		return fxt.tst_Parse_tmpl_str_rv(init_page);
 	}
-	void Test_lib_proc_internal(Scrib_lib lib, String func_name, KeyVal[] args) {
+	private void Test_lib_proc_internal(Scrib_lib lib, String func_name, KeyVal[] args) {
 		Init_lua_module();
 		this.Init_cbk(Scrib_engine.Key_mw_interface, lib, func_name);
 		this.Init_lua_rcvd(func_name, args);

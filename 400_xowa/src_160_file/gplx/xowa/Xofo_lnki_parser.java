@@ -47,7 +47,7 @@ class Xofo_lnki_parser extends Obj_ary_parser_base {
 		}
 		Exec_val(lnki, fld_idx, eq_pos, bry, fld_bgn, end);
 	}
-	void Exec_val(Xofo_lnki lnki, int fld_idx, int eq_pos, byte[] bry, int fld_bgn, int i) {
+	private void Exec_val(Xofo_lnki lnki, int fld_idx, int eq_pos, byte[] bry, int fld_bgn, int i) {
 		int fld_val = -1;
 		if (fld_idx < 3) {
 			fld_val = ByteAry_.XtoIntByPos(bry, fld_bgn, i, Int_.MinValue);

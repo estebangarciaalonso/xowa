@@ -214,7 +214,7 @@ public class Xof_xfer_mgr {
 		else
 			return Img_convert(Io_url_.new_fil_(src_str), trg_url);
 	}
-	void Make_vid() {
+	private void Make_vid() {
 		boolean thumb_pass = false;
 		Make_other();													// NOTE: must go before thumb b/c rslt.Pass() is modified by both
 		if (src_repo_is_wmf) {											// src is wmf >>> copy down thumb; NOTE: thumb not available in tar
@@ -243,28 +243,6 @@ public class Xof_xfer_mgr {
 		String src_str = this.Src_url(src_repo, Xof_repo_itm.Mode_orig, Xof_url_.Null_size_deprecated);
 		Io_url trg_url = this.Trg_url(trg_repo, Xof_repo_itm.Mode_orig, Xof_url_.Null_size_deprecated);
 		return Cmd_download(src_str, trg_url, true);
-	}
-	void Make_img__wmf_api() {
-		if (src_repo.Wmf_api() && meta_itm.Orig_w() < 1) {	// api_enabled
-			boolean pass = wiki.App().File_mgr().Download_mgr().Api_size_wkr().Api_query_size(rslts, wiki, ttl, lnki_w, lnki_h);
-			if (pass) {
-				if (rslts.Reg_wiki() != null) {
-					src_repo = wiki.App().File_mgr().Repo_mgr().Get_by_wmf(rslts.Reg_wiki());
-					trg_repo = wiki.App().File_mgr().Repo_mgr().Get_primary(rslts.Reg_wiki());
-					if (ByteAry_.Eq(rslts.Reg_wiki(), wiki.Key_bry()))
-						xfer_itm.Trg_repo_idx_(Xof_meta_itm.Repo_same);
-					else
-						xfer_itm.Trg_repo_idx_(0);
-					if (!ByteAry_.Eq(rslts.Reg_page(), ttl)) {
-						ttl = rslts.Reg_page();
-						md5 = Xof_xfer_itm.Md5_(ttl);
-						meta_itm.Ptr_ttl_(ttl);
-					}
-					meta_itm.Vrtl_repo_(xfer_itm.Trg_repo_idx());
-				}
-				meta_itm.Load_orig_(rslts.Orig_w(), rslts.Orig_h());
-			}
-		}
 	}
 	boolean Orig_max_download() {
 		long ext_max = ext_rule.View_max();

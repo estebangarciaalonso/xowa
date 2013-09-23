@@ -30,7 +30,7 @@ public class Xoctg_html_mgr implements GfoInvkAble {
 		else
 			Bld_html_v1(wiki, page, bfr);
 	}	private Xoctg_url url_ctg = new Xoctg_url();
-	void Bld_html_v2(Xow_wiki wiki, Xoa_page page, ByteAryBfr bfr) {
+	private void Bld_html_v2(Xow_wiki wiki, Xoa_page page, ByteAryBfr bfr) {
 		byte[] ttl_bry = page.Page_ttl().Page_db();
 		Xoctg_view_ctg view_ctg = new Xoctg_view_ctg().Name_(page.Page_ttl().Page_txt());
 		url_ctg.Parse(wiki.App().Usr_dlg(), page.Url());
@@ -64,14 +64,14 @@ public class Xoctg_html_mgr implements GfoInvkAble {
 			itm.Ttl_(itm_ttl);
 		}
 	}	ListAdp title_list = ListAdp_.new_(); static final byte[] Bry_missing = ByteAry_.new_ascii_("missing");
-	void Add_titles(ListAdp title_list, Xoctg_view_grp grp) {
+	private void Add_titles(ListAdp title_list, Xoctg_view_grp grp) {
 		int len = grp.Itms().length;
 		for (int i = 0; i < len; i++) {
 			Xoctg_view_itm itm = grp.Itms()[i];
 			title_list.Add(itm);
 		}
 	}
-	void Bld_html_v1(Xow_wiki wiki, Xoa_page page, ByteAryBfr bfr) {
+	private void Bld_html_v1(Xow_wiki wiki, Xoa_page page, ByteAryBfr bfr) {
 		Xoctg_view_ctg ctg = new Xoctg_view_ctg().Name_(page.Page_ttl().Page_txt());
 		boolean found = wiki.Db_mgr().Load_mgr().Load_ctg_v1(ctg, page.Page_ttl().Page_db()); if (!found) return;
 		Bld_all(bfr, wiki, page.Lang(), ctg, Xoa_ctg_mgr.Tid_subc);

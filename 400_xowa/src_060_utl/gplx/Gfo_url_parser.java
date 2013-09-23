@@ -129,7 +129,7 @@ public class Gfo_url_parser {
 		}
 		return pass;
 	}
-	void Parse_site(byte[] src, int bgn, int end) {
+	private void Parse_site(byte[] src, int bgn, int end) {
 		int dot_count = 0, dot_pos_0 = -1, dot_pos_1 = -1;
 		boolean loop = true;
 		byte b = Byte_ascii.Nil;
@@ -172,7 +172,7 @@ public class Gfo_url_parser {
 		}		
 	}
 	int slash_prv;
-	void Parse_segs(byte[] src, int bgn, int end) {
+	private void Parse_segs(byte[] src, int bgn, int end) {
 		if (bgn == end) return;
 		int pos = bgn;
 		slash_prv = bgn;
@@ -205,7 +205,7 @@ public class Gfo_url_parser {
 		}
 		url.Segs_((byte[][])segs.XtoAry(byte[].class));
 	}
-	void Parse_anchor(byte[] src, int bgn, int end) {		
+	private void Parse_anchor(byte[] src, int bgn, int end) {		
 		if (bgn == end) return;
 		int pos = bgn;
 		boolean loop = true;
@@ -232,7 +232,7 @@ public class Gfo_url_parser {
 			++pos;
 		}
 	}
-	void Parse_args(byte[] src, int bgn, int end) {
+	private void Parse_args(byte[] src, int bgn, int end) {
 		if (bgn == end) return;
 		int pos = bgn;
 		boolean loop = true;
@@ -259,7 +259,7 @@ public class Gfo_url_parser {
 		}
 		url.Args_((Gfo_url_arg[])args.XtoAry(Gfo_url_arg.class));
 	}
-	void Site_set(byte[] src, int bgn, int end, int dot_count, int dot_pos_0, int dot_pos_1) {
+	private void Site_set(byte[] src, int bgn, int end, int dot_count, int dot_pos_0, int dot_pos_1) {
 		encoder.Decode(src, bgn, end, tmp_bfr, false);
 		url.Site_(tmp_bfr.XtoAryAndClear());
 		switch (dot_count) {
@@ -280,7 +280,7 @@ public class Gfo_url_parser {
 				break;
 		}
 	}
-	void Segs_add(byte[] src, int bgn, int end) {
+	private void Segs_add(byte[] src, int bgn, int end) {
 		encoder.Decode(src, bgn, end, tmp_bfr, false);
 		byte[] seg = tmp_bfr.XtoAryAndClear();
 		if (url.Page() != null)
@@ -288,11 +288,11 @@ public class Gfo_url_parser {
 		url.Page_(seg);
 		slash_prv = end + 1;	// +1 to position after / 
 	}
-	void Anchor_set(byte[] src, int bgn, int end) {
+	private void Anchor_set(byte[] src, int bgn, int end) {
 		encoder.Decode(src, bgn, end, tmp_bfr, false);
 		url.Anchor_(tmp_bfr.XtoAryAndClear());
 	}
-	void Args_add(byte[] src, int key_bgn, int key_end, int val_bgn, int val_end) {
+	private void Args_add(byte[] src, int key_bgn, int key_end, int val_bgn, int val_end) {
 		encoder.Decode(src, key_bgn, key_end, tmp_bfr, false);
 		byte[] key = tmp_bfr.XtoAryAndClear();
 		encoder.Decode(src, val_bgn, val_end, tmp_bfr, false);

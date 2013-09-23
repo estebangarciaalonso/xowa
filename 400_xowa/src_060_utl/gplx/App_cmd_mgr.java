@@ -34,7 +34,7 @@ public class App_cmd_mgr {
 		return this;
 	}	String key_help, key_header, key_args;
 	public boolean Args_process(String[] ary) {Args_parse(ary); return errs.Count() == 0;}
-	void Args_parse(String[] ary) {
+	private void Args_parse(String[] ary) {
 		this.orig_ary = ary;
 		App_cmd_arg arg = null;			
 		int ary_len = ary.length;

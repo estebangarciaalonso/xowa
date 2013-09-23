@@ -22,6 +22,7 @@ public interface Xodb_mgr extends GfoInvkAble, RlsAble {
 	String Tid_name();
 	byte Data_storage_format(); void Data_storage_format_(byte v);
 	byte Category_version();
+	byte Search_version(); void Search_version_refresh();
 	DateAdp Dump_date_query();
 	Xodb_load_mgr Load_mgr();
 	Xodb_save_mgr Save_mgr();

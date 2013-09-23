@@ -117,21 +117,21 @@ public abstract class Xob_ctg_v1_base extends Xob_itm_dump_base implements Xobd_
 			--pos;
 		}
 	}
-	void wkr_hooks_add(ByteAryBfr tmp_bfr, Xow_ns[] ary) {
+	private void wkr_hooks_add(ByteAryBfr tmp_bfr, Xow_ns[] ary) {
 		int len = ary.length;
 		for (int i = 0; i < len; i++) {
 			Xow_ns ns = ary[i];
 			if (ns.Id_ctg()) wkr_hooks_add(tmp_bfr, ns.Name_bry());
 		}
 	}
-	void wkr_hooks_add(ByteAryBfr tmp_bfr, Xol_ns_grp ns_grp) {
+	private void wkr_hooks_add(ByteAryBfr tmp_bfr, Xol_ns_grp ns_grp) {
 		int len = ns_grp.Len();
 		for (int i = 0; i < len; i++) {
 			Xow_ns ns = ns_grp.Get_at(i);
 			if (ns.Id_ctg()) wkr_hooks_add(tmp_bfr, ns.Name_bry());
 		}
 	}
-	void wkr_hooks_add(ByteAryBfr tmp_bfr, byte[] word) {
+	private void wkr_hooks_add(ByteAryBfr tmp_bfr, byte[] word) {
 		tmp_bfr.Add_byte(Byte_ascii.Brack_bgn).Add_byte(Byte_ascii.Brack_bgn).Add(word).Add_byte(Byte_ascii.Colon);
 		byte[] key = tmp_bfr.XtoAryAndClear();
 		if (!wkr_hooks.Has(key)) wkr_hooks.Add(key, key);

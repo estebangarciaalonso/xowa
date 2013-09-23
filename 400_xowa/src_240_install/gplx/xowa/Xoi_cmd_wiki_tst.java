@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xoi_cmd_wiki_tst {
-	@Test  public void Stub() {}
-	void Get_len(String... ary) {
+	@Test  public void Stub() {Get_len();}
+	private void Get_len(String... ary) {
 		int ary_len = ary.length;
 		ByteAryBfr trg = ByteAryBfr.reset_(255);
 		Time_fmtr_arg time_fmtr = new Time_fmtr_arg();

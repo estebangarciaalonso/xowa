@@ -23,11 +23,12 @@ public class Xodb_fsys_mgr {
 		this.trg_dir = trg_dir;
 		this.trg_name = trg_name;
 		return this;
-	}	Io_url src_dir; Io_url trg_dir; String trg_name;
+	}	private Io_url src_dir; private String trg_name;
 	public Db_provider Core_provider() {return core_provider;} Db_provider core_provider;
 	public Db_provider Page_provider() {return page_provider;} Db_provider page_provider;
 	public Db_provider Category_provider() {return category_provider;} Db_provider category_provider;
 	public Db_provider Wdata_provider() {return wikidata_provider;} Db_provider wikidata_provider;
+	public Io_url Trg_dir() {return trg_dir;} private Io_url trg_dir; 
 	public int Tid_text_idx() {return tid_text_idx;} public Xodb_fsys_mgr Tid_text_idx_(int v) {tid_text_idx = v; return this;} private int tid_text_idx = File_id_core;
 	public long Tid_text_max() {return tid_text_max;} long tid_text_max = Heap_max_infinite;
 	static final int File_id_core = 0;
@@ -57,10 +58,10 @@ public class Xodb_fsys_mgr {
 		if (max == Max_core_db) return files_ary[File_id_core];
 		return Make(tid).File_max_(max);
 	}
-	void Init_by_tid_core(Xodb_file file)				{core_provider = page_provider = category_provider = wikidata_provider = file.Provider();}
+	private void Init_by_tid_core(Xodb_file file)				{core_provider = page_provider = category_provider = wikidata_provider = file.Provider();}
 	public void Init_by_tid_category(Xodb_file file)	{category_provider = file.Provider();}
 	public void Init_by_tid_wikidata(Xodb_file file)	{wikidata_provider = file.Provider();}
-	void Init_by_ns_map(Xow_ns_mgr ns_mgr, Xodb_ns_map_mgr ns_map) {
+	private void Init_by_ns_map(Xow_ns_mgr ns_mgr, Xodb_ns_map_mgr ns_map) {
 		Xodb_ns_map_itm[] ns_map_itms = ns_map.Itms();
 		int ns_map_itms_len = ns_map_itms.length;
 		for (int i = 0; i < ns_map_itms_len; i++) {
@@ -75,7 +76,7 @@ public class Xodb_fsys_mgr {
 			}
 		}
 	}
-	void Init_by_tid_text(Xodb_file file) {
+	private void Init_by_tid_text(Xodb_file file) {
 		tid_text_idx = file.Id();
 		tid_text_max = file.File_max();
 	}

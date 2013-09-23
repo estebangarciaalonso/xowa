@@ -26,6 +26,7 @@ import java.nio.channels.*;
 import java.util.Date;
 
 import javax.print.FlavorException;
+import javax.tools.JavaCompiler;
 import gplx.criterias.*;
 public class IoEngine_system extends IoEngine_base {
 	@Override public String Key() {return IoEngine_.SysKey;}
@@ -377,6 +378,12 @@ public class IoEngine_system extends IoEngine_base {
 			;
 	}
 	boolean user_agent_needs_resetting = true;
+	@Override public Io_stream_rdr DownloadFil_as_rdr(IoEngine_xrg_downloadFil xrg) {
+		Tfds.WriteText("\n" + xrg.Src());
+		Io_stream_rdr_http rdr = new Io_stream_rdr_http(xrg);
+		rdr.Open();
+		return rdr;
+	}
 	@Override public boolean DownloadFil(IoEngine_xrg_downloadFil xrg) {
 		IoStream trg_stream = null;
 		java.io.BufferedInputStream src_stream = null;
@@ -487,4 +494,118 @@ class IoEngine_system_xtn {
 	// PATCH.DROID:VerifyError if file.setExecutable is referenced directly in IoEngine_system. However, if placed in separate class
 	public static void SetExecutable(java.io.File file, boolean v) 	{file.setExecutable(v);}
 	public static void SetWritable(java.io.File file, boolean v) 	{file.setWritable(v);}
+}
+class Io_download_http {
+	public static boolean User_agent_reset_needed = true;
+	public static void User_agent_reset() {
+		User_agent_reset_needed = false;
+		System.setProperty("http.agent", "");	// need to set http.agent to '' in order for "User-agent" to take effect
+	}
+	public static void Save_to_fsys(IoEngine_xrg_downloadFil xrg) {
+		Io_stream_rdr_http rdr = new Io_stream_rdr_http(xrg); 
+		IoStream trg_stream = null;
+		try {			
+			boolean exists = Io_mgr._.ExistsDir(xrg.Trg().OwnerDir());
+		    if (!exists)
+		    	Io_mgr._.CreateDir(xrg.Trg().OwnerDir());	// dir must exist for OpenStreamWrite; create dir at last possible moment in case stream does not exist.
+		    trg_stream = Io_mgr._.OpenStreamWrite(xrg.Trg());
+		    byte[] bfr = new byte[Download_bfr_len];
+		    rdr.Open();
+		    while (rdr.Read(bfr, 0, Download_bfr_len) != Read_done) {		    	
+		    }
+		}
+		finally {
+			rdr.Rls();
+			if (trg_stream != null) trg_stream.Rls();
+		}
+		if (xrg.Rslt() != IoEngine_xrg_downloadFil.Rslt_pass)
+			Io_mgr._.DeleteFil_args(xrg.Trg()).MissingFails_off().Exec();
+	}
+	public static final int Read_done = -1;
+	public static final int Download_bfr_len = Io_mgr.Len_kb * 128;
+}
+class Io_stream_rdr_http implements Io_stream_rdr {
+	public Io_stream_rdr_http(IoEngine_xrg_downloadFil xrg) {
+		this.xrg = xrg;
+	}	private IoEngine_xrg_downloadFil xrg;
+	public byte Tid() {return Io_stream_.Tid_file;}
+	public Io_url Url() {return url;} public Io_stream_rdr Url_(Io_url v) {url = v; return this;} private Io_url url;
+	public long Len() {return len;} public Io_stream_rdr Len_(long v) {len = v; return this;} private long len;	
+	private String src_str; private HttpURLConnection src_conn; private java.io.BufferedInputStream src_stream;
+	private Io_download_fmt xfer_fmt; private Gfo_usr_dlg prog_dlg;
+	private boolean read_done = true, read_failed = false;
+	public Io_stream_rdr Open() {
+		if (Io_download_http.User_agent_reset_needed) Io_download_http.User_agent_reset();
+		src_str = xrg.Src();
+		xfer_fmt = xrg.Download_fmt(); prog_dlg = xfer_fmt.usr_dlg;
+		try {
+			src_conn = (HttpURLConnection)new java.net.URL(src_str).openConnection();
+			String user_agent = xrg.User_agent();
+			if (user_agent != null)
+				src_conn.setRequestProperty("User-Agent", user_agent);
+//			src_conn.setReadTimeout(5000);	// do not set; if file does not exist, will wait 5 seconds before timing out; want to fail immediately
+			long content_length = Long_.parse_or_(src_conn.getHeaderField("Content-Length"), Int_.Neg1);
+			xrg.Src_content_length_(content_length);
+			this.len = content_length;
+			if (xrg.Src_last_modified_query())	// NOTE: only files will have last modified (api calls will not); if no last_modified, then src_conn will throw get nullRef; avoid nullRef 
+			if (xrg.Exec_meta_only()) {
+				xrg.Src_last_modified_(DateAdp_.dateTime_long(src_conn.getLastModified()));
+				read_done = true;
+				return this;
+			}
+	        read_done = false;
+	        src_stream = new java.io.BufferedInputStream(src_conn.getInputStream());
+    		xfer_fmt.Bgn(content_length);
+		}
+		catch (Exception e) {Err_handle(e);}
+		return this;
+	}
+	public void Open_mem(byte[] v) {}
+	public Object Under() {return src_stream;}
+	public int Read(byte[] bry, int bgn, int len) {
+		if (read_done) return Io_download_http.Read_done;
+		if (xrg.Prog_cancel()) {read_failed = true; return Io_download_http.Read_done;}
+		try {
+			int read = src_stream.read(bry, bgn, len); 
+			xfer_fmt.Prog(read);
+			return read;
+		}
+		catch (Exception e) {
+			Err_handle(e);
+			return Io_download_http.Read_done;
+		}
+	}
+	private Io_url session_fil = null;
+	public long Skip(long len) {return 0;}
+	public void Rls() {
+		read_done = true;
+		if (prog_dlg != null) {
+			xfer_fmt.Term();
+		}
+		if (read_failed) {
+			if (session_fil == null) session_fil = prog_dlg.Log_wtr().Session_dir().GenSubFil("internet.txt");
+			prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download pass: src='~{0}' trg='~{1}'", src_str, xrg.Trg().Raw());
+		}
+		else
+			xrg.Rslt_(IoEngine_xrg_downloadFil.Rslt_pass);
+		xrg.Prog_running_(false);
+		try {
+			if (src_stream != null) src_stream.close();
+			if (src_conn != null) src_conn.disconnect();
+		}
+		catch (Exception e) {Err_.Noop(e);}	// ignore close errors; also Err_handle calls Rls() so it would be circular
+	}
+	private void Err_handle(Exception exc) {
+		read_done = read_failed = true;
+		len = -1;
+		xrg.Rslt_err_(exc);
+		if 		(ClassAdp_.Eq_typeSafe(exc, java.net.UnknownHostException.class)) 	xrg.Rslt_(IoEngine_xrg_downloadFil.Rslt_fail_host_not_found);
+		else if (ClassAdp_.Eq_typeSafe(exc, java.io.FileNotFoundException.class))	xrg.Rslt_(IoEngine_xrg_downloadFil.Rslt_fail_file_not_found);
+		else																		xrg.Rslt_(IoEngine_xrg_downloadFil.Rslt_fail_unknown);
+		if (prog_dlg != null && !xrg.Prog_cancel()) {
+			if (session_fil == null) session_fil = prog_dlg.Log_wtr().Session_dir().GenSubFil("internet.txt");
+			prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download fail: src='~{0}' trg='~{1}' error='~{2}'", src_str, xrg.Trg().Raw(), Err_.Message_lang(exc));
+		}
+		this.Rls();
+	}
 }

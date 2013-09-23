@@ -38,18 +38,18 @@ public class ByteTrieMgr_fast_tst {
 		tst_MatchAtCurExact("ab", null);
 		tst_MatchAtCurExact("abc", 123);
 	}
-	void run_Add(int val, byte... ary) {trie.Add(ary, val);}
-	void tst_Match(String srcStr, byte b, int bgnPos, int expd) {
+	private void run_Add(int val, byte... ary) {trie.Add(ary, val);}
+	private void tst_Match(String srcStr, byte b, int bgnPos, int expd) {
 		byte[] src = ByteAry_.new_ascii_(srcStr);
 		Object actl = trie.Match(b, src, bgnPos, src.length);
 		Tfds.Eq(expd, actl);
 	}
-	void tst_MatchAtCur(String srcStr, Object expd) {
+	private void tst_MatchAtCur(String srcStr, Object expd) {
 		byte[] src = ByteAry_.new_ascii_(srcStr);
 		Object actl = trie.MatchAtCur(src, 0, src.length);
 		Tfds.Eq(expd, actl);
 	}
-	void tst_MatchAtCurExact(String srcStr, Object expd) {
+	private void tst_MatchAtCurExact(String srcStr, Object expd) {
 		byte[] src = ByteAry_.new_ascii_(srcStr);
 		Object actl = trie.MatchAtCurExact(src, 0, src.length);
 		Tfds.Eq(expd, actl);

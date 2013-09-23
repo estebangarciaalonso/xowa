@@ -92,7 +92,7 @@ public class Xobc_utl_make_lang_kwds implements GfoInvkAble, Xol_lang_transform 
 	public void Parse_add_words(byte[] langs_bry, byte[] kwds) {Parse(langs_bry, kwds, add_words_hash);}	private OrderedHash add_words_hash = OrderedHash_.new_bry_();
 	public void Parse_prepend_hash(byte[] langs_bry, byte[] kwds) {Parse(langs_bry, kwds, prepend_hash);}	private OrderedHash prepend_hash = OrderedHash_.new_bry_();
 	public void Parse_keep_trailing_colon(byte[] langs_bry, byte[] kwds) {Parse(langs_bry, kwds, trailing_colons);}	private OrderedHash trailing_colons = OrderedHash_.new_bry_();
-	void Parse(byte[] langs_bry, byte[] kwds, OrderedHash hash) {
+	private void Parse(byte[] langs_bry, byte[] kwds, OrderedHash hash) {
 		Xobcl_kwd_row[] itms = Parse(kwds);
 		OrderedHash langs = app.Lang_mgr().Xto_hash(langs_bry);
 		int langs_len = langs.Count();
@@ -108,11 +108,6 @@ public class Xobc_utl_make_lang_kwds implements GfoInvkAble, Xol_lang_transform 
 			else
 				grp.Merge(itms);
 		}
-	}
-	void Set_itm(String lang_str, Xol_kwd_mgr kwd_mgr) {
-		Xol_lang_itm lang_itm = Xol_lang_itm_.Get_by_key(ByteAry_.new_utf8_(lang_str));
-		if (lang_itm == null) throw Err_mgr._.fmt_(GRP_KEY, "set.invalid_lang", "invalid lang: ~{0}", lang_str);
-		manual_set.Add(lang_str, kwd_mgr);
 	}
 	public static Xobcl_kwd_row[] Parse(byte[] src) {
 		int src_len = src.length, pos = 0, fld_bgn = 0;
@@ -145,8 +140,6 @@ public class Xobc_utl_make_lang_kwds implements GfoInvkAble, Xol_lang_transform 
 		}		
 		return (Xobcl_kwd_row[])rv.XtoAry(Xobcl_kwd_row.class);
 	}
-	OrderedHash manual_set = OrderedHash_.new_();
-	private static final String GRP_KEY = "xowa.bldr.lang.keywords"; 
 }
 class Xobcl_kwd_lang {
 	public Xobcl_kwd_lang(byte[] key_bry, Xobcl_kwd_row[] grps) {

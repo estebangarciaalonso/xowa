@@ -58,7 +58,7 @@ public class Xol_mw_lang_parser {
 		Parse_file_messages(app, mediawiki_root, bfr, lang_transform);
 		Parse_file_extensions(app, mediawiki_root, bfr, lang_transform);
 	}
-	void Parse_file_messages(Xoa_app app, Io_url mediawiki_root, ByteAryBfr bfr, Xol_lang_transform lang_transform) {
+	private void Parse_file_messages(Xoa_app app, Io_url mediawiki_root, ByteAryBfr bfr, Xol_lang_transform lang_transform) {
 		Io_url dir = mediawiki_root.GenSubDir("messages");
 		Io_url[] urls = Io_mgr._.QueryDir_fils(dir);
 		int len = urls.length;
@@ -73,7 +73,7 @@ public class Xol_mw_lang_parser {
 			} catch (Exception exc) {Err_.Noop(exc); Tfds.WriteText("failed to parse " + url.Raw() + Err_.Message_gplx_brief(exc) + "\n");}
 		}
 	}
-	void Parse_file_extensions(Xoa_app app, Io_url mediawiki_root, ByteAryBfr bfr, Xol_lang_transform lang_transform) {
+	private void Parse_file_extensions(Xoa_app app, Io_url mediawiki_root, ByteAryBfr bfr, Xol_lang_transform lang_transform) {
 		Io_url dir = mediawiki_root.GenSubDir("extensions");
 		Io_url[] urls = Io_mgr._.QueryDir_fils(dir);
 		int len = urls.length;
@@ -179,7 +179,7 @@ public class Xol_mw_lang_parser {
 //		if (trie_rebuild) wiki.Ns_mgr().Trie_rebuild();
 //		lang.Evt_lang_changed();
 	}
-	void Parse_array_kv(ListAdp rv, Php_line_assign line) {
+	private void Parse_array_kv(ListAdp rv, Php_line_assign line) {
 		rv.Clear();
 		Php_itm_ary ary = (Php_itm_ary)line.Val();
 		int subs_len = ary.Subs_len();
@@ -205,7 +205,7 @@ public class Xol_mw_lang_parser {
 		}
 		return rv;
 	}
-	void Parse_messages(ListAdp rv, Xol_lang lang, ByteAryBfr bfr) {
+	private void Parse_messages(ListAdp rv, Xol_lang lang, ByteAryBfr bfr) {
 		byte[][] brys = (byte[][])rv.XtoAry(byte[].class);
 		int brys_len = brys.length;
 		Xol_msg_mgr mgr = lang.Msg_mgr();
@@ -287,7 +287,7 @@ public class Xol_mw_lang_parser {
 				return itm.Val_obj_bry();
 		}
 	}
-	void Parse_separatorTransformTable(Php_line_assign line, Gfo_num_fmt_mgr num_fmt_mgr) {
+	private void Parse_separatorTransformTable(Php_line_assign line, Gfo_num_fmt_mgr num_fmt_mgr) {
 		if (line.Val().Itm_tid() == Php_itm_.Tid_null) return;// en is null; $separatorTransformTable = null;
 		Php_itm_ary ary = (Php_itm_ary)line.Val();
 		int subs_len = ary.Subs_len();

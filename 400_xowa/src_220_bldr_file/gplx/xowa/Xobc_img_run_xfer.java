@@ -121,7 +121,7 @@ public class Xobc_img_run_xfer extends Xob_itm_basic_base implements Xob_cmd, Gf
 		}
 		this.Flush(rdr, dump_url, url_idx, time_bgn, count);
 	}	long files_sum = 0, elapsed_sum = 0; long time_bgn;
-	void Flush(Io_line_rdr rdr, Io_url dump_url, int url_idx, long time_bgn, int fil_count) {
+	private void Flush(Io_line_rdr rdr, Io_url dump_url, int url_idx, long time_bgn, int fil_count) {
 		wiki.File_mgr().Meta_mgr().Save();
 //			int dirty_meta_mgrs_len = dirty_meta_mgrs.Count();
 //			for (int i = 0; i < dirty_meta_mgrs_len; i++) {

@@ -70,7 +70,7 @@ class Xosrh_parser {
 				return Xosrh_qry_itm.word_(src, word_tkn);
 		}
 	}
-        public static final Xosrh_parser _ = new Xosrh_parser(); Xosrh_parser() {}
+	public static final Xosrh_parser _ = new Xosrh_parser(); Xosrh_parser() {}
 }
 class Xosrh_parser_ctx {
 	public Xosrh_parser_ctx Init(Xosrh_qry_tkn[] ary) {

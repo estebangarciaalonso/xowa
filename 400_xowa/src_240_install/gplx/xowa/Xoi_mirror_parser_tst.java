@@ -50,11 +50,11 @@ public class Xoi_mirror_parser_tst {
 		Tst_find_last_lte(String_.Ary("20120516", "20121220", "20130214", "latest"), "20130101", "20121220");
 		Tst_find_last_lte(String_.Ary("20120516", "20121220", "20130214", "latest"), "20120101", "");
 	}
-	void Tst_parse(String raw, String[] expd) {
+	private void Tst_parse(String raw, String[] expd) {
 		Xoi_mirror_parser parser = new Xoi_mirror_parser();
 		Tfds.Eq_ary_str(expd, parser.Parse(raw));
 	}
-	void Tst_find_last_lte(String[] ary, String comp, String expd) {
+	private void Tst_find_last_lte(String[] ary, String comp, String expd) {
 		Tfds.Eq(expd, Xoi_mirror_parser.Find_last_lte(ary, comp));
 	}
 }

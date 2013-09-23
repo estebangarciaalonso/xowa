@@ -38,6 +38,14 @@ public class Xof_offline_png_tst {
 		fxt.Test_fsys("mem/root/common/orig/7/0/A.png", "440,400");
 		fxt.Test_regy_pass("A.png");
 	}
+	@Test   public void Copy_orig_w_width() {	// PURPOSE: type if not thumb, but width is specified; do not download orig and convert; EX: [[File:The Earth seen from Apollo 17.jpg|250px]]
+		if (fxt.Db_skip()) return;
+		fxt.Init_qry_xowa(Xof_fsdb_arg_init_qry.new_().Init_commons("A.png", 440, 400));
+		fxt.Init_bin_fsdb(Xof_fsdb_arg_init_bin.new_().Init_commons_thumb("A.png", 220, 200));
+		fxt.Exec_get(Xof_fsdb_arg_exec_get.new_().Init("A.png", Xop_lnki_type.Id_null, 220, Xop_lnki_tkn.Height_null).Rslt_reg_missing_reg().Rslt_qry_mock_().Rslt_bin_fsdb_());
+		fxt.Test_fsys("mem/root/common/thumb/7/0/A.png/220px.png", "220,200");
+		fxt.Test_regy_pass("A.png");
+	}
 	@Test   public void Make_thumb() {
 		if (fxt.Db_skip()) return;
 		fxt.Init_qry_xowa__bin_fsdb__commons_orig("A.png", 440, 400);

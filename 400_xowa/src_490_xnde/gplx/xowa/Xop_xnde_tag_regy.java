@@ -39,7 +39,7 @@ public class Xop_xnde_tag_regy {
 			rv.Add(itm);
 		return (Xop_xnde_tag[])rv.XtoAry(Xop_xnde_tag.class);
 	}
-	void Init_reg(ByteTrieMgr_slim tagRegy, Xop_xnde_tag... ary) {
+	private void Init_reg(ByteTrieMgr_slim tagRegy, Xop_xnde_tag... ary) {
 		for (Xop_xnde_tag tag : ary)
 			tagRegy.Add(tag.Name_bry(), tag);
 	}

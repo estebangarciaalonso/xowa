@@ -24,13 +24,23 @@ public class Fsdb_xtn_thm_itm {
 	public int Height() {return height;} public Fsdb_xtn_thm_itm Height_(int v) {height = v; return this;} private int height;
 	public long Size() {return size;} public Fsdb_xtn_thm_itm Size_(long v) {size = v; return this;} private long size;
 	public String Modified() {return modified;} public Fsdb_xtn_thm_itm Modified_(String v) {modified = v; return this;} private String modified;
-	public String Sha1() {return sha1;} public Fsdb_xtn_thm_itm Sha1_(String v) {sha1 = v; return this;} private String sha1;
+	public String Hash() {return hash;} public Fsdb_xtn_thm_itm Hash_(String v) {hash = v; return this;} private String hash;
 	public int Dir_id() {return dir_id;} public Fsdb_xtn_thm_itm Dir_id_(int v) {dir_id = v; return this;} private int dir_id;
-	public Fsdb_xtn_thm_itm Init_by_db(int id, int owner, int w, int thumbtime, int h, long size, String modified, String sha1) {
-		this.id = id; this.owner = owner; this.width = w; this.thumbtime = thumbtime; this.height = h; this.size = size; this.modified = modified; this.sha1 = sha1;
-		return this;
+	public int Db_bin_id() {return bin_db_id;} public Fsdb_xtn_thm_itm Db_bin_id_(int v) {bin_db_id = v; return this;} private int bin_db_id;
+	public static Fsdb_xtn_thm_itm load_(DataRdr rdr) {
+		Fsdb_xtn_thm_itm rv = new Fsdb_xtn_thm_itm();
+		rv.id = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_id);
+		rv.owner = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_owner);
+		rv.width = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_width);
+		rv.thumbtime = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_thumbtime) / Fsdb_xtn_thm_tbl.Thumbtime_multiplier;
+		rv.height = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_height);
+		rv.size = rdr.ReadLong(Fsdb_xtn_thm_tbl.Fld_thm_size);
+		rv.modified = rdr.ReadStr(Fsdb_xtn_thm_tbl.Fld_thm_modified);
+		rv.hash = rdr.ReadStr(Fsdb_xtn_thm_tbl.Fld_thm_hash);
+		rv.bin_db_id = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_bin_db_id);
+		return rv;
 	}
 	public static Fsdb_xtn_thm_itm new_() {return new Fsdb_xtn_thm_itm();}
-        public static final Fsdb_xtn_thm_itm Null = new Fsdb_xtn_thm_itm();
+	public static final Fsdb_xtn_thm_itm Null = new Fsdb_xtn_thm_itm();
 	public static final Fsdb_xtn_thm_itm[] Ary_empty = new Fsdb_xtn_thm_itm[0];
 }

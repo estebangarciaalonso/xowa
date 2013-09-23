@@ -90,14 +90,14 @@ public class Xou_user implements GfoInvkAble {
 			app.Setup_mgr().Maint_mgr().Wiki_mgr().Add(dir_name_as_bry);
 		}
 	}
-	void Available_from_bulk(byte[] raw) {
+	private void Available_from_bulk(byte[] raw) {
 		byte[][] wikis = ByteAry_.Split(raw, Byte_ascii.NewLine);
 		Xow_wiki usr_wiki = Wiki();
 		int wikis_len = wikis.length;
 		for (int i = 0; i < wikis_len; i++)
 			Available_add(usr_wiki, wikis[i]);
 	}
-	void Available_add(Xow_wiki usr_wiki, byte[] wiki_name) {usr_wiki.Xwiki_mgr().Add_full(wiki_name, wiki_name);}
+	private void Available_add(Xow_wiki usr_wiki, byte[] wiki_name) {usr_wiki.Xwiki_mgr().Add_full(wiki_name, wiki_name);}
 }
 class Xou_user_ {
 	public static Xow_wiki new_or_create_(Xou_user user, Xoa_app app) {

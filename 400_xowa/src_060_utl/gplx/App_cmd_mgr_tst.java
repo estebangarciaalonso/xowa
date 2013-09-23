@@ -85,7 +85,7 @@ public class App_cmd_mgr_tst {
 		Tst_val_as_url_rel_dir_or(root_dir, dir_spr, root_dir + "sub" + dir_spr	, root_dir + "sub" + dir_spr);						// /sub/  -> /sub/
 		Tst_val_as_url_rel_dir_or(root_dir, dir_spr, "sub"						, root_dir + "dir" + dir_spr + "sub" + dir_spr);	// sub    -> /dir/sub/
 	}
-	void Tst_val_as_url_rel_dir_or(String root_dir, String dir_spr, String val, String expd) {
+	private void Tst_val_as_url_rel_dir_or(String root_dir, String dir_spr, String val, String expd) {
 		Io_url actl = fxt.arg_("key").Val_(val).Val_as_url_rel_dir_or(Io_url_.new_dir_(root_dir).GenSubDir("dir"), null);
 		Tfds.Eq(expd, actl.Raw());
 	}

@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 class Xop_list_lxr implements Xop_lxr {//20111222
 	public byte Lxr_tid() {return Xop_lxr_.Tid_list;}
 	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast coreTrie) {Add_ary(coreTrie, this, Xop_list_tkn_.Hook_ul, Xop_list_tkn_.Hook_ol, Xop_list_tkn_.Hook_dt, Xop_list_tkn_.Hook_dd);}
-	void Add_ary(ByteTrieMgr_fast coreTrie, Object val, byte[]... ary) {for (byte[] itm : ary) coreTrie.Add(itm, val);}
+	private void Add_ary(ByteTrieMgr_fast coreTrie, Object val, byte[]... ary) {for (byte[] itm : ary) coreTrie.Add(itm, val);}
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {return ctx.List().MakeTkn_bgn(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos);}
 	public static final Xop_list_lxr _ = new Xop_list_lxr(); Xop_list_lxr() {}
 }

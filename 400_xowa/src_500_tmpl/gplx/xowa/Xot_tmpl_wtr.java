@@ -23,7 +23,7 @@ class Xot_tmpl_wtr {
 		Write_tkn(ctx, src, src.length, bfr, root);
 		return bfr.Mkr_rls().XtoAryAndClear();
 	}
-	void Write_tkn(Xop_ctx ctx, byte[] src, int src_len, ByteAryBfr bfr, Xop_tkn_itm tkn) {
+	private void Write_tkn(Xop_ctx ctx, byte[] src, int src_len, ByteAryBfr bfr, Xop_tkn_itm tkn) {
 		switch (tkn.Tkn_tid()) {
 			case Xop_tkn_itm_.Tid_root:											// write each sub
 				int subs_len = tkn.Subs_len();

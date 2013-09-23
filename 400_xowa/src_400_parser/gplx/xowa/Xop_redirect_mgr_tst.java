@@ -26,7 +26,7 @@ public class Xop_redirect_mgr_tst {
 	@Test  public void Exc_false_match()		{tst_Redirect("#REDIRECTA [[a]]", Xop_redirect_log.False_match);}
 	@Test  public void Exc_lnki_not_found()		{tst_Redirect("#REDIRECT test", Xop_redirect_log.Lnki_not_found);}
 	@Test  public void Ws()						{tst_Redirect("\n#REDIRECT [[a]]", "A");}	// EX.WP:Germany; {{Template group}} -> \n#REDIRECT [[Template:Navboxes]]
-	void tst_Redirect(String src_str, Object expd) {
+	private void tst_Redirect(String src_str, Object expd) {
 		Xop_redirect_mgr redirect_mgr = new Xop_redirect_mgr(fxt.Ctx().Wiki());
 		fxt.Log_clear();
 

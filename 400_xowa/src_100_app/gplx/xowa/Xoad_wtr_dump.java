@@ -88,7 +88,7 @@ class Xoad_dump_itm {
 		}
 		return bfr.Bry_len() - old;
 	}
-	void Write_mid(byte[] src, int bgn, int end) {
+	private void Write_mid(byte[] src, int bgn, int end) {
 		if (end - bgn == 0) return;
 		for (int i = bgn; i < end; i++) {
 			byte b = src[i];

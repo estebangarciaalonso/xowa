@@ -54,7 +54,7 @@ public class Xtn_score implements Xop_xnde_xtn, Xop_xnde_atr_parser, Xoh_cmd_itm
 		nde.Html_write(ctx.Wiki(), ctx.Page(), bfr);
 	}
 	public String Hcmd_id() {return hcmd_id;} private String hcmd_id;
-	void Html_write_code_as_pre(ByteAryBfr bfr, Xoa_app app) {
+	private void Html_write_code_as_pre(ByteAryBfr bfr, Xoa_app app) {
 		bfr.Add(Xoh_consts.Pre_bgn_overflow);
 		Xoh_html_wtr.Bfr_escape(bfr, code, 0, code.length, app, true, false);
 		bfr.Add(Xoh_consts.Pre_end);

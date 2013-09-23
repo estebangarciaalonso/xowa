@@ -200,7 +200,7 @@ class Scrib_lua_regx_converter {
 		}
 		return false;
 	}
-	void Regx_quote(ByteAryBfr bfr, byte b) {
+	private void Regx_quote(ByteAryBfr bfr, byte b) {
 		if (Regx_char(b)) bfr.Add_byte(Byte_ascii.Backslash);
 		bfr.Add_byte(b);
 	}
@@ -225,7 +225,7 @@ class Scrib_lua_regx_converter {
 	//, Bry_grp_bgn = ByteAry_.new_ascii_("(?<m")
 	//, Bry_regx_end = ByteAry_.new_ascii_("/us")
 	;
-	void Init() {
+	private void Init() {
 		Init_itm(percent_hash, "a", "\\p{L}");
 		Init_itm(percent_hash, "c", "\\p{Cc}");
 		Init_itm(percent_hash, "d", "\\p{Nd}");
@@ -252,6 +252,6 @@ class Scrib_lua_regx_converter {
 		Init_itm(brack_hash, "X", "\\x00-\\x2f\\x3a-\\x40\\x47-\\x60\\x67-\\x{ff0f}\\x{ff1a}-\\x{ff20}\\x{ff27}-\\x{ff40}\\x{ff47}-\\x{10ffff}");
 		Init_itm(brack_hash, "Z", "\\x01-\\x{10ffff}");
 	}
-	void Init_itm(Hash_adp_bry hash, String lua, String php) {hash.Add_bry_obj(ByteAry_.new_ascii_(lua), ByteAry_.new_ascii_(php));}
+	private void Init_itm(Hash_adp_bry hash, String lua, String php) {hash.Add_bry_obj(ByteAry_.new_ascii_(lua), ByteAry_.new_ascii_(php));}
 	final Hash_adp_bry percent_hash = new Hash_adp_bry(true), brack_hash = new Hash_adp_bry(true);
 }

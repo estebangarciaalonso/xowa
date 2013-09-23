@@ -23,7 +23,7 @@ public class Xoi_cmd_mgr implements GfoInvkAble {
 	public Xoa_app App() {return app;}
 	public void Canceled_y_() {canceled = true;} private boolean canceled = false;
 	public boolean Working() {return working;} private boolean working;
-	void Process_async(Gfo_thread_cmd cmd) {
+	private void Process_async(Gfo_thread_cmd cmd) {
 		byte init_rslt = cmd.Async_init();
 		if (init_rslt == Gfo_thread_cmd_.Init_ok) {
 			cmd.Async_run();
@@ -43,8 +43,8 @@ public class Xoi_cmd_mgr implements GfoInvkAble {
 		else
 			working = false;
 	}
-	void Run_async(Gfo_thread_cmd cmd) {ThreadAdp_.invk_msg_(this, GfoMsg_.new_cast_(Invk_process_async).Add("v", cmd)).Start();}
-	void Cmds_run() {
+	private void Run_async(Gfo_thread_cmd cmd) {ThreadAdp_.invk_msg_(this, GfoMsg_.new_cast_(Invk_process_async).Add("v", cmd)).Start();}
+	private void Cmds_run() {
 		int cmds_len = cmds.Count();
 		if (cmds_len == 0) return;
 		for (int i = 0; i < cmds_len - 1; i++) {
@@ -103,11 +103,12 @@ public class Xoi_cmd_mgr implements GfoInvkAble {
 		else if	(String_.Eq(cmd_key, Xoi_cmd_wiki_import.KEY))							return new Xoi_cmd_wiki_import(install_mgr, wiki_key, wiki_date, dump_type).Owner_(this);
 		else if	(String_.Eq(cmd_key, Xoi_cmd_wiki_zip.KEY))								return new Xoi_cmd_wiki_zip(install_mgr, wiki_key, wiki_date, dump_type).Owner_(this);
 		else if	(String_.Eq(cmd_key, Xoi_cmd_category2_build.KEY))						return new Xoi_cmd_category2_build(install_mgr, wiki_key).Owner_(this);
-		else if	(String_.Eq(cmd_key, Xoi_cmd_category2_download_page_props.KEY_category2))		return new Xoi_cmd_category2_download_page_props(install_mgr, wiki_key, wiki_date).Owner_(this);
-		else if	(String_.Eq(cmd_key, Xoi_cmd_category2_download_categorylinks.KEY_category2))	return new Xoi_cmd_category2_download_categorylinks(install_mgr, wiki_key, wiki_date).Owner_(this);
+		else if	(String_.Eq(cmd_key, Xoi_cmd_category2_page_props.KEY_category2))		return new Xoi_cmd_category2_page_props(install_mgr, wiki_key, wiki_date).Owner_(this);
+		else if	(String_.Eq(cmd_key, Xoi_cmd_category2_categorylinks.KEY_category2))	return new Xoi_cmd_category2_categorylinks(install_mgr, wiki_key, wiki_date).Owner_(this);
+		else if	(String_.Eq(cmd_key, Xoi_cmd_search2_build.KEY))						return new Xoi_cmd_search2_build(install_mgr, wiki_key).Owner_(this);
 		else																			throw Err_mgr._.unhandled_(cmd_key);
 	}
-	public static final String[] Wiki_cmds_valid = new String[] {Xoi_cmd_wiki_download.KEY_dump, Xoi_cmd_wiki_unzip.KEY_dump, Xoi_cmd_wiki_import.KEY, Xoi_cmd_wiki_zip.KEY, Xoi_cmd_category2_build.KEY, Xoi_cmd_category2_download_page_props.KEY_category2, Xoi_cmd_category2_download_categorylinks.KEY_category2};
+	public static final String[] Wiki_cmds_valid = new String[] {Xoi_cmd_wiki_download.KEY_dump, Xoi_cmd_wiki_unzip.KEY_dump, Xoi_cmd_wiki_import.KEY, Xoi_cmd_wiki_zip.KEY, Xoi_cmd_category2_build.KEY, Xoi_cmd_category2_page_props.KEY_category2, Xoi_cmd_category2_categorylinks.KEY_category2};
 	public static final String Wiki_cmd_custom = "wiki.custom", Wiki_cmd_dump_file = "wiki.dump_file";
 	public Gfo_thread_cmd Cmd_add(GfoMsg m) {Gfo_thread_cmd rv = Cmd_new(m); cmds.Add(rv); return rv;}
 	Gfo_thread_cmd Cmd_new(GfoMsg m) {

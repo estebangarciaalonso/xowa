@@ -39,11 +39,11 @@ public class ByteTrieItm_slim_tst {
 		tst_Find(Byte_ascii.Num_0, "0");
 		tst_Find(Byte_ascii.Ltr_B, "B");
 	}
-	void tst_Find(byte b, String expd) {
+	private void tst_Find(byte b, String expd) {
 		ByteTrieItm_slim actl_itm = itm.Ary_find(b);
 		Object actl = actl_itm == null ? null : actl_itm.Val();
 		Tfds.Eq(expd, actl);
 	}
-	void run_Add(byte... ary) {for (byte b : ary) itm.Ary_add(b, Char_.XtoStr((char)b));}
-	void run_Del(byte... ary) {for (byte b : ary) itm.Ary_del(b);}
+	private void run_Add(byte... ary) {for (byte b : ary) itm.Ary_add(b, Char_.XtoStr((char)b));}
+	private void run_Del(byte... ary) {for (byte b : ary) itm.Ary_del(b);}
 }

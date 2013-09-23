@@ -67,7 +67,7 @@ public class Xob_page_txt extends Xob_itm_dump_base implements Xobd_wkr, GfoInvk
 		}
 		return rv;
 	}
-	void Flush_page(Xob_xdat_file_wtr[] regy) {
+	private void Flush_page(Xob_xdat_file_wtr[] regy) {
 		for (int i = 0; i < Ns_ordinal_max; i++) {
 			Xob_xdat_file_wtr wtr = regy[i];
 			if (wtr != null) {

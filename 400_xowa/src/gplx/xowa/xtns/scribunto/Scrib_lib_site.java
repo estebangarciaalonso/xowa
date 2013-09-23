@@ -65,7 +65,7 @@ class Scrib_lib_site implements Scrib_lib {
 		rv[6] = KeyVal_.new_("stats", Bld_stats(wiki));
 		return Scrib_kv_utl.base1_obj_(rv);
 	}
-	void Bld_info(KeyVal[] rv) {
+	private void Bld_info(KeyVal[] rv) {
 		Xow_wiki_props props = engine.Wiki().Props();
 		rv[0] = KeyVal_.new_("siteName"			, props.SiteName());
 		rv[1] = KeyVal_.new_("server"			, props.Server());

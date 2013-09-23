@@ -161,7 +161,7 @@ public class Xoa_ttl_tst {
 	Xoa_ttl_tst Base_txt_wo_qarg(String v) {expd_base_txt_wo_qarg = v; return this;} private String expd_base_txt_wo_qarg;
 	Xoa_ttl_tst Leaf_txt_wo_qarg(String v) {expd_leaf_txt_wo_qarg = v; return this;} private String expd_leaf_txt_wo_qarg;
 	Xoa_ttl_tst Err_(Gfo_msg_itm v) {expd_err = v; return this;} Gfo_msg_itm expd_err;
-	void Run() {
+	private void Run() {
 		Xoa_ttl actl = Xoa_ttl.parse_(fxt.Wiki(), ByteAry_.new_utf8_(test_raw));
 		if (expd_err == null) {
 			if (expd_nsId != Int_.MinValue) Tfds.Eq(expd_nsId, actl.Ns().Id(), "ns");
@@ -191,7 +191,7 @@ public class Xoa_ttl_tst {
 		}
 		Clear();
 	}
-	void Clear() {
+	private void Clear() {
 		expd_nsId = Int_.MinValue;
 		expd_wik_txt = expd_full_txt = expd_full_url = expd_page_txt = expd_page_url = expd_leaf_txt = expd_leaf_url = expd_base_txt = expd_base_url 
 			= expd_root_txt = expd_rest_txt = expd_talk_txt = expd_talk_url = expd_subj_txt = expd_subj_url = expd_anch_txt 

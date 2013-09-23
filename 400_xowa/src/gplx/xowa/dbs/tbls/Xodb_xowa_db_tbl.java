@@ -39,7 +39,7 @@ public class Xodb_xowa_db_tbl {
 			stmt_bldr.Commit();
 		}	finally {stmt_bldr.Rls();}
 	}
-	void Commit_itm(Xodb_file itm) {
+	private void Commit_itm(Xodb_file itm) {
 		Db_stmt stmt = stmt_bldr.Get(itm.Cmd_mode());
 		switch (itm.Cmd_mode()) {
 			case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Id())	.Val_byte_(itm.Tid()).Val_str_(itm.Url()).Exec_insert(); break;
@@ -65,7 +65,7 @@ public class Xodb_xowa_db_tbl {
 		Chk_sequential(rv);
 		return rv;
 	}
-	void Chk_sequential(Xodb_file[] ary) {
+	private void Chk_sequential(Xodb_file[] ary) {
 		int len = ary.length;
 		int expd_id = 0;
 		for (int i = 0; i < len; i++) {

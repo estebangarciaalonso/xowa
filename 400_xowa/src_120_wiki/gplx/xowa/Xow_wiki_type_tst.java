@@ -29,7 +29,7 @@ public class Xow_wiki_type_tst {
 	@Test  public void En()							{tst_Extract_lang("en.wikipedia.org", "en");}
 	@Test  public void Fr()							{tst_Extract_lang("fr.wikipedia.org", "fr");}
 	@Test  public void Commons()					{tst_Extract_lang("commons.wikimedia.org", null);}
-	void tst_Extract_lang(String raw, String expd) {Tfds.Eq(expd, String_.new_utf8_(Xow_wiki_type_.Extract_lang(ByteAry_.new_utf8_(raw))));}
+	private void tst_Extract_lang(String raw, String expd) {Tfds.Eq(expd, String_.new_utf8_(Xow_wiki_type_.Extract_lang(ByteAry_.new_utf8_(raw))));}
 }
 class Xow_wiki_type_fxt {
 	public void Clear() {lang_key = ""; wiki_tid = Xow_wiki_type_.Tid_custom;}

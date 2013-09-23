@@ -39,13 +39,14 @@ public class Xob_cmd_mgr implements GfoInvkAble {
 		else if	(String_.Eq(cmd_key, Xob_wdata_qid_sql.KEY))				return Xml_rdr_direct_add(wiki, new Xob_wdata_qid_sql().Ctor(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_wdata_pid_txt.KEY))				return Xml_rdr_direct_add(wiki, new Xob_wdata_pid_txt().Ctor(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_wdata_pid_sql.KEY))				return Xml_rdr_direct_add(wiki, new Xob_wdata_pid_sql().Ctor(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xob_search_sql_wkr.KEY))				return Xml_rdr_direct_add(wiki, new Xob_search_sql_wkr(wiki));
+		else if	(String_.Eq(cmd_key, Xob_search_sql_wkr.KEY))				return Xml_rdr_direct_add(wiki, new Xob_search_sql_wkr(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_search_sql_cmd.KEY_search_sql))	return Add(new Xob_search_sql_cmd(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_category_registry_sql.KEY))		return Add(new Xob_category_registry_sql(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xob_dump_mgr_lnki_temp.KEY_oimg))		return Add(new Xob_dump_mgr_lnki_temp(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xob_dump_mgr_file_regy.KEY_oimg))		return Add(new Xob_dump_mgr_file_regy(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xob_dump_mgr_xfer_regy.KEY_oimg))		return Add(new Xob_dump_mgr_xfer_regy(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xob_dump_mgr_redirect.KEY_redirect))	return Add(new Xob_dump_mgr_redirect(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_lnki_temp_wkr.KEY_oimg))		return Add(new Xob_lnki_temp_wkr(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_file_regy_cmd.KEY_oimg))		return Add(new Xob_file_regy_cmd(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_xfer_regy_cmd.KEY_oimg))		return Add(new Xob_xfer_regy_cmd(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_redirect_cmd.KEY_redirect))	return Add(new Xob_redirect_cmd(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_fsdb_make.KEY_oimg))				return Add(new Xob_fsdb_make(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xoctg_link_idx_wkr.KEY))				return Add(new Xoctg_link_idx_wkr(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xoctg_hiddencat_parser_sql.KEY))		return Add(new Xoctg_hiddencat_parser_sql(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xoctg_hiddencat_parser_txt.KEY))		return Add(new Xoctg_hiddencat_parser_txt(bldr, wiki));
@@ -60,7 +61,7 @@ public class Xob_cmd_mgr implements GfoInvkAble {
 		else if	(String_.Eq(cmd_key, Xobc_parse_run.KEY))					return Add(new Xobc_parse_run(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_parse_all.KEY))					return Add(new Xob_parse_all(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_img_dump_ttl.KEY))				return Xml_rdr_direct_add(wiki, new Xobc_img_dump_ttl(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xobc_img_dump_sql.KEY))				return Add(new Xobc_img_dump_sql(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_image_sql.KEY))				return Add(new Xob_image_sql(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_img_merge_ttl_sql.KEY))			return Add(new Xobc_img_merge_ttl_sql(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_img_prep_xfer.KEY))				return Add(new Xobc_img_prep_xfer(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_img_run_xfer.KEY))				return Add(new Xobc_img_run_xfer(bldr, wiki));

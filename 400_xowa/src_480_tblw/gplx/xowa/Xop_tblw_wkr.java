@@ -407,7 +407,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 		wkr.Cell_pipe_seen_(true);
 		return true;
 	}
-	void IgnoreWs(Xop_ctx ctx, Xop_root_tkn root) {
+	private void IgnoreWs(Xop_ctx ctx, Xop_root_tkn root) {
 		int end = root.Subs_len() - 1;
 		// get last tr, tc, tb; cannot use ctx.Stack_get_tblw b/c this gets last open tblw, and we want last tblw; EX: "<table><tr></tr>";  Stack_get_tblw gets <table> want </tr>
 		boolean found = false;

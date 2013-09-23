@@ -145,7 +145,7 @@ public class Json_parser {
 		}
 		throw Err_.new_("eos inside ary");
 	}
-	void Skip_ws() {
+	private void Skip_ws() {
 		while (pos < src_len) {
 			switch (src[pos]) {
 				case Byte_ascii.Space: case Byte_ascii.NewLine: case Byte_ascii.Tab: case Byte_ascii.CarriageReturn: ++pos; break;
@@ -153,7 +153,7 @@ public class Json_parser {
 			}
 		}
 	}
-	void Chk(byte expd) {
+	private void Chk(byte expd) {
 		if (src[pos] == expd)
 			++pos;
 		else

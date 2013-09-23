@@ -146,7 +146,7 @@ public class Xodb_page_tbl {
 		}	finally {provider.Txn_mgr().Txn_end_all();}
 		return true;		
 	}
-	void Select_by_id_list_grp(Cancelable cancelable, boolean skip_table_read, Xodb_page[] page_ary, int[] id_ary, int id_ary_bgn, int id_ary_end) {
+	private void Select_by_id_list_grp(Cancelable cancelable, boolean skip_table_read, Xodb_page[] page_ary, int[] id_ary, int id_ary_bgn, int id_ary_end) {
 		DataRdr rdr = DataRdr_.Null; 
 		Db_stmt stmt = Db_stmt_.Null;
 		try {

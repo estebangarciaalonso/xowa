@@ -157,8 +157,8 @@ public class Xof_math_subst_regy {
 		Reg("\\begin{align}", "\n$\\begin{align}", true, true);	// HACK: \begin{align} needs to have preceding blank line else "\begin{align} allowed only in paragraph mode." and no dvi produced
 		return this;
 	}
-	void Reg(String src_str, String trg_str) {Reg(src_str, trg_str, false, true);}
-	void Reg(String src_str, String trg_str, boolean dollarSign, boolean wholeWord) {
+	private void Reg(String src_str, String trg_str) {Reg(src_str, trg_str, false, true);}
+	private void Reg(String src_str, String trg_str, boolean dollarSign, boolean wholeWord) {
 		byte[] src_bry = ByteAry_.new_ascii_(src_str);
 		Xof_math_subst_itm itm = new Xof_math_subst_itm(src_bry, ByteAry_.new_ascii_(trg_str), dollarSign, wholeWord);
 		trie.Add(src_bry, itm);

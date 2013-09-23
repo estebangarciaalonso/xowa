@@ -74,36 +74,36 @@ public class Xob_xdat_file_tst {
 		String expd = String_.Concat_lines_nl("!!!!%|!!!!%|!!!!%|!!!!%|!!!!%|"	, "4|j", "2|f", "0|b", "1|d", "3|h");
 		Rebuild_header_tst(orig, expd);
 	}
-	void Rebuild_header_tst(String orig, String expd) {		
+	private void Rebuild_header_tst(String orig, String expd) {		
 		Tfds.Eq_str_lines(expd, String_.new_ascii_(Xob_xdat_file.Rebuid_header(ByteAry_.new_ascii_(orig), ByteAry_.new_ascii_("\n"))));		
 	}
 	ByteAryBfr tmp = ByteAryBfr.new_();
-	void tst_Sort(Xob_xdat_file rdr, gplx.lists.ComparerAble comparer, String expd) {
+	private void tst_Sort(Xob_xdat_file rdr, gplx.lists.ComparerAble comparer, String expd) {
 		rdr.Sort(tmp, comparer);
 		Chk_file(rdr, expd);
 	}
-	void tst_Insert(Xob_xdat_file rdr, String new_val, String expd) {
+	private void tst_Insert(Xob_xdat_file rdr, String new_val, String expd) {
 		rdr.Insert(tmp, ByteAry_.new_utf8_(new_val));
 		Chk_file(rdr, expd);
 	}
-	void tst_Update(Xob_xdat_file rdr, int idx, String new_val, String expd) {
+	private void tst_Update(Xob_xdat_file rdr, int idx, String new_val, String expd) {
 		Xob_xdat_itm itm = new Xob_xdat_itm(); 
 		rdr.GetAt(itm, idx);
 		rdr.Update(tmp, itm, ByteAry_.new_utf8_(new_val));
 		Chk_file(rdr, expd);
 	}
-	void Chk_file(Xob_xdat_file rdr, String expd) {
+	private void Chk_file(Xob_xdat_file rdr, String expd) {
 		Io_url url = Io_url_.new_fil_("mem/test.xdat");
 		rdr.Save(url);
 		String actl = Io_mgr._.LoadFilStr(url);
 		Tfds.Eq_str_lines(expd, actl);		
 	}
-	void tst_Find(Xob_xdat_file rdr, String find, int expd, boolean exact) {
+	private void tst_Find(Xob_xdat_file rdr, String find, int expd, boolean exact) {
 		rdr.Find(itm, ByteAry_.new_utf8_(find), 2, Byte_ascii.NewLine, exact);
 		int id = ByteAry_.XtoIntOr(ByteAry_.Mid(itm.Itm_bry(), 0, 1), -1);
 			Tfds.Eq(expd, id);
 	}
-	void tst_ReadAt(Xob_xdat_file rdr, int i, String expd) {rdr.GetAt(itm, i); Tfds.Eq(expd, String_.new_utf8_(itm.Itm_bry()));}
+	private void tst_ReadAt(Xob_xdat_file rdr, int i, String expd) {rdr.GetAt(itm, i); Tfds.Eq(expd, String_.new_utf8_(itm.Itm_bry()));}
 	Xob_xdat_itm itm = new Xob_xdat_itm();
 	Xob_xdat_file rdr_(String... lines) {
 		StringBldr sb = StringBldr.new_();

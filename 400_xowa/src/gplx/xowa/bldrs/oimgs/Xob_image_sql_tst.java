@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import org.junit.*;
 import gplx.ios.*;
-public class Xobc_img_dump_sql_tst {
-	@Before public void init() {fxt.Init();} private Xobc_img_dump_sql_fxt fxt = new Xobc_img_dump_sql_fxt();
+public class Xob_image_sql_tst {
+	@Before public void init() {fxt.Init();} private Xob_image_sql_fxt fxt = new Xob_image_sql_fxt();
 	@After public void term() {fxt.Term();} 
 	@Test   public void Basic() {
 		fxt.Run(String_.Concat

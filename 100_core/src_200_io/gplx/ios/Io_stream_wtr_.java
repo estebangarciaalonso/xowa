@@ -47,8 +47,23 @@ public class Io_stream_wtr_ {
 		try {
 			wtr.Open();
 			wtr.Write(bry, bgn, end);
+			wtr.Flush();
 		}
 		finally {wtr.Rls();}
+	}
+	public static void Save_rdr(Io_url url, Io_stream_rdr rdr) {
+		byte[] bry = new byte[4096];
+		Io_stream_wtr wtr = new_by_url_(url);
+		try {
+			wtr.Open();
+			while (true) {
+				int read = rdr.Read(bry, 0, 4096);
+				if (read < gplx.ios.Io_stream_rdr_.Read_done_compare) break; 
+				wtr.Write(bry, 0, read);
+			}
+			wtr.Flush();
+		}
+		finally {wtr.Rls(); rdr.Rls();}
 	}
 }
 abstract class Io_stream_wtr_base implements Io_stream_wtr {

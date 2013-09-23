@@ -55,8 +55,7 @@ public class Xof_offline_redirect_tst {
 		fxt.Test_regy("B.png", Xof_fsdb_arg_reg_get.new_().Init_commons(440, 400, "A.png"));
 	}
 //		@Test  public void Cross_wiki() {
-//			fxt.Init_qry_xowa(Xof_fsdb_arg_init_qry.new_().Init_commons("A.png", 440, 400));
-//			fxt.Init_bin_fsdb(Xof_fsdb_arg_init_bin.new_().Init_commons_orig("A.png", 440, 400));
+//			fxt.Init_qry_xowa__bin_fsdb__commons_orig("A.png", 440, 400);
 //			fxt.Init_qry_xowa(Xof_fsdb_arg_init_qry.new_().Init_en_wiki_redirect("B.png", "A.png"));
 //			fxt.Exec_get(Xof_fsdb_arg_exec_get.new_().Init_orig("B.png").Rslt_bin_fsdb_());
 //			fxt.Test_fsys("mem/root/common/orig/7/0/A.png", "440,400");

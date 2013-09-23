@@ -64,5 +64,5 @@ public class Pf_xtn_rel2abs_tst {
 		Tst_rel2abs_ttl("a../b", true);
 		Tst_rel2abs_ttl("a../[b", false);
 	}
-	void Tst_rel2abs_ttl(String raw, boolean expd) {Tfds.Eq(expd, Pf_xtn_rel2abs.Rel2abs_ttl(ByteAry_.new_ascii_(raw), 0, String_.Len(raw)));}
+	private void Tst_rel2abs_ttl(String raw, boolean expd) {Tfds.Eq(expd, Pf_xtn_rel2abs.Rel2abs_ttl(ByteAry_.new_ascii_(raw), 0, String_.Len(raw)));}
 }

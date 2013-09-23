@@ -36,7 +36,7 @@ public class Xob_hive_mgr {
 		xdat.Parse(xdat_bry, xdat_bry.length, xdat_url);
 		return xdat;
 	}
-	void Special_allpages_query_fwd(Xows_page_allpages mgr, byte dir_tid, Xow_ns ns, boolean include_redirects, int total, int fil_idx, int row_idx, Xob_xdat_file xdat_file) {
+	private void Special_allpages_query_fwd(Xows_page_allpages mgr, byte dir_tid, Xow_ns ns, boolean include_redirects, int total, int fil_idx, int row_idx, Xob_xdat_file xdat_file) {
 		int count = 0; ++total;
 		boolean loop = true;
 		int regy_len = regy.Files_ary().length;
@@ -69,7 +69,7 @@ public class Xob_hive_mgr {
 		mgr.Rslt_list_len_(rslt_list_len);
 		mgr.Rslt_nxt_(nxt_itm);
 	}
-	void Special_allpages_query_bwd(Xows_page_allpages mgr, byte dir_tid, Xow_ns ns, boolean include_redirects, int total, int fil_idx, int row_idx, Xob_xdat_file xdat_file) {
+	private void Special_allpages_query_bwd(Xows_page_allpages mgr, byte dir_tid, Xow_ns ns, boolean include_redirects, int total, int fil_idx, int row_idx, Xob_xdat_file xdat_file) {
 		if (row_idx < 0) {
 			--fil_idx;
 			row_idx = -1;
@@ -115,33 +115,33 @@ public class Xob_hive_mgr {
 		xdat.Find(xdat_itm, key, Xodb_page_.Txt_ttl_pos, Byte_ascii.Tab, false);
 		Find_nearby_add_fwd(list, dir_tid, ns, include_redirects, count, xdat_idx, xdat_itm.Itm_idx());
 	}	private Xob_xdat_itm xdat_itm = new Xob_xdat_itm(); //Int_2_ref find_nearby_rslt = new Int_2_ref();
-	void Find_nearby_add_bwd(ListAdp list, byte dir_tid, Xow_ns ns, boolean include_redirects, int total, int fil_bgn, int row_bgn) {
-		if (--row_bgn < 0) {
-			--fil_bgn;
-			row_bgn = -1;
-		}
-		int fil_idx = fil_bgn;
-		boolean first = true;
-		int count = 0;
-		boolean loop = true;
-		while (loop) {
-			if (fil_idx == -1) break;
-			Io_url xdat_url = fsys_mgr.Url_ns_fil(dir_tid, ns.Id(), fil_idx);
-			byte[] xdat_bry = gplx.ios.Io_stream_rdr_.Load_all(xdat_url);
-			xdat.Parse(xdat_bry, xdat_bry.length, xdat_url);
-			int row_idx = first && row_bgn != -1 ? row_bgn : xdat.Count() - 1;
-			first = false;
-			for (; row_idx > -1; row_idx--) {
-				xdat.GetAt(xdat_itm, row_idx);
-				Xodb_page ttl_itm = Xodb_page_.Txt_ttl_load(ByteAry_.Mid(xdat_itm.Src(), xdat_itm.Itm_bgn(), xdat_itm.Itm_end()));
-				if (!include_redirects && ttl_itm.Type_redirect()) continue;
-				list.Add(ttl_itm);
-				if (++count == total) {loop = false; break;}
-			}
-			--fil_idx;
-		}
-	}
-	void Find_nearby_add_fwd(ListAdp list, byte dir_tid, Xow_ns ns, boolean include_redirects, int total, int fil_bgn, int row_bgn) {
+//		private void Find_nearby_add_bwd(ListAdp list, byte dir_tid, Xow_ns ns, boolean include_redirects, int total, int fil_bgn, int row_bgn) {
+//			if (--row_bgn < 0) {
+//				--fil_bgn;
+//				row_bgn = -1;
+//			}
+//			int fil_idx = fil_bgn;
+//			boolean first = true;
+//			int count = 0;
+//			boolean loop = true;
+//			while (loop) {
+//				if (fil_idx == -1) break;
+//				Io_url xdat_url = fsys_mgr.Url_ns_fil(dir_tid, ns.Id(), fil_idx);
+//				byte[] xdat_bry = gplx.ios.Io_stream_rdr_.Load_all(xdat_url);
+//				xdat.Parse(xdat_bry, xdat_bry.length, xdat_url);
+//				int row_idx = first && row_bgn != -1 ? row_bgn : xdat.Count() - 1;
+//				first = false;
+//				for (; row_idx > -1; row_idx--) {
+//					xdat.GetAt(xdat_itm, row_idx);
+//					Xodb_page ttl_itm = Xodb_page_.Txt_ttl_load(ByteAry_.Mid(xdat_itm.Src(), xdat_itm.Itm_bgn(), xdat_itm.Itm_end()));
+//					if (!include_redirects && ttl_itm.Type_redirect()) continue;
+//					list.Add(ttl_itm);
+//					if (++count == total) {loop = false; break;}
+//				}
+//				--fil_idx;
+//			}
+//		}
+	private void Find_nearby_add_fwd(ListAdp list, byte dir_tid, Xow_ns ns, boolean include_redirects, int total, int fil_bgn, int row_bgn) {
 		int fil_idx = fil_bgn;
 		boolean first = true;
 		int count = 0;
@@ -179,7 +179,7 @@ public class Xob_hive_mgr {
 	int Regy__find_file(byte[] key, byte dir_tid)					{return Regy__find_file_by_url(key, fsys_mgr.Url_site_reg(dir_tid));}
 	int Regy__find_file_ns(byte[] key, byte dir_tid, String ns_num) {return Regy__find_file_by_url(key, fsys_mgr.Url_ns_reg(ns_num, Xow_dir_info_.Tid_ttl));}
 	int Regy__find_file_by_url(byte[] key, Io_url regy_url) {regy.Init(regy_url); return regy.Files_find(key);} private Xowd_regy_mgr regy = new Xowd_regy_mgr();
-	void Xdat__create_row(byte dir_tid, byte[] key, byte[] row, int xdat_idx) {
+	private void Xdat__create_row(byte dir_tid, byte[] key, byte[] row, int xdat_idx) {
 		Io_url xdat_url = fsys_mgr.Url_site_fil(dir_tid, xdat_idx);
 //			byte[] xdat_bry = gplx.ios.Io_stream_rdr_.Load_all(xdat_url);
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();

@@ -61,7 +61,7 @@ class Db_stmt_sql implements Db_stmt {
 		try {Add(++val_idx, Val_str_wrap(v));} catch (Exception e) {throw Err_.err_(e, "failed to add value: type={0} val={1}", "String", v);} 
 		return this;
 	}
-	public Db_stmt Val_rdr_(gplx.ios.Io_stream_rdr v, int rdr_len) {
+	public Db_stmt Val_rdr_(gplx.ios.Io_stream_rdr v, long rdr_len) {
 		try {
 			ByteAryBfr bfr = ByteAryBfr.new_();
 			gplx.ios.Io_stream_rdr_.Load_all_to_bfr(bfr, v);

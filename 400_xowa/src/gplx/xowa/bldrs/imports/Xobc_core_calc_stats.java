@@ -25,7 +25,7 @@ public class Xobc_core_calc_stats extends Xob_itm_basic_base implements Xob_cmd 
 	public void Cmd_run() {Exec();}
 	public void Cmd_end() {}
 	public void Cmd_print() {}
-	void Exec() {
+	private void Exec() {
 		int ns_len = wiki.Ns_mgr().Ords_len();
 		int total = 0;
 		for (int i = 0; i < ns_len; i++) {
@@ -51,7 +51,7 @@ public class Xobc_core_calc_stats extends Xob_itm_basic_base implements Xob_cmd 
 		Io_url wiki_gfs = Wiki_gfs_url(wiki);
 		Io_mgr._.SaveFilBfr(wiki_gfs, bfr);
 	}
-	void Gen_call(boolean first, ByteAryBfr bfr, String key, Object... vals) {
+	private void Gen_call(boolean first, ByteAryBfr bfr, String key, Object... vals) {
 		if (!first) bfr.Add_byte(Byte_ascii.Dot);
 		bfr.Add_str(key);
 		int len = vals.length;

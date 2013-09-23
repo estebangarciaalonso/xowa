@@ -73,6 +73,12 @@ public class Xtn_gallery_parser_tst {
 	@Test   public void Blank() {
 		fxt.Test_parse("");
 	}
+	@Test   public void Err_empty() {
+		fxt.Test_parse("|File:A.png");
+	}
+	@Test   public void Err_ws() {
+		fxt.Test_parse(" |File:A.png");
+	}
 	@Test   public void Alt_magic_word_has_arg() {	// PURPOSE: img_alt magic_word is of form "alt=$1"; make sure =$1 is stripped for purpose of parser; DATE:2013-09-12
 		fxt.Init_kwd_set(Xol_kwd_grp_.Id_img_alt, "alt=$1");
 		fxt.Test_parse("File:A.png|alt=a|b", fxt.Expd("File:A.png", "b", "a"));

@@ -58,26 +58,26 @@ public class Scrib_lib_ustring_tst {
 //			fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_callback, Object_.Ary("abcabc", "a(b)", Scrib_kv_utl.base1_obj_ary_(false), 2)	, "5;\n  b");
 		fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_callback, Object_.Ary("abcabc", "a(b)", Scrib_kv_utl.base1_obj_ary_(false), 8)	, "8;{}");
 	}
-	void Exec_find(String text, String regx, int bgn, boolean plain, String expd) {
+	private void Exec_find(String text, String regx, int bgn, boolean plain, String expd) {
 		fxt.Init_lua_module();
 		fxt.Init_lua_rcvd(Scrib_lib_ustring.Invk_find, Scrib_kv_utl.base1_many_(text, regx, bgn, plain));
 		fxt.Init_lua_rcvd_rv();
 		fxt.Test_invoke(expd);
 	}
-	void Exec_match(String text, String regx, int bgn, String expd) {
+	private void Exec_match(String text, String regx, int bgn, String expd) {
 		fxt.Init_lua_module();
 		fxt.Init_lua_rcvd(Scrib_lib_ustring.Invk_match, Scrib_kv_utl.base1_many_(text, regx, bgn));
 		fxt.Init_lua_rcvd_rv();
 		fxt.Test_invoke(expd);
 	}
-	void Exec_gsub_regx(String text, String regx, int limit, Object repl, String expd) {Exec_gsub(text, regx, limit, repl, expd);}
-	void Exec_gsub(String text, String regx, int limit, Object repl, String expd) {
+	private void Exec_gsub_regx(String text, String regx, int limit, Object repl, String expd) {Exec_gsub(text, regx, limit, repl, expd);}
+	private void Exec_gsub(String text, String regx, int limit, Object repl, String expd) {
 		fxt.Init_lua_module();
 		fxt.Init_lua_rcvd(Scrib_lib_ustring.Invk_gsub, Scrib_kv_utl.base1_many_(text, regx, repl, limit));
 		fxt.Init_lua_rcvd_rv();
 		fxt.Test_invoke(expd);
 	}
-	void Exec_gsub_regx_func(String text, String regx, String expd) {
+	private void Exec_gsub_regx_func(String text, String regx, String expd) {
 		fxt.Init_lua_module();
 		fxt.Init_lua_rcvd(Scrib_lib_ustring.Invk_gsub, Scrib_kv_utl.base1_many_(text, regx, new Scrib_fnc("ignore_key", 1)));
 		fxt.Init_lua_rcvd_raw("a:3:{s:2:\"op\";s:6:\"return\";s:7:\"nvalues\";i:1;s:6:\"values\";a:1:{i:1;s:1:\"A\";}}");

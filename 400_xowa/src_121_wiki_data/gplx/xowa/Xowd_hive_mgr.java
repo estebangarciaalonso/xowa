@@ -91,8 +91,4 @@ public class Xowd_hive_mgr {
 		xdat.Save(url);
 		if (reg_save) reg_mgr.Save();
 	}
-	void Find_nearby_add(ListAdp list, Xow_ns ns, Xob_xdat_itm xdat_itm) {
-		Xodb_page page = Xodb_page_.Txt_ttl_load(ByteAry_.Mid(xdat_itm.Src(), xdat_itm.Itm_bgn(), xdat_itm.Itm_end()));
-		list.Add(page);
-	}
 }

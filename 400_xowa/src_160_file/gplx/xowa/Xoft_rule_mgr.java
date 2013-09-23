@@ -36,7 +36,7 @@ public class Xoft_rule_mgr implements GfoInvkAble {
 		}
 		return rv;
 	}	HashAdp hash = HashAdp_.new_bry_();
-	void App_default_set(Xoft_rule_grp app_default, long make_max, byte[][] keys) {
+	private void App_default_set(Xoft_rule_grp app_default, long make_max, byte[][] keys) {
 		int keys_len = keys.length;
 		for (int i = 0; i < keys_len; i++)
 			app_default.Get_or_new(keys[i]).Make_max_(make_max);

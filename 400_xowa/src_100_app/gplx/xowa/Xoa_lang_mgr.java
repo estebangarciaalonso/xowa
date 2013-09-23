@@ -58,7 +58,7 @@ public class Xoa_lang_mgr implements GfoInvkAble {
 		return this;
 	}	private static final String Invk_get = "get", Invk_local_set_bulk = "local_set_bulk", Invk_load_lang = "load_lang", Invk_groups = "groups", Invk_mediawiki_converter = "mediawiki_converter";
 	public Hash_adp_bry Fallback_regy() {return fallback_regy;} Hash_adp_bry fallback_regy = new Hash_adp_bry(false);
-	void Load_lang(byte[] bry) {this.Get_by_key_or_new(bry).Load(app);}
+	private void Load_lang(byte[] bry) {this.Get_by_key_or_new(bry).Load(app);}
 	public void Local_set_bulk(byte[] src) {	// NOTE: setting local lang names/grps on app level; may need to move to user level or wiki level (for groups) later
 		int len = src.length;
 		int pos = 0, fld_bgn = 0, fld_idx = 0;
@@ -111,4 +111,5 @@ public class Xoa_lang_mgr implements GfoInvkAble {
 		}
 		return langs;
 	}	private static final String GRP_KEY = "xowa.langs";
+	public static final byte[] Fallback_false = ByteAry_.new_ascii_("false");
 }

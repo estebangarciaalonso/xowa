@@ -20,7 +20,7 @@ public class Xoa_html_mgr implements GfoInvkAble {
 	public Xoa_html_mgr(Xoa_app app) {this.app = app; portal_mgr = new Xoh_portal_mgr(app);} private Xoa_app app;
 	public Xoh_portal_mgr Portal_mgr() {return portal_mgr;} private Xoh_portal_mgr portal_mgr;
 	public boolean Javascript_enabled() {return javascript_enabled;} private boolean javascript_enabled = true;
-	void Javascript_enabled_(boolean v) {
+	private void Javascript_enabled_(boolean v) {
 		javascript_enabled = v;
 		if (app.Gui_mgr().Main_win().Html_box() != null) {	// NOTE: Html_box may be null during Prefs_convert; will be called again when gui_mgr launches (for which member variable must be set)
 			gplx.gfui.GfuiInvkCmd invk_cmd = app.Gui_mgr().Kit().New_cmd_sync(app.Gui_mgr().Main_win().Html_box());

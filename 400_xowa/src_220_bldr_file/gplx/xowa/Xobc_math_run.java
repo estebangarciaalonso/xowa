@@ -69,11 +69,11 @@ public class Xobc_math_run extends Xob_itm_basic_base implements Xob_cmd, GfoInv
 		}
 		this.Flush(rdr, dump_url, url_idx, time_bgn, count);
 	}	long files_sum = 0, elapsed_sum = 0; 
-	void Write_err(byte[] math) {
+	private void Write_err(byte[] math) {
 		if (dump_bfr.Bry_len() > dump_fil_len) Io_mgr._.AppendFilBfr(dump_url_gen.Nxt_url(), dump_bfr);
 		fld_wtr.Write_bry_escape_row(math);
 	}
-	void Flush(Io_line_rdr rdr, Io_url dump_url, int url_idx, long time_bgn, int fil_count) {
+	private void Flush(Io_line_rdr rdr, Io_url dump_url, int url_idx, long time_bgn, int fil_count) {
 		Io_mgr._.AppendFilBfr(dump_url, dump_bfr);
 		Io_url cur = rdr.Urls()[url_idx];
 		int seconds = (int)((Env_.TickCount() - time_bgn) / 1000);

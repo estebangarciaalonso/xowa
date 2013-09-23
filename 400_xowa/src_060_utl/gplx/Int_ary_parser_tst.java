@@ -21,7 +21,7 @@ public class Int_ary_parser_tst {
 	@Test  public void Many()		{tst_ints("1,2,3,4,5"		, 0, 9, Int_.Ary(1, 2, 3, 4, 5));}
 	@Test  public void One()		{tst_ints("1"				, 0, 1, Int_.Ary(1));}
 	@Test  public void None()		{tst_ints(""				, 0, 0, Int_.Ary());}
-	void tst_ints(String raw, int bgn, int end, int[] expd) {
+	private void tst_ints(String raw, int bgn, int end, int[] expd) {
 		int[] actl = Int_ary_parser._.Parse_ary(ByteAry_.new_ascii_(raw), bgn, end, Byte_ascii.Comma);
 		Tfds.Eq_ary(expd, actl);
 	}

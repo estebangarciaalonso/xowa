@@ -43,12 +43,12 @@ public class Xog_history_mgr {
 		return rv;
 	}
 	private Xoa_page Get_or_fetch(Xow_wiki wiki, Xog_history_itm itm) {
-		byte[] page_key = Build_page_key(itm.Wiki_key(), itm.Page_key());
+		byte[] page_key = Build_page_key(itm.Wiki_key(), itm.Page_key(), itm.Qarg_key());
 		Xoa_page rv = (Xoa_page)hash.Fetch(page_key);
 		if (rv != null) return rv;
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, itm.Page_key());
 		return wiki.Data_mgr().Get_page(ttl, false);
 	}
-	private static byte[] Build_page_key(Xoa_page page) {return Build_page_key(page.Wiki().Domain_bry(), page.Page_ttl().Full_url());}
-	private static byte[] Build_page_key(byte[] wiki_key, byte[] page_key) {return ByteAry_.Add_w_dlm(Byte_ascii.Pipe, wiki_key, page_key);}
+	private static byte[] Build_page_key(Xoa_page page) {return Build_page_key(page.Wiki().Domain_bry(), page.Page_ttl().Full_url(), page.Url().Args_all_as_bry());}
+	private static byte[] Build_page_key(byte[] wiki_key, byte[] page_key, byte[] args_key) {return ByteAry_.Add_w_dlm(Byte_ascii.Pipe, wiki_key, page_key, args_key);}
 }

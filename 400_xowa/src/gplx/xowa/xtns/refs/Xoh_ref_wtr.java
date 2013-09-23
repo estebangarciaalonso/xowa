@@ -121,7 +121,7 @@ class Xoh_ref_list_fmtr implements ByteAryFmtrArg {
 			Fmt(itm_fmtr, trg, link_itm);
 		}
 	}
-	void Fmt(ByteAryFmtr itm_fmtr, ByteAryBfr trg, Xtn_ref_nde itm) {
+	private void Fmt(ByteAryFmtr itm_fmtr, ByteAryBfr trg, Xtn_ref_nde itm) {
 		if (itm.Idx_minor() < 0) return;	// HACK: <ref follow created a negative index; ignore these references for now; de.wikisource.org/wiki/Seite:Die Trunksucht.pdf/63; DATE:2013-06-22
 		itm_fmtr.Bld_bfr_many(trg
 			, fmtr.Atrs_(opt.Itm_id_key_one(), itm.Name(), itm.Idx_major(), itm.Idx_minor())

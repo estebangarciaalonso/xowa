@@ -61,7 +61,7 @@ public class Pxd_parser_tst {
 	@Test  public void Mdy_at_y_slash()								{tst_date_("1/2/70"					, "1970-01-02");}	// PURPOSE: mdy when delimiter is slash
 	@Test  public void Ago()										{tst_date_("1 month ago"			, "2012-01-27");}
 
-	void tst_date_(String raw, String expd) {
+	private void tst_date_(String raw, String expd) {
 		byte[] raw_ary = ByteAry_.new_utf8_(raw);
 		DateAdp date = parser.Parse(raw_ary, bfr);
 		if (date == DateAdp_.MinValue)
@@ -69,7 +69,7 @@ public class Pxd_parser_tst {
 		else
 			Tfds.Eq(expd, date.XtoStr_fmt_yyyy_MM_dd());
 	}
-	void tst_time_(String raw, String expd) {
+	private void tst_time_(String raw, String expd) {
 		byte[] raw_ary = ByteAry_.new_utf8_(raw);
 		DateAdp date = parser.Parse(raw_ary, bfr);
 		if (date == DateAdp_.MinValue)
@@ -77,7 +77,7 @@ public class Pxd_parser_tst {
 		else
 			Tfds.Eq(expd, date.XtoStr_fmt("HH:mm:ss.fff"));
 	}
-	void tst_both_(String raw, String expd) {
+	private void tst_both_(String raw, String expd) {
 		byte[] raw_ary = ByteAry_.new_utf8_(raw);
 		DateAdp date = parser.Parse(raw_ary, bfr);
 		if (date == DateAdp_.MinValue)

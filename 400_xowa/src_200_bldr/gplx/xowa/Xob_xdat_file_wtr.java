@@ -109,8 +109,8 @@ public class Xob_xdat_file_wtr {
 	public void Clear() {idx_pos = 0; bfr.Clear();}
 	public void Rls() {bfr.Rls(); idx = null;}
 	public void Url_gen_add() {Url_gen(++fil_idx);}
-	void Url_gen(int newIdx) {fil_url = Xow_fsys_mgr.Url_fil(root_dir, newIdx, fil_ext);} Io_url fil_url; Io_url root_dir;
-	void Idx_resize(int newLen) {idx = (int[])Array_.Resize(idx, newLen);}
+	private void Url_gen(int newIdx) {fil_url = Xow_fsys_mgr.Url_fil(root_dir, newIdx, fil_ext);} Io_url fil_url; Io_url root_dir;
+	private void Idx_resize(int newLen) {idx = (int[])Array_.Resize(idx, newLen);}
 	static final String GRP_KEY = "xowa.bldr.xdat_wtr";
 	private static final byte Dlm_fld = Byte_ascii.Pipe;		
 }
@@ -127,7 +127,7 @@ class SortAlgo_quick {// quicksort
 		this.ary = ary; this.ary_len = ary_len; this.comparer = comparer;
 		Sort_recurse(0, ary_len - 1);
 	}
-	void Sort_recurse(int lo, int hi) {
+	private void Sort_recurse(int lo, int hi) {
 		int i = lo, j = hi;
 		int mid_idx = lo + (hi-lo)/2;
 		Object mid = ary[mid_idx];										// get mid itm

@@ -82,7 +82,7 @@ public class Xoa_gui_mgr implements GfoInvkAble {
 	public void Run() {
 		Xoa_app_.Run_ui(app);
 	}
-	void layout_Init() {
+	private void layout_Init() {
 		Op_sys os = Op_sys.Cur();
 		int html_box_w = -8; int html_box_h = -30;	// default adjustments since version 0.0.0.0; seems to work on XP and LNX
 		switch (os.Tid()) {

@@ -20,8 +20,8 @@ public class Fsdb_xtn_img_itm {
 	public int Id() {return id;} public void Id_(int v) {this.id = v;} private int id;
 	public int W() {return w;} public void W_(int v) {this.w = v;} private int w;
 	public int H() {return h;} public void H_(int v) {this.h = v;} private int h;
-	public int Bits() {return bits;} public void Bits_(int v) {this.bits = v;} private int bits;
-	public Fsdb_xtn_img_itm Init_by_load(int id, int w, int h, int bits) {this.id = id; this.w = w; this.h = h; this.bits = bits; return this;}
+	public int Db_bin_id() {return bin_db_id;} public Fsdb_xtn_img_itm Db_bin_id_(int v) {bin_db_id = v; return this;} private int bin_db_id;
+	public Fsdb_xtn_img_itm Init_by_load(int id, int w, int h) {this.id = id; this.w = w; this.h = h; return this;}
 	public static final Fsdb_xtn_img_itm Null = new Fsdb_xtn_img_itm();
 	public static final int Bits_default = 8;
 }

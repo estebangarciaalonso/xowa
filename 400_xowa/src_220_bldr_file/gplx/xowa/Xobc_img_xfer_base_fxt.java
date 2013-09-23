@@ -65,7 +65,7 @@ class Xobc_img_xfer_base_fxt {
 		html_src = null;
 	}
 	@gplx.Virtual public void Ini_hook(Xoa_app app, Xow_wiki wiki) {}
-	void App_repo_add(Xof_file_mgr file_mgr, byte[] key, String root, String wiki, boolean trg) {
+	private void App_repo_add(Xof_file_mgr file_mgr, byte[] key, String root, String wiki, boolean trg) {
 		Xof_repo_itm repo = file_mgr.Repo_mgr().Set(String_.new_utf8_(key), root, wiki).Ext_rules_(Xoft_rule_grp.Grp_app_default);
 		if (trg) {
 			byte[][] ary = repo.Mode_names();

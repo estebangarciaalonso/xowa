@@ -28,7 +28,7 @@ public class Xobc_img_merge_ttl_sql extends Xob_itm_dump_base implements Xob_cmd
 	public void Cmd_bgn(Xob_bldr bldr) {
 		this.Init_dump(KEY);
 
-		sql_size_dir = wiki.Fsys_mgr().Tmp_dir().GenSubDir_nest(Xobc_img_dump_sql.KEY, "make");
+		sql_size_dir = wiki.Fsys_mgr().Tmp_dir().GenSubDir_nest(Xob_image_sql.KEY, "make");
 		ttl_name_dir = wiki.Fsys_mgr().Tmp_dir().GenSubDir_nest(Xobc_img_dump_ttl.KEY, "make");
 		redirect_name_dir = temp_dir.GenSubDir("redirect_dump");
 		redirect_sort_dir = temp_dir.GenSubDir("redirect_sort");
@@ -59,7 +59,7 @@ public class Xobc_img_merge_ttl_sql extends Xob_itm_dump_base implements Xob_cmd
 		Flush(standard_dump_bfr, standard_url_gen);
 		Xobdc_merger.Basic(bldr.Usr_dlg(), standard_url_gen, temp_dir.GenSubDir("sort"), sort_mem_len, Io_line_rdr_key_gen_all._, new Io_sort_fil_basic(bldr.Usr_dlg(), make_url_gen, make_fil_len));
 	}
-	void Merge(boolean pass_0, Io_line_rdr name_rdr, Io_line_rdr size_rdr) {
+	private void Merge(boolean pass_0, Io_line_rdr name_rdr, Io_line_rdr size_rdr) {
 		while (name_rdr.Read_next()) {
 			Xofo_file itm = new Xofo_file();
 			itm.Load_by_name_rdr(fld_rdr, name_rdr);
@@ -69,7 +69,7 @@ public class Xobc_img_merge_ttl_sql extends Xob_itm_dump_base implements Xob_cmd
 			Write(pass_0, itm);
 		}	
 	}
-	void Write(boolean pass_0, Xofo_file itm) {
+	private void Write(boolean pass_0, Xofo_file itm) {
 		if (pass_0) {
 			if (itm.Redirect_exists())
 				Write(redirect_dump_bfr, redirect_url_gen, itm, true);
@@ -79,12 +79,12 @@ public class Xobc_img_merge_ttl_sql extends Xob_itm_dump_base implements Xob_cmd
 		else
 			Write(standard_dump_bfr, standard_url_gen, itm, true);	// reverse name/redirect from pass_0
 	}
-	void Write(ByteAryBfr bfr, Io_url_gen url_gen, Xofo_file itm, boolean reverse) {
+	private void Write(ByteAryBfr bfr, Io_url_gen url_gen, Xofo_file itm, boolean reverse) {
 		if (bfr.Bry_len() > dump_fil_len) Flush(bfr, url_gen);
 		fld_wtr.Bfr_(bfr);
 		itm.Write(reverse, fld_wtr);
 	}
-	void Flush(ByteAryBfr bfr, Io_url_gen url_gen) {Io_mgr._.SaveFilBfr(url_gen.Nxt_url(), bfr);}
+	private void Flush(ByteAryBfr bfr, Io_url_gen url_gen) {Io_mgr._.SaveFilBfr(url_gen.Nxt_url(), bfr);}
 	Sql_file_parser parser = new Sql_file_parser(); 
 	ByteAryBfr standard_dump_bfr = ByteAryBfr.new_(), redirect_dump_bfr = ByteAryBfr.new_();
 	Io_url_gen standard_url_gen, redirect_url_gen;

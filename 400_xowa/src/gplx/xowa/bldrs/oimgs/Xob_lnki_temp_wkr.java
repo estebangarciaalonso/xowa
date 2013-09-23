@@ -17,21 +17,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*;
-public class Xob_dump_mgr_lnki_temp extends Xob_dump_mgr_base implements Xobc_lnki_wkr {
+public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xobc_lnki_wkr {
 	private Db_provider provider; private Db_stmt stmt;
-	private Xodb_file db_file; private Xodb_tbl_oimg_lnki_temp tbl;
-	public Xob_dump_mgr_lnki_temp(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	private Xob_lnki_temp_tbl tbl;
+	public Xob_lnki_temp_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
 	@Override public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "oimg.lnki_temp";
 	@Override public byte Init_redirect() {return Bool_.N_byte;}	// lnki will never be found in a redirect
 	@Override public int[] Init_ns_ary() {return Int_.Ary(Xow_ns_.Id_main, Xow_ns_.Id_category, Xow_ns_.Id_template);}
-	@Override public Xodb_file Init_db_file() {
+	@Override public Db_provider Init_db_file() {
 		ctx.Lnki().File_wkr_(this);
-		db_file = wiki.Db_mgr_as_sql().Fsys_mgr().Get_or_make(Db_name);
-		provider = db_file.Provider();
-		tbl = new Xodb_tbl_oimg_lnki_temp().Create_table(provider);
+		provider = Sqlite_engine_.Provider_load_or_make_(wiki.Db_mgr_as_sql().Fsys_mgr().Trg_dir().GenSubFil(Db_name + ".sqlite3"));
+		tbl = new Xob_lnki_temp_tbl().Create_table(provider);
 		stmt = tbl.Insert_stmt(provider);
 		provider.Txn_mgr().Txn_bgn_if_none();
-		return db_file;
+		return provider;
 	}
 	@Override public void Exec_page_hook(Xow_ns ns, Xodb_page page, byte[] page_src) {
 		byte[] ttl_bry = ns.Gen_ttl(page.Ttl_wo_ns());
@@ -52,39 +51,10 @@ public class Xob_dump_mgr_lnki_temp extends Xob_dump_mgr_base implements Xobc_ln
 		tbl.Insert(stmt, ctx.Page().Page_id(), ttl, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki.Width().Val(), lnki.Height().Val(), lnki.Upright(), lnki.Thumbtime());		
 	}
 	@Override public void Exec_commit_bgn(Xow_ns ns, byte[] ttl) {
-		db_file.Provider().Txn_mgr().Txn_end_all_bgn_if_none();
+		provider.Txn_mgr().Txn_end_all_bgn_if_none();
 	}
 	@Override public void Exec_end() {
-		db_file.Provider().Txn_mgr().Txn_end();
+		provider.Txn_mgr().Txn_end();
 	}
 	public static final String Db_name = "oimg_lnki";
-}
-class Xodb_tbl_oimg_lnki_temp {
-	public Xodb_tbl_oimg_lnki_temp Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); return this;}
-	public Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_olt_page_id, Fld_olt_title, Fld_olt_ext_id, Fld_olt_type, Fld_olt_width, Fld_olt_height, Fld_olt_upright, Fld_olt_time);}
-	public void Insert(Db_stmt stmt, int page_id, byte[] ttl, byte ext_id, byte img_type, int w, int h, double upright, int time) {
-		stmt.Clear()
-		.Val_int_(page_id)
-		.Val_str_by_bry_(ttl)
-		.Val_byte_(ext_id)
-		.Val_byte_(img_type)
-		.Val_int_(w)
-		.Val_int_(h)
-		.Val_double_(upright)
-		.Val_double_(time)
-		.Exec_insert();
-	}
-	public static final String Tbl_name = "oimg_lnki_temp", Fld_olt_page_id = "olt_page_id", Fld_olt_title = "olt_title", Fld_olt_ext_id = "olt_ext_id", Fld_olt_type = "olt_type", Fld_olt_width = "olt_width", Fld_olt_height = "olt_height", Fld_olt_upright = "olt_upright", Fld_olt_time = "olt_time";
-	private static final String Tbl_sql = String_.Concat_lines_nl
-	(  "CREATE TABLE IF NOT EXISTS oimg_lnki_temp"
-	,	"( olt_page_id         int                 NOT NULL"
-	,	", olt_title           varchar(1024)       NOT NULL"
-	,	", olt_ext_id          tinyint             NOT NULL"
-	,	", olt_type            tinyint             NOT NULL    -- thumb,full"
-	,	", olt_width           int                 NOT NULL"
-	,	", olt_height          int                 NOT NULL"
-	,	", olt_upright         double              NOT NULL"
-	,	", olt_time            double              NOT NULL"
-	,	");"
-	);
 }

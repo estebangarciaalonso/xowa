@@ -115,7 +115,7 @@ class Arg_bldr {
 		wkr.Args_add(ctx, tkn, cur_nde, cur_nde_idx);
 		return true;
 	}
-	void Arg_itm_end(Xop_ctx ctx, Arg_nde_tkn nde, Arg_itm_tkn itm, int ws_bgn_idx, int ws_end_idx, int subs_len, int lxr_bgn, int wkr_typ, boolean key_exists, boolean cur_itm_is_key, boolean itm_is_static, byte[] src, int arg_idx) {
+	private void Arg_itm_end(Xop_ctx ctx, Arg_nde_tkn nde, Arg_itm_tkn itm, int ws_bgn_idx, int ws_end_idx, int subs_len, int lxr_bgn, int wkr_typ, boolean key_exists, boolean cur_itm_is_key, boolean itm_is_static, byte[] src, int arg_idx) {
 		// PURPOSE: mark tkns Ignore; find dat_bgn, dat_end
 		int dat_bgn = itm.Src_bgn(), dat_end = lxr_bgn; boolean trim = false;
 		// trim ws at bgn

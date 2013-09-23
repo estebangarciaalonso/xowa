@@ -30,7 +30,7 @@ public class Xof_url_tst {
 	@Test  public void Height_missing()				{tst_Calc_view("50,-1"	, "100,200"	, "50,100");}
 	@Test  public void Explicit_ratio_large()		{tst_Calc_view("120,40"	, "200,100"	, "80,40");}		// see NOTE_1:view ratio > file ratio
 	@Test  public void Explicit_ratio_small()		{tst_Calc_view("120,80"	, "200,100"	, "120,60");}		// see NOTE_1:view ratio > file ratio
-	void tst_Calc_view(String lnki_str, String file_str, String expd_str) {
+	private void tst_Calc_view(String lnki_str, String file_str, String expd_str) {
 		Int_2_ref rv = new Int_2_ref();
 		Int_2_val lnki = Int_2_val.parse_(lnki_str);
 		Int_2_val file = Int_2_val.parse_(file_str);

@@ -245,7 +245,7 @@ class Scrib_engine_fxt {
 		Test_server_logs();
 		return this;
 	}
-	void Test_server_logs() {
+	private void Test_server_logs() {
 		if (expd_server_rcvd_list.Count() > 0) {
 			Tfds.Eq_ary_str(expd_server_rcvd_list.XtoStrAry(), server.Log_rcvd().XtoStrAry());
 			expd_server_rcvd_list.Clear();

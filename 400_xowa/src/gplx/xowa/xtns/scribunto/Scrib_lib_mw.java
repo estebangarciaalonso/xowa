@@ -272,5 +272,5 @@ class Scrib_lib_mw_callParserFunction_sorter implements gplx.lists.ComparerAble 
 		else															// both are strings
 			return String_.Compare(String_.cast_(lhs_key), String_.cast_(rhs_key));
 	}
-        public static final Scrib_lib_mw_callParserFunction_sorter _ = new Scrib_lib_mw_callParserFunction_sorter(); Scrib_lib_mw_callParserFunction_sorter() {}
+	public static final Scrib_lib_mw_callParserFunction_sorter _ = new Scrib_lib_mw_callParserFunction_sorter(); Scrib_lib_mw_callParserFunction_sorter() {}
 }

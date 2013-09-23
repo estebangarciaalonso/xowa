@@ -183,7 +183,7 @@ class Gfs_parser_fxt {
 			path.Del_by(path_len_new - path_len_old);
 		}
 	}
-	void To_str_atr(ByteAryBfr bfr, ByteAryBfr path_bfr, byte[] src, byte[] name, byte[] val, int val_bgn, int val_end) {
+	private void To_str_atr(ByteAryBfr bfr, ByteAryBfr path_bfr, byte[] src, byte[] name, byte[] val, int val_bgn, int val_end) {
 		if (val == null && val_bgn == -1 && val_end == -1) return;
 		bfr.Add_bfr(path_bfr).Add_byte(Byte_ascii.Colon);
 		bfr.Add(name);

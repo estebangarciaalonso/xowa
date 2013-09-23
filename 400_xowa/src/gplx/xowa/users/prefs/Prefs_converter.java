@@ -58,7 +58,7 @@ public class Prefs_converter {
 		}
 		return bfr.XtoStrAndClear();
 	} 
-	void Write_escaped_str(ByteAryBfr bfr, String str) {
+	private void Write_escaped_str(ByteAryBfr bfr, String str) {
 		byte[] bry = ByteAry_.new_utf8_(str);
 		int len = bry.length;
 		for (int i = 0; i < len; i++) {
@@ -69,7 +69,7 @@ public class Prefs_converter {
 				bfr.Add_byte(b);
 		}
 	}
-	void Convert_msg(GfoMsg m, int depth) {
+	private void Convert_msg(GfoMsg m, int depth) {
 		int subs_len = m.Subs_count();
 		if (subs_len == 0) {	
 			bfr.Add_byte(Byte_ascii.Dot);
@@ -103,7 +103,7 @@ public class Prefs_converter {
 			Convert_msg(m.Subs_getAt(0), depth + 1);
 		}
 	}
-        public static final Prefs_converter _ = new Prefs_converter(); Prefs_converter() {}
+	public static final Prefs_converter _ = new Prefs_converter(); Prefs_converter() {}
 }
 class Prefs_converter_itm {
 	public String Key() {return key;} public void Key_(String v) {this.key = v;} private String key; 

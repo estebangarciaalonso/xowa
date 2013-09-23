@@ -67,7 +67,12 @@ public class Xtn_gallery_parser {
 	private byte Fld_bgn(int fld_count) {
 		cur_fld = Fld_null;
 		int bgn_pos = cur_pos;
-		byte mode = Skip_ws(); if (mode != Mode_text) {return mode;}
+		byte mode = Skip_ws();
+		switch (mode) {
+			case Mode_nl:
+			case Mode_eos:
+				return mode;
+		}
 		Object o = trie.Match(cur_byte, src, cur_pos, end_pos);
 		if (o != null) {						// either "alt" or "link"
 			int old_pos = cur_pos;
@@ -118,7 +123,7 @@ public class Xtn_gallery_parser {
 		int fld_end = cur_pos;
 		if (cur_fld != Fld_caption) {
 			int non_ws_pos = ByteAry_.Find_bwd_non_ws(src, cur_pos - 1, itm_bgn) + 1;	// SEE:non_ws_pos
-			if (non_ws_pos != ByteAry_.NotFound)
+			if (non_ws_pos != ByteAry_.NotFound + 1)
 				fld_end = non_ws_pos;
 		}
 		switch (cur_fld) {

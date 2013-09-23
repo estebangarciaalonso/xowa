@@ -181,6 +181,15 @@ public class IoEngine_memory extends IoEngine_base {
 		XferFil(IoEngine_xrg_xferFil.copy_(src, xrg.Trg()).Overwrite_());
 		return true;
 	}
+	@Override public Io_stream_rdr DownloadFil_as_rdr(IoEngine_xrg_downloadFil xrg) {
+		Io_url src = Io_url_.mem_fil_(xrg.Src());
+		if (!ExistsFil_api(src)) {
+			xrg.Rslt_(IoEngine_xrg_downloadFil.Rslt_fail_file_not_found);
+			return Io_stream_rdr_.Null;
+		}
+		byte[] bry = ByteAry_.new_utf8_(FetchFil(Io_url_.mem_fil_(xrg.Src())).Text());
+		return Io_stream_rdr_.mem_(bry);
+	}
 	IoItmHash dirs = IoItmHash.new_();
 	IoEngineUtl utl = IoEngineUtl.new_();
 	@gplx.Internal protected static IoEngine_memory new_(String key) {

@@ -20,7 +20,7 @@ import org.junit.*;
 public class ByteTrieMgr_slim_tst {
 	@Before public void init() {
 	}	private ByteTrieMgr_slim trie;
-	void ini_setup1() {
+	private void ini_setup1() {
 		trie = ByteTrieMgr_slim.cs_();
 		run_Add("a"		,	1);
 		run_Add("abc"	,	123);
@@ -43,7 +43,7 @@ public class ByteTrieMgr_slim_tst {
 		tst_MatchAtCurExact("ab", null);
 		tst_MatchAtCurExact("abc", 123);
 	}
-	void ini_setup2() {
+	private void ini_setup2() {
 		trie = ByteTrieMgr_slim.cs_();
 		run_Add("a"	,	1);
 		run_Add("b"	,	2);
@@ -53,7 +53,7 @@ public class ByteTrieMgr_slim_tst {
 		tst_MatchAtCur("a", 1);
 		tst_MatchAtCur("b", 2);
 	}
-	void ini_setup_caseAny() {
+	private void ini_setup_caseAny() {
 		trie = ByteTrieMgr_slim.ci_();
 		run_Add("a"	,	1);
 		run_Add("b"	,	2);
@@ -64,18 +64,18 @@ public class ByteTrieMgr_slim_tst {
 		tst_MatchAtCur("A", 1);
 	}
 
-	void run_Add(String k, int val) {trie.Add(ByteAry_.new_ascii_(k), val);}
-	void tst_Match(String srcStr, byte b, int bgnPos, int expd) {
+	private void run_Add(String k, int val) {trie.Add(ByteAry_.new_ascii_(k), val);}
+	private void tst_Match(String srcStr, byte b, int bgnPos, int expd) {
 		byte[] src = ByteAry_.new_ascii_(srcStr);
 		Object actl = trie.Match(b, src, bgnPos, src.length);
 		Tfds.Eq(expd, actl);
 	}
-	void tst_MatchAtCur(String srcStr, Object expd) {
+	private void tst_MatchAtCur(String srcStr, Object expd) {
 		byte[] src = ByteAry_.new_ascii_(srcStr);
 		Object actl = trie.Match(src[0], src, 0, src.length);
 		Tfds.Eq(expd, actl);
 	}
-	void tst_MatchAtCurExact(String srcStr, Object expd) {
+	private void tst_MatchAtCurExact(String srcStr, Object expd) {
 		byte[] src = ByteAry_.new_ascii_(srcStr);
 		Object actl = trie.MatchAtCurExact(src, 0, src.length);
 		Tfds.Eq(expd, actl);

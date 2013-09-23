@@ -19,7 +19,7 @@ package gplx;
 import org.junit.*;
 public class ByteTrieMgr_bwd_slim_tst {
 	@Before public void init() {}	private ByteTrieMgr_bwd_slim trie;
-	void ini_setup1() {
+	private void ini_setup1() {
 		trie = new ByteTrieMgr_bwd_slim(false);
 		run_Add("c"		,	1);
 		run_Add("abc"	,	123);
@@ -48,7 +48,7 @@ public class ByteTrieMgr_bwd_slim_tst {
 		tst_MatchAtCurExact("bc", null);
 		tst_MatchAtCurExact("abc", 123);
 	}
-	void ini_setup2() {
+	private void ini_setup2() {
 		trie = new ByteTrieMgr_bwd_slim(false);
 		run_Add("a"	,	1);
 		run_Add("b"	,	2);
@@ -58,7 +58,7 @@ public class ByteTrieMgr_bwd_slim_tst {
 		tst_MatchAtCur("a", 1);
 		tst_MatchAtCur("b", 2);
 	}
-	void ini_setup_caseAny() {
+	private void ini_setup_caseAny() {
 		trie = ByteTrieMgr_bwd_slim.ci_();
 		run_Add("a"	,	1);
 		run_Add("b"	,	2);
@@ -68,18 +68,18 @@ public class ByteTrieMgr_bwd_slim_tst {
 		tst_MatchAtCur("a", 1);
 		tst_MatchAtCur("A", 1);
 	}
-	void run_Add(String k, int val) {trie.Add(ByteAry_.new_utf8_(k), val);}
-	void tst_Match(String srcStr, byte b, int bgnPos, int expd) {
+	private void run_Add(String k, int val) {trie.Add(ByteAry_.new_utf8_(k), val);}
+	private void tst_Match(String srcStr, byte b, int bgnPos, int expd) {
 		byte[] src = ByteAry_.new_utf8_(srcStr);
 		Object actl = trie.Match(b, src, bgnPos, -1);
 		Tfds.Eq(expd, actl);
 	}
-	void tst_MatchAtCur(String srcStr, Object expd) {
+	private void tst_MatchAtCur(String srcStr, Object expd) {
 		byte[] src = ByteAry_.new_utf8_(srcStr);
 		Object actl = trie.Match(src[src.length - 1], src, src.length - 1, -1);
 		Tfds.Eq(expd, actl);
 	}
-	void tst_MatchAtCurExact(String srcStr, Object expd) {
+	private void tst_MatchAtCurExact(String srcStr, Object expd) {
 		byte[] src = ByteAry_.new_utf8_(srcStr);
 		Object actl = trie.MatchAtCurExact(src, src.length - 1, -1);
 		Tfds.Eq(expd, actl);

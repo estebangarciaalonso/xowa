@@ -107,7 +107,7 @@ class Xosrh_scanner {
 		}
 		return false;
 	}
-	void Tkns_add_word(byte tid, int src_bgn, int src_end) {
+	private void Tkns_add_word(byte tid, int src_bgn, int src_end) {
 		if (tkns.Count() > 0) {	// at least 1 tkn
 			Xosrh_qry_tkn last_tkn = (Xosrh_qry_tkn)tkns.FetchAtLast();
 			if (last_tkn.Tid() == Xosrh_qry_tkn.Tid_word)	// previous tkn is not word; auto "AND" words; EX: A B -> A AND B
@@ -130,7 +130,7 @@ class Xosrh_scanner {
 	Xosrh_qry_tkn new_tkn_(byte tid, int val_bgn, int val_end) {return Xosrh_qry_tkn.new_pos_(tid, val_bgn, val_end);}
 	private static byte[] Bry_and = ByteAry_.new_ascii_("AND");
 	private static final ByteTrieMgr_slim trie = new ByteTrieMgr_slim(false).Add_str_byteVal(" ", Xosrh_qry_tkn.Tid_space).Add_str_byteVal("\"", Xosrh_qry_tkn.Tid_quote).Add_str_byteVal("-", Xosrh_qry_tkn.Tid_not).Add_str_byteVal("(", Xosrh_qry_tkn.Tid_paren_bgn).Add_str_byteVal(")", Xosrh_qry_tkn.Tid_paren_end).Add_str_byteVal("or", Xosrh_qry_tkn.Tid_or).Add_str_byteVal("and", Xosrh_qry_tkn.Tid_and);
-        public static final Xosrh_scanner _ = new Xosrh_scanner(); Xosrh_scanner() {}
+	public static final Xosrh_scanner _ = new Xosrh_scanner(); Xosrh_scanner() {}
 }
 class Xosrh_qry_tkn {
 	Xosrh_qry_tkn(byte tid, int val_bgn, int val_end, byte[] val_bry) {this.tid = tid; this.val_bgn = val_bgn; this.val_end = val_end; this.val_bry = val_bry;}

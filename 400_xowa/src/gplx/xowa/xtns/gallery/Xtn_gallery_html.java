@@ -34,6 +34,7 @@ public class Xtn_gallery_html {
 		}
 		int gallery_w = (itm_box_w + 8) * gallery_multiplier; // 8=Gallery Box borders; REF.MW:ImageGallery.php|GB_BORDERS; TODO:CFG
 		ByteAryBfr itm_bfr = ByteAryBfr.new_(), caption_bfr = ByteAryBfr.new_();
+		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_k004();
 		for (int i = 0; i < itms_len; i++) {
 			Xtn_gallery_itm itm = mgr.Itms_get(i);
 			byte[] lnki_caption = itm.Caption_bry();
@@ -64,7 +65,8 @@ public class Xtn_gallery_html {
 				if (itm.Link_bgn() != ByteAry_.NotFound)
 					lnki_link_ttl = Xoa_ttl.parse_(wiki, ByteAry_.Mid(src, itm.Link_bgn(), itm.Link_end()));
 				byte[] lnki_href = app.Href_parser().Build_to_bry(lnki_link_ttl, wiki);
-				byte[] lnki_alt = itm.Alt_bgn() == ByteAry_.NotFound ? lnki_ttl : ByteAry_.Mid(src, itm.Alt_bgn(), itm.Alt_end()); 
+				byte[] lnki_alt = itm.Alt_bgn() == ByteAry_.NotFound ? lnki_ttl 
+						: Xoh_html_wtr.Bfr_escape(app, tmp_bfr, ByteAry_.Mid(src, itm.Alt_bgn(), itm.Alt_end())); 
 				html_gallery_itm_img.Bld_bfr_many(itm_bfr
 					, itm_box_w, itm_div_w
 					, v_pad
@@ -85,6 +87,7 @@ public class Xtn_gallery_html {
 					);
 			}
 		}
+		tmp_bfr.Mkr_rls();
 		html_gallery_box.Bld_bfr(bfr, ByteAryFmtrArg_.fmtr_(gallery_style, ByteAryFmtrArg_.int_(gallery_w)), ByteAryFmtrArg_.bfr_(itm_bfr));
 	}
 	public ByteAryFmtr Html_gallery_box() {return html_gallery_box;} ByteAryFmtr html_gallery_box = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast

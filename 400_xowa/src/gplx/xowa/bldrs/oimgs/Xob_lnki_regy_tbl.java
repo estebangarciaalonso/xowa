@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.dbs.*; import gplx.xowa.dbs.*;
-class Xodb_tbl_oimg_lnki_regy {
-	public Xodb_tbl_oimg_lnki_regy Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); return this;}
+class Xob_lnki_regy_tbl {
+	public Xob_lnki_regy_tbl Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); return this;}
 	public void Create_data(Gfo_usr_dlg usr_dlg, Db_provider p) {
 		p.Exec_sql(Sql_create_data);
 		Sqlite_engine_.Idx_create(usr_dlg, p, "oimg", Idx_ttl);

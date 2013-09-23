@@ -71,6 +71,7 @@ class Io_stream_rdr_null implements Io_stream_rdr {
 	public Object Under() {return null;}
 	public byte Tid() {return Io_stream_.Tid_null;}
 	public Io_url Url() {return Io_url_.Null;} public Io_stream_rdr Url_(Io_url v) {return this;}
+	public long Len() {return Io_mgr.Len_null;} public Io_stream_rdr Len_(long v) {return this;}
 	public void Open_mem(byte[] v) {}
 	public Io_stream_rdr Open() {return this;}
 	public int Read(byte[] bry, int bgn, int len) {return Io_stream_rdr_.Read_done;}
@@ -83,6 +84,7 @@ class Io_stream_rdr_adp implements Io_stream_rdr {
 	public Object Under() {return strm;}
 	public byte Tid() {return Io_stream_.Tid_file;}
 	public Io_url Url() {return url;} public Io_stream_rdr Url_(Io_url v) {this.url = v; return this;} private Io_url url;
+	public long Len() {return len;} public Io_stream_rdr Len_(long v) {len = v; return this;} private long len = Io_mgr.Len_null;
 	public void Open_mem(byte[] v) {}
 	public Io_stream_rdr Open() {return this;}
 	public int Read(byte[] bry, int bgn, int len) {
@@ -102,6 +104,7 @@ abstract class Io_stream_rdr_base implements Io_stream_rdr {
 	public abstract byte Tid();
 	public Object Under() {return stream;} public Io_stream_rdr Under_(java.io.InputStream v) {this.stream = v; return this;} protected java.io.InputStream stream;
 	public Io_url Url() {return url;} public Io_stream_rdr Url_(Io_url v) {this.url = v; return this;} protected Io_url url;
+	public long Len() {return len;} public Io_stream_rdr Len_(long v) {len = v; return this;} private long len = Io_mgr.Len_null;
 	public void Open_mem(byte[] v) {
 		stream = Wrap_stream(new java.io.ByteArrayInputStream(v));
 	}
@@ -145,6 +148,7 @@ class Io_stream_rdr_file extends Io_stream_rdr_base {
 class Io_stream_rdr_zip implements Io_stream_rdr {
 	@Override public byte Tid() {return Io_stream_.Tid_zip;}
 	public Io_url Url() {return url;} public Io_stream_rdr Url_(Io_url v) {this.url = v; return this;} Io_url url;
+	public long Len() {return len;} public Io_stream_rdr Len_(long v) {len = v; return this;} private long len = Io_mgr.Len_null;
 	public Object Under() {return zip_stream;} private java.util.zip.ZipInputStream zip_stream;
 	public void Src_bfr_(ByteAryBfr v) {this.src_bfr = v;} ByteAryBfr src_bfr;
 	public void Open_mem(byte[] v) {

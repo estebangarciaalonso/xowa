@@ -37,15 +37,15 @@ public class Xob_xdat_file_wtr_tst {
 			, "<3>c>dd\n"
 			));
 	}
-	void tst_Write(Xob_xdat_file_wtr wtr, String val, String expd) {
+	private void tst_Write(Xob_xdat_file_wtr wtr, String val, String expd) {
 		wtr.Bfr().Add(ByteAry_.new_utf8_(val));
 		Tfds.Eq(expd, String_.new_utf8_len_(wtr.Bfr().Bry(), 0, wtr.Bfr().Bry_len()));
 	}
-	void tst_Add_idx(Xob_xdat_file_wtr wtr, int expd) {
+	private void tst_Add_idx(Xob_xdat_file_wtr wtr, int expd) {
 		wtr.Add_idx(Byte_ascii.NewLine);
 		Tfds.Eq(expd, wtr.Idx()[wtr.Idx_pos() - 1]);
 	}
-	void tst_Flush(Xob_xdat_file_wtr wtr, String expd) {
+	private void tst_Flush(Xob_xdat_file_wtr wtr, String expd) {
 		Io_url url = wtr.Fil_url();
 		wtr.Flush(Gfo_usr_dlg_base.test_());
 		String actl = Io_mgr._.LoadFilStr(url);

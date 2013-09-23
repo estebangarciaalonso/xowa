@@ -132,7 +132,7 @@ public class Xtn_gallery_nde_tst {
 			)
 		);
 	}
-	void Init_html() {
+	private void Init_html() {
 		Io_mgr._.InitEngine_mem();	// clear out mem files
 		Io_url rootDir = Io_url_.mem_dir_("mem").GenSubDir_nest(Xoa_app_.App_name);
 		fxt.App().Fsys_mgr().Temp_dir_(rootDir.OwnerDir().GenSubDir("tmp"));
@@ -251,6 +251,25 @@ public class Xtn_gallery_nde_tst {
 		,	"        </div>"
 		,	"      </div>"
 		,	"      <div class=\"gallerytext\">c<a href=\"/wiki/D\">ef</a>"
+		,	"      </div>"
+		,	"    </div>"
+		,	"  </li>"
+		,	"</ul>"
+		));
+	}
+	@Test   public void Alt_escape_quote() {
+		fxt.tst_Parse_page_wiki_str("<gallery>File:A.png|b|alt=c\"d'e</gallery>", String_.Concat_lines_nl_skipLast
+		(	"<ul class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+		,	"  <li class=\"gallerybox\" style=\"width:155px;\">"
+		,	"    <div style=\"width:155px;\">"
+		,	"      <div class=\"thumb\" style=\"width:150px;\">"
+		,	"        <div id=\"xowa_file_gallery_div_0\" style=\"margin:15px auto;\">"
+		,	"          <a href=\"/wiki/File:A.png\" class=\"image\">"
+		,	"            <img id=\"xowa_file_img_0\" alt=\"c&quot;d'e\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"120\" />"
+		,	"          </a>"
+		,	"        </div>"
+		,	"      </div>"
+		,	"      <div class=\"gallerytext\">b"
 		,	"      </div>"
 		,	"    </div>"
 		,	"  </li>"

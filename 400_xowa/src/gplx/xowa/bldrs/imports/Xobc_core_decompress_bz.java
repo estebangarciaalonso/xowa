@@ -34,7 +34,7 @@ public class Xobc_core_decompress_bz extends Xob_itm_basic_base implements Xob_c
 		else	return super.Invk(ctx, ikey, k, m);
 		return this;
 	}	private static final String Invk_src_ = "src_";
-	void Src_(Io_url v) {
+	private void Src_(Io_url v) {
 		src = v;
 		trg = bldr.App().Fsys_mgr().Wiki_dir().GenSubFil_nest(wiki.Key_str(), v.NameOnly());	// NOTE: NameOnly() will take "enwiki.xml.bz2" and make it "enwiki.xml"
 	}	Io_url src, trg;

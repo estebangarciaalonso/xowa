@@ -19,11 +19,11 @@ package gplx.xowa.files.qrys; import gplx.*; import gplx.xowa.*; import gplx.xow
 import gplx.dbs.*; import gplx.xowa.dbs.tbls.*;
 public class Xof_img_meta_wkr_xowa implements Xof_img_meta_wkr {
 	public Xodb_image_itm Find(Xow_wiki wiki, byte[] ttl) {
-		Db_provider image_regy_provider = null; //wiki.Db_mgr_as_sql().Fsys_mgr().Image_provider();
+		Db_provider image_regy_provider = Sqlite_engine_.Provider_load_or_make_(wiki.Db_mgr_as_sql().Fsys_mgr().Trg_dir().GenSubFil("oimg_image.sqlite3"));
 		Db_stmt stmt = Db_stmt_.Null;
 		try {
 			stmt = Xodb_image_tbl.Select_ttl_stmt(image_regy_provider);
-			return (Xodb_image_itm)Xodb_image_tbl.Select_ttl(stmt, String_.new_utf8_(ttl));
+			return Xodb_image_tbl.Select_itm(stmt, String_.new_utf8_(ttl));
 		} 	finally {stmt.Rls();}
 	}
 }

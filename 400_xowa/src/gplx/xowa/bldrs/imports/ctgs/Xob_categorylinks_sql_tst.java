@@ -106,7 +106,7 @@ class Db_tst_qry {
 			}
 		}	finally {rdr.Rls();}
 	}
-	void Test_row(ByteAryBfr bfr, int expd_row_idx, Db_tst_row expd_row, DataRdr rdr) {
+	private void Test_row(ByteAryBfr bfr, int expd_row_idx, Db_tst_row expd_row, DataRdr rdr) {
 		Db_tst_val[] expd_vals = expd_row.Vals_ary();
 		int len = expd_vals.length;
 		int pad_max = 16;

@@ -53,7 +53,7 @@ public class Xof_url_bldr {
 	public byte[] Xto_bry() {Bld(); byte[] rv = bfr.XtoAryAndClear(); Clear(); return rv;}
 	public String Xto_str() {Bld(); String rv = bfr.XtoStr(); Clear(); return rv;}
 	public Io_url Xto_url() {Bld(); Io_url rv = Io_url_.new_fil_(bfr.XtoStr()); Clear(); return rv;}
-	void Bld() {
+	private void Bld() {
 		Add_core();
 		if (thumb) {
 			if (wmf_fsys)	Add_thumb_wmf();

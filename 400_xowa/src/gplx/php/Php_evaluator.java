@@ -38,13 +38,6 @@ public class Php_evaluator implements Php_tkn_wkr {
 		mode = Mode_key_bgn;
 		next_tid = next_mode = 0;
 	}
-	void Fail_line() {
-		ListAdp_.Pop(lines);
-		cur_line = null;
-		cur_ary = null;
-		cur_kv_key = null;
-		mode = Mode_suspend;
-	}
 	public void Process(Php_tkn tkn) {
 		byte tkn_tid = tkn.Tkn_tid();
 		switch (tkn_tid) {
@@ -236,8 +229,8 @@ public class Php_evaluator implements Php_tkn_wkr {
 				break;
 		}
 	}
-	void Fail() {mode = Mode_suspend;}
-	void Ary_add_itm(Php_itm val) {
+	private void Fail() {mode = Mode_suspend;}
+	private void Ary_add_itm(Php_itm val) {
 		mode = Mode_ary_dlm;
 		if (cur_kv_key == null)
 			cur_ary.Subs_add((Php_itm_sub)val);
@@ -247,7 +240,7 @@ public class Php_evaluator implements Php_tkn_wkr {
 			cur_kv_key = null;
 		}		
 	}
-	void Expect(byte next_tid, byte next_mode) {
+	private void Expect(byte next_tid, byte next_mode) {
 		mode = Mode_expect;
 		this.next_tid = next_tid;
 		this.next_mode = next_mode;

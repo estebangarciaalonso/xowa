@@ -20,12 +20,12 @@ import gplx.dbs.*; import gplx.ios.*;
 public class Fsdb_bin_tbl {
 	public static void Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
 	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_bin_owner_id, Fld_bin_owner_tid, Fld_bin_data);}
-	public static void Insert_rdr(Db_provider p, int id, byte tid, int bin_len, Io_stream_rdr bin_rdr) {
+	public static void Insert_rdr(Db_provider p, int id, byte tid, long bin_len, Io_stream_rdr bin_rdr) {
 		Db_stmt stmt = Insert_stmt(p);
 		try {Insert_rdr(stmt, id, tid, bin_len, bin_rdr);}
 		finally {stmt.Rls();}
 	}
-	public static void Insert_rdr(Db_stmt stmt, int id, byte tid, int bin_len, Io_stream_rdr bin_rdr) {
+	public static void Insert_rdr(Db_stmt stmt, int id, byte tid, long bin_len, Io_stream_rdr bin_rdr) {
 		stmt.Clear()
 		.Val_int_(id)
 		.Val_byte_(tid);
@@ -62,7 +62,7 @@ public class Fsdb_bin_tbl {
 		}
 		finally {rdr.Rls();}
 	}
-	public static boolean Select_to_fsys(Db_provider p, int owner, Io_url url, byte[] bfr, int flush) {
+	public static boolean Select_to_url(Db_provider p, int owner, Io_url url, byte[] bfr, int flush) {
 		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_(Fld_bin_data).Where_(Db_crt_.eq_(Fld_bin_owner_id, owner));
 		DataRdr rdr = DataRdr_.Null;
 		try {
@@ -112,4 +112,5 @@ public class Fsdb_bin_tbl {
 	,	");"
 	);
 	public static final byte Owner_tid_fil = 1, Owner_tid_thm = 2;
+	public static final int Db_bin_id_null = -1;
 }

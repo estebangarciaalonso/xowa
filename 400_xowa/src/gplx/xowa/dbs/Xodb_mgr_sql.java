@@ -30,6 +30,8 @@ public class Xodb_mgr_sql implements Xodb_mgr, GfoInvkAble {
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	public byte Data_storage_format() {return data_storage_format;} public void Data_storage_format_(byte v) {data_storage_format = v;} private byte data_storage_format = gplx.ios.Io_stream_.Tid_gzip;		
 	public byte Category_version() {return category_version;} private byte category_version = Xoa_ctg_mgr.Version_null;
+	public byte Search_version() {return load_mgr.Search_version();}
+	public void Search_version_refresh() {load_mgr.Search_version_refresh();}
 	public Xodb_fsys_mgr Fsys_mgr() {return fsys_mgr;} private Xodb_fsys_mgr fsys_mgr = new Xodb_fsys_mgr();
 	public Xodb_load_mgr Load_mgr() {return load_mgr;} private Xodb_load_mgr_sql load_mgr;
 	public Xodb_save_mgr Save_mgr() {return save_mgr;} private Xodb_save_mgr_sql save_mgr;
@@ -66,7 +68,7 @@ public class Xodb_mgr_sql implements Xodb_mgr, GfoInvkAble {
 		Core_provider_(provider);
 		state = State_load;
 	}
-	void Core_provider_(Db_provider provider) {
+	private void Core_provider_(Db_provider provider) {
 		tbl_cfg.Provider_(provider);
 		tbl_ns.Provider_(provider);
 		tbl_db.Provider_(provider);
@@ -124,12 +126,14 @@ public class Xodb_mgr_sql implements Xodb_mgr, GfoInvkAble {
 		else if	(ctx.Match(k, Invk_data_storage_format_))				data_storage_format = Xoi_dump_mgr.Wtr_tid_parse(m.ReadStr("v"));
 		else if	(ctx.Match(k, Invk_category_version))					return category_version;
 		else if	(ctx.Match(k, Invk_category_version_))					category_version = m.ReadByte("v");
+		else if	(ctx.Match(k, Invk_search_version))						return this.Search_version();
 		else if	(ctx.Match(k, Invk_tid_name))							return this.Tid_name();
 		return this;
 	}
 	public static final String 
 	  Invk_data_storage_format = "data_storage_format", Invk_data_storage_format_ = "data_storage_format_"
 	, Invk_category_version = "category_version", Invk_category_version_ = "category_version_"
+	, Invk_search_version = "search_version"
 	, Invk_tid_name = "tid_name"
 	;
 	public void Category_version_update(boolean version_is_1) {

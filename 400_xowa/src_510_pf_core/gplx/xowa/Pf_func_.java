@@ -297,7 +297,7 @@ public class Pf_func_ {
 			case Xol_kwd_grp_.Id_i18n_grammar:					return new Pf_intl_grammar();
 			case Xol_kwd_grp_.Id_misc_tag:						return new Pf_tag();
 
-			case Xol_kwd_grp_.Id_xtn_expr:						return new Pf_xtn_expr();
+			case Xol_kwd_grp_.Id_xtn_expr:						return new gplx.xowa.xtns.pfuncs.exprs.Pfunc_expr();
 			case Xol_kwd_grp_.Id_xtn_if:						return new Pf_xtn_if();
 			case Xol_kwd_grp_.Id_xtn_ifeq:						return new Pf_xtn_ifeq();
 			case Xol_kwd_grp_.Id_xtn_iferror:					return new Pf_xtn_iferror();

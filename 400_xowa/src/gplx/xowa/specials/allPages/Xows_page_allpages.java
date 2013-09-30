@@ -118,7 +118,7 @@ public class Xows_page_allpages implements GfoInvkAble, ByteAryFmtrArg, Xows_pag
 		page.Allow_all_html_(true);
 	}
 	byte[] Build_html_end(ByteAryBfr bfr, Xodb_page itm, boolean fwd) {
-		Xoa_ttl ttl = Xows_page_allpages.ttl_(wiki, init_ns, itm);
+		Xoa_ttl ttl = Xows_page_allpages.ttl_(wiki, init_ns, itm); if (ttl == null) return ByteAry_.Empty;	// occurs when range is empty; EX: Module:A in simplewikibooks
 		int msg_id = fwd ? Xol_msg_itm_.Id_sp_allpages_fwd : Xol_msg_itm_.Id_sp_allpages_bwd;
 		Xol_msg_itm msg_itm = wiki.Lang().Msg_mgr().Itm_by_id_or_null(msg_id);
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512().Mkr_rls();

@@ -38,29 +38,8 @@ public class Xof_bin_mgr {
 	}
 	public Io_stream_rdr Find_as_rdr(byte exec_tid, Xof_fsdb_itm itm) {
 		Io_stream_rdr rv = Io_stream_rdr_.Null;
-		boolean html_is_thumb = itm.Html_is_thumb();
-		if (html_is_thumb) {
-			Io_url trg = Get_url(itm, Xof_repo_itm.Mode_thumb, Bool_.N);
-			itm.Html_url_(trg);
-			for (int i = 0; i < wkrs_len; i++) {
-				Xof_bin_wkr wkr = wkrs[i];
-				rv = wkr.Bin_wkr_get_as_rdr(itm, Bool_.Y, itm.Html_w());		// get thumb's bin
-				if (rv != Io_stream_rdr_.Null) {								// thumb's bin exists;
-					itm.Rslt_bin_(wkr.Bin_wkr_tid());
-					return rv;
-				}
-				rv = wkr.Bin_wkr_get_as_rdr(itm, Bool_.N, itm.Orig_w());		// thumb missing; get orig;
-				if (rv == Io_stream_rdr_.Null) continue;						// nothing found; continue;
-				Io_url src = Get_url(itm, Xof_repo_itm.Mode_orig, Bool_.Y);		// get src url
-				Io_stream_wtr_.Save_rdr(src, rv);
-				boolean resized = Resize(exec_tid, itm, html_is_thumb, src, trg);
-				if (!resized) continue;
-				itm.Rslt_bin_(wkr.Bin_wkr_tid());
-				itm.Rslt_bin_fsys_(true);
-				return Io_stream_rdr_.file_(trg);								// return stream of resized url; (result of imageMagick / inkscape)
-			}
-		}
-		else {	// orig
+		boolean file_is_orig = itm.File_is_orig();
+		if (file_is_orig) {
 			Io_url trg = itm.Lnki_ext().Orig_is_not_image()
 				? Get_url(itm, Xof_repo_itm.Mode_thumb, Bool_.N)
 				: Get_url(itm, Xof_repo_itm.Mode_orig, Bool_.N);
@@ -72,11 +51,13 @@ public class Xof_bin_mgr {
 				if (itm.Lnki_ext().Id_is_svg()) {
 					itm.Lnki_w_(itm.Html_w());
 					Io_url trg_png = Get_url(itm, Xof_repo_itm.Mode_thumb, Bool_.N);
-					boolean resized = Resize(exec_tid, itm, html_is_thumb, trg, trg_png);
+					boolean resized = Resize(exec_tid, itm, file_is_orig, trg, trg_png);
 					if (!resized) continue;
 					itm.Rslt_bin_(wkr.Bin_wkr_tid());
 					itm.Rslt_bin_fsys_(true);
-					return Io_stream_rdr_.file_(trg);							// return stream of resized url; (result of imageMagick / inkscape)
+					rv = Io_stream_rdr_.file_(trg);							// return stream of resized url; (result of imageMagick / inkscape)
+					rv.Open();
+					return rv;
 				}
 				else {
 					itm.Rslt_bin_(wkr.Bin_wkr_tid());
@@ -84,10 +65,33 @@ public class Xof_bin_mgr {
 				}
 			}
 		}
+		else {	// thumb
+			Io_url trg = Get_url(itm, Xof_repo_itm.Mode_thumb, Bool_.N);
+			itm.Html_url_(trg);
+			for (int i = 0; i < wkrs_len; i++) {
+				Xof_bin_wkr wkr = wkrs[i];
+				rv = wkr.Bin_wkr_get_as_rdr(itm, Bool_.Y, itm.Html_w());		// get thumb's bin
+				if (rv != Io_stream_rdr_.Null) {								// thumb's bin exists;
+					itm.Rslt_bin_(wkr.Bin_wkr_tid());
+					return rv;
+				}
+				rv = wkr.Bin_wkr_get_as_rdr(itm, Bool_.N, itm.Orig_w());		// thumb missing; get orig;
+				if (rv == Io_stream_rdr_.Null) continue;						// nothing found; continue;
+				Io_url orig = Get_url(itm, Xof_repo_itm.Mode_orig, Bool_.N);	// get orig url
+				Io_stream_wtr_.Save_rdr(orig, rv);
+				boolean resized = Resize(exec_tid, itm, file_is_orig, orig, trg);
+				if (!resized) continue;
+				itm.Rslt_bin_(wkr.Bin_wkr_tid());
+				itm.Rslt_bin_fsys_(true);
+				rv = Io_stream_rdr_.file_(trg);								// return stream of resized url; (result of imageMagick / inkscape)
+				rv.Open();
+				return rv;
+			}
+		}
 		return Io_stream_rdr_.Null;
 	}
-	private boolean Resize(byte exec_tid, Xof_fsdb_itm itm, boolean html_is_thumb, Io_url src, Io_url trg) {
-		Xof_xfer_itm_.Calc_xfer_size(tmp_size, gplx.xowa.Xof_img_mgr.Thumb_w_img_const, itm.Orig_w(), itm.Orig_h(), itm.Lnki_w(), itm.Lnki_h(), html_is_thumb, itm.Lnki_upright(), itm.Lnki_ext(), exec_tid);
+	private boolean Resize(byte exec_tid, Xof_fsdb_itm itm, boolean file_is_orig, Io_url src, Io_url trg) {
+		Xof_xfer_itm_.Calc_xfer_size(tmp_size, Xof_img_size.Thumb_width_img, itm.Orig_w(), itm.Orig_h(), itm.Lnki_w(), itm.Lnki_h(), !file_is_orig, itm.Lnki_upright(), itm.Lnki_ext(), exec_tid);
 		boolean rv = resizer.Exec(src, trg, tmp_size.Val_0(), tmp_size.Val_1(), itm.Lnki_ext().Id(), resize_warning);
 		itm.Rslt_cnv_(rv ? Xof_cnv_wkr_.Tid_y : Xof_cnv_wkr_.Tid_n);
 		return rv;

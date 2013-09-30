@@ -19,16 +19,15 @@ package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xo
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*;
 public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xobc_lnki_wkr {
 	private Db_provider provider; private Db_stmt stmt;
-	private Xob_lnki_temp_tbl tbl;
 	public Xob_lnki_temp_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
 	@Override public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "oimg.lnki_temp";
 	@Override public byte Init_redirect() {return Bool_.N_byte;}	// lnki will never be found in a redirect
 	@Override public int[] Init_ns_ary() {return Int_.Ary(Xow_ns_.Id_main, Xow_ns_.Id_category, Xow_ns_.Id_template);}
 	@Override public Db_provider Init_db_file() {
 		ctx.Lnki().File_wkr_(this);
-		provider = Sqlite_engine_.Provider_load_or_make_(wiki.Db_mgr_as_sql().Fsys_mgr().Trg_dir().GenSubFil(Db_name + ".sqlite3"));
-		tbl = new Xob_lnki_temp_tbl().Create_table(provider);
-		stmt = tbl.Insert_stmt(provider);
+		provider = Xodb_db_file.init__oimg_lnki(wiki).Provider();
+		Xob_lnki_temp_tbl.Create_table(provider);
+		stmt = Xob_lnki_temp_tbl.Insert_stmt(provider);
 		provider.Txn_mgr().Txn_bgn_if_none();
 		return provider;
 	}
@@ -48,7 +47,7 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xobc_lnki_wk
 	public void Wkr_exec(Xop_ctx ctx, Xop_lnki_tkn lnki) {
 		byte[] ttl = lnki.Ttl().Page_db();
 		Xof_ext ext = Xof_ext_.new_by_ttl_(ttl);
-		tbl.Insert(stmt, ctx.Page().Page_id(), ttl, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki.Width().Val(), lnki.Height().Val(), lnki.Upright(), lnki.Thumbtime());		
+		Xob_lnki_temp_tbl.Insert(stmt, ctx.Page().Page_id(), ttl, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki.Width().Val(), lnki.Height().Val(), lnki.Upright(), lnki.Thumbtime());		
 	}
 	@Override public void Exec_commit_bgn(Xow_ns ns, byte[] ttl) {
 		provider.Txn_mgr().Txn_end_all_bgn_if_none();
@@ -56,5 +55,4 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xobc_lnki_wk
 	@Override public void Exec_end() {
 		provider.Txn_mgr().Txn_end();
 	}
-	public static final String Db_name = "oimg_lnki";
 }

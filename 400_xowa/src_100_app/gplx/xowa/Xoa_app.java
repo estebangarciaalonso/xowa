@@ -141,6 +141,11 @@ public class Xoa_app implements GfoInvkAble {
 	public gplx.xowa.servers.Xosrv_server Server() {return server;} gplx.xowa.servers.Xosrv_server server = new gplx.xowa.servers.Xosrv_server();
 	private Xoa_shell shell; private Xoa_fmtr_mgr fmtr_mgr;
 
+	public void Reset_all() {
+		this.Free_mem(true);
+		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_invalidate();
+		Env_.GarbageCollect();
+	}
 	public void Free_mem(boolean clear_ctx) {
 		tmpl_result_cache.Clear();
 		utl_bry_bfr_mkr.Clear();

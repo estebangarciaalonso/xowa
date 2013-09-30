@@ -200,7 +200,7 @@ public class Xol_mw_lang_parser {
 			byte[] kv_val = brys[i + val_dif];
 			ByteAry_.Replace_all_direct(kv_val, Byte_ascii.Underline, Byte_ascii.Space); // NOTE: siteInfo.xml names have " " not "_" (EX: "User talk"). for now, follow that convention
 			int ns_id = Id_by_mw_name(kv_key);
-//				if (ns_id == Xow_ns_.Id_unknown) throw Err_mgr._.fmt_auto_(GRP_KEY, "namespace_names", String_.new_utf8_(kv_key));
+//				if (ns_id == Xow_ns_.Id_null) throw Err_mgr._.fmt_auto_(GRP_KEY, "namespace_names", String_.new_utf8_(kv_key));
 			rv[i / 2] = new Xow_ns(ns_id, Xow_ns_.Case_match_1st, kv_val, false);	// note that Xow_ns is being used as glorified id-name struct; case_match and alias values do not matter
 		}
 		return rv;
@@ -337,6 +337,6 @@ public class Xol_mw_lang_parser {
 			mw_names.Add("NS_CATEGORY_TALK", IntVal.new_(Xow_ns_.Id_category_talk));
 		}
 		Object o = mw_names.MatchAtCurExact(src, 0, src.length);
-		return o == null ? Xow_ns_.Id_unknown : ((IntVal)o).Val();
+		return o == null ? Xow_ns_.Id_null : ((IntVal)o).Val();
 	}	static ByteTrieMgr_slim mw_names;
 }

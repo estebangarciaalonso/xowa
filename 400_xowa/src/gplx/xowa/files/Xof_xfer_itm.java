@@ -72,10 +72,10 @@ public class Xof_xfer_itm {
 		}
 		boolean limit_size = !ext.Id_is_svg() || (ext.Id_is_svg() && caller_is_file_page);
 		if (ext.Id_is_media() && html_w < 1)		// if media and no width, set to default; NOTE: must be set or else dynamic download will resize play button to small size; DATE:20121227
-			html_w = Xof_img_mgr.Thumb_w_ogv_const;	
+			html_w = Xof_img_size.Thumb_width_ogv;	
 		if (lnki_thumbable) {				// file is thumb
 			if (ext.Id_is_video()) {		// video is a special case; src is thumb_w but html_w / html_h is based on calc
-				html_orig_src = Trg_html(Xof_repo_itm.Mode_orig, Xof_url_.Null_size_deprecated);
+				html_orig_src = Trg_html(Xof_repo_itm.Mode_orig, Xof_img_size.Size_null_deprecated);
 				if (meta_itm.Thumbs_indicates_oga() && ext.Id_is_ogv()) {ext = Xof_ext_.new_by_ext_(Xof_ext_.Bry_oga); return true;}	// if audio, do not thumb; NOTE: must happen after html_orig_src, b/c html must still be generated to auto-download files; NOTE: must change ext to oga b/c ogg may trigger video code elsewhere
 				Xof_meta_thumb thumb = meta_itm.Thumbs_get_vid(lnki_thumbtime);
 				if (thumb != null) {
@@ -87,7 +87,7 @@ public class Xof_xfer_itm {
 				}
 			}
 			else {							// regular thumb
-				html_orig_src = Trg_html(Xof_repo_itm.Mode_orig, Xof_url_.Null_size_deprecated);
+				html_orig_src = Trg_html(Xof_repo_itm.Mode_orig, Xof_img_size.Size_null_deprecated);
 				if (ext.Id_is_audio()) return true;	// if audio, do not thumb; even if user requests thumb;
 				Xof_meta_thumb[] thumbs = meta_itm.Thumbs(); int thumbs_len = thumbs.length; Xof_meta_thumb thumb = null;
 				if (lnki_h > 0 && orig_w < 1 && thumbs_len > 0) {		// if height is specified and no orig, then iterate over thumbs to find similar height; NOTE: this is a fallback case; orig_w/h is optimal; EX: c:Jacques-Louis David and <gallery>

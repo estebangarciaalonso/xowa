@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.fsdb; import gplx.*;
 import gplx.dbs.*; import gplx.cache.*;
 public class Fsdb_db_atr_fil implements RlsAble {
-	private Gfo_cache_mgr dir_cache = new Gfo_cache_mgr();
+	private Gfo_cache_mgr_obj dir_cache = new Gfo_cache_mgr_obj();
 	public int Id() {return id;} private int id;
 	public Io_url Url() {return url;} private Io_url url;
 	public String Path_bgn() {return path_bgn;} private String path_bgn;
@@ -41,7 +41,7 @@ public class Fsdb_db_atr_fil implements RlsAble {
 	public void Rls() {if (provider != null) provider.Rls();}
 	public Fsdb_fil_itm Fil_select(byte[] dir, byte[] fil) {
 		Db_provider p = this.Provider();
-		IntVal dir_id_obj = (IntVal)dir_cache.Get_val_or_null(dir);
+		IntVal dir_id_obj = (IntVal)dir_cache.Get_or_null(dir);
 		if (dir_id_obj == null) {
 			Fsdb_dir_itm dir_itm = Fsdb_dir_tbl.Select_itm(p, String_.new_utf8_(dir));
 			dir_id_obj = dir_itm == Fsdb_dir_itm.Null ? IntVal.neg1_() : IntVal.new_(dir_itm.Id());
@@ -97,7 +97,7 @@ public class Fsdb_db_atr_fil implements RlsAble {
 	}
 	private int Dir_id__get_by_mem_or_db(String dir) {
 		int rv = -1;
-		Object rv_obj = dir_cache.Get_val_or_null(dir);
+		Object rv_obj = dir_cache.Get_or_null(dir);
 		if (rv_obj == null) {
 			rv = Fsdb_cfg_tbl.Update_next_id(this.Provider());
 			Fsdb_dir_tbl.Insert(this.Provider(), rv, dir, 0);	// 0: always assume root owner

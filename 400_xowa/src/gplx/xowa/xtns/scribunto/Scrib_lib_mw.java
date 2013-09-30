@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 	public Scrib_lib_mw(Scrib_engine engine) {this.engine = engine; this.interpreter = engine.Interpreter(); this.fsys_mgr = engine.Fsys_mgr();} Scrib_engine engine; Scrib_interpreter interpreter; Scrib_fsys_mgr fsys_mgr;
-	public Scrib_mod Mod() {return mod;} public void Mod_(Scrib_mod v) {this.mod = v;} Scrib_mod mod;
+	public Scrib_mod Mod() {return mod;} public void Mod_(Scrib_mod v) {this.mod = v;} private Scrib_mod mod;
 	public boolean Allow_env_funcs() {return allow_env_funcs;} private boolean allow_env_funcs = false;
 	public Scrib_mod Register(Scrib_engine engine, Io_url script_dir) {			
 		mod = engine.RegisterInterface(script_dir.GenSubFil("mw.lua")
@@ -30,7 +30,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		if (src != null)	// src exists; indicates that Invoke being called recursively; push existing src onto stack
 			src_stack.Add(src);
 		this.cur_wiki = wiki; this.ctx = wiki.Ctx(); this.src = new_src;
-	} Xow_wiki cur_wiki; byte[] src; Xop_ctx ctx; ListAdp src_stack = ListAdp_.new_();
+	}	private Xow_wiki cur_wiki; private byte[] src; private Xop_ctx ctx; private ListAdp src_stack = ListAdp_.new_();
 	public void Invoke_end() {
 		if (src_stack.Count() > 0)	// src_stack item exists; pop
 			src = (byte[])ListAdp_.Pop(src_stack);
@@ -92,12 +92,17 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		for (int i = 0; i < len; i++) {	// iterate over list to find nth *non-keyd* arg; SEE:NOTE_1
 			Arg_nde_tkn nde = (Arg_nde_tkn)invk.Args_get_by_idx(i + frame_arg_adj);
 			if (nde.KeyTkn_exists()) {
-				int key_int = -1;
-				if (Env_.Mode_testing() && src == null)
-					key_int = ByteAry_.XtoIntByPos(nde.Key_tkn().Dat_ary(), 0, nde.Key_tkn().Dat_ary().length, -1);
-				else
-					key_int = ByteAry_.XtoIntByPos(src, nde.Key_tkn().Src_bgn(), nde.Key_tkn().Src_end(), -1);
-				if (key_int == -1)
+				int key_int = ByteAry_.NotFound;
+				byte[] key_dat_ary = nde.Key_tkn().Dat_ary();
+				if (Env_.Mode_testing() && src == null)	// some tests will always pass a null src;
+					key_int = ByteAry_.XtoIntByPos(key_dat_ary, 0, key_dat_ary.length, ByteAry_.NotFound);
+				else {
+					if (ByteAry_.Len_eq_0(key_dat_ary))	// should be called by current context;
+						key_int = ByteAry_.XtoIntByPos(src, nde.Key_tkn().Src_bgn(), nde.Key_tkn().Src_end(), ByteAry_.NotFound);
+					else								// will be called by parent context; note that this calls Xot_defn_tmpl_.Make_itm which sets a key_dat_ary; DATE:2013-09-23
+						key_int = ByteAry_.XtoIntByPos(key_dat_ary, 0, key_dat_ary.length, ByteAry_.NotFound);
+				}
+				if (key_int == ByteAry_.NotFound)
 					continue;
 				else {	// key is numeric
 					if (idx == key_int) {

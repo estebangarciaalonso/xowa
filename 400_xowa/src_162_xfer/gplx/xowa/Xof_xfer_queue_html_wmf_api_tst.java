@@ -148,5 +148,12 @@ public class Xof_xfer_queue_html_wmf_api_tst {
 				)
 			.tst();
 	}
+	@Test  public void Height_should_precede_width() {// PURPOSE: height should precede width; EX: <gallery>David_Self_Portrait.jpg</gallery>; c:Jacques-Louis David
+		fxt.save_(fxt.reg_("mem/xowa/file/#meta/en.wikipedia.org/7/70.csv", "A.png|z||2?0,0|1?86,121;1?120,168"));
+		fxt	.Lnki_thumb_("A.png", 120, 120)
+		.Html_src_("file:///mem/trg/en.wikipedia.org/fit/7/0/A.png/86px.png")	
+		.Html_size_(85, 120)
+		.tst();
+	}
 }
 // Tfds.Write_bry(Xof_xfer_itm.Md5_calc(ByteAry_.new_ascii_("A~.png")));

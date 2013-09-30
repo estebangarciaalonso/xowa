@@ -15,9 +15,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa; import gplx.*;
+package gplx.xowa.xtns.pfuncs.exprs; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.pfuncs.*;
 import org.junit.*;
-public class Pf_xtn_expr_tst {
+public class Pfunc_expr_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()				{fxt.Reset();}
 	@Test  public void Null()				{fxt.tst_Parse_tmpl_str_test("{{#expr:}}"									, "{{test}}"	, "");}
@@ -78,6 +78,9 @@ public class Pf_xtn_expr_tst {
 	@Test  public void Round_2()			{fxt.tst_Parse_tmpl_str_test("{{#expr:(0.03937007874015)round(3)}}"			, "{{test}}"	, "0.039");}	// PURPOSE: rounding results in excessive decimal places; EX.WP:Milky Way (light year conversions)
 	@Test  public void Mod_frac()			{fxt.tst_Parse_tmpl_str_test("{{#expr:0.00999999mod10}}"					, "{{test}}"	, "0");}
 	@Test  public void Mod_large()			{fxt.tst_Parse_tmpl_str_test("{{#expr:39052000900mod100}}"					, "{{test}}"	, "0");}		// PURPOSE: JAVA was failing in converting to int and converted to Int_.MaxValue instead; DATE:2013-01-26
+	@Test  public void Fmod()				{fxt.tst_Parse_tmpl_str_test("{{#expr:1.25 fmod .5}}"						, "{{test}}"	, "0.25");}
+	@Test  public void Sqrt()				{fxt.tst_Parse_tmpl_str_test("{{#expr:sqrt 4}}"								, "{{test}}"	, "2");}
+	@Test  public void Sqrt_frac()			{fxt.tst_Parse_tmpl_str_test("{{#expr:sqrt 2}}"								, "{{test}}"	, "1.41421356237309");}	// NOTE: MW (and C#) returns 31, not 309 
 	@Test  public void Esc_xml_entRef()		{fxt.tst_Parse_tmpl_str_test("{{#expr:&minus;1 &lt; 5}}"					, "{{test}}"	, "1");}
 	@Test  public void Ex_1()				{fxt.tst_Parse_tmpl_str_test("{{#expr:1e2round0}}"							, "{{test}}"	, "100");}		// PURPOSE: used in Convert
 	@Test  public void Floating()			{fxt.tst_Parse_tmpl_str_test("{{#expr:27.321582}}"							, "{{test}}"	, "27.321582");}

@@ -29,7 +29,7 @@ public class Xow_ns_ {
 		, Id_help				=  12				, Id_help_talk			=  13
 		, Id_category			=  14				, Id_category_talk		=  15
 		, Id_portal				= 100				, Id_portal_talk		= 101
-	    , Id_unknown			= Int_.MinValue
+	    , Id_null				= Int_.MinValue
 		;
 	public static final byte Case_match_all = 0, Case_match_1st = 1;
 	public static byte Case_match_parse_(String s) {
@@ -48,7 +48,7 @@ public class Xow_ns_ {
 			}
 		}
 		Object rv_obj = canonical_hash.Fetch(canonical_name);
-		return rv_obj == null ? Xow_ns_.Id_unknown : ((IntVal)rv_obj).Val();
+		return rv_obj == null ? Xow_ns_.Id_null : ((IntVal)rv_obj).Val();
 	}	private static OrderedHash canonical_hash;
 	public static int Canonical_idx_media = 0;
 	public static final Xow_ns[] Canonical = new Xow_ns[]	// REF.MW: Namespace.php|$wgCanonicalNamespaceNames

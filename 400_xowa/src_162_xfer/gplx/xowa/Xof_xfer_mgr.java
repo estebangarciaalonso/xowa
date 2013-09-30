@@ -62,8 +62,8 @@ public class Xof_xfer_mgr {
 		}
 
 		// BLOCK: orig; get orig for convert; note that Img_download will not download file again if src exists
-		src_str = this.Src_url(src_repo, Xof_repo_itm.Mode_orig, Xof_url_.Null_size_deprecated);
-		trg_url = this.Trg_url(trg_repo, Xof_repo_itm.Mode_orig, Xof_url_.Null_size_deprecated);
+		src_str = this.Src_url(src_repo, Xof_repo_itm.Mode_orig, Xof_img_size.Size_null_deprecated);
+		trg_url = this.Trg_url(trg_repo, Xof_repo_itm.Mode_orig, Xof_img_size.Size_null_deprecated);
 		if (!Img_download(src_str, trg_url, false)) return false;
 		trg_url = rslt.Trg();
 
@@ -123,7 +123,7 @@ public class Xof_xfer_mgr {
 				if (!wmf_api_found) return false;	// not found in wmf_api; exit now
 			}
 			else if (src_repo.Tarball()) {
-				String src_str = this.Src_url(src_repo, Xof_repo_itm.Mode_orig, Xof_url_.Null_size_deprecated);
+				String src_str = this.Src_url(src_repo, Xof_repo_itm.Mode_orig, Xof_img_size.Size_null_deprecated);
 				meta_itm.Orig_exists_(Xof_meta_itm.Exists_unknown);	// mark exists unknown; note need to assertively mark unknown b/c it may have been marked n in previous pass through multiple repos; DATE:20121227
 				meta_itm.Vrtl_repo_(Xof_meta_itm.Repo_unknown);		// mark repo unknown;
 				if (!Cmd_query_size(Io_url_.new_fil_(src_str))) {
@@ -147,7 +147,7 @@ public class Xof_xfer_mgr {
 				lnki_w = calc_size.Val_0(); 
 				if (lnki_h != -1) lnki_h = calc_size.Val_1(); // NOTE: if -1 (no height specified) do not set height; EX:Tokage_2011-07-15.jpg; DATE:2013-06-03
 
-				src_str = src_repo.Tarball() ? this.Src_url(src_repo, Xof_repo_itm.Mode_orig, Xof_url_.Null_size) : this.Src_url(src_repo, Xof_repo_itm.Mode_thumb, lnki_w);
+				src_str = src_repo.Tarball() ? this.Src_url(src_repo, Xof_repo_itm.Mode_orig, Xof_img_size.Size_null) : this.Src_url(src_repo, Xof_repo_itm.Mode_thumb, lnki_w);
 				trg_url = this.Trg_url(trg_repo, Xof_repo_itm.Mode_thumb, lnki_w);
 				if (Make_img_exec(src_str, trg_url)) {		// download passed
 					trg_url = rslt.Trg();
@@ -175,13 +175,13 @@ public class Xof_xfer_mgr {
 				Xof_xfer_itm_.Calc_xfer_size(calc_size, wiki.Html_mgr().Img_thumb_width(), meta_itm.Orig_w(), meta_itm.Orig_h(), lnki_w, lnki_h, lnki_thumbable, lnki_upright, limit);
 				lnki_w = calc_size.Val_0(); lnki_h = calc_size.Val_1();
 
-				src_str = src_repo.Tarball() ? this.Src_url(src_repo, Xof_repo_itm.Mode_orig, Xof_url_.Null_size) : this.Src_url(src_repo, Xof_repo_itm.Mode_thumb, lnki_w);
+				src_str = src_repo.Tarball() ? this.Src_url(src_repo, Xof_repo_itm.Mode_orig, Xof_img_size.Size_null) : this.Src_url(src_repo, Xof_repo_itm.Mode_thumb, lnki_w);
 				trg_url = this.Trg_url(trg_repo, Xof_repo_itm.Mode_thumb, lnki_w);
 				return Make_img_exec(src_str, trg_url);
 			}
 			else {	// no orig dimensions; do download
 				lnki_w = wiki.Html_mgr().Img_thumb_width();	// set lnki_w to default thumb_width (220)
-				src_str = src_repo.Tarball() ? this.Src_url(src_repo, Xof_repo_itm.Mode_orig, Xof_url_.Null_size) : this.Src_url(src_repo, Xof_repo_itm.Mode_thumb, lnki_w);
+				src_str = src_repo.Tarball() ? this.Src_url(src_repo, Xof_repo_itm.Mode_orig, Xof_img_size.Size_null) : this.Src_url(src_repo, Xof_repo_itm.Mode_thumb, lnki_w);
 				trg_url = this.Trg_url(trg_repo, Xof_repo_itm.Mode_thumb, lnki_w);
 				if (Make_img_exec(src_str, trg_url)) {		// download
 					if (src_repo.Tarball()) return true;	// convert worked; no need to download again;
@@ -240,8 +240,8 @@ public class Xof_xfer_mgr {
 	}
 	boolean Make_other() {
 		if (!Orig_max_download() && !force_orig) return false;
-		String src_str = this.Src_url(src_repo, Xof_repo_itm.Mode_orig, Xof_url_.Null_size_deprecated);
-		Io_url trg_url = this.Trg_url(trg_repo, Xof_repo_itm.Mode_orig, Xof_url_.Null_size_deprecated);
+		String src_str = this.Src_url(src_repo, Xof_repo_itm.Mode_orig, Xof_img_size.Size_null_deprecated);
+		Io_url trg_url = this.Trg_url(trg_repo, Xof_repo_itm.Mode_orig, Xof_img_size.Size_null_deprecated);
 		return Cmd_download(src_str, trg_url, true);
 	}
 	boolean Orig_max_download() {

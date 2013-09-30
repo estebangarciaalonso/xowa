@@ -63,14 +63,14 @@ public class Xol_mw_lang_parser_tst {
 		fxt.Parse_core("$namespaceNames = array(NS_FILE => 'Fichier');")
 			.Sync_ns()
 			.Tst_ns_lkp("Fichier", Xow_ns_.Id_file)
-			.Tst_ns_lkp("File"	, Xow_ns_.Id_unknown)
+			.Tst_ns_lkp("File"	, Xow_ns_.Id_null)
 			;
 	}
 	@Test  public void Core_namespaces_aliases() {
 		fxt.Parse_core("$namespaceAliases = array('Discussion_Fichier' => NS_FILE_TALK);")
 			.Sync_ns()
 			.Tst_ns_lkp("Discussion Fichier", Xow_ns_.Id_file_talk)
-			.Tst_ns_lkp("Discussion Fichierx", Xow_ns_.Id_unknown)
+			.Tst_ns_lkp("Discussion Fichierx", Xow_ns_.Id_null)
 			;
 	}
 	@Test  public void Core_specialPageAliases() {
@@ -206,7 +206,7 @@ class Xol_mw_lang_parser_fxt {
 	public Xol_mw_lang_parser_fxt Tst_ns_lkp(String key_str, int id) {
 		byte[] key = ByteAry_.new_utf8_(key_str);
 		Xow_ns ns = (Xow_ns)wiki.Ns_mgr().Trie_match_exact(key, 0, key.length);
-		int actl = ns == null ? Xow_ns_.Id_unknown : ns.Id();
+		int actl = ns == null ? Xow_ns_.Id_null : ns.Id();
 		Tfds.Eq(id, actl);
 		return this;
 	}

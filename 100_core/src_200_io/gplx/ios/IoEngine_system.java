@@ -379,7 +379,6 @@ public class IoEngine_system extends IoEngine_base {
 	}
 	boolean user_agent_needs_resetting = true;
 	@Override public Io_stream_rdr DownloadFil_as_rdr(IoEngine_xrg_downloadFil xrg) {
-		Tfds.WriteText("\n" + xrg.Src());
 		Io_stream_rdr_http rdr = new Io_stream_rdr_http(xrg);
 		rdr.Open();
 		return rdr;
@@ -584,10 +583,11 @@ class Io_stream_rdr_http implements Io_stream_rdr {
 		}
 		if (read_failed) {
 			if (session_fil == null) session_fil = prog_dlg.Log_wtr().Session_dir().GenSubFil("internet.txt");
-			prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download pass: src='~{0}' trg='~{1}'", src_str, xrg.Trg().Raw());
 		}
-		else
+		else {
+			prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download pass: src='~{0}' trg='~{1}'", src_str, xrg.Trg().Raw());
 			xrg.Rslt_(IoEngine_xrg_downloadFil.Rslt_pass);
+		}
 		xrg.Prog_running_(false);
 		try {
 			if (src_stream != null) src_stream.close();

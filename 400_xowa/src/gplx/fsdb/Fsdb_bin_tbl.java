@@ -19,7 +19,7 @@ package gplx.fsdb; import gplx.*;
 import gplx.dbs.*; import gplx.ios.*;
 public class Fsdb_bin_tbl {
 	public static void Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
-	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_bin_owner_id, Fld_bin_owner_tid, Fld_bin_data);}
+	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_bin_owner_id, Fld_bin_owner_tid, Fld_bin_data_url, Fld_bin_data);}
 	public static void Insert_rdr(Db_provider p, int id, byte tid, long bin_len, Io_stream_rdr bin_rdr) {
 		Db_stmt stmt = Insert_stmt(p);
 		try {Insert_rdr(stmt, id, tid, bin_len, bin_rdr);}
@@ -28,7 +28,9 @@ public class Fsdb_bin_tbl {
 	public static void Insert_rdr(Db_stmt stmt, int id, byte tid, long bin_len, Io_stream_rdr bin_rdr) {
 		stmt.Clear()
 		.Val_int_(id)
-		.Val_byte_(tid);
+		.Val_byte_(tid)
+		.Val_str_(Data_url_null)
+		;
 		if (Sqlite_engine_.Cfg_read_binary_stream_supported)
 			stmt.Val_rdr_(bin_rdr, bin_len);
 		else
@@ -103,14 +105,16 @@ public class Fsdb_bin_tbl {
 			fs_stream.Rls();
 		}
 	}
-	public static final String Tbl_name = "fsdb_bin", Fld_bin_owner_id = "bin_owner_id", Fld_bin_owner_tid = "bin_owner_tid", Fld_bin_data = "bin_data";
+	public static final String Tbl_name = "fsdb_bin", Fld_bin_owner_id = "bin_owner_id", Fld_bin_owner_tid = "bin_owner_tid", Fld_bin_data_url = "bin_data_url", Fld_bin_data = "bin_data";
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS fsdb_bin"
 	,	"( bin_owner_id          integer             NOT NULL    PRIMARY KEY"
 	,	", bin_owner_tid         byte                NOT NULL"
+	,	", bin_data_url          varchar(255)        NOT NULL"
 	,	", bin_data              mediumblob          NOT NULL"
 	,	");"
 	);
 	public static final byte Owner_tid_fil = 1, Owner_tid_thm = 2;
 	public static final int Db_bin_id_null = -1;
+	public static final String Data_url_null = "";
 }

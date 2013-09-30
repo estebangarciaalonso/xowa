@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.xtns.pfuncs.exprs.*;
 class Pf_xtn_ifexpr extends Pf_func_base {
 	@Override public boolean Func_require_colon_arg() {return true;}
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bb) {			
@@ -23,7 +24,7 @@ class Pf_xtn_ifexpr extends Pf_func_base {
 		byte[] val_dat_ary = Eval_argx(ctx, src, caller, self);
 		if (val_dat_ary == null) return;
 		DecimalAdp result = shunter.Evaluate(ctx, val_dat_ary);
-		boolean is_nan = result == Pf_xtn_expr_shunter.Null_rslt;
+		boolean is_nan = result == Pfunc_expr_shunter.Null_rslt;
 		if (is_nan && shunter.Err().Bry_len() > 0) {
 			bb.Add_bfr(shunter.Err());
 			shunter.Err().Clear();
@@ -35,7 +36,7 @@ class Pf_xtn_ifexpr extends Pf_func_base {
 				bb.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 0));
 		}
 	}
-	Pf_xtn_expr_shunter shunter = Pf_xtn_expr_shunter._;
+	Pfunc_expr_shunter shunter = Pfunc_expr_shunter._;
 	@Override public int Id() {return Xol_kwd_grp_.Id_xtn_ifexpr;}
 	@Override public Pf_func New(int id, byte[] name) {return new Pf_xtn_ifexpr().Name_(name);}
 }	

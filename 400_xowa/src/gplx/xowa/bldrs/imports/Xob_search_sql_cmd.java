@@ -26,17 +26,24 @@ public class Xob_search_sql_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	public void Cmd_end() {}
 	public void Cmd_print() {}
 	public void Exec(Xow_wiki wiki) {
+		usr_dlg.Log_many("", "", "search_title.cmd: initing wiki");
 		if (!Env_.Mode_testing()) wiki.Init_assert();
 		Xodb_fsys_mgr db_fs = wiki.Db_mgr_as_sql().Fsys_mgr();
+		usr_dlg.Log_many("", "", "search_title.cmd: getting core db");
 		Xodb_file page_db = db_fs.Get_tid_root(Xodb_file.Tid_core);
+		usr_dlg.Log_many("", "", "search_title.cmd: deleting existing searchdb");
 		wiki.Db_mgr_as_sql().Delete_by_tid(Xodb_file.Tid_search);
+		usr_dlg.Log_many("", "", "search_title.cmd: creating new searchdb");
 		Xodb_file search_db = db_fs.Make(Xodb_file.Tid_search);
 		DataRdr page_rdr = DataRdr_.Null;
 		Db_provider search_provider = search_db.Provider();
+		usr_dlg.Log_many("", "", "search_title.cmd: creating db connection; conn=~{0}", search_provider.ConnectInfo().Raw_of_db_connect());
 		Xodb_tbl_search_title_temp search_temp_tbl = new Xodb_tbl_search_title_temp().Create_table(search_provider);
 		try {
+			usr_dlg.Log_many("", "", "search_title.cmd: starting select;");
 			search_provider.Txn_mgr().Txn_bgn_if_none();
 			page_rdr = wiki.Db_mgr_as_sql().Tbl_page().Select_all(page_db.Provider());
+			usr_dlg.Log_many("", "", "search_title.cmd: other init;");
 			Db_stmt search_temp_stmt = search_temp_tbl.Insert_stmt(search_provider);
 			Xol_lang lang = wiki.Lang();
 			ByteAryBfr bfr = ByteAryBfr.reset_(1024);

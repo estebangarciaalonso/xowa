@@ -83,4 +83,11 @@ public class Xof_ext_ {
 			ttl[i + dot_pos + 1] = ext[i];
 		return ttl;
 	}
+	public static boolean Orig_file_is_img(int v) {	// identifies if orig_file can be used for <img src>; EX: png is valid, but svg, ogv, pdf is not
+		switch (v) {
+			case Id_png: case Id_jpg: case Id_jpeg:
+			case Id_gif: case Id_tif: case Id_tiff:				return true;
+			default:											return false;
+		}
+	}
 }

@@ -27,15 +27,15 @@ public class Xot_defn_tmpl_ {
 			Arg_nde_tkn copy_arg = tkn_mkr.ArgNde(-1, 0);
 			if (orig_arg.KeyTkn_exists()) {
 				Arg_itm_tkn key_tkn = orig_arg.Key_tkn();
-				copy_arg.Key_tkn_(MakeItm(false, ctx, tkn_mkr, src, key_tkn, caller, orig_arg));
+				copy_arg.Key_tkn_(Make_itm(false, ctx, tkn_mkr, src, key_tkn, caller, orig_arg));
 				rv.Args_addByKey(copy_arg.Key_tkn().Dat_ary(), copy_arg);	// NOTE: was originally ByteAry_.Mid(caller.Src(), key_tkn.Dat_bgn(), key_tkn.Dat_end()) which was wrong; caused {{{increment}}} instead of "increment"
 			}
-			copy_arg.Val_tkn_(MakeItm(true, ctx, tkn_mkr, src, orig_arg.Val_tkn(), caller, orig_arg));
+			copy_arg.Val_tkn_(Make_itm(true, ctx, tkn_mkr, src, orig_arg.Val_tkn(), caller, orig_arg));
 			rv.Args_add(copy_arg);
 		}
 		return rv;
 	}
-	private static Arg_itm_tkn MakeItm(boolean val_tkn, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, byte[] src, Arg_itm_tkn orig, Xot_invk caller, Arg_nde_tkn orig_arg) {
+	private static Arg_itm_tkn Make_itm(boolean val_tkn, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, byte[] src, Arg_itm_tkn orig, Xot_invk caller, Arg_nde_tkn orig_arg) {
 		int subs_len = orig.Subs_len();
 		ByteAryBfr arg_bfr = ByteAryBfr.new_();
 		for (int i = 0; i < subs_len; i++)

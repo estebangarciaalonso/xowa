@@ -61,6 +61,11 @@ public class Scrib_lib_mw_tst {
 		fxt.Init_page("{{#invoke:Mod_0|Prc_0|1=val_1}}");
 		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getExpandedArgument, Object_.Ary("current", "1")		, "val_1");			// get 1st by idx, even though idx is String
 	}
+	@Test  public void GetExpandedArgument_numeric_key_2() {	// PURPOSE.FIX: same as above, but for parent context; DATE:2013-09-23
+		fxt.Init_tmpl("{{#invoke:Mod_0|Prc_0|b2}}");	// current
+		fxt.Init_page("{{test|2=b1}}");					// parent
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getExpandedArgument, Object_.Ary("parent", "2")		, "b1");			// get 1st by idx, even though idx is String
+	}
 	@Test  public void GetExpandedArgument_out_of_bounds() {
 		fxt.Init_tmpl("{{#invoke:Mod_0|Prc_0|b1}}");
 		fxt.Init_page("{{test}}");

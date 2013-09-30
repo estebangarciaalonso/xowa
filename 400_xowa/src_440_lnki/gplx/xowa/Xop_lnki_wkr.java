@@ -81,7 +81,9 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 				Arg_itm_tkn name_tkn = arg.Val_tkn();
 				byte[] name_bry = ByteAry_.Mid(src, name_tkn.Dat_bgn(), name_tkn.Dat_end());
 				name_bry = ctx.App().Url_converter_url_ttl().Decode(name_bry);
-				if (Pf_xtn_rel2abs.Rel2abs_ttl(name_bry, 0, name_bry.length)) { // Linker.php|normalizeSubpageLink
+				int name_bry_len = name_bry.length;
+				if (//name_bry_len > 0 && name_bry[0] != Byte_ascii.Slash &&  
+					Pf_xtn_rel2abs.Rel2abs_ttl(name_bry, 0, name_bry_len)) { // Linker.php|normalizeSubpageLink
 					ByteAryBfr tmp_bfr = ctx.App().Utl_bry_bfr_mkr().Get_b512();
 					name_bry = Pf_xtn_rel2abs.Rel2abs(tmp_bfr, name_bry, ctx.Page().Page_ttl().Raw());
 					tmp_bfr.Mkr_rls();

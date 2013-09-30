@@ -65,11 +65,11 @@ class Xof_fsdb_mgr_utl {
 			}
 		}
 	}
-	private Int_2_ref html_size = new Int_2_ref();
+	private Xof_img_size img_size = new Xof_img_size();
 	private void Itm_process(Io_url file_dir, Xog_win_wtr win_wtr, Xof_fsdb_itm itm, ListAdp fsdb_list, Xow_repo_mgr repo_mgr, Xof_url_bldr url_bldr, byte exec_tid) {
 		switch (itm.Rslt_reg()) {
 			case Xof_reg_wkr_.Tid_found_orig:
-				itm.Html_size_calc(html_size, exec_tid);
+				itm.Html_size_calc(img_size, exec_tid);
 				Xof_repo_itm repo = repo_mgr.Repos_get_by_wiki(itm.Orig_wiki()).Trg();
 				Io_url trg_url = url_bldr.Set_trg_file_(itm.Lnki_type_as_mode(), repo, itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), itm.Html_w(), itm.Lnki_thumbtime()).Xto_url();
 				itm.Html_url_(trg_url);
@@ -88,13 +88,13 @@ class Xof_fsdb_mgr_utl {
 		gplx.ios.Io_stream_rdr bin_rdr = gplx.ios.Io_stream_rdr_.file_(html_url);
 		try {
 			bin_rdr.Open();
-			if (itm.Html_is_thumb()) {
-				Fsdb_xtn_thm_itm thm_itm = new Fsdb_xtn_thm_itm();
-				fsdb_mgr.Thm_insert(thm_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext().Id(), itm.Html_w(), itm.Html_h(), itm.Lnki_thumbtime(), Fsdb_xtn_thm_tbl.Modified_null, Fsdb_xtn_thm_tbl.Hash_null, bin_len, bin_rdr);
-			}
-			else {
+			if (itm.File_is_orig()) {
 				Fsdb_xtn_img_itm img_itm = new Fsdb_xtn_img_itm();
 				fsdb_mgr.Img_insert(img_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext().Id(), Fsdb_xtn_thm_tbl.Modified_null, Fsdb_xtn_thm_tbl.Hash_null, bin_len, bin_rdr, itm.Html_w(), itm.Html_h());
+			}
+			else {
+				Fsdb_xtn_thm_itm thm_itm = new Fsdb_xtn_thm_itm();
+				fsdb_mgr.Thm_insert(thm_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext().Id(), itm.Html_w(), itm.Html_h(), itm.Lnki_thumbtime(), Fsdb_xtn_thm_tbl.Modified_null, Fsdb_xtn_thm_tbl.Hash_null, bin_len, bin_rdr);
 			}
 		} finally {bin_rdr.Rls();}
 	}

@@ -71,7 +71,7 @@ public class Xof_xfer_queue {
 	}
 	public void Exec1(Xog_win_wtr wtr, Xow_wiki wiki) {
 		wiki.File_mgr().Fsdb_mgr().Init_by_wiki(wiki);
-		wiki.File_mgr().Fsdb_mgr().Reg_select(wtr, gplx.xowa.files.fsdb.Xof_exec_tid.Tid_wiki_page, Xfer_itms_to_fsdb_itms(list));
+		wiki.File_mgr().Fsdb_mgr().Reg_select(wtr, Xof_exec_tid.Tid_wiki_page, Xfer_itms_to_fsdb_itms(list));
 	}
 	private ListAdp Xfer_itms_to_fsdb_itms(ListAdp list) {
 		ListAdp rv = ListAdp_.new_();

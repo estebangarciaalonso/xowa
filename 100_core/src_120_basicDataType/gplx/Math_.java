@@ -34,6 +34,7 @@ public class Math_ {
 	public static double Asin(double v) {return java.lang.Math.asin(v);}
 	public static double Acos(double v) {return java.lang.Math.acos(v);}
 	public static double Atan(double v) {return java.lang.Math.atan(v);}
+	public static double Sqrt(double v) {return java.lang.Math.sqrt(v);}
 	public static int	Abs(int val)	{return val > 0 ? val : val * -1;}
 	public static long	Abs(long val)	{return val > 0 ? val : val * -1;}
 	public static float	Abs(float val)	{return val > 0 ? val : val * -1;}

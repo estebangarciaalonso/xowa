@@ -69,7 +69,6 @@ public class Xof_reg_fil_tbl {
 	,	", rf_orig_w         integer             NOT NULL"
 	,	", rf_orig_h         integer             NOT NULL"
 	,	", rf_orig_redirect  varchar(1024)       NOT NULL"
-//		,	", rf_thumbs         varchar(1024)       NOT NULL"	// format of "width@thumbtime;"; EX: "220@10;240@12;300"
 	,	");"
 	);
 }

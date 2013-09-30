@@ -283,6 +283,9 @@ public class Xop_lnki_wkr_tst {
 			,	"<a href=\"/wiki/C\">c</a>"
 			);
 	}
+//		@Test  public void Slash() {	// PURPOSE: slash being interpreted as subpage; EX.WP:[[/dev/null]]
+//			fxt.tst_Parse_page_all_str("[[/dev/null]]", "<a href=\"/wiki//dev/null\">/dev/null</a>");
+//		}
 	@Test  public void Subpage_slash() {
 		fxt.Page_ttl_("A");
 		fxt.tst_Parse_page_wiki_str

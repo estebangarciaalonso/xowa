@@ -60,7 +60,7 @@ public class Sqlite_engine_ {
 		return p;
 	}
 	public static final int Stmt_arg_max = 999;		// 999 is max number of variables allowed by sqlite
-	public static final boolean Cfg_read_binary_stream_supported = true;	
+	public static final boolean Cfg_read_binary_stream_supported = false;	
 	public static String X_date_to_str(DateAdp v) {return v == Date_null ? "" : v.XtoStr_fmt_iso_8561();}
 	public static final DateAdp Date_null = null;
 	public static final byte Wildcard_byte = Byte_ascii.Hash;

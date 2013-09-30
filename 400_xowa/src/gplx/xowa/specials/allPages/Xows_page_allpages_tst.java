@@ -124,7 +124,7 @@ class Xows_page_allpages_fxt {
 		if (app == null) {
 			app = Xoa_app_fxt.app_();
 			wiki = Xoa_app_fxt.wiki_tst_(app);
-			Io_mgr._.InitEngine_mem();
+//				Io_mgr._.InitEngine_mem();
 			allpages = wiki.Special_mgr().Page_allpages();
 			GfoInvkAble_.InvkCmd_val(allpages, Xows_page_allpages.Invk_itms_per_page_, 5);
 		}

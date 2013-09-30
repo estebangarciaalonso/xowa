@@ -37,7 +37,7 @@ public class Xog_resizer {
 		if (txt_dim < 25) 	{txt_dif = (25 - txt_dim) / 2;}
 		else				{btn_dif = (txt_dim - 25) / 2;}
 		boolean menu_bar_enabled = app.Gui_mgr().Menu_mgr().Window_mnu_mgr().Get_or_new("main_win").Enabled();
-		int menu_bar_adj = menu_bar_enabled ? 20 : 2;
+		int menu_bar_adj = menu_bar_enabled ? 20 : 2;	// 2, else linux progress bar abuts bottom of screen
 		RectAdp prv_elem_rect = (Op_sys.Cur().Tid_is_wnt() && Op_sys.Cur().Sub_tid() == Op_sys.Sub_tid_win_7) && menu_bar_enabled
 			? Prv_elem_rect_win_7	// NOTE: if windows 7 and menu bar enabled, shift everything up by 1 pixel; else ugly gap at top border of url box; only affects win 7; DATE:2013-08-31
 			: Prv_elem_rect_initial

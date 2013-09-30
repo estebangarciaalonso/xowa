@@ -31,7 +31,7 @@ public class Xoh_file_main_wkr implements ByteAryFmtrArg {
 		trg_repo = meta_itm.Repo_itm(wiki);
 		if (trg_repo == null) trg_repo = wiki.File_mgr().Repo_mgr().Repos_get_at(0).Trg();
 		xfer_itm.Atrs_by_meta(meta_itm, trg_repo, Xof_repo_itm.Thumb_default_null);
-		xfer_itm.Atrs_by_orig(meta_itm.Orig_w(), meta_itm.Orig_h(), Xof_url_.Null_size);
+		xfer_itm.Atrs_by_orig(meta_itm.Orig_w(), meta_itm.Orig_h(), Xof_img_size.Size_null);
 
 		xfer_itm.Trg_repo_idx_(meta_itm.Vrtl_repo());
 
@@ -39,7 +39,7 @@ public class Xoh_file_main_wkr implements ByteAryFmtrArg {
 
 		file_size_bry = ByteAry_.Empty;
 		if (xfer_itm.Atrs_calc_for_html(true)) {
-			long file_size = Io_mgr._.QueryFil(xfer_itm.Trg_file(Xof_repo_itm.Mode_orig, Xof_url_.Null_size_deprecated)).Size();
+			long file_size = Io_mgr._.QueryFil(xfer_itm.Trg_file(Xof_repo_itm.Mode_orig, Xof_img_size.Size_null_deprecated)).Size();
 			file_size_bry = ByteAry_.new_ascii_(gplx.ios.Io_size_.Xto_str(file_size));
 		}
 		else {	// NOTE: commons.wikimedia.org/wiki/File:Solar_Life_Cycle.svg would not load on subsequent views; note that "xfer_itm.Atrs_calc_for_html(true)" resizes image b/c it is .svg; DATE:2013-03-01

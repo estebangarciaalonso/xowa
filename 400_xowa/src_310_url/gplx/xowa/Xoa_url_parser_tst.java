@@ -114,6 +114,11 @@ public class Xoa_url_parser_tst {
 	@Test   public void Anchor_with_slash() {	// PURPOSE: A/b#c/d was not parsing correctly
 		fxt.Reset().Raw_("A/b#c/d").Page_("A/b").Anchor_("c.2Fd").tst_app();
 	}
+	@Test  public void Slash() {
+		fxt.Reset().Raw_("en.wikipedia.org/wiki//A").Wiki_("en.wikipedia.org").Page_("/A").tst_app();
+		fxt.Reset().Raw_("en.wikipedia.org/wiki/A//b").Wiki_("en.wikipedia.org").Page_("A//b").tst_app();
+		fxt.Reset().Raw_("en.wikipedia.org/wiki///A").Wiki_("en.wikipedia.org").Page_("//A").tst_app();
+	}
 }
 class Xoa_url_parser_chkr implements Tst_chkr {
 	Xoa_url_parser parser;

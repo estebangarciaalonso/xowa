@@ -61,7 +61,7 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 		}
 	}	private Xog_search_suggest_cmd cur_cmd; byte[] last_search_bry;
 	public void Notify() {// EX: receiveSuggestions('search_word', ['result_1', 'result_2']);
-		synchronized (thread_guard) {
+			// synchronized (thread_guard) NOTE: never use synchronized here; will synchronized search; DATE:2013-09-24
 			byte[] search_bry = cur_cmd.Search_bry();
 			if (!ByteAry_.Eq(search_bry, last_search_bry)) {
 				if (log_enabled) app.Usr_dlg().Log_many("", "", "search does not match?: expd=~{0} actl=~{1}", String_.new_utf8_(last_search_bry), String_.new_utf8_(search_bry));
@@ -82,7 +82,6 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 			wtr.Add_paren_end_semic();
 			if (log_enabled) app.Usr_dlg().Log_many("", "", "search end: word=~{0}", String_.new_utf8_(search_bry));
 			main_win.Html_box().Html_js_eval_script(wtr.Xto_str_and_clear());
-		}
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_search_async))			Search_async();

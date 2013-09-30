@@ -20,6 +20,7 @@ import gplx.xowa.dbs.tbls.*; import gplx.xowa.files.fsdb.*;
 public class Xof_qry_wkr_xowa implements Xof_qry_wkr {
 	private Xof_wiki_finder wiki_finder;
 	private Xof_img_meta_wkr img_meta_wkr;
+	private int qry_count, qry_count_max = 1000;
 	public Xof_qry_wkr_xowa(Xof_wiki_finder wiki_finder, Xof_img_meta_wkr img_meta_wkr) {
 		this.wiki_finder = wiki_finder;
 		this.img_meta_wkr = img_meta_wkr;
@@ -28,6 +29,11 @@ public class Xof_qry_wkr_xowa implements Xof_qry_wkr {
 	public boolean Qry_file(Xof_fsdb_itm itm) {
 		byte[] ttl = itm.Lnki_ttl();
 		Xoa_page page = wiki_finder.Get_page(Xow_ns_.Id_file, ttl);
+		++qry_count;
+		if (qry_count >= qry_count_max) {
+			page.Wiki().App().Reset_all();
+			qry_count = 0;
+		}
 		if (page.Missing()) return false;	// ttl not found in wikis; exit;
 		Xow_wiki wiki = page.Wiki();
 		itm.Orig_wiki_(wiki.Domain_bry());

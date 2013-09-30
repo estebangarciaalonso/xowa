@@ -20,17 +20,18 @@ import gplx.dbs.*;
 public class Xodb_image_tbl {
 	public Xodb_image_tbl Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); return this;}
 	public Xodb_image_tbl Create_index(Db_provider p) {Sqlite_engine_.Idx_create(p, Idx_img_name); return this;}
-	public Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_img_name, Fld_img_size, Fld_img_width, Fld_img_height, Fld_img_bits);}
-	public void Insert(Db_stmt stmt, byte[] ttl, int size, int w, int h, int bits) {
+	public Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_img_name, Fld_img_media_type, Fld_img_size, Fld_img_width, Fld_img_height, Fld_img_bits);}
+	public void Insert(Db_stmt stmt, byte[] ttl, byte[] media_type, int size, int w, int h, int bits) {
 		stmt.Clear()
 		.Val_str_by_bry_(ttl)
+		.Val_str_by_bry_(media_type)
 		.Val_int_(size)
 		.Val_int_(w)
 		.Val_int_(h)
 		.Val_int_(bits)
 		.Exec_insert();
 	}
-	public static Db_stmt Select_ttl_stmt(Db_provider p) {return Db_stmt_.new_select_(p, Tbl_name, String_.Ary(Fld_img_name), Fld_img_name, Fld_img_size, Fld_img_width, Fld_img_height, Fld_img_bits);}
+	public static Db_stmt Select_ttl_stmt(Db_provider p) {return Db_stmt_.new_select_(p, Tbl_name, String_.Ary(Fld_img_name), Fld_img_media_type, Fld_img_name, Fld_img_size, Fld_img_width, Fld_img_height, Fld_img_bits);}
 	public static Xodb_image_itm Select_itm(Db_stmt stmt, String ttl) {
 		DataRdr rdr = DataRdr_.Null;
 		try {
@@ -50,10 +51,14 @@ public class Xodb_image_tbl {
 		rv.Bits_(rdr.ReadByte(Fld_img_bits));
 		return rv;
 	}
-	public static final String Tbl_name = "image", Fld_img_name = "img_name", Fld_img_size = "img_size", Fld_img_width = "img_width", Fld_img_height = "img_height", Fld_img_bits = "img_bits";
+	public static final String Tbl_name = "image"
+	, Fld_img_name = "img_name", Fld_img_media_type = "img_media_type"
+	, Fld_img_size = "img_size", Fld_img_width = "img_width", Fld_img_height = "img_height", Fld_img_bits = "img_bits"
+	;
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS image"
 	,	"( img_name        varchar(255)    NOT NULL -- varbinary(255)"
+	,	", img_media_type  varchar(64)     NOT NULL -- enum('UNKNOWN','BITMAP','DRAWING','AUDIO','VIDEO','MULTIMEDIA','OFFICE','TEXT','EXECUTABLE','ARCHIVE')"
 	,	", img_size        integer         NOT NULL -- int(8) unsigned"
 	,	", img_width       integer         NOT NULL -- int(5)"
 	,	", img_height      integer         NOT NULL -- int(5)"

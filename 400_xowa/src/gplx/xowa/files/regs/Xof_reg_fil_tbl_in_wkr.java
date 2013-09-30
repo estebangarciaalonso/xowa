@@ -50,7 +50,7 @@ class Xof_reg_fil_tbl_in_wkr extends gplx.xowa.dbs.tbls.Xodb_in_wkr_base {
 class Xof_reg_fil_tbl_evaluator {
 	public static void Rdr_done(byte exec_tid, ListAdp itms_all, OrderedHash itms_by_ttl, Xof_url_bldr url_bldr, Xow_repo_mgr repo_mgr) {
 		int len = itms_all.Count();
-		Int_2_ref html_size = new Int_2_ref();
+		Xof_img_size img_size = new Xof_img_size();
 		for (int i = 0; i < len; i++) {
 			Xof_fsdb_itm fsdb_itm = (Xof_fsdb_itm)itms_all.FetchAt(i);
 			byte[] fsdb_itm_ttl = fsdb_itm.Lnki_ttl();
@@ -71,7 +71,7 @@ class Xof_reg_fil_tbl_evaluator {
 			fsdb_itm.Rslt_reg_(Xof_reg_wkr_.Tid_found_orig);
 			if (ByteAry_.Len_gt_0(regy_itm.Orig_redirect()))	// redirect exists;
 				fsdb_itm.Init_by_redirect(regy_itm.Orig_redirect());
-			fsdb_itm.Html_size_calc(html_size, exec_tid);
+			fsdb_itm.Html_size_calc(img_size, exec_tid);
 			Io_url html_url = url_bldr.Set_trg_file_(fsdb_itm.Lnki_type_as_mode(), repo, fsdb_itm.Lnki_ttl(), fsdb_itm.Lnki_md5(), fsdb_itm.Lnki_ext(), fsdb_itm.Html_w(), fsdb_itm.Lnki_thumbtime()).Xto_url();
 			fsdb_itm.Html_url_(html_url);
 			if (!Io_mgr._.ExistsFil(html_url))
@@ -79,13 +79,17 @@ class Xof_reg_fil_tbl_evaluator {
 			// build url; check if exists;
 		}
 	}
-//		private boolean Check_or_add(Io_url url) {
-//			if (url_regy.Has(url.Raw())) return true;	// in url_hash; return true;
-//			if (Io_mgr._.ExistsFil(url)) {				// exists on fs
-//				url_regy.Add(url.Raw(), url.Raw());		// dump item in url hash
-//				return true;
-//			}
-//			else										// not on fs; return false;
-//				return false;
-//		}
+}
+class Io_url_exists_mgr {
+	private gplx.cache.Gfo_cache_mgr_obj cache_mgr = new gplx.cache.Gfo_cache_mgr_obj();
+	public Io_url_exists_mgr() {
+		cache_mgr.Compress_max_(Int_.MaxValue);
+	}
+	public boolean Has(Io_url url) {
+		Object rv_obj = cache_mgr.Get_or_null(url.Raw());
+		if (rv_obj != null) return ((BoolRef)rv_obj).Val(); // cached val exists; use it
+		boolean exists = Io_mgr._.ExistsFil(url);
+		cache_mgr.Add(url.Raw(), BoolRef.new_(exists));
+		return exists;
+	}
 }

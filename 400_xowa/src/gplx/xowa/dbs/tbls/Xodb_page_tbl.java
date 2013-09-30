@@ -111,16 +111,23 @@ public class Xodb_page_tbl {
 					++rslt_idx;
 				}
 			}
-			if (rslt_nxt != null)
+			if (rslt_nxt != null && nxt_itm != null)	// occurs when range is empty; EX: "Module:A" in simplewikibooks
 				rslt_nxt.Copy(nxt_itm);
-			if (fetch_prv_item) {
+			if (fetch_prv_item) {						// NOTE: Special:AllPages passes in true, but Search_suggest passes in false
 				if (cancelable.Canceled()) return;
 				rdr = Load_ttls_starting_with_rdr(ns.Id(), key, include_redirects, max_results, min_page_len, browse_len, false, false);
 				Xodb_page prv_itm = new Xodb_page();
+				boolean found = false;
 				while (rdr.MoveNextPeer()) {
 					Read_page(prv_itm, rdr);
+					found = true;
 				}
-				rslt_prv.Copy(prv_itm);
+				if (found)
+					rslt_prv.Copy(prv_itm);
+				else {	// at beginning of range, so no items found; EX: "Module:A" is search, but 1st Module is "Module:B"
+					if (rslt_list.Count() > 0)	// use 1st item
+						rslt_prv.Copy((Xodb_page)rslt_list.FetchAt(0));
+				}
 			}
 		}
 		finally {rdr.Rls();}

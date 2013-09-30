@@ -24,9 +24,7 @@ public class DecimalAdp implements CompareAble {
 	public int compareTo(Object obj) {DecimalAdp comp = (DecimalAdp)obj; return under.compareTo(comp.under);}		
 
 		protected DecimalAdp(BigDecimal v) {this.under = v;} BigDecimal under;
-	protected DecimalAdp(int v) {
-		this.under = new BigDecimal(v);
-		}
+	protected DecimalAdp(int v) {this.under = new BigDecimal(v);}
 	public String XtoStr() {
 		BigDecimal tmp = under;
 		if (tmp.scale() > 14) tmp = tmp.setScale(14, RoundingMode.DOWN);	// NOTE: setting to 14 to match PHP/C# values more closely; RoundingMode.Down for same reason; see E, Pi tests 
@@ -39,10 +37,8 @@ public class DecimalAdp implements CompareAble {
 	public BigDecimal XtoDecimal() {return under;}
 	public long XtoLong_Mult1000() {return under.movePointRight(3).longValue();}
 	public int Fraction1000() {return  (int)(under.movePointRight(3).floatValue() % 1000);}
-	public double XtoDouble() {return (double)under.doubleValue();}
-	public int XtoInt() {
-		return (int)under.doubleValue();
-		}
+	public double XtoDouble() {return under.doubleValue();}
+	public int XtoInt() {return (int)under.doubleValue();}
 	public long XtoLong() {return (long)under.doubleValue();}
 	public DecimalAdp Op_add(DecimalAdp v) 				{return new DecimalAdp(under.add(v.under, DecimalAdp_.Gplx_rounding_context));}
 	public DecimalAdp Op_subtract(DecimalAdp v) 		{return new DecimalAdp(under.subtract(v.under, DecimalAdp_.Gplx_rounding_context));}
@@ -50,6 +46,8 @@ public class DecimalAdp implements CompareAble {
 	public DecimalAdp Op_mult(double v) 				{return new DecimalAdp(under.multiply(new BigDecimal(v, DecimalAdp_.Gplx_rounding_context)));}
 	public DecimalAdp Op_mult(long v)					{return new DecimalAdp(under.multiply(new BigDecimal(v)));}
 	public DecimalAdp Op_divide(DecimalAdp v)			{return new DecimalAdp(under.divide(v.under, DecimalAdp_.Gplx_rounding_context));}
+	public DecimalAdp Op_mod(DecimalAdp v)				{return new DecimalAdp(under.remainder(v.under, DecimalAdp_.Gplx_rounding_context));}
+	public DecimalAdp Op_sqrt()							{return new DecimalAdp(new BigDecimal(Math_.Sqrt(under.doubleValue())));}
 	public DecimalAdp Op_abs()							{return new DecimalAdp(under.abs(DecimalAdp_.Gplx_rounding_context));}
 	public DecimalAdp Op_pow(int v)						{return new DecimalAdp(under.pow(v, DecimalAdp_.Gplx_rounding_context));}
 	public DecimalAdp Op_truncate_decimal() 			{return new DecimalAdp(under.intValue());}

@@ -15,11 +15,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa; import gplx.*;
-class Pf_xtn_expr_shunter {
+package gplx.xowa.xtns.pfuncs.exprs; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.pfuncs.*;
+public class Pfunc_expr_shunter {
 	ByteTrieMgr_fast trie = expression_();
-	ValStack val_stack = new ValStack();
-	PrcStack prc_stack = new PrcStack();
+	Val_stack val_stack = new Val_stack();
+	Func_tkn_stack prc_stack = new Func_tkn_stack();
 	public static final DecimalAdp Null_rslt = null;
 	public ByteAryBfr Err() {return err_bfr;} ByteAryBfr err_bfr = ByteAryBfr.new_();
 	public DecimalAdp Err_set(Xop_ctx ctx, int msgId) {return Err_set(ctx, msgId, ByteAry_.Empty);}
@@ -36,7 +36,7 @@ class Pf_xtn_expr_shunter {
 	public DecimalAdp Evaluate(Xop_ctx ctx, byte[] src) {	// REF.MW: Expr.php
 		int src_len = src.length; if (src_len == 0) return Null_rslt;
 		int cur_pos = 0; byte cur_byt = src[0];
-		boolean mode_expr = true; PrcTkn prv_prc = null;
+		boolean mode_expr = true; Func_tkn prv_prc = null;
 		val_stack.Clear(); prc_stack.Clear();
 		while (true) {
 			// can't think of a way for this to happen; note that operators will automatically push values/operators off stack that are lower; can't get up to 100 
@@ -54,11 +54,11 @@ class Pf_xtn_expr_shunter {
 				return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unrecognised_word, ByteAry_.Mid(src, bgn_pos, cur_pos));
 			}
 			else {
-				ExprTkn t = (ExprTkn)o;
+				Expr_tkn t = (Expr_tkn)o;
 				cur_pos = trie.Match_pos();
-				switch (t.TypeId()) {
-					case ExprTkn_.TypeId_space: break;
-					case ExprTkn_.TypeId_number:
+				switch (t.Tid()) {
+					case Expr_tkn_.Tid_space: break;
+					case Expr_tkn_.Tid_number:
 						if (!mode_expr) return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unexpected_number);
 						int numBgn = cur_pos - 1;
 						boolean loop = true;
@@ -97,19 +97,19 @@ class Pf_xtn_expr_shunter {
 						val_stack.Push(num);
 						mode_expr = false;
 						break;
-					case ExprTkn_.TypeId_paren_lhs:
+					case Expr_tkn_.Tid_paren_lhs:
 						if (!mode_expr) return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unexpected_operator, ByteAry_.new_ascii_("("));
-						prc_stack.Push((PrcTkn)t);
+						prc_stack.Push((Func_tkn)t);
 						break;
-					case ExprTkn_.TypeId_operator:
-						PrcTkn cur_prc = (PrcTkn)t;
+					case Expr_tkn_.Tid_operator:
+						Func_tkn cur_prc = (Func_tkn)t;
 						if (Byte_ascii.Is_ltr(cur_byt)) {
 							int nxt_pos = Xop_lxr_.FindNonLetter(src, cur_pos, src_len);
 							if (nxt_pos > cur_pos)
 								return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unrecognised_word, ByteAry_.Mid(src, bgn_pos, nxt_pos));
 						}
 						if (mode_expr) {	// NOTE: all the GetAlts have higher precedence; "break;" need to skip evaluation below else will fail for --1
-							PrcTkn alt_prc = cur_prc.GetAlt();
+							Func_tkn alt_prc = cur_prc.GetAlt();
 //								if (alt_prc == cur_prc && cur_prc.ArgCount() > 1) return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_err__unexpected_operator);
 							prc_stack.Push(alt_prc);
 							break;
@@ -124,14 +124,14 @@ class Pf_xtn_expr_shunter {
 						prc_stack.Push(cur_prc);
 						mode_expr = true;
 						break;
-					case ExprTkn_.TypeId_paren_rhs: {
+					case Expr_tkn_.Tid_paren_rhs: {
 						prv_prc = prc_stack.GetLast();
-						while (prv_prc != null && prv_prc.TypeId() != ExprTkn_.TypeId_paren_lhs) {
+						while (prv_prc != null && prv_prc.Tid() != Expr_tkn_.Tid_paren_lhs) {
 							if (!prv_prc.Calc(ctx, this, val_stack)) return Null_rslt;
 							prc_stack.Pop();
 							prv_prc = prc_stack.GetLast();
 						}
-						if (prv_prc == ParenBgnTkn._)
+						if (prv_prc == Paren_bgn_tkn._)
 							prc_stack.Pop();
 						else
 							return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unexpected_closing_bracket);
@@ -144,68 +144,70 @@ class Pf_xtn_expr_shunter {
 			cur_byt = src[cur_pos];
 		}
 		while (prc_stack.Len() > 0) {
-			PrcTkn cur_prc = prc_stack.Pop();
-			if (cur_prc.TypeId() == ExprTkn_.TypeId_paren_lhs) return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unclosed_bracket);
+			Func_tkn cur_prc = prc_stack.Pop();
+			if (cur_prc.Tid() == Expr_tkn_.Tid_paren_lhs) return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unclosed_bracket);
 			if (!cur_prc.Calc(ctx, this, val_stack)) return Null_rslt;
 		}
 		return val_stack.Len() == 0 ? Null_rslt : val_stack.Pop();	// HACK: for [[List of Premiers of South Australia by time in office]] and {{#expr:\n{{age in days
 	}
 	private static ByteTrieMgr_fast expression_() {
 		ByteTrieMgr_fast rv = ByteTrieMgr_fast.ci_();
-		Trie_add(rv, new WsTkn(Byte_ascii.Space));
-		Trie_add(rv, new WsTkn(Byte_ascii.Tab));
-		Trie_add(rv, new WsTkn(Byte_ascii.NewLine));
-		Trie_add(rv, ParenBgnTkn._);
-		Trie_add(rv, ParenEndTkn._);
-		Trie_add(rv, new PrcTkn_plus("+"));
-		Trie_add(rv, new PrcTkn_minus("-"));
-		Trie_add(rv, new PrcTkn_minus(Char_.XtoStr((char)8722)));
-		Trie_add(rv, new PrcTkn_times("*"));
-		Trie_add(rv, new PrcTkn_divide("/"));
-		Trie_add(rv, new PrcTkn_divide("div"));
-		Trie_add(rv, new PrcTkn_pow("^"));
-		Trie_add(rv, new PrcTkn_mod("mod"));
-		Trie_add(rv, new PrcTkn_eq("="));
-		Trie_add(rv, new PrcTkn_neq("<>"));
-		Trie_add(rv, new PrcTkn_neq("!="));
-		Trie_add(rv, new PrcTkn_gt(">"));
-		Trie_add(rv, new PrcTkn_lt("<"));
-		Trie_add(rv, new PrcTkn_gte(">="));
-		Trie_add(rv, new PrcTkn_lte("<="));
-		Trie_add(rv, new PrcTkn_and("and"));
-		Trie_add(rv, new PrcTkn_or("or"));
-		Trie_add(rv, new PrcTkn_not("not"));
-		Trie_add(rv, new PrcTkn_e_op("e"));
-		Trie_add(rv, new PrcTkn_pi("pi"));
-		Trie_add(rv, new PrcTkn_ceil("ceil"));
-		Trie_add(rv, new PrcTkn_trunc("trunc"));
-		Trie_add(rv, new PrcTkn_floor("floor"));
-		Trie_add(rv, new PrcTkn_abs("abs"));
-		Trie_add(rv, new PrcTkn_exp("exp"));
-		Trie_add(rv, new PrcTkn_ln("ln"));
-		Trie_add(rv, new PrcTkn_sin("sin"));
-		Trie_add(rv, new PrcTkn_cos("cos"));
-		Trie_add(rv, new PrcTkn_tan("tan"));
-		Trie_add(rv, new PrcTkn_asin("asin"));
-		Trie_add(rv, new PrcTkn_acos("acos"));
-		Trie_add(rv, new PrcTkn_atan("atan"));
-		Trie_add(rv, new PrcTkn_round("round"));
-		Trie_add(rv, new NumTkn(0));
-		Trie_add(rv, new NumTkn(1));
-		Trie_add(rv, new NumTkn(2));
-		Trie_add(rv, new NumTkn(3));
-		Trie_add(rv, new NumTkn(4));
-		Trie_add(rv, new NumTkn(5));
-		Trie_add(rv, new NumTkn(6));
-		Trie_add(rv, new NumTkn(7));
-		Trie_add(rv, new NumTkn(8));
-		Trie_add(rv, new NumTkn(9));
-		Trie_add(rv, new DotTkn());
-		Trie_add(rv, new PrcTkn_gt("&gt;"));
-		Trie_add(rv, new PrcTkn_lt("&lt;"));
-		Trie_add(rv, new PrcTkn_minus("&minus;"));
+		Trie_add(rv, new Ws_tkn(Byte_ascii.Space));
+		Trie_add(rv, new Ws_tkn(Byte_ascii.Tab));
+		Trie_add(rv, new Ws_tkn(Byte_ascii.NewLine));
+		Trie_add(rv, Paren_bgn_tkn._);
+		Trie_add(rv, Paren_end_tkn._);
+		Trie_add(rv, new Func_tkn_plus("+"));
+		Trie_add(rv, new Func_tkn_minus("-"));
+		Trie_add(rv, new Func_tkn_minus(Char_.XtoStr((char)8722)));
+		Trie_add(rv, new Func_tkn_times("*"));
+		Trie_add(rv, new Func_tkn_divide("/"));
+		Trie_add(rv, new Func_tkn_divide("div"));
+		Trie_add(rv, new Func_tkn_pow("^"));
+		Trie_add(rv, new Func_tkn_mod("mod"));
+		Trie_add(rv, new Func_tkn_eq("="));
+		Trie_add(rv, new Func_tkn_neq("<>"));
+		Trie_add(rv, new Func_tkn_neq("!="));
+		Trie_add(rv, new Func_tkn_gt(">"));
+		Trie_add(rv, new Func_tkn_lt("<"));
+		Trie_add(rv, new Func_tkn_gte(">="));
+		Trie_add(rv, new Func_tkn_lte("<="));
+		Trie_add(rv, new Func_tkn_and("and"));
+		Trie_add(rv, new Func_tkn_or("or"));
+		Trie_add(rv, new Func_tkn_not("not"));
+		Trie_add(rv, new Func_tkn_e_op("e"));
+		Trie_add(rv, new Func_tkn_pi("pi"));
+		Trie_add(rv, new Func_tkn_ceil("ceil"));
+		Trie_add(rv, new Func_tkn_trunc("trunc"));
+		Trie_add(rv, new Func_tkn_floor("floor"));
+		Trie_add(rv, new Func_tkn_abs("abs"));
+		Trie_add(rv, new Func_tkn_exp("exp"));
+		Trie_add(rv, new Func_tkn_ln("ln"));
+		Trie_add(rv, new Func_tkn_sin("sin"));
+		Trie_add(rv, new Func_tkn_cos("cos"));
+		Trie_add(rv, new Func_tkn_tan("tan"));
+		Trie_add(rv, new Func_tkn_asin("asin"));
+		Trie_add(rv, new Func_tkn_acos("acos"));
+		Trie_add(rv, new Func_tkn_atan("atan"));
+		Trie_add(rv, new Func_tkn_round("round"));
+		Trie_add(rv, new Func_tkn_fmod("fmod"));
+		Trie_add(rv, new Func_tkn_sqrt("sqrt"));
+		Trie_add(rv, new Num_tkn(0));
+		Trie_add(rv, new Num_tkn(1));
+		Trie_add(rv, new Num_tkn(2));
+		Trie_add(rv, new Num_tkn(3));
+		Trie_add(rv, new Num_tkn(4));
+		Trie_add(rv, new Num_tkn(5));
+		Trie_add(rv, new Num_tkn(6));
+		Trie_add(rv, new Num_tkn(7));
+		Trie_add(rv, new Num_tkn(8));
+		Trie_add(rv, new Num_tkn(9));
+		Trie_add(rv, new Dot_tkn());
+		Trie_add(rv, new Func_tkn_gt("&gt;"));
+		Trie_add(rv, new Func_tkn_lt("&lt;"));
+		Trie_add(rv, new Func_tkn_minus("&minus;"));
 		return rv;
 	}
-	private static void Trie_add(ByteTrieMgr_fast trie, ExprTkn tkn) {trie.Add(tkn.Val_ary(), tkn);}
-	public static final Pf_xtn_expr_shunter _ = new Pf_xtn_expr_shunter(); Pf_xtn_expr_shunter() {}
+	private static void Trie_add(ByteTrieMgr_fast trie, Expr_tkn tkn) {trie.Add(tkn.Val_ary(), tkn);}
+	public static final Pfunc_expr_shunter _ = new Pfunc_expr_shunter(); Pfunc_expr_shunter() {}
 }

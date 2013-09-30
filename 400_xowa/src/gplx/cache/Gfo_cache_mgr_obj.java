@@ -16,32 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.cache; import gplx.*;
-public class Gfo_cache_mgr {
-	private OrderedHash hash = OrderedHash_.new_();
-	public int Compress_max() {return compress_max;} public void Compress_max_(int v) {compress_max = v;} private int compress_max = 16;
-	public int Compress_to() {return compress_to;} public void Compress_to_(int v) {compress_to = v;} private int compress_to = 8;
-	public Object Get_val_or_null(Object key) {
-		Object rv_obj = hash.Fetch(key);
-		return rv_obj == null ? null : ((Gfo_cache_itm)rv_obj).Val();
-	}
-	public void Add(Object key, Object val) {
-		if (hash.Count() >= compress_max) Compress(); 
-		Gfo_cache_itm itm = new Gfo_cache_itm(key, val); 
-		hash.Add(key, itm);
-	}
-	public void Compress() {
-		hash.SortBy(Gfo_cache_itm_comparer.Touched_asc);
-		int del_len = hash.Count() - compress_to;
-		ListAdp del_list = ListAdp_.new_();
-		for (int i = 0; i < del_len; i++) {
-			Gfo_cache_itm itm = (Gfo_cache_itm)hash.FetchAt(i);
-			del_list.Add(itm);
-		}
-		for (int i = 0; i < del_len; i++) {
-			Gfo_cache_itm itm = (Gfo_cache_itm)del_list.FetchAt(i);
-			hash.Del(itm.Key());
-		}
-	}
+public class Gfo_cache_mgr_obj extends Gfo_cache_mgr_base {
+	public Object Get_or_null(Object key) {return Base_get_or_null(key);}
+	public void Add(Object key, Object val) {Base_add(key, val);}
 }
 class Gfo_cache_itm {
 	public Gfo_cache_itm(Object key, Object val) {this.key = key; this.val = val; this.Touched_update();}

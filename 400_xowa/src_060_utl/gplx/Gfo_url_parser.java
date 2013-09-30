@@ -196,7 +196,8 @@ public class Gfo_url_parser {
 					loop = false;
 					break;
 				case Byte_ascii.Slash:
-					Segs_add(src, slash_prv, pos);
+					if (slash_prv != pos)	// HACK: handles urls of form "/wiki//A"; treat 2nd / as part of "/A"
+						Segs_add(src, slash_prv, pos);
 					break;
 				default:
 					break;

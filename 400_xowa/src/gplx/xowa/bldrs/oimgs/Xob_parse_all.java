@@ -119,7 +119,7 @@ public class Xob_parse_all extends Xob_itm_basic_base implements Xob_cmd, GfoInv
 			else if ((exec_count % progress_interval) == 0)
 				usr_dlg.Prog_many("", "", "parse progress: count=~{0} last=~{1} ns=~{2}", exec_count, String_.new_utf8_(ttl), ns.Id());
 			if ((exec_count % select_interval) == 0)
-				Free();
+				ctx.App().Reset_all();
 			if (ctx.App().Tmpl_result_cache().Count() > 50000) 
 				ctx.App().Tmpl_result_cache().Clear();
 		}
@@ -139,12 +139,6 @@ public class Xob_parse_all extends Xob_itm_basic_base implements Xob_cmd, GfoInv
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_end() {}
 	public void Cmd_print() {}		
-	private void Free() {
-		ctx.App().Free_mem(true);
-		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_invalidate();
-		Env_.GarbageCollect();
-//			Tfds.Write(ctx.App().Tmpl_result_cache().Count());
-	}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_prv_ttl_))				prv_ttl = m.ReadBry("v");
 		else if	(ctx.Match(k, Invk_commit_interval_))		commit_interval = m.ReadInt("v");

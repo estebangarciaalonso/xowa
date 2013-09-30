@@ -35,8 +35,8 @@ public class Xof_fsdb_itm {
 	}
 	public void Lnki_type_(byte v) {
 		this.lnki_type = v;
-		this.html_is_thumb = Xop_lnki_type.Id_is_thumb_like(lnki_type) || lnki_w != Xop_lnki_tkn.Width_null || lnki_h != Xop_lnki_tkn.Height_null;
-		this.lnki_type_as_mode = html_is_thumb ? Xof_repo_itm.Mode_thumb : Xof_repo_itm.Mode_orig;
+		this.file_is_orig = !(Xop_lnki_type.Id_is_thumb_like(lnki_type) || lnki_w != Xop_lnki_tkn.Width_null || lnki_h != Xop_lnki_tkn.Height_null);
+		this.lnki_type_as_mode = file_is_orig ? Xof_repo_itm.Mode_orig : Xof_repo_itm.Mode_thumb;
 	} 
 	public Xof_fsdb_itm	Lnki_ttl_(byte[] v) {
 		lnki_ttl = v;
@@ -63,10 +63,11 @@ public class Xof_fsdb_itm {
 	public int Html_w() {return html_w;} private int html_w;
 	public int Html_h() {return html_h;} private int html_h;
 	public Xof_fsdb_itm Html_size_(int w, int h) {html_w = w; html_h = h; return this;} 
-	public boolean	Html_is_thumb() {return html_is_thumb;} private boolean html_is_thumb;
-	public void Html_size_calc(Int_2_ref rslt, byte exec_tid) {
-		Xof_xfer_itm_.Calc_xfer_size(rslt, Xof_img_mgr.Thumb_w_img_const, orig_w, orig_h, lnki_w, lnki_h, Xop_lnki_type.Id_is_thumb_like(lnki_type), lnki_upright, lnki_ext, exec_tid);
-		html_w = rslt.Val_0(); html_h = rslt.Val_1();
+	public boolean File_is_orig() {return file_is_orig;} public Xof_fsdb_itm File_is_orig_(boolean v) {file_is_orig = v; return this;} private boolean file_is_orig;
+	public int File_w() {return file_w;} private int file_w;
+	public void Html_size_calc(Xof_img_size img_size, byte exec_tid) {
+		img_size.Html_size_calc(exec_tid, lnki_w, lnki_h, lnki_type, lnki_upright, lnki_ext.Id(), orig_w, orig_h, Xof_img_size.Thumb_width_img);
+		html_w = img_size.Html_w(); html_h = img_size.Html_h(); file_w = img_size.File_w();
 	}
 	public int Html_ids_len() {return html_ids_len;} private int html_ids_len;
 	public int Html_ids_get(int idx) {

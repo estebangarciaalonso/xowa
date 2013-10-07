@@ -45,4 +45,16 @@ public class Xof_qry_wkr_xowa implements Xof_qry_wkr {
 		itm.Orig_size_(img.Width(), img.Height());
 		return true;
 	}
+	private Xof_wiki_finder_itm finder_itm = new Xof_wiki_finder_itm();
+	public boolean Qry_file2(Xof_fsdb_itm itm) {
+		byte[] ttl = itm.Lnki_ttl();
+		if (!wiki_finder.Find_page(finder_itm, Xow_ns_.Id_file, ttl)) return false; // ttl not found in wikis; exit;
+		itm.Orig_wiki_(finder_itm.Orig_wiki().Domain_bry());
+		if (finder_itm.Orig_redirect() != null)
+			itm.Orig_redirect_(finder_itm.Orig_redirect().Full_txt());		
+		Xodb_image_itm img = img_meta_wkr.Find(finder_itm.Orig_wiki(), ttl);
+		if (img == Xodb_image_itm.Null) return false;	// ttl not found in image db; exit
+		itm.Orig_size_(img.Width(), img.Height());
+		return true;
+	}
 }

@@ -581,8 +581,8 @@ class Io_stream_rdr_http implements Io_stream_rdr {
 		if (prog_dlg != null) {
 			xfer_fmt.Term();
 		}
+		if (session_fil == null) session_fil = prog_dlg.Log_wtr().Session_dir().GenSubFil("internet.txt");
 		if (read_failed) {
-			if (session_fil == null) session_fil = prog_dlg.Log_wtr().Session_dir().GenSubFil("internet.txt");
 		}
 		else {
 			prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download pass: src='~{0}' trg='~{1}'", src_str, xrg.Trg().Raw());

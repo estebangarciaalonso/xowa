@@ -53,7 +53,7 @@ public class Fsdb_db_atr_fil implements RlsAble {
 	public Fsdb_xtn_thm_itm Thm_select(int fil_id, int width, int thumbtime) {
 		return Fsdb_xtn_thm_tbl.Select_itm_by_fil_width(this.Provider(), fil_id, width, thumbtime);
 	}
-	public int Img_insert(Fsdb_xtn_img_itm rv, String dir, String fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr, int img_w, int img_h, int bin_db_id) {
+	public int Img_insert(Fsdb_xtn_img_itm rv, String dir, String fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		int dir_id = Dir_id__get_by_mem_or_db(dir);
 		int fil_id = Fsdb_fil_tbl.Select_itm_by_name(provider, dir_id, fil).Id();
 		if (fil_id == 0) {
@@ -63,15 +63,15 @@ public class Fsdb_db_atr_fil implements RlsAble {
 		Fsdb_xtn_img_tbl.Insert(provider, fil_id, img_w, img_h);
 		return fil_id;
 	}
-	public int Thm_insert(Fsdb_xtn_thm_itm rv, String dir, String fil, int ext_id, int width, int height, int thumbtime, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+	public int Thm_insert(Fsdb_xtn_thm_itm rv, String dir, String fil, int ext_id, int thm_w, int thm_h, int thumbtime, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		int dir_id = Dir_id__get_by_mem_or_db(dir);
 		int fil_id = Fsdb_fil_tbl.Select_itm_by_name(provider, dir_id, fil).Id();
 		if (fil_id == 0) {
 			fil_id = Fsdb_cfg_tbl.Update_next_id(provider);
-			Fsdb_fil_tbl.Insert(provider, fil_id, dir_id, fil, Fsdb_xtn_tid_.Tid_thm, ext_id, bin_len, modified, hash, Fsdb_bin_tbl.Db_bin_id_null);
+			Fsdb_fil_tbl.Insert(provider, fil_id, dir_id, fil, Fsdb_xtn_tid_.Tid_thm, ext_id, bin_len, modified, hash, bin_db_id);
 		}
 		int thm_id = Fsdb_cfg_tbl.Update_next_id(provider);
-		Fsdb_xtn_thm_tbl.Insert(provider, thm_id, fil_id, width, height, thumbtime, bin_db_id, bin_len, modified, hash);
+		Fsdb_xtn_thm_tbl.Insert(provider, thm_id, fil_id, thm_w, thm_h, thumbtime, bin_db_id, bin_len, modified, hash);
 		rv.Id_(thm_id).Owner_(fil_id).Dir_id_(dir_id);
 		return thm_id;
 	}
@@ -97,10 +97,17 @@ public class Fsdb_db_atr_fil implements RlsAble {
 	}
 	private int Dir_id__get_by_mem_or_db(String dir) {
 		int rv = -1;
+		Db_provider p = this.Provider();
 		Object rv_obj = dir_cache.Get_or_null(dir);
 		if (rv_obj == null) {
-			rv = Fsdb_cfg_tbl.Update_next_id(this.Provider());
-			Fsdb_dir_tbl.Insert(this.Provider(), rv, dir, 0);	// 0: always assume root owner
+			Fsdb_dir_itm itm = Fsdb_dir_tbl.Select_itm(p, dir);
+			if (itm == Fsdb_dir_itm.Null) {
+				rv = Fsdb_cfg_tbl.Update_next_id(p);
+				Fsdb_dir_tbl.Insert(p, rv, dir, 0);	// 0: always assume root owner
+			}
+			else {
+				rv = itm.Id();
+			}
 			dir_cache.Add(dir, IntRef.new_(rv));
 		}
 		else

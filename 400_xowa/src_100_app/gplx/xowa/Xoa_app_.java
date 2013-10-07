@@ -173,7 +173,7 @@ public class Xoa_app_ {
 			if (app.Gui_mgr().Kit() != null) app.Gui_mgr().Kit().Ask_ok("", "", Err_.Message_gplx(e));
 		}
 	}
-	public static final String Version_str = "0.9.4.0";
+	public static final String Version_str = "0.10.0.0";
 	public static String Build_date_str = "2012-12-30 00:00:00";
 	public static final byte[] Version_bry = ByteAry_.new_ascii_(Version_str);
 	public static String User_agent = "";

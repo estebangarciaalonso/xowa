@@ -23,6 +23,7 @@ public class Fsdb_db_bin_mgr implements RlsAble {
 	private Fsdb_db_bin_fil itms_n;
 	private Fsdb_db_bin_mgr(Io_url dir, String wiki_domain) {this.dir = dir; this.wiki_domain = wiki_domain;}
 	public int Len() {return itms.length;}
+	public long Db_bin_max() {return db_bin_max;} public Fsdb_db_bin_mgr Db_bin_max_(long v) {db_bin_max = v; return this;} private long db_bin_max = Io_mgr.Len_mb * Long_.X_by_int(5);
 	public Fsdb_db_bin_fil Get_at(int i) {return itms[i];}
 	public void Commit(Db_provider provider) {		
 		Fsdb_db_bin_tbl.Commit_all(provider, itms);
@@ -64,7 +65,7 @@ public class Fsdb_db_bin_mgr implements RlsAble {
 		Fsdb_db_bin_fil[] new_itms = new Fsdb_db_bin_fil[new_itms_len];
 		for (int i = 0; i < itms_len; i++)
 			new_itms[i] = itms[i];
-		itms_n = Fsdb_db_bin_fil.make_(itms_len, Fsdb_db_bin_fil.url_(dir, wiki_domain, itms_len), bin_len);
+		itms_n = Fsdb_db_bin_fil.make_(itms_len, Fsdb_db_bin_fil.url_(dir, wiki_domain, itms_len), bin_len, db_bin_max);
 		itms = new_itms;
 		itms_len = new_itms_len;
 		itms[itms_len - 1] = itms_n;

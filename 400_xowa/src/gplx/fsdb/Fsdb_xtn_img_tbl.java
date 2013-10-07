@@ -39,7 +39,9 @@ public class Fsdb_xtn_img_tbl {
 	}
 	public static Fsdb_xtn_img_itm Select_itm_by_id(Db_provider p, int id) {
 		Db_stmt stmt = Select_itm_by_id_stmt(p);
-		return Select_itm_by_id(stmt, id);
+		try {
+			return Select_itm_by_id(stmt, id);
+		} finally {stmt.Rls();}
 	}
 	public static Fsdb_xtn_img_itm Select_itm_by_id(Db_stmt stmt, int id) {
 		DataRdr rdr = DataRdr_.Null;

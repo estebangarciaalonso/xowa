@@ -18,33 +18,44 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files; import gplx.*; import gplx.xowa.*;
 import org.junit.*; import gplx.xowa.files.*;
 public class Xof_img_size_tst {		
-	@Before public void init() {fxt.Reset();} private Xof_img_size_fxt fxt = new Xof_img_size_fxt();
-	@Test   public void Box()								{fxt.Lnki_type_(Xop_lnki_type.Id_null).Lnki_( 40,  50).Orig_( 40,  40).Test_html( 40,  40);}	// EX:[[File:Crystal Clear app kedit.svg|50x40px]]
-	@Test   public void Long_w()							{fxt.Lnki_type_(Xop_lnki_type.Id_null).Lnki_(128,  80).Orig_(720, 194).Test_html(128,  34);}	// EX:[[File:Firma B.Ohiggins.svg|128x80px|alt=|Bernardo O'Higgins's signature]]
-	@Test   public void Long_h()							{fxt.Lnki_(300,  -1).Orig_(149, 408).Test_html(149, 408);}	// EX:[[File:Adhanema Lasva.jpg|thumb|300px|The Firman given to the Bosnian Franciscans]]
-	@Test   public void Width_too_long()					{fxt.Lnki_(100,  -1).Orig_( 40,  40).Test_html( 40,  40);}	// limit to height;
-	@Test   public void Width_missing()						{fxt.Lnki_( -1,  20).Orig_( 80,  40).Test_html( 40,  20);}	// calc width based on height and file_size
-	@Test   public void Prefer_height_over_width()			{fxt.Lnki_( 60,  20).Orig_(120,  60).Test_html( 40,  20);}	// prefer height; if width was preferred, size would be 60,30
-	@Test   public void Height_missing()					{fxt.Lnki_( 50,  -1).Orig_(100, 200).Test_html( 50, 100);}
-	@Test   public void Explicit_ratio_large()				{fxt.Lnki_(120,  40).Orig_(200, 100).Test_html( 80,  40);}	// see NOTE_2: lnki_ratio > orig_ratio
-	@Test   public void Explicit_ratio_small()				{fxt.Lnki_(120,  80).Orig_(200, 100).Test_html(120,  60);}	// see NOTE_2: lnki_ratio > orig_ratio
-	@Test  	public void Orig_size_n() 						{fxt.Lnki_(300, 200).Orig_( -1,  -1).Test_html(300, 200);}	// no orig_size; use lnki_w and lnki_h
-	@Test  	public void Lnki_size_missing() 				{fxt.Lnki_( -1,  -1).Orig_( -1,  -1).Test_html(220,  -1);}	// no lnki or orig size; default to 220
-	@Test  	public void Missing_lnki_w_h() 					{fxt.Lnki_( -1,  -1).Orig_(440, 400).Test_html(220, 200);}	// w=thumbnail default; h=calc from orig
-	@Test  	public void Missing_lnki_h() 					{fxt.Lnki_(200,  -1).Orig_(400, 500).Test_html(200, 250);}	// w=lnki; h=calc from orig
-	@Test  	public void Missing_lnki_w() 					{fxt.Lnki_( -1, 250).Orig_(400, 500).Test_html(200, 250);}	// w=calc from orig
-	@Test  	public void Limit_to_size() 					{fxt.Lnki_(600, 750).Orig_(400, 500).Test_html(400, 500);}	// w/h: truncate to file
-	@Test  	public void W_is_wrong() 						{fxt.Lnki_( 20,  20).Orig_( 80, 100).Test_html( 16,  20);}
-	@Test  	public void W_is_wrong_2() 						{fxt.Lnki_( 65,  50).Orig_(160, 160).Test_html( 50,  50);}
-	@Test  	public void Size_is_wrong() 					{fxt.Lnki_(128,  80).Orig_(720, 194).Test_html(128,  34);}
-	@Test  	public void Thumb_upright() 					{fxt.Lnki_upright_(1).Lnki_(300, 200).Orig_( -1,  -1).Test_html(230, 200);}			// w=.(75*300) ROUND 10; is 200 right???
-	@Test  	public void Orig_exceeds() 						{fxt.Lnki_type_(Xop_lnki_type.Id_null).Lnki_(600, 400).Orig_(300, 200).Test_html(600, 400, true);}
-	@Test  	public void Orig_execeeds_svg() {
-		fxt	.Lnki_type_(Xop_lnki_type.Id_null)
-			.Lnki_(600, 400)
-			.Orig_(300, 200)
-			.Lnki_ext_(Xof_ext_.Id_svg)
-			.Test_html(600, 400, false);
+	@Before public void init() {
+		fxt.Reset();
+		fxt.Orig_(400, 200);
+	}	private Xof_img_size_fxt fxt = new Xof_img_size_fxt();
+	@Test  	public void Lnki_lt_orig_null() 		{fxt.Lnki_type_(Xop_lnki_type.Id_null)		.Lnki_(200, 100).Test_html(200, 100, Bool_.N);}	// [[File:A.png|200px]]           -> 200,100; File_is_orig = n
+	@Test  	public void Lnki_lt_orig_thumb() 		{fxt.Lnki_type_(Xop_lnki_type.Id_thumb)		.Lnki_(200, 100).Test_html(200, 100, Bool_.N);}	// [[File:A.png|thumb|200px]]     -> 200,100; File_is_orig = n
+	@Test  	public void Lnki_lt_orig_frameless() 	{fxt.Lnki_type_(Xop_lnki_type.Id_frameless)	.Lnki_(200, 100).Test_html(200, 100, Bool_.N);}	// [[File:A.png|frameless|200px]] -> 200,100; File_is_orig = n
+	@Test  	public void Lnki_lt_orig_frame() 		{fxt.Lnki_type_(Xop_lnki_type.Id_frame)		.Lnki_(200, 100).Test_html(400, 200, Bool_.Y);}	// [[File:A.png|frame|200px]]     -> 400,200; File_is_orig = y; frame always ignores parameters and returns orig
+	@Test  	public void Lnki_gt_orig_null() 		{fxt.Lnki_type_(Xop_lnki_type.Id_null)		.Lnki_(800, 400).Test_html(800, 400, Bool_.Y);}	// [[File:A.png|800px]]           -> 800,400; File_is_orig = n
+	@Test  	public void Lnki_gt_orig_thumb() 		{fxt.Lnki_type_(Xop_lnki_type.Id_thumb)		.Lnki_(800, 400).Test_html(400, 200, Bool_.Y);}	// [[File:A.png|thumb|800px]]     -> 400,200; File_is_orig = n
+	@Test  	public void Lnki_gt_orig_frameless() 	{fxt.Lnki_type_(Xop_lnki_type.Id_frameless)	.Lnki_(800, 400).Test_html(400, 200, Bool_.Y);}	// [[File:A.png|frameless|800px]] -> 400,200; File_is_orig = n
+	@Test  	public void Lnki_gt_orig_frame() 		{fxt.Lnki_type_(Xop_lnki_type.Id_frame)		.Lnki_(800, 400).Test_html(400, 200, Bool_.Y);}	// [[File:A.png|frame|800px]]     -> 400,200; File_is_orig = y; frame always ignores parameters and returns orig
+	@Test  	public void Lnki_eq_orig_null() 		{fxt.Lnki_type_(Xop_lnki_type.Id_null)		.Lnki_(400, 200).Test_html(400, 200, Bool_.Y);}	// make sure File_is_orig = y
+	@Test  	public void Lnki_gt_orig_null_svg() 	{fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_type_(Xop_lnki_type.Id_null)		.Lnki_(800, 400).Test_html(800, 400, Bool_.N);}	// [[File:A.svg|800px]]           -> 800,400; File_is_orig = n
+	@Test  	public void Lnki_gt_orig_thumb_svg() 	{fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_type_(Xop_lnki_type.Id_thumb)		.Lnki_(800, 400).Test_html(800, 400, Bool_.N);}	// [[File:A.svg|thumb|800px]]     -> 800,400; File_is_orig = n
+	@Test  	public void Lnki_gt_orig_frameless_svg(){fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_type_(Xop_lnki_type.Id_frameless)	.Lnki_(800, 400).Test_html(800, 400, Bool_.N);}	// [[File:A.svg|frameless|800px]] -> 800,400; File_is_orig = n
+	@Test  	public void Lnki_gt_orig_frame_svg() 	{fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_type_(Xop_lnki_type.Id_frame)		.Lnki_(800, 400).Test_html(400, 200, Bool_.N);}	// [[File:A.png|frame|800px]]     -> 400,200; File_is_orig = n; frame always ignores parameters and returns orig
+	@Test   public void Width_missing()				{fxt.Lnki_( -1, 100).Test_html(200, 100);}	// calc width based on height and orig
+	@Test   public void Height_missing()			{fxt.Lnki_(200,  -1).Test_html(200, 100);}
+	@Test  	public void Orig_missing() 				{fxt.Lnki_(400, 200).Orig_( -1,  -1).Test_html(400, 200);}	// no orig_size; use lnki_w and lnki_h
+	@Test  	public void Lnki_missing() 				{fxt.Lnki_( -1,  -1).Test_html(220, 110);}					// w=thumbnail default; h=calc from orig
+	@Test   public void Lnki_missing_frameless()    {fxt.Lnki_( -1,  -1).Lnki_type_(Xop_lnki_type.Id_frameless) .Test_html(220, 110, Bool_.N);}	// default to thumb width
+	@Test   public void Lnki_missing_null()         {fxt.Lnki_( -1,  -1).Lnki_type_(Xop_lnki_type.Id_null)		.Test_html(400, 200, Bool_.Y);}	// default to orig width
+	@Test  	public void Lnki_missing__orig_missing(){fxt.Lnki_( -1,  -1).Orig_( -1,  -1).Test_html(220,  -1);}	// no lnki or orig size; default to 220 with unknown height
+	@Test   public void Prefer_height_over_width()	{fxt.Lnki_(200, 100).Test_html(200, 100);}					// prefer height; if width were preferred, size would be 200,134
+	@Test  	public void Upright() 					{fxt.Lnki_upright_(1).Lnki_(400, 200).Test_html(300, 150);}	
+
+	@Test   public void Explicit_ratio_large()		{fxt.Lnki_(120,  40).Test_html( 80,  40);}	// see NOTE_2: lnki_ratio > orig_ratio
+	@Test   public void Explicit_ratio_small()		{fxt.Lnki_(120,  80).Test_html(120,  60);}	// see NOTE_2: lnki_ratio > orig_ratio
+
+	@Test   public void Lnki_gt_orig_null_svg_example() {	// EX:[[File:Crystal Clear app kedit.svg|50x40px]]
+		fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_type_(Xop_lnki_type.Id_null).Lnki_( 50,  40).Orig_( 40,  40).Test_html( 40,  40);
+	}	
+	@Test   public void Prefer_height_over_width_example() {// EX:[[File:Firma B.Ohiggins.svg|128x80px|alt=|Bernardo O'Higgins's signature]]
+		fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_type_(Xop_lnki_type.Id_null).Lnki_(128,  80).Orig_(720, 194).Test_html(128,  34);
+	}	
+	@Test   public void Lnki_gt_orig_thumb_example() {// EX:[[File:Adhanema Lasva.jpg|thumb|300px|The Firman given to the Bosnian Franciscans]]
+		fxt.Lnki_type_(Xop_lnki_type.Id_thumb).Lnki_(300,  -1).Orig_(149, 408).Test_html(149, 408, Bool_.Y);
 	}
 }
 class Xof_img_size_fxt {

@@ -38,7 +38,7 @@ public class Fsdb_db_sys_itm implements RlsAble {
 	public void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr, int img_w, int img_h) {
 		int bin_db_id = bin_mgr.Get_id_for_insert(bin_len);
 		rv.Db_bin_id_(bin_db_id);
-		int fil_id = atr_mgr.Img_insert(rv, String_.new_utf8_(dir), String_.new_utf8_(fil), ext_id, modified, hash, bin_len, bin_rdr, img_w, img_h, bin_db_id);
+		int fil_id = atr_mgr.Img_insert(rv, String_.new_utf8_(dir), String_.new_utf8_(fil), ext_id, img_w, img_h, modified, hash, bin_db_id, bin_len, bin_rdr);
 		bin_mgr.Insert(bin_db_id, fil_id, Fsdb_bin_tbl.Owner_tid_thm, bin_len, bin_rdr);
 	}
 	public Fsdb_xtn_thm_itm Thm_select_bin(byte[] dir, byte[] fil, int width, int thumbtime) {

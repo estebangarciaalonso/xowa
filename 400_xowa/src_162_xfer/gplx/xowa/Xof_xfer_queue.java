@@ -33,6 +33,12 @@ public class Xof_xfer_queue {
 			dirty.AddReplace(meta_mgr_key, meta_mgr);	// only add if new
 	}
 	public void Exec(Xog_win_wtr wtr, Xow_wiki wiki) {
+		if (wiki.File_mgr().Version() == Xow_file_mgr.Version_2)
+			Exec_v2(wtr, wiki);
+		else
+			Exec_v1(wtr, wiki);
+	}
+	private void Exec_v1(Xog_win_wtr wtr, Xow_wiki wiki) {
 		Xof_meta_mgr meta_mgr = null;
 		int xfer_len = list.Count();
 		for (int i = 0; i < xfer_len; i++) {
@@ -69,7 +75,7 @@ public class Xof_xfer_queue {
 		}
 		this.Clear();
 	}
-	public void Exec1(Xog_win_wtr wtr, Xow_wiki wiki) {
+	private void Exec_v2(Xog_win_wtr wtr, Xow_wiki wiki) {
 		wiki.File_mgr().Fsdb_mgr().Init_by_wiki(wiki);
 		wiki.File_mgr().Fsdb_mgr().Reg_select(wtr, Xof_exec_tid.Tid_wiki_page, Xfer_itms_to_fsdb_itms(list));
 	}

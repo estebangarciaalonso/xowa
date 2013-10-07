@@ -31,8 +31,8 @@ public class Fsdb_db_bin_tbl {
 	private static void Commit_itm(Fsdb_db_bin_fil itm) {
 		Db_stmt stmt = stmt_bldr.Get(itm.Cmd_mode());
 		switch (itm.Cmd_mode()) {
-			case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Id())	.Val_str_(itm.Url().NameAndExt()).Val_long_(itm.Bin_len()).Exec_insert(); break;
-			case Db_cmd_mode.Update:	stmt.Clear()					.Val_str_(itm.Url().NameAndExt()).Val_long_(itm.Bin_len()).Val_int_(itm.Id()).Exec_update(); break;
+			case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Id())	.Val_str_(itm.Url().NameAndExt()).Val_long_(itm.Bin_len()).Val_long_(itm.Bin_max()).Exec_insert(); break;
+			case Db_cmd_mode.Update:	stmt.Clear()					.Val_str_(itm.Url().NameAndExt()).Val_long_(itm.Bin_len()).Val_long_(itm.Bin_max()).Val_int_(itm.Id()).Exec_update(); break;
 			case Db_cmd_mode.Delete:	stmt.Clear().Val_int_(itm.Id()).Exec_delete();	break;
 			case Db_cmd_mode.Ignore:	break;
 			default:					throw Err_.unhandled(itm.Cmd_mode());
@@ -52,13 +52,14 @@ public class Fsdb_db_bin_tbl {
 		} finally {rdr.Rls();}
 		return (Fsdb_db_bin_fil[])rv.XtoAry(Fsdb_db_bin_fil.class);
 	}
-	public static final String Tbl_name = "fsdb_db_bin", Fld_fdb_id = "fdb_id", Fld_fdb_url = "fdb_url", Fld_fdb_bin_len = "fdb_bin_len";
+	public static final String Tbl_name = "fsdb_db_bin", Fld_fdb_id = "fdb_id", Fld_fdb_url = "fdb_url", Fld_fdb_bin_len = "fdb_bin_len", Fld_fdb_bin_max = "fdb_bin_max";
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS fsdb_db_bin"
 	,	"( fdb_id                integer             NOT NULL    PRIMARY KEY"
 	,	", fdb_url               varchar(255)        NOT NULL"
 	,	", fdb_bin_len           bigint              NOT NULL"
+	,	", fdb_bin_max           bigint              NOT NULL"
 	,	");"
 	);	
-	private static Db_stmt_bldr stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_fdb_id), Fld_fdb_url, Fld_fdb_bin_len);
+	private static Db_stmt_bldr stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_fdb_id), Fld_fdb_url, Fld_fdb_bin_len, Fld_fdb_bin_max);
 }

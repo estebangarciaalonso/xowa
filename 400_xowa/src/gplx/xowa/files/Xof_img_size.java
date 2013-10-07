@@ -20,14 +20,23 @@ import gplx.gfui.*;
 public class Xof_img_size {
 	public int Html_w() {return html_w;} private int html_w;
 	public int Html_h() {return html_h;} private int html_h;
-	public int File_w() {return file_w;} private int file_w;
+	public int File_w() {return file_w;} private int file_w;	// NOTE: file_w will always equal html_w, unless rounding is implemented; EX: html_w=150,151,152 -> file_w=150
+	public int File_h() {return file_h;} private int file_h;
 	public boolean File_is_orig() {return file_is_orig;} private boolean file_is_orig;
 
 	public void Html_size_calc(byte exec_tid, int lnki_w, int lnki_h, byte lnki_type, double lnki_upright, int lnki_ext, int orig_w, int orig_h, int thumb_default_w) {
+		if (lnki_type == Xop_lnki_type.Id_frame) {				// frame: always return orig size; Linker.php!makeThumbLink2; // Use image dimensions, don't scale
+			html_w = file_w = orig_w;
+			html_h = file_h = orig_h;
+			file_is_orig = Xof_ext_.Orig_file_is_img(lnki_ext);	// file_is_orig = true, unless svg
+			if (file_is_orig)
+				file_w = file_h = Size__same_as_orig;
+			return;
+		}
 		html_w = lnki_w; html_h = lnki_h;						// set html vals to lnki vals
 		file_is_orig = false;
 		if (html_w == Null && html_h == Null) {					// no size set; NOTE: do not default to thumb if only height is set; EX: x900px should have w=0 h=900
-			if (lnki_type == Xop_lnki_type.Id_thumb)
+			if (Xop_lnki_type.Id_defaults_to_thumb(lnki_type))
 				html_w = thumb_default_w;
 			else
 				html_w = orig_w;
@@ -42,26 +51,30 @@ public class Xof_img_size {
 				html_w = Calc_w(orig_w, orig_h, html_h);
 		}
 		html_h = Scale_h(orig_w, orig_h, html_w);				// calc html_h
-		boolean limit_size = Calc_limit_size(exec_tid, lnki_type, lnki_ext); 
-		if (html_w > orig_w && limit_size) {					// do not allow html_w > orig_w; REF.MW:Generic.php|normaliseParams
-			html_w = orig_w;
-			html_h = orig_h;
+		if (	html_w >= orig_w								// html >= orig
+			&&	(	Xof_ext_.Orig_file_is_img(lnki_ext)			// orig is img (ignore for svg, ogv, pdf, etc)
+				||	lnki_ext == Xof_ext_.Id_svg && exec_tid == Xof_exec_tid.Tid_wiki_file	// limit to size if svg and [[File]] page
+				)
+			) {
+			file_is_orig = true;								// use orig img (don't create thumb)
+			file_w = file_h = Size__same_as_orig;
+			if (Xop_lnki_type.Id_limits_large_size(lnki_type)) {// do not allow html_w > orig_w; REF.MW:Generic.php|normaliseParams
+				html_w = orig_w;
+				html_h = orig_h;
+			}
 		}
-		file_w = html_w;										// set file_w to html_w
-		if (	lnki_type != Xop_lnki_type.Id_thumb
-			&&	Xof_ext_.Orig_file_is_img(lnki_ext)
-			&&	html_w > orig_w) {
-			file_is_orig = true;
-//				file_w = File_w__is_orig;
+		else {													// html < orig
+			file_w = html_w;
+			file_h = html_h;
 		}
 	}
-	private static boolean Calc_limit_size(byte exec_tid, int lnki_type, int lnki_ext) {
-		if (lnki_type != Xop_lnki_type.Id_thumb) return false;  // only limit to size for thumb; EX:[[File:A.png|thumb|999x999px]] does not get limited but [[File:A.png|999x999px]] does  
-		if (lnki_ext == Xof_ext_.Id_svg)						// if svg...
-			return exec_tid == Xof_exec_tid.Tid_wiki_file;		// ... only limit to size if [[File]] page
-		else													// not svg and thumb; always limit to size
-			return true;
-	}
+//		private static boolean Calc_limit_size(byte exec_tid, int lnki_type, int lnki_ext) {
+//			if (lnki_type != Xop_lnki_type.Id_thumb) return false;  // only limit to size for thumb; EX:[[File:A.png|thumb|999x999px]] does not get limited but [[File:A.png|999x999px]] does  
+//			if (lnki_ext == Xof_ext_.Id_svg)						// if svg...
+//				return exec_tid == Xof_exec_tid.Tid_wiki_file;		// ... only limit to size if [[File]] page
+//			else													// not svg and thumb; always limit to size
+//				return true;
+//		}
 	public static int Calc_w(int file_w, int file_h, int lnki_h) {		// REF.MW:media/MediaHandler.php|fitBoxWidth
 		double ideal_w = (double)file_w * (double)lnki_h / (double)file_h;
 		double ideal_w_ceil = Math_.Ceil(ideal_w);
@@ -90,7 +103,7 @@ public class Xof_img_size {
 	public static final int Thumb_width_img = 220, Thumb_width_ogv = 220;
 	public static final double Upright_null = -1, Upright_default = 1;
 	public static final int Size_null_deprecated = -1, Size_null = 0;	// Size_null = 0, b/c either imageMagick / inkscape fails when -1 is passed
-	public static final int File_w__same_as_html = -1, File_w__is_orig = -2;
+	public static final int Size__same_as_orig = -1;
 }
 /*
 NOTE_1:proc source/layout

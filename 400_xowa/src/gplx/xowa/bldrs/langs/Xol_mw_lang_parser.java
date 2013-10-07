@@ -314,7 +314,7 @@ public class Xol_mw_lang_parser {
 		.Add_str_byteVal("magicWords", Tid_magicwords).Add_str_byteVal("specialPageAliases", Tid_specialPageAliases)
 		.Add_str_byteVal("linkTrail", Tid_linkTrail).Add_str_byteVal("dateFormats", Tid_dateFormats).Add_str_byteVal("fallback", Tid_fallback)
 		.Add_str_byteVal("separatorTransformTable", Tid_separatorTransformTable).Add_str_byteVal("rtl", Tid_rtl);
-	private static int Id_by_mw_name(byte[] src) {
+	public static int Id_by_mw_name(byte[] src) {
 		if (mw_names == null) {
 			mw_names = ByteTrieMgr_slim.cs_();
 			mw_names.Add("NS_MEDIA", IntVal.new_(Xow_ns_.Id_media));

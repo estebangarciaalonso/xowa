@@ -56,7 +56,7 @@ class Xof_file_fxt {
 		if (arg.Is_thumb())
 			fsdb_mgr.Thm_insert(tmp_thm, arg.Wiki(), arg.Ttl(), arg.Ext_id(), arg.W(), arg.H(), arg.Thumbtime(), arg.Modified(), arg.Hash(), arg.Bin().length, gplx.ios.Io_stream_rdr_.mem_(arg.Bin()));
 		else
-			fsdb_mgr.Img_insert(tmp_img, arg.Wiki(), arg.Ttl(), arg.Ext_id(), arg.Modified(), arg.Hash(), arg.Bin().length, gplx.ios.Io_stream_rdr_.mem_(arg.Bin()), arg.W(), arg.H());
+			fsdb_mgr.Img_insert(tmp_img, arg.Wiki(), arg.Ttl(), arg.Ext_id(), arg.W(), arg.H(), arg.Modified(), arg.Hash(), arg.Bin().length, gplx.ios.Io_stream_rdr_.mem_(arg.Bin()));
 	}
 	public void Init_qry_xowa(Xof_fsdb_arg_init_qry arg) {
 		qry_wkr_mock.Add_wiki_size(arg.Ttl(), arg.Wiki(), arg.W(), arg.H());
@@ -162,11 +162,11 @@ class Xof_fsdb_arg_exec_get {
 	public byte Rslt_qry() {return rslt_qry;} public Xof_fsdb_arg_exec_get Rslt_qry_(byte v) {rslt_qry = v; return this;} private byte rslt_qry = Xof_qry_wkr_.Tid_null;
 	public byte Rslt_bin() {return rslt_bin;} public Xof_fsdb_arg_exec_get Rslt_bin_(byte v) {rslt_bin = v; return this;} private byte rslt_bin = Xof_bin_wkr_.Tid_null;
 	public byte Rslt_cnv() {return rslt_cnv;} public Xof_fsdb_arg_exec_get Rslt_cnv_(byte v) {rslt_cnv = v; return this;} private byte rslt_cnv = Xof_cnv_wkr_.Tid_null;
-	public boolean Lnki_type_is_thumb() {return Xop_lnki_type.Id_is_thumb_like(lnki_type);}
+	public boolean Lnki_type_is_thumb() {return Xop_lnki_type.Id_defaults_to_thumb(lnki_type);}
 	public Xof_fsdb_arg_exec_get Init_thumb(String ttl)					{return Init(ttl, Xop_lnki_type.Id_thumb, 220, Xop_lnki_tkn.Height_null);}
 	public Xof_fsdb_arg_exec_get Init_thumb(String ttl, int w)			{return Init(ttl, Xop_lnki_type.Id_thumb, w, Xop_lnki_tkn.Height_null);}
 	public Xof_fsdb_arg_exec_get Init_thumb(String ttl, int w, int h)	{return Init(ttl, Xop_lnki_type.Id_thumb, w, h);}
-	public Xof_fsdb_arg_exec_get Init_orig(String ttl)					{return Init(ttl, Xop_lnki_type.Id_none, Xop_lnki_tkn.Width_null, Xop_lnki_tkn.Height_null);}
+	public Xof_fsdb_arg_exec_get Init_orig(String ttl)					{return Init(ttl, Xop_lnki_type.Id_null, Xop_lnki_tkn.Width_null, Xop_lnki_tkn.Height_null);}
 	public Xof_fsdb_arg_exec_get Init(String ttl, byte type, int w, int h) {
 		this.ttl = ByteAry_.new_utf8_(ttl);
 		this.lnki_type = type;

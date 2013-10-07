@@ -23,6 +23,18 @@ public class Xow_file_mgr implements GfoInvkAble {
 		repo_mgr = new Xow_repo_mgr(wiki);
 		meta_mgr = new Xof_meta_mgr(wiki);
 	}	private Xow_wiki wiki;
+	public byte Version() {
+		if (version == Bool_.__byte) {
+			Io_url file_dir = wiki.Fsys_mgr().File_dir();
+			Io_url[] sqlite_fils = Io_mgr._.QueryDir_args(file_dir).FilPath_("*.sqlite3").ExecAsUrlAry();
+			if (sqlite_fils.length == 0)
+				version = Version_1;
+			else
+				version = Version_2;
+		}
+		return version;
+	}	private byte version = Version_null;
+	public static final byte Version_null = Byte_.MaxValue_127, Version_1 = 1, Version_2 = 2;
 	public Xow_repo_mgr Repo_mgr() {return repo_mgr;} private Xow_repo_mgr repo_mgr;
 	public Xof_meta_mgr  Meta_mgr() {return meta_mgr;} private Xof_meta_mgr meta_mgr;
 	public Xof_cfg_download Cfg_download() {return cfg_download;} private Xof_cfg_download cfg_download = new Xof_cfg_download();

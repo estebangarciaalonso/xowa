@@ -24,17 +24,22 @@ public class Xtn_gallery_parser {
 	private byte cur_fld;
 	private int itm_bgn;
 	private ByteAryBfr caption_bfr = ByteAryBfr.reset_(255); private int caption_bgn;
+	private int gallery_itm_w, gallery_itm_h;
+	private Xop_ctx ctx; private Xobc_lnki_wkr file_wkr;
+
 	public Xtn_gallery_parser Init_by_wiki(Xow_wiki wiki) {
 		this.wiki = wiki; Xol_lang lang = wiki.Lang();
+		this.ctx = wiki.Ctx();
 		trie.Clear();
 		ByteRef tmp_bref = ByteRef.zero_();
 		Init_keyword(tmp_bref, lang, Xol_kwd_grp_.Id_img_alt, Fld_alt);
 		Init_keyword(tmp_bref, lang, Xol_kwd_grp_.Id_img_link, Fld_link);
 		return this;
 	}
-	public void Parse_all(ListAdp rv, byte[] src, int content_bgn, int content_end) {
+	public void Parse_all(ListAdp rv, byte[] src, int content_bgn, int content_end, int gallery_itm_w, int gallery_itm_h) {
 		this.src = src;
 		this.cur_pos = content_bgn; this.end_pos = content_end;
+		this.gallery_itm_w = gallery_itm_w; this.gallery_itm_h = gallery_itm_h;
 		cur_itm = new Xtn_gallery_itm();
 		while (cur_pos < end_pos) {
 			cur_itm.Reset();
@@ -43,12 +48,20 @@ public class Xtn_gallery_parser {
 			if (cur_itm.Ttl() != null) {
 				if (caption_bfr.Bry_len() > 0)
 					cur_itm.Caption_bry_(caption_bfr.XtoAryAndClearAndTrim());
+				Make_lnki_tkn();
 				rv.Add(cur_itm);
 				cur_itm = new Xtn_gallery_itm();
 			}
 			if (cur_mode == Mode_nl)
 				++cur_pos;
 		}
+	}
+	private void Make_lnki_tkn() {
+		if (file_wkr == null) file_wkr = ctx.Lnki().File_wkr();	// NOTE: set file_wkr ref late, b/c parse_all sets late
+		Xop_lnki_tkn lnki_tkn = ctx.Tkn_mkr().Lnki(cur_itm.Ttl_bgn(), cur_itm.Ttl_end()).Ttl_(cur_itm.Ttl()).Width_(gallery_itm_w).Height_(gallery_itm_h);
+		cur_itm.Lnki_tkn_(lnki_tkn);
+		if (file_wkr != null)
+			file_wkr.Wkr_exec(ctx, lnki_tkn);
 	}
 	public byte Parse_itm() {
 		int fld_count = 0;

@@ -20,7 +20,11 @@ import gplx.dbs.*; import gplx.ios.*;
 public class Fsdb_db_bin_fil implements RlsAble {
 	public int Id() {return id;} private int id;
 	public Io_url Url() {return url;} private Io_url url;
-	public long Bin_max() {return bin_max;} private long bin_max = Io_mgr.Len_gb * Long_.X_by_int(3);
+	public long Bin_max() {return bin_max;} private long bin_max;
+	public void Bin_max_(long v) {
+		bin_max = v; 
+		if (cmd_mode == Db_cmd_mode.Ignore) cmd_mode = Db_cmd_mode.Update;
+	}
 	public long Bin_len() {return bin_len;} private long bin_len;
 	public void Bin_len_(long v) {
 		bin_len = v; 
@@ -40,8 +44,12 @@ public class Fsdb_db_bin_fil implements RlsAble {
 	} 	private Db_provider provider;
 	public void Rls() {if (provider != null) provider.Rls();}
 	public void Insert(int bin_id, byte owner_tid, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		Db_stmt stmt = Fsdb_bin_tbl.Insert_stmt(this.Provider());
-		Fsdb_bin_tbl.Insert_rdr(stmt, bin_id, owner_tid, bin_len, bin_rdr);
+		Db_stmt stmt = Db_stmt_.Null;
+		try {
+			stmt = Fsdb_bin_tbl.Insert_stmt(this.Provider());
+			Fsdb_bin_tbl.Insert_rdr(stmt, bin_id, owner_tid, bin_len, bin_rdr);
+		}
+		finally {stmt.Rls();}
 	}
 	public boolean Get_to_url(int id, Io_url url, byte[] bfr, int flush) {
 		return Fsdb_bin_tbl.Select_to_url(this.Provider(), id, url, bfr, flush);
@@ -49,17 +57,26 @@ public class Fsdb_db_bin_fil implements RlsAble {
 	public Io_stream_rdr Get_as_rdr(int id) {
 		return Fsdb_bin_tbl.Select_as_rdr(this.Provider(), id);
 	}
-	public static Fsdb_db_bin_fil load_(DataRdr rdr, Io_url dir) {return new_(rdr.ReadInt(Fsdb_db_bin_tbl.Fld_fdb_id), dir.GenSubFil(rdr.ReadStr(Fsdb_db_bin_tbl.Fld_fdb_url)), rdr.ReadLong(Fsdb_db_bin_tbl.Fld_fdb_bin_len), Db_cmd_mode.Ignore);}
-	public static Fsdb_db_bin_fil make_(int id, Io_url url, long bin_len) {
-		Fsdb_db_bin_fil rv = new_(id, url, bin_len, Db_cmd_mode.Create);
+	public static Fsdb_db_bin_fil load_(DataRdr rdr, Io_url dir) {
+		return new_
+		(	rdr.ReadInt(Fsdb_db_bin_tbl.Fld_fdb_id)
+		,	dir.GenSubFil(rdr.ReadStr(Fsdb_db_bin_tbl.Fld_fdb_url))
+		,	rdr.ReadLong(Fsdb_db_bin_tbl.Fld_fdb_bin_len)
+		,	rdr.ReadLong(Fsdb_db_bin_tbl.Fld_fdb_bin_max)
+		,	Db_cmd_mode.Ignore
+		);
+	}
+	public static Fsdb_db_bin_fil make_(int id, Io_url url, long bin_len, long bin_max) {
+		Fsdb_db_bin_fil rv = new_(id, url, bin_len, bin_max, Db_cmd_mode.Create);
 		rv.Provider(); // force table create
 		return rv;
 	}
-	private static Fsdb_db_bin_fil new_(int id, Io_url url, long bin_len, byte cmd_mode) {
+	private static Fsdb_db_bin_fil new_(int id, Io_url url, long bin_len, long bin_max, byte cmd_mode) {
 		Fsdb_db_bin_fil rv = new Fsdb_db_bin_fil();
 		rv.id = id;
 		rv.url = url;
 		rv.bin_len = bin_len;
+		rv.bin_max = bin_max;
 		rv.cmd_mode = cmd_mode;
 		return rv;
 	}

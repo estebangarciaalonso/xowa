@@ -105,7 +105,7 @@ class Xtn_gallery_parser_fxt {
 	public void Test_parse(String raw, String[]... expd) {
 		ListAdp actl = ListAdp_.new_();
 		byte[] src = ByteAry_.new_ascii_(raw); int src_len = src.length;
-		parser.Parse_all(actl, src, 0, src_len);
+		parser.Parse_all(actl, src, 0, src_len, Xtn_gallery_nde.Itm_default_w, Xtn_gallery_nde.Itm_default_h);
 		Tfds.Eq_ary(Ary_flatten(expd), Ary_flatten(To_str_ary(src, actl)));
 	}
 	private String[] Ary_flatten(String[][] src_ary) {

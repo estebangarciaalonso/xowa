@@ -25,6 +25,7 @@ public class Xtn_gallery_itm {
 	public int Alt_end() {return alt_end;} public Xtn_gallery_itm Alt_end_(int v) {alt_end = v; return this;} private int alt_end;
 	public int Link_bgn() {return link_bgn;} public Xtn_gallery_itm Link_bgn_(int v) {link_bgn = v; return this;} private int link_bgn;
 	public int Link_end() {return link_end;} public Xtn_gallery_itm Link_end_(int v) {link_end = v; return this;} private int link_end;
+	public Xop_lnki_tkn Lnki_tkn() {return lnki_tkn;} public Xtn_gallery_itm Lnki_tkn_(Xop_lnki_tkn v) {lnki_tkn = v; return this;} private Xop_lnki_tkn lnki_tkn;
 	public Xtn_gallery_itm Reset() {
 		ttl = null;
 		ttl_bgn = ttl_end = alt_bgn = alt_end = link_bgn = link_end = ByteAry_.NotFound;

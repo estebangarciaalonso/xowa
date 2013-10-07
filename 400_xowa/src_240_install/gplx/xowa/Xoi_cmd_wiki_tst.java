@@ -18,10 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xoi_cmd_wiki_tst {
-	@Test  public void Stub() {Get_len();}
-	private void Get_len(String... ary) {
+	@Test  public void Stub() {Bld_cfg_files();}
+	public void Bld_import_list(String... ary) {
 		int ary_len = ary.length;
-		ByteAryBfr trg = ByteAryBfr.reset_(255);
+		ByteAryBfr bfr = ByteAryBfr.reset_(255);
 		Time_fmtr_arg time_fmtr = new Time_fmtr_arg();
 		Xob_dump_file dump_file = new Xob_dump_file();
 		for (int i = 0; i < ary_len; i++) {
@@ -40,29 +40,42 @@ public class Xoi_cmd_wiki_tst {
 			}
 			else
 				Tfds.WriteText(String_.Format("passed: {0}\n", itm));
-			trg.Add_str(itm).Add_byte_pipe();
-			trg.Add_str(dump_file.File_url()).Add_byte_pipe();
-			trg.Add(Xow_wiki_type_.Name_by_tid(dump_file.Wiki_type().Wiki_tid())).Add_byte_pipe();
+			bfr.Add_str(itm).Add_byte_pipe();
+			bfr.Add_str(dump_file.File_url()).Add_byte_pipe();
+			bfr.Add(Xow_wiki_type_.Name_by_tid(dump_file.Wiki_type().Wiki_tid())).Add_byte_pipe();
 //				Xol_lang_itm lang_itm = Xol_lang_itm_.Get_by_key(wiki_type.Lang_key());
 //				if (lang_itm == null) lang_itm = Xol_lang_itm_.Get_by_key(Xol_lang_.Key_en);	// commons, species, meta, etc will have no lang
-//				trg.Add(lang_itm.Local_name()).Add_byte_pipe();
-//				trg.Add(lang_itm.Canonical_name()).Add_byte_pipe();
+//				bfr.Add(lang_itm.Local_name()).Add_byte_pipe();
+//				bfr.Add(lang_itm.Canonical_name()).Add_byte_pipe();
 			long src_size = dump_file.File_len();
-			trg.Add_long_variable(src_size).Add_byte_pipe();
-			trg.Add_str(gplx.ios.Io_size_.Xto_str(src_size)).Add_byte_pipe();
-			time_fmtr.Seconds_((src_size/ 1000000) + 1).XferAry(trg, 0);	// add 1; this effectively rounds up fractionals, and guarantees nothing is 0
-			trg.Add_byte_pipe();
-			trg.Add_str(dump_file.File_modified().XtoStr_fmt_yyyy_MM_dd_HH_mm());
-			trg.Add_byte_pipe();
-//				trg.Add_str(String_.ConcatWith_any(",", (Object[])dump_file.Dump_available_dates()));
-//				trg.Add_byte_pipe();
-			trg.Add_str(dump_file.Dump_date());
-			trg.Add_byte_nl();
+			bfr.Add_long_variable(src_size).Add_byte_pipe();
+			bfr.Add_str(gplx.ios.Io_size_.Xto_str(src_size)).Add_byte_pipe();
+			time_fmtr.Seconds_((src_size/ 1000000) + 1).XferAry(bfr, 0);	// add 1; this effectively rounds up fractionals, and guarantees nothing is 0
+			bfr.Add_byte_pipe();
+			bfr.Add_str(dump_file.File_modified().XtoStr_fmt_yyyy_MM_dd_HH_mm());
+			bfr.Add_byte_pipe();
+//				bfr.Add_str(String_.ConcatWith_any(",", (Object[])dump_file.Dump_available_dates()));
+//				bfr.Add_byte_pipe();
+			bfr.Add_str(dump_file.Dump_date());
+			bfr.Add_byte_nl();
 		}
-		Io_mgr._.SaveFilStr("C:\\temp.txt", trg.XtoStr());
+		Io_mgr._.SaveFilStr("C:\\temp.txt", bfr.XtoStr());
+	}
+	public void Bld_cfg_files(String... ary) {
+		ByteAryBfr bfr = ByteAryBfr.reset_(255);
+		gplx.xowa.bldrs.wiki_cfgs.Xoi_wiki_props_api api = new gplx.xowa.bldrs.wiki_cfgs.Xoi_wiki_props_api();
+		gplx.xowa.bldrs.wiki_cfgs.Xoi_wiki_props_wiki wiki = new gplx.xowa.bldrs.wiki_cfgs.Xoi_wiki_props_wiki();
+		int ary_len = ary.length;
+		for (int i = 0; i < ary_len; i++) {
+			String wiki_domain = ary[i];
+			byte[] xml = api.Exec_api(api.Api_src(wiki_domain));
+			api.Parse(wiki, String_.new_utf8_(xml));
+			api.Build_cfg(bfr, wiki);
+		}
+		Io_mgr._.SaveFilStr("C:\\temp.txt", bfr.XtoStr());
 	}
 //		@Test  public void Len() {
-//Get_len
+//Bld_import_list
 //( "simple.wikipedia.org"
 //, "simple.wiktionary.org"
 //, "simple.wikibooks.org"

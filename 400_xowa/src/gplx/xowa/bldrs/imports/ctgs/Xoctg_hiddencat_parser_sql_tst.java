@@ -42,10 +42,12 @@ public class Xoctg_hiddencat_parser_sql_tst {
 		Xodb_category_tbl tbl = fxt.Wiki().Db_mgr_as_sql().Tbl_category();
 		Db_provider provider =  fxt.Wiki().Db_mgr_as_sql().Fsys_mgr().Category_provider();
 		Db_stmt stmt = tbl.Insert_stmt(provider);
-		for (int i = 0; i < len; i++) {
-			int ctg_id = ctgs[i];
-			tbl.Insert(stmt, ctg_id, 0, 0, 0, Bool_.N_byte, 0);
-		}		
+		try {
+			for (int i = 0; i < len; i++) {
+				int ctg_id = ctgs[i];
+				tbl.Insert(stmt, ctg_id, 0, 0, 0, Bool_.N_byte, 0);
+			}		
+		} finally {stmt.Rls();}
 	}
 	private void Tst_ctg_hidden(boolean expd_hidden, int... ctgs) {
 		int len = ctgs.length;

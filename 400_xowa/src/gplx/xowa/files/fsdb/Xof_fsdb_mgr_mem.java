@@ -24,20 +24,21 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 	public Xof_qry_mgr Qry_mgr() {return qry_mgr;} private Xof_qry_mgr qry_mgr = new Xof_qry_mgr();
 	public Xof_bin_mgr Bin_mgr() {return bin_mgr;} private Xof_bin_mgr bin_mgr;
 	public Xof_bin_wkr Bin_wkr_fsdb() {return this;}
+	public void Db_bin_max_(long v) {}
 	private Io_url fs_dir;
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
 	public void Init_by_wiki(String wiki_domain, Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr) {
 		this.fs_dir = fs_dir;
 		bin_mgr = new Xof_bin_mgr(repo_mgr);
 	}
-	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int w, int h, int thumbtime, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		byte[] key = Key_bld_thm(dir, fil, w, thumbtime);
+	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int thm_w, int thm_h, int thumbtime, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+		byte[] key = Key_bld_thm(dir, fil, thm_w, thumbtime);
 		byte[] bin = gplx.ios.Io_stream_rdr_.Load_all_as_bry(bin_rdr);
 		Fsdb_xtn_thm_itm_mem itm = new Fsdb_xtn_thm_itm_mem();
-		itm.Init(key, dir, fil, w, h, thumbtime, bin);
+		itm.Init(key, dir, fil, thm_w, thm_h, thumbtime, bin);
 		bin_hash.Add(key, itm);
 	}
-	public void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr, int img_w, int img_h) {
+	public void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		byte[] key = Key_bld_img(dir, fil);
 		byte[] bin = gplx.ios.Io_stream_rdr_.Load_all_as_bry(bin_rdr);
 		Fsdb_xtn_img_itm_mem itm = new Fsdb_xtn_img_itm_mem();

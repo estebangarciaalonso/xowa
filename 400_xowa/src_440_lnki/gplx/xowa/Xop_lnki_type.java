@@ -18,15 +18,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public class Xop_lnki_type {
 	public static final byte Id_null = 0, Id_none = 1, Id_frameless = 2, Id_frame = 4, Id_thumb = 8;
-	public static boolean Id_is_thumb_like(byte id) {
-		switch (id) {
-			case Id_null: case Id_none: case Id_frame:
-				return false;
-			case Id_frameless:	// NOTE: not sure if this is needed; only 2 users;
-			case Id_thumb:
+	public static boolean Id_defaults_to_thumb(byte id) {
+		switch (id) {			// assuming original of 400,200
+			case Id_thumb:		// [[File:A.png|thumb]]     -> 220,-1
+			case Id_frameless:	// [[File:A.png|frameless]] -> 220,-1
 				return true;
-			default:
-				return Enm_.HasInt(id, Id_thumb);
+			case Id_null:		// [[File:A.png]]           -> 400,200 (default to original size)
+			case Id_frame:		// [[File:A.png|frame]]     -> 400,200 (frame is always default size)
+			case Id_none:		// TODO: deprecate
+				return false;
+			default:			// TODO: deprecate
+				return Enm_.HasInt(id, Xop_lnki_type.Id_thumb) || Enm_.HasInt(id, Xop_lnki_type.Id_frameless);
+		}
+	}
+	public static boolean Id_limits_large_size(byte id) {// Linker.php|makeThumbLink2|Do not present an image bigger than the source, for bitmap-style images
+		switch (id) {			// assuming original of 400,200
+			case Id_thumb:		// [[File:A.png|600px|thumb]]      -> 400,200
+			case Id_frameless:	// [[File:A.png|600px|frameless]]  -> 400,200
+			case Id_frame:		// [[File:A.png|600px|frame]]      -> 400,200 (frame is always default size)
+				return true;
+			case Id_null:		// [[File:A.png|600px]]            -> 600,400; uses orig file of 400,200, but <img> tag src_width / src_height set to 600,400
+			case Id_none:		// TODO: deprecate
+				return false;
+			default:			// TODO: deprecate
+				return !Enm_.HasInt(id, Xop_lnki_type.Id_none);
 		}
 	}
 }

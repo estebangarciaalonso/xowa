@@ -72,3 +72,17 @@ public class Xof_reg_fil_tbl {
 	,	");"
 	);
 }
+/// TODO: store redirects
+//INSERT INTO  reg_fil 
+//(rf_ttl, rf_status, rf_orig_repo, rf_orig_ext, rf_orig_w, rf_orig_h, rf_orig_redirect)
+//SELECT 
+//  oor_lnki_ttl
+//, 1 --pass
+//, oor_orig_repo
+//, oor_lnki_ext
+//, oor_orig_w
+//, oor_orig_h
+//, oor_orig_redirect_ttl
+//FROM  oimg_orig_regy
+//LIMIT 10;
+//--WHERE oxr_xfer_status = 1;

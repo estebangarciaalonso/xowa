@@ -99,7 +99,7 @@ public class Xoh_lnki_wtr {
 			if		(lnki_ext.Id() == Xof_ext_.Id_ogv || xfer_itm.Html_pass()			// NOTE: xfer_itm.Html_pass() checks for video .ogg files (ext = .ogg and thumb is available); EX: WWI;
 				||	(lnki_ext.Id_is_ogg() && xfer_itm.Meta_itm().State_new())) {	// NOTE: State_new() will always assume that ogg is video; needed for 1st load and dynamic updates
 				xfer_itm.Html_dynamic_tid_(Xof_xfer_itm.Html_dynamic_tid_vid);
-				if (Xop_lnki_type.Id_is_thumb_like(lnki.Lnki_type())) {
+				if (Xop_lnki_type.Id_defaults_to_thumb(lnki.Lnki_type())) {
 					content = Video(src, opts, lnki, xfer_itm, depth, elem_id, true, lnki_href, html_view_src, html_orig_src, lnki_alt_text);
 				}
 				else {

@@ -77,7 +77,9 @@ class Sqlite_rdr extends Db_data_rdr {		@Override public float ReadFloat(String 
 	@Override public long ReadLong(String key) {return ReadLongOr(key, Long_.MinValue);}
 	@Override public long ReadLongOr(String key, long or) {
 		Object val = Read(key);
-		return val == null ? or : (long)Int_.cast_(val);
+		if (val == null) return or;
+		Number n = (Number)val;
+		return n.longValue();
 	}
 		public static Sqlite_rdr new_(ResultSet rdr, String commandText) {
 		Sqlite_rdr rv = new Sqlite_rdr();

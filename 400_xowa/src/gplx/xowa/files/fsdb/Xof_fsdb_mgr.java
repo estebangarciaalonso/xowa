@@ -22,9 +22,10 @@ public interface Xof_fsdb_mgr extends RlsAble {
 	Xof_qry_mgr Qry_mgr();
 	Xof_bin_mgr Bin_mgr();
 	Xof_bin_wkr Bin_wkr_fsdb();
+	void Db_bin_max_(long v);
 	void Init_by_wiki(String wiki_domain, Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr);
-	void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr, int img_w, int img_h);
-	void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int w, int h, int thumbtime, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr);
+	void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr);
+	void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int thm_w, int thm_h, int thumbtime, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr);
 	void Reg_insert(Xof_fsdb_itm itm, byte repo_id, byte status);
 	void Reg_select(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms);
 }
@@ -90,7 +91,7 @@ class Xof_fsdb_mgr_utl {
 			bin_rdr.Open();
 			if (itm.File_is_orig()) {
 				Fsdb_xtn_img_itm img_itm = new Fsdb_xtn_img_itm();
-				fsdb_mgr.Img_insert(img_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext().Id(), Fsdb_xtn_thm_tbl.Modified_null, Fsdb_xtn_thm_tbl.Hash_null, bin_len, bin_rdr, itm.Html_w(), itm.Html_h());
+				fsdb_mgr.Img_insert(img_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext().Id(), itm.Html_w(), itm.Html_h(), Fsdb_xtn_thm_tbl.Modified_null, Fsdb_xtn_thm_tbl.Hash_null, bin_len, bin_rdr);
 			}
 			else {
 				Fsdb_xtn_thm_itm thm_itm = new Fsdb_xtn_thm_itm();

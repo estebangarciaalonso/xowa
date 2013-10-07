@@ -24,9 +24,12 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, RlsAble {
 	public Xof_qry_mgr Qry_mgr() {return qry_mgr;} private Xof_qry_mgr qry_mgr = new Xof_qry_mgr();
 	public Xof_bin_mgr Bin_mgr() {return bin_mgr;} private Xof_bin_mgr bin_mgr;
 	public Xof_bin_wkr Bin_wkr_fsdb() {return bin_wkr_fsdb;} private Xof_bin_wkr_fsdb_sql bin_wkr_fsdb;
+	public void Db_bin_max_(long v) {sys_itm.Bin_mgr().Db_bin_max_(v);}
 	public Fsdb_db_sys_itm Sys_itm() {return sys_itm;} private Fsdb_db_sys_itm sys_itm = new Fsdb_db_sys_itm();
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
 	public Xof_fsdb_mgr_sql Init_by_wiki(Xow_wiki wiki) {
+		if (init) return this;
+		init = true;
 		Xow_repo_mgr repo_mgr = wiki.File_mgr().Repo_mgr();
 		Init_by_wiki(wiki.Key_str(), wiki.App().Fsys_mgr().File_dir().GenSubDir(wiki.Domain_str()), wiki.App().Fsys_mgr().File_dir(), repo_mgr);
 		Xof_qry_wkr_xowa qry_xowa = new Xof_qry_wkr_xowa(new Xof_wiki_finder(wiki.App().Wiki_mgr().Get_by_key_or_make(Xow_wiki_.Domain_commons_bry), wiki), new gplx.xowa.files.qrys.Xof_img_meta_wkr_xowa());
@@ -40,8 +43,6 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, RlsAble {
 		return this;
 	}
 	public void Init_by_wiki(String wiki_domain, Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr) {
-		if (init) return;
-		init = true;
 		this.fs_dir = fs_dir;
 		Init_img_regy_provider(db_dir, wiki_domain);
 		sys_itm.Init(db_dir, wiki_domain);
@@ -62,7 +63,7 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, RlsAble {
 	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int w, int h, int thumbtime, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		sys_itm.Thm_insert(rv, dir, fil, ext_id, w, h, thumbtime, modified, hash, bin_len, bin_rdr);
 	}
-	public void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr, int img_w, int img_h) {
+	public void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		sys_itm.Img_insert(rv, dir, fil, ext_id, modified, hash, bin_len, bin_rdr, img_w, img_h);
 	}
 	public void Rls() {

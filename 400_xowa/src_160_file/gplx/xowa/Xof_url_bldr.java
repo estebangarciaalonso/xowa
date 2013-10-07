@@ -148,7 +148,7 @@ public class Xof_url_bldr {
 		bfr.Clear();
 		return this;
 	}
-	public static final byte[] Bry_reg = ByteAry_.new_ascii_("reg.csv"), Bry_px = ByteAry_.new_ascii_("px"), Bry_px_dash = ByteAry_.new_ascii_("px-"), Bry_thumb = ByteAry_.new_ascii_("thumb"), Bry_mid = ByteAry_.new_ascii_("mid-"), Bry_lossy_page1 = ByteAry_.new_ascii_("lossy-page1-"), Bry_page1 = ByteAry_.new_ascii_("page1-"), Bry_seek = ByteAry_.new_ascii_("seek%3D"), Bry_file = ByteAry_.new_ascii_("file");
+	public static final byte[] Bry_reg = ByteAry_.new_ascii_("reg.csv"), Bry_px = ByteAry_.new_ascii_("px"), Bry_px_dash = ByteAry_.new_ascii_("px-"), Bry_thumb = ByteAry_.new_ascii_("thumb"), Bry_mid = ByteAry_.new_ascii_("mid-"), Bry_lossy_page1 = ByteAry_.new_ascii_("lossy-page1-"), Bry_page1 = ByteAry_.new_ascii_("page1-"), Bry_seek = ByteAry_.new_ascii_("seek%3D");
 	public static final Xof_url_bldr Temp = new Xof_url_bldr();
 	private static final Url_encoder encoder_src_http = Url_encoder.new_http_url_(); // NOTE: changed from new_html_href_mw_ to new_url_ on 2012-11-19; issues with A%2Cb becoming A%252Cb
 }

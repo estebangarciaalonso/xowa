@@ -20,7 +20,7 @@ import gplx.xowa.files.fsdb.*; import gplx.xowa.files.cnvs.*; import gplx.ios.*;
 public class Xof_bin_mgr {
 	private Xof_bin_wkr[] wkrs = null; private int wkrs_len;
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
-	private StringRef resize_warning = StringRef.null_(); private Int_2_ref tmp_size = new Int_2_ref();
+	private StringRef resize_warning = StringRef.null_(); private Xof_img_size tmp_size = new Xof_img_size();
 	public Xof_bin_mgr(Xow_repo_mgr repo_mgr) {this.repo_mgr = repo_mgr;}
 	public Xow_repo_mgr Repo_mgr() {return repo_mgr;} private Xow_repo_mgr repo_mgr;
 	public void Resizer_(Xof_img_wkr_resize_img v) {resizer = v;} private Xof_img_wkr_resize_img resizer;
@@ -91,8 +91,8 @@ public class Xof_bin_mgr {
 		return Io_stream_rdr_.Null;
 	}
 	private boolean Resize(byte exec_tid, Xof_fsdb_itm itm, boolean file_is_orig, Io_url src, Io_url trg) {
-		Xof_xfer_itm_.Calc_xfer_size(tmp_size, Xof_img_size.Thumb_width_img, itm.Orig_w(), itm.Orig_h(), itm.Lnki_w(), itm.Lnki_h(), !file_is_orig, itm.Lnki_upright(), itm.Lnki_ext(), exec_tid);
-		boolean rv = resizer.Exec(src, trg, tmp_size.Val_0(), tmp_size.Val_1(), itm.Lnki_ext().Id(), resize_warning);
+		tmp_size.Html_size_calc(exec_tid, itm.Lnki_w(), itm.Lnki_h(), itm.Lnki_type(), itm.Lnki_upright(), itm.Lnki_ext().Id(), itm.Orig_w(), itm.Orig_h(), Xof_img_size.Thumb_width_img);
+		boolean rv = resizer.Exec(src, trg, tmp_size.Html_w(), tmp_size.Html_h(), itm.Lnki_ext().Id(), resize_warning);
 		itm.Rslt_cnv_(rv ? Xof_cnv_wkr_.Tid_y : Xof_cnv_wkr_.Tid_n);
 		return rv;
 	}

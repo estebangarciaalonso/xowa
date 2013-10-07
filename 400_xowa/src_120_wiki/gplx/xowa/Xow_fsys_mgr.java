@@ -26,6 +26,7 @@ public class Xow_fsys_mgr {
 	public Io_url Root_dir()	{return root_dir;}	Io_url root_dir;
 	public Io_url Ns_dir()		{return ns_dir;}	Io_url ns_dir;
 	public Io_url Site_dir()	{return site_dir;}	Io_url site_dir;
+	public Io_url File_dir()	{return wiki.App().Fsys_mgr().File_dir().GenSubDir_nest(wiki.Key_str());}
 	public Io_url Tmp_dir()		{return tmp_dir;}	public void Tmp_dir_(Io_url v) {tmp_dir = v;} Io_url tmp_dir;		
 	public Io_url Cfg_wiki_core_fil()	{return root_dir.GenSubFil_nest(Const_url_cfg, "wiki_core.gfs");}
 	public Io_url Cfg_wiki_stats_fil()	{return root_dir.GenSubFil_nest(Const_url_cfg, "wiki_stats.gfs");}

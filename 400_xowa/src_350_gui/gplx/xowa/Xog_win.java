@@ -40,13 +40,17 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	public Xog_win_wtr		Gui_wtr() {return gui_wtr;} public void Gui_wtr_(Xog_win_wtr v) {gui_wtr = v;} private Xog_win_wtr gui_wtr = Xog_win_wtr_null._;
 	public Xoa_xowa_exec	Js_cbk() {return js_cbk;} private Xoa_xowa_exec js_cbk;
 	public Xog_resizer Resizer() {return resizer;} private Xog_resizer resizer = new Xog_resizer();
+	public void Refresh_win_size() {
+		if (win != null)	// NOTE: will be null when html box adjustment pref is set and application is starting
+			resizer.Exec_win_resize(app, win.Width(), win.Height());
+	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_link_click))								Exec_link_click();
 		else if	(ctx.Match(k, Invk_link_print))								Exec_link_print();
 		else if	(ctx.Match(k, Gfui_html.Evt_link_hover))					Exec_link_hover(m.ReadStr("v"));
 		else if	(ctx.Match(k, Gfui_html.Evt_location_changed))				Exec_link_clicked(m.ReadStr("v"));
 		else if	(ctx.Match(k, Gfui_html.Evt_location_changing))				Exec_navigate(m.ReadStr("v"));
-		else if (ctx.Match(k, Gfui_html.Evt_win_resized))					resizer.Exec_win_resize(app, win.Width(), win.Height());
+		else if (ctx.Match(k, Gfui_html.Evt_win_resized))					Refresh_win_size();
 		else if (ctx.Match(k, Invk_page_refresh))							Exec_page_refresh();
 		else if	(ctx.Match(k, Invk_page_reload_imgs))						Exec_page_reload_imgs();
 		else if	(ctx.Match(k, Invk_page_view_read))							Exec_page_view(Xoh_wiki_article.Tid_view_read);

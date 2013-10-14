@@ -220,9 +220,15 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 		if		(ctx.Match(k, Invk_load))				Xow_cfg_wiki_core.Load_ns_(this, m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_clear))				this.Clear();
 		else if	(ctx.Match(k, Invk_add_alias_bulk))		Exec_add_alias_bulk(m.ReadBry("v"));
+		else if	(ctx.Match(k, Invk_get_by_id_or_new))	return this.Get_by_id_or_null(m.ReadInt("v"));
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
-	}	private static final String Invk_add_alias_bulk = "add_alias_bulk";
+	}	private static final String Invk_add_alias_bulk = "add_alias_bulk", Invk_get_by_id_or_new = "get_by_id_or_new";
+	public Xow_ns Get_by_id_or_null(int ns_id) {
+		Xow_ns rv = Get_by_id(ns_id);
+		if (rv == null) return Null_ns;
+		return rv;
+	}	private static final Xow_ns Null_ns = new Xow_ns(Int_.MaxValue, Byte_.Zero, ByteAry_.Empty, false);
 	public static final String Invk_load = "load", Invk_clear = "clear";
 	private void Exec_add_alias_bulk(byte[] raw) {
 		byte[][] lines = ByteAry_.Split(raw, Byte_ascii.NewLine);

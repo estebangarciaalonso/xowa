@@ -16,20 +16,21 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
-import gplx.fsdb.*; import gplx.xowa.files.regs.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.bins.*;
+import gplx.fsdb.*; import gplx.xowa.files.main.orig.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.bins.*;
 public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 	private Hash_adp_bry bin_hash = new Hash_adp_bry(true); private ByteAryBfr bin_key_bfr = ByteAryBfr.new_();
 	private Hash_adp_bry reg_hash = new Hash_adp_bry(true);		
 	public boolean Tid_is_mem() {return true;}
+	public String Bin_wkr_key() {return key;} public void Bin_wkr_key_(String v) {key = v;} private String key;
 	public Xof_qry_mgr Qry_mgr() {return qry_mgr;} private Xof_qry_mgr qry_mgr = new Xof_qry_mgr();
 	public Xof_bin_mgr Bin_mgr() {return bin_mgr;} private Xof_bin_mgr bin_mgr;
 	public Xof_bin_wkr Bin_wkr_fsdb() {return this;}
 	public void Db_bin_max_(long v) {}
 	private Io_url fs_dir;
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
-	public void Init_by_wiki(String wiki_domain, Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr) {
+	public void Init_by_wiki(Xow_wiki wiki, Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr) {
 		this.fs_dir = fs_dir;
-		bin_mgr = new Xof_bin_mgr(repo_mgr);
+		bin_mgr = new Xof_bin_mgr(wiki, null, repo_mgr);	// HACK: pass null fsdb_mgr; fsdb_mgr only needed for factory methods.
 	}
 	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int thm_w, int thm_h, int thumbtime, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		byte[] key = Key_bld_thm(dir, fil, thm_w, thumbtime);
@@ -48,7 +49,7 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 	public void Reg_insert(Xof_fsdb_itm fsdb_itm, byte repo_id, byte status) {
 		byte[] fsdb_itm_ttl = fsdb_itm.Orig_ttl();
 		if (reg_hash.Has(fsdb_itm_ttl)) return;
-		Xof_reg_fil_itm regy_itm = new Xof_reg_fil_itm();
+		Xof_orig_fil_itm regy_itm = new Xof_orig_fil_itm();
 		regy_itm.Ttl_(fsdb_itm_ttl).Status_(status).Orig_repo_(repo_id).Orig_redirect_(fsdb_itm.Orig_redirect()).Orig_ext_(fsdb_itm.Lnki_ext().Id()).Orig_w_(fsdb_itm.Orig_w()).Orig_h_(fsdb_itm.Orig_h());
 		reg_hash.Add(fsdb_itm_ttl, regy_itm);
 	}
@@ -56,9 +57,9 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 		int itms_len = itms.Count();
 		for (int i = 0; i < itms_len; i++) {
 			Xof_fsdb_itm itm = (Xof_fsdb_itm)itms.FetchAt(i);
-			Xof_reg_fil_itm reg_itm = (Xof_reg_fil_itm)reg_hash.Get_by_bry(itm.Lnki_ttl());
+			Xof_orig_fil_itm reg_itm = (Xof_orig_fil_itm)reg_hash.Get_by_bry(itm.Lnki_ttl());
 			if (reg_itm == null) {
-				itm.Rslt_reg_(Xof_reg_wkr_.Tid_missing_reg);
+				itm.Rslt_reg_(Xof_orig_wkr_.Tid_missing_reg);
 				continue;
 			}
 			byte repo_id = reg_itm.Orig_repo();
@@ -118,6 +119,11 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 		return bin_key_bfr.XtoAryAndClear();
 	}
 	public void Rls() {bin_hash.Clear(); reg_hash.Clear();}
+	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
+//			if		(ctx.Match(k, Invk_set)) {}
+//			else	return GfoInvkAble_.Rv_unhandled;
+		return this;
+	}	//private static final String Invk_set = "set";
 }
 class Xof_fsdb_mem_itm {
 	public boolean Tid_is_file() {return tid_is_file;} private boolean tid_is_file;

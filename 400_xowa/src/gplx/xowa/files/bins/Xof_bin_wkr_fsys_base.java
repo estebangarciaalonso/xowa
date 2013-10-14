@@ -17,44 +17,57 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.xowa.files.fsdb.*;
-public abstract class Xof_bin_wkr_fsys_base implements Xof_bin_wkr {
-	public Xof_repo_itm Repo() {return repo;} private Xof_repo_itm repo;
-	public Xof_url_bldr Url_bldr() {return url_bldr;} private Xof_url_bldr url_bldr;
-	public void Ctor(Xof_repo_itm repo, Xof_url_bldr url_bldr) {this.repo = repo; this.url_bldr = url_bldr;}
+public abstract class Xof_bin_wkr_fsys_base implements Xof_bin_wkr, GfoInvkAble {
+	public Xof_bin_wkr_fsys_base() {}
+	public String Bin_wkr_key() {return key;} public void Bin_wkr_key_(String v) {key = v;} private String key;
 	public abstract byte Bin_wkr_tid();
 	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(Xof_fsdb_itm itm, boolean is_thumb, int w) {
 		byte mode = is_thumb ? Xof_repo_itm.Mode_thumb : Xof_repo_itm.Mode_orig;
-		Io_url src_url = this.Bin_wkr_get__src_url(mode, String_.new_utf8_(itm.Orig_wiki()), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), is_thumb, w, itm.Lnki_thumbtime());
+		Io_url src_url = this.Get_src_url(mode, String_.new_utf8_(itm.Orig_wiki()), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), w, itm.Lnki_thumbtime());
 		return (src_url == Io_url_.Null) ? gplx.ios.Io_stream_rdr_.Null : gplx.ios.Io_stream_rdr_.file_(src_url);
 	}
 	public boolean Bin_wkr_get_to_url(Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
 		byte mode = is_thumb ? Xof_repo_itm.Mode_thumb : Xof_repo_itm.Mode_orig;
-		Io_url src_url = this.Bin_wkr_get__src_url(mode, String_.new_utf8_(itm.Orig_wiki()), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), is_thumb, w, itm.Lnki_thumbtime());
+		Io_url src_url = this.Get_src_url(mode, String_.new_utf8_(itm.Orig_wiki()), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), w, itm.Lnki_thumbtime());
 		if (src_url == Io_url_.Null) return false;
 		byte[] bin = Io_mgr._.LoadFilBry(src_url);
 		return bin != Io_mgr.LoadFilBry_fail;
 	}
-	public abstract Io_url Bin_wkr_get__src_url(byte mode, String wiki, byte[] ttl_wo_ns, byte[] md5, Xof_ext ext, boolean is_thumb, int w, int thumbtime);
+	protected abstract void Url_(Io_url v);
+	protected abstract Io_url Get_src_url(byte mode, String wiki, byte[] ttl_wo_ns, byte[] md5, Xof_ext ext, int w, int thumbtime);
+	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
+		if		(ctx.Match(k, Invk_url_))		this.Url_(m.ReadIoUrl("v"));
+		else	return GfoInvkAble_.Rv_unhandled;
+		return this;
+	}	private static final String Invk_url_ = "url_";
 }
-class Xof_bin_wkr_fsys_wmf extends Xof_bin_wkr_fsys_base {
-	public Xof_bin_wkr_fsys_wmf(Xof_repo_itm repo, Xof_url_bldr url_bldr) {this.Ctor(repo, url_bldr);}
+abstract class Xof_bin_wkr_fsys_wmf_base extends Xof_bin_wkr_fsys_base {
+	public Xof_url_bldr Url_bldr() {return url_bldr;} private Xof_url_bldr url_bldr = new Xof_url_bldr();
+	public abstract void Init_by_root();
+	@Override protected void Url_(Io_url v) {url_bldr.Root_(ByteAry_.new_utf8_(v.Raw()));}
+	@Override protected Io_url Get_src_url(byte mode, String wiki, byte[] ttl_wo_ns, byte[] md5, Xof_ext ext, int w, int thumbtime) {
+		return this.Url_bldr().Init_by_itm(mode, ttl_wo_ns, md5, ext, w, thumbtime).Xto_url();
+	}
+}
+class Xof_bin_wkr_fsys_wmf extends Xof_bin_wkr_fsys_wmf_base {
 	@Override public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsys_wmf;}
-	@Override public Io_url Bin_wkr_get__src_url(byte mode, String wiki, byte[] ttl_wo_ns, byte[] md5, Xof_ext ext, boolean is_thumb, int w, int thumbtime) {
-		return this.Url_bldr().Set_src_file_(mode, this.Repo(), ttl_wo_ns, md5, ext, w, thumbtime).Xto_url();
+	@Override public void Init_by_root() {
+		this.Url_bldr().Init_by_root(ByteAry_.Empty, Op_sys.Cur().Fsys_dir_spr_byte(), Bool_.Y, Bool_.Y, Xof_repo_itm.Dir_depth_wmf);
 	}
+	public static final String Bin_wkr_type_fsys_wmf = "xowa.fsys.wmf";
 }
-class Xof_bin_wkr_fsys_xowa extends Xof_bin_wkr_fsys_base {
-	public Xof_bin_wkr_fsys_xowa(Xof_repo_itm repo, Xof_url_bldr url_bldr) {this.Ctor(repo, url_bldr);}
+class Xof_bin_wkr_fsys_xowa extends Xof_bin_wkr_fsys_wmf_base {
 	@Override public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsys_xowa;}
-	@Override public Io_url Bin_wkr_get__src_url(byte mode, String wiki, byte[] ttl_wo_ns, byte[] md5, Xof_ext ext, boolean is_thumb, int w, int thumbtime) {
-		return this.Url_bldr().Set_trg_file_(mode, this.Repo(), ttl_wo_ns, md5, ext, w, thumbtime).Xto_url();
+	@Override public void Init_by_root() {
+		this.Url_bldr().Init_by_root(ByteAry_.Empty, Op_sys.Cur().Fsys_dir_spr_byte(), Bool_.N, Bool_.N, Xof_repo_itm.Dir_depth_xowa);
 	}
+	public static final String Bin_wkr_type_fsys_wmf = "xowa.fsys.xowa";
 }
 class Xof_bin_wkr_fsys_dir extends Xof_bin_wkr_fsys_base {
 	private Io_url dir;
-	public Xof_bin_wkr_fsys_dir(Xof_repo_itm repo, Xof_url_bldr url_bldr, Io_url dir) {this.Ctor(repo, url_bldr); this.dir = dir;}
 	@Override public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsys_dir;}
-	@Override public Io_url Bin_wkr_get__src_url(byte mode, String wiki, byte[] ttl_wo_ns, byte[] md5, Xof_ext ext, boolean is_thumb, int w, int thumbtime) {
+	@Override protected void Url_(Io_url v) {this.dir = v;}
+	@Override protected Io_url Get_src_url(byte mode, String wiki, byte[] ttl_wo_ns, byte[] md5, Xof_ext ext, int w, int thumbtime) {
 		return mode == Xof_repo_itm.Mode_thumb ? Io_url_.Null : dir.GenSubFil(String_.new_utf8_(ttl_wo_ns));
 	}
 }

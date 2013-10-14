@@ -81,7 +81,7 @@ public class Xtn_dynamicPageList_nde implements Xop_xnde_xtn, Xop_xnde_atr_parse
 			if 		(b == dlm_fld) {
 				Object o = keys.Get_by_mid(src, fld_bgn, pos);
 				if (o == null) {
-					wiki.App().Usr_dlg().Warn_many(GRP_KEY, "unknown_key", "unknown_key: ~{0}", String_.new_utf8_(src, fld_bgn, pos));
+					wiki.App().Usr_dlg().Warn_many(GRP_KEY, "unknown_key", "unknown_key: page=~{0} key=~{1}", String_.new_utf8_(ctx.Page().Page_ttl().Full_txt()), String_.new_utf8_(src, fld_bgn, pos));
 					fld_bgn = ByteAry_.FindFwd(src, Byte_ascii.NewLine);
 					if (fld_bgn == ByteAry_.NotFound) break; 
 				}

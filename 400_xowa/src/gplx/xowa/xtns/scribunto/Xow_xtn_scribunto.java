@@ -26,6 +26,7 @@ public class Xow_xtn_scribunto implements Xow_xtn_itm {
 	public int Lua_timeout_busy_wait() {return lua_timeout_busy_wait;} private int lua_timeout_busy_wait = 250;
 	public int Lua_timeout_loop() {return lua_timeout_loop;} private int lua_timeout_loop = 10000000;
 	public boolean Lua_log_enabled() {return lua_log_enabled;} private boolean lua_log_enabled;
+	public boolean Lua_reset_engine() {return lua_reset_engine;} private boolean lua_reset_engine = false;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_enabled))				return Yn.XtoStr(enabled);
 		else if	(ctx.Match(k, Invk_enabled_))				enabled = m.ReadBool("v");
@@ -39,11 +40,19 @@ public class Xow_xtn_scribunto implements Xow_xtn_itm {
 		else if	(ctx.Match(k, Invk_lua_timeout_busy_wait_))	lua_timeout_busy_wait = m.ReadInt("v");
 		else if	(ctx.Match(k, Invk_lua_timeout_loop))		return lua_timeout_loop;
 		else if	(ctx.Match(k, Invk_lua_timeout_loop_))		lua_timeout_loop = m.ReadInt("v");
+		else if	(ctx.Match(k, Invk_lua_reset_engine))		return lua_reset_engine;
+		else if	(ctx.Match(k, Invk_lua_reset_engine_))		lua_reset_engine = m.ReadYn("v");
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}
-	static final String Invk_enabled = "enabled", Invk_enabled_ = "enabled_", Invk_lua_timeout = "lua_timeout", Invk_lua_timeout_ = "lua_timeout_", Invk_lua_timeout_polling = "lua_timeout_polling", Invk_lua_timeout_polling_ = "lua_timeout_polling_", Invk_lua_log_enabled = "lua_log_enabled", Invk_lua_log_enabled_ = "lua_log_enabled_"
-	, Invk_lua_timeout_loop = "lua_timeout_loop", Invk_lua_timeout_loop_ = "lua_timeout_loop_", Invk_lua_timeout_busy_wait = "lua_timeout_busy_wait", Invk_lua_timeout_busy_wait_ = "lua_timeout_busy_wait_";
+	private static final String Invk_enabled = "enabled", Invk_enabled_ = "enabled_"
+	, Invk_lua_timeout = "lua_timeout", Invk_lua_timeout_ = "lua_timeout_"
+	, Invk_lua_timeout_polling = "lua_timeout_polling", Invk_lua_timeout_polling_ = "lua_timeout_polling_"
+	, Invk_lua_log_enabled = "lua_log_enabled", Invk_lua_log_enabled_ = "lua_log_enabled_"
+	, Invk_lua_timeout_loop = "lua_timeout_loop", Invk_lua_timeout_loop_ = "lua_timeout_loop_"
+	, Invk_lua_timeout_busy_wait = "lua_timeout_busy_wait", Invk_lua_timeout_busy_wait_ = "lua_timeout_busy_wait_"
+	, Invk_lua_reset_engine = "lua_reset_engine", Invk_lua_reset_engine_ = "lua_reset_engine_"
+	;
 	public static Err err_(String fmt, Object... args) {return Err_.new_fmt_(fmt, args);}
 	public static Err err_(Exception e, String fmt, Object... args) {return Err_.new_fmt_(fmt, args);}
 }

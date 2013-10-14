@@ -25,7 +25,7 @@ public class Xof_qry_wkr_xowa implements Xof_qry_wkr {
 		this.wiki_finder = wiki_finder;
 		this.img_meta_wkr = img_meta_wkr;
 	}
-	public byte Tid() {return Xof_qry_wkr_.Tid_xowa;}
+	public byte Tid() {return Xof_qry_wkr_.Tid_xowa_db;}
 	public boolean Qry_file(Xof_fsdb_itm itm) {
 		byte[] ttl = itm.Lnki_ttl();
 		Xoa_page page = wiki_finder.Get_page(Xow_ns_.Id_file, ttl);

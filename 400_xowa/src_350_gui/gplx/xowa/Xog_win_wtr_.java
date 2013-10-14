@@ -34,6 +34,7 @@ class Xog_win_wtr_null implements Xog_win_wtr {
 	public String Log_direct(String msg) {return "";}
 	public String Note_many(String grp_key, String msg_key, String fmt, Object... args) {return "";}
 	public String Note_none(String grp_key, String msg_key, String fmt) {return "";}
+	public String Note_gui_none(String grp_key, String msg_key, String fmt) {return "";}
 	public String Prog_one(String grp_key, String msg_key, String fmt, Object arg) {return "";}
 	public Err Fail_many(String grp_key, String msg_key, String fmt, Object... args) {return Err_mgr._.fmt_(grp_key, msg_key, fmt, args);}
 	public void Info_box_clear(boolean clear_text) {}

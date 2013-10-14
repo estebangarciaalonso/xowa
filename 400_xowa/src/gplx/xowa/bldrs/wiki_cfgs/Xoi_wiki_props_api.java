@@ -20,7 +20,7 @@ import gplx.xmls.*; import gplx.ios.*;
 public class Xoi_wiki_props_api {
 	private IoEngine_xrg_downloadFil download_args = IoEngine_xrg_downloadFil.new_("", Io_url_.Null);
 	public String Api_src(String wiki_domain) {
-		return String_.Concat("http://", wiki_domain, "/w/api.php?action=query&format=xml&meta=siteinfo&siprop=namespacealiases");
+		return String_.Concat("http://", wiki_domain, "/w/api.php?action=query&format=xml&meta=siteinfo&siprop=namespacealiases|namespaces");
 	}
 	public byte[] Exec_api(String src) {
 		return download_args.Exec_as_bry(src);
@@ -34,16 +34,22 @@ public class Xoi_wiki_props_api {
 			bfr.Add_int_variable(alias.Id()).Add_byte_pipe().Add_str(alias.Alias()).Add_byte_nl();
 		}
 		bfr.Add_str("\");');\n");
-	
-		bfr.Add_str("app.wiki_cfg_bldr.get('").Add(wiki.Wiki_domain()).Add_str("').new_cmd_('wiki.ns_mgr.subpages', \"\n");
+		bfr.Add_str("app.wiki_cfg_bldr.get('").Add(wiki.Wiki_domain()).Add_str("').new_cmd_('wiki.ns_mgr.subpages', \"");
 		len = wiki.Ns_ary().length;
+		boolean first = true;
 		for (int i = 0; i < len; i++) {
 			Xoi_wiki_props_ns ns = wiki.Ns_ary()[i];
-//				if (ns.Subpages_enabled()) {
-				bfr.Add_str("ns_mgr.get_by_id_or_new(").Add_int_variable(ns.Id()).Add_str(").Subpages_enabled_('y');\n"); 
-//				}
+			if (ns.Subpages_enabled()) {
+				if (first) {
+					first = false;
+				}
+				else
+					bfr.Add_byte_nl();
+				bfr.Add_str("ns_mgr.get_by_id_or_new(").Add_int_variable(ns.Id()).Add_str(").subpages_enabled_('y');"); 
+			}
 		}
 		bfr.Add_str("\");\n");
+		bfr.Add_byte_nl();
 	}
 	public void Parse(Xoi_wiki_props_wiki wiki, String xml) {
 		XmlDoc xdoc = XmlDoc_.parse_(xml);

@@ -18,14 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.fsdb; import gplx.*;
 import gplx.dbs.*;
 public class Fsdb_db_bin_mgr implements RlsAble {
-	private Io_url dir; private String wiki_domain;
+	private Io_url dir;
 	private Fsdb_db_bin_fil[] itms = Fsdb_db_bin_fil.Ary_empty; private int itms_len = 0;
 	private Fsdb_db_bin_fil itms_n;
-	private Fsdb_db_bin_mgr(Io_url dir, String wiki_domain) {this.dir = dir; this.wiki_domain = wiki_domain;}
+	private Db_provider provider;
+	private Fsdb_db_bin_mgr(Io_url dir) {this.dir = dir;}
 	public int Len() {return itms.length;}
-	public long Db_bin_max() {return db_bin_max;} public Fsdb_db_bin_mgr Db_bin_max_(long v) {db_bin_max = v; return this;} private long db_bin_max = Io_mgr.Len_mb * Long_.X_by_int(5);
+	public long Db_bin_max() {return db_bin_max;} public Fsdb_db_bin_mgr Db_bin_max_(long v) {db_bin_max = v; return this;} private long db_bin_max = Io_mgr.Len_mb * Long_.X_by_int(188);
 	public Fsdb_db_bin_fil Get_at(int i) {return itms[i];}
-	public void Commit(Db_provider provider) {		
+	public void Commit() {		
 		Fsdb_db_bin_tbl.Commit_all(provider, itms);
 	}
 	public void Rls() {
@@ -36,27 +37,30 @@ public class Fsdb_db_bin_mgr implements RlsAble {
 		}
 	}
 	public int Get_id_for_insert(long bin_len) {
-		long new_bin_len = itms_n.Bin_len() + bin_len;
-		if (new_bin_len > itms_n.Bin_max())
-			Itms_add(bin_len);
-		else
-			itms_n.Bin_len_(new_bin_len);
+		if (itms_n.Bin_len() > itms_n.Bin_max())
+			Itms_add(0);
 		return itms_n.Id();
 	}
-	public void Insert(int db_id, int bin_id, byte owner_tid, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		Fsdb_db_bin_fil bin_fil = itms[db_id];
-		bin_fil.Insert(bin_id, owner_tid, bin_len, bin_rdr);
+	public void Increment(long bin_len) {
+		long new_bin_len = itms_n.Bin_len() + bin_len;
+		itms_n.Bin_len_(new_bin_len);
 	}
-	public static Fsdb_db_bin_mgr load_(Db_provider p, Io_url dir, String wiki_domain) {
-		Fsdb_db_bin_mgr rv = new Fsdb_db_bin_mgr(dir, wiki_domain);
+	public long Insert(int db_id, int bin_id, byte owner_tid, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+		Fsdb_db_bin_fil bin_fil = itms[db_id];
+		return bin_fil.Insert(bin_id, owner_tid, bin_len, bin_rdr);
+	}
+	public static Fsdb_db_bin_mgr load_(Db_provider p, Io_url dir) {
+		Fsdb_db_bin_mgr rv = new Fsdb_db_bin_mgr(dir);
+		rv.provider = p;
 		rv.itms = Fsdb_db_bin_tbl.Select_all(p, dir);
 		rv.itms_len = rv.itms.length;
 		rv.itms_n = rv.itms[rv.itms_len - 1];
 		return rv;
 	}
-	public static Fsdb_db_bin_mgr make_(Db_provider p, Io_url dir, String wiki_domain) {
+	public static Fsdb_db_bin_mgr make_(Db_provider p, Io_url dir) {
 		Fsdb_db_bin_tbl.Create_table(p);
-		Fsdb_db_bin_mgr rv = new Fsdb_db_bin_mgr(dir, wiki_domain);
+		Fsdb_db_bin_mgr rv = new Fsdb_db_bin_mgr(dir);
+		rv.provider = p;
 		rv.Itms_add(0);
 		return rv;
 	}
@@ -65,9 +69,10 @@ public class Fsdb_db_bin_mgr implements RlsAble {
 		Fsdb_db_bin_fil[] new_itms = new Fsdb_db_bin_fil[new_itms_len];
 		for (int i = 0; i < itms_len; i++)
 			new_itms[i] = itms[i];
-		itms_n = Fsdb_db_bin_fil.make_(itms_len, Fsdb_db_bin_fil.url_(dir, wiki_domain, itms_len), bin_len, db_bin_max);
+		itms_n = Fsdb_db_bin_fil.make_(itms_len, Fsdb_db_bin_fil.url_(dir, itms_len), bin_len, db_bin_max);
 		itms = new_itms;
 		itms_len = new_itms_len;
 		itms[itms_len - 1] = itms_n;
+		this.Commit();
 	}
 }

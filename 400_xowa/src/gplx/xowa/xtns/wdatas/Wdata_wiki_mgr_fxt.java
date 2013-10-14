@@ -66,8 +66,8 @@ public class Wdata_wiki_mgr_fxt {
 		byte[] itm = bfr.Add(ttl_bry).Add_byte(Byte_ascii.Pipe).Add(ByteAry_.new_ascii_(qid)).Add_byte_nl().XtoAryAndClear();
 		Xob_xdat_file xdat_file = new Xob_xdat_file();
 		xdat_file.Insert(bfr, itm);
-		Io_url reg_fil = Xob_wdata_qid_base_tst.ttl_(app.Wiki_mgr().Wdata_mgr().Wdata_wiki(), wiki, "000", 0);
-		xdat_file.Save(reg_fil);
+		Io_url file_orig = Xob_wdata_qid_base_tst.ttl_(app.Wiki_mgr().Wdata_mgr().Wdata_wiki(), wiki, "000", 0);
+		xdat_file.Save(file_orig);
 	}
 	public void Init_external_links_mgr_clear() {wiki.Ctx().Page().Wdata_external_lang_links().Reset();}
 	public void Init_external_links_mgr_add(String... langs) {

@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.gui; import gplx.*; import gplx.xowa.*;
-import gplx.gfui.*;
+import gplx.gfui.*; import gplx.xowa.users.*;
 public class Xog_resizer {
 	public void Exec_win_resize(Xoa_app app, int main_w, int main_h) {
 		Xog_layout layout = app.Gui_mgr().Layout();
@@ -49,7 +49,12 @@ public class Xog_resizer {
 		Exec_win_resize_elem(layout.Search_box()		, search_box			, new Rect_ref(0, 0, 190								, txt_dim				), url_exec_btn, Xog_resizer.Layout_right_top);
 		Exec_win_resize_elem(layout.Search_exec_btn()	, search_exec_btn		, new Rect_ref(0, 0, btn_dim							, btn_dim				), search_box, Xog_resizer.Layout_right_top);
 		Exec_win_resize_elem(layout.Html_box()			, html_box				, new Rect_ref(0, 0, main_w								, main_h + -(bar_dim * 2) + 4 - menu_bar_adj), go_bwd_btn, Xog_resizer.Layout_below_left);	// -40:btn_dim(url bar) + btn_dim (find box)
-		html_box.Y_(bar_dim);
+		Xoc_layout_mgr layout_mgr = app.User().Cfg_mgr().Layout_mgr();
+		switch (layout_mgr.Html_box_adj_type()) {
+			case Xoc_layout_mgr.Html_box_adj_type_none_byte: break;
+			case Xoc_layout_mgr.Html_box_adj_type_abs_byte: html_box.Rect_set(layout_mgr.Html_box_adj_rect()); break;
+			case Xoc_layout_mgr.Html_box_adj_type_rel_byte: html_box.Rect_set(html_box.Rect().Op_add(layout_mgr.Html_box_adj_rect())); break;
+		}
 		Exec_win_resize_elem(layout.Find_close_btn()	, find_close_btn		, new Rect_ref(0, 0, btn_dim							, btn_dim				), html_box, Xog_resizer.Layout_below_left);
 		Exec_win_resize_elem(layout.Find_box()			, find_box				, new Rect_ref(0, 0, 102								, txt_dim				), find_close_btn, Xog_resizer.Layout_right_top);
 		find_box.Y_(html_box.Y_max());

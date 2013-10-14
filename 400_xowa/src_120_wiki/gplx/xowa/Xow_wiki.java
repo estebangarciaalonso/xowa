@@ -193,6 +193,7 @@ public class Xow_wiki implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_import_mgr))			return import_mgr;
 		else if	(ctx.Match(k, Invk_maint))			return maint_mgr;
 		else if	(ctx.Match(k, Invk_domain))				return domain_str;
+		else if	(ctx.Match(k, Invk_xtns))				return xtn_mgr;
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}	public static final String Invk_ZipDirs = "zip_dirs_", Invk_files = "files", Invk_xwikis = "xwikis", Invk_cfg_gallery_ = "cfg_gallery_", Invk_commons_wiki_ = "commons_wiki_", Invk_stats = "stats"
@@ -200,7 +201,7 @@ public class Xow_wiki implements GfoInvkAble {
 			, Invk_special = "special"
 			, Invk_props = "props", Invk_parser = "parser"
 			, Invk_msgs = "msgs", Invk_app = "app", Invk_util = "util"
-			, Invk_xtns_mgr = "xtns", Invk_data_storage_format_ = "data_storage_format_", Invk_import_mgr = "import"
+			, Invk_xtns = "xtns", Invk_data_storage_format_ = "data_storage_format_", Invk_import_mgr = "import"
 			, Invk_db_mgr = "db_mgr", Invk_db_mgr_to_sql_ = "db_mgr_to_sql_"
 			, Invk_domain = "domain", Invk_maint = "maint"
 			;

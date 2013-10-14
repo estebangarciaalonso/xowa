@@ -28,9 +28,17 @@ public class Sqlite_engine_ {
 		p.Exec_qry(qry);
 	}
 	public static void Tbl_create(Db_provider p, String tbl_name, String tbl_sql) {
-		Db_qry qry = Db_qry_sql.ddl_("DROP TABLE IF EXISTS " + tbl_name + ";");
+		Tbl_delete(p, tbl_name);
+		Db_qry qry = Db_qry_sql.ddl_(tbl_sql);
 		p.Exec_qry(qry);
-		qry = Db_qry_sql.ddl_(tbl_sql);
+	}
+	public static void Tbl_delete_many(Db_provider p, String... tbls) {
+		int len = tbls.length;
+		for (int i = 0; i < len; i++)
+			Tbl_delete(p, tbls[i]);
+	}
+	public static void Tbl_delete(Db_provider p, String tbl) {
+		Db_qry qry = Db_qry_sql.ddl_("DROP TABLE IF EXISTS " + tbl + ";");
 		p.Exec_qry(qry);
 	}
 	public static void Pragma_page_size(Db_provider p, int val) {

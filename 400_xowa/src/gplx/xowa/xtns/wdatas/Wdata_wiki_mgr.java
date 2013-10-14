@@ -138,7 +138,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 		json.Root().Print_as_json(bfr, 0);
 		bfr.Add(Xoh_consts.Span_end);
 	}
-	Json_doc Get_json(byte[] qid_bry) {
+	private Json_doc Get_json(byte[] qid_bry) {
 		if (!enabled) return null;
 		Xoa_ttl qid_ttl = Xoa_ttl.parse_(this.Wdata_wiki(), qid_bry); if (qid_ttl == null) {app.Usr_dlg().Warn_many("", "", "invalid qid for ttl: ~{0}", String_.new_utf8_(qid_bry)); return null;}
 		Xoa_page qid_page = this.Wdata_wiki().Data_mgr().Get_page(qid_ttl, false); if (qid_page.Missing()) return null;

@@ -29,7 +29,7 @@ public class Xtn_gallery_itm {
 	public Xtn_gallery_itm Reset() {
 		ttl = null;
 		ttl_bgn = ttl_end = alt_bgn = alt_end = link_bgn = link_end = ByteAry_.NotFound;
-		caption_bry = null;
+		caption_bry = null;	// NOTE: use null instead of ""; more legible tests
 		return this;
 	}
 }

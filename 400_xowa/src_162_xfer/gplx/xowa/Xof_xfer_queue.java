@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
+import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*; import gplx.xowa.files.bins.*;
 public class Xof_xfer_queue {
 	private ListAdp list = ListAdp_.new_(); private OrderedHash dirty = OrderedHash_.new_(); private ByteAryRef dirty_key = ByteAryRef.null_();		
 	public IntRef Elem_id() {return elem_id;} private IntRef elem_id = IntRef.neg1_();
@@ -76,7 +76,12 @@ public class Xof_xfer_queue {
 		this.Clear();
 	}
 	private void Exec_v2(Xog_win_wtr wtr, Xow_wiki wiki) {
-		wiki.File_mgr().Fsdb_mgr().Init_by_wiki(wiki);
+		boolean init = wiki.File_mgr().Fsdb_mgr().Init_by_wiki(wiki);
+		if (init) {
+			Xof_bin_wkr_fsdb_sql fsdb_wkr = (Xof_bin_wkr_fsdb_sql)wiki.File_mgr().Fsdb_mgr().Bin_mgr().Add(Xof_bin_wkr_fsdb_sql.Bin_wkr_type_fsdb, "xowa.fsdb.main");
+			fsdb_wkr.Fsdb_mgr().Db_dir_(wiki.App().Fsys_mgr().File_dir().GenSubDir(wiki.Domain_str()));
+			wiki.File_mgr().Fsdb_mgr().Bin_mgr().Add(Xof_bin_wkr_wmf_xfer.Bin_wkr_type_wmf_xfer, "xowa.http.wmf");
+		}
 		wiki.File_mgr().Fsdb_mgr().Reg_select(wtr, Xof_exec_tid.Tid_wiki_page, Xfer_itms_to_fsdb_itms(list));
 	}
 	private ListAdp Xfer_itms_to_fsdb_itms(ListAdp list) {

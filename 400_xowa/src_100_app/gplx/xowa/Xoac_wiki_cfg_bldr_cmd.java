@@ -24,14 +24,14 @@ public class Xoac_wiki_cfg_bldr_cmd {
 		String sect_txt_bgn = sb.Add("// ").Add(key).Add(".bgn\n").XtoStrAndClear();
 		String sect_txt_end = sb.Add("// ").Add(key).Add(".end\n").XtoStrAndClear();
 		String sect_txt_all = sb.Add(sect_txt_bgn).Add(text + "\n").Add(sect_txt_end).XtoStrAndClear();	// NOTE: always add \n; convenience for single line cmds
-		int sect_pos_bgn = String_.FindFwd(src, sect_txt_bgn);
-		if (sect_pos_bgn == String_.NotFound)	// new cmd; add to end of file
+//			int sect_pos_bgn = String_.FindFwd(src, sect_txt_bgn);
+//			if (sect_pos_bgn == String_.NotFound)	// new cmd; add to end of file
 			return src + sect_txt_all;
-		int sect_pos_end = String_.FindFwd(src, sect_txt_end);
-		if (sect_pos_end == String_.NotFound)
-			throw Err_.new_("section_fail: " + wiki + " " + key);
-		try {
-			return sb.Add(String_.Mid(src, 0, sect_pos_bgn)).Add(sect_txt_all).Add(String_.Mid(src, sect_pos_end + String_.Len(sect_txt_end), String_.Len(text))).XtoStrAndClear();
-		} catch (Exception e) {Err_.Noop(e); throw Err_.new_("section_fail: " + wiki + " " + key);}
+//			int sect_pos_end = String_.FindFwd(src, sect_txt_end);
+//			if (sect_pos_end == String_.NotFound)
+//				throw Err_.new_("section_fail: " + wiki + " " + key);
+//			try {
+//				return sb.Add(String_.Mid(src, 0, sect_pos_bgn)).Add(sect_txt_all).Add(String_.Mid(src, sect_pos_end + String_.Len(sect_txt_end), String_.Len(text))).XtoStrAndClear();
+//			} catch (Exception e) {Err_.Noop(e); throw Err_.new_("section_fail: " + wiki + " " + key);}
 	}
 }

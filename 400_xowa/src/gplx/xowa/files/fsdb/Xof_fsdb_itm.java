@@ -100,7 +100,7 @@ public class Xof_fsdb_itm {
 		html_ids_ary = new_ary;
 		html_ids_ary_max = new_len;
 	}
-	public byte Rslt_reg() {return rslt_reg;} public Xof_fsdb_itm Rslt_reg_(byte v) {this.rslt_reg = v; return this;} private byte rslt_reg = gplx.xowa.files.regs.Xof_reg_wkr_.Tid_null;
+	public byte Rslt_reg() {return rslt_reg;} public Xof_fsdb_itm Rslt_reg_(byte v) {this.rslt_reg = v; return this;} private byte rslt_reg = gplx.xowa.files.main.orig.Xof_orig_wkr_.Tid_null;
 	public byte Rslt_qry() {return rslt_qry;} public Xof_fsdb_itm Rslt_qry_(byte v) {this.rslt_qry = v; return this;} private byte rslt_qry;
 	public byte Rslt_bin() {return rslt_bin;} public Xof_fsdb_itm Rslt_bin_(byte v) {this.rslt_bin = v; return this;} private byte rslt_bin;
 	public byte Rslt_cnv() {return rslt_cnv;} public Xof_fsdb_itm Rslt_cnv_(byte v) {this.rslt_cnv = v; return this;} private byte rslt_cnv;

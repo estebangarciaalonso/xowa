@@ -17,8 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.xowa.files.fsdb.*;
-public interface Xof_bin_wkr {
+public interface Xof_bin_wkr extends GfoInvkAble {
 	byte Bin_wkr_tid();
+	String Bin_wkr_key(); void Bin_wkr_key_(String v);
 	gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(Xof_fsdb_itm itm, boolean is_thumb, int w);
 	boolean Bin_wkr_get_to_url(Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url);
 }

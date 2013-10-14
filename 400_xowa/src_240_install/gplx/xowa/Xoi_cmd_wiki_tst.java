@@ -18,7 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xoi_cmd_wiki_tst {
-	@Test  public void Stub() {Bld_cfg_files();}
+	@Test  public void Run() {
+//			Bld_import_list(Wikis);
+//			Bld_cfg_files(Wikis);
+	}
 	public void Bld_import_list(String... ary) {
 		int ary_len = ary.length;
 		ByteAryBfr bfr = ByteAryBfr.reset_(255);
@@ -68,15 +71,22 @@ public class Xoi_cmd_wiki_tst {
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++) {
 			String wiki_domain = ary[i];
-			byte[] xml = api.Exec_api(api.Api_src(wiki_domain));
-			api.Parse(wiki, String_.new_utf8_(xml));
-			api.Build_cfg(bfr, wiki);
+			try {
+				byte[] xml = api.Exec_api(api.Api_src(wiki_domain));
+				wiki.Wiki_domain_(ByteAry_.new_ascii_(wiki_domain));
+				api.Parse(wiki, String_.new_utf8_(xml));
+				api.Build_cfg(bfr, wiki);
+			}
+			catch (Exception e) {
+				ConsoleAdp._.WriteLine(Err_.Message_gplx_brief(e));
+			}
 		}
+		bfr.Add_str("app.wiki_cfg_bldr.run;").Add_byte_nl();
 		Io_mgr._.SaveFilStr("C:\\temp.txt", bfr.XtoStr());
 	}
-//		@Test  public void Len() {
-//Bld_import_list
-//( "simple.wikipedia.org"
+	public static String[] Wikis = new String[]
+{ "simple.wikipedia.org"
+};
 //, "simple.wiktionary.org"
 //, "simple.wikibooks.org"
 //, "en.wikipedia.org"
@@ -739,8 +749,7 @@ public class Xoi_cmd_wiki_tst {
 //, "cr.wikiquote.org"
 //, "nds.wikiquote.org"
 //, "kr.wikiquote.org"
-//);
-//		}
+//};
 }
 //, "als.wikisource.org"
 //, "als.wikinews.org"

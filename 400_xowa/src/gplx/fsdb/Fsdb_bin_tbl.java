@@ -25,7 +25,8 @@ public class Fsdb_bin_tbl {
 		try {Insert_rdr(stmt, id, tid, bin_len, bin_rdr);}
 		finally {stmt.Rls();}
 	}
-	public static void Insert_rdr(Db_stmt stmt, int id, byte tid, long bin_len, Io_stream_rdr bin_rdr) {
+	public static long Insert_rdr(Db_stmt stmt, int id, byte tid, long bin_len, Io_stream_rdr bin_rdr) {
+		long rv = bin_len;
 		stmt.Clear()
 		.Val_int_(id)
 		.Val_byte_(tid)
@@ -34,9 +35,13 @@ public class Fsdb_bin_tbl {
 		;
 		if (Sqlite_engine_.Cfg_read_binary_stream_supported)
 			stmt.Val_rdr_(bin_rdr, bin_len);
-		else
-			stmt.Val_bry_(Io_stream_rdr_.Load_all_as_bry(ByteAryBfr.new_(), bin_rdr));
+		else {
+			byte[] bin_ary = Io_stream_rdr_.Load_all_as_bry(ByteAryBfr.new_(), bin_rdr);
+			stmt.Val_bry_(bin_ary);
+			rv = bin_ary.length;
+		}
 		stmt.Exec_insert();
+		return rv;
 	}	
 	public static void Delete(Db_provider p, int id) {
 		Db_stmt stmt = Delete_stmt(p);
@@ -65,14 +70,14 @@ public class Fsdb_bin_tbl {
 		}
 		finally {rdr.Rls();}
 	}
-	public static boolean Select_to_url(Db_provider p, int owner, Io_url url, byte[] bfr, int flush) {
+	public static boolean Select_to_url(Db_provider p, int owner, Io_url url, byte[] bin_bfr, int bin_flush_when) {
 		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_(Fld_bin_data).Where_(Db_crt_.eq_(Fld_bin_owner_id, owner));
 		DataRdr rdr = DataRdr_.Null;
 		try {
 			rdr = p.Exec_qry_as_rdr(qry);
 			if (rdr.MoveNextPeer()) {
 				if (Sqlite_engine_.Cfg_read_binary_stream_supported)
-					return Select_to_fsys__stream(rdr, url, bfr, flush);
+					return Select_to_fsys__stream(rdr, url, bin_bfr, bin_flush_when);
 				else {
 					byte[] bry = rdr.ReadBry(Fld_bin_data);
 					Io_mgr._.SaveFilBry(url, bry);
@@ -84,19 +89,19 @@ public class Fsdb_bin_tbl {
 		}
 		finally {rdr.Rls();}
 	}
-	public static boolean Select_to_fsys__stream(DataRdr rdr, Io_url url, byte[] bfr, int flush) {
+	public static boolean Select_to_fsys__stream(DataRdr rdr, Io_url url, byte[] bin_bfr, int bin_flush_when) {
 		Io_stream_rdr db_stream = Io_stream_rdr_.Null;
 		IoStream fs_stream = IoStream_.Null;
 		try {
 			db_stream = rdr.ReadRdr(Fld_bin_data); if (db_stream == Io_stream_rdr_.Null) return false;
 			fs_stream = Io_mgr._.OpenStreamWrite(url);
-			int pos = 0, flush_nxt = flush;
+			int pos = 0, flush_nxt = bin_flush_when;
 			while (true) {
-				int read = db_stream.Read(bfr, pos, bfr.length); if (read == Io_stream_rdr_.Read_done) break;
-				fs_stream.Write(bfr, 0, read);
+				int read = db_stream.Read(bin_bfr, pos, bin_bfr.length); if (read == Io_stream_rdr_.Read_done) break;
+				fs_stream.Write(bin_bfr, 0, read);
 				if (pos > flush_nxt) {
 					fs_stream.Flush();
-					flush_nxt += flush;
+					flush_nxt += bin_flush_when;
 				}
 			}
 			fs_stream.Flush();

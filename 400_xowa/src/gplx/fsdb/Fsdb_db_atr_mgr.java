@@ -43,10 +43,10 @@ public class Fsdb_db_atr_mgr implements RlsAble {
 		rv.itms_0 = rv.itms[0];
 		return rv;
 	}
-	public static Fsdb_db_atr_mgr make_(Db_provider p, Io_url dir, String wiki_domain) {
+	public static Fsdb_db_atr_mgr make_(Db_provider p, Io_url dir) {
 		Fsdb_db_atr_tbl.Create_table(p);
 		Fsdb_db_atr_mgr rv = new Fsdb_db_atr_mgr();
-		Fsdb_db_atr_fil itm = Fsdb_db_atr_fil.make_(Id_0, Fsdb_db_atr_fil.url_(dir, wiki_domain, Id_0), Path_bgn_0);
+		Fsdb_db_atr_fil itm = Fsdb_db_atr_fil.make_(Id_0, Fsdb_db_atr_fil.url_(dir, Id_0), Path_bgn_0);
 		rv.itms_0 = itm;
 		rv.itms = new Fsdb_db_atr_fil[] {itm};
 		return rv;

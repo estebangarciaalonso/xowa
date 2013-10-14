@@ -50,6 +50,17 @@ public class Xob_orig_qry_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	private void Load_itm(Xof_fsdb_itm itm, DataRdr rdr) {
 		itm.Lnki_ttl_(null);
 	}
+	public DataRdr Select(Db_provider p, byte prv_repo_id, byte[] prv_ttl) {
+		String sql = String_.Concat_lines_nl_skipLast
+			(	"SELECT	oor_lnki_ttl"
+			,	"FROM	oimg_orig_regy"	
+			,	"WHERE	lnki_repo >= '" + Byte_.XtoStr(prv_repo_id) + "'"
+			,	"AND    lnki_ttl > '" + prv_ttl + "'"
+			,	"AND	oimg_orig_page_id = -1;"
+			);
+		Db_qry select_qry = Db_qry_sql.rdr_(sql);
+		return p.Exec_qry_as_rdr(select_qry);
+	}
 //		private static final String Sql_select = String_.Concat_lines_nl_skipLast
 //		(	"SELECT	oor_lnki_ttl"
 //		,	"FROM	oimg_orig_regy"	

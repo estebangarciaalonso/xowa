@@ -262,6 +262,7 @@ public class ByteAryBfr {
 	}
 
 	public ByteAryBfr Add_obj(Object o) {
+		if (o == null) return this;	// treat null as empty String;
 		Class<?> o_type = o.getClass();
 		if		(o_type == byte[].class)          Add((byte[])o);
 		else if	(o_type == Integer.class)         Add_int_variable(Int_.cast_(o));    

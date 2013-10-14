@@ -28,6 +28,7 @@ public interface Gfo_usr_dlg extends GfoInvkAble {
 	String Prog_none(String grp_key, String msg_key, String fmt);
 	String Note_many(String grp_key, String msg_key, String fmt, Object... args);
 	String Note_none(String grp_key, String msg_key, String fmt);
+	String Note_gui_none(String grp_key, String msg_key, String fmt);
 	String Prog_one(String grp_key, String msg_key, String fmt, Object arg);
 	String Prog_direct(String msg);
 	String Log_direct(String msg);

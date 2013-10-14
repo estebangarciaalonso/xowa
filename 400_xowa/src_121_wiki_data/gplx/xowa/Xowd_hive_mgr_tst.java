@@ -69,8 +69,8 @@ class Xowd_hive_mgr_fxt {
 		mgr = new Xowd_hive_mgr(wiki, Xow_dir_info_.Tid_page);
 	}
 	public Xowd_hive_mgr_fxt Tst_reg(String expd) {
-		Io_url reg_fil = Io_url_.mem_fil_("mem/xowa/wiki/en.wikipedia.org/ns/000/title/reg.csv");
-		Tfds.Eq_str_lines(expd, Io_mgr._.LoadFilStr(reg_fil));
+		Io_url file_orig = Io_url_.mem_fil_("mem/xowa/wiki/en.wikipedia.org/ns/000/title/reg.csv");
+		Tfds.Eq_str_lines(expd, Io_mgr._.LoadFilStr(file_orig));
 		return this;
 	}
 	public Xowd_hive_mgr_fxt Tst_fil(int fil, String expd) {

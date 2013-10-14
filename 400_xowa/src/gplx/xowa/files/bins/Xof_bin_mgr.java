@@ -17,11 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.xowa.files.fsdb.*; import gplx.xowa.files.cnvs.*; import gplx.ios.*;
-public class Xof_bin_mgr {
-	private Xof_bin_wkr[] wkrs = null; private int wkrs_len;
+public class Xof_bin_mgr implements GfoInvkAble {
+	private Xof_bin_wkr[] wkrs = Xof_bin_wkr_.Ary_empty; private int wkrs_len;
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
+	private Xof_fsdb_mgr_sql fsdb_mgr;
+	private Xow_wiki wiki;
 	private StringRef resize_warning = StringRef.null_(); private Xof_img_size tmp_size = new Xof_img_size();
-	public Xof_bin_mgr(Xow_repo_mgr repo_mgr) {this.repo_mgr = repo_mgr;}
+	public Xof_bin_mgr(Xow_wiki wiki, Xof_fsdb_mgr_sql fsdb_mgr, Xow_repo_mgr repo_mgr) {this.wiki = wiki; this.fsdb_mgr = fsdb_mgr; this.repo_mgr = repo_mgr;}
 	public Xow_repo_mgr Repo_mgr() {return repo_mgr;} private Xow_repo_mgr repo_mgr;
 	public void Resizer_(Xof_img_wkr_resize_img v) {resizer = v;} private Xof_img_wkr_resize_img resizer;
 	public void Wkrs_(Xof_bin_wkr... wkrs) {this.wkrs = wkrs; wkrs_len = wkrs.length;}
@@ -102,5 +104,35 @@ public class Xof_bin_mgr {
 			? url_bldr.Set_src_file_(mode, repo.Src(), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), itm.Html_w(), itm.Lnki_thumbtime()).Xto_url()
 			: url_bldr.Set_trg_file_(mode, repo.Trg(), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), itm.Html_w(), itm.Lnki_thumbtime()).Xto_url()
 			;
+	}
+	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
+		if		(ctx.Match(k, Invk_add))		return Add(m.ReadStr("type"), m.ReadStr("key"));
+		else	return GfoInvkAble_.Rv_unhandled;
+	}	private static final String Invk_add = "add";
+	public Xof_bin_wkr Add(String type, String key) {
+		Xof_bin_wkr rv = Get_or_null(key);
+		if (rv == null) {
+			rv = Make(type, key);
+			wkrs = (Xof_bin_wkr[])Array_.Resize_add(wkrs, new Xof_bin_wkr[] {rv});
+			++wkrs_len;
+		}
+		return rv;
+	}
+	private Xof_bin_wkr Get_or_null(String key) {
+		int wkrs_len = wkrs.length;
+		for (int i = 0; i < wkrs_len; i ++) {
+			Xof_bin_wkr wkr = wkrs[i];
+			if (String_.Eq(key, wkr.Bin_wkr_key())) return wkr;
+		}
+		return null;
+	}
+	private Xof_bin_wkr Make(String type, String key) {
+		Xof_bin_wkr rv = null;
+		if		(String_.Eq(type, Xof_bin_wkr_fsdb_sql.Bin_wkr_type_fsdb))		rv = new Xof_bin_wkr_fsdb_sql(fsdb_mgr);
+		else if	(String_.Eq(type, Xof_bin_wkr_fsys_wmf.Bin_wkr_type_fsys_wmf))	rv = new Xof_bin_wkr_fsys_wmf();
+		else if	(String_.Eq(type, Xof_bin_wkr_wmf_xfer.Bin_wkr_type_wmf_xfer))	rv = new Xof_bin_wkr_wmf_xfer(repo_mgr, wiki.App().File_mgr().Download_mgr().Download_wkr().Download_xrg());
+		else																	throw Err_.unhandled(type);
+		rv.Bin_wkr_key_(key);
+		return rv;
 	}
 }

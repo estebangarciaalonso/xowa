@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.files.regs; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
-public class Xof_reg_wkr_ {
+package gplx.xowa.files.main.orig; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.main.*;
+public class Xof_orig_wkr_ {
 	public static final byte Tid_null = Byte_.MaxValue_127, Tid_noop = 0, Tid_found_orig = 1, Tid_missing_reg = 2, Tid_missing_qry = 3, Tid_missing_bin = 4;
 }

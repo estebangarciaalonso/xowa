@@ -24,7 +24,10 @@ public class Scrib_pf_invoke extends Pf_func_base {
 		byte[] mod_name = Eval_argx(ctx, src, caller, self);
 		if (ByteAry_.Len_eq_0(mod_name)) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;}		// {{#invoke:}}
 		Scrib_engine engine = Scrib_engine.Engine();
-		if (engine == null) {engine = Scrib_engine.Engine_new_(ctx.App(), ctx).Init(); engine.When_page_changed(ctx.Page());}
+		if (engine == null
+			|| wiki.Xtn_mgr().Xtn_scribunto().Lua_reset_engine()) {
+			engine = Scrib_engine.Engine_new_(ctx.App(), ctx).Init(); engine.When_page_changed(ctx.Page());
+		}
 		Scrib_mod mod = engine.Mods_get(mod_name);
 		byte[] mod_raw = null;
 		if (mod == null) {

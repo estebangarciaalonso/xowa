@@ -149,8 +149,8 @@ class Xow_data_mgr_fxt {
 	}
 	public Xow_data_mgr_fxt Tst_regy_title(String expd) {return Tst_regy(Xow_dir_info_.Name_title, expd);}
 	Xow_data_mgr_fxt Tst_regy(String name, String expd) {
-		Io_url reg_fil = Io_url_.mem_fil_("mem/xowa/wiki/en.wikipedia.org/ns/000/" + name + "/reg.csv");
-		Tfds.Eq_str_lines(expd, Io_mgr._.LoadFilStr(reg_fil));
+		Io_url file_orig = Io_url_.mem_fil_("mem/xowa/wiki/en.wikipedia.org/ns/000/" + name + "/reg.csv");
+		Tfds.Eq_str_lines(expd, Io_mgr._.LoadFilStr(file_orig));
 		return this;
 	}
 	public Xow_data_mgr_fxt Tst_data_page(String expd) {return Tst_data(Xow_dir_info_.Tid_page , Xow_ns_.Id_main, 0, expd);}

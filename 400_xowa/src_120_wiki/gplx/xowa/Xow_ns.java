@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-public class Xow_ns {
+public class Xow_ns implements GfoInvkAble {
 	public Xow_ns(int id, byte case_match, byte[] name, boolean alias) {
 		this.id = id; this.case_match = case_match; this.alias = alias;
 		Name_bry_(name);
@@ -61,7 +61,8 @@ public class Xow_ns {
 	public int		Ord_subj_id()			{if (id < 0) return ord; return Id_talk() ? ord - 1 : ord;}  // id< 0: special/media return themself
 	public int		Ord_talk_id()			{if (id < 0) return ord; return Id_talk() ? ord : ord + 1;}
 	public byte		Case_match()			{return case_match;} public void Case_match_(byte v) {case_match = v;} private byte case_match;
-	public boolean		Is_subpage_enabled()	{return id > Xow_ns_.Id_special;}								// ASSUME: only Special, Media does not have subpages
+	public boolean		Subpages_enabled()		{return subpages_enabled;} private boolean subpages_enabled = false;// CHANGED: id > Xow_ns_.Id_special; only Special, Media does not have subpages; DATE:2013-10-07
+	public Xow_ns	Subpages_enabled_(boolean v) {subpages_enabled = v; return this;}
 	public boolean		Is_gender_aware()		{return id == Xow_ns_.Id_user || id == Xow_ns_.Id_user_talk;}	// ASSUME: only User, User_talk are gender aware
 	public boolean		Is_capitalized()		{return false;}													// ASSUME: always false (?)
 	public boolean		Is_content()			{return id == Xow_ns_.Id_main;}									// ASSUME: only Main
@@ -74,4 +75,9 @@ public class Xow_ns {
 	public boolean Exists() {return exists;} public Xow_ns Exists_(boolean v) {exists = v; return this;} private boolean exists;
 	public int Bldr_file_idx() {return bldr_file_idx;} public void Bldr_file_idx_(int v) {bldr_file_idx = v;} private int bldr_file_idx = Bldr_file_idx_heap;
 	public static final int Bldr_file_idx_heap = -1;
+	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
+		if		(ctx.Match(k, Invk_subpages_enabled_))	subpages_enabled = m.ReadYn("v");
+		else	return GfoInvkAble_.Rv_unhandled;
+		return this;
+	}	private static final String Invk_subpages_enabled_ = "subpages_enabled_";
 }

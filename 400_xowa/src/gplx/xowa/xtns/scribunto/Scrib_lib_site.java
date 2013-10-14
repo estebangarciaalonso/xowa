@@ -94,7 +94,7 @@ class Scrib_lib_site implements Scrib_lib {
 		rv[ 0] = KeyVal_.new_("id"						, ns_id);
 		rv[ 1] = KeyVal_.new_("name"					, ns.Name_txt());
 		rv[ 2] = KeyVal_.new_("canonicalName"			, ns.Name_str());				// strtr( $canonical, "_", " " ),
-		rv[ 3] = KeyVal_.new_("hasSubpages"				, ns.Is_subpage_enabled());		// MWNs::hasSubpages( $ns ),
+		rv[ 3] = KeyVal_.new_("hasSubpages"				, ns.Subpages_enabled());		// MWNs::hasSubpages( $ns ),
 		rv[ 4] = KeyVal_.new_("hasGenderDistinction"	, ns.Is_gender_aware());		// MWNs::hasGenderDistinction( $ns ),
 		rv[ 5] = KeyVal_.new_("isCapitalized"			, ns.Is_capitalized());			// MWNs::isCapitalized( $ns ),
 		rv[ 6] = KeyVal_.new_("isContent"				, ns.Is_content());				// MWNs::isContent( $ns ),

@@ -31,12 +31,16 @@ public class Xob_search_sql_cmd extends Xob_itm_basic_base implements Xob_cmd {
 		Xodb_fsys_mgr db_fs = wiki.Db_mgr_as_sql().Fsys_mgr();
 		usr_dlg.Log_many("", "", "search_title.cmd: getting core db");
 		Xodb_file page_db = db_fs.Get_tid_root(Xodb_file.Tid_core);
-		usr_dlg.Log_many("", "", "search_title.cmd: deleting existing searchdb");
-		wiki.Db_mgr_as_sql().Delete_by_tid(Xodb_file.Tid_search);
-		usr_dlg.Log_many("", "", "search_title.cmd: creating new searchdb");
-		Xodb_file search_db = db_fs.Make(Xodb_file.Tid_search);
+		usr_dlg.Log_many("", "", "search_title.cmd: getting existing searchdb");
+		Xodb_file search_db = db_fs.Get_tid_root(Xodb_file.Tid_search);
+		if (search_db == null) {
+			usr_dlg.Log_many("", "", "search_title.cmd: making new searchdb");
+			search_db = db_fs.Make(Xodb_file.Tid_search);
+		}
 		DataRdr page_rdr = DataRdr_.Null;
 		Db_provider search_provider = search_db.Provider();
+		usr_dlg.Log_many("", "", "search_title.cmd: droping tables");
+		Sqlite_engine_.Tbl_delete_many(search_provider, Xodb_tbl_search_title_temp.Tbl_name, Xodb_search_title_word_tbl.Tbl_name, Xodb_search_title_page_tbl.Tbl_name);
 		usr_dlg.Log_many("", "", "search_title.cmd: creating db connection; conn=~{0}", search_provider.ConnectInfo().Raw_of_db_connect());
 		Xodb_tbl_search_title_temp search_temp_tbl = new Xodb_tbl_search_title_temp().Create_table(search_provider);
 		try {

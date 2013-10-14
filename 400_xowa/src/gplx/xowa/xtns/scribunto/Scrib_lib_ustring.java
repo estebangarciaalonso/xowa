@@ -131,6 +131,7 @@ class Scrib_lib_ustring_gsub_mgr {
 	public KeyVal[] Exec(KeyVal[] values) {
 		String text = Scrib_kv_utl.Val_to_str(values, 0);
 		String regx = Scrib_kv_utl.Val_to_str(values, 1);
+		if (values.length == 2) return Scrib_kv_utl.base1_obj_(text);	// if no replace arg, return self; EX:enwikt:'orse; DATE:2013-10-13
 		Object repl_obj = values[2].Val();
 		regx = regx_converter.Parse(ByteAry_.new_utf8_(regx), false);
 		int limit = Scrib_kv_utl.Val_to_int_or(values, 3, -1);

@@ -29,7 +29,9 @@ public class RectAdp {
 		return point.X() >= pos.X() && point.X() <= pos.X() + size.Width()
 			&& point.Y() >= pos.Y() && point.Y() <= pos.Y() + size.Height();
 	}
-
+	public RectAdp Op_add(RectAdp v) {
+		return new RectAdp(pos.Op_add(v.Pos()), size.Op_add(v.Size()));		
+	}
 	@Override public String toString() {return String_.Concat_any(pos, ";", size);}
 	@Override public boolean equals(Object obj) {
 		RectAdp comp = (RectAdp)obj;

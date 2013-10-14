@@ -43,16 +43,16 @@ public class Fsdb_db_bin_fil implements RlsAble {
 		return provider;
 	} 	private Db_provider provider;
 	public void Rls() {if (provider != null) provider.Rls();}
-	public void Insert(int bin_id, byte owner_tid, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+	public long Insert(int bin_id, byte owner_tid, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		Db_stmt stmt = Db_stmt_.Null;
 		try {
 			stmt = Fsdb_bin_tbl.Insert_stmt(this.Provider());
-			Fsdb_bin_tbl.Insert_rdr(stmt, bin_id, owner_tid, bin_len, bin_rdr);
+			return Fsdb_bin_tbl.Insert_rdr(stmt, bin_id, owner_tid, bin_len, bin_rdr);
 		}
 		finally {stmt.Rls();}
 	}
-	public boolean Get_to_url(int id, Io_url url, byte[] bfr, int flush) {
-		return Fsdb_bin_tbl.Select_to_url(this.Provider(), id, url, bfr, flush);
+	public boolean Get_to_url(int id, Io_url url, byte[] bin_bfr, int bin_flush_when) {
+		return Fsdb_bin_tbl.Select_to_url(this.Provider(), id, url, bin_bfr, bin_flush_when);
 	}
 	public Io_stream_rdr Get_as_rdr(int id) {
 		return Fsdb_bin_tbl.Select_as_rdr(this.Provider(), id);
@@ -80,8 +80,8 @@ public class Fsdb_db_bin_fil implements RlsAble {
 		rv.cmd_mode = cmd_mode;
 		return rv;
 	}
-	public static Io_url url_(Io_url dir, String wiki_domain, int id) {
-		return dir.GenSubFil_ary(wiki_domain, "#main#file.bin#", Int_.XtoStr_PadBgn(id, 4), ".sqlite3");
+	public static Io_url url_(Io_url dir, int id) {
+		return dir.GenSubFil_ary("fsdb.bin#", Int_.XtoStr_PadBgn(id, 4), ".sqlite3");
 	}
 	public static final Fsdb_db_bin_fil[] Ary_empty = new Fsdb_db_bin_fil[0];
 }

@@ -22,36 +22,48 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 	private int select_interval = 2500, progress_interval = 1, commit_interval = 1;
 	private byte[] wiki_key;
 	private int exec_count; int exec_errors;
-	public Xob_fsdb_make(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	private Xof_bin_mgr src_mgr;
+	private Xof_fsdb_mgr_sql fsdb_mgr = new Xof_fsdb_mgr_sql(); 
+	public Xob_fsdb_make(Xob_bldr bldr, Xow_wiki wiki) {
+		this.Cmd_init(bldr, wiki);
+		fsdb_mgr.Init_by_wiki(wiki);
+		Xof_fsdb_mgr_sql src_fsdb_mgr = new Xof_fsdb_mgr_sql();
+		src_fsdb_mgr.Init_by_wiki(wiki);
+		src_mgr = src_fsdb_mgr.Bin_mgr();
+	}
 	public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "oimg.fsdb_make";
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_bgn(Xob_bldr bldr) {
 		this.wiki_key = wiki.Key_bry();
 		wiki.Init_assert();
-		bin_mgr = fsdb_mgr.Init_by_wiki(wiki).Bin_mgr();
 	}
 	public void Cmd_run() {Exec();}
 	public void Cmd_end() {}
 	public void Cmd_print() {}
-	private Xof_bin_mgr bin_mgr;
-	private Xof_fsdb_mgr_sql fsdb_mgr = new Xof_fsdb_mgr_sql(); 
 	private Db_provider provider; private Db_stmt lnki_regy_stmt;
 	private Xob_bmk_mgr bmk_mgr = new Xob_bmk_mgr();
 	public void Exec() {
 		Init_db();
 		ListAdp list = ListAdp_.new_();
-		while (true) {
-			if (!Select_ttls(list)) break;	// no more ttls found
-			int list_count = list.Count();
-			for (int i = 0; i < list_count; i++) {
-				Xodb_tbl_oimg_xfer_itm itm = (Xodb_tbl_oimg_xfer_itm)list.FetchAt(i);
-				if (!Download_itm(itm)) {
-					usr_dlg.Warn_many("", "", "fatal error in sqlite layer: stopping");
-					return;
+		try {
+			while (true) {
+				if (!Select_ttls(list)) break;	// no more ttls found
+				int list_count = list.Count();
+				for (int i = 0; i < list_count; i++) {
+					Xodb_tbl_oimg_xfer_itm itm = (Xodb_tbl_oimg_xfer_itm)list.FetchAt(i);
+					if (!Download_itm(itm)) {
+						usr_dlg.Warn_many("", "", "fatal error in sqlite layer: stopping");
+						return;
+					}
 				}
 			}
 		}
-		// mass update of img_regy
+		finally {
+			fsdb_mgr.Rls();	// save changes and rls all connections
+			provider.Txn_mgr().Txn_end_all();
+			bmk_mgr.Save();
+			provider.Rls();
+		}
 	}
 	private void Init_db() {
 		Xodb_db_file db_file = Xodb_db_file.init__oimg_lnki(wiki);
@@ -100,10 +112,10 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		byte[] wiki = itm.Orig_repo() == Xof_repo_itm.Repo_local ? wiki_key : Xow_wiki_.Domain_commons_bry;
 		itm.Orig_wiki_(wiki);
 		if (exec_count % progress_interval == 0) usr_dlg.Prog_many("", "", "downloading image: count=~{0} failed=~{1} ttl=~{2}", exec_count, exec_errors, String_.new_utf8_(itm.Orig_ttl()));
-		if (itm.Html_w() > 0) {
+//			if (itm.Html_w() > 0) {
 			Io_stream_rdr bin_rdr = Io_stream_rdr_.Null;
 			try {
-				bin_rdr = bin_mgr.Find_as_rdr(Xof_exec_tid.Tid_wiki_page, itm);
+				bin_rdr = src_mgr.Find_as_rdr(Xof_exec_tid.Tid_wiki_page, itm);
 				if (bin_rdr != Io_stream_rdr_.Null) {
 					Download_pass(itm, bin_rdr);
 					return;
@@ -112,7 +124,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 			finally {
 				bin_rdr.Rls();
 			}
-		}
+//			}
 		Download_fail(itm);
 	}
 	private void Download_fail(Xodb_tbl_oimg_xfer_itm itm) {
@@ -135,12 +147,14 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		else if	(ctx.Match(k, Invk_commit_interval_))		commit_interval = m.ReadInt("v");
 		else if	(ctx.Match(k, Invk_select_interval_))		select_interval = m.ReadInt("v");
 		else if	(ctx.Match(k, Invk_db_bin_max_))			fsdb_mgr.Db_bin_max_(m.ReadLong("v"));
+		else if	(ctx.Match(k, Invk_src_mgr))				return src_mgr;
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}
 	private static final String Invk_prv_ttl_ = "prv_ttl_"
 	, Invk_select_interval_ = "select_interval_", Invk_progress_interval_ = "progress_interval_", Invk_commit_interval_ = "commit_interval_"
-	, Invk_db_bin_max_ = "db_bin_max_"	
+	, Invk_db_bin_max_ = "db_bin_max_"
+	, Invk_src_mgr = "src_mgr"
 	;
 	public static byte Status_null = 0, Status_pass = 1, Status_fail = 2;
 }

@@ -50,7 +50,7 @@ public class Xtn_dynamicPageList_nde_tst {
 	}
 	@Test  public void Invalid_key() {
 		fxt.Ctg_create("Ctg_0", "A", "B");
-		fxt.Warns("unknown_key: invalid_key");
+		fxt.Warns("unknown_key: page=Test page key=invalid_key");
 		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
 		(	"<DynamicPageList>"
 		,	"invalid_key=invalid_val"

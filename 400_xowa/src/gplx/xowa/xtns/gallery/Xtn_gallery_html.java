@@ -38,7 +38,7 @@ public class Xtn_gallery_html {
 		for (int i = 0; i < itms_len; i++) {
 			Xtn_gallery_itm itm = mgr.Itms_get(i);
 			byte[] lnki_caption = itm.Caption_bry();
-			if (lnki_caption != null) {
+			if (ByteAry_.Len_gt_0(lnki_caption)) {
 				Xop_root_tkn caption_root = wiki.Parser().Parse_recurse(ctx, lnki_caption, true);
 				wtr.Write_tkn(opts, caption_bfr, caption_root.Root_src(), depth + 1, caption_root, Xoh_html_wtr.Sub_idx_null, caption_root);
 				lnki_caption = caption_bfr.XtoAryAndClear();

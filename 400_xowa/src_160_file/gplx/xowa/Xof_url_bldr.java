@@ -19,35 +19,50 @@ package gplx.xowa; import gplx.*;
 import gplx.gfui.*;
 public class Xof_url_bldr {
 	ByteAryBfr bfr = ByteAryBfr.reset_(400);
+	private byte[] area; private boolean wmf_protocol_is_file;
 	public byte Dir_spr() {return dir_spr;} public Xof_url_bldr Dir_spr_(byte v) {dir_spr = v; return this;} private byte dir_spr;
 	public byte[] Root() {return root;} public Xof_url_bldr Root_(byte[] v) {root = v; return this;} private byte[] root;
-	public byte[] Area() {return area;} public Xof_url_bldr Area_(byte[] v) {area = v; return this;} private byte[] area;
 	public byte[] Ttl() {return ttl;} public Xof_url_bldr Ttl_(byte[] v) {ttl = v; return this;} private byte[] ttl;
 	public byte[] Md5() {return md5;} public Xof_url_bldr Md5_(byte[] v) {md5 = v; return this;} private byte[] md5;
 	public Xof_ext Ext() {return ext;} public Xof_url_bldr Ext_(Xof_ext v) {ext = v; return this;} private Xof_ext ext;
 	public int Width() {return width;} public Xof_url_bldr Width_(int v) {width = v; return this;} private int width;
 	public int Seek() {return seek;} public Xof_url_bldr Seek_(int v) {seek = v; return this;} private int seek = -1;
-	public Xof_url_bldr Wmf_fsys_(boolean v) {wmf_fsys = v; return this;} private boolean wmf_fsys;
+	public Xof_url_bldr Wmf_dir_hive_(boolean v) {wmf_dir_hive = v; return this;} private boolean wmf_dir_hive;
 	public boolean Thumb() {return thumb;} public Xof_url_bldr Thumb_(boolean v) {thumb = v; return this;} private boolean thumb;
 	public Xof_url_bldr Set_trg_html_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, int seek) {
-		this.wmf_fsys = false; this.thumb = mode == Xof_repo_itm.Mode_thumb;
+		this.wmf_dir_hive = false; this.thumb = mode == Xof_repo_itm.Mode_thumb;
 		this.dir_spr = Byte_ascii.Slash; this.root = repo.Root_http(); this.ttl = repo.Gen_name_trg(ttl, md5, ext); this.area = repo.Mode_names()[mode];
 		this.md5 = md5; this.ext = ext; this.width = width; this.seek = seek;
-		this.repo_file_depth = repo.Dir_depth();
+		this.repo_dir_depth = repo.Dir_depth();
 		return this;
-	}	private int repo_file_depth;
+	}	private int repo_dir_depth;
 	public Xof_url_bldr Set_src_file_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, int seek) {
-		this.wmf_fsys = true; this.thumb = mode == Xof_repo_itm.Mode_thumb;
+		this.wmf_dir_hive = true; this.thumb = mode == Xof_repo_itm.Mode_thumb;
 		this.dir_spr = repo.Dir_spr(); this.root = repo.Root(); this.ttl = repo.Gen_name_src(ttl); this.area = repo.Mode_names()[mode];
 		this.md5 = md5; this.ext = ext; this.width = width; this.seek = seek;
-		this.tarball = repo.Tarball();
+		this.wmf_protocol_is_file = repo.Tarball();
 		return this;
-	}	private boolean tarball;
+	}
 	public Xof_url_bldr Set_trg_file_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, int seek) {
-		this.wmf_fsys = false; this.thumb = mode == Xof_repo_itm.Mode_thumb;
+		this.wmf_dir_hive = false; this.thumb = mode == Xof_repo_itm.Mode_thumb;
 		this.dir_spr = repo.Dir_spr(); this.root = repo.Root(); this.ttl = repo.Gen_name_trg(ttl, md5, ext); this.area = repo.Mode_names()[mode];
 		this.md5 = md5; this.ext = ext; this.width = width; this.seek = seek;
-		this.repo_file_depth = repo.Dir_depth();
+		this.repo_dir_depth = repo.Dir_depth();
+		return this;
+	}
+	public Xof_url_bldr Init_by_root(byte[] root, byte dir_spr, boolean wmf_dir_hive, boolean wmf_protocol_is_file, int repo_dir_depth) {
+		this.root = root; this.dir_spr = dir_spr; this.wmf_dir_hive = wmf_dir_hive; this.wmf_protocol_is_file = wmf_protocol_is_file; this.repo_dir_depth = repo_dir_depth;
+		this.fsys_tid_is_wnt = Op_sys.Cur().Tid_is_wnt();
+		return this;
+	}	private boolean fsys_tid_is_wnt;
+	public Xof_url_bldr Init_by_itm(byte mode, byte[] ttl, byte[] md5, Xof_ext ext, int width, int seek) {
+		this.thumb = mode == Xof_repo_itm.Mode_thumb;
+		this.area = Xof_repo_itm.Mode_names_key[mode];
+		this.ttl = ttl;
+		if (wmf_protocol_is_file && fsys_tid_is_wnt)
+			this.ttl = Xof_repo_itm.Ttl_invalid_fsys_chars(ttl); 			
+		this.md5 = md5;	// NOTE: the md5 is the orig ttl, even if ttl gets changed b/c of invalid_chars or exceeds_len
+		this.ext = ext; this.width = width; this.seek = seek;
 		return this;
 	}
 	public byte[] Xto_bry() {Bld(); byte[] rv = bfr.XtoAryAndClear(); Clear(); return rv;}
@@ -56,25 +71,25 @@ public class Xof_url_bldr {
 	private void Bld() {
 		Add_core();
 		if (thumb) {
-			if (wmf_fsys)	Add_thumb_wmf();
-			else			Add_thumb_xowa();
+			if (wmf_dir_hive)	Add_thumb_wmf();
+			else				Add_thumb_xowa();
 		}
 	}
 	Xof_url_bldr Add_core() {
 		bfr.Add(root);																	// add root;				EX: "C:\xowa\file\"; assume trailing dir_spr
-		if (area != null && !(wmf_fsys && !thumb))										// !(wmf_fsys && !thumb) means never add if wmf_fsys and orig
+		if (area != null && !(wmf_dir_hive && !thumb))									// !(wmf_dir_hive && !thumb) means never add if wmf_dir_hive and orig
 			bfr.Add(area).Add_byte(dir_spr);											// add area;				EX: "thumb\"
 		byte b0 = md5[0];
-		if (wmf_fsys) {
+		if (wmf_dir_hive) {
 			bfr.Add_byte(b0).Add_byte(dir_spr);											// add md5_0				EX: "0/"
 			bfr.Add_byte(b0).Add_byte(md5[1]).Add_byte(dir_spr);						// add md5_01				EX: "01/"
 		}
 		else {
-			for (int i = 0; i < repo_file_depth; i++)
+			for (int i = 0; i < repo_dir_depth; i++)
 				bfr.Add_byte(md5[i]).Add_byte(dir_spr);									// add md5_0123				EX: "0/1/2/3"
 		}
-		if (wmf_fsys) {
-			if (tarball)																// tarball
+		if (wmf_dir_hive) {
+			if (wmf_protocol_is_file)													// sitting on local file system (as opposed to http)
 				bfr.Add(ttl);															// NOTE: file_names are not url-encoded; this includes symbols (') and foreign characters (ö)
 			else																		// wmf_http
 				bfr.Add(encoder_src_http.Encode(ttl));									// NOTE: file_names must be url-encoded; JAVA will default to native charset which on Windows will be 1252; foreign character urls will fail due to conversion mismatch (1252 on windows; UTF-8 on WMF); EX.WP:Möbius strip

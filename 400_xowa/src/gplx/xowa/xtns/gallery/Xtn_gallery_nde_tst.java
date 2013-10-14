@@ -276,6 +276,27 @@ public class Xtn_gallery_nde_tst {
 		,	"</ul>"
 		));
 	}
+	@Test   public void Caption_null() {	// PURPOSE: null caption causes page to fail; EX: de.w:Lewis Caroll; <gallery>Datei:A.png</gallery>; DATE:2013-10-09
+		Init_html();
+		fxt.tst_Parse_page_wiki_str("<gallery>File:A.png</gallery>", String_.Concat_lines_nl_skipLast
+		(	"<ul class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+		,	"  <li class=\"gallerybox\" style=\"width:155px;\">"
+		,	"    <div style=\"width:155px;\">"
+		,	"      <div class=\"thumb\" style=\"width:150px;\">"
+		,	"        <div id=\"xowa_file_gallery_div_0\" style=\"margin:15px auto;\">"
+		,	"          <a href=\"/wiki/File:A.png\" class=\"image\">"
+		,	"            <img id=\"xowa_file_img_0\" alt=\"A.png\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"120\" />"
+		,	"          </a>"
+		,	"        </div>"
+		,	"      </div>"
+		,	"      <div class=\"gallerytext\">"
+		,	"      </div>"
+		,	"    </div>"
+		,	"  </li>"
+		,	"</ul>"
+		));
+	}
+
 	private Xtn_gallery_mgr_data_chkr new_chkr_gallery_mgr()	{return new Xtn_gallery_mgr_data_chkr();}
 	private Xtn_gallery_itm_chkr new_chkr_gallery_itm()	{return new Xtn_gallery_itm_chkr();}
 }

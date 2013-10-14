@@ -30,7 +30,8 @@ public class Xof_repo_itm implements GfoInvkAble {
 	public byte[] Root_http() {return root_http;} private byte[] root_http = ByteAry_.Empty;
 	public byte[] Wiki_key() {return wiki_key;} public Xof_repo_itm Wiki_key_(byte[] v) {wiki_key = v; return this;} private byte[] wiki_key;
 	public int Ttl_max() {return ttl_max;} public Xof_repo_itm Ttl_max_(int v) {ttl_max = v; return this;} private int ttl_max = 180;
-	public byte[][] Mode_names() {return mode_names;} private byte[][] mode_names = new byte[][] {ByteAry_.new_utf8_("orig"), ByteAry_.new_utf8_("thumb")};
+	public byte[][] Mode_names() {return mode_names;} private byte[][] mode_names = new byte[][] {Mode_names_key[0], Mode_names_key[1]};
+	public static final byte[][] Mode_names_key = new byte[][] {ByteAry_.new_utf8_("orig"), ByteAry_.new_utf8_("thumb")};
 	public Xoft_rule_grp Ext_rules() {return ext_rules;} public Xof_repo_itm Ext_rules_(Xoft_rule_grp v) {ext_rules = v; return this;} private Xoft_rule_grp ext_rules;
 	public int Dir_depth() {return dir_depth;} public Xof_repo_itm Dir_depth_(int v) {dir_depth = v; return this;} private int dir_depth = 4;
 	public boolean Primary() {return primary;} public Xof_repo_itm Primary_(boolean v) {primary = v; return this;} private boolean primary;
@@ -50,6 +51,29 @@ public class Xof_repo_itm implements GfoInvkAble {
 			root_http = mgr.App().Url_converter_fsys().Encode_http(root_url);
 		}
 		return this;
+	}
+	public static byte[] Ttl_invalid_fsys_chars(byte[] ttl) {
+		int ttl_len = ttl.length;
+		for (int i = 0; i < ttl_len; i++) {
+			byte b = ttl[i];
+			Object o = wnt_trie.Match(b, ttl, i, ttl_len);
+			if (o == null)		wnt_tmp_bfr.Add_byte(b);		// regular char; add orig byte
+			else				wnt_tmp_bfr.Add((byte[])o);		// invalid char; add swap byte(s)
+		}
+		return wnt_tmp_bfr.XtoAryAndClear();
+	}	private static final ByteAryBfr wnt_tmp_bfr = ByteAryBfr.reset_(255); private static final ByteTrieMgr_slim wnt_trie = trie_make();
+	public static byte[] Ttl_shorten_ttl(int ttl_max, byte[] ttl, byte[] md5, Xof_ext ext) {
+		byte[] rv = ttl;
+		int exceed_len = rv.length - ttl_max;
+		if (exceed_len > 0) {
+			wnt_tmp_bfr.Add_mid(rv, 0, ttl_max - 33);							// add truncated title;		33=_.length + md5.length
+			wnt_tmp_bfr.Add_byte(Byte_ascii.Underline);							// add underline;			EX: "_"
+			wnt_tmp_bfr.Add(md5);												// add md5;					EX: "abcdefghijklmnopqrstuvwxyz0123456"
+			wnt_tmp_bfr.Add_byte(Byte_ascii.Dot);								// add dot;					EX: "."
+			wnt_tmp_bfr.Add(ext.Ext());											// add ext;					EX: ".png"
+			rv = wnt_tmp_bfr.XtoAryAndClear();
+		}
+		return rv;
 	}
 	public byte[] Gen_name_src(byte[] name) {
 		if (!fsys_is_wnt || wmf_fsys) return name;
@@ -100,4 +124,5 @@ public class Xof_repo_itm implements GfoInvkAble {
 	public static final int Thumb_default_null = -1;
 	public static final byte Mode_orig = 0, Mode_thumb = 1, Mode_nil = Byte_.MaxValue_127;
 	public static final byte Repo_remote = 0, Repo_local = 1, Repo_unknown = 126, Repo_null = Byte_.MaxValue_127;
+	public static final int Dir_depth_null = -1, Dir_depth_wmf = 2, Dir_depth_xowa = 4;
 }

@@ -92,8 +92,8 @@ public class Fsdb_db_atr_fil implements RlsAble {
 		rv.Provider(); // force table create
 		return rv;
 	}
-	public static Io_url url_(Io_url dir, String wiki_domain, int id) {
-		return dir.GenSubFil_ary(wiki_domain, "#main#file.atr#", Int_.XtoStr_PadBgn(id, 4), ".sqlite3");
+	public static Io_url url_(Io_url dir, int id) {
+		return dir.GenSubFil_ary("fsdb.atr#", Int_.XtoStr_PadBgn(id, 2), ".sqlite3");
 	}
 	private int Dir_id__get_by_mem_or_db(String dir) {
 		int rv = -1;

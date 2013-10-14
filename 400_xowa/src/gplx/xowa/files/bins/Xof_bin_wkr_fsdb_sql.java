@@ -17,24 +17,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.dbs.*; import gplx.cache.*; import gplx.fsdb.*; import gplx.xowa.files.fsdb.*;
-public class Xof_bin_wkr_fsdb_sql implements Xof_bin_wkr {
-	private byte[] url_bfr; private int url_flush = Io_mgr.Len_mb;
-	public Xof_bin_wkr_fsdb_sql(Xof_fsdb_mgr_sql fsdb_mgr) {this.fsdb_mgr = fsdb_mgr;} private Xof_fsdb_mgr_sql fsdb_mgr;
-	public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsdb;}
-	public int Url_bfr_len() {return url_bfr_len;} public Xof_bin_wkr_fsdb_sql Url_bfr_len_(int v) {url_bfr_len = v; return this;} private int url_bfr_len = 32;
+public class Xof_bin_wkr_fsdb_sql implements Xof_bin_wkr, GfoInvkAble {
+	private byte[] bin_bfr; private int bin_flush_when = Io_mgr.Len_mb;
 	private IntRef tmp_itm_id = IntRef.neg1_(), tmp_bin_db_id = IntRef.neg1_();
+	public Xof_bin_wkr_fsdb_sql(Xof_fsdb_mgr_sql fsdb_mgr) {this.fsdb_mgr = fsdb_mgr;}
+	public Xof_fsdb_mgr_sql Fsdb_mgr() {return fsdb_mgr;} private Xof_fsdb_mgr_sql fsdb_mgr;
+	public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsdb;}
+	public String Bin_wkr_key() {return key;} public void Bin_wkr_key_(String v) {key = v;} private String key;
+	public int Bin_bfr_len() {return bin_bfr_len;} public Xof_bin_wkr_fsdb_sql Bin_bfr_len_(int v) {bin_bfr_len = v; return this;} private int bin_bfr_len = 32;
 	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(Xof_fsdb_itm itm, boolean is_thumb, int w) {
 		Bin_wkr_get_ids(itm, is_thumb, w, tmp_itm_id, tmp_bin_db_id);
 		int bin_db_id = tmp_bin_db_id.Val(); if (bin_db_id == -1) return gplx.ios.Io_stream_rdr_.Null;
-		Fsdb_db_bin_fil bin_db = fsdb_mgr.Sys_itm().Bin_mgr().Get_at(bin_db_id);
+		Fsdb_db_bin_fil bin_db = fsdb_mgr.Abc_mgr().Bin_mgr().Get_at(bin_db_id);
 		return bin_db.Get_as_rdr(tmp_itm_id.Val());
 	}
 	public boolean Bin_wkr_get_to_url(Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
-		if (url_bfr == null) url_bfr = new byte[url_bfr_len];
+		if (bin_bfr == null) bin_bfr = new byte[bin_bfr_len];
 		Bin_wkr_get_ids(itm, is_thumb, w, tmp_itm_id, tmp_bin_db_id);
 		int bin_db_id = tmp_bin_db_id.Val(); if (bin_db_id == -1) return false;
-		Fsdb_db_bin_fil bin_db = fsdb_mgr.Sys_itm().Bin_mgr().Get_at(bin_db_id);
-		return bin_db.Get_to_url(tmp_itm_id.Val(), bin_url, url_bfr, url_flush);
+		Fsdb_db_bin_fil bin_db = fsdb_mgr.Abc_mgr().Bin_mgr().Get_at(bin_db_id);
+		return bin_db.Get_to_url(tmp_itm_id.Val(), bin_url, bin_bfr, bin_flush_when);
 	}
 	private void Bin_wkr_get_ids(Xof_fsdb_itm itm, boolean is_thumb, int w, IntRef tmp_itm_id, IntRef tmp_bin_db_id) {
 		byte[] dir = itm.Orig_wiki(), fil = itm.Lnki_ttl();
@@ -50,4 +52,11 @@ public class Xof_bin_wkr_fsdb_sql implements Xof_bin_wkr {
 			tmp_bin_db_id.Val_(fil_itm.Db_bin_id());
 		}
 	}
+	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
+		if		(ctx.Match(k, Invk_db_dir_))		fsdb_mgr.Db_dir_(m.ReadIoUrl("v"));
+		else if	(ctx.Match(k, Invk_url_))			fsdb_mgr.Db_dir_(m.ReadIoUrl("v"));
+		else	return GfoInvkAble_.Rv_unhandled;
+		return this;
+	}	private static final String Invk_db_dir_ = "db_dir_", Invk_url_ = "url_";
+	public static final String Bin_wkr_type_fsdb = "xowa.fsdb";
 }

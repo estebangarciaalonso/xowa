@@ -18,21 +18,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.ios.*; import gplx.xowa.files.fsdb.*;
 public class Xof_bin_wkr_wmf_xfer implements Xof_bin_wkr {
-	private gplx.ios.IoEngine_xrg_downloadFil download; 
+	private Xow_repo_mgr repo_mgr; private gplx.ios.IoEngine_xrg_downloadFil download; 
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
-	public Xof_bin_wkr_wmf_xfer(gplx.ios.IoEngine_xrg_downloadFil download, Xow_repo_mgr repo_mgr) {
-		this.repo_mgr = repo_mgr;
-		this.download = download;
-	} private Xow_repo_mgr repo_mgr;
+	private int fail_timeout = 1000;
+	public Xof_bin_wkr_wmf_xfer(Xow_repo_mgr repo_mgr, gplx.ios.IoEngine_xrg_downloadFil download) {
+		this.repo_mgr = repo_mgr; this.download = download;
+	}
 	public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_inet;}
+	public String Bin_wkr_key() {return key;} public void Bin_wkr_key_(String v) {key = v;} private String key;
 	public Io_stream_rdr Bin_wkr_get_as_rdr(Xof_fsdb_itm itm, boolean is_thumb, int w) {
 		Bin_wkr_get(itm, is_thumb, w, Io_url_.Null);
 		Io_stream_rdr rdr = download.Exec_as_rdr();
-		return (rdr.Len() == Io_stream_rdr_.Read_done) ? Io_stream_rdr_.Null : rdr;
+		boolean rv = rdr.Len() != Io_stream_rdr_.Read_done;
+		if (!rv) Handle_error();
+		return rv ? rdr : Io_stream_rdr_.Null;
 	}
 	public boolean Bin_wkr_get_to_url(Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
 		Bin_wkr_get(itm, is_thumb, w, bin_url);
-		return download.Exec();
+		boolean rv = download.Exec();
+		if (!rv) Handle_error();
+		return rv;
+	}
+	private void Handle_error() {
+		ThreadAdp_.Sleep(fail_timeout);	// as per WMF policy, pause 1 second for every cache miss; http://lists.wikimedia.org/pipermail/wikitech-l/2013-September/071948.html
 	}
 	private void Bin_wkr_get(Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
 		byte mode = is_thumb ? Xof_repo_itm.Mode_thumb : Xof_repo_itm.Mode_orig;
@@ -42,4 +50,10 @@ public class Xof_bin_wkr_wmf_xfer implements Xof_bin_wkr {
 		String src = url_bldr.Set_src_file_(mode, repo_itm.Src(), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), w, itm.Lnki_thumbtime()).Xto_str();
 		download.Init(src, bin_url);
 	}
+	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
+		if		(ctx.Match(k, Invk_fail_timeout_))		fail_timeout = m.ReadInt("v");
+		else	return GfoInvkAble_.Rv_unhandled;
+		return this;
+	}	private static final String Invk_fail_timeout_ = "fail_timeout_";
+	public static final String Bin_wkr_type_wmf_xfer = "xowa.http.wmf";
 }

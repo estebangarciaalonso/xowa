@@ -83,7 +83,7 @@ public class App_cmd_mgr {
 		App_cmd_arg arg_hdr = (App_cmd_arg)actl_args.Fetch(key_header);
 		if (arg_hdr == null) return this;				// no key_header specified; assume header shouldn't be printed
 		if (!arg_hdr.Val_as_bool()) return this;		// key_header specified as false; return;
-		usr_dlg.Note_none(GRP_KEY, "print.header", fmt_hdr);
+		usr_dlg.Note_gui_none(GRP_KEY, "print.header", fmt_hdr);
 		return this;
 	}
 	public void Print_args(Gfo_usr_dlg usr_dlg) {
@@ -139,7 +139,7 @@ public class App_cmd_mgr {
 //					sb.Add("    ").Add(String_.PadEnd(expdInf.Key(), key_max + 1, " ")).Add_line(expdInf.Descrip());
 //				}
 		}
-		usr_dlg.Note_none(GRP_KEY, "print.info", sb.XtoStrAndClear());
+		usr_dlg.Note_gui_none(GRP_KEY, "print.info", sb.XtoStrAndClear());
 	}
 	OrderedHash Expd_copy() {
 		OrderedHash rv = OrderedHash_.new_();

@@ -38,6 +38,7 @@ public class Xoa_app_fxt {
 		rv.Html_mgr().Tbl_para_n_();
 		rv.File_mgr().Meta_mgr().Depth_(2);					// TEST: written for 2 depth
 		rv.Props().Main_page_(Xoa_page.Bry_main_page);		// TEST: default to Main Page (nothing tests loading Main Page from wiki.gfs)			
+		rv.Ns_mgr().Get_by_id_or_null(Xow_ns_.Id_main).Subpages_enabled_(true);
 		app.Wiki_mgr().Add(rv);
 		return rv;
 	}

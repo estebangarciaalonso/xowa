@@ -38,7 +38,10 @@ public class Xob_xfer_temp_cmd extends Xob_itm_basic_base implements Xob_cmd {
 			byte orig_repo = rdr.ReadByte(Xob_orig_regy_tbl.Fld_oor_orig_repo);
 			int orig_page_id = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_page_id, -1);
 			if (orig_page_id == -1) continue;	// no orig found; ignore
-			String orig_ttl = rdr.ReadStr(Xob_orig_regy_tbl.Fld_oor_orig_join_ttl);
+			String join_ttl = rdr.ReadStr(Xob_orig_regy_tbl.Fld_oor_orig_join_ttl);
+			String redirect_src = rdr.ReadStr(Xob_orig_regy_tbl.Fld_oor_lnki_ttl);
+			if (String_.Eq(join_ttl, redirect_src))	// lnki_ttl is same as redirect_src; not a redirect
+				redirect_src = "";
 			byte lnki_type = rdr.ReadByte(Xob_lnki_regy_tbl.Fld_olr_lnki_type);
 			int lnki_w = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_w);
 			int lnki_h = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_h);
@@ -48,7 +51,7 @@ public class Xob_xfer_temp_cmd extends Xob_itm_basic_base implements Xob_cmd {
 			int orig_w = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_w, -1);
 			int orig_h = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_h, -1);
 			img_size.Html_size_calc(Xof_exec_tid.Tid_wiki_page, lnki_w, lnki_h, lnki_type, lnki_upright, lnki_ext, orig_w, orig_h, Xof_img_size.Thumb_width_img);
-			Xob_xfer_temp_tbl.Insert(trg_stmt, lnki_id, orig_repo, orig_page_id, orig_ttl, lnki_ext, lnki_type, orig_media_type, img_size.File_is_orig(), orig_w, orig_h, img_size.File_w(), img_size.File_h(), img_size.Html_w(), img_size.Html_h(), lnki_thumbtime, lnki_count);
+			Xob_xfer_temp_tbl.Insert(trg_stmt, lnki_id, orig_repo, orig_page_id, join_ttl, redirect_src, lnki_ext, lnki_type, orig_media_type, img_size.File_is_orig(), orig_w, orig_h, img_size.File_w(), img_size.File_h(), img_size.Html_w(), img_size.Html_h(), lnki_thumbtime, lnki_count);
 		}
 		provider.Txn_mgr().Txn_end_all();
 	}
@@ -70,6 +73,7 @@ public class Xob_xfer_temp_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	,	",       oor_orig_page_id"
 	,	",       oor_orig_join_id"
 	,	",       oor_orig_join_ttl"
+	,	",       oor_lnki_ttl"
 	,	",       oor_orig_size"
 	,	",       oor_orig_w"
 	,	",       oor_orig_h"

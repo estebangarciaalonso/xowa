@@ -31,6 +31,7 @@ class Gfo_usr_dlg_null implements Gfo_usr_dlg {
 	public String Prog_none(String grp_key, String msg_key, String fmt) {return "";}
 	public String Note_many(String grp_key, String msg_key, String fmt, Object... args) {return "";}
 	public String Note_none(String grp_key, String msg_key, String fmt) {return "";}
+	public String Note_gui_none(String grp_key, String msg_key, String fmt) {return "";}
 	public String Prog_one(String grp_key, String msg_key, String fmt, Object arg) {return "";}
 	public String Prog_direct(String msg) {return "";}
 	public String Log_direct(String msg) {return "";}

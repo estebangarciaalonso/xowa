@@ -63,7 +63,7 @@ public class Fsdb_bin_tbl {
 				if (Sqlite_engine_.Cfg_read_binary_stream_supported)
 					return rdr.ReadRdr(Fld_bin_data);
 				else
-					return gplx.ios.Io_stream_rdr_.mem_(rdr.ReadBry(Fld_bin_data));
+					return gplx.ios.Io_stream_rdr_.mem_(Read_bin_data(rdr));
 			}
 			else
 				return gplx.ios.Io_stream_rdr_.Null;
@@ -79,7 +79,7 @@ public class Fsdb_bin_tbl {
 				if (Sqlite_engine_.Cfg_read_binary_stream_supported)
 					return Select_to_fsys__stream(rdr, url, bin_bfr, bin_flush_when);
 				else {
-					byte[] bry = rdr.ReadBry(Fld_bin_data);
+					byte[] bry = Read_bin_data(rdr);
 					Io_mgr._.SaveFilBry(url, bry);
 					return true;
 				}
@@ -110,6 +110,10 @@ public class Fsdb_bin_tbl {
 			db_stream.Rls();
 			fs_stream.Rls();
 		}
+	}
+	private static byte[] Read_bin_data(DataRdr rdr) {
+		byte[] rv = rdr.ReadBry(Fld_bin_data);
+		return rv == null ? ByteAry_.Empty : rv;	// NOTE: bug in v0.10.1 where .ogg would save as null; return ByteAry_.Empty instead, else java.io.ByteArrayInputStream would fail on null
 	}
 	public static final String Tbl_name = "fsdb_bin", Fld_bin_owner_id = "bin_owner_id", Fld_bin_owner_tid = "bin_owner_tid", Fld_bin_part_id = "bin_part_id", Fld_bin_data_url = "bin_data_url", Fld_bin_data = "bin_data";
 	private static final String Tbl_sql = String_.Concat_lines_nl

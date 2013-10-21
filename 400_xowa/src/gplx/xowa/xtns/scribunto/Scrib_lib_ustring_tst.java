@@ -49,6 +49,14 @@ public class Scrib_lib_ustring_tst {
 		Exec_gsub_regx("a"	, "(a)"			, 1, "%%%1", "%a;1");
 		Exec_gsub_regx("à{b}c", "{b}"		, 1, "b", "àbc;1");		// utf8
 		Exec_gsub_regx("àbc", "^%s*(.-)%s*$", 1, "%1", "àbc;1");	// utf8; regx is for trim line
+		Exec_gsub_regx("a"	, "[^]"			, 1, "b", "a;0");		// invalid regx should not fail; should return self; DATE:2013-10-20
+	}
+	@Test  public void Gsub_no_replace() {// PURPOSE: gsub with no replace argument should not fail; EX:d:'orse; DATE:2013-10-14
+		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);
+		fxt.Init_lua_module();
+		fxt.Init_lua_rcvd(Scrib_lib_ustring.Invk_gsub, Scrib_kv_utl.base1_many_("text", "regx"));	// NOTE: repl, limit deliberately omitted
+		fxt.Init_lua_rcvd_rv();
+		fxt.Test_invoke("text");
 	}
 	@Test  public void Gmatch_init() {
 		fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_init, Object_.Ary("abcabc", "a(b)")					, "a(b);\n  false");

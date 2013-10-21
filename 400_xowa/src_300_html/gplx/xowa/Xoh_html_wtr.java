@@ -706,7 +706,7 @@ public class Xoh_html_wtr {
 	}
 	public BoolRef Queue_add_ref() {return queue_add_ref;} BoolRef queue_add_ref = BoolRef.false_();
 	private void Xnde_dynamic_page_list(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {		
-		Xtn_dynamicPageList_nde nde = (Xtn_dynamicPageList_nde)xnde.Xnde_data();
+		Dpl_xnde nde = (Dpl_xnde)xnde.Xnde_data();
 		nde.Xtn_html(this, opts, bfr, src, xnde, depth);
 	}
 	public void Xnde_poem(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {

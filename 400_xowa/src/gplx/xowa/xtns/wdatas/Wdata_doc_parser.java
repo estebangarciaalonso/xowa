@@ -108,13 +108,13 @@ public class Wdata_doc_parser {
 				Json_itm_kv entity_kv = Json_itm_kv.cast_(sub_nde.Subs_get_at(0));
 				return entity_kv.Val().Data_bry();
 			}
-			case Wdata_prop_itm_base_.Val_tid_globecoordinate: {
+			case Wdata_prop_itm_base_.Val_tid_globecoordinate: case Wdata_prop_itm_base_.Val_tid_bad: {
 				Json_itm_nde sub_nde = Json_itm_nde.cast_(ary.Subs_get_at(3));
 				Json_itm_kv latitude_kv = Json_itm_kv.cast_(sub_nde.Subs_get_at(0));
 				Json_itm_kv longitude_kv = Json_itm_kv.cast_(sub_nde.Subs_get_at(1));
 				return ByteAry_.Add(latitude_kv.Val().Data_bry(), Wdata_doc_bldr.Geodata_dlm, longitude_kv.Val().Data_bry());
 			}
-			default: throw Err_.unhandled(val_tid);
+			default: {throw Err_.unhandled(val_tid);}
 		}		
 	}
 	private void Warn(String fmt, Object... args) {usr_dlg.Warn_many("", "", fmt, args);}

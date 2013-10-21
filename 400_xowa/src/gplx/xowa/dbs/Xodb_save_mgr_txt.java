@@ -56,7 +56,13 @@ public class Xodb_save_mgr_txt implements Xodb_save_mgr {
 		wiki.Db_mgr().Load_mgr().Clear();	// NOTE: need to clear cached regy_ary in load_mgr
 	}
 	public void Data_update(Xoa_page page, byte[] text)		{Data_update_under(page, text, null);}
-	public void Data_rename(Xoa_page page, byte[] new_ttl)	{Data_update_under(page, null, new_ttl);}
+	public void Data_rename(Xoa_page page, byte[] new_ttl)	{
+		if (wiki.Wiki_tid() != Xow_wiki_type_.Tid_home) {
+			wiki.App().Gui_wtr().Warn_many("", "", "Only pages in the home wiki can be renamed");
+			return;
+		}
+		Data_update_under(page, null, new_ttl);
+	}
 	private void Data_update_under(Xoa_page page, byte[] text, byte[] new_ttl) {
 		Xoa_ttl ttl = page.Page_ttl();
 		Xow_ns ns = ttl.Ns(); byte[] ttl_bry = ttl.Page_db();

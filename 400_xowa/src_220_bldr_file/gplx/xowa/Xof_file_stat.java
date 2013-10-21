@@ -53,7 +53,7 @@ class Xof_file_stat {
 			size_180 += Calc_thumb_size(file, 180);
 			size_150 += Calc_thumb_size(file, 150);
 			size_120 += Calc_thumb_size(file, 120);
-			if (!file_type.Id_is_image()) break;
+			if (!file_type.Id_is_thumbable()) break;
 		}
 	}
 	int Calc_thumb_size(Xofo_file file, int thumb_w) {		

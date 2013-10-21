@@ -41,6 +41,10 @@ public class Sqlite_engine_ {
 		Db_qry qry = Db_qry_sql.ddl_("DROP TABLE IF EXISTS " + tbl + ";");
 		p.Exec_qry(qry);
 	}
+	public static void Tbl_rename(Db_provider p, String src, String trg) {
+		Db_qry qry = Db_qry_sql.ddl_(String_.Format("ALTER TABLE {0} RENAME TO {1};", src, trg));
+		p.Exec_qry(qry);
+	}
 	public static void Pragma_page_size(Db_provider p, int val) {
 		Db_qry qry = Db_qry_sql.ddl_("PRAGMA page_size = " + Int_.XtoStr(val) + ";");
 		p.Exec_qry(qry);

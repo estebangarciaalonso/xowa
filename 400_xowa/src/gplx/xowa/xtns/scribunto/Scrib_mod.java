@@ -40,7 +40,7 @@ public class Scrib_mod {
 	}
 	Scrib_fnc load_string_fnc;
 	public void Execute() {
-		hash.Clear();
+		hash.Clear();	// NOTE: questionable. should probably be removed, as it forces all modules to be "loadString"'d again; DATE:2013-10-16
 		this.LoadString(name);	// assert lua_id;
 		KeyVal[] prcs_ary = engine.Interpreter().ExecuteModule(lua_id);
 		prcs_ary = (KeyVal[])prcs_ary[0].Val();

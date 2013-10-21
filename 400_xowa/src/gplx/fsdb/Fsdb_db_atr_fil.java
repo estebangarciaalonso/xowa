@@ -53,6 +53,15 @@ public class Fsdb_db_atr_fil implements RlsAble {
 	public Fsdb_xtn_thm_itm Thm_select(int fil_id, int width, int thumbtime) {
 		return Fsdb_xtn_thm_tbl.Select_itm_by_fil_width(this.Provider(), fil_id, width, thumbtime);
 	}
+	public int Fil_insert(Fsdb_fil_itm rv    , String dir, String fil, int ext_id, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+		int dir_id = Dir_id__get_by_mem_or_db(dir);
+		int fil_id = Fsdb_fil_tbl.Select_itm_by_name(provider, dir_id, fil).Id();
+		if (fil_id == 0) {
+			fil_id = Fsdb_cfg_tbl.Update_next_id(provider);
+			Fsdb_fil_tbl.Insert(provider, fil_id, dir_id, fil, Fsdb_xtn_tid_.Tid_none, ext_id, bin_len, modified, hash, bin_db_id);
+		}
+		return fil_id;
+	}
 	public int Img_insert(Fsdb_xtn_img_itm rv, String dir, String fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		int dir_id = Dir_id__get_by_mem_or_db(dir);
 		int fil_id = Fsdb_fil_tbl.Select_itm_by_name(provider, dir_id, fil).Id();

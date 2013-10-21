@@ -103,6 +103,7 @@ class Scrib_lib_title implements Scrib_lib {
 		tmp_bfr.Add(ns_bry).Add_byte(Byte_ascii.Colon).Add_str(ttl_str);
 		if (anchor_str != null) tmp_bfr.Add_byte(Byte_ascii.Hash).Add_str(anchor_str);
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, tmp_bfr.Mkr_rls().XtoAryAndClear());
+		if (ttl == null) return Scrib_kv_utl.base1_obj_(null);	// invalid title; exit;
 		return Scrib_kv_utl.base1_obj_(Xto_kv_ary(ttl));
 	}
 	public KeyVal[] FileExists(KeyVal[] values) {

@@ -546,9 +546,9 @@ class Io_stream_rdr_http implements Io_stream_rdr {
 			long content_length = Long_.parse_or_(src_conn.getHeaderField("Content-Length"), Int_.Neg1);
 			xrg.Src_content_length_(content_length);
 			this.len = content_length;
-			if (xrg.Src_last_modified_query())	// NOTE: only files will have last modified (api calls will not); if no last_modified, then src_conn will throw get nullRef; avoid nullRef 
-			if (xrg.Exec_meta_only()) {
+			if (xrg.Src_last_modified_query())	// NOTE: only files will have last modified (api calls will not); if no last_modified, then src_conn will throw get nullRef; avoid nullRef
 				xrg.Src_last_modified_(DateAdp_.dateTime_long(src_conn.getLastModified()));
+			if (xrg.Exec_meta_only()) {
 				read_done = true;
 				return this;
 			}

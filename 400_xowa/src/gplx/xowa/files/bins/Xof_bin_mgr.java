@@ -41,30 +41,28 @@ public class Xof_bin_mgr implements GfoInvkAble {
 	public Io_stream_rdr Find_as_rdr(byte exec_tid, Xof_fsdb_itm itm) {
 		Io_stream_rdr rv = Io_stream_rdr_.Null;
 		boolean file_is_orig = itm.File_is_orig();
-		if (file_is_orig) {
-			Io_url trg = itm.Lnki_ext().Orig_is_not_image()
-				? Get_url(itm, Xof_repo_itm.Mode_thumb, Bool_.N)
-				: Get_url(itm, Xof_repo_itm.Mode_orig, Bool_.N);
+		if (file_is_orig || exec_tid == Xof_exec_tid.Tid_viewer_app) {		// mode is viewer_app; always return orig
+			Io_url trg = Get_url(itm, Xof_repo_itm.Mode_orig, Bool_.N);
 			itm.Html_url_(trg);
 			for (int i = 0; i < wkrs_len; i++) {
 				Xof_bin_wkr wkr = wkrs[i];
 				rv = wkr.Bin_wkr_get_as_rdr(itm, Bool_.N, itm.Html_w());
 				if (rv == Io_stream_rdr_.Null) continue;						// orig not found; continue;
-				if (itm.Lnki_ext().Id_is_svg()) {
-					itm.Lnki_w_(itm.Html_w());
-					Io_url trg_png = Get_url(itm, Xof_repo_itm.Mode_thumb, Bool_.N);
-					boolean resized = Resize(exec_tid, itm, file_is_orig, trg, trg_png);
-					if (!resized) continue;
+//					if (itm.Lnki_ext().Id_is_svg()) {
+//						itm.Lnki_w_(itm.Html_w());
+//						Io_url trg_png = Get_url(itm, Xof_repo_itm.Mode_thumb, Bool_.N);
+//						boolean resized = Resize(exec_tid, itm, file_is_orig, trg, trg_png);
+//						if (!resized) continue;
+//						itm.Rslt_bin_(wkr.Bin_wkr_tid());
+//						itm.Rslt_bin_fsys_(true);
+//						rv = Io_stream_rdr_.file_(trg);							// return stream of resized url; (result of imageMagick / inkscape)
+//						rv.Open();
+//						return rv;
+//					}
+//					else {
 					itm.Rslt_bin_(wkr.Bin_wkr_tid());
-					itm.Rslt_bin_fsys_(true);
-					rv = Io_stream_rdr_.file_(trg);							// return stream of resized url; (result of imageMagick / inkscape)
-					rv.Open();
 					return rv;
-				}
-				else {
-					itm.Rslt_bin_(wkr.Bin_wkr_tid());
-					return rv;
-				}
+//					}
 			}
 		}
 		else {	// thumb
@@ -106,10 +104,11 @@ public class Xof_bin_mgr implements GfoInvkAble {
 			;
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_add))		return Add(m.ReadStr("type"), m.ReadStr("key"));
+		if		(ctx.Match(k, Invk_add))		return Add(m.ReadStr("type"), m.ReadStrOr("key", null));
 		else	return GfoInvkAble_.Rv_unhandled;
 	}	private static final String Invk_add = "add";
 	public Xof_bin_wkr Add(String type, String key) {
+		if (key == null) key = type;	// default empty key to type; EX: add('xowa.http.wmf') -> add('xowa.http.wmf', 'xowa.http.wmf')
 		Xof_bin_wkr rv = Get_or_null(key);
 		if (rv == null) {
 			rv = Make(type, key);

@@ -19,16 +19,15 @@ package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xow
 import gplx.dbs.*; import gplx.fsdb.*; import gplx.xowa.files.main.orig.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.qrys.*;
 public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, RlsAble {
 	private Db_provider img_regy_provider = null;
+	private Fsdb_mnt_mgr mnt_mgr = new Fsdb_mnt_mgr();
 	private Io_url fs_dir;
+	private Xof_url_bldr url_bldr = new Xof_url_bldr();
 	public boolean Tid_is_mem() {return false;}
 	public Xof_qry_mgr Qry_mgr() {return qry_mgr;} private Xof_qry_mgr qry_mgr = new Xof_qry_mgr();
 	public Xof_bin_mgr Bin_mgr() {return bin_mgr;} private Xof_bin_mgr bin_mgr;
 	public Xof_bin_wkr Bin_wkr_fsdb() {return bin_wkr_fsdb;} private Xof_bin_wkr_fsdb_sql bin_wkr_fsdb;
-	public void Db_bin_max_(long v) {abc_mgr.Bin_mgr().Db_bin_max_(v);}
-	public Fsdb_db_abc_mgr Abc_mgr() {return abc_mgr;} private Fsdb_db_abc_mgr abc_mgr = new Fsdb_db_abc_mgr();
-	private Xof_url_bldr url_bldr = new Xof_url_bldr();
-	public Io_url Db_dir() {return db_dir;}
-	public Xof_fsdb_mgr_sql Db_dir_(Io_url v) {db_dir = v; abc_mgr.Init(db_dir); return this;} private Io_url db_dir;
+	public void Db_bin_max_(long v) {mnt_mgr.Bin_db_max_(v);}
+	public Xof_fsdb_mgr_sql Db_dir_(Io_url v) {db_dir = v; mnt_mgr.Init(db_dir); return this;} private Io_url db_dir;
 	public boolean Init_by_wiki(Xow_wiki wiki) {
 		if (init) return false;
 		init = true;
@@ -46,7 +45,7 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, RlsAble {
 		this.fs_dir = fs_dir;
 		this.db_dir = db_dir;
 		img_regy_provider = Init_img_regy_provider(db_dir);
-		abc_mgr.Init(db_dir);
+		mnt_mgr.Init(db_dir);
 		bin_mgr = new Xof_bin_mgr(wiki, this, repo_mgr);
 		bin_wkr_fsdb = new Xof_bin_wkr_fsdb_sql(this).Bin_bfr_len_(64 * Io_mgr.Len_kb);	// most thumbs are 40 kb
 	}	private boolean init = false;
@@ -54,22 +53,28 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, RlsAble {
 		Xof_orig_fil_tbl.Select_list(img_regy_provider, exec_tid, itms, url_bldr, bin_mgr.Repo_mgr());
 		Xof_fsdb_mgr_utl._.Fsdb_search(this, fs_dir, win_wtr, exec_tid, itms, bin_mgr.Repo_mgr(), url_bldr);
 	}
-	public Fsdb_fil_itm Fil_select_bin(byte[] dir, byte[] fil, boolean is_thumb, int width, int thumbtime) {return abc_mgr.Fil_select_bin(dir, fil, is_thumb, width, thumbtime);}
-	public Fsdb_xtn_thm_itm Thm_select_bin(byte[] dir, byte[] fil, int width, int thumbtime)			{return abc_mgr.Thm_select_bin(dir, fil, width, thumbtime);}
+	public Fsdb_db_bin_fil Bin_db_get(int mnt_id, int bin_db_id) {
+		return mnt_mgr.Bin_db_get(mnt_id, bin_db_id);
+	}
+	public Fsdb_fil_itm Fil_select_bin(byte[] dir, byte[] fil, boolean is_thumb, int width, int thumbtime) {return mnt_mgr.Fil_select_bin(dir, fil, is_thumb, width, thumbtime);}
+	public Fsdb_xtn_thm_itm Thm_select_bin(byte[] dir, byte[] fil, int width, int thumbtime)			{return mnt_mgr.Thm_select_bin(dir, fil, width, thumbtime);}
 	public void Reg_insert(Xof_fsdb_itm itm, byte repo_id, byte status) {
 		byte[] orig_page = itm.Orig_ttl();
 		if (!Xof_orig_fil_tbl.Select_itm_exists(img_regy_provider, orig_page))
 			Xof_orig_fil_tbl.Insert(img_regy_provider, itm.Reg_id(), orig_page, status, repo_id, itm.Orig_redirect(), itm.Lnki_ext().Id(), itm.Orig_w(), itm.Orig_h());
 	}
+	public void Fil_insert(Fsdb_fil_itm rv    , byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+		mnt_mgr.Fil_insert(rv, dir, fil, ext_id, modified, hash, bin_len, bin_rdr);
+	}
 	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int w, int h, int thumbtime, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		abc_mgr.Thm_insert(rv, dir, fil, ext_id, w, h, thumbtime, modified, hash, bin_len, bin_rdr);
+		mnt_mgr.Thm_insert(rv, dir, fil, ext_id, w, h, thumbtime, modified, hash, bin_len, bin_rdr);
 	}
 	public void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		abc_mgr.Img_insert(rv, dir, fil, ext_id, modified, hash, bin_len, bin_rdr, img_w, img_h);
+		mnt_mgr.Img_insert(rv, dir, fil, ext_id, modified, hash, bin_len, bin_rdr, img_w, img_h);
 	}
 	public void Rls() {
-		abc_mgr.Commit();
-		abc_mgr.Rls();
+		mnt_mgr.Commit();
+		mnt_mgr.Rls();
 		img_regy_provider.Rls();
 	}
 	public static Db_provider Init_img_regy_provider(Io_url root_dir) {

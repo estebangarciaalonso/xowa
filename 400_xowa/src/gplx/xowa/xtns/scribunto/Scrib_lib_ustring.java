@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.texts.*;
 class Scrib_lib_ustring implements Scrib_lib {
-	public Scrib_lib_ustring(Scrib_engine engine) {this.engine = engine; gsub_mgr = new Scrib_lib_ustring_gsub_mgr(engine, regx_converter);} Scrib_engine engine; RegxAdp regx_mgr = RegxAdp_.new_(""); Scrib_lib_ustring_gsub_mgr gsub_mgr;
+	public Scrib_lib_ustring(Scrib_engine engine) {this.engine = engine; gsub_mgr = new Scrib_lib_ustring_gsub_mgr(engine, regx_converter);} Scrib_engine engine; Scrib_lib_ustring_gsub_mgr gsub_mgr;
 	public Scrib_mod Mod() {return mod;} Scrib_mod mod;
 	public int String_len_max() {return string_len_max;} public Scrib_lib_ustring String_len_max_(int v) {string_len_max = v; return this;} private int string_len_max = Xoa_page.Page_len_max;
 	public int Pattern_len_max() {return pattern_len_max;} public Scrib_lib_ustring Pattern_len_max_(int v) {pattern_len_max = v; return this;} private int pattern_len_max = 10000;
@@ -54,7 +54,8 @@ class Scrib_lib_ustring implements Scrib_lib {
 		}
 		else
 			regx = regx_converter.Parse(ByteAry_.new_utf8_(regx), false);
-		RegxMatch[] regx_rslts = RegxAdp_.new_(regx).Match_all(text, bgn);
+		RegxAdp regx_adp = Scrib_lib_ustring.RegxAdp_new_(engine.Ctx(), regx);
+		RegxMatch[] regx_rslts = regx_adp.Match_all(text, bgn);
 		int len = regx_rslts.length;
 		if (len == 0) return KeyVal_.Ary_empty;
 		for (int i = 0; i < len; i++) {
@@ -79,7 +80,8 @@ class Scrib_lib_ustring implements Scrib_lib {
 		String regx = regx_converter.Parse(Scrib_kv_utl.Val_to_bry(values, 1), false);
 		int bgn = Scrib_kv_utl.Val_to_int_or(values, 2, 1);
 		bgn = Bgn_adjust(text, bgn);
-		RegxMatch[] regx_rslts = RegxAdp_.new_(regx).Match_all(text, bgn);
+		RegxAdp regx_adp = Scrib_lib_ustring.RegxAdp_new_(engine.Ctx(), regx);
+		RegxMatch[] regx_rslts = regx_adp.Match_all(text, bgn);
 		int len = regx_rslts.length;
 		for (int i = 0; i < len; i++) {
 			RegxMatch rslt = regx_rslts[i];
@@ -100,7 +102,8 @@ class Scrib_lib_ustring implements Scrib_lib {
 		String regx = Scrib_kv_utl.Val_to_str(values, 1);
 		// byte[] capt = Scrib_kv_utl.Val_to_bry(values, 2);  // TODO.4: not sure what this does
 		int pos = Scrib_kv_utl.Val_to_int(values, 3);
-		RegxMatch[] regx_rslts = RegxAdp_.new_(regx).Match_all(text, pos);
+		RegxAdp regx_adp = Scrib_lib_ustring.RegxAdp_new_(engine.Ctx(), regx);
+		RegxMatch[] regx_rslts = regx_adp.Match_all(text, pos);
 		int len = regx_rslts.length;
 		if (len == 0) return Scrib_kv_utl.base1_many_(pos, KeyVal_.Ary_empty);
 		RegxMatch rslt = regx_rslts[0];	// NOTE: take only 1st result
@@ -121,6 +124,13 @@ class Scrib_lib_ustring implements Scrib_lib {
 		}
 		else if (op_is_match)	// if op_is_match, and no captures, extract find_txt; note that UstringLibrary.php says "$arr[] = $m[0][0];" which means get the 1st match; EX: "aaaa", "a" will have four matches; get 1st
 			tmp_list.Add(String_.Mid(text, rslt.Find_bgn(), rslt.Find_end()));
+	}
+	public static RegxAdp RegxAdp_new_(Xop_ctx ctx, String regx) {
+		RegxAdp rv = RegxAdp_.new_(regx);
+		if (rv.Pattern_is_invalid()) {
+			ctx.App().Usr_dlg().Note_many("", "", "regx is invalid: regx=~{0} page=~{1}", regx, String_.new_utf8_(ctx.Page().Page_ttl().Page_db()));
+		}
+		return rv;
 	}
 	static final int Base1 = 1, End_adj = 1;
 }
@@ -163,7 +173,7 @@ class Scrib_lib_ustring_gsub_mgr {
 		else throw Err_.unhandled(ClassAdp_.NameOf_type(repl_type));
 	}
 	String Exec_repl(String text, String regx, int limit) {
-		RegxAdp regx_mgr = RegxAdp_.new_(regx);
+		RegxAdp regx_mgr = Scrib_lib_ustring.RegxAdp_new_(engine.Ctx(), regx);
 		RegxMatch[] rslts = regx_mgr.Match_all(text, 0);
 		if (rslts.length == 0) return text;	// PHP: If matches are found, the new subject will be returned, otherwise subject will be returned unchanged.; http://php.net/manual/en/function.preg-replace-callback.php
 		if (tmp_bfr == null) tmp_bfr = ByteAryBfr.new_();

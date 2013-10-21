@@ -71,7 +71,7 @@ class Prefs_html_wtr {
 		Write__id(bfr, prop_idx);						// " id='xowa_prop_123'"
 		Write__value_atr(bfr, prop_val);				// " value='abc'"
 		Write__nde_end(bfr);							// ">"
-		Write__tag_end(bfr, hnde);						// "</input>\n"
+		Write__tag_end(bfr, hnde);						// "</input>"
 		Write_io_btn(bfr, hnde, prop_idx);
 	}
 	private void Write_io_btn(ByteAryBfr bfr, Html_nde hnde, int prop_idx) {
@@ -123,6 +123,6 @@ class Prefs_html_wtr {
 	}
 	private void Write__tag_end(ByteAryBfr bfr, Html_nde hnde) {
 		bfr.Add_mid(hnde.Src(), hnde.Tag_rhs_bgn(), hnde.Tag_rhs_end()); 	// "</input>"
-		bfr.Add_byte_nl();													// "\n"
+		// bfr.Add_byte_nl();												// "\n"; NOTE: do not write \n; will move to next line; DATE:2013-10-16
 	}
 }

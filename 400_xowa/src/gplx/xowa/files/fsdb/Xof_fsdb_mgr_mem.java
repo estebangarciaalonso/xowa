@@ -32,6 +32,13 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 		this.fs_dir = fs_dir;
 		bin_mgr = new Xof_bin_mgr(wiki, null, repo_mgr);	// HACK: pass null fsdb_mgr; fsdb_mgr only needed for factory methods.
 	}
+	public void Fil_insert(Fsdb_fil_itm rv    , byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+		byte[] key = Key_bld_fil(dir, fil);
+		byte[] bin = gplx.ios.Io_stream_rdr_.Load_all_as_bry(bin_rdr);
+		Fsdb_fil_itm_mem itm = new Fsdb_fil_itm_mem();
+		itm.Init(key, dir, fil, bin);
+		bin_hash.Add(key, itm);
+	}
 	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int thm_w, int thm_h, int thumbtime, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		byte[] key = Key_bld_thm(dir, fil, thm_w, thumbtime);
 		byte[] bin = gplx.ios.Io_stream_rdr_.Load_all_as_bry(bin_rdr);
@@ -40,7 +47,7 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 		bin_hash.Add(key, itm);
 	}
 	public void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		byte[] key = Key_bld_img(dir, fil);
+		byte[] key = Key_bld_fil(dir, fil);
 		byte[] bin = gplx.ios.Io_stream_rdr_.Load_all_as_bry(bin_rdr);
 		Fsdb_xtn_img_itm_mem itm = new Fsdb_xtn_img_itm_mem();
 		itm.Init(key, dir, fil, img_w, img_h, bin);
@@ -80,36 +87,33 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 		byte[] wiki = itm.Orig_wiki();
 		byte[] ttl = itm.Lnki_ttl();
 		int thumbtime = itm.Lnki_thumbtime(); 
-		byte[] key = is_thumb || itm.Lnki_ext().Orig_is_not_image() ? Key_bld_thm(wiki, ttl, w, thumbtime) : Key_bld_img(wiki, ttl);
-		Fsdb_xtn_thm_itm_mem mem_itm = (Fsdb_xtn_thm_itm_mem)bin_hash.Get_by_bry(key);
+		byte[] key = is_thumb || itm.Lnki_ext().Id_is_thumbable2() ? Key_bld_thm(wiki, ttl, w, thumbtime) : Key_bld_fil(wiki, ttl);
+		Fsdb_mem_itm mem_itm = (Fsdb_mem_itm)bin_hash.Get_by_bry(key);
 		return mem_itm == null ? gplx.ios.Io_stream_rdr_.Null : gplx.ios.Io_stream_rdr_.mem_(mem_itm.Bin());
 	}
 	public boolean Bin_wkr_get_to_url(Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
 		byte[] wiki = itm.Orig_wiki();
 		byte[] ttl = itm.Lnki_ttl();
 		int thumbtime = itm.Lnki_thumbtime(); 
-		if (is_thumb || itm.Lnki_ext().Orig_is_not_image()) {
-			byte[] key = Key_bld_thm(wiki, ttl, w, thumbtime);
-			Fsdb_xtn_thm_itm_mem mem_itm = (Fsdb_xtn_thm_itm_mem)bin_hash.Get_by_bry(key);
-			if (mem_itm == null) return false;
-			Io_mgr._.SaveFilBry(bin_url, mem_itm.Bin());
-			return true;
+		byte[] key = null;
+		if (is_thumb || itm.Lnki_ext().Id_is_thumbable2()) {
+			key = Key_bld_thm(wiki, ttl, w, thumbtime);
 		}
 		else {
-			byte[] key = Key_bld_img(wiki, ttl);
-			Fsdb_xtn_img_itm_mem mem_itm = (Fsdb_xtn_img_itm_mem)bin_hash.Get_by_bry(key);
-			if (mem_itm == null) return false;
-			Io_mgr._.SaveFilBry(bin_url, mem_itm.Bin());
-			return true;
+			key = Key_bld_fil(wiki, ttl);
 		}
+		Fsdb_mem_itm mem_itm = (Fsdb_mem_itm)bin_hash.Get_by_bry(key);
+		if (mem_itm == null) return false;
+		Io_mgr._.SaveFilBry(bin_url, mem_itm.Bin());
+		return true;
 	}
-	public byte[] Key_bld_img(byte[] wiki, byte[] ttl) {
+	private byte[] Key_bld_fil(byte[] wiki, byte[] ttl) {
 		bin_key_bfr	.Add_byte(Byte_ascii.Ltr_f).Add_byte_pipe()
 			.Add(wiki).Add_byte_pipe()
 			.Add(ttl);
 		return bin_key_bfr.XtoAryAndClear();
 	}
-	public byte[] Key_bld_thm(byte[] wiki, byte[] ttl, int w, int thumbtime) {
+	private byte[] Key_bld_thm(byte[] wiki, byte[] ttl, int w, int thumbtime) {
 		bin_key_bfr	.Add_byte(Byte_ascii.Ltr_t).Add_byte_pipe()
 			.Add(wiki).Add_byte_pipe()
 			.Add(ttl).Add_byte_pipe()
@@ -120,27 +124,16 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 	}
 	public void Rls() {bin_hash.Clear(); reg_hash.Clear();}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-//			if		(ctx.Match(k, Invk_set)) {}
-//			else	return GfoInvkAble_.Rv_unhandled;
 		return this;
-	}	//private static final String Invk_set = "set";
-}
-class Xof_fsdb_mem_itm {
-	public boolean Tid_is_file() {return tid_is_file;} private boolean tid_is_file;
-	public byte[] Wiki() {return wiki;} private byte[] wiki;
-	public byte[] Ttl() {return ttl;} private byte[] ttl;
-	public int Img_w() {return img_w;} private int img_w;
-	public int Img_h() {return img_h;} private int img_h;
-	public int Thumbtime() {return thumbtime;} private int thumbtime;
-	public byte[] Bin() {return bin;} private byte[] bin;
-	public void Init(boolean tid_is_file, byte[] wiki, byte[] ttl, int img_w, int img_h, int thumbtime, byte[] bin) {
-		this.tid_is_file = tid_is_file;
-		this.wiki = wiki; this.ttl = ttl;
-		this.img_w = img_w; this.img_h = img_h;
-		this.thumbtime = thumbtime; this.bin = bin;
 	}
 }
-class Fsdb_xtn_thm_itm_mem extends Fsdb_xtn_thm_itm {	public byte[] Mem_key() {return mem_key;} private byte[] mem_key;
+interface Fsdb_mem_itm {
+	byte[] Mem_key();
+	byte[] Wiki();
+	byte[] Ttl();
+	byte[] Bin();
+}
+class Fsdb_xtn_thm_itm_mem extends Fsdb_xtn_thm_itm implements Fsdb_mem_itm {	public byte[] Mem_key() {return mem_key;} private byte[] mem_key;
 	public byte[] Wiki() {return wiki;} private byte[] wiki;
 	public byte[] Ttl() {return ttl;} private byte[] ttl;
 	public byte[] Bin() {return bin;} private byte[] bin;
@@ -150,12 +143,20 @@ class Fsdb_xtn_thm_itm_mem extends Fsdb_xtn_thm_itm {	public byte[] Mem_key() {r
 		this.Thumbtime_(thumbtime);
 	}	
 }
-class Fsdb_xtn_img_itm_mem extends Fsdb_xtn_img_itm {		public byte[] Mem_key() {return mem_key;} private byte[] mem_key;
+class Fsdb_xtn_img_itm_mem extends Fsdb_xtn_img_itm implements Fsdb_mem_itm {		public byte[] Mem_key() {return mem_key;} private byte[] mem_key;
 	public byte[] Wiki() {return wiki;} private byte[] wiki;
 	public byte[] Ttl() {return ttl;} private byte[] ttl;
 	public byte[] Bin() {return bin;} private byte[] bin;
 	public void Init(byte[] mem_key, byte[] wiki, byte[] ttl, int w, int h, byte[] bin) {
 		this.mem_key = mem_key; this.wiki = wiki; this.ttl = ttl; this.bin = bin;
 		this.W_(w); this.H_(h);
+	}	
+}
+class Fsdb_fil_itm_mem extends Fsdb_fil_itm implements Fsdb_mem_itm {		public byte[] Mem_key() {return mem_key;} private byte[] mem_key;
+	public byte[] Wiki() {return wiki;} private byte[] wiki;
+	public byte[] Ttl() {return ttl;} private byte[] ttl;
+	public byte[] Bin() {return bin;} private byte[] bin;
+	public void Init(byte[] mem_key, byte[] wiki, byte[] ttl, byte[] bin) {
+		this.mem_key = mem_key; this.wiki = wiki; this.ttl = ttl; this.bin = bin;
 	}	
 }

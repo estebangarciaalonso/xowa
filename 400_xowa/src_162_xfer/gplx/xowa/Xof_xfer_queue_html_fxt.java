@@ -47,7 +47,7 @@ public class Xof_xfer_queue_html_fxt extends Xof_xfer_queue_base_fxt {
 		ini_src_fils();
 		wiki.App().File_mgr().Download_mgr().Enabled_(true);
 		wiki.File_mgr().Cfg_download().Enabled_(true);
-		queue.Exec(note_wtr, wiki);
+		queue.Exec(Xof_exec_tid.Tid_wiki_page, note_wtr, wiki);
 		tst_trg_fils();
 		if (this.html_orig_src   != null)	Tfds.Eq(this.html_orig_src  , String_.new_utf8_(xfer_itm.Html_orig_src()));
 		if (this.Html_view_src() != null)	Tfds.Eq(this.Html_view_src(), String_.new_utf8_(xfer_itm.Html_view_src()));

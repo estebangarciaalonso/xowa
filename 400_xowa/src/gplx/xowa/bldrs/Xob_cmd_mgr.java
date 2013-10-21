@@ -45,8 +45,10 @@ public class Xob_cmd_mgr implements GfoInvkAble {
 		else if	(String_.Eq(cmd_key, Xob_lnki_temp_wkr.KEY_oimg))			return Add(new Xob_lnki_temp_wkr(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_lnki_regy_cmd.KEY_oimg))			return Add(new Xob_lnki_regy_cmd(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_orig_regy_cmd.KEY_oimg))			return Add(new Xob_orig_regy_cmd(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xob_xfer_temp_cmd.KEY_oimg))			return Add(new Xob_xfer_temp_cmd(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_xfer_temp_cmd_thumb.KEY_oimg))		return Add(new Xob_xfer_temp_cmd_thumb(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_xfer_temp_cmd_orig.KEY_oimg))		return Add(new Xob_xfer_temp_cmd_orig(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_xfer_regy_cmd.KEY_oimg))			return Add(new Xob_xfer_regy_cmd(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_xfer_update_cmd.KEY_oimg))			return Add(new Xob_xfer_update_cmd(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_fsdb_reg_fill_cmd.KEY_oimg))		return Add(new Xob_fsdb_reg_fill_cmd(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_redirect_cmd.KEY_redirect))		return Add(new Xob_redirect_cmd(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_fsdb_make.KEY_oimg))				return Add(new Xob_fsdb_make(bldr, wiki));

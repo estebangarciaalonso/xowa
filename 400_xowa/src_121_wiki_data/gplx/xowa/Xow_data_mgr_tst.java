@@ -106,18 +106,18 @@ public class Xow_data_mgr_tst {
 			.Create("B12", "B12 data")
 			.Create("C123", "C123 data")
 			.Rename("C123", "C1234")
-			.Tst_regy_title("0|A1|C1234|3\n")
+			.Tst_regy_title("0|A1|C123|3\n")
 			.Tst_data_title(String_.Concat_lines_nl
-			(	"!!!!>|!!!!?|!!!!A|"
+			(	"!!!!>|!!!!?|!!!!@|"
 			,	"!!!!!|!!!!!|!!!!!|0|!!!!(|A1"
 			,	"!!!!\"|!!!!!|!!!!\"|0|!!!!)|B12"
-			,	"!!!!#|!!!!!|!!!!#|0|!!!!*|C1234"
+			,	"!!!!#|!!!!!|!!!!#|0|!!!!*|C123"
 			))
 			.Tst_data_page(String_.Concat_lines_nl
-			(	"!!!!9|!!!!;|!!!!>|"
+			(	"!!!!9|!!!!;|!!!!=|"
 			,	"!!!!!\t##PX+\tA1\tA1 data\t"
 			,	"!!!!\"\t##PX/\tB12\tB12 data\t"
-			,	"!!!!#\t##PX0\tC1234\tC123 data\t"
+			,	"!!!!#\t##PX0\tC123\tC123 data\t"
 			))
 			;
 	}

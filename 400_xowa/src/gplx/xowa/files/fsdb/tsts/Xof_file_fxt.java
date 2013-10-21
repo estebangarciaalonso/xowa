@@ -74,6 +74,9 @@ class Xof_file_fxt {
 		if (arg.Rslt_cnv() != Xof_cnv_wkr_.Tid_null) Tfds.Eq(arg.Rslt_cnv(), itm.Rslt_cnv(), "rslt_cnv");
 	}
 	public void Test_fsys(String url, String expd_bin) {Tfds.Eq(expd_bin, Io_mgr._.LoadFilStr(url));}
+	public void Test_fsys_exists_y(String url) {Test_fsys_exists(url, Bool_.Y);}
+	public void Test_fsys_exists_n(String url) {Test_fsys_exists(url, Bool_.N);}
+	public void Test_fsys_exists(String url, boolean expd) {Tfds.Eq(expd, Io_mgr._.ExistsFil(Io_url_.new_any_(url)));}
 	public void Test_regy(String ttl, Xof_fsdb_arg_reg_get expd) {
 		Xof_fsdb_itm itm = Exec_reg_select_itm(ttl);
 		if (expd.Orig_w()	!= Xop_lnki_tkn.Width_null)		Tfds.Eq(expd.Orig_w(), itm.Orig_w());
@@ -121,6 +124,7 @@ class Xof_fsdb_arg_init_bin {
 		String bin_str = ext_id == Xof_ext_.Id_svg ? Xof_file_fxt.file_svg_(w, h) : Xof_file_fxt.file_img_(w, h);
 		return Bin_(ByteAry_.new_ascii_(bin_str));
 	}
+	public Xof_fsdb_arg_init_bin Init_commons_file(String ttl)						{return Init(Xow_wiki_.Domain_commons_bry, Bool_.N, ttl, Xof_img_size.Null, Xof_img_size.Null, Xop_lnki_tkn.Thumbtime_null);}
 	public Xof_fsdb_arg_init_bin Init_commons_thumb(String ttl)						{return Init(Xow_wiki_.Domain_commons_bry, Bool_.Y, ttl, W_default, H_default, Xop_lnki_tkn.Thumbtime_null);}
 	public Xof_fsdb_arg_init_bin Init_commons_thumb(String ttl, int w, int h)		{return Init(Xow_wiki_.Domain_commons_bry, Bool_.Y, ttl, w, h, Xop_lnki_tkn.Thumbtime_null);}
 	public Xof_fsdb_arg_init_bin Init_commons_thumb(String ttl, int w, int h, int s){return Init(Xow_wiki_.Domain_commons_bry, Bool_.Y, ttl, w, h, s);}
@@ -143,6 +147,7 @@ class Xof_fsdb_arg_init_qry {
 	public byte[] Redirect_trg() {return redirect_trg;} private byte[] redirect_trg;
 	public int W() {return w;} private int w = W_default;
 	public int H() {return h;} private int h = H_default;
+	public Xof_fsdb_arg_init_qry Init_commons_file(String ttl)					{this.wiki = Xow_wiki_.Domain_commons_bry; this.ttl = ByteAry_.new_ascii_(ttl); this.w = Xof_img_size.Size_null; this.h = Xof_img_size.Size_null; return this;}
 	public Xof_fsdb_arg_init_qry Init_commons(String ttl, int w, int h)			{this.wiki = Xow_wiki_.Domain_commons_bry; this.ttl = ByteAry_.new_ascii_(ttl); this.w = w; this.h = h; return this;}
 	public Xof_fsdb_arg_init_qry Init_en_wiki(String ttl, int w, int h)			{this.wiki = Xow_wiki_.Domain_en_wiki_bry; this.ttl = ByteAry_.new_ascii_(ttl); this.w = w; this.h = h; return this;}
 	public Xof_fsdb_arg_init_qry Init_en_wiki_redirect(String src, String trg)	{this.wiki = Xow_wiki_.Domain_en_wiki_bry; this.ttl = ByteAry_.new_ascii_(src); this.redirect_trg = ByteAry_.new_ascii_(trg); return this;}

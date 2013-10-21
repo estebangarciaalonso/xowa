@@ -31,5 +31,5 @@ public class Wdata_prop_itm_core extends Wdata_prop_itm_base {
 	public static Wdata_prop_itm_core new_time_(int pid, String val)				{return new_(Wdata_prop_itm_base_.Val_tid_time, pid, Wdata_doc_bldr.Xto_time(DateAdp_.parse_fmt(val, "yyyy-MM-dd HH:mm:ss")));}
 	public static Wdata_prop_itm_core new_geodata_(int pid, String lat, String lon)	{return new_(Wdata_prop_itm_base_.Val_tid_globecoordinate, pid, ByteAry_.Add(ByteAry_.new_ascii_(lat), Wdata_doc_bldr.Geodata_dlm, ByteAry_.new_ascii_(lon)));}
 	public static Wdata_prop_itm_core new_entity_(int pid, int v)					{return new_(Wdata_prop_itm_base_.Val_tid_entity, pid, ByteAry_.XtoStrBytesByInt(v, 0));}
-	private static Wdata_prop_itm_core new_(byte tid, int pid, byte[] val)					{return new Wdata_prop_itm_core(Wdata_prop_itm_base_.Snak_tid_value, pid, tid, val);}
+	private static Wdata_prop_itm_core new_(byte tid, int pid, byte[] val)			{return new Wdata_prop_itm_core(Wdata_prop_itm_base_.Snak_tid_value, pid, tid, val);}
 }

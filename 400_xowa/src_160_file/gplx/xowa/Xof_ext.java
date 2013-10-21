@@ -23,9 +23,25 @@ public class Xof_ext {
 	public byte[] Ext_view() {return Xof_ext_.Bry__ary[Id_view()];}
 	public byte[] Mime_type() {return Xof_ext_.Mime_type__ary[id];}
 	public boolean Id_is_unknown() {return id == Xof_ext_.Id_unknown;}
-	public boolean Id_is_image() {
+	public boolean Id_is_thumbable() {
 		switch (id) {
 			case Xof_ext_.Id_png: case Xof_ext_.Id_jpg: case Xof_ext_.Id_jpeg: case Xof_ext_.Id_gif: case Xof_ext_.Id_tif: case Xof_ext_.Id_tiff: case Xof_ext_.Id_svg: case Xof_ext_.Id_djvu: case Xof_ext_.Id_pdf:
+				return true;
+			default:
+				return false;
+		}
+	}
+	public boolean Id_is_thumbable2()	{
+		switch (id) {
+		case Xof_ext_.Id_unknown: case Xof_ext_.Id_ogg: case Xof_ext_.Id_oga:
+			return false;
+		default:
+			return true;
+		}
+	}
+	public boolean Id_is_image() {
+		switch (id) {
+			case Xof_ext_.Id_png: case Xof_ext_.Id_jpg: case Xof_ext_.Id_jpeg: case Xof_ext_.Id_gif: case Xof_ext_.Id_tif: case Xof_ext_.Id_tiff: case Xof_ext_.Id_svg:
 				return true;
 			default:
 				return false;
@@ -47,12 +63,6 @@ public class Xof_ext {
 	public boolean Id_needs_convert()	{
 		switch (id) {
 			case Xof_ext_.Id_svg: case Xof_ext_.Id_djvu: case Xof_ext_.Id_pdf: return true;
-			default: return false;
-		}
-	}
-	public boolean Orig_is_not_image()	{
-		switch (id) {
-			case Xof_ext_.Id_djvu: case Xof_ext_.Id_pdf: case Xof_ext_.Id_ogv: case Xof_ext_.Id_ogg: return true;
 			default: return false;
 		}
 	}

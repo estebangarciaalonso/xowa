@@ -104,5 +104,5 @@ class Xob_xfer_regy_tbl {
 	private static final Db_idx_itm
 		Idx_select	= Db_idx_itm.sql_("CREATE        INDEX IF NOT EXISTS oimg_xfer_regy__select        ON oimg_xfer_regy (oxr_xfer_status, oxr_xfer_repo, oxr_xfer_ttl, oxr_file_w);")
 	;
-	public static byte Status_todo = 0, Status_pass = 1, Status_fail = 2;
+	public static byte Status_todo = 0, Status_pass = 1, Status_fail = 2, Status_ignore_processed = 3;
 }

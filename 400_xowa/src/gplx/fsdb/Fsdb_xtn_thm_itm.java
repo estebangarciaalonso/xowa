@@ -27,13 +27,14 @@ public class Fsdb_xtn_thm_itm {
 	public String Hash() {return hash;} public Fsdb_xtn_thm_itm Hash_(String v) {hash = v; return this;} private String hash;
 	public int Dir_id() {return dir_id;} public Fsdb_xtn_thm_itm Dir_id_(int v) {dir_id = v; return this;} private int dir_id;
 	public int Db_bin_id() {return bin_db_id;} public Fsdb_xtn_thm_itm Db_bin_id_(int v) {bin_db_id = v; return this;} private int bin_db_id;
+	public int Mnt_id() {return mnt_id;} public Fsdb_xtn_thm_itm Mnt_id_(int v) {mnt_id = v; return this;} private int mnt_id;
 	public static Fsdb_xtn_thm_itm load_(DataRdr rdr) {
 		Fsdb_xtn_thm_itm rv = new Fsdb_xtn_thm_itm();
 		rv.id = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_id);
 		rv.owner = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_owner_id);
-		rv.width = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_width);
+		rv.width = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_w);
 		rv.thumbtime = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_thumbtime) / Fsdb_xtn_thm_tbl.Thumbtime_multiplier;
-		rv.height = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_height);
+		rv.height = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_h);
 		rv.size = rdr.ReadLong(Fsdb_xtn_thm_tbl.Fld_thm_size);
 		rv.modified = rdr.ReadStr(Fsdb_xtn_thm_tbl.Fld_thm_modified);
 		rv.hash = rdr.ReadStr(Fsdb_xtn_thm_tbl.Fld_thm_hash);

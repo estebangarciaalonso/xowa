@@ -26,6 +26,7 @@ public interface Xof_fsdb_mgr extends RlsAble {
 	void Init_by_wiki(Xow_wiki wiki, Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr);
 	void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr);
 	void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int thm_w, int thm_h, int thumbtime, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr);
+	void Fil_insert(Fsdb_fil_itm rv    , byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr);
 	void Reg_insert(Xof_fsdb_itm itm, byte repo_id, byte status);
 	void Reg_select(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms);
 }
@@ -46,6 +47,10 @@ class Xof_fsdb_mgr_utl {
 			switch (itm.Rslt_reg()) {
 				case Xof_orig_wkr_.Tid_missing_qry:
 				case Xof_orig_wkr_.Tid_missing_bin:	continue;	// already missing; do not try to find again
+			}
+			if (!itm.Lnki_ext().Id_is_thumbable2() && exec_tid != Xof_exec_tid.Tid_viewer_app) {
+				itm.Rslt_qry_(Xof_qry_wkr_.Tid_noop);
+				continue;
 			}
 			if (fsdb_mgr.Qry_mgr().Find(exec_tid, itm)) {
 				Xof_repo_pair repo_pair = repo_mgr.Repos_get_by_wiki(itm.Orig_wiki());
@@ -89,13 +94,19 @@ class Xof_fsdb_mgr_utl {
 		gplx.ios.Io_stream_rdr bin_rdr = gplx.ios.Io_stream_rdr_.file_(html_url);
 		try {
 			bin_rdr.Open();
-			if (itm.File_is_orig()) {
-				Fsdb_xtn_img_itm img_itm = new Fsdb_xtn_img_itm();
-				fsdb_mgr.Img_insert(img_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext().Id(), itm.Html_w(), itm.Html_h(), Fsdb_xtn_thm_tbl.Modified_null, Fsdb_xtn_thm_tbl.Hash_null, bin_len, bin_rdr);
+			if (itm.Lnki_ext().Id_is_thumbable()) {					
+				if (itm.File_is_orig()) {
+					Fsdb_xtn_img_itm img_itm = new Fsdb_xtn_img_itm();
+					fsdb_mgr.Img_insert(img_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext().Id(), itm.Html_w(), itm.Html_h(), Fsdb_xtn_thm_tbl.Modified_null, Fsdb_xtn_thm_tbl.Hash_null, bin_len, bin_rdr);
+				}
+				else {
+					Fsdb_xtn_thm_itm thm_itm = new Fsdb_xtn_thm_itm();
+					fsdb_mgr.Thm_insert(thm_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext().Id(), itm.Html_w(), itm.Html_h(), itm.Lnki_thumbtime(), Fsdb_xtn_thm_tbl.Modified_null, Fsdb_xtn_thm_tbl.Hash_null, bin_len, bin_rdr);
+				}
 			}
 			else {
-				Fsdb_xtn_thm_itm thm_itm = new Fsdb_xtn_thm_itm();
-				fsdb_mgr.Thm_insert(thm_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext().Id(), itm.Html_w(), itm.Html_h(), itm.Lnki_thumbtime(), Fsdb_xtn_thm_tbl.Modified_null, Fsdb_xtn_thm_tbl.Hash_null, bin_len, bin_rdr);
+				Fsdb_fil_itm fil_itm = new Fsdb_fil_itm();
+				fsdb_mgr.Fil_insert(fil_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext().Id(), Fsdb_xtn_thm_tbl.Modified_null, Fsdb_xtn_thm_tbl.Hash_null, bin_len, bin_rdr);
 			}
 		} finally {bin_rdr.Rls();}
 	}

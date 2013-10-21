@@ -73,7 +73,12 @@ public class Xoh_wiki_article implements GfoInvkAble {
 	    , "edit_div_rename", "edit_div_preview"
 		, "app_version", "app_build_date", "app_root_dir", "js_mathjax_script", "js_article_view_vars", "js_wikidata", "js_edit_toolbar", "xowa_mode_is_server"
 		);		
-	public byte[] Edit_rename_div_bry() {return div_edit_rename_bry;} private byte[] div_edit_rename_bry = ByteAry_.Empty;
+	public byte[] Edit_rename_div_bry() {return div_edit_rename_bry;} private byte[] div_edit_rename_bry = ByteAry_.new_utf8_(String_.Concat_lines_nl
+	(	"  <input id='xowa_edit_rename_box' width='120' height='20'></input>\r\n" 
+	,	"  <a href='xowa-cmd:app.gui.main_win.page_edit_rename;' class='xowa_anchor_button' style='width:100px;max-width:1024px;'>\r\n" 
+	,	"    Rename page\r\n" 
+	,	"  </a>"
+	));
 	public void Init_(boolean v) {init = v;}
 	boolean init = true;
 	public byte[] Gen(Xoa_page page, byte output_tid) {

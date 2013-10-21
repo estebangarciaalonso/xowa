@@ -32,13 +32,13 @@ public class Xof_xfer_queue {
 		if (!dirty.Has(dirty_key.Val_(meta_mgr_key)))
 			dirty.AddReplace(meta_mgr_key, meta_mgr);	// only add if new
 	}
-	public void Exec(Xog_win_wtr wtr, Xow_wiki wiki) {
+	public void Exec(byte exec_tid, Xog_win_wtr wtr, Xow_wiki wiki) {
 		if (wiki.File_mgr().Version() == Xow_file_mgr.Version_2)
-			Exec_v2(wtr, wiki);
+			Exec_v2(exec_tid, wtr, wiki);
 		else
-			Exec_v1(wtr, wiki);
+			Exec_v1(exec_tid, wtr, wiki);
 	}
-	private void Exec_v1(Xog_win_wtr wtr, Xow_wiki wiki) {
+	private void Exec_v1(byte exec_tid, Xog_win_wtr wtr, Xow_wiki wiki) {
 		Xof_meta_mgr meta_mgr = null;
 		int xfer_len = list.Count();
 		for (int i = 0; i < xfer_len; i++) {
@@ -75,14 +75,14 @@ public class Xof_xfer_queue {
 		}
 		this.Clear();
 	}
-	private void Exec_v2(Xog_win_wtr wtr, Xow_wiki wiki) {
+	private void Exec_v2(byte exec_tid, Xog_win_wtr wtr, Xow_wiki wiki) {
 		boolean init = wiki.File_mgr().Fsdb_mgr().Init_by_wiki(wiki);
 		if (init) {
 			Xof_bin_wkr_fsdb_sql fsdb_wkr = (Xof_bin_wkr_fsdb_sql)wiki.File_mgr().Fsdb_mgr().Bin_mgr().Add(Xof_bin_wkr_fsdb_sql.Bin_wkr_type_fsdb, "xowa.fsdb.main");
 			fsdb_wkr.Fsdb_mgr().Db_dir_(wiki.App().Fsys_mgr().File_dir().GenSubDir(wiki.Domain_str()));
 			wiki.File_mgr().Fsdb_mgr().Bin_mgr().Add(Xof_bin_wkr_wmf_xfer.Bin_wkr_type_wmf_xfer, "xowa.http.wmf");
 		}
-		wiki.File_mgr().Fsdb_mgr().Reg_select(wtr, Xof_exec_tid.Tid_wiki_page, Xfer_itms_to_fsdb_itms(list));
+		wiki.File_mgr().Fsdb_mgr().Reg_select(wtr, exec_tid, Xfer_itms_to_fsdb_itms(list));
 	}
 	private ListAdp Xfer_itms_to_fsdb_itms(ListAdp list) {
 		ListAdp rv = ListAdp_.new_();

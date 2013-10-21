@@ -42,6 +42,8 @@ public class Scrib_lib_title_tst {
 		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_makeTitle, Object_.Ary("Template", "A", "b")							, ttl_data_("10", "Template", "A", "b"));
 		fxt.Parser_fxt().Wiki().Xwiki_mgr().Add_full("fr", "fr.wikipedia.org");
 		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_makeTitle, Object_.Ary("Template", "A", "b", "fr")						, ttl_data_("0", "", "Template:A", "b", "fr"));
+		fxt.Parser_fxt().ini_Log_(Xop_ttl_log.Invalid_char);
+		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_makeTitle, Object_.Ary("Template", "a[b"), "null");		// PURPOSE: handle bad MakeTitle cmds; EX: Disney; DATE:2013-10-15
 	}
 	@Test   public void FileExists() {
 		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_fileExists, Object_.Ary("A")											, "false");

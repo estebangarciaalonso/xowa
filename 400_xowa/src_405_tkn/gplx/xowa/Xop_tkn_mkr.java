@@ -71,7 +71,7 @@ public class Xop_tkn_mkr {
 	public gplx.xowa.xtns.lst.Xtn_pages_nde Pages_nde()										{return new gplx.xowa.xtns.lst.Xtn_pages_nde();}
 	public gplx.xowa.xtns.lst.Xtn_section_nde Section_nde()									{return new gplx.xowa.xtns.lst.Xtn_section_nde();}
 	public gplx.xowa.xtns.categoryList.Xtn_categorylist_nde CategoryList_nde()				{return new gplx.xowa.xtns.categoryList.Xtn_categorylist_nde();}
-	public gplx.xowa.xtns.dynamicPageList.Xtn_dynamicPageList_nde DynamicPageList_nde()		{return new gplx.xowa.xtns.dynamicPageList.Xtn_dynamicPageList_nde();}
+	public gplx.xowa.xtns.dynamicPageList.Dpl_xnde DynamicPageList_nde()		{return new gplx.xowa.xtns.dynamicPageList.Dpl_xnde();}
 	public gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde SyntaxHighlight()			{return new gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde();}
 	public gplx.xowa.xtns.templateData.Xtn_templateData_nde TemplateData()					{return new gplx.xowa.xtns.templateData.Xtn_templateData_nde();}
 	public gplx.xowa.xtns.scores.Xtn_score Score_nde()										{return new gplx.xowa.xtns.scores.Xtn_score();}

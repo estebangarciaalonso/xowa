@@ -23,7 +23,7 @@ public interface Xodb_load_mgr {
 	boolean Load_ttl			(Xodb_page rv, Xow_ns ns, byte[] ttl);
 	boolean Load_ttl_by_id		(Xodb_page rv, int id);
 	void Load_ttls_by_ids	(Cancelable cancelable, ListAdp list, int bgn, int end);
-	void Load_search		(Cancelable cancelable, ListAdp rv, byte[] search, int results_max);
+	void Load_search		(Cancelable cancelable, ListAdp rv, byte[] search, int results_max);		
 	boolean Load_ctg_v1		(Xoctg_view_ctg rv, byte[] ttl);
 	boolean Load_ctg_v2		(Xoctg_data_ctg rv, byte[] ttl);
 	void Load_ctg_v2a		(Xoctg_view_ctg rv, Xoctg_url url_ctg, byte[] ttl_bry, int limit);

@@ -16,6 +16,19 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.dynamicPageList; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-public class Xtn_dynamicPageList_itm {
-	public byte[] Ttl_bry() {return ttl_bry;} public Xtn_dynamicPageList_itm Ttl_(byte[] v) {ttl_bry = v; return this;} private byte[] ttl_bry;
+//	public class Dpl_page {
+//		public byte[] Ttl_bry() {return ttl_bry;} public Dpl_page Ttl_bry_(byte[] v) {ttl_bry = v; return this;} private byte[] ttl_bry;
+//	}
+class Dpl_page_sorter implements gplx.lists.ComparerAble {
+	public Dpl_page_sorter(Dpl_cmd cmd) {this.cmd = cmd;} private Dpl_cmd cmd;
+	public int compare(Object lhsObj, Object rhsObj) {
+		Xodb_page lhs = (Xodb_page)lhsObj;
+		Xodb_page rhs = (Xodb_page)rhsObj;
+		int multiplier = cmd.Sort_ascending() == Bool_.Y_byte ? 1 : -1;
+		switch (cmd.Sort_tid()) {
+		case Dpl_sort.Tid_categorysortkey: 		
+		case Dpl_sort.Tid_categoryadd: 			return multiplier * ByteAry_.Compare(lhs.Ttl_wo_ns(), rhs.Ttl_wo_ns()); 
+		}
+		return CompareAble_.Same;
+	}
 }

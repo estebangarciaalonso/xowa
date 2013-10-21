@@ -17,10 +17,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.wdatas; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
+import gplx.json.*;
 public class Wdata_doc_parser_tst {
-	@Test  public void Basic() {
-//			fxt.Init_json_(json).Init_pid_("p1").Test_("A.png");
-//			fxt.tst_Parse_tmpl_str_test("{{#property:p1}}"			, "{{test}}", "test");
-//			fxt.Test();
+	@Test  public void Invalid_type__bad() {	// wikidata flags several entries as "bad"; https://www.wikidata.org/wiki/Wikidata:Project_chat/Archive/2013/10
+		Json_doc jdoc = Json_doc.new_apos_concat_nl
+		(	"{ 'entity':['item',2]"
+		,	", 'claims':"
+		,	"  ["
+		,	"    { 'm':"
+		,	"      [ 'value'"
+		,	"      , 373"
+		,	"      , 'bad'"
+		,	"      ,"
+		,	"        { 'latitude':1"
+		,	"        , 'longitude':2"
+		,	"        , 'altitude':null"
+		,	"        , 'globe':null"
+		,	"        , 'precision':1"
+		,	"        }"
+		,	"      ]"
+		,	"    }"
+		,	"  ]"
+		,	"}"
+		);
+		Wdata_doc_parser parser = new Wdata_doc_parser(Gfo_usr_dlg_.Null);
+		parser.Bld_props(jdoc);	// make sure it doesn't fail
 	}
 }

@@ -17,13 +17,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.dynamicPageList; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
-public class Xtn_dynamicPageList_nde_tst {
+public class Dpl_xnde_tst {
 	Xtn_dynamic_page_list_fxt fxt = new Xtn_dynamic_page_list_fxt();
 	@Before public void init() {fxt.Clear();}
 	@Test   public void Ctg() {
 		fxt.Ctg_create("Ctg_0", "B", "A");
 		fxt.Ul_pages("<DynamicPageList>category=Ctg_0</DynamicPageList>", fxt.Ul(Itm_html_null, "B", "A"));
 	}
+//		@Test   public void Ctg_multiple() {
+//			fxt.Ctg_create("Ctg_0", "B", "A");
+//			fxt.Ctg_create("Ctg_1", "A");
+//			fxt.Ul_pages(String_.Concat_lines_nl
+//			(	"<DynamicPageList>"
+//			,	"category=Ctg_0"
+//			,	"category=Ctg_1"
+//			,	"</DynamicPageList>"
+//			), fxt.Ul(Itm_html_null, "A"));
+//		}
 	@Test  public void Ctg_ascending() {
 		fxt.Ctg_create("Ctg_0", "B", "A");
 		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
@@ -104,7 +114,7 @@ class Xtn_dynamic_page_list_fxt {
 		warns = String_.Ary_empty;
 		fxt.App().Usr_dlg().Ui_wkr().Clear();
 		fxt.Wiki().Hive_mgr().Clear();
-		fxt.Wiki().Db_mgr().Load_mgr().Clear();	// clear regys else earlier ctgs will remain
+//			fxt.Wiki().Db_mgr().Load_mgr().Clear();	// clear regys else earlier ctgs will remain
 		Io_mgr._.InitEngine_mem();
 	}
 	public void Warns(String... v) {warns = v;} private String[] warns;
@@ -114,9 +124,16 @@ class Xtn_dynamic_page_list_fxt {
 		int[] page_ids = new int[pages_len];
 		for (int i = 0; i < pages_len; i++) {
 			String page = pages[i];
-			fxt.ini_page_create(page);
-			fxt.ini_id_create (i, 0, 0, false, 5, Xow_ns_.Id_main, page);
-			page_ids[i] = i;
+			int page_id = i;
+			Xoa_ttl page_ttl = Xoa_ttl.parse_(fxt.Wiki(), ByteAry_.new_utf8_(page));
+			Xoa_page page_obj = fxt.Wiki().Data_mgr().Get_page(page_ttl, false);
+			if (page_obj.Missing()) {
+				fxt.ini_page_create(page);
+				fxt.ini_id_create (page_id, 0, 0, false, 5, Xow_ns_.Id_main, page);
+			}
+			else
+				page_id = page_obj.Page_id();
+			page_ids[i] = page_id;
 		}
 		fxt.ini_ctg_create(ctg, page_ids);
 	}

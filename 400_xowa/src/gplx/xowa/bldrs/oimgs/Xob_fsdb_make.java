@@ -133,10 +133,14 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		String lnki_ttl = String_.Format("[[File:{0}|{1}px]]", String_.new_utf8_(itm.Lnki_ttl()), itm.Html_w());
 		usr_dlg.Warn_many("", "", "failed: ttl=~{0}", lnki_ttl);
 	}
-	private Fsdb_xtn_img_itm tmp_img_itm = new Fsdb_xtn_img_itm(); private Fsdb_xtn_thm_itm tmp_thm_itm = new Fsdb_xtn_thm_itm();
+	private Fsdb_xtn_img_itm tmp_img_itm = new Fsdb_xtn_img_itm(); private Fsdb_xtn_thm_itm tmp_thm_itm = new Fsdb_xtn_thm_itm(); private Fsdb_fil_itm tmp_fil_itm = new Fsdb_fil_itm();
 	private void Download_pass(Xodb_tbl_oimg_xfer_itm itm, Io_stream_rdr rdr) {
-		if (itm.File_is_orig())
-			fsdb_mgr.Img_insert(tmp_img_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), itm.Html_w(), itm.Html_h(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);
+		if (itm.File_is_orig()) {
+			if (itm.Lnki_ext().Id_is_image())
+				fsdb_mgr.Img_insert(tmp_img_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), itm.Html_w(), itm.Html_h(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);
+			else
+				fsdb_mgr.Fil_insert(tmp_fil_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);
+		}
 		else
 			fsdb_mgr.Thm_insert(tmp_thm_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), itm.Html_w(), itm.Html_h(), itm.Lnki_thumbtime(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);
 		Xob_xfer_regy_tbl.Update(lnki_regy_stmt, Xob_xfer_regy_tbl.Status_pass, itm.Lnki_id(), itm.Rslt_bin(), "");

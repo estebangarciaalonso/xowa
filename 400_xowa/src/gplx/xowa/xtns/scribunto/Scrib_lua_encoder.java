@@ -19,9 +19,10 @@ package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx
 class Scrib_lua_encoder {
 	public Scrib_lua_encoder(Gfo_usr_dlg usr_dlg) {this.usr_dlg = usr_dlg;} Gfo_usr_dlg usr_dlg;
 	public String Encode(Object o) {
+		ByteAryBfr tmp_bfr = ByteAryBfr.reset_(Io_mgr.Len_kb);
 		Encode_obj(tmp_bfr, o);
 		return tmp_bfr.XtoStrAndClear();
-	}	private ByteAryBfr tmp_bfr = ByteAryBfr.reset_(Io_mgr.Len_kb);
+	}
 	public void Encode_bool(ByteAryBfr bfr, boolean v)			{bfr.Add(v ? CONST_bool_true : CONST_bool_false);}
 	public void Encode_int(ByteAryBfr bfr, int v)			{bfr.Add_int_variable(v);}
 	public boolean Encode_double(ByteAryBfr bfr, double v)	{

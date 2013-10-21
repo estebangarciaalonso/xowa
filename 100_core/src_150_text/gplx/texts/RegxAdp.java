@@ -19,7 +19,13 @@ package gplx.texts; import gplx.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 public class RegxAdp {
-		void Under_sync() {under = Pattern.compile(pattern, Pattern.DOTALL);} Pattern under;
+		void Under_sync() {
+		try {under = Pattern.compile(pattern, Pattern.DOTALL);}
+		catch (Exception e) {	// NOTE: if invalid, then default to empty pattern (which should return nothing); EX:d:〆る generates [^]; DATE:2013-10-20
+			pattern_is_invalid = true;
+			under = Pattern.compile("", Pattern.DOTALL);
+		}
+	}  private Pattern under;
 	public RegxMatch Match(String input, int bgn) {
 		Matcher match = under.matcher(input);
 		boolean success = match.find(bgn);
@@ -36,6 +42,7 @@ public class RegxAdp {
 	}
 	public String ReplaceAll(String input, String replace) {return under.matcher(input).replaceAll(replace);}
 		public String Pattern() {return pattern;} public RegxAdp Pattern_(String val) {pattern = val; Under_sync(); return this;} private String pattern;
+	public boolean Pattern_is_invalid() {return pattern_is_invalid;} private boolean pattern_is_invalid = false;
 	public RegxMatch[] Match_all(String text, int bgn) {
 		int idx = bgn;
 		ListAdp rv = ListAdp_.new_();

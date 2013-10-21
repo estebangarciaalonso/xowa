@@ -28,7 +28,7 @@ public class Xof_img_size {
 		if (lnki_type == Xop_lnki_type.Id_frame) {				// frame: always return orig size; Linker.php!makeThumbLink2; // Use image dimensions, don't scale
 			html_w = file_w = orig_w;
 			html_h = file_h = orig_h;
-			file_is_orig = Xof_ext_.Orig_file_is_img(lnki_ext);	// file_is_orig = true, unless svg
+			file_is_orig = Xof_ext_.Orig_file_is_img(lnki_ext);	// file_is_orig = true, unless svg, ogv, pdf
 			if (file_is_orig)
 				file_w = file_h = Size__same_as_orig;
 			return;

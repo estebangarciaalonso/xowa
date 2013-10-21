@@ -20,7 +20,7 @@ import org.junit.*;
 public class Xoi_cmd_wiki_tst {
 	@Test  public void Run() {
 //			Bld_import_list(Wikis);
-//			Bld_cfg_files(Wikis);
+//			Bld_cfg_files(Wikis);	// NOTE: remember to carry over the wikisource / page / index commands from the existing xowa_build_cfg.gfs; also, only run the xowa_build_cfg.gfs once; DATE:2013-10-15
 	}
 	public void Bld_import_list(String... ary) {
 		int ary_len = ary.length;
@@ -82,7 +82,7 @@ public class Xoi_cmd_wiki_tst {
 			}
 		}
 		bfr.Add_str("app.wiki_cfg_bldr.run;").Add_byte_nl();
-		Io_mgr._.SaveFilStr("C:\\temp.txt", bfr.XtoStr());
+		Io_mgr._.SaveFilStr("C:\\xowa_build_cfg.gfs", bfr.XtoStr());
 	}
 	public static String[] Wikis = new String[]
 { "simple.wikipedia.org"

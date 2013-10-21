@@ -238,7 +238,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		xfer_len = page.File_queue().Count();
 		if (xfer_len > 0){
 			gui_wtr.Prog_one(GRP_KEY, "imgs.download", "downloading images: ~{0}", xfer_len);
-			page.File_queue().Exec(gui_wtr, page.Wiki());
+			page.File_queue().Exec(Xof_exec_tid.Tid_wiki_page, gui_wtr, page.Wiki());
 		}
 		xfer_len = page.File_math().Count();
 		if (xfer_len > 0){
@@ -298,10 +298,6 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			Exec_reload_imgs();
 	}
 	private void Exec_page_edit_rename() {
-		if (page.Wiki().Wiki_tid() != Xow_wiki_type_.Tid_home) {
-			gui_wtr.Warn_many(GRP_KEY, "edit.rename.valid_for_home_only", "Only pages in the home wiki can be renamed");
-			return;
-		}
 		if (ByteAry_.Eq(page.Page_ttl().Page_db(), Xoa_page.Bry_main_page)) {
 			gui_wtr.Warn_many(GRP_KEY, "edit.rename.invalid_for_main_page", "The Main Page cannot be renamed");
 			return;
@@ -663,7 +659,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 					page.File_queue().Clear();
 					page.File_queue().Add(xfer_itm);	// NOTE: set elem_id to "impossible" number, otherwise it will auto-update an image on the page with a super-large size; [[File:Alfred Sisley 062.jpg]]
 					page.Wiki().File_mgr().Repo_mgr().Xfer_mgr().Force_orig_y_();
-					page.File_queue().Exec(gui_wtr, page.Wiki());
+					page.File_queue().Exec(Xof_exec_tid.Tid_viewer_app, gui_wtr, page.Wiki());
 					page.Wiki().File_mgr().Repo_mgr().Xfer_mgr().Force_orig_n_();
 				}
 				if (Io_mgr._.ExistsFil(href_url)) {

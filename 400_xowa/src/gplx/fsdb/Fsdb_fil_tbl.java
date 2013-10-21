@@ -86,7 +86,7 @@ public class Fsdb_fil_tbl {
 		finally {rdr.Rls();}
 	}
 	private static Fsdb_fil_itm load_(DataRdr rdr) {
-		return new Fsdb_fil_itm(rdr.ReadInt(Fld_fil_id), rdr.ReadInt(Fld_fil_owner_id), rdr.ReadInt(Fld_fil_ext_id), rdr.ReadStr(Fld_fil_name), rdr.ReadInt(Fld_fil_bin_db_id));
+		return new Fsdb_fil_itm().Init(rdr.ReadInt(Fld_fil_id), rdr.ReadInt(Fld_fil_owner_id), rdr.ReadInt(Fld_fil_ext_id), rdr.ReadStr(Fld_fil_name), rdr.ReadInt(Fld_fil_bin_db_id));
 	}
 
 	public static final String Tbl_name = "fsdb_fil", Fld_fil_id = "fil_id", Fld_fil_owner_id = "fil_owner_id", Fld_fil_name = "fil_name", Fld_fil_xtn_id = "fil_xtn_id", Fld_fil_ext_id = "fil_ext_id"

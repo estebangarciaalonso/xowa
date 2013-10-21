@@ -25,7 +25,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 			, this, String_.Ary(Invk_loadPackage, Invk_frameExists, Invk_parentFrameExists, Invk_getExpandedArgument, Invk_getAllExpandedArguments, Invk_expandTemplate, Invk_preprocess, Invk_callParserFunction, Invk_incrementExpensiveFunctionCount)
 			, KeyVal_.new_("allowEnvFuncs", allow_env_funcs));
 		return mod;
-	}	private ByteAryBfr tmp_bfr = ByteAryBfr.new_();
+	}
 	public void Invoke_bgn(Xow_wiki wiki, byte[] new_src) {
 		if (src != null)	// src exists; indicates that Invoke being called recursively; push existing src onto stack
 			src_stack.Add(src);
@@ -73,6 +73,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		}
 		String idx_str = Scrib_kv_utl.Val_to_str(values, 1);
 		int idx_int = Int_.parse_or_(idx_str, Int_.MinValue);	// NOTE: should not receive int value < -1; idx >= 0
+		ByteAryBfr tmp_bfr = ByteAryBfr.new_();	// NOTE: do not make modular level variable, else random failures; DATE:2013-10-14
 		if (idx_int != Int_.MinValue) {	// idx is integer
 			Arg_nde_tkn nde = Get_arg(frame, idx_int, frame_arg_adj);
 			//frame.Args_eval_by_idx(engine.Ctx().Src(), idx_int); // NOTE: arg[0] is always MW function name; EX: {{#invoke:Mod_0|Func_0|Arg_1}}; arg_x = "Mod_0"; args[0] = "Func_0"; args[1] = "Arg_1"
@@ -134,6 +135,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		int args_len = frame.Args_len() - frame_arg_adj;
 		if (args_len < 1) return Scrib_kv_utl.base1_obj_(KeyVal_.Ary_empty);	// occurs when "frame:getParent().args" but no parent frame
 		KeyVal[] rv = new KeyVal[args_len];
+		ByteAryBfr tmp_bfr = ByteAryBfr.new_();	// NOTE: do not make modular level variable, else random failures; DATE:2013-10-14
 		for (int i = 0; i < args_len; i++) {
 			Arg_nde_tkn nde = frame.Args_get_by_idx(i + frame_arg_adj);
 			nde.Key_tkn().Tmpl_evaluate(ctx, src, owner_frame, tmp_bfr);
@@ -158,6 +160,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		Xop_ctx tmp_ctx = Xop_ctx.new_sub_(cur_wiki);
 		int args_len = frame.Args_len() - 1;
 		KeyVal[] kv_args = new KeyVal[args_len];
+		ByteAryBfr tmp_bfr = ByteAryBfr.new_();	// NOTE: do not make modular level variable, else random failures; DATE:2013-10-14
 		for (int i = 0; i < args_len; i++) {
 			Arg_nde_tkn arg = frame.Args_get_by_idx(i + 1);
 			arg.Key_tkn().Tmpl_evaluate(ctx, src, frame, tmp_bfr);
@@ -252,6 +255,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		Xot_defn_tmpl defn_tmpl = (Xot_defn_tmpl)defn;
 		Xot_invk invk_tmpl = Xot_defn_tmpl_.CopyNew(tmp_ctx, defn_tmpl, mock_frame, mock_frame, ByteAry_.Empty);
 
+		ByteAryBfr tmp_bfr = ByteAryBfr.new_(); // NOTE: do not make modular level variable, else random failures; DATE:2013-10-14
 		defn_tmpl.Tmpl_evaluate(ctx, invk_tmpl, tmp_bfr);
 		return Scrib_kv_utl.base1_obj_(tmp_bfr.XtoStrAndClear());
 	}

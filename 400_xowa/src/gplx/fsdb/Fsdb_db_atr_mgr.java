@@ -23,6 +23,9 @@ public class Fsdb_db_atr_mgr implements RlsAble {
 	public Fsdb_db_atr_fil Get_at(int i) {return i == Id_0 ? itms_0 : itms[i];}
 	public Fsdb_fil_itm Fil_select(byte[] dir, byte[] fil)						{return itms_0.Fil_select(dir, fil);}
 	public Fsdb_xtn_thm_itm Thm_select(int fil_id, int width, int thumbtime)	{return itms_0.Thm_select(fil_id, width, thumbtime);}
+	public int Fil_insert(Fsdb_fil_itm rv    , byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+		return itms_0.Fil_insert(rv, String_.new_utf8_(dir), String_.new_utf8_(fil), ext_id, modified, hash, bin_db_id, bin_len, bin_rdr);
+	}
 	public int Img_insert(Fsdb_xtn_img_itm rv, String dir, String fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		return itms_0.Img_insert(rv, dir, fil, ext_id, img_w, img_h, modified, hash, bin_db_id, bin_len, bin_rdr);
 	}

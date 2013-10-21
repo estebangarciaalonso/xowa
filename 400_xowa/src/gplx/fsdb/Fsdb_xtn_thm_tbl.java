@@ -27,7 +27,7 @@ public class Fsdb_xtn_thm_tbl {
 		try {Insert(stmt, id, thm_owner_id, width, height, thumbtime, bin_db_id, size, modified, hash);}
 		finally {stmt.Rls();}
 	}
-	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_thm_id, Fld_thm_owner_id, Fld_thm_width, Fld_thm_height, Fld_thm_thumbtime, Fld_thm_bin_db_id, Fld_thm_size, Fld_thm_modified, Fld_thm_hash);}
+	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_thm_id, Fld_thm_owner_id, Fld_thm_w, Fld_thm_h, Fld_thm_thumbtime, Fld_thm_bin_db_id, Fld_thm_size, Fld_thm_modified, Fld_thm_hash);}
 	public static void Insert(Db_stmt stmt, int id, int thm_owner_id, int width, int height, int thumbtime, int bin_db_id, long size, DateAdp modified, String hash) {
 		stmt.Clear()
 		.Val_int_(id)
@@ -68,7 +68,7 @@ public class Fsdb_xtn_thm_tbl {
 	}
 	public static Fsdb_xtn_thm_itm Select_itm_by_fil_width(Db_provider p, int owner, int width, int thumbtime) {
 		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_()
-			.Where_(gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_thm_owner_id, owner), Db_crt_.eq_(Fld_thm_width, width), Db_crt_.eq_(Fld_thm_thumbtime, X_thumbtime_to_db(thumbtime))));
+			.Where_(gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_thm_owner_id, owner), Db_crt_.eq_(Fld_thm_w, width), Db_crt_.eq_(Fld_thm_thumbtime, X_thumbtime_to_db(thumbtime))));
 		DataRdr rdr = DataRdr_.Null;
 		try {
 			rdr = p.Exec_qry_as_rdr(qry);
@@ -95,14 +95,14 @@ public class Fsdb_xtn_thm_tbl {
 		finally {rdr.Rls();}
 	}
 	public static final String Tbl_name = "fsdb_xtn_thm"
-	, Fld_thm_id = "thm_id", Fld_thm_owner_id = "thm_owner_id", Fld_thm_width = "thm_width", Fld_thm_thumbtime = "thm_thumbtime", Fld_thm_height = "thm_height"
+	, Fld_thm_id = "thm_id", Fld_thm_owner_id = "thm_owner_id", Fld_thm_w = "thm_w", Fld_thm_h = "thm_h", Fld_thm_thumbtime = "thm_thumbtime"
 	, Fld_thm_bin_db_id = "thm_bin_db_id", Fld_thm_size = "thm_size", Fld_thm_modified = "thm_modified", Fld_thm_hash = "thm_hash";
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS fsdb_xtn_thm"
 	,	"( thm_id            integer             NOT NULL    PRIMARY KEY"
 	,	", thm_owner_id      integer             NOT NULL"
-	,	", thm_width         integer             NOT NULL"
-	,	", thm_height        integer             NOT NULL"
+	,	", thm_w             integer             NOT NULL"
+	,	", thm_h             integer             NOT NULL"
 	,	", thm_thumbtime     integer             NOT NULL"	// stored in ms
 	,	", thm_bin_db_id     integer             NOT NULL"
 	,	", thm_size          bigint              NOT NULL"
@@ -111,7 +111,7 @@ public class Fsdb_xtn_thm_tbl {
 	,	");"
 	);
 	public static final Db_idx_itm
-	  Idx_name = Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS fsdb_xtn_thm__owner      ON fsdb_xtn_thm (thm_owner_id, thm_id, thm_width, thm_thumbtime);")
+	  Idx_name = Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS fsdb_xtn_thm__owner      ON fsdb_xtn_thm (thm_owner_id, thm_id, thm_w, thm_thumbtime);")
 	;
 	public static final int Thumbtime_multiplier = 1000;	// store thumbtime in ms; EX: 2 secs -> 2000
 	public static final DateAdp Modified_null = null;

@@ -55,7 +55,10 @@ class Scrib_kv_utl {
 		return rv == null ? or : ByteAry_.new_utf8_(rv);
 	}
 	public static String Val_to_str(KeyVal[] ary, int idx) {
-		if (ary == null) throw Err_.new_("ary is null"); if (idx >= ary.length) throw Err_.new_fmt_("idx is not in bounds: {0} {1}", idx, KeyVal_.Xto_str(ary));
+		if (ary == null) throw Err_.new_("ary is null");
+		int ary_len = ary.length;
+		if (ary_len == 0 && idx == 0) return "";	// NOTE: Modules can throw exceptions in which return value is nothing; do not fail; return ""; EX: -logy; DATE:2013-10-14
+		if (idx >= ary_len) throw Err_.new_fmt_("idx is not in bounds: {0} {1}", idx, KeyVal_.Xto_str(ary));
 		Object o = ary[idx].Val();
 		try {return (String)o;}
 		catch (Exception e) {throw Err_.cast_(e, String.class, o);}

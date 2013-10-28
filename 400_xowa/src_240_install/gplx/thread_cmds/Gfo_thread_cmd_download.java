@@ -26,7 +26,7 @@ public class Gfo_thread_cmd_download implements Gfo_thread_cmd {
 	}	String src; protected Gfui_kit kit; Gfo_usr_dlg usr_dlg; Io_url trg;
 	public GfoInvkAble Owner() {return owner;} public Gfo_thread_cmd_download Owner_(GfoInvkAble v) {owner = v; return this;} GfoInvkAble owner;
 	public ByteAryFmtr_eval_mgr Url_eval_mgr() {return url_eval_mgr;} public Gfo_thread_cmd_download Url_eval_mgr_(ByteAryFmtr_eval_mgr v) {url_eval_mgr = v; return this;} ByteAryFmtr_eval_mgr url_eval_mgr;
-	public void Cmd_init() {}
+	public void Cmd_ctor() {}
 	public Gfo_thread_cmd Async_next_cmd() {return next_cmd;} public void Async_next_cmd_(Gfo_thread_cmd v) {next_cmd = v;} Gfo_thread_cmd next_cmd;
 	@gplx.Virtual public String Async_key() {return KEY;}
 	public int Async_sleep_interval()	{return Gfo_thread_cmd_.Async_sleep_interval_1_second;}

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.ios.*;
 public class Xobc_core_make_id extends Xob_itm_dump_base implements Xobd_wkr, GfoInvkAble {
-	public Xobc_core_make_id(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xobc_core_make_id(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Wkr_key() {return KEY;} public static final String KEY = "core.make_id";
 	public void Wkr_ini(Xob_bldr bldr) {}
 	public void Wkr_bgn(Xob_bldr bldr) {

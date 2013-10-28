@@ -94,7 +94,7 @@ public class IptKey_ {
 		, Slash = new_(KeyEvent.VK_SLASH, "slash")					
 		, Tick = new_(KeyEvent.VK_BACK_QUOTE, "tick")						
 		, OpenBracket = new_(219, "openBracket")
-		, Backslash = new_(220, "backslash")
+		, Backslash = new_(KeyEvent.VK_BACK_SLASH, "backslash")			
 		, CloseBracket = new_(221, "closeBracket")
 		, Quote = new_(222, "quote")
 		, Shift = new_(KeyCode_Shift, "shift"), Ctrl = new_(KeyCode_Ctrl, "ctrl"), Alt = new_(KeyCode_Alt, "alt");

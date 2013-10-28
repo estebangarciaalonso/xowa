@@ -77,7 +77,7 @@ public class Xow_lang_mgr {
 			Xow_xwiki_itm xwiki = ttl.Wik_itm();
 			int lang_id = xwiki.Lang_id();
 			Xow_lang_itm itm = itms[lang_id];	// NOTE: handles ttls like [[fr:]] and [[:fr;]] which have an empty Page_txt, but a valued Full_txt_raw
-			byte[] ttl_bry = ttl.Page_txt();
+			byte[] ttl_bry = ttl.Page_txt_w_anchor();
 			boolean empty_xwiki = false;
 			if (ByteAry_.Len_eq_0(ttl_bry)) {
 				ttl_bry = wiki.Ctx().Page().Page_ttl().Page_txt();

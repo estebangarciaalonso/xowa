@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.wdatas.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.wdatas.*;
 import gplx.json.*; import gplx.ios.*;
 public abstract class Xob_wdata_qid_base extends Xob_itm_dump_base implements Xobd_wkr, GfoInvkAble {
-	public Xob_wdata_qid_base Ctor(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki); return this;}
+	public Xob_wdata_qid_base Ctor(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki); return this;}
 	public abstract String Wkr_key();
 	public abstract void Qid_bgn();
 	public abstract void Qid_add(byte[] wiki_key, Xow_ns ns, byte[] ttl, byte[] qid);

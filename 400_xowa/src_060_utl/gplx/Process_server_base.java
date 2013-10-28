@@ -21,25 +21,24 @@ import gplx.texts.HexDecUtl;
 import gplx.xowa.xtns.scribunto.*;
 import gplx.ios.*;
 import java.io.*;
-import java.lang.management.OperatingSystemMXBean;
 public class Process_server_base implements Process_server {
-    String[] process_args; Process process;
-    OutputStream stream_write; Process_server_gobbler_recv stream_read; byte[] bry_header = new byte[16], bry_body = new byte[Io_mgr.Len_kb * 4];
-    Scrib_lua_process_rdr process_rdr;
+    private Process process;
+    private OutputStream stream_write; private Process_server_gobbler_recv stream_read; private byte[] bry_header = new byte[16], bry_body = new byte[Io_mgr.Len_kb * 4], bry_error = new byte[Io_mgr.Len_kb * 4];
+    private Scrib_lua_process_rdr process_rdr;
+    private Process_server_gobbler_error error_reader;
 	public int Server_timeout() {return server_timeout;} public Process_server Server_timeout_(int v) {server_timeout = v; return this;} int server_timeout = 8000;
 	public int Server_timeout_polling() {return server_timeout_polling;} public Process_server Server_timeout_polling_(int v) {server_timeout_polling = v; return this;} int server_timeout_polling = 1;
 	public int Server_timeout_busy_wait() {return server_timeout_busy_wait;} public Process_server Server_timeout_busy_wait_(int v) {server_timeout_busy_wait = v; return this;} int server_timeout_busy_wait = 250;
     public void Init(String... process_args) {
-    	this.process_args = process_args;
         process_rdr = new Scrib_lua_process_rdr(bry_header, bry_body);
     	ProcessBuilder pb = new ProcessBuilder(process_args);
     	pb.redirectErrorStream(false);
     	try {process = pb.start();}
     	catch (Exception e) {throw Err_.err_(e, "process init failed: {0} {1}", String_.AryXtoStr(process_args), Err_.Message_gplx_brief(e));}
         stream_write = process.getOutputStream();
-        error_reader = new Process_server_gobbler_error(process.getErrorStream());
+        error_reader = new Process_server_gobbler_error(process.getErrorStream(), bry_error);
         error_reader.Start();
-    }	Process_server_gobbler_error error_reader; boolean op_sys_is_wnt;
+    }
     public byte[] Server_comm(byte[] cmd, Object[] cmd_objs) {
     	Server_send(cmd, cmd_objs);
     	return Server_recv();
@@ -76,16 +75,19 @@ public class Process_server_base implements Process_server {
    }
 }
 class Process_server_gobbler_error extends Thread {
-    public Process_server_gobbler_error(InputStream stream) {super("process.lua.error"); this.stream = stream;} InputStream stream;
+	private byte[] bfr;
+	private InputStream stream;
+    public Process_server_gobbler_error(InputStream stream, byte[] bfr) {
+    	super("process.lua.error");
+    	this.stream = stream;
+    	this.bfr = bfr;
+    }
     public Process_server_gobbler_error Start() {this.start(); return this;}
     public void run() {
-    	byte[] bfr = new byte[2048];
         try {
-        	while (true) {
+        	while (true) {	// loop b/c one gobbler is reused for multiple calls
         		stream.read(bfr);
-//        		Tfds.Write_bry(bfr);
-//        		bfr = new byte[2048];
-        		ThreadAdp_.Sleep(1);
+        		ThreadAdp_.Sleep(100);
         	}
         }
         catch (Exception e) {
@@ -101,22 +103,21 @@ class Process_server_gobbler_error extends Thread {
     }	boolean terminating = false;
 }
 class Process_server_gobbler_recv extends Thread {    
+    private Scrib_lua_process_rdr process_rdr;
+    private InputStream stream;
     public Process_server_gobbler_recv(InputStream stream, Scrib_lua_process_rdr process_rdr) {
     	super("process.lua.read");
-    	this.stream = stream; this.process_rdr = process_rdr;} Scrib_lua_process_rdr process_rdr;
-    InputStream stream;
+    	this.stream = stream; this.process_rdr = process_rdr;
+    }
     public void Data_reset() {data = null;}
-    public byte[] Data() {return data;} byte[] data;
+    public byte[] Data() {return data;} private byte[] data;
     public Process_server_gobbler_recv Start() {
     	process_rdr.Rdr().UnderRdr_(stream);
     	this.start();
     	return this;
     }
     public void run() {
-//    	while (true) {
-    		data = process_rdr.Read();
-//    		ThreadAdp_.Sleep(1000);
-//    	}
+    	data = process_rdr.Read();
     }
     public void Term() {
     	this.interrupt();

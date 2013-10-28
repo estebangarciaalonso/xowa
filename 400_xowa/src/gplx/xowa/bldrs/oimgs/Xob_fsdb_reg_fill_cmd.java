@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.dbs.*; import gplx.xowa.bldrs.*; import gplx.xowa.files.fsdb.*; import gplx.xowa.files.qrys.*;
 public class Xob_fsdb_reg_fill_cmd extends Xob_itm_basic_base implements Xob_cmd {
-	public Xob_fsdb_reg_fill_cmd(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xob_fsdb_reg_fill_cmd(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "oimg.fsdb_reg_fill";
 	private Db_provider wiki_reg_provider;
 	public void Cmd_ini(Xob_bldr bldr) {}

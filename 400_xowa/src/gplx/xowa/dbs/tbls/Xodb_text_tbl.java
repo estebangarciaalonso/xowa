@@ -70,7 +70,7 @@ public class Xodb_text_tbl {
 			while (rdr.MoveNextPeer()) {
 				if (cancelable.Canceled()) return;
 				int page_id = rdr.ReadInt(Fld_page_id);
-				byte[] old_text = (byte[])rdr.ReadBry(Fld_old_text);
+				byte[] old_text = rdr.ReadBry(Fld_old_text);
 				old_text = zip_mgr.Unzip(db_mgr.Data_storage_format(), old_text);
 				Xodb_page page = (Xodb_page)hash.Fetch(IntVal.new_(page_id));
 				page.Text_(old_text);

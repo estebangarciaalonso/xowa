@@ -19,7 +19,7 @@ package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xo
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*;
 public class Xob_xfer_temp_cmd_orig extends Xob_itm_basic_base implements Xob_cmd {
 	private byte[] ext_rules_key = ByteAry_.Empty;
-	public Xob_xfer_temp_cmd_orig(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xob_xfer_temp_cmd_orig(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "oimg.xfer_temp_orig";
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_bgn(Xob_bldr bldr) {

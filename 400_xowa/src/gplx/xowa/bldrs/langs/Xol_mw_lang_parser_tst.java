@@ -92,12 +92,12 @@ public class Xol_mw_lang_parser_tst {
 	@Test  public void Separator_transform_table() {
 //			fxt.Lang().Num_fmt_mgr().Clear().Dec_dlm_(ByteAry_.new_ascii_(".")).Grps_add(new Gfo_num_fmt_grp(ByteAry_.new_utf8_(","), 3, true));
 		fxt.Parse_core("$separatorTransformTable = array( ',' => '.', '.' => ',' );");
-		fxt.Num_fmt_tst("1234,56", "1.234,56");
+		fxt.Num_fmt_tst("1234,56", "1.234.56");	// NOTE: dot is repeated; confirmed with dewiki and {{formatnum:1234,56}}
 	}
 	@Test  public void Separator_transform_table_fr() {
 //			fxt.Lang().Num_fmt_mgr().Clear().Dec_dlm_(ByteAry_.new_ascii_(".")).Grps_add(new Gfo_num_fmt_grp(ByteAry_.new_utf8_(","), 3, true));
 		fxt.Parse_core("$separatorTransformTable = array( ',' => '\\xc2\\xa0', '.' => ',' );");
-		fxt.Num_fmt_tst("1234,56", "1 234,56");	// NOTE: nbsp;
+		fxt.Num_fmt_tst("1234,56", "1 234 56");	// NOTE: nbsp here; also, nbsp is repeated. see dewiki and {{formatnum:1234,56}}
 	}
 	@Test   public void Bld() {
 		//             mem/xowa/user/test_user/lang/mediawiki/messages/

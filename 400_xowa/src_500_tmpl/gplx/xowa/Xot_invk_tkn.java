@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.langs.*;
 public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 	public boolean Root_frame() {return false;}
 	public Arg_nde_tkn Name_tkn() {return name_tkn;} public Xot_invk_tkn Name_tkn_(Arg_nde_tkn v) {name_tkn = v; return this;} Arg_nde_tkn name_tkn = Arg_nde_tkn.Null;
@@ -86,10 +87,10 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 //					if (pre_len < name_ary_len && name_ary[pre_len] == Byte_ascii.Colon)
 				return SubEval(ctx, wiki, bfr, name_ary, caller, src);
 			}
-			Xot_func_regy_finder finder = wiki.Lang().Func_regy().FindDefn(name_ary, name_bgn, name_ary_len);
+			Xol_func_name_itm finder = wiki.Lang().Func_regy().Find_defn(name_ary, name_bgn, name_ary_len);
 			defn = finder.Func();
 			int colon_pos = -1;
-			switch (finder.TypeId()) {
+			switch (finder.Tid()) {
 				case Xot_defn_.Tid_subst:	// subst is added verbatim; EX: {{subst:!}} -> {{subst:!}}; logic below is to handle printing of arg which could be standardized if src[] was available for tmpl
 					bfr.Add(Xop_curly_bgn_lxr.Hook).Add(name_ary);
 					for (int i = 0; i < args_len; i++) {
@@ -135,7 +136,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 				name_ary = ByteAry_.Mid(name_ary, 0, colon_pos);
 			}
 			if (defn == Xot_defn_.Null) {
-				defn = wiki.Tmpl_regy().GetByKey(name_ary);
+				defn = wiki.Cache_mgr().Defn_cache().Get_by_key(name_ary);
 				if (defn == null) {
 					if (name_ary_len != 0 ) {	// name_ary_len != 0 for direct template inclusions; EX.WP:Human evolution and {{:Human evolution/Species chart}}; && ctx.Tmpl_whitelist().Has(name_ary)
 						Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.Add(wiki.Ns_mgr().Ns_template().Name_db_w_colon(), name_ary));
@@ -144,7 +145,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 							return false;
 						}
 						else {	// some templates produce null ttls; EX: "Citation needed{{subst"
-							defn = wiki.Tmpl_regy().GetByKey(ttl.Page_db());
+							defn = wiki.Cache_mgr().Defn_cache().Get_by_key(ttl.Page_db());
 							if (defn == null && ctx.Sys_load_tmpls())
 								defn = Load_defn(wiki, ctx, ttl, name_ary);
 						}
@@ -250,11 +251,11 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, name_ary); if (page_ttl == null) return false;	// ttl not valid; EX: {{:[[abc]]}}
 		byte[] transclude_src = null;
 		if (page_ttl.Ns().Id_tmpl()) {					// ttl is template; check tmpl_regy first before going to data_mgr
-			Xot_defn_tmpl tmpl = (Xot_defn_tmpl)wiki.Tmpl_regy().GetByKey(page_ttl.Page_db());
+			Xot_defn_tmpl tmpl = (Xot_defn_tmpl)wiki.Cache_mgr().Defn_cache().Get_by_key(page_ttl.Page_db());
 			if (tmpl != null) transclude_src = tmpl.Data_raw();
 		}
 		if (transclude_src == null && ctx.Sys_load_tmpls()) {	// ttl is template not in cache, or some other ns; do load
-			byte[] page_bry = wiki.Page_cache_get_or_fetch(page_ttl);
+			byte[] page_bry = wiki.Cache_mgr().Page_cache().Get_or_fetch(page_ttl);
 			if (page_bry != null)
 				transclude_src = page_bry;
 		}
@@ -268,13 +269,13 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		}
 	}
 	public static Xot_defn_tmpl Load_defn(Xow_wiki wiki, Xop_ctx ctx, Xoa_ttl ttl, byte[] name_ary) {
-		byte[] tmpl_page_bry = wiki.Page_cache_get_or_fetch(ttl);
+		byte[] tmpl_page_bry = wiki.Cache_mgr().Page_cache().Get_or_fetch(ttl);
 		Xot_defn_tmpl rv = null;
 		if (tmpl_page_bry != null) {
 			byte old_parse_tid = ctx.Parse_tid(); // NOTE: reusing templates is a bad idea; will change Parse_tid and cause strange errors; however, keeping for PERF reasons
 			rv = wiki.Parser().Parse_tmpl(ctx, ctx.Tkn_mkr(), wiki.Ns_mgr().Ns_template(), name_ary, tmpl_page_bry);
 			ctx.Parse_tid_(old_parse_tid);
-			wiki.Tmpl_regy().Add(rv, Bool_.Y);
+			wiki.Cache_mgr().Defn_cache().Add(rv, Bool_.Y);
 		}
 		return rv;
 	}
@@ -282,7 +283,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 	public static void Print_not_found(byte[] name_ary, ByteAryBfr bfr) {	// print as {{:page_not_found}}; should change to &#123;&#123;page_not_found}}; need to consider
 		bfr.Add(Xop_curly_bgn_lxr.Hook).Add_byte(Byte_ascii.Colon).Add(name_ary).Add(Xop_curly_end_lxr.Hook);
 	}
-	boolean Eval_sub(Xop_ctx ctx, Xot_defn_tmpl transclude_tmpl, Xot_invk caller, byte[] src, ByteAryBfr doc) {
+	private boolean Eval_sub(Xop_ctx ctx, Xot_defn_tmpl transclude_tmpl, Xot_invk caller, byte[] src, ByteAryBfr doc) {
 		boolean rv = false;
 		Xot_invk tmp_tmpl = Xot_defn_tmpl_.CopyNew(ctx, transclude_tmpl, this, caller, src);
 		ByteAryBfr tmp_bfr = ByteAryBfr.new_();
@@ -291,12 +292,12 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		doc.Add_bfr_and_clear(tmp_bfr);
 		return rv;
 	}
-	boolean SubEval(Xop_ctx ctx, Xow_wiki wiki, ByteAryBfr bfr, byte[] name_ary, Xot_invk caller, byte[] src_for_tkn) {
+	private boolean SubEval(Xop_ctx ctx, Xow_wiki wiki, ByteAryBfr bfr, byte[] name_ary, Xot_invk caller, byte[] src_for_tkn) {
 		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, name_ary); if (page_ttl == null) return false;	// ttl not valid; EX: {{:[[abc]]}}
 		Xot_defn_tmpl transclude_tmpl = null;
 		switch (page_ttl.Ns().Id()) {
 			case Xow_ns_.Id_template:	// ttl is template not in cache, or some other ns; do load
-				Xot_defn_tmpl tmpl = (Xot_defn_tmpl)wiki.Tmpl_regy().GetByKey(page_ttl.Page_db());
+				Xot_defn_tmpl tmpl = (Xot_defn_tmpl)wiki.Cache_mgr().Defn_cache().Get_by_key(page_ttl.Page_db());
 				if (tmpl != null) {
 					if (tmpl.Root() == null) tmpl.Parse_tmpl(ctx);
 					transclude_tmpl = tmpl;
@@ -307,7 +308,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 				return true;
 		}
 		if (transclude_tmpl == null && ctx.Sys_load_tmpls()) {	// ttl is template not in cache, or some other ns; do load
-			byte[] page_bry = wiki.Page_cache_get_or_fetch(page_ttl);
+			byte[] page_bry = wiki.Cache_mgr().Page_cache().Get_or_fetch(page_ttl);
 			if (page_bry != null) transclude_tmpl = ctx.Wiki().Parser().Parse_tmpl(ctx, ctx.Tkn_mkr(), page_ttl.Ns(), page_ttl.Page_db(), page_bry);
 		}
 		if (transclude_tmpl == null) return false;

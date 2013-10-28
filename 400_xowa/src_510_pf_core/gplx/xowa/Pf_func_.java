@@ -49,7 +49,7 @@ public class Pf_func_ {
 		if (rhs_parser.HasErr()) return false;
 		return lhs_parser.HasFrac() || rhs_parser.HasFrac() ? lhs_parser.AsDec().Eq(rhs_parser.AsDec()) : lhs_parser.AsInt() == rhs_parser.AsInt();
 	}
-	public static void Reg(Xot_func_regy func_regy, Xol_lang lang) {
+	public static void Reg(gplx.xowa.langs.Xol_func_name_regy func_regy, Xol_lang lang) {
 		Xol_kwd_mgr kwd_mgr = lang.Kwd_mgr();
 		int len = Ary__.length;
 		for (int i = 0; i < len; i++) {

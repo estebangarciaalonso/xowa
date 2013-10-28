@@ -22,7 +22,7 @@ public class Xob_page_sql extends Xob_itm_basic_base implements Xobd_wkr, GfoInv
 	private Xodb_mgr_sql db_mgr; private Xodb_fsys_mgr fsys_mgr; private Db_provider page_provider; private Db_stmt page_stmt; private Xob_text_stmts_mgr text_stmts_mgr;
 	private int page_count_all, page_count_main = 0; private int txn_commit_interval = 100000;	// 100 k
 	private DateAdp modified_latest = DateAdp_.MinValue;
-	public Xob_page_sql(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xob_page_sql(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Wkr_key() {return KEY;} public static final String KEY = "import.sql.page";
 	public void Wkr_bgn(Xob_bldr bldr) {			
 		// init local variables

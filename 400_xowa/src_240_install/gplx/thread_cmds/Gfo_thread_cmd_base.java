@@ -19,7 +19,7 @@ package gplx.thread_cmds; import gplx.*;
 import gplx.gfui.*;
 public class Gfo_thread_cmd_base implements Gfo_thread_cmd {
 	@gplx.Virtual public String Async_key() {return "undefined";}
-	public void Cmd_init() {}
+	public void Cmd_ctor() {}
 	public Gfo_thread_cmd_base Ctor(Gfo_usr_dlg usr_dlg, Gfui_kit kit) {this.usr_dlg = usr_dlg; this.kit = kit; return this;} protected Gfo_usr_dlg usr_dlg; protected Gfui_kit kit;
 	public GfoInvkAble Owner() {return owner;} public Gfo_thread_cmd_base Owner_(GfoInvkAble v) {owner = v; return this;} GfoInvkAble owner;
 	public ByteAryFmtr_eval_mgr Url_eval_mgr() {return url_eval_mgr;} public Gfo_thread_cmd_base Url_eval_mgr_(ByteAryFmtr_eval_mgr v) {url_eval_mgr = v; return this;} ByteAryFmtr_eval_mgr url_eval_mgr;

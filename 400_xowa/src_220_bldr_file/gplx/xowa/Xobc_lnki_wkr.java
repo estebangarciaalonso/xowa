@@ -22,7 +22,7 @@ public interface Xobc_lnki_wkr {
 }
 class Xobc_lnki_wkr_file extends Xob_itm_dump_base implements Xobc_lnki_wkr {
 	public static final String KEY = "img.dump_link";
-	public Xobc_lnki_wkr_file(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki); this.make_fil_len = 1 * Io_mgr.Len_mb;}
+	public Xobc_lnki_wkr_file(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki); this.make_fil_len = 1 * Io_mgr.Len_mb;}
 	public Io_url_gen Make_url_gen() {return make_url_gen;} public Xobc_lnki_wkr_file Make_url_gen_(Io_url_gen v) {make_url_gen = v; return this;} Io_url_gen make_url_gen;
 	public void Wkr_bgn(Xob_bldr bldr) {
 		Io_url temp_dir2 = wiki.Fsys_mgr().Tmp_dir().GenSubDir(KEY);

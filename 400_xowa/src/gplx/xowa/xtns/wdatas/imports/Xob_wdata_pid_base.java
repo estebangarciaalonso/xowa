@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.wdatas.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.wdatas.*;
 import gplx.json.*;
 public abstract class Xob_wdata_pid_base extends Xob_itm_dump_base implements Xobd_wkr, GfoInvkAble {
-	public Xob_wdata_pid_base Ctor(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki); return this;}
+	public Xob_wdata_pid_base Ctor(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki); return this;}
 	public abstract String Wkr_key();
 	public abstract void Pid_bgn();
 	public abstract void Pid_add(byte[] src_lang, byte[] src_ttl, byte[] trg_ttl);

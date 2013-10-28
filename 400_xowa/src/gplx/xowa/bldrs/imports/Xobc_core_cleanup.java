@@ -19,7 +19,7 @@ package gplx.xowa.bldrs.imports; import gplx.*; import gplx.xowa.*; import gplx.
 import gplx.xowa.bldrs.*; 
 public class Xobc_core_cleanup extends Xob_itm_basic_base implements Xob_cmd {
 	String bz2_cmd;
-	public Xobc_core_cleanup(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xobc_core_cleanup(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Cmd_key() {return KEY;} public static final String KEY = "core.cleanup";
 	public Xobc_core_cleanup Delete_sqlite3_(boolean v){delete_sqlite3 = v; return this;} private boolean delete_sqlite3;
 	public Xobc_core_cleanup Delete_xml_(boolean v)	{delete_xml = v; return this;} private boolean delete_xml;

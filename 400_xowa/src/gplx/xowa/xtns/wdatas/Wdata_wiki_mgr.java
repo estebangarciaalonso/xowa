@@ -109,25 +109,27 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 		for (int i = 0; i < len; i++) {
 			if (i != 0) bfr.Add(Prop_tmpl_val_dlm);
 			Wdata_prop_itm_core prop = prop_grp.Itms_get_at(i);
-			if (prop.Snak_tid() == Wdata_prop_itm_base_.Snak_tid_novalue) {
-				bfr.Add(Wdata_doc_consts.Val_prop_novalue_bry);
-			}
-			else {
-				switch (prop.Val_tid_byte()) {
-					case Wdata_prop_itm_base_.Val_tid_string	:
-					case Wdata_prop_itm_base_.Val_tid_time	: bfr.Add(prop.Val()); break;
-					case Wdata_prop_itm_base_.Val_tid_entity:
-						Wdata_doc entity_doc = Pages_get(ByteAry_.Add(Bry_q, prop.Val()));
-						byte[] label = entity_doc.Label_get(lang_key);
-						bfr.Add(label);
-						break;
-					case Wdata_prop_itm_base_.Val_tid_globecoordinate:
-						byte[][] flds = ByteAry_.Split(prop.Val(), Byte_ascii.Pipe);
-						bfr.Add(flds[0]);
-						bfr.Add_byte(Byte_ascii.Comma).Add_byte(Byte_ascii.Space);
-						bfr.Add(flds[1]);
-						break;
-					default: throw Err_.unhandled(prop.Val_tid_byte());
+			switch (prop.Snak_tid()) {
+				case Wdata_prop_itm_base_.Snak_tid_novalue	: bfr.Add(Wdata_doc_consts.Val_prop_novalue_bry); break;
+				case Wdata_prop_itm_base_.Snak_tid_somevalue: bfr.Add(Wdata_doc_consts.Val_prop_somevalue_bry); break;
+				default: {
+					switch (prop.Val_tid_byte()) {
+						case Wdata_prop_itm_base_.Val_tid_string	:
+						case Wdata_prop_itm_base_.Val_tid_time	: bfr.Add(prop.Val()); break;
+						case Wdata_prop_itm_base_.Val_tid_entity:
+							Wdata_doc entity_doc = Pages_get(ByteAry_.Add(Bry_q, prop.Val()));
+							byte[] label = entity_doc.Label_get(lang_key);
+							bfr.Add(label);
+							break;
+						case Wdata_prop_itm_base_.Val_tid_globecoordinate:
+							byte[][] flds = ByteAry_.Split(prop.Val(), Byte_ascii.Pipe);
+							bfr.Add(flds[0]);
+							bfr.Add_byte(Byte_ascii.Comma).Add_byte(Byte_ascii.Space);
+							bfr.Add(flds[1]);
+							break;
+						default: throw Err_.unhandled(prop.Val_tid_byte());
+					}
+					break;
 				}
 			}
 		}

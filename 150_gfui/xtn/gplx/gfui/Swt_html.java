@@ -81,7 +81,8 @@ class Swt_html implements Gxw_html, Swt_control, FocusListener {
 	}	private StringRef scroll_top = StringRef.null_(), node_path = StringRef.null_();
 	public boolean Html_doc_find(String elem_id, String find, boolean dir_fwd, boolean case_match, boolean wrap_find) {
 		if (String_.Eq(find, String_.Empty)) return false;
-		find = String_.Replace(find, "'", "\\'");	// NOTE: \\ in order to escape \ for java (will get passed to javascript as \' which js then escapes to ')
+		find = String_.Replace(find, "\\", "\\\\");	// escape \ -> \\
+		find = String_.Replace(find, "'", "\\'");	// escape ' -> \'; NOTE: \\' instead of \'
 		boolean search_text_is_diff = !String_.Eq(find, prv_find_str);
 		prv_find_str = find;
 		String script = String_.Eq(elem_id, Gfui_html.Elem_id_body)

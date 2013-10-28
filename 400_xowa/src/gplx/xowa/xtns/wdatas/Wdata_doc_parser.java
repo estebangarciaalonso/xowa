@@ -88,7 +88,10 @@ public class Wdata_doc_parser {
 	Wdata_prop_itm_core New_prop_by_m(byte[] src, Json_itm_ary ary) {
 		byte snak_tid = Wdata_prop_itm_base_.Snak_tid_parse(ary.Subs_get_at(0).Data_bry());
 		int pid = Json_itm_int.cast_(ary.Subs_get_at(1)).Data_as_int();
-		if (snak_tid == Wdata_prop_itm_base_.Snak_tid_novalue) return Wdata_prop_itm_core.new_novalue_(pid);
+		switch (snak_tid) {
+			case Wdata_prop_itm_base_.Snak_tid_novalue		: return Wdata_prop_itm_core.new_novalue_(pid);
+			case Wdata_prop_itm_base_.Snak_tid_somevalue	: return Wdata_prop_itm_core.new_somevalue_(pid);
+		}
 		Json_itm val_tid_itm = ary.Subs_get_at(2);
 		byte val_tid = Wdata_prop_itm_base_.Val_tid_parse(src, val_tid_itm.Src_bgn(), val_tid_itm.Src_end());
 		byte[] val_bry = Parse_val(ary, val_tid);

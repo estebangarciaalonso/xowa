@@ -19,7 +19,7 @@ package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xo
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*;
 public class Xob_xfer_update_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	private Io_url prv_url;
-	public Xob_xfer_update_cmd(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xob_xfer_update_cmd(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "oimg.xfer_update";
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_bgn(Xob_bldr bldr) {}

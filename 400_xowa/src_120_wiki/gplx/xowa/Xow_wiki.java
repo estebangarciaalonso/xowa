@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.xowa.users.*; import gplx.xowa.html.*; import gplx.xowa.users.history.*; import gplx.xowa.specials.*; import gplx.xowa.xtns.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*;
 import gplx.xowa.setup.maints.*;
+import gplx.xowa.wikis.caches.*;
 public class Xow_wiki implements GfoInvkAble {
 	public Xow_wiki(Xoa_app app, Io_url wiki_dir, Xow_ns_mgr ns_mgr, Xol_lang lang) {
 		this.app = app; this.ns_mgr = ns_mgr; this.lang = lang;
@@ -33,7 +34,6 @@ public class Xow_wiki implements GfoInvkAble {
 		ctx = Xop_ctx.new_(this);
 		props.SiteName_(wiki_tid).ServerName_(domain_bry);
 		props.ContentLanguage_(lang.Key_bry());
-		tmpl_regy = new Xot_tmpl_regy(lang);
 		Pf_func_.Reg(lang.Func_regy(), lang);
 		special_mgr = new Xows_mgr(this);
 		stats = new Xow_wiki_stats(this);
@@ -61,6 +61,7 @@ public class Xow_wiki implements GfoInvkAble {
 		db_mgr = new gplx.xowa.dbs.Xodb_mgr_txt(this, data_mgr);
 		wiki_tid_code = Xob_bz2_file.Build_alias(Xow_wiki_type_.parse_(domain_bry));
 		maint_mgr = new Xow_maint_mgr(this);
+		cache_mgr = new Xow_cache_mgr(this);
 	}
 	public boolean Init_needed() {return init_needed;} public Xow_wiki Init_needed_(boolean v) {init_needed = v; return this;} private boolean init_needed = true;
 	public byte[] Lang_key() {return lang_key;} private byte[] lang_key;
@@ -88,25 +89,13 @@ public class Xow_wiki implements GfoInvkAble {
 	public byte Wdata_wiki_tid() {return wdata_wiki_tid;} private byte wdata_wiki_tid;
 	public byte[] Wdata_wiki_lang() {return wdata_wiki_lang;} private byte[] wdata_wiki_lang;
 	public Xow_xtn_mgr Xtn_mgr() {return xtn_mgr;} private Xow_xtn_mgr xtn_mgr;
+	public Xow_cache_mgr Cache_mgr() {return cache_mgr;} private Xow_cache_mgr cache_mgr;
 
 	public Xop_parser Parser() {return parser;} private Xop_parser parser;
 	public Xop_redirect_mgr Redirect_mgr() {return redirect_mgr;} private Xop_redirect_mgr redirect_mgr;
 	public Xop_ctx Ctx() {return ctx;} private Xop_ctx ctx;
 	public Xog_view_data View_data() {return view_data;} private Xog_view_data view_data = new Xog_view_data();
-	public Xot_tmpl_regy Tmpl_regy() {return tmpl_regy;} private Xot_tmpl_regy tmpl_regy;
 	public ListAdp Rls_list() {if (rls_list == null) rls_list = ListAdp_.new_(); return rls_list;} private ListAdp rls_list;
-	public byte[] Page_cache_get_or_fetch(Xoa_ttl ttl) {
-		byte[] rv = (byte[])page_cache.Get_by_bry(ttl.Full_url());
-		if (rv == null) {
-			Xoa_page page = data_mgr.Get_page(ttl, true);
-			if (!page.Missing()) {
-				rv = page.Data_raw();
-				page_cache.Add_bry_obj(ttl.Full_url(), rv);
-			}
-		}
-		return rv;
-	}
-	public Hash_adp_bry Page_cache() {return page_cache;} Hash_adp_bry page_cache = new Hash_adp_bry(true);
 	public HashAdp If_exists_regy() {return if_exists_regy;} HashAdp if_exists_regy = HashAdp_.new_bry_();
 
 	public Xow_xwiki_mgr Xwiki_mgr() {return xwiki_mgr;} private Xow_xwiki_mgr xwiki_mgr;
@@ -227,7 +216,7 @@ public class Xow_wiki implements GfoInvkAble {
 			if (wiki_tid == Xow_wiki_type_.Tid_wikipedia)	// NOTE: if type is wikipedia, add "Wikipedia" as an alias; EX.WP: pt.wikipedia.org/wiki/Página principal which redirects to Wikipedia:Página principal
 				ns_mgr.Add_alias(Xow_ns_.Id_project, Xow_ns_.Ns_name_wikipedia);
 		}
-		Xow_ns_mgr_.rebuild_(lang, ns_mgr);	// always rebuild; may be changed by user_wiki.gfs
+		Xow_ns_mgr_.rebuild_(lang, ns_mgr);	// always rebuild; may be changed by user_wiki.gfs; different lang will change namespaces; EX: de.wikisource.org will have Seite for File and none of {{#lst}} will work
 		fragment_mgr.Evt_lang_changed(lang);
 		parser = Xop_parser.new_(this);	// rebuild parser
 		ByteAryFmtr.Null.Eval_mgr().Enabled_(false);

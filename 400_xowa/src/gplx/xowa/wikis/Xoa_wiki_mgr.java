@@ -48,9 +48,9 @@ public class Xoa_wiki_mgr implements GfoInvkAble {
 		int list_len = list.Count();
 		for (int i = 0; i < list_len; i++) {
 			Xow_wiki wiki = (Xow_wiki)list.FetchAt(i);
-			wiki.Tmpl_regy().ReduceCache();
+//				wiki.Defn_cache().ReduceCache();
 			if (clear_ctx) wiki.Ctx().Clear();	// NOTE: clear_ctx will reset toc and refs
-			wiki.Page_cache().Clear();
+			wiki.Cache_mgr().Page_cache().Free_mem_all();
 		}
 	}
 	public void Clear() {hash.Clear(); list.Clear();}

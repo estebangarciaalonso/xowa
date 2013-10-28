@@ -21,11 +21,15 @@ public class Xob_redirect_cmd extends Xob_dump_mgr_base {
 	private Db_provider provider; private Db_stmt stmt;
 	private Xob_redirect_tbl tbl_redirect;
 	private Xodb_mgr_sql db_mgr; private Xop_redirect_mgr redirect_mgr; private Url_encoder encoder;		
-	public Xob_redirect_cmd(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xob_redirect_cmd(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	@Override public String Cmd_key() {return KEY_redirect;} public static final String KEY_redirect = "oimg.redirect";
 	@Override public int[] Init_ns_ary() {return Int_.Ary(Xow_ns_.Id_file);}
 	@Override public byte Init_redirect() {return Bool_.Y_byte;}	// only look at redirects
-	@Override public Db_provider Init_db_file() {
+	@Override protected void Init_reset(Db_provider p) {
+		p.Exec_sql("DELETE FROM " + Xodb_xowa_cfg_tbl.Tbl_name);
+		p.Exec_sql("DELETE FROM " + Xob_redirect_tbl.Tbl_name);
+	}
+	@Override protected Db_provider Init_db_file() {
 		this.db_mgr = wiki.Db_mgr_as_sql();
 		Xoa_app app = bldr.App();
 		redirect_mgr = wiki.Redirect_mgr();
@@ -33,19 +37,21 @@ public class Xob_redirect_cmd extends Xob_dump_mgr_base {
 		app.Usr_dlg().Prog_none("", "", "dropping index: page__title");
 		db_mgr.Fsys_mgr().Core_provider().Exec_sql("DROP INDEX IF EXISTS page__title");
 		Sqlite_engine_.Idx_create(app.Usr_dlg(), db_mgr.Fsys_mgr().Core_provider(), "page", Idx_page_title);
-		provider = Xodb_db_file.init__oimg_redirect(wiki).Provider();
+		Xodb_db_file db_file = Xodb_db_file.init__oimg_redirect(wiki);
+		provider = db_file.Provider();
 		tbl_redirect = new Xob_redirect_tbl().Create_table(provider);
 		stmt = tbl_redirect.Insert_stmt(provider);
 		provider.Txn_mgr().Txn_bgn_if_none();
 		return provider;
 	}
+	@Override protected void Cmd_bgn_end() {}
 	@Override public void Exec_page_hook(Xow_ns ns, Xodb_page page, byte[] page_src) {
 		Xoa_ttl redirect_ttl = redirect_mgr.Extract_redirect(page_src, page_src.length);
 		byte[] redirect_ttl_bry = Xoa_ttl.Replace_spaces(redirect_ttl.Page_db());	// NOTE: spaces can still exist b/c redirect is scraped from #REDIRECT which sometimes has a mix; EX: "A_b c"
 		redirect_ttl_bry = encoder.Decode(redirect_ttl_bry);
 		tbl_redirect.Insert(stmt, page.Id(), -1, redirect_ttl.Ns().Id(), redirect_ttl_bry, redirect_ttl.Anch_txt(), 1);
 	}
-	@Override public void Exec_commit_bgn(Xow_ns ns, byte[] ttl) {
+	@Override public void Exec_commit_bgn() {
 		provider.Txn_mgr().Txn_end_all_bgn_if_none();
 	}
 	@Override public void Exec_end() {

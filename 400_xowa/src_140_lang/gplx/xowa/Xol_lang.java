@@ -16,13 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.langs.*; import gplx.xowa.langs.grammars.*; import gplx.intl.*; import gplx.xowa.xtns.lst.*;
+import gplx.xowa.langs.*; import gplx.xowa.langs.grammars.*; import gplx.intl.*; import gplx.xowa.xtns.lst.*; import gplx.xowa.wikis.caches.*;
 public class Xol_lang implements GfoInvkAble {
 	public Xol_lang(Xoa_app app, byte[] key_bry) {
 		this.app = app; this.key_bry = key_bry; this.key_str = String_.new_utf8_(key_bry);
 		Xol_lang_itm lang_itm = Xol_lang_itm_.Get_by_key(key_bry); if (lang_itm == null) throw Err_.new_fmt_("unknown lang_key: {0}", String_.new_utf8_(key_bry));
 		lang_id = lang_itm.Id();
-		func_regy = new Xot_func_regy(this);
+		func_regy = new Xol_func_name_regy(this);
 		ns_names = new Xol_ns_grp(this); ns_aliases = new Xol_ns_grp(this);
 		keyword_mgr = new Xol_kwd_mgr(this);
 		message_mgr = new Xol_msg_mgr(this, true);
@@ -52,7 +52,7 @@ public class Xol_lang implements GfoInvkAble {
 	public Xol_specials_mgr Specials_mgr() {return specials_mgr;} private Xol_specials_mgr specials_mgr;
 	
 	public Xol_lnki_arg_parser Lnki_arg_parser() {return lnki_arg_parser;} private Xol_lnki_arg_parser lnki_arg_parser = new Xol_lnki_arg_parser(); 
-	public Xot_func_regy Func_regy() {return func_regy;} private Xot_func_regy func_regy;
+	public Xol_func_name_regy Func_regy() {return func_regy;} private Xol_func_name_regy func_regy;
 
 	public Gfo_num_fmt_mgr Num_fmt_mgr() {return num_fmt_mgr;} Gfo_num_fmt_mgr num_fmt_mgr = new Gfo_num_fmt_mgr();
 	public byte Img_thumb_halign_default() {return Xop_lnki_halign.Right;}	// change for rtl languages

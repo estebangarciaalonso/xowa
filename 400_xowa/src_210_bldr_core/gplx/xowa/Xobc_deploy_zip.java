@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.xowa.bldrs.*; 
 public class Xobc_deploy_zip extends Xob_itm_basic_base implements Xob_cmd {
-	public Xobc_deploy_zip(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xobc_deploy_zip(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Cmd_key() {return KEY;} public static final String KEY = "deploy.zip";
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_bgn(Xob_bldr bldr) {}

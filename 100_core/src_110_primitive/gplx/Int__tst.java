@@ -99,7 +99,7 @@ public class Int__tst {
 	@Test  public void Xto_int_hex_tst() {
 		Xto_int_hex("007C", 124);
 	}	void Xto_int_hex(String raw, int expd) {Tfds.Eq(expd, Int_.Xto_int_hex(ByteAry_.new_ascii_(raw)));}
-	@Test  public void Ary_parse_() {
+	@Test  public void Ary_parse() {
 		Ary_parse__tst("1,2,3"							, 3, Int_.Ary_empty,   1,   2,   3);
 		Ary_parse__tst("123,321,213"					, 3, Int_.Ary_empty, 123, 321, 213);
 		Ary_parse__tst(" 1,  2,3"						, 3, Int_.Ary_empty,   1,   2,   3);
@@ -111,5 +111,5 @@ public class Int__tst {
 		Ary_parse__tst("a"								, 1, Int_.Ary_empty);
 		Ary_parse__tst("1-2,"							, 1, Int_.Ary_empty);
 	}
-	void Ary_parse__tst(String raw, int reqd_len, int[] or, int... expd) {Tfds.Eq_ary(expd, Int_.Ary_parse_(raw, reqd_len, or));}
+	void Ary_parse__tst(String raw, int reqd_len, int[] or, int... expd) {Tfds.Eq_ary(expd, Int_.Ary_parse(raw, reqd_len, or));}
 }

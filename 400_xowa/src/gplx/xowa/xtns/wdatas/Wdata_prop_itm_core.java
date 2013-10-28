@@ -25,7 +25,8 @@ public class Wdata_prop_itm_core extends Wdata_prop_itm_base {
 	public Wdata_prop_itm_base[] Qual_ary() {return qual_ary;} public void Qual_ary_(Wdata_prop_itm_base[] v) {this.qual_ary = v;} Wdata_prop_itm_base[] qual_ary;
 	public Wdata_prop_itm_base[] Ref_ary() {return ref_ary;} public void Ref_ary_(Wdata_prop_itm_base[] v) {this.ref_ary = v;} Wdata_prop_itm_base[] ref_ary;
 
-	public static Wdata_prop_itm_core new_novalue_(int pid)							{return new Wdata_prop_itm_core(Wdata_prop_itm_base_.Snak_tid_novalue, pid, Wdata_prop_itm_base_.Val_tid_unknown, ByteAry_.Empty);}
+	public static Wdata_prop_itm_core new_novalue_(int pid)							{return new Wdata_prop_itm_core(Wdata_prop_itm_base_.Snak_tid_novalue  , pid, Wdata_prop_itm_base_.Val_tid_unknown, ByteAry_.Empty);}
+	public static Wdata_prop_itm_core new_somevalue_(int pid)						{return new Wdata_prop_itm_core(Wdata_prop_itm_base_.Snak_tid_somevalue, pid, Wdata_prop_itm_base_.Val_tid_unknown, ByteAry_.Empty);}
 	public static Wdata_prop_itm_core new_str_(int pid, String val)					{return new_(Wdata_prop_itm_base_.Val_tid_string, pid, ByteAry_.new_utf8_(val));}
 	public static Wdata_prop_itm_core new_str_(int pid, byte[] val)					{return new_(Wdata_prop_itm_base_.Val_tid_string, pid, val);}
 	public static Wdata_prop_itm_core new_time_(int pid, String val)				{return new_(Wdata_prop_itm_base_.Val_tid_time, pid, Wdata_doc_bldr.Xto_time(DateAdp_.parse_fmt(val, "yyyy-MM-dd HH:mm:ss")));}

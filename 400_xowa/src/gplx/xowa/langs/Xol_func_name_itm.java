@@ -15,21 +15,21 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa; import gplx.*;
-public class Xot_func_regy_finder {
-	public byte TypeId() {return typeId;} private byte typeId;
-	public Xot_defn Func() {return func;}
+package gplx.xowa.langs; import gplx.*; import gplx.xowa.*;
+public class Xol_func_name_itm {
+	public byte Tid() {return tid;} private byte tid = Xot_defn_.Tid_null;
+	public Xot_defn Func() {return func;} private Xot_defn func = Xot_defn_.Null;
 	public void Func_set(Xot_defn v, int colon_pos) {
-		if (typeId == 0) this.typeId = Xot_defn_.Tid_func; // only set typeId if subst did not set it
+		if (tid == Xot_defn_.Tid_null) tid = Xot_defn_.Tid_func; // only set tid if subst did not set it
 		this.func = v; 
 		this.colon_pos = colon_pos;
-	} Xot_defn func = Xot_defn_.Null;
+	}
 	public int Colon_pos() {return colon_pos;} private int colon_pos = -1;
 	public int Subst_bgn() {return subst_bgn;} private int subst_bgn = -1;
 	public int Subst_end() {return subst_end;} private int subst_end = -1;
-	public void Subst_set_(byte typeId, int bgn, int end) {this.typeId = typeId; this.subst_bgn = bgn; this.subst_end = end;}
+	public void Subst_set_(byte tid, int bgn, int end) {this.tid = tid; this.subst_bgn = bgn; this.subst_end = end;}
 	public void Clear() {
-		typeId = 0;
+		tid = Xot_defn_.Tid_null;
 		func = Xot_defn_.Null;
 		colon_pos = subst_bgn = subst_end = -1;
 	}

@@ -23,7 +23,7 @@ public class ByteAry_ {
 	public static final byte[][] Ary_empty = new byte[0][];
 	public static byte[] bytes_(byte... ary) {return ary;}
 	public static byte[] ints_ (int... ary) {
-		int len = Array_.Len(ary);
+		int len = ary.length;
 		byte[] rv = new byte[len];
 		for (int i = 0; i < len; i++)
 			rv[i] = (byte)ary[i];
@@ -32,13 +32,6 @@ public class ByteAry_ {
 	public static byte[] new_utf8_(String s)	{return gplx.texts.Encoding_.XtoByteAry(s);}
 	public static byte[] new_ascii_(String s)	{return gplx.texts.Encoding_.XtoByteAryAscii(s);}
 	public static byte[] new_ascii_safe_null_(String s)	{return s == null ? null : gplx.texts.Encoding_.XtoByteAryAscii(s);}
-	public static byte[] Copy(byte[] src) {
-		int src_len = src.length;
-		byte[] trg = new byte[src_len];
-		for (int i = 0; i < src_len; i++)
-			trg[i] = src[i];
-		return trg;
-	}
 	public static byte[] Coalesce(byte[] orig, byte[] val_if_not_blank) {return ByteAry_.Len_eq_0(val_if_not_blank) ? orig : val_if_not_blank;}
 	public static int While_fwd(byte[] src, byte while_byte, int bgn, int end) {
 		for (int i = bgn; i < end; i++)
@@ -85,14 +78,21 @@ public class ByteAry_ {
 			rv[i] = b;
 		return rv;
 	}
-	public static void Copy_pos(byte[] src, int src_bgn, int src_end, byte[] trg, int trg_bgn) {
-		int src_len = src_end - src_bgn;
+	public static byte[] Copy(byte[] src) {
+		int src_len = src.length;
+		byte[] trg = new byte[src_len];
+		for (int i = 0; i < src_len; i++)
+			trg[i] = src[i];
+		return trg;
+	}
+	public static void Copy_by_pos(byte[] src, int src_bgn, int src_end, byte[] trg, int trg_bgn) {
+		int trg_adj = trg_bgn - src_bgn;
+		for (int i = src_bgn; i < src_end; i++)
+			trg[i + trg_adj] = src[i];
+	}
+	public static void Copy_by_len(byte[] src, int src_bgn, int src_len, byte[] trg, int trg_bgn) {
 		for (int i = 0; i < src_len; i++)
 			trg[i + trg_bgn] = src[i + src_bgn];
-	}
-	static void CopyTo(byte[] src, int src_bgn, byte[] trg, int trgBgn, int src_len) {
-		for (int i = 0; i < src_len; i++)
-			trg[i + trgBgn] = src[i + src_bgn];
 	}
 	public static byte[][] XtoByteAryAry(String... strAry) {
 		int strAryLen = strAry.length;
@@ -125,9 +125,9 @@ public class ByteAry_ {
 		int findLen = find.length, replLen = repl.length;
 		int rvLen = src_len + replLen - findLen;
 		byte[] rv = new byte[rvLen];
-		CopyTo(src	, 0					, rv, 0					, findPos);
-		CopyTo(repl	, 0					, rv, findPos			, replLen);
-		CopyTo(src	, findPos + findLen	, rv, findPos + replLen, src_len - findPos - findLen);
+		Copy_by_len(src	, 0					, findPos						, rv, 0		);
+		Copy_by_len(repl, 0					, replLen						, rv, findPos	);
+		Copy_by_len(src	, findPos + findLen	, src_len - findPos - findLen	, rv, findPos + replLen);
 		return rv;
 	}
 	public static void Replace_all_direct(byte[] src, byte find, byte repl) {Replace_all_direct(src, find, repl, 0, src.length);}
@@ -422,7 +422,7 @@ public class ByteAry_ {
 	}
 	public static byte[] Resize_manual(byte[] src, int rvLen) {
 		byte[] rv = new byte[rvLen];
-		int src_len = Array_.Len(src);
+		int src_len = src.length;
 		if (src_len > rvLen) src_len = rvLen; // resizing smaller; only copy as many elements as in rvLen
 		for (int i = 0; i < src_len; i++)
 			rv[i] = src[i];
@@ -432,7 +432,7 @@ public class ByteAry_ {
 	public static byte[] Resize(byte[] src, int src_bgn, int trgLen) {
 		byte[] trg = new byte[trgLen];
 		int src_len = src.length > trgLen ? trgLen : src.length;	// trgLen can either expand or shrink
-		Array_.CopyTo(src, src_bgn, trg, 0, src_len);
+		Copy_by_len(src, src_bgn, src_len, trg, 0);
 		return trg;
 	}
 	public static boolean Match(byte[] src, byte[] find) {return Match(src, 0, src.length, find, 0, find.length);}

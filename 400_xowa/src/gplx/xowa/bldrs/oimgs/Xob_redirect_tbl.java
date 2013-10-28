@@ -44,7 +44,7 @@ class Xob_redirect_tbl {
 		.Val_int_(count)
 		.Exec_insert();
 	}
-	private static final String Tbl_name = "redirect", Fld_r_src_id = "r_src_id", Fld_r_trg_id = "r_trg_id", Fld_r_trg_ns = "r_trg_ns", Fld_r_trg_ttl = "r_trg_ttl", Fld_r_trg_anchor = "r_trg_anchor", Fld_r_trg_is_redirect = "r_trg_is_redirect", Fld_r_count = "r_count";
+	public static final String Tbl_name = "redirect", Fld_r_src_id = "r_src_id", Fld_r_trg_id = "r_trg_id", Fld_r_trg_ns = "r_trg_ns", Fld_r_trg_ttl = "r_trg_ttl", Fld_r_trg_anchor = "r_trg_anchor", Fld_r_trg_is_redirect = "r_trg_is_redirect", Fld_r_count = "r_count";
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS redirect"
 	,	"( r_src_id            integer             NOT NULL       PRIMARY KEY"

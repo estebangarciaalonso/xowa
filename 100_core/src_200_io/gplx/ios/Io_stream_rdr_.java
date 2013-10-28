@@ -54,12 +54,14 @@ public class Io_stream_rdr_ {
 		return rv.XtoAryAndClear();
 	}
 	public static void Load_all_to_bfr(ByteAryBfr rv, Io_stream_rdr rdr) {
-		byte[] bry = new byte[4096];
-		while (true) {
-			int read = rdr.Read(bry, 0, 4096);
-			if (read < gplx.ios.Io_stream_rdr_.Read_done_compare) break; 
-			rv.Add_mid(bry, 0, read);
-		}
+		try {
+			byte[] bry = new byte[4096];
+			while (true) {
+				int read = rdr.Read(bry, 0, 4096);
+				if (read < gplx.ios.Io_stream_rdr_.Read_done_compare) break; 
+				rv.Add_mid(bry, 0, read);
+			}
+		} finally {rdr.Rls();}
 	}
 	public static final Io_stream_rdr Null = new Io_stream_rdr_null();
 	public static Io_stream_rdr mem_(String v) {return mem_(ByteAry_.new_utf8_(v));}

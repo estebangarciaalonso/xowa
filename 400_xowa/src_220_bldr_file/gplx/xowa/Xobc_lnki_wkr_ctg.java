@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 import gplx.ios.*;
 class Xobc_lnki_wkr_ctg extends Xob_itm_dump_base implements Xobc_lnki_wkr {
 	public static final String KEY = "dump.ctg";
-	public Xobc_lnki_wkr_ctg(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki); this.make_fil_len = 1 * Io_mgr.Len_mb;}
+	public Xobc_lnki_wkr_ctg(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki); this.make_fil_len = 1 * Io_mgr.Len_mb;}
 	public Io_url_gen Make_url_gen() {return make_url_gen;} Io_url_gen make_url_gen;
 	public void Wkr_bgn(Xob_bldr bldr) {
 		this.Init_dump(KEY, wiki.Fsys_mgr().Tmp_dir().GenSubDir(KEY).GenSubDir("make"));

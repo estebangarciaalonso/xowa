@@ -148,9 +148,9 @@ public class Xop_fxt {
 	public Xop_fxt ini_Log_(Gfo_msg_itm... itms) {for (Gfo_msg_itm itm : itms) log_itms.Add(itm); return this;} ListAdp log_itms = ListAdp_.new_();
 	public void ini_defn_add(String name, String text) {
 		Xot_defn_tmpl itm = run_Parse_tmpl(ByteAry_.new_ascii_(name), ByteAry_.new_utf8_(text));
-		wiki.Tmpl_regy().Add(itm, Bool_.Y);
+		wiki.Cache_mgr().Defn_cache().Add(itm, Bool_.Y);
 	}
-	public void ini_defn_clear() {wiki.Tmpl_regy().Clear();}
+	public void ini_defn_clear() {wiki.Cache_mgr().Defn_cache().Free_mem_all();}
 	public Xop_fxt ini_id_create(int id, int fil_idx, int row_idx, boolean type_redirect, int itm_len, int ns_id, String ttl) {Xow_hive_mgr_fxt.Create_id(app, wiki.Hive_mgr(), id, fil_idx, row_idx, type_redirect, itm_len, ns_id, ttl); return this;}
 	public Xop_fxt ini_ctg_create(String ctg, int... pages) {Xow_hive_mgr_fxt.Create_ctg(app, wiki.Hive_mgr(), ctg, pages); return this;}
 	public Xop_fxt ini_page_create(String ttl) {return ini_page_create(wiki, ttl, "");}

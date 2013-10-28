@@ -35,7 +35,7 @@ public class Pf_site_pagesincategory extends Pf_func_base {
 		}
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b128().Mkr_rls();
 		byte[] ctg_len_bry = tmp_bfr.Add_int_variable(ctg_len).XtoAryAndClear();			
-		byte[] rslt = fmt_num ? lang.Num_fmt_mgr().Fmt(ctg_len_bry) : lang.Num_fmt_mgr().Raw(ctg_len_bry);
+		byte[] rslt = fmt_num ? lang.Num_fmt_mgr().Fmt(ctg_len_bry) : lang.Num_fmt_mgr().Raw(gplx.intl.Gfo_num_fmt_mgr.Tid_raw, ctg_len_bry);
 		bb.Add(rslt);
 	}	private ByteTrieMgr_slim trie;
 	@Override public int Id() {return Xol_kwd_grp_.Id_site_pagesincategory;}

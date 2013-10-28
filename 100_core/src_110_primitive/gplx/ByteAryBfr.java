@@ -18,19 +18,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx;
 public class ByteAryBfr {
 	public byte[] Bry() {return bry;} private byte[] bry;
-	public int Bry_len() {return bry_len;} int bry_len;
+	public int Bry_len() {return bry_len;} private int bry_len;
 	public void Bry_init(byte[] bry, int bry_len) {this.bry = bry; this.bry_len = bry_len;}
-	@gplx.Internal protected int Mkr_itm() {return mkr_itm;} int mkr_itm = -1;
+	@gplx.Internal protected int Mkr_itm() {return mkr_itm;} private int mkr_itm = -1;
 	@gplx.Internal protected Bry_bfr_mkr_mgr Mkr_mgr() {return mkr_mgr;} Bry_bfr_mkr_mgr mkr_mgr;
 	@gplx.Internal protected ByteAryBfr Mkr_(Bry_bfr_mkr_mgr mkr_mgr, int itm) {this.mkr_mgr = mkr_mgr; this.mkr_itm = itm; return this;} 
 	public ByteAryBfr Mkr_rls() {mkr_mgr.Rls(this); return this;}
-	void Mkr_clear() {
+	private void Mkr_clear() {
 		if (mkr_mgr != null) mkr_mgr.Rls(this);
 		mkr_mgr = null;
 		mkr_itm = -1;
 	}
-	@gplx.Internal protected int Bry_max() {return bry_max;} int bry_max;
-	ByteAryBfr Reset_(int v) {reset = v; return this;} int reset;
+	@gplx.Internal protected int Bry_max() {return bry_max;} private int bry_max;
+	private ByteAryBfr Reset_(int v) {reset = v; return this;} private int reset;
 	public ByteAryBfr Reset_if_gt(int limit) {
 		if (bry_max > limit) {
 			this.bry_max = limit;
@@ -44,21 +44,24 @@ public class ByteAryBfr {
 	public ByteAryBfr Add(byte[] val) {
 		int val_len = val.length;
 		if (bry_len + val_len > bry_max) Resize((bry_max + val_len) * 2);
-		Array_.CopyTo(val, 0, bry, bry_len, val_len);
+		ByteAry_.Copy_by_pos(val, 0, val_len, bry, bry_len);
+//			Array_.CopyTo(val, 0, bry, bry_len, val_len);
 		bry_len += val_len;
 		return this;
 	}
 	public ByteAryBfr Add_mid(byte[] val, int bgn, int end) {
 		int len = end - bgn;
 		if (bry_len + len > bry_max) Resize((bry_max + len) * 2);
-		Array_.CopyTo(val, bgn, bry, bry_len, len);
+		ByteAry_.Copy_by_pos(val, bgn, end, bry, bry_len);
+//			Array_.CopyTo(val, bgn, bry, bry_len, len);
 		bry_len += len;
 		return this;
 	}
 	public ByteAryBfr Add_bfr(ByteAryBfr src) {
 		int len = src.bry_len;
 		if (bry_len + len > bry_max) Resize((bry_max + len) * 2);
-		Array_.CopyTo(src.bry, 0, bry, bry_len, len);
+		ByteAry_.Copy_by_pos(src.bry, 0, len, bry, bry_len);
+//			Array_.CopyTo(src.bry, 0, bry, bry_len, len);
 		bry_len += len;
 		return this;
 	}
@@ -97,7 +100,8 @@ public class ByteAryBfr {
 			if (all_ws) return this;
 		}
 		src_len = src_end - src_bgn;
-		Array_.CopyTo(src.bry, src_bgn, bry, bry_len, src_len);
+		ByteAry_.Copy_by_pos(src.bry, src_bgn, src_end, bry, bry_len);
+//			Array_.CopyTo(src.bry, src_bgn, bry, bry_len, src_len);
 		bry_len += src_len;
 		src.Clear();
 		return this;
@@ -185,22 +189,22 @@ public class ByteAryBfr {
 		bry[bry_len +  0] = (byte)((y / 1000) + ByteAry_.Ascii_zero); y %= 1000;
 		bry[bry_len +  1] = (byte)((y /  100) + ByteAry_.Ascii_zero); y %=  100;
 		bry[bry_len +  2] = (byte)((y /   10) + ByteAry_.Ascii_zero); y %=   10;
-		bry[bry_len +  3] = (byte)( y		 + ByteAry_.Ascii_zero);
+		bry[bry_len +  3] = (byte)( y		  + ByteAry_.Ascii_zero);
 		bry[bry_len +  4] = (byte)((M /   10) + ByteAry_.Ascii_zero); M %=  10;
-		bry[bry_len +  5] = (byte)( M		 + ByteAry_.Ascii_zero);
+		bry[bry_len +  5] = (byte)( M		  + ByteAry_.Ascii_zero);
 		bry[bry_len +  6] = (byte)((d /   10) + ByteAry_.Ascii_zero); d %=  10;
-		bry[bry_len +  7] = (byte)( d		 + ByteAry_.Ascii_zero);
+		bry[bry_len +  7] = (byte)( d		  + ByteAry_.Ascii_zero);
 		bry[bry_len +  8] = Byte_ascii.Space;
 		bry[bry_len +  9] = (byte)((H /   10) + ByteAry_.Ascii_zero); H %=  10;
-		bry[bry_len + 10] = (byte)( H		 + ByteAry_.Ascii_zero);
+		bry[bry_len + 10] = (byte)( H		  + ByteAry_.Ascii_zero);
 		bry[bry_len + 11] = (byte)((m /   10) + ByteAry_.Ascii_zero); m %=  10;
-		bry[bry_len + 12] = (byte)( m		 + ByteAry_.Ascii_zero);
+		bry[bry_len + 12] = (byte)( m		  + ByteAry_.Ascii_zero);
 		bry[bry_len + 13] = (byte)((s /   10) + ByteAry_.Ascii_zero); s %=  10;
-		bry[bry_len + 14] = (byte)( s		 + ByteAry_.Ascii_zero);
+		bry[bry_len + 14] = (byte)( s		  + ByteAry_.Ascii_zero);
 		bry[bry_len + 15] = Byte_ascii.Dot;
 		bry[bry_len + 16] = (byte)((f /  100) + ByteAry_.Ascii_zero); f %= 100;
 		bry[bry_len + 17] = (byte)((f /   10) + ByteAry_.Ascii_zero); f %=  10;
-		bry[bry_len + 18] = (byte)( f		 + ByteAry_.Ascii_zero);
+		bry[bry_len + 18] = (byte)( f		  + ByteAry_.Ascii_zero);
 		bry_len += 19;
 		return this;
 	}
@@ -209,22 +213,22 @@ public class ByteAryBfr {
 		bry[bry_len +  0] = (byte)((y / 1000) + ByteAry_.Ascii_zero); y %= 1000;
 		bry[bry_len +  1] = (byte)((y /  100) + ByteAry_.Ascii_zero); y %=  100;
 		bry[bry_len +  2] = (byte)((y /   10) + ByteAry_.Ascii_zero); y %=   10;
-		bry[bry_len +  3] = (byte)( y		 + ByteAry_.Ascii_zero);
+		bry[bry_len +  3] = (byte)( y		  + ByteAry_.Ascii_zero);
 		bry[bry_len +  4] = Byte_ascii.Dash;
 		bry[bry_len +  5] = (byte)((M /   10) + ByteAry_.Ascii_zero); M %=  10;
-		bry[bry_len +  6] = (byte)( M		 + ByteAry_.Ascii_zero);
+		bry[bry_len +  6] = (byte)( M		  + ByteAry_.Ascii_zero);
 		bry[bry_len +  7] = Byte_ascii.Dash;
 		bry[bry_len +  8] = (byte)((d /   10) + ByteAry_.Ascii_zero); d %=  10;
-		bry[bry_len +  9] = (byte)( d		 + ByteAry_.Ascii_zero);
+		bry[bry_len +  9] = (byte)( d		  + ByteAry_.Ascii_zero);
 		bry[bry_len + 10] = Byte_ascii.Ltr_T;
 		bry[bry_len + 11] = (byte)((H /   10) + ByteAry_.Ascii_zero); H %=  10;
-		bry[bry_len + 12] = (byte)( H		 + ByteAry_.Ascii_zero);
+		bry[bry_len + 12] = (byte)( H		  + ByteAry_.Ascii_zero);
 		bry[bry_len + 13] = Byte_ascii.Colon;
 		bry[bry_len + 14] = (byte)((m /   10) + ByteAry_.Ascii_zero); m %=  10;
-		bry[bry_len + 15] = (byte)( m		 + ByteAry_.Ascii_zero);
+		bry[bry_len + 15] = (byte)( m		  + ByteAry_.Ascii_zero);
 		bry[bry_len + 16] = Byte_ascii.Colon;
 		bry[bry_len + 17] = (byte)((s /   10) + ByteAry_.Ascii_zero); s %=  10;
-		bry[bry_len + 18] = (byte)( s		 + ByteAry_.Ascii_zero);
+		bry[bry_len + 18] = (byte)( s		  + ByteAry_.Ascii_zero);
 		bry[bry_len + 19] = Byte_ascii.Ltr_Z;
 		bry_len += 20;
 		return this;
@@ -295,8 +299,10 @@ public class ByteAryBfr {
 		int insertLen = insert.length;
 		int trgMax = bry_max + insertLen;
 		byte[] trg = new byte[trgMax];
-		Array_.CopyTo(insert, trg, 0);
-		Array_.CopyTo(bry, 0, trg, insertLen, bry_len);
+//			Array_.CopyTo(insert, trg, 0);
+//			Array_.CopyTo(bry, 0, trg, insertLen, bry_len);
+		ByteAry_.Copy_by_pos(insert, 0, insert.length, trg, 0);
+		ByteAry_.Copy_by_pos(bry, 0, bry_len, trg, insertLen);
 		bry = trg;
 		bry_len = bry_len + insertLen;
 		bry_max = trgMax;
@@ -307,7 +313,8 @@ public class ByteAryBfr {
 		int trgMax = bry_max + insertLen;
 		byte[] trg = new byte[trgMax];
 		trg[0] = b;
-		Array_.CopyTo(bry, 0, trg, insertLen, bry_len);
+//			Array_.CopyTo(bry, 0, trg, insertLen, bry_len);
+		ByteAry_.Copy_by_pos(bry, 0, insertLen, trg, bry_len);
 		bry = trg;
 		bry_len = bry_len + insertLen;
 		bry_max = trgMax;

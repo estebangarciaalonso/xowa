@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.ios.*; import gplx.xowa.bldrs.*; import gplx.xowa.xtns.math.*;
 public class Xobc_math_run extends Xob_itm_basic_base implements Xob_cmd, GfoInvkAble {
-	public Xobc_math_run(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xobc_math_run(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Cmd_key() {return KEY;} public static final String KEY = "math.run";
 	Xof_file_mgr file_mgr;
 	public Io_url Rdr_dir() {return rdr_dir;} Io_url rdr_dir;

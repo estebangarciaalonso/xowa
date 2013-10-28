@@ -22,7 +22,8 @@ public class Xodb_file {
 	public byte Cmd_mode() {return cmd_mode;} public Xodb_file Cmd_mode_(byte v) {cmd_mode = v; return this;} private byte cmd_mode;
 	public int Id() {return id;} private int id;
 	public byte Tid() {return tid;} private byte tid;
-	public String Url() {return url;} public Xodb_file Url_(String v) {this.url = v; return this;} private String url;
+	public Io_url Url() {return url;} public Xodb_file Url_(Io_url v) {url = v; return this;} private Io_url url;
+	public String Url_rel() {return url_rel;} public Xodb_file Url_rel_(String v) {this.url_rel = v; return this;} private String url_rel;
 	public Db_connect Connect() {return connect;} public Xodb_file Connect_(Db_connect v) {connect = v; return this;} Db_connect connect;
 	public long File_len() {return file_len;} public void File_len_add(int v) {file_len += v;} long file_len;
 	public long File_max() {return file_max;} public Xodb_file File_max_(long v) {file_max = v; return this;} long file_max;
@@ -51,8 +52,8 @@ public class Xodb_file {
 			default:			throw Err_.unhandled(v);
 		}
 	}
-	public static Xodb_file load_(int id, byte tid, String url) {return new Xodb_file(id, tid).Url_(url).Cmd_mode_(Db_cmd_mode.Ignore);}
-	public static Xodb_file make_(int id, byte tid, String url) {return new Xodb_file(id, tid).Url_(url).Cmd_mode_(Db_cmd_mode.Create);}
+	public static Xodb_file load_(int id, byte tid, String url) {return new Xodb_file(id, tid).Url_rel_(url).Cmd_mode_(Db_cmd_mode.Ignore);}
+	public static Xodb_file make_(int id, byte tid, String url) {return new Xodb_file(id, tid).Url_rel_(url).Cmd_mode_(Db_cmd_mode.Create);}
 	public void Index_create(Gfo_usr_dlg usr_dlg, Db_idx_itm[] idxs) {
 		int len = idxs.length;
 		provider.Txn_mgr().Txn_end_all();	// commit any pending transactions

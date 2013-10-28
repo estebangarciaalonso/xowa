@@ -36,6 +36,7 @@ class Scrib_lib_wikibase implements Scrib_lib {
 	public static final String Invk_getEntity = "getEntity", Invk_getEntityId = "getEntityId", Invk_getGlobalSiteId = "getGlobalSiteId";
 	public KeyVal[] GetEntity(KeyVal[] values) {
 		byte[] ttl_bry = Scrib_kv_utl.Val_to_bry(values, 0);
+		if (ByteAry_.Len_eq_0(ttl_bry)) return KeyVal_.Ary_empty; // NOTE: some Modules do not pass in an argument; return early, else spurious warning "invalid qid for ttl" (since ttl is blank); EX:w:Module:Authority_control; DATE:2013-10-27
 		Xow_wiki wiki = engine.Wiki();
 		Wdata_wiki_mgr wdata_mgr = wiki.App().Wiki_mgr().Wdata_mgr();
 		Wdata_doc page_doc = wdata_mgr.Pages_get(ttl_bry); if (page_doc == null) return KeyVal_.Ary_empty;

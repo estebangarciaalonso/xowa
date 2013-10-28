@@ -44,6 +44,7 @@ public class Xob_cmd_mgr implements GfoInvkAble {
 		else if	(String_.Eq(cmd_key, Xob_category_registry_sql.KEY))		return Add(new Xob_category_registry_sql(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_lnki_temp_wkr.KEY_oimg))			return Add(new Xob_lnki_temp_wkr(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_lnki_regy_cmd.KEY_oimg))			return Add(new Xob_lnki_regy_cmd(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_text_db_prep.KEY_oimg))		return Add(new Xob_text_db_prep(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_orig_regy_cmd.KEY_oimg))			return Add(new Xob_orig_regy_cmd(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_xfer_temp_cmd_thumb.KEY_oimg))		return Add(new Xob_xfer_temp_cmd_thumb(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_xfer_temp_cmd_orig.KEY_oimg))		return Add(new Xob_xfer_temp_cmd_orig(bldr, wiki));
@@ -64,9 +65,8 @@ public class Xob_cmd_mgr implements GfoInvkAble {
 		else if	(String_.Eq(cmd_key, Xobc_deploy_copy.KEY))					return Add(new Xobc_deploy_copy(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_parse_dump_templates.KEY))		return Xml_rdr_direct_add(wiki, new Xobc_parse_dump_templates(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_parse_run.KEY))					return Add(new Xobc_parse_run(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xob_parse_all.KEY))					return Add(new Xob_parse_all(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_img_dump_ttl.KEY))				return Xml_rdr_direct_add(wiki, new Xobc_img_dump_ttl(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xob_image_sql.KEY))				return Add(new Xob_image_sql(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_image_sql.KEY))					return Add(new Xob_image_sql(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_img_merge_ttl_sql.KEY))			return Add(new Xobc_img_merge_ttl_sql(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_img_prep_xfer.KEY))				return Add(new Xobc_img_prep_xfer(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_img_run_xfer.KEY))				return Add(new Xobc_img_run_xfer(bldr, wiki));

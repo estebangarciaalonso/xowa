@@ -43,16 +43,22 @@ public class Wdata_prop_itm_base_ {
 			default							: return "unknown";
 		} 
 	}
-	public static final byte Snak_tid_novalue = 0, Snak_tid_value = 1;
+	public static final byte Snak_tid_novalue = 0, Snak_tid_value = 1, Snak_tid_somevalue = 2;
 	public static byte Snak_tid_parse(byte[] v) {
 		Object bval_obj = Snak_tid_regy.Get_by_bry(v);
 		if	(bval_obj == null) throw Err_.new_fmt_("unknown snak type_id: ~{0}", String_.new_utf8_(v));
 		return ((ByteVal)bval_obj).Val();
-	}	private static Hash_adp_bry Snak_tid_regy = new Hash_adp_bry(false).Add_bry_byteVal(Wdata_doc_consts.Val_prop_novalue_bry, Snak_tid_novalue).Add_str_byteVal(Wdata_doc_consts.Val_prop_value_str, Snak_tid_value);
+	}
+	private static Hash_adp_bry Snak_tid_regy = new Hash_adp_bry(false)
+		.Add_bry_byteVal(Wdata_doc_consts.Val_prop_novalue_bry, Snak_tid_novalue)
+		.Add_str_byteVal(Wdata_doc_consts.Val_prop_value_str, Snak_tid_value)
+		.Add_str_byteVal(Wdata_doc_consts.Val_prop_somevalue_str, Snak_tid_somevalue)
+		;
 	public static String Snak_tid_string(byte v) {
 		switch (v) {
 			case Snak_tid_value:	return Wdata_doc_consts.Val_prop_value_str;
 			case Snak_tid_novalue:	return Wdata_doc_consts.Val_prop_novalue_str;
+			case Snak_tid_somevalue:return Wdata_doc_consts.Val_prop_somevalue_str;
 			default: 				return "unknown";
 		}
 	}
@@ -60,6 +66,7 @@ public class Wdata_prop_itm_base_ {
 		switch (v) {
 			case Snak_tid_value:	return Wdata_doc_consts.Val_prop_value_bry;
 			case Snak_tid_novalue:	return Wdata_doc_consts.Val_prop_novalue_bry;
+			case Snak_tid_somevalue:return Wdata_doc_consts.Val_prop_somevalue_bry;
 			default: 				return null;
 		}
 	}

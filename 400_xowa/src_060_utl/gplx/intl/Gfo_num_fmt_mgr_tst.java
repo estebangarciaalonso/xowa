@@ -45,7 +45,7 @@ public class Gfo_num_fmt_mgr_tst {
 		tst_Fmt("1234"								, "1 234");
 		tst_Fmt("12345678"							, "12 345 678");
 		tst_Fmt("12345678901234567890"				, "12 345 678 901 234 567 890");
-		tst_Fmt("1234,5678"							, "1 234,5678");
+		tst_Fmt("1234,5678"							, "1 234 5 678"); // NOTE: nbsp here; also, nbsp is repeated. see dewiki and {{formatnum:1234,56}}
 	}
 	@Test  public void Croatia() {
 		ini_(",", dat_(".", 3), dat_(",", 3));
@@ -89,13 +89,13 @@ public class Gfo_num_fmt_mgr_tst {
 		tst_Fmt("1234"								, "1·234");
 		tst_Fmt("12345678"							, "12·345·678");
 		tst_Fmt("12345678901234567890"				, "12·345·678·901·234·567·890");
-		tst_Fmt("1234·5678"							, "1·234·5678");
+		tst_Fmt("1234·5678"							, "1·234·5·678");// NOTE: middle-dot is repeated. see dewiki and {{formatnum:1234,5678}}
 		tst_Raw("1234·5678"							, "1234.5678");
 	}
 	Gfo_num_fmt_grp dat_(String dlm, int digits)				{return new Gfo_num_fmt_grp(ByteAry_.new_utf8_(dlm), digits, true);}
 	Gfo_num_fmt_grp dat_(String dlm, int digits, boolean repeat)	{return new Gfo_num_fmt_grp(ByteAry_.new_utf8_(dlm), digits, repeat);}
 	private void tst_Fmt(String val, String expd) {Tfds.Eq(expd, String_.new_utf8_(mgr.Fmt(ByteAry_.new_utf8_(val))));}
-	private void tst_Raw(String val, String expd) {Tfds.Eq(expd, String_.new_utf8_(mgr.Raw(ByteAry_.new_utf8_(val))));}
+	private void tst_Raw(String val, String expd) {Tfds.Eq(expd, String_.new_utf8_(mgr.Raw(Gfo_num_fmt_mgr.Tid_raw, ByteAry_.new_utf8_(val))));}
 	private void ini_(String dec_dlm, Gfo_num_fmt_grp... ary) {
 		mgr.Dec_dlm_(ByteAry_.new_utf8_(dec_dlm));
 		int ary_len = ary.length;

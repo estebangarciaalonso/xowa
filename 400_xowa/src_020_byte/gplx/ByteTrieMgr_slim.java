@@ -94,12 +94,12 @@ public class ByteTrieMgr_slim {
 	public static ByteTrieMgr_slim ci_() {return new ByteTrieMgr_slim(false);}
 }
 class ByteTrieItm_slim {
+	private ByteTrieItm_slim[] ary = ByteTrieItm_slim.Ary_empty;
 	public ByteTrieItm_slim(byte key_byte, Object val, boolean case_any) {this.key_byte = key_byte; this.val = val; this.case_any = case_any;}
 	public byte Key_byte() {return key_byte;} private byte key_byte;
 	public Object Val() {return val;} public void Val_set(Object val) {this.val = val;} Object val;
 	public boolean Case_any() {return case_any;} private boolean case_any;
 	public boolean Ary_is_empty() {return ary == ByteTrieItm_slim.Ary_empty;}
-	ByteTrieItm_slim[] ary = ByteTrieItm_slim.Ary_empty;
 	public void Clear() {
 		val = null;
 		for (int i = 0; i < ary_len; i++)

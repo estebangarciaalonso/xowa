@@ -15,21 +15,22 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa; import gplx.*;
+package gplx.xowa.wikis.caches; import gplx.*; import gplx.xowa.*; import gplx.xowa.wikis.*;
 import gplx.intl.*;
-public class Xot_tmpl_regy {
-	public Xot_tmpl_regy(Xol_lang lang) {this.lang = lang;} private Xol_lang lang;
-	public void Add(Xot_defn defn, boolean caseAny) {
+public class Xow_defn_cache {	// stores compiled Xot_defn
+	private Xol_lang lang;		// needed to lowercase names;
+	private Gfo_cache_mgr cache = new Gfo_cache_mgr().Max_size_(64 * 1024 * 1024).Reduce_by_(32 * 1024 * 1024);
+	public Xow_defn_cache(Xol_lang lang) {this.lang = lang;}
+	public Xot_defn Get_by_key(byte[] name) {return (Xot_defn)cache.Get_by_key(name);}
+	public void Free_mem_all() {cache.Clear();}
+	public void Free_mem() {cache.Reduce_recent();}
+	public void Add(Xot_defn defn, boolean case_any) {
 		byte[] name = defn.Name();
-		int cacheSize = defn.CacheSize(); // * 2 b/c it has src and root; 
-		regy.AddReplace(name, defn, cacheSize);
-		if (caseAny) {
+		int cache_size = defn.Cache_size();			// OBSOLETE: * 2 b/c it has src and root; 
+		cache.Add_replace(name, defn, cache_size);
+		if (case_any) {
 			name = lang.Case_mgr().Case_build_lower(name, 0, name.length);
-			regy.AddReplace(name, defn, 0);
+			cache.Add_replace(name, defn, 0);
 		}
 	}
-	public Xot_defn GetByKey(byte[] name) {return (Xot_defn)regy.GetVal(name);}
-	public void Clear() {regy.Clear();}
-	public void ReduceCache() {regy.ReduceRecent();}
-	GfoCacheMgr regy = new GfoCacheMgr().MaxSize_(64 * 1024 * 1024).ReduceBy_(32 * 1024 * 1024);
 }

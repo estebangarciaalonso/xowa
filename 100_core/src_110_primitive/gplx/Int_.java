@@ -197,7 +197,7 @@ public class Int_ implements GfoInvkAble {
 			sb.Add_spr_unless_first(Int_.XtoStr(ary[i]), " ", i);
 		return sb.XtoStr();
 	}
-	public static int[] Ary_parse_(String raw_str, int reqd_len, int[] or) {
+	public static int[] Ary_parse(String raw_str, int reqd_len, int[] or) {
 		byte[] raw_bry = ByteAry_.new_ascii_(raw_str);
 		int raw_bry_len = raw_bry.length;
 		int[] rv = new int[reqd_len];
@@ -232,6 +232,6 @@ public class Int_ implements GfoInvkAble {
 					return or;
 			}
 		}
-		return cur_idx == -1 ? rv : or;	// cur_idx == -1 checks for unfilled; EX: Ary_parse_("1,2", 3, null) is unfilled
+		return cur_idx == -1 ? rv : or;	// cur_idx == -1 checks for unfilled; EX: Ary_parse("1,2", 3, null) is unfilled
 	}
 }

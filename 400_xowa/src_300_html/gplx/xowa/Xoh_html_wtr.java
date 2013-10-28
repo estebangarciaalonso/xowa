@@ -113,6 +113,7 @@ public class Xoh_html_wtr {
 		}
 	}
 	private void Apos(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_apos_tkn apos) {
+		if (opts.Lnki_alt()) return;	// ignore apos if alt; EX: [[File:A.png|''A'']] should have alt of A; DATE:2013-10-25
 		switch (apos.Apos_cmd()) {
 			case Xop_apos_tkn_.Cmd_b_bgn:			bfr.Add(Xoh_consts.B_bgn); break;
 			case Xop_apos_tkn_.Cmd_b_end:			bfr.Add(Xoh_consts.B_end); break;
@@ -134,24 +135,26 @@ public class Xoh_html_wtr {
 		int lnke_bgn = lnke.Lnke_bgn(), lnke_end = lnke.Lnke_end();
 		byte[] lnke_xwiki_wiki = lnke.Lnke_xwiki_wiki();
 		boolean proto_is_xowa = lnke.Proto_tid() == Xow_cfg_lnke.Tid_xowa;
-		if (lnke_xwiki_wiki == null) {
-			if (lnke.Lnke_relative())		// relative; EX: //a.org
-				bfr.Add(Xoh_consts.A_bgn).Add(app.Url_parser().Url_parser().Relative_url_protocol_bry()).Add_mid(src, lnke_bgn, lnke_end).Add(Xoh_consts.A_bgn_lnke_0);
-			else {							// xowa or regular; EX: http://a.org
-				if (proto_is_xowa) {
-					bfr.Add(Xoh_consts.A_bgn).Add(Xop_lnke_wkr.Bry_xowa_protocol);
-					ctx.App().Url_converter_gfs().Encode(bfr, src, lnke_bgn, lnke_end);
-					bfr.Add(Xoh_consts.A_bgn_lnke_0_xowa);	
+		if (!opts.Lnki_alt()) {
+			if (lnke_xwiki_wiki == null) {
+				if (lnke.Lnke_relative())		// relative; EX: //a.org
+					bfr.Add(Xoh_consts.A_bgn).Add(app.Url_parser().Url_parser().Relative_url_protocol_bry()).Add_mid(src, lnke_bgn, lnke_end).Add(Xoh_consts.A_bgn_lnke_0);
+				else {							// xowa or regular; EX: http://a.org
+					if (proto_is_xowa) {
+						bfr.Add(Xoh_consts.A_bgn).Add(Xop_lnke_wkr.Bry_xowa_protocol);
+						ctx.App().Url_converter_gfs().Encode(bfr, src, lnke_bgn, lnke_end);
+						bfr.Add(Xoh_consts.A_bgn_lnke_0_xowa);	
+					}
+					else						// regular; add href
+						bfr.Add(Xoh_consts.A_bgn).Add_mid(src, lnke_bgn, lnke_end).Add(Xoh_consts.A_bgn_lnke_0);
 				}
-				else						// regular; add href
-					bfr.Add(Xoh_consts.A_bgn).Add_mid(src, lnke_bgn, lnke_end).Add(Xoh_consts.A_bgn_lnke_0);
 			}
-		}
-		else {
-			bfr.Add(Xoh_consts.A_bgn).Add(Xoh_href_parser.Href_site_bry).Add(lnke_xwiki_wiki).Add(Xoh_href_parser.Href_wiki_bry).Add(lnke.Lnke_xwiki_page());
-			if (lnke.Lnke_xwiki_qargs() != null)
-				Xoa_url_arg_hash.Concat_bfr(bfr, lnke.Lnke_xwiki_qargs());
-			bfr.Add(Xoh_consts.__end_quote);
+			else {
+				bfr.Add(Xoh_consts.A_bgn).Add(Xoh_href_parser.Href_site_bry).Add(lnke_xwiki_wiki).Add(Xoh_href_parser.Href_wiki_bry).Add(lnke.Lnke_xwiki_page());
+				if (lnke.Lnke_xwiki_qargs() != null)
+					Xoa_url_arg_hash.Concat_bfr(bfr, lnke.Lnke_xwiki_qargs());
+				bfr.Add(Xoh_consts.__end_quote);
+			}
 		}
 		int subs_len = lnke.Subs_len();
 		if (subs_len == 0) {																				// no text; auto-number; EX: "[1]"
@@ -164,9 +167,11 @@ public class Xoh_html_wtr {
 			for (int i = 0; i < subs_len; i++)
 				Write_tkn(opts, bfr, src, depth + 1, lnke, i, lnke.Subs_get(i));
 		}
-		if (proto_is_xowa)	// add <img />
-			bfr.Add(Xoh_consts.Img_bgn).Add(wiki.Html_mgr().Img_xowa_protocol()).Add(Xoh_consts.__inline_quote);
-		bfr.Add(Xoh_consts.A_end);
+		if (!opts.Lnki_alt()) {
+			if (proto_is_xowa)	// add <img />
+				bfr.Add(Xoh_consts.Img_bgn).Add(wiki.Html_mgr().Img_xowa_protocol()).Add(Xoh_consts.__inline_quote);
+			bfr.Add(Xoh_consts.A_end);
+		}
 	}
 	private void Lnki(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, int depth) {
 		Xow_xwiki_itm lang = lnki.Ttl().Wik_itm();
@@ -230,14 +235,22 @@ public class Xoh_html_wtr {
 		}
 	}
 	public void List(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_list_tkn list) {
-		byte list_itm_type = list.List_itmTyp();
-		if (list.List_bgn() == Bool_.Y_byte) {
-			if (list.List_sub_first()) List_grp_bgn(opts, bfr, src, list_itm_type);
-			List_itm_bgn(opts, bfr, src, list_itm_type);
+		if (opts.Lnki_alt()) {						// alt; add literally; EX: "*" for "\n*"; note that \n is added in NewLine()
+			if (list.List_bgn() == Bool_.Y_byte) {	// bgn tag
+				bfr.Add_byte(list.List_itmTyp());	// add literal byte
+			}
+			else {}									// end tag; ignore
 		}
 		else {
-			List_itm_end(opts, bfr, src, list_itm_type);
-			if (list.List_sub_last() == Bool_.Y_byte) List_grp_end(opts, bfr, src, list_itm_type);
+			byte list_itm_type = list.List_itmTyp();
+			if (list.List_bgn() == Bool_.Y_byte) {
+				if (list.List_sub_first()) List_grp_bgn(opts, bfr, src, list_itm_type);
+				List_itm_bgn(opts, bfr, src, list_itm_type);
+			}
+			else {
+				List_itm_end(opts, bfr, src, list_itm_type);
+				if (list.List_sub_last() == Bool_.Y_byte) List_grp_end(opts, bfr, src, list_itm_type);
+			}
 		}
 	}
 	@gplx.Virtual public void List_grp_bgn(Xoh_opts opts, ByteAryBfr bfr, byte[] src, byte type) {
@@ -297,31 +310,41 @@ public class Xoh_html_wtr {
 		bfr.Add(tag);
 	}
 	@gplx.Virtual public void NewLine(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_nl_tkn tkn) {
-		if (tkn.Nl_typeId() == Xop_nl_tkn.Tid_char) {
-			if (tkn.Nl_ws() == Bool_.Y_byte)
-				bfr.Add_byte(Byte_ascii.Space);
-			else
-				bfr.Add_byte(Byte_ascii.NewLine);
+		if (opts.Lnki_alt())
+			bfr.Add_byte_space();
+		else {
+			if (tkn.Nl_typeId() == Xop_nl_tkn.Tid_char) {
+				if (tkn.Nl_ws() == Bool_.Y_byte)
+					bfr.Add_byte(Byte_ascii.Space);
+				else
+					bfr.Add_byte(Byte_ascii.NewLine);
+			}
 		}
 	}
 	public void Space(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_tkn_grp grp, int sub_idx, Xop_space_tkn space) {
 		bfr.Add_byte_repeat(Byte_ascii.Space, space.Src_end_grp(grp, sub_idx) - space.Src_bgn_grp(grp, sub_idx));	// NOTE: lnki.caption will convert \n to \s; see Xop_nl_lxr; EX.WP: Schwarzschild radius
 	}
 	@gplx.Virtual public void Para(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_para_tkn para) {
-		switch (para.Para_end()) {
-			case Xop_para_tkn.Para_typeId_none:		break;
-			case Xop_para_tkn.Para_typeId_para:		bfr.Add(Tag_para_end).Add_byte_nl(); break;
-			case Xop_para_tkn.Para_typeId_pre:		bfr.Add(Tag_pre_end).Add_byte_nl(); break;
-			case Xop_para_tkn.Para_typeId_space:	bfr.Add_byte(Byte_ascii.Space); break;
-			default:								throw Err_.unhandled(para.Para_end());
-		}
-		switch (para.Para_bgn()) {
-			case Xop_para_tkn.Para_typeId_none:		break;
-			case Xop_para_tkn.Para_typeId_para:		Para_assert_tag_starts_on_nl(bfr, para.Src_bgn()); bfr.Add(Tag_para_bgn); break;
-			case Xop_para_tkn.Para_typeId_pre:		Para_assert_tag_starts_on_nl(bfr, para.Src_bgn()); bfr.Add(Tag_pre_bgn); break;
-			case Xop_para_tkn.Para_typeId_space:	bfr.Add_byte(Byte_ascii.Space); break;
-			default:								throw Err_.unhandled(para.Para_bgn());
-		}
+//			if (opts.Lnki_alt()) {
+//				if (para.Para_bgn() != Xop_para_tkn.Para_typeId_none)	// always add space, uncless tid is none
+//					bfr.Add_byte_space();
+//			}
+//			else {
+			switch (para.Para_end()) {
+				case Xop_para_tkn.Para_typeId_none:		break;
+				case Xop_para_tkn.Para_typeId_para:		bfr.Add(Tag_para_end).Add_byte_nl(); break;
+				case Xop_para_tkn.Para_typeId_pre:		bfr.Add(Tag_pre_end).Add_byte_nl(); break;
+				case Xop_para_tkn.Para_typeId_space:	bfr.Add_byte(Byte_ascii.Space); break;
+				default:								throw Err_.unhandled(para.Para_end());
+			}
+			switch (para.Para_bgn()) {
+				case Xop_para_tkn.Para_typeId_none:		break;
+				case Xop_para_tkn.Para_typeId_para:		Para_assert_tag_starts_on_nl(bfr, para.Src_bgn()); bfr.Add(Tag_para_bgn); break;
+				case Xop_para_tkn.Para_typeId_pre:		Para_assert_tag_starts_on_nl(bfr, para.Src_bgn()); bfr.Add(Tag_pre_bgn); break;
+				case Xop_para_tkn.Para_typeId_space:	bfr.Add_byte(Byte_ascii.Space); break;
+				default:								throw Err_.unhandled(para.Para_bgn());
+			}
+//			}
 	}
 	private void Para_assert_tag_starts_on_nl(ByteAryBfr bfr, int src_bgn) {
 		if (!bfr.Match_end_byt_nl_or_bos()) bfr.Add_byte_nl();
@@ -344,6 +367,7 @@ public class Xoh_html_wtr {
 		bfr.Add(bry.Bry());
 	}
 	@gplx.Virtual public void Under(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_under_tkn under) {
+		if (opts.Lnki_alt()) return;
 		switch (under.Under_typeId()) {
 			case Xol_kwd_grp_.Id_toc:
 				app.Toc_mgr().Html(page, src, bfr);
@@ -717,26 +741,35 @@ public class Xoh_html_wtr {
 		bfr.Add(Bry_poem_end);
 	}	static byte[] Bry_poem_bgn = ByteAry_.new_ascii_("<div class=\"poem\">\n"), Bry_poem_end = ByteAry_.new_ascii_("\n</div>"); 
 	public void Tblw(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_tblw_tkn tkn, byte[] bgn, byte[] end, int depth, boolean tblw_bgn) {
-		if (bfr.Bry_len() != 0 && !bfr.Match_end_byt(Byte_ascii.NewLine)) bfr.Add_byte_nl();
-		if (indent_level > 0) bfr.Add_byte_repeat(Byte_ascii.Space, indent_level * 2);
-
+		if (opts.Lnki_alt())			// add \s for each \n
+			bfr.Add_byte_space();
+		else {
+			if (bfr.Bry_len() != 0 && !bfr.Match_end_byt(Byte_ascii.NewLine)) bfr.Add_byte_nl();
+			if (indent_level > 0) bfr.Add_byte_repeat(Byte_ascii.Space, indent_level * 2);
 //			boolean para_mode = tblw_bgn && tbl_para && depth == 1;	// DELETE: old code; adding <p> to handle strange mozilla key down behavior on linux; DATE:2013-03-30
 //			if (para_mode) {bfr.Add(Xoh_consts.P_bgn);}
 
-		bfr.Add(bgn);
-		int atrs_bgn = tkn.Atrs_bgn();
-		if (atrs_bgn != -1) Xnde_atrs(tkn.Tag_id(), opts, src, atrs_bgn, tkn.Atrs_end(), tkn.Atrs_ary(), bfr); //bfr.Add_byte(Byte_ascii.Space).Add_mid(src, atrs_bgn, tkn.Atrs_end());
-		bfr.Add_byte(Tag__end);
-		++indent_level;			
+			bfr.Add(bgn);
+			int atrs_bgn = tkn.Atrs_bgn();
+			if (atrs_bgn != -1) Xnde_atrs(tkn.Tag_id(), opts, src, atrs_bgn, tkn.Atrs_end(), tkn.Atrs_ary(), bfr); //bfr.Add_byte(Byte_ascii.Space).Add_mid(src, atrs_bgn, tkn.Atrs_end());
+			bfr.Add_byte(Tag__end);
+			++indent_level;
+		}
 		int subs_len = tkn.Subs_len();
 		for (int i = 0; i < subs_len; i++)
 			Write_tkn(opts, bfr, src, depth + 1, tkn, i, tkn.Subs_get(i));
-		--indent_level;
-		if (bfr.Bry_len() != 0 && !bfr.Match_end_byt(Byte_ascii.NewLine)) bfr.Add_byte_nl();
-		if (indent_level > 0) bfr.Add_byte_repeat(Byte_ascii.Space, indent_level * 2);
-		bfr.Add(end);
+		if (opts.Lnki_alt()) {
+			if (tblw_bgn)			// only add \s for closing table; |} -> "\s"
+				bfr.Add_byte_space();
+		}
+		else {
+			--indent_level;
+			if (bfr.Bry_len() != 0 && !bfr.Match_end_byt(Byte_ascii.NewLine)) bfr.Add_byte_nl();
+			if (indent_level > 0) bfr.Add_byte_repeat(Byte_ascii.Space, indent_level * 2);
+			bfr.Add(end);
 //			if (para_mode) {bfr.Add(Xoh_consts.P_end);}				// DELETE: old code; adding <p> to handle strange mozilla key down behavior on linux; DATE:2013-03-30
-		bfr.Add_byte_nl();
+			bfr.Add_byte_nl();
+		}
 	}
 	private void Xnde_xtn(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		Xop_xnde_xtn xtn = xnde.Xnde_data(); if (xtn == null) return;

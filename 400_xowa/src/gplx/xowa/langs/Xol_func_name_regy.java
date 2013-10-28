@@ -15,10 +15,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa; import gplx.*;
+package gplx.xowa.langs; import gplx.*; import gplx.xowa.*;
 import gplx.intl.*;
-public class Xot_func_regy {
-	public Xot_func_regy(Xol_lang lang) {this.lang = lang;} private Xol_lang lang;
+public class Xol_func_name_regy {
+	public Xol_func_name_regy(Xol_lang lang) {this.lang = lang;} private Xol_lang lang;
 	public void Evt_lang_changed(Xol_lang lang) {
 		Xol_kwd_mgr kwd_mgr = lang.Kwd_mgr();
 		ci_trie.Clear(); cs_trie.Clear();
@@ -52,7 +52,7 @@ public class Xot_func_regy {
 			ci_trie.Add(lower_ary, func);
 		}
 	}
-	public Xot_func_regy_finder FindDefn(byte[] src, int txt_bgn, int txt_end) {
+	public Xol_func_name_itm Find_defn(byte[] src, int txt_bgn, int txt_end) {
 		finder.Clear();
 		for (int i = 0; i < 2; i++) {
 			if (txt_bgn == txt_end) return finder;	// NOTE: true when tmpl_name is either not loaded, or doesn't exist
@@ -108,6 +108,6 @@ public class Xot_func_regy {
 		lower_ary_len = len;
 		Array_.CopyTo(src, bgn, lower_ary, 0, len);
 	}	byte[] lower_ary = new byte[255]; int lower_ary_len = 255;
-	Xot_func_regy_finder finder = new Xot_func_regy_finder();
+	Xol_func_name_itm finder = new Xol_func_name_itm();
 	ByteTrieMgr_slim cs_trie = ByteTrieMgr_slim.cs_(), ci_trie = ByteTrieMgr_slim.ci_();
 }

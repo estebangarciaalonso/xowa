@@ -42,8 +42,8 @@ public class Xodb_xowa_db_tbl {
 	private void Commit_itm(Xodb_file itm) {
 		Db_stmt stmt = stmt_bldr.Get(itm.Cmd_mode());
 		switch (itm.Cmd_mode()) {
-			case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Id())	.Val_byte_(itm.Tid()).Val_str_(itm.Url()).Exec_insert(); break;
-			case Db_cmd_mode.Update:	stmt.Clear()					.Val_byte_(itm.Tid()).Val_str_(itm.Url()).Val_int_(itm.Id()).Exec_update(); break;
+			case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Id())	.Val_byte_(itm.Tid()).Val_str_(itm.Url_rel()).Exec_insert(); break;
+			case Db_cmd_mode.Update:	stmt.Clear()					.Val_byte_(itm.Tid()).Val_str_(itm.Url_rel()).Val_int_(itm.Id()).Exec_update(); break;
 			case Db_cmd_mode.Delete:	stmt.Clear().Val_int_(itm.Id()).Exec_delete();	break;
 			case Db_cmd_mode.Ignore:	break;
 			default:					throw Err_.unhandled(itm.Cmd_mode());

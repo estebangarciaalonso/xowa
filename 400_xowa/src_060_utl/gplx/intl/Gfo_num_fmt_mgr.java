@@ -17,64 +17,87 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.intl; import gplx.*;
 public class Gfo_num_fmt_mgr implements GfoInvkAble {
+	private ByteTrieMgr_fast dlm_trie = ByteTrieMgr_fast.cs_(); 
+	private Gfo_num_fmt_grp[] grp_ary = Gfo_num_fmt_grp.Ary_empty; int grp_ary_len;
+	private Gfo_num_fmt_wkr[] cache; int cache_len = 16;
+	private ByteAryBfr tmp = ByteAryBfr.new_();
 	public Gfo_num_fmt_mgr() {this.Clear();}
 	public boolean Standard() {return standard;} private boolean standard = true;
-	public byte[] Dec_dlm() {return dec_dlm;} public Gfo_num_fmt_mgr Dec_dlm_(byte[] v) {this.dec_dlm = v; raw_trie.Add_bry_byte(v, Raw_tid_dec); return this;} private byte[] dec_dlm = Dec_dlm_default;
-	public byte[] Raw(byte[] src) {
+	public byte[] Dec_dlm() {return dec_dlm;} public Gfo_num_fmt_mgr Dec_dlm_(byte[] v) {this.dec_dlm = v; dlm_trie.Add_bry_byte(v, Raw_tid_dec); return this;} private byte[] dec_dlm = Dec_dlm_default;
+	private byte[] grp_dlm;
+	public byte[] Raw(byte tid, byte[] src) {
 		int src_len = src.length;
 		for (int i = 0; i < src_len; i++) {
 			byte b = src[i];
-			Object o = raw_trie.MatchAtCur(src, i, src_len);
+			Object o = dlm_trie.MatchAtCur(src, i, src_len);
 			if (o == null)
 				tmp.Add_byte(b);
 			else {
-				if (((ByteVal)o).Val() == Raw_tid_dec)
-					tmp.Add_byte(Byte_ascii.Dot);
-				i = raw_trie.Match_pos() - 1; // NOTE: handle multi-byte delims
+				byte dlm_tid = ((ByteVal)o).Val();
+				int dlm_match_pos = dlm_trie.Match_pos();
+				switch (dlm_tid) {
+					case Raw_tid_dec: 
+						if (tid == Tid_raw)
+							tmp.Add_byte(Byte_ascii.Dot);	// NOTE: dec_dlm is always outputted as dot, not regional dec_spr; EX: for dewiki, 12,34 -> 12.34
+						else
+							tmp.Add(dec_dlm);
+						break; 
+					case Raw_tid_grp: {
+						if (tid == Tid_raw) {}	// never add grp_sep for raw
+						else					// add raw grp_spr
+							tmp.Add_mid(src, i, dlm_match_pos);
+						break;
+					}
+				}
+				i = dlm_match_pos - 1; // NOTE: handle multi-byte delims
 			}
 		}
 		return tmp.XtoAryAndClear();
 	}
 	public byte[] Fmt(int val) {return Fmt(ByteAry_.new_ascii_(Int_.XtoStr(val)));}
-	public byte[] Fmt(byte[] src) {
+	public byte[] Fmt(byte[] src) {	// SEE: DOC_1:Fmt
 		int src_len = src.length;
-		int num_bgn = -1; int dec_pos = -1;
+		int num_bgn = -1, dec_pos = -1;
 		for (int i = 0; i < src_len; i++) {
 			byte b = src[i];
 			switch (b) {
 				case Byte_ascii.Num_0: case Byte_ascii.Num_1: case Byte_ascii.Num_2: case Byte_ascii.Num_3: case Byte_ascii.Num_4:
 				case Byte_ascii.Num_5: case Byte_ascii.Num_6: case Byte_ascii.Num_7: case Byte_ascii.Num_8: case Byte_ascii.Num_9:						
-					if (dec_pos == -1) {
-						if (num_bgn == -1) num_bgn = i;
+					if (dec_pos == -1) {	// no decimal seen
+						if (num_bgn == -1)	// num_bgn hasn't started
+							num_bgn = i;	// set num_bgn
 					}
-					else
+					else					// decimal seen; add rest of src literally
 						tmp.Add_byte(b);
 					break;
-				default:
-					if (num_bgn != -1) {
-						Gfo_num_fmt_wkr wkr = GetOrNew(i - num_bgn);
+				default:					// non-number; includes alpha chars, as well as ".", "," and other potential separators
+					if (num_bgn != -1) {	// number started; format group; EX: 1234. -> 1,234.
+						Gfo_num_fmt_wkr wkr = Get_or_new(i - num_bgn);
 						wkr.Fmt(src, num_bgn, i, tmp);
-						num_bgn = -1;
-						dec_pos = -1;
-						if (ByteAry_.HasAtBgn(src, dec_dlm, i, src_len)) {
-						//if (src[i] == Byte_ascii.Dot) {	// ASSUME: all "." in raw are interpreted as decimals; EX: Float_.Xto_str()
+						num_bgn = dec_pos = -1;	// reset vars
+						if (b == Byte_ascii.Dot			// current char is "."; NOTE: all languages treat "." as decimal separator for parse; EX: for de, "1.23" is "1,23" DATE:2013-10-21
+							//|| ByteAry_.HasAtBgn(src, dec_dlm, i, src_len)
+							) {	// current char is languages's decimal delimiter; note this can be "," or any other multi-byte separator
 							dec_pos = i;
-							i += dec_dlm.length - 1;
+//								i += dec_dlm.length - 1;
 							tmp.Add(dec_dlm);
 							continue;
 						}
 					}
-					tmp.Add_byte(b);
+					if (b == Byte_ascii.Comma)
+						tmp.Add(grp_dlm);
+					else
+						tmp.Add_byte(b);
 					break;
 			}
 		}
-		if (num_bgn != -1) {
-			Gfo_num_fmt_wkr wkr = GetOrNew(src_len - num_bgn);
+		if (num_bgn != -1) {			// digits left unprocessed
+			Gfo_num_fmt_wkr wkr = Get_or_new(src_len - num_bgn);
 			wkr.Fmt(src, num_bgn, src_len, tmp);
 		}
 		return tmp.XtoAryAndClear();
 	}
-	Gfo_num_fmt_wkr GetOrNew(int src_len) {
+	Gfo_num_fmt_wkr Get_or_new(int src_len) {
 		Gfo_num_fmt_wkr rv = null;
 		if (src_len < cache_len) {
 			rv = cache[src_len];
@@ -95,16 +118,18 @@ public class Gfo_num_fmt_mgr implements GfoInvkAble {
 		for (int i = 0; i < grp_ary_len; i++) {
 			Gfo_num_fmt_grp itm = grp_ary[i];
 			byte[] itm_dlm = itm.Dlm();
-			Object o = raw_trie.MatchAtCurExact(itm_dlm, 0, itm_dlm.length);	// check for existing Object
-			if (o == null)
-				raw_trie.Add_bry_byte(itm_dlm, Raw_tid_grp);
+			Object o = dlm_trie.MatchAtCurExact(itm_dlm, 0, itm_dlm.length);	// check for existing Object
+			if (o == null) {
+				dlm_trie.Add_bry_byte(itm_dlm, Raw_tid_grp);
+				grp_dlm = itm_dlm;
+			}
 		}
 	}
 	public Gfo_num_fmt_mgr Clear() {
 		this.grp_ary = Gfo_num_fmt_grp.Ary_empty;
 		grp_ary_len = 0;
 		cache = new Gfo_num_fmt_wkr[cache_len];
-		raw_trie.Clear();
+		dlm_trie.Clear();
 		return this;
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
@@ -115,13 +140,10 @@ public class Gfo_num_fmt_mgr implements GfoInvkAble {
 		return this;
 	}
 	public static final String Invk_dec_dlm_ = "dec_dlm_", Invk_clear = "clear", Invk_grps_add = "grps_add";
-	static final byte Raw_tid_dec = 0, Raw_tid_grp = 1;
-	ByteTrieMgr_fast raw_trie = ByteTrieMgr_fast.cs_(); 
-	Gfo_num_fmt_grp[] grp_ary = Gfo_num_fmt_grp.Ary_empty; int grp_ary_len;
-	Gfo_num_fmt_wkr[] cache; int cache_len = 16;
-	ByteAryBfr tmp = ByteAryBfr.new_();
+	private static final byte Raw_tid_dec = 0, Raw_tid_grp = 1;
 	private static final byte[] Dec_dlm_default = new byte[] {Byte_ascii.Dot};
 	public static final byte[] Grp_dlm_default = new byte[] {Byte_ascii.Comma};
+	public static final byte Tid_format = 0, Tid_raw = 1, Tid_nosep = 2;
 }
 class Gfo_num_fmt_wkr {
 	public void Fmt(byte[] src, int bgn, int end, ByteAryBfr bb) {
@@ -169,3 +191,14 @@ class Gfo_num_fmt_bldr_many implements Gfo_num_fmt_bldr {
 	public void Gen(ByteAryBfr bb) {bb.Add(ary);}
 	public Gfo_num_fmt_bldr_many(int pos, byte[] ary) {this.pos = pos; this.ary = ary;} private byte[] ary;
 }
+/*
+DOC_1:Fmt
+. mediawiki does the following (from Language.php|commafy
+.. split the number by digitGoupingPattern: ###,###,### -> 3,3,3
+.. use regx to search for number groups
+.. for each number group, format with "," and "."
+.. replace final result with languages's decimal / grouping entry from separatorTransformTable
+. XOWA does the following
+.. iterate over bytes until non-number reached
+.. take all seen numbers and format according to lang
+*/

@@ -310,7 +310,7 @@ class Xodb_in_wkr_page_id extends Xodb_in_wkr_page_base {
 class Xodb_in_wkr_page_title extends Xodb_in_wkr_page_base {
 	private OrderedHash hash;
 	private int in_ns;
-	@Override public int Interval() {return 490;}
+	@Override public int Interval() {return 64;}	// NOTE: 96+ overflows; EX: w:Space_Liability_Convention; DATE:2013-10-24
 	public void Init(OrderedHash hash, int in_ns) {this.hash = hash; this.in_ns = in_ns;}
 	@Override public String In_fld_name() {return Xodb_page_tbl.Fld_page_title;}
 	@Override public Criteria In_filter(Object[] part_ary) {

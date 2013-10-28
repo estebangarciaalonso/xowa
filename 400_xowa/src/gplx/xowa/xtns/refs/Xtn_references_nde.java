@@ -60,4 +60,5 @@ public class Xtn_references_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 		list_idx = ctx.Page().Ref_mgr().Grps_get(group).Grp_seal();	// NOTE: needs to be sealed at end; else inner refs will end up in new group; EX: <references><ref>don't seal prematurely</ref></references>
 	}
 	public static final byte Xatr_id_group = 0;
+	public static boolean Enabled = true;
 }

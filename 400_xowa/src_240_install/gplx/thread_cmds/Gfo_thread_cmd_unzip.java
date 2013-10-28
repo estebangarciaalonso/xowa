@@ -25,7 +25,7 @@ public class Gfo_thread_cmd_unzip implements Gfo_thread_cmd {
 		return this;
 	}	Io_url src, trg; ProcessAdp bzip2_process, zip_process, active_process; Gfui_kit kit; Gfo_usr_dlg usr_dlg; String src_ext = ".bz2";
 	public GfoInvkAble Owner() {return owner;} public Gfo_thread_cmd_unzip Owner_(GfoInvkAble v) {owner = v; return this;} GfoInvkAble owner;
-	public void Cmd_init() {}
+	public void Cmd_ctor() {}
 	@gplx.Virtual public String Async_key() {return KEY;}
 	public Gfo_thread_cmd Async_next_cmd() {return next_cmd;} public void Async_next_cmd_(Gfo_thread_cmd v) {next_cmd = v;} Gfo_thread_cmd next_cmd;
 	public ByteAryFmtr_eval_mgr Url_eval_mgr() {return url_eval_mgr;} public Gfo_thread_cmd_unzip Url_eval_mgr_(ByteAryFmtr_eval_mgr v) {url_eval_mgr = v; return this;} ByteAryFmtr_eval_mgr url_eval_mgr;

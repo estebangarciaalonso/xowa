@@ -25,7 +25,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 	private Xof_bin_mgr src_mgr;
 	private Xof_fsdb_mgr_sql fsdb_mgr = new Xof_fsdb_mgr_sql(); 
 	public Xob_fsdb_make(Xob_bldr bldr, Xow_wiki wiki) {
-		this.Cmd_init(bldr, wiki);
+		this.Cmd_ctor(bldr, wiki);
 		fsdb_mgr.Init_by_wiki(wiki);
 		Xof_fsdb_mgr_sql src_fsdb_mgr = new Xof_fsdb_mgr_sql();
 		src_fsdb_mgr.Init_by_wiki(wiki);

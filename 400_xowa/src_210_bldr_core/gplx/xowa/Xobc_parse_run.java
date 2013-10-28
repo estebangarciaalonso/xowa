@@ -16,9 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.bldrs.*; 
+import gplx.xowa.bldrs.*; import gplx.xowa.wikis.caches.*;
 public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoInvkAble {
-	public Xobc_parse_run(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xobc_parse_run(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Cmd_key() {return KEY;} public static final String KEY = "parse.run";
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_bgn(Xob_bldr bldr) {
@@ -58,8 +58,7 @@ public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoIn
 	public void Cmd_end() {
 		img_dump.Wkr_end();
 		math_dump.Wkr_end();
-		wiki.Tmpl_regy().Clear();
-		wiki.Page_cache().Clear();
+		wiki.Cache_mgr().Free_mem_all();
 	}
 	public void Cmd_print() {}
 	private void Parse_ns(Xow_ns ns) {
@@ -145,7 +144,7 @@ public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoIn
 		Xow_ns ns_tmpl = wiki.Ns_mgr().Ns_template();
 		raw_parser.Load(bldr.Usr_dlg(), wiki, ns_tmpl, urls, load_len);
 		Xodb_page xml_page = new Xodb_page();
-		Xot_tmpl_regy tmpl_regy = wiki.Tmpl_regy();
+		Xow_defn_cache tmpl_regy = wiki.Cache_mgr().Defn_cache();
 		while (raw_parser.Read(xml_page)) {
 			Xot_defn_tmpl defn = new Xot_defn_tmpl();
 			defn.Init_by_new(ns_tmpl, xml_page.Ttl_w_ns(), xml_page.Text(), null, false);	// NOTE: passing null, false; will be overriden later when Parse is called

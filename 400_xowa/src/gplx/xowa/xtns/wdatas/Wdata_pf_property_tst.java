@@ -46,6 +46,11 @@ public class Wdata_pf_property_tst {
 		fxt.Init_pages_add(fxt.doc_("q1", fxt.prop_novalue_(1)));
 		fxt.Test_parse("{{#property:p1}}", "novalue");
 	}
+	@Test   public void Somevalue() {
+		fxt.Init_links_add("enwiki", "Test_page", "q1");
+		fxt.Init_pages_add(fxt.doc_("q1", fxt.prop_somevalue_(1)));
+		fxt.Test_parse("{{#property:p1}}", "somevalue");
+	}
 	@Test   public void Multiple() {
 		fxt.Init_links_add("enwiki", "Test_page", "q1");
 		fxt.Init_pages_add(fxt.doc_("q1", fxt.prop_str_(1, "a"), fxt.prop_str_(1, "b")));

@@ -155,7 +155,7 @@ class Scrib_lib_language implements Scrib_lib {
 	public KeyVal[] ParseFormattedNumber(KeyVal[] values) {
 		Xol_lang lang = lang_(values);
 		byte[] num = Scrib_kv_utl.Val_to_bry(values, 1);
-		byte[] rv = lang.Num_fmt_mgr().Raw(num);
+		byte[] rv = lang.Num_fmt_mgr().Raw(gplx.intl.Gfo_num_fmt_mgr.Tid_raw, num);
 		return Scrib_kv_utl.base1_obj_(rv);
 	}
 	public KeyVal[] formatDuration(KeyVal[] values) {throw Err_.not_implemented_();}

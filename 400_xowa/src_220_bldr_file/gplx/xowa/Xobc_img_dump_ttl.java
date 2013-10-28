@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.ios.*;
 public class Xobc_img_dump_ttl extends Xob_itm_dump_base implements Xobd_wkr, GfoInvkAble {
-	public Xobc_img_dump_ttl(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xobc_img_dump_ttl(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Wkr_key() {return KEY;} public static final String KEY = "img.dump_ttl";
 	@gplx.Internal protected Io_url_gen Make_url_gen() {return make_url_gen;} Io_url_gen make_url_gen;
 	public void Wkr_ini(Xob_bldr bldr) {}

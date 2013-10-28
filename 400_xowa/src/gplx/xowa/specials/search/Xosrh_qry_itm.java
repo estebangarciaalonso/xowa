@@ -44,8 +44,8 @@ class Xosrh_qry_itm {
 			default: throw Err_.unhandled(tid);
 		}
 	}
-	private static ListAdp Search_word(Xow_wiki wiki, Cancelable cancelable, ByteAryBfr tmp_bfr, byte[] search_word, int results_max) {
-		ListAdp rv = ListAdp_.new_();
+	private static ListAdp Search_word(Xow_wiki wiki, Cancelable cancelable, ByteAryBfr tmp_bfr, Xosrh_ns_mgr ns_mgr, byte[] search_word, int results_max) {
+		ListAdp found = ListAdp_.new_();
 		if (wiki.Db_mgr().Tid() == gplx.xowa.dbs.Xodb_mgr_sql.Tid_sql
 			&& wiki.App().Gui_mgr().Search_suggest_mgr().Auto_wildcard()) {	// HACK: auto-asterisk words for sqlite; DATE:2013-09-05
 			if (!ByteAry_.HasAtEnd(search_word, new byte[] {Byte_ascii.Asterisk}))
@@ -53,15 +53,22 @@ class Xosrh_qry_itm {
 			if (!ByteAry_.HasAtBgn(search_word, new byte[] {Byte_ascii.Asterisk}))
 				search_word = ByteAry_.Add(Byte_ascii.Asterisk, search_word);
 		}
-		wiki.Db_mgr().Load_mgr().Load_search(cancelable, rv, search_word, results_max);
+		wiki.Db_mgr().Load_mgr().Load_search(cancelable, found, search_word, results_max);
+		ListAdp rv = ListAdp_.new_();
+		int found_len = found.Count();
+		for (int i = 0; i < found_len; i++) {
+			Xodb_page page = (Xodb_page)found.FetchAt(i);
+			if (ns_mgr.Has(page.Ns_id()))
+				rv.Add(page);
+		}
 		return rv;
 	}
-	public void Search(Cancelable cancelable, ByteAryBfr tmp_bfr, byte[] src, Xow_wiki wiki, int results_max) {
+	public void Search(Cancelable cancelable, ByteAryBfr tmp_bfr, byte[] src, Xow_wiki wiki, int results_max, Xosrh_ns_mgr ns_mgr) {
 		if (cancelable.Canceled()) return;
 		switch (tid) {
 			case Xosrh_qry_itm.Tid_null: return;
 			case Xosrh_qry_itm.Tid_word:
-				ids = Search_word(wiki, cancelable, tmp_bfr, word, results_max);
+				ids = Search_word(wiki, cancelable, tmp_bfr, ns_mgr, word, results_max);
 				break;
 			case Xosrh_qry_itm.Tid_word_quote:
 				OrderedHash tmp_search_list = OrderedHash_.new_();
@@ -70,7 +77,7 @@ class Xosrh_qry_itm {
 				ListAdp prv_list = null;
 				for (int i = 0; i < words_len; i++) {
 					if (cancelable.Canceled()) return;
-					ListAdp cur_list = Search_word(wiki, cancelable, tmp_bfr, words[i], results_max);
+					ListAdp cur_list = Search_word(wiki, cancelable, tmp_bfr, ns_mgr, words[i], results_max);
 					if (prv_list == null)	// 1st list; just set to cur_list
 						prv_list = cur_list;
 					else {					// nth list; AND to prv_list; "A B" should find all titles with "A AND B"
@@ -94,8 +101,8 @@ class Xosrh_qry_itm {
 				}
 				break;
 			default:
-				if (lhs != null) lhs.Search(cancelable, tmp_bfr, src, wiki, results_max);
-				if (rhs != null) rhs.Search(cancelable, tmp_bfr, src, wiki, results_max);
+				if (lhs != null) lhs.Search(cancelable, tmp_bfr, src, wiki, results_max, ns_mgr);
+				if (rhs != null) rhs.Search(cancelable, tmp_bfr, src, wiki, results_max, ns_mgr);
 				break;
 		}
 	}

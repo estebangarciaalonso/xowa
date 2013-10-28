@@ -569,8 +569,8 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 					case Xop_xnde_tag_.Tid_poem:					xnde_data = tkn_mkr.Poem_nde(); break;
 //						case Xop_xnde_tag_.Tid_nowiki:					xnde_data = new Xtn_nowiki_nde(); break;
 					case Xop_xnde_tag_.Tid_math:					if (file_wkr != null) file_wkr.Wkr_run(ctx, xnde); break;
-					case Xop_xnde_tag_.Tid_ref:						xnde_data = tkn_mkr.Ref_nde(); break;
-					case Xop_xnde_tag_.Tid_references:				xnde_data = tkn_mkr.References_nde(); break;
+					case Xop_xnde_tag_.Tid_ref:						xnde_data = gplx.xowa.xtns.refs.Xtn_references_nde.Enabled ? tkn_mkr.Ref_nde() : null; break;
+					case Xop_xnde_tag_.Tid_references:				xnde_data = gplx.xowa.xtns.refs.Xtn_references_nde.Enabled ? tkn_mkr.References_nde() : null; break;
 					case Xop_xnde_tag_.Tid_gallery:					xnde_data = tkn_mkr.Gallery_nde(); break;
 					case Xop_xnde_tag_.Tid_imageMap:				xnde_data = tkn_mkr.ImageMap_nde(); break;
 					case Xop_xnde_tag_.Tid_hiero:					xnde_data = tkn_mkr.Hiero_nde(); break;

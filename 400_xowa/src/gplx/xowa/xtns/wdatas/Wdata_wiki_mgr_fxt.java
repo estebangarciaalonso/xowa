@@ -35,6 +35,7 @@ public class Wdata_wiki_mgr_fxt {
 	public Xoa_app App() {return app;}
 	public Wdata_doc_bldr page_bldr_(String qid) {return page_bldr.Qid_(qid);}
 	public Wdata_prop_itm_core prop_novalue_(int pid) {return Wdata_prop_itm_core.new_novalue_(pid);}
+	public Wdata_prop_itm_core prop_somevalue_(int pid) {return Wdata_prop_itm_core.new_somevalue_(pid);}
 	public Wdata_prop_itm_core prop_str_(int pid, String val) {return Wdata_prop_itm_core.new_str_(pid, val);}
 	public Wdata_prop_itm_core prop_str_(int pid, byte[] val) {return Wdata_prop_itm_core.new_str_(pid, val);}
 	public Wdata_prop_itm_core prop_time_(int pid, String val) {return Wdata_prop_itm_core.new_time_(pid, val);}

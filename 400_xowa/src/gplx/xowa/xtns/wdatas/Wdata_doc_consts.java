@@ -23,7 +23,7 @@ public class Wdata_doc_consts {
 		, Key_claims_m_str = "m", Key_claims_q_str = "q", Key_claims_g_str = "g", Key_claims_rank_str = "rank", Key_claims_refs_str = "refs"
 		, Key_ent_entity_type_str = "entity-type", Key_ent_numeric_id_str = "numeric-id"
 		, Val_ent_entity_type_item_str = "item"
-		, Val_prop_value_str = "value", Val_prop_novalue_str = "novalue"
+		, Val_prop_value_str = "value", Val_prop_novalue_str = "novalue", Val_prop_somevalue_str = "somevalue"
 		, Key_time_time_str = "time", Key_time_precision_str = "precision", Key_time_before_str = "before", Key_time_after_str = "after", Key_time_timezone_str = "timezone", Key_time_calendarmodel_str = "calendarmodel"
 		, Val_time_precision_str = "11", Val_time_before_str = "0", Val_time_after_str = "0", Val_time_timezone_str = "0"
 		, Val_time_globe_str = "http:\\/\\/www.wikidata.org\\/entity\\/Q2", Val_time_calendarmodel_str = "http://www.wikidata.org/entity/Q1985727"
@@ -37,7 +37,7 @@ public class Wdata_doc_consts {
 		
 		, Key_ent_entity_type_bry = bry_(Key_ent_entity_type_str), Key_ent_numeric_id_bry = bry_(Key_ent_numeric_id_str)
 		, Val_ent_entity_type_item_bry = bry_(Val_ent_entity_type_item_str)
-		, Val_prop_value_bry = bry_(Val_prop_value_str), Val_prop_novalue_bry = bry_(Val_prop_novalue_str)
+		, Val_prop_value_bry = bry_(Val_prop_value_str), Val_prop_novalue_bry = bry_(Val_prop_novalue_str), Val_prop_somevalue_bry = bry_(Val_prop_somevalue_str)
 		, Key_time_time_bry = bry_(Key_time_time_str), Key_time_timezone_bry = bry_(Key_time_timezone_str), Key_time_before_bry = bry_(Key_time_before_str), Key_time_after_bry = bry_(Key_time_after_str)
 		, Key_time_precision_bry = bry_(Key_time_precision_str), Key_time_calendarmodel_bry = bry_(Key_time_calendarmodel_str)
 		, Val_time_precision_bry = bry_(Val_time_precision_str), Val_time_before_bry = bry_(Val_time_before_str), Val_time_after_bry = bry_(Val_time_after_str), Val_time_timezone_bry = bry_(Val_time_timezone_str)

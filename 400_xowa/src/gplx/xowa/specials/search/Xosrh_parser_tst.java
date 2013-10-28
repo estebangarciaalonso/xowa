@@ -84,11 +84,11 @@ class Xosearch_searcher_fxt {
 	public void Test_search(String ttl_str, int... expd) {
 		byte[] ttl_bry = ByteAry_.new_ascii_(ttl_str);
 		Xosrh_qry_itm qry_root = parser.Parse(ttl_bry);
-		qry_root.Search(Cancelable_.Never, tmp_bfr, ttl_bry, wiki, 100);
+		Xosrh_ns_mgr ns_mgr = new Xosrh_ns_mgr(); ns_mgr.Add_all(); // WORKAROUND: xdat fmt does not store ns with search data; pages will be retrieved with ns_id = null; force ns_all (instead of allowing ns_main default);
+		qry_root.Search(Cancelable_.Never, tmp_bfr, ttl_bry, wiki, 100, ns_mgr);
 		int[] actl = Xosearch_parser_fxt.Xto_ints(qry_root.Ids());
 		Tfds.Eq_ary(expd, actl);
-	}
-	
+	}		
 }
 class Xosearch_parser_fxt {
 	public Xosearch_parser_fxt Clear() {

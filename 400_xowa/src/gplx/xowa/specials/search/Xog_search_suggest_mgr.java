@@ -29,6 +29,16 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 	public int All_pages_extend() {return all_pages_extend;} private int all_pages_extend = 1000;	// look ahead by 1000
 	public int All_pages_min() {return all_pages_min;} private int all_pages_min = 10000;			// only look at pages > 10 kb
 	public boolean Auto_wildcard() {return auto_wildcard;} private boolean auto_wildcard = false;			// automatically add wild-card; EX: Earth -> *Earth*
+	public Gfo_url_arg[] Args_default() {return args_default;} private Gfo_url_arg[] args_default = Gfo_url_arg.Ary_empty;
+	public void Args_default_str_(String v) {
+		this.args_default_str = v;
+		byte[] bry = ByteAry_.new_utf8_("http://x.org/a?" + v);
+		Gfo_url tmp_url = new Gfo_url();
+		app.Url_parser().Url_parser().Parse(tmp_url, bry, 0, bry.length);
+		args_default = tmp_url.Args();
+	}
+	private String args_default_str = "";// default args for search
+	public static final int[] Ns_default_main = new int[] {Xow_ns_.Id_main};
 	public void Cancel() {
 		cur_cmd.Cancel();
 		long prv_time = Env_.TickCount();
@@ -99,8 +109,10 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_all_pages_min_))			all_pages_min = m.ReadInt("v");
 		else if	(ctx.Match(k, Invk_auto_wildcard))			return Yn.XtoStr(auto_wildcard);
 		else if	(ctx.Match(k, Invk_auto_wildcard_))			auto_wildcard = m.ReadYn("v");
-		else if	(ctx.Match(k, Invk_log_enabled))		return Yn.XtoStr(log_enabled);
-		else if	(ctx.Match(k, Invk_log_enabled_))		log_enabled = m.ReadYn("v");
+		else if	(ctx.Match(k, Invk_log_enabled))			return Yn.XtoStr(log_enabled);
+		else if	(ctx.Match(k, Invk_log_enabled_))			log_enabled = m.ReadYn("v");
+		else if	(ctx.Match(k, Invk_args_default))			return args_default_str;
+		else if	(ctx.Match(k, Invk_args_default_))			Args_default_str_(m.ReadStr("v"));
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}
@@ -110,6 +122,7 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 	, Invk_all_pages_min = "all_pages_min", Invk_all_pages_min_ = "all_pages_min_"
 	, Invk_auto_wildcard = "auto_wildcard", Invk_auto_wildcard_ = "auto_wildcard_"
 	, Invk_log_enabled = "log_enabled", Invk_log_enabled_ = "log_enabled_"
+	, Invk_args_default = "args_default", Invk_args_default_ = "args_default_"
 	;
 	private static KeyVal[] Options_search_mode_list = KeyVal_.Ary(KeyVal_.new_("Search"), KeyVal_.new_("AllPages")); 
 	private static byte Search_mode_parse(String v) {

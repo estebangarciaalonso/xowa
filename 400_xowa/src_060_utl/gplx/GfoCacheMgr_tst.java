@@ -26,7 +26,7 @@ public class GfoCacheMgr_tst {
 //		@Test  public void Sizes() {fxt.run_Add("abc", "d", "e").Expd_curSize_(2).Expd_itms_("d", "e").tst();}
 }
 class GfoCacheMgr_fxt {
-	GfoCacheMgr mgr = new GfoCacheMgr().MaxSize_(4).ReduceBy_(2);
+	Gfo_cache_mgr mgr = new Gfo_cache_mgr().Max_size_(4).Reduce_by_(2);
 	public GfoCacheMgr_fxt() {
 		Env_.TickCount_Test = 1;
 	}
@@ -41,7 +41,7 @@ class GfoCacheMgr_fxt {
 	public GfoCacheMgr_fxt run_Get(String... ary) {
 		for (int i = 0; i < ary.length; i++) {
 			String s = ary[i];
-			mgr.GetVal(ByteAry_.new_utf8_(s));
+			mgr.Get_by_key(ByteAry_.new_utf8_(s));
 			Env_.TickCount_Test++;
 		}
 		return this;
@@ -49,11 +49,11 @@ class GfoCacheMgr_fxt {
 	public GfoCacheMgr_fxt Expd_curSize_(int v) {expd_curSize = v; return this;} private int expd_curSize = -1;
 	public GfoCacheMgr_fxt Expd_itms_(String... v) {expd_itms = v; return this;} private String[] expd_itms;
 	public GfoCacheMgr_fxt tst() {
-		if (expd_curSize != -1) Tfds.Eq(expd_curSize, mgr.CurSize(), "curSize");
+		if (expd_curSize != -1) Tfds.Eq(expd_curSize, mgr.Cur_size(), "curSize");
 		if (expd_itms != null) {
 			String[] actl = new String[mgr.Count()];
 			for (int i = 0; i < actl.length; i++)
-				actl[i] = ((GfoCacheItm_mock)mgr.GetAt(i)).S();
+				actl[i] = ((GfoCacheItm_mock)mgr.Get_at(i)).S();
 			Tfds.Eq_ary_str(expd_itms, actl, "itms");
 		}
 		return this;

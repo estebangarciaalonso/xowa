@@ -230,6 +230,7 @@ kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_property										, "#property");
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_noexternallanglinks							, "noexternallanglinks");
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_ns_num											, "namespacenumber");
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_page_id										, "pageid");
-kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_disambig                                        , "__DISAMBIG__");
+kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_disambig                                       , "__DISAMBIG__");
+kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_nocommafysuffix								, "NOSEP");
 	}
 }

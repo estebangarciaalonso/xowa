@@ -19,6 +19,8 @@ package gplx.xowa; import gplx.*;
 public class Xol_kwd_mgr implements GfoInvkAble {
 	public Xol_kwd_mgr(Xol_lang lang) {this.lang = lang;} private Xol_lang lang; Xol_kwd_grp[] grps = new Xol_kwd_grp[Xol_kwd_grp_.Id__max];
 	public int Len() {return grps.length;}
+	public ByteTrieMgr_slim Trie_raw() {if (trie_raw == null) trie_raw = Xol_kwd_mgr.trie_(this, Xol_kwd_grp_.Id_str_rawsuffix); return trie_raw;} private ByteTrieMgr_slim trie_raw;
+	public ByteTrieMgr_slim Trie_nosep() {if (trie_nosep == null) trie_nosep = Xol_kwd_mgr.trie_(this, Xol_kwd_grp_.Id_nocommafysuffix); return trie_nosep;} private ByteTrieMgr_slim trie_nosep;
 	public Xol_kwd_grp Get_at(int id) {return grps[id];}
 	public Xol_kwd_grp Get_or_new(int id) {
 		Xol_kwd_grp rv = grps[id];

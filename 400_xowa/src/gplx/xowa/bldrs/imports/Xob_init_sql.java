@@ -29,5 +29,6 @@ public class Xob_init_sql extends Xob_init_base {
 		String ns_map = wiki.App().Setup_mgr().Dump_mgr().Db_ns_map();
 		Xodb_mgr_sql db_mgr = wiki.Db_mgr_create_as_sql();
 		db_mgr.Init_make(ns_map);	// NOTE: must Init after Xob_siteinfo_parser b/c Xob_siteinfo_parser will create new ns itms
+		db_mgr.Tbl_xowa_cfg().Insert_str(Xodb_mgr_sql.Grp_wiki_init, "db_mgr.data_storage_format", Xoi_dump_mgr.Wtr_tid_to_str(db_mgr.Data_storage_format()));	// NOTE: insert data_storage_format at init stage, not at term stage; bldr will reload wiki, and will default to gz since setting is not saved; DATE:2013-10-27
 	}
 }

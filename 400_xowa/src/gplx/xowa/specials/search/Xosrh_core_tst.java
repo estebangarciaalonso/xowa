@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.specials.search; import gplx.*; import gplx.xowa.*; import gplx.xowa.specials.*;
 import org.junit.*;
-public class Xosrh_core_tst {		
+public class Xosrh_core_tst {
 	@Before public void Init() {fxt.Clear();} private Xos_search_mgr_fxt fxt = new Xos_search_mgr_fxt();
 	@Test   public void Basic() {
 		fxt.Init_basic();
@@ -38,7 +38,7 @@ public class Xosrh_core_tst {
 	}
 	@Test  public void Url() {
 		Xoa_url url = Xoa_url_parser.Parse_url(fxt.App(), fxt.Wiki(), "Special:Search/Abc?fulltext=y&xowa_sort=len_desc");
-		fxt.Search_mgr().Args_mgr().Parse(url);
+		fxt.Search_mgr().Args_mgr().Clear().Parse(url.Args());
 		Tfds.Eq(Xosrh_rslt_itm_sorter.Tid_len_dsc, fxt.Search_mgr().Args_mgr().Sort_tid());
 	}
 	@Test  public void Url_arg_title() {// http://en.wikipedia.org/wiki/Special:Search/Earth?fulltext=yes&title=Mars
@@ -46,9 +46,14 @@ public class Xosrh_core_tst {
 //			fxt.Test_url_search_bry("Special:Search/Abc?fulltext=y"				, "Abc");	// leaf
 		fxt.Test_url_search_bry("Special:Search/Abc?fulltext=y&search=Def"	, "Def");	// leaf overrides query arg
 	}
+	@Test  public void Url_ns() {
+		fxt.Test_url__ns("Special:Search?search=Abc&ns0=1&ns1=1", "0|1");
+		fxt.Test_url__ns("Special:Search?search=Abc&ns*=1", "*");
+		fxt.Test_url__ns("Special:Search?search=Abc", "0");
+	}
 	@Test  public void Html() {
 		fxt.Init_basic();
-		fxt.Test_html(Xosrh_core.Match_tid_all, "B1", String_.Concat_lines_nl
+		fxt.Test_html_by_url("B1", "", String_.Concat_lines_nl
 			(	"Result '''1''' of '''3''' for '''B1'''<br/>"
 			,	"{|"
 			,	"|-"
@@ -151,18 +156,25 @@ class Xos_search_mgr_fxt {
 			, this.data_id_(22, "B2_22")
 			, this.data_id_(23, "B3_23")
 			);
+		search_mgr.Page_mgr().Ns_mgr().Add_all(); // WORKAROUND: xdat fmt does not store ns with search data; pages will be retrieved with ns_id = null; force ns_all (instead of allowing ns_main default);
 	}
 	public void Clear() {
 		Io_mgr._.InitEngine_mem();
 		app = Xoa_app_fxt.app_();
 		wiki = Xoa_app_fxt.wiki_tst_(app);
 		search_mgr = wiki.Special_mgr().Page_search();
+		wiki.App().Gui_mgr().Search_suggest_mgr().Args_default_str_("ns*=1"); // WORKAROUND: xdat fmt does not store ns with search data; pages will be retrieved with ns_id = null; force ns_all (instead of allowing ns_main default);
 	}
 	public Xosrh_core Search_mgr() {return search_mgr;}
 	public void Test_url_search_bry(String url_str, String expd) {
 		Xoa_url url = Xoa_url_parser.Parse_url(app, wiki, url_str);
-		search_mgr.Args_mgr().Parse(url);
+		search_mgr.Args_mgr().Clear().Parse(url.Args());
 		Tfds.Eq(expd, String_.new_utf8_(search_mgr.Args_mgr().Search_bry()));
+	}
+	public void Test_url__ns(String url_str, String expd) {
+		Xoa_url url = Xoa_url_parser.Parse_url(app, wiki, url_str);
+		search_mgr.Args_mgr().Clear().Parse(url.Args());
+		Tfds.Eq(expd, String_.new_ascii_(search_mgr.Args_mgr().Ns_mgr().Xto_hash_key()));
 	}
 	public void Test_search_exact(String ttl_str, String... expd_ary) {Test_search(ttl_str, 0, expd_ary);}
 	public void Test_search_match_bgn(String ttl_str, String... expd_ary) {Test_search(ttl_str, 0, expd_ary);}
@@ -173,12 +185,14 @@ class Xos_search_mgr_fxt {
 		bfr.Mkr_rls();
 		Tfds.Eq_ary(expd_ary, Search_itms_to_int_ary(page));
 	}
-	public void Test_html(byte match_tid, String ttl_str, String expd_html) {
+	public void Test_html_by_url(String ttl_str, String args_str, String expd_html) {
 		wiki.Init_needed_(false);
 		byte[] ttl_bry = ByteAry_.new_ascii_(ttl_str);
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
-		Xoa_url url = new Xoa_url();
 		Xoa_page page = new Xoa_page(wiki, ttl);
+		Xoa_url url = new Xoa_url();
+		byte[] url_bry = ByteAry_.new_utf8_("http://en.wikipedia.org/wiki/Special:Search/" + ttl_str + args_str);
+		wiki.App().Url_parser().Parse(url, url_bry, 0, url_bry.length);
 		search_mgr.Special_gen(url, page, wiki, ttl);
 		Tfds.Eq_str_lines(expd_html, String_.new_utf8_(page.Root().Data_htm()));
 	}

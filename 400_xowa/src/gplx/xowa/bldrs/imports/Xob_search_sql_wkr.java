@@ -18,17 +18,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.ios.*; import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*;
 public class Xob_search_sql_wkr extends Xob_search_base implements Io_make_cmd {
-	public Xob_search_sql_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);} private Xodb_mgr_sql db_mgr = null;
+	public Xob_search_sql_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);} private Xodb_mgr_sql db_mgr = null;
 	@Override public String Wkr_key() {return KEY;} public static final String KEY = "import.sql.search_title.wkr";
 	@Override public gplx.ios.Io_make_cmd Make_cmd_site() {return this;}
 	public Io_sort_cmd Make_dir_(Io_url v) {return this;}	// noop	
 	public void Sort_bgn() {
 		db_mgr = wiki.Db_mgr_as_sql();
-		Xodb_file search_db = db_mgr.Fsys_mgr().Make(Xodb_file.Tid_search);
+		boolean created = false;
+		Xodb_file search_db = db_mgr.Fsys_mgr().Get_tid_root(Xodb_file.Tid_search);
+		if (search_db == null) {
+			search_db = db_mgr.Fsys_mgr().Make(Xodb_file.Tid_search);
+			created = true;
+		}
 		provider = search_db.Provider();
+		if (created) {
+			Xodb_search_title_word_tbl.Create_table(provider);
+			Xodb_search_title_page_tbl.Create_table(provider);
+		}
 		provider.Txn_mgr().Txn_bgn_if_none();
-		Xodb_search_title_word_tbl.Create_table(provider);
-		Xodb_search_title_page_tbl.Create_table(provider);
 		stmt_word = Xodb_search_title_word_tbl.Insert_stmt(provider);
 		stmt_page = Xodb_search_title_page_tbl.Insert_stmt(provider);
 	}	private Db_provider provider; private int search_id = 0; private Db_stmt stmt_word, stmt_page;

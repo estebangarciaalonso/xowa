@@ -416,6 +416,13 @@ public class Xop_lnki_wkr_tst {
 			));
 		fxt.App().Url_alias_mgr().Clear();
 	}
+	@Test  public void Xwiki_anchor() {
+		Reg_xwiki_alias("test", "test.wikimedia.org");
+		fxt.tst_Parse_page_wiki_str
+			(	"[[test:A#b]]", String_.Concat_lines_nl_skipLast
+			(	"<a href=\"/site/test.wikimedia.org/wiki/A#b\">test:A#b</a>"
+			));
+	}
 	@Test  public void Xwiki_empty() {
 		Reg_xwiki_alias("test", "test.wikimedia.org");
 		fxt.tst_Parse_page_wiki_str

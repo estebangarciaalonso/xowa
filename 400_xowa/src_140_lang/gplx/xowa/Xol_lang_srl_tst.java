@@ -175,7 +175,7 @@ public class Xol_lang_srl_tst {
 			,	";"
 			);
 		fxt.Invk(raw);
-		fxt.Tst_num_fmt("1234,56", "1.234,56");
+		fxt.Tst_num_fmt("1234,56", "1.234.56"); // NOTE: dot is repeated; confirmed with dewiki and {{formatnum:1234,56}}
 		fxt.Run_save_num_fmt(fxt.Lang().Num_fmt_mgr(), Xol_lang.Invk_keywords, raw);
 	}
 	@Test  public void Num_fmt_apos() {	// PURPOSE:de.ch has apos which breaks gfs

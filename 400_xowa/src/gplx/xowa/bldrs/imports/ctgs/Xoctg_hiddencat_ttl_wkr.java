@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.imports.ctgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.imports.*;
 import gplx.ios.*;
 public class Xoctg_hiddencat_ttl_wkr extends Xob_itm_dump_base implements Xob_cmd, GfoInvkAble {
-	public Xoctg_hiddencat_ttl_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki); this.make_fil_len = Io_mgr.Len_mb;} private Xob_sql_join_wkr_ctg_hidden join_wkr;
+	public Xoctg_hiddencat_ttl_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki); this.make_fil_len = Io_mgr.Len_mb;} private Xob_sql_join_wkr_ctg_hidden join_wkr;
 	public String Cmd_key() {return KEY;} public static final String KEY = "ctg.hiddencat_ttl";
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_bgn(Xob_bldr bldr) {

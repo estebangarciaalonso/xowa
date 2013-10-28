@@ -281,8 +281,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		page.Wiki().ParsePage_root(page, true);			// refresh html
 		if (page.Page_ttl().Ns().Id_tmpl()) {	// clear cache (if template)
 			app.Tmpl_result_cache().Clear();	
-			page.Wiki().Tmpl_regy().Clear();
-			page.Wiki().Page_cache().Clear();
+			page.Wiki().Cache_mgr().Free_mem_all();
 		}
 		if (!draft) {
 			page.Data_preview_(ByteAry_.Empty);
@@ -333,7 +332,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		byte[] new_htm = tmp_bfr.Mkr_rls().XtoAryAndClear();
 		if (page.Page_ttl().Ns().Id_tmpl()) {	// clear cache (if template)
 			app.Tmpl_result_cache().Clear();	
-			wiki.Tmpl_regy().Clear();
+			wiki.Cache_mgr().Defn_cache().Free_mem_all();
 		}
 		new_page.Data_preview_(new_htm);
 		page = new_page;

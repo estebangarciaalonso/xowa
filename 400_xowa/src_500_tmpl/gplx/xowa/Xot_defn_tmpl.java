@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 public class Xot_defn_tmpl implements Xot_defn {
 	public byte Defn_tid() {return Xot_defn_.Tid_tmpl;}
 	public boolean Defn_require_colon_arg() {return false;}
-	public int CacheSize() {return data_raw.length;}
+	public int Cache_size() {return data_raw.length;}
 	public byte[] Name() {return name;} private byte[] name;
 	public byte[] Data_raw() {return data_raw;} private byte[] data_raw;
 	public Xop_root_tkn Root() {return root;} private Xop_root_tkn root;

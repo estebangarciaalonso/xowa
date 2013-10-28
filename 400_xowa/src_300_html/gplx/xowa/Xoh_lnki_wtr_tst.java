@@ -286,6 +286,50 @@ public class Xoh_lnki_wtr_tst {
 		);
 		fxt.Hctx().Lnki_title_(false);
 	}
+	@Test  public void Alt_ignore_apos() {// PURPOSE: alt should ignore apos; EX: [[File:A.png|''A'']] should have alt of A; DATE:2013-10-25
+		fxt.Hctx().Lnki_title_(true);
+		fxt.tst_Parse_page_all_str
+			(	"[[File:A.png|''b'']]"
+			,	"<a href=\"/wiki/File:A.png\" class=\"image\" title=\"b\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"b\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
+			);
+		fxt.Hctx().Lnki_title_(false);
+	}
+	@Test  public void Alt_ignore_lnke() {// PURPOSE: alt should ignore lnke
+		fxt.Hctx().Lnki_title_(true);
+		fxt.tst_Parse_page_all_str
+			(	"[[File:A.png|b[http://c.org d] e]]"
+			,	"<a href=\"/wiki/File:A.png\" class=\"image\" title=\"bd e\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"bd e\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
+			);
+		fxt.Hctx().Lnki_title_(false);
+	}
+	@Test  public void Alt_ignore_list() {// PURPOSE: alt should ignore list
+		fxt.Hctx().Lnki_title_(true);
+		fxt.tst_Parse_page_all_str
+		(	"[[File:A.png|b\n*c]]"
+		,	"<a href=\"/wiki/File:A.png\" class=\"image\" title=\"bc\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"b*c\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
+		);
+		fxt.Hctx().Lnki_title_(false);
+	}
+	@Test  public void Alt_ignore_tblw() {// PURPOSE: alt should ignore tblw
+		fxt.Hctx().Lnki_title_(true);
+		fxt.tst_Parse_page_all_str
+			(	"[[File:A.png|\n{|\n|-\n|b\n|}\n]]"
+			,	"<a href=\"/wiki/File:A.png\" class=\"image\" title=\"b&#10;\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"   b \" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
+			);
+		fxt.Hctx().Lnki_title_(false);
+	}
+	@Test  public void Alt_ignore_para() {// PURPOSE: alt should ignore para
+		fxt.Hctx().Lnki_title_(true);
+		fxt.Ctx().Para().Enabled_y_();
+		fxt.tst_Parse_page_all_str
+			(	"[[File:A.png|b\nc]]"
+			,	String_.Concat_lines_nl
+			(	"<p><a href=\"/wiki/File:A.png\" class=\"image\" title=\"b&#10;c\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"b c\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
+			,	"</p>"
+			));
+		fxt.Ctx().Para().Enabled_n_();
+		fxt.Hctx().Lnki_title_(false);
+	}
 	@Test  public void Lnki_empty_alt_is_omitted() {// PURPOSE: empty alt should be ignored; DATE:2013-07-30
 		fxt.Hctx().Lnki_title_(true);
 		fxt.tst_Parse_page_all_str

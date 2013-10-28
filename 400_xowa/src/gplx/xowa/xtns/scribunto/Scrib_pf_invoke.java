@@ -17,11 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 public class Scrib_pf_invoke extends Pf_func_base {
+	public static Scrib_pf_invoke_wkr Invoke_wkr = null;
 	@Override public int Id() {return Xol_kwd_grp_.Id_invoke;}
 	@Override public Pf_func New(int id, byte[] name) {return new Scrib_pf_invoke().Name_(name);}
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {// {{#invoke:mod_name|prc_name|prc_args...}}
 		Xow_wiki wiki = ctx.Wiki();
 		byte[] mod_name = Eval_argx(ctx, src, caller, self);
+		int args_len = self.Args_len();
+		byte[] fnc_name = Pf_func_.EvalArgOr(ctx, src, caller, self, args_len, 0, null);
+		long invoke_time_bgn = 0;
+		if (Invoke_wkr != null) {
+			invoke_time_bgn = Env_.TickCount();
+			if (!Invoke_wkr.Eval_bgn(ctx.Page(), mod_name, fnc_name)) return;
+		}
 		if (ByteAry_.Len_eq_0(mod_name)) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;}		// {{#invoke:}}
 		Scrib_engine engine = Scrib_engine.Engine();
 		if (engine == null) {
@@ -34,18 +42,20 @@ public class Scrib_pf_invoke extends Pf_func_base {
 			Xow_ns module_ns = wiki.Ns_mgr().Get_by_id(Ns_id_module);
 			byte[] mod_ttl_bry = tmp_bfr.Add(module_ns.Name_db_w_colon()).Add(mod_name).Mkr_rls().XtoAryAndClear();
 			Xoa_ttl mod_ttl = Xoa_ttl.parse_(wiki, mod_ttl_bry);
-			Xoa_page mod_page = wiki.Data_mgr().Get_page(mod_ttl, false);
-			if (mod_page.Missing()) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;}		// {{#invoke:missing_mod}}
-			mod_raw = mod_page.Data_raw();
+			mod_raw = wiki.Cache_mgr().Page_cache().Get_or_fetch(mod_ttl);
+			if (mod_raw == gplx.xowa.wikis.caches.Xow_page_cache.Null) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;}		// {{#invoke:missing_mod}}
 		}
 		else
 			mod_raw = mod.Text_bry();
 
-		int args_len = self.Args_len();
-		byte[] fnc_name = Pf_func_.EvalArgOr(ctx, src, caller, self, args_len, 0, null);
 		if (ByteAry_.Len_eq_0(fnc_name)) {Error(bfr, wiki.Msg_mgr(), Err_fnc_missing); return;}		// {{#invoke:Module:Mod_0|missing_fnc}}
 		if (!engine.Enabled()) {bfr.Add_mid(src, self.Src_bgn(), self.Src_end()); return;}
-		try {engine.Invoke(wiki, src, caller, self, bfr, mod_name, mod_raw, fnc_name);}
+		try {
+			engine.Invoke(wiki, src, caller, self, bfr, mod_name, mod_raw, fnc_name);
+			if (Invoke_wkr != null) {
+				Invoke_wkr.Eval_end(ctx.Page(), mod_name, fnc_name, invoke_time_bgn);
+			}
+		}
 		catch (Exception e) {
 			bfr.Add_mid(src, self.Src_bgn(), self.Src_end());
 			bfr.Add(Xoh_consts.Comm_bgn).Add_str(Err_.Message_gplx_brief(e)).Add(Xoh_consts.Comm_end);

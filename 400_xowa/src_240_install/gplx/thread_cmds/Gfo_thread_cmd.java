@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.thread_cmds; import gplx.*;
 public interface Gfo_thread_cmd extends GfoInvkAble {
-	void Cmd_init();
+	void Cmd_ctor();
 	String Async_key();
 	int Async_sleep_interval();
 	boolean Async_prog_enabled(); 

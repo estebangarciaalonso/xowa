@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.ios.*;
 public class Xob_page_txt extends Xob_itm_dump_base implements Xobd_wkr, GfoInvkAble {
-	public Xob_page_txt(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xob_page_txt(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Wkr_key() {return KEY;} public static final String KEY = "core.make_page";
 	public void Wkr_ini(Xob_bldr bldr) {}
 	public void Wkr_bgn(Xob_bldr bldr) {

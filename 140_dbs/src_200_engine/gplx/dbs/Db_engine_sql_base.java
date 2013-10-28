@@ -58,7 +58,8 @@ abstract class Db_engine_sql_base implements Db_engine, RlsAble {
 	public Db_stmt New_db_stmt(Db_provider provider, Db_qry qry) {return new Db_stmt_cmd(provider, qry);}
 		public Object New_db_cmd(String sql) {
 		try {return connection.prepareStatement(sql);}
-		catch (Exception e) {throw Err_.err_(e, "failed to prepare sql; sql={0}", sql);}
+		catch (Exception e) {
+			throw Err_.err_(e, "failed to prepare sql; sql={0}", sql);}
 	}
 	public void Connect() {
 		connection = NewDbCon();

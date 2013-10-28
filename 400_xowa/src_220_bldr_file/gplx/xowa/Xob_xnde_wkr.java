@@ -21,7 +21,7 @@ public interface Xob_xnde_wkr {
 	void Wkr_run(Xop_ctx ctx, Xop_xnde_tkn xnde);
 }
 class Xobc_xnde_math_dump extends Xob_itm_dump_base implements Xob_xnde_wkr {	// note: similar to img_dump, except for Wkr_run
-	public Xobc_xnde_math_dump(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki); this.make_fil_len = 100 * Io_mgr.Len_kb;}
+	public Xobc_xnde_math_dump(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki); this.make_fil_len = 100 * Io_mgr.Len_kb;}
 	public static final String KEY = "math.text";
 	public Io_url_gen Make_url_gen() {return make_url_gen;} public Xobc_xnde_math_dump Make_url_gen_(Io_url_gen v) {make_url_gen = v; return this;} Io_url_gen make_url_gen;
 	public void Wkr_bgn(Xob_bldr bldr) {

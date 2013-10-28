@@ -28,7 +28,7 @@ public abstract class Xob_search_base extends Xob_itm_dump_base implements Xobd_
 		tmp_wtr_mgr = new Xob_tmp_wtr_mgr(new Xob_tmp_wtr_wkr__ttl(temp_dir, dump_fil_len));
 	}	private Xob_tmp_wtr_mgr tmp_wtr_mgr;
 	public void Wkr_run(Xodb_page page) {
-		if (page.Ns_id() != Xow_ns_.Id_main) return; // limit to main ns for now
+//			if (page.Ns_id() != Xow_ns_.Id_main) return; // limit to main ns for now
 		byte[] ttl = page.Ttl_wo_ns();
 		byte[][] words = Split(lang, list, dump_bfr, ttl);
 		Xob_tmp_wtr wtr = tmp_wtr_mgr.Get_or_new(page.Ns());

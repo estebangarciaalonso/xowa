@@ -29,8 +29,9 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 		if		(anch_bgn != -1) end = anch_bgn - 1;
 		return ByteAry_.Mid(full_txt, bgn, end);
 	}
-	public byte[] Full_txt_raw()	{return full_txt;} private byte[] full_txt = ByteAry_.Empty;
-	public byte[] Page_txt()		{return ByteAry_.Mid(full_txt, page_bgn, anch_bgn == -1 ? full_txt.length : anch_bgn - 1);}
+	public byte[] Full_txt_raw()		{return full_txt;} private byte[] full_txt = ByteAry_.Empty;
+	public byte[] Page_txt_w_anchor()	{return ByteAry_.Mid(full_txt, page_bgn, qarg_bgn == -1 ? full_txt.length : qarg_bgn - 1);}
+	public byte[] Page_txt()			{return ByteAry_.Mid(full_txt, page_bgn, anch_bgn == -1 ? full_txt.length : anch_bgn - 1);}
 	public byte[] Page_db() {
 		byte[] rv = this.Page_txt();
 		ByteAry_.Replace_reuse(rv, Byte_ascii.Space, Byte_ascii.Underline);

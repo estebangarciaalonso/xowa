@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.langs.*;
 public class Xot_invk_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
 	public void Page_bgn(Xop_ctx ctx) {this.ctx = ctx; this.tkn_mkr = ctx.Tkn_mkr(); this.root = ctx.Root(); this.src = ctx.Src(); this.srcLen = src.length;} private Xop_ctx ctx; Xop_tkn_mkr tkn_mkr; Xop_root_tkn root; byte[] src; int srcLen;
@@ -59,9 +60,9 @@ public class Xot_invk_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 
 		if (key_tkn.Itm_static() != Bool_.Y_byte) return;	// dynamic tkn; can't identify func/name
 		int colon_pos = -1, txt_bgn = key_tkn.Dat_bgn(), txt_end = key_tkn.Dat_end();
-		Xot_func_regy_finder finder = ctx.Wiki().Lang().Func_regy().FindDefn(src, txt_bgn, txt_end);
+		Xol_func_name_itm finder = ctx.Wiki().Lang().Func_regy().Find_defn(src, txt_bgn, txt_end);
 		Xot_defn finder_func = finder.Func();
-		byte finder_typeId = finder.TypeId();
+		byte finder_typeId = finder.Tid();
 		switch (finder_typeId) {
 			case Xot_defn_.Tid_func:				// func
 				colon_pos = finder.Colon_pos();

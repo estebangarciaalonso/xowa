@@ -50,7 +50,7 @@ public class Xoi_cmd_mgr implements GfoInvkAble {
 		for (int i = 0; i < cmds_len - 1; i++) {
 			Gfo_thread_cmd cur_cmd = (Gfo_thread_cmd)cmds.FetchAt(i);
 			Gfo_thread_cmd nxt_cmd = (Gfo_thread_cmd)cmds.FetchAt(i + 1);
-			cur_cmd.Cmd_init();
+			cur_cmd.Cmd_ctor();
 			cur_cmd.Async_next_cmd_(nxt_cmd);
 		}
 		Gfo_thread_cmd cmd = (Gfo_thread_cmd)cmds.FetchAt(0);

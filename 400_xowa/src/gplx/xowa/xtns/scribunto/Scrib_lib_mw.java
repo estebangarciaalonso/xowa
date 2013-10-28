@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.xowa.langs.*;
 class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 	public Scrib_lib_mw(Scrib_engine engine) {this.engine = engine; this.interpreter = engine.Interpreter(); this.fsys_mgr = engine.Fsys_mgr();} Scrib_engine engine; Scrib_interpreter interpreter; Scrib_fsys_mgr fsys_mgr;
 	public Scrib_mod Mod() {return mod;} public void Mod_(Scrib_mod v) {this.mod = v;} private Scrib_mod mod;
@@ -184,7 +185,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		ByteAryRef fnc_name_ref = ByteAryRef.new_(fnc_name);
 		KeyVal[] args = CallParserFunction_parse_args(cur_wiki.App().Utl_num_parser(), argx_ref, fnc_name_ref, values);
 		Xot_invk_mock frame = Xot_invk_mock.new_(0, args);
-		Xot_func_regy_finder finder = cur_wiki.Lang().Func_regy().FindDefn(fnc_name, 0, fnc_name_len);
+		Xol_func_name_itm finder = cur_wiki.Lang().Func_regy().Find_defn(fnc_name, 0, fnc_name_len);
 		Xot_defn defn = finder.Func();
 		if (defn == Xot_defn_.Null) throw Err_.new_fmt_("callParserFunction: function \"{0}\" was not found", String_.new_utf8_(fnc_name));
 		ByteAryBfr bfr = cur_wiki.Utl_bry_bfr_mkr().Get_k004();

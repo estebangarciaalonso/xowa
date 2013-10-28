@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.ios.*; import gplx.xowa.bldrs.*; 
 public class Xobc_img_prep_xfer extends Xob_itm_basic_base implements Xob_cmd, GfoInvkAble {
-	public Xobc_img_prep_xfer(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}		
+	public Xobc_img_prep_xfer(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}		
 	public String Cmd_key() {return KEY;} public static final String KEY = "img.prep_xfer";
 	public Io_url Src_fil() {return src_fil;} public Xobc_img_prep_xfer Src_fil_(Io_url v) {src_fil = v; return this;} Io_url src_fil;
 	public Io_url Temp_dir() {return temp_dir;}

@@ -23,7 +23,7 @@ class Io_sort_filCmd_reg implements Io_sort_filCmd { // 123|bgn|end|1
 	public void Bfr_add(Io_line_rdr stream) {
 		++itm_count;
 		int key_bgn = stream.Key_pos_bgn(), key_end = stream.Key_pos_end();
-		ByteAry_.Copy_pos(stream.Bfr(), key_bgn, key_end, prv_key, 0); prv_key_len = key_end - key_bgn; 
+		ByteAry_.Copy_by_pos(stream.Bfr(), key_bgn, key_end, prv_key, 0); prv_key_len = key_end - key_bgn; 
 	}	byte[] prv_key = new byte[1024]; int prv_key_len = 0;
 	public void Fil_bgn(Io_line_rdr stream) {
 		bfr.Add_int_variable(fil_idx++).Add_byte(Byte_ascii.Pipe);

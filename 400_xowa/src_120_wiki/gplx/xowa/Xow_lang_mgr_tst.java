@@ -69,4 +69,17 @@ public class Xow_lang_mgr_tst {
 			,	"</div>"
 			));
 	}
+	@Test  public void Anchor() {// PURPOSE: A#b was not showing anchor "#b"; DATE:2013-10-23
+		fxt.tst("[[simple:A#b]]", String_.Concat_lines_nl_skipLast
+			(	"<div id=\"xowa-lang\">"
+			,	"  <h5>In other languages</h5>"
+			,	"  <h4>grp1</h4>"
+			,	"  <table style='width: 100%;'>"
+			,	"    <tr>"
+			,	"      <td style='width: 10%; padding-bottom: 5px;'>Simple</td><td style='width: 20%; padding-bottom: 5px;'><a hreflang=\"simple\" title=\"A#b\" href=\"/site/simple.wikipedia.org/wiki/A#b\">A#b</a></td><td style='width: 3%; padding-bottom: 5px;'></td>"
+			,	"    </tr>"
+			,	"  </table>"
+			,	"</div>"
+			));
+	}
 }

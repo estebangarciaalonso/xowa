@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 public interface Xot_defn extends RlsAble {
 	byte Defn_tid();
 	byte[] Name();
-	int CacheSize();
+	int Cache_size();
 	boolean Defn_require_colon_arg();
 	Xot_defn Clone(int id, byte[] name);
 }
@@ -28,7 +28,7 @@ class Xot_defn_null implements Xot_defn {
 	public boolean Defn_require_colon_arg() {return false;}
 	public byte[] Name() {return ByteAry_.Empty;}
 	public Xot_defn Clone(int id, byte[] name) {return this;}
-	public int CacheSize() {return 0;}
+	public int Cache_size() {return 0;}
 	public void Rls() {}
 	public static final Xot_defn_null _ = new Xot_defn_null(); Xot_defn_null() {}
 }
@@ -39,5 +39,5 @@ class Xot_defn_subst implements Xot_defn {
 	public Xot_defn Clone(int id, byte[] name) {return new Xot_defn_subst(tid, name);}
 	public boolean Defn_require_colon_arg() {return true;}
 	public void Rls() {name = null;}
-	public int CacheSize() {return 1024;}	// arbitrary size
+	public int Cache_size() {return 1024;}	// arbitrary size
 }

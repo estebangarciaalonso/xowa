@@ -50,11 +50,23 @@ class Xosrh_html_mgr implements GfoInvkAble {
 		if (itms_len == 0) itms_bgn = 0;
 		byte[] search_results_header = wiki.Msg_mgr().Val_by_id_args(Xol_msg_itm_.Id_search_results_header, num_fmt_mgr.Fmt(itms_bgn), num_fmt_mgr.Fmt(core.Page_mgr().Itms_end()), num_fmt_mgr.Fmt(grp.Itms_total()), search_bry, pages_len);
 		html_all_bgn.Bld_bfr_many(bfr, search_results_header, search_bry, xowa_idx_bwd, xowa_idx_fwd);
+		Xow_ns_mgr ns_mgr = wiki.Ns_mgr();
+		ByteAryBfr tmp_ttl_bfr = core.Wiki().App().Utl_bry_bfr_mkr().Get_b512();
 		for (int i = 0; i < itms_len; i++) {
 			Xodb_page itm = grp.Itms_get_at(i);
-			html_itm.Bld_bfr_many(bfr, Xoa_ttl.Replace_unders(itm.Ttl_wo_ns()), itm.Text_len());
+			byte[] itm_ttl = Xoa_ttl.Replace_unders(itm.Ttl_wo_ns());
+			int itm_ns_id = itm.Ns_id();
+			if (itm_ns_id != Xow_ns_.Id_main) {
+				Xow_ns itm_ns = ns_mgr.Get_by_id(itm_ns_id);
+				tmp_ttl_bfr.Add_byte(Byte_ascii.Colon)	// NOTE: need to add : to literalize ns; EX: [[Category:A]] will get thrown into category list; [[:Category:A]] will print
+					.Add(itm_ns.Name_db_w_colon())
+					.Add(itm_ttl);
+				itm_ttl = tmp_ttl_bfr.XtoAryAndClear();
+			}
+			html_itm.Bld_bfr_many(bfr, itm_ttl, itm.Text_len());
 		}
 		html_all_end.Bld_bfr_many(bfr, search_bry, xowa_idx_bwd, xowa_idx_fwd);
+		tmp_ttl_bfr.Mkr_rls();
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_all_bgn_))				html_all_bgn.Fmt_(m.ReadBry("v"));

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xol_case_mgr implements GfoInvkAble {
-	ByteAryBfr tmp_bfr = ByteAryBfr.new_(); ByteTrieMgr_slim upper_trie = ByteTrieMgr_slim.cs_(), lower_trie = ByteTrieMgr_slim.cs_(); Xol_case_itm[] itms;
+	ByteAryBfr tmp_bfr = ByteAryBfr.new_(); ByteTrieMgr_fast upper_trie = ByteTrieMgr_fast.cs_(), lower_trie = ByteTrieMgr_fast.cs_(); Xol_case_itm[] itms;
 	public void Clear() {upper_trie.Clear(); lower_trie.Clear();}
 	public void Add_bulk(byte[] raw) {Add_bulk(Xol_case_itm_.parse_xo_(raw));}
 	public Xol_case_mgr Add_bulk(Xol_case_itm[] ary) {
@@ -45,7 +45,7 @@ public class Xol_case_mgr implements GfoInvkAble {
 	public byte[] Case_reuse(boolean upper, byte[] src, int bgn, int end) {
 		int pos = bgn;
 		tmp_bfr.Clear();
-		ByteTrieMgr_slim trie = upper ? upper_trie : lower_trie;
+		ByteTrieMgr_fast trie = upper ? upper_trie : lower_trie;
 		while (true) {
 			if (pos >= end) break;
 			byte b = src[pos];
@@ -69,7 +69,7 @@ public class Xol_case_mgr implements GfoInvkAble {
 	public byte[] Case_build(boolean upper, byte[] src, int bgn, int end) {
 		int pos = bgn;
 		tmp_bfr.Clear();
-		ByteTrieMgr_slim trie = upper ? upper_trie : lower_trie;
+		ByteTrieMgr_fast trie = upper ? upper_trie : lower_trie;
 		while (true) {
 			if (pos >= end) break;
 			byte b = src[pos];

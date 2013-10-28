@@ -131,6 +131,7 @@ public class String_ implements GfoInvkAble {
 	}
 	public static boolean EqNot(String lhs, String rhs) {return !Object_.Eq(lhs, rhs);}
 	public static boolean EqEmpty(String lhs, String rhs) {return lhs.equals("");} 
+	public static boolean Len_gt_0(String s) {return s != null && s.length() >  0;}	
 	public static boolean Len_eq_0(String s) {return s == null || s.length() == 0;}	
 	public static String IfNullOrEmpty(String s, String or) {return s == null || s.length() == 0 ? or : s;}	
 	public static int Compare(String lhs, String rhs) {return lhs.compareTo(rhs);} // NOTE: Compare instead of compareTo b/c javafy lowercases compareTo

@@ -20,7 +20,7 @@ import gplx.thread_cmds.*;
 class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 	public Xoi_cmd_wiki_import(Xoi_setup_mgr install_mgr, String wiki_key, String wiki_date, String dump_type) {this.install_mgr = install_mgr; this.Owner_(install_mgr); this.wiki_key = wiki_key; this.wiki_date = wiki_date; this.dump_type = dump_type;} private Xoi_setup_mgr install_mgr; String wiki_key, wiki_date, dump_type;
 	public static final String KEY = "wiki.import";
-	public void Cmd_init() {}
+	public void Cmd_ctor() {}
 	public String Async_key() {return KEY;}
 	public int Async_sleep_interval()	{return Gfo_thread_cmd_.Async_sleep_interval_1_second;}
 	public boolean Async_prog_enabled()	{return false;}

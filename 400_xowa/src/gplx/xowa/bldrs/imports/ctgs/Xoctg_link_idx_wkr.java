@@ -19,7 +19,7 @@ package gplx.xowa.bldrs.imports.ctgs; import gplx.*; import gplx.xowa.*; import 
 import gplx.ios.*; import gplx.xowa.ctgs.*;
 public class Xoctg_link_idx_wkr extends Xob_idx_base {	// NOTE: similar functionality to Xob_make_cmd_site, but more complicated due to p,f,s; not inheriting
 	Io_url src_link_dir; int make_fil_max = Int_.MinValue;
-	public Xoctg_link_idx_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_init(bldr, wiki);}
+	public Xoctg_link_idx_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	@Override public String Cmd_key() {return KEY;} public static final String KEY = "ctg.link_idx";
 	@Override public void Cmd_bgn_hook() {
 		this.fld_rdr = this.Fld_rdr();

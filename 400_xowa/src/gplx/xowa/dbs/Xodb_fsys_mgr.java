@@ -38,8 +38,8 @@ public class Xodb_fsys_mgr {
 		boolean category_provider_core_null = true;
 		for (int i = 0; i < files_ary_len; i++) {
 			Xodb_file file = files_ary[i];
-			Io_url url = trg_dir.GenSubFil(file.Url());	// relative name only
-			file.Connect_(Db_connect_.sqlite_(url));
+			Io_url url = trg_dir.GenSubFil(file.Url_rel());	// relative name only
+			file.Connect_(Db_connect_.sqlite_(url)).Url_(url);
 			switch (file.Tid()) {
 				case Xodb_file.Tid_core					: file.Provider_(p); Init_by_tid_core(file); break;
 				case Xodb_file.Tid_category				: if (category_provider_core_null) {Init_by_tid_category(file); category_provider_core_null = false;}break;
@@ -84,7 +84,7 @@ public class Xodb_fsys_mgr {
 	public Xodb_file Get_or_make(byte file_tid, int file_idx) {return file_idx < files_ary_len ? files_ary[file_idx] : Make(file_tid);}
 	public Io_url Get_url(byte file_tid) {
 		Xodb_file file = Get_tid_root(file_tid);
-		return trg_dir.GenSubFil(file.Url());
+		return trg_dir.GenSubFil(file.Url_rel());
 	}
 	public Xodb_file Get_tid_root(byte file_tid) {
 		for (int i = 0; i < files_ary_len; i++) {

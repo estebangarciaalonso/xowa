@@ -21,7 +21,7 @@ public abstract class Pf_func_base implements Pf_func {
 	public byte[] Name() {return name;} public Pf_func_base Name_(byte[] v) {name = v; name_len = v.length; return this;} private byte[] name = ByteAry_.Empty; int name_len = 0;
 	@gplx.Virtual public boolean Func_require_colon_arg() {return false;}
 	public boolean Defn_require_colon_arg() {return this.Func_require_colon_arg();}
-	public int CacheSize() {return 1024;}	// arbitrary size
+	public int Cache_size() {return 1024;}	// arbitrary size
 	public abstract int Id();
 	public void Rls() {name = null; argx_dat = null;}
 	public abstract Pf_func New(int id, byte[] name);

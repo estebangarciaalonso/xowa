@@ -163,6 +163,9 @@ public class Xop_lnki_wkr_tst {
 		fxt.tst_Parse_page_wiki("[[]]", fxt.tkn_txt_(0, 4));
 		fxt.tst_Parse_page_wiki("[[ ]]", fxt.tkn_txt_(0, 5));
 	}
+	@Test  public void Exc_nl_with_apos() {	// PURPOSE: apos, lnki and nl will cause parser to fail; DATE:2013-10-31
+		fxt.tst_Parse_page_all_str("''[[\n]]", "<i>[[\n]]</i>");
+	}
 	@Test  public void Exc_pipeOnly() {
 		fxt.tst_Parse_page_wiki("[[|]]", fxt.tkn_txt_(0, 5));
 	}

@@ -49,7 +49,8 @@ public class Xob_xfer_temp_cmd_orig extends Xob_itm_basic_base implements Xob_cm
 				lnki_ext = Xof_ext_.Id_ogv;							// some .ogg files are "VIDEO"; manually override lnki_ext type
 			int orig_size = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_size, -1);
 			if (orig_size > ext_maxs[lnki_ext]) continue;
-			Xob_xfer_temp_tbl.Insert(trg_stmt, lnki_id, orig_repo, orig_page_id, join_ttl, redirect_src, lnki_ext, Xop_lnki_type.Id_none, orig_media_type
+			int lnki_page_id = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_page_id);
+			Xob_xfer_temp_tbl.Insert(trg_stmt, lnki_id, lnki_page_id, orig_repo, orig_page_id, join_ttl, redirect_src, lnki_ext, Xop_lnki_type.Id_none, orig_media_type
 			, Bool_.Y									// orig is y
 			, orig_w, orig_h
 			, orig_w, orig_h							// file_w, file_h is same as orig_w,orig_h; i.e.: make same file_w as orig_w
@@ -78,6 +79,7 @@ public class Xob_xfer_temp_cmd_orig extends Xob_itm_basic_base implements Xob_cm
 	,   "        olr_lnki_id"
 	,	",       olr_lnki_ttl"
 	,	",       olr_lnki_ext"
+	,	",       olr_lnki_page_id"
 	,	",       oor_orig_repo"
 	,	",       oor_orig_page_id"
 	,	",       oor_orig_join_id"

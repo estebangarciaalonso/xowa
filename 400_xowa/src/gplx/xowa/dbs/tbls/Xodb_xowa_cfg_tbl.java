@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.dbs.tbls; import gplx.*; import gplx.xowa.*; import gplx.xowa.dbs.*;
 import gplx.dbs.*;
 public class Xodb_xowa_cfg_tbl {
-	public Xodb_xowa_cfg_tbl Provider_(Db_provider provider) {this.provider = provider; return this;} Db_provider provider;
+	public Db_provider Provider() {return provider;} public Xodb_xowa_cfg_tbl Provider_(Db_provider provider) {this.provider = provider; return this;} Db_provider provider;
 	private DataRdr Select(String grp) {
 		Db_qry qry = Db_qry_.select_cols_(Tbl_name, Db_crt_.eq_(Fld_cfg_grp, grp), Fld_cfg_key, Fld_cfg_val);
 		return provider.Exec_qry_as_rdr(qry);

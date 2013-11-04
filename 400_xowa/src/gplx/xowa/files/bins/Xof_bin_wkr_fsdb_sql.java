@@ -25,13 +25,13 @@ public class Xof_bin_wkr_fsdb_sql implements Xof_bin_wkr, GfoInvkAble {
 	public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsdb;}
 	public String Bin_wkr_key() {return key;} public void Bin_wkr_key_(String v) {key = v;} private String key;
 	public int Bin_bfr_len() {return bin_bfr_len;} public Xof_bin_wkr_fsdb_sql Bin_bfr_len_(int v) {bin_bfr_len = v; return this;} private int bin_bfr_len = 32;
-	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(Xof_fsdb_itm itm, boolean is_thumb, int w) {
+	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w) {
 		Bin_wkr_get_ids(itm, is_thumb, w, tmp_itm_id, tmp_bin_db_id, tmp_mnt_id);
 		int bin_db_id = tmp_bin_db_id.Val(); if (bin_db_id == -1) return gplx.ios.Io_stream_rdr_.Null;
 		Fsdb_db_bin_fil bin_db = fsdb_mgr.Bin_db_get(tmp_mnt_id.Val(), bin_db_id);
 		return bin_db.Get_as_rdr(tmp_itm_id.Val());
 	}
-	public boolean Bin_wkr_get_to_url(Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
+	public boolean Bin_wkr_get_to_url(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
 		if (bin_bfr == null) bin_bfr = new byte[bin_bfr_len];
 		Bin_wkr_get_ids(itm, is_thumb, w, tmp_itm_id, tmp_bin_db_id, tmp_mnt_id);
 		int bin_db_id = tmp_bin_db_id.Val(); if (bin_db_id == -1) return false;

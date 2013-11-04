@@ -55,7 +55,7 @@ class Xof_fsdb_mgr_utl {
 			if (fsdb_mgr.Qry_mgr().Find(exec_tid, itm)) {
 				Xof_repo_pair repo_pair = repo_mgr.Repos_get_by_wiki(itm.Orig_wiki());
 				byte orig_wiki = repo_pair.Id();
-				if (fsdb_mgr.Bin_mgr().Find_to_url_as_bool(exec_tid, itm)) {
+				if (fsdb_mgr.Bin_mgr().Find_to_url_as_bool(ListAdp_.Null, exec_tid, itm)) {
 					fsdb_mgr.Reg_insert(itm, orig_wiki, Xof_orig_wkr_.Tid_found_orig);
 					if (itm.Rslt_bin() != Xof_bin_wkr_.Tid_fsdb)
 						Fsdb_save(fsdb_mgr, itm);

@@ -54,6 +54,7 @@ public interface GfoMsg {
 	Io_url	ReadIoUrlOr(String k, Io_url url);
 	boolean	ReadYn(String k);
 	boolean	ReadYn_toggle(String k, boolean cur);
+	boolean	ReadYnOrY(String k);
 	byte	ReadByte(String k);
 	byte[]	ReadBry(String k);
 	byte[]	ReadBryOr(String k, byte[] or);

@@ -49,24 +49,25 @@ class Xob_dump_src_ttl implements Xob_parse_all_db {
 }
 class Xob_dump_src_id {
 	private Xodb_mgr_sql db_mgr; private byte redirect;
-	private String page_db_url; private int page_limit;
+	private String page_db_url; private int size_max;
 	private Db_stmt text_stmt; int cur_text_db_idx = -1;
-	public Xob_dump_src_id Init(Xow_wiki wiki, byte redirect, int page_limit) {
+	public Xob_dump_src_id Init(Xow_wiki wiki, byte redirect, int size_max) {
 		this.db_mgr = wiki.Db_mgr_as_sql(); this.redirect = redirect;
-		this.page_limit = page_limit;
+		this.size_max = size_max;
 		page_db_url = db_mgr.Fsys_mgr().Get_tid_root(Xodb_file.Tid_core).Url().Raw();
 		return this;
 	}
 	public void Get_pages(ListAdp list, int text_db_idx, int cur_ns, int prv_id) {
 		DataRdr rdr = DataRdr_.Null;
-		int page_count = 0;
+		int size_len = 0;
 		list.Clear();
 		try {
 			rdr = New_rdr(db_mgr, page_db_url, text_db_idx, cur_ns, prv_id, redirect);
 			while (rdr.MoveNextPeer()) {
 				Xodb_page page = New_page(db_mgr, cur_ns, rdr);
 				list.Add(page);
-				if (++page_count > page_limit)
+				size_len += page.Text_len();
+				if (size_len > size_max)
 					break;
 			}
 		}
@@ -81,10 +82,6 @@ class Xob_dump_src_id {
 			text_stmt = provider.Prepare(Db_qry_sql.rdr_(sql));
 		}
 		return text_stmt.Clear().Val_int_(prv_id).Val_int_(cur_ns).Exec_select();
-//			Xodb_file text_db = db_mgr.Fsys_mgr().Get_by_db_idx(text_db_idx);
-//			Db_provider provider = text_db.Provider();
-//			String sql = String_.Format(Sql_select, cur_ns, prv_id, New_rdr__redirect_clause(redirect));
-//			return provider.Exec_sql_as_rdr(sql);
 	}
 	private static Xodb_page New_page(Xodb_mgr_sql db_mgr, int ns_id, DataRdr rdr) {
 		Xodb_page rv = new Xodb_page();
@@ -108,11 +105,11 @@ class Xob_dump_src_id {
 	( "SELECT  p.page_id"
 	, ",       p.page_title"
 	, ",       t.old_text"
-	, "FROM    text t"
-	, "        JOIN oimg_page_dump p ON t.page_id = p.page_id"
-	, "WHERE   t.page_id > ?"
+	, "FROM    oimg_page_dump p"
+	, "        JOIN text t ON t.page_id = p.page_id"
+	, "WHERE   p.page_id > ?"
 	, "AND     p.page_namespace = ?{0}" 
-	, "ORDER BY t.page_id"
+	, "ORDER BY p.page_id"
 	);
 	private static final String
 	  Sql_select__redirect_y = "\nAND     p.page_is_redirect = 1"

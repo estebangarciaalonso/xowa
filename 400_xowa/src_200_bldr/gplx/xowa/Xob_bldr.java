@@ -60,6 +60,13 @@ public class Xob_bldr implements GfoInvkAble {
 			if (pause_at_end && !Env_.Mode_testing()) {ConsoleAdp._.ReadLine("press enter to continue");}
 		}	catch (Exception e) {throw Err_.err_(e, "error during build: ~{0}", Err_.Message_gplx(e));}
 	}	boolean pause_at_end = true;
+	private void Cancel() {
+		int cmd_mgr_len = cmd_mgr.Len();
+		for (int i = 0; i < cmd_mgr_len; i++) {
+			Xob_cmd cmd = cmd_mgr.Get_at(i);
+			cmd.Cmd_end();
+		}
+	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_pause_at_end_))			pause_at_end = m.ReadBoolOrTrue("val");
 		else if	(ctx.Match(k, Invk_cmds))					return cmd_mgr;
@@ -67,9 +74,12 @@ public class Xob_bldr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_dump_fil_len_)) 			dump_fil_len = gplx.ios.Io_size_.Load_int_(m);
 		else if	(ctx.Match(k, Invk_make_fil_len_)) 			make_fil_len = gplx.ios.Io_size_.Load_int_(m);
 		else if	(ctx.Match(k, Invk_run)) 					Run();
+		else if	(ctx.Match(k, Invk_cancel)) 				Cancel();
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
-	}	private static final String Invk_cmds = "cmds", Invk_pause_at_end_ = "pause_at_end_", Invk_sort_mem_len_ = "sort_mem_len_", Invk_dump_fil_len_ = "dump_fil_len_", Invk_make_fil_len_ = "make_fil_len_", Invk_run = "run";
+	}
+	private static final String Invk_cmds = "cmds", Invk_pause_at_end_ = "pause_at_end_", Invk_sort_mem_len_ = "sort_mem_len_", Invk_dump_fil_len_ = "dump_fil_len_", Invk_make_fil_len_ = "make_fil_len_", Invk_run = "run"
+	, Invk_cancel = "cancel";
 	static final String GRP_KEY = "xowa.bldr";
 }
 /*

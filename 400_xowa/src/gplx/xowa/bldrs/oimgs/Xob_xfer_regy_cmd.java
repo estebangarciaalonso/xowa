@@ -27,6 +27,7 @@ public class Xob_xfer_regy_cmd extends Xob_itm_basic_base implements Xob_cmd {
 		Xob_xfer_regy_tbl.Create_table(provider);
 		Xob_xfer_regy_tbl.Create_data(usr_dlg, provider);
 		Xob_xfer_regy_tbl.Create_index(usr_dlg, provider);
+		Xob_xfer_regy_log_tbl.Create_table(provider);
 		provider.Txn_mgr().Txn_end_all();
 	}
 	public void Cmd_end() {}

@@ -93,7 +93,7 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 		Add_alias(Xow_ns_.Id_file		, "Image");			// REF.MW: Setup.php; add "Image", "Image talk" for backward compatibility; note that MW hardcodes Image ns as well
 		Add_alias(Xow_ns_.Id_file_talk	, "Image_talk");
 		Add_alias(Xow_ns_.Id_project	, "Project");		// always add "Project" ns (EX: Wikipedia is name for en.wikipedia.org; not sure if MW hardcodes, but it is in messages
-		Add_alias(gplx.xowa.xtns.scribunto.Scrib_pf_invoke.Ns_id_module, "Module");		// always add "Module" ns; de.wikipedia.org has "Modul" defined in siteinfo.xml, but also uses Module
+		Add_alias(gplx.xowa.xtns.scribunto.Scrib_core_.Ns_id_module, "Module");		// always add "Module" ns; de.wikipedia.org has "Modul" defined in siteinfo.xml, but also uses Module
 		return this;
 
 	}

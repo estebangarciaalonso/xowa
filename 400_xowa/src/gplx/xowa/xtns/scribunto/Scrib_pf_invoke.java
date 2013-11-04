@@ -17,49 +17,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 public class Scrib_pf_invoke extends Pf_func_base {
-	public static Scrib_pf_invoke_wkr Invoke_wkr = null;
 	@Override public int Id() {return Xol_kwd_grp_.Id_invoke;}
 	@Override public Pf_func New(int id, byte[] name) {return new Scrib_pf_invoke().Name_(name);}
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {// {{#invoke:mod_name|prc_name|prc_args...}}
 		Xow_wiki wiki = ctx.Wiki();
 		byte[] mod_name = Eval_argx(ctx, src, caller, self);
+		if (ByteAry_.Len_eq_0(mod_name)) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;}		// EX: "{{#invoke:}}"
 		int args_len = self.Args_len();
 		byte[] fnc_name = Pf_func_.EvalArgOr(ctx, src, caller, self, args_len, 0, null);
-		long invoke_time_bgn = 0;
-		if (Invoke_wkr != null) {
-			invoke_time_bgn = Env_.TickCount();
-			if (!Invoke_wkr.Eval_bgn(ctx.Page(), mod_name, fnc_name)) return;
+		Scrib_pf_invoke_wkr invoke_wkr = ctx.Xtn__scribunto__invoke_wkr();
+		long log_time_bgn = 0;
+		if (invoke_wkr != null) {
+			log_time_bgn = Env_.TickCount();
+			if (!invoke_wkr.Eval_bgn(ctx.Page(), mod_name, fnc_name)) return;
 		}
-		if (ByteAry_.Len_eq_0(mod_name)) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;}		// {{#invoke:}}
 		Scrib_engine engine = Scrib_engine.Engine();
 		if (engine == null) {
-			engine = Scrib_engine.Engine_new_(ctx.App(), ctx).Init(); engine.When_page_changed(ctx.Page());
+			engine = Scrib_engine.Engine_new_(ctx.App(), ctx).Init();
+			engine.When_page_changed(ctx.Page());
 		}
-		Scrib_mod mod = engine.Mods_get(mod_name);
 		byte[] mod_raw = null;
+		Scrib_mod mod = engine.Mods_get(mod_name);
 		if (mod == null) {
-			ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
-			Xow_ns module_ns = wiki.Ns_mgr().Get_by_id(Ns_id_module);
-			byte[] mod_ttl_bry = tmp_bfr.Add(module_ns.Name_db_w_colon()).Add(mod_name).Mkr_rls().XtoAryAndClear();
-			Xoa_ttl mod_ttl = Xoa_ttl.parse_(wiki, mod_ttl_bry);
+			Xow_ns module_ns = wiki.Ns_mgr().Get_by_id(Scrib_core_.Ns_id_module);
+			Xoa_ttl mod_ttl = Xoa_ttl.parse_(wiki, ByteAry_.Add(module_ns.Name_db_w_colon(), mod_name));
 			mod_raw = wiki.Cache_mgr().Page_cache().Get_or_fetch(mod_ttl);
-			if (mod_raw == gplx.xowa.wikis.caches.Xow_page_cache.Null) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;}		// {{#invoke:missing_mod}}
+			if (mod_raw == gplx.xowa.wikis.caches.Xow_page_cache.Null) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;} // EX: "{{#invoke:missing_mod}}"
 		}
 		else
 			mod_raw = mod.Text_bry();
-
-		if (ByteAry_.Len_eq_0(fnc_name)) {Error(bfr, wiki.Msg_mgr(), Err_fnc_missing); return;}		// {{#invoke:Module:Mod_0|missing_fnc}}
+		if (ByteAry_.Len_eq_0(fnc_name)) {Error(bfr, wiki.Msg_mgr(), Err_fnc_missing); return;}		// EX:"{{#invoke:Module:Mod_0|missing_fnc}}"
 		if (!engine.Enabled()) {bfr.Add_mid(src, self.Src_bgn(), self.Src_end()); return;}
 		try {
 			engine.Invoke(wiki, src, caller, self, bfr, mod_name, mod_raw, fnc_name);
-			if (Invoke_wkr != null) {
-				Invoke_wkr.Eval_end(ctx.Page(), mod_name, fnc_name, invoke_time_bgn);
-			}
+			if (invoke_wkr != null)
+				invoke_wkr.Eval_end(ctx.Page(), mod_name, fnc_name, log_time_bgn);
 		}
 		catch (Exception e) {
 			bfr.Add_mid(src, self.Src_bgn(), self.Src_end());
 			bfr.Add(Xoh_consts.Comm_bgn).Add_str(Err_.Message_gplx_brief(e)).Add(Xoh_consts.Comm_end);
-			ctx.App().Usr_dlg().Warn_many(GRP_KEY, "invoke.fail", "invoke failed: ~{0} ~{1} ~{2}", String_.new_utf8_(ctx.Page().Page_ttl().Raw()), String_.new_utf8_(src, self.Src_bgn(), self.Src_end()), Err_.Message_gplx_brief(e));
+			ctx.App().Usr_dlg().Warn_many("", "", "invoke failed: ~{0} ~{1} ~{2}", String_.new_utf8_(ctx.Page().Page_ttl().Raw()), String_.new_utf8_(src, self.Src_bgn(), self.Src_end()), Err_.Message_gplx_brief(e));
 			Scrib_engine.Engine_invalidate();	// reset engine
 		}
 	}
@@ -69,8 +66,5 @@ public class Scrib_pf_invoke extends Pf_func_base {
 		byte[] script_error_msg = msg_mgr.Val_by_id(Xol_msg_itm_.Id_scribunto_parser_error);
 		fmtr.Bld_bfr_many(bfr, script_error_msg, error);
 	}
-	static final String GRP_KEY = "xowa.parser.xtn.invoke";
 	public static final String Err_mod_missing = "No such module", Err_fnc_missing = "The function you specified did not exist";
-	public static final int Ns_id_module = 828, Ns_id_module_talk = 829;
-	public static final String Ns_name_module = "Module", Ns_name_module_talk = "Module talk";
 }

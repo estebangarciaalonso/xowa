@@ -21,7 +21,7 @@ public class OrderedHash_ {
 	public static OrderedHash new_bry_()		{return new OrderedHash_bry();}
 }
 class OrderedHash_bry extends OrderedHash_base {
-	ByteAryRef lkp = ByteAryRef.null_();
+	private ByteAryRef lkp = ByteAryRef.null_();
 	@Override protected void Add_base(Object key, Object val)	{super.Add_base(ByteAryRef.new_((byte[])key), val);}
 	@Override protected void Del_base(Object key)				{super.Del_base(lkp.Val_((byte[])key));}
 	@Override protected boolean Has_base(Object key)				{return super.Has_base(lkp.Val_((byte[])key));}

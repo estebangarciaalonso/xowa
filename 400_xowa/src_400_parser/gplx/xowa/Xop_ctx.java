@@ -17,14 +17,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.gui.*; import gplx.xowa.xtns.lst.*;
+import gplx.xowa.xtns.scribunto.*;
+import gplx.xowa.xtns.wdatas.*;
 public class Xop_ctx {
 	Xop_ctx(Xow_wiki wiki) {
 		this.app = wiki.App(); this.msg_log = app.Msg_log();
 		this.wiki = wiki;
 		page = new Xoa_page(wiki, Xoa_ttl.parse_(wiki, Xoa_page.Bry_main_page));
 		wkrs = wkrs_(para, apos, xnde, list, lnki, hdr, amp, lnke, tblw, invk);
-		for (Xop_ctx_wkr wkr : wkrs) wkr.Ctor_ctx(this);			
-	}	private Xop_ctx_wkr[] wkrs = new Xop_ctx_wkr[] {}; Xop_ctx_wkr[] wkrs_(Xop_ctx_wkr... ary) {return ary;}
+		for (Xop_ctx_wkr wkr : wkrs) wkr.Ctor_ctx(this);
+	}
 	public Xoa_app				App()				{return app;} private Xoa_app app;
 	public Xow_wiki				Wiki()				{return wiki;} private Xow_wiki wiki;
 	public Xog_tab Tab() {return tab;} public Xop_ctx Tab_(Xog_tab v) {tab = v; return this;} private Xog_tab tab = new Xog_tab();
@@ -50,10 +52,13 @@ public class Xop_ctx {
 	public boolean					Ref_nested()		{return ref_nested;} public Xop_ctx Ref_nested_(boolean v) {ref_nested = v; return this;} private boolean ref_nested;
 	public Xot_defn_trace		Defn_trace()		{return defn_trace;} public Xop_ctx Defn_trace_(Xot_defn_trace v) {defn_trace = v; return this;} private Xot_defn_trace defn_trace = Xot_defn_trace_null._;
 	public byte					Parse_tid()			{return parse_tid;} public Xop_ctx Parse_tid_(byte v) {parse_tid = v; return this;} private byte parse_tid = Xop_parser_.Parse_tid_null;
-	public int					Cur_tkn_tid()		{return cur_tkn_tid;} public Xop_ctx Cur_tkn_tid_(int v) {cur_tkn_tid = v; return this;} private int cur_tkn_tid = Xop_tkn_itm_.Tid_null;
+	public byte					Cur_tkn_tid()		{return cur_tkn_tid;} public Xop_ctx Cur_tkn_tid_(byte v) {cur_tkn_tid = v; return this;} private byte cur_tkn_tid = Xop_tkn_itm_.Tid_null;
 	public boolean					Lxr_make()			{return lxr_make;} public Xop_ctx Lxr_make_(boolean v) {lxr_make = v; return this;} private boolean lxr_make = false;
 	public boolean Only_include_evaluate() {return only_include_evaluate;} public Xop_ctx Only_include_evaluate_(boolean v) {only_include_evaluate = v; return this;} private boolean only_include_evaluate;
 	public Xtn_lst_section_mgr	Lst_section_mgr() {if (lst_section_mgr == null) lst_section_mgr = new Xtn_lst_section_mgr(); return lst_section_mgr;} Xtn_lst_section_mgr lst_section_mgr;
+	public Scrib_pf_invoke_wkr Xtn__scribunto__invoke_wkr() {return app.Xtn_mgr().Xtn_scribunto().Invoke_wkr();} 
+	public Wdata_pf_property_wkr Xtn__wikidata__property_wkr() {return app.Wiki_mgr().Wdata_mgr().Property_wkr();} 
+	private Xop_ctx_wkr[] wkrs = new Xop_ctx_wkr[] {}; private Xop_ctx_wkr[] wkrs_(Xop_ctx_wkr... ary) {return ary;}
 	public int Tag_idx;
 	public Xop_ctx Clear() {
 		page.Clear();
@@ -64,7 +69,7 @@ public class Xop_ctx {
 		return this;
 	}
 	public void Page_bgn(Xop_root_tkn root, byte[] src) {
-		this.root = root; this.Msg_log().Clear(); cur_tkn_tid = -1;
+		this.root = root; this.Msg_log().Clear(); cur_tkn_tid = Xop_tkn_itm_.Tid_null;
 		this.src = src; src_len = src.length;
 		empty_ignored = false;
 		for (Xop_ctx_wkr wkr : wkrs) wkr.Page_bgn(this);
@@ -212,11 +217,11 @@ public class Xop_ctx {
 	}
 	public void Stack_pop_idx(int tilIdx) {
 		aryLen = tilIdx < 0 ? 0 : tilIdx;
-		cur_tkn_tid = aryLen == 0 ? -1 : ary[aryLen - 1].Tkn_tid();
+		cur_tkn_tid = aryLen == 0 ? Xop_tkn_itm_.Tid_null : ary[aryLen - 1].Tkn_tid();
 	}
 	public void Stack_pop_lnki() {	// used primarily by lnke to remove lnke from stack
 		--aryLen;
-		cur_tkn_tid = aryLen == 0 ? -1 : ary[aryLen - 1].Tkn_tid();
+		cur_tkn_tid = aryLen == 0 ? Xop_tkn_itm_.Tid_null : ary[aryLen - 1].Tkn_tid();
 	}
 	public void CloseOpenItms(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {
 		int stack_pos = -1, stack_len = ctx.Stack_len(); boolean stop = false;

@@ -80,4 +80,8 @@ public class Env_ {
 	public static String Env_prop(String key) {
 				return System.getProperty(key);
 			}	static final String Env_prop_key__user_language = "user.language";
+	public static void Term_add(GfoInvkAble invk, String cmd) {
+				ThreadAdp thread = ThreadAdp_.invk_(invk, cmd);
+		Runtime.getRuntime().addShutdownHook(thread.Under_thread());
+			}
 }

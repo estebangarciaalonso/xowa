@@ -15,11 +15,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
-import gplx.xowa.files.fsdb.*;
-public interface Xof_bin_wkr extends GfoInvkAble {
-	byte Bin_wkr_tid();
-	String Bin_wkr_key(); void Bin_wkr_key_(String v);
-	gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w);
-	boolean Bin_wkr_get_to_url(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url);
+package gplx.xowa.apps.caches; import gplx.*; import gplx.xowa.*; import gplx.xowa.apps.*;
+public class Xoa_cache_mgr {
+	public Wdata_doc_cache Doc_cache() {return doc_cache;} private Wdata_doc_cache doc_cache = new Wdata_doc_cache();
+	public void Free_mem_all() {
+		doc_cache.Free_mem_all();
+	}
 }

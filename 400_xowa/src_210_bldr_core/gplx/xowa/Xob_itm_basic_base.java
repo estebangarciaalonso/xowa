@@ -18,7 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public abstract class Xob_itm_basic_base implements GfoInvkAble {
 	protected Xob_bldr bldr; protected Xow_wiki wiki; protected Gfo_usr_dlg usr_dlg;
-	public void Cmd_ctor(Xob_bldr bldr, Xow_wiki wiki) {this.bldr = bldr; this.wiki = wiki; usr_dlg = bldr.Usr_dlg();}
+	public void Cmd_ctor(Xob_bldr bldr, Xow_wiki wiki) {this.bldr = bldr; this.wiki = wiki; usr_dlg = bldr.Usr_dlg(); this.Cmd_ctor_end(bldr, wiki);}
+	@gplx.Virtual protected void Cmd_ctor_end(Xob_bldr bldr, Xow_wiki wiki) {
+	}
 	@gplx.Virtual public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_owner))				return bldr.Cmd_mgr();
 		else	return GfoInvkAble_.Rv_unhandled;

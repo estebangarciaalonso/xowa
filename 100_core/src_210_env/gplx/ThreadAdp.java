@@ -40,6 +40,6 @@ public class ThreadAdp implements Runnable {
 	@Override public void run() {
 		invk.Invk(GfsCtx._, 0, invkCmd, m);
 	}
-	Thread thread;
+	public Thread Under_thread() {return thread;} private Thread thread;
 		public static final ThreadAdp Null = new ThreadAdp(GfoInvkAble_.Null, "", GfoMsg_.Null);
 }

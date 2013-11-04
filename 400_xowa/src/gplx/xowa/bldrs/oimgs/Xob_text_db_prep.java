@@ -69,6 +69,6 @@ public class Xob_text_db_prep extends Xob_itm_basic_base implements Xob_cmd {
 	)
 	;
 	private static final Db_idx_itm Idx_create = Db_idx_itm.sql_
-	( "CREATE UNIQUE INDEX oimg_page_dump_index ON oimg_page_dump (page_id, page_title, page_namespace, page_is_redirect);"
+	( "CREATE UNIQUE INDEX oimg_page_dump_index ON oimg_page_dump (page_id, page_namespace, page_is_redirect, page_title);"
 	);
 }

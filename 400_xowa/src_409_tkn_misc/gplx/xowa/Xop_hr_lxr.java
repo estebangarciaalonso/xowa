@@ -26,7 +26,7 @@ public class Xop_hr_lxr implements Xop_lxr {
 			bgn_pos = 0;	// do not allow -1 pos
 			nl_adj = 0;		// no nl at bgn, so nl_adj = 0
 		}
-		ctx.Apos().EndFrame(ctx, src, bgn_pos);
+		ctx.Apos().EndFrame(ctx, src, bgn_pos, false);
 		ctx.CloseOpenItms(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos);		// close open items
 		cur_pos = Xop_lxr_.Find_fwd_while(src, src_len, cur_pos, Hook_byt);			// get all consecutive dashes
 		int hr_len = cur_pos - bgn_pos + nl_adj;

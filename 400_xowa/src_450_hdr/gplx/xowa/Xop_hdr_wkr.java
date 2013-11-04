@@ -31,7 +31,7 @@ public class Xop_hdr_wkr implements Xop_ctx_wkr {
 	}
 	public int Make_tkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		if (bgn_pos == Xop_parser_.Doc_bgn_bos) bgn_pos = 0;	// do not allow -1 pos
-		ctx.Apos().EndFrame(ctx, src, bgn_pos);
+		ctx.Apos().EndFrame(ctx, src, bgn_pos, false);
 		Close_open_itms(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos);
 		ctx.Para().Process_nl_sect_bgn(bgn_pos, cur_pos, Xop_nl_tkn.Tid_hdr);
 		int new_pos = Xop_lxr_.Find_fwd_while(src, src_len, cur_pos, Xop_hdr_lxr.Hook);				// count all =
@@ -47,7 +47,7 @@ public class Xop_hdr_wkr implements Xop_ctx_wkr {
 	}
 	public int Make_tkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, int stackPos, int end_hdr_len, int end_ws_bgn) {// REF.MW: Parser|doHeadings
 		Xop_hdr_tkn hdr = (Xop_hdr_tkn)ctx.Stack_pop_til(stackPos, false, bgn_pos, cur_pos);
-		ctx.Apos().EndFrame(ctx, src, bgn_pos);	// end any apos; EX: ==''a==
+		ctx.Apos().EndFrame(ctx, src, bgn_pos, false);	// end any apos; EX: ==''a==
 		int hdr_len = hdr.Hdr_len(), bgn_manual = 0, end_manual = 0;
 		boolean dirty = false;
 		if		(end_hdr_len < hdr_len) {	// mismatch: end has more; adjust hdr

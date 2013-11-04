@@ -42,8 +42,8 @@ public class Scrib_lib_site_tst {
 //		}
 	@Test   public void Init_lib_site() {
 		Xow_ns_mgr ns_mgr = new Xow_ns_mgr();
-		ns_mgr.Add_new(Scrib_pf_invoke.Ns_id_module, "Module");
-		ns_mgr.Add_new(Scrib_pf_invoke.Ns_id_module_talk, "Module talk");
+		ns_mgr.Add_new(Scrib_core_.Ns_id_module, "Module");
+		ns_mgr.Add_new(Scrib_core_.Ns_id_module_talk, "Module talk");
 		ns_mgr.Add_new(Xow_ns_.Id_special, "Special");
 		ns_mgr.Add_new(Xow_ns_.Id_main, "");
 		ns_mgr.Add_new(Xow_ns_.Id_talk, "Talk");

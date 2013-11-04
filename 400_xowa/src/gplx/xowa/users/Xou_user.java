@@ -137,7 +137,7 @@ class Xou_user_ {
 			.Add_new(12, "Help").Add_new(13, "Help talk").Add_new(14, "Category").Add_new(15, "Category talk").Add_new(100, "Portal").Add_new(101, "Portal talk")
 			.Add_new(gplx.xowa.xtns.wdatas.Wdata_wiki_mgr.Ns_property, gplx.xowa.xtns.wdatas.Wdata_wiki_mgr.Ns_property_name)
 			.Add_new(730, "Data").Add_new(731, "Data talk")
-			.Add_new(Scrib_pf_invoke.Ns_id_module, Scrib_pf_invoke.Ns_name_module).Add_new(Scrib_pf_invoke.Ns_id_module_talk, Scrib_pf_invoke.Ns_name_module_talk)
+			.Add_new(Scrib_core_.Ns_id_module, Scrib_core_.Ns_name_module).Add_new(Scrib_core_.Ns_id_module_talk, Scrib_core_.Ns_name_module_talk)
 			.Add_defaults()
 			;
 		rv.Ords_sort();

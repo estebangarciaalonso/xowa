@@ -41,8 +41,8 @@ public class Fsdb_cfg_tbl {
 		try {Update(stmt, grp, key, val);}
 		finally {stmt.Rls();}
 	}
-	private static Db_stmt Update_stmt(Db_provider p) {return Db_stmt_.new_update_(p, Tbl_name, String_.Ary(Fld_cfg_grp, Fld_cfg_key), Fld_cfg_val);}
-	private static void Update(Db_stmt stmt, String grp, String key, String val) {
+	public static Db_stmt Update_stmt(Db_provider p) {return Db_stmt_.new_update_(p, Tbl_name, String_.Ary(Fld_cfg_grp, Fld_cfg_key), Fld_cfg_val);}
+	public static void Update(Db_stmt stmt, String grp, String key, String val) {
 		stmt.Clear()
 		.Val_str_(val)
 		.Val_str_(grp)

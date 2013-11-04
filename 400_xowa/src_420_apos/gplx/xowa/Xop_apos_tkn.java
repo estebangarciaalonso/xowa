@@ -17,12 +17,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xop_apos_tkn extends Xop_tkn_itm_base {
+	public Xop_apos_tkn(int bgn, int end, int apos_len, int apos_tid, int apos_cmd, int apos_lit, byte ctx_tkn_tid) {
+		this.apos_len = apos_len; this.apos_tid = apos_tid; this.apos_cmd = apos_cmd; this.apos_lit = apos_lit; this.Tkn_ini_pos(false, bgn, end);
+		this.ctx_tkn_tid = ctx_tkn_tid;
+	}
 	@Override public byte Tkn_tid() {return Xop_tkn_itm_.Tid_apos;}
+	public byte Ctx_tkn_tid() {return ctx_tkn_tid;} private byte ctx_tkn_tid;
 	public int Apos_len() {return apos_len;} private int apos_len;
 	public int Apos_lit() {return apos_lit;} public Xop_apos_tkn Apos_lit_(int v) {apos_lit = v; return this;} private int apos_lit;
 	public int Apos_tid() {return apos_tid;} public Xop_apos_tkn Apos_tid_(int v) {apos_tid = v; return this;} private int apos_tid;
 	public int Apos_cmd() {return apos_cmd;} public Xop_apos_tkn Apos_cmd_(int v) {apos_cmd = v; return this;} private int apos_cmd;
-	public Xop_apos_tkn(int bgn, int end, int apos_len, int apos_tid, int apos_cmd, int apos_lit) {this.apos_len = apos_len; this.apos_tid = apos_tid; this.apos_cmd = apos_cmd; this.apos_lit = apos_lit; this.Tkn_ini_pos(false, bgn, end);}
 }
 class Xop_apos_tkn_ {
 	public static final int Cmd_nil = 0

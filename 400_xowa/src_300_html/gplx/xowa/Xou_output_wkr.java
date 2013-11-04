@@ -178,7 +178,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 			case Xow_ns_.Id_user:
 				return ByteAry_.HasAtEnd(ttl, Ext_js) || ByteAry_.HasAtEnd(ttl, Ext_css)
 					? Render_tid_pre : Render_tid_wikitext;
-			case gplx.xowa.xtns.scribunto.Scrib_pf_invoke.Ns_id_module:
+			case gplx.xowa.xtns.scribunto.Scrib_core_.Ns_id_module:
 				return Render_tid_pre;
 			default:
 				return Wdata_wiki_mgr.Wiki_page_is_json(wiki_tid, ns_id)

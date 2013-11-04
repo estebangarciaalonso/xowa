@@ -83,7 +83,7 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 		Xof_fsdb_mgr_utl._.Fsdb_search(this, fs_dir, win_wtr, exec_tid, itms, bin_mgr.Repo_mgr(), url_bldr);
 	}
 	public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsdb;}
-	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(Xof_fsdb_itm itm, boolean is_thumb, int w) {
+	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w) {
 		byte[] wiki = itm.Orig_wiki();
 		byte[] ttl = itm.Lnki_ttl();
 		int thumbtime = itm.Lnki_thumbtime(); 
@@ -91,7 +91,7 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 		Fsdb_mem_itm mem_itm = (Fsdb_mem_itm)bin_hash.Get_by_bry(key);
 		return mem_itm == null ? gplx.ios.Io_stream_rdr_.Null : gplx.ios.Io_stream_rdr_.mem_(mem_itm.Bin());
 	}
-	public boolean Bin_wkr_get_to_url(Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
+	public boolean Bin_wkr_get_to_url(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
 		byte[] wiki = itm.Orig_wiki();
 		byte[] ttl = itm.Lnki_ttl();
 		int thumbtime = itm.Lnki_thumbtime(); 

@@ -25,7 +25,7 @@ public class Gfo_cache_mgr {
 	public int Count() {return hash.Count();}
 	public void Clear() {hash.Clear(); recent.Clear(); cur_size = 0;}
 	@gplx.Internal protected Object Get_at(int i) {
-		Gfo_cache_itm rv = (Gfo_cache_itm)hash.FetchAt(i);;
+		Gfo_cache_itm rv = (Gfo_cache_itm)hash.FetchAt(i);
 		return rv.Val();
 	}
 	public Object Get_by_key(byte[] key) {

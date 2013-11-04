@@ -23,7 +23,7 @@ public class Xop_apos_wkr implements Xop_ctx_wkr {
 		Reset();
 	}	ListAdp stack = ListAdp_.new_(); int boldCount, italCount; Xop_apos_tkn dualTkn = null;
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int srcLen) {
-		this.EndFrame(ctx, src, srcLen);
+		this.EndFrame(ctx, src, srcLen, false);
 	}
 	public int Stack_len() {return stack.Count();}
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {
@@ -34,7 +34,7 @@ public class Xop_apos_wkr implements Xop_ctx_wkr {
 			++aposLen; ++curPos;
 		}
 		dat.Ident(ctx, aposLen, curPos);
-		Xop_apos_tkn aposTkn = tkn_mkr.Apos(bgnPos, curPos, curPos - bgnPos, dat.Typ(), dat.Cmd(), dat.LitApos());
+		Xop_apos_tkn aposTkn = tkn_mkr.Apos(bgnPos, curPos, curPos - bgnPos, dat.Typ(), dat.Cmd(), dat.LitApos(), ctx.Cur_tkn_tid());
 		ctx.Subs_add(aposTkn);
 		ctx.Apos().RegTkn(aposTkn, curPos);
 		return curPos;
@@ -56,7 +56,7 @@ public class Xop_apos_wkr implements Xop_ctx_wkr {
 			dualTkn = null;
 		}
 	}
-	public void EndFrame(Xop_ctx ctx, byte[] src, int curPos) {
+	public void EndFrame(Xop_ctx ctx, byte[] src, int curPos, boolean from_nl_lxr) {
 		int state = dat.State();
 		if (state == 0) {Reset(); return;}
 		if (boldCount % 2 == 1 && italCount % 2 == 1) ConvertBoldToItal(ctx, src);
@@ -64,6 +64,17 @@ public class Xop_apos_wkr implements Xop_ctx_wkr {
 		state = dat.State();
 		int closeCmd = 0, closeTyp = 0;
 		if (state == 0) {Reset(); return;}	// all closed: return
+		byte cur_tkn_tid = ctx.Cur_tkn_tid();
+		Xop_apos_tkn prv = Previous_bgn(closeTyp);
+		if (from_nl_lxr) {											// NOTE: if \n
+			if (	cur_tkn_tid			== Xop_tkn_itm_.Tid_lnki	// and cur scope is lnki
+				&&	prv.Ctx_tkn_tid()	!= Xop_tkn_itm_.Tid_lnki	// but apos_bgn is not lnki
+				) {
+//					prv.Apos_cmd_(Xop_apos_tkn_.Cmd_nil);				// render invalid; EX: ''[[\n]]''DATE:2013-10-31
+//					Reset();
+				return;
+			}
+		}
 		switch (state) {
 			case Xop_apos_tkn_.State_i:		closeTyp = Xop_apos_tkn_.Typ_ital; closeCmd = Xop_apos_tkn_.Cmd_i_end; break;
 			case Xop_apos_tkn_.State_b:		closeTyp = Xop_apos_tkn_.Typ_bold; closeCmd = Xop_apos_tkn_.Cmd_b_end; break;
@@ -71,9 +82,8 @@ public class Xop_apos_wkr implements Xop_ctx_wkr {
 			case Xop_apos_tkn_.State_ib:	closeTyp = Xop_apos_tkn_.Typ_dual; closeCmd = Xop_apos_tkn_.Cmd_bi_end; break;
 			case Xop_apos_tkn_.State_bi:	closeTyp = Xop_apos_tkn_.Typ_dual; closeCmd = Xop_apos_tkn_.Cmd_ib_end; break;
 		}
-		Xop_apos_tkn prv = Previous_bgn(closeTyp);
 		ctx.Msg_log().Add_itm_none(Xop_apos_log.Dangling_apos, src, prv.Src_bgn(), curPos);
-		ctx.Subs_add(ctx.Tkn_mkr().Apos(curPos, curPos, 0, closeTyp, closeCmd, 0));
+		ctx.Subs_add(ctx.Tkn_mkr().Apos(curPos, curPos, 0, closeTyp, closeCmd, 0, cur_tkn_tid));
 		Reset();
 	}
 	private void ConvertBoldToItal(Xop_ctx ctx, byte[] src) {
@@ -113,7 +123,7 @@ public class Xop_apos_wkr implements Xop_ctx_wkr {
 		stack.Clear();
 		dat.State_clear();
 	}
-	Xop_apos_tkn Previous_bgn(int typ) {
+	private Xop_apos_tkn Previous_bgn(int typ) {
 		for (int i = stack.Count() - 1; i > -1; i--) {
 			Xop_apos_tkn apos = (Xop_apos_tkn)stack.FetchAt(i);
 			int cmd = apos.Apos_cmd();

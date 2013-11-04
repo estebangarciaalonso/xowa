@@ -27,8 +27,12 @@ public class Sqlite_engine_ {
 		Db_qry qry = Db_qry_sql.xtn_(s);
 		p.Exec_qry(qry);
 	}
-	public static void Tbl_create(Db_provider p, String tbl_name, String tbl_sql) {
+	public static void Tbl_create_and_delete(Db_provider p, String tbl_name, String tbl_sql) {
 		Tbl_delete(p, tbl_name);
+		Db_qry qry = Db_qry_sql.ddl_(tbl_sql);
+		p.Exec_qry(qry);
+	}
+	public static void Tbl_create(Db_provider p, String tbl_name, String tbl_sql) {
 		Db_qry qry = Db_qry_sql.ddl_(tbl_sql);
 		p.Exec_qry(qry);
 	}

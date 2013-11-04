@@ -27,18 +27,18 @@ public class Xof_bin_mgr implements GfoInvkAble {
 	public Xow_repo_mgr Repo_mgr() {return repo_mgr;} private Xow_repo_mgr repo_mgr;
 	public void Resizer_(Xof_img_wkr_resize_img v) {resizer = v;} private Xof_img_wkr_resize_img resizer;
 	public void Wkrs_(Xof_bin_wkr... wkrs) {this.wkrs = wkrs; wkrs_len = wkrs.length;}
-	public boolean Find_to_url_as_bool(byte exec_tid, Xof_fsdb_itm itm) {
-		return Find_to_url(exec_tid, itm) != Io_url_.Null;
+	public boolean Find_to_url_as_bool(ListAdp temp_files, byte exec_tid, Xof_fsdb_itm itm) {
+		return Find_to_url(temp_files, exec_tid, itm) != Io_url_.Null;
 	}
-	public Io_url Find_to_url(byte exec_tid, Xof_fsdb_itm itm) {
-		Io_stream_rdr rdr = Find_as_rdr(exec_tid, itm);
+	public Io_url Find_to_url(ListAdp temp_files, byte exec_tid, Xof_fsdb_itm itm) {
+		Io_stream_rdr rdr = Find_as_rdr(temp_files, exec_tid, itm);
 		if (rdr == Io_stream_rdr_.Null) return Io_url_.Null;
 		Io_url trg = itm.Html_url();
 		if (itm.Rslt_bin_fsys()) return trg;	// rdr is opened directly from trg; return its url; occurs when url goes through imageMagick / inkscape, or when thumb is already in disk;
 		Io_stream_wtr_.Save_rdr(trg, rdr);		// rdr is stream; either from http_wmf or fsdb; save to trg and return;
 		return trg;
 	}
-	public Io_stream_rdr Find_as_rdr(byte exec_tid, Xof_fsdb_itm itm) {
+	public Io_stream_rdr Find_as_rdr(ListAdp temp_files, byte exec_tid, Xof_fsdb_itm itm) {
 		Io_stream_rdr rv = Io_stream_rdr_.Null;
 		boolean file_is_orig = itm.File_is_orig();
 		if (file_is_orig || exec_tid == Xof_exec_tid.Tid_viewer_app) {		// mode is viewer_app; always return orig
@@ -46,7 +46,7 @@ public class Xof_bin_mgr implements GfoInvkAble {
 			itm.Html_url_(trg);
 			for (int i = 0; i < wkrs_len; i++) {
 				Xof_bin_wkr wkr = wkrs[i];
-				rv = wkr.Bin_wkr_get_as_rdr(itm, Bool_.N, itm.Html_w());
+				rv = wkr.Bin_wkr_get_as_rdr(temp_files, itm, Bool_.N, itm.Html_w());
 				if (rv == Io_stream_rdr_.Null) continue;						// orig not found; continue;
 //					if (itm.Lnki_ext().Id_is_svg()) {
 //						itm.Lnki_w_(itm.Html_w());
@@ -70,14 +70,14 @@ public class Xof_bin_mgr implements GfoInvkAble {
 			itm.Html_url_(trg);
 			for (int i = 0; i < wkrs_len; i++) {
 				Xof_bin_wkr wkr = wkrs[i];
-				rv = wkr.Bin_wkr_get_as_rdr(itm, Bool_.Y, itm.Html_w());		// get thumb's bin
-				if (rv != Io_stream_rdr_.Null) {								// thumb's bin exists;
+				rv = wkr.Bin_wkr_get_as_rdr(temp_files, itm, Bool_.Y, itm.Html_w());		// get thumb's bin
+				if (rv != Io_stream_rdr_.Null) {											// thumb's bin exists;
 					itm.Rslt_bin_(wkr.Bin_wkr_tid());
 					return rv;
 				}
-				rv = wkr.Bin_wkr_get_as_rdr(itm, Bool_.N, itm.Orig_w());		// thumb missing; get orig;
-				if (rv == Io_stream_rdr_.Null) continue;						// nothing found; continue;
-				Io_url orig = Get_url(itm, Xof_repo_itm.Mode_orig, Bool_.N);	// get orig url
+				rv = wkr.Bin_wkr_get_as_rdr(temp_files, itm, Bool_.N, itm.Orig_w());		// thumb missing; get orig;
+				if (rv == Io_stream_rdr_.Null) continue;									// nothing found; continue;
+				Io_url orig = Get_url(itm, Xof_repo_itm.Mode_orig, Bool_.N);				// get orig url
 				Io_stream_wtr_.Save_rdr(orig, rv);
 				boolean resized = Resize(exec_tid, itm, file_is_orig, orig, trg);
 				if (!resized) continue;

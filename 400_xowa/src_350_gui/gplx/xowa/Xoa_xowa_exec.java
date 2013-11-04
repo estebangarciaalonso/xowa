@@ -140,7 +140,7 @@ public class Xoa_xowa_exec implements GfoInvkAble {
 						if		(ByteAry_.Eq(lang_key, Wikidata_get_label_xowa_title))
 							val_bry = ttl_bry;
 						else {
-							val_bry = page.Label_get(lang_key);
+							val_bry = page.Label_list_get(lang_key);
 						}
 						if (val_bry == null) continue;
 						rv[i - 1] = String_.new_utf8_(val_bry);

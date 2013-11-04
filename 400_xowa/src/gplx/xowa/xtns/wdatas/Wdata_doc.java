@@ -21,19 +21,15 @@ public class Wdata_doc {
 	public Wdata_doc(byte[] qid, Wdata_wiki_mgr mgr, Json_doc doc) {this.qid = qid; this.mgr = mgr; this.doc = doc;} Wdata_wiki_mgr mgr;
 	public Json_doc Doc() {return doc;} Json_doc doc;
 	public byte[] Qid() {return qid;} private byte[] qid;
-	public OrderedHash Links() {if (links == null) links = mgr.Page_doc_parser().Bld_hash(doc, Wdata_doc_consts.Key_atr_links_bry); return links;} private OrderedHash links;
-	public byte[] Label_get(byte[] lang_key) {
-		if (labels == null) labels = mgr.Page_doc_parser().Bld_hash(doc, Wdata_doc_consts.Key_atr_label_bry);
-		Object rv = labels.Fetch(lang_key); if (rv == null) return null;
+	public OrderedHash Link_list()  {if (link_list == null)  link_list  = mgr.Page_doc_parser().Bld_hash(doc, Wdata_doc_consts.Key_atr_links_bry); return link_list;} private OrderedHash link_list;
+	public OrderedHash Label_list() {if (label_list == null) label_list = mgr.Page_doc_parser().Bld_hash(doc, Wdata_doc_consts.Key_atr_label_bry); return label_list;} private OrderedHash label_list;
+	public OrderedHash Alias_list() {if (alias_list == null) alias_list = mgr.Page_doc_parser().Bld_hash(doc, Wdata_doc_consts.Key_atr_aliases_bry); return alias_list;} private OrderedHash alias_list;
+	public OrderedHash Description_list() {if (description_list == null) description_list = mgr.Page_doc_parser().Bld_hash(doc, Wdata_doc_consts.Key_atr_description_bry); return description_list;} private OrderedHash description_list;
+	public OrderedHash Claim_list() {if (claim_list == null) claim_list = mgr.Page_doc_parser().Bld_props(doc); return claim_list;} private OrderedHash claim_list;
+	public byte[] Label_list_get(byte[] lang_key) {
+		Object rv = this.Label_list().Fetch(lang_key); if (rv == null) return null;
 		Json_itm_kv kv = (Json_itm_kv)rv;
 		return kv.Val().Data_bry();
-	}	private OrderedHash labels;
-	public int Props_len() {
-		if (props == null) props = mgr.Page_doc_parser().Bld_props(doc);
-		return props.Count();
-	}
-	public Wdata_prop_grp Prop_get(int pid) {
-		if (props == null) props = mgr.Page_doc_parser().Bld_props(doc);
-		return (Wdata_prop_grp)props.Fetch(mgr.Tmp_prop_ref().Val_(pid));
-	}	private OrderedHash props;
+	}	
+	public Wdata_prop_grp Claim_list_get(int pid) {return (Wdata_prop_grp)this.Claim_list().Fetch(mgr.Tmp_prop_ref().Val_(pid));}	
 }

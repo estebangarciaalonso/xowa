@@ -36,7 +36,7 @@ public class Wdata_xwiki_link_wtr implements ByteAryFmtrArg {
 			Wdata_wiki_mgr wdata_mgr = wiki.App().Wiki_mgr().Wdata_mgr();
 			Wdata_doc doc = wdata_mgr.Pages_get(wiki, ttl); if (doc == null) return Qid_null;	// no links
 			boolean external_links_mgr_enabled = external_links_mgr.Enabled();
-			OrderedHash links = doc.Links();
+			OrderedHash links = doc.Link_list();
 			ByteAryBfr tmp_bfr = wiki.App().Utl_bry_bfr_mkr().Get_k004();
 			int len = links.Count();
 			for (int i = 0; i < len; i++) {

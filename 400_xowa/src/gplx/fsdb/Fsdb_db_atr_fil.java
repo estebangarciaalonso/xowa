@@ -23,6 +23,7 @@ public class Fsdb_db_atr_fil implements RlsAble {
 	public Io_url Url() {return url;} private Io_url url;
 	public String Path_bgn() {return path_bgn;} private String path_bgn;
 	public byte Cmd_mode() {return cmd_mode;} public Fsdb_db_atr_fil Cmd_mode_(byte v) {cmd_mode = v; return this;} private byte cmd_mode;
+//		private Db_stmt cfg_update_stmt;
 	public Db_provider Provider() {
 		if (provider == null) {
 			if (cmd_mode == Db_cmd_mode.Create) {
@@ -36,6 +37,7 @@ public class Fsdb_db_atr_fil implements RlsAble {
 			else
 				provider = Db_provider_.new_(Db_connect_sqlite.load_(url));
 		}
+//			cfg_update_stmt = Fsdb_cfg_tbl.Update_stmt(provider);
 		return provider;
 	} 	private Db_provider provider;
 	public void Rls() {if (provider != null) provider.Rls();}
@@ -77,7 +79,7 @@ public class Fsdb_db_atr_fil implements RlsAble {
 		int fil_id = Fsdb_fil_tbl.Select_itm_by_name(provider, dir_id, fil).Id();
 		if (fil_id == 0) {
 			fil_id = Fsdb_cfg_tbl.Update_next_id(provider);
-			Fsdb_fil_tbl.Insert(provider, fil_id, dir_id, fil, Fsdb_xtn_tid_.Tid_thm, ext_id, bin_len, modified, hash, bin_db_id);
+			Fsdb_fil_tbl.Insert(provider, fil_id, dir_id, fil, Fsdb_xtn_tid_.Tid_thm, ext_id, bin_len, modified, hash, Fsdb_bin_tbl.Db_bin_id_null);
 		}
 		int thm_id = Fsdb_cfg_tbl.Update_next_id(provider);
 		Fsdb_xtn_thm_tbl.Insert(provider, thm_id, fil_id, thm_w, thm_h, thumbtime, bin_db_id, bin_len, modified, hash);

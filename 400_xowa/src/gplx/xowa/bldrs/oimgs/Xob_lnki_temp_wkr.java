@@ -16,11 +16,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*;
+import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.wdatas.*;
 public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xobc_lnki_wkr {
 	private Db_provider provider; private Db_stmt stmt;
-	private boolean wdata_enabled = true, log_module_enabled = false, xtn_ref_enabled = true;
-	private Scrib_pf_invoke_wkr_log scrib_wkr = new Scrib_pf_invoke_wkr_log();
+	private boolean wdata_enabled = true, xtn_ref_enabled = true;
+	private Scrib_pf_invoke_wkr invoke_wkr; private Wdata_pf_property_wkr property_wkr;
 	public Xob_lnki_temp_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	@Override public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "oimg.lnki_temp";
 	@Override public byte Init_redirect() {return Bool_.N_byte;}	// lnki will never be found in a redirect
@@ -39,9 +39,11 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xobc_lnki_wk
 		return provider;
 	}
 	@Override protected void Cmd_bgn_end() {
+		invoke_wkr = this.Invoke_wkr();	// set member reference
+		invoke_wkr.Init_by_wiki(wiki);
+		property_wkr = this.Property_wkr();	// set member reference
+		property_wkr.Init_by_wiki(wiki);
 		wiki.App().Wiki_mgr().Wdata_mgr().Enabled_(wdata_enabled);
-		if (log_module_enabled)
-			scrib_wkr.Init_by_wiki(wiki);
 		if (!xtn_ref_enabled) gplx.xowa.xtns.refs.Xtn_references_nde.Enabled = false;
 	}
 	@Override public void Exec_page_hook(Xow_ns ns, Xodb_page page, byte[] page_src) {
@@ -57,28 +59,35 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xobc_lnki_wk
 			root.Clear();
 		}
 	}
-	public void Wkr_exec(Xop_ctx ctx, Xop_lnki_tkn lnki) {
-		byte[] ttl = lnki.Ttl().Page_db();
-		Xof_ext ext = Xof_ext_.new_by_ttl_(ttl);
-		Xob_lnki_temp_tbl.Insert(stmt, ctx.Page().Page_id(), ttl, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki.Width().Val(), lnki.Height().Val(), lnki.Upright(), lnki.Thumbtime());		
-	}
 	@Override public void Exec_commit_bgn() {
 		provider.Txn_mgr().Txn_end_all_bgn_if_none();
 	}
 	@Override public void Exec_end() {
 		provider.Txn_mgr().Txn_end();
-		if (log_module_enabled)
-			scrib_wkr.Term();
+		invoke_wkr.Term();
+		property_wkr.Term();
+	}
+	public void Wkr_exec(Xop_ctx ctx, Xop_lnki_tkn lnki) {
+		byte[] ttl = lnki.Ttl().Page_db();
+		Xof_ext ext = Xof_ext_.new_by_ttl_(ttl);
+		Xob_lnki_temp_tbl.Insert(stmt, ctx.Page().Page_id(), ttl, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki.Width().Val(), lnki.Height().Val(), lnki.Upright(), lnki.Thumbtime());		
 	}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_wdata_enabled_))				wdata_enabled = m.ReadYn("v");
-		else if	(ctx.Match(k, Invk_log_module_enabled_))		log_module_enabled = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_xtn_ref_enabled_))			xtn_ref_enabled = m.ReadYn("v");
-		else if	(ctx.Match(k, Invk_scrib_wkr))					return scrib_wkr;
+		else if	(ctx.Match(k, Invk_invoke_wkr))					return this.Invoke_wkr();
+		else if	(ctx.Match(k, Invk_property_wkr))				return this.Property_wkr();
 		else	return super.Invk(ctx, ikey, k, m);
 		return this;
 	}
-	private static final String Invk_wdata_enabled_ = "wdata_enabled_", Invk_log_module_enabled_ = "log_module_enabled_", Invk_xtn_ref_enabled_ = "xtn_ref_enabled_"
-	, Invk_scrib_wkr = "scrib_wkr"
+	private Scrib_pf_invoke_wkr Invoke_wkr() {
+		if (invoke_wkr == null) invoke_wkr = bldr.App().Xtn_mgr().Xtn_scribunto().Invoke_wkr_or_new();
+		return invoke_wkr;
+	}
+	private Wdata_pf_property_wkr Property_wkr() {
+		if (property_wkr == null) property_wkr = bldr.App().Wiki_mgr().Wdata_mgr().Property_wkr_or_new();
+		return property_wkr;
+	}
+	private static final String Invk_wdata_enabled_ = "wdata_enabled_", Invk_xtn_ref_enabled_ = "xtn_ref_enabled_", Invk_invoke_wkr = "invoke_wkr", Invk_property_wkr = "property_wkr"
 	;
 }

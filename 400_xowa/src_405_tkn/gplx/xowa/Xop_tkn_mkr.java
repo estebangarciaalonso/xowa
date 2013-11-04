@@ -24,7 +24,8 @@ public class Xop_tkn_mkr {
 //		public Xop_space_tkn Space(Xop_tkn_grp grp, int bgn, int end)							{grp.Subs_src_pos_(grp.Subs_len(), bgn, end); return space_tkn_immutable;}
 	public Xop_space_tkn Space(Xop_tkn_grp grp, int bgn, int end)							{Xop_space_tkn rv = new Xop_space_tkn(false, bgn, end); grp.Subs_src_pos_(grp.Subs_len(), bgn, end); return rv;}
 	public Xop_space_tkn Space_mutable(int bgn, int end)									{return new Xop_space_tkn(false, bgn, end);}
-	public Xop_apos_tkn Apos(int bgn, int end, int aposLen, int typ, int cmd, int litApos)	{return new Xop_apos_tkn(bgn, end, aposLen, typ, cmd, litApos);}
+	public Xop_apos_tkn Apos(int bgn, int end
+		, int aposLen, int typ, int cmd, int lit_apos, byte cur_tkn_tid)					{return new Xop_apos_tkn(bgn, end, aposLen, typ, cmd, lit_apos, cur_tkn_tid);}
 	public Xop_tkn_itm HtmlRef(int bgn, int end, Xop_amp_trie_itm itm)						{return new Xop_html_ref_tkn(bgn, end, itm);}
 	public Xop_tkn_itm HtmlNcr(int bgn, int end, int val_int, byte[] val_bry)				{return new Xop_html_ncr_tkn(bgn, end, val_int, val_bry);}
 	public Xop_tkn_itm HtmlNcr(int bgn, int end, int val_int)								{return new Xop_html_ncr_tkn(bgn, end, val_int, gplx.intl.Utf8_.EncodeCharAsAry(val_int));}

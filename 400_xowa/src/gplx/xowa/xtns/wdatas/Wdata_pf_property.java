@@ -20,24 +20,32 @@ import gplx.json.*;
 public class Wdata_pf_property extends Pf_func_base {
 	@Override public int Id() {return Xol_kwd_grp_.Id_property;}
 	@Override public Pf_func New(int id, byte[] name) {return new Wdata_pf_property().Name_(name);}
-	public static int Func_count = 0;
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {// {{#property:pNumber|}}
+		byte[] id = Eval_argx(ctx, src, caller, self);
+		Wdata_pf_property_wkr property_wkr = ctx.Xtn__wikidata__property_wkr();
+		long log_time_bgn = 0;
+		if (property_wkr != null) {
+			log_time_bgn = Env_.TickCount();
+			if (!property_wkr.Eval_bgn(ctx.Page(), id)) return;
+		}
+
 		Xoa_app app = ctx.App();
-		++Func_count;
 		Wdata_wiki_mgr wdata_mgr = app.Wiki_mgr().Wdata_mgr();
 		if (!wdata_mgr.Enabled()) return;
 		Xow_wiki wiki = ctx.Wiki();
 		Xoa_ttl ttl = ctx.Page().Page_ttl();
 
 		Wdata_pf_property_data data = new Wdata_pf_property_data();
-		data.Parse(ctx, src, caller, self, this);
+		data.Parse(ctx, src, caller, self, this, id);
 		Wdata_doc prop_doc = wdata_mgr.Pages_get(wiki, ttl, data); if (prop_doc == null) return; // NOTE: some pages will not exist in qid; EX: {{#property:P345}} for "Unknown_page" will not even had a qid; if no qid, then no pid
 		int pid = data.Id_int();
 		if (pid == Wdata_wiki_mgr.Pid_null)
 			pid = wdata_mgr.Pids_get(wiki.Wdata_wiki_lang(), data.Id());
 		if (pid == Wdata_wiki_mgr.Pid_null) {Print_self(app.Usr_dlg(), bfr, src, self, "prop_not_found", "prop id not found: ~{0} ~{1} ~{2}", wiki.Key_str(), ttl.Page_db_as_str(), data.Id()); return;}
-		Wdata_prop_grp prop_grp = prop_doc.Prop_get(pid); if (prop_grp == null) return;// NOTE: some props may not exist; EX: {{#property:P345}} for "Unknown_movie" may have a qid, but doesn't have a defined pid
+		Wdata_prop_grp prop_grp = prop_doc.Claim_list_get(pid); if (prop_grp == null) return;// NOTE: some props may not exist; EX: {{#property:P345}} for "Unknown_movie" may have a qid, but doesn't have a defined pid
 		wdata_mgr.Resolve_to_bfr(bfr, prop_grp, ctx.Page().Lang().Key_bry());
+		if (property_wkr != null)
+			property_wkr.Eval_end(ctx.Page(), id, log_time_bgn);
 	}
 	public static int Parse_pid(NumberParser num_parser, byte[] bry) {
 		int bry_len = bry.length;
@@ -62,7 +70,11 @@ class Wdata_pf_property_data {
 	public byte[] Id() {return id;} private byte[] id;
 	public int Id_int() {return id_int;} private int id_int;
 	public void Parse(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, Wdata_pf_property pfunc) {
-		id = pfunc.Eval_argx(ctx, src, caller, self);
+		byte[] id = pfunc.Eval_argx(ctx, src, caller, self);
+		Parse(ctx, src, caller, self, pfunc, id);
+	}
+	public void Parse(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, Wdata_pf_property pfunc, byte[] id) {
+		this.id = id;
 		id_int = Wdata_pf_property.Parse_pid(ctx.App().Utl_num_parser(), id);
 		if (id_int == Wdata_wiki_mgr.Pid_null) {}	// named; TODO: get pid from pid_regy
 		int args_len = self.Args_len();

@@ -147,6 +147,7 @@ class GfoMsg_base implements GfoMsg {
 	public Io_url	ReadIoUrlOr(String k, Io_url or)		{Object rv = ReadOr(k, or)	; if (rv == Nil) return or		; return parse ? Io_url_.new_any_((String)rv) : Io_url_.cast_(rv);}
 	public boolean		ReadBoolOrFalse(String k)				{Object rv = ReadOr(k,false); if (rv == Nil) return false	; return parse ? Yn.parse_or_((String)rv, false) : Bool_.cast_(rv);}
 	public boolean		ReadBoolOrTrue(String k)				{Object rv = ReadOr(k, true); if (rv == Nil) return true	; return parse ? Yn.parse_or_((String)rv, true) : Bool_.cast_(rv);}
+	public boolean		ReadYnOrY(String k)						{Object rv = ReadOr(k, true); if (rv == Nil) return true	; return parse ? Yn.parse_or_((String)rv, true) : Bool_.cast_(rv);}
 	public boolean		ReadYn(String k)						{Object rv = ReadOr(k,false); if (rv == Nil) ThrowNotFound(k); return parse ? Yn.parse_or_((String)rv, false) : Yn.coerce_(rv);}
 	public boolean		ReadYn_toggle(String k, boolean cur) {
 		Object rv = ReadOr(k, "!");

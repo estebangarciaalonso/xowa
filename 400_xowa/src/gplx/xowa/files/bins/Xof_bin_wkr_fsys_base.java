@@ -21,12 +21,12 @@ public abstract class Xof_bin_wkr_fsys_base implements Xof_bin_wkr, GfoInvkAble 
 	public Xof_bin_wkr_fsys_base() {}
 	public String Bin_wkr_key() {return key;} public void Bin_wkr_key_(String v) {key = v;} private String key;
 	public abstract byte Bin_wkr_tid();
-	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(Xof_fsdb_itm itm, boolean is_thumb, int w) {
+	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w) {
 		byte mode = is_thumb ? Xof_repo_itm.Mode_thumb : Xof_repo_itm.Mode_orig;
 		Io_url src_url = this.Get_src_url(mode, String_.new_utf8_(itm.Orig_wiki()), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), w, itm.Lnki_thumbtime());
 		return (src_url == Io_url_.Null) ? gplx.ios.Io_stream_rdr_.Null : gplx.ios.Io_stream_rdr_.file_(src_url);
 	}
-	public boolean Bin_wkr_get_to_url(Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
+	public boolean Bin_wkr_get_to_url(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
 		byte mode = is_thumb ? Xof_repo_itm.Mode_thumb : Xof_repo_itm.Mode_orig;
 		Io_url src_url = this.Get_src_url(mode, String_.new_utf8_(itm.Orig_wiki()), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), w, itm.Lnki_thumbtime());
 		if (src_url == Io_url_.Null) return false;

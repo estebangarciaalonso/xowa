@@ -23,7 +23,7 @@ class Xop_nl_lxr implements Xop_lxr {
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		Xop_para_wkr para_wkr = ctx.Para();
 		if (bgn_pos == Xop_parser_.Doc_bgn_bos) {return ctx.LxrMake_txt_(cur_pos);} // simulated nl at beginning of every parse
-		ctx.Apos().EndFrame(ctx, src, cur_pos);
+		ctx.Apos().EndFrame(ctx, src, bgn_pos, true);	// NOTE: frame should at end at bgn_pos (before \n) not after; else, will create tkn at (5,5), while tkn_mkr.Space creates one at (4,5); DATE:2013-10-31
 		ctx.Tblw().Cell_pipe_seen_(false);
 
 		// if hdr is open, then close it
@@ -37,7 +37,7 @@ class Xop_nl_lxr implements Xop_lxr {
 		switch (ctx.Cur_tkn_tid()) {
 			case Xop_tkn_itm_.Tid_lnki: // NOTE: \n in caption or other multipart lnki; don't call para_wkr.Process
 //					para_wkr.Process_nl_sect_end(cur_pos);
-				Xop_tkn_itm nl_tkn = tkn_mkr.Space(ctx.Root(), bgn_pos, cur_pos);	// convert \n to \s. may result in multiple \s, but rely on htmlViewer to suppress; EX.WP: Schwarzschild radius; and the stellar [[Velocity dispersion|velocity\ndispersion]]
+				Xop_tkn_itm nl_tkn = tkn_mkr.Space(ctx.Root(), bgn_pos, cur_pos);	// convert \n to \s. may result in multiple \s, but rely on htmlViewer to suppress; EX.WP: Schwarzschild radius; and the stellar [[Velocity dispersion|velocity\ndispersion]];
 				ctx.Subs_add(nl_tkn);
 				return cur_pos;
 			case Xop_tkn_itm_.Tid_list:

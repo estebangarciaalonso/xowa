@@ -34,7 +34,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 		if (acsPos != -1) ctx.Stack_pop_til(acsPos, true, bgnPos, curPos);
 
 		// close apos
-		ctx.Apos().EndFrame(ctx, src, bgnPos);
+		ctx.Apos().EndFrame(ctx, src, bgnPos, false);
 		byte symByt = src[curPos - 1];  // -1 b/c symByt is byte before curByt; EX: \n*a; curPos is at a; want to get *
 		int prvSymLen = curSymLen;
 		curPos = SymAry_fill(src, curPos, srcLen, symByt);

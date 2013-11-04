@@ -46,12 +46,13 @@ public class Xob_xfer_temp_cmd_thumb extends Xob_itm_basic_base implements Xob_c
 			int lnki_w = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_w);
 			int lnki_h = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_h);
 			int lnki_count = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_count);
+			int lnki_page_id = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_page_id);
 			double lnki_upright = rdr.ReadDouble(Xob_lnki_regy_tbl.Fld_olr_lnki_upright);
 			double lnki_thumbtime = rdr.ReadDouble(Xob_lnki_regy_tbl.Fld_olr_lnki_thumbtime);
 			int orig_w = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_w, -1);
 			int orig_h = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_h, -1);
 			img_size.Html_size_calc(Xof_exec_tid.Tid_wiki_page, lnki_w, lnki_h, lnki_type, lnki_upright, lnki_ext, orig_w, orig_h, Xof_img_size.Thumb_width_img);
-			Xob_xfer_temp_tbl.Insert(trg_stmt, lnki_id, orig_repo, orig_page_id, join_ttl, redirect_src, lnki_ext, lnki_type, orig_media_type, img_size.File_is_orig(), orig_w, orig_h, img_size.File_w(), img_size.File_h(), img_size.Html_w(), img_size.Html_h(), lnki_thumbtime, lnki_count);
+			Xob_xfer_temp_tbl.Insert(trg_stmt, lnki_id, lnki_page_id, orig_repo, orig_page_id, join_ttl, redirect_src, lnki_ext, lnki_type, orig_media_type, img_size.File_is_orig(), orig_w, orig_h, img_size.File_w(), img_size.File_h(), img_size.Html_w(), img_size.Html_h(), lnki_thumbtime, lnki_count);
 		}
 		provider.Txn_mgr().Txn_end_all();
 	}
@@ -69,6 +70,7 @@ public class Xob_xfer_temp_cmd_thumb extends Xob_itm_basic_base implements Xob_c
 	,	",       olr_lnki_upright"
 	,	",       olr_lnki_thumbtime"
 	,	",       olr_lnki_count"
+	,	",       olr_lnki_page_id"
 	,	",       oor_orig_repo"
 	,	",       oor_orig_page_id"
 	,	",       oor_orig_join_id"

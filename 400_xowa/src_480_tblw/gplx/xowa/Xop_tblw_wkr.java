@@ -35,7 +35,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 			&& !ws_enabled)										// only close list if tblw starts new line; EX: "* a {|" does not close list, but "* a\n{|" does
 			Xop_list_wkr_.Close_list_if_present(ctx, bgn_pos, cur_pos);
 		if (ctx.Apos().Stack_len() > 0)							// open apos; note that apos keeps its own stack, as they are not "structural" (not sure about this)
-			ctx.Apos().EndFrame(ctx, src, cur_pos);				// close it
+			ctx.Apos().EndFrame(ctx, src, cur_pos, false);		// close it
 
 		Xop_tblw_tkn prv_tkn = ctx.Stack_get_tblw();
 		if (prv_tkn == null) {									// prv_tkn not found; i.e.: no earlier "{|" or "<table>"

@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.wikis.*;
 public class Xohp_wikis_mgr implements GfoInvkAble {
 	public Xohp_wikis_mgr(Xoa_app app) {this.app = app;} private Xoa_app app;
 	public String Itms_as_html() {

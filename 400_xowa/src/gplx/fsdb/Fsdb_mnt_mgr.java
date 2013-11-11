@@ -19,9 +19,8 @@ package gplx.fsdb; import gplx.*;
 import gplx.dbs.*;
 public class Fsdb_mnt_mgr {
 	private Db_provider provider;
+	private Fsdb_cfg_tbl tbl_cfg;
 	private Fsdb_db_abc_mgr[] ary; int ary_len = 0;
-	public Fsdb_mnt_mgr() {}
-	private int insert_db = 0;
 	public void Init(Io_url cur_dir) {
 		Fsdb_mnt_itm[] mnts = Db_load_or_make(cur_dir);
 		ary_len = mnts.length;
@@ -29,20 +28,22 @@ public class Fsdb_mnt_mgr {
 		for (int i = 0; i < ary_len; i++) {
 			Fsdb_mnt_itm itm = mnts[i];
 			Io_url abc_url = cur_dir.GenSubFil_nest(itm.Url(), "fsdb.abc.sqlite3");
-			ary[i] = new Fsdb_db_abc_mgr().Init(abc_url.OwnerDir());
+			ary[i] = new Fsdb_db_abc_mgr(this).Init(abc_url.OwnerDir());
 		}
-		insert_db = Fsdb_cfg_tbl.Select_as_int(provider, "core", "mnt.insert_idx");
+		insert_db = tbl_cfg.Select_as_int("core", "mnt.insert_idx");
 	}
+	public int Insert_db() {return insert_db;} public Fsdb_mnt_mgr Insert_db_(int v) {insert_db = v; return this;} private int insert_db = Mnt_idx_user;
+	public Fsdb_db_abc_mgr Abc_mgr_at(int i) {return ary[i];}
 	private Fsdb_mnt_itm[] Db_load_or_make(Io_url cur_dir) {
 		BoolRef created = BoolRef.false_();
 		provider = Sqlite_engine_.Provider_load_or_make_(cur_dir.GenSubFil("file.core.sqlite3"), created);
+		tbl_cfg = new Fsdb_cfg_tbl(provider, created.Val());
 		if (created.Val()) {
 			Fsdb_mnt_tbl.Create_table(provider);
-			Fsdb_mnt_tbl.Insert(provider, 0, "fsdb.main", "fsdb.main");
-			Fsdb_mnt_tbl.Insert(provider, 1, "fsdb.upgrade_00", "fsdb.upgrade_00");
-			Fsdb_mnt_tbl.Insert(provider, 2, "fsdb.user", "fsdb.user");
-			Fsdb_cfg_tbl.Create_table(provider);
-			Fsdb_cfg_tbl.Insert(provider, "core", "mnt.insert_idx", "2");
+			Fsdb_mnt_tbl.Insert(provider, Mnt_idx_main, "fsdb.main", "fsdb.main");
+			Fsdb_mnt_tbl.Insert(provider, Mnt_idx_update, "fsdb.update_00", "fsdb.update_00");
+			Fsdb_mnt_tbl.Insert(provider, Mnt_idx_user, "fsdb.user", "fsdb.user");
+			tbl_cfg.Insert("core", "mnt.insert_idx", Int_.XtoStr(Mnt_idx_user));
 		}
 		return Fsdb_mnt_tbl.Select_all(provider);
 	}
@@ -89,5 +90,7 @@ public class Fsdb_mnt_mgr {
 	public void Rls() {
 		for (int i = 0; i < ary_len; i++)
 			ary[i].Rls();
+		tbl_cfg.Rls();
 	}
+	public static final int Mnt_idx_main = 0, Mnt_idx_update = 1, Mnt_idx_user = 2;
 }

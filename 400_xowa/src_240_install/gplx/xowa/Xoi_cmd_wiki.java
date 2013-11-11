@@ -28,7 +28,7 @@ class Xoi_cmd_wiki_download extends Gfo_thread_cmd_download implements Gfo_threa
 		this.Owner_(install_mgr);
 		return this;
 	}
-	@gplx.Virtual public String Download_file_ext() {return ".xml";}	// wiki.download is primarily used for dump files; default to .xml.bz2
+	@gplx.Virtual public String Download_file_ext() {return ".xml.bz2";}	// wiki.download is primarily used for dump files; default to .xml.bz2; NOTE: changed from ".xml"; DATE:2013-11-07
 	@Override public String Async_key() {return KEY_dump;}
 	@Override public byte Async_init() {
 		Xoa_app app = install_mgr.App();

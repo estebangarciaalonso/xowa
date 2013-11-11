@@ -18,35 +18,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.fsdb; import gplx.*;
 import gplx.dbs.*;
 public class Fsdb_xtn_img_tbl {
-	public static void Create_table(Db_provider p) {
-		Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); 
+	private Db_provider provider;
+	private Db_stmt stmt_insert, stmt_select_by_id;
+	public Fsdb_xtn_img_tbl(Db_provider provider, boolean created) {
+		this.provider = provider;
+		if (created) Create_table();
 	}
-	public static void Insert(Db_provider p, int id, int w, int h) {
-		Db_stmt stmt = Insert_stmt(p);
-		try {Insert(stmt, id, w, h);}
-		finally {stmt.Rls();}
+	public void Rls() {
+		if (stmt_insert != null) {stmt_insert.Rls(); stmt_insert = null;}
+		if (stmt_select_by_id != null) {stmt_select_by_id.Rls(); stmt_select_by_id = null;}
 	}
-	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_img_id, Fld_img_w, Fld_img_h);}
-	public static void Insert(Db_stmt stmt, int id, int w, int h) {
-		stmt.Clear()
+	public void Create_table() {
+		Sqlite_engine_.Tbl_create(provider, Tbl_name, Tbl_sql); 
+	}
+	public Db_stmt Insert_stmt() {return Db_stmt_.new_insert_(provider, Tbl_name, Fld_img_id, Fld_img_w, Fld_img_h);}
+	public void Insert(int id, int w, int h) {
+		if (stmt_insert == null) stmt_insert = Insert_stmt();
+		stmt_insert.Clear()
 		.Val_int_(id)
 		.Val_int_(w)
 		.Val_int_(h)
 		.Exec_insert();
 	}
-	public static Db_stmt Select_itm_by_id_stmt(Db_provider p) {
-		return Db_stmt_.new_select_(p, Tbl_name, String_.Ary(Fld_img_id), Fld_img_w, Fld_img_h); 
-	}
-	public static Fsdb_xtn_img_itm Select_itm_by_id(Db_provider p, int id) {
-		Db_stmt stmt = Select_itm_by_id_stmt(p);
-		try {
-			return Select_itm_by_id(stmt, id);
-		} finally {stmt.Rls();}
-	}
-	public static Fsdb_xtn_img_itm Select_itm_by_id(Db_stmt stmt, int id) {
+	public Db_stmt Select_itm_by_id_stmt() {return Db_stmt_.new_select_(provider, Tbl_name, String_.Ary(Fld_img_id), Fld_img_w, Fld_img_h); }
+	public Fsdb_xtn_img_itm Select_itm_by_id(int id) {
+		if (stmt_select_by_id == null) stmt_select_by_id = this.Select_itm_by_id_stmt();
 		DataRdr rdr = DataRdr_.Null;
 		try {
-			rdr = stmt.Val_int_(id).Exec_select();
+			rdr = stmt_select_by_id.Clear()
+				.Val_int_(id)
+				.Exec_select();
 			if (rdr.MoveNextPeer())
 				return new Fsdb_xtn_img_itm().Init_by_load(id, rdr.ReadInt(Fld_img_w), rdr.ReadInt(Fld_img_h));
 			else

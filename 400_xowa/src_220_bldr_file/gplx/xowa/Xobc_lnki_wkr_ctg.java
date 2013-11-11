@@ -16,8 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.ios.*;
-class Xobc_lnki_wkr_ctg extends Xob_itm_dump_base implements Xobc_lnki_wkr {
+import gplx.ios.*; import gplx.xowa.parsers.lnkis.*;
+class Xobc_lnki_wkr_ctg extends Xob_itm_dump_base implements Xop_lnki_logger {
 	public static final String KEY = "dump.ctg";
 	public Xobc_lnki_wkr_ctg(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki); this.make_fil_len = 1 * Io_mgr.Len_mb;}
 	public Io_url_gen Make_url_gen() {return make_url_gen;} Io_url_gen make_url_gen;

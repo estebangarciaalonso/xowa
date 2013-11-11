@@ -76,6 +76,9 @@ public class Scrib_lib_language_tst {
 	@Test  public void ConvertGrammar() {
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_convertGrammar, Object_.Ary("fi", "talo", "elative"), "talosta");
 	}
+	@Test  public void ConvertPlural() {
+		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_convertPlural, Object_.Ary("ru", 5, "a", "b", "c"), "c");
+	}
 	@Test  public void IsRTL() {
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_isRTL, Object_.Ary("en"), "false");
 		Xol_lang other_lang = fxt.Engine().App().Lang_mgr().Get_by_key_or_new(ByteAry_.new_ascii_("ar"));

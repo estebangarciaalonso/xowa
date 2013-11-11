@@ -47,6 +47,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 	public byte[] Talk_txt() {return ns.Id_talk()		? Full_txt() : ByteAry_.Add(tors_txt, Page_txt());} 
 	public byte[] Subj_txt() {return ns.Id_subj()		? Full_txt() : ByteAry_.Add(tors_txt, Page_txt());} 
 	public byte[] Full_url() {return Xoa_url_encoder._.Encode(full_txt);}
+	public byte[] Full_db()  {return ns.Gen_ttl(this.Page_db());}
 	public byte[] Page_url() {return Xoa_url_encoder._.Encode(this.Page_txt());}
 	public byte[] Leaf_url() {return Xoa_url_encoder._.Encode(this.Leaf_txt());}
 	public byte[] Base_url() {return Xoa_url_encoder._.Encode(this.Base_txt());}
@@ -422,6 +423,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 	private int wik_bgn = -1, ns_bgn = -1, page_bgn = 0, leaf_bgn = -1, anch_bgn = -1, root_bgn = -1; byte[] tors_txt;
 	public static final int Wik_bgn_int = -1;
 	public static final byte Subpage_spr = Byte_ascii.Slash;	// EX: A/B/C
+	public static final int Anch_bgn_anchor_only = 1;	// signifies lnki which is only anchor; EX: [[#anchor]]
 	static final byte 	// NOTE: Bidi characters appear in File titles /\xE2\x80[\x8E\x8F\xAA-\xAE]/S
 			Bidi_0_E2 	= (byte)226
 		,	Bidi_1_80 	= (byte)128

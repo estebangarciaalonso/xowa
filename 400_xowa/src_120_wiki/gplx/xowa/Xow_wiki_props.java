@@ -16,8 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.wikis.*;
 public class Xow_wiki_props implements GfoInvkAble {
-	public byte[] SiteName() {return siteName;} public Xow_wiki_props SiteName_(byte v) {siteName = ByteAry_.new_ascii_(String_.UpperFirst(String_.new_ascii_(Xow_wiki_type_.Name_by_tid(v)))); return this;} private byte[] siteName = ByteAry_.Empty;
+	public byte[] SiteName() {return siteName;} public Xow_wiki_props SiteName_(byte v) {siteName = ByteAry_.new_ascii_(String_.UpperFirst(String_.new_ascii_(Xow_wiki_type_.Key_by_tid(v)))); return this;} private byte[] siteName = ByteAry_.Empty;
 	public byte[] ServerName() {return serverName;} public Xow_wiki_props ServerName_(byte[] v) {serverName = v; server = ByteAry_.Add(bry_http, v); return this;} private byte[] serverName = ByteAry_.new_ascii_("localhost");
 	public byte[] Server() {return server;} private byte[] server = ByteAry_.new_ascii_("http://localhost"); static final byte[] bry_http = ByteAry_.new_ascii_("http://");
 	public byte[] ArticlePath() {return articlePath;} public Xow_wiki_props ArticlePath_(byte[] v) {articlePath = v; return this;} private byte[] articlePath = Xoh_href_parser.Href_wiki_bry;

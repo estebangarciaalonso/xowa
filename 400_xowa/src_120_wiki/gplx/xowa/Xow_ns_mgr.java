@@ -37,6 +37,9 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 		Xow_ns rv = this.Trie_match_exact(name_bry, 0, name_bry.length);
 		return rv == null ? this.Ns_main() : rv;
 	}
+	public Xow_ns Get_by_bry_or_null(byte[] name_bry) {
+		return this.Trie_match_exact(name_bry, 0, name_bry.length);
+	}
 	public Object Trie_match_colon(byte[] src, int bgn, int end) {return Trie_match_colon(src, bgn, end, colon_pos_tmp.Val_neg1_());}	static IntRef colon_pos_tmp = IntRef.neg1_();
 	public Object Trie_match_colon(byte[] src, int bgn, int end, IntRef colon_pos_ref) {
 		int colon_pos = ByteAry_.FindFwd(src, Byte_ascii.Colon, bgn, end); if (colon_pos == ByteAry_.NotFound) return null;
@@ -241,5 +244,25 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 			this.Add_alias(cur_id, String_.new_utf8_(flds[1]));
 		}
 		Ords_sort();
+	}
+	public int[] Ids_by_aliases(String[] aliases) {
+		ListAdp list = ListAdp_.new_();
+		int len = aliases.length;
+		for (int i = 0; i < len; i++) {
+			String alias = aliases[i];
+			if (String_.Eq(alias, Xow_ns_.Key_main))
+				list.Add(this.Ns_main());
+			else {
+				Xow_ns ns = this.Get_by_bry_or_null(ByteAry_.new_utf8_(alias));
+				if (ns != null)
+					list.Add(ns);
+			}
+		}
+		len = list.Count();
+		int[] rv = new int[len];
+		for (int i = 0; i < len; i++) {
+			rv[i] = ((Xow_ns)list.FetchAt(i)).Id();
+		}
+		return rv;
 	}
 }

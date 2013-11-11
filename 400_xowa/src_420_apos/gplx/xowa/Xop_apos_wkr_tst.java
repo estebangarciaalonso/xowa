@@ -126,7 +126,13 @@ public class Xop_apos_wkr_tst {
 	@Test   public void Nowiki() {	// EX:en.w:Wiki; DATE:2013-05-13
 		fxt.tst_Parse_page_all_str("<nowiki>''a''</nowiki>", "&#39;&#39;a&#39;&#39;");
 	}
-
+	@Test  public void Lnki_multi_line() {	// PURPOSE: handle apos within multi-line lnki caption; DATE:2013-11-10
+		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		(	"[[A|b '' c"
+		,	"d '' e ]]"
+		)
+		,	"<a href=\"/wiki/A\">b <i> c d </i> e</a>");	// NOTE: c d should be italicized, not c e (latter occurs when apos is ended on each line)
+	}
 
 //	@Test  public void Mix_lnke() {	// FUTURE: requires rewrite of apos
 //		fxt.tst_Parse_page_wiki("''a[irc://b c''d''e]f''"

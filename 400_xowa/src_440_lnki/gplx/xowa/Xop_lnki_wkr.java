@@ -16,12 +16,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.parsers.lnkis.*;
 public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
 	public void Page_bgn(Xop_ctx ctx) {}
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int srcLen) {}
-	public Xobc_lnki_wkr File_wkr() {return file_wkr;} public Xop_lnki_wkr File_wkr_(Xobc_lnki_wkr v) {file_wkr = v; return this;} private Xobc_lnki_wkr file_wkr;
-	public Xobc_lnki_wkr Ctg_wkr() {return ctg_wkr;} public Xop_lnki_wkr Ctg_wkr_(Xobc_lnki_wkr v) {ctg_wkr = v; return this;} private Xobc_lnki_wkr ctg_wkr;
+	public Xop_lnki_logger File_wkr() {return file_wkr;} public Xop_lnki_wkr File_wkr_(Xop_lnki_logger v) {file_wkr = v; return this;} private Xop_lnki_logger file_wkr;
+	public Xop_lnki_logger Lnki_logger() {return lnki_logger;} public Xop_lnki_wkr Lnki_logger_(Xop_lnki_logger v) {lnki_logger = v; return this;} private Xop_lnki_logger lnki_logger;
+	public Xop_lnki_logger Ctg_wkr() {return ctg_wkr;} public Xop_lnki_wkr Ctg_wkr_(Xop_lnki_logger v) {ctg_wkr = v; return this;} private Xop_lnki_logger ctg_wkr;
 	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos, Xop_tkn_itm tkn) {
 		Xop_lnki_tkn lnki = (Xop_lnki_tkn)tkn;
 		ctx.Msg_log().Add_itm_none(Xop_misc_log.Eos, src, lnki.Src_bgn(), lnki.Src_end());	// FUTURE: autoclose
@@ -52,6 +54,7 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		curPos = this.ChkForTail(ctx.Lang(), src, curPos, srcLen, lnki);
 		lnki.Src_end_(curPos);	// NOTE: must happen after ChkForTail; redundant with above, but above needed b/c of returns
 		root.Subs_del_after(lnki.Tkn_sub_idx() + 1);	// all tkns should now be converted to args in owner; delete everything in root
+		if (lnki_logger != null) lnki_logger.Wkr_exec(ctx, lnki);
 		switch (lnki.NmsId()) {
 			case Xow_ns_.Id_file:
 				switch (lnki.Lnki_type()) {

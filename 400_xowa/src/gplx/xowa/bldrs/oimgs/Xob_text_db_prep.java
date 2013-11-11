@@ -18,16 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.dbs.*; import gplx.xowa.dbs.*;
 public class Xob_text_db_prep extends Xob_itm_basic_base implements Xob_cmd {
+	private ListAdp providers = ListAdp_.new_();
 	public Xob_text_db_prep(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "oimg.text_db_prep";
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_bgn(Xob_bldr bldr) {
 		wiki.Init_assert();
 	}
-	public void Cmd_run() {Exec();}
-	public void Cmd_end() {}
-	public void Cmd_print() {}
-	private void Exec() {
+	public void Cmd_run() {
 		Xodb_fsys_mgr db_fsys_mgr = wiki.Db_mgr_as_sql().Fsys_mgr();
 		String page_db_url = db_fsys_mgr.Get_tid_root(Xodb_file.Tid_core).Url().Raw();
 		Xodb_file[] ary = db_fsys_mgr.Ary();
@@ -38,6 +36,15 @@ public class Xob_text_db_prep extends Xob_itm_basic_base implements Xob_cmd {
 				Prep_db(page_db_url, db_file);
 		}
 	}
+	public void Cmd_end() {
+		int len = providers.Count();
+		for (int i = 0; i < len; i++) {
+			Db_provider provider = (Db_provider)providers.FetchAt(i);
+			provider.Rls();
+		}
+		providers.Clear();
+	}
+	public void Cmd_print() {}
 	private void Prep_db(String page_db_url, Xodb_file text_db) {
 		usr_dlg.Note_many("", "", "copying page_rows to text_db: ~{0}", text_db.Url().NameOnly());
 		Db_provider provider = text_db.Provider();
@@ -47,7 +54,7 @@ public class Xob_text_db_prep extends Xob_itm_basic_base implements Xob_cmd {
 		provider.Exec_sql(String_.Format(Sql_insert_data, text_db.Id()));
 		provider.Txn_mgr().Txn_end_all();
 		Sqlite_engine_.Idx_create(provider, Idx_create);
-		provider.Rls();
+		providers.Add(provider);
 	}
 	private static final String Sql_create_tbl = String_.Concat_lines_nl
 	( "CREATE TABLE IF NOT EXISTS oimg_page_dump"

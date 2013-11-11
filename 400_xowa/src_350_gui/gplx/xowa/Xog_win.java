@@ -256,6 +256,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			page.File_math().Clear();			
 		}
 		page.Html_cmd_mgr().Exec(app, gui_wtr, page);
+		page.Wiki().Ctx().Tab().Redlinks_mgr().Redlink(page.Wiki(), this);
 		gui_wtr.Prog_none(GRP_KEY, "imgs.done", "");
 		app.Log_wtr().Queue_enabled_(false);
 	}
@@ -379,7 +380,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		app.Gui_mgr().Search_suggest_mgr().Cancel();
 		if (Env_.System_memory_free() < app.Sys_cfg().Free_mem_when()) app.Free_mem(false);			
 		Xoa_page old_page = page;
-		Xoa_page new_page = Xoa_page.Null;
+		Xoa_page new_page = Xoa_page.Null;			
 		if (url.Anchor_str() != null && url.Eq_page(old_page.Url()) && url.Args().length == 0)	// skip page load and just jump to anchor if (a) new.anchor != null (has anchor) (b) new.page == old.page (same page) (c) url.Args() == 0 (no args; needed for Category:A?from=b#mw-pages)
 			GfoInvkAble_.InvkCmd_val(async_cmd, Invk_html_box_select_by_id, url.Anchor_str());			
 		else {
@@ -432,7 +433,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			Exec_reload_imgs();
 		}
 	}	ThreadAdp reload_imgs_thread = ThreadAdp.Null;
-	private void Exec_reload_imgs() {
+	public void Exec_reload_imgs() {
 		reload_imgs_thread = ThreadAdp_.invk_(this, Invk_page_reload_imgs).Start();
 	}
 	private void Exec_page_dbg(byte view_tid) {

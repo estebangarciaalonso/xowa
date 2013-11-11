@@ -40,13 +40,19 @@ public class Gfo_usr_dlg_xowa extends Gfo_usr_dlg_base implements GfoInvkAble, X
 		GfoMsg m = GfoMsg_.new_cast_(Invk_html_elem_atr_set).Add("elem_id", elem_id).Add("atr_key", atr_key).Add("atr_val", atr_val);
 		GfoInvkAble_.InvkCmd_msg(cmd_sync, Invk_html_elem_atr_set, m);
 	}
+	public void Html_elem_atr_set_append(String elem_id, String atr_key, String atr_val) {
+		GfoMsg m = GfoMsg_.new_cast_(Invk_html_elem_atr_set_append).Add("elem_id", elem_id).Add("atr_key", atr_key).Add("atr_val", atr_val);
+		GfoInvkAble_.InvkCmd_msg(cmd_sync, Invk_html_elem_atr_set_append, m);
+	}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_html_img_update))	win.Html_box().Html_elem_img_update(m.ReadStr("elem_id"), m.ReadStr("elem_src"), m.ReadInt("elem_width"), m.ReadInt("elem_height"));
 		else if	(ctx.Match(k, Invk_html_elem_atr_set))  win.Html_box().Html_elem_atr_set(m.ReadStr("elem_id"), m.ReadStr("atr_key"), m.ReadStr("atr_val"));
+		else if	(ctx.Match(k, Invk_html_elem_atr_set_append)) 
+														win.Html_box().Html_elem_atr_set_append(m.ReadStr("elem_id"), m.ReadStr("atr_key"), m.ReadStr("atr_val"));
 		else if	(ctx.Match(k, Invk_html_elem_delete))	win.Html_box().Html_elem_delete(m.ReadStr("elem_id"));
 		else	return super.Invk(ctx, ikey, k, m);
 		return this;
-	}	private static final String Invk_html_img_update = "html_img_update", Invk_html_elem_atr_set = "html_elem_atr_set", Invk_html_elem_delete = "html_elem_delete";
+	}	private static final String Invk_html_img_update = "html_img_update", Invk_html_elem_atr_set = "html_elem_atr_set", Invk_html_elem_atr_set_append = "html_elem_atr_set_append", Invk_html_elem_delete = "html_elem_delete";
 	public static Gfo_usr_dlg_xowa console_() {
 		Gfo_usr_dlg_xowa rv = new Gfo_usr_dlg_xowa();
 		rv.Ui_wkr_(Gfo_usr_dlg_ui_.Console);

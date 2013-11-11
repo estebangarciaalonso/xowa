@@ -77,13 +77,10 @@ public class Xoa_xowa_exec implements GfoInvkAble {
 			return String_.new_utf8_(page.Data_raw());
 		} catch (Exception e) {Err_.Noop(e); return null;}
 	}
-	private boolean Get_title_exists(Xow_wiki wiki, byte[] ttl) {
-		return Pf_xtn_ifexist.Exists(tmp_page, wiki.Ctx(), ttl);
-	}	private static final Xodb_page tmp_page = Xodb_page.tmp_();
 	private String[] Get_title_meta(Xow_wiki wiki, byte[] ttl) {
 		Pf_xtn_ifexist.Exists(tmp_page, wiki.Ctx(), ttl);
 		return String_.Ary(tmp_page.Exists() ? "1" : "0", Int_.XtoStr(tmp_page.Id()), Int_.XtoStr(tmp_page.Ns_id()), String_.new_utf8_(tmp_page.Ttl_wo_ns()), Bool_.XtoStr_lower(tmp_page.Type_redirect()), tmp_page.Modified_on().XtoStr_fmt("yyyy-MM-dd HH:mm:ss"), Int_.XtoStr(tmp_page.Text_len()));
-	}
+	}	private static final Xodb_page tmp_page = Xodb_page.tmp_();
 	private String[][] Get_titles_meta(GfoMsg m) {
 		Xow_wiki wiki = app.Gui_mgr().Main_win().Page().Wiki();
 		try {
@@ -97,6 +94,9 @@ public class Xoa_xowa_exec implements GfoInvkAble {
 			return rv;
 		} catch (Exception e) {Err_.Noop(e); return null;}
 	}
+	private boolean Get_title_exists(Xow_wiki wiki, byte[] ttl) {
+		return Pf_xtn_ifexist.Exists(tmp_page, wiki.Ctx(), ttl);
+	}		
 	private String[] Get_titles_exists(GfoMsg m) {
 		Xow_wiki wiki = app.Gui_mgr().Main_win().Page().Wiki();
 		try {
@@ -110,6 +110,27 @@ public class Xoa_xowa_exec implements GfoInvkAble {
 			return rv;
 		} catch (Exception e) {Err_.Noop(e); return null;}
 	}	
+//		private String[] Get_titles_exists(GfoMsg m) {
+//			Xow_wiki wiki = app.Gui_mgr().Main_win().Page().Wiki();
+//			try {
+//				byte[][] ttls = ByteAry_.Ary_obj((Object[])m.ReadValAt(0));
+//				int ttls_len = ttls.length;
+//				OrderedHash hash = OrderedHash_.new_bry_();
+//				for (int i = 0; i < ttls_len; i++) {
+//					byte[] ttl = ttls[i];
+//					Xodb_page page = new Xodb_page().Ttl_(ttl, wiki.Ns_mgr());
+//					Xow_ns ns = page.Ns();
+//					hash.Add(ns.Gen_ttl(page.Ttl_wo_ns()), page);
+//				}
+//				wiki.Db_mgr().Load_mgr().Load_by_ttls(Cancelable_.Never, hash, true, 0, ttls_len);
+//				String[] rv = new String[ttls_len];
+//				for (int i = 0; i < ttls_len; i++) {
+//					Xodb_page page = (Xodb_page)hash.FetchAt(i);
+//					rv[i] = page.Exists() ? "1" : "0";
+//				}
+//				return rv;
+//			} catch (Exception e) {Err_.Noop(e); return null;}
+//		}	
 	private String Get_search_suggestions(GfoMsg m) {
 		Xow_wiki wiki = app.Gui_mgr().Main_win().Page().Wiki();
 		byte[] search_str = ByteAry_.new_utf8_((String)m.ReadValAt(0));

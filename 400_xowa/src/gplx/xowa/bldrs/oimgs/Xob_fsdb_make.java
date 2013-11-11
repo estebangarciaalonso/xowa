@@ -36,12 +36,15 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 	private Fsdb_xtn_img_itm tmp_img_itm = new Fsdb_xtn_img_itm(); private Fsdb_xtn_thm_itm tmp_thm_itm = new Fsdb_xtn_thm_itm(); private Fsdb_fil_itm tmp_fil_itm = new Fsdb_fil_itm();
 	private boolean app_restart_enabled = false;
 	private boolean exec_done;
+	private Fsdb_mnt_mgr mnt_mgr;
 	public Xob_fsdb_make(Xob_bldr bldr, Xow_wiki wiki) {
 		this.Cmd_ctor(bldr, wiki);
 		fsdb_mgr.Init_by_wiki(wiki);
 		Xof_fsdb_mgr_sql src_fsdb_mgr = new Xof_fsdb_mgr_sql();
 		src_fsdb_mgr.Init_by_wiki(wiki);
 		src_mgr = src_fsdb_mgr.Bin_mgr();
+		mnt_mgr = fsdb_mgr.Mnt_mgr();
+		mnt_mgr.Insert_db_(Fsdb_mnt_mgr.Mnt_idx_main);
 		poll_mgr = new Xob_poll_mgr(bldr.App());
 	}
 	public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "oimg.fsdb_make";
@@ -57,7 +60,8 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 			page_id_bmk = Int_.MaxValue;
 			lnki_id_bmk = Int_.MaxValue;
 		}
-		usr_dlg.Note_many("", "", "done: ~{0} ~{1}", exec_count, DecimalAdp_.divide_(exec_count, (1 + Env_.TickCount() - time_bgn) / 1000).XtoStr("#,###.000"));	// 1 + to prevent div by zero errrs
+		long time_end = ((Env_.TickCount() - time_bgn) / 1000) + 1; // 1 + to prevent div by zero errrs
+		usr_dlg.Note_many("", "", "done: ~{0} ~{1}", exec_count, DecimalAdp_.divide_(exec_count, time_end).XtoStr("#,###.000"));
 		Commit();
 		fsdb_mgr.Rls();	// save changes and rls all connections
 		provider.Txn_mgr().Txn_end_all();
@@ -227,10 +231,10 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		Xob_xfer_regy_log_tbl.Insert(db_log_stmt, Xob_xfer_regy_tbl.Status_pass, itm.Lnki_id(), itm.Rslt_bin(), "");
 	}
 	private void Commit() {
-		provider.Txn_mgr().Txn_end_all_bgn_if_none();
-		tbl_cfg.Update(Cfg_fsdb_make, Cfg_lnki_id_bmk, page_id_bmk);
-		tbl_cfg.Update(Cfg_fsdb_make, Cfg_page_id_bmk, lnki_id_bmk);
+		tbl_cfg.Update(Cfg_fsdb_make, Cfg_page_id_bmk, page_id_val);
+		tbl_cfg.Update(Cfg_fsdb_make, Cfg_lnki_id_bmk, lnki_id_val);
 		tbl_cfg.Provider().Txn_mgr().Txn_end_all_bgn_if_none();
+		mnt_mgr.Commit();
 		usr_dlg.Prog_many("", "", "committing data: count=~{0} failed=~{1}", exec_count, exec_fail);
 		if (exit_after_commit)
 			exit_now = true;
@@ -250,7 +254,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		if		(ctx.Match(k, Invk_progress_interval_))		progress_interval = m.ReadInt("v");
 		else if	(ctx.Match(k, Invk_commit_interval_))		commit_interval = m.ReadInt("v");
 		else if	(ctx.Match(k, Invk_select_interval_))		select_interval = m.ReadInt("v");
-		else if	(ctx.Match(k, Invk_db_bin_max_))			fsdb_mgr.Db_bin_max_(m.ReadLong("v"));
+		else if	(ctx.Match(k, Invk_db_bin_max_))			fsdb_mgr.Db_bin_max_(m.ReadLong("v") * Io_mgr.Len_mb);
 		else if	(ctx.Match(k, Invk_src_mgr))				return src_mgr;
 		else if	(ctx.Match(k, Invk_poll_mgr))				return poll_mgr;
 		else if	(ctx.Match(k, Invk_reset_db_))				reset_db = m.ReadYn("v");
@@ -287,10 +291,11 @@ class Xodb_tbl_oimg_xfer_itm extends Xof_fsdb_itm {	public int 			Lnki_id() {ret
 		rv.lnki_id = rdr.ReadInt(Xob_xfer_regy_tbl.Fld_oxr_lnki_id);
 		rv.Orig_repo_(rdr.ReadByte(Xob_xfer_regy_tbl.Fld_oxr_xfer_repo));
 		rv.File_is_orig_(rdr.ReadByte(Xob_xfer_regy_tbl.Fld_oxr_file_is_orig) == Bool_.Y_byte);
-		rv.Orig_ttl_(rdr.ReadBryByStr(Xob_xfer_regy_tbl.Fld_oxr_xfer_ttl));
 		rv.lnki_ext_id = rdr.ReadInt(Xob_xfer_regy_tbl.Fld_oxr_xfer_ext);
 		rv.Lnki_thumbtime_(rdr.ReadInt(Xob_xfer_regy_tbl.Fld_oxr_xfer_thumbtime));
-		rv.Lnki_ttl_(rdr.ReadBryByStr(Xob_xfer_regy_tbl.Fld_oxr_xfer_ttl));
+		byte[] ttl = rdr.ReadBryByStr(Xob_xfer_regy_tbl.Fld_oxr_xfer_ttl);
+		rv.Orig_ttl_(ttl);
+		rv.Lnki_ttl_(ttl);
 		rv.Html_size_(rdr.ReadInt(Xob_xfer_regy_tbl.Fld_oxr_file_w), rdr.ReadInt(Xob_xfer_regy_tbl.Fld_oxr_file_h));
 		return rv;
 	}

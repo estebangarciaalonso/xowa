@@ -18,36 +18,50 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.fsdb; import gplx.*;
 import gplx.dbs.*;
 public class Fsdb_dir_tbl {
-	public static void Create_table(Db_provider p) {
-		Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);
-		Sqlite_engine_.Idx_create(p, Idx_name);
+	private Db_provider provider;
+	private Db_stmt stmt_insert, stmt_update, stmt_select_by_name;
+	public Fsdb_dir_tbl(Db_provider provider, boolean created) {
+		this.provider = provider;
+		if (created) Create_table();
 	}
-	public static void Insert(Db_provider p, int id, String name, int owner_id) {
-		Db_stmt stmt = Insert_stmt(p);
-		try {Insert(stmt, id, name, owner_id);}
-		finally {stmt.Rls();}
+	public void Rls() {
+		if (stmt_insert != null) {stmt_insert.Rls(); stmt_insert = null;}
+		if (stmt_update != null) {stmt_update.Rls(); stmt_update = null;}
+		if (stmt_select_by_name != null) {stmt_select_by_name.Rls(); stmt_select_by_name = null;}
 	}
-	private static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_dir_id, Fld_dir_owner_id, Fld_dir_name);}
-	private static void Insert(Db_stmt stmt, int id, String name, int owner_id) {
-		stmt.Clear()
+	public void Create_table() {
+		Sqlite_engine_.Tbl_create(provider, Tbl_name, Tbl_sql);
+		Sqlite_engine_.Idx_create(provider, Idx_name);
+	}
+	private Db_stmt Insert_stmt() {return Db_stmt_.new_insert_(provider, Tbl_name, Fld_dir_id, Fld_dir_owner_id, Fld_dir_name);}
+	public void Insert(int id, String name, int owner_id) {
+		if (stmt_insert == null) stmt_insert = Insert_stmt();
+		stmt_insert.Clear()
 		.Val_int_(id)
 		.Val_int_(owner_id)
 		.Val_str_(name)
 		.Exec_insert();
 	}	
-	public static Db_stmt Update_stmt(Db_provider p) {return Db_stmt_.new_update_(p, Tbl_name, String_.Ary(Fld_dir_id), Fld_dir_owner_id, Fld_dir_name);}
-	public static void Update(Db_stmt stmt, int id, String name, int owner_id) {
-		stmt.Clear()
+	private Db_stmt Update_stmt() {return Db_stmt_.new_update_(provider, Tbl_name, String_.Ary(Fld_dir_id), Fld_dir_owner_id, Fld_dir_name);}
+	public void Update(int id, String name, int owner_id) {
+		if (stmt_update == null) stmt_update = Update_stmt();
+		stmt_update.Clear()
 		.Val_int_(id)
 		.Val_str_(name)
 		.Val_int_(owner_id)
 		.Exec_update();
-	}	
-	public static Fsdb_dir_itm Select_itm(Db_provider p, String dir_name) {
-		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_(Fld_dir_id, Fld_dir_owner_id).Where_(Db_crt_.eq_(Fld_dir_name, dir_name));
+	}
+	private Db_stmt Select_itm_stmt() {
+		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_(Fld_dir_id, Fld_dir_owner_id).Where_(Db_crt_.eq_(Fld_dir_name, ByteAry_.Empty));
+		return provider.Prepare(qry);
+	}
+	public Fsdb_dir_itm Select_itm(String dir_name) {
+		if (stmt_select_by_name == null) stmt_select_by_name = Select_itm_stmt();
 		DataRdr rdr = DataRdr_.Null;
 		try {
-			rdr = p.Exec_qry_as_rdr(qry);
+			rdr = stmt_select_by_name.Clear()
+				.Val_str_(dir_name)
+				.Exec_select();
 			while (rdr.MoveNextPeer()) {
 				return new Fsdb_dir_itm(rdr.ReadInt(Fld_dir_id), rdr.ReadInt(Fld_dir_owner_id), dir_name);
 			}

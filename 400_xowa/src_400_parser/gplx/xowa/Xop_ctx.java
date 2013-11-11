@@ -29,7 +29,7 @@ public class Xop_ctx {
 	}
 	public Xoa_app				App()				{return app;} private Xoa_app app;
 	public Xow_wiki				Wiki()				{return wiki;} private Xow_wiki wiki;
-	public Xog_tab Tab() {return tab;} public Xop_ctx Tab_(Xog_tab v) {tab = v; return this;} private Xog_tab tab = new Xog_tab();
+	public Xog_tab Tab() {return tab;} private Xog_tab tab;
 	public Xol_lang				Lang()				{return wiki.Lang();}
 	public Xoa_page				Page()				{return page;} public Xop_ctx Page_(Xoa_page v) {page = v; return this;} private Xoa_page page;
 	public Xop_tkn_mkr			Tkn_mkr()			{return app.Tkn_mkr();}
@@ -237,11 +237,17 @@ public class Xop_ctx {
 		if (stack_pos == -1) return;
 		ctx.Stack_pop_til(stack_pos, true, bgnPos, curPos);
 	}
-	public static Xop_ctx new_(Xow_wiki wiki) {return new Xop_ctx(wiki);}
+	public static Xop_ctx new_(Xow_wiki wiki) {
+		Xop_ctx rv = new Xop_ctx(wiki);
+		rv.tab = new Xog_tab();
+		rv.Lnki().Lnki_logger_(rv.tab.Redlinks_mgr());
+		return rv;
+	}
 	public static Xop_ctx new_sub_(Xow_wiki wiki) {
 		Xop_ctx rv = new Xop_ctx(wiki);
 		rv.Page().Page_ttl_(wiki.Ctx().Page().Page_ttl());	// NOTE: sub_ctx must have same page_ttl as owner; see Xtn_lst_tst!Fullpagename
-		rv.Tab_(wiki.Ctx().Tab());	// NOTE: tab should be same instance across all sub_ctxs; otherwise CallParserFunction will not set DISPLAYTITLE correctly; DATE:2013-08-05
+		rv.tab = wiki.Ctx().Tab();	// NOTE: tab should be same instance across all sub_ctxs; otherwise CallParserFunction will not set DISPLAYTITLE correctly; DATE:2013-08-05
+		rv.Lnki().Lnki_logger_(rv.tab.Redlinks_mgr());
 		return rv;
 	}
 }

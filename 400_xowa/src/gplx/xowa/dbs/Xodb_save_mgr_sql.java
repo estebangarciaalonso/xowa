@@ -65,7 +65,7 @@ public class Xodb_save_mgr_sql implements Xodb_save_mgr {
 			provider.Txn_mgr().Txn_end_all();
 		}
 		Xodb_page db_page = new Xodb_page();
-		db_mgr.Load_mgr().Load_ttl_by_id(db_page, page.Page_id());
+		db_mgr.Load_mgr().Load_by_id(db_page, page.Page_id());
 		text = zip_mgr.Zip(db_mgr.Data_storage_format(), text);
 		db_mgr.Tbl_text().Update(db_page.Db_file_idx(), page.Page_id(), text);
 	}

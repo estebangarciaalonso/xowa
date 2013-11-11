@@ -19,14 +19,14 @@ package gplx.fsdb; import gplx.*;
 import gplx.dbs.*;
 public class Fsdb_db_atr_tbl {
 	public static void Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
-	public static Fsdb_db_atr_fil[] Select_all(Db_provider p, Io_url dir) {
+	public static Fsdb_db_atr_fil[] Select_all(Fsdb_db_abc_mgr abc_mgr, Db_provider p, Io_url dir) {
 		ListAdp rv = ListAdp_.new_();
 		Db_qry qry = Db_qry_select.new_().From_(Tbl_name).Cols_all_().OrderBy_asc_(Fld_fda_id);
 		DataRdr rdr = DataRdr_.Null;
 		try {
 			rdr = p.Exec_qry_as_rdr(qry);
 			while (rdr.MoveNextPeer()) {
-				Fsdb_db_atr_fil itm = Fsdb_db_atr_fil.load_(rdr, dir);
+				Fsdb_db_atr_fil itm = Fsdb_db_atr_fil.load_(abc_mgr, rdr, dir);
 				rv.Add(itm);
 			}
 		} finally {rdr.Rls();}

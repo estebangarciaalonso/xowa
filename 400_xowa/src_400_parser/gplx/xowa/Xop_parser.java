@@ -56,8 +56,7 @@ public class Xop_parser {
 	public void Parse_page_all(Xop_root_tkn root, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, byte[] src, int doc_bgn_pos) {
 		ctx.Parse_tid_(Xop_parser_.Parse_tid_page_tmpl);
 		root.Reset();
-		byte[] mid_bry = ctx.Page().Page_ttl().Ns().Id_module() ? src : Parse_page_tmpl(root, ctx, tkn_mkr, src);// HACK: do not parse anything if Module; else embedded template names will be called; EX: Module:Routelist_row has comment -- Date passed to the module via the "established" parameter of {{routelist row}}; DATE:2013-04-04
-//			byte[] mid_bry = Parse_page_tmpl(root, ctx, tkn_mkr, src);
+		byte[] mid_bry = Parse_page_tmpl(root, ctx, tkn_mkr, src);
 		root.Data_mid_(mid_bry);
 		root.Reset();
 		Parse_page_wiki(root, ctx, tkn_mkr, mid_bry, doc_bgn_pos);

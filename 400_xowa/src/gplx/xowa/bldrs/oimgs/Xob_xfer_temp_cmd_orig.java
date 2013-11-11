@@ -30,9 +30,10 @@ public class Xob_xfer_temp_cmd_orig extends Xob_itm_basic_base implements Xob_cm
 		DataRdr rdr = provider.Exec_sql_as_rdr(Sql_select);
 		long[] ext_maxs = Calc_ext_max();
 		while (rdr.MoveNextPeer()) {
+			byte lnki_ext = rdr.ReadByte(Xob_lnki_regy_tbl.Fld_olr_lnki_ext);
 			String orig_media_type = rdr.ReadStrOr(Xob_orig_regy_tbl.Fld_oor_orig_media_type, "");	// convert nulls to ""
 			byte orig_media_type_tid = Xof_media_type.Xto_byte(orig_media_type);
-			byte lnki_ext = rdr.ReadByte(Xob_lnki_regy_tbl.Fld_olr_lnki_ext);
+			lnki_ext = Xof_media_type.Convert_if_ogg_and_video(lnki_ext, orig_media_type_tid);
 			int lnki_id = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_id);
 			byte orig_repo = rdr.ReadByte(Xob_orig_regy_tbl.Fld_oor_orig_repo);
 			int orig_page_id = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_page_id, -1);
@@ -43,10 +44,6 @@ public class Xob_xfer_temp_cmd_orig extends Xob_itm_basic_base implements Xob_cm
 				redirect_src = "";
 			int orig_w = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_w, -1);
 			int orig_h = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_h, -1);
-			if (   orig_media_type_tid == Xof_media_type.Tid_video	// media_type is "VIDEO"
-				&& lnki_ext == Xof_ext_.Id_ogg						// ext is ".ogg"
-				)
-				lnki_ext = Xof_ext_.Id_ogv;							// some .ogg files are "VIDEO"; manually override lnki_ext type
 			int orig_size = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_size, -1);
 			if (orig_size > ext_maxs[lnki_ext]) continue;
 			int lnki_page_id = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_page_id);
@@ -99,16 +96,4 @@ public class Xob_xfer_temp_cmd_orig extends Xob_itm_basic_base implements Xob_cm
 		else	return super.Invk (ctx, ikey, k, m);
 		return this;
 	}	private static final String Invk_ext_rules_ = "ext_rules_";
-}
-class Xof_media_type {
-	public static final byte Tid_null = 0, Tid_audio = 1, Tid_bitmap = 2, Tid_drawing = 2, Tid_office = 3, Tid_video = 4;
-	public static final String Name_null = "", Name_audio = "AUDIO", Name_bitmap = "BITMAP", Name_drawing = "DRAWING", Name_office = "OFFICE", Name_video = "VIDEO";
-	public static byte Xto_byte(String v) {
-		if		(String_.Eq(v, Name_audio))		return Tid_audio;
-		else if	(String_.Eq(v, Name_bitmap))	return Tid_bitmap;
-		else if	(String_.Eq(v, Name_drawing))	return Tid_drawing;
-		else if	(String_.Eq(v, Name_office))	return Tid_office;
-		else if	(String_.Eq(v, Name_video))		return Tid_video;
-		else									return Tid_null;
-	}
 }

@@ -26,6 +26,7 @@ public class Gfui_html extends GfuiElemBase {
 	public String		Html_elem_atr_get_str(String elem_id, String atr_key) {return under.Html_elem_atr_get_str(elem_id, atr_key);}
 	public boolean			Html_elem_atr_get_bool(String elem_id, String atr_key) {return under.Html_elem_atr_get_bool(elem_id, atr_key);}
 	public boolean		Html_elem_atr_set(String elem_id, String atr_key, String v) {return under.Html_elem_atr_set(elem_id, atr_key, v);}
+	public boolean		Html_elem_atr_set_append(String elem_id, String atr_key, String append) {return under.Html_elem_atr_set_append(elem_id, atr_key, append);}
 	public boolean		Html_elem_delete(String elem_id) {return under.Html_elem_delete(elem_id);}
 	public void			Html_elem_focus(String elem_id) {under.Html_elem_focus(elem_id);}
 	public boolean		Html_elem_scroll_into_view(String elem_id) {return under.Html_elem_scroll_into_view(elem_id);}

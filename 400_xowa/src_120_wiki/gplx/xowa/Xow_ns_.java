@@ -31,6 +31,21 @@ public class Xow_ns_ {
 		, Id_portal				= 100				, Id_portal_talk		= 101
 	    , Id_null				= Int_.MinValue
 		;
+	public static final String
+		  Key_media				= "Media"
+		, Key_special			= "Special"
+		, Key_main				= "(Main)"			, Key_talk				= "Talk"
+		, Key_user				= "User"			, Key_user_talk			= "User talk"
+		, Key_project			= "Project"			, Key_project_talk		= "Project talk"
+		, Key_file				= "File"			, Key_file_talk			= "File talk"
+		, Key_mediaWiki			= "MediaWiki"		, Key_mediaWiki_talk	= "MediaWiki talk"
+		, Key_template			= "Template"		, Key_template_talk		= "Template talk"
+		, Key_help				= "Help"			, Key_help_talk			= "Help talk"
+		, Key_category			= "Category"		, Key_category_talk		= "Category talk"
+		, Key_portal			= "Portal"			, Key_portal_talk		= "Portal talk"
+		, Key_module			= "Module"			, Key_module_talk		= "Module talk"
+	    , Key_null				= "null"
+		;
 	public static final byte Case_match_all = 0, Case_match_1st = 1;
 	public static byte Case_match_parse_(String s) {
 		if		(String_.Eq(s, "first-letter"))		return Case_match_1st;
@@ -52,23 +67,23 @@ public class Xow_ns_ {
 	}	private static OrderedHash canonical_hash;
 	public static int Canonical_idx_media = 0;
 	public static final Xow_ns[] Canonical = new Xow_ns[]	// REF.MW: Namespace.php|$wgCanonicalNamespaceNames
-	{	Canonical_new_(Id_media,				"Media")
-	,	Canonical_new_(Id_special,				"Special")
-	,	Canonical_new_(Id_talk,					"Talk")
-	,	Canonical_new_(Id_user,					"User")
-	,	Canonical_new_(Id_user_talk,			"User talk")
-	,	Canonical_new_(Id_project,				"Project")
-	,	Canonical_new_(Id_project_talk,			"Project talk")
-	,	Canonical_new_(Id_file,					"File")
-	,	Canonical_new_(Id_file_talk,			"File talk")
-	,	Canonical_new_(Id_mediaWiki,			"MediaWiki")
-	,	Canonical_new_(Id_mediaWiki,			"MediaWiki talk")
-	,	Canonical_new_(Id_template,				"Template")
-	,	Canonical_new_(Id_template_talk,		"Template talk")
-	,	Canonical_new_(Id_help,					"Help")
-	,	Canonical_new_(Id_help_talk,			"Help talk")
-	,	Canonical_new_(Id_category,				"Category")
-	,	Canonical_new_(Id_category_talk,		"Category talk")
+	{	Canonical_new_(Id_media,				Key_media)
+	,	Canonical_new_(Id_special,				Key_special)
+	,	Canonical_new_(Id_talk,					Key_talk)
+	,	Canonical_new_(Id_user,					Key_user)
+	,	Canonical_new_(Id_user_talk,			Key_user_talk)
+	,	Canonical_new_(Id_project,				Key_project)
+	,	Canonical_new_(Id_project_talk,			Key_project_talk)
+	,	Canonical_new_(Id_file,					Key_file)
+	,	Canonical_new_(Id_file_talk,			Key_file_talk)
+	,	Canonical_new_(Id_mediaWiki,			Key_mediaWiki)
+	,	Canonical_new_(Id_mediaWiki_talk,		Key_mediaWiki_talk)
+	,	Canonical_new_(Id_template,				Key_template)
+	,	Canonical_new_(Id_template_talk,		Key_template_talk)
+	,	Canonical_new_(Id_help,					Key_help)
+	,	Canonical_new_(Id_help_talk,			Key_help_talk)
+	,	Canonical_new_(Id_category,				Key_category)
+	,	Canonical_new_(Id_category_talk,		Key_category_talk)
 	};
 	public static final String Ns_name_wikipedia = "Wikipedia";
 	public static final String Ns_name_main = "Main";

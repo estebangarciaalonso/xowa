@@ -18,18 +18,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.fsdb; import gplx.*;
 import gplx.dbs.*;
 public class Fsdb_xtn_thm_tbl {
-	public static void Create_table(Db_provider p) {
-		Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);
-		Sqlite_engine_.Idx_create(p, Idx_name);
+	private Db_provider provider;
+	private Db_stmt stmt_insert, stmt_delete, stmt_select_by_id, stmt_select_by_fil_w, stmt_select_by_owner;
+	public Fsdb_xtn_thm_tbl(Db_provider provider, boolean created) {
+		this.provider = provider;
+		if (created) Create_table();
 	}
-	public static void Insert(Db_provider p, int id, int thm_owner_id, int width, int height, int thumbtime, int bin_db_id, long size, DateAdp modified, String hash) {
-		Db_stmt stmt = Insert_stmt(p);
-		try {Insert(stmt, id, thm_owner_id, width, height, thumbtime, bin_db_id, size, modified, hash);}
-		finally {stmt.Rls();}
+	private void Create_table() {
+		Sqlite_engine_.Tbl_create(provider, Tbl_name, Tbl_sql);
+		Sqlite_engine_.Idx_create(provider, Idx_name);
 	}
-	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_thm_id, Fld_thm_owner_id, Fld_thm_w, Fld_thm_h, Fld_thm_thumbtime, Fld_thm_bin_db_id, Fld_thm_size, Fld_thm_modified, Fld_thm_hash);}
-	public static void Insert(Db_stmt stmt, int id, int thm_owner_id, int width, int height, int thumbtime, int bin_db_id, long size, DateAdp modified, String hash) {
-		stmt.Clear()
+	public void Rls() {
+		if (stmt_insert != null) {stmt_insert.Rls(); stmt_insert = null;}
+		if (stmt_delete != null) {stmt_delete.Rls(); stmt_delete = null;}
+		if (stmt_select_by_id != null) {stmt_select_by_id.Rls(); stmt_select_by_id = null;}
+		if (stmt_select_by_fil_w != null) {stmt_select_by_fil_w.Rls(); stmt_select_by_fil_w = null;}
+		if (stmt_select_by_id != null) {stmt_select_by_id.Rls(); stmt_select_by_id = null;}
+		if (stmt_select_by_owner != null) {stmt_select_by_owner.Rls(); stmt_select_by_owner = null;}
+	}
+	private Db_stmt Insert_stmt() {return Db_stmt_.new_insert_(provider, Tbl_name, Fld_thm_id, Fld_thm_owner_id, Fld_thm_w, Fld_thm_h, Fld_thm_thumbtime, Fld_thm_bin_db_id, Fld_thm_size, Fld_thm_modified, Fld_thm_hash);}
+	public void Insert(int id, int thm_owner_id, int width, int height, int thumbtime, int bin_db_id, long size, DateAdp modified, String hash) {
+		if (stmt_insert == null) stmt_insert = Insert_stmt();
+		stmt_insert.Clear()
 		.Val_int_(id)
 		.Val_int_(thm_owner_id)
 		.Val_int_(width)
@@ -41,23 +51,25 @@ public class Fsdb_xtn_thm_tbl {
 		.Val_str_(hash)
 		.Exec_insert();
 	}
-	public static void Delete_by_id(Db_provider p, int id) {
-		Db_stmt stmt = Delete_by_id_stmt(p);
-		try {Delete_by_id(stmt, id);}
-		finally {stmt.Rls();}
-	}
-	public static Db_stmt Delete_by_id_stmt(Db_provider p) {return Db_stmt_.new_delete_(p, Tbl_name, Fld_thm_id);}
-	public static void Delete_by_id(Db_stmt stmt, int thm_id) {
-		stmt.Clear()
+	private Db_stmt Delete_stmt() {return Db_stmt_.new_delete_(provider, Tbl_name, Fld_thm_id);}
+	public void Delete_by_id(int thm_id) {
+		if (stmt_delete == null) stmt_delete = Delete_stmt();
+		stmt_delete.Clear()
 		.Val_int_(thm_id)
 		.Exec_delete();
 	}
-	public static Fsdb_xtn_thm_itm Select_itm_by_id(Db_provider p, int thm_id) {
-		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_()
-			.Where_(Db_crt_.eq_(Fld_thm_id, thm_id));
+	private Db_stmt Select_by_itm_stmt() {
+		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(Db_crt_.eq_(Fld_thm_id, 0));
+		return provider.Prepare(qry);
+	}
+	public Fsdb_xtn_thm_itm Select_itm_by_id(int thm_id) {
+		if (stmt_select_by_id == null) stmt_select_by_id = Select_by_itm_stmt();
 		DataRdr rdr = DataRdr_.Null;
 		try {
-			rdr = p.Exec_qry_as_rdr(qry);
+			rdr = stmt_select_by_id.Clear()
+				.Val_int_(thm_id)
+				.Exec_select()
+				;
 			if (rdr.MoveNextPeer()) {
 				return Fsdb_xtn_thm_itm.load_(rdr);
 			}
@@ -66,12 +78,21 @@ public class Fsdb_xtn_thm_tbl {
 		}
 		finally {rdr.Rls();}
 	}
-	public static Fsdb_xtn_thm_itm Select_itm_by_fil_width(Db_provider p, int owner, int width, int thumbtime) {
+	private Db_stmt Select_by_fil_w_stmt() {
 		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_()
-			.Where_(gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_thm_owner_id, owner), Db_crt_.eq_(Fld_thm_w, width), Db_crt_.eq_(Fld_thm_thumbtime, X_thumbtime_to_db(thumbtime))));
+			.Where_(gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_thm_owner_id, Int_.MinValue), Db_crt_.eq_(Fld_thm_w, Int_.MinValue), Db_crt_.eq_(Fld_thm_thumbtime, Int_.MinValue)));
+		return provider.Prepare(qry);
+	}
+	public Fsdb_xtn_thm_itm Select_itm_by_fil_width(int owner, int width, int thumbtime) {
+		if (stmt_select_by_fil_w == null) stmt_select_by_fil_w = Select_by_fil_w_stmt();
 		DataRdr rdr = DataRdr_.Null;
 		try {
-			rdr = p.Exec_qry_as_rdr(qry);
+			rdr = stmt_select_by_fil_w.Clear()
+				.Val_int_(owner)
+				.Val_int_(width)
+				.Val_int_(X_thumbtime_to_db(thumbtime))
+				.Exec_select()
+				;
 			if (rdr.MoveNextPeer())
 				return Fsdb_xtn_thm_itm.load_(rdr);
 			else
@@ -79,12 +100,19 @@ public class Fsdb_xtn_thm_tbl {
 		}
 		finally {rdr.Rls();}
 	}
-	public static Fsdb_xtn_thm_itm[] Select_itms_by_owner(Db_provider p, int owner) {
+	private Db_stmt Select_itms_by_owner_stmt() {
 		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_()
-			.Where_(Db_crt_.eq_(Fld_thm_owner_id, owner));
+			.Where_(Db_crt_.eq_(Fld_thm_owner_id, Int_.MinValue));
+		return provider.Prepare(qry);
+	}
+	public Fsdb_xtn_thm_itm[] Select_itms_by_owner(int owner) {
+		if (stmt_select_by_owner == null) stmt_select_by_owner = Select_itms_by_owner_stmt();
 		DataRdr rdr = DataRdr_.Null;
 		try {
-			rdr = p.Exec_qry_as_rdr(qry);
+			rdr = stmt_select_by_fil_w.Clear()
+				.Val_int_(owner)
+				.Exec_select()
+				;
 			ListAdp rv = ListAdp_.Null;
 			while (rdr.MoveNextPeer()) {
 				if (rv == ListAdp_.Null) rv = ListAdp_.new_();

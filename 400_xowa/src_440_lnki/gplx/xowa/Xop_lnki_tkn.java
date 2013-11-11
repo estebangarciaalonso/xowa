@@ -41,6 +41,7 @@ public class Xop_lnki_tkn extends Xop_tkn_itm_base {
 	public Arg_nde_tkn Alt_tkn() {return alt_tkn;} public Xop_lnki_tkn Alt_tkn_(Arg_nde_tkn v) {alt_tkn = v; return this;} Arg_nde_tkn alt_tkn = Arg_nde_tkn.Null;
 	public boolean Alt_exists() {return alt_tkn != Arg_nde_tkn.Null;}
 	public Xoa_ttl Ttl() {return ttl;} public Xop_lnki_tkn Ttl_(Xoa_ttl v) {ttl = v; return this;} private Xoa_ttl ttl;
+	public int Html_id() {return html_id;} public Xop_lnki_tkn Html_id_(int v) {html_id = v; return this;} private int html_id;
 	public byte[] Ttl_ary() {
 		return ttl.ForceLiteralLink() || nsId != Xow_ns_.Id_main		// if [[:]] or non-main (Category, Template)
 			? ttl.Full_txt()												// use full_txt (no initial colon; capitalize first)

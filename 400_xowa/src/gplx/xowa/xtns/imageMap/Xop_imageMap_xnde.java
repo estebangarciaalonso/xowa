@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.imageMap; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.xowa.parsers.lnkis.*;
 public class Xop_imageMap_xnde implements Xop_xnde_xtn {
 	public byte[] Xtn_src() {return lnki_src;} private byte[] lnki_src;
 	public boolean Xtn_literal() {return false;}
@@ -55,7 +56,7 @@ public class Xop_imageMap_xnde implements Xop_xnde_xtn {
 					}
 				}
 				//int bgn = ws_pos_bgn = -1 ? nl_0_pos : ws
-				ParseLine(imageMap_ctx, wiki, tkn_mkr, root, src, src_len, xnde, nl_0_pos, nl_1_pos);
+				ParseLine(ctx, imageMap_ctx, wiki, tkn_mkr, root, src, src_len, xnde, nl_0_pos, nl_1_pos);
 				nl_0_pos = nl_1_pos + 1;
 				nl_1_pos = -1;
 			}
@@ -75,15 +76,32 @@ public class Xop_imageMap_xnde implements Xop_xnde_xtn {
 			++cur_pos;
 		}
 	}	boolean first = true;
-	private void ParseLine(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, Xop_xnde_tkn xnde, int nl_0_pos, int nl_1_pos) {
+	private void ParseLine(Xop_ctx orig_ctx, Xop_ctx image_map_ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, Xop_xnde_tkn xnde, int nl_0_pos, int nl_1_pos) {
 		int line_len = nl_1_pos - nl_0_pos; 
 		if (line_len == 0 || src[nl_0_pos + 1] == Byte_ascii.Hash) return;
 		if (first) {
 			byte[] lnki_raw = ByteAry_.Add(Xop_tkn_.Lnki_bgn, ByteAry_.Mid(src, nl_0_pos, nl_1_pos), Xop_tkn_.Lnki_end);
 			lnki_root = tkn_mkr.Root(lnki_src);
-			ctx.Wiki().Parser().Parse_page_all(lnki_root, ctx, tkn_mkr, lnki_raw, 0);
+			image_map_ctx.Wiki().Parser().Parse_page_all(lnki_root, image_map_ctx, tkn_mkr, lnki_raw, 0);
 			lnki_src = lnki_root.Root_src();	// NOTE: html_wtr will write based on parsed mid (not raw)
-			lnki_root.Root_src_(lnki_src);	// HACK: Xoh_html_wtr uses raw (instead of mid); put data in raw in order to conform to other xtns
+			lnki_root.Root_src_(lnki_src);		// HACK: Xoh_html_wtr uses raw (instead of mid); put data in raw in order to conform to other xtns
+			Xop_lnki_logger file_wkr = orig_ctx.Lnki().File_wkr();	// NOTE: do not do image_map_ctx.Lnki(); image_map_ctx is brand new
+			if (file_wkr != null) {
+				Xop_lnki_tkn lnki_tkn = null;
+				int subs_len = lnki_root.Subs_len();
+				for (int i = 0; i < subs_len; i++) {
+					Xop_tkn_itm sub_tkn = lnki_root.Subs_get(i);
+					if (sub_tkn.Tkn_tid() == Xop_tkn_itm_.Tid_lnki) {
+						lnki_tkn = (Xop_lnki_tkn)sub_tkn;
+						break;
+					}
+				}
+				if (lnki_tkn == null) {
+					image_map_ctx.Wiki().App().Usr_dlg().Warn_many("", "", "image_map failed to find lnki; page=~{0} imageMap=~{1}", String_.new_utf8_(image_map_ctx.Page().Page_ttl().Full_txt()), String_.new_utf8_(lnki_raw));
+				}
+				else
+					file_wkr.Wkr_exec(orig_ctx, lnki_tkn);
+			}
 			first = false;
 		}
 		else {

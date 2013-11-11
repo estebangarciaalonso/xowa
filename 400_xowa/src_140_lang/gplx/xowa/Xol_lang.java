@@ -31,6 +31,7 @@ public class Xol_lang implements GfoInvkAble {
 		if (Env_.Mode_testing() && lang_id == Xol_lang_itm_.Id_en)	// NOTE: if test (and english) load case_mgr; NOTE: placed here b/c tests do not call load; NOTE: using English b/c Universal is large
 			case_mgr.Add_bulk(Xol_case_itm_.English);
 		grammar = Xol_grammar_.new_by_lang_id(lang_id);
+		plural = Xol_plural_.new_by_lang_id(lang_id);
 		lnki_trail_mgr = new Xol_lnki_trail_mgr(this);
 	}
 	public Xoa_app App() {return app;} private Xoa_app app;
@@ -48,6 +49,7 @@ public class Xol_lang implements GfoInvkAble {
 	public boolean Variants_enabled() {return variants_enabled;} public Xol_lang Variants_enabled_(boolean v) {variants_enabled = v; return this;} private boolean variants_enabled;
 	public Xol_fragment_mgr Fragment_mgr() {return fragment_mgr;} private Xol_fragment_mgr fragment_mgr;
 	public Xol_grammar Grammar() {return grammar;} private Xol_grammar grammar;
+	public Xol_plural Plural() {return plural;} private Xol_plural plural;
 	public Xol_lnki_trail_mgr Lnki_trail_mgr() {return lnki_trail_mgr;} private Xol_lnki_trail_mgr lnki_trail_mgr;
 	public Xol_specials_mgr Specials_mgr() {return specials_mgr;} private Xol_specials_mgr specials_mgr;
 	

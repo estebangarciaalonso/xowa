@@ -64,6 +64,7 @@ public abstract class Xog_win_view_base implements GfoInvkAble {
 			this.Exec_async(Xog_win.Invk_html_box_focus_previous_or_firstHeading);
 		if (new_page.Url().Anchor_bry() != null)
 			app.Gui_mgr().Main_win().Exec_async_arg(Xog_win.Invk_html_box_select_by_id, new_page.Url().Anchor_str());
+		app.Gui_mgr().Main_win().Exec_reload_imgs();
 	}
 	public abstract void Exec_async(String cmd);
 	public abstract void Exec_sync(String cmd);

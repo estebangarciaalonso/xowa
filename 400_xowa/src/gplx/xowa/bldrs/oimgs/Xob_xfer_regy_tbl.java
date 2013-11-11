@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.dbs.*;
 class Xob_xfer_regy_log_tbl {
-	public static void Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
+	public static void Create_table(Db_provider p) {Sqlite_engine_.Tbl_create_and_delete(p, Tbl_name, Tbl_sql);}
 	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_oxr_lnki_id, Fld_oxr_xfer_status, Fld_oxr_xfer_bin_tid, Fld_oxr_xfer_bin_msg);}
 	public static void Insert(Db_stmt stmt, byte status, int id, byte wkr_tid, String wkr_msg) {
 		stmt.Clear()
@@ -41,7 +41,7 @@ class Xob_xfer_regy_log_tbl {
 	;
 }
 class Xob_xfer_regy_tbl {
-	public static void Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
+	public static void Create_table(Db_provider p) {Sqlite_engine_.Tbl_create_and_delete(p, Tbl_name, Tbl_sql);}
 	public static void Create_data(Gfo_usr_dlg usr_dlg, Db_provider p) {
 		p.Exec_sql(Sql_create_data_orig);
 		p.Exec_sql(Sql_create_data_thumb);
@@ -134,7 +134,7 @@ class Xob_xfer_regy_tbl {
 	);
 	private static final Db_idx_itm
 //		  Idx_select		= Db_idx_itm.sql_("CREATE        INDEX IF NOT EXISTS oimg_xfer_regy__select        ON oimg_xfer_regy (oxr_xfer_status, oxr_xfer_repo, oxr_xfer_ttl, oxr_file_w);")
-	  Idx_lnki_page_id	= Db_idx_itm.sql_("CREATE        INDEX IF NOT EXISTS oimg_xfer_regy__lnki_page_id  ON oimg_xfer_regy (oxr_xfer_status, oxr_lnki_page_id, oxr_lnki_id);")
+	  Idx_lnki_page_id	= Db_idx_itm.sql_("CREATE        INDEX IF NOT EXISTS oimg_xfer_regy__lnki_page_id  ON oimg_xfer_regy (oxr_xfer_status, oxr_lnki_page_id, oxr_lnki_id, oxr_xfer_repo, oxr_file_is_orig, oxr_xfer_ttl, oxr_xfer_ext, oxr_xfer_thumbtime, oxr_file_w, oxr_file_h);")
 	;
 	public static byte Status_todo = 0, Status_pass = 1, Status_fail = 2, Status_ignore_processed = 3;
 }

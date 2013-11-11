@@ -163,8 +163,26 @@ public class Xop_lnki_wkr_tst {
 		fxt.tst_Parse_page_wiki("[[]]", fxt.tkn_txt_(0, 4));
 		fxt.tst_Parse_page_wiki("[[ ]]", fxt.tkn_txt_(0, 5));
 	}
-	@Test  public void Exc_nl_with_apos() {	// PURPOSE: apos, lnki and nl will cause parser to fail; DATE:2013-10-31
+	@Test  public void Exc_nl_with_apos() {			// PURPOSE: apos, lnki and nl will cause parser to fail; DATE:2013-10-31
 		fxt.tst_Parse_page_all_str("''[[\n]]", "<i>[[\n]]</i>");
+	}
+	@Test  public void Exc_nl_multiple_lines() {	// PURPOSE: apos, tblw, lnki, and nl will cause parser to fail; EX:Module:Taxobox; DATE:2013-11-10
+		fxt.Ctx().Para().Enabled_y_();
+		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl
+		(	" [[''"
+		,	" [["
+		,	"  |"
+		,	"]]"
+		)
+		,	String_.Concat_lines_nl_skipLast
+		(	"<pre>[[<i>"
+		,	"[["
+		,	"  |"
+		,	"]] "
+		,	"</p>"
+		,	"</i>"
+		));
+		fxt.Ctx().Para().Enabled_n_();
 	}
 	@Test  public void Exc_pipeOnly() {
 		fxt.tst_Parse_page_wiki("[[|]]", fxt.tkn_txt_(0, 5));

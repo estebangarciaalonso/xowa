@@ -327,7 +327,7 @@ public class ByteAry_ {
 		}
 		return src.length;
 	}
-	public static int FindFwd(byte[] src, byte[] lkp)								{return Find(src, lkp, 0	 , src.length, true);}
+	public static int FindFwd(byte[] src, byte[] lkp)								{return Find(src, lkp, 0	  , src.length, true);}
 	public static int FindFwd(byte[] src, byte[] lkp, int src_bgn)					{return Find(src, lkp, src_bgn, src.length, true);}
 	public static int FindFwd(byte[] src, byte[] lkp, int src_bgn, int srcEnd)		{return Find(src, lkp, src_bgn,	   srcEnd, true);}
 	public static int FindBwd_last_ws(byte[] src, int src_bgn)						{

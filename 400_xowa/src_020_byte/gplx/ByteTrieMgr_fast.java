@@ -66,9 +66,19 @@ public class ByteTrieMgr_fast {
 		ByteTrieItm_fast cur = root;
 		for (int i = 0; i < key_len; i++) {
 			byte b = key[i];
-			cur = cur.Ary_find(b);
-			if (cur == null) break;
-			cur.Ary_del(b);
+			Object itm_obj = cur.Ary_find(b);
+			if (itm_obj == null) break;	// b not found; no match; exit;
+			ByteTrieItm_fast itm = (ByteTrieItm_fast)itm_obj;
+			if (i == key_len - 1) {	// last char
+				if (itm.Val() == null) break; // itm does not have val; EX: trie with "abc", and "ab" deleted
+				if (itm.Ary_is_empty())
+					cur.Ary_del(b);
+				else
+					itm.Val_set(null);
+			}
+			else {					// mid char; set itm as cur and continue
+				cur = itm;
+			}
 		}
 	}
 	public void Clear() {root.Clear();}
@@ -81,11 +91,11 @@ public class ByteTrieMgr_fast {
 	}
 }
 class ByteTrieItm_fast {
+	private ByteTrieItm_fast[] ary = new ByteTrieItm_fast[256];
 	public byte Key_byte() {return key_byte;} private byte key_byte;
 	public Object Val() {return val;} public void Val_set(Object val) {this.val = val;} Object val;
 	public boolean Ary_is_empty() {return ary_is_empty;} private boolean ary_is_empty;
 	public boolean CaseAny() {return caseAny;} public ByteTrieItm_fast CaseAny_(boolean v) {caseAny = v; return this;} private boolean caseAny;
-	ByteTrieItm_fast[] ary = new ByteTrieItm_fast[256];
 	public void Clear() {
 		val = null;
 		for (int i = 0; i < 256; i++) {

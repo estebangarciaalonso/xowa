@@ -75,7 +75,7 @@ class Xog_search_suggest_cmd implements GfoInvkAble, Cancelable {
 					rslts_2.Add(rslts_1.FetchAt(i));
 				if (canceled) {working = false; return;}
 				rslts_2.SortBy(Xodb_page_sorter.IdAsc);
-				wiki.Db_mgr().Load_mgr().Load_ttls_by_ids(this, rslts_2, 0, len);
+				wiki.Db_mgr().Load_mgr().Load_by_ids(this, rslts_2, 0, len);
 				rslts_2.SortBy(Xodb_page_sorter.TitleAsc);
 				if (canceled) {working = false; return;}
 			}

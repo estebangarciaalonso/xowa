@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.wdatas; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-import gplx.xowa.xtns.wdatas.imports.*;
+import gplx.xowa.wikis.*; import gplx.xowa.xtns.wdatas.imports.*;
 public class Wdata_wiki_mgr_fxt {
 	public Wdata_wiki_mgr_fxt Init() {return Init(new Xop_fxt(), true);}
 	public Wdata_wiki_mgr_fxt Init(Xop_fxt parser_fxt, boolean reset) {

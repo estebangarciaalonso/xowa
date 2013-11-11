@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.wikis.*;
 public class Xob_bz2_file {
 	public Io_url Fil() {return fil;} public Xob_bz2_file Fil_(Io_url v) {fil = v; return this;} Io_url fil;
 	public byte Tid() {return tid;} private byte tid;
@@ -73,13 +74,13 @@ public class Xob_bz2_file {
 		byte domain_tid = ((ByteRef)o).Val();
 		ByteAryBfr bfr = ByteAryBfr.reset_(255);
 		switch (domain_tid) {
-			case Domain_wikimediafoundation:	return bfr.Add(Xow_wiki_type_.Key_wikimediafoundation_bry).Add_byte(Byte_ascii.Dot).Add(Xow_wiki_type_.Tld_org_bry).XtoAryAndClear();
+			case Domain_wikimediafoundation:	return bfr.Add(Xow_wiki_type_.Key_wikimediafoundation_bry).Add_byte(Byte_ascii.Dot).Add(Xow_wiki_type_.Seg_org_bry).XtoAryAndClear();
 			case Domain_wikidata:
-			case Domain_mediawiki:				return bfr.Add(Xow_wiki_type_.Bry_www).Add_byte(Byte_ascii.Dot).Add(Xow_wiki_type_.Name_by_tid(domain_tid)).Add_byte(Byte_ascii.Dot).Add(Xow_wiki_type_.Tld_org_bry).XtoAryAndClear();
+			case Domain_mediawiki:				return bfr.Add(Xow_wiki_type_.Seg_www_bry).Add_byte(Byte_ascii.Dot).Add(Xow_wiki_type_.Key_by_tid(domain_tid)).Add_byte(Byte_ascii.Dot).Add(Xow_wiki_type_.Seg_org_bry).XtoAryAndClear();
 			case Domain_commons:
 			case Domain_species:
 			case Domain_meta:
-			case Domain_incubator:				return bfr.Add(Xow_wiki_type_.Name_by_tid(domain_tid)).Add_byte(Byte_ascii.Dot).Add(Xow_wiki_type_.Seg_wikimedia_bry).Add_byte(Byte_ascii.Dot).Add(Xow_wiki_type_.Tld_org_bry).XtoAryAndClear();
+			case Domain_incubator:				return bfr.Add(Xow_wiki_type_.Key_by_tid(domain_tid)).Add_byte(Byte_ascii.Dot).Add(Xow_wiki_type_.Seg_wikimedia_bry).Add_byte(Byte_ascii.Dot).Add(Xow_wiki_type_.Seg_org_bry).XtoAryAndClear();
 			case Domain_wikipedia:
 			case Domain_wiktionary:
 			case Domain_wikisource:
@@ -90,7 +91,7 @@ public class Xob_bz2_file {
 			case Domain_wikivoyage:
 				bfr.Add_mid(src, 0, alias_bry_trie.Match_pos() + 1);
 				bfr.Add_byte(Byte_ascii.Dot);
-				return bfr.Add(Xow_wiki_type_.Name_by_tid(domain_tid)).Add_byte(Byte_ascii.Dot).Add(Xow_wiki_type_.Tld_org_bry).XtoAryAndClear();
+				return bfr.Add(Xow_wiki_type_.Key_by_tid(domain_tid)).Add_byte(Byte_ascii.Dot).Add(Xow_wiki_type_.Seg_org_bry).XtoAryAndClear();
 		}
 		return null;
 	}

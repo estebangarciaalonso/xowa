@@ -56,7 +56,7 @@ public class Xop_apos_wkr implements Xop_ctx_wkr {
 			dualTkn = null;
 		}
 	}
-	public void EndFrame(Xop_ctx ctx, byte[] src, int curPos, boolean from_nl_lxr) {
+	public void EndFrame(Xop_ctx ctx, byte[] src, int curPos, boolean skip_cancel_if_lnki_and_apos) {
 		int state = dat.State();
 		if (state == 0) {Reset(); return;}
 		if (boldCount % 2 == 1 && italCount % 2 == 1) ConvertBoldToItal(ctx, src);
@@ -66,15 +66,11 @@ public class Xop_apos_wkr implements Xop_ctx_wkr {
 		if (state == 0) {Reset(); return;}	// all closed: return
 		byte cur_tkn_tid = ctx.Cur_tkn_tid();
 		Xop_apos_tkn prv = Previous_bgn(closeTyp);
-		if (from_nl_lxr) {											// NOTE: if \n
-			if (	cur_tkn_tid			== Xop_tkn_itm_.Tid_lnki	// and cur scope is lnki
-				&&	prv.Ctx_tkn_tid()	!= Xop_tkn_itm_.Tid_lnki	// but apos_bgn is not lnki
-				) {
-//					prv.Apos_cmd_(Xop_apos_tkn_.Cmd_nil);				// render invalid; EX: ''[[\n]]''DATE:2013-10-31
-//					Reset();
-				return;
-			}
-		}
+		if (	skip_cancel_if_lnki_and_apos						// NOTE: if \n or tblw
+			&&	cur_tkn_tid	== Xop_tkn_itm_.Tid_lnki				// and cur scope is lnki
+//				&&	prv.Ctx_tkn_tid() != Xop_tkn_itm_.Tid_lnki			// but apos_bgn is not lnki; NOTE: disabled on 2013-11-10
+			)
+			return;													// don't end frame
 		switch (state) {
 			case Xop_apos_tkn_.State_i:		closeTyp = Xop_apos_tkn_.Typ_ital; closeCmd = Xop_apos_tkn_.Cmd_i_end; break;
 			case Xop_apos_tkn_.State_b:		closeTyp = Xop_apos_tkn_.Typ_bold; closeCmd = Xop_apos_tkn_.Cmd_b_end; break;

@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.cfgs; import gplx.*; import gplx.xowa.*;
+import gplx.xowa.wikis.*;
 public class Xoa_cfg_mgr implements GfoInvkAble {
 	public Xoa_cfg_mgr(Xoa_app app) {this.app = app;} private OrderedHash hash = OrderedHash_.new_bry_();
 	public Xoa_app App() {return app;} private Xoa_app app;
@@ -37,7 +38,7 @@ public class Xoa_cfg_mgr implements GfoInvkAble {
 	}
 	public void Set_by_app(String grp_key, String val)				{Set(ByteAry_.new_utf8_(grp_key), Xoa_cfg_grp_tid.Key_app_bry, val);}
 	public void Set_by_all(String grp_key, String val)				{Set(ByteAry_.new_utf8_(grp_key), Xoa_cfg_grp_tid.Key_all_bry, val);}
-	public void Set_by_type(String grp_key, byte tid, String val)	{Set(ByteAry_.new_utf8_(grp_key), Xow_wiki_type_.Name_by_tid(tid), val);}
+	public void Set_by_type(String grp_key, byte tid, String val)	{Set(ByteAry_.new_utf8_(grp_key), Xow_wiki_type_.Key_by_tid(tid), val);}
 	private void Set(byte[] grp_key, byte[] tid_key, String val) {
 		Xoa_cfg_itm itm = Get_itm_or_make(grp_key, tid_key);
 		itm.Val_(val);

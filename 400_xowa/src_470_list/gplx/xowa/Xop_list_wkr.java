@@ -20,7 +20,18 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
 	public void Page_bgn(Xop_ctx ctx) {Reset(0);}
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int srcLen) {}
+	private void Dd_colon_hide(Xop_root_tkn root) {	// : seen, but nl encountered; mark ":" as invisible (i.e.: consume for <dd>; don't let it show as ":"); DATE:2013-11-07
+		int subs_len = root.Subs_len();
+		for (int i = subs_len - 1; i > -1; i--) {
+			Xop_tkn_itm colon_tkn = root.Subs_get(i);
+			if (colon_tkn.Tkn_tid() == Xop_tkn_itm_.Tid_colon) {
+				colon_tkn.Ignore_y_();
+				break;
+			}
+		}
+	}
 	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos, Xop_tkn_itm tkn) {
+		if (dd_chk) Dd_colon_hide(root);
 		// NOTE: list_tkns can not be explicitly closed, so auto-close will happen for all items
 		MakeTkn_end(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos, (Xop_list_tkn)tkn, Bool_.Y_byte);
 		Reset(listId + 1);
@@ -28,6 +39,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 	}
 	public int MakeTkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {// REF.MW: Parser|doBlockLevels
 		if (bgnPos == Xop_parser_.Doc_bgn_bos) bgnPos = 0;	// do not allow -1 pos
+		if (dd_chk) Dd_colon_hide(root);
 
 		// pop hdr if exists; EX: \n== a ==\n*b; \n* needs to close hdr
 		int acsPos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_hdr);
@@ -93,7 +105,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 		if (allDd && curPos < srcLen - 2 && src[curPos] == '{' && src[curPos + 1] == '|') // NOTE: if indent && next == {| then invoke table; EX: ":::{|"
 			return ctx.Tblw().MakeTkn_bgn(ctx, tkn_mkr, root, src, srcLen, curPos, curPos + 2, Xop_tblw_wkr.Tblw_type_tb, true, false, -1, -1);	// NOTE: ws_enabled must be set to true; see test for Adinkras; Cato the Elder
 		else {
-			Dd_chk = symByt == Xop_list_tkn_.List_itmTyp_dt;
+			dd_chk = symByt == Xop_list_tkn_.List_itmTyp_dt;
 			return curPos;
 		}
 	}
@@ -194,13 +206,15 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 		posBldr.Init();
 		curSymLen = 0;
 		prvSymAry = ByteAry_.Empty;
-		Dd_chk = false;
+		dd_chk = false;
 		listId = newListId;
 	}
 	public static final int Max_list_depth = 256;
 	int listId = 0; byte[] curSymAry = new byte[Max_list_depth]; int curSymLen = 0; byte[] prvSymAry = ByteAry_.Empty;
 	HierPosAryBldr posBldr = new HierPosAryBldr(Max_list_depth);
-	public boolean Dd_chk = false;
+	public boolean Dd_chk() {return dd_chk;} public Xop_list_wkr Dd_chk_(boolean v) {
+											  dd_chk = v; 
+											  return this;} private boolean dd_chk;
 	boolean SymAry_fill_overflow;
 }
 class Xop_list_wkr_ {

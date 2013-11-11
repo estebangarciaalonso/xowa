@@ -31,13 +31,20 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 		xdat_file.Clear().Parse(bry, bry_len, file).GetAt(xdat_itm, txtdb_row_idx);
 		Load_page_parse(rv, bry, bry_len, xdat_itm.Itm_bgn(), xdat_itm.Itm_end(), timestamp_enabled);
 	}
-	public boolean Load_ttl(Xodb_page rv, Xow_ns ns, byte[] ttl) {	// NOTE: ttl must be correct case; EX: "Example title"
+	public boolean Load_by_ttl(Xodb_page rv, Xow_ns ns, byte[] ttl) {	// NOTE: ttl must be correct case; EX: "Example title"
 		if (!Env_.Mode_testing() && wiki.Init_needed()) wiki.Init_assert();	// NOTE: need to call assert as wiki_finder (and possibly elsewhere) may call load on commons_wiki without ever asserting; DATE:2013-03-19
 		if (!Load_xdat_itm(tmp_xdat_itm, ns, Xow_dir_info_.Tid_ttl, ttl, Xodb_page_.Txt_ttl_pos, Byte_ascii.Tab, true)) return false;
 		Xodb_page_.Txt_ttl_load(rv, tmp_xdat_itm.Itm_bry());
+		rv.Exists_(true);
 		return ByteAry_.Eq(rv.Ttl_wo_ns(), ttl);
 	}
-	public void Load_ttls_by_ids(Cancelable cancelable, ListAdp list, int bgn, int end) {
+	public void Load_by_ttls(Cancelable cancelable, OrderedHash rv, boolean fill_idx_fields_only, int bgn, int end) {// NOTE: Load_by_ttls just a wrapper around Load_by_ttl; for xdat, Load_by_ttl is fast enough
+		for (int i = bgn; i < end; i++) {
+			Xodb_page page = (Xodb_page)rv.FetchAt(i);
+			Load_by_ttl(page, page.Ns(), page.Ttl_wo_ns());
+		}
+	}
+	public void Load_by_ids(Cancelable cancelable, ListAdp list, int bgn, int end) {
 		int prv_fil_idx = -1;
 		byte[] id_bry = new byte[5];
 		int len = end - bgn;
@@ -51,7 +58,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 				if (!this.Load_xdat_file(cancelable, tmp_xdat_file, Xow_dir_info_.Tid_id, cur_fil_idx)) continue; // file not found; ignore
 				prv_fil_idx = cur_fil_idx;
 			}
-			if (!this.Load_ttl_by_id(tmp_page, tmp_xdat_file, id_bry)) continue; // id not found in file; ignore	
+			if (!this.Load_by_id(tmp_page, tmp_xdat_file, id_bry)) continue; // id not found in file; ignore	
 			itm.Ns_id_(tmp_page.Ns_id()).Ttl_wo_ns_(tmp_page.Ttl_wo_ns());
 			msg_wtr.Write_prog_cur(i, wiki.App().Usr_dlg());
 		}
@@ -163,13 +170,13 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 			idx_mgr.Total_(count);
 		}
 	}
-	public boolean Load_ttl_by_id(Xodb_page page, int id)			{Base85_utl.XtoStrByAry(id, tmp_id_bry, 0, 5); return Load_ttl_by_id(page, tmp_id_bry);} private byte[] tmp_id_bry = new byte[5];
-	boolean Load_ttl_by_id(Xodb_page page, byte[] id_bry)	{
+	public boolean Load_by_id(Xodb_page page, int id)			{Base85_utl.XtoStrByAry(id, tmp_id_bry, 0, 5); return Load_by_id(page, tmp_id_bry);} private byte[] tmp_id_bry = new byte[5];
+	boolean Load_by_id(Xodb_page page, byte[] id_bry)	{
 		if (!Load_xdat_itm(tmp_xdat_itm, Xow_dir_info_.Tid_id, id_bry, true)) return false;;
 		Xodb_page_.Txt_id_load(page, tmp_xdat_itm.Itm_bry());
 		return true;
 	}
-	boolean Load_ttl_by_id(Xodb_page page, Xob_xdat_file xdat_file, byte[] id_bry) {
+	boolean Load_by_id(Xodb_page page, Xob_xdat_file xdat_file, byte[] id_bry) {
 		xdat_file.Find(tmp_xdat_itm, id_bry, 0, Byte_ascii.Pipe, true);
 		if (tmp_xdat_itm.Missing()) return false;
 		Xodb_page_.Txt_id_load(page, tmp_xdat_itm.Itm_bry());
@@ -279,7 +286,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 		ListAdp ctgs = ListAdp_.new_();
 		Load_ctg_v1_parse(ctgs, wiki.App().Usr_dlg(), tmp_xdat_itm.Itm_bry());
 		ctgs.SortBy(Xodb_page_sorter.IdAsc);
-		this.Load_ttls_by_ids(Cancelable_.Never, ctgs, 0, ctgs.Count());
+		this.Load_by_ids(Cancelable_.Never, ctgs, 0, ctgs.Count());
 		ctgs.SortBy(Xodb_page_sorter.NmsId_TtlAsc);
 
 		int ctgs_len = ctgs.Count(); if (ctgs_len == 0) return false;
@@ -511,7 +518,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 		for (int i = 0; i < len; i++) {
 			byte[] ttl = Xoa_ttl.Replace_spaces(ttls[i]);	// NOTE: ctg_ttls has spaces since v1 rendered it literally;
 			Xodb_page page = new Xodb_page();
-			this.Load_ttl(page, ns, ttl);
+			this.Load_by_ttl(page, ns, ttl);
 
 			Load_ctg_v2_main(ctg_temp, page.Ttl_wo_ns());
 			Xodb_category_itm ctg_itm = Xodb_category_itm.load_(page.Id(), page.Db_file_idx(), ctg_temp.Hidden(), ctg_temp.Total_by_tid(Xoa_ctg_mgr.Tid_subc), ctg_temp.Total_by_tid(Xoa_ctg_mgr.Tid_file), ctg_temp.Total_by_tid(Xoa_ctg_mgr.Tid_page)); 

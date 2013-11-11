@@ -43,7 +43,7 @@ class Scrib_lib_language implements Scrib_lib {
 		else if	(ctx.Match(k, Invk_formatNum))					return FormatNum((KeyVal[])m.CastObj("v"));
 		else if	(ctx.Match(k, Invk_formatDate))					return FormatDate((KeyVal[])m.CastObj("v"));
 		else if	(ctx.Match(k, Invk_parseFormattedNumber))		return ParseFormattedNumber((KeyVal[])m.CastObj("v"));
-		else if	(ctx.Match(k, Invk_convertPlural))				return convertPlural((KeyVal[])m.CastObj("v"));
+		else if	(ctx.Match(k, Invk_convertPlural))				return ConvertPlural((KeyVal[])m.CastObj("v"));
 		else if	(ctx.Match(k, Invk_convertGrammar))				return ConvertGrammar((KeyVal[])m.CastObj("v"));
 		else if	(ctx.Match(k, Invk_gender))						return gender((KeyVal[])m.CastObj("v"));
 		else if	(ctx.Match(k, Invk_isRTL))						return IsRTL((KeyVal[])m.CastObj("v"));
@@ -160,7 +160,17 @@ class Scrib_lib_language implements Scrib_lib {
 	}
 	public KeyVal[] formatDuration(KeyVal[] values) {throw Err_.not_implemented_();}
 	public KeyVal[] getDurationIntervals(KeyVal[] values) {throw Err_.not_implemented_();}
-	public KeyVal[] convertPlural(KeyVal[] values) {throw Err_.not_implemented_();}
+	public KeyVal[] ConvertPlural(KeyVal[] values) {
+		Xol_lang lang = lang_(values);
+		int count = Scrib_kv_utl.Val_to_int(values, 1);
+		int values_len = values.length;
+		byte[][] words = new byte[values_len - 2][];
+		for (int i = 2; i < values_len; i++) {
+			words[i - 2] = Scrib_kv_utl.Val_to_bry(values, i);
+		}
+		byte[] rv = lang.Plural().Plural_eval(lang, count, words);
+		return Scrib_kv_utl.base1_obj_(rv);
+	}
 	public KeyVal[] ConvertGrammar(KeyVal[] values) {
 		Xol_lang lang = lang_(values);
 		byte[] word = Scrib_kv_utl.Val_to_bry(values, 1);

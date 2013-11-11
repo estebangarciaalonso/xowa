@@ -19,14 +19,21 @@ package gplx.fsdb; import gplx.*;
 import gplx.dbs.*;
 public class Fsdb_db_abc_mgr implements RlsAble {
 	private Db_provider boot_provider;
+	private Fsdb_cfg_tbl tbl_cfg;
+	public int Next_id() {return next_id++;} private int next_id = 1;
+	public Fsdb_mnt_mgr Mnt_mgr() {return mnt_mgr;} private Fsdb_mnt_mgr mnt_mgr;
+	public Fsdb_db_abc_mgr(Fsdb_mnt_mgr mnt_mgr) {this.mnt_mgr = mnt_mgr;}
 	public Fsdb_db_atr_mgr Atr_mgr() {return atr_mgr;} private Fsdb_db_atr_mgr atr_mgr;
 	public Fsdb_db_bin_mgr Bin_mgr() {return bin_mgr;} private Fsdb_db_bin_mgr bin_mgr;
 	public Fsdb_db_abc_mgr Init(Io_url dir) {
 		Io_url url = dir.GenSubFil("fsdb.abc.sqlite3");
-		if (Io_mgr._.ExistsFil(url))
-			Init_load(dir, url);
-		else
+		boolean create = !Io_mgr._.ExistsFil(url);
+		if (create)
 			Init_make(dir, url);
+		else
+			Init_load(dir, url);
+		if (create)
+			tbl_cfg.Insert("core", "next_id", "1");
 		return this;
 	}
 	public void Fil_insert(Fsdb_fil_itm rv    , byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
@@ -60,24 +67,30 @@ public class Fsdb_db_abc_mgr implements RlsAble {
 	public void Commit() {
 		atr_mgr.Commit(boot_provider);
 		bin_mgr.Commit();
+		this.Update_next_id();
 	}
 	public void Rls() {
 		atr_mgr.Rls();
 		bin_mgr.Rls();
+		tbl_cfg.Rls();
 		boot_provider.Rls();
 	}
 	private void Init_load(Io_url dir, Io_url boot_url) {
 		Db_connect connect = Db_connect_sqlite.load_(boot_url);
 		boot_provider = Db_provider_.new_(connect);
-		atr_mgr = Fsdb_db_atr_mgr.load_(boot_provider, dir);
+		atr_mgr = Fsdb_db_atr_mgr.load_(this, boot_provider, dir);
 		bin_mgr = Fsdb_db_bin_mgr.load_(boot_provider, dir);
+		tbl_cfg = new Fsdb_cfg_tbl(boot_provider, false);
+		next_id = Select_next_id();
 	}
 	private void Init_make(Io_url dir, Io_url boot_url) {
 		Db_connect connect = Db_connect_sqlite.make_(boot_url);
 		boot_provider = Db_provider_.new_(connect);
-		Fsdb_cfg_tbl.Create_table(boot_provider);
-		atr_mgr = Fsdb_db_atr_mgr.make_(boot_provider, dir);
+		atr_mgr = Fsdb_db_atr_mgr.make_(this, boot_provider, dir);
 		bin_mgr = Fsdb_db_bin_mgr.make_(boot_provider, dir);
+		tbl_cfg = new Fsdb_cfg_tbl(boot_provider, true);
 		this.Commit();
 	}
+	private int Select_next_id()	{return tbl_cfg.Select_as_int("core", "next_id");}
+	private void Update_next_id()	{tbl_cfg.Update("core", "next_id", Int_.XtoStr(next_id));}
 }

@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.users; import gplx.*; import gplx.xowa.*;
-import gplx.xowa.users.history.*; import gplx.xowa.xtns.scribunto.*;
+import gplx.xowa.wikis.*; import gplx.xowa.users.history.*; import gplx.xowa.xtns.scribunto.*;
 public class Xou_user implements GfoInvkAble {
 	public Xou_user(Xoa_app app, Io_url user_dir) {
 		this.app = app; this.key_str = user_dir.NameOnly(); key_bry = ByteAry_.new_utf8_(key_str);

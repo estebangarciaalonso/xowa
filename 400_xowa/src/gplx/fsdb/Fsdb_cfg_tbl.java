@@ -18,47 +18,50 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.fsdb; import gplx.*;
 import gplx.dbs.*;
 public class Fsdb_cfg_tbl {
-	public static void Create_table(Db_provider p) {
-		Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);
-		Sqlite_engine_.Idx_create(p, Idx_main);
-		Insert(p, "core", "next_id", "1");
+	private Db_provider provider;
+	private Db_stmt stmt_insert, stmt_update, stmt_select;
+	public Fsdb_cfg_tbl(Db_provider provider, boolean created) {
+		this.provider = provider;
+		if (created) Create_table();
 	}
-	public static void Insert(Db_provider p, String grp, String key, String val) {
-		Db_stmt stmt = Insert_stmt(p);
-		try {Insert(stmt, grp, key, val);}
-		finally {stmt.Rls();}
+	public void Rls() {
+		if (stmt_insert != null) {stmt_insert.Rls(); stmt_insert = null;}
+		if (stmt_update != null) {stmt_update.Rls(); stmt_update = null;}
+		if (stmt_select != null) {stmt_select.Rls(); stmt_select = null;}
 	}
-	private static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_cfg_grp, Fld_cfg_key, Fld_cfg_val);}
-	private static void Insert(Db_stmt stmt, String grp, String key, String val) {
-		stmt.Clear()
+	public void Create_table() {
+		Sqlite_engine_.Tbl_create(provider, Tbl_name, Tbl_sql);
+		Sqlite_engine_.Idx_create(provider, Idx_main);
+	}
+	private Db_stmt Insert_stmt() {return Db_stmt_.new_insert_(provider, Tbl_name, Fld_cfg_grp, Fld_cfg_key, Fld_cfg_val);}
+	public void Insert(String grp, String key, String val) {
+		if (stmt_insert == null) stmt_insert = Insert_stmt();
+		stmt_insert.Clear()
 		.Val_str_(grp)
 		.Val_str_(key)
 		.Val_str_(val)
 		.Exec_insert();
 	}	
-	public static void Update(Db_provider p, String grp, String key, String val) {		
-		Db_stmt stmt = Update_stmt(p);
-		try {Update(stmt, grp, key, val);}
-		finally {stmt.Rls();}
-	}
-	public static Db_stmt Update_stmt(Db_provider p) {return Db_stmt_.new_update_(p, Tbl_name, String_.Ary(Fld_cfg_grp, Fld_cfg_key), Fld_cfg_val);}
-	public static void Update(Db_stmt stmt, String grp, String key, String val) {
-		stmt.Clear()
+	private Db_stmt Update_stmt() {return Db_stmt_.new_update_(provider, Tbl_name, String_.Ary(Fld_cfg_grp, Fld_cfg_key), Fld_cfg_val);}
+	public void Update(String grp, String key, String val) {
+		if (stmt_update == null) stmt_update = Update_stmt();
+		stmt_update.Clear()
 		.Val_str_(val)
 		.Val_str_(grp)
 		.Val_str_(key)
 		.Exec_update();
 	}
-	public static int Update_next_id(Db_provider p) {
-		int rv = Select_next_id(p);
-		Update(p, "core", "next_id", Int_.XtoStr(rv + 1));
-		return rv;
+	public int Select_as_int(String grp, String key) {return Int_.parse_or_(Select_as_str(grp, key), Int_.MinValue);}
+	private Db_stmt Select_stmt() {
+		Db_qry_select qry = Db_qry_.select_val_(Tbl_name, Fld_cfg_val, gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_cfg_grp, ""), Db_crt_.eq_(Fld_cfg_key, "")));
+		return provider.Prepare(qry);
 	}
-	public static int Select_next_id(Db_provider p) {return Select_as_int(p, "core", "next_id");}
-	public static int Select_as_int(Db_provider p, String grp, String key) {return Int_.parse_or_(Select_as_str(p, grp, key), Int_.MinValue);}
-	public static String Select_as_str(Db_provider p, String grp, String key) {
-		Db_qry_select qry = Db_qry_.select_val_(Tbl_name, Fld_cfg_val, gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_cfg_grp, grp), Db_crt_.eq_(Fld_cfg_key, key)));
-		return (String)qry.ExecRdr_val(p);
+	public String Select_as_str(String grp, String key) {
+		if (stmt_select == null) stmt_select = Select_stmt();
+		return (String)stmt_select.Clear()
+			.Val_str_(grp)
+			.Val_str_(key)
+			.Exec_select_val();
 	}
 	public static final String Tbl_name = "fsdb_cfg", Fld_cfg_grp = "cfg_grp", Fld_cfg_key = "cfg_key", Fld_cfg_val = "cfg_val";
 	private static final String Tbl_sql = String_.Concat_lines_nl

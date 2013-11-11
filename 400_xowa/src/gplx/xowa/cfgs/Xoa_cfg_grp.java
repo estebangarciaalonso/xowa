@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.cfgs; import gplx.*; import gplx.xowa.*;
+import gplx.xowa.wikis.*;
 public class Xoa_cfg_grp {		
 	public Xoa_cfg_grp(Xoa_cfg_mgr mgr, Xoa_cfg_grp_tid tid, byte[] key_bry) {
 		this.mgr = mgr; this.tid = tid; this.key_bry = key_bry; this.key_str = String_.new_utf8_(key_bry);
@@ -37,7 +38,7 @@ public class Xoa_cfg_grp {
 	public Xoa_cfg_itm Get_itm_by_wiki(byte[] domain, byte wiki_tid) {
 		Xoa_cfg_itm rv = (Xoa_cfg_itm)hash.Fetch(domain);
 		if (rv == null) { 		// match by domain failed; try type
-			rv = (Xoa_cfg_itm)hash.Fetch(Xow_wiki_type_.Name_by_tid(wiki_tid));
+			rv = (Xoa_cfg_itm)hash.Fetch(Xow_wiki_type_.Key_by_tid(wiki_tid));
 			if (rv == null)		// match by type failed; try all
 				rv = (Xoa_cfg_itm)hash.Fetch(Xoa_cfg_grp_tid.Key_all_bry);	
 				if (rv == null)		// match by type failed; try app

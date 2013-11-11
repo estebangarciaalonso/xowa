@@ -234,4 +234,12 @@ public class Int_ implements GfoInvkAble {
 		}
 		return cur_idx == -1 ? rv : or;	// cur_idx == -1 checks for unfilled; EX: Ary_parse("1,2", 3, null) is unfilled
 	}
+	public static int[] Ary_parse(String raw_str, String spr) {
+		String[] ary = String_.Split(raw_str, spr);
+		int len = ary.length;
+		int[] rv = new int[len];
+		for (int i = 0; i < len; i++)
+			rv[i] = Int_.parse_(ary[i]);
+		return rv;
+	}
 }

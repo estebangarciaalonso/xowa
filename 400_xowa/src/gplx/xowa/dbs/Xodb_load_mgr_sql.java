@@ -48,10 +48,11 @@ public class Xodb_load_mgr_sql implements Xodb_load_mgr {
 			gfs_mgr.Run_str_for(wiki, bfr.XtoStrAndClear());
 		}	finally {bfr.Mkr_rls();}
 	}
-	public boolean Load_ttl(Xodb_page rv, Xow_ns ns, byte[] ttl) {return db_mgr.Tbl_page().Select_by_ttl(rv, ns, ttl);}
+	public boolean Load_by_ttl(Xodb_page rv, Xow_ns ns, byte[] ttl) {return db_mgr.Tbl_page().Select_by_ttl(rv, ns, ttl);}
+	public void Load_by_ttls(Cancelable cancelable, OrderedHash rv, boolean fill_idx_fields_only, int bgn, int end) {db_mgr.Tbl_page().Select_by_ttl_in(cancelable, rv, db_mgr.Wiki(), fill_idx_fields_only, bgn, end);}
 	public void Load_page(Xodb_page rv, Xow_ns ns, boolean timestamp_enabled) {rv.Text_(db_mgr.Tbl_text().Select(rv.Db_file_idx(), rv.Id()));}
-	public boolean Load_ttl_by_id	(Xodb_page rv, int id) {return db_mgr.Tbl_page().Select_by_id(rv, id);}
-	public void Load_ttls_by_ids(Cancelable cancelable, ListAdp rv, int bgn, int end) {db_mgr.Tbl_page().Select_by_id_list(cancelable, false, rv, bgn, end);}
+	public boolean Load_by_id	(Xodb_page rv, int id) {return db_mgr.Tbl_page().Select_by_id(rv, id);}
+	public void Load_by_ids(Cancelable cancelable, ListAdp rv, int bgn, int end) {db_mgr.Tbl_page().Select_by_id_list(cancelable, false, rv, bgn, end);}
 	public boolean Load_ctg_v1(Xoctg_view_ctg rv, byte[] ctg_bry) {
 		int cat_page_id = db_mgr.Tbl_page().Select_id(Xow_ns_.Id_category, ctg_bry); if (cat_page_id == Xodb_mgr_sql.Page_id_null) return false;
 		Xodb_category_itm ctg = db_mgr.Tbl_category().Select(fsys_mgr.Category_provider(), cat_page_id); if (ctg == Xodb_category_itm.Null) return false;

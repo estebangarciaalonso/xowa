@@ -40,16 +40,16 @@ public class Fsdb_db_atr_mgr implements RlsAble {
 			itm.Rls();
 		}
 	}
-	public static Fsdb_db_atr_mgr load_(Db_provider p, Io_url dir) {
+	public static Fsdb_db_atr_mgr load_(Fsdb_db_abc_mgr abc_mgr, Db_provider p, Io_url dir) {
 		Fsdb_db_atr_mgr rv = new Fsdb_db_atr_mgr();
-		rv.itms = Fsdb_db_atr_tbl.Select_all(p, dir);
+		rv.itms = Fsdb_db_atr_tbl.Select_all(abc_mgr, p, dir);
 		rv.itms_0 = rv.itms[0];
 		return rv;
 	}
-	public static Fsdb_db_atr_mgr make_(Db_provider p, Io_url dir) {
+	public static Fsdb_db_atr_mgr make_(Fsdb_db_abc_mgr abc_mgr, Db_provider p, Io_url dir) {
 		Fsdb_db_atr_tbl.Create_table(p);
 		Fsdb_db_atr_mgr rv = new Fsdb_db_atr_mgr();
-		Fsdb_db_atr_fil itm = Fsdb_db_atr_fil.make_(Id_0, Fsdb_db_atr_fil.url_(dir, Id_0), Path_bgn_0);
+		Fsdb_db_atr_fil itm = Fsdb_db_atr_fil.make_(abc_mgr, Id_0, Fsdb_db_atr_fil.url_(dir, Id_0), Path_bgn_0);
 		rv.itms_0 = itm;
 		rv.itms = new Fsdb_db_atr_fil[] {itm};
 		return rv;

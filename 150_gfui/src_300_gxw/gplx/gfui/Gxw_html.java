@@ -25,6 +25,7 @@ public interface Gxw_html extends GxwElem {
 	String		Html_elem_atr_get_str	(String id, String atr_key);
 	boolean		Html_elem_atr_get_bool	(String id, String atr_key);
 	boolean		Html_elem_atr_set		(String id, String atr_key, String val);
+	boolean		Html_elem_atr_set_append(String id, String atr_key, String append);
 	boolean		Html_elem_delete(String id);
 	boolean		Html_elem_focus(String id);
 	boolean		Html_elem_scroll_into_view(String id);

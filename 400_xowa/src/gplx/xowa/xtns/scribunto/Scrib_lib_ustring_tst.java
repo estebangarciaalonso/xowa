@@ -39,6 +39,8 @@ public class Scrib_lib_ustring_tst {
 		Exec_match("abcd"	, "a"				, 2, "");							// bgn
 		Exec_match("abcd"	, "b(c)"			, 1, "c");							// group
 		Exec_match(" a b "	, "^%s*(.-)%s*$"	, 1, "a b");						// trim
+		Exec_match("abcd"	, "a"				, 0, "a");							// handle 0; note that php/lua is super-1, but some modules pass in 0; ru.w:Module:Infocards; DATE:2013-11-08
+		Exec_match("abcd"	, "."				, -1, "d");							// -1
 	}
 	@Test  public void Gsub() {
 		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);
@@ -57,6 +59,13 @@ public class Scrib_lib_ustring_tst {
 		fxt.Init_lua_rcvd(Scrib_lib_ustring.Invk_gsub, Scrib_kv_utl.base1_many_("text", "regx"));	// NOTE: repl, limit deliberately omitted
 		fxt.Init_lua_rcvd_rv();
 		fxt.Test_invoke("text");
+	}
+	@Test  public void Gsub_int() {	// PURPOSE: gsub with integer arg should not fail; DATE:2013-11-06
+		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);
+		fxt.Init_lua_module();
+		fxt.Init_lua_rcvd(Scrib_lib_ustring.Invk_gsub, Scrib_kv_utl.base1_many_(1, "[1]", "2", 1));	// NOTE: text is integer (lua / php are type-less)
+		fxt.Init_lua_rcvd_rv();
+		fxt.Test_invoke("2;1");
 	}
 	@Test  public void Gmatch_init() {
 		fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_init, Object_.Ary("abcabc", "a(b)")					, "a(b);\n  false");

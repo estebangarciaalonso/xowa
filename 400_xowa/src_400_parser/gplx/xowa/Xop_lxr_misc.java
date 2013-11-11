@@ -21,9 +21,9 @@ class Xop_colon_lxr implements Xop_lxr {
 	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast coreTrie) {coreTrie.Add(Byte_ascii.Colon, this);}
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {
 		Xop_list_wkr listCtx = ctx.List();
-		if (listCtx.Dd_chk) {	// handle ";a:b" construct; REF.MW: Parser.php|doBlockLevels|; title : definition text
+		if (listCtx.Dd_chk()) {	// handle ";a:b" construct; REF.MW: Parser.php|doBlockLevels|; title : definition text
 			if (ctx.Cur_tkn_tid() != Xop_tkn_itm_.Tid_lnki && curPos < srcLen && src[curPos] != Byte_ascii.NewLine) {	// FUTURE: emulate Parser.php|findColonNoLinks which does much more logic to see if ";a:b" construct should apply
-				listCtx.Dd_chk = false;
+				listCtx.Dd_chk_(false);
 				return listCtx.MakeTkn_bgn(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos);
 			}
 		}

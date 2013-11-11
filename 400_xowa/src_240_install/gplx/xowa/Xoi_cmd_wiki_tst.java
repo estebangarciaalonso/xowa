@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import org.junit.*;
+import org.junit.*; import gplx.xowa.wikis.*;
 public class Xoi_cmd_wiki_tst {
 	@Test  public void Run() {
 //			Bld_import_list(Wikis);
@@ -45,7 +45,7 @@ public class Xoi_cmd_wiki_tst {
 				Tfds.WriteText(String_.Format("passed: {0}\n", itm));
 			bfr.Add_str(itm).Add_byte_pipe();
 			bfr.Add_str(dump_file.File_url()).Add_byte_pipe();
-			bfr.Add(Xow_wiki_type_.Name_by_tid(dump_file.Wiki_type().Wiki_tid())).Add_byte_pipe();
+			bfr.Add(Xow_wiki_type_.Key_by_tid(dump_file.Wiki_type().Wiki_tid())).Add_byte_pipe();
 //				Xol_lang_itm lang_itm = Xol_lang_itm_.Get_by_key(wiki_type.Lang_key());
 //				if (lang_itm == null) lang_itm = Xol_lang_itm_.Get_by_key(Xol_lang_.Key_en);	// commons, species, meta, etc will have no lang
 //				bfr.Add(lang_itm.Local_name()).Add_byte_pipe();

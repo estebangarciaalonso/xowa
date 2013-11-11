@@ -29,6 +29,9 @@ public class Gfui_html_cfg implements GfoInvkAble {
 	public String Elem_atr_get(String elem_id, String atr_key)					{return Exec_fmt(fmtr_elem_atr_get, elem_id, atr_key);}				private ByteAryFmtr fmtr_elem_atr_get = ByteAryFmtr.keys_("elem_id", "atr_key");
 	public String Elem_atr_get_toString(String elem_id, String atr_key)			{return Exec_fmt(fmtr_elem_atr_get_toString, elem_id, atr_key);}	private ByteAryFmtr fmtr_elem_atr_get_toString = ByteAryFmtr.keys_("elem_id", "atr_key");
 	public String Elem_atr_set(String elem_id, String atr_key, String atr_val)	{return Exec_fmt(fmtr_elem_atr_set, elem_id, atr_key, atr_val);}	private ByteAryFmtr fmtr_elem_atr_set = ByteAryFmtr.keys_("elem_id", "atr_key", "atr_val");
+	public String Elem_atr_set_append(String elem_id, String atr_key, String atr_val) {
+		return Exec_fmt(fmtr_elem_atr_set_append, elem_id, atr_key, atr_val);
+	}	private ByteAryFmtr fmtr_elem_atr_set_append = ByteAryFmtr.keys_("elem_id", "atr_key", "atr_val");
 	public String Elem_delete(String elem_id)									{return Exec_fmt(fmtr_elem_delete, elem_id);}						private ByteAryFmtr fmtr_elem_delete = ByteAryFmtr.keys_("elem_id");
 	public String Elem_focus(String elem_id)									{return Exec_fmt(fmtr_elem_focus, elem_id);}						private ByteAryFmtr fmtr_elem_focus = ByteAryFmtr.keys_("elem_id");
 	public String Elem_scroll_into_view(String elem_id)							{return Exec_fmt(fmtr_elem_scroll_into_view, elem_id);}				private ByteAryFmtr fmtr_elem_scroll_into_view = ByteAryFmtr.keys_("elem_id");
@@ -54,11 +57,12 @@ public class Gfui_html_cfg implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_doc_find_edit_))				fmtr_doc_find_edit.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_elem_atr_get_))				fmtr_elem_atr_get.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_elem_atr_get_toString_))		fmtr_elem_atr_get_toString.Fmt_(m.ReadBry("v"));
+		else if	(ctx.Match(k, Invk_elem_atr_set_))				fmtr_elem_atr_set.Fmt_(m.ReadBry("v"));
+		else if	(ctx.Match(k, Invk_elem_atr_set_append_))		fmtr_elem_atr_set_append.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_elem_delete_))				fmtr_elem_delete.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_elem_focus_))				fmtr_elem_focus.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_elem_scroll_into_view_))		fmtr_elem_scroll_into_view.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_elem_img_update_))			fmtr_elem_img_update.Fmt_(m.ReadBry("v"));
-		else if	(ctx.Match(k, Invk_elem_atr_set_))				fmtr_elem_atr_set.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_elem_path_get_))				fmtr_window_vpos.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_win_print_preview_))			fmtr_window_print_preview.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_elem_path_set_))				fmtr_window_vpos_.Fmt_(m.ReadBry("v"));
@@ -78,7 +82,7 @@ public class Gfui_html_cfg implements GfoInvkAble {
 	public static final String Invk_debug_file_ = "debug_file_"
 	, Invk_doc_html_ = "doc_html_", Invk_doc_body_focus_ = "doc_body_focus_", Invk_doc_active_atr_get_ = "doc_active_atr_get_", Invk_doc_find_html_ = "doc_find_html_", Invk_doc_find_edit_ = "doc_find_edit_"
 	, Invk_doc_selected_get_ = "doc_selected_get_", Invk_win_print_preview_ = "win_print_preview_"
-	, Invk_elem_atr_get_ = "elem_atr_get_", Invk_elem_atr_get_toString_ = "elem_atr_get_toString_", Invk_elem_atr_set_ = "elem_atr_set_"
+	, Invk_elem_atr_get_ = "elem_atr_get_", Invk_elem_atr_get_toString_ = "elem_atr_get_toString_", Invk_elem_atr_set_ = "elem_atr_set_", Invk_elem_atr_set_append_ = "elem_atr_set_append_"
 	, Invk_elem_path_get_ = "elem_path_get_", Invk_elem_path_set_ = "elem_path_set_"
 	, Invk_elem_focus_ = "elem_focus_", Invk_elem_scroll_into_view_ = "elem_scroll_into_view_"
 	, Invk_elem_img_update_ = "elem_img_update_", Invk_elem_delete_ = "elem_delete_"

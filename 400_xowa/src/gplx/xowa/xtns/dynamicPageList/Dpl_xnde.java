@@ -61,7 +61,7 @@ public class Dpl_xnde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 			page_list.Add(new Xodb_page().Id_(id_ref.Val()));
 		}
 		
-		wiki.Db_mgr().Load_mgr().Load_ttls_by_ids(Cancelable_.Never, page_list, 0, pages_len);
+		wiki.Db_mgr().Load_mgr().Load_by_ids(Cancelable_.Never, page_list, 0, pages_len);
 		page_list.SortBy(Xodb_page_sorter.IdAsc);
 		return page_list;
 	}
@@ -78,7 +78,7 @@ public class Dpl_xnde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 				if (list.Has(tmp_id.Val_(ctg_itm_id))) continue;
 				list.Add(IntRef.new_(ctg_itm_id), ctg_itm);
 				if (ctg_tid == Xoa_ctg_mgr.Tid_subc) {
-					load_mgr.Load_ttl_by_id(tmp_page, ctg_itm_id);
+					load_mgr.Load_by_id(tmp_page, ctg_itm_id);
 					Find_ctg_pages(list, load_mgr, tmp_page, tmp_id, tmp_page.Ttl_wo_ns());
 				}
 			}
@@ -117,7 +117,7 @@ public class Dpl_xnde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 //				page_list.Add(new Xodb_page().Id_(id_ref.Val()));
 //			}
 //			
-//			wiki.Db_mgr().Load_mgr().Load_ttls_by_ids(Cancelable_.Never, page_list, 0, pages_len);
+//			wiki.Db_mgr().Load_mgr().Load_by_ids(Cancelable_.Never, page_list, 0, pages_len);
 //			page_list.SortBy(Xodb_page_sorter.IdAsc);
 //			return page_list;
 //		}

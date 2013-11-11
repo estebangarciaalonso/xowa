@@ -495,14 +495,16 @@ class Func_tkn_round extends Func_tkn_base {
 		DecimalAdp rhs = val_stack.Pop();
 		DecimalAdp lhs = val_stack.Pop();
 		if (rhs.Comp_gt(16)) {
-//				ConsoleAdp._.WriteLine(rhs +  " round " + Double_.XtoStr(rhs));
 			rhs = DecimalAdp_.int_(16);
 		}
 		else if (rhs.Comp_lt(-16)) {
-//				ConsoleAdp._.WriteLine(rhs +  " round" + Double_.XtoStr(rhs));
 			rhs = DecimalAdp_.int_(-16);
 		}
-		val_stack.Push(lhs.Op_round(rhs.XtoInt()));
+		DecimalAdp val = lhs.Op_round(rhs.XtoInt());
+		if (val.XtoDouble() == 0)	// NOTE: must explicitly check for zero, else "0.0" will be pushed onto stack; EXE: {{#expr: 0 round 1}}; DATE:2013-11-09
+			val_stack.Push(DecimalAdp_.Zero);
+		else
+			val_stack.Push(val);
 		return true;
 	}
 }

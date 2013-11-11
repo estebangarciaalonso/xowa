@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.wdatas; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-import gplx.json.*;
+import gplx.json.*; import gplx.xowa.wikis.*;
 public class Wdata_wiki_mgr implements GfoInvkAble {
 	public Wdata_wiki_mgr(Xoa_app app) {
 		this.app = app;
@@ -43,7 +43,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 	public byte[] Qids_get(Xow_wiki wiki, Xoa_ttl ttl) {return Qids_get(wiki.Wdata_wiki_lang(), wiki.Wdata_wiki_tid(), ttl.Ns().Num_bry(), ttl.Page_db());}
 	public byte[] Qids_get(byte[] lang_key, byte wiki_tid, byte[] ns_num, byte[] ttl) {
 		if (!enabled) return null;
-		if (wiki_tid == Xow_wiki_type_.Tid_custom) return null;
+		if (wiki_tid == Xow_wiki_type_.Tid_other) return null;	// "other" wikis will never call wikidata
 		ByteAryBfr bfr = app.Utl_bry_bfr_mkr().Get_b512();
 		Xob_bz2_file.Build_alias_by_lang_tid(bfr, lang_key, wiki_tid_ref.Val_(wiki_tid));
 		int xwiki_key_len = bfr.Bry_len();

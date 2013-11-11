@@ -62,7 +62,7 @@ public class Xosrh_page_mgr implements Xosrh_page_mgr_searcher {
 			&&	cancelable == Cancelable_.Never								// cancelable != Cancelable_.Never for search_suggest
 			&&	wiki.Db_mgr().Tid() == gplx.xowa.dbs.Xodb_mgr_txt.Tid_txt	// txt only has search_title fields (page_id, word_id), so it needs to do another load to get page fields; note that sql has page fields already
 			) {	
-			wiki.Db_mgr().Load_mgr().Load_ttls_by_ids(cancelable, cur_ids, itms_bgn, itms_end);
+			wiki.Db_mgr().Load_mgr().Load_by_ids(cancelable, cur_ids, itms_bgn, itms_end);
 		}
 		rv = new Xosrh_rslt_grp(page_idx);
 		for (int i = itms_bgn; i < itms_end; i++)
@@ -86,7 +86,7 @@ public class Xosrh_page_mgr implements Xosrh_page_mgr_searcher {
 			cur_ids.Add(ids.FetchAt(i));
 		if (sort_tid == Xosrh_rslt_itm_sorter.Tid_ttl_asc) {
 			cur_ids.SortBy(sorter.Tid_(Xosrh_rslt_itm_sorter.Tid_id));
-			wiki.Db_mgr().Load_mgr().Load_ttls_by_ids(cancelable, cur_ids, 0, ids_len);
+			wiki.Db_mgr().Load_mgr().Load_by_ids(cancelable, cur_ids, 0, ids_len);
 			cur_ids.SortBy(sorter.Tid_(Xosrh_rslt_itm_sorter.Tid_ttl_asc));
 		}
 		else {

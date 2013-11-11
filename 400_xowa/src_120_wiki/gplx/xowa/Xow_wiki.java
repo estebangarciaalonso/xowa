@@ -16,14 +16,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.users.*; import gplx.xowa.html.*; import gplx.xowa.users.history.*; import gplx.xowa.specials.*; import gplx.xowa.xtns.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*;
+import gplx.xowa.wikis.*; import gplx.xowa.users.*; import gplx.xowa.html.*; import gplx.xowa.users.history.*; import gplx.xowa.specials.*; import gplx.xowa.xtns.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*;
 import gplx.xowa.setup.maints.*;
 import gplx.xowa.wikis.caches.*;
 public class Xow_wiki implements GfoInvkAble {
 	public Xow_wiki(Xoa_app app, Io_url wiki_dir, Xow_ns_mgr ns_mgr, Xol_lang lang) {
 		this.app = app; this.ns_mgr = ns_mgr; this.lang = lang;
 		domain_str = wiki_dir.NameOnly(); domain_bry = ByteAry_.new_utf8_(domain_str);			
-		Xow_wiki_type wiki_type = Xow_wiki_type_.parse_(domain_bry);
+		Xow_wiki_type wiki_type = Xow_wiki_type_.parse_by_domain(domain_bry);
 		wiki_tid = wiki_type.Wiki_tid();
 		lang_key = wiki_type.Lang_key();	// NOTE: commons, species, meta will be ""
 		fsys_mgr = new Xow_fsys_mgr(this, wiki_dir);
@@ -59,7 +59,7 @@ public class Xow_wiki implements GfoInvkAble {
 			wdata_wiki_lang = lang_key;
 		}
 		db_mgr = new gplx.xowa.dbs.Xodb_mgr_txt(this, data_mgr);
-		wiki_tid_code = Xob_bz2_file.Build_alias(Xow_wiki_type_.parse_(domain_bry));
+		wiki_tid_code = Xob_bz2_file.Build_alias(Xow_wiki_type_.parse_by_domain(domain_bry));
 		maint_mgr = new Xow_maint_mgr(this);
 		cache_mgr = new Xow_cache_mgr(this);
 	}
@@ -151,7 +151,9 @@ public class Xow_wiki implements GfoInvkAble {
 		ctx.Page_(page);
 		Xop_root_tkn root = ctx.Tkn_mkr().Root(page.Data_raw());
 		if (clear) {page.Clear();}
-		parser.Parse_page_all(root, ctx, app.Tkn_mkr(), page.Data_raw(), Xop_parser_.Doc_bgn_bos);
+		Xoa_ttl ttl = page.Page_ttl();
+		if (Xow_page_tid.Identify(wiki_tid, ttl.Ns().Id(), ttl.Page_db()) == Xow_page_tid.Tid_wikitext)	// only parse page if wikitext; skip .js, .css, Module; DATE:2013-11-10
+			parser.Parse_page_all(root, ctx, app.Tkn_mkr(), page.Data_raw(), Xop_parser_.Doc_bgn_bos);
 		page.Root_(root);
 		root.Data_htm_(root.Root_src());
 	}
@@ -223,7 +225,7 @@ public class Xow_wiki implements GfoInvkAble {
 		app.Wiki_mgr().Scripts().Exec(this);
 		ByteAryFmtr.Null.Eval_mgr().Enabled_(true);
 		app.Wiki_mgr().Css_installer().Chk(this, user.Fsys_mgr().Wiki_html_dir(domain_str));
-		html_wtr.Hctx().Toc_show_(true).Lnki_title_(true).Lnki_visited_(true);
+		html_wtr.Hctx().Toc_show_(true).Lnki_title_(true).Lnki_visited_(true).Lnki_id_(true);
 		this.Copy_cfg(app.User().Wiki());
 		File_repos_assert(app, this);
 		xtn_mgr.Init_by_wiki(this);

@@ -338,7 +338,7 @@ public class Xop_para_wkr implements Xop_ctx_wkr {
 	}
 	public void Prv_nl_pos_(int v) {prv_nl_pos = v;}
 	public boolean Pre_at_line_bgn() {return pre_at_line_bgn;} private boolean pre_at_line_bgn = false;
-	private void Dd_clear() {ctx.List().Dd_chk = false;}
+	private void Dd_clear() {ctx.List().Dd_chk_(false);}
 	int prv_nl_pos = -1;
 	Xop_para_tkn prv_para = null;
 	public byte Cur_mode() {return cur_mode;}

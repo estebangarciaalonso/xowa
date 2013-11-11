@@ -88,7 +88,7 @@ class Xosrh_qry_itm {
 				int ids_len = tmp_ids.Count();
 				if (ids_len == 0) return;
 				if (cancelable.Canceled()) return;
-				wiki.Db_mgr().Load_mgr().Load_ttls_by_ids(cancelable, tmp_ids, 0, ids_len);
+				wiki.Db_mgr().Load_mgr().Load_by_ids(cancelable, tmp_ids, 0, ids_len);
 				if (cancelable.Canceled()) return;
 				ids = ListAdp_.new_();
 				for (int i = 0; i < ids_len; i++) {

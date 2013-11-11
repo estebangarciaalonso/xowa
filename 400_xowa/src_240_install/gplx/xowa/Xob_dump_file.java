@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.wikis.*;
 public class Xob_dump_file {
 	public Xow_wiki_type Wiki_type()	{return wiki_type;} private Xow_wiki_type wiki_type;
 	public String Dump_date()			{return dump_date;} public void Dump_date_(String v) {dump_date = v;}  String dump_date;
@@ -28,7 +29,7 @@ public class Xob_dump_file {
 	public byte[] Wiki_alias()			{return wiki_alias;} private byte[] wiki_alias;
 	public Xob_dump_file Ctor(String wiki_domain, String dump_date, String dump_file_type) {
 		this.dump_date = dump_date; this.dump_file_type = dump_file_type;
-		this.wiki_type = Xow_wiki_type_.parse_(ByteAry_.new_ascii_(wiki_domain));
+		this.wiki_type = Xow_wiki_type_.parse_by_domain(ByteAry_.new_ascii_(wiki_domain));
 		this.wiki_alias = Xob_bz2_file.Build_alias(wiki_type);
 		byte[] dump_file_bry = ByteAry_.new_utf8_(dump_file_type);
 		byte dump_file_tid = Xob_bz2_file.Parse__tid(dump_file_bry, 0, dump_file_bry.length);

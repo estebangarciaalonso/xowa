@@ -280,6 +280,12 @@ public class Xodb_page_tbl {
 		wkr.Init(rv);
 		wkr.Select_in(provider, cancelable, bgn, end);
 	}
+	public void Select_by_ttl_in(Cancelable cancelable, OrderedHash rv, Xow_wiki wiki, boolean fill_idx_fields_only, int bgn, int end) {
+		Xodb_in_wkr_page_title_ns wkr = new Xodb_in_wkr_page_title_ns();
+		wkr.Fill_idx_fields_only_(fill_idx_fields_only);
+		wkr.Init(wiki, rv);
+		wkr.Select_in(provider, cancelable, bgn, end);
+	}
 	public void Select_by_ttl_in(Cancelable cancelable, OrderedHash rv, int ns_id, int bgn, int end) {
 		Xodb_in_wkr_page_title wkr = new Xodb_in_wkr_page_title();
 		wkr.Init(rv, ns_id);
@@ -290,6 +296,7 @@ public class Xodb_page_tbl {
 	public static final String Tbl_name = "page", Fld_page_id = "page_id", Fld_page_ns = "page_namespace", Fld_page_title = "page_title", Fld_page_is_redirect = "page_is_redirect", Fld_page_touched = "page_touched", Fld_page_len = "page_len", Fld_page_random_int = "page_random_int", Fld_page_file_idx = "page_file_idx";
 	private static final String[] Flds_all = new String[] {Fld_page_id, Fld_page_ns, Fld_page_title, Fld_page_touched, Fld_page_is_redirect, Fld_page_len, Fld_page_file_idx};
 	private static String[] Flds_ary_all = String_.Ary(Flds_all), Flds_ary_search_suggest = String_.Ary(Fld_page_id, Fld_page_ns, Fld_page_title, Fld_page_len);
+	public static final boolean Load_idx_flds_only_y = true;
 }
 class Xodb_in_wkr_page_id extends Xodb_in_wkr_page_base {
 	private OrderedHash hash;
@@ -329,11 +336,56 @@ class Xodb_in_wkr_page_title extends Xodb_in_wkr_page_base {
 	}
 	@Override public Xodb_page Eval_rslts_key(Xodb_page rdr_page) {return (Xodb_page)hash.Fetch(rdr_page.Ttl_wo_ns());}
 }
+class Xodb_in_wkr_page_title_ns extends Xodb_in_wkr_page_base {
+	private Xow_wiki wiki;
+	private OrderedHash hash;
+	@Override public int Interval() {return 64;}	// NOTE: 96+ overflows; EX: w:Space_Liability_Convention; DATE:2013-10-24
+	public void Init(Xow_wiki wiki, OrderedHash hash) {this.wiki = wiki; this.hash = hash;}
+	@Override public String In_fld_name() {return Xodb_page_tbl.Fld_page_title;}
+	@Override public Criteria In_filter(Object[] part_ary) {
+		int len = part_ary.length;
+		Criteria[] crt_ary = new Criteria[len];
+		for (int i = 0; i < len; i++)
+			crt_ary[i] = Criteria_.And(Db_crt_.eq_(Xodb_page_tbl.Fld_page_ns, 0), Db_crt_.eq_(Xodb_page_tbl.Fld_page_title, ByteAry_.Empty));
+		return Criteria_.Or_many(crt_ary);
+	}
+	@Override public void Fill_stmt(Db_stmt stmt, int bgn, int end) {
+		for (int i = bgn; i < end; i++) {
+			Xodb_page page = (Xodb_page)hash.FetchAt(i);
+			stmt.Val_int_(page.Ns_id());
+			stmt.Val_str_by_bry_(page.Ttl_wo_ns());
+		}
+	}
+//		public override Criteria In_filter(Object[] part_ary) {
+//			int len = part_ary.length;
+//			Object[] vals = new Object[len];
+//			for (int i = 0; i < len; i++)
+//				vals[i] = ByteAry_.Empty;
+//			Db_obj_ary_crt crt_x = Db_obj_ary_crt.new_(new Db_fld(Xodb_page_tbl.Fld_page_title, ClassAdp_.Tid_str));
+//			crt_x.Vals_(new Object[][] {vals});
+//			return Criteria_.And(Db_crt_.eq_(Xodb_page_tbl.Fld_page_ns, 0), crt_x);
+////			return Criteria_.And(Db_crt_.eq_(Xodb_page_tbl.Fld_page_ns, 0), Criteria_.Or_many(crt_ary));
+//		}
+//		public override void Fill_stmt(Db_stmt stmt, int bgn, int end) {
+//			stmt.Val_int_(0);
+//			for (int i = bgn; i < end; i++) {
+//				Xodb_page page = (Xodb_page)hash.FetchAt(i);
+//				stmt.Val_str_by_bry_(page.Ttl_wo_ns());
+//			}
+//		}
+	@Override public Xodb_page Eval_rslts_key(Xodb_page rdr_page) {
+		Xow_ns ns = wiki.Ns_mgr().Get_by_id(rdr_page.Ns_id());
+		byte[] ttl_wo_ns = rdr_page.Ttl_wo_ns();
+		rdr_page.Ttl_(ns, ttl_wo_ns);
+		return (Xodb_page)hash.Fetch(rdr_page.Ttl_w_ns());
+	}
+}
 abstract class Xodb_in_wkr_page_base extends Xodb_in_wkr_base {
 	public String Tbl_name() {return Xodb_page_tbl.Tbl_name;}
 	public abstract String In_fld_name();
 	public abstract Criteria In_filter(Object[] part_ary);
 	public abstract Xodb_page Eval_rslts_key(Xodb_page rdr_page);
+	public boolean Fill_idx_fields_only() {return fill_idx_fields_only;} public Xodb_in_wkr_page_base Fill_idx_fields_only_(boolean v) {fill_idx_fields_only = v; return this;} private boolean fill_idx_fields_only;
 	@Override public Db_qry Build_qry(int bgn, int end) {
 		Object[] part_ary = Xodb_in_wkr_base.In_ary(end - bgn);
 		return Db_qry_.select_cols_
@@ -346,8 +398,13 @@ abstract class Xodb_in_wkr_page_base extends Xodb_in_wkr_base {
 		Xodb_page temp = new Xodb_page();
 		while (rdr.MoveNextPeer()) {
 			if (cancelable.Canceled()) return;
-			Xodb_page_tbl.Read_page(temp, rdr);
+			if (fill_idx_fields_only)
+				Xodb_page_tbl.Read_page_for_search_suggest(temp, rdr);
+			else
+				Xodb_page_tbl.Read_page(temp, rdr);
 			Xodb_page page = Eval_rslts_key(temp);
+			if (page == null) continue; // page not found
+			temp.Exists_(true);
 			page.Copy(temp);
 		}
 	}

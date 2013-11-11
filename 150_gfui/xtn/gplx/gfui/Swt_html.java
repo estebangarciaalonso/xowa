@@ -53,6 +53,8 @@ class Swt_html implements Gxw_html, Swt_control, FocusListener {
 	public boolean 		Html_elem_atr_get_bool(String elem_id, String atr_key) 			{return Bool_.parse_((String)Eval_script(kit.Html_cfg().Elem_atr_get_toString(elem_id, atr_key)));}
 	public Object 		Html_elem_atr_get_obj(String elem_id, String atr_key) 			{return Eval_script(kit.Html_cfg().Elem_atr_get(elem_id, atr_key));}
 	public boolean 		Html_elem_atr_set(String elem_id, String atr_key, String atr_val){return Eval_script_as_exec(kit.Html_cfg().Elem_atr_set(elem_id, atr_key, Escape_quotes(atr_val)));}
+	public boolean 		Html_elem_atr_set_append(String elem_id, String atr_key, String atr_val)
+																						{return Eval_script_as_exec(kit.Html_cfg().Elem_atr_set_append(elem_id, atr_key, Escape_quotes(atr_val)));}
 	public boolean 		Html_elem_delete(String elem_id) 								{return Eval_script_as_exec(kit.Html_cfg().Elem_delete(elem_id));}
 	public boolean 		Html_elem_focus(String elem_id) 								{return Eval_script_as_exec(kit.Html_cfg().Elem_focus(elem_id));}
 	public boolean 		Html_elem_scroll_into_view(String id) 							{return Eval_script_as_bool(kit.Html_cfg().Elem_scroll_into_view(Escape_quotes(id)));}

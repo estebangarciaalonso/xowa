@@ -73,8 +73,8 @@ public class Xoa_wiki_mgr implements GfoInvkAble {
 	private static final String Invk_len = "len", Invk_get_at = "get_at";
 	Xow_wiki New_wiki(byte[] key) {
 		Xow_ns_mgr ns_mgr = Xow_ns_mgr_.default_();
-		Xow_wiki_type wiki_type = Xow_wiki_type_.parse_(key);
-		byte[] lang_key = wiki_type.Lang_key(); if (lang_key == Xol_lang_itm_.Bry__null) lang_key = Xol_lang_.Key_en;
+		Xow_wiki_type wiki_type = Xow_wiki_type_.parse_by_domain(key);
+		byte[] lang_key = wiki_type.Lang_key(); if (lang_key == Xol_lang_itm_.Key__unknown) lang_key = Xol_lang_.Key_en;
 		Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(lang_key);
 		Io_url wiki_dir = app.Fsys_mgr().Wiki_dir().GenSubDir(String_.new_utf8_(key));
 		Xow_wiki rv = new Xow_wiki(app, wiki_dir, ns_mgr, lang);

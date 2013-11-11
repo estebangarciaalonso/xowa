@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import org.junit.*;
+import org.junit.*; import gplx.xowa.wikis.*;
 public class Xob_bz2_file_tst {
 	Xob_bz2_file_fxt fxt = new Xob_bz2_file_fxt();
 	@Test  public void Parse()	{fxt.Parse("enwiki-20121201-pages-articles.xml.bz2", "en.wikipedia.org", "20121201", Xob_bz2_file.Tid_pages_articles);}
@@ -68,7 +68,7 @@ class Xob_bz2_file_fxt {
 	public void Parse__domain_name(String raw_str, String expd) {byte[] raw = ByteAry_.new_ascii_(raw_str); Tfds.Eq(expd, String_.new_ascii_(Xob_bz2_file.Parse__domain_name(raw, 0, raw.length)));}
 	public void Parse__tid(String raw_str, byte expd) {byte[] raw = ByteAry_.new_ascii_(raw_str); Tfds.Eq(expd, Xob_bz2_file.Parse__tid(raw, 0, raw.length));}
 	public void Build_alias(String domain, String expd) {
-		Xow_wiki_type wiki_type = Xow_wiki_type_.parse_(ByteAry_.new_ascii_(domain));
+		Xow_wiki_type wiki_type = Xow_wiki_type_.parse_by_domain(ByteAry_.new_ascii_(domain));
 		byte[] actl = Xob_bz2_file.Build_alias(wiki_type);
 		Tfds.Eq(expd, String_.new_ascii_(actl));
 	}	private ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);

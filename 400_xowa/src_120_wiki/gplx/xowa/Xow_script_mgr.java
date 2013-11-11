@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.wikis.*;
 public class Xow_script_mgr implements GfoInvkAble {
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_set))		Set(m.ReadBry("key"), m.ReadBry("wiki_type"), m.ReadBry("script"));
@@ -29,7 +30,7 @@ public class Xow_script_mgr implements GfoInvkAble {
 			Xow_script_itm itm = (Xow_script_itm)hash.FetchAt(i);
 			byte wiki_tid = wiki.Wiki_tid();
 			if (Byte_.In(wiki_tid, itm.Wiki_tids()))	// wiki_tid matches itm
-				itm.Fmtr().Bld_bfr_many(bfr, wiki.Key_bry(), Xow_wiki_type_.Name_by_tid(wiki_tid), wiki.Lang_key());
+				itm.Fmtr().Bld_bfr_many(bfr, wiki.Key_bry(), Xow_wiki_type_.Key_by_tid(wiki_tid), wiki.Lang_key());
 		}
 		String gfs_script = String_.Replace(bfr.XtoStrAndClear(), Op_sys.Wnt.Nl_str(), Op_sys.Lnx.Nl_str());
 		wiki.App().Gfs_mgr().Run_str(gfs_script);
@@ -40,7 +41,7 @@ public class Xow_script_mgr implements GfoInvkAble {
 		int len = wiki_tid_names.length;
 		byte[] wiki_tids = new byte[len];
 		for (int i = 0; i < len; i++)
-			wiki_tids[i] = Xow_wiki_type_.Tid_by_name(wiki_tid_names[i]);
+			wiki_tids[i] = Xow_wiki_type_.Tid_by_key(wiki_tid_names[i]);
 
 		Xow_script_itm itm = new Xow_script_itm(key, wiki_tids, script);
 		hash.AddReplace(itm.Key(), itm);

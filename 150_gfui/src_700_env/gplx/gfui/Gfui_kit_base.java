@@ -105,7 +105,12 @@ class Base_HtmlBox extends GxwTextMemo_lang implements Gxw_html {		public String
 		else													throw Err_.unhandled(atr_key);
 	}
 	public boolean Html_elem_atr_set(String elem_id, String atr_key, String v) {
-		if		(String_.Eq(atr_key, Gfui_html.Atr_value))	this.TextVal_set(v);
+		if		(String_.Eq(atr_key, Gfui_html.Atr_value))		this.TextVal_set(v);
+		else													throw Err_.unhandled(atr_key);
+		return true;
+	}
+	public boolean Html_elem_atr_set_append(String elem_id, String atr_key, String append) {
+		if		(String_.Eq(atr_key, Gfui_html.Atr_value))		this.TextVal_set(this.TextVal() + append);
 		else													throw Err_.unhandled(atr_key);
 		return true;
 	}

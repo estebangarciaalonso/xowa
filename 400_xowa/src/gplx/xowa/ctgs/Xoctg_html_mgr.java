@@ -51,7 +51,7 @@ public class Xoctg_html_mgr implements GfoInvkAble {
 		for (int i = 0; i < len; i++) {
 			Xoctg_view_itm itm = (Xoctg_view_itm)title_list.FetchAt(i);
 			if (pct != 0 && i % pct == 0) usr_dlg.Prog_many("", "", "loading title data: ~{0} / ~{1} -- ~{2}", i, len, String_.new_utf8_(itm.Sortkey()));
-			boolean id_exists = wiki.Db_mgr().Load_mgr().Load_ttl_by_id(dbo_page, itm.Id());
+			boolean id_exists = wiki.Db_mgr().Load_mgr().Load_by_id(dbo_page, itm.Id());
 			Xoa_ttl itm_ttl = null;
 			if (id_exists)
 				itm_ttl = Xoa_ttl.parse_(wiki, dbo_page.Ns_id(), dbo_page.Ttl_wo_ns());

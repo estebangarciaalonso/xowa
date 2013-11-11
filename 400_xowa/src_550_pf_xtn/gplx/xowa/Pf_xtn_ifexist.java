@@ -45,7 +45,7 @@ class Pf_xtn_ifexist extends Pf_func_base {
 			rv.Exists_(exists);
 			return exists;
 		}
-		boolean found = wiki.Db_mgr().Load_mgr().Load_ttl(rv, ttl.Ns(), page_ttl);
+		boolean found = wiki.Db_mgr().Load_mgr().Load_by_ttl(rv, ttl.Ns(), page_ttl);
 		rv.Exists_(found);
 		++Count;
 		ctx.Wiki().If_exists_regy().Add(val_dat_ary, found ? BoolVal.True : BoolVal.False);

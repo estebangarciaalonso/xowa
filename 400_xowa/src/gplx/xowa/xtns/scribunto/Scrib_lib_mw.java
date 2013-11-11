@@ -80,13 +80,13 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 			//frame.Args_eval_by_idx(engine.Ctx().Src(), idx_int); // NOTE: arg[0] is always MW function name; EX: {{#invoke:Mod_0|Func_0|Arg_1}}; arg_x = "Mod_0"; args[0] = "Func_0"; args[1] = "Arg_1"
 			if (nde == null) return KeyVal_.Ary_empty;
 			nde.Val_tkn().Tmpl_evaluate(ctx, src, engine.Cur_frame_owner(), tmp_bfr);
-			return Scrib_kv_utl.base1_obj_(tmp_bfr.XtoStrAndClear());				
+			return Scrib_kv_utl.base1_obj_(tmp_bfr.XtoStrAndClear());
 		}
 		else {
 			Arg_nde_tkn nde = frame.Args_get_by_key(src, ByteAry_.new_utf8_(idx_str));
 			if (nde == null) return KeyVal_.Ary_empty;	// idx_str does not exist;
 			nde.Val_tkn().Tmpl_evaluate(ctx, src, engine.Cur_frame_owner(), tmp_bfr);
-			return Scrib_kv_utl.base1_obj_(tmp_bfr.XtoStrAndClear());
+			return Scrib_kv_utl.base1_obj_(tmp_bfr.XtoStrAndClearAndTrim());	// NOTE: must trim if key_exists; DUPE:TRIM_IF_KEY
 		}
 	}
 	Arg_nde_tkn Get_arg(Xot_invk invk, int idx, int frame_arg_adj) {	// DUPE:MW_ARG_RETRIEVE
@@ -137,13 +137,19 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		if (args_len < 1) return Scrib_kv_utl.base1_obj_(KeyVal_.Ary_empty);	// occurs when "frame:getParent().args" but no parent frame
 		KeyVal[] rv = new KeyVal[args_len];
 		ByteAryBfr tmp_bfr = ByteAryBfr.new_();	// NOTE: do not make modular level variable, else random failures; DATE:2013-10-14
+		int arg_idx = 0;
 		for (int i = 0; i < args_len; i++) {
 			Arg_nde_tkn nde = frame.Args_get_by_idx(i + frame_arg_adj);
 			nde.Key_tkn().Tmpl_evaluate(ctx, src, owner_frame, tmp_bfr);
-			int key_len = tmp_bfr.Bry_len();				
-			Object key = key_len == 0 ? key = i + ListAdp_.Base1 : tmp_bfr.XtoStrAndClear(); // NOTE: MW requires a key; if none, then default to int index; NOTE: must be int, not String
+			int key_len = tmp_bfr.Bry_len();
+			boolean key_missing = key_len == 0;
+			Object key = null;
+			if (key_missing)	// key missing; EX: {{a|val}}
+				key = ++arg_idx;// NOTE: MW requires a key; if none, then default to int index; NOTE: must be int, not String; NOTE: must be indexed to keyless args; EX: in "key1=val1,val2", "val2" must be "1" (1st keyless arg) not "2" (2nd arg); DATE:2013-11-09
+			else				// key absent; EX:{{a|key=val}}
+				key = tmp_bfr.XtoStrAndClear();		
 			nde.Val_tkn().Tmpl_evaluate(ctx, src, owner_frame, tmp_bfr);
-			String val = tmp_bfr.XtoStrAndClear();
+			String val = key_missing ? tmp_bfr.XtoStrAndClear() : tmp_bfr.XtoStrAndClearAndTrim(); // NOTE: must trim if key_exists; DUPE:TRIM_IF_KEY
 			rv[i] = KeyVal_.obj_(key, val);
 		}
 		return Scrib_kv_utl.base1_obj_(rv);

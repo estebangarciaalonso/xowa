@@ -226,32 +226,42 @@ class Scrib_lua_regx_converter {
 	//, Bry_regx_end = ByteAry_.new_ascii_("/us")
 	;
 	private void Init() {
-		Init_itm(percent_hash, "a", "\\p{L}");
-		Init_itm(percent_hash, "c", "\\p{Cc}");
-		Init_itm(percent_hash, "d", "\\p{Nd}");
-		Init_itm(percent_hash, "l", "\\p{Ll}");
-		Init_itm(percent_hash, "p", "\\p{P}");
-		Init_itm(percent_hash, "s", "\\s");	// JAVA \p{Xps} not valid
-		Init_itm(percent_hash, "u", "\\p{Lu}");
-		Init_itm(percent_hash, "w", "[\\p{L}\\p{Nd}]");
-		Init_itm(percent_hash, "x", "[0-9A-Fa-f0-9A-Fa-f]");
-		Init_itm(percent_hash, "z", "\\0");
-		Init_itm(percent_hash, "A", "\\P{L}");
-		Init_itm(percent_hash, "C", "\\P{Cc}");
-		Init_itm(percent_hash, "D", "\\P{Nd}");
-		Init_itm(percent_hash, "L", "\\P{Ll}");
-		Init_itm(percent_hash, "P", "\\P{P}");
-		Init_itm(percent_hash, "S", "\\S");	// JAVA: \P{Xps} not valid
-		Init_itm(percent_hash, "U", "\\P{Lu}");
-		Init_itm(percent_hash, "W", "[\\P{L}\\P{Nd}]");
-		Init_itm(percent_hash, "X", "[^0-9A-Fa-f0-9A-Fa-f]");
-		Init_itm(percent_hash, "Z", "[^\\0]");
-		Init_itm(brack_hash, "w", "\\p{L}\\p{Nd}");
-		Init_itm(brack_hash, "x", "0-9A-Fa-f0-9A-Fa-f");
-		Init_itm(brack_hash, "W", "\\P{Xan}\\p{Nl}\\p{No}");	// Xan is L plus N, so ^Xan plus Nl plus No is anything that's not L or Nd
-		Init_itm(brack_hash, "X", "\\x00-\\x2f\\x3a-\\x40\\x47-\\x60\\x67-\\x{ff0f}\\x{ff1a}-\\x{ff20}\\x{ff27}-\\x{ff40}\\x{ff47}-\\x{10ffff}");
-		Init_itm(brack_hash, "Z", "\\x01-\\x{10ffff}");
+		Init_itm(Bool_.Y, "a", "\\p{L}");
+		Init_itm(Bool_.Y, "c", "\\p{Cc}");
+		Init_itm(Bool_.Y, "d", "\\p{Nd}");
+		Init_itm(Bool_.Y, "l", "\\p{Ll}");
+		Init_itm(Bool_.Y, "p", "\\p{P}");
+		Init_itm(Bool_.Y, "s", "\\s");	// JAVA \p{Xps} not valid
+		Init_itm(Bool_.Y, "u", "\\p{Lu}");
+		Init_itm(Bool_.Y, "w", "[\\p{L}\\p{Nd}]");
+		Init_itm(Bool_.Y, "x", "[0-9A-Fa-f0-9A-Fa-f]");
+		Init_itm(Bool_.Y, "z", "\\0");
+		Init_itm(Bool_.Y, "A", "\\P{L}");
+		Init_itm(Bool_.Y, "C", "\\P{Cc}");
+		Init_itm(Bool_.Y, "D", "\\P{Nd}");
+		Init_itm(Bool_.Y, "L", "\\P{Ll}");
+		Init_itm(Bool_.Y, "P", "\\P{P}");
+		Init_itm(Bool_.Y, "S", "\\S");	// JAVA: \P{Xps} not valid
+		Init_itm(Bool_.Y, "U", "\\P{Lu}");
+		Init_itm(Bool_.Y, "W", "[\\P{L}\\P{Nd}]");
+		Init_itm(Bool_.Y, "X", "[^0-9A-Fa-f0-9A-Fa-f]");
+		Init_itm(Bool_.Y, "Z", "[^\\0]");
+		Init_itm(Bool_.N, "w", "\\p{L}\\p{Nd}");
+		Init_itm(Bool_.N, "x", "0-9A-Fa-f0-9A-Fa-f");
+		Init_itm(Bool_.N, "W", "\\P{Xan}\\p{Nl}\\p{No}");	// Xan is L plus N, so ^Xan plus Nl plus No is anything that's not L or Nd
+		Init_itm(Bool_.N, "X", "\\x00-\\x2f\\x3a-\\x40\\x47-\\x60\\x67-\\x{ff0f}\\x{ff1a}-\\x{ff20}\\x{ff27}-\\x{ff40}\\x{ff47}-\\x{10ffff}");
+		Init_itm(Bool_.N, "Z", "\\x01-\\x{10ffff}");
 	}
-	private void Init_itm(Hash_adp_bry hash, String lua, String php) {hash.Add_bry_obj(ByteAry_.new_ascii_(lua), ByteAry_.new_ascii_(php));}
-	final Hash_adp_bry percent_hash = new Hash_adp_bry(true), brack_hash = new Hash_adp_bry(true);
+	private void Init_itm(boolean add_to_percent_hash, String lua, String php) {
+		byte[] lua_bry = ByteAry_.new_ascii_(lua);
+		byte[] php_bry = ByteAry_.new_ascii_(php);
+		if (add_to_percent_hash) {
+			percent_hash.Add_bry_obj(lua_bry, php_bry);
+			brack_hash.Add_bry_obj(lua_bry, php_bry);	// always add to brack_hash; brack_hash = percent_hash + other characters
+		}
+		else {
+			brack_hash.AddReplace(lua_bry, php_bry);	// replace percent_hash definitions
+		}
+	}
+	private final Hash_adp_bry percent_hash = new Hash_adp_bry(true), brack_hash = new Hash_adp_bry(true);
 }

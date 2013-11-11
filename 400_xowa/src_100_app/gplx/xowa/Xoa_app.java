@@ -74,6 +74,7 @@ public class Xoa_app implements GfoInvkAble {
 		if (setup_mgr.Cmd_mgr().Working()) {
 			if (!gui_mgr.Kit().Ask_yes_no("", "", "An import is in progress. Are you sure you want to exit?")) return false;
 		} 
+		gui_mgr.Main_win().Gui_wtr().Canceled_y_();
 		user.Session_mgr().Window_mgr().Save_window(gui_mgr.Main_win().Win());
 		user.History_mgr().Save(this);
 		log_wtr.Term();

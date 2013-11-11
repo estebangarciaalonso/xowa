@@ -18,8 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.dbs.*; import gplx.fsdb.*; import gplx.xowa.files.main.orig.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.qrys.*;
 public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, RlsAble {
-	private Db_provider img_regy_provider = null;
-	private Fsdb_mnt_mgr mnt_mgr = new Fsdb_mnt_mgr();
+	private Db_provider img_regy_provider = null;		
 	private Io_url fs_dir;
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
 	public boolean Tid_is_mem() {return false;}
@@ -27,6 +26,7 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, RlsAble {
 	public Xof_bin_mgr Bin_mgr() {return bin_mgr;} private Xof_bin_mgr bin_mgr;
 	public Xof_bin_wkr Bin_wkr_fsdb() {return bin_wkr_fsdb;} private Xof_bin_wkr_fsdb_sql bin_wkr_fsdb;
 	public void Db_bin_max_(long v) {mnt_mgr.Bin_db_max_(v);}
+	public Fsdb_mnt_mgr Mnt_mgr() {return mnt_mgr;} private Fsdb_mnt_mgr mnt_mgr = new Fsdb_mnt_mgr();
 	public Xof_fsdb_mgr_sql Db_dir_(Io_url v) {db_dir = v; mnt_mgr.Init(db_dir); return this;} private Io_url db_dir;
 	public boolean Init_by_wiki(Xow_wiki wiki) {
 		if (init) return false;

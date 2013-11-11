@@ -33,7 +33,7 @@ public class Xof_ext {
 	}
 	public boolean Id_is_thumbable2()	{
 		switch (id) {
-		case Xof_ext_.Id_unknown: case Xof_ext_.Id_ogg: case Xof_ext_.Id_oga:
+		case Xof_ext_.Id_unknown: case Xof_ext_.Id_oga:	// NOTE: removed Xof_ext_.Id_ogg; some vids can be ogg
 			return false;
 		default:
 			return true;

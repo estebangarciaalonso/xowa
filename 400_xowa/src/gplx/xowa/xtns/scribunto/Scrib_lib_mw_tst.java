@@ -44,6 +44,16 @@ public class Scrib_lib_mw_tst {
 		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getAllExpandedArguments, Object_.Ary("parent"), "\n  1:a1;2:a2");
 		fxt.Init_server_print_key_n_();
 	}
+	@Test  public void GetAllExpandedArguments_ws_prm_key_exists() {	// PURPOSE: trim val if key exists; parameterized value ("key={{{1}}}")
+		fxt.Init_tmpl("{{#invoke:Mod_0|Prc_0|key={{{1}}}}}");
+		fxt.Init_page("{{test| a }}");
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getAllExpandedArguments, Object_.Ary("current"),  "\n  a");				// " a " -> "a"
+	}
+	@Test  public void GetAllExpandedArguments_ws_prm_key_missing() {	// PURPOSE: do not trim val if key missing; parameterized value ("{{{1}}}")
+		fxt.Init_tmpl("{{#invoke:Mod_0|Prc_0|{{{1}}}}}");
+		fxt.Init_page("{{test| a }}");
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getAllExpandedArguments, Object_.Ary("current"),  "\n   a ");				// " a " -> " a "
+	}
 	@Test  public void GetExpandedArgument() {
 		fxt.Init_page("{{#invoke:Mod_0|Prc_0|val_1|key_2=val_2|val_3}}");
 		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getExpandedArgument, Object_.Ary("current", "1")		, "val_1");			// get 1st by idx
@@ -51,6 +61,24 @@ public class Scrib_lib_mw_tst {
 		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getExpandedArgument, Object_.Ary("current", "3")		, "");				// get 3rd by idx (which is n/a, not "3")
 		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getExpandedArgument, Object_.Ary("current", "key_2")	, "val_2");			// get key_2
 		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getExpandedArgument, Object_.Ary("current", "key_3")	, "");				// key_3 n/a
+	}
+	@Test  public void GetExpandedArgument_ws_key_exists() {	// PURPOSE: trim val if key exists; literal value
+		fxt.Init_page("{{#invoke:Mod_0|Prc_0| key1 = val1 }}");
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getExpandedArgument, Object_.Ary("current", "key1")	, "val1");			// "key1" -> "key1"
+	}
+	@Test  public void GetExpandedArgument_ws_key_missing() {	// PURPOSE: do not trim val if key missing; literal value
+		fxt.Init_page("{{#invoke:Mod_0|Prc_0| a }}");
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getExpandedArgument, Object_.Ary("current", "1")		, " a ");			// " a " -> " a "
+	}
+	@Test  public void GetExpandedArgument_ws_key_prm_key_exists() {	// PURPOSE: trim val if key exists; parameterized value ("key={{{1}}}")
+		fxt.Init_tmpl("{{#invoke:Mod_0|Prc_0|key1={{{1}}}}}");
+		fxt.Init_page("{{test| a }}");
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getExpandedArgument, Object_.Ary("current", "key1")	, "a");				// " a " -> "a"
+	}
+	@Test  public void GetExpandedArgument_ws_key_prm_key_missing() {	// PURPOSE: do not trim val if key missing; parameterized value ("{{{1}}}")
+		fxt.Init_tmpl("{{#invoke:Mod_0|Prc_0|{{{1}}}}}");
+		fxt.Init_page("{{test| a }}");
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getExpandedArgument, Object_.Ary("current", "1")		, " a ");			// " a " -> " a "
 	}
 	@Test  public void GetExpandedArgument_parent() {
 		fxt.Init_tmpl("{{#invoke:Mod_0|Prc_0|b1}}");

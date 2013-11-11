@@ -32,6 +32,20 @@ public class Xodb_page implements Xobl_data_itm {
 	public Xow_ns Ns() {return ns;} private Xow_ns ns;
 	public Object Xtn() {return xtn;} public Xodb_page Xtn_(Object v) {this.xtn = v; return this;} Object xtn;
 	public byte[] Ttl_w_ns() {return ttl_w_ns;} private byte[] ttl_w_ns;
+	public Xodb_page Ttl_(Xow_ns ns, byte[] ttl_wo_ns) {
+		this.ns = ns;
+		ns_id = ns.Id();
+		this.ttl_wo_ns = ttl_wo_ns;
+		this.ttl_w_ns = ns.Gen_ttl(ttl_wo_ns);
+		return this;
+	}
+	public Xodb_page Ttl_(Xoa_ttl ttl) {
+		ttl_w_ns = ttl.Full_txt();
+		ttl_wo_ns = ttl.Page_db();
+		ns = ttl.Ns();
+		ns_id = ns.Id();
+		return this;
+	}
 	public Xodb_page Ttl_(byte[] v, Xow_ns_mgr ns_mgr) {
 		ttl_w_ns = v;
 		Object o = ns_mgr.Trie_match_colon(v, 0, v.length, colon_pos_tmp);
@@ -47,7 +61,7 @@ public class Xodb_page implements Xobl_data_itm {
 		return this;
 	}	static final IntRef colon_pos_tmp = IntRef.neg1_();
 	public void Clear() {
-		id = -1; text_len = 0;	// text_len should be 0 b/c text defaults to 0;
+		id = Id_null; text_len = 0;	// text_len should be 0 b/c text defaults to 0;
 		db_file_idx = db_row_idx = 0; // default to 0, b/c some tests do not set and will fail at -1
 		ns_id = Int_.MinValue;
 		ttl_w_ns = ttl_wo_ns = null; text = ByteAry_.Empty;	// default to Ary_empty for entries that have <text />
@@ -81,4 +95,5 @@ public class Xodb_page implements Xobl_data_itm {
 	public static Xodb_page srch_(int id, int text_len) {return new Xodb_page().Id_(id).Text_len_(text_len);}
 	public static final Xodb_page[] Ary_empty = new Xodb_page[0];
 	public static final int Timestamp_null = 0;
+	public static final int Id_null = -1;
 }

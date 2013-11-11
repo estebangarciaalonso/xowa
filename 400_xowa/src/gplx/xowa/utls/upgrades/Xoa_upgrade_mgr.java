@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.utls.upgrades; import gplx.*; import gplx.xowa.*; import gplx.xowa.utls.*;
+import gplx.xowa.wikis.*;
 public class Xoa_upgrade_mgr {
 	public static void Check(Xoa_app app) {
 		Upgrade_history(app);

@@ -18,18 +18,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.fsdb; import gplx.*;
 import gplx.dbs.*;
 public class Fsdb_fil_tbl {
-	public static void Create_table(Db_provider p) {
-		Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); 
-		Sqlite_engine_.Idx_create(p, Idx_name, Idx_owner);
+	private Db_provider provider;
+	private Db_stmt stmt_insert, stmt_update, stmt_select_by_name, stmt_select_by_id;
+	public Fsdb_fil_tbl(Db_provider provider, boolean created) {
+		this.provider = provider;
+		if (created) Create_table();
 	}
-	public static void Insert(Db_provider p, int id, int owner_id, String name, int xtn_id, int ext_id, long size, DateAdp modified, String hash, int bin_db_id) {
-		Db_stmt stmt = Insert_stmt(p);
-		try {Insert(stmt, id, owner_id, name, xtn_id, ext_id, size, modified, hash, bin_db_id);}
-		finally {stmt.Rls();}
+	private void Create_table() {
+		Sqlite_engine_.Tbl_create(provider, Tbl_name, Tbl_sql); 
+		Sqlite_engine_.Idx_create(provider, Idx_name, Idx_owner);
 	}
-	private static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_fil_id, Fld_fil_owner_id, Fld_fil_name, Fld_fil_xtn_id, Fld_fil_ext_id, Fld_fil_bin_db_id, Fld_fil_size, Fld_fil_modified, Fld_fil_hash);}
-	private static void Insert(Db_stmt stmt, int id, int owner_id, String name, int xtn_id, int ext_id, long size, DateAdp modified, String hash, int bin_db_id) {
-		stmt.Clear()
+	public void Rls() {
+		if (stmt_insert != null) {stmt_insert.Rls(); stmt_insert = null;}
+		if (stmt_update != null) {stmt_update.Rls(); stmt_update = null;}
+		if (stmt_select_by_name != null) {stmt_select_by_name.Rls(); stmt_select_by_name = null;}
+		if (stmt_select_by_id != null) {stmt_select_by_id.Rls(); stmt_select_by_id = null;}
+	}
+	private Db_stmt Insert_stmt() {return Db_stmt_.new_insert_(provider, Tbl_name, Fld_fil_id, Fld_fil_owner_id, Fld_fil_name, Fld_fil_xtn_id, Fld_fil_ext_id, Fld_fil_bin_db_id, Fld_fil_size, Fld_fil_modified, Fld_fil_hash);}
+	public void Insert(int id, int owner_id, String name, int xtn_id, int ext_id, long size, DateAdp modified, String hash, int bin_db_id) {
+		if (stmt_insert == null) stmt_insert = Insert_stmt();
+		stmt_insert.Clear()
 		.Val_int_(id)
 		.Val_int_(owner_id)
 		.Val_str_(name)
@@ -41,31 +49,28 @@ public class Fsdb_fil_tbl {
 		.Val_str_(hash)
 		.Exec_insert();
 	}	
-	public static Db_stmt Update_stmt(Db_provider p) {return Db_stmt_.new_update_(p, Tbl_name, String_.Ary(Fld_fil_id), Fld_fil_owner_id, Fld_fil_ext_id, Fld_fil_name);}
-	public static void Update(Db_stmt stmt, int id, int owner_id, String name, int ext_id) {
-		stmt.Clear()
+	private Db_stmt Update_stmt() {return Db_stmt_.new_update_(provider, Tbl_name, String_.Ary(Fld_fil_id), Fld_fil_owner_id, Fld_fil_ext_id, Fld_fil_name);}
+	public void Update(int id, int owner_id, String name, int ext_id) {
+		if (stmt_update == null) stmt_update = Update_stmt();
+		stmt_update.Clear()
 		.Val_int_(id)
 		.Val_int_(owner_id)
 		.Val_int_(ext_id)
 		.Val_str_(name)
 		.Exec_update();
 	}	
-	public static void Delete_by_id(Db_provider p, int id) {
-		Db_stmt stmt = Delete_by_id_stmt(p);
-		try {Delete_by_id(stmt, id);}
-		finally {stmt.Rls();}
+	private Db_stmt Select_by_name_stmt() {
+		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_fil_owner_id, Int_.MinValue), Db_crt_.eq_(Fld_fil_name, "")));
+		return provider.Prepare(qry);
 	}
-	private static Db_stmt Delete_by_id_stmt(Db_provider p) {return Db_stmt_.new_delete_(p, Tbl_name, Fld_fil_id);}
-	private static void Delete_by_id(Db_stmt stmt, int id) {
-		stmt.Clear()
-		.Val_int_(id)
-		.Exec_delete();
-	}	
-	public static Fsdb_fil_itm Select_itm_by_name(Db_provider p, int dir_id, String fil_name) {
-		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_fil_owner_id, dir_id), Db_crt_.eq_(Fld_fil_name, fil_name)));
+	public Fsdb_fil_itm Select_itm_by_name(int dir_id, String fil_name) {
+		if (stmt_select_by_name == null) stmt_select_by_name = Select_by_name_stmt();
 		DataRdr rdr = DataRdr_.Null;
 		try {
-			rdr = p.Exec_qry_as_rdr(qry);
+			rdr = stmt_select_by_name.Clear()
+				.Val_int_(dir_id)
+				.Val_str_(fil_name)
+				.Exec_select();
 			if (rdr.MoveNextPeer())
 				return load_(rdr);
 			else
@@ -73,11 +78,17 @@ public class Fsdb_fil_tbl {
 		}
 		finally {rdr.Rls();}
 	}
-	public static Fsdb_fil_itm Select_itm_by_id(Db_provider p, int fil_id) {
-		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(Db_crt_.eq_(Fld_fil_id, fil_id));
+	private Db_stmt Select_by_id_stmt() {
+		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(Db_crt_.eq_(Fld_fil_id, 0));
+		return provider.Prepare(qry);
+	}
+	public Fsdb_fil_itm Select_itm_by_id(int fil_id) {
+		if (stmt_select_by_id == null) stmt_select_by_id = Select_by_id_stmt();
 		DataRdr rdr = DataRdr_.Null;
 		try {
-			rdr = p.Exec_qry_as_rdr(qry);
+			rdr = stmt_select_by_name.Clear()
+				.Val_int_(fil_id)
+				.Exec_select();
 			if (rdr.MoveNextPeer())
 				return load_(rdr);
 			else
@@ -85,10 +96,9 @@ public class Fsdb_fil_tbl {
 		}
 		finally {rdr.Rls();}
 	}
-	private static Fsdb_fil_itm load_(DataRdr rdr) {
+	private Fsdb_fil_itm load_(DataRdr rdr) {
 		return new Fsdb_fil_itm().Init(rdr.ReadInt(Fld_fil_id), rdr.ReadInt(Fld_fil_owner_id), rdr.ReadInt(Fld_fil_ext_id), rdr.ReadStr(Fld_fil_name), rdr.ReadInt(Fld_fil_bin_db_id));
 	}
-
 	public static final String Tbl_name = "fsdb_fil", Fld_fil_id = "fil_id", Fld_fil_owner_id = "fil_owner_id", Fld_fil_name = "fil_name", Fld_fil_xtn_id = "fil_xtn_id", Fld_fil_ext_id = "fil_ext_id"
 	, Fld_fil_size = "fil_size", Fld_fil_modified = "fil_modified", Fld_fil_hash = "fil_hash", Fld_fil_bin_db_id = "fil_bin_db_id"
 	;

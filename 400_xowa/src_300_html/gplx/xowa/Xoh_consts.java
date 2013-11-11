@@ -22,6 +22,7 @@ public class Xoh_consts {
 	, I_bgn = ByteAry_.new_ascii_("<i>"), I_end = ByteAry_.new_ascii_("</i>")
 	, P_bgn = ByteAry_.new_ascii_("<p>"), P_end = ByteAry_.new_ascii_("</p>")
 	, A_bgn = ByteAry_.new_ascii_("<a href=\""), A_bgn_lnki_0 = ByteAry_.new_ascii_("\" title=\""), A_mid_xowa_title = ByteAry_.new_ascii_("\" xowa_title=\"")
+	, A_mid_id = ByteAry_.new_ascii_("\" id=\"xowa_lnki_")
 	, A_bgn_lnke_0		= ByteAry_.new_ascii_("\" class=\"external text\" rel=\"nofollow\">")
 	, A_bgn_lnke_0_xowa = ByteAry_.new_ascii_("\">")
 	, A_end = ByteAry_.new_ascii_("</a>")

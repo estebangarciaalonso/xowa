@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xol_lang_itm_ {
-	public static final byte[] Bry__null = ByteAry_.Empty;
-	public static final int Id__null = -1
+	public static final byte[] Key__unknown = ByteAry_.Empty;
+	public static final int Id__unknown = -1
 , Id_aa = 0
 , Id_ab = 1
 , Id_ace = 2

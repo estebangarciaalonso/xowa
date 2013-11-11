@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.xowa.parsers.lnkis.*;
 public class Xtn_gallery_parser {		
 	private Xow_wiki wiki; private ByteTrieMgr_slim trie = new ByteTrieMgr_slim(false);
 	private Xtn_gallery_itm cur_itm;
@@ -25,7 +26,7 @@ public class Xtn_gallery_parser {
 	private int itm_bgn;
 	private ByteAryBfr caption_bfr = ByteAryBfr.reset_(255); private int caption_bgn;
 	private int gallery_itm_w, gallery_itm_h;
-	private Xop_ctx ctx; private Xobc_lnki_wkr file_wkr;
+	private Xop_ctx ctx; private Xop_lnki_logger file_wkr;
 
 	public Xtn_gallery_parser Init_by_wiki(Xow_wiki wiki) {
 		this.wiki = wiki; Xol_lang lang = wiki.Lang();

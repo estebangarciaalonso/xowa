@@ -52,7 +52,7 @@ public class Db_mgr_fxt {
 		Xow_wiki wiki = bldr_fxt.Wiki();
 		Xow_ns ns = wiki.Ns_mgr().Get_by_id(ns_id);
 		byte[] ttl_bry = ByteAry_.new_ascii_(ttl_str);
-		wiki.Db_mgr_as_sql().Load_mgr().Load_ttl(actl, ns, ttl_bry);
+		wiki.Db_mgr_as_sql().Load_mgr().Load_by_ttl(actl, ns, ttl_bry);
 		Tfds.Eq(expd.Id(), actl.Id());
 		Tfds.Eq_date(expd.Modified_on(), actl.Modified_on());
 		Tfds.Eq(expd.Type_redirect(), actl.Type_redirect());

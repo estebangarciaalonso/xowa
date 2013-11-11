@@ -25,15 +25,16 @@ public class Xob_xfer_temp_cmd_thumb extends Xob_itm_basic_base implements Xob_c
 		Db_provider provider = Xodb_db_file.init__oimg_lnki(wiki).Provider();
 		Xob_xfer_temp_tbl.Create_table(provider);
 		Db_stmt trg_stmt = Xob_xfer_temp_tbl.Insert_stmt(provider);
-
 		provider.Txn_mgr().Txn_bgn_if_none();
 		DataRdr rdr = provider.Exec_sql_as_rdr(Sql_select);
 		Xof_img_size img_size = new Xof_img_size();
 		while (rdr.MoveNextPeer()) {
-			String orig_media_type = rdr.ReadStrOr(Xob_orig_regy_tbl.Fld_oor_orig_media_type, "");	// convert nulls to ""
-			if (String_.Eq(orig_media_type, "AUDIO")) continue;	// .ogg file, but marked AUDIO; ignore; audio will never have thumbs
 			byte lnki_ext = rdr.ReadByte(Xob_lnki_regy_tbl.Fld_olr_lnki_ext);
-			if (Byte_.In(lnki_ext, Xof_ext_.Id_mid)) continue;	// .mid does not have orig_media_type of "AUDIO"
+			String orig_media_type = rdr.ReadStrOr(Xob_orig_regy_tbl.Fld_oor_orig_media_type, "");	// convert nulls to ""
+			byte orig_media_type_tid = Xof_media_type.Xto_byte(orig_media_type);
+			lnki_ext = Xof_media_type.Convert_if_ogg_and_video(lnki_ext, orig_media_type_tid);
+			if (orig_media_type_tid == Xof_media_type.Tid_audio) continue;	// ignore: audio will never have thumbs
+			if (Byte_.In(lnki_ext, Xof_ext_.Id_mid)) continue;				// NOTE: .mid does not have orig_media_type of "AUDIO"
 			int lnki_id = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_id);
 			byte orig_repo = rdr.ReadByte(Xob_orig_regy_tbl.Fld_oor_orig_repo);
 			int orig_page_id = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_page_id, -1);

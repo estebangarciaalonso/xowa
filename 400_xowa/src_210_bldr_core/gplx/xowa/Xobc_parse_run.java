@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.bldrs.*; import gplx.xowa.wikis.caches.*;
+import gplx.xowa.bldrs.*; import gplx.xowa.wikis.caches.*; import gplx.xowa.parsers.lnkis.*;
 public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoInvkAble {
 	public Xobc_parse_run(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Cmd_key() {return KEY;} public static final String KEY = "parse.run";

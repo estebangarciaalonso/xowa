@@ -17,14 +17,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.wdatas.*;
-public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xobc_lnki_wkr {
+import gplx.xowa.parsers.lnkis.*;
+public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_logger {
 	private Db_provider provider; private Db_stmt stmt;
 	private boolean wdata_enabled = true, xtn_ref_enabled = true;
 	private Scrib_pf_invoke_wkr invoke_wkr; private Wdata_pf_property_wkr property_wkr;
+	private int[] ns_ids = Int_.Ary(Xow_ns_.Id_main);// , Xow_ns_.Id_category, Xow_ns_.Id_template
 	public Xob_lnki_temp_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	@Override public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "oimg.lnki_temp";
 	@Override public byte Init_redirect() {return Bool_.N_byte;}	// lnki will never be found in a redirect
-	@Override public int[] Init_ns_ary() {return Int_.Ary(Xow_ns_.Id_main);}	// , Xow_ns_.Id_category, Xow_ns_.Id_template
+	@Override public int[] Init_ns_ary() {return ns_ids;}
 	@Override protected void Init_reset(Db_provider p) {
 		p.Exec_sql("DELETE FROM " + Xodb_xowa_cfg_tbl.Tbl_name);
 		p.Exec_sql("DELETE FROM " + Xob_lnki_temp_tbl.Tbl_name);
@@ -75,10 +77,23 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xobc_lnki_wk
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_wdata_enabled_))				wdata_enabled = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_xtn_ref_enabled_))			xtn_ref_enabled = m.ReadYn("v");
-		else if	(ctx.Match(k, Invk_invoke_wkr))					return this.Invoke_wkr();
+		else if	(ctx.Match(k, Invk_ns_ids_))					ns_ids = Int_.Ary_parse(m.ReadStr("v"), "|");
+		else if	(ctx.Match(k, Invk_ns_ids_by_aliases))			Ns_ids_by_aliases(m.ReadStrAry("v", "|"));
 		else if	(ctx.Match(k, Invk_property_wkr))				return this.Property_wkr();
+		else if	(ctx.Match(k, Invk_invoke_wkr))					return this.Invoke_wkr();
 		else	return super.Invk(ctx, ikey, k, m);
 		return this;
+	}	private static final String Invk_wdata_enabled_ = "wdata_enabled_", Invk_xtn_ref_enabled_ = "xtn_ref_enabled_", Invk_ns_ids_ = "ns_ids_", Invk_ns_ids_by_aliases = "ns_ids_by_aliases", Invk_invoke_wkr = "invoke_wkr", Invk_property_wkr = "property_wkr";
+	private void Ns_ids_by_aliases(String[] aliases) {
+		ns_ids = wiki.Ns_mgr().Ids_by_aliases(aliases);
+		int aliases_len = aliases.length;
+		int ids_len = ns_ids.length;
+		for (int i = 0; i < aliases_len; i++) {
+			String alias = aliases[i];
+			int id = i < ids_len ? ns_ids[i] : -1;
+			usr_dlg.Note_many("", "", "ns: ~{0} <- ~{1}", Int_.XtoStr_fmt(id, "0000"), alias);
+		}
+		if (aliases_len != ids_len) throw Err_.new_fmt_("mismatch in aliases and ids: {0} vs {1}", aliases_len, ids_len);
 	}
 	private Scrib_pf_invoke_wkr Invoke_wkr() {
 		if (invoke_wkr == null) invoke_wkr = bldr.App().Xtn_mgr().Xtn_scribunto().Invoke_wkr_or_new();
@@ -88,6 +103,4 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xobc_lnki_wk
 		if (property_wkr == null) property_wkr = bldr.App().Wiki_mgr().Wdata_mgr().Property_wkr_or_new();
 		return property_wkr;
 	}
-	private static final String Invk_wdata_enabled_ = "wdata_enabled_", Invk_xtn_ref_enabled_ = "xtn_ref_enabled_", Invk_invoke_wkr = "invoke_wkr", Invk_property_wkr = "property_wkr"
-	;
 }

@@ -394,6 +394,10 @@ public class IoEngine_system extends IoEngine_base {
 		String src_str = xrg.Src();
 		Io_download_fmt xfer_fmt = xrg.Download_fmt();
 		prog_dlg = xfer_fmt.usr_dlg;
+		if (!Web_access_enabled) {
+			prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download disabled: src='~{0}' trg='~{1}'", xrg.Src(), xrg.Trg().Raw());
+			return false;
+		}
 		try {
 			trg_stream = Io_mgr._.OpenStreamWrite(xrg.Trg());
 			src_url = new java.net.URL(src_str);
@@ -480,6 +484,7 @@ public class IoEngine_system extends IoEngine_base {
 	IoEngineUtl utl = IoEngineUtl.new_();
 	public static IoEngine_system new_() {return new IoEngine_system();} IoEngine_system() {}
 	static final String GRP_KEY = "Io_engine";
+	public static boolean Web_access_enabled = true;
 }
 class IoEngineArgs {
 	public int		LoadFilStr_BufferSize = 4096 * 256;
@@ -535,6 +540,11 @@ class Io_stream_rdr_http implements Io_stream_rdr {
 	private boolean read_done = true, read_failed = false;
 	public Io_stream_rdr Open() {
 		if (Io_download_http.User_agent_reset_needed) Io_download_http.User_agent_reset();
+		if (!IoEngine_system.Web_access_enabled) {
+			read_done = read_failed = true;
+			prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download disabled: src='~{0}' trg='~{1}'", xrg.Src(), xrg.Trg().Raw());
+			return this;
+		}
 		src_str = xrg.Src();
 		xfer_fmt = xrg.Download_fmt(); prog_dlg = xfer_fmt.usr_dlg;
 		try {

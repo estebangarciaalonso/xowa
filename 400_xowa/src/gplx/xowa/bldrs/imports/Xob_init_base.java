@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import gplx.xowa.xtns.wdatas.*; import gplx.xowa.bldrs.xmls.*;
+import gplx.xowa.wikis.*; import gplx.xowa.xtns.wdatas.*; import gplx.xowa.bldrs.xmls.*;
 public abstract class Xob_init_base implements Xob_cmd, GfoInvkAble {
 	public Xob_init_base Ctor(Xob_bldr bldr, Xow_wiki wiki) {this.bldr = bldr; this.wiki = wiki; this.usr_dlg = wiki.App().Usr_dlg(); return this;} private Xob_bldr bldr; Xow_wiki wiki; Gfo_usr_dlg usr_dlg;
 	public abstract String Cmd_key();

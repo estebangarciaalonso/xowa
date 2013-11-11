@@ -349,6 +349,7 @@ public class ByteAryBfr {
 	public String XtoStr()							{return String_.new_utf8_(XtoAry());}
 	public String XtoStrByPos(int bgn, int end)		{return String_.new_utf8_(XtoAry(), bgn, end);}
 	public String XtoStrAndClear()					{return String_.new_utf8_(XtoAryAndClear());}
+	public String XtoStrAndClearAndTrim()			{return String_.new_utf8_(XtoAryAndClearAndTrim());}
 	public String XtoStrAndReset(int v)				{return String_.new_utf8_(XtoAryAndReset(v));}
 	public int XtoIntAndClear(int or) {int rv = XtoInt(or); this.Clear(); return rv;}
 	public int XtoInt(int or) {

@@ -18,40 +18,68 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx;
 import org.junit.*;
 public class ByteTrieMgr_fast_tst {
-	@Before public void init() {
-		trie = ByteTrieMgr_fast.cs_();
-		run_Add(1	, Byte_ascii.Ltr_a);
-		run_Add(123	, Byte_ascii.Ltr_a, Byte_ascii.Ltr_b, Byte_ascii.Ltr_c);
-	}	private ByteTrieMgr_fast trie;
+	private ByteTrieMgr_fast_fxt fxt = new ByteTrieMgr_fast_fxt();
+	@Before public void init() {fxt.Clear();}
 	@Test  public void Fetch() {
-		tst_MatchAtCur("a"		, 1);
-		tst_MatchAtCur("abc"	, 123);
-		tst_MatchAtCur("ab"		, 1);
-		tst_MatchAtCur("abcde"	, 123);
-		tst_MatchAtCur(" a"		, null);
+		fxt.Test_matchAtCur("a"		, 1);
+		fxt.Test_matchAtCur("abc"	, 123);
+		fxt.Test_matchAtCur("ab"	, 1);
+		fxt.Test_matchAtCur("abcde"	, 123);
+		fxt.Test_matchAtCur(" a"	, null);
 	}
 	@Test  public void Bos() {
-		tst_Match("bc", Byte_ascii.Ltr_a, -1, 123);
+		fxt.Test_match("bc", Byte_ascii.Ltr_a, -1, 123);
 	}
 	@Test  public void MatchAtCurExact() {
-		tst_MatchAtCurExact("a", 1);
-		tst_MatchAtCurExact("ab", null);
-		tst_MatchAtCurExact("abc", 123);
+		fxt.Test_matchAtCurExact("a", 1);
+		fxt.Test_matchAtCurExact("ab", null);
+		fxt.Test_matchAtCurExact("abc", 123);
 	}
-	private void run_Add(int val, byte... ary) {trie.Add(ary, val);}
-	private void tst_Match(String srcStr, byte b, int bgnPos, int expd) {
-		byte[] src = ByteAry_.new_ascii_(srcStr);
+	@Test  public void Del_noop__no_match() {
+		fxt.Exec_del("d");
+		fxt.Test_matchAtCurExact("a"	, 1);
+		fxt.Test_matchAtCurExact("abc"	, 123);
+	}
+	@Test  public void Del_noop__partial_match() {
+		fxt.Exec_del("ab");
+		fxt.Test_matchAtCurExact("a"	, 1);
+		fxt.Test_matchAtCurExact("abc"	, 123);
+	}
+	@Test  public void Del_match__long() {
+		fxt.Exec_del("abc");
+		fxt.Test_matchAtCurExact("a"	, 1);
+		fxt.Test_matchAtCurExact("abc"	, null);
+	}
+	@Test  public void Del_match__short() {
+		fxt.Exec_del("a");
+		fxt.Test_matchAtCurExact("a"	, null);
+		fxt.Test_matchAtCurExact("abc"	, 123);
+	}
+}
+class ByteTrieMgr_fast_fxt {
+	private ByteTrieMgr_fast trie;
+	public void Clear() {
+		trie = ByteTrieMgr_fast.cs_();
+		Init_add(  1	, Byte_ascii.Ltr_a);
+		Init_add(123	, Byte_ascii.Ltr_a, Byte_ascii.Ltr_b, Byte_ascii.Ltr_c);
+	}
+	public void Init_add(int val, byte... ary) {trie.Add(ary, val);}
+	public void Test_match(String src_str, byte b, int bgnPos, int expd) {
+		byte[] src = ByteAry_.new_ascii_(src_str);
 		Object actl = trie.Match(b, src, bgnPos, src.length);
 		Tfds.Eq(expd, actl);
 	}
-	private void tst_MatchAtCur(String srcStr, Object expd) {
-		byte[] src = ByteAry_.new_ascii_(srcStr);
+	public void Test_matchAtCur(String src_str, Object expd) {
+		byte[] src = ByteAry_.new_ascii_(src_str);
 		Object actl = trie.MatchAtCur(src, 0, src.length);
 		Tfds.Eq(expd, actl);
 	}
-	private void tst_MatchAtCurExact(String srcStr, Object expd) {
-		byte[] src = ByteAry_.new_ascii_(srcStr);
+	public void Test_matchAtCurExact(String src_str, Object expd) {
+		byte[] src = ByteAry_.new_ascii_(src_str);
 		Object actl = trie.MatchAtCurExact(src, 0, src.length);
 		Tfds.Eq(expd, actl);
+	}
+	public void Exec_del(String src_str) {
+		trie.Del(ByteAry_.new_utf8_(src_str));
 	}
 }

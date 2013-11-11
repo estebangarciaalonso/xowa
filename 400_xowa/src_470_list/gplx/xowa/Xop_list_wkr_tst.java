@@ -433,7 +433,7 @@ public class Xop_list_wkr_tst {
 			));
 		fxt.Ctx().Para().Enabled_n_();
 	}
-	@Test  public void Dt_dd_colon_at_eol() {	// PURPOSE: ";a:b\n" should not apply to ";a:\n"; EX.WP: Stein
+	@Test  public void Dt_dd_colon_at_eol() {		// PURPOSE: dangling ":" should not put next line in <dt>; EX.WP: Stein; b was being wrapped in <dt>b</dt>
 		fxt.Ctx().Para().Enabled_y_();
 		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	";a:"
@@ -443,7 +443,7 @@ public class Xop_list_wkr_tst {
 			,	"*d"
 			) ,	String_.Concat_lines_nl_skipLast
 			(	"<dl>"
-			,	"  <dt>a:"
+			,	"  <dt>a"
 			,	"  </dt>"
 			,	"</dl>"
 			,	"<ul>"
@@ -460,6 +460,16 @@ public class Xop_list_wkr_tst {
 			,	"</ul>"
 			));
 		fxt.Ctx().Para().Enabled_n_();
+	}
+	@Test  public void Dd_should_not_print_colon() {// PURPOSE: ;a:\n should show as ";a" not ";a:". colon should still be considered as part of empty list; DATE:2013-11-07
+		fxt.tst_Parse_page_all_str(";a:\nb"
+		,	String_.Concat_lines_nl_skipLast
+		(	"<dl>"
+		,	"  <dt>a"
+		,	"  </dt>"
+		,	"</dl>"
+		,	"b"
+		));		
 	}
 	@Test  public void Dt_dd_colon_in_lnki() {	// PURPOSE: "; [[Portal:a]]" should not split lnki; EX.WP: Wikipedia:WikiProject Military history/Operation Majestic Titan; "; [[Wikipedia:WikiProject Military history/Operation Majestic Titan/Phase I|Phase I]]: a b"
 		fxt.Ctx().Para().Enabled_y_();
@@ -577,5 +587,3 @@ public class Xop_list_wkr_tst {
 		));		
 	}
 }
-/*
-*/

@@ -67,7 +67,8 @@ class Scrib_lib_ustring implements Scrib_lib {
 		return Scrib_kv_utl.base1_list_(tmp_list);
 	}
 	int Bgn_adjust(String text, int bgn) {
-		bgn -= Scrib_lib_ustring.Base1;
+//			if (bgn == 0) return 0;
+		if (bgn > 0) bgn -= Scrib_lib_ustring.Base1;
 		int text_len = String_.Len(text);
 		if		(bgn < 0)			// negative number means search from rear of String
 			bgn += text_len;		// NOTE: PHP has extra + 1 for Base 1
@@ -139,7 +140,9 @@ class Scrib_lib_ustring_gsub_mgr {
 	byte repl_tid = Repl_tid_null; byte[] repl_bry = null; HashAdp repl_hash = null; Scrib_fnc repl_func = null; ByteAryBfr tmp_bfr;
 	int repl_count = 0;
 	public KeyVal[] Exec(KeyVal[] values) {
-		String text = Scrib_kv_utl.Val_to_str(values, 0);
+		Object text_obj = Scrib_kv_utl.Val_to_obj(values, 0);
+		String text = String_.as_(text_obj);
+		if (text == null) text = Object_.XtoStr_OrEmpty(text_obj);
 		String regx = Scrib_kv_utl.Val_to_str(values, 1);
 		if (values.length == 2) return Scrib_kv_utl.base1_obj_(text);	// if no replace arg, return self; EX:enwikt:'orse; DATE:2013-10-13
 		Object repl_obj = values[2].Val();

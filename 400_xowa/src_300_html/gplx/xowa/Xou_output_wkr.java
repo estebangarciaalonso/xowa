@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.html.*; import gplx.xowa.xtns.wdatas.*;
+import gplx.xowa.wikis.*; import gplx.xowa.html.*; import gplx.xowa.xtns.wdatas.*;
 public class Xou_output_wkr implements ByteAryFmtrArg {		
 	public Xou_output_wkr(byte output_tid, boolean raw_text, boolean wiki_text) {this.output_tid = output_tid; this.raw_text = raw_text; this.wiki_text = wiki_text;} private byte output_tid; boolean wiki_text;
 	public boolean Raw_text() {return raw_text;} private boolean raw_text;
@@ -95,7 +95,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		, Xoa_app_.Version_str, Xoa_app_.Build_date_str, Bry_xowa_root_dir, js_mathjax_script, wiki.Fragment_mgr().Html_js_table(), js_wikidata_bry, js_edit_toolbar_bry, app.Server().Running_str()
 		);
 	}
-	byte[] Build_redirect_msg(Xoa_app app, Xow_wiki wiki, Xoa_page page) {
+	private byte[] Build_redirect_msg(Xoa_app app, Xow_wiki wiki, Xoa_page page) {
 		ListAdp list = page.Redirect_list();
 		int list_len = list.Count();
 		if (list_len == 0) return ByteAry_.Empty;
@@ -133,17 +133,19 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		Xoa_app app = wiki.App();
 		int ns_id = page.Page_ttl().Ns().Id();
 		int bfr_page_bgn = bfr.Bry_len();
-		byte render_tid = Render_tid(wiki.Wiki_tid(), ns_id, page.Page_ttl().Page_db());
-		switch (render_tid) {
-			case Render_tid_pre:
-				Xoh_html_wtr.Bfr_escape(tmp_bfr, data_raw, 0, data_raw.length, page.Wiki().App(), true, false);
+		byte page_tid = Xow_page_tid.Identify(wiki.Wiki_tid(), ns_id, page.Page_ttl().Page_db());
+		switch (page_tid) {
+			case Xow_page_tid.Tid_js:
+			case Xow_page_tid.Tid_css:
+			case Xow_page_tid.Tid_lua:
+				Xoh_html_wtr.Bfr_escape(tmp_bfr, data_raw, 0, data_raw.length, page.Wiki().App(), false, false);
 				app.Html_mgr().Page_mgr().Content_code_fmtr().Bld_bfr_many(bfr, tmp_bfr);
 				tmp_bfr.Clear();
 				break;
-			case Render_tid_json:
+			case Xow_page_tid.Tid_json:
 				app.Wiki_mgr().Wdata_mgr().Write_json_as_html(bfr, data_raw);
 				break;
-			case Render_tid_wikitext:
+			case Xow_page_tid.Tid_wikitext:
 				if	(ns_id == Xow_ns_.Id_file)		// if File ns, add boilerplate header
 					app.File_main_wkr().Bld_html(wiki, bfr, page.Page_ttl(), wiki.Cfg_file_page(), page.File_queue());
 				if (wiki.Html_mgr().Tidy_enabled())
@@ -171,20 +173,6 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 			}
 		}
 	}
-	static final byte Render_tid_pre = 1, Render_tid_wikitext = 2, Render_tid_json = 3;  
-	private static byte Render_tid(byte wiki_tid, int ns_id, byte[] ttl) {
-		switch (ns_id) {
-			case Xow_ns_.Id_mediaWiki:
-			case Xow_ns_.Id_user:
-				return ByteAry_.HasAtEnd(ttl, Ext_js) || ByteAry_.HasAtEnd(ttl, Ext_css)
-					? Render_tid_pre : Render_tid_wikitext;
-			case gplx.xowa.xtns.scribunto.Scrib_core_.Ns_id_module:
-				return Render_tid_pre;
-			default:
-				return Wdata_wiki_mgr.Wiki_page_is_json(wiki_tid, ns_id)
-					? Render_tid_json : Render_tid_wikitext;
-		}
-	}	static final byte[] Ext_js = ByteAry_.new_ascii_(".js"), Ext_css = ByteAry_.new_ascii_(".css");
 	private void Tidy(Xow_wiki wiki, ByteAryBfr bfr) {
 		Bry_bfr_mkr bfr_mkr = page.Wiki().App().Utl_bry_bfr_mkr();
 		ByteAryBfr tmp_src_bfr = bfr_mkr.Get_m001();

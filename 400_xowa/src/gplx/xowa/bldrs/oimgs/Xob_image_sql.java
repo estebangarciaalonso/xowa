@@ -31,7 +31,7 @@ public class Xob_image_sql extends Xob_itm_dump_base implements Xob_cmd, GfoInvk
 		wiki.Init_assert();	// NOTE: must init wiki for db_mgr_as_sql
 		this.Init_dump(KEY);
 		if (src_fil == null) {
-			src_fil = Xobd_rdr.Find_fil_by(wiki.Fsys_mgr().Root_dir(), "*.sql");
+			src_fil = Xobd_rdr.Find_fil_by(wiki.Fsys_mgr().Root_dir(), "*-image.sql");
 			if (src_fil == null) throw Err_mgr._.fmt_(Xob_cmd_mgr.GRP_KEY, "sql_file_missing", ".sql file not found in dir: ~{0}", wiki.Fsys_mgr().Root_dir());
 		}
 		parser.Src_fil_(src_fil).Trg_fil_gen_(dump_url_gen).Fld_cmd_(this).Flds_req_idx_(20, Fld_img_name, Fld_img_size, Fld_img_width, Fld_img_height, Fld_img_bits, Fld_img_media_type);

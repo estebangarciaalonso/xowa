@@ -24,7 +24,7 @@ public class Xow_xwiki_itm implements gplx.CompareAble {
 	public byte[] Domain() {return domain;} private byte[] domain;
 	public byte Wiki_tid() {return wiki_tid;} private byte wiki_tid;
 	public int Lang_id() {return lang_id;} private int lang_id;
-	public boolean Type_is_lang(int cur_lang_id) {return lang_id != Xol_lang_itm_.Id__null && cur_lang_id != lang_id && ByteAry_.Len_gt_0(fmt);}
+	public boolean Type_is_lang(int cur_lang_id) {return lang_id != Xol_lang_itm_.Id__unknown && cur_lang_id != lang_id && ByteAry_.Len_gt_0(fmt);}
 	public boolean Offline() {return offline;} public Xow_xwiki_itm Offline_(boolean v) {offline = v; return this;} private boolean offline;
 	public int compareTo(Object obj) {Xow_xwiki_itm comp = (Xow_xwiki_itm)obj; return ByteAry_.Compare(key, comp.key);}		
 }

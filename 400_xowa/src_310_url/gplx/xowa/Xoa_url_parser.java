@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.wikis.*;
 public class Xoa_url_parser {
 	Url_encoder encoder = Url_encoder.new_html_href_mw_().Itms_raw_same_many(Byte_ascii.Underline); ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
 	public Gfo_url_parser Url_parser() {return url_parser;} Gfo_url_parser url_parser = new Gfo_url_parser(); Gfo_url gfo_url = new Gfo_url(); Xoa_url url = new Xoa_url();
@@ -60,7 +61,7 @@ public class Xoa_url_parser {
 			byte[] lang_bry = sub_bry;
 			if (upload_segs_hash.Has(sub_bry)) {					// wikimedia links will have fmt of "/wikipedia/commons"; must change to wikimedia
 				domain_bry = Xow_wiki_type_.Seg_wikimedia_bry;
-				lang_bry = Xol_lang_itm_.Bry__null;
+				lang_bry = Xol_lang_itm_.Key__unknown;
 			}
 			tmp_bfr.Clear().Add(sub_bry).Add_byte(Byte_ascii.Dot)	// add lang/type + .;	EX: "en."; "fr."; "commons."
 				.Add(domain_bry).Add(Bry_dot_org);					// add type + .org;		EX: "wikipedia.org"; "wikimedia.org";

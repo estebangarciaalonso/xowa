@@ -34,8 +34,9 @@ public class Scrib_lua_regx_converter_tst {
 	@Test   public void Percent_text()		{fxt.Test_parse("%e"					, "e");}
 	@Test   public void Brack_pow()			{fxt.Test_parse("[^a]"					, "[^a]");}
 	@Test   public void Brack_percent_has()	{fxt.Test_parse("[%w]"					, "[\\p{L}\\p{Nd}]");}
-	@Test   public void Brack_percent_na()	{fxt.Test_parse("[%a]"					, "[a]");}
+	@Test   public void Brack_percent_a()	{fxt.Test_parse("[%a]"					, "[\\p{L}]");}	// NOTE: was previously [a]; DATE:2013-11-08
 	@Test   public void Brack_dash()		{fxt.Test_parse("[a-z]"					, "[a-z]");}
+	@Test   public void Brack_num()			{fxt.Test_parse("[%d]"					, "[\\p{Nd}]");}
 	@Test   public void Brack_text()		{fxt.Test_parse("[abc]"					, "[abc]");}
 	@Test   public void Ex_url()			{fxt.Test_parse("^%s*(.-)%s*$"			, "^\\s*(.*?)\\s*$");}
 }

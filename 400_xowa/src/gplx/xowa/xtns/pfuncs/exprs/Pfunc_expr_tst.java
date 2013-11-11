@@ -75,7 +75,8 @@ public class Pfunc_expr_tst {
 	@Test  public void Acos()				{fxt.tst_Parse_tmpl_str_test("{{#expr:acos(0)}}"							, "{{test}}"	, "1.57079632679489");} // NOTE: MW (and C#) returns 49, not 489 
 	@Test  public void Atan()				{fxt.tst_Parse_tmpl_str_test("{{#expr:atan(0)}}"							, "{{test}}"	, "0");}
 	@Test  public void Round()				{fxt.tst_Parse_tmpl_str_test("{{#expr:1.5 round 0}}"						, "{{test}}"	, "2");}
-	@Test  public void Round_2()			{fxt.tst_Parse_tmpl_str_test("{{#expr:(0.03937007874015)round(3)}}"			, "{{test}}"	, "0.039");}	// PURPOSE: rounding results in excessive decimal places; EX.WP:Milky Way (light year conversions)
+	@Test  public void Round_0()			{fxt.tst_Parse_tmpl_str_test("{{#expr:0 round 1}}"							, "{{test}}"	, "0");}		// PURPOSE: 0 round 1 should be 0, not 0.0; DATE:2013-11-09
+	@Test  public void Round_ex_1()			{fxt.tst_Parse_tmpl_str_test("{{#expr:(0.03937007874015)round(3)}}"			, "{{test}}"	, "0.039");}	// PURPOSE: rounding results in excessive decimal places; EX.WP:Milky Way (light year conversions)
 	@Test  public void Mod_frac()			{fxt.tst_Parse_tmpl_str_test("{{#expr:0.00999999mod10}}"					, "{{test}}"	, "0");}
 	@Test  public void Mod_large()			{fxt.tst_Parse_tmpl_str_test("{{#expr:39052000900mod100}}"					, "{{test}}"	, "0");}		// PURPOSE: JAVA was failing in converting to int and converted to Int_.MaxValue instead; DATE:2013-01-26
 	@Test  public void Fmod()				{fxt.tst_Parse_tmpl_str_test("{{#expr:1.25 fmod .5}}"						, "{{test}}"	, "0.25");}

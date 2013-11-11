@@ -128,7 +128,7 @@ class Scrib_lib_title implements Scrib_lib {
 	}
 	KeyVal[] Xto_kv_ary(Xoa_ttl ttl) {
 		Xow_ns ns = ttl.Ns();
-		boolean ttl_exists = engine.Wiki().Db_mgr().Load_mgr().Load_ttl(tmp_db_page, ttl.Ns(), ttl.Page_db());
+		boolean ttl_exists = engine.Wiki().Db_mgr().Load_mgr().Load_by_ttl(tmp_db_page, ttl.Ns(), ttl.Page_db());
 		boolean ttl_redirect = false; int ttl_id = 0;
 		if (ttl_exists) {
 			ttl_redirect = tmp_db_page.Type_redirect();

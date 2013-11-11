@@ -51,6 +51,12 @@ public class Xob_xml_parser_tst {
 		fil = page_bldr.Add(doc).XtoByteStreamRdr();
 		tst_parse(fil, doc.Text_(ByteAry_.new_utf8_("a &#09; b")), 0);
 	}
+	@Test  public void Tab_disable() {
+		Xodb_page doc = doc_(1, "a", "a \t b", Date_1);
+		page_parser.Trie_tab_del_();
+		fil = page_bldr.Add(doc).XtoByteStreamRdr();
+		tst_parse(fil, doc.Text_(ByteAry_.new_utf8_("a \t b")), 0);
+	}
 	@Test  public void Cr_nl() {
 		Xodb_page doc = doc_(1, "a", "a \r\n b", Date_1);
 		fil = page_bldr.Add(doc).XtoByteStreamRdr();

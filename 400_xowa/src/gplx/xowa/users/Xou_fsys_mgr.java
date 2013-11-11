@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.users; import gplx.*; import gplx.xowa.*;
+import gplx.xowa.wikis.*;
 public class Xou_fsys_mgr implements GfoInvkAble {
 	Io_url app_root_dir;  Io_url wiki_root_dir; Xoa_app app; Xou_user usr; Io_url cur_root;
 	public Xou_fsys_mgr(Xoa_app app, Xou_user usr, Io_url user_dir) {

@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.wikis.*;
 public class Xowh_portal_mgr implements GfoInvkAble {
 	public Xowh_portal_mgr(Xow_wiki wiki) {
 		this.wiki = wiki;

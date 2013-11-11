@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.users.history.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.dynamicPageList.*; import gplx.xowa.xtns.math.*;
+import gplx.xowa.wikis.*; import gplx.xowa.users.history.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.dynamicPageList.*; import gplx.xowa.xtns.math.*;
 public class Xoh_html_wtr {
 	Xow_wiki wiki; Xoa_app app; Xop_ctx ctx; Xoa_page page; Xop_root_tkn root; 
 	gplx.xowa.xtns.refs.Xoh_ref_wtr ref_wtr = new gplx.xowa.xtns.refs.Xoh_ref_wtr();  Url_encoder href_encoder; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
@@ -205,6 +205,11 @@ public class Xoh_html_wtr {
 		else {
 			bfr.Add(Xoh_consts.A_bgn);
 			app.Href_parser().Build_to_bfr(lnki_ttl, wiki, bfr);
+			if (hctx.Lnki_id()) {
+				int lnki_html_id = lnki.Html_id();
+				if (lnki_html_id > 0)	// skipped lnkis will have 0; EX: anchors and interwiki
+					bfr.Add(Xoh_consts.A_mid_id).Add_int_variable(lnki_html_id);
+			}
 			if (hctx.Lnki_title()) bfr.Add(Xoh_consts.A_bgn_lnki_0).Add(lnki_ttl.Page_txt());	// NOTE: use Page_txt to (a) replace underscores with spaces; (b) get title casing; EX:[[roman_empire]] -> Roman empire
 			if (hctx.Lnki_visited() && history_mgr.Has(wiki_key, ttl_bry)) bfr.Add(A_xowa_visited);
 			bfr.Add(Xoh_consts.__end_quote);
@@ -631,7 +636,7 @@ public class Xoh_html_wtr {
 		Bfr_escape(tmp_bfr, src, 0, src.length, app, true, false);
 		return tmp_bfr.XtoAryAndClear();
 	}
-	public static void Bfr_escape(ByteAryBfr bfr, byte[] src, int bgn, int end, Xoa_app app, boolean escape_amp, boolean nowiki_skip) {
+	public static void Bfr_escape(ByteAryBfr bfr, byte[] src, int bgn, int end, Xoa_app app, boolean interpret_amp, boolean nowiki_skip) {
 		ByteTrieMgr_slim amp_trie = app.AmpTrie();
 		bfr_escape_fail.Val_false();
 		for (int i = bgn; i < end; i++) {
@@ -655,7 +660,7 @@ public class Xoh_html_wtr {
 					bfr.Add(Xop_xnde_wkr.Bry_escape_gt);
 					break;
 				case Byte_ascii.Amp:
-					if (escape_amp) {
+					if (interpret_amp) {
 						Object o = amp_trie.MatchAtCur(src, i + 1, end);	// is this a valid &....
 						if (o == null)										// nope; invalid; EX: "a&b"; "&bad;"; "&#letters;"; 
 							bfr.Add(Xop_xnde_wkr.Bry_escape_amp);			// escape & and continue
@@ -663,7 +668,7 @@ public class Xoh_html_wtr {
 							Xop_amp_trie_itm itm = (Xop_amp_trie_itm)o;
 							int match_pos = amp_trie.Match_pos();
 							int itm_tid = itm.Tid();
-							if (itm_tid == Xop_amp_trie_itm.Tid_name) {	// name
+							if (itm_tid == Xop_amp_trie_itm.Tid_name) {		// name
 								bfr.Add_mid(src, i, match_pos);				// embed entire name
 								i = match_pos - 1;
 							}

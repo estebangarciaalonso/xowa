@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.dbs; import gplx.*; import gplx.xowa.*;
+import gplx.xowa.wikis.*;
 public class Xodb_save_mgr_txt implements Xodb_save_mgr {
 	public Xodb_save_mgr_txt(Xow_wiki wiki, Xodb_load_mgr_txt load_mgr) {
 		this.wiki = wiki;
@@ -29,7 +30,7 @@ public class Xodb_save_mgr_txt implements Xodb_save_mgr {
 	public void Data_create(Xoa_ttl ttl, byte[] text) {
 		Xow_ns ns_itm = ttl.Ns(); byte[] ttl_bry = ttl.Page_db();
 		Xodb_page db_page = Xodb_page.tmp_();
-		boolean found = load_mgr.Load_ttl(db_page, ns_itm, ttl_bry);
+		boolean found = load_mgr.Load_by_ttl(db_page, ns_itm, ttl_bry);
 		if (found) throw Err_mgr._.fmt_(GRP_KEY, "title_exists", "create requested but title already exists: ~{0}", String_.new_utf8_(ttl_bry));
 		int text_len = text.length;
 		ByteAryBfr tmp = wiki.Utl_bry_bfr_mkr().Get_m001();
@@ -67,7 +68,7 @@ public class Xodb_save_mgr_txt implements Xodb_save_mgr {
 		Xoa_ttl ttl = page.Page_ttl();
 		Xow_ns ns = ttl.Ns(); byte[] ttl_bry = ttl.Page_db();
 		Xodb_page db_page = Xodb_page.tmp_();
-		if (!load_mgr.Load_ttl(db_page, ns, ttl_bry)) throw Err_mgr._.fmt_(GRP_KEY, "title_missing", "update requested but title does not exist: ~{0}", String_.new_utf8_(ttl_bry));
+		if (!load_mgr.Load_by_ttl(db_page, ns, ttl_bry)) throw Err_mgr._.fmt_(GRP_KEY, "title_missing", "update requested but title does not exist: ~{0}", String_.new_utf8_(ttl_bry));
 		byte[] old_ttl = ttl_bry;
 		if (new_ttl != null) {
 			ttl_bry = new_ttl;

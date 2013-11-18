@@ -169,10 +169,15 @@ public class Xoh_href_parser {
 //				rv.Qarg_(qarg_bry);
 //				page_bry = ByteAry_.Mid(page_bry, 0, qarg_pos);
 //			}
-		Parse_ttl_and_resolve_xwiki(rv, wiki, encoder, page_bry, raw, bgn, len);
+		Parse_ttl_and_resolve_xwiki(wiki.App().Usr_dlg(), rv, wiki, encoder, page_bry, raw, bgn, len);
 	}
-	private static void Parse_ttl_and_resolve_xwiki(Xoh_href rv, Xow_wiki wiki, Url_encoder encoder, byte[] page_bry, byte[] raw, int bgn, int len) {
-		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, page_bry); if (ttl == null) throw Err_mgr._.fmt_("xowa.href.parser", "invalid_wiki", "wiki href does not have valid title: ~{0}", String_.new_utf8_(raw, bgn, len));
+	private static void Parse_ttl_and_resolve_xwiki(Gfo_usr_dlg usr_dlg, Xoh_href rv, Xow_wiki wiki, Url_encoder encoder, byte[] page_bry, byte[] raw, int bgn, int len) {
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, page_bry);
+		if (ttl == null) {
+			usr_dlg.Warn_many("xowa.href.parser", "invalid_wiki", "wiki href does not have valid title: ~{0}", String_.new_utf8_(raw, bgn, len));
+			rv.Page_(ByteAry_.Empty);
+			return;
+		}
 		if (ttl.Wik_itm() != null) {				// page_bry has xwiki; EX: "wikt:A"; note that since this is called by "/site/", there may be two xwikis; EX: "w:wikt:"; Note that more than 2 is not being handled 
 			wiki = wiki.App().Wiki_mgr().Get_by_key_or_make(ttl.Wik_itm().Domain());
 			rv.Wiki_(wiki.Domain_bry());

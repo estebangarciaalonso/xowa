@@ -15,11 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx;
-public class Xo_test {
-	public static boolean Db_skip() {return false;}
-	public static boolean Fsdb_is_mem = false;
-	public static Io_url Url_root()			{return Io_url_.Usr().GenSubDir_nest("xowa", "dev", "tst", "400_xowa");}
-	public static Io_url Url_wiki_enwiki()	{return Url_root().GenSubDir_nest("root", "wiki", "en.wikipedia.org");}
-	public static Io_url Url_file_enwiki()	{return Url_root().GenSubDir_nest("root", "file", "en.wikipedia.org");}
+package gplx.xowa.apps; import gplx.*; import gplx.xowa.*;
+public class Xoa_stage_ {
+	public static final byte Tid_ctor_done = 0, Tid_init_done = 1, Tid_launch_done = 2;
 }

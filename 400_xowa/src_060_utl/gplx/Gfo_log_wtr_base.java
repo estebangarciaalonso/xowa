@@ -66,6 +66,10 @@ public class Gfo_log_wtr_base implements Gfo_log_wtr {
 		String line = Bld_msg(s);
 		Log_msg(session_fil, line);
 	}
+	public void Log_msg_to_session_direct(String s) {
+		if (!enabled) return;
+		Log_msg(session_fil, s);
+	}
 	public void Log_err(String s) {
 		if (!enabled) return;
 		String line = Bld_msg(s);

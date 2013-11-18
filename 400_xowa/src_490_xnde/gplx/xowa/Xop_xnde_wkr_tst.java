@@ -595,12 +595,12 @@ public class Xop_xnde_wkr_tst {
 	@Test  public void Atrs_bad_match() {		// PURPOSE: make sure brx does not match br
 		fxt.tst_Parse_page_wiki("<brx/>"	, fxt.tkn_bry_(0, 1), fxt.tkn_txt_(1, 6));
 	}
-	@Test  public void Atr_xnde_defect() {	// PURPOSE: < in atrs was causing premature termination; EX.WP:en.wikipedia.org/wiki/Wikipedia:List of hoaxes on Wikipedia
+	@Test   public void Atr_xnde_defect() {	// PURPOSE: < in atrs was causing premature termination; EX.WP:en.wikipedia.org/wiki/Wikipedia:List of hoaxes on Wikipedia
 		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|id=\"a<b\""
 			,	"|a"
 			,	"|}"), String_.Concat_lines_nl_skipLast
-			( "<table id=\"a<b\">"
+			( "<table id=\"a.3Cb\">"
 			, "  <tr>"
 			, "    <td>a"
 			, "    </td>"

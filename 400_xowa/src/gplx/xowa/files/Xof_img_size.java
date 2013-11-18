@@ -23,7 +23,10 @@ public class Xof_img_size {
 	public int File_w() {return file_w;} private int file_w;	// NOTE: file_w will always equal html_w, unless rounding is implemented; EX: html_w=150,151,152 -> file_w=150
 	public int File_h() {return file_h;} private int file_h;
 	public boolean File_is_orig() {return file_is_orig;} private boolean file_is_orig;
-
+	public void Clear() {
+		html_w = html_h = file_w = file_h = 0;
+		file_is_orig = false;
+	}
 	public void Html_size_calc(byte exec_tid, int lnki_w, int lnki_h, byte lnki_type, double lnki_upright, int lnki_ext, int orig_w, int orig_h, int thumb_default_w) {
 		if (lnki_type == Xop_lnki_type.Id_frame) {				// frame: always return orig size; Linker.php!makeThumbLink2; // Use image dimensions, don't scale
 			html_w = file_w = orig_w;

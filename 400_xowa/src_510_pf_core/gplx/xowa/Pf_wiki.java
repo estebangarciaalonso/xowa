@@ -79,6 +79,10 @@ class Pf_rev_props extends Pf_func_base {
 			case Xol_kwd_grp_.Id_rev_pagesize:
 				if (argx.length > 0) {
 					Xoa_ttl argx_ttl = Xoa_ttl.parse_(ctx.Wiki(), argx);
+					if (argx_ttl == null) {	// invalid ttl; EX: {{PAGESIZE:{{{bad}}}}}
+						bb.Add_byte(Byte_ascii.Num_0);
+						return;
+					}
 					Xoa_page argx_page = ctx.Wiki().Data_mgr().Get_page(argx_ttl, false);
 					if (!argx_page.Missing()) {
 						bb.Add_int_variable(argx_page.Data_raw().length);

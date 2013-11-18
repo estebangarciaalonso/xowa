@@ -119,7 +119,7 @@ class Xou_user_ {
 		home_wiki.Db_mgr().Save_mgr().Data_create(Xoa_ttl.parse_(home_wiki, ByteAry_.new_ascii_("Data:Bookmarks")), ByteAry_.new_ascii_(Bookmarks_text));
 	}
 	public static final String User_system_cfg_text = String_.Concat_lines_nl
-		(	"app.scripts.txns.get('user.prefs.general').version_('" + Xoa_app_.Version_str + "').bgn();"
+		(	"app.scripts.txns.get('user.prefs.general').version_('" + Xoa_app_.Version + "').bgn();"
 		,	"app.files.download.enabled_('n');"
 		,	"app.files.math.enabled_('y');"
 		,	"app.files.math.renderer_('mathjax');"

@@ -27,12 +27,13 @@ public class Xof_media_type {
 		else if	(String_.Eq(v, Name_video))		return Tid_video;
 		else									return Tid_null;
 	}
-	public static byte Convert_if_ogg_and_video(byte ext, byte media_type) {
+	public static int Convert_if_ogg_and_video(int ext, byte media_type) {
 		return
 			(   ext			== Xof_ext_.Id_ogg			// ext is ".ogg"
 			&&	media_type	== Xof_media_type.Tid_video	// media_type is "VIDEO"
 			)
-			?  Xof_ext_.Id_ogv							// some .ogg files are "VIDEO"; manually override lnki_ext type
-			: ext;
+			? Xof_ext_.Id_ogv							// some .ogg files are "VIDEO"; manually override lnki_ext type
+			: ext										// return self; not that .ogg with AUDIO will stay as ".ogg" not ".oga"
+			;
 	}
 }

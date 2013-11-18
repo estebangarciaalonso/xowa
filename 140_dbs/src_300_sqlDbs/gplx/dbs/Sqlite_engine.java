@@ -29,17 +29,24 @@ class Sqlite_engine extends Db_engine_sql_base {
 		static boolean loaded = false; 
 	@gplx.Internal @Override protected Connection NewDbCon() {
 		if (!loaded) {
-			try {Class.forName("org.sqlite.JDBC");}
+			try {
+				Class.forName("org.sqlite.JDBC");
+			}
 			catch (ClassNotFoundException e) {throw Err_.new_("could not load sqlite jdbc driver");}
-			loaded = true;			
+			loaded = true;					
 		}
 		Db_connect_sqlite connUrl = (Db_connect_sqlite)dbInfo;
 		return NewDbCon("jdbc:sqlite:/" + String_.Replace(connUrl.Database(), "\\", "/"), "none", "none");
 	}
+	private boolean pragma_needed = true; 
 	@Override public void Txn_bgn() {
 //		Execute(Db_qry_sql.xtn_("PRAGMA ENCODING=\"UTF-8\";"));
 //		Execute(Db_qry_sql.xtn_("PRAGMA journal_mode = OFF;"));	// will cause out of memory
-		Execute(Db_qry_sql.xtn_("PRAGMA synchronous = OFF;"));
+//		Execute(Db_qry_sql.xtn_("PRAGMA journal_mode = MEMORY;"));
+		if (pragma_needed) {
+			Execute(Db_qry_sql.xtn_("PRAGMA synchronous = OFF;"));
+			pragma_needed = false;
+		}
 //		Execute(Db_qry_sql.xtn_("PRAGMA temp_store = MEMORY;"));
 //		Execute(Db_qry_sql.xtn_("PRAGMA locking_mode = EXCLUSIVE;"));
 //		Execute(Db_qry_sql.xtn_("PRAGMA cache_size=4000;"));	// too many will also cause out of memory		

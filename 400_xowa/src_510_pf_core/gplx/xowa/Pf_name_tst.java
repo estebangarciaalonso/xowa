@@ -43,5 +43,7 @@ public class Pf_name_tst {
 	@Test  public void Ns_subj_url()			{fxt.Page_ttl_("Help talk:a b"); fxt.tst_Parse_tmpl_str_test("{{SUBJECTSPACEE}}"				, "{{test}}", "Help");}
 	@Test  public void Ns_talk_txt()			{fxt.Page_ttl_("Help:a b"); fxt.tst_Parse_tmpl_str_test("{{TALKSPACE}}"							, "{{test}}", "Help talk");}
 	@Test  public void Ns_talk_url()			{fxt.Page_ttl_("Help:a b"); fxt.tst_Parse_tmpl_str_test("{{TALKSPACEE}}"						, "{{test}}", "Help_talk");}
+	@Test  public void Ns_safesubst()			{fxt.Page_ttl_("Help:a"); fxt.tst_Parse_tmpl_str_test("{{{{{|safesubst:}}}NAMESPACE}}"			, "{{test}}", "Help");}	// PURPOSE: "safesubst:NAMESPACE" was being interpreted as "NAMESPACE:" due to false colon detection; DATE:2013-11-11
+	@Test  public void Ns_safesubst2()			{fxt.Page_ttl_("Help:a"); fxt.tst_Parse_tmpl_str_test("{{{{{|safesubst:}}}NAMESPACE:}}"			, "{{test}}", "");} //PURPOSE: makes sure "safesubst:NAMESPACE:" still returns ""
 	@Test  public void Exc_empty2()				{fxt.Page_ttl_("Test"); fxt.tst_Parse_tmpl_str_test("{{NAMESPACE:<noinclude>x</noinclude>}}"	, "{{test}}", "");} // {{NMS:<ni>x</ni>}} -> {{NMS:}}
 }

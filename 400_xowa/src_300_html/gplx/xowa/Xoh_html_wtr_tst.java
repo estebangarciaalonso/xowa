@@ -372,6 +372,10 @@ public class Xoh_html_wtr_tst {
 	@Test  public void Xnde_inline() {
 		fxt.tst_Parse_page_wiki_str("<div/>", "<div></div>");
 	}
+	@Test  public void Xnde_id_encode() { // PURPOSE: id should be url-encoded; DATE: 2013-11-13;
+		fxt.tst_Parse_page_wiki_str("<div id='a*'></div>", "<div id='a.2A'></div>");
+		fxt.tst_Parse_page_wiki_str("<div id='a b'></div>", "<div id='a_b'></div>");
+	}
 	@Test  public void Math() {
 		fxt.App().File_mgr().Math_mgr().Renderer_is_mathjax_(false);
 		fxt.tst_Parse_page_all_str("<math>x + y</math>", "<img id='xowa_math_img_0' src='' width='' height=''/><span id='xowa_math_txt_0'>x + y</span>");	// latex has img

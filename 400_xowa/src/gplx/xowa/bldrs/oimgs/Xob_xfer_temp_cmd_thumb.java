@@ -27,33 +27,13 @@ public class Xob_xfer_temp_cmd_thumb extends Xob_itm_basic_base implements Xob_c
 		Db_stmt trg_stmt = Xob_xfer_temp_tbl.Insert_stmt(provider);
 		provider.Txn_mgr().Txn_bgn_if_none();
 		DataRdr rdr = provider.Exec_sql_as_rdr(Sql_select);
+		Xob_xfer_temp_itm temp_itm = new Xob_xfer_temp_itm();
 		Xof_img_size img_size = new Xof_img_size();
 		while (rdr.MoveNextPeer()) {
-			byte lnki_ext = rdr.ReadByte(Xob_lnki_regy_tbl.Fld_olr_lnki_ext);
-			String orig_media_type = rdr.ReadStrOr(Xob_orig_regy_tbl.Fld_oor_orig_media_type, "");	// convert nulls to ""
-			byte orig_media_type_tid = Xof_media_type.Xto_byte(orig_media_type);
-			lnki_ext = Xof_media_type.Convert_if_ogg_and_video(lnki_ext, orig_media_type_tid);
-			if (orig_media_type_tid == Xof_media_type.Tid_audio) continue;	// ignore: audio will never have thumbs
-			if (Byte_.In(lnki_ext, Xof_ext_.Id_mid)) continue;				// NOTE: .mid does not have orig_media_type of "AUDIO"
-			int lnki_id = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_id);
-			byte orig_repo = rdr.ReadByte(Xob_orig_regy_tbl.Fld_oor_orig_repo);
-			int orig_page_id = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_page_id, -1);
-			if (orig_page_id == -1) continue;	// no orig found; ignore
-			String join_ttl = rdr.ReadStr(Xob_orig_regy_tbl.Fld_oor_orig_join_ttl);
-			String redirect_src = rdr.ReadStr(Xob_orig_regy_tbl.Fld_oor_lnki_ttl);
-			if (String_.Eq(join_ttl, redirect_src))	// lnki_ttl is same as redirect_src; not a redirect
-				redirect_src = "";
-			byte lnki_type = rdr.ReadByte(Xob_lnki_regy_tbl.Fld_olr_lnki_type);
-			int lnki_w = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_w);
-			int lnki_h = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_h);
-			int lnki_count = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_count);
-			int lnki_page_id = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_olr_lnki_page_id);
-			double lnki_upright = rdr.ReadDouble(Xob_lnki_regy_tbl.Fld_olr_lnki_upright);
-			double lnki_thumbtime = rdr.ReadDouble(Xob_lnki_regy_tbl.Fld_olr_lnki_thumbtime);
-			int orig_w = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_w, -1);
-			int orig_h = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_oor_orig_h, -1);
-			img_size.Html_size_calc(Xof_exec_tid.Tid_wiki_page, lnki_w, lnki_h, lnki_type, lnki_upright, lnki_ext, orig_w, orig_h, Xof_img_size.Thumb_width_img);
-			Xob_xfer_temp_tbl.Insert(trg_stmt, lnki_id, lnki_page_id, orig_repo, orig_page_id, join_ttl, redirect_src, lnki_ext, lnki_type, orig_media_type, img_size.File_is_orig(), orig_w, orig_h, img_size.File_w(), img_size.File_h(), img_size.Html_w(), img_size.Html_h(), lnki_thumbtime, lnki_count);
+			temp_itm.Clear();
+			temp_itm.Load(rdr);
+			if (temp_itm.Chk(img_size))
+				temp_itm.Insert(trg_stmt, img_size);
 		}
 		provider.Txn_mgr().Txn_end_all();
 	}

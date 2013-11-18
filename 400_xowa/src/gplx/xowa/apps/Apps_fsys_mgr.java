@@ -39,8 +39,9 @@ public class Apps_fsys_mgr implements GfoInvkAble {
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_apps))					return app_mgr;
+		else if	(ctx.Match(k, Invk_root_dir))				return root_dir;
 		else	return GfoInvkAble_.Rv_unhandled;
 	}
-	static final String Invk_apps = "apps";
+	private static final String Invk_apps = "apps", Invk_root_dir = "root_dir";
 	public static final String DirName_wiki = "wiki", DirName_user = "user";
 }

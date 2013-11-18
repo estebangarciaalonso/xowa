@@ -26,4 +26,8 @@ public class Pf_rev_props_tst {
 	@Test  public void RevisionUser()				{fxt.tst_Parse_tmpl_str_test("{{REVISIONUSER}}"				, "{{test}}", "user");}
 	@Test  public void PageSize()					{fxt.tst_Parse_tmpl_str_test("{{PAGESIZE:Test page}}"		, "{{test}}", "0");}
 	@Test  public void ProtectionLevel()			{fxt.tst_Parse_tmpl_str_test("{{PROTECTIONLEVEL}}"			, "{{test}}", "normal");}
+	@Test  public void PageSize_invalid_ttl()		{
+		fxt.ini_Log_(Xop_ttl_log.Invalid_char);
+		fxt.tst_Parse_tmpl_str_test("{{PAGESIZE:{{{100}}}|R}}"		, "{{test}}", "0");
+	}
 }

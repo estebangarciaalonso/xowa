@@ -48,6 +48,7 @@ public class Xof_qry_wrk_mock implements Xof_qry_wkr {
 		if (reg.Orig_redirect() != null)
 			itm.Orig_redirect_(reg.Orig_redirect());
 		itm.Orig_size_(reg.Orig_w(), reg.Orig_h());
+		if (itm.Lnki_ext().Id_is_ogg()) Xof_qry_wkr_wmf_api.Coerce_ogg_ext(itm, reg.Orig_w(), reg.Orig_h());
 		return true;
 	}
 }

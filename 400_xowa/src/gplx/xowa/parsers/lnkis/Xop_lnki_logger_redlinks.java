@@ -17,18 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.parsers.lnkis; import gplx.*; import gplx.xowa.*; import gplx.xowa.parsers.*;
 import gplx.xowa.dbs.tbls.*;
-public class Xop_lnki_logger_redlinks implements Xop_lnki_logger {
+public class Xop_lnki_logger_redlinks {
 	private ListAdp list = ListAdp_.new_();
 	private OrderedHash page_hash = OrderedHash_.new_bry_();
-	private int lnki_idx = 1;
-	public void Clear() {
-		lnki_idx = 0;
+	private int lnki_idx;
+	private boolean disabled = false;
+	public void Page_bgn(Xop_ctx ctx) {
+		lnki_idx = 1;	// NOTE: must start at 1; html_wtr checks for > 0
 		list.Clear();
-		page_hash.Clear();
+		disabled = ctx.Page().Page_ttl().Ns().Id_module();		// never redlink in Module ns; particularly since Lua has multi-line comments for [[ ]]
 	}
 	public void Wkr_exec(Xop_ctx ctx, Xop_lnki_tkn lnki) {
+		if (disabled) return;
 		Xoa_ttl ttl = lnki.Ttl();
-		if (ctx.Page().Page_ttl().Ns().Id_module())	return;		// never redlink in Module ns; particularly since Lua has multi-line comments for [[ ]]
 		if (ttl == null) return; // occurs for invalid links
 		Xow_ns ns = ttl.Ns();
 		if (	ns.Id_file_or_media()							// ignore files which will usually not be in local wiki (most are in commons), and whose html is built up separately
@@ -43,6 +44,7 @@ public class Xop_lnki_logger_redlinks implements Xop_lnki_logger {
 		++lnki_idx;
 	}
 	public void Redlink(Xow_wiki wiki, Xog_win win) {
+		page_hash.Clear(); // NOTE: do not clear in Page_bgn, else will fail b/c of threading; EX: Open Page -> Preview -> Save; DATE:2013-11-17
 		int len = list.Count();
 		for (int i = 0; i < len; i++) {
 			Xop_lnki_tkn lnki = (Xop_lnki_tkn)list.FetchAt(i);

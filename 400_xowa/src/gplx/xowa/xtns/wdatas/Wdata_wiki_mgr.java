@@ -59,7 +59,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 	public IntVal Pids_add(byte[] pids_key, int pid_id) {IntVal rv = IntVal.new_(pid_id); pids_cache.Add(pids_key, rv); return rv;}
 	public int Pids_get(byte[] lang_key, byte[] pid_name) {
 		if (!enabled) return Pid_null;
-		byte[] pids_key = ByteAry_.Add(lang_key, Xoa_app_.Pipe_bry, pid_name);
+		byte[] pids_key = ByteAry_.Add(lang_key, Xoa_consts.Pipe_bry, pid_name);
 		IntVal rv = (IntVal)pids_cache.Fetch(pids_key);
 		if (rv == null) {
 			int pid_id = this.Wdata_wiki().Db_mgr().Load_mgr().Load_pid(lang_key, pid_name); if (pid_id == Pid_null) return Pid_null;

@@ -36,20 +36,24 @@ public class Fsdb_dir_tbl {
 	private Db_stmt Insert_stmt() {return Db_stmt_.new_insert_(provider, Tbl_name, Fld_dir_id, Fld_dir_owner_id, Fld_dir_name);}
 	public void Insert(int id, String name, int owner_id) {
 		if (stmt_insert == null) stmt_insert = Insert_stmt();
-		stmt_insert.Clear()
-		.Val_int_(id)
-		.Val_int_(owner_id)
-		.Val_str_(name)
-		.Exec_insert();
+		try {
+			stmt_insert.Clear()
+			.Val_int_(id)
+			.Val_int_(owner_id)
+			.Val_str_(name)
+			.Exec_insert();
+		}	catch (Exception exc) {stmt_insert = null; throw Err_.err_(exc, "stmt failed");} // must reset stmt, else next call will fail
 	}	
 	private Db_stmt Update_stmt() {return Db_stmt_.new_update_(provider, Tbl_name, String_.Ary(Fld_dir_id), Fld_dir_owner_id, Fld_dir_name);}
 	public void Update(int id, String name, int owner_id) {
 		if (stmt_update == null) stmt_update = Update_stmt();
-		stmt_update.Clear()
-		.Val_int_(id)
-		.Val_str_(name)
-		.Val_int_(owner_id)
-		.Exec_update();
+		try {
+			stmt_update.Clear()
+			.Val_int_(id)
+			.Val_str_(name)
+			.Val_int_(owner_id)
+			.Exec_update();
+		}	catch (Exception exc) {stmt_update = null; throw Err_.err_(exc, "stmt failed");} // must reset stmt, else next call will fail
 	}
 	private Db_stmt Select_itm_stmt() {
 		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_(Fld_dir_id, Fld_dir_owner_id).Where_(Db_crt_.eq_(Fld_dir_name, ByteAry_.Empty));

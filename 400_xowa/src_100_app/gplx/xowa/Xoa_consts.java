@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-class Xoa_consts {
+public class Xoa_consts {
 	public static final byte[] Url_relative_prefix = new byte[] {Byte_ascii.Slash, Byte_ascii.Slash};	// "//"
+	public static final byte[] Pipe_bry = new byte[] {Byte_ascii.Pipe};
 }

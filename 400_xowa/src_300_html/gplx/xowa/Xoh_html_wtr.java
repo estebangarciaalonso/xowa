@@ -17,20 +17,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.wikis.*; import gplx.xowa.users.history.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.dynamicPageList.*; import gplx.xowa.xtns.math.*;
+import gplx.xowa.parsers.lnkis.*;
 public class Xoh_html_wtr {
 	Xow_wiki wiki; Xoa_app app; Xop_ctx ctx; Xoa_page page; Xop_root_tkn root; 
-	gplx.xowa.xtns.refs.Xoh_ref_wtr ref_wtr = new gplx.xowa.xtns.refs.Xoh_ref_wtr();  Url_encoder href_encoder; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	private gplx.xowa.xtns.refs.Xoh_ref_wtr ref_wtr = new gplx.xowa.xtns.refs.Xoh_ref_wtr();  Url_encoder href_encoder; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	private Xop_lnki_logger_redlinks redlinks_mgr;
 	public Xoh_lnki_wtr Lnki_wtr() {return lnki_wtr;} private Xoh_lnki_wtr lnki_wtr;
 	public Xoh_html_wtr(Xow_wiki wiki) {
 		this.wiki = wiki; app = wiki.App(); this.wiki_key = wiki.Key_bry();
 		lnki_wtr = new Xoh_lnki_wtr(wiki, this);
 		history_mgr = app.User().History_mgr();
-		this.href_encoder = wiki.App().Url_converter_href();			
-	}	byte[] wiki_key; Xou_history_mgr history_mgr;
+		this.href_encoder = wiki.App().Url_converter_href();
+		redlinks_mgr = wiki.Ctx().Tab().Redlinks_mgr();
+	}	private byte[] wiki_key; Xou_history_mgr history_mgr;
 	public Xoh_ctx Hctx() {return hctx;} private Xoh_ctx hctx = new Xoh_ctx();
 	public void Page_(Xoa_page v) {this.page = v;}
 	public void Write_all(Xop_ctx ctx, Xop_root_tkn root, byte[] src, ByteAryBfr main_bfr) {
 		try {
+			redlinks_mgr.Page_bgn(ctx);
 			tbl_para = wiki.Html_mgr().Tbl_para();
 			this.ctx = ctx; this.root = root; indent_level = 0; this.page = ctx.Page();
 			this.page.Langs().Clear();	// HACK: always clear langs; necessary for reload
@@ -180,6 +184,7 @@ public class Xoh_html_wtr {
 			return;
 		}
 		boolean literal_link = lnki.Ttl().ForceLiteralLink();	// NOTE: if literal link, then override ns behavior; for File, do not show image; for Ctg, do not display at bottom of page
+		redlinks_mgr.Wkr_exec(ctx, lnki);
 		switch (lnki.NmsId()) {
 			case Xow_ns_.Id_media:		lnki_wtr.Write_or_queue(page, opts, bfr, src, lnki, depth); return; // NOTE: literal ":" has no effect; EX.WP:Beethoven and [[:Media:De-Ludwig_van_Beethoven.ogg|listen]]
 			case Xow_ns_.Id_file:		if (!literal_link) {lnki_wtr.Write_or_queue(page, opts, bfr, src, lnki, depth); return;} break;
@@ -528,7 +533,7 @@ public class Xoh_html_wtr {
 						Xop_html_ncr_tkn ncr_tkn = (Xop_html_ncr_tkn)sub;
 						if (ncr_tkn.Html_ncr_val() == Byte_ascii.Space) {
 							ws_bfr.Add_mid(src, ncr_tkn.Src_bgn(), ncr_tkn.Src_end());
-							continue;												// just add entity; don't process rest;
+							continue;											// just add entity; don't process rest;
 						}
 					}
 					if (ws_bfr.Bry_len() > 0) bfr.Add_bfr_and_clear(ws_bfr);	// dump ws_bfr to real bfr
@@ -591,12 +596,8 @@ public class Xoh_html_wtr {
 		}
 		bfr.Add_byte(quote_byte);
 	}
-	private void Xnde_atr_write_id(ByteAryBfr bfr, byte[] ary, int bgn, int end) {
-		for (int i = bgn; i < end; i++) {
-			byte b = ary[i];
-			if (b == Byte_ascii.Space) b = Byte_ascii.Underline;
-			bfr.Add_byte(b);
-		}
+	private void Xnde_atr_write_id(ByteAryBfr bfr, byte[] bry, int bgn, int end) {
+		app.Url_converter_id().Encode(bfr, bry, bgn, end);
 	}
 	private static IntRef bfr_escape_ncr = IntRef.zero_(); static BoolRef bfr_escape_fail = BoolRef.false_();
 	private static int Bfr_escape_nowiki_skip(Xoa_app app, ByteAryBfr bfr, byte[] src, int bgn, int end, byte[] nowiki_name, int nowiki_name_len) {

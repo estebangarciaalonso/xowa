@@ -134,7 +134,7 @@ public class Xtn_gallery_nde_tst {
 	}
 	private void Init_html() {
 		Io_mgr._.InitEngine_mem();	// clear out mem files
-		Io_url rootDir = Io_url_.mem_dir_("mem").GenSubDir_nest(Xoa_app_.App_name);
+		Io_url rootDir = Io_url_.mem_dir_("mem").GenSubDir_nest(Xoa_app_.Name);
 		fxt.App().Fsys_mgr().Temp_dir_(rootDir.OwnerDir().GenSubDir("tmp"));
 	}
 	@Test   public void Html() {

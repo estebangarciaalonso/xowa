@@ -32,6 +32,7 @@ class Xob_orig_regy_tbl {
 		Sqlite_engine_.Idx_create(usr_dlg, p, "oimg", Idx_wiki_join_id, Idx_wiki_join_ttl, Idx_join_ttl);
 		Create_data__update_image(usr_dlg, p, Byte_.int_(Xof_repo_itm.Repo_remote), commons_dir.GenSubFil("oimg_image.sqlite3"));
 		Create_data__update_image(usr_dlg, p, Byte_.int_(Xof_repo_itm.Repo_local), wiki_dir.GenSubFil("oimg_image.sqlite3"));
+		Sqlite_engine_.Idx_create(usr_dlg, p, "oimg", Idx_redirect);
 	}
 	private static void Create_data__update_page(Gfo_usr_dlg usr_dlg, Db_provider cur, byte wiki_tid, Io_url join) {
 		usr_dlg.Prog_many("", "", "creating temp_page: ~{0}", join.NameOnly());
@@ -57,11 +58,12 @@ class Xob_orig_regy_tbl {
 	, Fld_oor_orig_join_id = "oor_orig_join_id", Fld_oor_orig_join_ttl = "oor_orig_join_ttl"
 	, Fld_oor_orig_size = "oor_orig_size", Fld_oor_orig_w = "oor_orig_w", Fld_oor_orig_h = "oor_orig_h", Fld_oor_orig_bits = "oor_orig_bits", Fld_oor_orig_media_type = "oor_orig_media_type";
 	private static final Db_idx_itm
-		Idx_ttl     		= Db_idx_itm.sql_("CREATE        INDEX IF NOT EXISTS oimg_orig_regy__ttl           ON oimg_orig_regy (oor_lnki_ttl);")
-	,   Idx_page_id 		= Db_idx_itm.sql_("CREATE        INDEX IF NOT EXISTS oimg_orig_regy__page_id       ON oimg_orig_regy (oor_orig_page_id);")
-	,   Idx_wiki_join_id 	= Db_idx_itm.sql_("CREATE        INDEX IF NOT EXISTS oimg_orig_regy__wiki_join_id  ON oimg_orig_regy (oor_orig_repo, oor_orig_join_id);")
-	,   Idx_wiki_join_ttl 	= Db_idx_itm.sql_("CREATE        INDEX IF NOT EXISTS oimg_orig_regy__wiki_join_ttl ON oimg_orig_regy (oor_orig_repo, oor_orig_join_ttl);")	    
-	,   Idx_join_ttl 		= Db_idx_itm.sql_("CREATE        INDEX IF NOT EXISTS oimg_orig_regy__join_ttl      ON oimg_orig_regy (oor_orig_join_ttl);")	    
+		Idx_ttl     		= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS oimg_orig_regy__ttl           ON oimg_orig_regy (oor_lnki_ttl);")
+	,	Idx_redirect     	= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS oimg_orig_regy__redirect      ON oimg_orig_regy (oor_orig_redirect_ttl);")
+	,   Idx_page_id 		= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS oimg_orig_regy__page_id       ON oimg_orig_regy (oor_orig_page_id);")
+	,   Idx_wiki_join_id 	= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS oimg_orig_regy__wiki_join_id  ON oimg_orig_regy (oor_orig_repo, oor_orig_join_id);")
+	,   Idx_wiki_join_ttl 	= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS oimg_orig_regy__wiki_join_ttl ON oimg_orig_regy (oor_orig_repo, oor_orig_join_ttl);")	    
+	,   Idx_join_ttl 		= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS oimg_orig_regy__join_ttl      ON oimg_orig_regy (oor_orig_join_ttl);")	    
 	;
 	private static final String
 		Tbl_sql = String_.Concat_lines_nl

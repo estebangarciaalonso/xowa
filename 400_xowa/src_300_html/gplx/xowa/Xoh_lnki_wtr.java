@@ -141,10 +141,11 @@ public class Xoh_lnki_wtr {
 					case Xop_lnki_halign.Right:		bfr.Add(Bry_div_float_right).Add_byte_nl();	break;
 					case Xop_lnki_halign.None:		bfr.Add(Bry_div_float_none).Add_byte_nl();	break;
 				}
-				if (lnki.Link_tkn() == Arg_nde_tkn.Null)						
+				Arg_nde_tkn lnki_link_tkn = lnki.Link_tkn();
+				if (lnki_link_tkn == Arg_nde_tkn.Null)						
 					cfg.Lnki_full_image().Bld_bfr_many(bfr, elem_id, lnki_href, html_view_src, xfer_itm.Html_w(), xfer_itm.Html_h(), lnki_alt_text, lnki_ttl, Xow_html_mgr.Bry_anchor_class_image, Xow_html_mgr.Bry_anchor_rel_blank, anchor_title, Xow_html_mgr.Bry_img_class_none);
 				else {
-					Arg_itm_tkn link_tkn = lnki.Link_tkn().Val_tkn();
+					Arg_itm_tkn link_tkn = lnki_link_tkn.Val_tkn();
 					byte[] link_ref = link_tkn.Dat_to_bry(src);
 					byte[] link_ref_new = tmp_link_parser.Parse(tmp_bfr, tmp_url, wiki, link_ref, lnki_href);
 					link_ref = link_ref_new == null ? lnki_href: link_ref_new;	// if parse fails, then assign to lnki_href; EX:link={{{1}}}

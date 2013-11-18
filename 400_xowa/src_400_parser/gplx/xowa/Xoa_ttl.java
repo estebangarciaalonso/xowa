@@ -95,7 +95,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 		return pass ? rv : null;
 	}	private Xoa_ttl() {} static ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
 	private static final Url_encoder anchor_encoder = Url_encoder.new_html_id_(); static final ByteAryBfr anchor_encoder_bfr = ByteAryBfr.reset_(32);
-	boolean Parse(Xow_wiki wiki, Gfo_msg_log msg_log, byte[] raw, byte[] src, int bgn, int end) {
+	private boolean Parse(Xow_wiki wiki, Gfo_msg_log msg_log, byte[] raw, byte[] src, int bgn, int end) {
 		/* This proc will
 		- identify all parts: Wiki, Namespace, Base/Leaf, Anchor; it will also identify Subject/Talk ns 
 		- trim whitespace around part delimiters; EX: "Help : Test" --> "Help:Test"; note that it will trim only if the part is real; EX: "Helpx : Test" is unchanged
@@ -411,7 +411,11 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 		if (wik_bgn == -1 && ns.Case_match() == Xow_ns_.Case_match_1st) {// do not check case if wiki is dif; NOTE: wik_bgn == -1 chk is needed for ttls like "fr:"
 			byte page_0 = full_txt[page_bgn];
 			int page_0_len = gplx.intl.Utf8_.CharLen(page_0);
-			full_txt = wiki.Lang().Case_mgr().Case_reuse_upper(full_txt, page_bgn, page_bgn + page_0_len);
+			int page_end = page_bgn + page_0_len;
+			if (	page_0_len > 1				// 1st char is multi-byte char
+				&&	page_end > full_txt.length	// expd page_len is > full_txt.length; EX: [[%D0]] is 208 but in utf8, 208 requires at least another char; DATE:2013-11-11
+				) return false;					// ttl is invalid
+			full_txt = wiki.Lang().Case_mgr().Case_reuse_upper(full_txt, page_bgn, page_end);
 		}
 		Xow_ns tors_ns = ns.Id_talk() ? nsMgr.Get_by_ord(ns.Ord_subj_id()) : nsMgr.Get_by_ord(ns.Ord_talk_id());
 		tors_txt = tors_ns.Name_txt_w_colon();

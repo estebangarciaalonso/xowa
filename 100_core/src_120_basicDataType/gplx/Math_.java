@@ -48,6 +48,9 @@ public class Math_ {
 		}
 		return rv;
 	}
+	public static int Div_safe_as_int(int val, int divisor) {return divisor == 0 ? 0 : val / divisor;}
+	public static long Div_safe_as_long(long val, long divisor) {return divisor == 0 ? 0 : val / divisor;}
+	public static double Div_safe_as_double(double val, double divisor) {return divisor == 0 ? 0 : val / divisor;}
 	public static int Min(int val0, int val1) {return val0 < val1 ? val0 : val1;}
 	public static int Max(int val0, int val1) {return val0 > val1 ? val0 : val1;}
 	public static int[] Base2Ary(int v, int max) {

@@ -16,9 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.cache; import gplx.*;
-public class Gfo_cache_mgr_obj extends Gfo_cache_mgr_base {
-	public Object Get_or_null(Object key) {return Base_get_or_null(key);}
-	public void Add(Object key, Object val) {Base_add(key, val);}
+public class Gfo_cache_mgr_bry extends Gfo_cache_mgr_base {
+	public Object Get_or_null(byte[] key) {return Base_get_or_null(key);}
+	public void Add(byte[] key, Object val) {Base_add(key, val);}
+	public void Del(byte[] key) {Base_del(key);}
 }
 class Gfo_cache_itm {
 	public Gfo_cache_itm(Object key, Object val) {this.key = key; this.val = val; this.Touched_update();}

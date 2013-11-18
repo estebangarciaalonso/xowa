@@ -48,6 +48,7 @@ import java.math.BigDecimal;import java.math.MathContext;import java.math.Roun
 		if (divisor == 0) return "%ERR";
 		return DecimalAdp_.float_(Float_.Div(dividend, divisor) * 100).XtoStr(fmt) + "%";
 	}
+	public static DecimalAdp divide_safe_(long lhs, long rhs) {return rhs == 0 ? Zero : divide_(lhs, rhs);}
 		public static DecimalAdp divide_(long lhs, long rhs) {		return new DecimalAdp(new BigDecimal(lhs).divide(new BigDecimal(rhs), Gplx_rounding_context));	}	public static DecimalAdp int_(int v) {return new DecimalAdp(new BigDecimal(v));}	public static DecimalAdp long_(long v) {return new DecimalAdp(new BigDecimal(v));}
 	public static DecimalAdp float_(float v) {return new DecimalAdp(new BigDecimal(v));}	public static DecimalAdp double_(double v) {return new DecimalAdp(new BigDecimal(v));}
 	public static DecimalAdp double_thru_str_(double v) {return new DecimalAdp(BigDecimal.valueOf(v));}

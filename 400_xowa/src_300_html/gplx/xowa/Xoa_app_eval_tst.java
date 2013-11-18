@@ -21,7 +21,7 @@ public class Xoa_app_eval_tst {
 	Xoa_app_eval_fxt fxt = new Xoa_app_eval_fxt();
 	@Before public void init() {fxt.Clear();}
 	@Test  public void Basic() {
-		fxt.Eval_test("[~{<>app.sys_cfg.version;<>}]", "[" + Xoa_app_.Version_str + "]");
+		fxt.Eval_test("[~{<>app.sys_cfg.version;<>}]", "[" + Xoa_app_.Version + "]");
 	}
 }
 class Xoa_app_eval_fxt {

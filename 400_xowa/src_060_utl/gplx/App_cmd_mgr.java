@@ -17,8 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
 public class App_cmd_mgr {
-	OrderedHash expd_args = OrderedHash_.new_(), actl_args = OrderedHash_.new_(); ListAdp tmp_vals = ListAdp_.new_(); String[] orig_ary;
-	public App_cmd_mgr Msg_root_(Gfo_msg_root v) {msg_root = v; return this;} Gfo_msg_root msg_root = Gfo_msg_root._;
+	private OrderedHash expd_args = OrderedHash_.new_(), actl_args = OrderedHash_.new_(); 
+	private ListAdp tmp_vals = ListAdp_.new_(); private String[] orig_ary;
+	public App_cmd_mgr Msg_root_(Gfo_msg_root v) {msg_root = v; return this;} private Gfo_msg_root msg_root = Gfo_msg_root._;
 	public String Arg_prefix() {return arg_prefix;} public App_cmd_mgr Arg_prefix_(String v) {arg_prefix = v; prefix_len = String_.Len(v); return this;} private String arg_prefix = "--"; int prefix_len = 2;
 	public void Clear() {expd_args.Clear(); actl_args.Clear(); errs.Clear(); key_help = key_header = null;}
 	public int Actl_len() {return actl_args.Count();}
@@ -141,7 +142,7 @@ public class App_cmd_mgr {
 		}
 		usr_dlg.Note_gui_none(GRP_KEY, "print.info", sb.XtoStrAndClear());
 	}
-	OrderedHash Expd_copy() {
+	private OrderedHash Expd_copy() {
 		OrderedHash rv = OrderedHash_.new_();
 		int expd_len = expd_args.Count();
 		for (int i = 0 ; i < expd_len; i++) {
@@ -154,7 +155,7 @@ public class App_cmd_mgr {
 		errs.Add(msg_root.Data_new_many(Gfo_msg_itm_.Cmd_warn, GRP_KEY, key, fmt, vals));
 		return false;
 	}
-	public int			Errs_len()		{return errs.Count();} ListAdp errs = ListAdp_.new_();
+	public int			Errs_len()		{return errs.Count();} private ListAdp errs = ListAdp_.new_();
 	public Gfo_msg_data Errs_get(int i) {return (Gfo_msg_data)errs.FetchAt(i);}
-	static final String GRP_KEY = "gplx.app.app_cmd_mgr";
+	private static final String GRP_KEY = "gplx.app.app_cmd_mgr";
 }

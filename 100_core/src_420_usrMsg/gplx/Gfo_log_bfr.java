@@ -15,12 +15,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.gui; import gplx.*; import gplx.xowa.*;
-import gplx.xowa.parsers.lnkis.*;
-public class Xog_tab {
-	public byte[] Display_ttl() {return display_ttl;} public Xog_tab Display_ttl_(byte[] v) {display_ttl = v; return this;} private byte[] display_ttl = null;
-	public Xop_lnki_logger_redlinks Redlinks_mgr() {return redlinks_mgr;} private Xop_lnki_logger_redlinks redlinks_mgr = new Xop_lnki_logger_redlinks();
-	public void Clear() {	// NOTE: must be cleared else pages which have an italicized display titles will persit;
-		display_ttl = null;
+package gplx;
+public class Gfo_log_bfr {
+	private ByteAryBfr bfr = ByteAryBfr.reset_(255);
+	public Gfo_log_bfr Add(String s) {
+		bfr.Add_str(DateAdp_.Now().XtoStr_fmt_yyyyMMdd_HHmmss_fff());
+		bfr.Add_byte_space();
+		bfr.Add_str(s);
+		bfr.Add_byte_nl();
+		return this;
 	}
+	public String Xto_str() {return bfr.XtoStrAndClear();}
 }

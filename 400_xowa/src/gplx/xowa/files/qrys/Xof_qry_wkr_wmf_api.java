@@ -30,7 +30,14 @@ public class Xof_qry_wkr_wmf_api implements Xof_qry_wkr {
 		itm.Orig_wiki_(api_rv.Reg_wiki());
 		if (!ByteAry_.Eq(itm_ttl, api_rv.Reg_page()))	// ttl is different; must be redirect
 			itm.Orig_redirect_(api_rv.Reg_page());
-		itm.Orig_size_(api_rv.Orig_w(), api_rv.Orig_h());
+		int orig_w = api_rv.Orig_w(), orig_h = api_rv.Orig_h();
+		itm.Orig_size_(orig_w, orig_h);
+		if (itm.Lnki_ext().Id_is_ogg()) Coerce_ogg_ext(itm, orig_w, orig_h);
 		return true;
+	}
+	public static void Coerce_ogg_ext(Xof_fsdb_itm itm, int orig_w, int orig_h) {
+		boolean is_audio = orig_w == 0 && orig_h == 0; // wmf returns back w/h of 0 if audio; non-0 if video; DATE:2013-11-11
+		int actl_ext_id = is_audio ? Xof_ext_.Id_oga : Xof_ext_.Id_ogv;
+		itm.Lnki_ext_(Xof_ext_.new_by_id_(actl_ext_id));
 	}
 }

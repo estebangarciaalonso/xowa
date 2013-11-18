@@ -56,8 +56,9 @@ public class Xof_ext {
 	}
 	public boolean Id_is_video()	{return id == Xof_ext_.Id_ogv || id == Xof_ext_.Id_ogg || id == Xof_ext_.Id_webm;}	// NOTE: ogg can be vid; EX.WP: Comet; Encke_tail_rip_off.ogg
 	public boolean Id_is_svg()		{return id == Xof_ext_.Id_svg;}
-	public boolean Id_is_ogv()		{return id == Xof_ext_.Id_ogv;}
 	public boolean Id_is_ogg()		{return id == Xof_ext_.Id_ogg;}
+	public boolean Id_is_oga()		{return id == Xof_ext_.Id_oga;}
+	public boolean Id_is_ogv()		{return id == Xof_ext_.Id_ogv;}
 	public boolean Id_is_djvu()	{return id == Xof_ext_.Id_djvu;}
 	public boolean Id_is_pdf()		{return id == Xof_ext_.Id_pdf;}
 	public boolean Id_needs_convert()	{

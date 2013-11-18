@@ -25,8 +25,57 @@ import java.sql.*;
 public class SqliteDbMain {
 	public static void main(String[] args) throws Exception {
 		SqliteDbMain main = new SqliteDbMain();
-		main.Read();
+//		main.Read();
 //		main.Mass_upload(Io_url_.new_dir_("J:\\gplx\\xowl\\file\\all#meta\\en.wikipedia.org\\"));
+//		main.CreateMany(20, 0);
+		main.CreateMany(20, 1000000 + 1);
+	}// 179,167,161,147,160,165,159
+/*
+'5281' '189'
+'5266' '189' 
+ 
+'5640' '177'
+'5719' '174'  
+'5766' '173' 
+*/
+	private void CreateMany(int number, int base_val) {
+		long time_bgn = Env_.TickCount();
+		Db_provider provider = Sqlite_engine_.Provider_load_or_make_(Io_url_.new_fil_("E:\\test.sqlite3"));		
+		String tbl_sql = String_.Concat_lines_nl
+		( "CREATE TABLE fsdb_xtn_thm"
+		, "( thm_id            integer             NOT NULL    PRIMARY KEY"
+		, ", thm_owner_id      integer             NOT NULL"
+		, ", thm_w             integer             NOT NULL"
+		, ", thm_h             integer             NOT NULL"
+		, ", thm_thumbtime     integer             NOT NULL"
+		, ", thm_bin_db_id     integer             NOT NULL"
+		, ", thm_size          bigint              NOT NULL"
+		, ", thm_modified      varchar(14)         NOT NULL"
+		, ", thm_hash          varchar(40)         NOT NULL"
+		, ");"
+		);
+		Sqlite_engine_.Tbl_create_and_delete(provider, "fsdb_xtn_thm", tbl_sql);
+//		provider.Txn_mgr().Txn_bgn();
+		Db_stmt stmt = Db_stmt_.new_insert_(provider, "fsdb_xtn_thm", "thm_id", "thm_owner_id", "thm_w", "thm_h", "thm_thumbtime", "thm_bin_db_id", "thm_size", "thm_modified", "thm_hash");
+		for (int i = 0; i < number; i++) {
+			stmt.Clear()
+				.Val_int_(base_val + i)
+				.Val_int_(base_val + i)
+				.Val_int_(220)
+				.Val_int_(200)
+				.Val_int_(-1)
+				.Val_int_(15)
+				.Val_long_(23456)
+				.Val_str_("")
+				.Val_str_("")
+				.Exec_insert();
+		}
+		long time_elapsed = (Env_.TickCount() - time_bgn);	
+//		provider.Txn_mgr().Txn_end();
+		provider.Rls();
+		Tfds.Write(time_elapsed, number / time_elapsed);
+		// 250; 260
+		Tfds.Write("");
 	}
 	Connection conn; PreparedStatement stmt;
 	void Read() {

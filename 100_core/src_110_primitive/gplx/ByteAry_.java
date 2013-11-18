@@ -449,6 +449,16 @@ public class ByteAry_ {
 		}
 		return true;
 	}
+	public static boolean Match_bwd_any(byte[] src, int src_end, int src_bgn, byte[] find) {	// NOTE: utf8 doesn't matter (matching byte for byte)
+		int find_len = find.length;
+		for (int i = 0; i < find_len; i++) {
+			int src_pos = src_end - i;
+			int find_pos = find_len - i - 1;
+			if (src_pos < src_bgn) return false;	// ran out of src; exit; EX: src=ab; find=abc
+			if (src[src_pos] != find[find_pos]) return false;
+		}
+		return true;
+	}
 	public static int Compare(byte[] lhs, byte[] rhs) {
 		if		(lhs == null)	return CompareAble_.More;
 		else if (rhs == null)	return CompareAble_.Less;

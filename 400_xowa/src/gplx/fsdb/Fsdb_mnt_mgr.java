@@ -53,7 +53,7 @@ public class Fsdb_mnt_mgr {
 	public Fsdb_fil_itm Fil_select_bin(byte[] dir, byte[] fil, boolean is_thumb, int width, int thumbtime) {
 		for (int i = 0; i < ary_len; i++) {
 			Fsdb_fil_itm rv = ary[i].Fil_select_bin(dir, fil, is_thumb, width, thumbtime);
-			if (rv != Fsdb_fil_itm.Null) {
+			if (rv != Fsdb_fil_itm.Null && rv.Db_bin_id() != Fsdb_bin_tbl.Db_bin_id_null) {	// NOTE: mnt_0 can have thumb, but mnt_1 can have itm; check for itm with Db_bin_id; DATE:2013-11-16
 				rv.Mnt_id_(i);
 				return rv;
 			}
@@ -83,9 +83,13 @@ public class Fsdb_mnt_mgr {
 		for (int i = 0; i < ary_len; i++)
 			ary[i].Bin_mgr().Db_bin_max_(v);
 	}
-	public void Commit() {
+	public void Txn_open() {
 		for (int i = 0; i < ary_len; i++)
-			ary[i].Commit();
+			ary[i].Txn_open();
+	}
+	public void Txn_save() {
+		for (int i = 0; i < ary_len; i++)
+			ary[i].Txn_save();
 	}
 	public void Rls() {
 		for (int i = 0; i < ary_len; i++)

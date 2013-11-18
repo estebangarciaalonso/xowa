@@ -111,6 +111,9 @@ public class Pf_msg_mgr {
 					else
 						bfr.Add_byte(Byte_ascii.Backslash);
 					break;
+				case Byte_ascii.Tilde:
+					bfr.Add_byte_repeat(ByteAryFmtr.char_escape, 2);	// escape tilde; EX: ~u -> ~~u; DATE:2013-11-11
+					break;
 				case Byte_ascii.Dollar:
 					int end_pos = Php_text_itm_parser.Find_fwd_non_int(raw, i + 1, raw_len);
 					int int_val = ByteAry_.XtoIntByPos(raw, i + 1, end_pos, -1);

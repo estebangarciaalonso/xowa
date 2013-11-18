@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.fsdb; import gplx.*;
 import gplx.dbs.*; import gplx.cache.*;
 public class Fsdb_db_atr_fil implements RlsAble {
-	private Gfo_cache_mgr_obj dir_cache = new Gfo_cache_mgr_obj();
+	private Gfo_cache_mgr_bry dir_cache = new Gfo_cache_mgr_bry();
 	private Db_provider provider;
 	private Fsdb_dir_tbl tbl_dir; private Fsdb_fil_tbl tbl_fil; private Fsdb_xtn_thm_tbl tbl_thm; private Fsdb_xtn_img_tbl tbl_img;
 	public Fsdb_db_atr_fil(Fsdb_db_abc_mgr abc_mgr, Io_url url, boolean create) {
@@ -42,24 +42,30 @@ public class Fsdb_db_atr_fil implements RlsAble {
 		provider.Txn_mgr().Txn_end_all();
 		provider.Rls();
 	}
-	public void Commit() {
-		provider.Txn_mgr().Txn_end_all_bgn_if_none();
+	public void Txn_open() {
+		provider.Txn_mgr().Txn_bgn_if_none();
+	}
+	public void Txn_save() {
+		provider.Txn_mgr().Txn_end_all();
 	}
 	public Fsdb_fil_itm Fil_select(byte[] dir, byte[] fil) {
-		IntVal dir_id_obj = (IntVal)dir_cache.Get_or_null(dir);
+		IntRef dir_id_obj = (IntRef)dir_cache.Get_or_null(dir);
+		int dir_id = -1;
 		if (dir_id_obj == null) {
 			Fsdb_dir_itm dir_itm = tbl_dir.Select_itm(String_.new_utf8_(dir));
-			dir_id_obj = dir_itm == Fsdb_dir_itm.Null ? IntVal.neg1_() : IntVal.new_(dir_itm.Id());
-			dir_cache.Add(dir, dir_id_obj);
+			dir_id = dir_itm == Fsdb_dir_itm.Null ? -1 : dir_itm.Id();
+			dir_cache.Add(dir, IntRef.new_(dir_id));
 		}
-		int dir_id = dir_id_obj.Val(); if (dir_id == Int_.Neg1) return Fsdb_fil_itm.Null;
+		else
+			dir_id = dir_id_obj.Val();
+		if (dir_id == Int_.Neg1) return Fsdb_fil_itm.Null;
 		return tbl_fil.Select_itm_by_name(dir_id, String_.new_utf8_(fil));
 	}
 	public Fsdb_xtn_thm_itm Thm_select(int fil_id, int width, int thumbtime) {
 		return tbl_thm.Select_itm_by_fil_width(fil_id, width, thumbtime);
 	}
 	public int Fil_insert(Fsdb_fil_itm rv    , String dir, String fil, int ext_id, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		int dir_id = Dir_id__get_by_mem_or_db(dir);
+		int dir_id = Dir_id__get_for_insert(dir);
 		int fil_id = tbl_fil.Select_itm_by_name(dir_id, fil).Id();
 		if (fil_id == 0) {
 			fil_id = abc_mgr.Next_id();				
@@ -68,7 +74,7 @@ public class Fsdb_db_atr_fil implements RlsAble {
 		return fil_id;
 	}
 	public int Img_insert(Fsdb_xtn_img_itm rv, String dir, String fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		int dir_id = Dir_id__get_by_mem_or_db(dir);
+		int dir_id = Dir_id__get_for_insert(dir);
 		int fil_id = tbl_fil.Select_itm_by_name(dir_id, fil).Id();
 		if (fil_id == 0) {
 			fil_id = abc_mgr.Next_id();
@@ -78,7 +84,7 @@ public class Fsdb_db_atr_fil implements RlsAble {
 		return fil_id;
 	}
 	public int Thm_insert(Fsdb_xtn_thm_itm rv, String dir, String fil, int ext_id, int thm_w, int thm_h, int thumbtime, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		int dir_id = Dir_id__get_by_mem_or_db(dir);
+		int dir_id = Dir_id__get_for_insert(dir);
 		int fil_id = tbl_fil.Select_itm_by_name(dir_id, fil).Id();
 		if (fil_id == 0) {
 			fil_id = abc_mgr.Next_id();
@@ -109,22 +115,26 @@ public class Fsdb_db_atr_fil implements RlsAble {
 	public static Io_url url_(Io_url dir, int id) {
 		return dir.GenSubFil_ary("fsdb.atr#", Int_.XtoStr_PadBgn(id, 2), ".sqlite3");
 	}
-	private int Dir_id__get_by_mem_or_db(String dir) {
+	private int Dir_id__get_for_insert(String dir_str) {
+		byte[] dir_bry = ByteAry_.new_utf8_(dir_str);
+		Object rv_obj = dir_cache.Get_or_null(dir_bry);
 		int rv = -1;
-		Object rv_obj = dir_cache.Get_or_null(dir);
-		if (rv_obj == null) {
-			Fsdb_dir_itm itm = tbl_dir.Select_itm(dir);
+		if (rv_obj != null) {	// item found
+			rv = ((IntRef)rv_obj).Val();
+			if (rv == -1)		// dir was previously -1; occurs when doing select on empty db (no dir, so -1 added) and then doing insert (-1 now needs to be dropped)
+				dir_cache.Del(dir_bry);
+		}
+		if (rv == -1) {
+			Fsdb_dir_itm itm = tbl_dir.Select_itm(dir_str);
 			if (itm == Fsdb_dir_itm.Null) {
 				rv = abc_mgr.Next_id();
-				tbl_dir.Insert(rv, dir, 0);	// 0: always assume root owner
+				tbl_dir.Insert(rv, dir_str, 0);	// 0: always assume root owner
 			}
 			else {
 				rv = itm.Id();
 			}
-			dir_cache.Add(dir, IntRef.new_(rv));
+			dir_cache.Add(dir_bry, IntRef.new_(rv));
 		}
-		else
-			rv = ((IntRef)rv_obj).Val();
 		return rv;
 	}
 }

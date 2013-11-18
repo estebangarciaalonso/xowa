@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 class Pf_name extends Pf_func_base {
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {
-		byte[] val_dat_ary = Eval_argx_or_null(ctx, src, caller, self); 
+		byte[] val_dat_ary = Eval_argx_or_null(ctx, src, caller, self, this.Name()); 
 		if (val_dat_ary == ByteAry_.Empty) return; // if argx is empty, return EX: {{PAGENAME:}}; DATE:2013-02-20
 		Xoa_ttl ttl = val_dat_ary == null ? ctx.Page().Page_ttl() : Xoa_ttl.parse_(ctx.Wiki(), val_dat_ary);
 		if (ttl == null) return;

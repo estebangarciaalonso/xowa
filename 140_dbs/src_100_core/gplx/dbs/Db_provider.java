@@ -29,5 +29,8 @@ public class Db_provider implements RlsAble {
 	public int Exec_sql(String sql)				{return this.Exec_qry(Db_qry_sql.dml_(sql));}
 	public DataRdr Exec_sql_as_rdr(String sql)	{return this.Exec_qry_as_rdr(Db_qry_sql.rdr_(sql));}
 	public Db_txn_mgr Txn_mgr()					{return txn_mgr;} Db_txn_mgr txn_mgr;
-	public void Rls()							{engine.Rls();}
+	public void Rls() {
+		engine.Rls();
+		Db_provider_pool._.Del(this.ConnectInfo());	// remove from pool, else rls'd instance will be cached and fail upon next use
+	}
 }

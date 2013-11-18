@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs; import gplx.*; import gplx.xowa.*;
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.specials.search.*; import gplx.xowa.ctgs.*; import gplx.xowa.dbs.tbls.*;
 public class Db_mgr_fxt {
-	public Db_mgr_fxt Ctor_fsys()	{bldr_fxt = new Xob_fxt().Ctor(Xo_test.Url_root().GenSubDir("root")); return this;} 
+	public Db_mgr_fxt Ctor_fsys()	{bldr_fxt = new Xob_fxt().Ctor(Xoa_test_.Url_root().GenSubDir("root")); return this;} 
 	public Db_mgr_fxt Ctor_mem()	{bldr_fxt = new Xob_fxt().Ctor_mem(); return this;} private Xob_fxt bldr_fxt;
 	public Xodb_page page_(int id, String modified_on, boolean type_redirect, int text_len) {return new Xodb_page().Id_(id).Modified_on_(DateAdp_.parse_gplx(modified_on)).Type_redirect_(type_redirect).Text_len_(text_len);}
 	public Xow_wiki Wiki() {return bldr_fxt.Wiki();}
@@ -124,7 +124,7 @@ public class Db_mgr_fxt {
 		}
 		return (int[])list.XtoAryAndClear(int.class);
 	}
-	public void Init_db_sqlite() {Init_db_sqlite(Xo_test.Url_wiki_enwiki().GenSubFil_nest("en.wikipedia.org.sqlite3"));}
+	public void Init_db_sqlite() {Init_db_sqlite(Xoa_test_.Url_wiki_enwiki().GenSubFil_nest("en.wikipedia.org.sqlite3"));}
 	public void Init_db_sqlite(Io_url url) {
 		Xow_wiki wiki = this.Wiki();
 		Db_provider_pool._.Clear();

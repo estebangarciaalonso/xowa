@@ -21,7 +21,7 @@ public class Xol_mw_lang_parser {
 	Php_parser parser = new Php_parser(); Php_evaluator evaluator;
 	public Xol_mw_lang_parser(Gfo_msg_log msg_log) {evaluator = new Php_evaluator(msg_log);}
 	public void Bld_all(Xoa_app app, Io_url user_root) {Bld_all(app, user_root, Xol_lang_transform_null._);}
-	public static final String Dir_name_xowa = Xoa_app_.App_name;
+	public static final String Dir_name_xowa = Xoa_app_.Name;
 	public void Bld_all(Xoa_app app, Io_url user_root, Xol_lang_transform lang_transform) {
 		Io_url lang_root = user_root.GenSubDir("lang");
 		Parse_mediawiki(app, lang_root.GenSubDir("mediawiki"), lang_transform);

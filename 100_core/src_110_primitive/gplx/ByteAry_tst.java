@@ -245,4 +245,15 @@ public class ByteAry_tst {
 		byte[] actl = ByteAry_.Add_w_dlm(dlm, ByteAry_.Ary(itms));
 		Tfds.Eq(expd, String_.new_ascii_(actl));
 	}
+	@Test   public void Match_bwd_any() {
+		Tst_match_bwd_any("abc", 2, 0, "c", true);
+		Tst_match_bwd_any("abc", 2, 0, "b", false);
+		Tst_match_bwd_any("abc", 2, 0, "bc", true);
+		Tst_match_bwd_any("abc", 2, 0, "abc", true);
+		Tst_match_bwd_any("abc", 2, 0, "zabc", false);
+		Tst_match_bwd_any("abc", 1, 0, "ab", true);
+	}
+	void Tst_match_bwd_any(String src, int src_end, int src_bgn, String find, boolean expd) {
+		Tfds.Eq(expd, ByteAry_.Match_bwd_any(ByteAry_.new_ascii_(src), src_end, src_bgn, ByteAry_.new_ascii_(find)));
+	}
 }

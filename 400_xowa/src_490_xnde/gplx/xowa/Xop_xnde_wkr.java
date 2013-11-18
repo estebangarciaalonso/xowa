@@ -610,7 +610,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 	}
 //		public static ByteAryBfr TEMP_TIMELINE = ByteAryBfr.new_();
 	public static final byte[] Bry_escape_lt = ByteAry_.new_ascii_("&lt;"), Bry_escape_gt = ByteAry_.new_ascii_("&gt;"), Bry_escape_quote = ByteAry_.new_ascii_("&quot;"), Bry_escape_amp = ByteAry_.new_ascii_("&amp;"), Bry_escape_brack_bgn = ByteAry_.new_ascii_("&#91;"), Bry_apos = new byte[] {Byte_ascii.Apos};
-	public static final byte[] Bry_lt = new byte[] {Byte_ascii.Lt}, Bry_brack_bgn = new byte[] {Byte_ascii.Brack_bgn}, Bry_pipe = new byte[] {Byte_ascii.Pipe};
+	public static final byte[] Bry_lt = new byte[] {Byte_ascii.Lt}, Bry_brack_bgn = new byte[] {Byte_ascii.Brack_bgn}, Bry_pipe = Xoa_consts.Pipe_bry;
 	public static int Find_gt_pos(Xop_ctx ctx, byte[] src, int cur_pos, int src_len) {	// UNUSED
 		int gt_pos = -1;	// find closing >
 		for (int i = cur_pos; i < src_len; i++) {

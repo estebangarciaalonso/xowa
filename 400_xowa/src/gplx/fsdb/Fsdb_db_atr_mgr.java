@@ -32,7 +32,21 @@ public class Fsdb_db_atr_mgr implements RlsAble {
 	public int Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int width, int height, int thumbtime, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		return itms_0.Thm_insert(rv, String_.new_utf8_(dir), String_.new_utf8_(fil), ext_id, width, height, thumbtime, modified, hash, bin_db_id, bin_len, bin_rdr);
 	}
-	public void Commit(Db_provider provider) {Fsdb_db_atr_tbl.Commit_all(provider, itms);}
+	public void Txn_open() {
+		int len = itms.length;
+		for (int i = 0; i < len; i++) {
+			Fsdb_db_atr_fil itm = itms[i];
+			itm.Txn_open();
+		}
+	}
+	public void Txn_save(Db_provider provider) {
+		Fsdb_db_atr_tbl.Commit_all(provider, itms);
+		int len = itms.length;
+		for (int i = 0; i < len; i++) {
+			Fsdb_db_atr_fil itm = itms[i];
+			itm.Txn_save();
+		}
+	}
 	public void Rls() {
 		int len = itms.length;
 		for (int i = 0; i < len; i++) {

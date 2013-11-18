@@ -18,13 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.imports.ctgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.imports.*;
 import org.junit.*; import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*;
 public class Xoctg_hiddencat_parser_sql_tst {
-	@Before public void init() {if (Xo_test.Db_skip()) return; fxt.Ctor_fsys();} Db_mgr_fxt fxt = new Db_mgr_fxt();
-	@After public void term() {if (Xo_test.Db_skip()) return; fxt.Rls();} 
+	@Before public void init() {if (Xoa_test_.Db_skip()) return; fxt.Ctor_fsys();} Db_mgr_fxt fxt = new Db_mgr_fxt();
+	@After public void term() {if (Xoa_test_.Db_skip()) return; fxt.Rls();} 
 	@Test   public void Basic() {
-		if (Xo_test.Db_skip()) return; 
+		if (Xoa_test_.Db_skip()) return; 
 		fxt.Init_db_sqlite();
 		Init_ctgs(1, 2, 3);
-		Io_url page_props_url = Xo_test.Url_root().GenSubFil_nest("root", "wiki", "en.wikipedia.org", "page_props.sql");		
+		Io_url page_props_url = Xoa_test_.Url_root().GenSubFil_nest("root", "wiki", "en.wikipedia.org", "page_props.sql");		
 		fxt	.Init_fil(page_props_url, String_.Concat
 		(	"INSERT INTO `page_props` VALUES"
 		,	" (1,'hiddencat','')"

@@ -27,6 +27,7 @@ class Gfo_log_wtr_null implements Gfo_log_wtr {
 	public void Log_msg_to_url_fmt(Io_url url, String fmt, Object... args) {}
 	public void Log_msg_to_session_fmt(String fmt, Object... args) {}
 	public void Log_msg_to_session(String txt) {}
+	public void Log_msg_to_session_direct(String txt) {}
 	public void Log_err(String txt) {}
 	public void Init() {}
 	public void Term() {}

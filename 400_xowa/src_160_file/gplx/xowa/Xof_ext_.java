@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xof_ext_ {
-	public static final byte Id_unknown = 0, Id_png = 1, Id_jpg = 2, Id_jpeg = 3, Id_gif = 4, Id_tif = 5, Id_tiff = 6, Id_svg = 7, Id_djvu = 8, Id_pdf = 9, Id_mid = 10, Id_ogg = 11, Id_oga = 12, Id_ogv = 13, Id_webm = 14;
+	public static final int Id_unknown = 0, Id_png = 1, Id_jpg = 2, Id_jpeg = 3, Id_gif = 4, Id_tif = 5, Id_tiff = 6, Id_svg = 7, Id_djvu = 8, Id_pdf = 9, Id_mid = 10, Id_ogg = 11, Id_oga = 12, Id_ogv = 13, Id_webm = 14;
 	public static final int Id__max = 15;
 	public static final byte[] Bry_png = ByteAry_.new_ascii_("png"), Bry_jpg = ByteAry_.new_ascii_("jpg"), Bry_jpeg = ByteAry_.new_ascii_("jpeg"), Bry_gif = ByteAry_.new_ascii_("gif"), Bry_tif = ByteAry_.new_ascii_("tif"), Bry_tiff = ByteAry_.new_ascii_("tiff"), Bry_svg = ByteAry_.new_ascii_("svg"), Bry_djvu = ByteAry_.new_ascii_("djvu"), Bry_pdf = ByteAry_.new_ascii_("pdf"), Bry_mid = ByteAry_.new_ascii_("mid"), Bry_ogg = ByteAry_.new_ascii_("ogg"), Bry_oga = ByteAry_.new_ascii_("oga"), Bry_ogv = ByteAry_.new_ascii_("ogv"), Bry_webm = ByteAry_.new_ascii_("webm");
 	public static final byte[][] Bry__ary = new byte[][] {ByteAry_.Empty, Bry_png, Bry_jpg, Bry_jpeg, Bry_gif, Bry_tif, Bry_tiff, Bry_svg, Bry_djvu, Bry_pdf, Bry_mid, Bry_ogg, Bry_oga, Bry_ogv, Bry_webm};
@@ -47,17 +47,22 @@ public class Xof_ext_ {
 	public static final int Ary_max = Id_webm + 1;
 	private static final Xof_ext[] Ary = new Xof_ext[Ary_max];
 
-	public static byte[] get_by_id(int id) {
+	public static byte[] Get_ext_by_id_(int id) {
 		if (id < 0 || id > Id_webm) throw Err_.new_fmt_("index out of bounds; {id}", id);
 		return Bry__ary[id];
+	}
+	public static int Get_id_by_ext_(byte[] ext_bry) {
+		Object o = id_hash.Fetch(ext_bry);
+		return o == null ? Id_unknown : ((IntVal)o).Val();
 	}
 	public static Xof_ext new_by_ttl_(byte[] ttl) {
 		int ttl_len = ttl.length;
 		int dot_pos = ByteAry_.FindBwd(ttl, Byte_ascii.Dot);
 		byte[] ext = (dot_pos == ByteAry_.NotFound || dot_pos == ttl_len) ? ByteAry_.Empty : ByteAry_.Xto_str_lower(ttl, dot_pos + 1, ttl_len); // +1 to bgn after .
-		return new_(Id_of_(ext), ext);
+		return new_(Get_id_by_ext_(ext), ext);
 	}
-	public static Xof_ext new_by_ext_(byte[] ext) {return new_(Id_of_(ext), ext);}
+	public static Xof_ext new_by_ext_(byte[] ext)	{return new_(Get_id_by_ext_(ext), ext);}
+	public static Xof_ext new_by_id_(int id)		{return new_(id, Get_ext_by_id_(id));}
 	public static Xof_ext new_(int id, byte[] ext) {
 		Xof_ext rv = Ary[id];
 		if (rv == null) {
@@ -65,10 +70,6 @@ public class Xof_ext_ {
 			Ary[id] = rv;
 		}
 		return rv;
-	}
-	public static int Id_of_(byte[] ext_bry) {
-		Object o = id_hash.Fetch(ext_bry);
-		return o == null ? Id_unknown : ((IntVal)o).Val();
 	}
 	public static byte[] Lower_ext(byte[] ttl) {
 		int dot_pos = ByteAry_.FindBwd(ttl, Byte_ascii.Dot);

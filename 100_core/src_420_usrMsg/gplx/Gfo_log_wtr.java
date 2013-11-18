@@ -24,6 +24,7 @@ public interface Gfo_log_wtr extends GfoInvkAble {
 	void Log_msg_to_url_fmt(Io_url url, String fmt, Object... args);
 	void Log_msg_to_session(String txt);
 	void Log_msg_to_session_fmt(String fmt, Object... args);
+	void Log_msg_to_session_direct(String txt);
 	void Log_err(String txt);
 	void Init();
 	void Term();

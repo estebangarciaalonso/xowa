@@ -16,9 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.apps.*;
 import gplx.xowa.wikis.*; import gplx.xowa.users.*; import gplx.xowa.html.*; import gplx.xowa.users.history.*; import gplx.xowa.specials.*; import gplx.xowa.xtns.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*;
-import gplx.xowa.setup.maints.*;
-import gplx.xowa.wikis.caches.*;
+import gplx.xowa.setup.maints.*; import gplx.xowa.wikis.caches.*;
 public class Xow_wiki implements GfoInvkAble {
 	public Xow_wiki(Xoa_app app, Io_url wiki_dir, Xow_ns_mgr ns_mgr, Xol_lang lang) {
 		this.app = app; this.ns_mgr = ns_mgr; this.lang = lang;
@@ -126,7 +126,7 @@ public class Xow_wiki implements GfoInvkAble {
 		Xoa_page page = data_mgr.Get_page(url, ttl, false);						// get page from data_mgr
 		if (!page.Missing())
 			gplx.xowa.xtns.scribunto.Scrib_engine.Engine_page_changed(page);	// notify scribunto about page changed
-		ctx.Tab().Clear();
+		ctx.Tab().Clear();	// NOTE: must clear tab here, else italicized display_ttl will persist; DATE:2013-11-16
 		if (page.Missing()) {													// page doesn't exist
 			if (ttl.Ns().Id_file()) {
 				Xow_wiki commons_wiki = app.Wiki_mgr().Get_by_key_or_null(commons_wiki_key);
@@ -200,7 +200,9 @@ public class Xow_wiki implements GfoInvkAble {
 	Io_url wiki_dir = Io_url_.Null;
 	public Xow_wiki Init_assert() {if (init_needed) Init_wiki(app.User()); return this;}
 	private void Init_wiki(Xou_user user) {	// NOTE: (a) one-time initialization for all wikis; (b) not called by tests
-		if (app.Stage() == Xoa_app.Stage_launch_done) init_needed = false;	// NOTE: only mark inited if app fully launched; otherwise statements in xowa.gfs can fire and premature set home to inited; DATE:2013-03-24
+		if (app.Stage() == Xoa_stage_.Tid_launch_done) init_needed = false;	// NOTE: only mark inited if app fully launched; otherwise statements in xowa.gfs can fire and premature set home to inited; DATE:2013-03-24
+		Gfo_log_bfr log_bfr = app.Log_bfr();
+		log_bfr.Add("wiki.init.bgn:" + domain_str);
 		app.Cfg_mgr().Init(this);
 		file_mgr.Cfg_download().Enabled_(app.File_mgr().Download_mgr().Enabled());	// default download to app global; can be overriden below
 		Io_url sqlite_url = Xodb_mgr_sql.Find_core_url(this);
@@ -208,7 +210,7 @@ public class Xow_wiki implements GfoInvkAble {
 			Xodb_mgr_sql db_mgr_sql = this.Db_mgr_create_as_sql();
 			db_mgr_sql.Init_load(gplx.dbs.Db_connect_.sqlite_(sqlite_url));
 		}
-		db_mgr.Load_mgr().Load_init(this);
+		db_mgr.Load_mgr().Load_init(this); log_bfr.Add("wiki.init.db_mgr");
 		app.Gfs_mgr().Run_url_for(this, fsys_mgr.Cfg_wiki_core_fil());
 		gplx.xowa.utls.upgrades.Xoa_upgrade_mgr.Check(this);
 		app.Gfs_mgr().Run_url_for(this, fsys_mgr.Cfg_wiki_stats_fil());
@@ -218,17 +220,20 @@ public class Xow_wiki implements GfoInvkAble {
 			if (wiki_tid == Xow_wiki_type_.Tid_wikipedia)	// NOTE: if type is wikipedia, add "Wikipedia" as an alias; EX.WP: pt.wikipedia.org/wiki/Página principal which redirects to Wikipedia:Página principal
 				ns_mgr.Add_alias(Xow_ns_.Id_project, Xow_ns_.Ns_name_wikipedia);
 		}
+		log_bfr.Add("wiki.init.lang");
 		Xow_ns_mgr_.rebuild_(lang, ns_mgr);	// always rebuild; may be changed by user_wiki.gfs; different lang will change namespaces; EX: de.wikisource.org will have Seite for File and none of {{#lst}} will work
 		fragment_mgr.Evt_lang_changed(lang);
 		parser = Xop_parser.new_(this);	// rebuild parser
 		ByteAryFmtr.Null.Eval_mgr().Enabled_(false);
 		app.Wiki_mgr().Scripts().Exec(this);
 		ByteAryFmtr.Null.Eval_mgr().Enabled_(true);
-		app.Wiki_mgr().Css_installer().Chk(this, user.Fsys_mgr().Wiki_html_dir(domain_str));
+		app.Wiki_mgr().Css_installer().Chk(this, user.Fsys_mgr().Wiki_html_dir(domain_str)); log_bfr.Add("wiki.init.css");
 		html_wtr.Hctx().Toc_show_(true).Lnki_title_(true).Lnki_visited_(true).Lnki_id_(true);
 		this.Copy_cfg(app.User().Wiki());
 		File_repos_assert(app, this);
 		xtn_mgr.Init_by_wiki(this);
+		log_bfr.Add("wiki.init.done");
+		app.Log_wtr().Log_msg_to_session_direct(log_bfr.Xto_str());
 	}
 	public void Rls() {
 		if (rls_list == null) return;

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.wikis.caches.*;
 public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xob_cmd, GfoInvkAble {
-	private int exec_count, exec_count_max = Int_.MaxValue, exec_size_len = 0;
+	private int exec_count, exec_count_max = Int_.MaxValue;
 	private int commit_interval = 1000, progress_interval = 250, cleanup_interval = 2500, select_size = 10 * Io_mgr.Len_mb;
 	private Xodb_xowa_cfg_tbl tbl_cfg;
 	private Xob_dump_src_id page_src;
@@ -113,10 +113,10 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 	private void Exec_page(Xow_ns ns, Xodb_page page) {
 		try {
 			if ((exec_count % progress_interval) == 0)
-				usr_dlg.Prog_many("", "", "parsing: ns=~{0} text_db=~{1} count=~{2} size=~{3} MB page_id=~{4} ttl=~{5}", ns_val, db_val, exec_count, exec_size_len / Io_mgr.Len_mb, page.Id(), String_.new_utf8_(page.Ttl_wo_ns()));
+				usr_dlg.Prog_many("", "", "parsing: ns=~{0} text_db=~{1} count=~{2} time=~{3} page_id=~{4} ttl=~{5}", ns_val, db_val, exec_count, Env_.TickCount_elapsed_in_sec(time_bgn), page.Id(), String_.new_utf8_(page.Ttl_wo_ns()));
 			Exec_page_hook(ns, page, page.Text());
 			++exec_count;
-			exec_size_len += page.Text_len();
+//				exec_size_len += page.Text_len();
 			id_bmk = id_val = page.Id();
 			ctx.App().Utl_bry_bfr_mkr().Clear_fail_check();	// make sure all bfrs are released
 			if ((exec_count % poll_interval) == 0)
@@ -156,7 +156,7 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 		Exec_commit(ByteAry_.Empty);
 		Free();
 		Exec_end();
-		usr_dlg.Note_many("", "", "done: ~{0} ~{1}", exec_count, DecimalAdp_.divide_(exec_count, (Env_.TickCount() - time_bgn) / 1000).XtoStr("#,###.000"));
+		usr_dlg.Note_many("", "", "done: ~{0} ~{1}", exec_count, DecimalAdp_.divide_safe_(exec_count, Env_.TickCount_elapsed_in_sec(time_bgn)).XtoStr("#,###.000"));
 	}
 	public void Cmd_print() {}		
 	private void Free() {

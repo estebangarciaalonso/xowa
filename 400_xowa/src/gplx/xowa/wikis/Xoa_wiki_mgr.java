@@ -71,7 +71,7 @@ public class Xoa_wiki_mgr implements GfoInvkAble {
 		else	return GfoInvkAble_.Rv_unhandled;
 	}	private static final String Invk_get = "get", Invk_groups = "groups", Invk_scripts = "scripts", Invk_wdata = "wdata";
 	private static final String Invk_len = "len", Invk_get_at = "get_at";
-	Xow_wiki New_wiki(byte[] key) {
+	private Xow_wiki New_wiki(byte[] key) {
 		Xow_ns_mgr ns_mgr = Xow_ns_mgr_.default_();
 		Xow_wiki_type wiki_type = Xow_wiki_type_.parse_by_domain(key);
 		byte[] lang_key = wiki_type.Lang_key(); if (lang_key == Xol_lang_itm_.Key__unknown) lang_key = Xol_lang_.Key_en;

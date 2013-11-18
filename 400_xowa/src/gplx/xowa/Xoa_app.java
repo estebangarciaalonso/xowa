@@ -16,14 +16,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.ios.*; import gplx.xowa.apps.*; import gplx.xowa.wikis.*; import gplx.xowa.users.*;  import gplx.xowa.cfgs.*; import gplx.xowa.ctgs.*;
-import gplx.xowa.html.tocs.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.math.*;
-import gplx.xowa.fmtrs.*;
-import gplx.xowa.apps.caches.*;
+import gplx.ios.*; 
+import gplx.xowa.apps.*; import gplx.xowa.apps.caches.*; import gplx.xowa.specials.*;
+import gplx.xowa.wikis.*; import gplx.xowa.users.*; import gplx.xowa.cfgs.*; import gplx.xowa.ctgs.*; import gplx.xowa.html.tocs.*; import gplx.xowa.fmtrs.*; 
+import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.math.*;	
 public class Xoa_app implements GfoInvkAble {
 	public Xoa_app(Gfo_usr_dlg_xowa usr_dlg, Io_url root_dir, Io_url user_dir, String bin_dir_name) {
 		this.usr_dlg = usr_dlg;
-		this.log_wtr = usr_dlg.Log_wtr();
+		log_wtr = usr_dlg.Log_wtr();
 		cfg_mgr = new Xoa_cfg_mgr(this);
 		url_cmd_eval = new Apps_app_mgr_eval(this);
 		fsys_mgr = new Apps_fsys_mgr(this, root_dir, bin_dir_name);
@@ -51,7 +51,7 @@ public class Xoa_app implements GfoInvkAble {
 		server.App_ctor(this);
 		fmtr_mgr = new Xoa_fmtr_mgr(this);
 	}
-	public NumberParser Utl_num_parser() {return utl_num_parser;} NumberParser utl_num_parser = new NumberParser();
+	public NumberParser Utl_num_parser() {return utl_num_parser;} private NumberParser utl_num_parser = new NumberParser();
 	public void Init() {
 		log_wtr.Init();
 		gui_mgr.Init();
@@ -59,17 +59,17 @@ public class Xoa_app implements GfoInvkAble {
 		user.Init();
 		wiki_mgr.App_init();
 		gplx.xowa.utls.upgrades.Xoa_upgrade_mgr.Check(this);
-		stage = Stage_init_done;
+		stage = Xoa_stage_.Tid_init_done;
 		ctg_mgr.Init_by_app(this);
 		setup_mgr.Init_by_app(this);
 	}
-	public boolean Launch_done() {return stage == Stage_launch_done;}
+	public boolean Launch_done() {return stage == Xoa_stage_.Tid_launch_done;}
 	public void Launch() {
 		if (Launch_done()) return;
 		gplx.xowa.users.prefs.Prefs_converter._.Check(this);
-		stage = Stage_launch_done;
+		stage = Xoa_stage_.Tid_launch_done;
 	}
-	public byte Stage() {return stage;} public Xoa_app Stage_(byte v) {stage = v; return this;} private byte stage = Stage_ctor_done; public static final byte Stage_ctor_done = 0, Stage_init_done = 1, Stage_launch_done = 2;
+	public byte Stage() {return stage;} public Xoa_app Stage_(byte v) {stage = v; return this;} private byte stage = Xoa_stage_.Tid_ctor_done;
 	public boolean Term_cbk() {
 		if (setup_mgr.Cmd_mgr().Working()) {
 			if (!gui_mgr.Kit().Ask_yes_no("", "", "An import is in progress. Are you sure you want to exit?")) return false;
@@ -82,21 +82,27 @@ public class Xoa_app implements GfoInvkAble {
 		wiki_mgr.Rls();
 		return true;
 	}
-	public Apps_fsys_mgr		Fsys_mgr() {return fsys_mgr;} Apps_fsys_mgr fsys_mgr;
 	public Xoa_wiki_mgr			Wiki_mgr() {return wiki_mgr;} private Xoa_wiki_mgr wiki_mgr;
 	public Xou_user_mgr			User_mgr() {return user_mgr;} private Xou_user_mgr user_mgr;
 	public Xoa_lang_mgr			Lang_mgr() {return lang_mgr;} private Xoa_lang_mgr lang_mgr;
+	public Xoa_gui_mgr			Gui_mgr() {return gui_mgr;} private Xoa_gui_mgr gui_mgr;
 	public Xou_user				User() {return user;} private Xou_user user;
 	public Xob_bldr				Bldr() {return bldr;} private Xob_bldr bldr;
+	public Xow_xtn_mgr			Xtn_mgr() {return xtn_mgr;} private Xow_xtn_mgr xtn_mgr;
+	public Xop_tkn_mkr			Tkn_mkr() {return tkn_mkr;} private Xop_tkn_mkr tkn_mkr = new Xop_tkn_mkr();
+	public Gfo_usr_dlg			Usr_dlg() {return usr_dlg;} private Gfo_usr_dlg usr_dlg;
+	public Gfo_log_wtr			Log_wtr() {return log_wtr;} private Gfo_log_wtr log_wtr;
+	public Xoa_gfs_mgr			Gfs_mgr() {return gfs_mgr;} private Xoa_gfs_mgr gfs_mgr;
+	public Xoa_special_mgr		Special_mgr() {return special_mgr;} private Xoa_special_mgr special_mgr = new gplx.xowa.specials.Xoa_special_mgr();
+
+	public Apps_fsys_mgr		Fsys_mgr() {return fsys_mgr;} private Apps_fsys_mgr fsys_mgr;
 	public Xoa_hive_mgr			Hive_mgr() {return hive_mgr;} private Xoa_hive_mgr hive_mgr;
 	public Xoa_url_parser		Url_parser() {return url_parser;} private Xoa_url_parser url_parser = new Xoa_url_parser();
 	public Xoh_href_parser		Href_parser() {return href_parser;} private Xoh_href_parser href_parser;
 	public Xop_sanitizer		Sanitizer() {return sanitizer;} private Xop_sanitizer sanitizer;
-	public Xow_xtn_mgr			Xtn_mgr() {return xtn_mgr;} private Xow_xtn_mgr xtn_mgr;
-	public Xop_tkn_mkr			Tkn_mkr() {return tkn_mkr;} private Xop_tkn_mkr tkn_mkr = new Xop_tkn_mkr();
-	public ByteTrieMgr_slim		AmpTrie() {return amp_trie;} ByteTrieMgr_slim amp_trie = Xop_amp_trie._;
-	public ByteTrieMgr_fast		TmplBgnTrie() {return tmplBgnTrie;} ByteTrieMgr_fast tmplBgnTrie = Xop_curly_bgn_lxr.tmpl_bgn_trie_();
-	public ByteTrieMgr_slim		TblwWsTrie() {return tblwWsTrie;} ByteTrieMgr_slim tblwWsTrie = Xop_tblw_ws_itm.trie_();
+	public ByteTrieMgr_slim		AmpTrie() {return amp_trie;} private ByteTrieMgr_slim amp_trie = Xop_amp_trie._;
+	public ByteTrieMgr_fast		TmplBgnTrie() {return tmplBgnTrie;} private ByteTrieMgr_fast tmplBgnTrie = Xop_curly_bgn_lxr.tmpl_bgn_trie_();
+	public ByteTrieMgr_slim		TblwWsTrie() {return tblwWsTrie;} private ByteTrieMgr_slim tblwWsTrie = Xop_tblw_ws_itm.trie_();
 	public Xop_xatr_parser		Xatr_parser() {return xatr_parser;} private Xop_xatr_parser xatr_parser = new Xop_xatr_parser();
 	public Xop_xnde_tag_regy	Xnde_tag_regy() {return xnde_tag_regy;} private Xop_xnde_tag_regy xnde_tag_regy = new Xop_xnde_tag_regy();
 	public Xof_math_subst_regy	Math_subst_regy() {return math_subst_regy;} private Xof_math_subst_regy math_subst_regy = new Xof_math_subst_regy();
@@ -105,14 +111,8 @@ public class Xoa_app implements GfoInvkAble {
 	public Xop_toc_mgr			Toc_mgr() {return toc_mgr;} private Xop_toc_mgr toc_mgr = new Xop_toc_mgr();
 	public Xof_file_mgr			File_mgr() {return file_mgr;} private Xof_file_mgr file_mgr = new Xof_file_mgr();
 	public Xoi_setup_mgr		Setup_mgr() {return setup_mgr;} private Xoi_setup_mgr setup_mgr;
-
-	public Xoa_gui_mgr			Gui_mgr() {return gui_mgr;} private Xoa_gui_mgr gui_mgr;
-	public Gfo_usr_dlg			Usr_dlg() {return usr_dlg;} Gfo_usr_dlg usr_dlg;
-	public Gfo_log_wtr			Log_wtr() {return log_wtr;} Gfo_log_wtr log_wtr;
-	public Gfo_msg_log			Msg_log() {return msg_log;} Gfo_msg_log msg_log = new Gfo_msg_log(Xoa_app_.App_name);
-	public Gfo_msg_log			Msg_log_null() {return msg_log_null;} Gfo_msg_log msg_log_null = new Gfo_msg_log("null_log");
-	public Xoa_gfs_mgr			Gfs_mgr() {return gfs_mgr;} private Xoa_gfs_mgr gfs_mgr;
-	public gplx.xowa.specials.Xoa_special_mgr Special_mgr() {return special_mgr;} gplx.xowa.specials.Xoa_special_mgr special_mgr = new gplx.xowa.specials.Xoa_special_mgr();
+	public Gfo_msg_log			Msg_log() {return msg_log;} private Gfo_msg_log msg_log = new Gfo_msg_log(Xoa_app_.Name);
+	public Gfo_msg_log			Msg_log_null() {return msg_log_null;} private Gfo_msg_log msg_log_null = new Gfo_msg_log("null_log");
 
 	public Url_encoder			Url_converter_id()			{return url_converter_id;} Url_encoder url_converter_id = Url_encoder.new_html_id_();
 	public Url_encoder			Url_converter_url()			{return url_converter_url;} Url_encoder url_converter_url = Url_encoder.new_http_url_();
@@ -125,6 +125,7 @@ public class Xoa_app implements GfoInvkAble {
 	public Xoh_file_main_wkr	File_main_wkr() {return file_main_wkr;} private Xoh_file_main_wkr file_main_wkr = new Xoh_file_main_wkr();		
 	public Bry_bfr_mkr			Utl_bry_bfr_mkr() {return utl_bry_bfr_mkr;} Bry_bfr_mkr utl_bry_bfr_mkr = new Bry_bfr_mkr();
 	public Gfo_fld_rdr			Utl_fld_rdr() {return utl_fld_rdr;} Gfo_fld_rdr utl_fld_rdr = Gfo_fld_rdr.xowa_();
+	public Gfo_log_bfr			Log_bfr() {return log_bfr;} private Gfo_log_bfr log_bfr = new Gfo_log_bfr();
 	public gplx.xowa.html.utils.Xoh_js_cleaner Utl_js_cleaner() {return utl_js_cleaner;} gplx.xowa.html.utils.Xoh_js_cleaner utl_js_cleaner = new gplx.xowa.html.utils.Xoh_js_cleaner();
 	public HashAdp				Tmpl_result_cache() {return tmpl_result_cache;} HashAdp tmpl_result_cache = HashAdp_.new_bry_();
 	public Xoa_sys_cfg			Sys_cfg() {return sys_cfg;} private Xoa_sys_cfg sys_cfg;
@@ -142,7 +143,6 @@ public class Xoa_app implements GfoInvkAble {
 	public gplx.xowa.servers.Xosrv_server Server() {return server;} gplx.xowa.servers.Xosrv_server server = new gplx.xowa.servers.Xosrv_server();
 	public Xoa_cache_mgr Cache_mgr() {return cache_mgr;} private Xoa_cache_mgr cache_mgr = new Xoa_cache_mgr();
 	private Xoa_shell shell; private Xoa_fmtr_mgr fmtr_mgr;
-
 	public void Reset_all() {
 		this.Free_mem(true);
 		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_invalidate();
@@ -195,7 +195,13 @@ public class Xoa_app implements GfoInvkAble {
 class Xoa_shell implements GfoInvkAble {
 	public Xoa_shell(Xoa_app app) {this.app = app;} private Xoa_app app;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_fetch_page))		return String_.new_utf8_(app.Gui_mgr().Main_win().Exec_app_retrieve_by_url(m.ReadStr("url"), m.ReadStrOr("output_type", "html")));
+		if		(ctx.Match(k, Invk_fetch_page))				return String_.new_utf8_(app.Gui_mgr().Main_win().Exec_app_retrieve_by_url(m.ReadStr("url"), m.ReadStrOr("output_type", "html")));
+		else if	(ctx.Match(k, Invk_chars_per_line_max_))	Chars_per_line_max_(m.ReadInt("v"));
 		else return GfoInvkAble_.Rv_unhandled;
-	}	private static final String Invk_fetch_page = "fetch_page";
+		return this;
+	}
+	private void Chars_per_line_max_(int v) {
+		ConsoleAdp._.CharsPerLineMax_set(v);
+	}
+	private static final String Invk_fetch_page = "fetch_page", Invk_chars_per_line_max_ = "chars_per_line_max_";
 }

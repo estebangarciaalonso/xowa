@@ -30,7 +30,7 @@ public class Xob_xfer_temp_cmd_orig extends Xob_itm_basic_base implements Xob_cm
 		DataRdr rdr = provider.Exec_sql_as_rdr(Sql_select);
 		long[] ext_maxs = Calc_ext_max();
 		while (rdr.MoveNextPeer()) {
-			byte lnki_ext = rdr.ReadByte(Xob_lnki_regy_tbl.Fld_olr_lnki_ext);
+			int lnki_ext = rdr.ReadByte(Xob_lnki_regy_tbl.Fld_olr_lnki_ext);
 			String orig_media_type = rdr.ReadStrOr(Xob_orig_regy_tbl.Fld_oor_orig_media_type, "");	// convert nulls to ""
 			byte orig_media_type_tid = Xof_media_type.Xto_byte(orig_media_type);
 			lnki_ext = Xof_media_type.Convert_if_ogg_and_video(lnki_ext, orig_media_type_tid);
@@ -60,7 +60,7 @@ public class Xob_xfer_temp_cmd_orig extends Xob_itm_basic_base implements Xob_cm
 		Xoft_rule_grp ext_rules = wiki.App().File_mgr().Ext_rules().Get_or_new(ext_rules_key);
 		long[] rv = new long[Xof_ext_.Id__max];
 		for (int i = 0; i < Xof_ext_.Id__max; i++) {
-			byte[] ext = Xof_ext_.get_by_id(i);
+			byte[] ext = Xof_ext_.Get_ext_by_id_(i);
 			Xoft_rule_itm ext_rule = ext_rules.Get_or_null(ext);
 			long max = ext_rule == null ? 0 : ext_rule.Make_max();
 			rv[i] = max;

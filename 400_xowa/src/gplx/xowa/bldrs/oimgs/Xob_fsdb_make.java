@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.fsdb.*; import gplx.ios.*; import gplx.xowa.files.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.fsdb.*; import gplx.xowa.dbs.tbls.*;
 public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
-	private int exec_count, exec_count_max = Int_.MaxValue; private long exec_size_len = 0;
-	private int exec_fail;
+	private int exec_count, exec_count_max = Int_.MaxValue;
+	private int exec_fail, exec_fail_max = 1000; // 115 over 900k
 	private int select_interval = 2500, progress_interval = 1, commit_interval = 1;
 	private int delete_interval = 5000;
 	private byte[] wiki_key;
@@ -60,11 +60,10 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 			page_id_bmk = Int_.MaxValue;
 			lnki_id_bmk = Int_.MaxValue;
 		}
-		long time_end = ((Env_.TickCount() - time_bgn) / 1000) + 1; // 1 + to prevent div by zero errrs
-		usr_dlg.Note_many("", "", "done: ~{0} ~{1}", exec_count, DecimalAdp_.divide_(exec_count, time_end).XtoStr("#,###.000"));
-		Commit();
+		usr_dlg.Note_many("", "", "done: ~{0} ~{1}", exec_count, DecimalAdp_.divide_safe_(exec_count, Env_.TickCount_elapsed_in_sec(time_bgn)).XtoStr("#,###.000"));
+		this.Txn_save();
+		fsdb_mgr.Txn_save();
 		fsdb_mgr.Rls();	// save changes and rls all connections
-		provider.Txn_mgr().Txn_end_all();
 		db_log_stmt.Rls();
 		db_select_stmt.Rls();
 		provider.Rls();
@@ -77,7 +76,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		ListAdp list = ListAdp_.new_();
 		boolean loop = true;
 		time_bgn = Env_.TickCount();
-		provider.Txn_mgr().Txn_bgn_if_none();
+		this.Txn_open();
 		while (loop) {
 			byte rslt = Select_ttls(list);
 			switch (rslt) {
@@ -92,7 +91,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 				Xodb_tbl_oimg_xfer_itm itm = (Xodb_tbl_oimg_xfer_itm)list.FetchAt(i);
 				if (!Download_itm(itm)
 					|| app_restart_enabled) {
-					Commit();
+					this.Txn_renew();
 					if (db_reset_tries_count < db_reset_tries_max) {
 						db_reset_tries_count++;
 						usr_dlg.Note_many("", "", "restarting db: ~{0}", db_reset_tries_count);
@@ -105,9 +104,10 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 				}
 				if (	exit_now
 					||	exec_count >= exec_count_max
+					||	exec_fail >= exec_fail_max
 					||	page_id_val >= page_id_end
 					) {
-					Commit();
+					this.Txn_renew();
 					return;
 				}
 			}
@@ -181,7 +181,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 			if ((exec_count % poll_interval) == 0)
 				poll_mgr.Poll();
 			if (exec_count % commit_interval == 0)
-				Commit();
+				this.Txn_renew();
 			if (exec_count % delete_interval == 0)
 				Delete_files();
 			return true;
@@ -197,15 +197,16 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		byte[] wiki = itm.Orig_repo() == Xof_repo_itm.Repo_local ? wiki_key : Xow_wiki_.Domain_commons_bry;
 		itm.Orig_wiki_(wiki);
 		Io_stream_rdr bin_rdr = Io_stream_rdr_.Null;
-		if ((exec_count % progress_interval) == 0)
-			usr_dlg.Prog_many("", "", "prog: size=~{0} num=~{1} err=~{2} time=~{3} page=~{4} lnki=~{5} ttl=~{6}", exec_size_len / Io_mgr.Len_mb, exec_count, exec_fail, (Env_.TickCount() - time_bgn) / 1000, page_id_val, lnki_id_val, String_.new_utf8_(itm.Orig_ttl()));
+		if ((exec_count % progress_interval) == 0) {
+			int time_elapsed = Env_.TickCount_elapsed_in_sec(time_bgn);
+			usr_dlg.Prog_many("", "", "prog: num=~{0} err=~{1} time=~{2} rate=~{3} page=~{4} lnki=~{5} ttl=~{6}", exec_count, exec_fail, time_elapsed,  Math_.Div_safe_as_int(exec_count, time_elapsed), page_id_val, lnki_id_val, String_.new_utf8_(itm.Orig_ttl()));
+		}
 		try {
 			bin_rdr = src_mgr.Find_as_rdr(temp_files, Xof_exec_tid.Tid_wiki_page, itm);
 			if (bin_rdr == Io_stream_rdr_.Null)
 				Download_fail(itm);
 			else {
 				Download_pass(itm, bin_rdr);
-				exec_size_len = bin_rdr.Len();
 			}
 		}
 		finally {
@@ -222,7 +223,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 	private void Download_pass(Xodb_tbl_oimg_xfer_itm itm, Io_stream_rdr rdr) {
 		if (itm.File_is_orig()) {
 			if (itm.Lnki_ext().Id_is_image())
-				fsdb_mgr.Img_insert(tmp_img_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), itm.Html_w(), itm.Html_h(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);
+				fsdb_mgr.Img_insert(tmp_img_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), itm.Orig_w(), itm.Orig_h(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);
 			else
 				fsdb_mgr.Fil_insert(tmp_fil_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);
 		}
@@ -230,12 +231,20 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 			fsdb_mgr.Thm_insert(tmp_thm_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), itm.Html_w(), itm.Html_h(), itm.Lnki_thumbtime(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);
 		Xob_xfer_regy_log_tbl.Insert(db_log_stmt, Xob_xfer_regy_tbl.Status_pass, itm.Lnki_id(), itm.Rslt_bin(), "");
 	}
-	private void Commit() {
+	private void Txn_renew() {
+		this.Txn_save();
+		this.Txn_open();
+	}
+	private void Txn_open() {
+		tbl_cfg.Provider().Txn_mgr().Txn_bgn_if_none();
+		mnt_mgr.Txn_open();
+	}
+	private void Txn_save() {
+		usr_dlg.Prog_many("", "", "committing data: count=~{0} failed=~{1}", exec_count, exec_fail);
 		tbl_cfg.Update(Cfg_fsdb_make, Cfg_page_id_bmk, page_id_val);
 		tbl_cfg.Update(Cfg_fsdb_make, Cfg_lnki_id_bmk, lnki_id_val);
-		tbl_cfg.Provider().Txn_mgr().Txn_end_all_bgn_if_none();
-		mnt_mgr.Commit();
-		usr_dlg.Prog_many("", "", "committing data: count=~{0} failed=~{1}", exec_count, exec_fail);
+		tbl_cfg.Provider().Txn_mgr().Txn_end_all();
+		mnt_mgr.Txn_save();
 		if (exit_after_commit)
 			exit_now = true;
 	}
@@ -259,6 +268,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		else if	(ctx.Match(k, Invk_poll_mgr))				return poll_mgr;
 		else if	(ctx.Match(k, Invk_reset_db_))				reset_db = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_exec_count_max_))		exec_count_max = m.ReadInt("v");
+		else if	(ctx.Match(k, Invk_exec_fail_max_))			exec_fail_max = m.ReadInt("v");
 		else if	(ctx.Match(k, Invk_exit_now_))				exit_now = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_exit_after_commit_))		exit_after_commit = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_page_id_bmk_))			page_id_bmk = m.ReadInt("v");
@@ -275,10 +285,10 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 	, Invk_page_id_bmk_ = "page_id_bmk_", Invk_lnki_id_bmk_ = "lnki_id_bmk_"
 	, Invk_src_mgr = "src_mgr"
 	, Invk_poll_mgr = "poll_mgr", Invk_reset_db_ = "reset_db_"
-	, Invk_exec_count_max_ = "exec_count_max_", Invk_exit_now_ = "exit_now_", Invk_exit_after_commit_ = "exit_after_commit_"
+	, Invk_exec_count_max_ = "exec_count_max_", Invk_exec_fail_max_ = "exec_fail_max_", Invk_exit_now_ = "exit_now_", Invk_exit_after_commit_ = "exit_after_commit_"
 	, Invk_delete_interval_ = "delete_interval_"
 	, Invk_app_restart_enabled_ = "app_restart_enabled_"
-	, Invk_db_restart_tries_max_ = "db_restart_tries_max_"
+	, Invk_db_restart_tries_max_ = "db_restart_tries_max_"		
 	;
 	public static byte Status_null = 0, Status_pass = 1, Status_fail = 2;
 }
@@ -296,7 +306,8 @@ class Xodb_tbl_oimg_xfer_itm extends Xof_fsdb_itm {	public int 			Lnki_id() {ret
 		byte[] ttl = rdr.ReadBryByStr(Xob_xfer_regy_tbl.Fld_oxr_xfer_ttl);
 		rv.Orig_ttl_(ttl);
 		rv.Lnki_ttl_(ttl);
-		rv.Html_size_(rdr.ReadInt(Xob_xfer_regy_tbl.Fld_oxr_file_w), rdr.ReadInt(Xob_xfer_regy_tbl.Fld_oxr_file_h));
+		rv.Orig_size_(rdr.ReadInt(Xob_xfer_regy_tbl.Fld_oxr_orig_w), rdr.ReadInt(Xob_xfer_regy_tbl.Fld_oxr_orig_h));
+		rv.Html_size_(rdr.ReadInt(Xob_xfer_regy_tbl.Fld_oxr_file_w), rdr.ReadInt(Xob_xfer_regy_tbl.Fld_oxr_file_h));	// set html_size as file_size (may change later)
 		return rv;
 	}
 }

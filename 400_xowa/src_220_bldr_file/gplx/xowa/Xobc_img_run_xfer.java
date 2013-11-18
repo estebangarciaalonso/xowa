@@ -130,9 +130,8 @@ public class Xobc_img_run_xfer extends Xob_itm_basic_base implements Xob_cmd, Gf
 //			}
 		Io_mgr._.AppendFilBfr(dump_url, dump_bfr);
 		Io_url cur = rdr.Urls()[url_idx];
-		int seconds = (int)((Env_.TickCount() - time_bgn) / 1000);
-		if (seconds == 0) seconds = 1;
-		double rate = (fil_count * 3600) / seconds;
+		int seconds = Env_.TickCount_elapsed_in_sec(time_bgn);
+		double rate = Math_.Div_safe_as_double(fil_count * 3600, seconds);
 		files_sum += fil_count;
 		elapsed_sum += seconds;
 		String txt = bldr.Usr_dlg().Note_many(GRP_KEY, "flush", "name=~{0} files=~{1} fails=~{2} seconds=~{3} files/hour=~{4} files_total=~{5} seconds_total=~{6}", cur.NameOnly(), fil_count, fail_count, seconds, rate, files_sum, elapsed_sum);

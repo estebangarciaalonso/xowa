@@ -34,11 +34,13 @@ public class Fsdb_xtn_img_tbl {
 	public Db_stmt Insert_stmt() {return Db_stmt_.new_insert_(provider, Tbl_name, Fld_img_id, Fld_img_w, Fld_img_h);}
 	public void Insert(int id, int w, int h) {
 		if (stmt_insert == null) stmt_insert = Insert_stmt();
-		stmt_insert.Clear()
-		.Val_int_(id)
-		.Val_int_(w)
-		.Val_int_(h)
-		.Exec_insert();
+		try {
+			stmt_insert.Clear()
+			.Val_int_(id)
+			.Val_int_(w)
+			.Val_int_(h)
+			.Exec_insert();
+		}	catch (Exception exc) {stmt_insert = null; throw Err_.err_(exc, "stmt failed");} // must reset stmt, else next call will fail
 	}
 	public Db_stmt Select_itm_by_id_stmt() {return Db_stmt_.new_select_(provider, Tbl_name, String_.Ary(Fld_img_id), Fld_img_w, Fld_img_h); }
 	public Fsdb_xtn_img_itm Select_itm_by_id(int id) {

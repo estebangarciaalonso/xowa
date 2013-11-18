@@ -64,9 +64,14 @@ public class Fsdb_db_abc_mgr implements RlsAble {
 	public Fsdb_fil_itm Fil_select_bin(byte[] dir, byte[] fil, boolean is_thumb, int width, int thumbtime) {
 		return atr_mgr.Fil_select(dir, fil);
 	}
-	public void Commit() {
-		atr_mgr.Commit(boot_provider);
-		bin_mgr.Commit();
+	public void Txn_open() {
+		boot_provider.Txn_mgr().Txn_bgn_if_none();
+		atr_mgr.Txn_open();
+		bin_mgr.Txn_open();
+	}
+	public void Txn_save() {
+		atr_mgr.Txn_save(boot_provider);
+		bin_mgr.Txn_save();
 		this.Update_next_id();
 	}
 	public void Rls() {
@@ -89,7 +94,7 @@ public class Fsdb_db_abc_mgr implements RlsAble {
 		atr_mgr = Fsdb_db_atr_mgr.make_(this, boot_provider, dir);
 		bin_mgr = Fsdb_db_bin_mgr.make_(boot_provider, dir);
 		tbl_cfg = new Fsdb_cfg_tbl(boot_provider, true);
-		this.Commit();
+		this.Txn_save();
 	}
 	private int Select_next_id()	{return tbl_cfg.Select_as_int("core", "next_id");}
 	private void Update_next_id()	{tbl_cfg.Update("core", "next_id", Int_.XtoStr(next_id));}

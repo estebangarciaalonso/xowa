@@ -29,6 +29,7 @@ public interface Xof_fsdb_mgr extends RlsAble {
 	void Fil_insert(Fsdb_fil_itm rv    , byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr);
 	void Reg_insert(Xof_fsdb_itm itm, byte repo_id, byte status);
 	void Reg_select(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms);
+	Gfo_usr_dlg Usr_dlg();
 }
 class Xof_fsdb_mgr_utl {
 	public void Fsdb_search(Xof_fsdb_mgr fsdb_mgr, Io_url file_dir, Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms, Xow_repo_mgr repo_mgr, Xof_url_bldr url_bldr) {
@@ -48,16 +49,26 @@ class Xof_fsdb_mgr_utl {
 				case Xof_orig_wkr_.Tid_missing_qry:
 				case Xof_orig_wkr_.Tid_missing_bin:	continue;	// already missing; do not try to find again
 			}
-			if (!itm.Lnki_ext().Id_is_thumbable2() && exec_tid != Xof_exec_tid.Tid_viewer_app) {
+			if (itm.Lnki_ext().Id_is_oga() && exec_tid != Xof_exec_tid.Tid_viewer_app) {
 				itm.Rslt_qry_(Xof_qry_wkr_.Tid_noop);
 				continue;
 			}
 			if (fsdb_mgr.Qry_mgr().Find(exec_tid, itm)) {
 				Xof_repo_pair repo_pair = repo_mgr.Repos_get_by_wiki(itm.Orig_wiki());
+				if (repo_pair == null) {
+					fsdb_mgr.Reg_insert(itm, Xof_repo_itm.Repo_unknown, Xof_orig_wkr_.Tid_missing_qry);
+					continue;
+				}
 				byte orig_wiki = repo_pair.Id();
+				if (itm.Lnki_ext().Id_is_oga() && exec_tid != Xof_exec_tid.Tid_viewer_app) {
+					itm.Rslt_qry_(Xof_qry_wkr_.Tid_mock);
+					itm.Rslt_bin_(Xof_bin_wkr_.Tid_noop);
+					fsdb_mgr.Reg_insert(itm, orig_wiki, Xof_orig_wkr_.Tid_noop);
+					continue;
+				}
 				if (fsdb_mgr.Bin_mgr().Find_to_url_as_bool(ListAdp_.Null, exec_tid, itm)) {
 					fsdb_mgr.Reg_insert(itm, orig_wiki, Xof_orig_wkr_.Tid_found_orig);
-					if (itm.Rslt_bin() != Xof_bin_wkr_.Tid_fsdb)
+					if (itm.Rslt_bin() != Xof_bin_wkr_.Tid_fsdb)	// if bin is from fsdb, don't save it; occurs when page has new file listed twice; 1st file inserts into fsdb; 2nd file should find in fsdb and not save again
 						Fsdb_save(fsdb_mgr, itm);
 					Gui_update(win_wtr, itm);
 				}
@@ -84,7 +95,8 @@ class Xof_fsdb_mgr_utl {
 			case Xof_orig_wkr_.Tid_missing_qry:
 			case Xof_orig_wkr_.Tid_missing_bin:		break;
 			case Xof_orig_wkr_.Tid_missing_reg:
-			case Xof_orig_wkr_.Tid_null:				fsdb_list.Add(itm); break;
+			case Xof_orig_wkr_.Tid_noop:			// previous attempt was noop; only occurs if oga and exec_tid != viewer
+			case Xof_orig_wkr_.Tid_null:			fsdb_list.Add(itm); break;
 			default:								throw Err_.unhandled(itm.Rslt_reg());
 		}
 	}
@@ -108,7 +120,11 @@ class Xof_fsdb_mgr_utl {
 				Fsdb_fil_itm fil_itm = new Fsdb_fil_itm();
 				fsdb_mgr.Fil_insert(fil_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext().Id(), Fsdb_xtn_thm_tbl.Modified_null, Fsdb_xtn_thm_tbl.Hash_null, bin_len, bin_rdr);
 			}
-		} finally {bin_rdr.Rls();}
+		}
+		catch (Exception e) {
+			fsdb_mgr.Usr_dlg().Warn_many("", "", "failed to save file: ttl=~{0} url=~{1} err=~{2}", String_.new_utf8_(itm.Lnki_ttl()), html_url.Raw(), Err_.Message_gplx(e));
+		}
+		finally {bin_rdr.Rls();}
 	}
 	private void Gui_update(Xog_win_wtr win_wtr, Xof_fsdb_itm itm) {
 		int len = itm.Html_ids_len();

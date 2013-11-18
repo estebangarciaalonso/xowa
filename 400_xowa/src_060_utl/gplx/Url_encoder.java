@@ -219,7 +219,6 @@ class Url_encoder_itm_hex implements Url_encoder_itm {
 			int v_1 = Int_.Xto_int_hex(src[idx + 2]);
 			if (v_1 != -1) {
 				bfr.Add_byte((byte)(v_0 + v_1));
-				idx += 2;
 				return 2;
 			}
 		}
@@ -229,7 +228,6 @@ class Url_encoder_itm_hex implements Url_encoder_itm {
 			bfr.Add_byte(b);
 			return 0;
 		}
-
 	}
 	public static final byte[] HexBytes = new byte[] 
 	{	Byte_ascii.Num_0, Byte_ascii.Num_1, Byte_ascii.Num_2, Byte_ascii.Num_3, Byte_ascii.Num_4, Byte_ascii.Num_5, Byte_ascii.Num_6, Byte_ascii.Num_7

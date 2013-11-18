@@ -41,15 +41,22 @@ public abstract class Pf_func_base implements Pf_func {
 		}
 		return argx_dat;
 	}		
-	public byte[] Eval_argx_or_null(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self) {
+	public byte[] Eval_argx_or_null(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, byte[] func_name) {
 		if (argx_dat == ByteAry_.Empty) {
 			Arg_nde_tkn name_tkn = self.Name_tkn();
 			Arg_itm_tkn name_val_tkn = name_tkn.Val_tkn();
 			int subs_len = name_val_tkn.Subs_len();
-			if (subs_len == 0) {
-				int name_bgn = name_tkn.Src_bgn() + name_len;	// start looking after {{ + name_len
-				int colon_pos = ByteAry_.FindFwd(src, Byte_ascii.Colon, name_bgn, self.Src_end());	// look for :
-				return colon_pos == ByteAry_.NotFound ? null : ByteAry_.Empty;	// if ":" found, return "", else return null (callers should know what to do with this)
+			if (subs_len == 0) {	// no subs; either {{#func}} or {{#func:}}
+				int src_bgn = name_tkn.Src_bgn();
+				int colon_pos = ByteAry_.FindBwd(src, Byte_ascii.Colon, self.Src_end() - 1, src_bgn - 1);	// look for :
+				if (colon_pos == ByteAry_.NotFound)		// no colon; EX: {{#func}}
+					return Eval_arg_or_null_is_null;
+				else {									// colon found; EX: {{#func:}}
+					if (ByteAry_.Match_bwd_any(src, colon_pos - 1, src_bgn - 1, func_name))  // #func == func_name; EX: {{NAMESPACE:}}
+						return Eval_arg_or_null_is_empty;
+					else								// #func != func_name; assume subst: or safesubst:; EX: {{safesubst:NAMESPACE}}; NOTE: can check subst / safesubs trie, but will be expensive; also, only Pf_name calls this function
+						return Eval_arg_or_null_is_null;
+				}
 			}
 			else {
 				ByteAryBfr tmp = ByteAryBfr.new_();
@@ -60,4 +67,5 @@ public abstract class Pf_func_base implements Pf_func {
 		}
 		return argx_dat;
 	}
+	public static final byte[] Eval_arg_or_null_is_null = null, Eval_arg_or_null_is_empty = ByteAry_.Empty;
 }

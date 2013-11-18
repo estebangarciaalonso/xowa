@@ -57,6 +57,7 @@ class Xof_orig_fil_tbl_evaluator {
 			fsdb_itm.Rslt_reg_(Xof_orig_wkr_.Tid_missing_reg);
 			Xof_orig_fil_itm regy_itm = (Xof_orig_fil_itm)itms_by_ttl.Fetch(fsdb_itm_ttl); if (regy_itm == null) continue; // not in reg; do full search
 			byte regy_itm_status = regy_itm.Status();
+			fsdb_itm.Lnki_ext_(Xof_ext_.new_by_id_(regy_itm.Orig_ext()));	// overwrite ext_id with whatever's in file_orig; needed for ogg -> oga / ogv
 			fsdb_itm.Rslt_reg_(regy_itm_status);
 			if (regy_itm_status != Xof_orig_wkr_.Tid_found_orig) continue;
 			byte repo_id = regy_itm.Orig_repo();
@@ -81,15 +82,16 @@ class Xof_orig_fil_tbl_evaluator {
 	}
 }
 class Io_url_exists_mgr {
-	private gplx.cache.Gfo_cache_mgr_obj cache_mgr = new gplx.cache.Gfo_cache_mgr_obj();
+	private gplx.cache.Gfo_cache_mgr_bry cache_mgr = new gplx.cache.Gfo_cache_mgr_bry();
 	public Io_url_exists_mgr() {
 		cache_mgr.Compress_max_(Int_.MaxValue);
 	}
 	public boolean Has(Io_url url) {
-		Object rv_obj = cache_mgr.Get_or_null(url.Raw());
+		byte[] url_key = url.RawBry();
+		Object rv_obj = cache_mgr.Get_or_null(url_key);
 		if (rv_obj != null) return ((BoolRef)rv_obj).Val(); // cached val exists; use it
 		boolean exists = Io_mgr._.ExistsFil(url);
-		cache_mgr.Add(url.Raw(), BoolRef.new_(exists));
+		cache_mgr.Add(url_key, BoolRef.new_(exists));
 		return exists;
 	}
 }

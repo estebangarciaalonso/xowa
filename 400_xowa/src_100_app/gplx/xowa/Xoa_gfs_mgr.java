@@ -35,7 +35,10 @@ public class Xoa_gfs_mgr implements GfoInvkAble, GfoInvkRootWkr {
 		Run_url(url);
 	}
 	public GfoMsg Parse_root_msg(String v) {return gplx.gfs.Gfs_msg_bldr._.ParseToMsg(v);}
-	public void Run_url(Io_url url) {Run_url_for(GfsCore._.Root(), url);}
+	public void Run_url(Io_url url) {
+		Run_url_for(GfsCore._.Root(), url);
+		app.Log_wtr().Log_msg_to_session_fmt("gfs_ran: ~{0}", url.Raw());
+	}
 	public void Run_url_for(GfoInvkAble invk, Io_url url) {
 		String raw = Io_mgr._.LoadFilStr_args(url).MissingIgnored_().Exec(); if (String_.Len_eq_0(raw)) return;
 		Run_str_for(invk, raw);

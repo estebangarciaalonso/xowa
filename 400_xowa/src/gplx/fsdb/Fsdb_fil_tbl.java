@@ -37,27 +37,31 @@ public class Fsdb_fil_tbl {
 	private Db_stmt Insert_stmt() {return Db_stmt_.new_insert_(provider, Tbl_name, Fld_fil_id, Fld_fil_owner_id, Fld_fil_name, Fld_fil_xtn_id, Fld_fil_ext_id, Fld_fil_bin_db_id, Fld_fil_size, Fld_fil_modified, Fld_fil_hash);}
 	public void Insert(int id, int owner_id, String name, int xtn_id, int ext_id, long size, DateAdp modified, String hash, int bin_db_id) {
 		if (stmt_insert == null) stmt_insert = Insert_stmt();
-		stmt_insert.Clear()
-		.Val_int_(id)
-		.Val_int_(owner_id)
-		.Val_str_(name)
-		.Val_int_(xtn_id)
-		.Val_int_(ext_id)
-		.Val_int_(bin_db_id)
-		.Val_long_(size)
-		.Val_str_(Sqlite_engine_.X_date_to_str(modified))
-		.Val_str_(hash)
-		.Exec_insert();
+		try {
+			stmt_insert.Clear()
+			.Val_int_(id)
+			.Val_int_(owner_id)
+			.Val_str_(name)
+			.Val_int_(xtn_id)
+			.Val_int_(ext_id)
+			.Val_int_(bin_db_id)
+			.Val_long_(size)
+			.Val_str_(Sqlite_engine_.X_date_to_str(modified))
+			.Val_str_(hash)
+			.Exec_insert();
+		}	catch (Exception exc) {stmt_insert = null; throw Err_.err_(exc, "stmt failed");} // must reset stmt, else next call will fail
 	}	
 	private Db_stmt Update_stmt() {return Db_stmt_.new_update_(provider, Tbl_name, String_.Ary(Fld_fil_id), Fld_fil_owner_id, Fld_fil_ext_id, Fld_fil_name);}
 	public void Update(int id, int owner_id, String name, int ext_id) {
 		if (stmt_update == null) stmt_update = Update_stmt();
-		stmt_update.Clear()
-		.Val_int_(id)
-		.Val_int_(owner_id)
-		.Val_int_(ext_id)
-		.Val_str_(name)
-		.Exec_update();
+		try {
+			stmt_update.Clear()
+			.Val_int_(id)
+			.Val_int_(owner_id)
+			.Val_int_(ext_id)
+			.Val_str_(name)
+			.Exec_update();
+		}	catch (Exception exc) {stmt_update = null; throw Err_.err_(exc, "stmt failed");} // must reset stmt, else next call will fail
 	}	
 	private Db_stmt Select_by_name_stmt() {
 		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_fil_owner_id, Int_.MinValue), Db_crt_.eq_(Fld_fil_name, "")));

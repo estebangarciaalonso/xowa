@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.dbs.tbls; import gplx.*; import gplx.xowa.*; import gplx.xowa.dbs.*;
 import gplx.dbs.*;
 public class Xodb_image_tbl {
-	public Xodb_image_tbl Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql); return this;}
+	public Xodb_image_tbl Create_table(Db_provider p) {Sqlite_engine_.Tbl_create_and_delete(p, Tbl_name, Tbl_sql); return this;}
 	public Xodb_image_tbl Create_index(Db_provider p) {Sqlite_engine_.Idx_create(p, Idx_img_name); return this;}
 	public Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_img_name, Fld_img_media_type, Fld_img_size, Fld_img_width, Fld_img_height, Fld_img_bits);}
 	public void Insert(Db_stmt stmt, byte[] ttl, byte[] media_type, int size, int w, int h, int bits) {

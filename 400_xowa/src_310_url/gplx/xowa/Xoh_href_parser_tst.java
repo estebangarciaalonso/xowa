@@ -102,6 +102,13 @@ public class Xoh_href_parser_tst {
 			.Expd_page_("File:A")
 			.Test_parse();
 	}
+	@Test   public void Parse_site_page__invalid_ttl_shouldnt_fail() {	// PURPOSE: invalid title shouldn't fail; EX: A{{B}} is invalid (b/c of braces);
+		fxt	.Prep_raw_("/site/en.wikt.org/wiki/A{{B}}")
+			.Expd_tid_(Xoh_href.Tid_site)
+			.Expd_full_("en.wikt.org/wiki/")
+			.Expd_page_("")
+			.Test_parse();
+	}
 	@Test   public void Parse_xcmd_edit() {
 		fxt	.Prep_raw_("/xcmd/page_edit")
 			.Expd_tid_(Xoh_href.Tid_xcmd)

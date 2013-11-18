@@ -72,6 +72,12 @@ public class Wdata_pf_property_tst {
 		fxt.Init_pages_add(fxt.doc_("q2", fxt.prop_str_(1, "a")));
 		fxt.Test_parse("{{#property:astronomic symbol}}", "a");
 	}
+	@Test   public void Empty_arg() {	// PURPOSE: {{#property:p1|}} should not fail / warn; DATE:2013-11-15
+		fxt.Init_links_add("enwiki", "Test_page", "q2");
+		fxt.Init_pids_add("en", "astronomic symbol", 1);
+		fxt.Init_pages_add(fxt.doc_("q2", fxt.prop_str_(1, "a")));
+		fxt.Test_parse("{{#property:p1|}}", "a");	//
+	}
 	@Test  public void Data() {
 		Wdata_pf_property_data_fxt fxt = new Wdata_pf_property_data_fxt();
 		fxt.Init().Expd_id_int_(1).Test_parse("{{#property:p1}}");

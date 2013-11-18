@@ -31,7 +31,7 @@ public class Xouc_setup_mgr implements GfoInvkAble {
 			case Op_sys.Tid_drd: 
 			case Op_sys.Tid_wnt: return;
 		}
-		String op_sys_name = Xoa_app_.Op_sys_str;
+		String op_sys_name = Xoa_app_.Op_sys;
 		String[] plats_ary = String_.Split(setup_completed, ";");
 		int plats_ary_len = plats_ary.length;
 		for (int i = 0; i < plats_ary_len; i++) {

@@ -87,7 +87,7 @@ public class Apps_app_mgr implements GfoInvkAble {
 	public void Exec_view_web(byte[] url) {
 		app_view_web.Run(ByteAry_.Replace(url, Quote_normal, Quote_escape)); // escape quotes; DATE:2013-03-31
 	}	static final byte[] Quote_normal = new byte[] {Byte_ascii.Quote}, Quote_escape = new byte[] {Byte_ascii.Quote, Byte_ascii.Quote};
-	ProcessAdp App_by_ext_key(String ext) {return cmds_view_file_by_ext[Xof_ext_.Id_of_(ByteAry_.new_ascii_(ext))];}
+	ProcessAdp App_by_ext_key(String ext) {return cmds_view_file_by_ext[Xof_ext_.Get_id_by_ext_(ByteAry_.new_ascii_(ext))];}
 	public void Exec_view_by_ext(String exts_raw, String cmd, String args) {
 		String[] exts_ary = String_.Split(exts_raw, '|');
 		int exts_ary_len = exts_ary.length;
@@ -98,7 +98,7 @@ public class Apps_app_mgr implements GfoInvkAble {
 		ProcessAdp rv = App_by_ext_key(exts[0]);
 		int len = exts.length;
 		for (int i = 0; i < len; i++) {
-			cmds_view_file_by_ext[Xof_ext_.Id_of_(ByteAry_.new_ascii_(exts[i]))] = rv;
+			cmds_view_file_by_ext[Xof_ext_.Get_id_by_ext_(ByteAry_.new_ascii_(exts[i]))] = rv;
 		}
 		return rv;
 	}

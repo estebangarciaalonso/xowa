@@ -80,7 +80,22 @@ public class Xoa_gui_mgr implements GfoInvkAble {
 	private static final String Invk_kit = "kit", Invk_kit_ = "kit_", Invk_browser_type = "browser_type_", Invk_xul_runner_path_ = "xul_runner_path_", Invk_run = "run", Invk_bindings = "bindings", Invk_main_win = "main_win", Invk_win_opts = "win_opts", Invk_layout = "layout", Invk_html = "html"
 		, Invk_search_suggest = "search_suggest", Invk_menus = "menus", Invk_cmds = "cmds";
 	public void Run() {
-		Xoa_app_.Run_ui(app);
+		Gfo_log_bfr log_bfr = app.Log_bfr();
+		try {
+			Xoa_gui_mgr ui_mgr = app.Gui_mgr();
+			Gfui_kit kit = ui_mgr.Kit();
+			ui_mgr.Kit_(kit); log_bfr.Add("app.gui_mgr.Kit_");
+			Xog_win main_win = ui_mgr.Main_win();
+			Xog_win_.Init_desktop(main_win); log_bfr.Add("app.gui_mgr.init_desktop");
+			main_win.Launch(); log_bfr.Add("app.gui_mgr.launch");
+			app.User().Prefs_mgr().Launch(); log_bfr.Add("app.gui_mgr.prefs");
+			app.User().Cfg_mgr().Setup_mgr().Setup_run_check(app); log_bfr.Add("app.gui_mgr.setup_");
+			app.Log_wtr().Log_msg_to_session_direct(log_bfr.Xto_str());
+			kit.Kit_run();	// NOTE: enters thread-loop
+		} catch (Exception e) {
+			app.Usr_dlg().Warn_many("", "", "run_failed: ~{0} ~{1}", log_bfr.Xto_str(), Err_.Message_gplx(e));
+			if (app.Gui_mgr().Kit() != null) app.Gui_mgr().Kit().Ask_ok("", "", Err_.Message_gplx(e));
+		}
 	}
 	private void layout_Init() {
 		Op_sys os = Op_sys.Cur();

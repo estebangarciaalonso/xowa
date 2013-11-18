@@ -53,7 +53,7 @@ public class Xoi_cmd_wiki_tst {
 			long src_size = dump_file.File_len();
 			bfr.Add_long_variable(src_size).Add_byte_pipe();
 			bfr.Add_str(gplx.ios.Io_size_.Xto_str(src_size)).Add_byte_pipe();
-			time_fmtr.Seconds_((src_size/ 1000000) + 1).XferAry(bfr, 0);	// add 1; this effectively rounds up fractionals, and guarantees nothing is 0
+			time_fmtr.Seconds_(Math_.Div_safe_as_long(src_size, 1000000)).XferAry(bfr, 0);
 			bfr.Add_byte_pipe();
 			bfr.Add_str(dump_file.File_modified().XtoStr_fmt_yyyy_MM_dd_HH_mm());
 			bfr.Add_byte_pipe();

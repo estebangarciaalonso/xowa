@@ -112,8 +112,7 @@ class Arg_bldr {
 		}
 		Arg_itm_end(ctx, cur_nde, cur_itm, ws_bgn_idx, ws_end_idx, cur_itm_subs_len, bgnPos, wkr_typ, key_exists, false, itm_is_static, src, cur_nde_idx);
 		cur_nde.Val_tkn_(cur_itm);
-		wkr.Args_add(ctx, tkn, cur_nde, cur_nde_idx);
-		return true;
+		return wkr.Args_add(ctx, tkn, cur_nde, cur_nde_idx);
 	}
 	private void Arg_itm_end(Xop_ctx ctx, Arg_nde_tkn nde, Arg_itm_tkn itm, int ws_bgn_idx, int ws_end_idx, int subs_len, int lxr_bgn, int wkr_typ, boolean key_exists, boolean cur_itm_is_key, boolean itm_is_static, byte[] src, int arg_idx) {
 		// PURPOSE: mark tkns Ignore; find dat_bgn, dat_end

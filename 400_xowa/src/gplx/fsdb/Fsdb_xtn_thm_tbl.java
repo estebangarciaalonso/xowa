@@ -39,24 +39,28 @@ public class Fsdb_xtn_thm_tbl {
 	private Db_stmt Insert_stmt() {return Db_stmt_.new_insert_(provider, Tbl_name, Fld_thm_id, Fld_thm_owner_id, Fld_thm_w, Fld_thm_h, Fld_thm_thumbtime, Fld_thm_bin_db_id, Fld_thm_size, Fld_thm_modified, Fld_thm_hash);}
 	public void Insert(int id, int thm_owner_id, int width, int height, int thumbtime, int bin_db_id, long size, DateAdp modified, String hash) {
 		if (stmt_insert == null) stmt_insert = Insert_stmt();
-		stmt_insert.Clear()
-		.Val_int_(id)
-		.Val_int_(thm_owner_id)
-		.Val_int_(width)
-		.Val_int_(height)
-		.Val_int_(X_thumbtime_to_db(thumbtime))
-		.Val_int_(bin_db_id)
-		.Val_long_(size)
-		.Val_str_(Sqlite_engine_.X_date_to_str(modified))
-		.Val_str_(hash)
-		.Exec_insert();
+		try {
+			stmt_insert.Clear()
+			.Val_int_(id)
+			.Val_int_(thm_owner_id)
+			.Val_int_(width)
+			.Val_int_(height)
+			.Val_int_(X_thumbtime_to_db(thumbtime))
+			.Val_int_(bin_db_id)
+			.Val_long_(size)
+			.Val_str_(Sqlite_engine_.X_date_to_str(modified))
+			.Val_str_(hash)
+			.Exec_insert();
+		}	catch (Exception exc) {stmt_insert = null; throw Err_.err_(exc, "stmt failed");} // must reset stmt, else next call will fail
 	}
 	private Db_stmt Delete_stmt() {return Db_stmt_.new_delete_(provider, Tbl_name, Fld_thm_id);}
 	public void Delete_by_id(int thm_id) {
 		if (stmt_delete == null) stmt_delete = Delete_stmt();
-		stmt_delete.Clear()
-		.Val_int_(thm_id)
-		.Exec_delete();
+		try {
+			stmt_delete.Clear()
+			.Val_int_(thm_id)
+			.Exec_delete();
+		}	catch (Exception exc) {stmt_delete = null; throw Err_.err_(exc, "stmt failed");} // must reset stmt, else next call will fail
 	}
 	private Db_stmt Select_by_itm_stmt() {
 		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(Db_crt_.eq_(Fld_thm_id, 0));

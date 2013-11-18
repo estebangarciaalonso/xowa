@@ -52,7 +52,7 @@ public class Xob_siteinfo_parser {
 			// else throw Err_mgr._.fmt_(GRP_KEY, "siteinfo.root.unknown_sub", "unknown sub for root nde: ~{0}", sub_nde.Name());	// NOTE: do not fail if MW introduces something odd in future (or if JAVA starts picking up other elements)
 		}
 		wiki.Props().Siteinfo_misc_(siteinfo_misc_bfr.XtoAryAndClear());
-		wiki.Props().Bldr_version_(Xoa_app_.Version_bry);
+		wiki.Props().Bldr_version_(ByteAry_.new_ascii_(Xoa_app_.Version));
 	}
 	private static byte[] Siteinfo_parse_mainpage(byte[] url) {
 		byte[] wiki_bry = ByteAry_.new_ascii_("/wiki/");

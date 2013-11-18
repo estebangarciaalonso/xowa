@@ -92,7 +92,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		, portal_mgr.Div_personal_bry(), portal_mgr.Div_ns_bry(app.Utl_bry_bfr_mkr(), page.Page_ttl(), wiki.Ns_mgr()), portal_mgr.Div_view_bry(app.Utl_bry_bfr_mkr(), view_tid, page.Search_text())
 		, portal_mgr.Div_logo_bry(), portal_mgr.Div_home_bry(), portal_mgr.Div_wikis_bry(app.Utl_bry_bfr_mkr()), portal_mgr.Sidebar_mgr().Html_bry()
 		, mgr.Edit_rename_div_bry(), page.Data_preview()
-		, Xoa_app_.Version_str, Xoa_app_.Build_date_str, Bry_xowa_root_dir, js_mathjax_script, wiki.Fragment_mgr().Html_js_table(), js_wikidata_bry, js_edit_toolbar_bry, app.Server().Running_str()
+		, Xoa_app_.Version, Xoa_app_.Build_date, Bry_xowa_root_dir, js_mathjax_script, wiki.Fragment_mgr().Html_js_table(), js_wikidata_bry, js_edit_toolbar_bry, app.Server().Running_str()
 		);
 	}
 	private byte[] Build_redirect_msg(Xoa_app app, Xow_wiki wiki, Xoa_page page) {

@@ -18,13 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.imports.ctgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.imports.*;
 import org.junit.*; import gplx.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.ctgs.*;
 public class Xob_categorylinks_sql_tst {
-	@Before public void init() {if (Xo_test.Db_skip()) return; fxt.Ctor_fsys();} Db_mgr_fxt fxt = new Db_mgr_fxt();
-	@After public void term() {if (Xo_test.Db_skip()) return; fxt.Rls();} 
+	@Before public void init() {if (Xoa_test_.Db_skip()) return; fxt.Ctor_fsys();} Db_mgr_fxt fxt = new Db_mgr_fxt();
+	@After public void term() {if (Xoa_test_.Db_skip()) return; fxt.Rls();} 
 	@Test   public void Basic() {
-		if (Xo_test.Db_skip()) return;
+		if (Xoa_test_.Db_skip()) return;
 		fxt.Init_db_sqlite();
 		fxt.Init_page_insert(IntRef.new_(1), Xow_ns_.Id_category, String_.Ary("Ctg_1", "Ctg_2"));
-		fxt.Init_fil(Xo_test.Url_wiki_enwiki().GenSubFil("xowa_categorylinks.sql"), String_.Concat
+		fxt.Init_fil(Xoa_test_.Url_wiki_enwiki().GenSubFil("xowa_categorylinks.sql"), String_.Concat
 		(	Xob_categorylinks_sql.Tbl_categorylinks
 		,	"INSERT INTO `categorylinks` VALUES"
 		,	" (3,'Ctg_2','File:2a','2013-04-15 01:02:03','','uppercase','file')"

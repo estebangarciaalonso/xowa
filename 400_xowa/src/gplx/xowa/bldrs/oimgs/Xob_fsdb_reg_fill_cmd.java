@@ -33,10 +33,13 @@ public class Xob_fsdb_reg_fill_cmd extends Xob_itm_basic_base implements Xob_cmd
 	public void Cmd_print() {}
 	private void Exec() {
 //			gplx.xowa.files.main.orig.Xof_orig_fil_tbl.Create_table(wiki_reg_provider);
-		wiki_reg_provider.Exec_sql(Sql_create_direct);
-		wiki_reg_provider.Exec_sql(Sql_create_redirect);
+		wiki_reg_provider.Exec_sql(Sql_create_xfer_direct);
+		wiki_reg_provider.Exec_sql(Sql_create_xfer_redirect);
+		wiki_reg_provider.Exec_sql(Sql_create_orig_direct);
+		wiki_reg_provider.Exec_sql(Sql_create_orig_redirect);
 	}
-	private static final String Sql_create_direct = String_.Concat_lines_nl
+	private static final String 
+	Sql_create_xfer_direct = String_.Concat_lines_nl
 	(	"INSERT INTO file_orig "
 	,	"(fo_ttl, fo_status, fo_orig_repo, fo_orig_ext, fo_orig_w, fo_orig_h, fo_orig_redirect)"
 	,	"SELECT DISTINCT"
@@ -50,8 +53,8 @@ public class Xob_fsdb_reg_fill_cmd extends Xob_itm_basic_base implements Xob_cmd
 	,	"FROM    oimg_lnki.oimg_xfer_regy xfer"
 	,	"        LEFT JOIN file_orig cur ON xfer.oxr_xfer_ttl = cur.fo_ttl"
 	,	"WHERE   cur.fo_ttl IS NULL"
-	); 
-	private static final String Sql_create_redirect = String_.Concat_lines_nl
+	)
+	, Sql_create_xfer_redirect = String_.Concat_lines_nl
 	(	"INSERT INTO file_orig "
 	,	"(fo_ttl, fo_status, fo_orig_repo, fo_orig_ext, fo_orig_w, fo_orig_h, fo_orig_redirect)"
 	,	"SELECT DISTINCT"
@@ -66,5 +69,42 @@ public class Xob_fsdb_reg_fill_cmd extends Xob_itm_basic_base implements Xob_cmd
 	,	"        LEFT JOIN file_orig cur ON xfer.oxr_xfer_redirect_src = cur.fo_ttl"
 	,	"WHERE   cur.fo_ttl IS NULL"
 	,	"AND     Coalesce(oxr_xfer_redirect_src, '') != ''"
-	); 
+	) 
+	, Sql_create_orig_direct = String_.Concat_lines_nl
+	( "INSERT INTO file_orig "
+	, "(fo_ttl, fo_status, fo_orig_repo, fo_orig_ext, fo_orig_w, fo_orig_h, fo_orig_redirect)"
+	, "SELECT DISTINCT"
+	, "    oor_lnki_ttl"
+	, ",   0 --unknown"
+	, ",   oor_orig_repo"
+	, ",   oor_lnki_ext"
+	, ",   oor_orig_w"
+	, ",   oor_orig_h"
+	, ",   ''"
+	, "FROM    oimg_lnki.oimg_orig_regy xfer"
+	, "        LEFT JOIN file_orig cur ON xfer.oor_lnki_ttl = cur.fo_ttl"
+	, "WHERE   cur.fo_ttl IS NULL"							// not already in file_orig
+	, "AND     oor_orig_repo IS NOT NULL"					// not found in oimg_image.sqlite3
+	, "AND     Coalesce(oor_orig_w, -1) != -1"				// ignore entries that are either ext_id = 0 ("File:1") or don't have any width / height info (makes it useless); need to try to get again from wmf_api
+	, "AND     Coalesce(oor_orig_redirect_ttl, '') == ''"	// direct
+	)
+	, Sql_create_orig_redirect = String_.Concat_lines_nl
+	( "INSERT INTO file_orig "
+	, "(fo_ttl, fo_status, fo_orig_repo, fo_orig_ext, fo_orig_w, fo_orig_h, fo_orig_redirect)"
+	, "SELECT DISTINCT"
+	, "    oor_orig_redirect_ttl"
+	, ",   0 --unknown"
+	, ",   oor_orig_repo"
+	, ",   oor_lnki_ext"
+	, ",   oor_orig_w"
+	, ",   oor_orig_h"
+	, ",   ''"
+	, "FROM    oimg_lnki.oimg_orig_regy xfer"
+	, "        LEFT JOIN file_orig cur ON xfer.oor_orig_redirect_ttl = cur.fo_ttl"
+	, "WHERE   cur.fo_ttl IS NULL"							// not already in file_orig
+	, "AND     oor_orig_repo IS NOT NULL"					// not found in oimg_image.sqlite3
+	, "AND     Coalesce(oor_orig_w, -1) != -1"				// ignore entries that are either ext_id = 0 ("File:1") or don't have any width / height info (makes it useless); need to try to get again from wmf_api
+	, "AND     Coalesce(oor_orig_redirect_ttl, '') != ''"	// redirect
+	)
+	; 
 }

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.dbs.*; import gplx.fsdb.*; import gplx.xowa.files.main.orig.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.qrys.*;
-public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, RlsAble {
+public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr {
 	private Db_provider img_regy_provider = null;		
 	private Io_url fs_dir;
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
@@ -28,8 +28,10 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, RlsAble {
 	public void Db_bin_max_(long v) {mnt_mgr.Bin_db_max_(v);}
 	public Fsdb_mnt_mgr Mnt_mgr() {return mnt_mgr;} private Fsdb_mnt_mgr mnt_mgr = new Fsdb_mnt_mgr();
 	public Xof_fsdb_mgr_sql Db_dir_(Io_url v) {db_dir = v; mnt_mgr.Init(db_dir); return this;} private Io_url db_dir;
+	public Gfo_usr_dlg Usr_dlg() {return usr_dlg;} Gfo_usr_dlg usr_dlg = Gfo_usr_dlg_.Null;
 	public boolean Init_by_wiki(Xow_wiki wiki) {
 		if (init) return false;
+		usr_dlg = wiki.App().Usr_dlg();
 		init = true;
 		Xow_repo_mgr repo_mgr = wiki.File_mgr().Repo_mgr();
 		Init_by_wiki(wiki, wiki.App().Fsys_mgr().File_dir().GenSubDir(wiki.Domain_str()), wiki.App().Fsys_mgr().File_dir(), repo_mgr);
@@ -72,8 +74,15 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, RlsAble {
 	public void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		mnt_mgr.Img_insert(rv, dir, fil, ext_id, modified, hash, bin_len, bin_rdr, img_w, img_h);
 	}
+	public void Txn_open() {
+		mnt_mgr.Txn_open();
+		img_regy_provider.Txn_mgr().Txn_bgn_if_none();
+	}
+	public void Txn_save() {
+		mnt_mgr.Txn_save();
+		img_regy_provider.Txn_mgr().Txn_end_all();
+	}
 	public void Rls() {
-		mnt_mgr.Commit();
 		mnt_mgr.Rls();
 		img_regy_provider.Rls();
 	}

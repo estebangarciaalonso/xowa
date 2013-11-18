@@ -61,7 +61,7 @@ class Xob_xfer_temp_tbl {
 	,	", oxt_xfer_repo           tinyint             NOT NULL"
 	,	", oxt_xfer_ttl            varchar(255)        NOT NULL"
 	,	", oxt_xfer_redirect_src   varchar(255)        NOT NULL"
-	,	", oxt_xfer_ext            tinyint             NOT NULL"
+	,	", oxt_xfer_ext            integer             NOT NULL"
 	,	", oxt_orig_media_type     varchar(64)         NOT NULL"
 	,	", oxt_xfer_type           tinyint             NOT NULL"
 	,	", oxt_file_is_orig        tinyint             NOT NULL"

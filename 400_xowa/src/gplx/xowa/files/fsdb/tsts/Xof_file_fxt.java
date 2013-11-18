@@ -20,7 +20,7 @@ import gplx.fsdb.*; import gplx.dbs.*; import gplx.xowa.files.main.orig.*; impor
 class Xof_file_fxt {		
 	private Fsdb_xtn_thm_itm tmp_thm = Fsdb_xtn_thm_itm.new_(); private Fsdb_xtn_img_itm tmp_img = new Fsdb_xtn_img_itm();
 	private Xof_fsdb_mgr fsdb_mgr; private Xof_qry_wrk_mock qry_wkr_mock = new Xof_qry_wrk_mock();
-	public boolean Db_skip() {return Xo_test.Db_skip();}
+	public boolean Db_skip() {return Xoa_test_.Db_skip();}
 	public void Reset() {this.Reset(Bool_.__byte);}
 	public void Reset(byte mem_tid) {
 		Xoa_app app = Xoa_app_fxt.app_();
@@ -28,7 +28,7 @@ class Xof_file_fxt {
 		Xof_repo_fxt.Repos_init(app.File_mgr(), true, wiki);
 		fsdb_mgr = fsdb_mgr_new_(mem_tid);
 		qry_wkr_mock.Clear();
-		fsdb_mgr.Init_by_wiki(wiki, Xo_test.Url_file_enwiki(), Io_url_.mem_dir_("mem/root/"), wiki.File_mgr().Repo_mgr());
+		fsdb_mgr.Init_by_wiki(wiki, Xoa_test_.Url_file_enwiki(), Io_url_.mem_dir_("mem/root/"), wiki.File_mgr().Repo_mgr());
 		fsdb_mgr.Qry_mgr().Wkrs_(qry_wkr_mock);
 		fsdb_mgr.Bin_mgr().Wkrs_(fsdb_mgr.Bin_wkr_fsdb());
 		fsdb_mgr.Bin_mgr().Resizer_(Xof_img_wkr_resize_img_mok._);
@@ -38,10 +38,10 @@ class Xof_file_fxt {
 		switch (mem_tid) {
 			case Bool_.Y_byte: mem = true; break;
 			case Bool_.N_byte: mem = false; break;
-			case Bool_.__byte: mem = Xo_test.Fsdb_is_mem; break;
+			case Bool_.__byte: mem = Xoa_test_.Fsdb_is_mem; break;
 		}
 		Xof_fsdb_mgr rv = mem ? (Xof_fsdb_mgr)new Xof_fsdb_mgr_mem() : (Xof_fsdb_mgr)new Xof_fsdb_mgr_sql();
-		if (!mem) Io_mgr._.DeleteDirDeep(Xo_test.Url_file_enwiki());
+		if (!mem) Io_mgr._.DeleteDirDeep(Xoa_test_.Url_file_enwiki());
 		return rv;
 	}
 	public void Init_qry_xowa__bin_fsdb__commons_orig(String ttl, int w, int h) {
@@ -84,8 +84,10 @@ class Xof_file_fxt {
 		if (expd.Redirect()	!= null)						Tfds.Eq_bry(expd.Redirect(), itm.Orig_redirect());
 		if (expd.Repo_id()	!= Xof_repo_itm.Repo_null)		Tfds.Eq(expd.Repo_id(), itm.Orig_repo());
 	}
-	public void Test_regy_pass(String key) {
-		Tfds.Eq_false(Exec_reg_select_itm(key) == null);
+	public Xof_fsdb_itm Test_regy_pass(String key) {
+		Xof_fsdb_itm itm = Exec_reg_select_itm(key) ;
+		Tfds.Eq_false(itm == null);
+		return itm;
 	}
 	public void Test_regy_missing_qry(String key)		{Tfds.Eq(Xof_orig_wkr_.Tid_missing_qry, Exec_reg_select_itm(key).Rslt_reg());}
 	public void Test_regy_missing_bin(String key)		{Tfds.Eq(Xof_orig_wkr_.Tid_missing_bin, Exec_reg_select_itm(key).Rslt_reg());}
@@ -95,6 +97,7 @@ class Xof_file_fxt {
 		Xof_ext ext = Xof_ext_.new_by_ttl_(ttl_bry);
 		return new Xof_fsdb_itm().Init_by_lnki(ttl_bry, ext, md5, type, w, h, upright, thumbtime);
 	}
+	public void Test_itm_ext(Xof_fsdb_itm itm, int expd_ext_id) {Tfds.Eq(expd_ext_id, itm.Lnki_ext().Id());}
 	public void Rls() {fsdb_mgr.Rls();}
 	private Xof_fsdb_itm Exec_reg_select_itm(String ttl) {
 		Xof_fsdb_itm itm = itm_(ttl, Xop_lnki_type.Id_null, Xop_lnki_tkn.Width_null, Xop_lnki_tkn.Height_null, Xop_lnki_tkn.Upright_null, Xop_lnki_tkn.Thumbtime_null);
@@ -189,6 +192,7 @@ class Xof_fsdb_arg_exec_get {
 	public Xof_fsdb_arg_exec_get Rslt_qry_unavailable_() {rslt_qry = Xof_qry_wkr_.Tid_missing; return this;}
 	public Xof_fsdb_arg_exec_get Rslt_bin_fsdb_() {rslt_bin = Xof_bin_wkr_.Tid_fsdb; return this;}
 	public Xof_fsdb_arg_exec_get Rslt_bin_not_found_() {rslt_bin = Xof_bin_wkr_.Tid_not_found; return this;}
+	public Xof_fsdb_arg_exec_get Rslt_bin_noop_() {rslt_bin = Xof_bin_wkr_.Tid_noop; return this;}
 	public Xof_fsdb_arg_exec_get Rslt_cnv_y_() {rslt_cnv = Xof_cnv_wkr_.Tid_y; return this;}
 	public Xof_fsdb_arg_exec_get Rslt_cnv_n_() {rslt_cnv = Xof_cnv_wkr_.Tid_n; return this;}
 	public static Xof_fsdb_arg_exec_get new_() {return new Xof_fsdb_arg_exec_get();} Xof_fsdb_arg_exec_get() {}

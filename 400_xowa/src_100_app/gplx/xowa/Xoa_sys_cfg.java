@@ -23,8 +23,8 @@ public class Xoa_sys_cfg implements GfoInvkAble {
 	public int Options_version() {return options_version;} public Xoa_sys_cfg Options_version_(int v) {options_version = v; return this;} private int options_version = 1;
 	public long Free_mem_when() {return free_mem_when;} long free_mem_when;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_version))			return Xoa_app_.Version_str;
-		else if	(ctx.Match(k, Invk_build_date))			return Xoa_app_.Build_date_str;
+		if		(ctx.Match(k, Invk_version))			return Xoa_app_.Version;
+		else if	(ctx.Match(k, Invk_build_date))			return Xoa_app_.Build_date;
 		else if	(ctx.Match(k, Invk_free_mem_when_))		free_mem_when = gplx.ios.Io_size_.parse_or_(m.ReadStr("v"), Io_mgr.Len_mb * 5);
 		else if	(ctx.Match(k, Invk_lang))				return lang;
 		else if	(ctx.Match(k, Invk_lang_))				lang = Xol_lang_itm_.Get_by_key_or_en(m.ReadBry("v")).Key();

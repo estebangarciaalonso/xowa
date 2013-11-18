@@ -187,6 +187,11 @@ public class Xop_lnki_wkr_tst {
 	@Test  public void Exc_pipeOnly() {
 		fxt.tst_Parse_page_wiki("[[|]]", fxt.tkn_txt_(0, 5));
 	}
+	@Test  public void Exc_invalid_utf8() {	// PURPOSE: "%DO" is an invalid UTF-8 sequence (requires 2 bytes, not just %D0); DATE:2013-11-11
+		fxt.Ctx().Lang().Case_mgr().Add_bulk(Xol_case_itm_.Universal);	// NOTE: only occurs during Universal
+		fxt.tst_Parse_page_all_str("[[%D0]]", "[[%D0]]");				// invalid titles render literally
+		fxt.Ctx().Lang().Case_mgr().Add_bulk(Xol_case_itm_.English);
+	}
 	@Test  public void Ex_eq() {	// make sure that eq is not evaluated for kv delimiter
 		fxt.tst_Parse_page_wiki("[[=]]", fxt.tkn_lnki_(0, 5));
 		fxt.tst_Parse_page_wiki("[[a|=]]", fxt.tkn_lnki_(0, 7));

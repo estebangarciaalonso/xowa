@@ -585,25 +585,33 @@ class Io_stream_rdr_http implements Io_stream_rdr {
 		}
 	}
 	private Io_url session_fil = null;
+	private boolean rls_done = false;
 	public long Skip(long len) {return 0;}
 	public void Rls() {
-		read_done = true;
-		if (prog_dlg != null) {
-			xfer_fmt.Term();
-		}
-		if (session_fil == null) session_fil = prog_dlg.Log_wtr().Session_dir().GenSubFil("internet.txt");
-		if (read_failed) {
-		}
-		else {
-			prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download pass: src='~{0}' trg='~{1}'", src_str, xrg.Trg().Raw());
-			xrg.Rslt_(IoEngine_xrg_downloadFil.Rslt_pass);
-		}
-		xrg.Prog_running_(false);
+		if (rls_done) return;
 		try {
-			if (src_stream != null) src_stream.close();
-			if (src_conn != null) src_conn.disconnect();
+			read_done = true;
+			if (prog_dlg != null) {
+				xfer_fmt.Term();
+			}
+			if (session_fil == null) session_fil = prog_dlg.Log_wtr().Session_dir().GenSubFil("internet.txt");
+			if (read_failed) {
+			}
+			else {
+				prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download pass: src='~{0}' trg='~{1}'", src_str, xrg.Trg().Raw());
+				xrg.Rslt_(IoEngine_xrg_downloadFil.Rslt_pass);
+			}
+			xrg.Prog_running_(false);
 		}
 		catch (Exception e) {Err_.Noop(e);}	// ignore close errors; also Err_handle calls Rls() so it would be circular
+		finally {
+			try {if (src_stream != null) src_stream.close();} 
+			catch (Exception e) {Err_.Noop(e);}	// ignore failures when cleaning up
+			if (src_conn != null) src_conn.disconnect();
+			src_stream = null;
+			src_conn = null;
+			rls_done = true;
+		}
 	}
 	private void Err_handle(Exception exc) {
 		read_done = read_failed = true;

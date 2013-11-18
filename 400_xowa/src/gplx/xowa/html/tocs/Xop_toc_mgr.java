@@ -177,26 +177,26 @@ public class Xop_toc_mgr implements ByteAryFmtrArg {
 		bfmtr_main.Bld_bfr_many(bfr, ByteAryFmtrArg_.bry_(bry_contents), this, tbl_para_bgn, tbl_para_end);
 		this.src = null;
 	}
-	byte[]	Bry_list_bgn = ByteAry_.new_utf8_("      <ul>\n")
-		,	Bry_list_end = ByteAry_.new_utf8_("      </ul>\n")
-		,	Bry_item_end = ByteAry_.new_utf8_("      </li>\n")
-		;
-	ByteAryFmtr
-			bfmtr_main = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
-			(	"~{tbl_para_bgn}<table id=\"toc\" class=\"toc\">"
-			,	"  <tr>"
-			,	"    <td>"
-			,	"      <div id=\"toctitle\"><h2>~{contents_title}</h2></div>"
-			,	"~{toc_list}    </td>"
-			,	"  </tr>"
-			,	"</table>~{tbl_para_end}"
-			)
-			,	"contents_title", "toc_list", "tbl_para_bgn", "tbl_para_end"
-			)
-		, 	bfmtr_line = ByteAryFmtr.new_
-			(	"        <li class=\"toclevel-~{level} tocsection-~{toc_idx}\"><a href=\"#~{anchor}\"><span class=\"tocnumber\">~{heading}</span> <span class=\"toctext\">~{text}</span></a>\n"
-			,	"level", "toc_idx", "anchor", "heading", "text"
-			);
+	private byte[]
+	Bry_list_bgn = ByteAry_.new_utf8_("  <ul>\n")
+	, Bry_list_end = ByteAry_.new_utf8_("  </ul>\n")
+	, Bry_item_end = ByteAry_.new_utf8_("  </li>\n")
+	;
+	private ByteAryFmtr
+	bfmtr_main = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
+	( "~{tbl_para_bgn}<div id=\"toc\" class=\"toc\">"
+	, "  <div id=\"toctitle\">"
+	, "    <h2>~{contents_title}</h2>"
+	, "  </div>"
+	, "~{toc_list}</div>"
+	, "~{tbl_para_end}"
+	)
+	, "contents_title", "toc_list", "tbl_para_bgn", "tbl_para_end"
+	)
+	, bfmtr_line = ByteAryFmtr.new_
+	( "    <li class=\"toclevel-~{level} tocsection-~{toc_idx}\"><a href=\"#~{anchor}\"><span class=\"tocnumber\">~{heading}</span> <span class=\"toctext\">~{text}</span></a>\n"
+	, "level", "toc_idx", "anchor", "heading", "text"
+	);
 }
 class Xop_toc_itm {
 	public int Eq_len() {return eq_len;} public Xop_toc_itm Eq_len_(int v) {eq_len = v; return this;} private int eq_len;

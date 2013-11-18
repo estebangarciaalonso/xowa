@@ -20,6 +20,7 @@ public class Xof_fsdb_itm {
 	public byte[]		Lnki_ttl() {return lnki_ttl;} private byte[] lnki_ttl;
 	public byte[]		Lnki_md5() {return lnki_md5;} private byte[] lnki_md5;
 	public Xof_ext		Lnki_ext() {return lnki_ext;} private Xof_ext lnki_ext;
+	public void			Lnki_ext_(Xof_ext v) {lnki_ext = v;}
 	public byte			Lnki_type() {return lnki_type;} private byte lnki_type;
 	public byte			Lnki_type_as_mode() {return lnki_type_as_mode;} private byte lnki_type_as_mode;
 	public int			Lnki_w() {return lnki_w;} public Xof_fsdb_itm Lnki_w_(int v) {lnki_w = v; return this;} private int lnki_w;

@@ -53,6 +53,7 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
 		ttl_bry = ttl.Page_db();
 		ctx.Page().Page_ttl_(ttl).Page_id_(page.Id());
+		ctx.Tab().Redlinks_mgr().Page_bgn(ctx);
 		if (ns.Id_tmpl())
 			parser.Parse_tmpl(ctx, ctx.Tkn_mkr(), wiki.Ns_mgr().Ns_template(), ttl_bry, page_src);
 		else {

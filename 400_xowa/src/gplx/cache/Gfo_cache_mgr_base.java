@@ -17,17 +17,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.cache; import gplx.*;
 public class Gfo_cache_mgr_base {
-	private OrderedHash hash = OrderedHash_.new_();
+	private OrderedHash hash = OrderedHash_.new_bry_();
 	public int Compress_max() {return compress_max;} public void Compress_max_(int v) {compress_max = v;} private int compress_max = 16;
 	public int Compress_to() {return compress_to;} public void Compress_to_(int v) {compress_to = v;} private int compress_to = 8;
-	protected Object Base_get_or_null(Object key) {
+	protected Object Base_get_or_null(byte[] key) {
 		Object rv_obj = hash.Fetch(key);
 		return rv_obj == null ? null : ((Gfo_cache_itm)rv_obj).Val();
 	}
-	protected void Base_add(Object key, Object val) {
+	protected void Base_add(byte[] key, Object val) {
 		if (hash.Count() >= compress_max) Compress(); 
 		Gfo_cache_itm itm = new Gfo_cache_itm(key, val); 
 		hash.Add(key, itm);
+	}
+	protected void Base_del(byte[] key) {
+		hash.Del(key);
 	}
 	public void Compress() {
 		hash.SortBy(Gfo_cache_itm_comparer.Touched_asc);

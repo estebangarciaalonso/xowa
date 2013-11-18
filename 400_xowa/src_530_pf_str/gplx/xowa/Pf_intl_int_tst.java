@@ -59,8 +59,12 @@ public class Pf_intl_int_tst {
 		fxt.tst_Parse_tmpl_str_test("{{int:precedes}}"							, "{{test}}"	, "precedes_from_mw");
 	}
 	@Test  public void Convert_php() {
-		fxt.Data_create("MediaWiki:test_msg", "a\\\\b\\$c$1e");
-		fxt.tst_Parse_tmpl_str_test("{{int:test_msg|d}}"						, "{{test}}"	, "a\\b$cde");
+		fxt.Data_create("MediaWiki:tst_msg_2", "a\\\\b\\$c$1e");
+		fxt.tst_Parse_tmpl_str_test("{{int:tst_msg_2|d}}"						, "{{test}}"	, "a\\b$cde");
+	}
+	@Test  public void Convert_php_tilde() {	// PURPOSE: tildes should be escaped, else will fail inside ByteAryBfrFmtr; DATE:2013-11-11
+		fxt.Data_create("MediaWiki:tst_msg_3", "$1~u");
+		fxt.tst_Parse_tmpl_str_test("{{int:tst_msg_3|a}}"						, "{{test}}"	, "a~u");
 	}
 	@Test  public void Err_fmt_failed() {
 		Xol_lang lang = fxt.Ctx().Page().Lang();

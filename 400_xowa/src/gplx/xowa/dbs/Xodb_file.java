@@ -37,8 +37,7 @@ public class Xodb_file {
 		try {
 			provider.Txn_mgr().Txn_end_all();	// close any open transactions
 			provider.Rls();
-			Db_provider_pool._.Del(connect);
-		} finally {provider = null;}
+		}	finally {provider = null;}
 	}
 	public static final byte Tid_core = 1, Tid_text = 2, Tid_category = 3, Tid_search = 4, Tid_wikidata = 5, Tid_temp = 6;
 	public static String Tid_to_name(byte v) {

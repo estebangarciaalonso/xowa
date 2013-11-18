@@ -21,7 +21,7 @@ public class Xow_cfg_wiki_core_tst {
 	Xow_cfg_wiki_core_fxt fxt = new Xow_cfg_wiki_core_fxt();
 	@Before public void init() {fxt.Clear();}
 	@Test  public void Save() {
-		fxt.Save_tst(Xoa_app_.Version_str, "Main_Page", "Wikipedia|MediaWiki 1.21wmf5|first-letter|", 0, "User test", Const_wiki_core_cfg);
+		fxt.Save_tst(Xoa_app_.Version, "Main_Page", "Wikipedia|MediaWiki 1.21wmf5|first-letter|", 0, "User test", Const_wiki_core_cfg);
 	}
 	@Test  public void Load_and_save() {
 		fxt.Load_and_save_tst(Const_wiki_core_cfg);
@@ -43,7 +43,7 @@ public class Xow_cfg_wiki_core_tst {
 	}
 	public static final String Const_wiki_core_cfg = String_.Concat_lines_nl
 	(	"props"
-	,	".bldr_version_('" + Xoa_app_.Version_str + "')"
+	,	".bldr_version_('" + Xoa_app_.Version + "')"
 	,	".main_page_('Main_Page')"
 	,	".siteinfo_misc_('Wikipedia|MediaWiki 1.21wmf5|first-letter|')"
 	,	".siteinfo_mainpage_('')"

@@ -32,8 +32,13 @@ public class Fsdb_db_bin_mgr implements RlsAble {
 		return this;
 	}	private long db_bin_max = Io_mgr.Len_mb * Long_.X_by_int(188);
 	public Fsdb_db_bin_fil Get_at(int i) {return itms[i];}
-	public void Commit() {		
+	private Fsdb_db_bin_fil Get_cur() {return itms_len == 0 ? null : itms[itms_len - 1];}
+	public void Txn_open() {		
+		Get_cur().Provider().Txn_mgr().Txn_bgn_if_none();
+	}
+	public void Txn_save() {		
 		Fsdb_db_bin_tbl.Commit_all(provider, itms);
+		Get_cur().Provider().Txn_mgr().Txn_end_all();
 	}
 	public void Rls() {
 		int len = itms.length;
@@ -71,6 +76,11 @@ public class Fsdb_db_bin_mgr implements RlsAble {
 		return rv;
 	}
 	private void Itms_add(long bin_len) {
+		Fsdb_db_bin_fil cur = Get_cur();
+		if (cur != null) {
+			cur.Provider().Txn_mgr().Txn_end_all();
+			cur.Provider().Rls();
+		}
 		int new_itms_len = itms_len + 1;
 		Fsdb_db_bin_fil[] new_itms = new Fsdb_db_bin_fil[new_itms_len];
 		for (int i = 0; i < itms_len; i++)
@@ -79,6 +89,6 @@ public class Fsdb_db_bin_mgr implements RlsAble {
 		itms = new_itms;
 		itms_len = new_itms_len;
 		itms[itms_len - 1] = itms_n;
-		this.Commit();
+		this.Txn_open();
 	}
 }

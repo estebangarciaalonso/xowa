@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.specials.search; import gplx.*; import gplx.xowa.*; import gplx.xowa.specials.*;
+import gplx.xowa.dbs.*;
 class Xosrh_qry_itm {
 	public Xosrh_qry_itm(byte tid, byte[] word, Xosrh_qry_itm lhs, Xosrh_qry_itm rhs) {
 		this.tid = tid; this.word = word; this.lhs = lhs; this.rhs = rhs;
@@ -46,7 +47,8 @@ class Xosrh_qry_itm {
 	}
 	private static ListAdp Search_word(Xow_wiki wiki, Cancelable cancelable, ByteAryBfr tmp_bfr, Xosrh_ns_mgr ns_mgr, byte[] search_word, int results_max) {
 		ListAdp found = ListAdp_.new_();
-		if (wiki.Db_mgr().Tid() == gplx.xowa.dbs.Xodb_mgr_sql.Tid_sql
+		byte wiki_db_tid = wiki.Db_mgr().Tid();
+		if (wiki_db_tid == Xodb_mgr_sql.Tid_sql
 			&& wiki.App().Gui_mgr().Search_suggest_mgr().Auto_wildcard()) {	// HACK: auto-asterisk words for sqlite; DATE:2013-09-05
 			if (!ByteAry_.HasAtEnd(search_word, new byte[] {Byte_ascii.Asterisk}))
 				search_word = ByteAry_.Add(search_word, Byte_ascii.Asterisk);
@@ -58,7 +60,8 @@ class Xosrh_qry_itm {
 		int found_len = found.Count();
 		for (int i = 0; i < found_len; i++) {
 			Xodb_page page = (Xodb_page)found.FetchAt(i);
-			if (ns_mgr.Has(page.Ns_id()))
+			if (	ns_mgr.Has(page.Ns_id())
+				||	wiki_db_tid == Xodb_mgr_txt.Tid_txt)	// xdat does not store ns, so ns will always be null; no choice but to bring back all results; DATE:2013-11-14
 				rv.Add(page);
 		}
 		return rv;

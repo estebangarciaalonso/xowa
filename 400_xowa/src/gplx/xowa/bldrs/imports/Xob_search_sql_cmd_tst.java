@@ -18,10 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import org.junit.*; import gplx.dbs.*; import gplx.xowa.specials.search.*; import gplx.xowa.bldrs.imports.ctgs.*;
 public class Xob_search_sql_cmd_tst {
-	@Before public void init() {if (Xo_test.Db_skip()) return; fxt.Ctor_fsys();} private Db_mgr_fxt fxt = new Db_mgr_fxt();
-	@After public void term() {if (Xo_test.Db_skip()) return; fxt.Rls();} 
+	@Before public void init() {if (Xoa_test_.Db_skip()) return; fxt.Ctor_fsys();} private Db_mgr_fxt fxt = new Db_mgr_fxt();
+	@After public void term() {if (Xoa_test_.Db_skip()) return; fxt.Rls();} 
 	@Test   public void Basic() {
-		if (Xo_test.Db_skip()) return;
+		if (Xoa_test_.Db_skip()) return;
 		fxt.Init_db_sqlite();
 		fxt.doc_ary_
 		(	fxt.doc_ttl_(2, "A b")
@@ -36,7 +36,7 @@ public class Xob_search_sql_cmd_tst {
 		fxt.Test_search("d");
 	}
 	@Test   public void Wildcard() {
-		if (Xo_test.Db_skip()) return;
+		if (Xoa_test_.Db_skip()) return;
 		fxt.Init_db_sqlite();
 		fxt.doc_ary_
 		(	fxt.doc_ttl_(1, "A")

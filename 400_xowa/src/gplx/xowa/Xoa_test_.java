@@ -15,12 +15,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.gui; import gplx.*; import gplx.xowa.*;
-import gplx.xowa.parsers.lnkis.*;
-public class Xog_tab {
-	public byte[] Display_ttl() {return display_ttl;} public Xog_tab Display_ttl_(byte[] v) {display_ttl = v; return this;} private byte[] display_ttl = null;
-	public Xop_lnki_logger_redlinks Redlinks_mgr() {return redlinks_mgr;} private Xop_lnki_logger_redlinks redlinks_mgr = new Xop_lnki_logger_redlinks();
-	public void Clear() {	// NOTE: must be cleared else pages which have an italicized display titles will persit;
-		display_ttl = null;
-	}
+package gplx.xowa; import gplx.*;
+public class Xoa_test_ {
+	public static boolean Db_skip() {return false;}
+	public static boolean Fsdb_is_mem = false;
+	public static Io_url Url_root()			{return Io_url_.Usr().GenSubDir_nest("xowa", "dev", "tst", "400_xowa");}
+	public static Io_url Url_wiki_enwiki()	{return Url_root().GenSubDir_nest("root", "wiki", "en.wikipedia.org");}
+	public static Io_url Url_file_enwiki()	{return Url_root().GenSubDir_nest("root", "file", "en.wikipedia.org");}
 }

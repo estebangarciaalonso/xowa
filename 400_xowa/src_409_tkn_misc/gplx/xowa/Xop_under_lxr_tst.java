@@ -59,21 +59,20 @@ public class Xop_under_lxr_tst {
 	@Test   public void Toc_works() {	// PURPOSE: make sure "suppressed" pre does not somehow suppress TOC
 		fxt.Ctx().Para().Enabled_y_();
 		fxt.tst_Parse_page_all_str("a\n__TOC__\n==b==\n", String_.Concat_lines_nl
-		(	"<p>a"
-		,	"<table id=\"toc\" class=\"toc\">"
-		,	"  <tr>"
-		,	"    <td>"
-		,	"      <div id=\"toctitle\"><h2>Contents</h2></div>"
-		,	"      <ul>"
-		,	"        <li class=\"toclevel-1 tocsection-1\"><a href=\"#b\"><span class=\"tocnumber\">1</span> <span class=\"toctext\">b</span></a>"
-		,	"        </li>"
-		,	"      </ul>"
-		,	"    </td>"
-		,	"  </tr>"
-		,	"</table>"
-		,	"</p>"
-		,	""
-		,	"<h2>b</h2>"
+		( "<p>a"
+		, "<div id=\"toc\" class=\"toc\">"
+		, "  <div id=\"toctitle\">"
+		, "    <h2>Contents</h2>"
+		, "  </div>"
+		, "  <ul>"
+		, "    <li class=\"toclevel-1 tocsection-1\"><a href=\"#b\"><span class=\"tocnumber\">1</span> <span class=\"toctext\">b</span></a>"
+		, "    </li>"
+		, "  </ul>"
+		, "</div>"
+		, ""
+		, "</p>"
+		, ""
+		, "<h2>b</h2>"
 		));
 		fxt.Ctx().Para().Enabled_n_();
 	}		

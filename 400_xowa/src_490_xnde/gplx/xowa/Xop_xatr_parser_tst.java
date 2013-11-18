@@ -58,14 +58,14 @@ class Xop_xatr_parser_fxt {
 	public Xop_xatr_itm_chkr new_atr_(String key, String val) {return new Xop_xatr_itm_chkr().Expd_key_(key).Expd_val_(val);}
 	public void tst_(String src_str, Xop_xatr_itm_chkr... expd) {
 		byte[] src = ByteAry_.new_utf8_(src_str);
-		Gfo_msg_log msg_log = new Gfo_msg_log(Xoa_app_.App_name);
+		Gfo_msg_log msg_log = new Gfo_msg_log(Xoa_app_.Name);
 		Xop_xatr_itm[] actl = parser.Parse(msg_log, src, 0, src.length);
 		tst_mgr.Vars().Clear().Add("raw_bry", src);
 		tst_mgr.Tst_ary("xatr:", expd, actl);
 	}
 	public void tst_int(String src_str, int... expd) {
 		byte[] src = ByteAry_.new_utf8_(src_str);
-		Gfo_msg_log msg_log = new Gfo_msg_log(Xoa_app_.App_name);
+		Gfo_msg_log msg_log = new Gfo_msg_log(Xoa_app_.Name);
 		Xop_xatr_itm[] actl_atr = parser.Parse(msg_log, src, 0, src.length);
 		int[] actl = new int[actl_atr.length];
 		

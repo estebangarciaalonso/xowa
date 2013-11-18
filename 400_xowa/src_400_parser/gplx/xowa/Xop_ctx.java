@@ -240,14 +240,12 @@ public class Xop_ctx {
 	public static Xop_ctx new_(Xow_wiki wiki) {
 		Xop_ctx rv = new Xop_ctx(wiki);
 		rv.tab = new Xog_tab();
-		rv.Lnki().Lnki_logger_(rv.tab.Redlinks_mgr());
 		return rv;
 	}
 	public static Xop_ctx new_sub_(Xow_wiki wiki) {
 		Xop_ctx rv = new Xop_ctx(wiki);
 		rv.Page().Page_ttl_(wiki.Ctx().Page().Page_ttl());	// NOTE: sub_ctx must have same page_ttl as owner; see Xtn_lst_tst!Fullpagename
 		rv.tab = wiki.Ctx().Tab();	// NOTE: tab should be same instance across all sub_ctxs; otherwise CallParserFunction will not set DISPLAYTITLE correctly; DATE:2013-08-05
-		rv.Lnki().Lnki_logger_(rv.tab.Redlinks_mgr());
 		return rv;
 	}
 }

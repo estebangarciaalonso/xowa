@@ -134,6 +134,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		int ns_id = page.Page_ttl().Ns().Id();
 		int bfr_page_bgn = bfr.Bry_len();
 		byte page_tid = Xow_page_tid.Identify(wiki.Wiki_tid(), ns_id, page.Page_ttl().Page_db());
+		boolean page_tid_uses_pre = false;
 		switch (page_tid) {
 			case Xow_page_tid.Tid_js:
 			case Xow_page_tid.Tid_css:
@@ -141,6 +142,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 				Xoh_html_wtr.Bfr_escape(tmp_bfr, data_raw, 0, data_raw.length, page.Wiki().App(), false, false);
 				app.Html_mgr().Page_mgr().Content_code_fmtr().Bld_bfr_many(bfr, tmp_bfr);
 				tmp_bfr.Clear();
+				page_tid_uses_pre = true;
 				break;
 			case Xow_page_tid.Tid_json:
 				app.Wiki_mgr().Wdata_mgr().Write_json_as_html(bfr, data_raw);
@@ -163,7 +165,8 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 				}
 				break;
 		}
-		if (wiki.Wiki_tid() != Xow_wiki_type_.Tid_home) {	// allow home wiki to use javascript
+		if (	wiki.Wiki_tid() != Xow_wiki_type_.Tid_home	// allow home wiki to use javascript
+			&&  !page_tid_uses_pre) {						// if .js, .css or .lua, skip test; may have js fragments, but entire text is escaped and put in pre; don't show spurious warning; DATE:2013-11-21
 			int bfr_page_end = bfr.Bry_len();
 			byte[] cleaned = app.Utl_js_cleaner().Clean(wiki, bfr.Bry(), bfr_page_bgn, bfr_page_end);
 			if (cleaned != null) {

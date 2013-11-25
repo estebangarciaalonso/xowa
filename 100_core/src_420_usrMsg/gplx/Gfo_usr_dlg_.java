@@ -21,6 +21,7 @@ public class Gfo_usr_dlg_ {
 }
 class Gfo_usr_dlg_null implements Gfo_usr_dlg {
 	public boolean Canceled() {return false;} public void Canceled_y_() {} public void Canceled_n_() {}
+	public void Cancel() {} public void Cancel_reset() {}
 	public void Clear() {}
 	public Gfo_usr_dlg_ui Ui_wkr() {throw Err_.not_implemented_();} public void Ui_wkr_(Gfo_usr_dlg_ui v) {}
 	public Gfo_log_wtr Log_wtr() {throw Err_.not_implemented_();} public void Log_wtr_(Gfo_log_wtr v) {}

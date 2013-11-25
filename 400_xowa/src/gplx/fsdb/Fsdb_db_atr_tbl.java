@@ -21,7 +21,7 @@ public class Fsdb_db_atr_tbl {
 	public static void Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
 	public static Fsdb_db_atr_fil[] Select_all(Fsdb_db_abc_mgr abc_mgr, Db_provider p, Io_url dir) {
 		ListAdp rv = ListAdp_.new_();
-		Db_qry qry = Db_qry_select.new_().From_(Tbl_name).Cols_all_().OrderBy_asc_(Fld_fda_id);
+		Db_qry qry = Db_qry_select.new_().From_(Tbl_name).Cols_all_().OrderBy_asc_(Fld_uid);
 		DataRdr rdr = DataRdr_.Null;
 		try {
 			rdr = p.Exec_qry_as_rdr(qry);
@@ -52,13 +52,13 @@ public class Fsdb_db_atr_tbl {
 		}
 		itm.Cmd_mode_(Db_cmd_mode.Ignore);
 	}
-	public static final String Tbl_name = "fsdb_db_atr", Fld_fda_id = "fda_id", Fld_fda_url = "fda_url", Fld_fda_path_bgn = "fda_path_bgn";
+	public static final String Tbl_name = "fsdb_db_atr", Fld_uid = "uid", Fld_url = "url", Fld_path_bgn = "path_bgn";
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS fsdb_db_atr"
-	,	"( fda_id                integer             NOT NULL    PRIMARY KEY"
-	,	", fda_url               varchar(255)        NOT NULL"
-	,	", fda_path_bgn          varchar(255)        NOT NULL"
+	,	"( uid                   integer             NOT NULL    PRIMARY KEY"
+	,	", url                   varchar(255)        NOT NULL"
+	,	", path_bgn              varchar(255)        NOT NULL"
 	,	");"
 	);	
-	private static Db_stmt_bldr stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_fda_id), Fld_fda_url, Fld_fda_path_bgn);
+	private static Db_stmt_bldr stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_uid), Fld_url, Fld_path_bgn);
 }

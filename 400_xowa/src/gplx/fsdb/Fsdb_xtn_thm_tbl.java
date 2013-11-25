@@ -45,7 +45,7 @@ public class Fsdb_xtn_thm_tbl {
 			.Val_int_(thm_owner_id)
 			.Val_int_(width)
 			.Val_int_(height)
-			.Val_int_(X_thumbtime_to_db(thumbtime))
+			.Val_int_(thumbtime)
 			.Val_int_(bin_db_id)
 			.Val_long_(size)
 			.Val_str_(Sqlite_engine_.X_date_to_str(modified))
@@ -94,7 +94,7 @@ public class Fsdb_xtn_thm_tbl {
 			rdr = stmt_select_by_fil_w.Clear()
 				.Val_int_(owner)
 				.Val_int_(width)
-				.Val_int_(X_thumbtime_to_db(thumbtime))
+				.Val_int_(thumbtime)
 				.Exec_select()
 				;
 			if (rdr.MoveNextPeer())
@@ -145,8 +145,7 @@ public class Fsdb_xtn_thm_tbl {
 	public static final Db_idx_itm
 	  Idx_name = Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS fsdb_xtn_thm__owner      ON fsdb_xtn_thm (thm_owner_id, thm_id, thm_w, thm_thumbtime);")
 	;
-	public static final int Thumbtime_multiplier = 1000;	// store thumbtime in ms; EX: 2 secs -> 2000
+//		public static final int Thumbtime_multiplier = 1000;	// store thumbtime in ms; EX: 2 secs -> 2000
 	public static final DateAdp Modified_null = null;
 	public static final String Hash_null = "";
-	private static int X_thumbtime_to_db(int v) {return v == -1 ? v : v * Thumbtime_multiplier;}
 }

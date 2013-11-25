@@ -23,25 +23,23 @@ public class Xof_ext {
 	public byte[] Ext_view() {return Xof_ext_.Bry__ary[Id_view()];}
 	public byte[] Mime_type() {return Xof_ext_.Mime_type__ary[id];}
 	public boolean Id_is_unknown() {return id == Xof_ext_.Id_unknown;}
-	public boolean Id_is_thumbable() {
+	public boolean Id_is_thumbable_img() {
 		switch (id) {
-			case Xof_ext_.Id_png: case Xof_ext_.Id_jpg: case Xof_ext_.Id_jpeg: case Xof_ext_.Id_gif: case Xof_ext_.Id_tif: case Xof_ext_.Id_tiff: case Xof_ext_.Id_svg: case Xof_ext_.Id_djvu: case Xof_ext_.Id_pdf:
+			case Xof_ext_.Id_png: case Xof_ext_.Id_jpg: case Xof_ext_.Id_jpeg:
+			case Xof_ext_.Id_gif: case Xof_ext_.Id_tif: case Xof_ext_.Id_tiff:
+			case Xof_ext_.Id_svg: case Xof_ext_.Id_djvu: case Xof_ext_.Id_pdf:
+			case Xof_ext_.Id_bmp: case Xof_ext_.Id_xcf:
 				return true;
 			default:
 				return false;
 		}
 	}
-	public boolean Id_is_thumbable2()	{
-		switch (id) {
-		case Xof_ext_.Id_unknown: case Xof_ext_.Id_oga:	// NOTE: removed Xof_ext_.Id_ogg; some vids can be ogg
-			return false;
-		default:
-			return true;
-		}
-	}
 	public boolean Id_is_image() {
 		switch (id) {
-			case Xof_ext_.Id_png: case Xof_ext_.Id_jpg: case Xof_ext_.Id_jpeg: case Xof_ext_.Id_gif: case Xof_ext_.Id_tif: case Xof_ext_.Id_tiff: case Xof_ext_.Id_svg:
+			case Xof_ext_.Id_png: case Xof_ext_.Id_jpg: case Xof_ext_.Id_jpeg:
+			case Xof_ext_.Id_gif: case Xof_ext_.Id_tif: case Xof_ext_.Id_tiff:
+			case Xof_ext_.Id_svg:
+			case Xof_ext_.Id_bmp: case Xof_ext_.Id_xcf:
 				return true;
 			default:
 				return false;
@@ -50,7 +48,13 @@ public class Xof_ext {
 	public boolean Id_is_media() {return Id_is_audio() || Id_is_video();}
 	public boolean Id_is_audio() {
 		switch (id) {
-			case Xof_ext_.Id_mid: case Xof_ext_.Id_oga: case Xof_ext_.Id_ogg: return true;
+			case Xof_ext_.Id_mid: case Xof_ext_.Id_oga: case Xof_ext_.Id_flac: case Xof_ext_.Id_ogg: return true;
+			default: return false;
+		}
+	}
+	public boolean Id_is_audio_strict() {	// same as above, but deliberately exclude ambiguous ogg
+		switch (id) {
+			case Xof_ext_.Id_mid: case Xof_ext_.Id_oga: case Xof_ext_.Id_flac: return true;
 			default: return false;
 		}
 	}
@@ -69,8 +73,8 @@ public class Xof_ext {
 	}
 	public int Id_view() {
 		switch (id) {
-			case Xof_ext_.Id_svg:																			return Xof_ext_.Id_png;
-			case Xof_ext_.Id_tif: case Xof_ext_.Id_tiff: case Xof_ext_.Id_djvu: case Xof_ext_.Id_pdf: 
+			case Xof_ext_.Id_svg: case Xof_ext_.Id_bmp: case Xof_ext_.Id_xcf:								return Xof_ext_.Id_png;
+			case Xof_ext_.Id_tif: case Xof_ext_.Id_tiff: case Xof_ext_.Id_djvu: case Xof_ext_.Id_pdf:
 			case Xof_ext_.Id_ogg: case Xof_ext_.Id_ogv: case Xof_ext_.Id_webm:								return Xof_ext_.Id_jpg;
 			default:																						return id;
 		}

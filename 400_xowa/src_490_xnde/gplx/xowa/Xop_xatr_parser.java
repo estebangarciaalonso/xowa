@@ -228,6 +228,8 @@ public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_AT
 								val_end = i;
 								Make(log_mgr, src, i + 1);	// NOTE: set atr_end *after* quote
 							}
+							else
+								val_bfr.Add_byte(b);
 							break;
 						case Byte_ascii.Lt:	// "<" try to find nowiki inside atr
 							int gt_pos = Xnde_find_gt(log_mgr, src, i, end);

@@ -16,14 +16,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.qrys; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
-import gplx.dbs.*; import gplx.xowa.dbs.tbls.*;
+import gplx.dbs.*; import gplx.xowa.bldrs.wikis.images.*;
 public class Xof_img_meta_wkr_xowa implements Xof_img_meta_wkr {
-	public Xodb_image_itm Find(Xow_wiki wiki, byte[] ttl) {
-		Db_provider image_regy_provider = gplx.xowa.bldrs.oimgs.Xodb_db_file.init__oimg_image(wiki).Provider();
+	public Xob_wiki_image_itm Find(Xow_wiki wiki, byte[] ttl) {
+		Db_provider image_regy_provider = gplx.xowa.bldrs.oimgs.Xodb_db_file.init__wiki_image(wiki.Fsys_mgr().Root_dir()).Provider();
 		Db_stmt stmt = Db_stmt_.Null;
 		try {
-			stmt = Xodb_image_tbl.Select_ttl_stmt(image_regy_provider);
-			return Xodb_image_tbl.Select_itm(stmt, String_.new_utf8_(ttl));
+			stmt = Xob_wiki_image_tbl.Select_ttl_stmt(image_regy_provider);
+			return Xob_wiki_image_tbl.Select_itm(stmt, String_.new_utf8_(ttl));
 		} 	finally {stmt.Rls();}
 	}
 }

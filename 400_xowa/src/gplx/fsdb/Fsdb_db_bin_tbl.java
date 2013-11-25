@@ -41,7 +41,7 @@ public class Fsdb_db_bin_tbl {
 	}
 	public static Fsdb_db_bin_fil[] Select_all(Db_provider p, Io_url dir) {
 		ListAdp rv = ListAdp_.new_();
-		Db_qry qry = Db_qry_select.new_().From_(Tbl_name).Cols_all_().OrderBy_asc_(Fld_fdb_id);
+		Db_qry qry = Db_qry_select.new_().From_(Tbl_name).Cols_all_().OrderBy_asc_(Fld_uid);
 		DataRdr rdr = DataRdr_.Null;
 		try {
 			rdr = p.Exec_qry_as_rdr(qry);
@@ -52,14 +52,14 @@ public class Fsdb_db_bin_tbl {
 		} finally {rdr.Rls();}
 		return (Fsdb_db_bin_fil[])rv.XtoAry(Fsdb_db_bin_fil.class);
 	}
-	public static final String Tbl_name = "fsdb_db_bin", Fld_fdb_id = "fdb_id", Fld_fdb_url = "fdb_url", Fld_fdb_bin_len = "fdb_bin_len", Fld_fdb_bin_max = "fdb_bin_max";
+	public static final String Tbl_name = "fsdb_db_bin", Fld_uid = "uid", Fld_url = "url", Fld_bin_len = "bin_len", Fld_bin_max = "bin_max";
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS fsdb_db_bin"
-	,	"( fdb_id                integer             NOT NULL    PRIMARY KEY"
-	,	", fdb_url               varchar(255)        NOT NULL"
-	,	", fdb_bin_len           bigint              NOT NULL"
-	,	", fdb_bin_max           bigint              NOT NULL"
+	,	"( uid                   integer             NOT NULL    PRIMARY KEY"
+	,	", url                   varchar(255)        NOT NULL"
+	,	", bin_len               bigint              NOT NULL"
+	,	", bin_max               bigint              NOT NULL"
 	,	");"
 	);	
-	private static Db_stmt_bldr stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_fdb_id), Fld_fdb_url, Fld_fdb_bin_len, Fld_fdb_bin_max);
+	private static Db_stmt_bldr stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_uid), Fld_url, Fld_bin_len, Fld_bin_max);
 }

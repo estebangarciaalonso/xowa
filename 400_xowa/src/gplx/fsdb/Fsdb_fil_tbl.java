@@ -26,7 +26,7 @@ public class Fsdb_fil_tbl {
 	}
 	private void Create_table() {
 		Sqlite_engine_.Tbl_create(provider, Tbl_name, Tbl_sql); 
-		Sqlite_engine_.Idx_create(provider, Idx_name, Idx_owner);
+		Sqlite_engine_.Idx_create(provider, Idx_owner);
 	}
 	public void Rls() {
 		if (stmt_insert != null) {stmt_insert.Rls(); stmt_insert = null;}
@@ -51,20 +51,28 @@ public class Fsdb_fil_tbl {
 			.Exec_insert();
 		}	catch (Exception exc) {stmt_insert = null; throw Err_.err_(exc, "stmt failed");} // must reset stmt, else next call will fail
 	}	
-	private Db_stmt Update_stmt() {return Db_stmt_.new_update_(provider, Tbl_name, String_.Ary(Fld_fil_id), Fld_fil_owner_id, Fld_fil_ext_id, Fld_fil_name);}
-	public void Update(int id, int owner_id, String name, int ext_id) {
+	private Db_stmt Update_stmt() {return Db_stmt_.new_update_(provider, Tbl_name, String_.Ary(Fld_fil_id), Fld_fil_owner_id, Fld_fil_name, Fld_fil_xtn_id, Fld_fil_ext_id, Fld_fil_bin_db_id, Fld_fil_size, Fld_fil_modified, Fld_fil_hash);}
+	public void Update(int id, int owner_id, String name, int xtn_id, int ext_id, long size, DateAdp modified, String hash, int bin_db_id) {
 		if (stmt_update == null) stmt_update = Update_stmt();
 		try {
 			stmt_update.Clear()
 			.Val_int_(id)
 			.Val_int_(owner_id)
-			.Val_int_(ext_id)
 			.Val_str_(name)
+			.Val_int_(xtn_id)
+			.Val_int_(ext_id)
+			.Val_int_(bin_db_id)
+			.Val_long_(size)
+			.Val_str_(Sqlite_engine_.X_date_to_str(modified))
+			.Val_str_(hash)
 			.Exec_update();
 		}	catch (Exception exc) {stmt_update = null; throw Err_.err_(exc, "stmt failed");} // must reset stmt, else next call will fail
 	}	
 	private Db_stmt Select_by_name_stmt() {
-		Db_qry qry = Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_fil_owner_id, Int_.MinValue), Db_crt_.eq_(Fld_fil_name, "")));
+		Db_qry qry = Sqlite_engine_.Supports_indexed_by
+			? (Db_qry)Db_qry_sql.rdr_("SELECT * FROM fsdb_fil INDEXED BY fsdb_fil__owner WHERE fil_owner_id = ? AND fil_name = ?;") 
+			: Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_fil_owner_id, Int_.MinValue), Db_crt_.eq_(Fld_fil_name, "")))
+			;
 		return provider.Prepare(qry);
 	}
 	public Fsdb_fil_itm Select_itm_by_name(int dir_id, String fil_name) {
@@ -120,7 +128,7 @@ public class Fsdb_fil_tbl {
 	,	");"
 	);
 	public static final Db_idx_itm
-	  Idx_name = Db_idx_itm.sql_	("CREATE INDEX IF NOT EXISTS fsdb_fil__name       ON fsdb_fil (fil_name, fil_owner_id, fil_id, fil_ext_id);")
-	, Idx_owner = Db_idx_itm.sql_	("CREATE INDEX IF NOT EXISTS fsdb_fil__owner      ON fsdb_fil (fil_owner_id, fil_name, fil_id);")
+//		  Idx_name = Db_idx_itm.sql_	("CREATE INDEX IF NOT EXISTS fsdb_fil__name       ON fsdb_fil (fil_name, fil_owner_id, fil_id, fil_ext_id);")
+	  Idx_owner = Db_idx_itm.sql_	("CREATE INDEX IF NOT EXISTS fsdb_fil__owner      ON fsdb_fil (fil_owner_id, fil_name, fil_id);")
 	;
 }

@@ -65,7 +65,11 @@ public class Io_stream_rdr_ {
 	}
 	public static final Io_stream_rdr Null = new Io_stream_rdr_null();
 	public static Io_stream_rdr mem_(String v) {return mem_(ByteAry_.new_utf8_(v));}
-	public static Io_stream_rdr mem_(byte[] v) {return new Io_stream_rdr_adp(new java.io.ByteArrayInputStream(v));}	
+	public static Io_stream_rdr mem_(byte[] v) {
+		Io_stream_rdr rv = new Io_stream_rdr_adp(new java.io.ByteArrayInputStream(v)); 
+		rv.Len_(v.length);
+		return rv;
+	}	
 	public static final int Read_done = -1;
 	public static final int Read_done_compare = 1;
 }
@@ -224,7 +228,7 @@ class Io_stream_rdr_bzip2 extends Io_stream_rdr_base {
 				if (i + bry_len > end)
 					bry_len = end - i;
 				int read = stream.read(bry, i, bry_len);
-//				ByteAry_.Copy_pos(tmp, 0, read, bry, i);
+//				if (read == gplx.ios.Io_stream_rdr_.Read_done) return gplx.ios.Io_stream_rdr_.Read_done;
 				rv += read;
 			}
 			return rv;

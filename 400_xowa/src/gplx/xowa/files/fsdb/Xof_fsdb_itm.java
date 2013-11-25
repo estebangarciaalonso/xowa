@@ -36,10 +36,10 @@ public class Xof_fsdb_itm {
 	}
 	public void Lnki_type_(byte v) {
 		this.lnki_type = v;
-		if (lnki_ext.Id_is_thumbable2())
-			this.file_is_orig = !(Xop_lnki_type.Id_defaults_to_thumb(lnki_type) || lnki_w != Xop_lnki_tkn.Width_null || lnki_h != Xop_lnki_tkn.Height_null);
-		else
+		if (lnki_ext.Id_is_audio_strict())
 			file_is_orig = true;
+		else
+			this.file_is_orig = !(Xop_lnki_type.Id_defaults_to_thumb(lnki_type) || lnki_w != Xop_lnki_tkn.Width_null || lnki_h != Xop_lnki_tkn.Height_null);
 		this.lnki_type_as_mode = file_is_orig ? Xof_repo_itm.Mode_orig : Xof_repo_itm.Mode_thumb;
 	} 
 	public Xof_fsdb_itm	Lnki_ttl_(byte[] v) {
@@ -70,7 +70,7 @@ public class Xof_fsdb_itm {
 	public boolean File_is_orig() {return file_is_orig;} public Xof_fsdb_itm File_is_orig_(boolean v) {file_is_orig = v; return this;} private boolean file_is_orig;
 	public int File_w() {return file_w;} private int file_w;
 	public void Html_size_calc(Xof_img_size img_size, byte exec_tid) {
-		if (lnki_ext.Id_is_thumbable2()) {
+		if (!lnki_ext.Id_is_audio_strict()) {	// audio does not have html size calculated; everything else does
 			img_size.Html_size_calc(exec_tid, lnki_w, lnki_h, lnki_type, lnki_upright, lnki_ext.Id(), orig_w, orig_h, Xof_img_size.Thumb_width_img);
 			html_w = img_size.Html_w(); html_h = img_size.Html_h(); file_w = img_size.File_w();
 			file_is_orig = img_size.File_is_orig();
@@ -106,7 +106,7 @@ public class Xof_fsdb_itm {
 		html_ids_ary = new_ary;
 		html_ids_ary_max = new_len;
 	}
-	public byte Rslt_reg() {return rslt_reg;} public Xof_fsdb_itm Rslt_reg_(byte v) {this.rslt_reg = v; return this;} private byte rslt_reg = gplx.xowa.files.main.orig.Xof_orig_wkr_.Tid_null;
+	public byte Rslt_reg() {return rslt_reg;} public Xof_fsdb_itm Rslt_reg_(byte v) {this.rslt_reg = v; return this;} private byte rslt_reg = gplx.xowa.files.wiki_orig.Xof_wiki_orig_wkr_.Tid_null;
 	public byte Rslt_qry() {return rslt_qry;} public Xof_fsdb_itm Rslt_qry_(byte v) {this.rslt_qry = v; return this;} private byte rslt_qry;
 	public byte Rslt_bin() {return rslt_bin;} public Xof_fsdb_itm Rslt_bin_(byte v) {this.rslt_bin = v; return this;} private byte rslt_bin;
 	public byte Rslt_cnv() {return rslt_cnv;} public Xof_fsdb_itm Rslt_cnv_(byte v) {this.rslt_cnv = v; return this;} private byte rslt_cnv;

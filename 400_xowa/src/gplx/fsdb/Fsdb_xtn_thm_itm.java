@@ -33,7 +33,7 @@ public class Fsdb_xtn_thm_itm {
 		rv.id = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_id);
 		rv.owner = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_owner_id);
 		rv.width = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_w);
-		rv.thumbtime = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_thumbtime) / Fsdb_xtn_thm_tbl.Thumbtime_multiplier;
+		rv.thumbtime = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_thumbtime);
 		rv.height = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_h);
 		rv.size = rdr.ReadLong(Fsdb_xtn_thm_tbl.Fld_thm_size);
 		rv.modified = rdr.ReadStr(Fsdb_xtn_thm_tbl.Fld_thm_modified);

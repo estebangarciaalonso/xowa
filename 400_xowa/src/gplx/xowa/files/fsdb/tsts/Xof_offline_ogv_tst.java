@@ -35,6 +35,7 @@ public class Xof_offline_ogv_tst {
 		fxt.Init_bin_fsdb(Xof_fsdb_arg_init_bin.new_().Init_commons_thumb("A.ogv", 440, 400, 10));
 		fxt.Exec_get(Xof_fsdb_arg_exec_get.new_().Init_orig("A.ogv").Lnki_thumbtime_(10).Rslt_reg_missing_reg().Rslt_qry_mock_().Rslt_bin_fsdb_().Rslt_cnv_n_());
 		fxt.Test_fsys("mem/root/common/thumb/d/0/A.ogv/440px@10.jpg", "440,400");
+		fxt.Exec_get(Xof_fsdb_arg_exec_get.new_().Init_thumb("A.png", Xop_lnki_tkn.Width_null, 130));
 		fxt.Test_regy_pass("A.ogv");
 	}
 }

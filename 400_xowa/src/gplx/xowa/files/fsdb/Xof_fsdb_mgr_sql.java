@@ -16,8 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
-import gplx.dbs.*; import gplx.fsdb.*; import gplx.xowa.files.main.orig.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.qrys.*;
-public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr {
+import gplx.dbs.*; import gplx.fsdb.*; import gplx.xowa.files.wiki_orig.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.qrys.*;
+public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	private Db_provider img_regy_provider = null;		
 	private Io_url fs_dir;
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
@@ -32,6 +32,7 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr {
 	public boolean Init_by_wiki(Xow_wiki wiki) {
 		if (init) return false;
 		usr_dlg = wiki.App().Usr_dlg();
+		mnt_mgr.Usr_dlg_(usr_dlg);
 		init = true;
 		Xow_repo_mgr repo_mgr = wiki.File_mgr().Repo_mgr();
 		Init_by_wiki(wiki, wiki.App().Fsys_mgr().File_dir().GenSubDir(wiki.Domain_str()), wiki.App().Fsys_mgr().File_dir(), repo_mgr);
@@ -46,13 +47,13 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr {
 	public void Init_by_wiki(Xow_wiki wiki, Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr) {
 		this.fs_dir = fs_dir;
 		this.db_dir = db_dir;
-		img_regy_provider = Init_img_regy_provider(db_dir);
+		img_regy_provider = Init_wiki_orig_provider(db_dir);
 		mnt_mgr.Init(db_dir);
 		bin_mgr = new Xof_bin_mgr(wiki, this, repo_mgr);
 		bin_wkr_fsdb = new Xof_bin_wkr_fsdb_sql(this).Bin_bfr_len_(64 * Io_mgr.Len_kb);	// most thumbs are 40 kb
 	}	private boolean init = false;
 	public void Reg_select(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms) {
-		Xof_orig_fil_tbl.Select_list(img_regy_provider, exec_tid, itms, url_bldr, bin_mgr.Repo_mgr());
+		Xof_wiki_orig_tbl.Select_list(img_regy_provider, exec_tid, itms, url_bldr, bin_mgr.Repo_mgr());
 		Xof_fsdb_mgr_utl._.Fsdb_search(this, fs_dir, win_wtr, exec_tid, itms, bin_mgr.Repo_mgr(), url_bldr);
 	}
 	public Fsdb_db_bin_fil Bin_db_get(int mnt_id, int bin_db_id) {
@@ -62,8 +63,8 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr {
 	public Fsdb_xtn_thm_itm Thm_select_bin(byte[] dir, byte[] fil, int width, int thumbtime)			{return mnt_mgr.Thm_select_bin(dir, fil, width, thumbtime);}
 	public void Reg_insert(Xof_fsdb_itm itm, byte repo_id, byte status) {
 		byte[] orig_page = itm.Orig_ttl();
-		if (!Xof_orig_fil_tbl.Select_itm_exists(img_regy_provider, orig_page))
-			Xof_orig_fil_tbl.Insert(img_regy_provider, itm.Reg_id(), orig_page, status, repo_id, itm.Orig_redirect(), itm.Lnki_ext().Id(), itm.Orig_w(), itm.Orig_h());
+		if (!Xof_wiki_orig_tbl.Select_itm_exists(img_regy_provider, orig_page))
+			Xof_wiki_orig_tbl.Insert(img_regy_provider, orig_page, status, repo_id, itm.Orig_redirect(), itm.Lnki_ext().Id(), itm.Orig_w(), itm.Orig_h());
 	}
 	public void Fil_insert(Fsdb_fil_itm rv    , byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		mnt_mgr.Fil_insert(rv, dir, fil, ext_id, modified, hash, bin_len, bin_rdr);
@@ -86,11 +87,15 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr {
 		mnt_mgr.Rls();
 		img_regy_provider.Rls();
 	}
-	public static Db_provider Init_img_regy_provider(Io_url root_dir) {
+	public static Db_provider Init_wiki_orig_provider(Io_url root_dir) {
 		BoolRef created = BoolRef.false_();
-		Db_provider rv = Sqlite_engine_.Provider_load_or_make_(root_dir.GenSubFil("file.orig#00.sqlite3"), created);
+		Db_provider rv = Sqlite_engine_.Provider_load_or_make_(root_dir.GenSubFil("wiki.orig#00.sqlite3"), created);
 		if (created.Val())
-			Xof_orig_fil_tbl.Create_table(rv);
+			Xof_wiki_orig_tbl.Create_table(rv);
 		return rv;
 	}
+	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
+		if		(ctx.Match(k, Invk_mnt_mgr))	return mnt_mgr;
+		else	return GfoInvkAble_.Rv_unhandled;
+	}	private static final String Invk_mnt_mgr = "mnt_mgr";
 }

@@ -17,5 +17,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.fsdb; import gplx.*;
 public class Fsdb_xtn_tid_ {
-	public static final byte Tid_none = 0, Tid_thm = 1, Tid_img = 2;
+	public static final int Tid_none = 0, Tid_thm = 1, Tid_img = 2;
 }

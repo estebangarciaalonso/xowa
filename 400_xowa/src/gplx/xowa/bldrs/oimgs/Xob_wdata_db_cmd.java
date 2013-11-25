@@ -23,14 +23,14 @@ public class Xob_wdata_db_cmd extends Xob_dump_mgr_base implements Xob_cmd {
 	private Wdata_wiki_mgr wdata_mgr; private Json_parser json_parser;
 	private byte[] lang_key = Xol_lang_.Key_en;
 	public Xob_wdata_db_cmd(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
-	@Override public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "oimg.wdata_db";
+	@Override public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "wiki.wdata_db";
 	@Override public byte Init_redirect() {return Bool_.N_byte;}	// json will never be found in a redirect
 	@Override public int[] Init_ns_ary() {return Int_.Ary(Xow_ns_.Id_main, Wdata_wiki_mgr.Ns_property);}
 	@Override protected void Init_reset(Db_provider p) {
 		p.Exec_sql("DELETE FROM " + gplx.xowa.dbs.tbls.Xodb_xowa_cfg_tbl.Tbl_name);
 	}
 	@Override protected Db_provider Init_db_file() {
-		Xodb_db_file tbl_file = Xodb_db_file.init_(wiki, "wdata_db");
+		Xodb_db_file tbl_file = Xodb_db_file.init_(wiki.Fsys_mgr().Root_dir(), "wdata_db.sqlite3");
 		Db_provider provider = tbl_file.Provider();
 		tbl_mgr.Init(provider);
 		return provider;

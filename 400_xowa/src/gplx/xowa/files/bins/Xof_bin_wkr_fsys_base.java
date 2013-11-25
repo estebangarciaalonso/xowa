@@ -19,7 +19,6 @@ package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xow
 import gplx.xowa.files.fsdb.*;
 public abstract class Xof_bin_wkr_fsys_base implements Xof_bin_wkr, GfoInvkAble {
 	public Xof_bin_wkr_fsys_base() {}
-	public String Bin_wkr_key() {return key;} public void Bin_wkr_key_(String v) {key = v;} private String key;
 	public abstract byte Bin_wkr_tid();
 	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w) {
 		byte mode = is_thumb ? Xof_repo_itm.Mode_thumb : Xof_repo_itm.Mode_orig;
@@ -54,14 +53,12 @@ class Xof_bin_wkr_fsys_wmf extends Xof_bin_wkr_fsys_wmf_base {
 	@Override public void Init_by_root() {
 		this.Url_bldr().Init_by_root(ByteAry_.Empty, Op_sys.Cur().Fsys_dir_spr_byte(), Bool_.Y, Bool_.Y, Xof_repo_itm.Dir_depth_wmf);
 	}
-	public static final String Bin_wkr_type_fsys_wmf = "xowa.fsys.wmf";
 }
 class Xof_bin_wkr_fsys_xowa extends Xof_bin_wkr_fsys_wmf_base {
 	@Override public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsys_xowa;}
 	@Override public void Init_by_root() {
 		this.Url_bldr().Init_by_root(ByteAry_.Empty, Op_sys.Cur().Fsys_dir_spr_byte(), Bool_.N, Bool_.N, Xof_repo_itm.Dir_depth_xowa);
 	}
-	public static final String Bin_wkr_type_fsys_wmf = "xowa.fsys.xowa";
 }
 class Xof_bin_wkr_fsys_dir extends Xof_bin_wkr_fsys_base {
 	private Io_url dir;

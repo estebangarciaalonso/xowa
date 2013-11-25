@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.ios.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.oimgs.*;
+import gplx.ios.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.wikis.images.*;
 public class Xobc_img_merge_ttl_sql extends Xob_itm_dump_base implements Xob_cmd, GfoInvkAble {
 	public Xobc_img_merge_ttl_sql(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki); this.make_fil_len = Io_mgr.Len_mb;}
 	public String Cmd_key() {return KEY;} public static final String KEY = "img.merge_ttl";
@@ -28,7 +28,7 @@ public class Xobc_img_merge_ttl_sql extends Xob_itm_dump_base implements Xob_cmd
 	public void Cmd_bgn(Xob_bldr bldr) {
 		this.Init_dump(KEY);
 
-		sql_size_dir = wiki.Fsys_mgr().Tmp_dir().GenSubDir_nest(Xob_image_sql.KEY, "make");
+		sql_size_dir = wiki.Fsys_mgr().Tmp_dir().GenSubDir_nest(Xob_wiki_image_sql.KEY, "make");
 		ttl_name_dir = wiki.Fsys_mgr().Tmp_dir().GenSubDir_nest(Xobc_img_dump_ttl.KEY, "make");
 		redirect_name_dir = temp_dir.GenSubDir("redirect_dump");
 		redirect_sort_dir = temp_dir.GenSubDir("redirect_sort");

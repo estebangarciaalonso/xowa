@@ -16,12 +16,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
-import gplx.fsdb.*; import gplx.xowa.files.main.orig.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.bins.*;
+import gplx.fsdb.*; import gplx.xowa.files.wiki_orig.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.bins.*;
 public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 	private Hash_adp_bry bin_hash = new Hash_adp_bry(true); private ByteAryBfr bin_key_bfr = ByteAryBfr.new_();
 	private Hash_adp_bry reg_hash = new Hash_adp_bry(true);		
 	public boolean Tid_is_mem() {return true;}
-	public String Bin_wkr_key() {return key;} public void Bin_wkr_key_(String v) {key = v;} private String key;
 	public Xof_qry_mgr Qry_mgr() {return qry_mgr;} private Xof_qry_mgr qry_mgr = new Xof_qry_mgr();
 	public Xof_bin_mgr Bin_mgr() {return bin_mgr;} private Xof_bin_mgr bin_mgr;
 	public Xof_bin_wkr Bin_wkr_fsdb() {return this;}
@@ -57,7 +56,7 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 	public void Reg_insert(Xof_fsdb_itm fsdb_itm, byte repo_id, byte status) {
 		byte[] fsdb_itm_ttl = fsdb_itm.Orig_ttl();
 		if (reg_hash.Has(fsdb_itm_ttl)) return;
-		Xof_orig_fil_itm regy_itm = new Xof_orig_fil_itm();
+		Xof_wiki_orig_itm regy_itm = new Xof_wiki_orig_itm();
 		regy_itm.Ttl_(fsdb_itm_ttl).Status_(status).Orig_repo_(repo_id).Orig_redirect_(fsdb_itm.Orig_redirect()).Orig_ext_(fsdb_itm.Lnki_ext().Id()).Orig_w_(fsdb_itm.Orig_w()).Orig_h_(fsdb_itm.Orig_h());
 		reg_hash.Add(fsdb_itm_ttl, regy_itm);
 	}
@@ -65,9 +64,9 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 		int itms_len = itms.Count();
 		for (int i = 0; i < itms_len; i++) {
 			Xof_fsdb_itm itm = (Xof_fsdb_itm)itms.FetchAt(i);
-			Xof_orig_fil_itm reg_itm = (Xof_orig_fil_itm)reg_hash.Get_by_bry(itm.Lnki_ttl());
+			Xof_wiki_orig_itm reg_itm = (Xof_wiki_orig_itm)reg_hash.Get_by_bry(itm.Lnki_ttl());
 			if (reg_itm == null) {
-				itm.Rslt_reg_(Xof_orig_wkr_.Tid_missing_reg);
+				itm.Rslt_reg_(Xof_wiki_orig_wkr_.Tid_missing_reg);
 				continue;
 			}
 			byte repo_id = reg_itm.Orig_repo();
@@ -83,26 +82,26 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 		}
 		Xof_fsdb_mgr_utl._.Fsdb_search(this, fs_dir, win_wtr, exec_tid, itms, bin_mgr.Repo_mgr(), url_bldr);
 	}
-	public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsdb;}
+	public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsdb_wiki;}
 	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w) {
 		byte[] wiki = itm.Orig_wiki();
 		byte[] ttl = itm.Lnki_ttl();
 		int thumbtime = itm.Lnki_thumbtime(); 
-		byte[] key = is_thumb || itm.Lnki_ext().Id_is_thumbable2() ? Key_bld_thm(wiki, ttl, w, thumbtime) : Key_bld_fil(wiki, ttl);
+		byte[] key = Gen_key(is_thumb, itm.Lnki_ext(), wiki, ttl, w, thumbtime);
 		Fsdb_mem_itm mem_itm = (Fsdb_mem_itm)bin_hash.Get_by_bry(key);
 		return mem_itm == null ? gplx.ios.Io_stream_rdr_.Null : gplx.ios.Io_stream_rdr_.mem_(mem_itm.Bin());
+	}
+	private byte[] Gen_key(boolean is_thumb, Xof_ext ext, byte[] wiki, byte[] ttl, int w, int thumbtime) {
+		return ext.Id_is_audio_strict()
+			? Key_bld_fil(wiki, ttl)					// use fil for audio b/c it doesn't have w, thumbtime
+			: Key_bld_thm(wiki, ttl, w, thumbtime)		// use thm for everything else, even if thumb is not specified; [[File:A.png]] -> enwiki|A.png|-1,-1
+			;
 	}
 	public boolean Bin_wkr_get_to_url(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
 		byte[] wiki = itm.Orig_wiki();
 		byte[] ttl = itm.Lnki_ttl();
 		int thumbtime = itm.Lnki_thumbtime(); 
-		byte[] key = null;
-		if (is_thumb || itm.Lnki_ext().Id_is_thumbable2()) {
-			key = Key_bld_thm(wiki, ttl, w, thumbtime);
-		}
-		else {
-			key = Key_bld_fil(wiki, ttl);
-		}
+		byte[] key = Gen_key(is_thumb, itm.Lnki_ext(), wiki, ttl, w, thumbtime);
 		Fsdb_mem_itm mem_itm = (Fsdb_mem_itm)bin_hash.Get_by_bry(key);
 		if (mem_itm == null) return false;
 		Io_mgr._.SaveFilBry(bin_url, mem_itm.Bin());

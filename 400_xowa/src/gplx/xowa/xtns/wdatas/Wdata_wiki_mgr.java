@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.wdatas; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.json.*; import gplx.xowa.wikis.*;
+import gplx.xowa.parsers.logs.*;
 public class Wdata_wiki_mgr implements GfoInvkAble {
 	public Wdata_wiki_mgr(Xoa_app app) {
 		this.app = app;
@@ -28,7 +29,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 	public Xow_wiki Wdata_wiki() {if (wdata_wiki == null) wdata_wiki = app.Wiki_mgr().Get_by_key_or_make(domain).Init_assert(); return wdata_wiki;} private Xow_wiki wdata_wiki;
 	public Json_parser Parser() {return parser;} Json_parser parser = new Json_parser();
 	public Wdata_doc_parser Page_doc_parser() {return page_doc_parser;} Wdata_doc_parser page_doc_parser;
-	public Wdata_pf_property_wkr Property_wkr() {return property_wkr;} private Wdata_pf_property_wkr property_wkr;
+	public Xop_log_property_wkr Property_wkr() {return property_wkr;} private Xop_log_property_wkr property_wkr;
 	public IntRef Tmp_prop_ref() {return tmp_prop_ref;} IntRef tmp_prop_ref = IntRef.zero_();
 	public void Clear() {
 		qids_cache.Clear();
@@ -163,8 +164,8 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 		return this;
 	}
 	private static final String Invk_enabled = "enabled", Invk_enabled_ = "enabled_", Invk_domain = "domain", Invk_domain_ = "domain_", Invk_property_wkr = "property_wkr";
-	public Wdata_pf_property_wkr Property_wkr_or_new() {
-		if (property_wkr == null) property_wkr = new Wdata_pf_property_wkr();
+	public Xop_log_property_wkr Property_wkr_or_new() {
+		if (property_wkr == null) property_wkr = app.Log_mgr().Make_wkr_property();
 		return property_wkr;
 	}
 	public static final int Ns_property = 120;

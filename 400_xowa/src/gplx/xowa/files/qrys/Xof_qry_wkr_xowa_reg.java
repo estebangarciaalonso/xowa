@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.qrys; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
-import gplx.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.files.fsdb.*; import gplx.xowa.files.main.orig.*;
+import gplx.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.files.fsdb.*; import gplx.xowa.files.wiki_orig.*;
 public class Xof_qry_wkr_xowa_reg implements Xof_qry_wkr {
 	private Db_provider provider;
 	public Xof_qry_wkr_xowa_reg(Db_provider p) {this.provider = p;}
@@ -27,18 +27,18 @@ public class Xof_qry_wkr_xowa_reg implements Xof_qry_wkr {
 			rdr = Select(provider, itm.Lnki_ttl());
 			if (!rdr.MoveNextPeer()) return false;
 			// NOTE: no need to set redirect; file_orig stores direct entries; EX: A.png with 20,30 redirects to B.png; file_orig stores B.png,20,30,A.png
-			byte[] orig_redirect = rdr.ReadBryByStr(Xof_orig_fil_tbl.Fld_fo_orig_redirect);
+			byte[] orig_redirect = rdr.ReadBryByStr(Xof_wiki_orig_tbl.Fld_orig_redirect);
 			if (ByteAry_.Len_gt_0(orig_redirect))
 				itm.Orig_redirect_(orig_redirect);
-			int orig_w = rdr.ReadInt(Xof_orig_fil_tbl.Fld_fo_orig_w);
-			int orig_h = rdr.ReadInt(Xof_orig_fil_tbl.Fld_fo_orig_h);
+			int orig_w = rdr.ReadInt(Xof_wiki_orig_tbl.Fld_orig_w);
+			int orig_h = rdr.ReadInt(Xof_wiki_orig_tbl.Fld_orig_h);
 			itm.Orig_size_(orig_w, orig_h);
 			return true;
 		}
 		finally {rdr.Rls();}
 	}
 	private DataRdr Select(Db_provider p, byte[] ttl) {
-		Db_stmt stmt = Db_stmt_.new_select_(p,	Xof_orig_fil_tbl.Tbl_name, String_.Ary(Xof_orig_fil_tbl.Fld_fo_ttl));
+		Db_stmt stmt = Db_stmt_.new_select_(p,	Xof_wiki_orig_tbl.Tbl_name, String_.Ary(Xof_wiki_orig_tbl.Fld_orig_ttl));
 		return stmt.Clear().Val_str_by_bry_(ttl).Exec_select();
 	}
 }

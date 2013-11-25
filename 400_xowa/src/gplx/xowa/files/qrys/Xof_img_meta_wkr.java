@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.qrys; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
-import gplx.dbs.*; import gplx.xowa.dbs.tbls.*;
+import gplx.dbs.*; import gplx.xowa.bldrs.wikis.images.*;
 public interface Xof_img_meta_wkr {
-	Xodb_image_itm Find(Xow_wiki wiki, byte[] ttl);
+	Xob_wiki_image_itm Find(Xow_wiki wiki, byte[] ttl);
 }

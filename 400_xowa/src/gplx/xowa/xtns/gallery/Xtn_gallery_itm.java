@@ -21,6 +21,7 @@ public class Xtn_gallery_itm {
 	public int Ttl_bgn() {return ttl_bgn;} public Xtn_gallery_itm Ttl_bgn_(int v) {ttl_bgn = v; return this;} private int ttl_bgn;
 	public int Ttl_end() {return ttl_end;} public Xtn_gallery_itm Ttl_end_(int v) {ttl_end = v; return this;} private int ttl_end;
 	public byte[] Caption_bry() {return caption_bry;} public Xtn_gallery_itm Caption_bry_(byte[] v) {caption_bry = v; return this;} private byte[] caption_bry;
+	public Xop_root_tkn Caption_tkn() {return caption_tkn;} public Xtn_gallery_itm Caption_tkn_(Xop_root_tkn v) {caption_tkn = v; return this;} private Xop_root_tkn caption_tkn;
 	public int Alt_bgn() {return alt_bgn;} public Xtn_gallery_itm Alt_bgn_(int v) {alt_bgn = v; return this;} private int alt_bgn;
 	public int Alt_end() {return alt_end;} public Xtn_gallery_itm Alt_end_(int v) {alt_end = v; return this;} private int alt_end;
 	public int Link_bgn() {return link_bgn;} public Xtn_gallery_itm Link_bgn_(int v) {link_bgn = v; return this;} private int link_bgn;
@@ -30,6 +31,7 @@ public class Xtn_gallery_itm {
 		ttl = null;
 		ttl_bgn = ttl_end = alt_bgn = alt_end = link_bgn = link_end = ByteAry_.NotFound;
 		caption_bry = null;	// NOTE: use null instead of ""; more legible tests
+		caption_tkn = null;
 		return this;
 	}
 }

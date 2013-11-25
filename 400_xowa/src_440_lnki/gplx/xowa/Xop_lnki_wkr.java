@@ -156,13 +156,7 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 						break;
 					case Xol_lnki_arg_parser.Tid_noicon:			lnki.Media_icon_n_();  break;
 					case Xol_lnki_arg_parser.Tid_thumbtime:		{
-						int valTknBgn = arg.Val_tkn().Src_bgn(), valTknEnd = arg.Val_tkn().Src_end();
-						byte[] bry = ByteAry_.Trim(src, valTknBgn, valTknEnd);	// some tkns have trailing space; EX.WWI: [[File:Bombers of WW1.ogg|thumb |thumbtime=3]]
-						numberParser.Parse(bry, 0, bry.length);
-						if (numberParser.HasErr())
-							ctx.Msg_log().Add_itm_none(Xop_lnki_log.Upright_val_is_invalid, src, valTknBgn, valTknEnd);
-						else
-							lnki.Thumbtime_(numberParser.AsInt());
+						Thumbtime_parse(ctx, lnki, arg, src);
 						break;
 					}
 				}
@@ -171,6 +165,54 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		} catch (Exception e) {
 			ctx.App().Usr_dlg().Warn_many("", "", "fatal error in lnki: page=~{0} src=~{1} err=~{2}", String_.new_utf8_(ctx.Page().Page_ttl().Full_db()), String_.new_utf8_(src, lnki.Src_bgn(), lnki.Src_end()), Err_.Message_gplx(e));
 			return false;
+		}
+	}
+	private void Thumbtime_parse(Xop_ctx ctx, Xop_lnki_tkn lnki, Arg_nde_tkn arg, byte[] src) {
+		int val_tkn_bgn = arg.Val_tkn().Src_bgn(), val_tkn_end = arg.Val_tkn().Src_end();
+		byte[] val_bry = ByteAry_.Trim(src, val_tkn_bgn, val_tkn_end);	// some tkns have trailing space; EX.WWI: [[File:Bombers of WW1.ogg|thumb |thumbtime=3]]
+		int val_bry_len = val_bry.length;
+		int colon_pos = ByteAry_.FindBwd(val_bry, Byte_ascii.Colon);
+		if (colon_pos == ByteAry_.NotFound) {	// integer; EX: thumbtime=123
+			numberParser.Parse(val_bry, 0, val_bry_len);
+			if (numberParser.HasErr())
+				ctx.Msg_log().Add_itm_none(Xop_lnki_log.Upright_val_is_invalid, src, val_tkn_bgn, val_tkn_end);
+			else
+				lnki.Thumbtime_(numberParser.AsInt());
+		}
+		else {									// segment; EX: thumbtime=1:23
+			int seconds = 0, multiplier = 1, seg_idx = 0;
+			int seg_bgn = colon_pos + 1, seg_end = val_bry_len;
+			boolean valid = true;
+			while (valid) {
+				numberParser.Parse(val_bry, seg_bgn, seg_end);
+				if (numberParser.HasErr()) {
+					ctx.Msg_log().Add_itm_none(Xop_lnki_log.Upright_val_is_invalid, src, val_tkn_bgn, val_tkn_end);
+					valid = false;
+				}
+				if (!valid) break;
+				int seg_val = numberParser.AsInt();
+				switch (seg_idx) {
+					case 0: multiplier =    1; break; // seconds
+					case 1: multiplier =   60; break; // minutes
+					case 2: multiplier = 3600; break; // hours
+					default:
+						ctx.Msg_log().Add_itm_none(Xop_lnki_log.Upright_val_is_invalid, src, val_tkn_bgn, val_tkn_end);
+						valid = false;
+						break;
+				}
+				if (!valid) break;
+				seconds += (seg_val * multiplier);
+				seg_idx++;
+				if (seg_bgn == 0) {	// right-most seg; exit; EX: 1:23:45; reached "1" so exit
+					lnki.Thumbtime_(seconds);
+					break;
+				}
+				seg_end = seg_bgn - 1;														// -1=place at colon    ; EX: "1:23:45"; seg_end is at ":"
+				colon_pos = ByteAry_.FindBwd(val_bry, Byte_ascii.Colon, seg_end - 1);		// -1=place before colon; EX: "1:23:45"; search at "3" (before colon)
+				seg_bgn = colon_pos == ByteAry_.NotFound
+					? 0
+					: colon_pos + 1;
+			}
 		}
 	}
 	public int ChkForTail(Xol_lang lang, byte[] src, int curPos, int srcLen, Xop_lnki_tkn lnki) {

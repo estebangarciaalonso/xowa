@@ -45,7 +45,7 @@ public class Xof_xfer_mgr {
 				&& src_repo.Wmf_api()						// make sure wmf_api enabled
 				)
 			Call_wmf_api();
-		if 		(ext.Id_is_thumbable())										Make_img();
+		if 		(ext.Id_is_thumbable_img())								Make_img();
 		else if (ext.Id_is_video()&& !meta_itm.Thumbs_indicates_oga())	Make_vid();
 		else															Make_other();
 		return rslt.Pass();

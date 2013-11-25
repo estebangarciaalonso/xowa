@@ -31,15 +31,19 @@ public abstract class Xog_win_view_base implements GfoInvkAble {
 	public abstract Xoa_page Page();
 	public abstract void Page_(Xoa_page page);
 	public void Launch() {
+		Gfo_log_bfr log_bfr = app.Log_bfr();
 		Xow_wiki home_wiki = app.User().Wiki();
+		log_bfr.Add("window.launch: getting page");
 		Xoa_page launch_page = Launch_page(home_wiki, app.Sys_cfg().Launch_url());
 		if (launch_page.Missing())
-			//launch_page = Launch_page(home_wiki, app.User().Cfg_mgr().Startup_mgr().Page_url());
 			launch_page = Launch_page(home_wiki, Xoa_sys_cfg.Launch_url_dflt);
+		log_bfr.Add("window.launch: showing page");
 		Show_page(launch_page);
 		this.History_mgr().Add(launch_page);
 		this.Html_box().Focus(); //this.Html_box().Html_doc_body_focus();	// focus the html_box so wheel scroll works; DATE:2013-02-08
 		app.Gui_wtr().Prog_none(GRP_KEY, "launch.done", "");
+		log_bfr.Add("window.launch: completed");
+		app.Gui_wtr().Log_wtr().Log_msg_to_session_direct(log_bfr.Xto_str());
 	}
 	Xoa_page Launch_page(Xow_wiki home_wiki, String launch_str) {
 		Xoa_url launch_url = Xoa_url_parser.Parse_url(app, home_wiki, launch_str);

@@ -19,7 +19,6 @@ package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xow
 import gplx.xowa.files.fsdb.*;
 public interface Xof_bin_wkr extends GfoInvkAble {
 	byte Bin_wkr_tid();
-	String Bin_wkr_key(); void Bin_wkr_key_(String v);
 	gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w);
 	boolean Bin_wkr_get_to_url(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url);
 }

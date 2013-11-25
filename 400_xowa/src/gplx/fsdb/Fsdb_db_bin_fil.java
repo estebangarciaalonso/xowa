@@ -35,6 +35,7 @@ public class Fsdb_db_bin_fil implements RlsAble {
 		if (provider == null) {
 			if (cmd_mode == Db_cmd_mode.Create) {
 				provider = Db_provider_.new_(Db_connect_sqlite.make_(url));
+				Sqlite_engine_.Pragma_page_size_4096(provider);
 				Fsdb_bin_tbl.Create_table(provider);
 			}
 			else
@@ -59,10 +60,10 @@ public class Fsdb_db_bin_fil implements RlsAble {
 	}
 	public static Fsdb_db_bin_fil load_(DataRdr rdr, Io_url dir) {
 		return new_
-		(	rdr.ReadInt(Fsdb_db_bin_tbl.Fld_fdb_id)
-		,	dir.GenSubFil(rdr.ReadStr(Fsdb_db_bin_tbl.Fld_fdb_url))
-		,	rdr.ReadLong(Fsdb_db_bin_tbl.Fld_fdb_bin_len)
-		,	rdr.ReadLong(Fsdb_db_bin_tbl.Fld_fdb_bin_max)
+		(	rdr.ReadInt(Fsdb_db_bin_tbl.Fld_uid)
+		,	dir.GenSubFil(rdr.ReadStr(Fsdb_db_bin_tbl.Fld_url))
+		,	rdr.ReadLong(Fsdb_db_bin_tbl.Fld_bin_len)
+		,	rdr.ReadLong(Fsdb_db_bin_tbl.Fld_bin_max)
 		,	Db_cmd_mode.Ignore
 		);
 	}

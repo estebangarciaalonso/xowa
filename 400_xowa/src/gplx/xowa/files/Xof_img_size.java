@@ -93,6 +93,7 @@ public class Xof_img_size {
 	public static int Upright_calc(double upright, int width) {		
 		if 		(upright == Upright_null)		return width;	// upright is null; return width
 		else if (upright == Upright_default)	upright = .75f;	// upright is default; set val to .75; EX: [[File:A.png|upright]]
+		if		(width == Null)					return Null;	// width is null (-1); must exit early or will become 0; DATE:2013-11-23
 		int rv = (int)(width * upright);  
 		return Round_10p2(rv);
 	}

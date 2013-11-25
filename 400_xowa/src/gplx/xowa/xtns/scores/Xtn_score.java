@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scores; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.xowa.html.*; import gplx.xowa.files.*;
+import gplx.xowa.parsers.logs.*;
 public class Xtn_score implements Xop_xnde_xtn, Xop_xnde_atr_parser, Xoh_cmd_itm {
 	public Xop_root_tkn Xtn_root() {return null;}
 	public boolean Xtn_literal() {return false;}
@@ -47,7 +48,9 @@ public class Xtn_score implements Xop_xnde_xtn, Xop_xnde_atr_parser, Xoh_cmd_itm
 		code = ByteAry_.Mid(src, xnde.Tag_open_end(), xnde.Tag_close_bgn());
 		code = ByteAry_.Replace(code, gplx.xowa.bldrs.xmls.Xob_xml_parser_.Bry_tab_ent, gplx.xowa.bldrs.xmls.Xob_xml_parser_.Bry_tab);
 		ttl = ctx.Page().Page_ttl();
-	}	byte[] code; Xoa_ttl ttl; 	
+		boolean log_wkr_enabled = Log_wkr != Xop_log_basic_wkr.Null; if (log_wkr_enabled) Log_wkr.Log_end_xnde(ctx.Page(), Xop_log_basic_wkr.Tid_score, src, xnde);
+	}	public static Xop_log_basic_wkr Log_wkr = Xop_log_basic_wkr.Null;
+	private byte[] code; Xoa_ttl ttl; 	
 
 	public static void To_html(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		Xtn_score nde = (Xtn_score)xnde.Xnde_data();

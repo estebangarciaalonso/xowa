@@ -67,7 +67,7 @@ public class Xtn_gallery_nde_tst {
 		fxt.tst_Parse_page_wiki("<gallery>A.png|cc</gallery>"
 		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_data_
 		(	new_chkr_gallery_mgr().Expd_subs_
-			(	new_chkr_gallery_itm().Expd_lnki_("A.png")
+			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png")	// NOTE: MW converts "A.png" to "File:A.png"
 			)
 		));
 	}
@@ -131,11 +131,6 @@ public class Xtn_gallery_nde_tst {
 			(	new_chkr_gallery_mgr().Expd_subs_()
 			)
 		);
-	}
-	private void Init_html() {
-		Io_mgr._.InitEngine_mem();	// clear out mem files
-		Io_url rootDir = Io_url_.mem_dir_("mem").GenSubDir_nest(Xoa_app_.Name);
-		fxt.App().Fsys_mgr().Temp_dir_(rootDir.OwnerDir().GenSubDir("tmp"));
 	}
 	@Test   public void Html() {
 		Init_html();
@@ -296,7 +291,54 @@ public class Xtn_gallery_nde_tst {
 		,	"</ul>"
 		));
 	}
+	@Test   public void Ttl_has_no_ns() {	// PURPOSE: MW allows ttl to not have ns; DATE: 2013-11-18
+		Init_html();
+		fxt.tst_Parse_page_wiki_str("<gallery>A.png|b</gallery>", String_.Concat_lines_nl_skipLast
+		(	"<ul class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+		,	"  <li class=\"gallerybox\" style=\"width:155px;\">"
+		,	"    <div style=\"width:155px;\">"
+		,	"      <div class=\"thumb\" style=\"width:150px;\">"
+		,	"        <div id=\"xowa_file_gallery_div_0\" style=\"margin:15px auto;\">"
+		,	"          <a href=\"/wiki/File:A.png\" class=\"image\">"
+		,	"            <img id=\"xowa_file_img_0\" alt=\"A.png\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"120\" />"
+		,	"          </a>"
+		,	"        </div>"
+		,	"      </div>"
+		,	"      <div class=\"gallerytext\">b"
+		,	"      </div>"
+		,	"    </div>"
+		,	"  </li>"
+		,	"</ul>"
+		));
+	}
+	@Test   public void Ref() {	// PURPOSE: <ref> inside <gallery> was not showing up in <references>; DATE:2013-10-09
+		Init_html();
+		fxt.tst_Parse_page_wiki_str("<gallery>File:A.png|<ref name='a'>b</ref></gallery><references/>", String_.Concat_lines_nl_skipLast
+		(	"<ul class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+		,	"  <li class=\"gallerybox\" style=\"width:155px;\">"
+		,	"    <div style=\"width:155px;\">"
+		,	"      <div class=\"thumb\" style=\"width:150px;\">"
+		,	"        <div id=\"xowa_file_gallery_div_0\" style=\"margin:15px auto;\">"
+		,	"          <a href=\"/wiki/File:A.png\" class=\"image\">"
+		,	"            <img id=\"xowa_file_img_0\" alt=\"A.png\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"120\" />"
+		,	"          </a>"
+		,	"        </div>"
+		,	"      </div>"
+		,	"      <div class=\"gallerytext\"><sup id=\"cite_ref-a_0-0\" class=\"reference\"><a href=\"#cite_note-a-0\">[1]</a></sup>"
+		,	"      </div>"
+		,	"    </div>"
+		,	"  </li>"
+		,	"</ul><ol class=\"references\">"
+		,	"<li id=\"cite_note-a-0\"><span class=\"mw-cite-backlink\"><a href=\"#cite_ref-a_0-0\">^</a></span> <span class=\"reference-text\">b</span></li>"
+		,	"</ol>"
+		));
+	}
 
+	private void Init_html() {
+		Io_mgr._.InitEngine_mem();	// clear out mem files
+		Io_url rootDir = Io_url_.mem_dir_("mem").GenSubDir_nest(Xoa_app_.Name);
+		fxt.App().Fsys_mgr().Temp_dir_(rootDir.OwnerDir().GenSubDir("tmp"));
+	}
 	private Xtn_gallery_mgr_data_chkr new_chkr_gallery_mgr()	{return new Xtn_gallery_mgr_data_chkr();}
 	private Xtn_gallery_itm_chkr new_chkr_gallery_itm()	{return new Xtn_gallery_itm_chkr();}
 }

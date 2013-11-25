@@ -43,6 +43,7 @@ public class Env_ {
 	public static void GarbageCollect() {if (mode_testing) return; System.gc();}				
 	public static long TickCount() {return TickCount_Test >= 0 ? TickCount_Test : System.currentTimeMillis();} 
 	public static int TickCount_elapsed_in_sec(long time_bgn) {return (int)(Env_.TickCount() - time_bgn) / 1000;}
+	public static int TickCount_elapsed_in_frac(long time_bgn) {return (int)(Env_.TickCount() - time_bgn);}
 	public static long TickCount_Test = -1;	// in milliseconds
 	public static void TickCount_normal() {TickCount_Test = -1;}
 	public static long System_memory_free() {return Runtime.getRuntime().freeMemory();}	

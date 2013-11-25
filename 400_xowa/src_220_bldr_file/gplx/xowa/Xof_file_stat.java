@@ -53,7 +53,7 @@ class Xof_file_stat {
 			size_180 += Calc_thumb_size(file, 180);
 			size_150 += Calc_thumb_size(file, 150);
 			size_120 += Calc_thumb_size(file, 120);
-			if (!file_type.Id_is_thumbable()) break;
+			if (!file_type.Id_is_thumbable_img()) break;
 		}
 	}
 	int Calc_thumb_size(Xofo_file file, int thumb_w) {		
@@ -64,7 +64,10 @@ class Xof_file_stat {
 			case Xof_ext_.Id_jpeg: 
 			case Xof_ext_.Id_gif: 
 			case Xof_ext_.Id_tif:
-			case Xof_ext_.Id_tiff: {
+			case Xof_ext_.Id_tiff: 
+			case Xof_ext_.Id_bmp: 
+			case Xof_ext_.Id_xcf: 
+			{
 				if (file_size == 0 || orig_w == 0) return 0;
 				int bits = file.Bits();
 				if (bits == 0) bits = 8;
@@ -85,6 +88,7 @@ class Xof_file_stat {
 			case Xof_ext_.Id_ogg:
 			case Xof_ext_.Id_oga:
 			case Xof_ext_.Id_ogv:
+			case Xof_ext_.Id_flac:
 			default:
 				return file_size;
 		}

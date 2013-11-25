@@ -57,6 +57,12 @@ public class Xof_img_size_tst {
 	@Test   public void Lnki_gt_orig_thumb_example() {// EX:[[File:Adhanema Lasva.jpg|thumb|300px|The Firman given to the Bosnian Franciscans]]
 		fxt.Lnki_type_(Xop_lnki_type.Id_thumb).Lnki_(300,  -1).Orig_(149, 408).Test_html(149, 408, Bool_.Y);
 	}
+	@Test  	public void Upright_and_null_width_fails() {// PURPOSE: if width = -1, but upright is specified, ignore upright (was calculating 0 for width); DATE:2013-11-23
+		fxt.Lnki_type_(Xop_lnki_type.Id_null).Lnki_(-1, 110).Orig_(440, 220).Lnki_upright_(.50f).Test_html(220, 110, Bool_.N);
+	}
+//		@Test  	public void Upright_and_null_width_fails2() {//
+//			fxt.Lnki_type_(Xop_lnki_type.Id_null).Lnki_(-1, 40).Orig_(1, 1).Test_html(40, 40, Bool_.N);
+//		}
 }
 class Xof_img_size_fxt {
 	private Xof_img_size img_size = new Xof_img_size();

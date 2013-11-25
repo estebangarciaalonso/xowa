@@ -91,6 +91,7 @@ public class Fsdb_db_abc_mgr implements RlsAble {
 	private void Init_make(Io_url dir, Io_url boot_url) {
 		Db_connect connect = Db_connect_sqlite.make_(boot_url);
 		boot_provider = Db_provider_.new_(connect);
+		Sqlite_engine_.Pragma_page_size_4096(boot_provider);
 		atr_mgr = Fsdb_db_atr_mgr.make_(this, boot_provider, dir);
 		bin_mgr = Fsdb_db_bin_mgr.make_(boot_provider, dir);
 		tbl_cfg = new Fsdb_cfg_tbl(boot_provider, true);

@@ -24,12 +24,12 @@ public class Xodb_db_file {
 	public Db_provider Provider() {return provider;} private Db_provider provider;
 	public boolean Created() {return created;} public void Created_clear() {created = false;} private boolean created;
 
-	public static Xodb_db_file init__oimg_lnki(Xow_wiki wiki)		{return init_(wiki, Name__oimg_lnki);}
-	public static Xodb_db_file init__oimg_image(Xow_wiki wiki)		{return init_(wiki, Name__oimg_image);}
-	public static Xodb_db_file init__oimg_redirect(Xow_wiki wiki)	{return init_(wiki, Name__oimg_redirect);}
-	public static Xodb_db_file init_(Xow_wiki wiki, String name) {
-		wiki.Init_assert();
-		Io_url url = wiki.Db_mgr_as_sql().Fsys_mgr().Trg_dir().GenSubFil(name + ".sqlite3");
+	public static Xodb_db_file init__file_make(Io_url dir)		{return init_(dir, Name__file_make);}
+	public static Xodb_db_file init__wiki_image(Io_url dir)		{return init_(dir, Name__wiki_image);}
+	public static Xodb_db_file init__wiki_redirect(Io_url dir)	{return init_(dir, Name__wiki_redirect);}
+	public static Xodb_db_file init__temp_log(Io_url dir)		{return init_(dir, Name__temp_log);}
+	public static Xodb_db_file init_(Io_url dir, String name) {
+		Io_url url = dir.GenSubFil(name);
 		BoolRef created = BoolRef.false_();
 		Db_provider provider = Sqlite_engine_.Provider_load_or_make_(url, created);
 		if (created.Val()) {	// always create cfg table
@@ -38,5 +38,8 @@ public class Xodb_db_file {
 		}
 		return new Xodb_db_file(name, url, provider, created.Val());
 	}
-	public static final String Name__oimg_lnki = "oimg_lnki", Name__oimg_image = "oimg_image", Name__oimg_redirect = "oimg_redirect";
+	public static final String 
+	  Name__wiki_image = "xowa.wiki.image.sqlite3", Name__wiki_redirect = "xowa.wiki.redirect.sqlite3"
+	, Name__file_make = "xowa.file.make.sqlite3", Name__temp_log = "xowa.temp.log.sqlite3"
+	;
 }

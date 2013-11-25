@@ -42,6 +42,7 @@ public class Xop_xatr_parser_tst {
 	@Test  public void Quote_ws_nl()			{fxt.tst_("a='b\nc'", fxt.new_atr_("a", "b c"));}
 	@Test  public void Quote_ws_mult()			{fxt.tst_("a='b  c'", fxt.new_atr_("a", "b c"));}
 	@Test  public void Quote_ws_mult_mult()		{fxt.tst_("a='b  c d'", fxt.new_atr_("a", "b c d"));}	// PURPOSE: fix wherein 1st-gobble gobbled rest of spaces (was b cd)
+	@Test  public void Quote_apos()				{fxt.tst_("a=\"b c'd\"", fxt.new_atr_("a", "b c'd"));}	// PURPOSE: fix wherein apos was gobbled up; DATE:2013-11-22
 /*
 TODO:
 change ws to be end; EX: "a=b c=d" atr1 ends at 4 (not 3)

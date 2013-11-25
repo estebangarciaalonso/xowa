@@ -30,10 +30,10 @@ public class Fsdb_bin_tbl {
 		stmt.Clear()
 		.Val_int_(id)
 		.Val_byte_(tid)
-		.Val_int_(Part_id_null)
-		.Val_str_(Data_url_null)
+		.Val_int_(Null_part_id)
+		.Val_str_(Null_data_url)
 		;
-		if (Sqlite_engine_.Cfg_read_binary_stream_supported)
+		if (Sqlite_engine_.Supports_read_binary_stream)
 			stmt.Val_rdr_(bin_rdr, bin_len);
 		else {
 			byte[] bin_ary = Io_stream_rdr_.Load_all_as_bry(ByteAryBfr.new_(), bin_rdr);
@@ -60,7 +60,7 @@ public class Fsdb_bin_tbl {
 		try {
 			rdr = p.Exec_qry_as_rdr(qry);
 			if (rdr.MoveNextPeer()) {
-				if (Sqlite_engine_.Cfg_read_binary_stream_supported)
+				if (Sqlite_engine_.Supports_read_binary_stream)
 					return rdr.ReadRdr(Fld_bin_data);
 				else
 					return gplx.ios.Io_stream_rdr_.mem_(Read_bin_data(rdr));
@@ -76,7 +76,7 @@ public class Fsdb_bin_tbl {
 		try {
 			rdr = p.Exec_qry_as_rdr(qry);
 			if (rdr.MoveNextPeer()) {
-				if (Sqlite_engine_.Cfg_read_binary_stream_supported)
+				if (Sqlite_engine_.Supports_read_binary_stream)
 					return Select_to_fsys__stream(rdr, url, bin_bfr, bin_flush_when);
 				else {
 					byte[] bry = Read_bin_data(rdr);
@@ -126,7 +126,6 @@ public class Fsdb_bin_tbl {
 	,	");"
 	);
 	public static final byte Owner_tid_fil = 1, Owner_tid_thm = 2;
-	public static final int Db_bin_id_null = -1;
-	public static final String Data_url_null = "";
-	public static final int Part_id_null = -1;
+	public static final int Null_db_bin_id = -1, Null_size = -1, Null_part_id = -1;
+	public static final String Null_data_url = "";
 }

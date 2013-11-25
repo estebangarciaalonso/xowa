@@ -25,6 +25,7 @@ public class Fsdb_db_bin_mgr implements RlsAble {
 	private Fsdb_db_bin_mgr(Io_url dir) {this.dir = dir;}
 	public int Len() {return itms.length;}
 	public long Db_bin_max() {return db_bin_max;}
+	public int Insert_to_bin() {return insert_to_bin;} public Fsdb_db_bin_mgr Insert_to_bin_(int v) {insert_to_bin = v; return this;} private int insert_to_bin = Fsdb_mnt_mgr.Insert_to_bin_null;
 	public Fsdb_db_bin_mgr Db_bin_max_(long v) {
 		db_bin_max = v;
 		for (int i = 0; i < itms_len; i++)
@@ -48,6 +49,7 @@ public class Fsdb_db_bin_mgr implements RlsAble {
 		}
 	}
 	public int Get_id_for_insert(long bin_len) {
+		if (insert_to_bin != Fsdb_mnt_mgr.Insert_to_bin_null) return insert_to_bin;	// insert_to_bin specified; return it
 		if (itms_n.Bin_len() > itms_n.Bin_max())
 			Itms_add(0);
 		return itms_n.Id();

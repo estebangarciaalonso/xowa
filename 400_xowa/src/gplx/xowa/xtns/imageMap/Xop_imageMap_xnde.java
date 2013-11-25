@@ -16,8 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.imageMap; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-import gplx.xowa.parsers.lnkis.*;
+import gplx.xowa.parsers.lnkis.*; import gplx.xowa.parsers.logs.*;
 public class Xop_imageMap_xnde implements Xop_xnde_xtn {
+	private boolean first = true;
 	public byte[] Xtn_src() {return lnki_src;} private byte[] lnki_src;
 	public boolean Xtn_literal() {return false;}
 	public Xop_root_tkn Xtn_root() {return lnki_root;} private Xop_root_tkn lnki_root;
@@ -75,7 +76,8 @@ public class Xop_imageMap_xnde implements Xop_xnde_xtn {
 			}
 			++cur_pos;
 		}
-	}	boolean first = true;
+		boolean log_wkr_enabled = Log_wkr != Xop_log_basic_wkr.Null; if (log_wkr_enabled) Log_wkr.Log_end_xnde(ctx.Page(), Xop_log_basic_wkr.Tid_imageMap, src, xnde);
+	}	public static Xop_log_basic_wkr Log_wkr = Xop_log_basic_wkr.Null;
 	private void ParseLine(Xop_ctx orig_ctx, Xop_ctx image_map_ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, Xop_xnde_tkn xnde, int nl_0_pos, int nl_1_pos) {
 		int line_len = nl_1_pos - nl_0_pos; 
 		if (line_len == 0 || src[nl_0_pos + 1] == Byte_ascii.Hash) return;

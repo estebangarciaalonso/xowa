@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.wikis.caches.*;
+import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.wikis.caches.*; import gplx.xowa.bldrs.files.*;
 public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xob_cmd, GfoInvkAble {
 	private int exec_count, exec_count_max = Int_.MaxValue;
 	private int commit_interval = 1000, progress_interval = 250, cleanup_interval = 2500, select_size = 10 * Io_mgr.Len_mb;
@@ -32,9 +32,9 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 	private Xodb_fsys_mgr db_fsys_mgr; protected Xop_parser parser; protected Xop_ctx ctx; protected Xop_root_tkn root;
 	private boolean load_tmpls;
 	public abstract String Cmd_key();
-	private Xob_poll_mgr poll_mgr; private int poll_interval;
+	private Xobu_poll_mgr poll_mgr; private int poll_interval;
 	@Override protected void Cmd_ctor_end(Xob_bldr bldr, Xow_wiki wiki) {
-		poll_mgr = new Xob_poll_mgr(bldr.App());
+		poll_mgr = new Xobu_poll_mgr(bldr.App());
 	}
 	public void Cmd_bgn(Xob_bldr bldr) {
 		parser = wiki.Parser();

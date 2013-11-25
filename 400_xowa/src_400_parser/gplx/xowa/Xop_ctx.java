@@ -19,6 +19,7 @@ package gplx.xowa; import gplx.*;
 import gplx.xowa.gui.*; import gplx.xowa.xtns.lst.*;
 import gplx.xowa.xtns.scribunto.*;
 import gplx.xowa.xtns.wdatas.*;
+import gplx.xowa.parsers.logs.*;
 public class Xop_ctx {
 	Xop_ctx(Xow_wiki wiki) {
 		this.app = wiki.App(); this.msg_log = app.Msg_log();
@@ -56,8 +57,8 @@ public class Xop_ctx {
 	public boolean					Lxr_make()			{return lxr_make;} public Xop_ctx Lxr_make_(boolean v) {lxr_make = v; return this;} private boolean lxr_make = false;
 	public boolean Only_include_evaluate() {return only_include_evaluate;} public Xop_ctx Only_include_evaluate_(boolean v) {only_include_evaluate = v; return this;} private boolean only_include_evaluate;
 	public Xtn_lst_section_mgr	Lst_section_mgr() {if (lst_section_mgr == null) lst_section_mgr = new Xtn_lst_section_mgr(); return lst_section_mgr;} Xtn_lst_section_mgr lst_section_mgr;
-	public Scrib_pf_invoke_wkr Xtn__scribunto__invoke_wkr() {return app.Xtn_mgr().Xtn_scribunto().Invoke_wkr();} 
-	public Wdata_pf_property_wkr Xtn__wikidata__property_wkr() {return app.Wiki_mgr().Wdata_mgr().Property_wkr();} 
+	public Xop_log_invoke_wkr Xtn__scribunto__invoke_wkr() {return app.Xtn_mgr().Xtn_scribunto().Invoke_wkr();} 
+	public Xop_log_property_wkr Xtn__wikidata__property_wkr() {return app.Wiki_mgr().Wdata_mgr().Property_wkr();} 
 	private Xop_ctx_wkr[] wkrs = new Xop_ctx_wkr[] {}; private Xop_ctx_wkr[] wkrs_(Xop_ctx_wkr... ary) {return ary;}
 	public int Tag_idx;
 	public Xop_ctx Clear() {

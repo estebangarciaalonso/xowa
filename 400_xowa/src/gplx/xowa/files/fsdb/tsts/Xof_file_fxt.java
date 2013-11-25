@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb.tsts; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
-import gplx.fsdb.*; import gplx.dbs.*; import gplx.xowa.files.main.orig.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.cnvs.*;
+import gplx.fsdb.*; import gplx.dbs.*; import gplx.xowa.files.wiki_orig.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.cnvs.*;
 class Xof_file_fxt {		
 	private Fsdb_xtn_thm_itm tmp_thm = Fsdb_xtn_thm_itm.new_(); private Fsdb_xtn_img_itm tmp_img = new Fsdb_xtn_img_itm();
 	private Xof_fsdb_mgr fsdb_mgr; private Xof_qry_wrk_mock qry_wkr_mock = new Xof_qry_wrk_mock();
@@ -68,7 +68,7 @@ class Xof_file_fxt {
 		ListAdp itms_list = ListAdp_.new_();
 		itms_list.Add(itm);
 		fsdb_mgr.Reg_select(Xog_win_wtr_.Null, arg.Exec_tid(), itms_list);
-		if (arg.Rslt_reg() != Xof_orig_wkr_.Tid_null) Tfds.Eq(arg.Rslt_reg(), itm.Rslt_reg(), "rslt_reg");
+		if (arg.Rslt_reg() != Xof_wiki_orig_wkr_.Tid_null) Tfds.Eq(arg.Rslt_reg(), itm.Rslt_reg(), "rslt_reg");
 		if (arg.Rslt_qry() != Xof_qry_wkr_.Tid_null) Tfds.Eq(arg.Rslt_qry(), itm.Rslt_qry(), "rslt_qry");
 		if (arg.Rslt_bin() != Xof_bin_wkr_.Tid_null) Tfds.Eq(arg.Rslt_bin(), itm.Rslt_bin(), "rslt_bin");
 		if (arg.Rslt_cnv() != Xof_cnv_wkr_.Tid_null) Tfds.Eq(arg.Rslt_cnv(), itm.Rslt_cnv(), "rslt_cnv");
@@ -89,8 +89,8 @@ class Xof_file_fxt {
 		Tfds.Eq_false(itm == null);
 		return itm;
 	}
-	public void Test_regy_missing_qry(String key)		{Tfds.Eq(Xof_orig_wkr_.Tid_missing_qry, Exec_reg_select_itm(key).Rslt_reg());}
-	public void Test_regy_missing_bin(String key)		{Tfds.Eq(Xof_orig_wkr_.Tid_missing_bin, Exec_reg_select_itm(key).Rslt_reg());}
+	public void Test_regy_missing_qry(String key)		{Tfds.Eq(Xof_wiki_orig_wkr_.Tid_missing_qry, Exec_reg_select_itm(key).Rslt_reg());}
+	public void Test_regy_missing_bin(String key)		{Tfds.Eq(Xof_wiki_orig_wkr_.Tid_missing_bin, Exec_reg_select_itm(key).Rslt_reg());}
 	private Xof_fsdb_itm itm_(String ttl_str, byte type, int w, int h, double upright, int thumbtime) {
 		byte[] ttl_bry = ByteAry_.new_ascii_(ttl_str);
 		byte[] md5 = Xof_xfer_itm.Md5_(ttl_bry);
@@ -166,7 +166,7 @@ class Xof_fsdb_arg_exec_get {
 	public int Lnki_h() {return lnki_h;} public Xof_fsdb_arg_exec_get Lnki_h_(int v) {lnki_h = v; return this;} private int lnki_h = Xop_lnki_tkn.Height_null;
 	public double Lnki_upright() {return lnki_upright;} public Xof_fsdb_arg_exec_get Lnki_upright_(double v) {lnki_upright = v; return this;} private double lnki_upright = Xop_lnki_tkn.Upright_null;
 	public int Lnki_thumbtime() {return lnki_thumbtime;} public Xof_fsdb_arg_exec_get Lnki_thumbtime_(int v) {lnki_thumbtime = v; return this;} private int lnki_thumbtime = Xop_lnki_tkn.Thumbtime_null;
-	public byte Rslt_reg() {return rslt_reg;} public Xof_fsdb_arg_exec_get Rslt_reg_(byte v) {rslt_reg = v; return this;} private byte rslt_reg = Xof_orig_wkr_.Tid_null;
+	public byte Rslt_reg() {return rslt_reg;} public Xof_fsdb_arg_exec_get Rslt_reg_(byte v) {rslt_reg = v; return this;} private byte rslt_reg = Xof_wiki_orig_wkr_.Tid_null;
 	public byte Rslt_qry() {return rslt_qry;} public Xof_fsdb_arg_exec_get Rslt_qry_(byte v) {rslt_qry = v; return this;} private byte rslt_qry = Xof_qry_wkr_.Tid_null;
 	public byte Rslt_bin() {return rslt_bin;} public Xof_fsdb_arg_exec_get Rslt_bin_(byte v) {rslt_bin = v; return this;} private byte rslt_bin = Xof_bin_wkr_.Tid_null;
 	public byte Rslt_cnv() {return rslt_cnv;} public Xof_fsdb_arg_exec_get Rslt_cnv_(byte v) {rslt_cnv = v; return this;} private byte rslt_cnv = Xof_cnv_wkr_.Tid_null;
@@ -182,15 +182,15 @@ class Xof_fsdb_arg_exec_get {
 		this.lnki_h = h;
 		return this;
 	}
-	public Xof_fsdb_arg_exec_get Rslt_reg_noop() {rslt_reg = Xof_orig_wkr_.Tid_noop; return this;}
-	public Xof_fsdb_arg_exec_get Rslt_reg_missing_reg() {rslt_reg = Xof_orig_wkr_.Tid_missing_reg; return this;}
-	public Xof_fsdb_arg_exec_get Rslt_reg_missing_qry() {rslt_reg = Xof_orig_wkr_.Tid_missing_qry; return this;}
-	public Xof_fsdb_arg_exec_get Rslt_reg_missing_bin() {rslt_reg = Xof_orig_wkr_.Tid_missing_bin; return this;}
-	public Xof_fsdb_arg_exec_get Rslt_reg_found_orig() {rslt_reg = Xof_orig_wkr_.Tid_found_orig; return this;}
+	public Xof_fsdb_arg_exec_get Rslt_reg_noop() {rslt_reg = Xof_wiki_orig_wkr_.Tid_noop; return this;}
+	public Xof_fsdb_arg_exec_get Rslt_reg_missing_reg() {rslt_reg = Xof_wiki_orig_wkr_.Tid_missing_reg; return this;}
+	public Xof_fsdb_arg_exec_get Rslt_reg_missing_qry() {rslt_reg = Xof_wiki_orig_wkr_.Tid_missing_qry; return this;}
+	public Xof_fsdb_arg_exec_get Rslt_reg_missing_bin() {rslt_reg = Xof_wiki_orig_wkr_.Tid_missing_bin; return this;}
+	public Xof_fsdb_arg_exec_get Rslt_reg_found_orig() {rslt_reg = Xof_wiki_orig_wkr_.Tid_found_orig; return this;}
 	public Xof_fsdb_arg_exec_get Rslt_qry_mock_() {rslt_qry = Xof_qry_wkr_.Tid_mock; return this;}
 	public Xof_fsdb_arg_exec_get Rslt_qry_noop_() {rslt_qry = Xof_qry_wkr_.Tid_noop; return this;}
 	public Xof_fsdb_arg_exec_get Rslt_qry_unavailable_() {rslt_qry = Xof_qry_wkr_.Tid_missing; return this;}
-	public Xof_fsdb_arg_exec_get Rslt_bin_fsdb_() {rslt_bin = Xof_bin_wkr_.Tid_fsdb; return this;}
+	public Xof_fsdb_arg_exec_get Rslt_bin_fsdb_() {rslt_bin = Xof_bin_wkr_.Tid_fsdb_wiki; return this;}
 	public Xof_fsdb_arg_exec_get Rslt_bin_not_found_() {rslt_bin = Xof_bin_wkr_.Tid_not_found; return this;}
 	public Xof_fsdb_arg_exec_get Rslt_bin_noop_() {rslt_bin = Xof_bin_wkr_.Tid_noop; return this;}
 	public Xof_fsdb_arg_exec_get Rslt_cnv_y_() {rslt_cnv = Xof_cnv_wkr_.Tid_y; return this;}

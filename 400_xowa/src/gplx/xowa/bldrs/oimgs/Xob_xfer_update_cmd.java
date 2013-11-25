@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*;
+import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*; import gplx.xowa.bldrs.files.*;
 public class Xob_xfer_update_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	private Io_url prv_url;
 	public Xob_xfer_update_cmd(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
@@ -25,19 +25,19 @@ public class Xob_xfer_update_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	public void Cmd_bgn(Xob_bldr bldr) {}
 	public void Cmd_run() {
 		// init vars
-		Xodb_db_file cur_file = Xodb_db_file.init__oimg_lnki(wiki);
+		Xodb_db_file cur_file = Xodb_db_file.init__file_make(wiki.Fsys_mgr().Root_dir());
 		Db_provider provider = cur_file.Provider();
 		if (prv_url == null) {
-			prv_url = wiki.App().Fsys_mgr().File_dir().GenSubFil_nest(wiki.Domain_str(), "bldr", Xodb_db_file.Name__oimg_lnki + ".sqlite3");
+			prv_url = wiki.App().Fsys_mgr().File_dir().GenSubFil_nest(wiki.Domain_str(), "bldr", Xodb_db_file.Name__file_make);
 		}
 
 		// run sql
-		Sqlite_engine_.Tbl_rename(provider, "oimg_xfer_regy", "oimg_xfer_regy_old");
+		Sqlite_engine_.Tbl_rename(provider, "xfer_regy", "xfer_regy_old");
 		Xob_xfer_regy_tbl.Create_table(provider);
 		Sqlite_engine_.Db_attach(provider, "old_db", prv_url.Raw());
 		provider.Exec_sql(Sql_update);
 		Sqlite_engine_.Db_detach(provider, "old_db");
-		Sqlite_engine_.Tbl_delete(provider, "oimg_xfer_regy_old");
+		Sqlite_engine_.Tbl_delete(provider, "xfer_regy_old");
 		Xob_xfer_regy_tbl.Create_index(usr_dlg, provider);
 
 //			// rotate db
@@ -49,31 +49,31 @@ public class Xob_xfer_update_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	public void Cmd_end() {}
 	public void Cmd_print() {}
 	public static final String Sql_update = String_.Concat_lines_nl
-	( "INSERT INTO oimg_xfer_regy"
-        , "SELECT  cur.oxr_lnki_id"
-	, ",       cur.oxr_orig_page_id"
-	, ",       cur.oxr_xfer_repo"
-	, ",       cur.oxr_xfer_ttl"
-	, ",       cur.oxr_xfer_redirect_src"
-	, ",       cur.oxr_xfer_ext"
-	, ",       cur.oxr_orig_media_type"
-	, ",       cur.oxr_file_is_orig"
-	, ",       cur.oxr_orig_w"
-	, ",       cur.oxr_orig_h"
-	, ",       cur.oxr_file_w"
-	, ",       cur.oxr_file_h"
-	, ",       cur.oxr_xfer_thumbtime"
-	, ",       cur.oxr_xfer_count"
+	( "INSERT INTO xfer_regy"
+        , "SELECT  cur.lnki_id"
+	, ",       cur.orig_page_id"
+	, ",       cur.orig_repo"
+	, ",       cur.lnki_ttl"
+	, ",       cur.orig_redirect_src"
+	, ",       cur.lnki_ext"
+	, ",       cur.orig_media_type"
+	, ",       cur.file_is_orig"
+	, ",       cur.orig_w"
+	, ",       cur.orig_h"
+	, ",       cur.file_w"
+	, ",       cur.file_h"
+	, ",       cur.lnki_thumbtime"
+	, ",       cur.lnki_count"
 	, ",       CASE"
-	, "          WHEN old.oxr_xfer_ttl IS NULL THEN"	// not in old table; mark todo
+	, "          WHEN old.lnki_ttl IS NULL THEN"	// not in old table; mark todo
 	, "            " + Byte_.XtoStr(Xob_xfer_regy_tbl.Status_todo)
 	, "          ELSE"									// in old table; mark processed
 	, "            " + Byte_.XtoStr(Xob_xfer_regy_tbl.Status_ignore_processed)
 	, "        END"
-	, ",       cur.oxr_xfer_bin_tid"
-	, ",       cur.oxr_xfer_bin_msg"
-	, "FROM    oimg_xfer_regy_old cur"
-	, "        LEFT JOIN old_db.oimg_xfer_regy old ON cur.oxr_xfer_ttl = old.oxr_xfer_ttl AND cur.oxr_file_w = old.oxr_file_w"
+	, ",       cur.xfer_bin_tid"
+	, ",       cur.xfer_bin_msg"
+	, "FROM    xfer_regy_old cur"
+	, "        LEFT JOIN old_db.xfer_regy old ON cur.lnki_ttl = old.lnki_ttl AND cur.file_w = old.file_w"
 	);
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_previous_url_))				prv_url = m.ReadIoUrl("v");

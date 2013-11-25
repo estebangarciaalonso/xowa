@@ -49,6 +49,7 @@ public class Sqlite_engine_ {
 		Db_qry qry = Db_qry_sql.ddl_(String_.Format("ALTER TABLE {0} RENAME TO {1};", src, trg));
 		p.Exec_qry(qry);
 	}
+	public static void Pragma_page_size_4096(Db_provider p) {Pragma_page_size(p, 4096);}
 	public static void Pragma_page_size(Db_provider p, int val) {
 		Db_qry qry = Db_qry_sql.ddl_("PRAGMA page_size = " + Int_.XtoStr(val) + ";");
 		p.Exec_qry(qry);
@@ -76,7 +77,8 @@ public class Sqlite_engine_ {
 		return p;
 	}
 	public static final int Stmt_arg_max = 999;		// 999 is max number of variables allowed by sqlite
-	public static final boolean Cfg_read_binary_stream_supported = false;	
+	public static final boolean Supports_read_binary_stream = false;	
+	public static final boolean Supports_indexed_by = true;			
 	public static String X_date_to_str(DateAdp v) {return v == Date_null ? "" : v.XtoStr_fmt_iso_8561();}
 	public static final DateAdp Date_null = null;
 	public static final byte Wildcard_byte = Byte_ascii.Hash;

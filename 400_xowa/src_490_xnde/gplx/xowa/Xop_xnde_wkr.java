@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.apps.*; import gplx.xowa.wikis.*; import gplx.xowa.xtns.*;
+import gplx.xowa.parsers.logs.*;
 public class Xop_xnde_wkr implements Xop_ctx_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {this.ctx = ctx; this.tkn_mkr = ctx.Tkn_mkr();}
 	public Xob_xnde_wkr File_wkr() {return file_wkr;} public Xop_xnde_wkr File_wkr_(Xob_xnde_wkr v) {file_wkr = v; return this;} private Xob_xnde_wkr file_wkr;
@@ -584,6 +585,9 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 					case Xop_xnde_tag_.Tid_translate:				xnde_data = tkn_mkr.Translate(); break;
 					case Xop_xnde_tag_.Tid_languages:				xnde_data = tkn_mkr.Languages(); break;
 					case Xop_xnde_tag_.Tid_templateData:			xnde_data = tkn_mkr.TemplateData(); break;
+					case Xop_xnde_tag_.Tid_timeline:
+						boolean log_wkr_enabled = Timeline_log_wkr != Xop_log_basic_wkr.Null; if (log_wkr_enabled) Timeline_log_wkr.Log_end_xnde(ctx.Page(), Xop_log_basic_wkr.Tid_timeline, src, xnde);
+						break;
 				}
 				if (xnde_data != null) {
 					try {
@@ -630,6 +634,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		}
 		return gt_pos;
 	}
+	public static Xop_log_basic_wkr Timeline_log_wkr = Xop_log_basic_wkr.Null;
 }
 //	class Xtn_nowiki_nde : Xop_xnde_xtn {
 //		public Xop_root_tkn Xtn_root() {return null;}

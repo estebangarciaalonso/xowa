@@ -23,6 +23,7 @@ class Xog_win_wtr_null implements Xog_win_wtr {
 	public Gfo_usr_dlg_ui Ui_wkr() {return ui_wkr;} public void Ui_wkr_(Gfo_usr_dlg_ui v) {ui_wkr = v;} Gfo_usr_dlg_ui ui_wkr = Gfo_usr_dlg_ui_.Null;
 	public Gfo_log_wtr Log_wtr() {return log_wtr;} public void Log_wtr_(Gfo_log_wtr v) {log_wtr = v;} Gfo_log_wtr log_wtr = Gfo_log_wtr_.Null;
 	public boolean Canceled() {return canceled;} public void Canceled_y_() {canceled = true;} public void Canceled_n_() {canceled = false;} private boolean canceled;
+	public void Cancel() {canceled = true;} public void Cancel_reset() {canceled = false;}
 	public void Clear() {canceled = false;}
 	public void Ini(gplx.gfui.Gfui_kit kit, Xog_win win) {}
 	public void Log_text(String v) {}

@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.xowa.parsers.logs.*;
 public class Xtn_gallery_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 	public Xop_root_tkn Xtn_root() {return null;}
 	public boolean Xtn_literal() {return false;}
@@ -38,6 +39,7 @@ public class Xtn_gallery_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 		if (itms_per_row == -1) itms_per_row = wiki.Cfg_gallery().Imgs_per_row();
 		Xop_xatr_itm.Xatr_parse(wiki.App(), this, wiki.Lang().Xatrs_gallery(), wiki, src, xnde);
 		wiki.Xtn_mgr().Xtn_gallery().Parser().Parse_all(itms, src, xnde.Tag_open_end(), xnde.Tag_close_bgn(), itm_width, itm_height);
-	}	
-	public static final int Itm_default_w = 120, Itm_default_h = 120;
+		boolean log_wkr_enabled = Log_wkr != Xop_log_basic_wkr.Null; if (log_wkr_enabled) Log_wkr.Log_end_xnde(ctx.Page(), Xop_log_basic_wkr.Tid_gallery, src, xnde);
+	}	public static Xop_log_basic_wkr Log_wkr = Xop_log_basic_wkr.Null;
+	public static final int Itm_default_w = 120, Itm_default_h = 120;		
 }

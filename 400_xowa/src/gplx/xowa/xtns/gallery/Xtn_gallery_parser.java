@@ -26,8 +26,7 @@ public class Xtn_gallery_parser {
 	private int itm_bgn;
 	private ByteAryBfr caption_bfr = ByteAryBfr.reset_(255); private int caption_bgn;
 	private int gallery_itm_w, gallery_itm_h;
-	private Xop_ctx ctx; private Xop_lnki_logger file_wkr;
-
+	private Xop_ctx ctx;
 	public Xtn_gallery_parser Init_by_wiki(Xow_wiki wiki) {
 		this.wiki = wiki; Xol_lang lang = wiki.Lang();
 		this.ctx = wiki.Ctx();
@@ -58,9 +57,14 @@ public class Xtn_gallery_parser {
 		}
 	}
 	private void Make_lnki_tkn() {
-		if (file_wkr == null) file_wkr = ctx.Lnki().File_wkr();	// NOTE: set file_wkr ref late, b/c parse_all sets late
 		Xop_lnki_tkn lnki_tkn = ctx.Tkn_mkr().Lnki(cur_itm.Ttl_bgn(), cur_itm.Ttl_end()).Ttl_(cur_itm.Ttl()).Width_(gallery_itm_w).Height_(gallery_itm_h);
 		cur_itm.Lnki_tkn_(lnki_tkn);
+		byte[] lnki_caption = cur_itm.Caption_bry();
+		if (ByteAry_.Len_gt_0(lnki_caption)) {
+			Xop_root_tkn caption_tkn = wiki.Parser().Parse_recurse(ctx, lnki_caption, true);
+			cur_itm.Caption_tkn_(caption_tkn);
+		}
+		Xop_lnki_logger file_wkr = ctx.Lnki().File_wkr();	// NOTE: do not set file_wkr ref early (as member var); parse_all sets late
 		if (file_wkr != null)
 			file_wkr.Wkr_exec(ctx, lnki_tkn);
 	}
@@ -143,11 +147,15 @@ public class Xtn_gallery_parser {
 		switch (cur_fld) {
 			case Fld_ttl:
 				cur_itm.Ttl_end_(fld_end);
-				Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.Mid(src, cur_itm.Ttl_bgn(), fld_end));
+				byte[] ttl_bry = ByteAry_.Mid(src, cur_itm.Ttl_bgn(), fld_end);
+				Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
 				if (ttl == null)
 					cur_itm.Reset();
-				else
+				else {
+					if (!ttl.Ns().Id_file_or_media())	// ttl does not have "File:"; MW allows non-ns names; EX: "A.png" instead of "File:A.png"; DATE:2013-11-18 
+						ttl = Xoa_ttl.parse_(wiki, Xow_ns_.Id_file, ttl_bry);
 					cur_itm.Lnki_(ttl);
+				}
 				break;
 			case Fld_caption:
 				if (caption_bfr.Bry_len() != 0) caption_bfr.Add_byte_pipe();	// prepend | to all other captions; EX: File:A.png|a|b -> "a|b" (pipe not added to 1st, but added to 2nd)

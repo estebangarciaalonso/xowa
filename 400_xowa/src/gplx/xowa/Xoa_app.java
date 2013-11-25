@@ -20,6 +20,7 @@ import gplx.ios.*;
 import gplx.xowa.apps.*; import gplx.xowa.apps.caches.*; import gplx.xowa.specials.*;
 import gplx.xowa.wikis.*; import gplx.xowa.users.*; import gplx.xowa.cfgs.*; import gplx.xowa.ctgs.*; import gplx.xowa.html.tocs.*; import gplx.xowa.fmtrs.*; 
 import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.math.*;	
+import gplx.xowa.parsers.logs.*;
 public class Xoa_app implements GfoInvkAble {
 	public Xoa_app(Gfo_usr_dlg_xowa usr_dlg, Io_url root_dir, Io_url user_dir, String bin_dir_name) {
 		this.usr_dlg = usr_dlg;
@@ -50,6 +51,7 @@ public class Xoa_app implements GfoInvkAble {
 		Io_url.Http_file_str_encoder = url_converter_fsys;
 		server.App_ctor(this);
 		fmtr_mgr = new Xoa_fmtr_mgr(this);
+		log_mgr = new Xop_log_mgr(this);
 	}
 	public NumberParser Utl_num_parser() {return utl_num_parser;} private NumberParser utl_num_parser = new NumberParser();
 	public void Init() {
@@ -78,6 +80,7 @@ public class Xoa_app implements GfoInvkAble {
 		user.Session_mgr().Window_mgr().Save_window(gui_mgr.Main_win().Win());
 		user.History_mgr().Save(this);
 		log_wtr.Term();
+		log_mgr.Rls();
 		if (Scrib_engine.Engine() != null) Scrib_engine.Engine().Term();
 		wiki_mgr.Rls();
 		return true;
@@ -94,6 +97,7 @@ public class Xoa_app implements GfoInvkAble {
 	public Gfo_log_wtr			Log_wtr() {return log_wtr;} private Gfo_log_wtr log_wtr;
 	public Xoa_gfs_mgr			Gfs_mgr() {return gfs_mgr;} private Xoa_gfs_mgr gfs_mgr;
 	public Xoa_special_mgr		Special_mgr() {return special_mgr;} private Xoa_special_mgr special_mgr = new gplx.xowa.specials.Xoa_special_mgr();
+	public Xop_log_mgr			Log_mgr() {return log_mgr;} private Xop_log_mgr log_mgr;
 
 	public Apps_fsys_mgr		Fsys_mgr() {return fsys_mgr;} private Apps_fsys_mgr fsys_mgr;
 	public Xoa_hive_mgr			Hive_mgr() {return hive_mgr;} private Xoa_hive_mgr hive_mgr;

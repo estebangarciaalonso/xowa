@@ -21,6 +21,7 @@ public class Gfo_usr_dlg_base implements Gfo_usr_dlg {
 	public Gfo_log_wtr Log_wtr() {return log_wtr;} public void Log_wtr_(Gfo_log_wtr v) {log_wtr = v;} Gfo_log_wtr log_wtr;
 	@gplx.Virtual public void Clear() {ui_wkr.Clear();}
 	public boolean Canceled() {return canceled;} public void Canceled_y_() {canceled = true;} public void Canceled_n_() {canceled = false;} private boolean canceled;
+	public void Cancel() {canceled = true;} public void Cancel_reset() {canceled = false;}
 	public String Log_many(String grp_key, String msg_key, String fmt, Object... args)	{String rv = Bld_msg_many(grp_key, msg_key, fmt, args	); log_wtr.Log_msg_to_session(rv); return rv;}
 	public String Warn_many(String grp_key, String msg_key, String fmt, Object... args)	{String rv = Bld_msg_many(grp_key, msg_key, fmt, args	); log_wtr.Log_err(rv); ui_wkr.Write_warn(rv); return rv;}
 	public String Prog_many(String grp_key, String msg_key, String fmt, Object... args)	{String rv = Bld_msg_many(grp_key, msg_key, fmt, args	); ui_wkr.Write_prog(rv); return rv;}

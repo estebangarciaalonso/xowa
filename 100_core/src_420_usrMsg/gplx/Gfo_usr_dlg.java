@@ -16,8 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
-public interface Gfo_usr_dlg extends GfoInvkAble {
-	boolean Canceled(); void Canceled_y_(); void Canceled_n_();
+public interface Gfo_usr_dlg extends GfoInvkAble, Cancelable {
+	void Canceled_y_(); void Canceled_n_();
 	void Clear();
 	Gfo_usr_dlg_ui Ui_wkr(); void Ui_wkr_(Gfo_usr_dlg_ui v);
 	Gfo_log_wtr Log_wtr(); void Log_wtr_(Gfo_log_wtr v);

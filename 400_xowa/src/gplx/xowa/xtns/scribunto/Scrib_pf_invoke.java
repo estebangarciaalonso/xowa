@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.xowa.parsers.logs.*;
 public class Scrib_pf_invoke extends Pf_func_base {
 	@Override public int Id() {return Xol_kwd_grp_.Id_invoke;}
 	@Override public Pf_func New(int id, byte[] name) {return new Scrib_pf_invoke().Name_(name);}
@@ -25,7 +26,7 @@ public class Scrib_pf_invoke extends Pf_func_base {
 		if (ByteAry_.Len_eq_0(mod_name)) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;}		// EX: "{{#invoke:}}"
 		int args_len = self.Args_len();
 		byte[] fnc_name = Pf_func_.EvalArgOr(ctx, src, caller, self, args_len, 0, null);
-		Scrib_pf_invoke_wkr invoke_wkr = ctx.Xtn__scribunto__invoke_wkr();
+		Xop_log_invoke_wkr invoke_wkr = ctx.Xtn__scribunto__invoke_wkr();
 		long log_time_bgn = 0;
 		if (invoke_wkr != null) {
 			log_time_bgn = Env_.TickCount();

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.users; import gplx.*; import gplx.xowa.*;
 public class Xou_security_mgr implements GfoInvkAble {
-	private boolean web_access_enabled = true;
+	public boolean Web_access_enabled() {return web_access_enabled;} private boolean web_access_enabled = true;
 	private void Web_access_enabled_(boolean v) {
 		this.web_access_enabled = v;
 		gplx.ios.IoEngine_system.Web_access_enabled = v;

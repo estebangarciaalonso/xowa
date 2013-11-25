@@ -378,7 +378,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		app.Utl_bry_bfr_mkr().Clear();
 		app.Gui_wtr().Clear();
 		app.Gui_mgr().Search_suggest_mgr().Cancel();
-		if (Env_.System_memory_free() < app.Sys_cfg().Free_mem_when()) app.Free_mem(false);			
+		if (Env_.System_memory_free() < app.Sys_cfg().Free_mem_when()) app.Free_mem(false);
 		Xoa_page old_page = page;
 		Xoa_page new_page = Xoa_page.Null;			
 		if (url.Anchor_str() != null && url.Eq_page(old_page.Url()) && url.Args().length == 0)	// skip page load and just jump to anchor if (a) new.anchor != null (has anchor) (b) new.page == old.page (same page) (c) url.Args() == 0 (no args; needed for Category:A?from=b#mw-pages)

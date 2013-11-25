@@ -72,6 +72,8 @@ public class Xodb_xowa_cfg_tbl {
 		p.Exec_qry(qry);
 	}
 	public Db_stmt Update_stmt() {return Db_stmt_.new_update_(provider, Tbl_name, String_.Ary(Fld_cfg_grp, Fld_cfg_key), Fld_cfg_val);}
+	public void Update(Db_stmt stmt, String grp, String key, long val) {Update(stmt, grp, key, Long_.XtoStr(val));}
+	public void Update(Db_stmt stmt, String grp, String key, int val) {Update(stmt, grp, key, Int_.XtoStr(val));}
 	public void Update(Db_stmt stmt, String grp, String key, String val) {
 		stmt.Clear()
 			.Val_str_(val)

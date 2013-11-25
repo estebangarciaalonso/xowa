@@ -24,5 +24,6 @@ public class Fsdb_fil_itm {
 	public int Db_bin_id() {return bin_db_id;} public Fsdb_fil_itm Db_bin_id_(int v) {bin_db_id = v; return this;} private int bin_db_id;
 	public int Mnt_id() {return mnt_id;} public Fsdb_fil_itm Mnt_id_(int v) {mnt_id = v; return this;} private int mnt_id;
 	public Fsdb_fil_itm Init(int id, int owner, int ext_id, String name, int bin_db_id) {this.id = id; this.owner = owner; this.ext_id = ext_id; this.name = name; this.bin_db_id = bin_db_id; return this;}
-	public static final Fsdb_fil_itm Null = new Fsdb_fil_itm().Init(0, 0, 0, "", Fsdb_bin_tbl.Db_bin_id_null);
+	public static final int Null_id = 0;
+	public static final Fsdb_fil_itm Null = new Fsdb_fil_itm().Init(Null_id, 0, 0, "", Fsdb_bin_tbl.Null_db_bin_id);
 }

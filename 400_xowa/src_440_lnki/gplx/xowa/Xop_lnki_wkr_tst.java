@@ -64,6 +64,12 @@ public class Xop_lnki_wkr_tst {
 			.Caption_tkn_(fxt.tkn_arg_nde_(22, 25).Val_tkn_(fxt.tkn_arg_itm_(fxt.tkn_txt_(22, 23), fxt.tkn_space_(23, 24), fxt.tkn_txt_(24, 25)))))
 			;
 	}
+	@Test  public void Thumbtime() {
+		fxt.tst_Parse_page_wiki("[[File:A.ogv|thumbtime=123]]", fxt.tkn_lnki_().Thumbtime_(123));
+		fxt.tst_Parse_page_wiki("[[File:A.ogv|thumbtime=1:23]]", fxt.tkn_lnki_().Thumbtime_(83));
+		fxt.tst_Parse_page_wiki("[[File:A.ogv|thumbtime=1:01:01]]", fxt.tkn_lnki_().Thumbtime_(3661));
+		fxt.ini_Log_(Xop_lnki_log.Upright_val_is_invalid).tst_Parse_page_wiki("[[File:A.ogv|thumbtime=:1:1]]", fxt.tkn_lnki_().Thumbtime_(-1));
+	}
 	@Test  public void Width_ws() {
 		fxt.tst_Parse_page_wiki("[[Image:a| 123 px]]"		, fxt.tkn_lnki_().Width_(123));
 	}

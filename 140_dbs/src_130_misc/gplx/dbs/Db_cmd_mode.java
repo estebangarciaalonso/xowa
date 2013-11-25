@@ -18,4 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.dbs; import gplx.*;
 public class Db_cmd_mode {
 	public static final byte Create = 1, Update = 2, Delete = 3, Ignore = 4;
+	public static byte X_to_update(byte cur) {
+		switch (cur) {
+			case Create:					// ignore update if item is already marked for create
+			case Delete:					// ignore update if item is already marked for delete (might want to throw error)
+							return cur;		
+			case Ignore:					// must mark for update
+			case Update:					// return self
+							return Update;
+			default:		throw Err_.unhandled(cur);
+		}
+	}
 }	

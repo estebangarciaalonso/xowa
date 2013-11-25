@@ -20,11 +20,12 @@ import gplx.dbs.*; import gplx.cache.*;
 public class Fsdb_db_atr_fil implements RlsAble {
 	private Gfo_cache_mgr_bry dir_cache = new Gfo_cache_mgr_bry();
 	private Db_provider provider;
-	private Fsdb_dir_tbl tbl_dir; private Fsdb_fil_tbl tbl_fil; private Fsdb_xtn_thm_tbl tbl_thm; private Fsdb_xtn_img_tbl tbl_img;
+	private Fsdb_dir_tbl tbl_dir; private Fsdb_fil_tbl tbl_fil; private Fsdb_xtn_thm_tbl tbl_thm; private Fsdb_xtn_img_tbl tbl_img; private BoolRef created = BoolRef.false_();
 	public Fsdb_db_atr_fil(Fsdb_db_abc_mgr abc_mgr, Io_url url, boolean create) {
 		this.abc_mgr = abc_mgr;
 		Db_connect connect = create ? Db_connect_sqlite.make_(url) : Db_connect_sqlite.load_(url);
 		provider = Db_provider_.new_(connect);
+		Sqlite_engine_.Pragma_page_size_4096(provider);
 		tbl_dir = new Fsdb_dir_tbl(provider, create);
 		tbl_fil = new Fsdb_fil_tbl(provider, create);
 		tbl_thm = new Fsdb_xtn_thm_tbl(provider, create);
@@ -64,43 +65,35 @@ public class Fsdb_db_atr_fil implements RlsAble {
 	public Fsdb_xtn_thm_itm Thm_select(int fil_id, int width, int thumbtime) {
 		return tbl_thm.Select_itm_by_fil_width(fil_id, width, thumbtime);
 	}
-	public int Fil_insert(Fsdb_fil_itm rv    , String dir, String fil, int ext_id, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		int dir_id = Dir_id__get_for_insert(dir);
-		int fil_id = tbl_fil.Select_itm_by_name(dir_id, fil).Id();
-		if (fil_id == 0) {
-			fil_id = abc_mgr.Next_id();				
-			tbl_fil.Insert(fil_id, dir_id, fil, Fsdb_xtn_tid_.Tid_none, ext_id, bin_len, modified, hash, bin_db_id);
-		}
+	public int Fil_insert(Fsdb_fil_itm rv, String dir, String fil, int ext_id, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+		int dir_id = Dir_id__get_or_insert(dir);
+		int fil_id = Fil_id__get_or_insert(Fsdb_xtn_tid_.Tid_none, dir_id, fil, ext_id, modified, hash, bin_db_id, bin_len);
+		rv.Id_(fil_id).Owner_(dir_id);
 		return fil_id;
 	}
 	public int Img_insert(Fsdb_xtn_img_itm rv, String dir, String fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		int dir_id = Dir_id__get_for_insert(dir);
-		int fil_id = tbl_fil.Select_itm_by_name(dir_id, fil).Id();
-		if (fil_id == 0) {
-			fil_id = abc_mgr.Next_id();
-			tbl_fil.Insert(fil_id, dir_id, fil, Fsdb_xtn_tid_.Tid_img, ext_id, bin_len, modified, hash, bin_db_id);
-		}
-		tbl_img.Insert(fil_id, img_w, img_h);
+		int dir_id = Dir_id__get_or_insert(dir);
+		created.Val_(false);
+		int fil_id = Fil_id__get_or_insert(Fsdb_xtn_tid_.Tid_img, dir_id, fil, ext_id, modified, hash, bin_db_id, bin_len);			
+		if (created.Val())	// NOTE: fsdb_fil row can already exist; EX: thm gets inserted -> fsdb_fil row gets created with -1 bin_db_id; orig gets inserted -> fsdb_fil row already exists
+			tbl_img.Insert(fil_id, img_w, img_h);
+		rv.Id_(fil_id);
 		return fil_id;
 	}
 	public int Thm_insert(Fsdb_xtn_thm_itm rv, String dir, String fil, int ext_id, int thm_w, int thm_h, int thumbtime, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		int dir_id = Dir_id__get_for_insert(dir);
-		int fil_id = tbl_fil.Select_itm_by_name(dir_id, fil).Id();
-		if (fil_id == 0) {
-			fil_id = abc_mgr.Next_id();
-			tbl_fil.Insert(fil_id, dir_id, fil, Fsdb_xtn_tid_.Tid_thm, ext_id, bin_len, modified, hash, Fsdb_bin_tbl.Db_bin_id_null);
-		}
+		int dir_id = Dir_id__get_or_insert(dir);
+		int fil_id = Fil_id__get_or_insert(Fsdb_xtn_tid_.Tid_thm, dir_id, fil, ext_id, modified, hash, Fsdb_bin_tbl.Null_db_bin_id, Fsdb_bin_tbl.Null_size);	// NOTE: bin_db_id must be set to NULL
 		int thm_id = abc_mgr.Next_id();
 		tbl_thm.Insert(thm_id, fil_id, thm_w, thm_h, thumbtime, bin_db_id, bin_len, modified, hash);
 		rv.Id_(thm_id).Owner_(fil_id).Dir_id_(dir_id);
 		return thm_id;
 	}
 	public static Fsdb_db_atr_fil load_(Fsdb_db_abc_mgr abc_mgr, DataRdr rdr, Io_url dir) {
-		Io_url url = dir.GenSubFil(rdr.ReadStr(Fsdb_db_atr_tbl.Fld_fda_url));
+		Io_url url = dir.GenSubFil(rdr.ReadStr(Fsdb_db_atr_tbl.Fld_url));
 		Fsdb_db_atr_fil rv = new Fsdb_db_atr_fil(abc_mgr, url, false);
-		rv.id = rdr.ReadInt(Fsdb_db_atr_tbl.Fld_fda_id);
+		rv.id = rdr.ReadInt(Fsdb_db_atr_tbl.Fld_uid);
 		rv.url = url;
-		rv.path_bgn = rdr.ReadStr(Fsdb_db_atr_tbl.Fld_fda_path_bgn);
+		rv.path_bgn = rdr.ReadStr(Fsdb_db_atr_tbl.Fld_path_bgn);
 		rv.cmd_mode = Db_cmd_mode.Ignore;
 		return rv;
 	}
@@ -115,7 +108,7 @@ public class Fsdb_db_atr_fil implements RlsAble {
 	public static Io_url url_(Io_url dir, int id) {
 		return dir.GenSubFil_ary("fsdb.atr#", Int_.XtoStr_PadBgn(id, 2), ".sqlite3");
 	}
-	private int Dir_id__get_for_insert(String dir_str) {
+	private int Dir_id__get_or_insert(String dir_str) {
 		byte[] dir_bry = ByteAry_.new_utf8_(dir_str);
 		Object rv_obj = dir_cache.Get_or_null(dir_bry);
 		int rv = -1;
@@ -136,5 +129,21 @@ public class Fsdb_db_atr_fil implements RlsAble {
 			dir_cache.Add(dir_bry, IntRef.new_(rv));
 		}
 		return rv;
+	}
+	private int Fil_id__get_or_insert(int xtn_tid, int dir_id, String fil, int ext_id, DateAdp modified, String hash, int bin_db_id, long bin_len) {
+		Fsdb_fil_itm fil_itm = tbl_fil.Select_itm_by_name(dir_id, fil);
+		int fil_id = fil_itm.Id();
+		if (fil_id == Fsdb_fil_itm.Null_id) {	// new item
+			fil_id = abc_mgr.Next_id();				
+			tbl_fil.Insert(fil_id, dir_id, fil, xtn_tid, ext_id, bin_len, modified, hash, bin_db_id);
+			created.Val_(true);
+		}
+		else {									// existing item				
+			if (	fil_itm.Db_bin_id() == Fsdb_bin_tbl.Null_db_bin_id	// prv row was previously inserted by thumb
+				&&	xtn_tid != Fsdb_xtn_tid_.Tid_thm					// cur row is not thumb
+				)
+				tbl_fil.Update(fil_id, dir_id, fil, xtn_tid, ext_id, bin_len, modified, hash, bin_db_id);	// update props; note that thumb inserts null props, whereas file will insert real props (EX: bin_db_id)
+		}
+		return fil_id;
 	}
 }

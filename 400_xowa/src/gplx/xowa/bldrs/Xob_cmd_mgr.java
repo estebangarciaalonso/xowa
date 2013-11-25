@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs; import gplx.*; import gplx.xowa.*;
 import gplx.xowa.wikis.*; import gplx.xowa.xtns.wdatas.imports.*; import gplx.xowa.bldrs.imports.ctgs.*; import gplx.xowa.bldrs.imports.*; import gplx.xowa.bldrs.oimgs.*;
+import gplx.xowa.bldrs.wikis.redirects.*; import gplx.xowa.bldrs.wikis.images.*; import gplx.xowa.files.wiki_orig.*;
+import gplx.xowa.bldrs.files.*;
 public class Xob_cmd_mgr implements GfoInvkAble {
 	public Xob_cmd_mgr(Xob_bldr bldr) {this.bldr = bldr;} private Xob_bldr bldr;
 	public void Clear() {list.Clear(); dump_rdrs.Clear();}
@@ -50,8 +52,11 @@ public class Xob_cmd_mgr implements GfoInvkAble {
 		else if	(String_.Eq(cmd_key, Xob_xfer_temp_cmd_orig.KEY_oimg))		return Add(new Xob_xfer_temp_cmd_orig(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_xfer_regy_cmd.KEY_oimg))			return Add(new Xob_xfer_regy_cmd(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_xfer_update_cmd.KEY_oimg))			return Add(new Xob_xfer_update_cmd(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xob_fsdb_reg_fill_cmd.KEY_oimg))		return Add(new Xob_fsdb_reg_fill_cmd(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xob_redirect_cmd.KEY_redirect))		return Add(new Xob_redirect_cmd(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xof_wiki_orig_cmd.KEY_oimg))			return Add(new Xof_wiki_orig_cmd(bldr, wiki));
+
+		else if	(String_.Eq(cmd_key, Xob_wiki_redirect_cmd.KEY_redirect))	return Add(new Xob_wiki_redirect_cmd(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_wiki_image_sql.KEY))				return Add(new Xob_wiki_image_sql(bldr, wiki));
+
 		else if	(String_.Eq(cmd_key, Xob_fsdb_make.KEY_oimg))				return Add(new Xob_fsdb_make(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_wdata_db_cmd.KEY_oimg))			return Add(new Xob_wdata_db_cmd(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xoctg_link_idx_wkr.KEY))				return Add(new Xoctg_link_idx_wkr(bldr, wiki));
@@ -67,7 +72,6 @@ public class Xob_cmd_mgr implements GfoInvkAble {
 		else if	(String_.Eq(cmd_key, Xobc_parse_dump_templates.KEY))		return Xml_rdr_direct_add(wiki, new Xobc_parse_dump_templates(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_parse_run.KEY))					return Add(new Xobc_parse_run(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_img_dump_ttl.KEY))				return Xml_rdr_direct_add(wiki, new Xobc_img_dump_ttl(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xob_image_sql.KEY))					return Add(new Xob_image_sql(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_img_merge_ttl_sql.KEY))			return Add(new Xobc_img_merge_ttl_sql(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_img_prep_xfer.KEY))				return Add(new Xobc_img_prep_xfer(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_img_run_xfer.KEY))				return Add(new Xobc_img_run_xfer(bldr, wiki));

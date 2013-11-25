@@ -22,8 +22,7 @@ public class Xof_bin_wkr_fsdb_sql implements Xof_bin_wkr, GfoInvkAble {
 	private IntRef tmp_itm_id = IntRef.neg1_(), tmp_bin_db_id = IntRef.neg1_(), tmp_mnt_id = IntRef.neg1_();
 	public Xof_bin_wkr_fsdb_sql(Xof_fsdb_mgr_sql fsdb_mgr) {this.fsdb_mgr = fsdb_mgr;}
 	public Xof_fsdb_mgr_sql Fsdb_mgr() {return fsdb_mgr;} private Xof_fsdb_mgr_sql fsdb_mgr;
-	public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsdb;}
-	public String Bin_wkr_key() {return key;} public void Bin_wkr_key_(String v) {key = v;} private String key;
+	public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsdb_wiki;}
 	public int Bin_bfr_len() {return bin_bfr_len;} public Xof_bin_wkr_fsdb_sql Bin_bfr_len_(int v) {bin_bfr_len = v; return this;} private int bin_bfr_len = 32;
 	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w) {
 		Bin_wkr_get_ids(itm, is_thumb, w, tmp_itm_id, tmp_bin_db_id, tmp_mnt_id);
@@ -60,5 +59,4 @@ public class Xof_bin_wkr_fsdb_sql implements Xof_bin_wkr, GfoInvkAble {
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}	private static final String Invk_db_dir_ = "db_dir_", Invk_url_ = "url_";
-	public static final String Bin_wkr_type_fsdb = "xowa.fsdb";
 }

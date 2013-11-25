@@ -93,7 +93,7 @@ public class Apps_app_mgr implements GfoInvkAble {
 		int exts_ary_len = exts_ary.length;
 		for (int i = 0; i < exts_ary_len; i++) 
 			App_by_ext_key(exts_ary[i]).Cmd_args(cmd, args);
-	}	ProcessAdp[] cmds_view_file_by_ext = new ProcessAdp[Xof_ext_.Ary_max];
+	}	ProcessAdp[] cmds_view_file_by_ext = new ProcessAdp[Xof_ext_.Id__max];
 	ProcessAdp Init_by_exts(String... exts) {
 		ProcessAdp rv = App_by_ext_key(exts[0]);
 		int len = exts.length;

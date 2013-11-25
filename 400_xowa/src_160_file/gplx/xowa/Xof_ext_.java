@@ -17,11 +17,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xof_ext_ {
-	public static final int Id_unknown = 0, Id_png = 1, Id_jpg = 2, Id_jpeg = 3, Id_gif = 4, Id_tif = 5, Id_tiff = 6, Id_svg = 7, Id_djvu = 8, Id_pdf = 9, Id_mid = 10, Id_ogg = 11, Id_oga = 12, Id_ogv = 13, Id_webm = 14;
-	public static final int Id__max = 15;
-	public static final byte[] Bry_png = ByteAry_.new_ascii_("png"), Bry_jpg = ByteAry_.new_ascii_("jpg"), Bry_jpeg = ByteAry_.new_ascii_("jpeg"), Bry_gif = ByteAry_.new_ascii_("gif"), Bry_tif = ByteAry_.new_ascii_("tif"), Bry_tiff = ByteAry_.new_ascii_("tiff"), Bry_svg = ByteAry_.new_ascii_("svg"), Bry_djvu = ByteAry_.new_ascii_("djvu"), Bry_pdf = ByteAry_.new_ascii_("pdf"), Bry_mid = ByteAry_.new_ascii_("mid"), Bry_ogg = ByteAry_.new_ascii_("ogg"), Bry_oga = ByteAry_.new_ascii_("oga"), Bry_ogv = ByteAry_.new_ascii_("ogv"), Bry_webm = ByteAry_.new_ascii_("webm");
-	public static final byte[][] Bry__ary = new byte[][] {ByteAry_.Empty, Bry_png, Bry_jpg, Bry_jpeg, Bry_gif, Bry_tif, Bry_tiff, Bry_svg, Bry_djvu, Bry_pdf, Bry_mid, Bry_ogg, Bry_oga, Bry_ogv, Bry_webm};
-	public static final byte[][] Mime_type__ary = new byte[][] {ByteAry_.new_ascii_("application/octet-stream"), ByteAry_.new_ascii_("image/png"), ByteAry_.new_ascii_("image/jpg"), ByteAry_.new_ascii_("image/jpeg"), ByteAry_.new_ascii_("image/gif"), ByteAry_.new_ascii_("image/tiff"), ByteAry_.new_ascii_("image/tiff"), ByteAry_.new_ascii_("image/svg+xml"), ByteAry_.new_ascii_("image/x.djvu"), ByteAry_.new_ascii_("application/pdf"), ByteAry_.new_ascii_("application/x-midi"), ByteAry_.new_ascii_("video/ogg"), ByteAry_.new_ascii_("audio/oga"), ByteAry_.new_ascii_("video/ogg"), ByteAry_.new_ascii_("video/webm")};
+	// NOTE: do not change ids; ids are saved to image databases;
+	public static final int Id_unknown = 0
+	, Id_png = 1, Id_jpg = 2, Id_jpeg = 3, Id_gif = 4, Id_tif = 5, Id_tiff = 6
+	, Id_svg = 7, Id_djvu = 8, Id_pdf = 9
+	, Id_mid = 10, Id_ogg = 11, Id_oga = 12, Id_ogv = 13, Id_webm = 14
+	, Id_flac = 15, Id_bmp = 16, Id_xcf = 17;
+	public static final int Id__max = 18;
+	public static final byte[] 
+	  Bry_png = ByteAry_.new_ascii_("png"), Bry_jpg = ByteAry_.new_ascii_("jpg"), Bry_jpeg = ByteAry_.new_ascii_("jpeg")
+	, Bry_gif = ByteAry_.new_ascii_("gif"), Bry_tif = ByteAry_.new_ascii_("tif"), Bry_tiff = ByteAry_.new_ascii_("tiff")
+	, Bry_svg = ByteAry_.new_ascii_("svg"), Bry_djvu = ByteAry_.new_ascii_("djvu"), Bry_pdf = ByteAry_.new_ascii_("pdf")
+	, Bry_mid = ByteAry_.new_ascii_("mid"), Bry_ogg = ByteAry_.new_ascii_("ogg"), Bry_oga = ByteAry_.new_ascii_("oga")
+	, Bry_ogv = ByteAry_.new_ascii_("ogv"), Bry_webm = ByteAry_.new_ascii_("webm")
+	, Bry_flac = ByteAry_.new_ascii_("flac"), Bry_bmp = ByteAry_.new_ascii_("bmp"), Bry_xcf = ByteAry_.new_ascii_("xcf")
+	;
+	public static final byte[][] Bry__ary = new byte[][]
+	{ ByteAry_.Empty, Bry_png, Bry_jpg, Bry_jpeg, Bry_gif, Bry_tif, Bry_tiff
+	, Bry_svg, Bry_djvu, Bry_pdf, Bry_mid, Bry_ogg, Bry_oga, Bry_ogv, Bry_webm
+	, Bry_flac, Bry_bmp, Bry_xcf
+	};
+	public static final byte[][] Mime_type__ary = new byte[][] 
+	{ ByteAry_.new_ascii_("application/octet-stream")
+	, ByteAry_.new_ascii_("image/png"), ByteAry_.new_ascii_("image/jpg"), ByteAry_.new_ascii_("image/jpeg")
+	, ByteAry_.new_ascii_("image/gif"), ByteAry_.new_ascii_("image/tiff"), ByteAry_.new_ascii_("image/tiff")
+	, ByteAry_.new_ascii_("image/svg+xml"), ByteAry_.new_ascii_("image/x.djvu"), ByteAry_.new_ascii_("application/pdf")
+	, ByteAry_.new_ascii_("application/x-midi"), ByteAry_.new_ascii_("video/ogg"), ByteAry_.new_ascii_("audio/oga")
+	, ByteAry_.new_ascii_("video/ogg"), ByteAry_.new_ascii_("video/webm")
+	, ByteAry_.new_ascii_("audio/flac"), ByteAry_.new_ascii_("image/bmp"), ByteAry_.new_ascii_("image/xcf")
+	};
 	private static final HashAdp id_hash = id_hash_new_();
 	private static HashAdp id_hash_new_() {
 		HashAdp rv = HashAdp_.new_bry_();
@@ -39,16 +63,18 @@ public class Xof_ext_ {
 		id_hash_new_(rv, Bry_oga, Id_oga);
 		id_hash_new_(rv, Bry_ogv, Id_ogv);
 		id_hash_new_(rv, Bry_webm, Id_webm);
+		id_hash_new_(rv, Bry_flac, Id_flac);
+		id_hash_new_(rv, Bry_bmp, Id_bmp);
+		id_hash_new_(rv, Bry_xcf, Id_xcf);
 		return rv;
 	}
 	private static void id_hash_new_(HashAdp hash, byte[] key, int val) {hash.Add(key, IntVal.new_(val));}
 
 	private static final Hash_adp_bry ext_hash = new Hash_adp_bry(false).Add_bry_bry(Bry_png).Add_bry_bry(Bry_jpg).Add_bry_bry(Bry_jpeg).Add_bry_bry(Bry_gif).Add_bry_bry(Bry_tif).Add_bry_bry(Bry_tiff).Add_bry_bry(Bry_svg).Add_bry_bry(Bry_djvu).Add_bry_bry(Bry_pdf).Add_bry_bry(Bry_mid).Add_bry_bry(Bry_ogg).Add_bry_bry(Bry_oga).Add_bry_bry(Bry_ogv).Add_bry_bry(Bry_webm);
-	public static final int Ary_max = Id_webm + 1;
-	private static final Xof_ext[] Ary = new Xof_ext[Ary_max];
+	private static final Xof_ext[] Ary = new Xof_ext[Id__max];
 
 	public static byte[] Get_ext_by_id_(int id) {
-		if (id < 0 || id > Id_webm) throw Err_.new_fmt_("index out of bounds; {id}", id);
+		if (id < 0 || id >= Id__max) throw Err_.new_fmt_("index out of bounds; {id}", id);
 		return Bry__ary[id];
 	}
 	public static int Get_id_by_ext_(byte[] ext_bry) {

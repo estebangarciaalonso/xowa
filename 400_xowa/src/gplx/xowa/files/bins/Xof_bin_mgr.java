@@ -48,21 +48,8 @@ public class Xof_bin_mgr implements GfoInvkAble {
 				Xof_bin_wkr wkr = wkrs[i];
 				rv = wkr.Bin_wkr_get_as_rdr(temp_files, itm, Bool_.N, itm.Html_w());
 				if (rv == Io_stream_rdr_.Null) continue;						// orig not found; continue;
-//					if (itm.Lnki_ext().Id_is_svg()) {
-//						itm.Lnki_w_(itm.Html_w());
-//						Io_url trg_png = Get_url(itm, Xof_repo_itm.Mode_thumb, Bool_.N);
-//						boolean resized = Resize(exec_tid, itm, file_is_orig, trg, trg_png);
-//						if (!resized) continue;
-//						itm.Rslt_bin_(wkr.Bin_wkr_tid());
-//						itm.Rslt_bin_fsys_(true);
-//						rv = Io_stream_rdr_.file_(trg);							// return stream of resized url; (result of imageMagick / inkscape)
-//						rv.Open();
-//						return rv;
-//					}
-//					else {
-					itm.Rslt_bin_(wkr.Bin_wkr_tid());
-					return rv;
-//					}
+				itm.Rslt_bin_(wkr.Bin_wkr_tid());
+				return rv;
 			}
 		}
 		else {	// thumb
@@ -83,7 +70,7 @@ public class Xof_bin_mgr implements GfoInvkAble {
 				if (!resized) continue;
 				itm.Rslt_bin_(wkr.Bin_wkr_tid());
 				itm.Rslt_bin_fsys_(true);
-				rv = Io_stream_rdr_.file_(trg);								// return stream of resized url; (result of imageMagick / inkscape)
+				rv = Io_stream_rdr_.file_(trg);												// return stream of resized url; (result of imageMagick / inkscape)
 				rv.Open();
 				return rv;
 			}
@@ -119,19 +106,19 @@ public class Xof_bin_mgr implements GfoInvkAble {
 	}
 	private Xof_bin_wkr Get_or_null(String key) {
 		int wkrs_len = wkrs.length;
+		byte tid = Xof_bin_wkr_.X_key_to_tid(key);
 		for (int i = 0; i < wkrs_len; i ++) {
 			Xof_bin_wkr wkr = wkrs[i];
-			if (String_.Eq(key, wkr.Bin_wkr_key())) return wkr;
+			if (wkr.Bin_wkr_tid() == tid) return wkr;
 		}
 		return null;
 	}
 	private Xof_bin_wkr Make(String type, String key) {
 		Xof_bin_wkr rv = null;
-		if		(String_.Eq(type, Xof_bin_wkr_fsdb_sql.Bin_wkr_type_fsdb))		rv = new Xof_bin_wkr_fsdb_sql(fsdb_mgr);
-		else if	(String_.Eq(type, Xof_bin_wkr_fsys_wmf.Bin_wkr_type_fsys_wmf))	rv = new Xof_bin_wkr_fsys_wmf();
-		else if	(String_.Eq(type, Xof_bin_wkr_wmf_xfer.Bin_wkr_type_wmf_xfer))	rv = new Xof_bin_wkr_wmf_xfer(repo_mgr, wiki.App().File_mgr().Download_mgr().Download_wkr().Download_xrg());
-		else																	throw Err_.unhandled(type);
-		rv.Bin_wkr_key_(key);
+		if		(String_.Eq(type, Xof_bin_wkr_.Key_fsdb_wiki))		rv = new Xof_bin_wkr_fsdb_sql(fsdb_mgr);
+		else if	(String_.Eq(type, Xof_bin_wkr_.Key_fsys_wmf))		rv = new Xof_bin_wkr_fsys_wmf();
+		else if	(String_.Eq(type, Xof_bin_wkr_.Key_http_wmf))		rv = new Xof_bin_wkr_http_wmf(repo_mgr, wiki.App().File_mgr().Download_mgr().Download_wkr().Download_xrg());
+		else														throw Err_.unhandled(type);
 		return rv;
 	}
 }

@@ -65,12 +65,15 @@ public class Swt_kit implements Gfui_kit {
 	public boolean Kit_init_done() {return kit_init_done;} private boolean kit_init_done;  
 	public void Kit_init(Gfo_usr_dlg gui_wtr) {
 		usrMsgWkr_Stop = new Swt_UsrMsgWkr_Stop(this, gui_wtr);
+		gui_wtr.Log_many("", "", "swt.kit_init.display");
 		display = new Display();
 		UsrDlg_._.Reg(UsrMsgWkr_.Type_Warn, GfoConsoleWin._);
 		UsrDlg_._.Reg(UsrMsgWkr_.Type_Stop, usrMsgWkr_Stop);
+		gui_wtr.Log_many("", "", "swt.kit_init.clipboard");
 		clipboard = new Swt_clipboard(display);
 		if (xulRunnerPath != null) System.setProperty("org.eclipse.swt.browser.XULRunnerPath", xulRunnerPath);
 		kit_init_done = true; 
+		gui_wtr.Log_many("", "", "swt.kit_init.done");
 	}
 	public void	Kit_term_cbk_(GfoInvkAbleCmd v) {this.term_cbk = v;} GfoInvkAbleCmd term_cbk = GfoInvkAbleCmd.Null;
 	public void Kit_run() {

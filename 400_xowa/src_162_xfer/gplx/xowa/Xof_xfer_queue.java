@@ -78,9 +78,9 @@ public class Xof_xfer_queue {
 	private void Exec_v2(byte exec_tid, Xog_win_wtr wtr, Xow_wiki wiki) {
 		boolean init = wiki.File_mgr().Fsdb_mgr().Init_by_wiki(wiki);
 		if (init) {
-			Xof_bin_wkr_fsdb_sql fsdb_wkr = (Xof_bin_wkr_fsdb_sql)wiki.File_mgr().Fsdb_mgr().Bin_mgr().Add(Xof_bin_wkr_fsdb_sql.Bin_wkr_type_fsdb, "xowa.fsdb.main");
+			Xof_bin_wkr_fsdb_sql fsdb_wkr = (Xof_bin_wkr_fsdb_sql)wiki.File_mgr().Fsdb_mgr().Bin_mgr().Add(Xof_bin_wkr_.Key_fsdb_wiki, "xowa.fsdb.main");
 			fsdb_wkr.Fsdb_mgr().Db_dir_(wiki.App().Fsys_mgr().File_dir().GenSubDir(wiki.Domain_str()));
-			wiki.File_mgr().Fsdb_mgr().Bin_mgr().Add(Xof_bin_wkr_wmf_xfer.Bin_wkr_type_wmf_xfer, "xowa.http.wmf");
+			wiki.File_mgr().Fsdb_mgr().Bin_mgr().Add(Xof_bin_wkr_.Key_http_wmf, "xowa.http.wmf");
 		}
 		wiki.File_mgr().Fsdb_mgr().Reg_select(wtr, exec_tid, Xfer_itms_to_fsdb_itms(list));
 	}

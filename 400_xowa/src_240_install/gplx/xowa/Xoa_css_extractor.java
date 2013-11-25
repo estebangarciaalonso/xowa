@@ -40,17 +40,24 @@ public class Xoa_css_extractor {
 		url_encoder = app.Url_converter_url();
 	}
 	public void Chk(Xow_wiki wiki, Io_url wiki_html_dir) {
-		Io_url url_css_common = wiki_html_dir.GenSubFil("xowa_common.css");
-		Io_url url_css_wiki   = wiki_html_dir.GenSubFil("xowa_wiki.css");
-		Xoh_wiki_article wiki_article = wiki.Html_mgr().Output_mgr();
-		wiki_article.Css_common_bry_(url_css_common).Css_wiki_bry_(url_css_wiki);
-		if (wiki.Wiki_tid() == Xow_wiki_type_.Tid_home || Env_.Mode_testing()) return;		// NOTE: do not download if xowa; also needed for TEST
-		if (Io_mgr._.ExistsFil(url_css_wiki)) return;				// css file exists; nothing to generate
-		wiki.App().Usr_dlg().Log_many("", "", "generating css for '~{0}'", wiki.Domain_str());
-		this.Install(wiki, wiki_html_dir);
+		try {
+			Io_url url_css_common = wiki_html_dir.GenSubFil("xowa_common.css");
+			Io_url url_css_wiki   = wiki_html_dir.GenSubFil("xowa_wiki.css");
+			Xoh_wiki_article wiki_article = wiki.Html_mgr().Output_mgr();
+			wiki_article.Css_common_bry_(url_css_common).Css_wiki_bry_(url_css_wiki);
+			if (wiki.Wiki_tid() == Xow_wiki_type_.Tid_home || Env_.Mode_testing()) return;		// NOTE: do not download if xowa; also needed for TEST
+			if (Io_mgr._.ExistsFil(url_css_wiki)) return;				// css file exists; nothing to generate
+			wiki.App().Usr_dlg().Log_many("", "", "generating css for '~{0}'", wiki.Domain_str());
+			this.Install(wiki, wiki_html_dir);
+		}
+		catch (Exception e) {	// if error, failover; paranoia catch for outliers like bad network connectivity fail, or MediaWiki: message not existing; DATE:2013-11-21
+			wiki.App().Usr_dlg().Warn_many("", "", "failed while trying to generate css; failing over; wiki='~{0}' err=~{1}", wiki.Domain_str(), Err_.Message_gplx(e));
+			Css_stylesheet_common_copy();	// only failover xowa_common.css; xowa_wiki.css comes from MediaWiki:Common.css / Vector.css
+		}
 	}
 	public void Install(Xow_wiki wiki, Io_url wiki_html_dir) {
 		css_stylesheet_common_download = wiki.App().Setup_mgr().Dump_mgr().Css_commons_download();
+		if (!wiki.App().User().Cfg_mgr().Security_mgr().Web_access_enabled()) css_stylesheet_common_download = false;	// if !web_access_enabled, don't download
 		this.wiki_domain = wiki.Domain_bry();
 		mainpage_url = "http://" + wiki.Key_str();	// NOTE: cannot reuse protocol_prefix b/c "//" needs to be added manually; protocol_prefix is used for logo and images which have form of "//domain/image.png"
 		if (page_fetcher == null) page_fetcher = new Xow_page_fetcher_wiki();

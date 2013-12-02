@@ -40,6 +40,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 	}
 	public void Load_by_ttls(Cancelable cancelable, OrderedHash rv, boolean fill_idx_fields_only, int bgn, int end) {// NOTE: Load_by_ttls just a wrapper around Load_by_ttl; for xdat, Load_by_ttl is fast enough
 		for (int i = bgn; i < end; i++) {
+			if (cancelable.Canceled()) return;
 			Xodb_page page = (Xodb_page)rv.FetchAt(i);
 			Load_by_ttl(page, page.Ns(), page.Ttl_wo_ns());
 		}

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.fsdb.*; import gplx.xowa.files.wiki_orig.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.bins.*;
+import gplx.xowa.files.fsdb.caches.*;
 public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 	private Hash_adp_bry bin_hash = new Hash_adp_bry(true); private ByteAryBfr bin_key_bfr = ByteAryBfr.new_();
 	private Hash_adp_bry reg_hash = new Hash_adp_bry(true);		
@@ -28,8 +29,12 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 	public Gfo_usr_dlg Usr_dlg() {return usr_dlg;} Gfo_usr_dlg usr_dlg = Gfo_usr_dlg_.Null;
 	private Io_url fs_dir;
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
+	public Cache_mgr Cache_mgr() {return cache_mgr;} private Cache_mgr cache_mgr = new Cache_mgr(null);
+	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	public void Init_by_wiki(Xow_wiki wiki, Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr) {
 		this.fs_dir = fs_dir;
+		this.wiki = wiki;
+		cache_mgr = wiki.App().File_mgr().Cache_mgr();
 		bin_mgr = new Xof_bin_mgr(wiki, null, repo_mgr);	// HACK: pass null fsdb_mgr; fsdb_mgr only needed for factory methods.
 	}
 	public void Fil_insert(Fsdb_fil_itm rv    , byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {

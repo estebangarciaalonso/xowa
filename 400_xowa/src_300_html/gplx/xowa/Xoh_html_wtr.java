@@ -21,7 +21,7 @@ import gplx.xowa.parsers.lnkis.*;
 public class Xoh_html_wtr {
 	Xow_wiki wiki; Xoa_app app; Xop_ctx ctx; Xoa_page page; Xop_root_tkn root; 
 	private gplx.xowa.xtns.refs.Xoh_ref_wtr ref_wtr = new gplx.xowa.xtns.refs.Xoh_ref_wtr();  Url_encoder href_encoder; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
-	private Xop_lnki_logger_redlinks redlinks_mgr;
+	private Xop_lnki_logger_redlinks_mgr redlinks_mgr;
 	public Xoh_lnki_wtr Lnki_wtr() {return lnki_wtr;} private Xoh_lnki_wtr lnki_wtr;
 	public Xoh_html_wtr(Xow_wiki wiki) {
 		this.wiki = wiki; app = wiki.App(); this.wiki_key = wiki.Key_bry();
@@ -34,7 +34,6 @@ public class Xoh_html_wtr {
 	public void Page_(Xoa_page v) {this.page = v;}
 	public void Write_all(Xop_ctx ctx, Xop_root_tkn root, byte[] src, ByteAryBfr main_bfr) {
 		try {
-			redlinks_mgr.Page_bgn(ctx);
 			tbl_para = wiki.Html_mgr().Tbl_para();
 			this.ctx = ctx; this.root = root; indent_level = 0; this.page = ctx.Page();
 			this.page.Langs().Clear();	// HACK: always clear langs; necessary for reload
@@ -599,7 +598,7 @@ public class Xoh_html_wtr {
 	private void Xnde_atr_write_id(ByteAryBfr bfr, byte[] bry, int bgn, int end) {
 		app.Url_converter_id().Encode(bfr, bry, bgn, end);
 	}
-	private static IntRef bfr_escape_ncr = IntRef.zero_(); static BoolRef bfr_escape_fail = BoolRef.false_();
+	private static IntRef bfr_escape_ncr = IntRef.zero_(); static BoolRef bfr_escape_fail = BoolRef.n_();
 	private static int Bfr_escape_nowiki_skip(Xoa_app app, ByteAryBfr bfr, byte[] src, int bgn, int end, byte[] nowiki_name, int nowiki_name_len) {
 		try {
 			boolean tag_is_bgn = true;
@@ -639,7 +638,7 @@ public class Xoh_html_wtr {
 	}
 	public static void Bfr_escape(ByteAryBfr bfr, byte[] src, int bgn, int end, Xoa_app app, boolean interpret_amp, boolean nowiki_skip) {
 		ByteTrieMgr_slim amp_trie = app.AmpTrie();
-		bfr_escape_fail.Val_false();
+		bfr_escape_fail.Val_n_();
 		for (int i = bgn; i < end; i++) {
 			byte b = src[i];
 			switch (b) {
@@ -734,7 +733,7 @@ public class Xoh_html_wtr {
 			}
 		}
 	}
-	public BoolRef Queue_add_ref() {return queue_add_ref;} BoolRef queue_add_ref = BoolRef.false_();
+	public BoolRef Queue_add_ref() {return queue_add_ref;} BoolRef queue_add_ref = BoolRef.n_();
 	private void Xnde_dynamic_page_list(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {		
 		Dpl_xnde nde = (Dpl_xnde)xnde.Xnde_data();
 		nde.Xtn_html(this, opts, bfr, src, xnde, depth);

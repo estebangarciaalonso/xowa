@@ -35,15 +35,10 @@ public class Wmf_dump_list_parser_tst {
 		(	"<li>2013-07-17 00:32:33 <a href=\"http://dumps.wikimedia.org/enwiki/20130708\">enwiki</a>: <span class=\"done\">Error</span></li>"
 		,	fxt.itm("enwiki", "20130708", "n", "Error", "2013-07-17 00:32:33")
 		);
-//			Wmf_dump_list_parser parser = new Wmf_dump_list_parser();
-//			byte[] src = Io_mgr._.LoadFilBry("dump.htm");
-//			Wmf_dump_itm[] itms = parser.Parse(src);
-//			int len = itms.length;
-//			ByteAryBfr bfr = ByteAryBfr.new_();
-//			for (int i = 0; i < len; i++) {
-//				bfr.Add_str(Wmf_dump_list_parser_fxt.Xto_str(itms[i])).Add_byte_nl();
-//			}
-//			Tfds.Write(bfr.XtoStrAndClear());
+		fxt.Test_parse
+		(	"<li>2013-11-28 06:08:56 <a href=\"zh_classicalwiki/20131128\">zh_classicalwiki</a>: <span class='done'>Dump complete</span></li>"
+		,	fxt.itm("zh-classicalwiki", "20131128", "y", "Dump complete", "2013-11-28 06:08:56")
+		);
 	}
 }
 class Wmf_dump_list_parser_fxt {

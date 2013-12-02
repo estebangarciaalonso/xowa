@@ -104,7 +104,7 @@ public class Xoa_ttl_tst {
 	@Test  public void Nl_mid()					{ttl_("a\nb").Page_txt_("A b").Run();}
 	@Test  public void Trim_space()				{ttl_(" a ").Page_txt_("A").Run();}
 	@Test  public void Trim_tab()				{ttl_("\ta\t").Page_txt_("A").Run();}
-	@Test  public void HtmlEnt_eacute()			{ttl_("&eacute;").Page_txt_("é").Run();}
+	@Test  public void HtmlEnt_eacute()			{ttl_("&eacute;").Page_txt_("é").Run();}	//É
 	@Test  public void HtmlEnt_endsInAmp()		{ttl_("Bisc &").Page_txt_("Bisc &").Run();}
 	@Test  public void HtmlEnt_ltr_a()			{ttl_("A&#98;").Page_txt_("Ab").Run();}
 	@Test  public void HtmlEnt_nbsp()			{ttl_("A&nbsp;b").Page_txt_("A b").Run();}	// NOTE: &nbsp must convert to space; EX:w:United States [[Image:Dust Bowl&nbsp;- Dallas, South Dakota 1936.jpg|220px|alt=]]
@@ -138,6 +138,12 @@ public class Xoa_ttl_tst {
 	@Test  public void Anchor_arg_in_non_main_ns() {
 		ttl_("Help:A#B").Full_txt_("Help:A").Anch_txt_("B").Run();
 	}
+//		@Test  public void First_char_is_multi_bypte() {	// PURPOSE: if multi-byte, uppercasing is complicated; EX: µ -> Μ; DATE:2013-11-27
+//			if (!String_.Supports_multibyte_case_conversion) return;
+//			ttl_("µ").Full_txt_("Μ").Run();					// NOTE: this is not an ASCII "Μ"
+//			ttl_("µab").Full_txt_("Μab").Run();				// check that rest of title works fine
+//			ttl_("Help:µab").Full_txt_("Μab").Run();	// check ns
+//		}
 	Xoa_ttl_tst ttl_(String raw) {test_raw = raw; return this;} private String test_raw = "";
 	Xoa_ttl_tst NmsId_(int v) {expd_nsId = v; return this;} private int expd_nsId = Int_.MinValue;
 	Xoa_ttl_tst Page_txt_(String v) {expd_page_txt = v; return this;} private String expd_page_txt;

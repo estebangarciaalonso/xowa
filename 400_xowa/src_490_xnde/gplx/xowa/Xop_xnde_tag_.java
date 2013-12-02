@@ -19,6 +19,7 @@ package gplx.xowa; import gplx.*;
 public class Xop_xnde_tag_ {
 	public static final int EndNdeMode_normal = 0, EndNdeMode_inline = 1, EndNdeMode_escape = 2; // escape is for hr which does not support </hr>
 	public static final int BgnNdeMode_normal = 0, BgnNdeMode_inline = 1;
+	public static final byte[] Name_onlyinclude = ByteAry_.new_ascii_("onlyinclude");
 	public static final byte[] XtnEndTag_bgn = ByteAry_.new_ascii_("</");//, XtnEndTag_end = ByteAry_.new_ascii_(">");
 	public static final byte
   Tid_b = 0

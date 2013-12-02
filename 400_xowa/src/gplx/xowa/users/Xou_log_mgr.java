@@ -15,19 +15,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx;
-public class BoolRef {
-	public boolean Val() {return val;} private boolean val;
-	public BoolRef Val_y_() {val = true; return this;}
-	public BoolRef Val_n_() {val = false; return this;}
-	public BoolRef Val_(boolean v) {val = v; return this;}
-	public BoolRef Val_toggle_() {val = !val; return this;}
-	@Override public String toString() {return Bool_.XtoStr_lower(val);}
-        public static BoolRef n_() {return new_(false);}
-        public static BoolRef y_() {return new_(true);}
-        public static BoolRef new_(boolean val) {
-		BoolRef rv = new BoolRef();
-		rv.val = val;
-		return rv;
-	}	BoolRef() {}
+package gplx.xowa.users; import gplx.*; import gplx.xowa.*;
+public class Xou_log_mgr implements GfoInvkAble {
+	public boolean Log_redlinks() {return log_redlinks;} private boolean log_redlinks;
+	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
+		if		(ctx.Match(k, Invk_log_redlinks))			return Yn.XtoStr(log_redlinks);
+		else if	(ctx.Match(k, Invk_log_redlinks_))			log_redlinks = m.ReadYn("v");
+		return this;
+	}
+	public static final String 
+	  Invk_log_redlinks = "log_redlinks", Invk_log_redlinks_ = "log_redlinks_"
+	;
 }

@@ -110,5 +110,5 @@ public class Xof_fsdb_itm {
 	public byte Rslt_qry() {return rslt_qry;} public Xof_fsdb_itm Rslt_qry_(byte v) {this.rslt_qry = v; return this;} private byte rslt_qry;
 	public byte Rslt_bin() {return rslt_bin;} public Xof_fsdb_itm Rslt_bin_(byte v) {this.rslt_bin = v; return this;} private byte rslt_bin;
 	public byte Rslt_cnv() {return rslt_cnv;} public Xof_fsdb_itm Rslt_cnv_(byte v) {this.rslt_cnv = v; return this;} private byte rslt_cnv;
-	public boolean Rslt_bin_fsys() {return rslt_bin_fsys;} public Xof_fsdb_itm Rslt_bin_fsys_(boolean v) {rslt_bin_fsys = v; return this;} private boolean rslt_bin_fsys;
+	public boolean Rslt_fil_created() {return rslt_fil_created;} public Xof_fsdb_itm Rslt_fil_created_(boolean v) {rslt_fil_created = v; return this;} private boolean rslt_fil_created;
 }

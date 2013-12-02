@@ -62,17 +62,17 @@ public class Xob_dump_file {
 class Xob_dump_file_ {
 	public static byte[] Bld_dump_dir_url(byte[] server_url, byte[] alias, byte[] date) {
 		return ByteAry_.Add
-			(	server_url					// "http://dumps.wikimedia.org/"
-			,	alias, Bry_slash			// "simplewiki/"
-			,	date, Bry_slash				// "latest/"
+			(	server_url																	// "http://dumps.wikimedia.org/"
+			,	ByteAry_.Replace(alias, Byte_ascii.Dash, Byte_ascii.Underline), Bry_slash	// "simplewiki/"
+			,	date, Bry_slash																// "latest/"
 			);
 	}
 	public static byte[] Bld_dump_file_name(byte[] alias, byte[] date, byte[] dump_file_type, byte[] ext) {
 		return ByteAry_.Add
-			(	alias, Bry_dash				// "simplewiki-"
-			,	date, Bry_dash				// "latest-"
-			,	dump_file_type				// "pages-articles"
-			,	ext							// ".xml.bz2"
+			(	ByteAry_.Replace(alias, Byte_ascii.Dash, Byte_ascii.Underline), Bry_dash	// "simplewiki-"
+			,	date, Bry_dash																// "latest-"
+			,	dump_file_type																// "pages-articles"
+			,	ext																			// ".xml.bz2"
 			);
 	}
 	private static final byte[] Bry_dash = new byte[] {Byte_ascii.Dash}, Bry_slash = new byte[] {Byte_ascii.Slash};

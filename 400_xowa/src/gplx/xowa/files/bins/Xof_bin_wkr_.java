@@ -32,4 +32,12 @@ public class Xof_bin_wkr_ {
 		else if	(String_.Eq(key, Key_fsys_xowa))	return Tid_fsys_xowa;
 		else										return Tid_null;
 	}
+	public static boolean Tid_is_fsdb(byte v) {
+		switch (v) {
+			case Tid_fsdb_wiki: case Tid_fsdb_regy:
+				return true;
+			default:
+				return false;
+		}
+	}
 }

@@ -36,7 +36,7 @@ public class Fsdb_mnt_mgr implements GfoInvkAble {
 	public int Insert_to_mnt() {return insert_to_mnt;} public Fsdb_mnt_mgr Insert_to_mnt_(int v) {insert_to_mnt = v; return this;} private int insert_to_mnt = Mnt_idx_user;
 	public Fsdb_db_abc_mgr Abc_mgr_at(int i) {return ary[i];}
 	private Fsdb_mnt_itm[] Db_load_or_make(Io_url cur_dir) {
-		BoolRef created = BoolRef.false_();
+		BoolRef created = BoolRef.n_();
 		provider = Sqlite_engine_.Provider_load_or_make_(cur_dir.GenSubFil("wiki.mnt.sqlite3"), created);
 		tbl_cfg = new Fsdb_cfg_tbl(provider, created.Val());
 		if (created.Val()) {

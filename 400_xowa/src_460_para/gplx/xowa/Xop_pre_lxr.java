@@ -45,10 +45,15 @@ class Xop_pre_lxr implements Xop_lxr {
 		if (txt_pos == src_len) return cur_pos;	// NOTE: "\n\s" at eos; treat as \n only; EX: "a\n ";
 		if (	bgn_pos == Xop_parser_.Doc_bgn_bos		// bos
 			&& 	txt_pos < src_len						// bounds check
-			&&	src[txt_pos] == Byte_ascii.NewLine) {	// next char is nl
-			cur_pos = txt_pos;							// position at nl; NOTE: do not position after nl, else may break wikitext; EX: "\s\n{|" needs to preserve "\n" for tblw
-			ctx.Subs_add(tkn_mkr.Ignore(bgn_pos, cur_pos, Xop_ignore_tkn.Ignore_tid_pre_at_bos));
-			return cur_pos;	// ignore pre if blank line at bos; EX: "\s\n"
+			) {
+			byte b = src[txt_pos];
+			if		(b == Byte_ascii.NewLine) {	// next char is nl
+				cur_pos = txt_pos;							// position at nl; NOTE: do not position after nl, else may break wikitext; EX: "\s\n{|" needs to preserve "\n" for tblw
+				ctx.Subs_add(tkn_mkr.Ignore(bgn_pos, cur_pos, Xop_ignore_tkn.Ignore_tid_pre_at_bos));
+				return cur_pos;	// ignore pre if blank line at bos; EX: "\s\n"
+			}
+			else if (b == Byte_ascii.Lt)		// next char is <; possible xnde; flag so that xnde can escape; DATE:2013-11-28
+				ctx.Xnde().Pre_at_bos_(true);
 		}
 		switch (ctx.Cur_tkn_tid()) {
 			case Xop_tkn_itm_.Tid_tblw_tb: case Xop_tkn_itm_.Tid_tblw_tr: case Xop_tkn_itm_.Tid_tblw_th:

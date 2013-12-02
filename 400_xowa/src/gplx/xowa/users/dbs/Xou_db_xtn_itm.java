@@ -15,23 +15,23 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.files.fsdb.caches; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
+package gplx.xowa.users.dbs; import gplx.*; import gplx.xowa.*; import gplx.xowa.users.*;
 import gplx.dbs.*;
-class Cache_dir_itm {
-	public int Id() {return id;} private int id;
-	public byte[] Dir_bry() {return dir_bry;} private byte[] dir_bry;
-	public byte Cmd_mode() {return cmd_mode;} public Cache_dir_itm Cmd_mode_(byte v) {cmd_mode = v; return this;} private byte cmd_mode;
-	public Cache_dir_itm Init_by_load(DataRdr rdr) {
+class Xou_db_xtn_itm {
+	public String Key() {return key;} private String key;
+	public String Version() {return version;} private String version;
+	public byte Cmd_mode() {return cmd_mode;} public Xou_db_xtn_itm Cmd_mode_(byte v) {cmd_mode = v; return this;} private byte cmd_mode;
+	public Xou_db_xtn_itm Init_by_load(DataRdr rdr) {
+		key = rdr.ReadStr(Xou_db_xtn_tbl.Fld_xtn_key);
+		version = rdr.ReadStr(Xou_db_xtn_tbl.Fld_xtn_version);
 		cmd_mode = Db_cmd_mode.Ignore;
-		id = rdr.ReadInt(Cache_dir_tbl.Fld_dir_id);
-		dir_bry = rdr.ReadBryByStr(Cache_dir_tbl.Fld_dir_name);
 		return this;
 	}
-	public Cache_dir_itm Init_by_make(int id, byte[] dir_bry) {
+	public Xou_db_xtn_itm Init_by_make(String key, String version) {
+		this.key = key;
+		this.version = version;
 		cmd_mode = Db_cmd_mode.Create;
-		this.id = id;
-		this.dir_bry = dir_bry;
 		return this;
 	}
-	public static final Cache_dir_itm Null = new Cache_dir_itm();
+        public static final Xou_db_xtn_itm Null = new Xou_db_xtn_itm(); public Xou_db_xtn_itm() {}
 }

@@ -63,7 +63,7 @@ abstract class Db_engine_sql_base implements Db_engine, RlsAble {
 	}
 	public void Connect() {
 		connection = NewDbCon();
-	}	Connection connection;
+	}	private Connection connection;
 	public void Rls() {
 //		if (Env_.Mode_testing()) return;	// WORKAROUND:MYSQL:else errors randomly when running all tests. possible connection pooling issue (?); // commented out 2013-08-22
 		try 	{connection.close();}

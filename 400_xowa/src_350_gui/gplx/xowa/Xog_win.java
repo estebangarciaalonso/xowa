@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.gfui.*; import gplx.xowa.gui.*; import gplx.xowa.gui.history.*; import gplx.xowa.xtns.math.*; import gplx.xowa.files.*;
+import gplx.xowa.parsers.lnkis.*;
 public class Xog_win implements GfoInvkAble, GfoEvObj {
 	public Xog_win(Xoa_app app, Xoa_gui_mgr mgr) {this.app = app; js_cbk = new Xoa_xowa_exec(app);}
 	public GfuiWin			Win() {return win;} GfuiWin win;
@@ -256,8 +257,10 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			page.File_math().Clear();			
 		}
 		page.Html_cmd_mgr().Exec(app, gui_wtr, page);
-		page.Wiki().Ctx().Tab().Redlinks_mgr().Redlink(page.Wiki(), this);
+		Xop_lnki_logger_redlinks_wkr redlinks_wkr = new Xop_lnki_logger_redlinks_wkr(this);
+		ThreadAdp_.invk_(redlinks_wkr, Xop_lnki_logger_redlinks_wkr.Invk_run).Start();
 		gui_wtr.Prog_none(GRP_KEY, "imgs.done", "");
+		app.File_mgr().Cache_mgr().Compress_check();
 		app.Log_wtr().Queue_enabled_(false);
 	}
 	private void Exec_navigate(String href) {
@@ -339,7 +342,6 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		page = new_page;
 		Exec_page_view(Xoh_wiki_article.Tid_view_edit);
 		Exec_html_box_select_by_id(Html_id_first_heading);
-		Exec_reload_imgs();
 	}
 	private void Exec_url_box_paste_and_go() {
 		String s = ClipboardAdp_.GetText();
@@ -467,12 +469,18 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		page.Wiki().ParsePage_root(page, true);		// NOTE: must reparse page if (a) Edit -> Read; or (b) "Options" save
 		Exec_page_refresh();
 	}
-	public void Exec_page_view(byte v) {
-		if (cur_view_tid == Xoh_wiki_article.Tid_view_edit && v == Xoh_wiki_article.Tid_view_read && !page.Missing())
-			Exec_page_reload(); // NOTE: if moving from "Edit" to "Read", reload page (else Preview changes will still show)
-		cur_view_tid = v;
+	public void Exec_page_view(byte new_view_tid) {
+		if (	new_view_tid == Xoh_wiki_article.Tid_view_read	// used to be && cur_view_tid == Edit; removed clause else redlinks wouldn't show when going form html to read (or clicking read multiple times) DATE: 2013-11-26;
+			&& !page.Missing()	// if new page, don't try to reload
+			) {
+			// NOTE: if moving from "Edit" to "Read", reload page (else Preview changes will still show); NOTE: do not call Exec_page_reload / Exec_page_refresh, which will fire redlinks code
+			page = history_mgr.Cur_page(page.Wiki());	// NOTE: must be to CurPage() else changes will be lost when going Bwd,Fwd
+			page.Wiki().ParsePage_root(page, true);		// NOTE: must reparse page if (a) Edit -> Read; or (b) "Options" save
+		}
+		cur_view_tid = new_view_tid;
 		if (page.Missing()) return;
 		Exec_show_wiki_page(page, false);
+		Exec_page_refresh();
 	}
 	public void Exec_page_stack(Xoa_page new_page) {
 		if (new_page.Missing()) return;

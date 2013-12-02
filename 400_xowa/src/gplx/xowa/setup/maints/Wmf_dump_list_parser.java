@@ -46,7 +46,7 @@ class Wmf_dump_list_parser {
 		int abrv_end = date_bgn;
 		int abrv_bgn = ByteAry_.FindBwd(href_bry, Byte_ascii.Slash, abrv_end - 1); if (abrv_bgn == ByteAry_.NotFound) abrv_bgn = -1;	// "enwiki/20130708"
 		byte[] abrv_bry = ByteAry_.Mid(href_bry, abrv_bgn + 1, abrv_end);
-		itm.Wiki_abrv_(abrv_bry);
+		itm.Wiki_abrv_(ByteAry_.Replace(abrv_bry, Byte_ascii.Underline, Byte_ascii.Dash));
 		return true;
 	}
 	private DateAdp Parse_status_time(byte[] src, int a_pos) {

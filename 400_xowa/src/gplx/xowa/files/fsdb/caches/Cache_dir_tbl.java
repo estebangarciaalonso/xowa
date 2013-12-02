@@ -20,14 +20,14 @@ import gplx.dbs.*;
 class Cache_dir_tbl {
 	private Db_provider provider;
 	private Db_stmt select_stmt;
-	private Db_stmt_bldr stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_dir_id), Fld_dir_name);
+	private Db_stmt_bldr stmt_bldr;
 	public void Db_init(Db_provider provider) {this.provider = provider;}
 	public void Db_save(Cache_dir_itm itm) {
-		if (stmt_bldr == null) stmt_bldr.Init(provider);
+		if (stmt_bldr == null) stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_dir_id), Fld_dir_name).Init(provider);
 		Db_stmt stmt = stmt_bldr.Get(itm.Cmd_mode());
 		switch (itm.Cmd_mode()) {
-			case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Id())	.Val_str_(itm.Dir()).Exec_insert(); break;
-			case Db_cmd_mode.Update:	stmt.Clear()					.Val_str_(itm.Dir()).Exec_update(); break;
+			case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Id())	.Val_str_by_bry_(itm.Dir_bry()).Exec_insert(); break;
+			case Db_cmd_mode.Update:	stmt.Clear()					.Val_str_by_bry_(itm.Dir_bry()).Exec_update(); break;
 			case Db_cmd_mode.Delete:	stmt.Clear().Val_int_(itm.Id()).Exec_delete();	break;
 			case Db_cmd_mode.Ignore:	break;
 			default:					throw Err_.unhandled(itm.Cmd_mode());
@@ -38,16 +38,16 @@ class Cache_dir_tbl {
 		if (select_stmt != null) select_stmt.Rls();
 		if (stmt_bldr != null) stmt_bldr.Rls();
 	}
-	public void Db_when_new() {
-		Sqlite_engine_.Tbl_create(provider, Tbl_name, Tbl_sql);
-		Sqlite_engine_.Idx_create(provider, Idx_name);
+	public void Db_when_new(Db_provider p) {
+		Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);
+		Sqlite_engine_.Idx_create(p, Idx_name);
 	}
-	public Cache_dir_itm Select(String name) {
+	public Cache_dir_itm Select(byte[] name) {
 		if (select_stmt == null) select_stmt = Db_stmt_.new_select_(provider, Tbl_name, String_.Ary(Fld_dir_name));
 		DataRdr rdr = DataRdr_.Null;
 		try {
 			rdr = select_stmt.Clear()
-			.Val_str_(name)
+			.Val_str_by_bry_(name)
 			.Exec_select();
 			if (rdr.MoveNextPeer()) {
 				return new Cache_dir_itm().Init_by_load(rdr);
@@ -58,6 +58,20 @@ class Cache_dir_tbl {
 		catch (Exception e) {select_stmt = null; throw Err_.err_(e, "stmt failed");}
 		finally {rdr.Rls();}
 	}		
+	public void Select_all(ListAdp list) {
+		list.Clear();
+		Db_stmt select_all_stmt = Db_stmt_.new_select_all_(provider, Tbl_name);
+		DataRdr rdr = DataRdr_.Null;
+		try {
+			rdr = select_all_stmt.Exec_select();
+			while (rdr.MoveNextPeer()) {
+				Cache_dir_itm dir_itm = new Cache_dir_itm().Init_by_load(rdr);
+				list.Add(dir_itm);
+			}
+		}
+		catch (Exception e) {throw Err_.err_(e, "stmt failed");}
+		finally {rdr.Rls();}
+	}
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	( "CREATE TABLE cache_dir"
 	, "( dir_id            integer       NOT NULL        PRIMARY KEY"

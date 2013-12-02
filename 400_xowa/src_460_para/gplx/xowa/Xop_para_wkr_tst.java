@@ -1171,6 +1171,18 @@ public class Xop_para_wkr_tst {
 		));
 		fxt.Ctx().Para().Enabled_n_();
 	}
+	@Test  public void Pre_ignore_bos_xnde() {		// PURPOSE: space at bgn shouldn't create pre; EX:commons.wikimedia.org; " <center>a\n</center>"; DATE:2013-11-28
+		fxt.Ctx().Para().Enabled_y_();
+		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		(	" <center>a"
+		,	"</center>"
+		), String_.Concat_lines_nl_skipLast	
+		(	"<p><center>a"
+		,	"</p>"			// FIXME: para logic is incorrect, but firefox handles correctly; DATE:2013-11-28
+		,	"</center>"
+		));
+		fxt.Ctx().Para().Enabled_n_();
+	}
 	@Test  public void List_ignore_pre_lines() {	// PURPOSE: "\s\n" should create new list; was continuing previous list; DATE:2013-07-12
 		fxt.Ctx().Para().Enabled_y_();
 		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl

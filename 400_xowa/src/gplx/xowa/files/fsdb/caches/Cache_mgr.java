@@ -16,60 +16,65 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb.caches; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
-import gplx.dbs.*; import gplx.xowa.users.data.*;
-public class Cache_mgr implements Xou_data_wkr {
+import gplx.dbs.*; import gplx.xowa.users.dbs.*;
+public class Cache_mgr implements Xou_db_wkr, GfoInvkAble {
 	private Cache_cfg_mgr cfg_mgr;
 	private Cache_dir_mgr dir_mgr;
 	private Cache_fil_mgr fil_mgr;
-	public Cache_mgr() {
+	private Xoa_app app;
+	private BoolRef created = BoolRef.n_();
+	public Cache_mgr(Xoa_app app) {
+		this.app = app;
 		cfg_mgr = new Cache_cfg_mgr(this);
 		dir_mgr = new Cache_dir_mgr(this);
 		fil_mgr = new Cache_fil_mgr(this);
 	}
+	public String Xtn_key() {return "xowa.file.cache_mgr";}
+	public String Xtn_version() {return "0.1.0.0";}
 	public int Next_id() {return cfg_mgr.Next_id();}
-	public void Db_init(Xou_data_mgr data_mgr) {
+	public void Db_init(Xou_db_mgr data_mgr) {
 		Db_provider provider = data_mgr.Provider();
+		data_mgr.Wkr_reg(this);
 		cfg_mgr.Db_init(provider);
 		dir_mgr.Db_init(provider);
 		fil_mgr.Db_init(provider);
-		data_mgr.Wkr_reg(this);
 	}
-	public void Db_when_new(Xou_data_mgr data_mgr) {
+	public void Db_when_new(Xou_db_mgr data_mgr) {
 		Db_provider provider = data_mgr.Provider();
 		cfg_mgr.Db_when_new(provider);
 		dir_mgr.Db_when_new(provider);
 		fil_mgr.Db_when_new(provider);
 	}
-	public void Db_save(Xou_data_mgr data_mgr) {
+	public void Db_save(Xou_db_mgr data_mgr) {
 		cfg_mgr.Db_save();
 		dir_mgr.Db_save();
 		fil_mgr.Db_save();
 	}
-	public void Db_term(Xou_data_mgr data_mgr) {
+	public void Db_term(Xou_db_mgr data_mgr) {
 		cfg_mgr.Db_term();
 		dir_mgr.Db_term();
 		fil_mgr.Db_term();
 	}
-	public void Add(Io_url url, String dir, String fil, int ext_id, DateAdp modified, String hash, long bin_len, boolean fil_is_orig, int fil_w, int fil_h, int fil_thumbtime) {
-		int dir_id = dir_mgr.Get_dir_id(dir);
-		Cache_fil_itm fil_itm = fil_mgr.Get_or_new(dir_id, fil, fil_is_orig, fil_w, fil_h, fil_thumbtime, ext_id, bin_len);
+	public Cache_fil_itm Reg(Xow_wiki wiki, Xof_fsdb_itm itm, long bin_len) {return this.Reg(wiki, itm.Orig_wiki(), itm.Lnki_ttl(), itm.File_is_orig(), itm.File_w(), itm.File_w(), itm.Lnki_thumbtime(), itm.Lnki_ext(), bin_len, DateAdp_.MaxValue, "");}
+	public Cache_fil_itm Reg(Xow_wiki wiki, byte[] repo, byte[] ttl, boolean fil_is_orig, int fil_w, int fil_h, int fil_thumbtime, Xof_ext ext, long bin_len, DateAdp modified, String hash) {
+		int dir_id = dir_mgr.Get_itm_by_name(repo).Id();
+		Cache_fil_itm fil_itm = fil_mgr.Get_or_new(dir_id, ttl, fil_is_orig, fil_w, fil_h, fil_thumbtime, ext, bin_len, created.Val_n_());
 		fil_itm.Cache_time_now_();
-		if (fil_itm.Cmd_mode() == Db_cmd_mode.Create)
+		if (created.Val())	// increase cache_size if item is new; (don't increase if update); NOTE: not same as Db_cmd_mode.Created, b/c itm could be created, but not saved to db yet; EX: Page_1 has A.png; A.png marked Created; Page_2 has A.png; A.png still Created, but should increase cache_size
 			cfg_mgr.Cache_len_add(bin_len);
+		return fil_itm;
+	}
+	public void Compress_check() {
 		if (cfg_mgr.Cache_len() > cfg_mgr.Cache_max())
-			Compress();
+			fil_mgr.Compress(app, dir_mgr, cfg_mgr);
 	}
-	public void Compress() {
-		// sort by cache time
-		// delete from fs
-		// update entries in mem
-	}
+	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
+		if		(ctx.Match(k, Invk_cache_min))		return cfg_mgr.Cache_min() / Io_mgr.Len_mb;
+		else if	(ctx.Match(k, Invk_cache_min_))		cfg_mgr.Cache_min_(m.ReadLong("v") * Io_mgr.Len_mb);
+		else if	(ctx.Match(k, Invk_cache_max))		return cfg_mgr.Cache_max() / Io_mgr.Len_mb;
+		else if	(ctx.Match(k, Invk_cache_max_))		cfg_mgr.Cache_max_(m.ReadLong("v") * Io_mgr.Len_mb);
+		else if	(ctx.Match(k, Invk_cache_compress))	fil_mgr.Compress(app, dir_mgr, cfg_mgr);
+		else	return GfoInvkAble_.Rv_unhandled;
+		return this;
+	}	private static final String Invk_cache_min = "cache_min", Invk_cache_min_ = "cache_min_", Invk_cache_max = "cache_max", Invk_cache_max_ = "cache_max_", Invk_cache_compress = "cache_compress";
 }
-/*
-xowa_cfg: grp,key,val
-xowa_xtn: xtn_id,xtn_name,xtn_created_in
-cache_dir: dir_id,dir_name
-cache_fil: uid,dir_id,...
-if (!data_mgr.Xtn_created('fsdb.cache'))
-create()
-*/

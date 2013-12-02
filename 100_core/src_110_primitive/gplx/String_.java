@@ -493,4 +493,5 @@ public class String_ implements GfoInvkAble {
 	public static String Replace_by_pos(String v, int del_bgn, int del_end, String repl) {
 		return String_.Mid(v, 0, del_bgn) + repl + String_.Mid(v, del_end, String_.Len(v));
 	}
+	public static final boolean Supports_multibyte_case_conversion = true; 
 }

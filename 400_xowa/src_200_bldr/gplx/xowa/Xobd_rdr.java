@@ -68,6 +68,7 @@ public class Xobd_rdr implements Xob_cmd {
 			throw Err_.err_(e, "error while reading dump");
 		}
 		finally {fil.Rls();}
+		bldr.Usr_dlg().Prog_none("", "", "reading completed: performing post-processing clean-up");
 		for (int i = 0; i < wkr_ary_len; i++)
 			wkr_ary[i].Wkr_end();
 	}

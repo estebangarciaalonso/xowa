@@ -19,8 +19,8 @@ package gplx.xowa.html; import gplx.*; import gplx.xowa.*;
 import gplx.xowa.wikis.*;
 public class Xoh_imgs_mgr implements GfoInvkAble {
 	public Xoh_imgs_mgr(Xow_html_mgr html_mgr) {wiki_is_default = html_mgr.Wiki().Wiki_tid() == Xow_wiki_type_.Tid_home;} private boolean wiki_is_default;
-	public BoolRef Alt_in_caption() {return alt_in_caption;} BoolRef alt_in_caption = BoolRef.true_();
-	public BoolRef Alt_defaults_to_caption() {return alt_defaults_to_caption;} BoolRef alt_defaults_to_caption = BoolRef.true_();
+	public BoolRef Alt_in_caption() {return alt_in_caption;} BoolRef alt_in_caption = BoolRef.y_();
+	public BoolRef Alt_defaults_to_caption() {return alt_defaults_to_caption;} BoolRef alt_defaults_to_caption = BoolRef.y_();
 	public void Copy_cfg(Xoh_imgs_mgr copy) {this.alt_in_caption = copy.alt_in_caption;}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_alt_in_caption))					return Yn.XtoStr(alt_in_caption.Val());

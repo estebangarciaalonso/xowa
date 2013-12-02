@@ -18,7 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.users; import gplx.*; import gplx.xowa.*;
 import gplx.gfui.*;
 public class Xoc_layout_mgr implements GfoInvkAble {
-	public Xoc_layout_mgr(Xoa_app app) {this.app = app;} private Xoa_app app;
+	public Xoc_layout_mgr(Xoa_app app) {
+		this.app = app;
+		Ctor_by_os();
+	}	private Xoa_app app;
 	public byte Html_box_adj_type() {return html_box_adj_type;} private byte html_box_adj_type;
 	public RectAdp Html_box_adj_rect() {return html_box_adj_rect;} private RectAdp html_box_adj_rect = RectAdp_.Zero;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
@@ -33,10 +36,16 @@ public class Xoc_layout_mgr implements GfoInvkAble {
 		app.Gui_mgr().Main_win().Refresh_win_size();
 	}
 	public static final String 
-		Invk_html_box_adj_type = "html_box_adj_type", Invk_html_box_adj_type_ = "html_box_adj_type_", Invk_html_box_adj_type_list = "html_box_adj_type_list"
+	  Invk_html_box_adj_type = "html_box_adj_type", Invk_html_box_adj_type_ = "html_box_adj_type_", Invk_html_box_adj_type_list = "html_box_adj_type_list"
 	, Invk_html_box_adj_rect = "html_box_adj_rect", Invk_html_box_adj_rect_ = "html_box_adj_rect_";
 	public static final byte Html_box_adj_type_none_byte = 0, Html_box_adj_type_rel_byte = 1, Html_box_adj_type_abs_byte = 2;
 	private static final Enm_mgr html_box_adj_type_enm = new Enm_mgr().Add(Html_box_adj_type_none_byte, "none").Add(Html_box_adj_type_rel_byte, "relative").Add(Html_box_adj_type_abs_byte, "absolute");
+	private void Ctor_by_os() {
+		if (Op_sys.Cur().Tid_is_osx()) {
+			html_box_adj_type = Html_box_adj_type_rel_byte;
+			html_box_adj_rect = RectAdp_.new_(0, 0, 5, 30);
+		}
+	}
 }
 class Enm_mgr {
 	private OrderedHash str_hash = OrderedHash_.new_(); private HashAdp val_hash = HashAdp_.new_();

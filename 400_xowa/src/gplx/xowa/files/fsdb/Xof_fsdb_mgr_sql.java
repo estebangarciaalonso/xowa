@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
-import gplx.dbs.*; import gplx.fsdb.*; import gplx.xowa.files.wiki_orig.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.qrys.*;
+import gplx.dbs.*; import gplx.fsdb.*; import gplx.xowa.files.wiki_orig.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.fsdb.caches.*;
 public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	private Db_provider img_regy_provider = null;		
 	private Io_url fs_dir;
@@ -29,8 +29,11 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	public Fsdb_mnt_mgr Mnt_mgr() {return mnt_mgr;} private Fsdb_mnt_mgr mnt_mgr = new Fsdb_mnt_mgr();
 	public Xof_fsdb_mgr_sql Db_dir_(Io_url v) {db_dir = v; mnt_mgr.Init(db_dir); return this;} private Io_url db_dir;
 	public Gfo_usr_dlg Usr_dlg() {return usr_dlg;} Gfo_usr_dlg usr_dlg = Gfo_usr_dlg_.Null;
+	public Cache_mgr Cache_mgr() {return cache_mgr;} private Cache_mgr cache_mgr;
+	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	public boolean Init_by_wiki(Xow_wiki wiki) {
 		if (init) return false;
+		this.wiki = wiki;
 		usr_dlg = wiki.App().Usr_dlg();
 		mnt_mgr.Usr_dlg_(usr_dlg);
 		init = true;
@@ -51,6 +54,7 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 		mnt_mgr.Init(db_dir);
 		bin_mgr = new Xof_bin_mgr(wiki, this, repo_mgr);
 		bin_wkr_fsdb = new Xof_bin_wkr_fsdb_sql(this).Bin_bfr_len_(64 * Io_mgr.Len_kb);	// most thumbs are 40 kb
+		cache_mgr = wiki.App().File_mgr().Cache_mgr();
 	}	private boolean init = false;
 	public void Reg_select(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms) {
 		Xof_wiki_orig_tbl.Select_list(img_regy_provider, exec_tid, itms, url_bldr, bin_mgr.Repo_mgr());
@@ -88,7 +92,7 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 		img_regy_provider.Rls();
 	}
 	public static Db_provider Init_wiki_orig_provider(Io_url root_dir) {
-		BoolRef created = BoolRef.false_();
+		BoolRef created = BoolRef.n_();
 		Db_provider rv = Sqlite_engine_.Provider_load_or_make_(root_dir.GenSubFil("wiki.orig#00.sqlite3"), created);
 		if (created.Val())
 			Xof_wiki_orig_tbl.Create_table(rv);

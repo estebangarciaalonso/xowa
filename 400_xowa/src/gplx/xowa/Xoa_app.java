@@ -58,7 +58,8 @@ public class Xoa_app implements GfoInvkAble {
 		log_wtr.Init();
 		gui_mgr.Init();
 		fsys_mgr.Init();
-		user.Init();
+		user.App_init();
+		file_mgr.App_init();
 		wiki_mgr.App_init();
 		gplx.xowa.utls.upgrades.Xoa_upgrade_mgr.Check(this);
 		stage = Xoa_stage_.Tid_init_done;
@@ -77,8 +78,7 @@ public class Xoa_app implements GfoInvkAble {
 			if (!gui_mgr.Kit().Ask_yes_no("", "", "An import is in progress. Are you sure you want to exit?")) return false;
 		} 
 		gui_mgr.Main_win().Gui_wtr().Canceled_y_();
-		user.Session_mgr().Window_mgr().Save_window(gui_mgr.Main_win().Win());
-		user.History_mgr().Save(this);
+		user.App_term();
 		log_wtr.Term();
 		log_mgr.Rls();
 		if (Scrib_engine.Engine() != null) Scrib_engine.Engine().Term();
@@ -87,6 +87,7 @@ public class Xoa_app implements GfoInvkAble {
 	}
 	public Xoa_wiki_mgr			Wiki_mgr() {return wiki_mgr;} private Xoa_wiki_mgr wiki_mgr;
 	public Xou_user_mgr			User_mgr() {return user_mgr;} private Xou_user_mgr user_mgr;
+	public Xof_file_mgr			File_mgr() {return file_mgr;} private Xof_file_mgr file_mgr = new Xof_file_mgr();
 	public Xoa_lang_mgr			Lang_mgr() {return lang_mgr;} private Xoa_lang_mgr lang_mgr;
 	public Xoa_gui_mgr			Gui_mgr() {return gui_mgr;} private Xoa_gui_mgr gui_mgr;
 	public Xou_user				User() {return user;} private Xou_user user;
@@ -113,7 +114,6 @@ public class Xoa_app implements GfoInvkAble {
 	public Xog_win_wtr			Gui_wtr() {return gui_mgr.Main_win().Gui_wtr();}
 
 	public Xop_toc_mgr			Toc_mgr() {return toc_mgr;} private Xop_toc_mgr toc_mgr = new Xop_toc_mgr();
-	public Xof_file_mgr			File_mgr() {return file_mgr;} private Xof_file_mgr file_mgr = new Xof_file_mgr();
 	public Xoi_setup_mgr		Setup_mgr() {return setup_mgr;} private Xoi_setup_mgr setup_mgr;
 	public Gfo_msg_log			Msg_log() {return msg_log;} private Gfo_msg_log msg_log = new Gfo_msg_log(Xoa_app_.Name);
 	public Gfo_msg_log			Msg_log_null() {return msg_log_null;} private Gfo_msg_log msg_log_null = new Gfo_msg_log("null_log");

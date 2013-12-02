@@ -34,8 +34,12 @@ public class Xof_bin_mgr implements GfoInvkAble {
 		Io_stream_rdr rdr = Find_as_rdr(temp_files, exec_tid, itm);
 		if (rdr == Io_stream_rdr_.Null) return Io_url_.Null;
 		Io_url trg = itm.Html_url();
-		if (itm.Rslt_bin_fsys()) return trg;	// rdr is opened directly from trg; return its url; occurs when url goes through imageMagick / inkscape, or when thumb is already in disk;
+		if (itm.Rslt_fil_created()) return trg;	// rdr is opened directly from trg; return its url; occurs when url goes through imageMagick / inkscape, or when thumb is already in disk;
 		Io_stream_wtr_.Save_rdr(trg, rdr);		// rdr is stream; either from http_wmf or fsdb; save to trg and return;
+		if (Xof_bin_wkr_.Tid_is_fsdb(itm.Rslt_bin())) {	// rdr is coming from fsdb; register in cache
+			if (!Env_.Mode_testing())
+				fsdb_mgr.Cache_mgr().Reg(wiki, itm, rdr.Len());
+		}
 		return trg;
 	}
 	public Io_stream_rdr Find_as_rdr(ListAdp temp_files, byte exec_tid, Xof_fsdb_itm itm) {
@@ -69,7 +73,7 @@ public class Xof_bin_mgr implements GfoInvkAble {
 				boolean resized = Resize(exec_tid, itm, file_is_orig, orig, trg);
 				if (!resized) continue;
 				itm.Rslt_bin_(wkr.Bin_wkr_tid());
-				itm.Rslt_bin_fsys_(true);
+				itm.Rslt_fil_created_(true);
 				rv = Io_stream_rdr_.file_(trg);												// return stream of resized url; (result of imageMagick / inkscape)
 				rv.Open();
 				return rv;

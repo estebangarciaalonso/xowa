@@ -24,11 +24,12 @@ public class Xoa_gfs_mgr implements GfoInvkAble, GfoInvkRootWkr {
 	}	private Xoa_app app;
 	public Xoa_app_eval Eval_mgr() {return eval_mgr;} private Xoa_app_eval eval_mgr;
 	public static boolean Fail_if_unhandled = false;
+	public static final String Cfg_user_custom_file = "user_custom_cfg.gfs";
 	private void Run_url_by_type(String type) {
 		Io_url app_data_dir = app.User().Fsys_mgr().App_data_dir();
 		Io_url url = null;
 		if		(String_.Eq(type, "user_system_cfg"))	url = app_data_dir.GenSubFil_nest("cfg", "user_system_cfg.gfs");
-		else if	(String_.Eq(type, "user_custom_cfg"))	url = app_data_dir.GenSubFil_nest("cfg", "user_custom_cfg.gfs");
+		else if	(String_.Eq(type, "user_custom_cfg"))	url = app_data_dir.GenSubFil_nest("cfg", Cfg_user_custom_file);
 		else if	(String_.Eq(type, "xowa_user_cfg"))		url = app_data_dir.GenSubFil_nest("cfg", "xowa_user_cfg.gfs");
 		else if	(String_.Eq(type, "xowa"))				url = app.Fsys_mgr().Root_dir().GenSubFil("xowa.gfs");
 		else											throw Err_mgr._.fmt_(GRP_KEY, "invalid_gfs_type", "invalid gfs type: ~{0}", type);

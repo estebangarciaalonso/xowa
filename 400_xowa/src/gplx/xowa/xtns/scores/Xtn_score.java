@@ -112,7 +112,7 @@ public class Xtn_score implements Xop_xnde_xtn, Xop_xnde_atr_parser, Xoh_cmd_itm
 	String Fill_xfer(Xow_wiki wiki, Xoa_page page, byte[] ttl) {
 		Xof_xfer_itm xfer_itm = wiki.Html_wtr().Lnki_wtr().Lnki_eval(page.File_queue(), ttl, Xop_lnki_type.Id_none, -1, -1, -1, -1, false, Fill_xfer_ref);
 		return String_.new_utf8_(xfer_itm.Html_orig_src());
-	}	BoolRef Fill_xfer_ref = BoolRef.false_();
+	}	BoolRef Fill_xfer_ref = BoolRef.n_();
 	public void Hcmd_exec(Xoa_app app, Xog_win_wtr gui_wtr, Xoa_page page) {
 		fail_msg = "unknown failure";
 		gui_wtr.Prog_many(GRP_KEY, "exec.msg", "generating lilypond: ~{0}", String_.new_utf8_(code));

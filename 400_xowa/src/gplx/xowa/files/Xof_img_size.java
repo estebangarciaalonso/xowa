@@ -28,6 +28,7 @@ public class Xof_img_size {
 		file_is_orig = false;
 	}
 	public void Html_size_calc(byte exec_tid, int lnki_w, int lnki_h, byte lnki_type, double lnki_upright, int lnki_ext, int orig_w, int orig_h, int thumb_default_w) {
+		this.Clear();											// always clear before calc; caller should be responsible, but just to be safe.
 		if (lnki_type == Xop_lnki_type.Id_frame) {				// frame: always return orig size; Linker.php!makeThumbLink2; // Use image dimensions, don't scale
 			html_w = file_w = orig_w;
 			html_h = file_h = orig_h;
@@ -41,6 +42,9 @@ public class Xof_img_size {
 		if (html_w == Null && html_h == Null) {					// no size set; NOTE: do not default to thumb if only height is set; EX: x900px should have w=0 h=900
 			if (Xop_lnki_type.Id_defaults_to_thumb(lnki_type))
 				html_w = thumb_default_w;
+			else if (	lnki_ext == Xof_ext_.Id_pdf				// pdf and viewing on page; default to 220
+					&&	exec_tid == Xof_exec_tid.Tid_wiki_page)
+				html_w = thumb_default_w;
 			else
 				html_w = orig_w;
 		}
@@ -48,7 +52,13 @@ public class Xof_img_size {
 			html_w = Upright_calc(lnki_upright, html_w);
 		if (orig_w == Null) return;								// no orig_w; just use html_w and html_h (html_h will likely be -1 and wrong)
 
-		if (html_w == Xof_img_size.Null) html_w = orig_w;		// html_w missing >>> use orig_w; REF.MW:Linker.php|makeImageLink2|$hp['width'] = $file->getWidth( $page );				
+		if (html_w == Xof_img_size.Null) {
+			if	(	lnki_ext == Xof_ext_.Id_svg					// following strange MW logic; REF.MW:Linker.php|makeImageLink|If its a vector image, and user only specifies height, we don't want it to be limited by its "normal" width; DATE: 2013-11-26
+				&&	html_h != Xof_img_size.Null)
+				html_w = Svg_max_width;
+			else
+				html_w = orig_w;								// html_w missing >>> use orig_w; REF.MW:Linker.php|makeImageLink2|$hp['width'] = $file->getWidth( $page );				
+		}
 		if (html_h != Xof_img_size.Null) {						// html_h exists; REF.MW:ImageHandler.php|normaliseParams|if ( isset( $params['height'] ) && $params['height'] != -1 ) {
 			if (html_w * orig_h > html_h * orig_w)				// html ratio > orig ratio; recalc html_w; SEE:NOTE_2
 				html_w = Calc_w(orig_w, orig_h, html_h);
@@ -108,6 +118,7 @@ public class Xof_img_size {
 	public static final double Upright_null = -1, Upright_default = 1;
 	public static final int Size_null_deprecated = -1, Size_null = 0;	// Size_null = 0, b/c either imageMagick / inkscape fails when -1 is passed
 	public static final int Size__same_as_orig = -1;
+	private static final int Svg_max_width = 2048;
 }
 /*
 NOTE_1:proc source/layout

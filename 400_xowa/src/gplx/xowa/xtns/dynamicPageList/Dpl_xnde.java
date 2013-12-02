@@ -30,7 +30,7 @@ public class Dpl_xnde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 			pages.SortBy(new Dpl_page_sorter(cmd));
 	}
 	private ListAdp Find_pages() {
-		ListAdp includes = cmd.Ctg_includes();
+		ListAdp includes = cmd.Ctg_includes(); if (includes == null) return ListAdp_.Null;
 		int includes_len = includes.Count();
 		OrderedHash cur_regy = OrderedHash_.new_(), new_regy = OrderedHash_.new_(), tmp_regy = OrderedHash_.new_();
 		Xodb_load_mgr load_mgr = wiki.Db_mgr().Load_mgr();

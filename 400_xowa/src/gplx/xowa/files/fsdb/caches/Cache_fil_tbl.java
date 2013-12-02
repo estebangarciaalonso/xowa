@@ -17,17 +17,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb.caches; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
 import gplx.dbs.*;
-class Cache_fil_tbl {
-	private Db_provider provider;
-	private Db_stmt select_stmt;
-	private Db_stmt_bldr stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_uid), Fld_dir_id, Fld_fil_name, Fld_fil_is_orig, Fld_fil_w, Fld_fil_h, Fld_fil_thumbtime, Fld_fil_ext, Fld_fil_size, Fld_cache_time);
+class Cache_fil_tbl {		
+	private Db_stmt select_itm_stmt;
+	private Db_stmt_bldr stmt_bldr;
 	public void Db_init(Db_provider p) {this.provider = p;}
-	public void Db_when_new() {
-		Sqlite_engine_.Tbl_create(provider, Tbl_name, Tbl_sql);
-		Sqlite_engine_.Idx_create(provider, Idx_ttl);
+	public Db_provider Provider() {return provider;} private Db_provider provider;
+	public void Db_when_new(Db_provider p) {
+		Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);
+		Sqlite_engine_.Idx_create(p, Idx_ttl);
 	}
 	public void Db_save(Cache_fil_itm itm) {
-		if (stmt_bldr == null) stmt_bldr.Init(provider);
+		if (stmt_bldr == null) stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_uid), Fld_dir_id, Fld_fil_name, Fld_fil_is_orig, Fld_fil_w, Fld_fil_h, Fld_fil_thumbtime, Fld_fil_ext, Fld_fil_size, Fld_cache_time).Init(provider);
 		Db_stmt stmt = stmt_bldr.Get(itm.Cmd_mode());
 		switch (itm.Cmd_mode()) {
 			case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Uid()); Db_save_modify(stmt, itm); stmt.Exec_insert(); break;
@@ -40,27 +40,27 @@ class Cache_fil_tbl {
 	}
 	private void Db_save_modify(Db_stmt stmt, Cache_fil_itm itm) {
 		stmt.Val_int_(itm.Dir_id())
-			.Val_str_(itm.Fil_name())
+			.Val_str_by_bry_(itm.Fil_name())
 			.Val_byte_by_bool_(itm.Fil_is_orig())
 			.Val_int_(itm.Fil_w())
 			.Val_int_(itm.Fil_h())
 			.Val_int_(itm.Fil_thumbtime())
-			.Val_int_(itm.Fil_ext())
+			.Val_int_(itm.Fil_ext().Id())
 			.Val_long_(itm.Fil_size())
 			.Val_long_(itm.Cache_time())
 			;
 	}
 	public void Db_term() {
-		if (select_stmt != null) select_stmt.Rls();
+		if (select_itm_stmt != null) select_itm_stmt.Rls();
 		if (stmt_bldr != null) stmt_bldr.Rls();
 	}
-	public Cache_fil_itm Select(int dir_id, String fil_name, boolean fil_is_orig, int fil_w, int fil_h, int fil_thumbtime) {
-		if (select_stmt == null) select_stmt = Db_stmt_.new_select_(provider, Tbl_name, String_.Ary(Fld_dir_id, Fld_fil_name, Fld_fil_is_orig, Fld_fil_w, Fld_fil_h, Fld_fil_thumbtime));
+	public Cache_fil_itm Select(int dir_id, byte[] fil_name, boolean fil_is_orig, int fil_w, int fil_h, int fil_thumbtime) {
+		if (select_itm_stmt == null) select_itm_stmt = Db_stmt_.new_select_(provider, Tbl_name, String_.Ary(Fld_dir_id, Fld_fil_name, Fld_fil_is_orig, Fld_fil_w, Fld_fil_h, Fld_fil_thumbtime));
 		DataRdr rdr = DataRdr_.Null;
 		try {
-			rdr = select_stmt.Clear()
+			rdr = select_itm_stmt.Clear()
 			.Val_int_(dir_id)
-			.Val_str_(fil_name)
+			.Val_str_by_bry_(fil_name)
 			.Val_byte_by_bool_(fil_is_orig)
 			.Val_int_(fil_w)
 			.Val_int_(fil_h)
@@ -71,7 +71,22 @@ class Cache_fil_tbl {
 			else
 				return Cache_fil_itm.Null;
 		}
-		catch (Exception e) {select_stmt = null; throw Err_.err_(e, "stmt failed");}
+		catch (Exception e) {select_itm_stmt = null; throw Err_.err_(e, "stmt failed");}
+		finally {rdr.Rls();}
+	}
+	public void Select_all(ByteAryBfr fil_key_bldr, OrderedHash hash) {
+		hash.Clear();
+		Db_stmt select_all_stmt = Db_stmt_.new_select_all_(provider, Tbl_name);
+		DataRdr rdr = DataRdr_.Null;
+		try {
+			rdr = select_all_stmt.Exec_select();
+			while (rdr.MoveNextPeer()) {
+				Cache_fil_itm fil_itm = new Cache_fil_itm().Init_by_load(rdr);
+				byte[] key = fil_itm.Gen_hash_key(fil_key_bldr);
+				hash.Add(key, fil_itm);
+			}
+		}
+		catch (Exception e) {throw Err_.err_(e, "stmt failed");}
 		finally {rdr.Rls();}
 	}
 	private static final String Tbl_sql = String_.Concat_lines_nl
@@ -93,6 +108,6 @@ class Cache_fil_tbl {
 	, Fld_fil_w = "fil_w", Fld_fil_h = "fil_h", Fld_fil_thumbtime = "fil_thumbtime", Fld_fil_ext = "fil_ext", Fld_fil_size = "fil_size", Fld_cache_time = "cache_time"
 	;
 	private static final Db_idx_itm
-		Idx_ttl     		= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS cache_fil__fil ON fsdb (fil_name, fil_is_orig, fil_w, fil_h, fil_thumbtime, cache_time, uid);")
+		Idx_ttl     		= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS cache_fil__fil ON cache_fil (fil_name, fil_is_orig, fil_w, fil_h, fil_thumbtime, cache_time, uid);")
 	;
 }

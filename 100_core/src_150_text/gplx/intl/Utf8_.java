@@ -21,7 +21,7 @@ public class Utf8_ {
 		int len = CharLen(src[bgn]);
 		return ByteAry_.Mid(src, bgn, bgn + len);
 	}
-	public static int CharLen(byte b) {
+	public static int CharLen(byte b) {	// NOTE: changed charLen to match w:UTF-8; DATE:2013-11-27
 		int i = b & 0xff;
 		switch (i) {
 			case   0: case   1: case   2: case   3: case   4: case   5: case   6: case   7: case   8: case   9: case  10: case  11: case  12: case  13: case  14: case  15: 
@@ -39,13 +39,18 @@ public class Utf8_ {
 				return 1;
 			case 192: case 193: case 194: case 195: case 196: case 197: case 198: case 199: case 200: case 201: case 202: case 203: case 204: case 205: case 206: case 207: 
 			case 208: case 209: case 210: case 211: case 212: case 213: case 214: case 215: case 216: case 217: case 218: case 219: case 220: case 221: case 222: case 223: 
-			case 224: case 225: case 226: case 227: case 228: case 229: case 230: case 231: case 232: case 233: case 234: case 235: case 236: case 237: case 238: case 239: 
 				return 2;
-			case 240: case 241: case 242: case 243: case 244: case 245: case 246: case 247:
+			case 224: case 225: case 226: case 227: case 228: case 229: case 230: case 231: case 232: case 233: case 234: case 235: case 236: case 237: case 238: case 239: 
 				return 3;
-			case 248: case 249: case 250: case 251: case 252: case 253: case 254: case 255:
-			default:
+			case 240: case 241: case 242: case 243: case 244: case 245: case 246: case 247:
 				return 4;
+			case 248: case 249: case 250: case 251:
+				return 5;
+			case 252: case 253:
+				return 6;
+			case 254: case 255:
+			default:
+				return 6;
 		}
 	}
 	public static int DecodeChar(byte[] ary, int pos) {

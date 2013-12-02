@@ -46,7 +46,7 @@ public class Xoh_file_main_wkr implements ByteAryFmtrArg {
 			xfer_itm = Xoh_lnki_wtr.Queue_add_manual(queue, xfer_itm);
 		}
 		opt.Html_main().Bld_bfr_many(bfr, this);
-	}	byte[] play_btn_icon; BoolRef queue_add_ref = BoolRef.false_();
+	}	byte[] play_btn_icon; BoolRef queue_add_ref = BoolRef.n_();
 	public void Bld_html(Xow_wiki wiki, ByteAryBfr bfr, Xof_xfer_itm xfer_itm, Xoa_ttl ttl, Xoh_file_page opt, byte[] file_size_bry, byte[] play_btn_icon, int elem_id_val) {
 		this.xfer_itm = xfer_itm; 
 		this.wiki = wiki; this.ttl = ttl; this.opt = opt; this.file_size_bry = file_size_bry; this.play_btn_icon = play_btn_icon; this.elem_id_val = elem_id_val;

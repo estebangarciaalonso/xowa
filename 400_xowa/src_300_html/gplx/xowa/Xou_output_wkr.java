@@ -29,7 +29,8 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		this.mgr = mgr;
 		this.page = page; 			
 		Xow_wiki wiki = page.Wiki(); Xoa_app app = wiki.App();
-		wiki.Ctx().Page_(page); // HACK: must update page for toc_mgr; WHEN: Xoa_page rewrite
+		Xop_ctx ctx = wiki.Ctx();
+		ctx.Page_(page); // HACK: must update page for toc_mgr; WHEN: Xoa_page rewrite
 		log_wtr.Write(page, app.Msg_log());
 		ByteAryFmtr fmtr = null;
 		if (mgr.Html_capable()) {
@@ -38,7 +39,9 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 			switch (output_tid) {
 				case Xoh_wiki_article.Tid_view_edit:	fmtr = mgr.Page_edit_fmtr(); break;
 				case Xoh_wiki_article.Tid_view_html:	fmtr = mgr.Page_read_fmtr(); view_tid = Xoh_wiki_article.Tid_view_read; break; // set view_tid to read, so that "read" is highlighted in HTML
-				case Xoh_wiki_article.Tid_view_read:	fmtr = mgr.Page_read_fmtr(); break;
+				case Xoh_wiki_article.Tid_view_read:	fmtr = mgr.Page_read_fmtr(); 
+					ctx.Tab().Redlinks_mgr().Page_bgn(ctx);	// not sure if this is the best place to put it, but redlinks (a) must only fire once; (b) must fire before html generation; (c) cannot fire during edit (preview will handle separately)
+					break;
 			}
 			Fmt(app, wiki, mgr, page, view_tid, bfr, fmtr, this);
 			if (output_tid == Xoh_wiki_article.Tid_view_html)

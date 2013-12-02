@@ -30,7 +30,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 	private byte[] wiki_key;
 	private Xobu_poll_mgr poll_mgr; private int poll_interval;
 	private long time_bgn;
-	private Xodb_xowa_cfg_tbl tbl_cfg; private Db_provider provider; private Db_stmt db_log_stmt, db_select_stmt;
+	private Xodb_xowa_cfg_tbl tbl_cfg; private Db_provider provider; private Db_stmt db_select_stmt;
 	private Xof_bin_mgr src_mgr;
 	private Xof_fsdb_mgr_sql trg_fsdb_mgr = new Xof_fsdb_mgr_sql(); private Fsdb_mnt_mgr trg_mnt_mgr;
 	private ListAdp temp_files = ListAdp_.new_();
@@ -63,7 +63,6 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		this.Txn_save();
 		trg_fsdb_mgr.Txn_save();
 		trg_fsdb_mgr.Rls();	// save changes and rls all connections
-		db_log_stmt.Rls();
 		db_select_stmt.Rls();
 		provider.Rls();
 	}
@@ -120,7 +119,6 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		if (reset_db && chk_reset) {
 			provider.Exec_qry(Db_qry_.delete_tbl_(Xodb_xowa_cfg_tbl.Tbl_name));
 		}
-		db_log_stmt = Xob_xfer_regy_log_tbl.Insert_stmt(provider);
 		db_select_stmt = Xob_xfer_regy_tbl.Select_by_page_id_stmt(provider);
 	}
 	private boolean Init_bmk(Xodb_xowa_cfg_tbl tbl_cfg) {
@@ -217,7 +215,6 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		++exec_fail;
 		String lnki_ttl = String_.Format("[[File:{0}|{1}px]]", String_.new_utf8_(itm.Lnki_ttl()), itm.Html_w());
 		usr_dlg.Warn_many("", "", "failed: ttl=~{0}", lnki_ttl);
-		Xob_xfer_regy_log_tbl.Insert(db_log_stmt, Xob_xfer_regy_tbl.Status_fail, itm.Lnki_id(), itm.Rslt_bin(), lnki_ttl);
 	}
 	private void Download_pass(Xodb_tbl_oimg_xfer_itm itm, Io_stream_rdr rdr) {
 		if (itm.File_is_orig()) {
@@ -228,7 +225,6 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		}
 		else
 			trg_fsdb_mgr.Thm_insert(tmp_thm_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), itm.Html_w(), itm.Html_h(), itm.Lnki_thumbtime(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);
-		Xob_xfer_regy_log_tbl.Insert(db_log_stmt, Xob_xfer_regy_tbl.Status_pass, itm.Lnki_id(), itm.Rslt_bin(), "");
 	}
 	private void Txn_renew() {
 		this.Txn_save();

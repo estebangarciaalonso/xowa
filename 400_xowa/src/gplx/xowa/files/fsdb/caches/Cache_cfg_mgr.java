@@ -18,14 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files.fsdb.caches; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
 import gplx.dbs.*; import gplx.xowa.dbs.tbls.*;
 class Cache_cfg_mgr {
-//		private Cache_mgr cache_mgr;
 	private Xodb_xowa_cfg_tbl cfg_tbl = new Xodb_xowa_cfg_tbl();
 	private Db_stmt update_stmt;
 	public Cache_cfg_mgr(Cache_mgr cache_mgr) {}
 	public int Next_id() {return next_id++;} private int next_id;
-	public long Cache_len() {return cache_len;} private long cache_len = 0;
+	public long Cache_len() {return cache_len;} public Cache_cfg_mgr Cache_len_(long v) {cache_len = v; return this;} private long cache_len = 0;
 	public void Cache_len_add(long v) {cache_len += v;}
-	public long Cache_max() {return cache_max;} private long cache_max = Io_mgr.Len_mb * 10;
+	public long Cache_min() {return cache_min;} public Cache_cfg_mgr Cache_min_(long v) {cache_min = v; return this;} private long cache_min = Io_mgr.Len_mb * 10;
+	public long Cache_max() {return cache_max;} public Cache_cfg_mgr Cache_max_(long v) {cache_max = v; return this;} private long cache_max = Io_mgr.Len_mb * 25;
 	public void Db_init(Db_provider provider) {
 		cfg_tbl.Provider_(provider);
 		next_id = cfg_tbl.Select_val_as_int(Cfg_grp, Cfg_key__next_id);
@@ -33,19 +33,21 @@ class Cache_cfg_mgr {
 		cache_max = cfg_tbl.Select_val_as_int(Cfg_grp, Cfg_key__cache_max);
 	}
 	public void Db_when_new(Db_provider provider) {
+		cfg_tbl.Provider_(provider);
 		cfg_tbl.Insert_str(Cfg_grp, Cfg_key__next_id, Int_.XtoStr(1));
 		cfg_tbl.Insert_str(Cfg_grp, Cfg_key__cache_len, Long_.XtoStr(0));
+		cfg_tbl.Insert_str(Cfg_grp, Cfg_key__cache_min, Long_.XtoStr(cache_min));
 		cfg_tbl.Insert_str(Cfg_grp, Cfg_key__cache_max, Long_.XtoStr(cache_max));
 	}
 	public void Db_save() {
 		if (update_stmt == null) update_stmt = cfg_tbl.Update_stmt();
 		cfg_tbl.Update(update_stmt, Cfg_grp, Cfg_key__next_id, next_id);
 		cfg_tbl.Update(update_stmt, Cfg_grp, Cfg_key__cache_len, cache_len);
+		cfg_tbl.Update(update_stmt, Cfg_grp, Cfg_key__cache_min, cache_min);
 		cfg_tbl.Update(update_stmt, Cfg_grp, Cfg_key__cache_max, cache_max);
 	}
 	public void Db_term() {
-		this.Db_save();
 		if (update_stmt != null) update_stmt.Rls();
 	}
-	private static final String Cfg_grp = "fsdb.cache", Cfg_key__next_id = "next_id", Cfg_key__cache_max = "cache_max", Cfg_key__cache_len = "cache_len";
+	private static final String Cfg_grp = "fsdb.cache", Cfg_key__next_id = "next_id", Cfg_key__cache_min = "cache_min", Cfg_key__cache_max = "cache_max", Cfg_key__cache_len = "cache_len";
 }

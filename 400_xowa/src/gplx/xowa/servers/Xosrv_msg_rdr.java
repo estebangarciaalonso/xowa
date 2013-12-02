@@ -33,7 +33,7 @@ public class Xosrv_msg_rdr {
 		if (cksum != (body_len * 2) + 1) return Xosrv_msg.fail_("checksum failed; body_len:{0} chksum:{1}", body_len, cksum);
 		byte[] body_bry = body_len > default_body_bry_len ? new byte[body_len] : default_body_bry;
 		rdr.Read(body_bry, 0, body_len);
-		IntRef fld_bgn = IntRef.zero_(); BoolRef fail_ref = BoolRef.false_(); StringRef fld_ref = StringRef.null_();
+		IntRef fld_bgn = IntRef.zero_(); BoolRef fail_ref = BoolRef.n_(); StringRef fld_ref = StringRef.null_();
 		byte[] cmd_name		= Read_fld(body_bry, body_len, fld_bgn, fail_ref, fld_ref.Val_("cmd_name"));	if (fail_ref.Val()) return Read_fld_fail(fld_ref, body_bry);
 		byte[] msg_id		= Read_fld(body_bry, body_len, fld_bgn, fail_ref, fld_ref.Val_("msg_id"));		if (fail_ref.Val()) return Read_fld_fail(fld_ref, body_bry);
 		byte[] sender		= Read_fld(body_bry, body_len, fld_bgn, fail_ref, fld_ref.Val_("sender"));		if (fail_ref.Val()) return Read_fld_fail(fld_ref, body_bry);
@@ -44,7 +44,7 @@ public class Xosrv_msg_rdr {
 	}
 	private static byte[] Read_fld(byte[] bry, int bry_len, IntRef fld_bgn, BoolRef fail_ref, StringRef fld_ref) {
 		int fld_end = ByteAry_.FindFwd(bry, Byte_ascii.Pipe, fld_bgn.Val(), bry_len);
-		if (fld_end == ByteAry_.NotFound) {fail_ref.Val_true(); return null;}
+		if (fld_end == ByteAry_.NotFound) {fail_ref.Val_y_(); return null;}
 		byte[] rv = ByteAry_.Mid(bry, fld_bgn.Val(), fld_end);
 		fld_bgn.Val_(fld_end + 1);	// +1 to place after pipe
 		return rv;

@@ -30,7 +30,7 @@ public class Xodb_db_file {
 	public static Xodb_db_file init__temp_log(Io_url dir)		{return init_(dir, Name__temp_log);}
 	public static Xodb_db_file init_(Io_url dir, String name) {
 		Io_url url = dir.GenSubFil(name);
-		BoolRef created = BoolRef.false_();
+		BoolRef created = BoolRef.n_();
 		Db_provider provider = Sqlite_engine_.Provider_load_or_make_(url, created);
 		if (created.Val()) {	// always create cfg table
 			Xodb_xowa_cfg_tbl.Create_table(provider);

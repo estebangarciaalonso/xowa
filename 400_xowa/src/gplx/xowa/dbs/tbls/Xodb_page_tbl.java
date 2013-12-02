@@ -138,58 +138,17 @@ public class Xodb_page_tbl {
 	public boolean Select_by_id_list(Cancelable cancelable, boolean skip_table_read, ListAdp rv, int bgn, int end) {
 		Xodb_page[] page_ary = (Xodb_page[])rv.XtoAry(Xodb_page.class);
 		int len = page_ary.length; if (len == 0) return false;
-		int[] id_ary = new int[len];  
+		OrderedHash hash = OrderedHash_.new_();
 		for (int i = 0; i < len; i++) {
-			Xodb_page page = page_ary[i];
-			int page_id = page.Id();
-			id_ary[i] = page_id;
+			if (cancelable.Canceled()) return false;
+			Xodb_page p = page_ary[i];
+			if (!hash.Has(p.Id()))	// NOTE: must check if file already exists b/c dynamicPageList currently allows dupes; DATE:2013-07-22
+				hash.Add(p.Id(), p);
 		}
-		try {
-			provider.Txn_mgr().Txn_bgn_if_none();
-			for (int i = 0; i < len; i += Sqlite_engine_.Stmt_arg_max) {
-				int grp_end = i + 998; if (grp_end > len) grp_end = len;
-				Select_by_id_list_grp(cancelable, skip_table_read, page_ary, id_ary, i, grp_end);
-			}			
-		}	finally {provider.Txn_mgr().Txn_end_all();}
+		Xodb_in_wkr_page_id wkr = new Xodb_in_wkr_page_id();
+		wkr.Init(hash);
+		wkr.Select_in(provider, cancelable, bgn, end);
 		return true;		
-	}
-	private void Select_by_id_list_grp(Cancelable cancelable, boolean skip_table_read, Xodb_page[] page_ary, int[] id_ary, int id_ary_bgn, int id_ary_end) {
-		DataRdr rdr = DataRdr_.Null; 
-		Db_stmt stmt = Db_stmt_.Null;
-		try {
-			int len = id_ary_end - id_ary_bgn;
-			Object[] slice_ary = new Object[len];
-			for (int i = 0; i < len; i++) {
-				if (cancelable.Canceled()) return;
-				slice_ary[i] = 0;
-			}
-			OrderedHash hash = OrderedHash_.new_();
-			int page_len = page_ary.length;
-			for (int i = 0; i < page_len; i++) {
-				if (cancelable.Canceled()) return;
-				Xodb_page p = page_ary[i];
-				if (!hash.Has(p.Id()))	// NOTE: must check if file already exists b/c dynamicPageList currently allows dupes; DATE:2013-07-22
-					hash.Add(p.Id(), p);
-			}
-			String[] flds = skip_table_read ? Flds_ary_search_suggest : Flds_ary_all;
-			stmt = Db_stmt_.new_select_in_(provider, Tbl_name, Fld_page_id, slice_ary, flds);
-			for (int i = id_ary_bgn; i < id_ary_end; i++) {
-				if (cancelable.Canceled()) return;
-				int v = id_ary[i];
-				stmt.Val_int_(v);
-			}
-			rdr = stmt.Exec_select();
-			Xodb_page stub = new Xodb_page();
-			while (rdr.MoveNextPeer()) {
-				if (cancelable.Canceled()) return;
-				if (skip_table_read)
-					Read_page_for_search_suggest(stub, rdr);
-				else
-					Read_page(stub, rdr);
-				Xodb_page page = (Xodb_page)hash.Fetch(stub.Id());
-				page.Copy(stub);
-			}
-		} finally {rdr.Rls(); stmt.Rls();}
 	}
 	public boolean Select_by_ttl(Xodb_page rv, Xow_ns ns, byte[] ttl) {
 		DataRdr rdr = DataRdr_.Null; 
@@ -295,12 +254,12 @@ public class Xodb_page_tbl {
 	private static String Xto_touched_str(DateAdp v) {return v.XtoStr_fmt(Page_touched_fmt);}
 	public static final String Tbl_name = "page", Fld_page_id = "page_id", Fld_page_ns = "page_namespace", Fld_page_title = "page_title", Fld_page_is_redirect = "page_is_redirect", Fld_page_touched = "page_touched", Fld_page_len = "page_len", Fld_page_random_int = "page_random_int", Fld_page_file_idx = "page_file_idx";
 	private static final String[] Flds_all = new String[] {Fld_page_id, Fld_page_ns, Fld_page_title, Fld_page_touched, Fld_page_is_redirect, Fld_page_len, Fld_page_file_idx};
-	private static String[] Flds_ary_all = String_.Ary(Flds_all), Flds_ary_search_suggest = String_.Ary(Fld_page_id, Fld_page_ns, Fld_page_title, Fld_page_len);
+	public static String[] Flds_ary_all = String_.Ary(Flds_all), Flds_ary_search_suggest = String_.Ary(Fld_page_id, Fld_page_ns, Fld_page_title, Fld_page_len);
 	public static final boolean Load_idx_flds_only_y = true;
 }
 class Xodb_in_wkr_page_id extends Xodb_in_wkr_page_base {
 	private OrderedHash hash;
-	public void Init(OrderedHash hash) {this.hash = hash;}
+	public void Init(OrderedHash hash) {this.hash = hash; this.Fill_idx_fields_only_(true);}
 	@Override public int Interval() {return 990;}
 	@Override public String In_fld_name() {return Xodb_page_tbl.Fld_page_id;}
 	@Override public Criteria In_filter(Object[] part_ary) {
@@ -391,6 +350,7 @@ abstract class Xodb_in_wkr_page_base extends Xodb_in_wkr_base {
 		return Db_qry_.select_cols_
 		(	this.Tbl_name()
 		, 	In_filter(part_ary)
+		, 	fill_idx_fields_only ? Xodb_page_tbl.Flds_ary_search_suggest : Xodb_page_tbl.Flds_ary_all
 		)
 		;
 	}

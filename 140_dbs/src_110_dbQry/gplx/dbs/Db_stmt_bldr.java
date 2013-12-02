@@ -24,9 +24,10 @@ public class Db_stmt_bldr implements RlsAble {
 		this.tbl_name = tbl_name; this.flds_keys = flds_keys; this.flds_vals = flds_vals;
 		flds_all = String_.Ary_add(flds_keys, flds_vals);
 	}
-	public void Init(Db_provider v) {
+	public Db_stmt_bldr Init(Db_provider v) {
 		this.provider = v;
 		provider.Txn_mgr().Txn_bgn_if_none();
+		return this;
 	}
 	public Db_stmt Get(byte cmd_mode) {
 		switch (cmd_mode) {

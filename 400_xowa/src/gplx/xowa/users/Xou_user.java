@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.users; import gplx.*; import gplx.xowa.*;
+import gplx.xowa.users.dbs.*;
 import gplx.xowa.wikis.*; import gplx.xowa.users.history.*; import gplx.xowa.xtns.scribunto.*;
 public class Xou_user implements GfoInvkAble {
 	public Xou_user(Xoa_app app, Io_url user_dir) {
@@ -25,6 +26,7 @@ public class Xou_user implements GfoInvkAble {
 		cfg_mgr = new Xou_cfg(this);
 		session_mgr = new Xou_session(this);
 		history_mgr = new Xou_history_mgr(this);
+		db_mgr = new Xou_db_mgr(app);
 	}
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public String Key_str() {return key_str;} private String key_str;
@@ -36,14 +38,22 @@ public class Xou_user implements GfoInvkAble {
 	public Xou_history_mgr History_mgr() {return history_mgr;} private Xou_history_mgr history_mgr;
 	public Xou_cfg Cfg_mgr() {return cfg_mgr;} private Xou_cfg cfg_mgr;
 	public Xou_session Session_mgr() {return session_mgr;} private Xou_session session_mgr;
+	public Xou_db_mgr Db_mgr() {return db_mgr;} private Xou_db_mgr db_mgr;
 	public gplx.xowa.users.prefs.Prefs_mgr Prefs_mgr() {return prefs_mgr;} gplx.xowa.users.prefs.Prefs_mgr prefs_mgr;
 	public Xow_msg_mgr Msg_mgr() {
 		if (msg_mgr == null)
 			msg_mgr = new Xow_msg_mgr(this.Wiki(), this.Lang());	// NOTE: must call this.Lang() not this.lang, else nullRef exception when using "app.shell.fetch_page"; DATE:2013-04-12
 		return msg_mgr;} private Xow_msg_mgr msg_mgr;
-	public void Init() {
+	public void App_init() {
 		Io_url user_system_cfg = fsys_mgr.App_data_cfg_dir().GenSubFil(Xou_fsys_mgr.Name_user_system_cfg);
 		if (!Io_mgr._.ExistsFil(user_system_cfg)) Xou_user_.User_system_cfg_make(app.Usr_dlg(), user_system_cfg);
+		if (!Env_.Mode_testing())
+			db_mgr.App_init();
+	}
+	public void App_term() {
+		session_mgr.Window_mgr().Save_window(app.Gui_mgr().Main_win().Win());
+		history_mgr.Save(app);
+		db_mgr.App_term();
 	}
 	public void Bookmarks_add(Xoa_page page) {
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_k004();

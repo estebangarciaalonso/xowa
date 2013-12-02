@@ -26,9 +26,8 @@ public class Xop_para_wkr implements Xop_ctx_wkr {
 		paraEnabled = enabled && ctx.Parse_tid() == Xop_parser_.Parse_tid_page_wiki;
 		block_mode = Block_mode_none;
 		pre_at_line_bgn = false;
-		if (paraEnabled) {
+		if (paraEnabled)
 			Prv_para_new(0);
-		}
 	}	private Xop_root_tkn root; byte[] src; int src_len; boolean paraEnabled;
 	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_tkn_itm tkn) {
 		if (((Xop_pre_tkn)tkn).Pre_enable() != Bool_.N_byte)
@@ -303,6 +302,15 @@ public class Xop_para_wkr implements Xop_ctx_wkr {
 		para_stack = ParaStack_none;
 		cur_mode = Mode_none;
 	}
+	public void Prv_para_x_pre(int pos) {
+		if (prv_para == null) return;
+//			para_stack = ParaStack_none;
+//			cur_mode = Mode_para;
+		pre_at_line_bgn = false;
+		block_mode = Block_mode_none;
+		prv_para.Para_bgn_(Xop_para_tkn.Para_typeId_none);
+		prv_para.Para_end_(Xop_para_tkn.Para_typeId_none);
+	}
 	private void ParaStack_end(int cur_pos) {
 		switch (para_stack) {
 			case ParaStack_none:	break;
@@ -312,7 +320,7 @@ public class Xop_para_wkr implements Xop_ctx_wkr {
 		para_stack = ParaStack_none;
 		cur_mode_(Mode_para);
 	}
-	boolean PseudoTrim(int pos) {
+	private boolean PseudoTrim(int pos) {
 		if (prv_nl_pos == -1) return false;
 		boolean ws = true;
 		for (int i = prv_nl_pos + 1; i < pos; i++) {

@@ -60,9 +60,12 @@ public class Xof_img_size_tst {
 	@Test  	public void Upright_and_null_width_fails() {// PURPOSE: if width = -1, but upright is specified, ignore upright (was calculating 0 for width); DATE:2013-11-23
 		fxt.Lnki_type_(Xop_lnki_type.Id_null).Lnki_(-1, 110).Orig_(440, 220).Lnki_upright_(.50f).Test_html(220, 110, Bool_.N);
 	}
-//		@Test  	public void Upright_and_null_width_fails2() {//
-//			fxt.Lnki_type_(Xop_lnki_type.Id_null).Lnki_(-1, 40).Orig_(1, 1).Test_html(40, 40, Bool_.N);
-//		}
+	@Test  	public void Svg_null_width() {	// PURPOSE: if svg and only height is specified, default width to 2048 (and recalc); DATE: 2013-11-26
+		fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_(-1, 40).Orig_(1, 1).Test_html(40, 40, Bool_.N);	// NOTE: used to be 1,1
+	}
+	@Test  	public void Pdf_none_defaults_to_thumb() {	// PURPOSE: if no width is specified, pdf uses thumb width default, not orig width); DATE: 2013-11-27
+		fxt.Lnki_type_(Xop_lnki_type.Id_none).Lnki_ext_(Xof_ext_.Id_pdf).Lnki_(-1, -1).Orig_(440, 220).Test_html(220, 110, Bool_.N);	// NOTE: used to be 1,1
+	}
 }
 class Xof_img_size_fxt {
 	private Xof_img_size img_size = new Xof_img_size();

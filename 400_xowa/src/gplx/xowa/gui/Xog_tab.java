@@ -19,7 +19,7 @@ package gplx.xowa.gui; import gplx.*; import gplx.xowa.*;
 import gplx.xowa.parsers.lnkis.*;
 public class Xog_tab {
 	public byte[] Display_ttl() {return display_ttl;} public Xog_tab Display_ttl_(byte[] v) {display_ttl = v; return this;} private byte[] display_ttl = null;
-	public Xop_lnki_logger_redlinks Redlinks_mgr() {return redlinks_mgr;} private Xop_lnki_logger_redlinks redlinks_mgr = new Xop_lnki_logger_redlinks();
+	public Xop_lnki_logger_redlinks_mgr Redlinks_mgr() {return redlinks_mgr;} private Xop_lnki_logger_redlinks_mgr redlinks_mgr = new Xop_lnki_logger_redlinks_mgr();
 	public void Clear() {	// NOTE: must be cleared else pages which have an italicized display titles will persit;
 		display_ttl = null;
 	}

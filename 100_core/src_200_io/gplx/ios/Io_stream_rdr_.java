@@ -66,10 +66,46 @@ public class Io_stream_rdr_ {
 	public static final Io_stream_rdr Null = new Io_stream_rdr_null();
 	public static Io_stream_rdr mem_(String v) {return mem_(ByteAry_.new_utf8_(v));}
 	public static Io_stream_rdr mem_(byte[] v) {
-		Io_stream_rdr rv = new Io_stream_rdr_adp(new java.io.ByteArrayInputStream(v)); 
+		Io_stream_rdr rv = new Io_stream_rdr_adp(Stream_new_mem(v));
 		rv.Len_(v.length);
 		return rv;
 	}	
+	public static java.io.InputStream Stream_new_mem(byte[] v) {	
+		return new java.io.ByteArrayInputStream(v);					
+	}
+	public static boolean Stream_close(java.io.InputStream stream) {	
+		try {
+			if (stream != null)
+				stream.close();									
+			return true;
+		} catch (Exception e) {Err_.Noop(e); return false;}
+	}
+	public static int Stream_read_by_parts(java.io.InputStream stream, int part_len, byte[] bry, int bgn, int len) {
+		/*
+		NOTE: BZip2CompressorInputStream will fail if large len is used
+		Instead, make smaller requests and fill bry
+		*/
+		try {
+			int rv = 0;
+			int end = bgn + len;
+			int cur = bgn;
+			while (true) {
+				int bry_len = part_len;		// read in increments of part_len
+				if (cur + bry_len > end)	// if cur + 8 kb > bry_len, trim to end; EX: 9 kb bry passed; 1st pass is 8kb, 2nd pass should be 1kb, not 8 kb;   
+					bry_len = end - cur;
+				if (cur == end) break;		// no more bytes needed; break; EX: 8 kb bry passed; 1st pass is 8kb; 2nd pass is 0 and cur == end
+				int read = stream.read(bry, cur, bry_len);		
+				if (read == gplx.ios.Io_stream_rdr_.Read_done) // read done; end
+					break;
+				rv += read;
+				cur += read;
+			}
+			return rv;
+		}
+		catch (Exception exc) {
+			throw Err_.new_fmt_("read failed: bgn={0} len={1} exc={2}", bgn, len, Err_.Message_gplx(exc));
+		}
+	}
 	public static final int Read_done = -1;
 	public static final int Read_done_compare = 1;
 }
@@ -220,22 +256,7 @@ class Io_stream_rdr_bzip2 extends Io_stream_rdr_base {
 		catch (Exception exc) {throw Err_.new_fmt_("failed to open bzip2 stream");}
 	}
 	@Override public int Read(byte[] bry, int bgn, int len) {
-		try {
-			int rv = 0;
-			int end = bgn + len;
-			for (int i = bgn; i < end; i += tmp_len) {
-				int bry_len = tmp_len;
-				if (i + bry_len > end)
-					bry_len = end - i;
-				int read = stream.read(bry, i, bry_len);
-//				if (read == gplx.ios.Io_stream_rdr_.Read_done) return gplx.ios.Io_stream_rdr_.Read_done;
-				rv += read;
-			}
-			return rv;
-		}
-		catch (Exception exc) {
-			throw Err_.new_fmt_("read failed: bgn={0} len={1}", bgn, len);
-		}
+		return Io_stream_rdr_.Stream_read_by_parts(stream, Read_len, bry, bgn, len);
 	}
-	static final int tmp_len = Io_mgr.Len_kb * 8;
+	private static final int Read_len = Io_mgr.Len_mb * 128;
 }

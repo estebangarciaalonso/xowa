@@ -17,12 +17,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.parsers.lnkis; import gplx.*; import gplx.xowa.*; import gplx.xowa.parsers.*;
 import gplx.xowa.dbs.tbls.*;
-public class Xop_lnki_logger_redlinks {
-	private ListAdp lnki_list = ListAdp_.new_(), work_list = ListAdp_.new_();
-	private OrderedHash page_hash = OrderedHash_.new_bry_();
+public class Xop_lnki_logger_redlinks_mgr {
 	private int lnki_idx;
 	private boolean disabled = false;
+	public int Request_idx() {return request_idx;} private int request_idx = 1;
+	public ListAdp Lnki_list() {return lnki_list;} private ListAdp lnki_list = ListAdp_.new_();
+	public boolean Log_enabled() {return log_enabled;} private boolean log_enabled = false;
+	public Gfo_usr_dlg Usr_dlg() {return usr_dlg;} private Gfo_usr_dlg usr_dlg = null;
 	public void Page_bgn(Xop_ctx ctx) {
+		request_idx++;
+		log_enabled = ctx.App().User().Cfg_mgr().Log_mgr().Log_redlinks();
+		usr_dlg = log_enabled ? ctx.App().Usr_dlg() : Gfo_usr_dlg_.Null;
 		lnki_idx = 1;	// NOTE: must start at 1; html_wtr checks for > 0
 		lnki_list.Clear();
 		disabled = ctx.Page().Page_ttl().Ns().Id_module();		// never redlink in Module ns; particularly since Lua has multi-line comments for [[ ]]
@@ -43,37 +48,5 @@ public class Xop_lnki_logger_redlinks {
 		lnki_list.Add(lnki);
 		++lnki_idx;
 	}
-	public void Redlink(Xow_wiki wiki, Xog_win win) {
-		page_hash.Clear(); // NOTE: do not clear in Page_bgn, else will fail b/c of threading; EX: Open Page -> Preview -> Save; DATE:2013-11-17
-		work_list .Clear();
-		int len = lnki_list.Count();
-		for (int i = 0; i < len; i++)	// make a copy of list else thread issues
-			work_list.Add(lnki_list.FetchAt(i));
-		for (int i = 0; i < len; i++) {
-			Xop_lnki_tkn lnki = (Xop_lnki_tkn)work_list.FetchAt(i);
-			Xoa_ttl ttl = lnki.Ttl();
-			Xodb_page page = new Xodb_page().Ttl_(ttl);
-			byte[] full_txt = ttl.Full_db();
-			if (!page_hash.Has(full_txt))
-				page_hash.Add(full_txt, page);
-		}
-		int page_len = page_hash.Count();
-		for (int i = 0; i < page_len; i += Batch_size) {
-			if (win.Gui_wtr().Canceled()) return;
-			int end = i + Batch_size;
-			if (end > page_len) end = page_len;
-			wiki.Db_mgr().Load_mgr().Load_by_ttls(win.Gui_wtr(), page_hash, Xodb_page_tbl.Load_idx_flds_only_y, i, end);
-		}
-		for (int j = 0; j < len; j++) {
-			if (win.Gui_wtr().Canceled()) return;
-			Xop_lnki_tkn lnki = (Xop_lnki_tkn)work_list.FetchAt(j);
-			byte[] full_txt = lnki.Ttl().Full_db();
-			Xodb_page page = (Xodb_page)page_hash.Fetch(full_txt);
-			if (page == null) continue;	// pages shouldn't be null, but just in case
-			if (!page.Exists())
-				win.Gui_wtr().Html_elem_atr_set_append(Lnki_id_prefix + Int_.XtoStr(lnki.Html_id()), "class", " new");
-		}
-	}
 	public static final String Lnki_id_prefix = "xowa_lnki_";
-	private static final int Batch_size = 32;
 }

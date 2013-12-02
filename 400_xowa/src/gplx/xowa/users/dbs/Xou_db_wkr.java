@@ -15,10 +15,12 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.users.data; import gplx.*; import gplx.xowa.*; import gplx.xowa.users.*;
-public interface Xou_data_wkr {
-	void Db_init(Xou_data_mgr data_mgr);
-	void Db_when_new(Xou_data_mgr data_mgr);
-	void Db_save(Xou_data_mgr data_mgr);
-	void Db_term(Xou_data_mgr data_mgr);
+package gplx.xowa.users.dbs; import gplx.*; import gplx.xowa.*; import gplx.xowa.users.*;
+public interface Xou_db_wkr {
+	void Db_init(Xou_db_mgr data_mgr);
+	void Db_when_new(Xou_db_mgr data_mgr);
+	void Db_save(Xou_db_mgr data_mgr);
+	void Db_term(Xou_db_mgr data_mgr);
+	String Xtn_key();
+	String Xtn_version();
 }

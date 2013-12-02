@@ -17,11 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.fsdb.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.wiki_orig.*;
+import gplx.xowa.files.fsdb.caches.*;
 public interface Xof_fsdb_mgr extends RlsAble {
 	boolean Tid_is_mem();
 	Xof_qry_mgr Qry_mgr();
 	Xof_bin_mgr Bin_mgr();
 	Xof_bin_wkr Bin_wkr_fsdb();
+	Cache_mgr Cache_mgr();
+	Xow_wiki Wiki();
 	void Db_bin_max_(long v);
 	void Init_by_wiki(Xow_wiki wiki, Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr);
 	void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr);
@@ -38,7 +41,7 @@ class Xof_fsdb_mgr_utl {
 		for (int i = 0; i < itms_len; i++) {
 			if (win_wtr.Canceled()) return;
 			Xof_fsdb_itm itm = (Xof_fsdb_itm)itms.FetchAt(i);
-			Itm_process(file_dir, win_wtr, itm, fsdb_list, repo_mgr, url_bldr, exec_tid);
+			Itm_process(fsdb_mgr, file_dir, win_wtr, itm, fsdb_list, repo_mgr, url_bldr, exec_tid);
 		}
 		itms_len = fsdb_list.Count(); if (itms_len == 0) return;	// all items found; return;
 		Reg_search(fsdb_mgr, file_dir, win_wtr, exec_tid, fsdb_list, itms_len, repo_mgr);
@@ -86,7 +89,7 @@ class Xof_fsdb_mgr_utl {
 		}
 	}
 	private Xof_img_size img_size = new Xof_img_size();
-	private void Itm_process(Io_url file_dir, Xog_win_wtr win_wtr, Xof_fsdb_itm itm, ListAdp fsdb_list, Xow_repo_mgr repo_mgr, Xof_url_bldr url_bldr, byte exec_tid) {
+	private void Itm_process(Xof_fsdb_mgr fsdb_mgr, Io_url file_dir, Xog_win_wtr win_wtr, Xof_fsdb_itm itm, ListAdp fsdb_list, Xow_repo_mgr repo_mgr, Xof_url_bldr url_bldr, byte exec_tid) {
 		switch (itm.Rslt_reg()) {
 			case Xof_wiki_orig_wkr_.Tid_found_orig:
 				itm.Html_size_calc(img_size, exec_tid);
@@ -94,13 +97,20 @@ class Xof_fsdb_mgr_utl {
 				Io_url trg_url = url_bldr.Set_trg_file_(itm.Lnki_type_as_mode(), repo, itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), itm.Html_w(), itm.Lnki_thumbtime()).Xto_url();
 				itm.Html_url_(trg_url);
 				Gui_update(win_wtr, itm);
+				if (!Env_.Mode_testing()) {
+					Cache_fil_itm cache_fil_itm = fsdb_mgr.Cache_mgr().Reg(fsdb_mgr.Wiki(), itm, 0);
+					if (cache_fil_itm.Fil_size() == 0) {
+						long fil_size = Io_mgr._.QueryFil(trg_url).Size();
+						cache_fil_itm.Fil_size_(fil_size);
+					}
+				}
 				break;
 			case Xof_wiki_orig_wkr_.Tid_missing_qry:
 			case Xof_wiki_orig_wkr_.Tid_missing_bin:		break;
 			case Xof_wiki_orig_wkr_.Tid_missing_reg:
 			case Xof_wiki_orig_wkr_.Tid_noop:			// previous attempt was noop; only occurs if oga and exec_tid != viewer
 			case Xof_wiki_orig_wkr_.Tid_null:			fsdb_list.Add(itm); break;
-			default:								throw Err_.unhandled(itm.Rslt_reg());
+			default:									throw Err_.unhandled(itm.Rslt_reg());
 		}
 	}
 	private void Fsdb_save(Xof_fsdb_mgr fsdb_mgr, Xof_fsdb_itm itm) {
@@ -129,6 +139,8 @@ class Xof_fsdb_mgr_utl {
 					fsdb_mgr.Fil_insert(fil_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext().Id(), Fsdb_xtn_thm_tbl.Modified_null, Fsdb_xtn_thm_tbl.Hash_null, bin_len, bin_rdr);
 				}
 			}
+			if (!Env_.Mode_testing())
+				fsdb_mgr.Cache_mgr().Reg(fsdb_mgr.Wiki(), itm, bin_len);
 		}
 		catch (Exception e) {
 			fsdb_mgr.Usr_dlg().Warn_many("", "", "failed to save file: ttl=~{0} url=~{1} err=~{2}", String_.new_utf8_(itm.Lnki_ttl()), html_url.Raw(), Err_.Message_gplx(e));

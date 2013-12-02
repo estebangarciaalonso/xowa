@@ -54,7 +54,7 @@ public class Xog_mnu_defaults {
 		Add_btn(Key_tools_wikis_import_from_list, "Import from list", "i", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Import/List\");");
 		Add_btn(Key_tools_wikis_import_from_script, "Import from script", "s", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Import/Script\");");
 		Add_btn(Key_tools_wikis_maintenance, "Wiki maintenance", "s", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Wiki_maintenance\");");
-		Add_btn(Key_tools_wikis_image_db_download, "Image database download", "d", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Image_database_download\");");
+		Add_btn(Key_tools_wikis_download, "Download", "d", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Download\");");
 		Add_btn(Key_help_help, "XOWA Help", "h", "help/contents.png", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Contents\");");
 		Add_btn(Key_help_change_log, "Change log", "l", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Change_log\");");
 		Add_btn(Key_help_diagnostics, "Diagnostics", "d", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Diagnostics\");");
@@ -83,7 +83,7 @@ public class Xog_mnu_defaults {
 		, Key_tools_wikis_import_from_list = "xowa.tools.wikis.import_from_list"
 		, Key_tools_wikis_import_from_script = "xowa.tools.wikis.import_from_script"
 		, Key_tools_wikis_maintenance = "xowa.tools.wikis.maintenance"
-		, Key_tools_wikis_image_db_download = "xowa.tools.wikis.image_db_download"
+		, Key_tools_wikis_download = "xowa.tools.wikis.download"
 		, Key_help_help = "xowa.help.help"
 		, Key_help_about = "xowa.help.about"
 		, Key_help_change_log = "xowa.help.change_log"
@@ -129,7 +129,7 @@ public class Xog_mnu_defaults {
 	,	"  add_btn_default('xowa.tools.wikis.import_from_script');"
 	,	"  add_spr;"
 	,	"  add_btn_default('xowa.tools.wikis.maintenance');"
-	,	"  add_btn_default('xowa.tools.wikis.image_db_download');"
+	,	"  add_btn_default('xowa.tools.wikis.download');"
 	,	"  }"
 	,	"}"
 	,	"add_grp_default('xowa.help') {"
@@ -180,7 +180,7 @@ public class Xog_mnu_defaults {
 	,	"  add_btn_default('xowa.tools.wikis.import_from_script');"
 	,	"  add_spr;"
 	,	"  add_btn_default('xowa.tools.wikis.maintenance');"
-	,	"  add_btn_default('xowa.tools.wikis.image_db_download');"
+	,	"  add_btn_default('xowa.tools.wikis.download');"
 	,	"}"
 	,	"add_grp_default('xowa.help').img_('') {"
 	,	"  add_btn_default('xowa.help.help');"

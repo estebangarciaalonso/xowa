@@ -28,19 +28,19 @@ public class Xoh_lnki_wtr {
 		this.page = page;
 		Xof_xfer_itm xfer_itm = this.Lnki_eval(page, lnki, queue_add_ref);
 		this.Write_media(bfr, src, opts, lnki, depth, xfer_itm);
-	}	BoolRef queue_add_ref = BoolRef.false_();
+	}	BoolRef queue_add_ref = BoolRef.n_();
 	public void Page_bgn(Xoa_page page) {
 		cfg_alt_defaults_to_caption = page.Wiki().App().User().Wiki().Html_mgr().Imgs_mgr().Alt_defaults_to_caption().Val();
 	}	private boolean cfg_alt_defaults_to_caption = true;
 	public Xof_xfer_itm Lnki_eval(Xoa_page page, Xop_lnki_tkn lnki, BoolRef queue_add_ref) {return Lnki_eval(page.File_queue(), lnki.Ttl().Page_url(), lnki.Lnki_type(), lnki.Width().Val(), lnki.Height().Val(), lnki.Upright(), lnki.Thumbtime(), lnki.NmsId() == Xow_ns_.Id_media, queue_add_ref);}
 	public Xof_xfer_itm Lnki_eval(Xof_xfer_queue queue, byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, int lnki_seek, boolean lnki_is_media_ns, BoolRef queue_add_ref) {
-		queue_add_ref.Val_false();
+		queue_add_ref.Val_n_();
 		tmp_xfer_itm.Clear().Atrs_by_ttl(lnki_ttl, ByteAry_.Empty).Atrs_by_lnki(lnki_type, lnki_w, lnki_h, lnki_upright, lnki_seek);
 		boolean found = wiki.File_mgr().Find_meta(tmp_xfer_itm);
 		boolean file_queue_add = File_queue_add(wiki, tmp_xfer_itm, lnki_is_media_ns, found);
 		Xof_xfer_itm rv = tmp_xfer_itm;
 		if (file_queue_add) {
-			queue_add_ref.Val_true();
+			queue_add_ref.Val_y_();
 			return Queue_add_manual(queue,  tmp_xfer_itm);
 		}
 		return rv;

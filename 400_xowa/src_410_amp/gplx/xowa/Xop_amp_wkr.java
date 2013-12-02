@@ -32,7 +32,7 @@ public class Xop_amp_wkr implements Xop_ctx_wkr {
 		}
 		else {
 			boolean ncr_is_hex = itm.Tid() == Xop_amp_trie_itm.Tid_num_hex;
-			fail.Val_false();
+			fail.Val_n_();
 			int rv = CalcNcr(ctx.Msg_log(), ncr_is_hex, src, src_len, bgn, cur_pos, ncr_val, fail);
 			if (fail.Val()) return ctx.LxrMake_txt_(cur_pos);
 			ctx.Subs_add(tkn_mkr.HtmlNcr(bgn, rv, ncr_val.Val()));
@@ -45,8 +45,8 @@ public class Xop_amp_wkr implements Xop_ctx_wkr {
 		int max_pos = cur_pos + max_len;
 		byte b = 0;
 		while (true) {	// find semicolon
-			if		(cur_pos == src_len)		{fail.Val_true(); msg_log.Add_itm_none(Xop_amp_log.Eos, src, int_bgn, src_len); return bgn + 1;}	// eos
-			else if (cur_pos == max_pos)		{fail.Val_true(); return bgn + 1;} // looks like ncr, but no semic found; EX.WP:Afghanistan "&#af |title="
+			if		(cur_pos == src_len)		{fail.Val_y_(); msg_log.Add_itm_none(Xop_amp_log.Eos, src, int_bgn, src_len); return bgn + 1;}	// eos
+			else if (cur_pos == max_pos)		{fail.Val_y_(); return bgn + 1;} // looks like ncr, but no semic found; EX.WP:Afghanistan "&#af |title="
 			b = src[cur_pos];
 			if (b == Byte_ascii.Semic) {
 				int_end = cur_pos - Char_.CharLen;	// int_end = pos before semicolon
@@ -77,7 +77,7 @@ public class Xop_amp_wkr implements Xop_ctx_wkr {
 		return cur_pos;
 	}
 	private static int Fail(BoolRef fail, Gfo_msg_log msg_log, byte[] src, int int_bgn, int cur_pos, Gfo_msg_itm itm, int bgn) {
-		fail.Val_true();
+		fail.Val_y_();
 		msg_log.Add_itm_none(itm, src, int_bgn, cur_pos);
 		return bgn + 1;
 	}

@@ -24,7 +24,7 @@ public class Xop_sanitizer {
 		trie_add("%3A"	, Tid_colon);
 		trie_add("%3a"	, Tid_colon);
 		trie_add("%"	, Tid_percent);
-	}	private ByteTrieMgr_slim trie = ByteTrieMgr_slim.cs_(), amp_trie; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); Gfo_msg_log msg_log; IntRef ncr_val = IntRef.zero_(); BoolRef fail = BoolRef.false_();
+	}	private ByteTrieMgr_slim trie = ByteTrieMgr_slim.cs_(), amp_trie; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); Gfo_msg_log msg_log; IntRef ncr_val = IntRef.zero_(); BoolRef fail = BoolRef.n_();
 	private void trie_add(String hook, byte tid) {trie.Add_stub(hook, tid);}
 	public byte[] Escape_id(byte[] src) {
 		boolean dirty = Escape_id(src, 0, src.length, tmp_bfr);
@@ -77,7 +77,7 @@ public class Xop_sanitizer {
 								case Xop_amp_trie_itm.Tid_num_dec:
 								case Xop_amp_trie_itm.Tid_num_hex:
 									boolean ncr_is_hex = itm_tid == Xop_amp_trie_itm.Tid_num_hex;
-									fail = fail.Val_false();
+									fail = fail.Val_n_();
 									int pos_new = Xop_amp_wkr.CalcNcr(msg_log, ncr_is_hex, src, end, pos - 1, pos + itm.Xml_name_bry().length, ncr_val, fail);
 									if (fail.Val())
 										bfr.Add_byte(Byte_ascii.Amp);

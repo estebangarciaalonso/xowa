@@ -47,11 +47,25 @@ public class Scrib_lib_ustring_tst {
 		Exec_gsub_regx("abcd", "[a]"		, -1, "A", "Abcd;1");
 		Exec_gsub_regx("abcd", "[ac]"		, -1, Scrib_kv_utl.flat_many_("a", "A", "c", "C"), "AbCd;2");
 		Exec_gsub_regx("aaaa", "[a]"		, 2, "A", "AAaa;2");
-		Exec_gsub_regx_func("abcd", "[a]"	, "Abcd;1");
 		Exec_gsub_regx("a"	, "(a)"			, 1, "%%%1", "%a;1");
 		Exec_gsub_regx("à{b}c", "{b}"		, 1, "b", "àbc;1");		// utf8
 		Exec_gsub_regx("àbc", "^%s*(.-)%s*$", 1, "%1", "àbc;1");	// utf8; regx is for trim line
 		Exec_gsub_regx("a"	, "[^]"			, 1, "b", "a;0");		// invalid regx should not fail; should return self; DATE:2013-10-20
+	}
+	@Test  public void Gsub_proc() {
+		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);
+		Exec_gsub_regx_func_0("abcd", "([a])", "Abcd;1");
+	}
+	@Test  public void Gsub_proc_w_grouped() {	// PURPOSE: gsub_proc should pass matched String, not entire String; DATE:2013-12-01
+		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);
+		Exec_gsub_regx_func_1("[[a]]", "%[%[([^#|%]]-)%]%]"	, "A;1");
+		fxt.Test_log_rcvd(3, "000000370000006D{[\"op\"]=\"call\",[\"id\"]=1,[\"nargs\"]=1,[\"args\"]={[1]=\"a\"}}");	// should be "a", not "[[a]]"
+	}
+	@Test  public void Gsub_proc_w_grouped_2() {// PURPOSE: gsub_proc failed when passing multiple matches; DATE:2013-12-01
+		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);
+		Exec_gsub_regx_func_2("[[a]] [[b]]", "%[%[([^#|%]]-)%]%]"	, "A B;2");
+		fxt.Test_log_rcvd(3, "000000370000006D{[\"op\"]=\"call\",[\"id\"]=1,[\"nargs\"]=1,[\"args\"]={[1]=\"a\"}}");	// should be "a", not "[[a]]"
+		fxt.Test_log_rcvd(4, "000000370000006D{[\"op\"]=\"call\",[\"id\"]=1,[\"nargs\"]=1,[\"args\"]={[1]=\"b\"}}");	// should be "b", not "[[b]]"
 	}
 	@Test  public void Gsub_no_replace() {// PURPOSE: gsub with no replace argument should not fail; EX:d:'orse; DATE:2013-10-14
 		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);
@@ -71,8 +85,8 @@ public class Scrib_lib_ustring_tst {
 		fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_init, Object_.Ary("abcabc", "a(b)")					, "a(b);\n  false");
 	}
 	@Test  public void Gmatch_callback() {
-//			fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_callback, Object_.Ary("abcabc", "a(b)", Scrib_kv_utl.base1_obj_ary_(false), 0)	, "2;\n  b");
-//			fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_callback, Object_.Ary("abcabc", "a(b)", Scrib_kv_utl.base1_obj_ary_(false), 2)	, "5;\n  b");
+		fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_callback, Object_.Ary("abcabc", "a(b)", Scrib_kv_utl.base1_obj_ary_(false), 0)	, "2;\n  b");
+		fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_callback, Object_.Ary("abcabc", "a(b)", Scrib_kv_utl.base1_obj_ary_(false), 2)	, "5;\n  b");
 		fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_callback, Object_.Ary("abcabc", "a(b)", Scrib_kv_utl.base1_obj_ary_(false), 8)	, "8;{}");
 	}
 	private void Exec_find(String text, String regx, int bgn, boolean plain, String expd) {
@@ -94,11 +108,27 @@ public class Scrib_lib_ustring_tst {
 		fxt.Init_lua_rcvd_rv();
 		fxt.Test_invoke(expd);
 	}
-	private void Exec_gsub_regx_func(String text, String regx, String expd) {
+	private void Exec_gsub_regx_func_0(String text, String regx, String expd) {
 		fxt.Init_lua_module();
 		fxt.Init_lua_rcvd(Scrib_lib_ustring.Invk_gsub, Scrib_kv_utl.base1_many_(text, regx, new Scrib_fnc("ignore_key", 1)));
 		fxt.Init_lua_rcvd_raw("a:3:{s:2:\"op\";s:6:\"return\";s:7:\"nvalues\";i:1;s:6:\"values\";a:1:{i:1;s:1:\"A\";}}");
 		fxt.Init_lua_rcvd_rv();
 		fxt.Test_invoke(expd);
 	}
-}	
+	private void Exec_gsub_regx_func_1(String text, String regx, String expd) {
+		fxt.Init_lua_module();
+		fxt.Init_lua_rcvd(Scrib_lib_ustring.Invk_gsub, Scrib_kv_utl.base1_many_(text, regx, new Scrib_fnc("ignore_key", 1)));
+		fxt.Init_lua_rcvd_raw("a:3:{s:2:\"op\";s:6:\"return\";s:7:\"nvalues\";i:1;s:6:\"values\";a:1:{i:1;s:1:\"A\";}}");
+		fxt.Init_lua_rcvd_rv();
+		fxt.Test_invoke(expd);
+	}
+	private void Exec_gsub_regx_func_2(String text, String regx, String expd) {
+		fxt.Init_lua_module();
+		fxt.Init_lua_rcvd(Scrib_lib_ustring.Invk_gsub, Scrib_kv_utl.base1_many_(text, regx, new Scrib_fnc("ignore_key", 1)));
+		fxt.Init_lua_rcvd_raw("a:3:{s:2:\"op\";s:6:\"return\";s:7:\"nvalues\";i:1;s:6:\"values\";a:1:{i:1;s:1:\"A\";}}");
+		fxt.Init_lua_rcvd_raw("a:3:{s:2:\"op\";s:6:\"return\";s:7:\"nvalues\";i:1;s:6:\"values\";a:1:{i:1;s:1:\"B\";}}");
+		fxt.Init_lua_rcvd_rv();
+		fxt.Init_lua_rcvd_rv();
+		fxt.Test_invoke(expd);
+	}
+}

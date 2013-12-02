@@ -215,7 +215,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 							}
 							else {
 								boolean ncr_is_hex = amp_itm.Tid() == Xop_amp_trie_itm.Tid_num_hex;
-								fail.Val_false();
+								fail.Val_n_();
 								int rv = Xop_amp_wkr.CalcNcr(wiki.Ctx().Msg_log(), ncr_is_hex, src, end, cur2, match_pos, ncr_val, fail);
 								if (fail.Val()) {}
 								else {
@@ -408,14 +408,24 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 //				this.raw = cur_page_ttl == null ? ByteAry_.Empty : ByteAry_.Copy(cur_page_ttl.Page_txt());	// set raw to current page ttl; note that this is needed for lnki_caption to show correctly (otherwise lnki_caption will be blank); this is a quasi-hack as it depends on the ttl of the current page, but passing in another argument feels sloppy
 //				tmp_bfr.Add(this.raw);
 //			}
-		if (wik_bgn == -1 && ns.Case_match() == Xow_ns_.Case_match_1st) {// do not check case if wiki is dif; NOTE: wik_bgn == -1 chk is needed for ttls like "fr:"
-			byte page_0 = full_txt[page_bgn];
-			int page_0_len = gplx.intl.Utf8_.CharLen(page_0);
-			int page_end = page_bgn + page_0_len;
-			if (	page_0_len > 1				// 1st char is multi-byte char
-				&&	page_end > full_txt.length	// expd page_len is > full_txt.length; EX: [[%D0]] is 208 but in utf8, 208 requires at least another char; DATE:2013-11-11
-				) return false;					// ttl is invalid
-			full_txt = wiki.Lang().Case_mgr().Case_reuse_upper(full_txt, page_bgn, page_end);
+		if (	ns.Case_match() == Xow_ns_.Case_match_1st
+			&&	wik_bgn == -1 ) {	// do not check case if xwiki; EX: "fr:" would have a wik_bgn of 0 (and a wik_end of 3); "A" (and any non-xwiki ttl) would have a wik_bgn == -1
+			byte char_1st = full_txt[page_bgn];
+			int char_1st_len = gplx.intl.Utf8_.CharLen(char_1st);
+			int page_end = page_bgn + char_1st_len;
+			if (	char_1st_len > 1){			// 1st char is multi-byte char
+				int full_txt_len = full_txt.length;
+				if (page_end > full_txt_len)	// ttl is too too short for 1st multi-byte char; EX: [[%D0]] is 208 but in utf8, 208 requires at least another char; DATE:2013-11-11
+					return false;				// ttl is invalid
+				else {							// ttl is long enough for 1st mult-byte char; need to use platform uppercasing; Xol_case_itm_.Universal is not sufficient
+//						String s = String_.new_utf8_(full_txt, page_bgn, page_bgn + char_1st_len); // convert 1st mb char to String
+//						s = String_.Upper(s);
+//						full_txt = ByteAry_.Add(ByteAry_.new_utf8_(s), ByteAry_.Mid(full_txt, page_end, full_txt_len));
+					full_txt = wiki.Lang().Case_mgr().Case_reuse_upper(full_txt, page_bgn, page_end);
+				}
+			}
+			else
+				full_txt = wiki.Lang().Case_mgr().Case_reuse_upper(full_txt, page_bgn, page_end);
 		}
 		Xow_ns tors_ns = ns.Id_talk() ? nsMgr.Get_by_ord(ns.Ord_subj_id()) : nsMgr.Get_by_ord(ns.Ord_talk_id());
 		tors_txt = tors_ns.Name_txt_w_colon();

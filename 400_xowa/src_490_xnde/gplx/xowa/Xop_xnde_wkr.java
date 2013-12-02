@@ -21,8 +21,12 @@ import gplx.xowa.parsers.logs.*;
 public class Xop_xnde_wkr implements Xop_ctx_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {this.ctx = ctx; this.tkn_mkr = ctx.Tkn_mkr();}
 	public Xob_xnde_wkr File_wkr() {return file_wkr;} public Xop_xnde_wkr File_wkr_(Xob_xnde_wkr v) {file_wkr = v; return this;} private Xob_xnde_wkr file_wkr;
+	public boolean Pre_at_bos() {return pre_at_bos;} public void Pre_at_bos_(boolean v) {pre_at_bos = v;} private boolean pre_at_bos;
 	public void Page_bgn(Xop_ctx ctx) {this.src = ctx.Src(); this.root = ctx.Root(); this.src_len = src.length;} private Xop_ctx ctx; Xop_tkn_mkr tkn_mkr; byte[] src; int src_len; Xop_root_tkn root;
-	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {}
+	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {this.Clear();}
+	private void Clear() {
+		pre_at_bos = false;
+	}
 	public void AutoClose(Xop_ctx ctx, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_tkn_itm tkn) {
 		Xop_xnde_tkn xnde = (Xop_xnde_tkn)tkn;
 		xnde.Src_end_(src_len);
@@ -30,6 +34,10 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		ctx.Msg_log().Add_itm_none(Xop_xnde_log.Dangling_xnde, src, xnde.Src_bgn(), xnde.Name_end());	// NOTE: xnde.Src_bgn to start at <; xnde.Name_end b/c xnde.Src_end is -1
 	}
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+		if (bgn_pos == Xop_parser_.Doc_bgn_bos) {
+			bgn_pos = 0;	// do not allow -1 pos
+			ctx.Para().Prv_para_disable(bgn_pos);
+		}
 		if (cur_pos == src_len) return ctx.LxrMake_txt_(src_len);					// "<" is last char in page; strange, but don't raise error;
 
 		// find >
@@ -124,6 +132,13 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			}
 		}
 		Xop_xnde_tag tag = (Xop_xnde_tag)tag_obj;
+		if (pre_at_bos) {
+			pre_at_bos = false;
+			if (tag.Block_close() == Xop_xnde_tag.Block_end) {	// NOTE: only ignore if Block_end; loosely based on Parser.php|doBlockLevels|$closematch; DATE:2013-12-01
+				ctx.Para().Prv_para_x_pre(cur_pos);
+				ctx.Subs_add(tkn_mkr.Ignore(bgn_pos, cur_pos, Xop_ignore_tkn.Ignore_tid_pre_at_bos));
+			}
+		}
 		int gt_pos = -1;	// find closing >; NOTE: MW does not ignore > inside quotes; EX: <div id="a>b">abc</div> -> <div id="a>
 		for (int i = cur_pos; i < src_len; i++) {
 			byte b = src[i];

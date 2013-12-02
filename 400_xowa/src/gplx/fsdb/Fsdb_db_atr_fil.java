@@ -20,7 +20,7 @@ import gplx.dbs.*; import gplx.cache.*;
 public class Fsdb_db_atr_fil implements RlsAble {
 	private Gfo_cache_mgr_bry dir_cache = new Gfo_cache_mgr_bry();
 	private Db_provider provider;
-	private Fsdb_dir_tbl tbl_dir; private Fsdb_fil_tbl tbl_fil; private Fsdb_xtn_thm_tbl tbl_thm; private Fsdb_xtn_img_tbl tbl_img; private BoolRef created = BoolRef.false_();
+	private Fsdb_dir_tbl tbl_dir; private Fsdb_fil_tbl tbl_fil; private Fsdb_xtn_thm_tbl tbl_thm; private Fsdb_xtn_img_tbl tbl_img; private BoolRef created = BoolRef.n_();
 	public Fsdb_db_atr_fil(Fsdb_db_abc_mgr abc_mgr, Io_url url, boolean create) {
 		this.abc_mgr = abc_mgr;
 		Db_connect connect = create ? Db_connect_sqlite.make_(url) : Db_connect_sqlite.load_(url);

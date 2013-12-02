@@ -36,7 +36,7 @@ class Sqlite_engine extends Db_engine_sql_base {
 			loaded = true;					
 		}
 		Db_connect_sqlite connUrl = (Db_connect_sqlite)dbInfo;
-		return NewDbCon("jdbc:sqlite:/" + String_.Replace(connUrl.Database(), "\\", "/"), "none", "none");
+		return NewDbCon("jdbc:sqlite://" + String_.Replace(connUrl.Database(), "\\", "/"), "", "");
 	}
 	private boolean pragma_needed = true; 
 	@Override public void Txn_bgn() {

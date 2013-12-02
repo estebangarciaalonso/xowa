@@ -161,6 +161,9 @@ class Scrib_pf_invoke_fxt {
 		this.Init_lua_rcvd(func_name, args);
 		this.Init_lua_rcvd_rv();
 	}
+	public void Test_log_rcvd(int i, String expd) {
+		Tfds.Eq(expd, (String)server.Log_rcvd().FetchAt(i));
+	}
 }
 class Scrib_lua_rsp_bldr {
 	ByteAryBfr bfr = ByteAryBfr.reset_(255);

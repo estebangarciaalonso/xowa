@@ -137,7 +137,8 @@ class Scrib_lib_ustring implements Scrib_lib {
 }
 class Scrib_lib_ustring_gsub_mgr {
 	public Scrib_lib_ustring_gsub_mgr(Scrib_engine engine, Scrib_lua_regx_converter regx_converter) {this.engine = engine; this.regx_converter = regx_converter;} Scrib_engine engine; Scrib_lua_regx_converter regx_converter;
-	byte repl_tid = Repl_tid_null; byte[] repl_bry = null; HashAdp repl_hash = null; Scrib_fnc repl_func = null; ByteAryBfr tmp_bfr;
+	private byte tmp_repl_tid = Repl_tid_null; private byte[] tmp_repl_bry = null;
+	private HashAdp repl_hash = null; private Scrib_fnc repl_func = null; private ByteAryBfr tmp_bfr;
 	int repl_count = 0;
 	public KeyVal[] Exec(KeyVal[] values) {
 		Object text_obj = Scrib_kv_utl.Val_to_obj(values, 0);
@@ -150,16 +151,17 @@ class Scrib_lib_ustring_gsub_mgr {
 		int limit = Scrib_kv_utl.Val_to_int_or(values, 3, -1);
 		repl_count = 0;
 		Identify_repl(repl_obj);
-		return Scrib_kv_utl.base1_many_(Exec_repl(text, regx, limit), repl_count);
+		String repl = Exec_repl(tmp_repl_tid, tmp_repl_bry, text, regx, limit);
+		return Scrib_kv_utl.base1_many_(repl, repl_count);
 	}
 	private void Identify_repl(Object repl_obj) {
 		Class<?> repl_type = repl_obj.getClass();
 		if		(Object_.Eq(repl_type, String.class)) {
-			repl_tid = Repl_tid_string;
-			repl_bry = ByteAry_.new_utf8_((String)repl_obj);
+			tmp_repl_tid = Repl_tid_string;
+			tmp_repl_bry = ByteAry_.new_utf8_((String)repl_obj);
 		}
 		else if	(Object_.Eq(repl_type, KeyVal[].class)) {
-			repl_tid = Repl_tid_table;
+			tmp_repl_tid = Repl_tid_table;
 			KeyVal[] repl_tbl = (KeyVal[])repl_obj;
 			if (repl_hash == null) repl_hash = HashAdp_.new_();
 			int repl_tbl_len = repl_tbl.length;
@@ -170,12 +172,12 @@ class Scrib_lib_ustring_gsub_mgr {
 			}
 		}
 		else if	(Object_.Eq(repl_type, Scrib_fnc.class)) {
-			repl_tid = Repl_tid_luacbk;
+			tmp_repl_tid = Repl_tid_luacbk;
 			repl_func = (Scrib_fnc)repl_obj;
 		}
 		else throw Err_.unhandled(ClassAdp_.NameOf_type(repl_type));
 	}
-	String Exec_repl(String text, String regx, int limit) {
+	private String Exec_repl(byte repl_tid, byte[] repl_bry, String text, String regx, int limit) {
 		RegxAdp regx_mgr = Scrib_lib_ustring.RegxAdp_new_(engine.Ctx(), regx);
 		RegxMatch[] rslts = regx_mgr.Match_all(text, 0);
 		if (rslts.length == 0) return text;	// PHP: If matches are found, the new subject will be returned, otherwise subject will be returned unchanged.; http://php.net/manual/en/function.preg-replace-callback.php
@@ -186,7 +188,7 @@ class Scrib_lib_ustring_gsub_mgr {
 			if (limit > -1 && repl_count == limit) break;
 			RegxMatch rslt = rslts[i];
 			tmp_bfr.Add_str(String_.Mid(text, pos, rslt.Find_bgn()));	// NOTE: regx returns char pos (not bry); must add as String, not bry; DATE:2013-07-17
-			Exec_repl_itm(text, rslt);
+			Exec_repl_itm(repl_tid, repl_bry, text, rslt);
 			pos = rslt.Find_end();
 			++repl_count;
 		}
@@ -195,7 +197,7 @@ class Scrib_lib_ustring_gsub_mgr {
 			tmp_bfr.Add_str(String_.Mid(text, pos, text_len));			// NOTE: regx returns char pos (not bry); must add as String, not bry; DATE:2013-07-17
 		return tmp_bfr.XtoStrAndClear();
 	}
-	private void Exec_repl_itm(String text, RegxMatch rslt) {
+	private void Exec_repl_itm(byte repl_tid, byte[] repl_bry, String text, RegxMatch rslt) {
 		switch (repl_tid) {
 			case Repl_tid_string:
 				int len = repl_bry.length;
@@ -246,9 +248,21 @@ class Scrib_lib_ustring_gsub_mgr {
 				break;
 			}
 			case Repl_tid_luacbk: {
-				String find_str = String_.Mid(text, rslt.Find_bgn(), rslt.Find_end());
-				KeyVal[] rslts = engine.Interpreter().CallFunction(repl_func.Id(), Scrib_kv_utl.base1_obj_(find_str));
-				tmp_bfr.Add_str(Scrib_kv_utl.Val_to_str(rslts, 0));
+				RegxGroup[] grps = rslt.Groups();
+				int grps_len = grps.length;
+				if (grps_len == 0) {
+					String find_str = String_.Mid(text, rslt.Find_bgn(), rslt.Find_end());
+					KeyVal[] rslts = engine.Interpreter().CallFunction(repl_func.Id(), Scrib_kv_utl.base1_obj_(find_str));
+					tmp_bfr.Add_str(Scrib_kv_utl.Val_to_str(rslts, 0));
+				}
+				else {
+					for (int i = 0; i < grps_len; i++) {
+						RegxGroup grp = grps[i];
+						String find_str = String_.Mid(text, grp.Bgn(), grp.End());
+						KeyVal[] rslts = engine.Interpreter().CallFunction(repl_func.Id(), Scrib_kv_utl.base1_obj_(find_str));
+						tmp_bfr.Add_str(Scrib_kv_utl.Val_to_str(rslts, 0));
+					}
+				}
 				break;
 			}
 			default: throw Err_.unhandled(repl_tid);

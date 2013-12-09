@@ -421,7 +421,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 //						String s = String_.new_utf8_(full_txt, page_bgn, page_bgn + char_1st_len); // convert 1st mb char to String
 //						s = String_.Upper(s);
 //						full_txt = ByteAry_.Add(ByteAry_.new_utf8_(s), ByteAry_.Mid(full_txt, page_end, full_txt_len));
-					full_txt = wiki.Lang().Case_mgr().Case_reuse_upper(full_txt, page_bgn, page_end);
+					full_txt = wiki.Lang().Case_mgr().Case_reuse_upper(full_txt, page_bgn, page_end);	// always build; never reuse; (multi-byte character will expand array)
 				}
 			}
 			else

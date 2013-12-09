@@ -338,7 +338,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		if (tag.Empty_ignored()) ctx.Empty_ignored_y_();
 		return open_tag_end;
 	}
-	boolean TagStack_has(Xop_ctx ctx, int tagId) {
+	private boolean TagStack_has(Xop_ctx ctx, int cur_tag_id) {
 		int acs_end = ctx.Stack_len() - 1;
 		if (acs_end == -1) return false;
 		for (int i = acs_end; i > -1; i--) {
@@ -346,17 +346,25 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			switch (tkn.Tkn_tid()) {
 				case Xop_tkn_itm_.Tid_tblw_td:
 				case Xop_tkn_itm_.Tid_tblw_th:
-				case Xop_tkn_itm_.Tid_tblw_tc:
+				case Xop_tkn_itm_.Tid_tblw_tc:	// tables always reset tag_stack; EX: <table><tr><td><li><table><tr><td><li>; 2nd li is not nested in 1st
 					return false;
 				case Xop_tkn_itm_.Tid_xnde:
 					Xop_xnde_tkn xnde_tkn = (Xop_xnde_tkn)tkn;
-					if (xnde_tkn.Tag().Id() == tagId) return true;
+					int stack_tag_id = xnde_tkn.Tag().Id();
+					if (cur_tag_id == Xop_xnde_tag_.Tid_li) {
+						switch (stack_tag_id) {
+							case Xop_xnde_tag_.Tid_ul:	// ul / ol resets tag_stack for li; EX: <li><ul><li>; 2nd li is not nested in 1st
+							case Xop_xnde_tag_.Tid_ol:
+								return false;
+						}
+					}
+					if (stack_tag_id == cur_tag_id) return true;
 					break;
 			}
 		}
 		return false;
 	}
-	boolean TagStack_has_list(Xop_ctx ctx) {
+	private boolean TagStack_has_list(Xop_ctx ctx) {
 		int acs_end = ctx.Stack_len() - 1;
 		if (acs_end == -1)
 			return false;
@@ -531,20 +539,18 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			for (int i = 2; i < close_ary_len; i++)			// 2 to ignore </
 				close_ary[i] = src[src_offset + i];
 
-			int close_bgn = ByteAry_.FindFwd(src, close_ary, open_end);
-			if (close_bgn == ByteAry_.NotFound) {// NOTE: end_tag not found; try again, but with case_insensitive; EX: w:Ehrenfest_paradox
-				xtn_end_tag_trie.Clear();
-				xtn_end_tag_trie.Add(close_ary, close_ary);
-				for (int i = open_end; i < src_len; i++) {
-					Object o = xtn_end_tag_trie.MatchAtCur(src, i, src_len);
-					if (o != null) {
-						close_bgn = i;
-						break;
-					}
+			int close_bgn = ByteAry_.NotFound;				// search rest of String for case-insensitive name; NOTE: used to do CS first, then fall-back on CI; DATE:2013-12-02
+			xtn_end_tag_trie.Clear();
+			xtn_end_tag_trie.Add(close_ary, close_ary);
+			for (int i = open_end; i < src_len; i++) {
+				Object o = xtn_end_tag_trie.MatchAtCur(src, i, src_len);
+				if (o != null) {
+					close_bgn = i;
+					break;
 				}
-				if (close_bgn == ByteAry_.NotFound)
-					return ctx.LxrMake_log_(Xop_xnde_log.Xtn_end_not_found, open_bgn, open_end);
 			}
+			if (close_bgn == ByteAry_.NotFound)
+				return ctx.LxrMake_log_(Xop_xnde_log.Xtn_end_not_found, open_bgn, open_end);
 			int close_end = Find_endTag_pos(close_bgn + close_ary.length);
 			if (close_end == ByteAry_.NotFound) return ctx.LxrMake_log_(Xop_xnde_log.Xtn_end_not_found, open_bgn, open_end);
 			xnde_end = close_end;

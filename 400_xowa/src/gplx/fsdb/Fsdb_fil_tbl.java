@@ -56,7 +56,6 @@ public class Fsdb_fil_tbl {
 		if (stmt_update == null) stmt_update = Update_stmt();
 		try {
 			stmt_update.Clear()
-			.Val_int_(id)
 			.Val_int_(owner_id)
 			.Val_str_(name)
 			.Val_int_(xtn_id)
@@ -65,6 +64,7 @@ public class Fsdb_fil_tbl {
 			.Val_long_(size)
 			.Val_str_(Sqlite_engine_.X_date_to_str(modified))
 			.Val_str_(hash)
+			.Val_int_(id)
 			.Exec_update();
 		}	catch (Exception exc) {stmt_update = null; throw Err_.err_(exc, "stmt failed");} // must reset stmt, else next call will fail
 	}	

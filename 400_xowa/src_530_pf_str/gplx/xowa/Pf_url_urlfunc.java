@@ -47,10 +47,9 @@ public class Pf_url_urlfunc extends Pf_func_base {	// EX: {{lc:A}} -> a
 				default:			throw Err_.unhandled(tid);
 			}
 			tmp_bfr.Add(ttl_ary);
-			trg.Add_bfr(tmp_bfr);
-			if (qry_arg != ByteAry_.Empty) trg.Add_byte(Byte_ascii.Question).Add(qry_arg);
-			tmp_bfr.Clear();
+			trg.Add_bfr_and_clear(tmp_bfr);
 		}
+		if (qry_arg != ByteAry_.Empty) trg.Add_byte(Byte_ascii.Question).Add(qry_arg);
 	}
 	public Pf_url_urlfunc(int id, byte tid, boolean encode) {this.id = id; this.tid = tid; this.encode = encode;} private byte tid; boolean encode;
 	@Override public int Id() {return id;} private int id;

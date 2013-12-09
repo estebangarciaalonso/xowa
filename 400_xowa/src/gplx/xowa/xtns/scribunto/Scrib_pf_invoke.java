@@ -47,7 +47,6 @@ public class Scrib_pf_invoke extends Pf_func_base {
 		}
 		else
 			mod_raw = mod.Text_bry();
-		if (ByteAry_.Len_eq_0(fnc_name)) {Error(bfr, wiki.Msg_mgr(), Err_fnc_missing); return;}		// EX:"{{#invoke:Module:Mod_0|missing_fnc}}"
 		if (!engine.Enabled()) {bfr.Add_mid(src, self.Src_bgn(), self.Src_end()); return;}
 		try {
 			engine.Invoke(wiki, src, caller, self, bfr, mod_name, mod_raw, fnc_name);

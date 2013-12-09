@@ -20,10 +20,10 @@ import gplx.xowa.langs.*;
 public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 	public boolean Root_frame() {return false;}
 	public Arg_nde_tkn Name_tkn() {return name_tkn;} public Xot_invk_tkn Name_tkn_(Arg_nde_tkn v) {name_tkn = v; return this;} Arg_nde_tkn name_tkn = Arg_nde_tkn.Null;
-	public byte Tmpl_subst_type() {return tmpl_subst_type;} private byte tmpl_subst_type = Xot_defn_.Tid_null;
+	public byte Defn_tid() {return defn_tid;} private byte defn_tid = Xot_defn_.Tid_null;
 	public int Tmpl_subst_bgn() {return tmpl_subst_bgn;} private int tmpl_subst_bgn;
 	public int Tmpl_subst_end() {return tmpl_subst_end;} private int tmpl_subst_end;
-	public Xot_invk_tkn Tmpl_subst_props_(byte type, int bgn, int end) {tmpl_subst_type = type; tmpl_subst_bgn = bgn; tmpl_subst_end = end; return this;}
+	public Xot_invk_tkn Tmpl_subst_props_(byte type, int bgn, int end) {defn_tid = type; tmpl_subst_bgn = bgn; tmpl_subst_end = end; return this;}
 	public Xot_defn Tmpl_defn() {return tmpl_defn;} public Xot_invk_tkn Tmpl_defn_(Xot_defn v) {tmpl_defn = v; return this;} private Xot_defn tmpl_defn = Xot_defn_.Null;
 	@Override public void Tmpl_fmt(Xop_ctx ctx, byte[] src, Xot_fmtr fmtr) {fmtr.Reg_tmpl(ctx, src, name_tkn, args_len, args);}
 	@Override public void Tmpl_compile(Xop_ctx ctx, byte[] src, Xot_compile_data prep_data) {
@@ -47,7 +47,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		if (defn == Xot_defn_.Null) {								// tmpl_name is not exact match; may be dynamic, subst, transclusion, etc..
 			if (name_key_tkn.Itm_static() == Bool_.N_byte) {		// tmpl is dynamic; EX:{{{{{1}}}|a}}
 				ByteAryBfr name_tkn_bfr = new ByteAryBfr(name_tkn.Src_end() - name_tkn.Src_bgn());
-				if (tmpl_subst_type == Xot_defn_.Tid_subst) name_tkn_bfr.Add(Get_first_subst_itm(wiki.Lang().Kwd_mgr()));
+				if (defn_tid == Xot_defn_.Tid_subst) name_tkn_bfr.Add(Get_first_subst_itm(wiki.Lang().Kwd_mgr()));
 				name_tkn.Tmpl_evaluate(ctx, src, caller, name_tkn_bfr);
 				name_ary = name_tkn_bfr.XtoAryAndClear();
 			}

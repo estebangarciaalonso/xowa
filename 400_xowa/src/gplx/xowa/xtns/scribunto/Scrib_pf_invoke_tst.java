@@ -21,7 +21,6 @@ public class Scrib_pf_invoke_tst {
 	@Before public void init() {fxt.Clear();} Scrib_pf_invoke_fxt fxt = new Scrib_pf_invoke_fxt();
 	@Test  public void Err_mod_blank()				{fxt.Test_parse_err("{{#invoke:}}", Scrib_pf_invoke.Err_mod_missing);}
 	@Test  public void Err_mod_missing()			{fxt.Test_parse_err("{{#invoke:Missing}}", Scrib_pf_invoke.Err_mod_missing);}
-	@Test  public void Err_fnc_blank()				{fxt.Test_parse_err("{{#invoke:Mod_0|}}", Scrib_pf_invoke.Err_fnc_missing);}
 	@Test  public void Preprocess() {
 		this.Init_preprocess();
 		this.Exec_preprocess(Scrib_engine.Frame_key_current	, "1", "c");

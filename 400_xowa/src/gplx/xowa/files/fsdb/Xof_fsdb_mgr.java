@@ -92,15 +92,12 @@ class Xof_fsdb_mgr_utl {
 	private void Itm_process(Xof_fsdb_mgr fsdb_mgr, Io_url file_dir, Xog_win_wtr win_wtr, Xof_fsdb_itm itm, ListAdp fsdb_list, Xow_repo_mgr repo_mgr, Xof_url_bldr url_bldr, byte exec_tid) {
 		switch (itm.Rslt_reg()) {
 			case Xof_wiki_orig_wkr_.Tid_found_orig:
-				itm.Html_size_calc(img_size, exec_tid);
-				Xof_repo_itm repo = repo_mgr.Repos_get_by_wiki(itm.Orig_wiki()).Trg();
-				Io_url trg_url = url_bldr.Set_trg_file_(itm.Lnki_type_as_mode(), repo, itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), itm.Html_w(), itm.Lnki_thumbtime()).Xto_url();
-				itm.Html_url_(trg_url);
+				itm.Html__init(repo_mgr, url_bldr, img_size, exec_tid);
 				Gui_update(win_wtr, itm);
 				if (!Env_.Mode_testing()) {
 					Cache_fil_itm cache_fil_itm = fsdb_mgr.Cache_mgr().Reg(fsdb_mgr.Wiki(), itm, 0);
 					if (cache_fil_itm.Fil_size() == 0) {
-						long fil_size = Io_mgr._.QueryFil(trg_url).Size();
+						long fil_size = Io_mgr._.QueryFil(itm.Html_url()).Size();
 						cache_fil_itm.Fil_size_(fil_size);
 					}
 				}
@@ -148,10 +145,21 @@ class Xof_fsdb_mgr_utl {
 		finally {bin_rdr.Rls();}
 	}
 	private void Gui_update(Xog_win_wtr win_wtr, Xof_fsdb_itm itm) {
-		int len = itm.Html_ids_len();
-		for (int i = 0; i < len; i++) {
-			win_wtr.Html_img_update("xowa_file_img_" + itm.Html_ids_get(i), itm.Html_url().To_http_file_str(), itm.Html_w(), itm.Html_h());
+		int html_uid = itm.Html_uid();
+		String html_id = "xowa_file_img_" + html_uid;
+		win_wtr.Html_img_update(html_id, itm.Html_url().To_http_file_str(), itm.Html_w(), itm.Html_h());
+		if (itm.Lnki_type() == Xop_lnki_type.Id_thumb) {
+			win_wtr.Html_atr_set(html_id, "class", gplx.xowa.html.Xow_html_mgr.Str_img_class_thumbimage);
+			win_wtr.Html_atr_set("xowa_file_div_" + html_uid, "style", "width:" + itm.Html_w() + "px;");
 		}
+//				if (xfer_itm.Html_elem_tid() == Xof_xfer_itm.Html_elem_tid_gallery) {
+//					int vpad = ((gplx.xowa.xtns.gallery.Xtn_gallery_dynamic_data)xfer_itm.Gallery_data()).Calc_vpad(itm.Html_h());
+//					win_wtr.Html_atr_set("xowa_file_gallery_div_" + file_img_id_int, "style", "margin:" + vpad + "px auto;");
+//				}
+//				else if (xfer_itm.Html_elem_tid() == Xof_xfer_itm.Html_elem_tid_vid) {
+//					win_wtr.Html_atr_set("xowa_file_play_" + file_img_id_int, "style", "width:" + itm.Html_w() + "px;max-width:" + (itm.Html_w() - 2) + "px;");
+//					win_wtr.Html_atr_set("xowa_file_play_" + file_img_id_int, "href", String_.new_utf8_(xfer_itm.Html_orig_src()));
+//				}
 	}
 	public static final Xof_fsdb_mgr_utl _ = new Xof_fsdb_mgr_utl(); Xof_fsdb_mgr_utl() {}
 }

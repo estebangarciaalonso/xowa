@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public interface Xot_invk {
+	byte Defn_tid();
 	boolean Root_frame();
 	int Src_bgn();
 	int Src_end();

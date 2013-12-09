@@ -84,7 +84,6 @@ class Xog_win_ {
 		IptBnd_.cmd_to_(wikiBox_cfg		, win		, tab, Xog_win.Invk_page_view_edit			, IptArg_.parse_chain_("mod.c+key.m,mod.c+key.w"));
 		IptBnd_.cmd_to_(wikiBox_cfg		, win		, tab, Xog_win.Invk_page_view_read			, IptArg_.parse_chain_("mod.c+key.m,mod.c+key.h"));
 		IptBnd_.cmd_to_(wikiBox_cfg		, win		, tab, Xog_win.Invk_page_view_html			, IptArg_.parse_chain_("mod.c+key.m,mod.c+key.s"));
-		IptBnd_.cmd_to_(wikiBox_cfg		, win		, tab, Xog_win.Invk_page_view_edit			, IptArg_.parse_chain_("mod.c+key.m,mod.c+key.w"));
 		IptBnd_.cmd_to_(wikiBox_cfg		, win		, tab, Xog_win.Invk_page_edit_focus_box		, IptArg_.parse_chain_("mod.as+key.comma"));
 		IptBnd_.cmd_to_(wikiBox_cfg		, win		, tab, Xog_win.Invk_page_edit_focus_first	, IptArg_.parse_chain_("mod.as+key.period"));
 		IptBnd_.cmd_to_(wikiBox_cfg		, win		, tab, Xog_win.Invk_page_edit_preview		, IptArg_.parse_chain_("mod.as+key.p"));

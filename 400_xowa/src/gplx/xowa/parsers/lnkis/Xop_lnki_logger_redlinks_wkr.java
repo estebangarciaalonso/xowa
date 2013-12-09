@@ -25,7 +25,7 @@ public class Xop_lnki_logger_redlinks_wkr implements GfoInvkAble {
 		this.win = win; 
 		Xoa_page page = win.Page();
 		this.wiki = page.Wiki();
-		redlinks_mgr = wiki.Ctx().Tab().Redlinks_mgr();
+		redlinks_mgr = wiki.Ctx().Tab().Lnki_redlinks_mgr();
 		this.lnki_list = redlinks_mgr.Lnki_list(); this.log_enabled = redlinks_mgr.Log_enabled(); this.usr_dlg = redlinks_mgr.Usr_dlg();
 		this.request_idx = redlinks_mgr.Request_idx();
 	}

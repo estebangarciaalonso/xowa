@@ -47,9 +47,9 @@ public class Xtn_gallery_html {
 			if (itm_ttl != null && itm_ttl.Ns().Id_file()) {	// && fileDownloadEnabled
 				Xop_lnki_tkn lnki = ctx.Tkn_mkr().Lnki(itm.Ttl_bgn(), itm.Ttl_end()).Ttl_(itm_ttl).Width_(itm_w).Height_(itm_h);
 				Xof_xfer_itm xfer_itm = wtr.Lnki_wtr().Lnki_eval(page, lnki, wtr.Queue_add_ref());
-				int elem_id = xfer_itm.Html_dynamic_id();
+				int elem_id = xfer_itm.Html_uid();
 				xfer_itm.Gallery_data_(new Xtn_gallery_dynamic_data().Init(mgr.Itm_height()));
-				xfer_itm.Html_dynamic_tid_(Xof_xfer_itm.Html_dynamic_tid_gallery);
+				xfer_itm.Html_tid_(Xof_xfer_itm.Html_tid_gallery);
 				byte[] html_src = xfer_itm.Html_view_src();
 				int html_w = xfer_itm.Html_w();
 				int html_h = xfer_itm.Html_h();

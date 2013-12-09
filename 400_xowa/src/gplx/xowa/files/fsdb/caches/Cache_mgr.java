@@ -33,11 +33,13 @@ public class Cache_mgr implements Xou_db_wkr, GfoInvkAble {
 	public String Xtn_version() {return "0.1.0.0";}
 	public int Next_id() {return cfg_mgr.Next_id();}
 	public void Db_init(Xou_db_mgr data_mgr) {
+		try {
 		Db_provider provider = data_mgr.Provider();
 		data_mgr.Wkr_reg(this);
 		cfg_mgr.Db_init(provider);
 		dir_mgr.Db_init(provider);
 		fil_mgr.Db_init(provider);
+		} catch (Exception e) {app.Usr_dlg().Warn_many("", "", "cache_mgr.init:fatal error: err=~{0}", Err_.Message_gplx_brief(e));}
 	}
 	public void Db_when_new(Xou_db_mgr data_mgr) {
 		Db_provider provider = data_mgr.Provider();
@@ -46,14 +48,18 @@ public class Cache_mgr implements Xou_db_wkr, GfoInvkAble {
 		fil_mgr.Db_when_new(provider);
 	}
 	public void Db_save(Xou_db_mgr data_mgr) {
+		try {
 		cfg_mgr.Db_save();
 		dir_mgr.Db_save();
 		fil_mgr.Db_save();
+		} catch (Exception e) {app.Usr_dlg().Warn_many("", "", "cache_mgr.save:fatal error: err=~{0}", Err_.Message_gplx_brief(e));}
 	}
 	public void Db_term(Xou_db_mgr data_mgr) {
+		try {
 		cfg_mgr.Db_term();
 		dir_mgr.Db_term();
 		fil_mgr.Db_term();
+		} catch (Exception e) {app.Usr_dlg().Warn_many("", "", "cache_mgr.term:fatal error: err=~{0}", Err_.Message_gplx_brief(e));}
 	}
 	public Cache_fil_itm Reg(Xow_wiki wiki, Xof_fsdb_itm itm, long bin_len) {return this.Reg(wiki, itm.Orig_wiki(), itm.Lnki_ttl(), itm.File_is_orig(), itm.File_w(), itm.File_w(), itm.Lnki_thumbtime(), itm.Lnki_ext(), bin_len, DateAdp_.MaxValue, "");}
 	public Cache_fil_itm Reg(Xow_wiki wiki, byte[] repo, byte[] ttl, boolean fil_is_orig, int fil_w, int fil_h, int fil_thumbtime, Xof_ext ext, long bin_len, DateAdp modified, String hash) {

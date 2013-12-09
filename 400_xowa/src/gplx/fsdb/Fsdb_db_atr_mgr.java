@@ -63,10 +63,13 @@ public class Fsdb_db_atr_mgr implements RlsAble {
 	public static Fsdb_db_atr_mgr make_(Fsdb_db_abc_mgr abc_mgr, Db_provider p, Io_url dir) {
 		Fsdb_db_atr_tbl.Create_table(p);
 		Fsdb_db_atr_mgr rv = new Fsdb_db_atr_mgr();
-		Fsdb_db_atr_fil itm = Fsdb_db_atr_fil.make_(abc_mgr, Id_0, Fsdb_db_atr_fil.url_(dir, Id_0), Path_bgn_0);
+		Fsdb_db_atr_fil itm = Fsdb_db_atr_fil.make_(abc_mgr, Id_0, url_(dir, Id_0), Path_bgn_0);
 		rv.itms_0 = itm;
 		rv.itms = new Fsdb_db_atr_fil[] {itm};
 		return rv;
+	}
+	private static Io_url url_(Io_url dir, int id) {
+		return dir.GenSubFil_ary("fsdb.atr.", Int_.XtoStr_PadBgn(id, 2), ".sqlite3");
 	}
 	public static final int Id_0 = 0;
 	public static final String Path_bgn_0 = "";

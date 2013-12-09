@@ -19,6 +19,13 @@ package gplx;
 public class Byte_ {
 	public static final byte MinValue = Byte.MIN_VALUE;	
 	public static byte[] Ary(byte... ary) {return ary;}
+	public static byte[] Ary_by_ints(int... ary) {
+		int ary_len = ary.length;
+		byte[] rv = new byte[ary_len];
+		for (int i = 0; i < ary_len; i++)
+			rv[i] = int_(ary[i]);
+		return rv;
+	}
 	public static String XtoStr(byte v) {return new Byte(v).toString();} 
 	public static int XtoInt(byte v) {return v < 0 ? (int)v + 256 : v;}
 	public static boolean In(byte v, byte... ary) {

@@ -92,7 +92,7 @@ public class Xodb_page_tbl {
 		Db_qry_select select = Db_qry_.select_cols_(Tbl_name, crt, cols).Limit_(limit).OrderBy_(Fld_page_title, fwd);
 		return select.Exec_qry_as_rdr(provider);
 	}
-	public void Load_ttls_starting_with(Cancelable cancelable, ListAdp rslt_list, Xodb_page rslt_nxt, Xodb_page rslt_prv, IntRef rslt_count, Xow_ns ns, byte[] key, int max_results, int min_page_len, int browse_len, boolean include_redirects, boolean fetch_prv_item) {
+	public void Load_ttls_for_all_pages(Cancelable cancelable, ListAdp rslt_list, Xodb_page rslt_nxt, Xodb_page rslt_prv, IntRef rslt_count, Xow_ns ns, byte[] key, int max_results, int min_page_len, int browse_len, boolean include_redirects, boolean fetch_prv_item) {
 		DataRdr rdr = DataRdr_.Null;
 		Xodb_page nxt_itm = null;
 		int rslt_idx = 0;
@@ -133,6 +133,23 @@ public class Xodb_page_tbl {
 		finally {rdr.Rls();}
 		rslt_count.Val_(rslt_idx);
 	}
+	public void Load_ttls_for_search_suggest(Cancelable cancelable, ListAdp rslt_list, Xow_ns ns, byte[] key, int max_results, int min_page_len, int browse_len, boolean include_redirects, boolean fetch_prv_item) {
+		String search_bgn = String_.new_utf8_(key);
+		String search_end = String_.new_utf8_(gplx.intl.Utf8_.Increment_char_last(key));
+		Db_qry qry = Db_qry_sql.rdr_("SELECT page_id, page_namespace, page_title, page_len FROM page INDEXED BY page__title WHERE page_namespace = " + Int_.XtoStr(ns.Id()) + " AND page_title BETWEEN '" + search_bgn + "' AND '" + search_end + "' ORDER BY page_len DESC LIMIT " + Int_.XtoStr(max_results) + ";");
+		DataRdr rdr = DataRdr_.Null;
+		try {
+			rdr = provider.Exec_qry_as_rdr(qry);
+			while (rdr.MoveNextPeer()) {
+				if (cancelable.Canceled()) return;
+				Xodb_page page = new Xodb_page();
+				Read_page_for_search_suggest(page, rdr);
+				rslt_list.Add(page);
+			}
+			rslt_list.SortBy(Xodb_page_sorter.TitleAsc);
+		}
+		finally {rdr.Rls();}
+	}
 	public boolean Select_by_id_list(Cancelable cancelable, ListAdp rv)						{return Select_by_id_list(cancelable, false, rv, 0, rv.Count());}
 	public boolean Select_by_id_list(Cancelable cancelable, boolean skip_table_read, ListAdp rv)	{return Select_by_id_list(cancelable, skip_table_read, rv, 0, rv.Count());}
 	public boolean Select_by_id_list(Cancelable cancelable, boolean skip_table_read, ListAdp rv, int bgn, int end) {
@@ -146,7 +163,7 @@ public class Xodb_page_tbl {
 				hash.Add(p.Id(), p);
 		}
 		Xodb_in_wkr_page_id wkr = new Xodb_in_wkr_page_id();
-		wkr.Init(hash);
+		wkr.Init(rv, hash);
 		wkr.Select_in(provider, cancelable, bgn, end);
 		return true;		
 	}
@@ -234,11 +251,6 @@ public class Xodb_page_tbl {
 			}
 		}	finally {rdr.Rls();}
 	}
-	public void Select_by_id_in(Cancelable cancelable, OrderedHash rv, int bgn, int end) {
-		Xodb_in_wkr_page_id wkr = new Xodb_in_wkr_page_id();
-		wkr.Init(rv);
-		wkr.Select_in(provider, cancelable, bgn, end);
-	}
 	public void Select_by_ttl_in(Cancelable cancelable, OrderedHash rv, Xow_wiki wiki, boolean fill_idx_fields_only, int bgn, int end) {
 		Xodb_in_wkr_page_title_ns wkr = new Xodb_in_wkr_page_title_ns();
 		wkr.Fill_idx_fields_only_(fill_idx_fields_only);
@@ -258,8 +270,9 @@ public class Xodb_page_tbl {
 	public static final boolean Load_idx_flds_only_y = true;
 }
 class Xodb_in_wkr_page_id extends Xodb_in_wkr_page_base {
-	private OrderedHash hash;
-	public void Init(OrderedHash hash) {this.hash = hash; this.Fill_idx_fields_only_(true);}
+	private ListAdp list;		// list is original list of ids which may have dupes; needed to fill statement (which takes range of bgn - end); DATE:2013-12-08
+	private OrderedHash hash;	// hash is unique list of ids; needed for fetch from rdr (which indexes by id)
+	public void Init(ListAdp list, OrderedHash hash) {this.list = list; this.hash = hash; this.Fill_idx_fields_only_(true);}
 	@Override public int Interval() {return 990;}
 	@Override public String In_fld_name() {return Xodb_page_tbl.Fld_page_id;}
 	@Override public Criteria In_filter(Object[] part_ary) {
@@ -267,7 +280,7 @@ class Xodb_in_wkr_page_id extends Xodb_in_wkr_page_base {
 	}
 	@Override public void Fill_stmt(Db_stmt stmt, int bgn, int end) {
 		for (int i = bgn; i < end; i++) {
-			Xodb_page page = (Xodb_page)hash.FetchAt(i);
+			Xodb_page page = (Xodb_page)list.FetchAt(i);
 			stmt.Val_int_(page.Id());		
 		}
 	}

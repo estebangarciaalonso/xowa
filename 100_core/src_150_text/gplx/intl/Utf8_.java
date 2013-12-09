@@ -53,9 +53,59 @@ public class Utf8_ {
 				return 6;
 		}
 	}
+	public static byte[] Increment_char_last(byte[] bry) {
+		int bry_len = bry.length; if (bry_len == 0) return bry;
+		int cur_pos = bry_len - 1;
+		while (true) {
+			int new_pos = Char_bgn(bry, cur_pos);
+			int b_len = (cur_pos - new_pos) + 1;
+			int nxt_codepoint = Codepoint_max;
+			if (b_len == 1) {	// ASCII char; just increment by 1
+				nxt_codepoint = Codepoint_next(bry[new_pos]);
+				if (nxt_codepoint < 128) {
+					bry = ByteAry_.Copy(bry);
+					bry[new_pos] = (byte)nxt_codepoint;
+					return bry;
+				}
+			}
+			int cur_codepoint = DecodeChar(bry, new_pos);
+			nxt_codepoint = Codepoint_next(cur_codepoint);
+			if (nxt_codepoint != Codepoint_max) {
+				byte[] nxt_codepoint_bry = EncodeCharAsAry(nxt_codepoint);
+				bry = ByteAry_.Add(ByteAry_.Mid(bry, 0, new_pos), nxt_codepoint_bry);
+				return bry;
+			}
+			cur_pos = new_pos - 1;
+			if (cur_pos < 0) return null;
+		}
+	}
+	public static int Char_bgn(byte[] bry, int pos) {
+		int end = pos - 4; if (end < 0) end = 0;
+		for (int i = pos; i >= end; i--) {
+			byte b = bry[i];
+			int b_len = CharLen(b);
+			if (b_len > 1) return i;	// multi-byte char; return pos of first char
+		}
+		return pos;	// no mult-byte char found; return pos
+	}
+	public static int Codepoint_next(int cur) {
+		while (cur++ < Codepoint_max) {
+			if (cur == Codepoint_surrogate_bgn) cur = Codepoint_surrogate_end + 1;
+			if (!Codepoint_valid(cur)) continue;
+			return cur;
+		}
+		return Codepoint_max;
+	}
+	private static boolean Codepoint_valid(int v) {
+				return Character.isDefined(v);
+			}
+	public static final int 
+	  Codepoint_max = 0x10FFFF //see http://unicode.org/glossary/
+	, Codepoint_surrogate_bgn = 0xD800
+	, Codepoint_surrogate_end = 0xDFFF
+	;
 	public static int DecodeChar(byte[] ary, int pos) {
 		byte b0 = ary[pos];
-//			Tfds.Write(0xF0, 0xF8, b0 & 0xF8);
 		if 		((b0 & 0x80) == 0) {
 			return  b0;			
 		}

@@ -99,7 +99,7 @@ public class Xows_page_allpages implements GfoInvkAble, ByteAryFmtrArg, Xows_pag
 		Xodb_page rslt_prv2 = new Xodb_page();
 		int all_pages_min = 0;// no minimum for all pages
 		ListAdp rslt_list = ListAdp_.new_();
-		wiki.Db_mgr().Load_mgr().Load_ttls_starting_with(Cancelable_.Never, rslt_list, rslt_nxt2, rslt_prv2, rslt_len, init_ns, from_ttl.Page_db(), itms_per_page, all_pages_min, itms_per_page, !hide_redirects_val, true);
+		wiki.Db_mgr().Load_mgr().Load_ttls_for_all_pages(Cancelable_.Never, rslt_list, rslt_nxt2, rslt_prv2, rslt_len, init_ns, from_ttl.Page_db(), itms_per_page, all_pages_min, itms_per_page, !hide_redirects_val, true);
 		rslt_list_len = rslt_len.Val();
 		for (int i = 0; i < rslt_list_len; i++)
 			rslt_list_ttls[i] = (Xodb_page)rslt_list.FetchAt(i);

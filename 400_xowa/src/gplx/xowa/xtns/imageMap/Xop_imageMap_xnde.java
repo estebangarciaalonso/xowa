@@ -101,8 +101,10 @@ public class Xop_imageMap_xnde implements Xop_xnde_xtn {
 				if (lnki_tkn == null) {
 					image_map_ctx.Wiki().App().Usr_dlg().Warn_many("", "", "image_map failed to find lnki; page=~{0} imageMap=~{1}", String_.new_utf8_(image_map_ctx.Page().Page_ttl().Full_txt()), String_.new_utf8_(lnki_raw));
 				}
-				else
-					file_wkr.Wkr_exec(orig_ctx, lnki_tkn);
+				else {
+					orig_ctx.Tab().Lnki_file_mgr().Add(lnki_tkn);
+					if (file_wkr != null) file_wkr.Wkr_exec(orig_ctx, lnki_tkn);
+				}
 			}
 			first = false;
 		}

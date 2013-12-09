@@ -40,6 +40,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/150_gfui"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/140_dbs"/>
-	<classpathentry kind="lib" path="C:/000/200_dev/110_java/140_dbs/lib/sqlite-jdbc-3.7.15-M1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

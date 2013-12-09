@@ -48,6 +48,12 @@ public class Xoa_css_extractor_tst {
 		fxt.Exec_css_common_setup();
 		fxt.Test_fil("mem/xowa/user/anonymous/wiki/en.wikipedia.org/html/xowa_common.css", "failover");
 	}
+	@Test   public void Css_common_copy_specific_wiki() {	// PURPOSE: css for specific wiki
+		fxt.Css_installer().Css_stylesheet_common_download_(false).Wiki_code_(ByteAry_.new_ascii_("enwiki"));
+		fxt.Init_fil("mem/xowa/bin/any/html/xowa/import/xowa_common_override/xowa_common_enwiki.css", "failover");
+		fxt.Exec_css_common_setup();
+		fxt.Test_fil("mem/xowa/user/anonymous/wiki/en.wikipedia.org/html/xowa_common.css", "failover");
+	}
 	@Test   public void Css_scrape_download() {
 		fxt.Css_installer().Url_encoder_(Url_encoder.new_http_url_());
 		fxt.Init_fil("mem/http/en.wikipedia.org"							, Xoa_css_extractor_fxt.Main_page_html);

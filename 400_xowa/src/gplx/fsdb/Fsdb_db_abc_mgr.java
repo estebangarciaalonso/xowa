@@ -54,7 +54,7 @@ public class Fsdb_db_abc_mgr implements RlsAble {
 		int bin_db_id = bin_mgr.Get_id_for_insert(bin_len);
 		rv.Db_bin_id_(bin_db_id);
 		int fil_id = atr_mgr.Img_insert(rv, String_.new_utf8_(dir), String_.new_utf8_(fil), ext_id, img_w, img_h, modified, hash, bin_db_id, bin_len, bin_rdr);
-		bin_len = bin_mgr.Insert(bin_db_id, fil_id, Fsdb_bin_tbl.Owner_tid_thm, bin_len, bin_rdr);
+		bin_len = bin_mgr.Insert(bin_db_id, fil_id, Fsdb_bin_tbl.Owner_tid_fil, bin_len, bin_rdr);
 		bin_mgr.Increment(bin_len);
 	}
 	public Fsdb_xtn_thm_itm Thm_select_bin(byte[] dir, byte[] fil, int width, int thumbtime) {

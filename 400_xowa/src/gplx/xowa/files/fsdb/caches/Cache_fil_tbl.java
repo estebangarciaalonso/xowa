@@ -31,7 +31,7 @@ class Cache_fil_tbl {
 		Db_stmt stmt = stmt_bldr.Get(itm.Cmd_mode());
 		switch (itm.Cmd_mode()) {
 			case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Uid()); Db_save_modify(stmt, itm); stmt.Exec_insert(); break;
-			case Db_cmd_mode.Update:	stmt.Clear();					  Db_save_modify(stmt, itm); stmt.Exec_update(); break;
+			case Db_cmd_mode.Update:	stmt.Clear();					  Db_save_modify(stmt, itm); stmt.Val_int_(itm.Uid()).Exec_update(); break;
 			case Db_cmd_mode.Delete:	stmt.Clear().Val_int_(itm.Uid()); stmt.Exec_delete();	break;
 			case Db_cmd_mode.Ignore:	break;
 			default:					throw Err_.unhandled(itm.Cmd_mode());

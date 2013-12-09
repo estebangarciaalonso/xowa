@@ -93,10 +93,13 @@ public class Xof_xfer_mgr {
 			if (rslts.Reg_wiki() != null) {
 				src_repo = wiki.App().File_mgr().Repo_mgr().Get_by_wmf(rslts.Reg_wiki());
 				trg_repo = wiki.App().File_mgr().Repo_mgr().Get_primary(rslts.Reg_wiki());
-				if (ByteAry_.Eq(rslts.Reg_wiki(), wiki.Key_bry()))
-					xfer_itm.Trg_repo_idx_(Xof_meta_itm.Repo_same);
-				else
-					xfer_itm.Trg_repo_idx_(0);
+				if (ByteAry_.Eq(rslts.Reg_wiki(), wiki.Key_bry()))	// wmf returned same wiki as current
+					xfer_itm.Trg_repo_idx_(Xof_meta_itm.Repo_same);	// set repo to "same"
+				else {												// wmf returned other wiki (which is 99% likely to be commons)
+					Xof_repo_pair trg_repo_pair = wiki.File_mgr().Repo_mgr().Repos_get_by_wiki(rslts.Reg_wiki());	// need to do this b/c commons is not always first; see wikinews; DATE:2013-12-04					
+					int trg_repo_idx = trg_repo_pair == null ? 0 : (int)trg_repo_pair.Id();	// 0=commons
+					xfer_itm.Trg_repo_idx_(trg_repo_idx);
+				}
 				if (!ByteAry_.Eq(rslts.Reg_page(), ttl)) {
 					ttl = rslts.Reg_page();
 					md5 = Xof_xfer_itm.Md5_(ttl);

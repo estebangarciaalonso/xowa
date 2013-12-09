@@ -276,7 +276,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 		return rv;
 	}
 	public boolean Load_ctg_v1(Xoctg_view_ctg view_ctg, byte[] ctg_ttl) {return Load_ctg_v1_wkr(view_ctg, ctg_ttl, null);}
-	boolean Load_ctg_v1_wkr(Xoctg_view_ctg view_ctg, byte[] ctg_ttl, IntRef count_only) {
+	private boolean Load_ctg_v1_wkr(Xoctg_view_ctg view_ctg, byte[] ctg_ttl, IntRef count_only) {
 		Xowd_regy_mgr ctg_regy = Get_regy_by_site(Xow_dir_info_.Tid_category);
 		int fil_idx = ctg_regy.Files_find(ctg_ttl);
 		if (fil_idx == Xowd_regy_mgr.Regy_null) return false;	// NOTE: must check for -1, not 0; else defect in which entries in file 0 are ignored; DATE:2013-04-11
@@ -376,7 +376,11 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 		}
 		return rv;
 	}	private Xowd_regy_mgr[] ns_regys = new Xowd_regy_mgr[Xow_ns_mgr_.Ordinal_max];
-	public void Load_ttls_starting_with(Cancelable cancelable, ListAdp rslt_list, Xodb_page rslt_nxt, Xodb_page rslt_prv, IntRef rslt_count, Xow_ns ns, byte[] key, int max_results, int min_page_len, int browse_len, boolean include_redirects, boolean fetch_prv_item) {
+	private Xodb_page tmp_rslt_nxt = new Xodb_page(), tmp_rslt_prv = new Xodb_page(); private IntRef tmp_rslt_count = IntRef.zero_();
+	public void Load_ttls_for_search_suggest(Cancelable cancelable, ListAdp rslt_list, Xow_ns ns, byte[] key, int max_results, int min_page_len, int browse_len, boolean include_redirects, boolean fetch_prv_item) {
+		this.Load_ttls_for_all_pages(cancelable, rslt_list, tmp_rslt_nxt, tmp_rslt_prv, tmp_rslt_count, ns, key, max_results, min_page_len, browse_len, include_redirects, fetch_prv_item);
+	}
+	public void Load_ttls_for_all_pages(Cancelable cancelable, ListAdp rslt_list, Xodb_page rslt_nxt, Xodb_page rslt_prv, IntRef rslt_count, Xow_ns ns, byte[] key, int max_results, int min_page_len, int browse_len, boolean include_redirects, boolean fetch_prv_item) {
 		byte dir_tid = Xow_dir_info_.Tid_ttl;
 		Xob_xdat_file cur_xdat_file = new Xob_xdat_file();
 		Xob_xdat_itm cur_xdat_itm = new Xob_xdat_itm();

@@ -101,6 +101,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		else if	(ctx.Match(k, Invk_context_copy))							Exec_context_copy();
 		else if	(ctx.Match(k, Invk_context_find))							Exec_context_find();
 		else if	(ctx.Match(k, Invk_window_font_changed))					Exec_window_font_changed((Xol_font_info)m.CastObj("font"));
+		else if	(ctx.Match(k, Invk_app))									return app;
 		else																return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}	Ipt_bnd_redirect_mgr redirect_mgr = new Ipt_bnd_redirect_mgr();
@@ -126,6 +127,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		, Invk_options_save = "options_save"
 		, Invk_context_copy = "context.copy", Invk_context_find = "context.find"
 		, Invk_window_font_changed = "winow_font_changed"
+		, Invk_app = "app"
 		;
 	public void Exec_bookmarks_add() {
 		app.User().Bookmarks_add(page); gui_wtr.Prog_many(GRP_KEY, "app_bookmarks_add", "bookmark added: ~{0}", String_.new_utf8_(page.Page_ttl().Full_txt_raw()));
@@ -328,6 +330,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		Xow_wiki wiki = page.Wiki();
 		Xoa_page new_page = new Xoa_page(wiki, page.Page_ttl()).Page_id_(page.Page_id());	// NOTE: page_id needed for sqlite (was not needed for xdat)
 		new_page.Data_raw_(new_raw);
+		wiki.Ctx().Tab().Lnki_file_mgr().Clear();
 		wiki.ParsePage_root(new_page, true);		// refresh html
 		ByteAryBfr tmp_bfr = app.Utl_bry_bfr_mkr().Get_m001();
 		Xou_output_wkr wkr = wiki.Html_mgr().Output_mgr().Wkr(Xoh_wiki_article.Tid_view_read);
@@ -392,6 +395,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			Xoa_ttl ttl = Xoa_ttl.parse_(wiki, url.Page_bry());
 			gui_wtr.Prog_one(GRP_KEY, "view.load", "loading: ~{0}", String_.new_utf8_(ttl.Raw()));
 			try {
+				wiki.Ctx().Tab().Lnki_file_mgr().Clear();
 				new_page = wiki.GetPageByTtl(url, ttl);
 				wiki.Ctx().Page_(new_page);
 			}
@@ -406,6 +410,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 				if (ByteAry_.Eq(url.Page_bry(), Xoa_page.Bry_main_page)) {	// HACK: handle missing Main Page; EX: nl.wikivoyage.org
 					url.Page_bry_(wiki.Props().Main_page());
 					ttl = Xoa_ttl.parse_(wiki, url.Page_bry());
+					wiki.Ctx().Tab().Lnki_file_mgr().Clear();
 					new_page = wiki.GetPageByTtl(url, ttl);
 					wiki.Ctx().Page_(new_page);
 				}

@@ -131,8 +131,11 @@ public class Xodb_load_mgr_sql implements Xodb_load_mgr {
 			db_mgr.Tbl_page().Select_by_id_list(cancelable, true, rv);
 		}
 	}
-	public void Load_ttls_starting_with(Cancelable cancelable, ListAdp rslt_list, Xodb_page rslt_nxt, Xodb_page rslt_prv, IntRef rslt_count, Xow_ns ns, byte[] key, int max_results, int min_page_len, int browse_len, boolean include_redirects, boolean fetch_prv_item) {
-		db_mgr.Tbl_page().Load_ttls_starting_with(cancelable, rslt_list, rslt_nxt, rslt_prv, rslt_count, ns, key, max_results, min_page_len, browse_len, include_redirects, fetch_prv_item);
+	public void Load_ttls_for_all_pages(Cancelable cancelable, ListAdp rslt_list, Xodb_page rslt_nxt, Xodb_page rslt_prv, IntRef rslt_count, Xow_ns ns, byte[] key, int max_results, int min_page_len, int browse_len, boolean include_redirects, boolean fetch_prv_item) {
+		db_mgr.Tbl_page().Load_ttls_for_all_pages(cancelable, rslt_list, rslt_nxt, rslt_prv, rslt_count, ns, key, max_results, min_page_len, browse_len, include_redirects, fetch_prv_item);
+	}
+	public void Load_ttls_for_search_suggest(Cancelable cancelable, ListAdp rslt_list, Xow_ns ns, byte[] key, int max_results, int min_page_len, int browse_len, boolean include_redirects, boolean fetch_prv_item) {
+		db_mgr.Tbl_page().Load_ttls_for_search_suggest(cancelable, rslt_list, ns, key, max_results, min_page_len, browse_len, include_redirects, fetch_prv_item);
 	}
 	public int Load_ctg_count(byte[] ttl) {
 		int page_id = db_mgr.Tbl_page().Select_id(Xow_ns_.Id_category, ttl);

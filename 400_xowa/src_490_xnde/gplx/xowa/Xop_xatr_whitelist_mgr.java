@@ -108,6 +108,7 @@ class Xop_xatr_whitelist_mgr {
 		Ini_nde(Xop_xnde_tag_.Tid_rp         , "common");
 		Ini_nde(Xop_xnde_tag_.Tid_math       , "class", "style", "id", "title");
 		Ini_nde(Xop_xnde_tag_.Tid_time		 , "class", "datetime");
+		Ini_nde(Xop_xnde_tag_.Tid_bdi		 , "common");
 		Ini_all_loose("data");
 		return this;
 	}

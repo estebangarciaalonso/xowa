@@ -22,13 +22,13 @@ public class Xoh_lnki_wtr {
 		this.wiki = wiki; this.html_wtr = html_wtr; bfr_mkr = wiki.Utl_bry_bfr_mkr();
 		this.cfg = wiki.Html_mgr();
 	}	private Xow_html_mgr cfg; boolean lnki_title_enabled;
-	Xow_wiki wiki; Xoh_html_wtr html_wtr; ByteAryFmtrArg_html_fmtr media_alt_fmtr = new ByteAryFmtrArg_html_fmtr(), caption_fmtr = new ByteAryFmtrArg_html_fmtr(); Bry_bfr_mkr bfr_mkr; Xoa_url tmp_url = new Xoa_url();
-	Xoa_page page;
+	private Xow_wiki wiki; private Xoh_html_wtr html_wtr;
+	private ByteAryFmtrArg_html_fmtr media_alt_fmtr = new ByteAryFmtrArg_html_fmtr(), caption_fmtr = new ByteAryFmtrArg_html_fmtr(); private Bry_bfr_mkr bfr_mkr;
+	private Xoa_url tmp_url = new Xoa_url();
 	public void Write_or_queue(Xoa_page page, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, int depth) {
-		this.page = page;
 		Xof_xfer_itm xfer_itm = this.Lnki_eval(page, lnki, queue_add_ref);
 		this.Write_media(bfr, src, opts, lnki, depth, xfer_itm);
-	}	BoolRef queue_add_ref = BoolRef.n_();
+	}	private BoolRef queue_add_ref = BoolRef.n_();
 	public void Page_bgn(Xoa_page page) {
 		cfg_alt_defaults_to_caption = page.Wiki().App().User().Wiki().Html_mgr().Imgs_mgr().Alt_defaults_to_caption().Val();
 	}	private boolean cfg_alt_defaults_to_caption = true;
@@ -36,18 +36,24 @@ public class Xoh_lnki_wtr {
 	public Xof_xfer_itm Lnki_eval(Xof_xfer_queue queue, byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, int lnki_seek, boolean lnki_is_media_ns, BoolRef queue_add_ref) {
 		queue_add_ref.Val_n_();
 		tmp_xfer_itm.Clear().Atrs_by_ttl(lnki_ttl, ByteAry_.Empty).Atrs_by_lnki(lnki_type, lnki_w, lnki_h, lnki_upright, lnki_seek);
-		boolean found = wiki.File_mgr().Find_meta(tmp_xfer_itm);
+		boolean found = Find_file(tmp_xfer_itm);
 		boolean file_queue_add = File_queue_add(wiki, tmp_xfer_itm, lnki_is_media_ns, found);
 		Xof_xfer_itm rv = tmp_xfer_itm;
 		if (file_queue_add) {
 			queue_add_ref.Val_y_();
-			return Queue_add_manual(queue,  tmp_xfer_itm);
+			return Queue_add_manual(queue, tmp_xfer_itm);
 		}
 		return rv;
 	}	private Xof_xfer_itm tmp_xfer_itm = new Xof_xfer_itm();
+	private boolean Find_file(Xof_xfer_itm xfer_itm) {
+		if (wiki.File_mgr().Version() == Xow_file_mgr.Version_2)
+			return wiki.Ctx().Tab().Lnki_file_mgr().Find(wiki, Xof_exec_tid.Tid_wiki_page, xfer_itm);
+		else
+			return wiki.File_mgr().Find_meta(xfer_itm);
+	}
 	public static Xof_xfer_itm Queue_add_manual(Xof_xfer_queue queue, Xof_xfer_itm xfer_itm) {
 		int elem_id = queue.Elem_id().Val_add();
-		Xof_xfer_itm rv = xfer_itm.Clone().Html_dynamic_atrs_(elem_id, Xof_xfer_itm.Html_dynamic_tid_img);
+		Xof_xfer_itm rv = xfer_itm.Clone().Html_elem_atrs_(elem_id, Xof_xfer_itm.Html_tid_img);
 		queue.Add(rv);
 		return rv;
 	}
@@ -58,7 +64,10 @@ public class Xoh_lnki_wtr {
 		switch (wiki.File_mgr().Cfg_download().Redownload()) {
 			case Xof_cfg_download.Redownload_none:
 				if (found) return false;
-				if (!found && xfer_itm.Meta_itm().Orig_exists() == Xof_meta_itm.Exists_n) return false;	// not found, and orig_exists is n; do not download again (NOTE: even if current lnki is thumb, don't bother looking for thumb if orig is missing)
+				if (!found 
+					&& xfer_itm.Meta_itm() != null		// null check; fsdb_call does not set meta
+					&& xfer_itm.Meta_itm().Orig_exists() == Xof_meta_itm.Exists_n) 
+					return false;	// not found, and orig_exists is n; do not download again (NOTE: even if current lnki is thumb, don't bother looking for thumb if orig is missing)
 				break;
 			case Xof_cfg_download.Redownload_missing:
 				if (found) return false;
@@ -68,11 +77,12 @@ public class Xoh_lnki_wtr {
 		}
 		return true;
 	}
-	Xop_link_parser tmp_link_parser = new Xop_link_parser();
-	Xohp_title_wkr anchor_title_wkr = new Xohp_title_wkr();
+	private Xop_link_parser tmp_link_parser = new Xop_link_parser();
+	private Xohp_title_wkr anchor_title_wkr = new Xohp_title_wkr();
 	private void Write_media(ByteAryBfr bfr, byte[] src, Xoh_opts opts, Xop_lnki_tkn lnki, int depth, Xof_xfer_itm xfer_itm) {
+		try {
 		lnki_title_enabled = html_wtr.Hctx().Lnki_title();
-		int elem_id = xfer_itm.Html_dynamic_id();
+		int elem_id = xfer_itm.Html_uid();
 		int div_width = xfer_itm.Html_w();
 		if (div_width < 1) div_width = wiki.Html_mgr().Img_thumb_width();
 		int lnki_halign = lnki.HAlign();
@@ -97,8 +107,11 @@ public class Xoh_lnki_wtr {
 		}
 		if (lnki_ext.Id_is_media()) {
 			if		(lnki_ext.Id() == Xof_ext_.Id_ogv || xfer_itm.Html_pass()			// NOTE: xfer_itm.Html_pass() checks for video .ogg files (ext = .ogg and thumb is available); EX: WWI;
-				||	(lnki_ext.Id_is_ogg() && xfer_itm.Meta_itm().State_new())) {	// NOTE: State_new() will always assume that ogg is video; needed for 1st load and dynamic updates
-				xfer_itm.Html_dynamic_tid_(Xof_xfer_itm.Html_dynamic_tid_vid);
+				||	(lnki_ext.Id_is_ogg() 
+					&& xfer_itm.Meta_itm() != null		// null check; fsdb_call does not set meta
+					&& xfer_itm.Meta_itm().State_new())	// NOTE: State_new() will always assume that ogg is video; needed for 1st load and dynamic updates
+					) {	
+				xfer_itm.Html_tid_(Xof_xfer_itm.Html_tid_vid);
 				if (Xop_lnki_type.Id_defaults_to_thumb(lnki.Lnki_type())) {
 					content = Video(src, opts, lnki, xfer_itm, depth, elem_id, true, lnki_href, html_view_src, html_orig_src, lnki_alt_text);
 				}
@@ -160,6 +173,9 @@ public class Xoh_lnki_wtr {
 			}
 			if (lnki_halign == Xop_lnki_halign.Center) bfr.Add(Bry_div_end);
 			tmp_bfr.Mkr_rls();
+		}
+		} catch (Exception e) {
+			wiki.App().Usr_dlg().Warn_many("", "", "lnki_wtr:fatal error while writing lnki: ttl=~{0} err=~{1}", String_.new_utf8_(lnki.Ttl().Raw()), Err_.Message_gplx_brief(e));
 		}
 	}
 	private static byte[] Make_anchor_title(ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, byte[] lnki_ttl, Xohp_title_wkr anchor_title_wkr) {

@@ -49,8 +49,8 @@ class Xof_wiki_orig_tbl_in_wkr extends gplx.xowa.dbs.tbls.Xodb_in_wkr_base {
 }
 class Xof_wiki_orig_tbl_evaluator {
 	public static void Rdr_done(byte exec_tid, ListAdp itms_all, OrderedHash itms_by_ttl, Xof_url_bldr url_bldr, Xow_repo_mgr repo_mgr) {
-		int len = itms_all.Count();
 		Xof_img_size img_size = new Xof_img_size();
+		int len = itms_all.Count();
 		for (int i = 0; i < len; i++) {
 			Xof_fsdb_itm fsdb_itm = (Xof_fsdb_itm)itms_all.FetchAt(i);
 			byte[] fsdb_itm_ttl = fsdb_itm.Lnki_ttl();

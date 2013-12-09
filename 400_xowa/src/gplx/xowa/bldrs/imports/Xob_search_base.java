@@ -58,7 +58,7 @@ public abstract class Xob_search_base extends Xob_itm_dump_base implements Xobd_
 	static final int row_fixed_len = 5 + 1 + 1 + 1;	// 5=rowId; 1=|; 1=NmsOrd; 1=|		
 	public static byte[][] Split(Xol_lang lang, OrderedHash list, ByteAryBfr bfr, byte[] ttl) {
 		if (lang != null)	// null lang passed in by searcher
-			ttl = lang.Case_mgr().Case_reuse_lower(ttl, 0, ttl.length);
+			ttl = lang.Case_mgr().Case_build_lower(ttl);
 		int ttl_len = ttl.length; ByteAryRef word_ref = ByteAryRef.new_(ByteAry_.Empty);
 		int i = 0; boolean word_done = false;
 		while (true) {

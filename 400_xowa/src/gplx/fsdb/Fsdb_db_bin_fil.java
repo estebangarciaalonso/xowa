@@ -81,8 +81,5 @@ public class Fsdb_db_bin_fil implements RlsAble {
 		rv.cmd_mode = cmd_mode;
 		return rv;
 	}
-	public static Io_url url_(Io_url dir, int id) {
-		return dir.GenSubFil_ary("fsdb.bin#", Int_.XtoStr_PadBgn(id, 4), ".sqlite3");
-	}
 	public static final Fsdb_db_bin_fil[] Ary_empty = new Fsdb_db_bin_fil[0];
 }

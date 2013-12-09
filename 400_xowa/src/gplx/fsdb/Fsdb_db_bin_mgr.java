@@ -87,10 +87,13 @@ public class Fsdb_db_bin_mgr implements RlsAble {
 		Fsdb_db_bin_fil[] new_itms = new Fsdb_db_bin_fil[new_itms_len];
 		for (int i = 0; i < itms_len; i++)
 			new_itms[i] = itms[i];
-		itms_n = Fsdb_db_bin_fil.make_(itms_len, Fsdb_db_bin_fil.url_(dir, itms_len), bin_len, db_bin_max);
+		itms_n = Fsdb_db_bin_fil.make_(itms_len, url_(dir, itms_len), bin_len, db_bin_max);
 		itms = new_itms;
 		itms_len = new_itms_len;
 		itms[itms_len - 1] = itms_n;
 		this.Txn_open();
+	}
+	private static Io_url url_(Io_url dir, int id) {
+		return dir.GenSubFil_ary("fsdb.bin.", Int_.XtoStr_PadBgn(id, 4), ".sqlite3");
 	}
 }

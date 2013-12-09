@@ -21,6 +21,7 @@ import gplx.xowa.apps.*; import gplx.xowa.apps.caches.*; import gplx.xowa.specia
 import gplx.xowa.wikis.*; import gplx.xowa.users.*; import gplx.xowa.cfgs.*; import gplx.xowa.ctgs.*; import gplx.xowa.html.tocs.*; import gplx.xowa.fmtrs.*; 
 import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.math.*;	
 import gplx.xowa.parsers.logs.*;
+import gplx.xowa.servers.*;
 public class Xoa_app implements GfoInvkAble {
 	public Xoa_app(Gfo_usr_dlg_xowa usr_dlg, Io_url root_dir, Io_url user_dir, String bin_dir_name) {
 		this.usr_dlg = usr_dlg;
@@ -52,6 +53,7 @@ public class Xoa_app implements GfoInvkAble {
 		server.App_ctor(this);
 		fmtr_mgr = new Xoa_fmtr_mgr(this);
 		log_mgr = new Xop_log_mgr(this);
+		webserver = new Xosrv_webserver(this);
 	}
 	public NumberParser Utl_num_parser() {return utl_num_parser;} private NumberParser utl_num_parser = new NumberParser();
 	public void Init() {
@@ -144,8 +146,11 @@ public class Xoa_app implements GfoInvkAble {
 	public Xoa_cfg_mgr			Cfg_mgr() {return cfg_mgr;} private Xoa_cfg_mgr cfg_mgr;
 	public Io_stream_zip_mgr	Zip_mgr() {return zip_mgr;} Io_stream_zip_mgr zip_mgr = new Io_stream_zip_mgr();
 	public gplx.xowa.html.Xoh_html_mgr Html_mgr() {return html_mgr;} private gplx.xowa.html.Xoh_html_mgr html_mgr = new gplx.xowa.html.Xoh_html_mgr();
-	public gplx.xowa.servers.Xosrv_server Server() {return server;} gplx.xowa.servers.Xosrv_server server = new gplx.xowa.servers.Xosrv_server();
 	public Xoa_cache_mgr Cache_mgr() {return cache_mgr;} private Xoa_cache_mgr cache_mgr = new Xoa_cache_mgr();
+
+	public Xosrv_server			Server() {return server;} private Xosrv_server server = new Xosrv_server();
+	public Xosrv_webserver		Webserver() {return webserver;} private Xosrv_webserver webserver;
+
 	private Xoa_shell shell; private Xoa_fmtr_mgr fmtr_mgr;
 	public void Reset_all() {
 		this.Free_mem(true);

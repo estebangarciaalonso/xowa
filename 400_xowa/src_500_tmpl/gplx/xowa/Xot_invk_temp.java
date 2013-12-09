@@ -17,6 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xot_invk_temp implements Xot_invk {
+	public Xot_invk_temp(byte defn_tid, byte[] src, Arg_nde_tkn name_tkn, int src_bgn, int src_end) {
+		this.defn_tid = defn_tid; this.src = src;
+		this.name_tkn = name_tkn; this.src_bgn = src_bgn; this.src_end = src_end;
+	}
+	public byte[] Src() {return src;} private byte[] src; public Xot_invk_temp Src_(byte[] src) {this.src = src; return this;}
+	public byte Defn_tid() {return defn_tid;} private byte defn_tid = Xot_defn_.Tid_null;
 	public Xot_invk_temp(boolean root_frame) {this.root_frame = root_frame;}
 	public boolean Root_frame() {return root_frame;} private boolean root_frame;
 	public Arg_nde_tkn Name_tkn() {return name_tkn;} Arg_nde_tkn name_tkn;
@@ -55,12 +61,6 @@ public class Xot_invk_temp implements Xot_invk {
 		hash.Del(key_ref);
 		hash.Add(key_ref, arg);
 	}	HashAdp hash = HashAdp_.new_();
-	public byte[] Src() {return src;} private byte[] src;
-	public Xot_invk_temp Src_(byte[] src) {this.src = src; return this;}
-	public Xot_invk_temp(byte[] src, Arg_nde_tkn name_tkn, int src_bgn, int src_end) {
-		this.src = src;
-		this.name_tkn = name_tkn; this.src_bgn = src_bgn; this.src_end = src_end;
-	}
 	public static final Xot_invk_temp PageIsCaller = new Xot_invk_temp(true);	// SEE NOTE_2
 	Xot_invk_temp() {}
 }

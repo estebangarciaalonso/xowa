@@ -40,7 +40,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 				case Xoh_wiki_article.Tid_view_edit:	fmtr = mgr.Page_edit_fmtr(); break;
 				case Xoh_wiki_article.Tid_view_html:	fmtr = mgr.Page_read_fmtr(); view_tid = Xoh_wiki_article.Tid_view_read; break; // set view_tid to read, so that "read" is highlighted in HTML
 				case Xoh_wiki_article.Tid_view_read:	fmtr = mgr.Page_read_fmtr(); 
-					ctx.Tab().Redlinks_mgr().Page_bgn(ctx);	// not sure if this is the best place to put it, but redlinks (a) must only fire once; (b) must fire before html generation; (c) cannot fire during edit (preview will handle separately)
+					ctx.Tab().Lnki_redlinks_mgr().Page_bgn(ctx);	// not sure if this is the best place to put it, but redlinks (a) must only fire once; (b) must fire before html generation; (c) cannot fire during edit (preview will handle separately)
 					break;
 			}
 			Fmt(app, wiki, mgr, page, view_tid, bfr, fmtr, this);

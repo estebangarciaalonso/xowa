@@ -23,7 +23,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 	public boolean Allow_env_funcs() {return allow_env_funcs;} private boolean allow_env_funcs = false;
 	public Scrib_mod Register(Scrib_engine engine, Io_url script_dir) {			
 		mod = engine.RegisterInterface(script_dir.GenSubFil("mw.lua")
-			, this, String_.Ary(Invk_loadPackage, Invk_frameExists, Invk_parentFrameExists, Invk_getExpandedArgument, Invk_getAllExpandedArguments, Invk_expandTemplate, Invk_preprocess, Invk_callParserFunction, Invk_incrementExpensiveFunctionCount)
+			, this, String_.Ary(Invk_loadPackage, Invk_frameExists, Invk_parentFrameExists, Invk_getExpandedArgument, Invk_getAllExpandedArguments, Invk_expandTemplate, Invk_preprocess, Invk_callParserFunction, Invk_incrementExpensiveFunctionCount, Invk_isSubsting)
 			, KeyVal_.new_("allowEnvFuncs", allow_env_funcs));
 		return mod;
 	}
@@ -48,8 +48,15 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		else if	(ctx.Match(k, Invk_expandTemplate))						return ExpandTemplate((KeyVal[])m.CastObj("v"));
 		else if	(ctx.Match(k, Invk_callParserFunction))					return CallParserFunction((KeyVal[])m.CastObj("v"));
 		else if	(ctx.Match(k, Invk_incrementExpensiveFunctionCount))	return IncrementExpensiveFunctionCount((KeyVal[])m.CastObj("v"));
+		else if	(ctx.Match(k, Invk_isSubsting))							return IsSubsting((KeyVal[])m.CastObj("v"));
 		else	return GfoInvkAble_.Rv_unhandled;
-	}	public static final String Invk_loadPackage = "loadPackage", Invk_frameExists = "frameExists", Invk_parentFrameExists = "parentFrameExists", Invk_getExpandedArgument = "getExpandedArgument", Invk_getAllExpandedArguments = "getAllExpandedArguments", Invk_expandTemplate = "expandTemplate", Invk_preprocess = "preprocess", Invk_callParserFunction = "callParserFunction", Invk_incrementExpensiveFunctionCount = "incrementExpensiveFunctionCount";
+	}
+	public static final String Invk_loadPackage = "loadPackage", Invk_frameExists = "frameExists", Invk_parentFrameExists = "parentFrameExists"
+	, Invk_getExpandedArgument = "getExpandedArgument", Invk_getAllExpandedArguments = "getAllExpandedArguments"
+	, Invk_expandTemplate = "expandTemplate", Invk_preprocess = "preprocess"
+	, Invk_callParserFunction = "callParserFunction", Invk_incrementExpensiveFunctionCount = "incrementExpensiveFunctionCount"
+	, Invk_isSubsting = "isSubsting"
+	;
 	public KeyVal[] LoadPackage(KeyVal[] values) {
 		String mod_name = Scrib_kv_utl.Val_to_str(values, 0);
 		String mod_code = fsys_mgr.Get_or_null(mod_name);	// check if mod_name is a Scribunto .lua file (in /lualib/)
@@ -89,7 +96,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 			return Scrib_kv_utl.base1_obj_(tmp_bfr.XtoStrAndClearAndTrim());	// NOTE: must trim if key_exists; DUPE:TRIM_IF_KEY
 		}
 	}
-	Arg_nde_tkn Get_arg(Xot_invk invk, int idx, int frame_arg_adj) {	// DUPE:MW_ARG_RETRIEVE
+	private Arg_nde_tkn Get_arg(Xot_invk invk, int idx, int frame_arg_adj) {	// DUPE:MW_ARG_RETRIEVE
 		int cur = ListAdp_.Base1, len = invk.Args_len() - frame_arg_adj; 
 		for (int i = 0; i < len; i++) {	// iterate over list to find nth *non-keyd* arg; SEE:NOTE_1
 			Arg_nde_tkn nde = (Arg_nde_tkn)invk.Args_get_by_idx(i + frame_arg_adj);
@@ -190,7 +197,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		ByteAryRef argx_ref = ByteAryRef.null_();
 		ByteAryRef fnc_name_ref = ByteAryRef.new_(fnc_name);
 		KeyVal[] args = CallParserFunction_parse_args(cur_wiki.App().Utl_num_parser(), argx_ref, fnc_name_ref, values);
-		Xot_invk_mock frame = Xot_invk_mock.new_(0, args);
+		Xot_invk_mock frame = Xot_invk_mock.new_(owner_frame.Defn_tid(), 0, args);
 		Xol_func_name_itm finder = cur_wiki.Lang().Func_regy().Find_defn(fnc_name, 0, fnc_name_len);
 		Xot_defn defn = finder.Func();
 		if (defn == Xot_defn_.Null) throw Err_.new_fmt_("callParserFunction: function \"{0}\" was not found", String_.new_utf8_(fnc_name));
@@ -256,7 +263,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		Xoa_ttl tmp_ttl = Xoa_ttl.parse_(cur_wiki, tmpl_ttl_bry);	// parse directly; handles titles where template is already part of title; EX: "Template:A"
 		if (!tmp_ttl.Ns().Id_tmpl())								// title is not a template; assume just page passed; EX: "A"
 			tmp_ttl = Xoa_ttl.parse_(cur_wiki, ByteAry_.Add(cur_wiki.Ns_mgr().Ns_template().Name_db_w_colon(), tmpl_ttl_bry));	// parse again, but add "Template:"
-		Xot_invk_mock mock_frame = Xot_invk_mock.new_(0, tmpl_args);
+		Xot_invk_mock mock_frame = Xot_invk_mock.new_(engine.Cur_frame_invoke().Defn_tid(), 0, tmpl_args);
 
 		Xot_defn defn = Xot_invk_tkn.Load_defn(cur_wiki, tmp_ctx, tmp_ttl, tmp_ttl.Page_db());
 		Xot_defn_tmpl defn_tmpl = (Xot_defn_tmpl)defn;
@@ -267,7 +274,19 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		return Scrib_kv_utl.base1_obj_(tmp_bfr.XtoStrAndClear());
 	}
 	public KeyVal[] IncrementExpensiveFunctionCount(KeyVal[] values) {return Scrib_kv_utl.base1_obj_(KeyVal_.Ary_empty);}	// NOTE: for now, always return null (XOWA does not care about expensive parser functions)
-	Xot_invk values_get_frame(KeyVal[] values, int idx) {
+	public KeyVal[] IsSubsting(KeyVal[] values) {
+		boolean is_substing = false;
+		Xot_invk current_frame = engine.Cur_frame_invoke();
+		if	(current_frame != null && Xot_defn_.Tid_is_subst(current_frame.Defn_tid()))		// check current frame first
+			is_substing = true;
+		else {																				// check owner frame next
+			Xot_invk owner_frame = engine.Cur_frame_owner();
+			if (owner_frame != null && Xot_defn_.Tid_is_subst(owner_frame.Defn_tid()))
+				is_substing = true;
+		}			
+		return Scrib_kv_utl.base1_obj_(is_substing);
+	}
+	private Xot_invk values_get_frame(KeyVal[] values, int idx) {
 		String frame_id = Scrib_kv_utl.Val_to_str(values, idx);
 		return String_.Eq(frame_id, "current") ? engine.Cur_frame_invoke() : engine.Cur_frame_owner();
 	}

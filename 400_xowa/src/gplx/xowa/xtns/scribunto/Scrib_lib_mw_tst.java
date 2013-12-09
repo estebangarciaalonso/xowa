@@ -117,4 +117,8 @@ public class Scrib_lib_mw_tst {
 		fxt.Test_lib_proc_kv(lib, Scrib_lib_mw.Invk_callParserFunction, Scrib_kv_utl.flat_many_("frameId", "current", "name", "DISPLAYTITLE", "args", "''a''"), "");
 		Tfds.Eq("<i>a</i>", String_.new_ascii_(fxt.Parser_fxt().Ctx().Tab().Display_ttl()));
 	}
+	@Test  public void IsSubsting() {
+		fxt.Init_page("{{#invoke:Mod_0|Prc_0}}");
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_isSubsting, Object_.Ary_empty, "false");
+	}
 }

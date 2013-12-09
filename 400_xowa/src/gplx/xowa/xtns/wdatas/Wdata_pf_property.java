@@ -43,7 +43,7 @@ public class Wdata_pf_property extends Pf_func_base {
 			pid = wdata_mgr.Pids_get(wiki.Wdata_wiki_lang(), data.Id());
 		if (pid == Wdata_wiki_mgr.Pid_null) {Print_self(app.Usr_dlg(), bfr, src, self, "prop_not_found", "prop id not found: ~{0} ~{1} ~{2}", wiki.Key_str(), ttl.Page_db_as_str(), data.Id()); return;}
 		Wdata_prop_grp prop_grp = prop_doc.Claim_list_get(pid); if (prop_grp == null) return;// NOTE: some props may not exist; EX: {{#property:P345}} for "Unknown_movie" may have a qid, but doesn't have a defined pid
-		wdata_mgr.Resolve_to_bfr(bfr, prop_grp, ctx.Page().Lang().Key_bry());
+		wdata_mgr.Resolve_to_bfr(bfr, prop_grp, wiki.Wdata_wiki_lang()); // NOTE: was ctx.Page().Lang().Key_bry(), but fails in simplewiki; DATE:2013-12-02
 		if (property_wkr != null)
 			property_wkr.Eval_end(ctx.Page(), id, log_time_bgn);
 	}

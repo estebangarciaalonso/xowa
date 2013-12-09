@@ -55,57 +55,35 @@ public class Xof_fsdb_itm {
 		lnki_md5 = Xof_xfer_itm.Md5_calc(lnki_ttl);
 		return this;
 	}
-	public int Orig_w() {return orig_w;} private int orig_w = Xop_lnki_tkn.Width_null;
-	public int Orig_h() {return orig_h;} private int orig_h = Xop_lnki_tkn.Height_null;
+	public int			Orig_w() {return orig_w;} private int orig_w = Xop_lnki_tkn.Width_null;
+	public int			Orig_h() {return orig_h;} private int orig_h = Xop_lnki_tkn.Height_null;
 	public Xof_fsdb_itm Orig_size_(int w, int h) {orig_w = w; orig_h = h; return this;} 
-	public byte[] Orig_wiki() {return orig_wiki;} public Xof_fsdb_itm Orig_wiki_(byte[] v) {orig_wiki = v; return this;} private byte[] orig_wiki;
-	public byte[] Orig_ttl() {return orig_ttl;} public Xof_fsdb_itm Orig_ttl_(byte[] v) {orig_ttl = v; return this;} private byte[] orig_ttl;
-	public byte[] Orig_redirect() {return orig_redirect;} public Xof_fsdb_itm Orig_redirect_(byte[] v) {orig_redirect = v; return this;} private byte[] orig_redirect = ByteAry_.Empty;
-	public byte Orig_repo() {return orig_repo;} public Xof_fsdb_itm Orig_repo_(byte v) {orig_repo = v; return this;} private byte orig_repo = Xof_repo_itm.Repo_null;
-	public int Reg_id() {return reg_id;} public Xof_fsdb_itm Reg_id_(int v) {reg_id = v; return this;} private int reg_id;
-	public Io_url Html_url() {return html_url;} public Xof_fsdb_itm Html_url_(Io_url v) {html_url = v; return this;} private Io_url html_url;
-	public int Html_w() {return html_w;} private int html_w;
-	public int Html_h() {return html_h;} private int html_h;
+	public byte[]		Orig_wiki() {return orig_wiki;} public Xof_fsdb_itm Orig_wiki_(byte[] v) {orig_wiki = v; return this;} private byte[] orig_wiki;
+	public byte[]		Orig_ttl() {return orig_ttl;} public Xof_fsdb_itm Orig_ttl_(byte[] v) {orig_ttl = v; return this;} private byte[] orig_ttl;
+	public byte[]		Orig_redirect() {return orig_redirect;} public Xof_fsdb_itm Orig_redirect_(byte[] v) {orig_redirect = v; return this;} private byte[] orig_redirect = ByteAry_.Empty;
+	public byte			Orig_repo() {return orig_repo;} public Xof_fsdb_itm Orig_repo_(byte v) {orig_repo = v; return this;} private byte orig_repo = Xof_repo_itm.Repo_null;
+	public boolean			File_is_orig() {return file_is_orig;} public Xof_fsdb_itm File_is_orig_(boolean v) {file_is_orig = v; return this;} private boolean file_is_orig;
+	public int			File_w() {return file_w;} private int file_w;
+	public int			Html_uid() {return html_uid;} public Xof_fsdb_itm Html_uid_(int v) {html_uid = v; return this;} private int html_uid;
+	public Io_url		Html_url() {return html_url;} public Xof_fsdb_itm Html_url_(Io_url v) {html_url = v; return this;} private Io_url html_url;
+	public int			Html_w() {return html_w;} private int html_w;
+	public int			Html_h() {return html_h;} private int html_h;
 	public Xof_fsdb_itm Html_size_(int w, int h) {html_w = w; html_h = h; return this;} 
-	public boolean File_is_orig() {return file_is_orig;} public Xof_fsdb_itm File_is_orig_(boolean v) {file_is_orig = v; return this;} private boolean file_is_orig;
-	public int File_w() {return file_w;} private int file_w;
-	public void Html_size_calc(Xof_img_size img_size, byte exec_tid) {
+	public void			Html_size_calc(Xof_img_size img_size, byte exec_tid) {
 		if (!lnki_ext.Id_is_audio_strict()) {	// audio does not have html size calculated; everything else does
 			img_size.Html_size_calc(exec_tid, lnki_w, lnki_h, lnki_type, lnki_upright, lnki_ext.Id(), orig_w, orig_h, Xof_img_size.Thumb_width_img);
 			html_w = img_size.Html_w(); html_h = img_size.Html_h(); file_w = img_size.File_w();
 			file_is_orig = img_size.File_is_orig();
+			lnki_type_as_mode = file_is_orig ? Xof_repo_itm.Mode_orig : Xof_repo_itm.Mode_thumb;
 		}
 	}
-	public int Html_ids_len() {return html_ids_len;} private int html_ids_len;
-	public int Html_ids_get(int idx) {
-		switch (html_ids_len) {
-			case 0: return -1;// throw Err_.new_fmt_("no html ids available: {0}", String_.new_utf8_(lnki_key));
-			case 1: return html_ids_itm_0;
-			default: return html_ids_ary[idx];
-		}
+	public void			Html__init(Xow_repo_mgr repo_mgr, Xof_url_bldr url_bldr, Xof_img_size img_size, byte exec_tid) {
+		Html_size_calc(img_size, exec_tid);
+		Xof_repo_itm repo = repo_mgr.Repos_get_by_wiki(orig_wiki).Trg();
+		html_url = url_bldr.Set_trg_file_(lnki_type_as_mode, repo, lnki_ttl, lnki_md5, lnki_ext, html_w, lnki_thumbtime).Xto_url();
+		html_orig_url = url_bldr.Set_trg_file_(Xof_repo_itm.Mode_orig, repo, lnki_ttl, lnki_md5, lnki_ext, Xof_img_size.Size_null_deprecated, Xop_lnki_tkn.Thumbtime_null).Xto_url();
 	}
-	public void Html_ids_add(int v) {
-		switch (html_ids_len) {
-			case 0:		html_ids_itm_0 = v; break;
-			case 1:	
-				Html_ids_expand(4);
-				html_ids_ary[0] = html_ids_itm_0;
-				html_ids_ary[1] = v;
-				break;
-			default:
-				if (html_ids_len == html_ids_ary_max) Html_ids_expand(html_ids_ary_max * 2);
-				html_ids_ary[html_ids_len] = v;
-				break;
-		}
-		++html_ids_len;
-	}	private int html_ids_itm_0; private int[] html_ids_ary; int html_ids_ary_max = 0;
-	private void Html_ids_expand(int new_len) {
-		int[] new_ary = new int[new_len];
-		for (int i = 0; i < html_ids_len; i++)
-			new_ary[i] = html_ids_ary[i];
-		html_ids_ary = new_ary;
-		html_ids_ary_max = new_len;
-	}
+	public Io_url Html_orig_url() {return html_orig_url;} private Io_url html_orig_url;
 	public byte Rslt_reg() {return rslt_reg;} public Xof_fsdb_itm Rslt_reg_(byte v) {this.rslt_reg = v; return this;} private byte rslt_reg = gplx.xowa.files.wiki_orig.Xof_wiki_orig_wkr_.Tid_null;
 	public byte Rslt_qry() {return rslt_qry;} public Xof_fsdb_itm Rslt_qry_(byte v) {this.rslt_qry = v; return this;} private byte rslt_qry;
 	public byte Rslt_bin() {return rslt_bin;} public Xof_fsdb_itm Rslt_bin_(byte v) {this.rslt_bin = v; return this;} private byte rslt_bin;

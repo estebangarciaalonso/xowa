@@ -59,10 +59,11 @@ public class Xodb_xowa_ns_tbl {
 				byte[] ns_name = rdr.ReadBryByStr(Fld_ns_name);
 				boolean ns_is_alias = rdr.ReadBool(Fld_ns_is_alias);
 				ns_mgr.Add_new(ns_id, ns_name, ns_case_match, ns_is_alias);
-				if (ns_id < 0) continue;
+				if (ns_id < 0) continue;			// don't load counts for Special / Media
 				int ns_count = rdr.ReadInt(Fld_ns_count);
 				Xow_ns ns = ns_mgr.Get_by_id(ns_id);
 				ns.Count_(ns_count);
+				if (ns_count > 0) ns.Exists_(true);	// ns has article; mark it as exists, else Talk tab won't show; DATE:2013-12-04
 			}
 			ns_mgr.Ords_sort();
 		} 	finally {rdr.Rls();}

@@ -396,7 +396,7 @@ public class IoEngine_system extends IoEngine_base {
 		prog_dlg = xfer_fmt.usr_dlg;
 		if (!Web_access_enabled) {
 			if (session_fil == null) session_fil = prog_dlg.Log_wtr().Session_dir().GenSubFil("internet.txt");
-			prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download disabled: src='~{0}' trg='~{1}'", xrg.Src(), xrg.Trg().Raw());
+			if (prog_dlg != null) prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download disabled: src='~{0}' trg='~{1}'", xrg.Src(), xrg.Trg().Raw());
 			return false;
 		}
 		try {
@@ -543,7 +543,8 @@ class Io_stream_rdr_http implements Io_stream_rdr {
 		if (Io_download_http.User_agent_reset_needed) Io_download_http.User_agent_reset();
 		if (!IoEngine_system.Web_access_enabled) {
 			read_done = read_failed = true;
-			prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download disabled: src='~{0}' trg='~{1}'", xrg.Src(), xrg.Trg().Raw());
+			if (prog_dlg != null)
+				prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download disabled: src='~{0}' trg='~{1}'", xrg.Src(), xrg.Trg().Raw());
 			return this;
 		}
 		src_str = xrg.Src();
@@ -595,7 +596,7 @@ class Io_stream_rdr_http implements Io_stream_rdr {
 			if (prog_dlg != null) {
 				xfer_fmt.Term();
 			}
-			if (session_fil == null) session_fil = prog_dlg.Log_wtr().Session_dir().GenSubFil("internet.txt");
+			if (session_fil == null && prog_dlg != null) session_fil = prog_dlg.Log_wtr().Session_dir().GenSubFil("internet.txt");
 			if (read_failed) {
 			}
 			else {

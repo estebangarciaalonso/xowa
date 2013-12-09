@@ -28,7 +28,7 @@ public class Xoh_html_wtr {
 		lnki_wtr = new Xoh_lnki_wtr(wiki, this);
 		history_mgr = app.User().History_mgr();
 		this.href_encoder = wiki.App().Url_converter_href();
-		redlinks_mgr = wiki.Ctx().Tab().Redlinks_mgr();
+		redlinks_mgr = wiki.Ctx().Tab().Lnki_redlinks_mgr();
 	}	private byte[] wiki_key; Xou_history_mgr history_mgr;
 	public Xoh_ctx Hctx() {return hctx;} private Xoh_ctx hctx = new Xoh_ctx();
 	public void Page_(Xoa_page v) {this.page = v;}
@@ -183,7 +183,7 @@ public class Xoh_html_wtr {
 			return;
 		}
 		boolean literal_link = lnki.Ttl().ForceLiteralLink();	// NOTE: if literal link, then override ns behavior; for File, do not show image; for Ctg, do not display at bottom of page
-		redlinks_mgr.Wkr_exec(ctx, lnki);
+		redlinks_mgr.Lnki_add(ctx, lnki);
 		switch (lnki.NmsId()) {
 			case Xow_ns_.Id_media:		lnki_wtr.Write_or_queue(page, opts, bfr, src, lnki, depth); return; // NOTE: literal ":" has no effect; EX.WP:Beethoven and [[:Media:De-Ludwig_van_Beethoven.ogg|listen]]
 			case Xow_ns_.Id_file:		if (!literal_link) {lnki_wtr.Write_or_queue(page, opts, bfr, src, lnki, depth); return;} break;
@@ -421,7 +421,7 @@ public class Xoh_html_wtr {
 			case Xop_xnde_tag_.Tid_h1: case Xop_xnde_tag_.Tid_h2: case Xop_xnde_tag_.Tid_h3: case Xop_xnde_tag_.Tid_h4: case Xop_xnde_tag_.Tid_h5: case Xop_xnde_tag_.Tid_h6:
 			case Xop_xnde_tag_.Tid_dt: case Xop_xnde_tag_.Tid_dd: case Xop_xnde_tag_.Tid_ol: case Xop_xnde_tag_.Tid_ul: case Xop_xnde_tag_.Tid_dl:
 			case Xop_xnde_tag_.Tid_table: case Xop_xnde_tag_.Tid_tr: case Xop_xnde_tag_.Tid_td: case Xop_xnde_tag_.Tid_th: case Xop_xnde_tag_.Tid_caption: case Xop_xnde_tag_.Tid_tbody:
-			case Xop_xnde_tag_.Tid_time:
+			case Xop_xnde_tag_.Tid_time: case Xop_xnde_tag_.Tid_bdi:
 			case Xop_xnde_tag_.Tid_ruby: case Xop_xnde_tag_.Tid_rt: case Xop_xnde_tag_.Tid_rb: case Xop_xnde_tag_.Tid_rp:  {
 //					byte[] name = tag.Name_bry();
 //					bfr.Add_byte(Tag__bgn).Add(name);

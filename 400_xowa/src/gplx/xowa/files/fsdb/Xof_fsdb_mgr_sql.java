@@ -31,6 +31,16 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	public Gfo_usr_dlg Usr_dlg() {return usr_dlg;} Gfo_usr_dlg usr_dlg = Gfo_usr_dlg_.Null;
 	public Cache_mgr Cache_mgr() {return cache_mgr;} private Cache_mgr cache_mgr;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
+	public void Init_by_wiki__add_bin_wkrs(Xow_wiki wiki) { // helper method to init and add bin wkrs
+		Xof_fsdb_mgr_sql fsdb_mgr = wiki.File_mgr().Fsdb_mgr();
+		boolean init = fsdb_mgr.Init_by_wiki(wiki);
+		if (init) {
+			Xof_bin_mgr bin_mgr = fsdb_mgr.Bin_mgr();
+			Xof_bin_wkr_fsdb_sql fsdb_wkr = (Xof_bin_wkr_fsdb_sql)bin_mgr.Add(Xof_bin_wkr_.Key_fsdb_wiki, "xowa.fsdb.main");
+			fsdb_wkr.Fsdb_mgr().Db_dir_(wiki.App().Fsys_mgr().File_dir().GenSubDir(wiki.Domain_str()));
+			bin_mgr.Add(Xof_bin_wkr_.Key_http_wmf, "xowa.http.wmf");
+		}
+	}
 	public boolean Init_by_wiki(Xow_wiki wiki) {
 		if (init) return false;
 		this.wiki = wiki;
@@ -56,8 +66,11 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 		bin_wkr_fsdb = new Xof_bin_wkr_fsdb_sql(this).Bin_bfr_len_(64 * Io_mgr.Len_kb);	// most thumbs are 40 kb
 		cache_mgr = wiki.App().File_mgr().Cache_mgr();
 	}	private boolean init = false;
-	public void Reg_select(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms) {
+	public void Reg_select_only(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms) {
 		Xof_wiki_orig_tbl.Select_list(img_regy_provider, exec_tid, itms, url_bldr, bin_mgr.Repo_mgr());
+	}
+	public void Reg_select(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms) {
+		Reg_select_only(win_wtr, exec_tid, itms);
 		Xof_fsdb_mgr_utl._.Fsdb_search(this, fs_dir, win_wtr, exec_tid, itms, bin_mgr.Repo_mgr(), url_bldr);
 	}
 	public Fsdb_db_bin_fil Bin_db_get(int mnt_id, int bin_db_id) {

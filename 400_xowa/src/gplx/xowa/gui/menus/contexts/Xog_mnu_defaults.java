@@ -34,7 +34,7 @@ public class Xog_mnu_defaults {
 		Add_grp(Key_tools_wikis, "Wikis", "w", "");
 		Add_grp(Key_help, "Help", "h", "help/contents.png");
 		Add_btn(Key_file_save_as, "Save As", "s", "file/save.png", "app.gui.cmds.file.save_as;");
-		Add_btn(Key_file_print, "Print", "v", "file/print.png", "app.gui.cmds.file.print;");
+		Add_btn(Key_file_print, "Print", "p", "file/print.png", "app.gui.cmds.file.print;");
 		Add_btn(Key_file_exit, "Exit", "x", "file/exit.png", "app.gui.cmds.file.exit;");
 		Add_btn(Key_edit_copy, "Copy", "c", "edit/copy.png", "app.gui.cmds.edit.copy;");
 		Add_btn(Key_edit_select_all, "Select All", "s", "edit/select_all.png", "app.gui.cmds.edit.select_all;");
@@ -53,7 +53,7 @@ public class Xog_mnu_defaults {
 		Add_btn(Key_tools_options, "Options", "o", "tools/options.png", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Options\");");
 		Add_btn(Key_tools_wikis_import_from_list, "Import from list", "i", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Import/List\");");
 		Add_btn(Key_tools_wikis_import_from_script, "Import from script", "s", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Import/Script\");");
-		Add_btn(Key_tools_wikis_maintenance, "Wiki maintenance", "s", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Wiki_maintenance\");");
+		Add_btn(Key_tools_wikis_maintenance, "Wiki maintenance", "m", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Wiki_maintenance\");");
 		Add_btn(Key_tools_wikis_download, "Download", "d", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Download\");");
 		Add_btn(Key_help_help, "XOWA Help", "h", "help/contents.png", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Contents\");");
 		Add_btn(Key_help_change_log, "Change log", "l", "", "app.gui.cmds.bookmarks.goto(\"home/wiki/Help:Change_log\");");

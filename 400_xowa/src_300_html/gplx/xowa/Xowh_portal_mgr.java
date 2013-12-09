@@ -24,11 +24,11 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 		missing_ns_cls = ByteAry_.Eq(wiki.Key_bry(), Xow_wiki_type_.Key_home_bry) ? Missing_ns_cls_hide : null;	// if home wiki, set missing_ns to application default; if any other wiki, set to null; will be overriden during init
 	}	private Xow_wiki wiki;
 	public Xowh_sidebar_mgr Sidebar_mgr() {return sidebar_mgr;} private Xowh_sidebar_mgr sidebar_mgr;
-	ByteAryFmtr div_personal_fmtr = ByteAryFmtr.new_("~{portal_personal_subj_href};~{portal_personal_subj_text};~{portal_personal_talk_cls};~{portal_personal_talk_href};~{portal_personal_talk_cls};", "portal_personal_subj_href", "portal_personal_subj_text", "portal_personal_subj_cls", "portal_personal_talk_href", "portal_personal_talk_cls");
-	ByteAryFmtr div_ns_fmtr = ByteAryFmtr.new_("~{portal_ns_subj_href};~{portal_ns_subj_cls};~{portal_ns_talk_href};~{portal_ns_talk_cls}", "portal_ns_subj_href", "portal_ns_subj_cls", "portal_ns_talk_href", "portal_ns_talk_cls");
-	ByteAryFmtr div_view_fmtr = ByteAryFmtr.new_("", "portal_view_read_cls", "portal_view_edit_cls", "portal_view_html_cls", "search_text");
-	ByteAryFmtr div_logo_fmtr = ByteAryFmtr.new_("", "portal_nav_main_href", "portal_logo_url");
-	ByteAryFmtr div_wikis_fmtr = ByteAryFmtr.new_("");
+	private ByteAryFmtr div_personal_fmtr = ByteAryFmtr.new_("~{portal_personal_subj_href};~{portal_personal_subj_text};~{portal_personal_talk_cls};~{portal_personal_talk_href};~{portal_personal_talk_cls};", "portal_personal_subj_href", "portal_personal_subj_text", "portal_personal_subj_cls", "portal_personal_talk_href", "portal_personal_talk_cls");
+	private ByteAryFmtr div_ns_fmtr = ByteAryFmtr.new_("~{portal_ns_subj_href};~{portal_ns_subj_cls};~{portal_ns_talk_href};~{portal_ns_talk_cls}", "portal_ns_subj_href", "portal_ns_subj_cls", "portal_ns_talk_href", "portal_ns_talk_cls");
+	private ByteAryFmtr div_view_fmtr = ByteAryFmtr.new_("", "portal_view_read_cls", "portal_view_edit_cls", "portal_view_html_cls", "search_text");
+	private ByteAryFmtr div_logo_fmtr = ByteAryFmtr.new_("", "portal_nav_main_href", "portal_logo_url");
+	private ByteAryFmtr div_wikis_fmtr = ByteAryFmtr.new_("");
 	public ByteAryFmtr Div_home_fmtr() {return div_home_fmtr;} ByteAryFmtr div_home_fmtr = ByteAryFmtr.new_("");
 	public Xowh_portal_mgr Init_assert() {if (init_needed) Init(); return this;}
 	private void Init() {
@@ -48,7 +48,7 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 		tmp_bfr.Mkr_rls();
 		sidebar_mgr.Init();
 	}	boolean init_needed = true;
-	byte[] Init_fmtr(ByteAryBfr tmp_bfr, ByteAryFmtr_eval_mgr eval_mgr, ByteAryFmtr fmtr, Object... fmt_args) {
+	private byte[] Init_fmtr(ByteAryBfr tmp_bfr, ByteAryFmtr_eval_mgr eval_mgr, ByteAryFmtr fmtr, Object... fmt_args) {
 		fmtr.Eval_mgr_(eval_mgr);
 		fmtr.Bld_bfr_many(tmp_bfr, fmt_args);
 		byte[] rv = tmp_bfr.XtoAryAndClear();
@@ -67,11 +67,11 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 		div_ns_fmtr.Bld_bfr_many(tmp_bfr, ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, ttl.Subj_txt()), subj_cls, ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, ttl.Talk_txt()), talk_cls);
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();
 	}
-	byte[] Ns_cls_by_ord(Xow_ns_mgr ns_mgr, int ns_ord) {
+	private byte[] Ns_cls_by_ord(Xow_ns_mgr ns_mgr, int ns_ord) {
 		Xow_ns ns = ns_mgr.Get_by_ord(ns_ord);
 		return ns == null || ns.Exists() ? ByteAry_.Empty : missing_ns_cls;
 	}
-	byte[] Ns_cls_by_id(Xow_ns_mgr ns_mgr, int ns_id) {
+	private byte[] Ns_cls_by_id(Xow_ns_mgr ns_mgr, int ns_id) {
 		Xow_ns ns = ns_mgr.Get_by_id(ns_id);
 		return ns == null || ns.Exists() ? ByteAry_.Empty : missing_ns_cls;			
 	}
@@ -107,7 +107,7 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}
-	static final String Invk_div_personal_ = "div_personal_", Invk_div_view_ = "div_view_", Invk_div_ns_ = "div_ns_", Invk_div_home_ = "div_home_", Invk_div_wikis_ = "div_wikis_"
+	private static final String Invk_div_personal_ = "div_personal_", Invk_div_view_ = "div_view_", Invk_div_ns_ = "div_ns_", Invk_div_home_ = "div_home_", Invk_div_wikis_ = "div_wikis_"
 		, Invk_missing_ns_cls = "missing_ns_cls", Invk_missing_ns_cls_ = "missing_ns_cls_", Invk_missing_ns_cls_list = "missing_ns_cls_list"
 		;
 	public static final String Invk_div_logo_ = "div_logo_";

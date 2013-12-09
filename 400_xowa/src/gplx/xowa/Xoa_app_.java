@@ -23,7 +23,7 @@ public class Xoa_app_ {
 		boot_mgr.Run(args);
 	}
 	public static final String Name = "xowa";
-	public static final String Version = "0.12.0.0";
+	public static final String Version = "0.12.1.0";
 	public static String Build_date = "2012-12-30 00:00:00";
 	public static String Op_sys;
 	public static String User_agent = "";
@@ -69,7 +69,7 @@ class Xoa_app_boot_mgr {
 			,	App_cmd_arg.opt_("user_dir").Example_url_("C:\\xowa\\user\\" + Xou_user.Key_xowa_user).Note_("directory for user_data; defaults to '/xowa/user/" + Xou_user.Key_xowa_user + "'")
 			,	App_cmd_arg.opt_("wiki_dir").Example_url_("C:\\xowa\\wiki\\").Note_("directory for wikis; defaults to '/xowa/wiki/'")
 			,	App_cmd_arg.opt_("bin_dir_name").Example_("windows").Note_("platform-dependent directory name inside /xowa/bin/; valid values are 'linux', 'macosx', 'windows', 'linux_64', 'macosx_64', 'windows_64'; defaults to detected version")
-			,	App_cmd_arg.opt_("app_mode").Example_("gui").Note_("type of app to run; valid values are 'gui' or 'cmd'; defaults to 'gui'")
+			,	App_cmd_arg.opt_("app_mode").Example_("gui").Note_("type of app to run; valid values are 'gui', 'cmd', 'server', 'http_server'; defaults to 'gui'")
 			,	App_cmd_arg.opt_("cmd_file").Example_url_("C:\\xowa\\xowa.gfs").Note_("file_path of script to execute; defaults to 'xowa.gfs'")
 			,	App_cmd_arg.opt_("cmd_text").Example_("\"app.shell.fetch_page('en.wikipedia.org/wiki/Earth', 'html');\"").Note_("script to run; runs after cmd_file; does nothing if empty; default is empty.\nCurrently a useful cmd is to do 'java -jar xowa_your_platform.jar --app_mode cmd --show_license n --show_args n --cmd_text \"app.shell.fetch_page('en.wikipedia.org/wiki/Earth' 'html');\"'. This will output the page's html to the console. You can also change 'html' to 'wiki' to get the wikitext.")
 			,	App_cmd_arg.opt_("url").Example_("en.wikipedia.org/wiki/Earth").Note_("url to be shown when xowa first launches; default is home/wiki/Main_Page")
@@ -138,8 +138,10 @@ class Xoa_app_boot_mgr {
 
 			// launch
 			app.Launch(); chkpoint = "launch";
-			if (String_.Eq(app_mode, "server"))
+			if		(String_.Eq(app_mode, "server"))
 				app.Server().Run();
+			else if	(String_.Eq(app_mode, "http_server"))
+				app.Webserver().Run();
 			else {
 				if (cmd_text != null)
 					ConsoleAdp._.WriteLine_utf8(Object_.XtoStr_OrEmpty(app.Gfs_mgr().Run_str(cmd_text)));

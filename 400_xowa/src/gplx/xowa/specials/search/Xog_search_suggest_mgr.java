@@ -25,7 +25,7 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 		cur_cmd = new Xog_search_suggest_cmd(app, this);
 	}	private Xoa_app app; Xoa_gui_mgr gui_mgr; Xog_win main_win; Js_wtr wtr = new Js_wtr();
 	private boolean enabled = true; private int results_max = 10; private boolean log_enabled = false;
-	public byte Search_mode() {return search_mode;} public Xog_search_suggest_mgr Search_mode_(byte v) {search_mode = v; return this;} private byte search_mode;
+	public byte Search_mode() {return search_mode;} public Xog_search_suggest_mgr Search_mode_(byte v) {search_mode = v; return this;} private byte search_mode = Tid_search_mode_all_pages_v2;
 	public int All_pages_extend() {return all_pages_extend;} private int all_pages_extend = 1000;	// look ahead by 1000
 	public int All_pages_min() {return all_pages_min;} private int all_pages_min = 10000;			// only look at pages > 10 kb
 	public boolean Auto_wildcard() {return auto_wildcard;} private boolean auto_wildcard = false;			// automatically add wild-card; EX: Earth -> *Earth*
@@ -54,7 +54,7 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 		this.wiki = wiki; this.search_bry = search_bry; this.cbk_func = cbk_func;
 		ThreadAdp_.invk_(this, Invk_search_async).Start();
 	}	private Xow_wiki wiki; private byte[] search_bry, cbk_func;
-	Object thread_guard = new Object();
+	private Object thread_guard = new Object();
 	private void Search_async() {
 		if (!enabled) return;
 		if (search_bry.length == 0) return;
@@ -64,7 +64,7 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 				if (log_enabled) app.Usr_dlg().Log_many("", "", "search repeated?: word=~{0}", String_.new_utf8_(search_bry));
 				return;
 			}
-			cur_cmd.Init(wiki, search_bry, cbk_func, results_max, search_mode, all_pages_extend, all_pages_min);
+			cur_cmd.Init(wiki, search_bry, results_max, search_mode, all_pages_extend, all_pages_min);
 			this.last_search_bry = search_bry;
 			if (log_enabled) app.Usr_dlg().Log_many("", "", "search bgn: word=~{0}", String_.new_utf8_(search_bry));
 			cur_cmd.Search();
@@ -85,7 +85,8 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 					int len = found.Count();
 					for (int i = 0; i < len; i++) {
 						Xodb_page p = (Xodb_page)found.FetchAt(i);
-						byte[] ttl = Xoa_ttl.Replace_unders(p.Ttl_wo_ns());
+						Xow_ns ns = wiki.Ns_mgr().Get_by_id(p.Ns_id());
+						byte[] ttl = Xoa_ttl.Replace_unders(ns.Gen_ttl(p.Ttl_wo_ns()));
 						wtr.Add_str_arg(i, ttl);
 					}
 				wtr.Add_brack_end();
@@ -124,19 +125,21 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 	, Invk_log_enabled = "log_enabled", Invk_log_enabled_ = "log_enabled_"
 	, Invk_args_default = "args_default", Invk_args_default_ = "args_default_"
 	;
-	private static KeyVal[] Options_search_mode_list = KeyVal_.Ary(KeyVal_.new_("Search"), KeyVal_.new_("AllPages")); 
+	private static final String Str_search_mode_search = "Search", Str_search_mode_all_pages_v1 = "AllPages", Str_search_mode_all_pages_v2 = "AllPages_(v2)";
+	public static final byte Tid_search_mode_all_pages_v1 = 0, Tid_search_mode_search = 1, Tid_search_mode_all_pages_v2 = 2;
+	private static KeyVal[] Options_search_mode_list = KeyVal_.Ary(KeyVal_.new_(Str_search_mode_search), KeyVal_.new_(Str_search_mode_all_pages_v1), KeyVal_.new_(Str_search_mode_all_pages_v2)); 
 	private static byte Search_mode_parse(String v) {
 		if		(String_.Eq(v, Str_search_mode_search))			return Tid_search_mode_search;
-		else if	(String_.Eq(v, Str_search_mode_all_pages))		return Tid_search_mode_all_pages;
+		else if	(String_.Eq(v, Str_search_mode_all_pages_v1))	return Tid_search_mode_all_pages_v1;
+		else if	(String_.Eq(v, Str_search_mode_all_pages_v2))	return Tid_search_mode_all_pages_v2;
 		else													throw Err_.unhandled(v);
 	}
 	private static String Search_mode_str(byte v) {
 		switch (v) {
 			case Tid_search_mode_search:						return Str_search_mode_search;
-			case Tid_search_mode_all_pages:						return Str_search_mode_all_pages;
+			case Tid_search_mode_all_pages_v1:					return Str_search_mode_all_pages_v1;
+			case Tid_search_mode_all_pages_v2:					return Str_search_mode_all_pages_v2;
 			default:											throw Err_.unhandled(v);
 		}
 	}
-	public static final byte Tid_search_mode_all_pages = 0, Tid_search_mode_search = 1;
-	static final String Str_search_mode_search = "Search", Str_search_mode_all_pages = "AllPages";
 }

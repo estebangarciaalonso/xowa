@@ -32,7 +32,7 @@ public class Xop_lnki_logger_redlinks_mgr {
 		lnki_list.Clear();
 		disabled = ctx.Page().Page_ttl().Ns().Id_module();		// never redlink in Module ns; particularly since Lua has multi-line comments for [[ ]]
 	}
-	public void Wkr_exec(Xop_ctx ctx, Xop_lnki_tkn lnki) {
+	public void Lnki_add(Xop_ctx ctx, Xop_lnki_tkn lnki) {
 		if (disabled) return;
 		Xoa_ttl ttl = lnki.Ttl();
 		if (ttl == null) return; // occurs for invalid links

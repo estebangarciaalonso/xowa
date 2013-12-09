@@ -76,7 +76,7 @@ public class Wdata_pf_property_tst {
 		fxt.Init_links_add("enwiki", "Test_page", "q2");
 		fxt.Init_pids_add("en", "astronomic symbol", 1);
 		fxt.Init_pages_add(fxt.doc_("q2", fxt.prop_str_(1, "a")));
-		fxt.Test_parse("{{#property:p1|}}", "a");	//
+		fxt.Test_parse("{{#property:p1|}}", "a");
 	}
 	@Test  public void Data() {
 		Wdata_pf_property_data_fxt fxt = new Wdata_pf_property_data_fxt();

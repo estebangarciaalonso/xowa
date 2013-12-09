@@ -53,15 +53,18 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		curPos = this.ChkForTail(ctx.Lang(), src, curPos, srcLen, lnki);
 		lnki.Src_end_(curPos);	// NOTE: must happen after ChkForTail; redundant with above, but above needed b/c of returns
 		root.Subs_del_after(lnki.Tkn_sub_idx() + 1);	// all tkns should now be converted to args in owner; delete everything in root
+		boolean lnki_is_file = false;
 		switch (lnki.NmsId()) {
 			case Xow_ns_.Id_file:
 				switch (lnki.Lnki_type()) {
-					case Xop_lnki_type.Id_thumb:
-					case Xop_lnki_type.Id_frame:
+					case Xop_lnki_type.Id_thumb: case Xop_lnki_type.Id_frame:
 						ctx.Para().Process_lnki_file_div(lnki.Src_bgn(), curPos);
 						break;
 				}
-				if (file_wkr != null) file_wkr.Wkr_exec(ctx, lnki);
+				lnki_is_file = true;
+				break;
+			case Xow_ns_.Id_media:
+				lnki_is_file = true;
 				break;
 			case Xow_ns_.Id_category:
 				if (!lnki.Ttl().ForceLiteralLink())					// NOTE: do not remove ws if literal; EX:[[Category:A]]\n[[Category:B]] should stay the same; DATE:2013-07-10
@@ -69,8 +72,12 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 				if (ctg_wkr != null) ctg_wkr.Wkr_exec(ctx, lnki);
 				break;
 		}
+		if (lnki_is_file) {
+			ctx.Tab().Lnki_file_mgr().Add(lnki);
+			if (file_wkr != null) file_wkr.Wkr_exec(ctx, lnki);
+		}
 		return curPos;
-	}	static byte[] RelPath_bry = ByteAry_.new_utf8_("../");
+	}
 	public boolean Args_add(Xop_ctx ctx, Xop_tkn_itm tkn, Arg_nde_tkn arg, int arg_idx) {
 		Xop_lnki_tkn lnki = (Xop_lnki_tkn)tkn;
 		byte[] src = ctx.Src();
@@ -231,5 +238,5 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		else
 			return bgnPos;
 	}
-	NumberParser numberParser = new NumberParser();
+	private NumberParser numberParser = new NumberParser();
 }

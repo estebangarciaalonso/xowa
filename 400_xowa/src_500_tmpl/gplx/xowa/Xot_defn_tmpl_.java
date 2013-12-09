@@ -20,7 +20,7 @@ public class Xot_defn_tmpl_ {
 	public static Xot_invk CopyNew(Xop_ctx ctx, Xot_defn_tmpl orig_defn, Xot_invk orig, Xot_invk caller, byte[] src) {	// SEE:NOTE_1
 		Xop_tkn_mkr tkn_mkr = ctx.Tkn_mkr();
 		byte[] orig_src = orig_defn.Data_raw();
-		Xot_invk_temp rv = new Xot_invk_temp(orig_src, orig.Name_tkn(), caller.Src_bgn(), caller.Src_end());
+		Xot_invk_temp rv = new Xot_invk_temp(orig.Defn_tid(), orig_src, orig.Name_tkn(), caller.Src_bgn(), caller.Src_end());
 		int orig_args_len = orig.Args_len();
 		for (int i = 0; i < orig_args_len; i++) {
 			Arg_nde_tkn orig_arg = orig.Args_get_by_idx(i);

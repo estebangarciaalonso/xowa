@@ -52,20 +52,20 @@ public class Xof_xfer_queue {
 			xfer_itm.Atrs_by_meta(xfer_itm.Meta_itm(), xfer_itm.Meta_itm().Repo_itm(wiki), wiki.Html_mgr().Img_thumb_width());
 			xfer_itm.Atrs_calc_for_html();
 			if (ByteAry_.Len_gt_0(xfer_itm.Html_view_src())								// only update images that have been found; otherwise "Undefined" shows up in image box
-				&& xfer_itm.Html_dynamic_tid() != Xof_xfer_itm.Html_dynamic_tid_none) {	// skip updates when downloading orig on File page (there won't be any frame to update)
-				String file_img_id = "xowa_file_img_" + xfer_itm.Html_dynamic_id();
+				&& xfer_itm.Html_tid() != Xof_xfer_itm.Html_tid_none) {	// skip updates when downloading orig on File page (there won't be any frame to update)
+				String file_img_id = "xowa_file_img_" + xfer_itm.Html_uid();
 				wtr.Html_img_update(file_img_id, String_.new_utf8_(xfer_itm.Html_view_src()), xfer_itm.Html_w(), xfer_itm.Html_h());
 				if (xfer_itm.Lnki_type() == Xop_lnki_type.Id_thumb) {
 					wtr.Html_atr_set(file_img_id, "class", gplx.xowa.html.Xow_html_mgr.Str_img_class_thumbimage);
-					wtr.Html_atr_set("xowa_file_div_" + xfer_itm.Html_dynamic_id(), "style", "width:" + xfer_itm.Html_w() + "px;");
+					wtr.Html_atr_set("xowa_file_div_" + xfer_itm.Html_uid(), "style", "width:" + xfer_itm.Html_w() + "px;");
 				}
-				if (xfer_itm.Html_dynamic_tid() == Xof_xfer_itm.Html_dynamic_tid_gallery) {
+				if (xfer_itm.Html_tid() == Xof_xfer_itm.Html_tid_gallery) {
 					int vpad = ((gplx.xowa.xtns.gallery.Xtn_gallery_dynamic_data)xfer_itm.Gallery_data()).Calc_vpad(xfer_itm.Html_h());
-					wtr.Html_atr_set("xowa_file_gallery_div_" + xfer_itm.Html_dynamic_id(), "style", "margin:" + vpad + "px auto;");
+					wtr.Html_atr_set("xowa_file_gallery_div_" + xfer_itm.Html_uid(), "style", "margin:" + vpad + "px auto;");
 				}
-				else if (xfer_itm.Html_dynamic_tid() == Xof_xfer_itm.Html_dynamic_tid_vid) {
-					wtr.Html_atr_set("xowa_file_play_" + xfer_itm.Html_dynamic_id(), "style", "width:" + xfer_itm.Html_w() + "px;max-width:" + (xfer_itm.Html_w() - 2) + "px;");
-					wtr.Html_atr_set("xowa_file_play_" + xfer_itm.Html_dynamic_id(), "href", String_.new_utf8_(xfer_itm.Html_orig_src()));
+				else if (xfer_itm.Html_tid() == Xof_xfer_itm.Html_tid_vid) {
+					wtr.Html_atr_set("xowa_file_play_" + xfer_itm.Html_uid(), "style", "width:" + xfer_itm.Html_w() + "px;max-width:" + (xfer_itm.Html_w() - 2) + "px;");
+					wtr.Html_atr_set("xowa_file_play_" + xfer_itm.Html_uid(), "href", String_.new_utf8_(xfer_itm.Html_orig_src()));
 				}
 			}
 		}
@@ -76,12 +76,7 @@ public class Xof_xfer_queue {
 		this.Clear();
 	}
 	private void Exec_v2(byte exec_tid, Xog_win_wtr wtr, Xow_wiki wiki) {
-		boolean init = wiki.File_mgr().Fsdb_mgr().Init_by_wiki(wiki);
-		if (init) {
-			Xof_bin_wkr_fsdb_sql fsdb_wkr = (Xof_bin_wkr_fsdb_sql)wiki.File_mgr().Fsdb_mgr().Bin_mgr().Add(Xof_bin_wkr_.Key_fsdb_wiki, "xowa.fsdb.main");
-			fsdb_wkr.Fsdb_mgr().Db_dir_(wiki.App().Fsys_mgr().File_dir().GenSubDir(wiki.Domain_str()));
-			wiki.File_mgr().Fsdb_mgr().Bin_mgr().Add(Xof_bin_wkr_.Key_http_wmf, "xowa.http.wmf");
-		}
+		wiki.File_mgr().Fsdb_mgr().Init_by_wiki__add_bin_wkrs(wiki);
 		wiki.File_mgr().Fsdb_mgr().Reg_select(wtr, exec_tid, Xfer_itms_to_fsdb_itms(list));
 	}
 	private ListAdp Xfer_itms_to_fsdb_itms(ListAdp list) {
@@ -91,7 +86,7 @@ public class Xof_xfer_queue {
 			Xof_xfer_itm xfer_itm = (Xof_xfer_itm)list.FetchAt(i);				
 			Xof_fsdb_itm fsdb_itm = new Xof_fsdb_itm();
 			fsdb_itm.Init_by_lnki(xfer_itm.Lnki_ttl(), xfer_itm.Lnki_ext(), xfer_itm.Lnki_md5(), xfer_itm.Lnki_type(), xfer_itm.Lnki_w(), xfer_itm.Lnki_h(), xfer_itm.Lnki_upright(), xfer_itm.Lnki_thumbtime());				
-			fsdb_itm.Html_ids_add(xfer_itm.Html_dynamic_id());
+			fsdb_itm.Html_uid_(xfer_itm.Html_uid());
 			rv.Add(fsdb_itm);
 		}
 		return rv;

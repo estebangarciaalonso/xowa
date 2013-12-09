@@ -56,7 +56,7 @@ public class Xow_wiki implements GfoInvkAble {
 		}
 		else {
 			wdata_wiki_tid	= wiki_tid;
-			wdata_wiki_lang = lang_key;
+			wdata_wiki_lang = lang.Lang_id() == Xol_lang_itm_.Id_simple ? Xol_lang_.Key_en : lang_key;	// simple should be English
 		}
 		db_mgr = new gplx.xowa.dbs.Xodb_mgr_txt(this, data_mgr);
 		wiki_tid_code = Xob_bz2_file.Build_alias(Xow_wiki_type_.parse_by_domain(domain_bry));

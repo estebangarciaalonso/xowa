@@ -111,6 +111,12 @@ public class Xop_xnde_wkr_tst {
 		,	"</ol>"
 		));
 	}
+	@Test   public void CaseSensitivity_xtn2() {// PURPOSE: xtn xnde must do case-insensitive match DATE:2013-12-02
+		fxt.tst_Parse_page_all_str
+			(	"<matH>a</math> b <math>c</matH>"	// <matH> should match </math> not </matH>
+			,	"<span id='xowa_math_txt_0'>a</span> b <span id='xowa_math_txt_0'>c</span>"
+			);
+	}
 	@Test  public void Lnki() {
 		fxt.tst_Parse_page_wiki("[[Image:a|b<br/>d]]"
 			, fxt.tkn_lnki_().NmsId_(Xow_ns_.Id_file).Trg_tkn_(fxt.tkn_arg_nde_().Val_tkn_(fxt.tkn_arg_itm_(fxt.tkn_txt_(2, 7), fxt.tkn_colon_(7), fxt.tkn_txt_(8, 9))))
@@ -325,7 +331,16 @@ public class Xop_xnde_wkr_tst {
 			,	"</table>"
 			,	""
 			));
-		}
+	}
+	@Test   public void Li_nested_inside_ul() {	// PURPOSE: nested li in ul should not be escaped; DATE:2013-12-04
+		fxt.tst_Parse_page_wiki_str
+		(	"<ul><li>a<ul><li>b</li></ul></li></ul>"
+		,	String_.Concat_lines_nl_skipLast
+		(	"<ul>"
+		,	"<li>a<ul>"
+		,	"<li>b</li></ul></li></ul>"	// note that <li><li>b becomes <li>&lt;li>b but <li><ul><li>b should stay the same
+		));
+	}
 	@Test  public void Ws_bgn_tbl() {	// PURPOSE: some templates return leading ws; EX.WP:UK
 		fxt.Ctx().Para().Enabled_y_();
 		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
@@ -692,8 +707,11 @@ public class Xop_xnde_wkr_tst {
 		fxt.ini_Log_(Xop_xnde_log.No_inline);
 		fxt.tst_Parse_page_all_str("<b/>", "<b></b>");
 	}
-	@Test  public void Time() {
+	@Test  public void Time() {	// HTML5; should output self (i.e.: must be whitelisted)
 		fxt.tst_Parse_page_wiki_str("<time class=\"dtstart\" datetime=\"2010-10-10\">10 October 2010</time>", "<time class=\"dtstart\" datetime=\"2010-10-10\">10 October 2010</time>");
+	}
+	@Test  public void Bdi() {	// HTML5; should output self (i.e.: must be whitelisted); DATE:2013-12-07
+		fxt.tst_Parse_page_wiki_str("<bdi lang=\"en\">a</bdi>", "<bdi lang=\"en\">a</bdi>");
 	}
 	@Test  public void Pre_nowiki() {	// PURPOSE: nowikis inside pre should be ignored; DATE:2013-03-30
 		fxt.tst_Parse_page_all_str("<pre>a<nowiki>&lt;</nowiki>b</pre>"		, "<pre>a&lt;b</pre>");											// basic

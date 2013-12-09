@@ -24,11 +24,16 @@ public class Xoctg_html_mgr implements GfoInvkAble {
 	Xoctg_fmtr_all mgr_files = new Xoctg_fmtr_all(Xoa_ctg_mgr.Tid_file);
 	public Xoctg_data_cache Data_cache() {return data_cache;} private Xoctg_data_cache data_cache = new Xoctg_data_cache(); 
 	public void Bld_html(Xoa_page page, ByteAryBfr bfr) {
-		Xow_wiki wiki = page.Wiki();
-		if (wiki.Db_mgr().Category_version() == Xoa_ctg_mgr.Version_2)
-			Bld_html_v2(wiki, page, bfr);
-		else
-			Bld_html_v1(wiki, page, bfr);
+		try {
+			Xow_wiki wiki = page.Wiki();
+			if (wiki.Db_mgr().Category_version() == Xoa_ctg_mgr.Version_2)
+				Bld_html_v2(wiki, page, bfr);
+			else
+				Bld_html_v1(wiki, page, bfr);
+		}
+		catch (Exception e) { // ctg error should never cause page to fail
+			page.Wiki().App().Gui_wtr().Warn_many("", "", "failed to generate category: title=~{0} err=~{1}", String_.new_utf8_(page.Page_ttl().Full_txt()), Err_.Message_gplx_brief(e));
+		}
 	}	private Xoctg_url url_ctg = new Xoctg_url();
 	private void Bld_html_v2(Xow_wiki wiki, Xoa_page page, ByteAryBfr bfr) {
 		byte[] ttl_bry = page.Page_ttl().Page_db();

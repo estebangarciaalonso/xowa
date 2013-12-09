@@ -36,5 +36,5 @@ public class Xoa_sys_cfg implements GfoInvkAble {
 	}
 	static final String Invk_version = "version", Invk_build_date = "build_date", Invk_free_mem_when_ = "free_mem_when_", Invk_options_version = "options_version", Invk_options_version_ = "options_version_"
 		, Invk_lang = "lang", Invk_lang_ = "lang_", Invk_lang_list = "lang_list";
-	private static KeyVal[] Options_lang_list = KeyVal_.Ary(KeyVal_.new_("en", "English"), KeyVal_.new_("de", "Deutsch"), KeyVal_.new_("pl", "Polski")); 
+	private static KeyVal[] Options_lang_list = KeyVal_.Ary(KeyVal_.new_("en", "English"), KeyVal_.new_("de", "Deutsch"), KeyVal_.new_("pl", "Polski"), KeyVal_.new_("zh-hans", "‪中文(简体)‬"), KeyVal_.new_("zh-hant", "‪中文(繁體)‬")); 
 }

@@ -37,9 +37,9 @@ public class Fsdb_mnt_tbl {
 	public static Db_stmt Update_stmt(Db_provider p) {return Db_stmt_.new_update_(p, Tbl_name, String_.Ary(Fld_mnt_id), Fld_mnt_name, Fld_mnt_url);}
 	public static void Update(Db_stmt stmt, int id, String name, String url) {
 		stmt.Clear()
-		.Val_int_(id)
 		.Val_str_(name)
 		.Val_str_(url)
+		.Val_int_(id)
 		.Exec_update();
 	}	
 	public static Fsdb_mnt_itm[] Select_all(Db_provider p) {

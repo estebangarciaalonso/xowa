@@ -30,6 +30,7 @@ public class Xoa_css_extractor {
 	public Xoa_css_extractor Css_img_downloader_(Xoa_css_img_downloader v) {this.css_img_downloader = v; return this;} private Xoa_css_img_downloader css_img_downloader;
 	public Xoa_css_extractor Css_stylesheet_common_download_(boolean v) {css_stylesheet_common_download = v; return this;} private boolean css_stylesheet_common_download;
 	public Xoa_css_extractor Url_encoder_(Url_encoder v) {url_encoder = v; return this;} Url_encoder url_encoder;
+	public Xoa_css_extractor Wiki_code_(byte[] v) {this.wiki_code = v; return this;} private byte[] wiki_code = null;
 	private byte[] mainpage_bry; private boolean lang_is_ltr = true;
 	public void App_init(Xoa_app app) {
 		this.usr_dlg = app.Usr_dlg();
@@ -64,6 +65,7 @@ public class Xoa_css_extractor {
 		((Xow_page_fetcher_wiki)page_fetcher).Wiki_(wiki);
 		this.wiki_html_dir = wiki_html_dir;
 		this.lang_is_ltr = wiki.Lang().Dir_ltr();
+		this.wiki_code = wiki.Wiki_tid_code();
 		mainpage_bry = Mainpage_download_bry();
 		Logo_setup();
 		Css_stylesheet_common_setup();
@@ -88,7 +90,7 @@ public class Xoa_css_extractor {
 		bry = ByteAry_.Replace(bry, gplx.xowa.bldrs.xmls.Xob_xml_parser_.Bry_tab_ent, gplx.xowa.bldrs.xmls.Xob_xml_parser_.Bry_tab);
 		Io_mgr._.SaveFilBry(trg_fil, bry);
 		return true;
-	}	static final byte[] Ttl_common_css = ByteAry_.new_ascii_("Common.css"), Ttl_vector_css = ByteAry_.new_ascii_("Vector.css");
+	}	private static final byte[] Ttl_common_css = ByteAry_.new_ascii_("Common.css"), Ttl_vector_css = ByteAry_.new_ascii_("Vector.css");
 	private boolean Css_stylesheet_wiki_generate_section(ByteAryBfr bfr, byte[] ttl) {
 		byte[] page = page_fetcher.Fetch(Xow_ns_.Id_mediaWiki, ttl);
 		if (page == null) return false;
@@ -117,7 +119,11 @@ public class Xoa_css_extractor {
 		else 
 			css_img_downloader.Chk(wiki_domain, trg_fil);
 	}
-	private Io_url Css_stylesheet_common_failover_url() {return failover_dir.GenSubFil(lang_is_ltr ? Css_common_name_ltr : Css_common_name_rtl);}
+	private Io_url Css_stylesheet_common_failover_url() {
+		Io_url css_commons_url = failover_dir.GenSubDir("xowa_common_override").GenSubFil_ary("xowa_common_", String_.new_utf8_(wiki_code), ".css");
+		if (Io_mgr._.ExistsFil(css_commons_url)) return css_commons_url;	// specific css exists for wiki; use it; EX: xowa_common_wiki_mediawikiwiki.css
+		return failover_dir.GenSubFil(lang_is_ltr ? Css_common_name_ltr : Css_common_name_rtl);
+	}
 	private boolean Css_stylesheet_common_download(Io_url trg_fil) {
 		String src_fil = String_.Format(css_stylesheet_common_src_fmt, String_.new_utf8_(wiki_domain));
 		String log_msg = usr_dlg.Prog_many("", "", "downloading css common: '~{0}'", src_fil);
@@ -185,7 +191,7 @@ public class Xoa_css_extractor {
 	}
 	private byte[] Css_scrape() {
 		if (mainpage_bry == null) return null;
-		String[] css_urls = Css_scrape_urls(mainpage_bry);		if (css_urls.length == 0) return null;
+		String[] css_urls = Css_scrape_urls(mainpage_bry); if (css_urls.length == 0) return null;
 		return Css_scrape_download(css_urls);
 	}
 	private String[] Css_scrape_urls(byte[] raw) {
@@ -220,5 +226,6 @@ public class Xoa_css_extractor {
 		}
 		return tmp_bfr.XtoAryAndClear();
 	}
-	public static final String Css_common_name = "xowa_common.css", Css_wiki_name = "xowa_wiki.css", Css_common_name_ltr = "xowa_common_ltr.css", Css_common_name_rtl = "xowa_common_rtl.css";
+	public static final String Css_common_name = "xowa_common.css", Css_wiki_name = "xowa_wiki.css"
+	, Css_common_name_ltr = "xowa_common_ltr.css", Css_common_name_rtl = "xowa_common_rtl.css";
 }

@@ -17,10 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xot_invk_mock implements Xot_invk {
-	public Xot_invk_mock(int idx_adj) {this.idx_adj = idx_adj;} private int idx_adj; // SEE NOTE_1:
+	public Xot_invk_mock(byte defn_tid, int idx_adj) {this.defn_tid = defn_tid; this.idx_adj = idx_adj;} private int idx_adj; // SEE NOTE_1:
 	public boolean Root_frame() {return false;}
 	public int Src_bgn() {return -1;}
 	public int Src_end() {return -1;}
+	public byte Defn_tid() {return defn_tid;} private byte defn_tid = Xot_defn_.Tid_null;
 	public Arg_nde_tkn Name_tkn() {return Arg_nde_tkn.Null;}
 	public int Args_len() {return args.Count() + idx_adj;} private OrderedHash args = OrderedHash_.new_bry_();
 	public Arg_nde_tkn Args_get_by_idx(int i) {return (Arg_nde_tkn)args.FetchAt(i - idx_adj);}
@@ -48,9 +49,10 @@ public class Xot_invk_mock implements Xot_invk {
 		return Args_get_by_key(src, ByteAry_.XtoStrBytesByInt(idx + 1, 1));
 	}
 	public Arg_nde_tkn Args_get_by_key(byte[] src, byte[] key) {return (Arg_nde_tkn)args.Fetch(key);}
-	public static Xot_invk_mock new_(KeyVal... args) {return new_(1, args);}
-	public static Xot_invk_mock new_(int idx_adj, KeyVal... args) {
-		Xot_invk_mock rv = new Xot_invk_mock(idx_adj);
+	public static Xot_invk_mock new_(byte defn_tid, KeyVal... args)	{return new_(defn_tid, 1, args);}
+	public static Xot_invk_mock new_(KeyVal... args)							{return new_(Xot_defn_.Tid_null, 1, args);}
+	public static Xot_invk_mock new_(byte defn_tid, int idx_adj, KeyVal... args) {
+		Xot_invk_mock rv = new Xot_invk_mock(defn_tid, idx_adj);
 		int len = args.length;
 		for (int i = 0; i < len; i++) {
 			KeyVal arg = args[i];
@@ -63,7 +65,7 @@ public class Xot_invk_mock implements Xot_invk {
 		}
 		return rv;
 	}
-	public static final Xot_invk_mock Null = new Xot_invk_mock(1);
+	public static final Xot_invk_mock Null = new Xot_invk_mock(Xot_defn_.Tid_null, 1);
 }
 class Arg_nde_tkn_mock extends Arg_nde_tkn {	public Arg_nde_tkn_mock(boolean arg_key_is_int, String k, String v) {
 		this.key_exists = !arg_key_is_int;

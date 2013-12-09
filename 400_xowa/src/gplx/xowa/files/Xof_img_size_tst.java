@@ -44,6 +44,7 @@ public class Xof_img_size_tst {
 	@Test  	public void Lnki_missing__orig_missing(){fxt.Lnki_( -1,  -1).Orig_( -1,  -1).Test_html(220,  -1);}	// no lnki or orig size; default to 220 with unknown height
 	@Test   public void Prefer_height_over_width()	{fxt.Lnki_(200, 100).Test_html(200, 100);}					// prefer height; if width were preferred, size would be 200,134
 	@Test  	public void Upright() 					{fxt.Lnki_upright_(1).Lnki_(400, 200).Test_html(300, 150);}	
+	@Test  	public void Upright_w_thumb() 			{fxt.Lnki_type_(Xop_lnki_type.Id_thumb).Lnki_upright_(2).Lnki_(-1, -1).Orig_(1500, 1125).Test_html(440, 330);}
 
 	@Test   public void Explicit_ratio_large()		{fxt.Lnki_(120,  40).Test_html( 80,  40);}	// see NOTE_2: lnki_ratio > orig_ratio
 	@Test   public void Explicit_ratio_small()		{fxt.Lnki_(120,  80).Test_html(120,  60);}	// see NOTE_2: lnki_ratio > orig_ratio

@@ -27,7 +27,7 @@ class Xop_colon_lxr implements Xop_lxr {
 				return listCtx.MakeTkn_bgn(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos);
 			}
 		}
-		ctx.Subs_add(tkn_mkr.Colon(bgnPos, curPos));
+		ctx.Subs_add(root, tkn_mkr.Colon(bgnPos, curPos));
 		return curPos;
 	}
 	public static final Xop_colon_lxr _ = new Xop_colon_lxr();

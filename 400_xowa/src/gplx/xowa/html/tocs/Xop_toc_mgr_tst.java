@@ -396,7 +396,7 @@ public class Xop_toc_mgr_tst {
 		, "  </ul>"
 		));
 	}
-	@Test    public void Ref() { // PURPOSE: ref contents should not print in TOC; DATE:2013-07-23
+	@Test   public void Ref() { // PURPOSE: ref contents should not print in TOC; DATE:2013-07-23
 		fxt.Test_html_all(String_.Concat_lines_nl_skipLast
 		( "__FORCETOC__"
 		, "==a<ref>b</ref>=="
@@ -409,6 +409,21 @@ public class Xop_toc_mgr_tst {
 		, "  </ul>"
 		)
 		, "<h2><span class='mw-headline' id='ab'>a<sup id=\"cite_ref-0\" class=\"reference\"><a href=\"#cite_note-0\">[1]</a></sup></span></h2>"
+		));
+	}
+	@Test   public void Category() { // PURPOSE: Category should not show in in TOC; DATE:2013-12-09
+		fxt.Test_html_all(String_.Concat_lines_nl_skipLast
+		( "__FORCETOC__"
+		, "==A[[Category:B]]=="
+		)
+		, String_.Concat_lines_nl
+		( TocTable_nl_n
+		( "  <ul>"
+		, "    <li class=\"toclevel-1 tocsection-1\"><a href=\"#A\"><span class=\"tocnumber\">1</span> <span class=\"toctext\">A</span></a>"
+		, "    </li>"
+		, "  </ul>"
+		)
+		, "<h2><span class='mw-headline' id='A'>A</span></h2>"
 		));
 	}
 	private String TocTable_nl_y(String... ary) {return TocTable(Bool_.Y, ary);}

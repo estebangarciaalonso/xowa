@@ -48,7 +48,7 @@ class Xop_brack_bgn_lxr implements Xop_lxr {
 	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast coreTrie) {coreTrie.Add(Xop_tkn_.Lnki_bgn, this);}
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {
 		Xop_tkn_itm tkn = tkn_mkr.Brack_bgn(bgnPos, curPos);
-		ctx.Subs_add_and_stack(tkn);			
+		ctx.Subs_add_and_stack(root, tkn);			
 		return curPos;
 	}
 	public static final Xop_brack_bgn_lxr _ = new Xop_brack_bgn_lxr(); Xop_brack_bgn_lxr() {}
@@ -59,9 +59,9 @@ class Xop_brack_end_lxr implements Xop_lxr {
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {
 		int acs_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_brack_bgn);
 		if (acs_pos != -1 && ctx.Cur_tkn_tid() != Xop_tkn_itm_.Tid_tmpl_curly_bgn)	// NOTE: do not pop tkn if inside tmpl; EX: [[a|{{#switch:{{{1}}}|b=c]]|d=e]]|f]]}}
-			ctx.Stack_pop_til(acs_pos, true, bgnPos, curPos);
+			ctx.Stack_pop_til(root, src, acs_pos, true, bgnPos, curPos);
 		Xop_tkn_itm tkn = tkn_mkr.Brack_end(bgnPos, curPos);
-		ctx.Subs_add(tkn);
+		ctx.Subs_add(root, tkn);
 		return curPos;
 	}
 	public static final Xop_brack_end_lxr _ = new Xop_brack_end_lxr(); Xop_brack_end_lxr() {}

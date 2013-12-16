@@ -30,7 +30,7 @@ public class Xtn_section_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 	public Xop_root_tkn Xtn_root() {return null;}
 	public Xop_xnde_tkn Xnde() {return xnde;} private Xop_xnde_tkn xnde;
 	public byte Name_tid() {return name_tid;} private byte name_tid;
-	public void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		Xoa_app app = ctx.App();
 		Xop_xatr_itm[] atrs = Xop_xatr_itm.Xatr_parse(app, this, wiki.Lang().Xatrs_section(), wiki, src, xnde);
 		this.xnde = xnde;

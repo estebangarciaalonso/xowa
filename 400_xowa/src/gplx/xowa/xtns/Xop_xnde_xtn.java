@@ -19,5 +19,5 @@ package gplx.xowa.xtns; import gplx.*; import gplx.xowa.*;
 public interface Xop_xnde_xtn {
 	Xop_root_tkn Xtn_root();
 	boolean Xtn_literal();
-	void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde);
+	void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde);
 }

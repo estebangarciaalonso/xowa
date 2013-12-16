@@ -21,7 +21,7 @@ public class Xop_languages_xnde implements Xop_xnde_xtn {
 	public boolean Xtn_literal() {return false;}
 	public Xop_root_tkn Xtn_root() {return null;}
 	public Xop_xnde_tkn Xnde() {return xnde;} private Xop_xnde_tkn xnde;
-	public void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		this.xnde = xnde;
 		langs = Find_lang_pages(ctx, wiki);
 	}

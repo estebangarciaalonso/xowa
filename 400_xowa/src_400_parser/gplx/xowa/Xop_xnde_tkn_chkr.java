@@ -206,7 +206,7 @@ class Xop_ignore_tkn_chkr extends Xop_tkn_chkr_base {
 class Xop_lnki_tkn_chkr extends Xop_tkn_chkr_base {
 	@Override public Class<?> TypeOf() {return Xop_lnki_tkn.class;}
 	@Override public byte Tkn_tid() {return Xop_tkn_itm_.Tid_lnki;}
-	public int NmsId() {return nsId;} public Xop_lnki_tkn_chkr NmsId_(int v) {nsId = v; return this;} private int nsId = Int_.MinValue;
+	public int Ns_id() {return nsId;} public Xop_lnki_tkn_chkr Ns_id_(int v) {nsId = v; return this;} private int nsId = Int_.MinValue;
 	public byte ImgType() {return imgType;} public Xop_lnki_tkn_chkr ImgType_(byte v) {imgType = v; return this;} private byte imgType = Byte_.MaxValue_127;
 	public int Width() {return width;} public Xop_lnki_tkn_chkr Width_(int v) {width = v; return this;} private int width = Int_.MinValue;
 	public int Height() {return height;} public Xop_lnki_tkn_chkr Height_(int v) {height = v; return this;} private int height = Int_.MinValue;
@@ -223,7 +223,7 @@ class Xop_lnki_tkn_chkr extends Xop_tkn_chkr_base {
 	public Xop_tkn_chkr_base Link_tkn() {return link_tkn;} public Xop_lnki_tkn_chkr Link_tkn_(Xop_tkn_chkr_base v) {link_tkn = v; return this;} private Xop_tkn_chkr_base link_tkn;
 	@Override public int Chk_hook(Tst_mgr mgr, String path, Object actl_obj, int err) {
 		Xop_lnki_tkn actl = (Xop_lnki_tkn)actl_obj;
-		err += mgr.Tst_val(nsId == Int_.MinValue, path, "nsId", nsId, actl.NmsId());
+		err += mgr.Tst_val(nsId == Int_.MinValue, path, "nsId", nsId, actl.Ns_id());
 		err += mgr.Tst_val(imgType == Byte_.MaxValue_127, path, "imgType", imgType, actl.Lnki_type());
 		err += mgr.Tst_val(width == Int_.MinValue, path, "width", width, actl.Width().Val());
 		err += mgr.Tst_val(height == Int_.MinValue, path, "height", height, actl.Height().Val());

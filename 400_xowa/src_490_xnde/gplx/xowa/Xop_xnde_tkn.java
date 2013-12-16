@@ -17,8 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.xtns.*;
-public class Xop_xnde_tkn extends Xop_tkn_itm_base {
+public class Xop_xnde_tkn extends Xop_tkn_itm_base implements Xop_tblw_tkn {
 	@Override public byte Tkn_tid() {return Xop_tkn_itm_.Tid_xnde;}
+	public int Tblw_tid() {return tag.Id();}	// NOTE: tblw tkns actually return xnde as Tblw_tid
+	public boolean Tblw_xml() {return true;}
+	public int Tblw_subs_len() {return tblw_subs_len;} public void Tblw_subs_len_add_() {++tblw_subs_len;} private int tblw_subs_len;
 	public byte CloseMode() {return closeMode;} public Xop_xnde_tkn CloseMode_(byte v) {closeMode = v; return this;} private byte closeMode = Xop_xnde_tkn.CloseMode_null;
 	public boolean Tag_visible() {return tag_visible;} public Xop_xnde_tkn Tag_visible_(boolean v) {tag_visible = v; return this;} private boolean tag_visible = true;
 	public int Name_bgn() {return name_bgn;} public Xop_xnde_tkn Name_bgn_(int v) {name_bgn = v; return this;} private int name_bgn = -1;
@@ -27,7 +30,10 @@ public class Xop_xnde_tkn extends Xop_tkn_itm_base {
 	public int Atrs_bgn() {return atrs_bgn;} public Xop_xnde_tkn Atrs_bgn_(int v) {atrs_bgn = v; return this;} private int atrs_bgn = Xop_tblw_wkr.Atrs_null;
 	public int Atrs_end() {return atrs_end;} public Xop_xnde_tkn Atrs_end_(int v) {atrs_end = v; return this;} private int atrs_end = Xop_tblw_wkr.Atrs_null;
 	public Xop_xnde_tkn Atrs_rng_(int bgn, int end) {atrs_bgn = bgn; atrs_end = end; return this;}
-	public Xop_xatr_itm[] Atrs_ary() {return atrs_ary;} public Xop_xnde_tkn Atrs_ary_(Xop_xatr_itm[] v) {atrs_ary = v; return this;} private Xop_xatr_itm[] atrs_ary;
+	public void Atrs_rng_set(int bgn, int end) {Atrs_rng_(bgn, end);}
+	public Xop_xatr_itm[] Atrs_ary() {return atrs_ary;}
+	public Xop_xnde_tkn Atrs_ary_(Xop_xatr_itm[] v) {atrs_ary = v; return this;} private Xop_xatr_itm[] atrs_ary;
+	public Xop_tblw_tkn Atrs_ary_as_tblw_(Xop_xatr_itm[] v) {atrs_ary = v; return this;}
 	public Xop_xnde_tag Tag() {return tag;} public Xop_xnde_tkn Tag_(Xop_xnde_tag v) {tag = v; return this;} private Xop_xnde_tag tag;
 	public int Tag_open_bgn() {return tag_open_bgn;} private int tag_open_bgn = Int_.Null;
 	public int Tag_open_end() {return tag_open_end;} private int tag_open_end = Int_.Null;

@@ -66,6 +66,12 @@ public class Sqlite_engine_ {
 			p.Txn_mgr().Txn_end_all();
 		}
 	}
+	public static Db_provider Provider_load_or_fail_(Io_url url) {
+		boolean exists = Io_mgr._.ExistsFil(url);
+		if (!exists) throw Err_.new_fmt_("db does not exist; url=~{0}", url.Raw());
+		Db_connect connect = Db_connect_sqlite.load_(url); 
+		return Db_provider_.new_(connect);
+	}
 	public static Db_provider Provider_load_or_make_(Io_url url) {return Provider_load_or_make_(url, BoolRef.n_());}
 	public static Db_provider Provider_load_or_make_(Io_url url, BoolRef created) {
 		boolean exists = Io_mgr._.ExistsFil(url);

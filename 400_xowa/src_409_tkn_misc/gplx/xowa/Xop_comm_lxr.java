@@ -72,7 +72,7 @@ class Xop_comm_lxr implements Xop_lxr {
 			curPos = nl_rhs;
 		}
 
-		ctx.Subs_add(tkn_mkr.Ignore(bgnPos, curPos, Xop_ignore_tkn.Ignore_tid_comment));
+		ctx.Subs_add(root, tkn_mkr.Ignore(bgnPos, curPos, Xop_ignore_tkn.Ignore_tid_comment));
 		return curPos;
 	}	private ByteTrieMgr_fast lkp = ByteTrieMgr_fast.cs_();	// NOTE: private trie, b/c comment is leaf
 	Xop_comm_lxr() {lkp.Add(End_ary, IntVal.zero_());}

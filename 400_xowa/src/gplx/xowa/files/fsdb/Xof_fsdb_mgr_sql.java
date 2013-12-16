@@ -19,7 +19,7 @@ package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xow
 import gplx.dbs.*; import gplx.fsdb.*; import gplx.xowa.files.wiki_orig.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.fsdb.caches.*;
 public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	private Db_provider img_regy_provider = null;		
-	private Io_url fs_dir;
+	private Io_url app_file_dir;
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
 	public boolean Tid_is_mem() {return false;}
 	public Xof_qry_mgr Qry_mgr() {return qry_mgr;} private Xof_qry_mgr qry_mgr = new Xof_qry_mgr();
@@ -27,7 +27,7 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	public Xof_bin_wkr Bin_wkr_fsdb() {return bin_wkr_fsdb;} private Xof_bin_wkr_fsdb_sql bin_wkr_fsdb;
 	public void Db_bin_max_(long v) {mnt_mgr.Bin_db_max_(v);}
 	public Fsdb_mnt_mgr Mnt_mgr() {return mnt_mgr;} private Fsdb_mnt_mgr mnt_mgr = new Fsdb_mnt_mgr();
-	public Xof_fsdb_mgr_sql Db_dir_(Io_url v) {db_dir = v; mnt_mgr.Init(db_dir); return this;} private Io_url db_dir;
+	public Io_url Db_dir() {return db_dir;} public Xof_fsdb_mgr_sql Db_dir_(Io_url v) {db_dir = v; mnt_mgr.Init(db_dir); return this;} private Io_url db_dir;
 	public Gfo_usr_dlg Usr_dlg() {return usr_dlg;} Gfo_usr_dlg usr_dlg = Gfo_usr_dlg_.Null;
 	public Cache_mgr Cache_mgr() {return cache_mgr;} private Cache_mgr cache_mgr;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
@@ -57,8 +57,8 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 		bin_mgr.Resizer_(wiki.App().File_mgr().Img_mgr().Wkr_resize_img());
 		return true;
 	}
-	public void Init_by_wiki(Xow_wiki wiki, Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr) {
-		this.fs_dir = fs_dir;
+	public void Init_by_wiki(Xow_wiki wiki, Io_url db_dir, Io_url app_file_dir, Xow_repo_mgr repo_mgr) {
+		this.app_file_dir = app_file_dir;
 		this.db_dir = db_dir;
 		img_regy_provider = Init_wiki_orig_provider(db_dir);
 		mnt_mgr.Init(db_dir);
@@ -71,7 +71,7 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	}
 	public void Reg_select(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms) {
 		Reg_select_only(win_wtr, exec_tid, itms);
-		Xof_fsdb_mgr_utl._.Fsdb_search(this, fs_dir, win_wtr, exec_tid, itms, bin_mgr.Repo_mgr(), url_bldr);
+		Xof_fsdb_mgr_utl._.Fsdb_search(this, app_file_dir, win_wtr, exec_tid, itms, bin_mgr.Repo_mgr(), url_bldr);
 	}
 	public Fsdb_db_bin_fil Bin_db_get(int mnt_id, int bin_db_id) {
 		return mnt_mgr.Bin_db_get(mnt_id, bin_db_id);

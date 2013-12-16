@@ -32,7 +32,7 @@ public class Xtn_pages_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 			case Xatr_end_sect:		end_sect = xatr.Val_as_bry(src); break;
 		}
 	}
-	public void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		Xowc_xtn_pages cfg_pages = wiki.Cfg_parser().Xtns().Itm_pages();
 		if (cfg_pages.Init_needed()) cfg_pages.Init(wiki.Ns_mgr());
 		int Ns_page = cfg_pages.Ns_page_id();

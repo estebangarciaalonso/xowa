@@ -66,5 +66,5 @@ public class Scrib_pf_invoke extends Pf_func_base {
 		byte[] script_error_msg = msg_mgr.Val_by_id(Xol_msg_itm_.Id_scribunto_parser_error);
 		fmtr.Bld_bfr_many(bfr, script_error_msg, error);
 	}
-	public static final String Err_mod_missing = "No such module", Err_fnc_missing = "The function you specified did not exist";
+	public static final String Err_mod_missing = "No such module";
 }

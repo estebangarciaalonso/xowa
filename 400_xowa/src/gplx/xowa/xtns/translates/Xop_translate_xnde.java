@@ -22,7 +22,7 @@ public class Xop_translate_xnde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 	public void Xatr_parse(Xow_wiki wiki, byte[] src, Xop_xatr_itm xatr, Object xatr_obj) {
 		if (xatr_obj == null) return;
 	}
-	public void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		byte[] translate_src = ByteAry_.Mid(src, xnde.Tag_open_end(), xnde.Tag_close_bgn());
 		translate_src = ByteAry_.Trim(translate_src, 0, translate_src.length);
 		Xop_ctx sub_ctx = Xop_ctx.new_sub_(wiki);

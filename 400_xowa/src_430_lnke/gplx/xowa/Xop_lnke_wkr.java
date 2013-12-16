@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 import gplx.xowa.apps.*;
 public class Xop_lnke_wkr implements Xop_ctx_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {url_parser = ctx.App().Url_parser().Url_parser();} Gfo_url_parser url_parser; Gfo_url_site_data site_data = new Gfo_url_site_data(); Xoa_url_parser xo_url_parser = new Xoa_url_parser(); Xoa_url xo_url_parser_url = new Xoa_url();
-	public void Page_bgn(Xop_ctx ctx) {}
+	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {}
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {}
 	public void AutoClose(Xop_ctx ctx, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_tkn_itm tkn) {
 		// "[" but no "]"; EX: "[irc://a"; NOTE: lnkes that start with protocol will be ac'd in MakeTkn_bgn; EX: "http://a"
@@ -48,7 +48,7 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 
 		int end_pos = txt_end + 1;	// +1 to place after ]
 		Xop_lnke_tkn tkn = tkn_mkr.Lnke(bgn_pos, end_pos, protocol, proto_tid, lnke_type, lnke_bgn_pos, rhs_dlm_pos);	// +1 to ignore [
-		ctx.Subs_add(tkn);
+		ctx.Subs_add(root, tkn);
 		tkn.Subs_add(tkn_mkr.Txt(txt_bgn, txt_end));
 		return end_pos;
 	}	static final byte[] Bry_quote = new byte[] {Byte_ascii.Quote};
@@ -127,7 +127,7 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 			switch (lnke_endType) {
 				case EndType_eos:
 					if (brack_end_pos == -1) {	// eos but no ]; EX: "[irc://a"
-						ctx.Subs_add(tkn_mkr.Txt(bgn_pos, bgn_pos + 1));// convert open brack to txt;	// FUTURE: don't make brack_tkn; just flag
+						ctx.Subs_add(root, tkn_mkr.Txt(bgn_pos, bgn_pos + 1));// convert open brack to txt;	// FUTURE: don't make brack_tkn; just flag
 						bgn_pos += 1;
 						brack_end_pos = cur_pos;
 						lnke_bgn = bgn_pos;
@@ -158,7 +158,7 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 			}
 		}
 		if (proto_tid == Xow_cfg_lnke.Tid_relative_2)	// for "[[//", add "["; rest of code handles "[//" normally, but still want to include literal "["; DATE:2013-02-02
-			ctx.Subs_add(tkn_mkr.Txt(lnke_bgn - 1, lnke_bgn));
+			ctx.Subs_add(root, tkn_mkr.Txt(lnke_bgn - 1, lnke_bgn));
 		Xop_lnke_tkn tkn = tkn_mkr.Lnke(bgn_pos, brack_end_pos, protocol, proto_tid, lnke_type, lnke_bgn, lnke_end);
 		url_parser.Parse_site_fast(site_data, src, lnke_bgn, lnke_end);
 		int site_bgn = site_data.Site_bgn(), site_end = site_data.Site_end(); tkn.Lnke_relative_(site_data.Rel());
@@ -176,7 +176,7 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 			}
 			tkn.Lnke_xwiki_(xwiki_wiki, xwiki_page, xo_url_parser_url.Args());
 		}			
-		ctx.Subs_add(tkn);
+		ctx.Subs_add(root, tkn);
 		if (lnke_type == Xop_lnke_tkn.Lnke_typ_brack) {
 			if (lnke_endType == EndType_brack) {
 				tkn.Src_end_(cur_pos);
@@ -191,7 +191,7 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 		else {
 			switch (lnke_endType) {
 				case EndType_space:
-					ctx.Subs_add(tkn_mkr.Space(ctx.Root(), cur_pos - 1, cur_pos));
+					ctx.Subs_add(root, tkn_mkr.Space(root, cur_pos - 1, cur_pos));
 					break;			
 				case EndType_nl:
 				case EndType_invalid:	// NOTE that cur_pos is set after <, must subtract 1 else </xnde> will be ignored; EX: <span>irc://a</span>
@@ -202,12 +202,12 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 	}
 	static final byte Lnki_linkMode_init = 0, Lnki_linkMode_eq = 1, Lnki_linkMode_text = 2;
 	static final byte EndType_null = 0, EndType_eos = 1, EndType_brack = 2, EndType_space = 3, EndType_nl = 4, EndType_invalid = 5;
-	public int MakeTkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public int MakeTkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		int lnke_bgn_idx = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnke);
 		if (lnke_bgn_idx == -1) return ctx.LxrMake_txt_(cur_pos);	// no lnke_bgn tkn; occurs when just ]; EX: "a]b"
-		Xop_lnke_tkn bgnTkn = (Xop_lnke_tkn)ctx.Stack_pop_til(lnke_bgn_idx, false, bgn_pos, cur_pos);
+		Xop_lnke_tkn bgnTkn = (Xop_lnke_tkn)ctx.Stack_pop_til(root, src, lnke_bgn_idx, false, bgn_pos, cur_pos);
 		bgnTkn.Src_end_(cur_pos);
-		bgnTkn.Subs_move(ctx.Root());
+		bgnTkn.Subs_move(root);
 		return cur_pos;
 	}
 }

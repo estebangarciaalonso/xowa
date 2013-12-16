@@ -20,7 +20,7 @@ public class Xop_lnki_tkn extends Xop_tkn_itm_base {
 	@Override public byte Tkn_tid() {return typeId;} private byte typeId = Xop_tkn_itm_.Tid_lnki;
 	public void TypeId_toText() {typeId = Xop_tkn_itm_.Tid_txt;}
 	public boolean Dangling() {return this.Src_end() - this.Src_bgn() == Xop_tkn_.Lnki_bgn_len;}
-	public int NmsId() {return nsId;} public Xop_lnki_tkn NmsId_(int v) {nsId = v; return this;} private int nsId;
+	public int Ns_id() {return nsId;} public Xop_lnki_tkn Ns_id_(int v) {nsId = v; return this;} private int nsId;
 	public int Tail_bgn() {return tail_bgn;} public Xop_lnki_tkn Tail_bgn_(int v) {tail_bgn = v; return this;} private int tail_bgn = -1;
 	public int Tail_end() {return tail_end;} public Xop_lnki_tkn Tail_end_(int v) {tail_end = v; return this;} private int tail_end = -1;
 	public byte Lnki_type() {return lnki_type;} public Xop_lnki_tkn Lnki_type_(byte v) {lnki_type = (byte)Enm_.AddInt(lnki_type, v); return this;} private byte lnki_type = Xop_lnki_type.Id_null;

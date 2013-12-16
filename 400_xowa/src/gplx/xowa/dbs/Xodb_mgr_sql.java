@@ -97,7 +97,7 @@ public class Xodb_mgr_sql implements Xodb_mgr, GfoInvkAble {
 		int rslts_len = rslts.Count();
 		rslts.SortBy(Xodb_page_sorter.IdAsc);
 		tbl_page.Select_by_id_list(Cancelable_.Never, false, rslts, 0, rslts_len);
-		rslts.SortBy(Xodb_page_sorter.NmsId_TtlAsc);
+		rslts.SortBy(Xodb_page_sorter.Ns_id_TtlAsc);
 		boolean rv = false;
 		for (int i = 0; i < rslts.Count(); i++) {
 			Xodb_page page = (Xodb_page)rslts.FetchAt(i);

@@ -47,9 +47,9 @@ public class Xtn_poem_nde_tst {
 				), String_.Concat_lines_nl_skipLast
 				(	"<div class=\"poem\">"
 				,	"a 1<br/>"
-				,	Char_.XtoStr(160) + Char_.XtoStr(160) + "b 1<br/>"
+				,	"&#160;&#160;b 1<br/>"
 				,	"c 1<br/>"
-				,	Char_.XtoStr(160) + Char_.XtoStr(160) + "d 1"
+				,	"&#160;&#160;d 1"
 				,	"</div>"
 				));
 	}
@@ -63,10 +63,10 @@ public class Xtn_poem_nde_tst {
 			,	"</poem>"
 			), String_.Concat_lines_nl_skipLast
 			(	"<div class=\"poem\">"
-			,	Char_.XtoStr(160) + Char_.XtoStr(160) + "a<br/>"
-			,	Char_.XtoStr(160) + Char_.XtoStr(160) + "b<br/>"
-			,	Char_.XtoStr(160) + Char_.XtoStr(160) + "c<br/>"
-			,	Char_.XtoStr(160) + Char_.XtoStr(160) + "d"
+			,	"&#160;&#160;a<br/>"
+			,	"&#160;&#160;b<br/>"
+			,	"&#160;&#160;c<br/>"
+			,	"&#160;&#160;d"
 			,	"</div>"
 			));
 	}

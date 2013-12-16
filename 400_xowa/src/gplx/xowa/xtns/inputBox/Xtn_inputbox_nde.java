@@ -19,5 +19,5 @@ package gplx.xowa.xtns.inputBox; import gplx.*; import gplx.xowa.*; import gplx.
 public class Xtn_inputbox_nde implements Xop_xnde_xtn {
 	public Xop_root_tkn Xtn_root() {return null;}
 	public boolean Xtn_literal() {return false;}
-	public void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde) {}	// FUTURE: noop for now so it doesn't show (since it's useless)
+	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {}	// FUTURE: noop for now so it doesn't show (since it's useless)
 }

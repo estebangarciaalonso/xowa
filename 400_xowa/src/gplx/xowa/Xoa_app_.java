@@ -23,7 +23,7 @@ public class Xoa_app_ {
 		boot_mgr.Run(args);
 	}
 	public static final String Name = "xowa";
-	public static final String Version = "0.12.1.0";
+	public static final String Version = "0.12.2.0";
 	public static String Build_date = "2012-12-30 00:00:00";
 	public static String Op_sys;
 	public static String User_agent = "";
@@ -75,6 +75,7 @@ class Xoa_app_boot_mgr {
 			,	App_cmd_arg.opt_("url").Example_("en.wikipedia.org/wiki/Earth").Note_("url to be shown when xowa first launches; default is home/wiki/Main_Page")
 			,	App_cmd_arg.opt_("server_port_recv").Example_("55000").Note_("applies to --app_mode server; port where xowa server will receive messages; clients should send messages to this port")
 			,	App_cmd_arg.opt_("server_port_send").Example_("55001").Note_("applies to --app_mode server; port where xowa server will send messages; clients should listen for messages from this port")
+			,	App_cmd_arg.opt_("http_server_port").Example_("8080").Note_("applies to --app_mode http_server; port used by http_server; default is 8080")
 			,	App_cmd_arg.sys_header_("show_license").Dflt_(true)
 			,	App_cmd_arg.sys_args_("show_args").Dflt_(true)
 			,	App_cmd_arg.sys_help_()
@@ -111,6 +112,7 @@ class Xoa_app_boot_mgr {
 			String launch_url = args_mgr.Args_get("url").Val_as_str_or(Xoa_sys_cfg.Launch_url_dflt);
 			int server_port_recv = args_mgr.Args_get("server_port_recv").Val_as_int_or(55000);
 			int server_port_send = args_mgr.Args_get("server_port_send").Val_as_int_or(55001);
+			int http_server_port = args_mgr.Args_get("http_server_port").Val_as_int_or(8080);
 			Xoa_app_.Op_sys = args_mgr.Args_get("bin_dir_name").Val_as_str_or(Bin_dir_name());
 			Xoa_app_.User_agent = String_.Format("XOWA/{0} ({1}) [gnosygnu@gmail.com]", Xoa_app_.Version, Xoa_app_.Op_sys);
 			String cmd_text = args_mgr.Args_get("cmd_text").Val_as_str_or(null);
@@ -123,6 +125,7 @@ class Xoa_app_boot_mgr {
 				app.Sys_cfg().Lang_(System_lang()); chkpoint = "lang";
 				app.Sys_cfg().Launch_url_(launch_url); chkpoint = "url";
 				app.Server().Rdr_port_(server_port_recv).Wtr_port_(server_port_send);
+				app.Webserver().Http_server_port_(http_server_port);
 				app.Init(); chkpoint = "init_gfs";
 			}
 			catch (Exception e) {usr_dlg.Warn_many("", "", "app init failed: ~{0} ~{1}", chkpoint, Err_.Message_gplx(e));}

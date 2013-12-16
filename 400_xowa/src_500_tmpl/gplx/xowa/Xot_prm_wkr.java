@@ -24,7 +24,7 @@ class Xot_prm_wkr implements Xop_arg_wkr {
 		if (loop_bgn == loop_end) {// no tkns; output literal {{{}}}	// 2012.03.27:commented out due to {{{{{{}}}}}}
 			root.Subs_del_after(bgn.Tkn_sub_idx());
 			ctx.Msg_log().Add_itm_none(Xot_prm_log.Lkp_is_nil, src, lxr_bgn_pos, lxr_cur_pos); 
-			ctx.Subs_add(tkn_mkr.Txt(bgn.Src_bgn(), lxr_cur_pos));
+			ctx.Subs_add(root, tkn_mkr.Txt(bgn.Src_bgn(), lxr_cur_pos));
 			return false;
 		}
 		Xot_prm_tkn prm_tkn = tkn_mkr.Tmpl_prm(bgn.Src_bgn(), lxr_cur_pos);
@@ -33,12 +33,12 @@ class Xot_prm_wkr implements Xop_arg_wkr {
 		root.Subs_add(prm_tkn);
 		return true;
 	}
-	public boolean Args_add(Xop_ctx ctx, Xop_tkn_itm tkn, Arg_nde_tkn arg, int arg_idx) {
+	public boolean Args_add(Xop_ctx ctx, byte[] src, Xop_tkn_itm tkn, Arg_nde_tkn arg, int arg_idx) {
 		Xot_prm_tkn prm = (Xot_prm_tkn)tkn;
 		switch (arg_idx) {
 			case 0:			prm.Find_tkn_(arg.Val_tkn()); break;
 			case 1:			prm.Dflt_tkn_(arg.Val_tkn()); break;
-			default:		ctx.Msg_log().Add_itm_none(Xot_prm_log.Prm_has_2_or_more, ctx.Src(), arg.Src_bgn(), arg.Src_end()); break;
+			default:		ctx.Msg_log().Add_itm_none(Xot_prm_log.Prm_has_2_or_more, src, arg.Src_bgn(), arg.Src_end()); break;
 		}
 		return true;
 	}

@@ -105,7 +105,7 @@ class Xobc_lnki_wkr_file extends Xob_itm_dump_base implements Xop_lnki_logger {
 		sort_dir = temp_dir.GenSubDir("sort");
 		make_url_gen = Io_url_gen_.dir_(temp_dir.GenSubDir("make"));
 	}	Io_url sort_dir; Gfo_fld_wtr lnki_wtr;
-	public void Wkr_exec(Xop_ctx ctx, Xop_lnki_tkn lnki) {
+	public void Wkr_exec(Xop_ctx ctx, byte[] src, Xop_lnki_tkn lnki) {
 		byte[] ttl = lnki.Ttl().Page_db();
 		ttl = encoder.Decode_lax(lnki.Ttl().Page_db());
 		Xofo_lnki.Write(lnki_wtr, ttl, lnki);

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public class Xop_amp_wkr implements Xop_ctx_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
-	public void Page_bgn(Xop_ctx ctx) {}
+	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {}
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {}
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn, int cur_pos) {
 		if (cur_pos == src_len) return ctx.LxrMake_txt_(cur_pos);	// NOTE: & is last char in page; strange and rare, but don't raise error
@@ -27,7 +27,7 @@ public class Xop_amp_wkr implements Xop_ctx_wkr {
 		if (o == null) return ctx.LxrMake_txt_(cur_pos);
 		Xop_amp_trie_itm itm = (Xop_amp_trie_itm)o;
 		if (itm.Tid() == Xop_amp_trie_itm.Tid_name) {
-			ctx.Subs_add(tkn_mkr.HtmlRef(bgn, cur_pos, itm));
+			ctx.Subs_add(root, tkn_mkr.HtmlRef(bgn, cur_pos, itm));
 			return cur_pos;
 		}
 		else {
@@ -35,7 +35,7 @@ public class Xop_amp_wkr implements Xop_ctx_wkr {
 			fail.Val_n_();
 			int rv = CalcNcr(ctx.Msg_log(), ncr_is_hex, src, src_len, bgn, cur_pos, ncr_val, fail);
 			if (fail.Val()) return ctx.LxrMake_txt_(cur_pos);
-			ctx.Subs_add(tkn_mkr.HtmlNcr(bgn, rv, ncr_val.Val()));
+			ctx.Subs_add(root, tkn_mkr.HtmlNcr(bgn, rv, ncr_val.Val()));
 			return rv;
 		}
 	}

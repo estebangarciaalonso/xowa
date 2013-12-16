@@ -82,14 +82,19 @@ public class Xoh_html_wtr {
 				break;
 		}
 	}
-	@gplx.Virtual public void Html_ncr(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_html_ncr_tkn tkn)	{bfr.Add(tkn.Html_ncr_bry());}
+	@gplx.Virtual public void Html_ncr(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_html_ncr_tkn tkn)	{
+		if (tkn.Html_ncr_val() < Byte_ascii.Max_7_bit)		// NOTE: must "literalize"; <nowiki> converts wiki chars to ncrs, which must be "literalized: EX: <nowiki>[[A]]</nowiki> -> &#92;&#92;A&#93;&#93; which must be converted back to [[A]]
+			bfr.Add(tkn.Html_ncr_bry());
+		else
+			bfr.Add_byte(Byte_ascii.Amp).Add_byte(Byte_ascii.Hash).Add_int_variable(tkn.Html_ncr_val()).Add_byte(Byte_ascii.Semic);	// NOTE: do not literalize, else browser may not display multi-char bytes properly; EX: &#160; gets added as &#160; not as {192,160}; DATE:2013-12-09
+	}
 	@gplx.Virtual public void Html_ref(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_html_ref_tkn tkn)	{tkn.HtmlRef_itm().Print_to_html(bfr);}
 	private static final byte[] Bry_hdr_bgn = ByteAry_.new_ascii_("<span class='mw-headline' id='"), Bry_hdr_end = ByteAry_.new_ascii_("</span>");
 	@gplx.Virtual public void Hr(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_hr_tkn tkn)				{bfr.Add(Tag_hr);}
 	@gplx.Virtual public void Hdr(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_hdr_tkn hdr, int depth) {
 //			page.Hdrs_id_bld(hdr, src);
 		if (hdr.Hdr_html_first() && hctx.Toc_show() && page.TocPos_firstHdr()) {
-			app.Toc_mgr().Html(ctx.Page(), src, bfr);
+			app.Toc_mgr().Html(wiki.Ctx().Page(), src, bfr);
 		}
 		int hdr_len = hdr.Hdr_len();
 		if (hdr_len > 0) {	// NOTE: need to check hdr_len b/c it could be dangling
@@ -184,7 +189,7 @@ public class Xoh_html_wtr {
 		}
 		boolean literal_link = lnki.Ttl().ForceLiteralLink();	// NOTE: if literal link, then override ns behavior; for File, do not show image; for Ctg, do not display at bottom of page
 		redlinks_mgr.Lnki_add(ctx, lnki);
-		switch (lnki.NmsId()) {
+		switch (lnki.Ns_id()) {
 			case Xow_ns_.Id_media:		lnki_wtr.Write_or_queue(page, opts, bfr, src, lnki, depth); return; // NOTE: literal ":" has no effect; EX.WP:Beethoven and [[:Media:De-Ludwig_van_Beethoven.ogg|listen]]
 			case Xow_ns_.Id_file:		if (!literal_link) {lnki_wtr.Write_or_queue(page, opts, bfr, src, lnki, depth); return;} break;
 			case Xow_ns_.Id_category:	if (!literal_link) {hctx.Lnki_ctg_add(lnki); return;} break;
@@ -756,7 +761,7 @@ public class Xoh_html_wtr {
 
 			bfr.Add(bgn);
 			int atrs_bgn = tkn.Atrs_bgn();
-			if (atrs_bgn != -1) Xnde_atrs(tkn.Tag_id(), opts, src, atrs_bgn, tkn.Atrs_end(), tkn.Atrs_ary(), bfr); //bfr.Add_byte(Byte_ascii.Space).Add_mid(src, atrs_bgn, tkn.Atrs_end());
+			if (atrs_bgn != -1) Xnde_atrs(tkn.Tblw_tid(), opts, src, atrs_bgn, tkn.Atrs_end(), tkn.Atrs_ary(), bfr); //bfr.Add_byte(Byte_ascii.Space).Add_mid(src, atrs_bgn, tkn.Atrs_end());
 			bfr.Add_byte(Tag__end);
 			++indent_level;
 		}

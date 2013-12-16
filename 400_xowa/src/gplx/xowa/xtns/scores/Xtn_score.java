@@ -42,7 +42,7 @@ public class Xtn_score implements Xop_xnde_xtn, Xop_xnde_atr_parser, Xoh_cmd_itm
 			default:					throw Err_.unhandled(xatr_key.Val());
 		}
 	}
-	public void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		Xop_xatr_itm.Xatr_parse(wiki.App(), this, atr_hash, wiki, src, xnde);
 		this.xnde = xnde;
 		code = ByteAry_.Mid(src, xnde.Tag_open_end(), xnde.Tag_close_bgn());

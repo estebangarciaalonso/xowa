@@ -17,10 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public interface Xop_tblw_tkn extends Xop_tkn_itm {
-	int Tag_id();
+	int Tblw_tid();
+	boolean Tblw_xml();
+	int Tblw_subs_len(); void Tblw_subs_len_add_();
 	int Atrs_bgn();
 	int Atrs_end();
 	void Atrs_rng_set(int bgn, int end);
-	Xop_xatr_itm[] Atrs_ary(); Xop_tblw_tkn Atrs_ary_(Xop_xatr_itm[] v);
-	boolean Tblw_xml();
+	Xop_xatr_itm[] Atrs_ary(); Xop_tblw_tkn Atrs_ary_as_tblw_(Xop_xatr_itm[] v);
 }

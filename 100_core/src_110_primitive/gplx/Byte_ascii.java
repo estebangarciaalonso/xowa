@@ -41,6 +41,7 @@ public class Byte_ascii {
 		, Ltr_x			= 120, Ltr_y			= 121, Ltr_z			= 122, Curly_bgn		= 123, Pipe				= 124
 		, Curly_end		= 125, Tilde			= 126
 		;
+	public static final byte Max_7_bit = (byte)127;
 	public static final byte[] Space_len2 = new byte[] {Space, Space}, Space_len4 = new byte[] {Space, Space, Space, Space};
 	public static boolean Is_ltr(byte b) {
 		return (	b >= Byte_ascii.Ltr_a && b <= Byte_ascii.Ltr_z

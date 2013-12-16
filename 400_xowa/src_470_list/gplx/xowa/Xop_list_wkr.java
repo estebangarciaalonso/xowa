@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public class Xop_list_wkr implements Xop_ctx_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
-	public void Page_bgn(Xop_ctx ctx) {Reset(0);}
+	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {Reset(0);}
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int srcLen) {}
 	private void Dd_colon_hide(Xop_root_tkn root) {	// : seen, but nl encountered; mark ":" as invisible (i.e.: consume for <dd>; don't let it show as ":"); DATE:2013-11-07
 		int subs_len = root.Subs_len();
@@ -35,7 +35,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 		// NOTE: list_tkns can not be explicitly closed, so auto-close will happen for all items
 		MakeTkn_end(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos, (Xop_list_tkn)tkn, Bool_.Y_byte);
 		Reset(listId + 1);
-		ctx.Para().Process_nl_sect_end(curPos);
+		ctx.Para().Process_nl_sect_end(ctx, curPos);
 	}
 	public int MakeTkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {// REF.MW: Parser|doBlockLevels
 		if (bgnPos == Xop_parser_.Doc_bgn_bos) bgnPos = 0;	// do not allow -1 pos
@@ -43,10 +43,10 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 
 		// pop hdr if exists; EX: \n== a ==\n*b; \n* needs to close hdr
 		int acsPos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_hdr);
-		if (acsPos != -1) ctx.Stack_pop_til(acsPos, true, bgnPos, curPos);
+		if (acsPos != -1) ctx.Stack_pop_til(root, src, acsPos, true, bgnPos, curPos);
 
 		// close apos
-		ctx.Apos().EndFrame(ctx, src, bgnPos, false);
+		ctx.Apos().EndFrame(ctx, root, src, bgnPos, false);
 		byte symByt = src[curPos - 1];  // -1 b/c symByt is byte before curByt; EX: \n*a; curPos is at a; want to get *
 		int prvSymLen = curSymLen;
 		curPos = SymAry_fill(src, curPos, srcLen, symByt);
@@ -59,14 +59,14 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 			return trim_line_end; 
 		}
 		PrvItm_compare();
-		ctx.Para().Process_nl_sect_bgn(bgnPos, curPos - 1, Xop_nl_tkn.Tid_list);	// -1 b/c curPos includes sym_byte; EX: \n*
+		ctx.Para().Process_nl_sect_bgn(ctx, root, src, bgnPos, curPos - 1, Xop_nl_tkn.Tid_list);	// -1 b/c curPos includes sym_byte; EX: \n*
 		ctx.Para().Process_xml_block(Xop_xnde_tag.Block_bgn, curPos - 1);
 		if	(prvSymMatch) {
 			PopTil(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos, Bool_.N_byte);
 			posBldr.MoveNext();
 			prvSymAry = Xop_list_wkr_.MakeSymAry(curSymAry, curSymLen);
 			Xop_list_tkn prvItm = tkn_mkr.List_bgn(bgnPos, curPos, curSymAry[curSymLen - 1], curSymLen).List_path_(posBldr.XtoIntAry()).List_uid_(listId);
-			ctx.Subs_add_and_stack(prvItm);
+			ctx.Subs_add_and_stack(root, prvItm);
 			ctx.Empty_ignored_y_();
 		}
 		else {
@@ -90,7 +90,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 				prvSymAry = Xop_list_wkr_.MakeSymAry(curSymAry, curSymLen);
 				symByt = src[curPos - 1];
 				Xop_list_tkn prvItm = tkn_mkr.List_bgn(bgnPos, curPos, symByt, curSymLen).List_path_(posBldr.XtoIntAry()).List_uid_(listId);
-				ctx.Subs_add_and_stack(prvItm);
+				ctx.Subs_add_and_stack(root, prvItm);
 				ctx.Empty_ignored_y_();
 			}
 			for (int i = commonSymLen; i < curSymLen; i++) {	// open new itms; EX: #\n##\n
@@ -98,7 +98,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 				symByt = curSymAry[i];
 				prvSymAry = Xop_list_wkr_.MakeSymAry(curSymAry, curSymLen);
 				Xop_list_tkn prvItm = tkn_mkr.List_bgn(bgnPos, curPos, symByt, i + ListAdp_.Base1).List_path_(posBldr.XtoIntAry()).List_uid_(listId);
-				ctx.Subs_add_and_stack(prvItm);
+				ctx.Subs_add_and_stack(root, prvItm);
 				ctx.Empty_ignored_y_();
 			}
 		}
@@ -112,9 +112,9 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 	public void MakeTkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos, Xop_list_tkn bgn, byte sub_last) {
 		boolean empty_ignored = ctx.Empty_ignored();
 		Xop_tkn_itm end_tkn = tkn_mkr.List_end(bgnPos, bgn.List_itmTyp()).List_path_(bgn.List_path()).List_uid_(listId).List_sub_last_(sub_last);
-		ctx.Subs_add(end_tkn);
-		if (empty_ignored) ctx.Empty_ignore(bgn.Tkn_sub_idx());
-		ctx.Para().Process_nl_sect_end(curPos);
+		ctx.Subs_add(root, end_tkn);
+		if (empty_ignored) ctx.Empty_ignore(root, bgn.Tkn_sub_idx());
+		ctx.Para().Process_nl_sect_end(ctx, curPos);
 	}
 	int Trim_empty_item(byte[] src, int src_len, int pos) {
 		while (pos < src_len) {
@@ -134,7 +134,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 	Xop_list_tkn PopTil(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos, byte subLast) {
 		int acs_pos = ctx.Stack_idx_typ_tblw(Xop_tkn_itm_.Tid_list);
 		if (acs_pos == -1) return null;
-		Xop_list_tkn rv = (Xop_list_tkn)ctx.Stack_pop_til(acs_pos, false, bgnPos, curPos);
+		Xop_list_tkn rv = (Xop_list_tkn)ctx.Stack_pop_til(root, src, acs_pos, false, bgnPos, curPos);
 		MakeTkn_end(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos, rv, subLast);
 		return rv;
 	}
@@ -233,7 +233,7 @@ class Xop_list_wkr_ {
 			default:					throw Err_.unhandled(b);
 		}
 	}
-	public static void Close_list_if_present(Xop_ctx ctx, int bgn_pos, int cur_pos) {
+	public static void Close_list_if_present(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int bgn_pos, int cur_pos) {
 		if (ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tmpl_invk) != Xop_ctx.Stack_not_found) return; // list is inside template; do not close;
 		while (true) {	// close all list tkns on stack; EX: *** n should close all 3 stars; used to only close 1
 			int acs_pos = -1, acs_len = ctx.Stack_len();
@@ -257,7 +257,7 @@ class Xop_list_wkr_ {
 			}
 //				int acs_idx = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_list);
 			if (acs_pos == Xop_ctx.Stack_not_found) break;	// no more list tokens found
-			ctx.Stack_pop_til(acs_pos, true, bgn_pos, cur_pos);
+			ctx.Stack_pop_til(root, src, acs_pos, true, bgn_pos, cur_pos);
 		}
 	}
 }

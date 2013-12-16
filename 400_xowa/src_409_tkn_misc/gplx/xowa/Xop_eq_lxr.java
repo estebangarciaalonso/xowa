@@ -22,13 +22,13 @@ class Xop_eq_lxr implements Xop_lxr {//20111222
 	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast coreTrie) {coreTrie.Add(Byte_ascii.Eq, this);}
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		if (tmpl_mode) {
-			ctx.Subs_add(tkn_mkr.Eq(bgn_pos, cur_pos, 1));
+			ctx.Subs_add(root, tkn_mkr.Eq(bgn_pos, cur_pos, 1));
 			return cur_pos;
 		}
 		// wiki_mode; chk if hdr exists
 		int stack_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_hdr);
 		if (stack_pos == Xop_ctx.Stack_not_found) {	// no hdr; make eq_tkn and return;
-			ctx.Subs_add(tkn_mkr.Eq(bgn_pos, cur_pos, 1));
+			ctx.Subs_add(root, tkn_mkr.Eq(bgn_pos, cur_pos, 1));
 			return cur_pos;
 		}
 		// hdr exists; see if "=" begins hdr_end, or is just text; EX: "== a =ab\n"; NOTE: "==a==\s\t\n" is also a valid hdr
@@ -58,8 +58,8 @@ class Xop_eq_lxr implements Xop_lxr {//20111222
 		// = is just text; create = tkn and any other ws tkns; NOTE: also create ws tkns if scanned; EX: "== a ===  bad"; create "===" and " "; position at "b"
 		int end_pos = cur_pos;
 		if (ws_bgn != -1) end_pos = ws_bgn;
-		ctx.Subs_add(tkn_mkr.Eq(bgn_pos, end_pos, eq_len));
-		if (ws_bgn != -1) ctx.Subs_add(tkn_mkr.Space(ctx.Root(), ws_bgn, cur_pos));
+		ctx.Subs_add(root, tkn_mkr.Eq(bgn_pos, end_pos, eq_len));
+		if (ws_bgn != -1) ctx.Subs_add(root, tkn_mkr.Space(root, ws_bgn, cur_pos));
 		return cur_pos;
 	}	private static final byte State_loop = 0, State_stop_eos = 1, State_stop_nl = 2, State_stop_non_hdr = 3;
 }

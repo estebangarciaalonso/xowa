@@ -33,7 +33,7 @@ public class Xtn_references_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 		}
 	}	static byte[] Bry_group = ByteAry_.new_ascii_("group");
 	private static Xop_ctx inner_ctx;
-	public void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn cur_root, byte[] src, Xop_xnde_tkn xnde) {
 		Xop_xatr_itm.Xatr_parse(wiki.App(), this, wiki.Lang().Xatrs_references(), wiki, src, xnde);
 		if (xnde.CloseMode() == Xop_xnde_tkn.CloseMode_pair) {
 			int itm_bgn = xnde.Tag_open_end(), itm_end = xnde.Tag_close_bgn();
@@ -51,7 +51,7 @@ public class Xtn_references_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 					Xop_xnde_tkn ref_xnde = (Xop_xnde_tkn)tkn;
 					if (ref_xnde.Tag().Id() == Xop_xnde_tag_.Tid_ref) {
 						Xtn_ref_nde ref_itm = new Xtn_ref_nde().Head_(true).Group_(group);
-						ref_itm.Xtn_compile(ctx, wiki, tkn_mkr, root.Root_src(), ref_xnde);
+						ref_itm.Xtn_compile(wiki, ctx, tkn_mkr, root, root.Root_src(), ref_xnde);
 					}
 				}
 			}

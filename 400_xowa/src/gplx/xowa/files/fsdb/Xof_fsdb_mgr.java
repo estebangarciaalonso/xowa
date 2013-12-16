@@ -50,42 +50,47 @@ class Xof_fsdb_mgr_utl {
 		for (int i = 0; i < itms_len; i++) {
 			if (win_wtr.Canceled()) return;
 			Xof_fsdb_itm itm = (Xof_fsdb_itm)itms_list.FetchAt(i);
-			switch (itm.Rslt_reg()) {
-				case Xof_wiki_orig_wkr_.Tid_missing_qry:
-				case Xof_wiki_orig_wkr_.Tid_missing_bin:	continue;	// already missing; do not try to find again
+			try {
+				Reg_search_itm(fsdb_mgr, file_dir, win_wtr, exec_tid, itms_list, itms_len, repo_mgr, itm );
+			} catch (Exception e) {win_wtr.Warn_many("", "", "file.search.error: page=~{0} img=~{1} err=~{2}", String_.new_utf8_(fsdb_mgr.Wiki().Ctx().Page().Page_ttl().Raw()), String_.new_utf8_(itm.Lnki_ttl()), Err_.Message_gplx_brief(e));}
+		}
+	}
+	private void Reg_search_itm(Xof_fsdb_mgr fsdb_mgr, Io_url file_dir, Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms_list, int itms_len, Xow_repo_mgr repo_mgr, Xof_fsdb_itm itm) {
+		switch (itm.Rslt_reg()) {
+			case Xof_wiki_orig_wkr_.Tid_missing_qry:
+			case Xof_wiki_orig_wkr_.Tid_missing_bin:	return;	// already missing; do not try to find again
+		}
+		if (itm.Lnki_ext().Id_is_audio_strict() && exec_tid != Xof_exec_tid.Tid_viewer_app) {
+			itm.Rslt_qry_(Xof_qry_wkr_.Tid_noop);
+			return;
+		}
+		if (fsdb_mgr.Qry_mgr().Find(exec_tid, itm)) {
+			Xof_repo_pair repo_pair = repo_mgr.Repos_get_by_wiki(itm.Orig_wiki());
+			if (repo_pair == null) {
+				fsdb_mgr.Reg_insert(itm, Xof_repo_itm.Repo_unknown, Xof_wiki_orig_wkr_.Tid_missing_qry);
+				return;
 			}
+			byte orig_wiki = repo_pair.Id();
 			if (itm.Lnki_ext().Id_is_audio_strict() && exec_tid != Xof_exec_tid.Tid_viewer_app) {
-				itm.Rslt_qry_(Xof_qry_wkr_.Tid_noop);
-				continue;
+				itm.Rslt_qry_(Xof_qry_wkr_.Tid_mock);
+				itm.Rslt_bin_(Xof_bin_wkr_.Tid_noop);
+				fsdb_mgr.Reg_insert(itm, orig_wiki, Xof_wiki_orig_wkr_.Tid_noop);
+				return;
 			}
-			if (fsdb_mgr.Qry_mgr().Find(exec_tid, itm)) {
-				Xof_repo_pair repo_pair = repo_mgr.Repos_get_by_wiki(itm.Orig_wiki());
-				if (repo_pair == null) {
-					fsdb_mgr.Reg_insert(itm, Xof_repo_itm.Repo_unknown, Xof_wiki_orig_wkr_.Tid_missing_qry);
-					continue;
-				}
-				byte orig_wiki = repo_pair.Id();
-				if (itm.Lnki_ext().Id_is_audio_strict() && exec_tid != Xof_exec_tid.Tid_viewer_app) {
-					itm.Rslt_qry_(Xof_qry_wkr_.Tid_mock);
-					itm.Rslt_bin_(Xof_bin_wkr_.Tid_noop);
-					fsdb_mgr.Reg_insert(itm, orig_wiki, Xof_wiki_orig_wkr_.Tid_noop);
-					continue;
-				}
-				if (fsdb_mgr.Bin_mgr().Find_to_url_as_bool(ListAdp_.Null, exec_tid, itm)) {
-					fsdb_mgr.Reg_insert(itm, orig_wiki, Xof_wiki_orig_wkr_.Tid_found_orig);
-					// TODO: this "breaks" tests b/c mock bin_wkr is fsdb; 
-					if (itm.Rslt_bin() != Xof_bin_wkr_.Tid_fsdb_wiki)	// if bin is from fsdb, don't save it; occurs when page has new file listed twice; 1st file inserts into fsdb; 2nd file should find in fsdb and not save again
-						Fsdb_save(fsdb_mgr, itm);
-					Gui_update(win_wtr, itm);
-				}
-				else {
-					itm.Rslt_bin_(Xof_bin_wkr_.Tid_not_found);
-					fsdb_mgr.Reg_insert(itm, orig_wiki, Xof_wiki_orig_wkr_.Tid_missing_bin);
-				}
+			if (fsdb_mgr.Bin_mgr().Find_to_url_as_bool(ListAdp_.Null, exec_tid, itm)) {
+				fsdb_mgr.Reg_insert(itm, orig_wiki, Xof_wiki_orig_wkr_.Tid_found_orig);
+				// TODO: this "breaks" tests b/c mock bin_wkr is fsdb; 
+				if (itm.Rslt_bin() != Xof_bin_wkr_.Tid_fsdb_wiki)	// if bin is from fsdb, don't save it; occurs when page has new file listed twice; 1st file inserts into fsdb; 2nd file should find in fsdb and not save again
+					Fsdb_save(fsdb_mgr, itm);
+				Gui_update(win_wtr, itm);
 			}
 			else {
-				fsdb_mgr.Reg_insert(itm, Xof_repo_itm.Repo_unknown, Xof_wiki_orig_wkr_.Tid_missing_qry);
+				itm.Rslt_bin_(Xof_bin_wkr_.Tid_not_found);
+				fsdb_mgr.Reg_insert(itm, orig_wiki, Xof_wiki_orig_wkr_.Tid_missing_bin);
 			}
+		}
+		else {
+			fsdb_mgr.Reg_insert(itm, Xof_repo_itm.Repo_unknown, Xof_wiki_orig_wkr_.Tid_missing_qry);
 		}
 	}
 	private Xof_img_size img_size = new Xof_img_size();

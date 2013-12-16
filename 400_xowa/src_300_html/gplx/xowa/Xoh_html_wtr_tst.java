@@ -383,6 +383,9 @@ public class Xoh_html_wtr_tst {
 		fxt.tst_Parse_page_all_str("<math>x + y</math>", "<span id='xowa_math_txt_0'>x + y</span>");	// mathjax has no img
 		fxt.App().File_mgr().Math_mgr().Renderer_is_mathjax_(false);
 	}
+	@Test  public void Amp_ncr_should_not_be_rendered_as_bytes() {	// PURPOSE: &#160; should be rendered as &#160; not as literal bytes {192,160}; DATE:2013-12-09
+		fxt.tst_Parse_page_wiki_str("a&#160;b", "a&#160;b");
+	}
 
 	//		@Test  public void Fix_PositionAbsolute_stripped() {
 //			fxt.tst_Parse_page_wiki_str("<span style=\"position:absolute;\"></span>", "<span style=\";\"></span>");

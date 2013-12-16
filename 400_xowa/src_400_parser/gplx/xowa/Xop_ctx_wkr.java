@@ -18,11 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 interface Xop_ctx_wkr {
 	void Ctor_ctx(Xop_ctx ctx);
-	void Page_bgn(Xop_ctx ctx);
+	void Page_bgn(Xop_ctx ctx, Xop_root_tkn root);
 	void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int srcLen);
 }
 interface Xop_arg_wkr {
-	boolean Args_add(Xop_ctx ctx, Xop_tkn_itm tkn, Arg_nde_tkn arg, int arg_idx);
+	boolean Args_add(Xop_ctx ctx, byte[] src, Xop_tkn_itm tkn, Arg_nde_tkn arg, int arg_idx);
 }
 class Xop_arg_wkr_ {
 	public static final int Typ_lnki = 0, Typ_tmpl = 1, Typ_prm = 2;

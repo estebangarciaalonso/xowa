@@ -24,8 +24,8 @@ public class Xoa_ttl_tst {
 		test_raw = "Test page";
 		this.Clear();
 	}
-	@Test  public void Ns()							{ttl_("Help:Test").NmsId_(Xow_ns_.Id_help).Page_txt_("Test").Run();}
-	@Test  public void Ns_false()					{ttl_("Helpx:Test").NmsId_(Xow_ns_.Id_main).Page_txt_("Helpx:Test").Run();}
+	@Test  public void Ns()							{ttl_("Help:Test").Ns_id_(Xow_ns_.Id_help).Page_txt_("Test").Run();}
+	@Test  public void Ns_false()					{ttl_("Helpx:Test").Ns_id_(Xow_ns_.Id_main).Page_txt_("Helpx:Test").Run();}
 	@Test  public void Ns_multiple()				{ttl_("Help:Talk:test").Page_txt_("Talk:test").Run();}
 	@Test  public void Full_txt()					{ttl_("Help:a & b").Full_txt_("Help:A & b").Run();}							// preserve
 	@Test  public void Full_url()					{ttl_("Help:a & b").Full_url_("Help:A_%26_b").Run();}						// escape
@@ -52,19 +52,20 @@ public class Xoa_ttl_tst {
 	@Test  public void Subj_txt_main()				{ttl_("Talk:test").Subj_txt_("Test").Run();}
 	@Test  public void ForceNormalLink_y()			{ttl_(":Help:test").ForceNormalLink_(1).Page_txt_("Test").Run();}
 	@Test  public void ForceNormalLink_n()			{ttl_( "Help:test").ForceNormalLink_(0).Page_txt_("Test").Run();}
+	@Test  public void ForceNormalLink_y_2()		{ttl_("::Help:test").ForceNormalLink_(1).Page_txt_("Test").Run();}	// PURPOSE: 2nd initial colon should be ignored; EX:mw:MediaWiki; [[::MediaWiki]]; DATE:2013-12-14
 	@Test  public void Ws()							{ttl_("  a  b  ").Page_url_("A_b").Page_txt_("A b").Run();}
 	@Test  public void Ws_ns()						{ttl_("  Help  :  a  b  ").Page_url_("A_b").Page_txt_("A b").Run();}
-	@Test  public void Wik_y()						{ttl_("fr:test").Wik_txt_("fr").NmsId_(Xow_ns_.Id_main).Page_txt_("test").Run();}
-	@Test  public void Wik_ctg_y()					{ttl_("fr:Category:test").Wik_txt_("fr").NmsId_(Xow_ns_.Id_main).Page_txt_("Category:test").Run();}
-	@Test  public void Wik_n()						{ttl_("frx:test").Wik_txt_("").NmsId_(Xow_ns_.Id_main).Page_txt_("Frx:test").Run();}
-	@Test  public void Wik_ctg_n()					{ttl_("frx:Category:test").Wik_txt_("").NmsId_(Xow_ns_.Id_main).Page_txt_("Frx:Category:test").Run();}
+	@Test  public void Wik_y()						{ttl_("fr:test").Wik_txt_("fr").Ns_id_(Xow_ns_.Id_main).Page_txt_("test").Run();}
+	@Test  public void Wik_ctg_y()					{ttl_("fr:Category:test").Wik_txt_("fr").Ns_id_(Xow_ns_.Id_main).Page_txt_("Category:test").Run();}
+	@Test  public void Wik_n()						{ttl_("frx:test").Wik_txt_("").Ns_id_(Xow_ns_.Id_main).Page_txt_("Frx:test").Run();}
+	@Test  public void Wik_ctg_n()					{ttl_("frx:Category:test").Wik_txt_("").Ns_id_(Xow_ns_.Id_main).Page_txt_("Frx:Category:test").Run();}
 	@Test  public void Anch_y()						{ttl_("a#b").Full_txt_("A").Page_txt_("A").Anch_txt_("b").Run();}
 	@Test  public void Anch_only()					{ttl_("#a").Full_txt_("").Page_txt_("").Anch_txt_("a").Run();}
-	@Test  public void All_page()					{ttl_("test").Wik_txt_("").NmsId_(Xow_ns_.Id_main).Page_txt_("Test").Leaf_txt_("Test").Anch_txt_("").Run();}
-	@Test  public void All_wik()					{ttl_("fr:test").Wik_txt_("fr").NmsId_(Xow_ns_.Id_main).Page_txt_("test").Leaf_txt_("test").Anch_txt_("").Run();}
-	@Test  public void All_ns()						{ttl_("Help:test").Wik_txt_("").NmsId_(Xow_ns_.Id_help).Page_txt_("Test").Leaf_txt_("Test").Anch_txt_("").Run();}
-	@Test  public void All_wik_ns()					{ttl_("fr:Help:test").Wik_txt_("fr").NmsId_(Xow_ns_.Id_main).Page_txt_("Help:test").Leaf_txt_("Help:test").Anch_txt_("").Run();}
-	@Test  public void All_wik_ns_leaf_anch()		{ttl_("fr:Help:a/b/c#d").Wik_txt_("fr").NmsId_(Xow_ns_.Id_main).Page_txt_("Help:a/b/c").Leaf_txt_("c").Anch_txt_("d").Full_txt_("Help:a/b/c").Run();}
+	@Test  public void All_page()					{ttl_("test").Wik_txt_("").Ns_id_(Xow_ns_.Id_main).Page_txt_("Test").Leaf_txt_("Test").Anch_txt_("").Run();}
+	@Test  public void All_wik()					{ttl_("fr:test").Wik_txt_("fr").Ns_id_(Xow_ns_.Id_main).Page_txt_("test").Leaf_txt_("test").Anch_txt_("").Run();}
+	@Test  public void All_ns()						{ttl_("Help:test").Wik_txt_("").Ns_id_(Xow_ns_.Id_help).Page_txt_("Test").Leaf_txt_("Test").Anch_txt_("").Run();}
+	@Test  public void All_wik_ns()					{ttl_("fr:Help:test").Wik_txt_("fr").Ns_id_(Xow_ns_.Id_main).Page_txt_("Help:test").Leaf_txt_("Help:test").Anch_txt_("").Run();}
+	@Test  public void All_wik_ns_leaf_anch()		{ttl_("fr:Help:a/b/c#d").Wik_txt_("fr").Ns_id_(Xow_ns_.Id_main).Page_txt_("Help:a/b/c").Leaf_txt_("c").Anch_txt_("d").Full_txt_("Help:a/b/c").Run();}
 	@Test  public void Full_examples() {
 		ttl_("fr:Category:a").Wik_txt_("fr").Full_txt_("Category:a").Page_txt_("Category:a").Run(); // NOTE: Page is "Category:a" b/c ns are unknowable in foreign wiki
 	}
@@ -81,7 +82,7 @@ public class Xoa_ttl_tst {
 		ttl_(String_.Repeat("A", 512)).Page_txt_(String_.Repeat("A", 512)).Run();
 //			ttl_("File:" + String_.Repeat("A", 255)).Page_txt_(String_.Repeat("A", 255)).Run();	// DELETE: removing multi-byte check; DATE:2013-02-02
 //			ttl_(String_.Repeat("A", 256)).Err_(Xop_ttl_log.Len_max).Run();
-//			ttl_("Special:" + String_.Repeat("A", 255)).NmsId_(Xow_ns_.Id_special).Page_txt_(String_.Repeat("A", 255)).Run();
+//			ttl_("Special:" + String_.Repeat("A", 255)).Ns_id_(Xow_ns_.Id_special).Page_txt_(String_.Repeat("A", 255)).Run();
 //			ttl_("Special:" + String_.Repeat("A", 512 + 8)).Err_(Xop_ttl_log.Len_max).Run();	// 8="Special:".length
 	}
 	@Test  public void Exc_colon_is_last_ns() {ttl_("Help:").Err_(Xop_ttl_log.Ttl_is_ns_only).Run();}
@@ -94,7 +95,7 @@ public class Xoa_ttl_tst {
 		ttl_("fr::Help:Test").Wik_txt_("fr").Page_txt_(":Help:Test").Run();
 		ttl_("fr::Test").Wik_txt_("fr").Page_txt_(":Test").Run();
 		ttl_(":fr:Test").Wik_txt_("fr").Page_txt_("Test").ForceNormalLink_(1).Run();
-		ttl_("::fr:Test").Wik_txt_("").Page_txt_(":fr:Test").ForceNormalLink_(1).Run();
+		ttl_(":::fr:Test").Wik_txt_("").Page_txt_(":fr:Test").ForceNormalLink_(1).Run();
 	}
 	@Test  public void Comment()				{ttl_("Ab<!--b-->").Page_txt_("Ab").Run();}
 	@Test  public void Comment_eos()			{ttl_("Ab<!--b--").Page_txt_(null).Run();}
@@ -108,8 +109,8 @@ public class Xoa_ttl_tst {
 	@Test  public void HtmlEnt_endsInAmp()		{ttl_("Bisc &").Page_txt_("Bisc &").Run();}
 	@Test  public void HtmlEnt_ltr_a()			{ttl_("A&#98;").Page_txt_("Ab").Run();}
 	@Test  public void HtmlEnt_nbsp()			{ttl_("A&nbsp;b").Page_txt_("A b").Run();}	// NOTE: &nbsp must convert to space; EX:w:United States [[Image:Dust Bowl&nbsp;- Dallas, South Dakota 1936.jpg|220px|alt=]]
-	@Test  public void Special()				{ttl_("Special:Random").NmsId_(Xow_ns_.Id_special).Page_txt_("Random").Run();}
-	@Test  public void Special_xowa()			{ttl_("Special:xowa/Search/Ttl").NmsId_(Xow_ns_.Id_special).Page_txt_("Xowa/Search/Ttl").Run();}
+	@Test  public void Special()				{ttl_("Special:Random").Ns_id_(Xow_ns_.Id_special).Page_txt_("Random").Run();}
+	@Test  public void Special_xowa()			{ttl_("Special:xowa/Search/Ttl").Ns_id_(Xow_ns_.Id_special).Page_txt_("Xowa/Search/Ttl").Run();}
 	@Test  public void Bidi() {
 		ttl_("A" + String_.new_utf8_(ByteAry_.ints_(226, 128, 142)) + "B").Page_txt_("AB").Run();
 		ttl_("A" + String_.new_utf8_(ByteAry_.ints_(226, 128,  97)) + "B").Page_txt_("A" + String_.new_utf8_(ByteAry_.ints_(226, 128,  97)) + "B").Run();
@@ -138,35 +139,38 @@ public class Xoa_ttl_tst {
 	@Test  public void Anchor_arg_in_non_main_ns() {
 		ttl_("Help:A#B").Full_txt_("Help:A").Anch_txt_("B").Run();
 	}
+//		@Test  public void Multi_byte_char2() {
+//			ttl_("&#x2c65;").Full_txt_("Help:A").Anch_txt_("B").Run();
+//		}
 //		@Test  public void First_char_is_multi_bypte() {	// PURPOSE: if multi-byte, uppercasing is complicated; EX: µ -> Μ; DATE:2013-11-27
 //			if (!String_.Supports_multibyte_case_conversion) return;
 //			ttl_("µ").Full_txt_("Μ").Run();					// NOTE: this is not an ASCII "Μ"
 //			ttl_("µab").Full_txt_("Μab").Run();				// check that rest of title works fine
 //			ttl_("Help:µab").Full_txt_("Μab").Run();	// check ns
 //		}
-	Xoa_ttl_tst ttl_(String raw) {test_raw = raw; return this;} private String test_raw = "";
-	Xoa_ttl_tst NmsId_(int v) {expd_nsId = v; return this;} private int expd_nsId = Int_.MinValue;
-	Xoa_ttl_tst Page_txt_(String v) {expd_page_txt = v; return this;} private String expd_page_txt;
-	Xoa_ttl_tst Page_url_(String v) {expd_page_url = v; return this;} private String expd_page_url;
-	Xoa_ttl_tst Full_txt_(String v) {expd_full_txt = v; return this;} private String expd_full_txt;
-	Xoa_ttl_tst Full_url_(String v) {expd_full_url = v; return this;} private String expd_full_url;
-	Xoa_ttl_tst Leaf_txt_(String v) {expd_leaf_txt = v; return this;} private String expd_leaf_txt;
-	Xoa_ttl_tst Leaf_url_(String v) {expd_leaf_url = v; return this;} private String expd_leaf_url;
-	Xoa_ttl_tst Base_txt_(String v) {expd_base_txt = v; return this;} private String expd_base_txt;
-	Xoa_ttl_tst Base_url_(String v) {expd_base_url = v; return this;} private String expd_base_url;
-	Xoa_ttl_tst Root_txt_(String v) {expd_root_txt = v; return this;} private String expd_root_txt;
-	Xoa_ttl_tst Rest_txt_(String v) {expd_rest_txt = v; return this;} private String expd_rest_txt;
-	Xoa_ttl_tst Talk_txt_(String v) {expd_talk_txt = v; return this;} private String expd_talk_txt;
-	Xoa_ttl_tst Talk_url_(String v) {expd_talk_url = v; return this;} private String expd_talk_url;
-	Xoa_ttl_tst Subj_txt_(String v) {expd_subj_txt = v; return this;} private String expd_subj_txt;
-	Xoa_ttl_tst Subj_url_(String v) {expd_subj_url = v; return this;} private String expd_subj_url;
-	Xoa_ttl_tst Qarg_txt_(String v) {expd_qarg_txt = v; return this;} private String expd_qarg_txt;
-	Xoa_ttl_tst ForceNormalLink_(int v) {expd_forceNormalLink = v; return this;} private int expd_forceNormalLink = -1;
-	Xoa_ttl_tst Wik_txt_(String v) {expd_wik_txt = v; return this;} private String expd_wik_txt;
-	Xoa_ttl_tst Anch_txt_(String v) {expd_anch_txt = v; return this;} private String expd_anch_txt;
-	Xoa_ttl_tst Base_txt_wo_qarg(String v) {expd_base_txt_wo_qarg = v; return this;} private String expd_base_txt_wo_qarg;
-	Xoa_ttl_tst Leaf_txt_wo_qarg(String v) {expd_leaf_txt_wo_qarg = v; return this;} private String expd_leaf_txt_wo_qarg;
-	Xoa_ttl_tst Err_(Gfo_msg_itm v) {expd_err = v; return this;} Gfo_msg_itm expd_err;
+	private Xoa_ttl_tst ttl_(String raw) {test_raw = raw; return this;} private String test_raw = "";
+	private Xoa_ttl_tst Ns_id_(int v) {expd_nsId = v; return this;} private int expd_nsId = Int_.MinValue;
+	private Xoa_ttl_tst Page_txt_(String v) {expd_page_txt = v; return this;} private String expd_page_txt;
+	private Xoa_ttl_tst Page_url_(String v) {expd_page_url = v; return this;} private String expd_page_url;
+	private Xoa_ttl_tst Full_txt_(String v) {expd_full_txt = v; return this;} private String expd_full_txt;
+	private Xoa_ttl_tst Full_url_(String v) {expd_full_url = v; return this;} private String expd_full_url;
+	private Xoa_ttl_tst Leaf_txt_(String v) {expd_leaf_txt = v; return this;} private String expd_leaf_txt;
+	private Xoa_ttl_tst Leaf_url_(String v) {expd_leaf_url = v; return this;} private String expd_leaf_url;
+	private Xoa_ttl_tst Base_txt_(String v) {expd_base_txt = v; return this;} private String expd_base_txt;
+	private Xoa_ttl_tst Base_url_(String v) {expd_base_url = v; return this;} private String expd_base_url;
+	private Xoa_ttl_tst Root_txt_(String v) {expd_root_txt = v; return this;} private String expd_root_txt;
+	private Xoa_ttl_tst Rest_txt_(String v) {expd_rest_txt = v; return this;} private String expd_rest_txt;
+	private Xoa_ttl_tst Talk_txt_(String v) {expd_talk_txt = v; return this;} private String expd_talk_txt;
+	private Xoa_ttl_tst Talk_url_(String v) {expd_talk_url = v; return this;} private String expd_talk_url;
+	private Xoa_ttl_tst Subj_txt_(String v) {expd_subj_txt = v; return this;} private String expd_subj_txt;
+	private Xoa_ttl_tst Subj_url_(String v) {expd_subj_url = v; return this;} private String expd_subj_url;
+	private Xoa_ttl_tst Qarg_txt_(String v) {expd_qarg_txt = v; return this;} private String expd_qarg_txt;
+	private Xoa_ttl_tst ForceNormalLink_(int v) {expd_forceNormalLink = v; return this;} private int expd_forceNormalLink = -1;
+	private Xoa_ttl_tst Wik_txt_(String v) {expd_wik_txt = v; return this;} private String expd_wik_txt;
+	private Xoa_ttl_tst Anch_txt_(String v) {expd_anch_txt = v; return this;} private String expd_anch_txt;
+	private Xoa_ttl_tst Base_txt_wo_qarg(String v) {expd_base_txt_wo_qarg = v; return this;} private String expd_base_txt_wo_qarg;
+	private Xoa_ttl_tst Leaf_txt_wo_qarg(String v) {expd_leaf_txt_wo_qarg = v; return this;} private String expd_leaf_txt_wo_qarg;
+	private Xoa_ttl_tst Err_(Gfo_msg_itm v) {expd_err = v; return this;} Gfo_msg_itm expd_err;
 	private void Run() {
 		Xoa_ttl actl = Xoa_ttl.parse_(fxt.Wiki(), ByteAry_.new_utf8_(test_raw));
 		if (expd_err == null) {

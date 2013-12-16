@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 import gplx.xowa.parsers.lnkis.*;
 public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
-	public void Page_bgn(Xop_ctx ctx) {}
+	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {}
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int srcLen) {}
 	public Xop_lnki_logger File_wkr() {return file_wkr;} public Xop_lnki_wkr File_wkr_(Xop_lnki_logger v) {file_wkr = v; return this;} private Xop_lnki_logger file_wkr;
 	public Xop_lnki_logger Ctg_wkr() {return ctg_wkr;} public Xop_lnki_wkr Ctg_wkr_(Xop_lnki_logger v) {ctg_wkr = v; return this;} private Xop_lnki_logger ctg_wkr;
@@ -32,12 +32,12 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {
 		if (ctx.Cur_tkn_tid() == Xop_tkn_itm_.Tid_lnke) {	// if lnke then take 1st ] in "]]" and use it close lnke
 			int lnke_end_pos = bgnPos + 1;
-			ctx.Lnke().MakeTkn_end(ctx, tkn_mkr, src, srcLen, bgnPos, lnke_end_pos);
+			ctx.Lnke().MakeTkn_end(ctx, tkn_mkr, root, src, srcLen, bgnPos, lnke_end_pos);
 			return lnke_end_pos;
 		}
 		int stackPos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnki);
 		if (stackPos == -1) {return ctx.LxrMake_txt_(curPos);}
-		Xop_lnki_tkn lnki = (Xop_lnki_tkn)ctx.Stack_pop_til(stackPos, false, bgnPos, curPos);
+		Xop_lnki_tkn lnki = (Xop_lnki_tkn)ctx.Stack_pop_til(root, src, stackPos, false, bgnPos, curPos);
 		lnki.Src_end_(curPos);	// NOTE: must happen after ChkForTail
 		int loop_bgn = lnki.Tkn_sub_idx() + 1, loop_end = root.Subs_len();
 		if (loop_bgn == loop_end) {	// NOTE: fixes empty template; EX: [[]]
@@ -54,11 +54,11 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		lnki.Src_end_(curPos);	// NOTE: must happen after ChkForTail; redundant with above, but above needed b/c of returns
 		root.Subs_del_after(lnki.Tkn_sub_idx() + 1);	// all tkns should now be converted to args in owner; delete everything in root
 		boolean lnki_is_file = false;
-		switch (lnki.NmsId()) {
+		switch (lnki.Ns_id()) {
 			case Xow_ns_.Id_file:
 				switch (lnki.Lnki_type()) {
 					case Xop_lnki_type.Id_thumb: case Xop_lnki_type.Id_frame:
-						ctx.Para().Process_lnki_file_div(lnki.Src_bgn(), curPos);
+						ctx.Para().Process_lnki_file_div(ctx, root, lnki.Src_bgn(), curPos);
 						break;
 				}
 				lnki_is_file = true;
@@ -68,19 +68,18 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 				break;
 			case Xow_ns_.Id_category:
 				if (!lnki.Ttl().ForceLiteralLink())					// NOTE: do not remove ws if literal; EX:[[Category:A]]\n[[Category:B]] should stay the same; DATE:2013-07-10
-					ctx.Para().Process_lnki_category(ctx, curPos);	// removes excessive ws between categories; EX: [[Category:A]]\n\s[[Category:B]] -> [[Category:A]][[Category:B]] (note that both categories will not be rendered directly in html, but go to the bottom of the page)
-				if (ctg_wkr != null) ctg_wkr.Wkr_exec(ctx, lnki);
+					ctx.Para().Process_lnki_category(ctx, root, curPos);	// removes excessive ws between categories; EX: [[Category:A]]\n\s[[Category:B]] -> [[Category:A]][[Category:B]] (note that both categories will not be rendered directly in html, but go to the bottom of the page)
+				if (ctg_wkr != null) ctg_wkr.Wkr_exec(ctx, src, lnki);
 				break;
 		}
 		if (lnki_is_file) {
 			ctx.Tab().Lnki_file_mgr().Add(lnki);
-			if (file_wkr != null) file_wkr.Wkr_exec(ctx, lnki);
+			if (file_wkr != null) file_wkr.Wkr_exec(ctx, src, lnki);
 		}
 		return curPos;
 	}
-	public boolean Args_add(Xop_ctx ctx, Xop_tkn_itm tkn, Arg_nde_tkn arg, int arg_idx) {
+	public boolean Args_add(Xop_ctx ctx, byte[] src, Xop_tkn_itm tkn, Arg_nde_tkn arg, int arg_idx) {
 		Xop_lnki_tkn lnki = (Xop_lnki_tkn)tkn;
-		byte[] src = ctx.Src();
 		try {
 			if (arg_idx == 0) {							// 1st arg; assume trg; process ns;
 				if (arg.Val_tkn().Dat_end() - arg.Val_tkn().Dat_bgn() == 0) {	// blank trg; EX: [[]],[[ ]]
@@ -101,7 +100,7 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 					//Xoa_ttl ttl = Xoa_ttl.new_(ctx.Wiki(), ctx.Msg_log(), name_bry, src, name_tkn.Dat_bgn(), name_tkn.Dat_end());
 					if (ttl == null) {lnki.TypeId_toText(); return false;}
 					lnki.Ttl_(ttl);
-					lnki.NmsId_(lnki.Ttl().Ns().Id());
+					lnki.Ns_id_(lnki.Ttl().Ns().Id());
 					lnki.Trg_tkn_(arg);
 				}
 			}
@@ -231,7 +230,7 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 			if (lnki_trail_bry == null) break;	// no longer a lnki_trail char; stop
 			curPos += lnki_trail_bry.length;	// lnki_trail char; add
 		}
-		if (bgnPos != curPos && lnki.NmsId() == Xow_ns_.Id_main) {	// only mark trail if Main ns (skip trail for Image)
+		if (bgnPos != curPos && lnki.Ns_id() == Xow_ns_.Id_main) {	// only mark trail if Main ns (skip trail for Image)
 			lnki.Tail_bgn_(bgnPos).Tail_end_(curPos);
 			return curPos;
 		}

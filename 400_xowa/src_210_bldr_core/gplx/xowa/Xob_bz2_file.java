@@ -119,24 +119,28 @@ public class Xob_bz2_file {
 				break;
 		}
 	}
-	public static final byte Tid_null = 0, Tid_pages_articles = 1, Tid_pages_meta_current = 2, Tid_categorylinks = 3, Tid_page_props = 4;
-	public static final String Key_null = "", Key_pages_articles = "pages-articles", Key_pages_meta_current = "pages-meta-current", Key_categorylinks = "categorylinks", Key_page_props = "page_props";
-	static final byte 
-		Domain_wikipedia = Xow_wiki_type_.Tid_wikipedia
-		, Domain_wiktionary = Xow_wiki_type_.Tid_wiktionary
-		, Domain_wikisource = Xow_wiki_type_.Tid_wikisource
-		, Domain_wikibooks = Xow_wiki_type_.Tid_wikibooks
-		, Domain_wikiversity = Xow_wiki_type_.Tid_wikiversity
-		, Domain_wikiquote = Xow_wiki_type_.Tid_wikiquote
-		, Domain_wikinews = Xow_wiki_type_.Tid_wikinews
-		, Domain_wikivoyage = Xow_wiki_type_.Tid_wikivoyage
-		, Domain_commons = Xow_wiki_type_.Tid_commons
-		, Domain_species = Xow_wiki_type_.Tid_species
-		, Domain_meta = Xow_wiki_type_.Tid_meta
-		, Domain_incubator = Xow_wiki_type_.Tid_incubator
-		, Domain_wikidata = Xow_wiki_type_.Tid_wikidata
-		, Domain_mediawiki = Xow_wiki_type_.Tid_mediawiki
-		, Domain_wikimediafoundation = Xow_wiki_type_.Tid_wikimediafoundation;
+	public static final byte Tid_null = 0, Tid_pages_articles = 1, Tid_pages_meta_current = 2, Tid_categorylinks = 3, Tid_page_props = 4, Tid_image = 5;
+	public static final String Key_null = ""
+	, Key_pages_articles = "pages-articles", Key_pages_meta_current = "pages-meta-current"
+	, Key_categorylinks = "categorylinks", Key_page_props = "page_props"
+	, Key_image = "image"
+	;
+	private static final byte 
+	  Domain_wikipedia = Xow_wiki_type_.Tid_wikipedia
+	, Domain_wiktionary = Xow_wiki_type_.Tid_wiktionary
+	, Domain_wikisource = Xow_wiki_type_.Tid_wikisource
+	, Domain_wikibooks = Xow_wiki_type_.Tid_wikibooks
+	, Domain_wikiversity = Xow_wiki_type_.Tid_wikiversity
+	, Domain_wikiquote = Xow_wiki_type_.Tid_wikiquote
+	, Domain_wikinews = Xow_wiki_type_.Tid_wikinews
+	, Domain_wikivoyage = Xow_wiki_type_.Tid_wikivoyage
+	, Domain_commons = Xow_wiki_type_.Tid_commons
+	, Domain_species = Xow_wiki_type_.Tid_species
+	, Domain_meta = Xow_wiki_type_.Tid_meta
+	, Domain_incubator = Xow_wiki_type_.Tid_incubator
+	, Domain_wikidata = Xow_wiki_type_.Tid_wikidata
+	, Domain_mediawiki = Xow_wiki_type_.Tid_mediawiki
+	, Domain_wikimediafoundation = Xow_wiki_type_.Tid_wikimediafoundation;
 	private static void Init_aliases() {
 		alias_bry_trie = new ByteTrieMgr_bwd_slim(false);
 		alias_val_hash = HashAdp_.new_();
@@ -169,6 +173,7 @@ public class Xob_bz2_file {
 		Init_tid(Key_pages_meta_current	, Tid_pages_meta_current);
 		Init_tid(Key_categorylinks		, Tid_categorylinks);
 		Init_tid(Key_page_props			, Tid_page_props);
+		Init_tid(Key_image				, Tid_image);
 	}
 	public static String Tid_to_str(byte v) {
 		switch (v) {
@@ -176,6 +181,7 @@ public class Xob_bz2_file {
 			case Tid_pages_meta_current		: return Key_pages_meta_current;
 			case Tid_categorylinks			: return Key_categorylinks;
 			case Tid_page_props				: return Key_page_props;
+			case Tid_image					: return Key_image;
 			default							: throw Err_.unhandled(v);
 		}
 	}

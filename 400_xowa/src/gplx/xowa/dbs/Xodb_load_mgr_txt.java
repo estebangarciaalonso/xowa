@@ -288,7 +288,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 		Load_ctg_v1_parse(ctgs, wiki.App().Usr_dlg(), tmp_xdat_itm.Itm_bry());
 		ctgs.SortBy(Xodb_page_sorter.IdAsc);
 		this.Load_by_ids(Cancelable_.Never, ctgs, 0, ctgs.Count());
-		ctgs.SortBy(Xodb_page_sorter.NmsId_TtlAsc);
+		ctgs.SortBy(Xodb_page_sorter.Ns_id_TtlAsc);
 
 		int ctgs_len = ctgs.Count(); if (ctgs_len == 0) return false;
 		if (count_only != null) {	// Ctg_count specificed

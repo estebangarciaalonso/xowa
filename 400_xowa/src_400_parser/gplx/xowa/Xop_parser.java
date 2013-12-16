@@ -95,13 +95,13 @@ public class Xop_parser {
 			b = src[pos];
 		}
 		if (txt_bgn != pos) txt_tkn = Txt_add(ctx, tkn_mkr, root, txt_tkn, txt_bgn, pos);
-		ctx.Page_end(src, len);
+		ctx.Page_end(root, src, len);
 	}
 	private static Xop_tkn_itm Txt_add(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, Xop_tkn_itm tkn, int txt_bgn, int pos) {
 		if (pos == Xop_parser_.Doc_bgn_bos) return null;	// don't make txt_tkn for Bos_pos
 		if (tkn == null) {									// no existing txt_tkn; create new one
 			tkn = tkn_mkr.Txt(txt_bgn, pos);
-			ctx.Subs_add(tkn);
+			ctx.Subs_add(root, tkn);
 		}
 		else												// existing txt_tkn; happens for false matches; EX: abc[[\nef[[a]]; see NOTE_1
 			tkn.Src_end_(pos);

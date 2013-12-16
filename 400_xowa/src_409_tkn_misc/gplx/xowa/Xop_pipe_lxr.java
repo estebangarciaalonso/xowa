@@ -30,10 +30,10 @@ class Xop_pipe_lxr implements Xop_lxr {
 				switch (ctx.Parse_tid()) {
 					case Xop_parser_.Parse_tid_tmpl:
 					case Xop_parser_.Parse_tid_page_tmpl:
-						ctx.Subs_add(tkn_mkr.Txt(bgnPos, curPos));
+						ctx.Subs_add(root, tkn_mkr.Txt(bgnPos, curPos));
 						break;
 					case Xop_parser_.Parse_tid_page_wiki:
-						ctx.Subs_add(tkn_mkr.Pipe(bgnPos, curPos));
+						ctx.Subs_add(root, tkn_mkr.Pipe(bgnPos, curPos));
 						break;
 					default: throw Err_.unhandled(ctx.Parse_tid());
 				}
@@ -42,7 +42,7 @@ class Xop_pipe_lxr implements Xop_lxr {
 			case Xop_tkn_itm_.Tid_tblw_tr:
 				rv = Xop_tblw_lxr_ws.Make(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos, Xop_tblw_wkr.Tblw_type_td);
 				if (rv == Xop_tblw_lxr_ws.Tblw_ws_cell_pipe) {
-					ctx.Subs_add(tkn_mkr.Pipe(bgnPos, curPos));
+					ctx.Subs_add(root, tkn_mkr.Pipe(bgnPos, curPos));
 					return curPos;
 				}
 				else
@@ -54,7 +54,7 @@ class Xop_pipe_lxr implements Xop_lxr {
 				if (rv != Xop_tblw_lxr_ws.Tblw_ws_cell_pipe) return rv;
 
 				if (ctx.Tblw().Cell_pipe_seen()) {
-					ctx.Subs_add(tkn_mkr.Pipe(bgnPos, curPos));
+					ctx.Subs_add(root, tkn_mkr.Pipe(bgnPos, curPos));
 					return curPos;
 				}
 				else {
@@ -63,7 +63,7 @@ class Xop_pipe_lxr implements Xop_lxr {
 					return curPos;
 				}
 			default:
-				ctx.Subs_add(tkn_mkr.Pipe(bgnPos, curPos));
+				ctx.Subs_add(root, tkn_mkr.Pipe(bgnPos, curPos));
 				return curPos;
 		}
 	}

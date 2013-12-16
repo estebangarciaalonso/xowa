@@ -58,9 +58,13 @@ class Scrib_interpreter {
 	public Process_server Server() {return server;} public void Server_(Process_server v) {server = v;} Process_server server;
 	public boolean Dbg_print() {return dbg_print;} public Scrib_interpreter Dbg_print_(boolean v) {dbg_print = v; return this;} private boolean dbg_print;
 	public KeyVal[] Dispatch(Object... ary) {
-		ByteAryBfr bfr = app.Utl_bry_bfr_mkr().Get_m001();
-		Dispatch_bld_send(bfr, ary);
-		bfr.Mkr_rls();
+		ByteAryBfr bfr = app.Utl_bry_bfr_mkr().Get_k004().Clear();
+		try {
+			Dispatch_bld_send(bfr, ary);
+		}
+		finally {
+			bfr.Mkr_rls();
+		}
 		boolean log_enabled = scrib_opts.Lua_log_enabled();
 		if (log_enabled) app.Usr_dlg().Log_direct("sent:" + bfr.XtoStr() + "\n");
 		byte[] rsp_bry = server.Server_comm(bfr.XtoAryAndClear(), ary);

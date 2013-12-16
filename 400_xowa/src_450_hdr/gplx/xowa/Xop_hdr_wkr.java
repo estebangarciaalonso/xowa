@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public class Xop_hdr_wkr implements Xop_ctx_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
-	public void Page_bgn(Xop_ctx ctx) {}
+	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {}
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {}
 	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_tkn_itm tkn) {
 		// bgn never closed; mark inert; EX: "==a"
@@ -31,9 +31,9 @@ public class Xop_hdr_wkr implements Xop_ctx_wkr {
 	}
 	public int Make_tkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		if (bgn_pos == Xop_parser_.Doc_bgn_bos) bgn_pos = 0;	// do not allow -1 pos
-		ctx.Apos().EndFrame(ctx, src, bgn_pos, false);
+		ctx.Apos().EndFrame(ctx, root, src, bgn_pos, false);
 		Close_open_itms(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos);
-		ctx.Para().Process_nl_sect_bgn(bgn_pos, cur_pos, Xop_nl_tkn.Tid_hdr);
+		ctx.Para().Process_nl_sect_bgn(ctx, root, src, bgn_pos, cur_pos, Xop_nl_tkn.Tid_hdr);
 		int new_pos = Xop_lxr_.Find_fwd_while(src, src_len, cur_pos, Xop_hdr_lxr.Hook);				// count all =
 		int hdr_len = new_pos - cur_pos + 1;														// +1 b/c Hook has 1 eq: "\n="
 		switch (hdr_len) {
@@ -41,13 +41,14 @@ public class Xop_hdr_wkr implements Xop_ctx_wkr {
 			case 2: case 3: case 4: case 5: case 6: break;													// <h2>-<h6>: normal
 			default: ctx.Msg_log().Add_itm_none(Xop_hdr_log.Len_7_or_more, src, bgn_pos, new_pos); break;	// <h7>+; limit to 6; flag; NOTE: only 14 pages in 2011-07-27
 		}
+
 		Xop_hdr_tkn tkn = tkn_mkr.Hdr(bgn_pos, new_pos, hdr_len);	// make tkn
-		ctx.StackTkn_add(tkn);
+		ctx.StackTkn_add(root, tkn);
 		return new_pos;
 	}
 	public int Make_tkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, int stackPos, int end_hdr_len, int end_ws_bgn) {// REF.MW: Parser|doHeadings
-		Xop_hdr_tkn hdr = (Xop_hdr_tkn)ctx.Stack_pop_til(stackPos, false, bgn_pos, cur_pos);
-		ctx.Apos().EndFrame(ctx, src, bgn_pos, false);	// end any apos; EX: ==''a==
+		Xop_hdr_tkn hdr = (Xop_hdr_tkn)ctx.Stack_pop_til(root, src, stackPos, false, bgn_pos, cur_pos);
+		ctx.Apos().EndFrame(ctx, root, src, bgn_pos, false);	// end any apos; EX: ==''a==
 		int hdr_len = hdr.Hdr_len(), bgn_manual = 0, end_manual = 0;
 		boolean dirty = false;
 		if		(end_hdr_len < hdr_len) {	// mismatch: end has more; adjust hdr
@@ -70,7 +71,7 @@ public class Xop_hdr_wkr implements Xop_ctx_wkr {
 		if (dirty)
 			hdr.Hdr_bgn_manual_(bgn_manual).Hdr_end_manual_(end_manual).Hdr_len_(hdr_len);			
 		cur_pos = Xop_lxr_.Find_fwd_while_ws_hdr_version(src, src_len, cur_pos); // NOTE: hdr gobbles up trailing ws; EX: "==a== \n\t \n \nb" gobbles up all 3 "\n"s; otherwise para_wkr will process <br/> 
-		ctx.Para().Process_hdr_end(cur_pos);
+		ctx.Para().Process_hdr_end(ctx, root, cur_pos);
 		hdr.Subs_move(root);
 		hdr.Src_end_(cur_pos);
 		if (ctx.Parse_tid() == Xop_parser_.Parse_tid_page_wiki)
@@ -89,6 +90,6 @@ public class Xop_hdr_wkr implements Xop_ctx_wkr {
 			if (stop) break;
 		}
 		if (stack_pos == -1) return;
-		ctx.Stack_pop_til(stack_pos, true, bgn_pos, cur_pos);
+		ctx.Stack_pop_til(root, src, stack_pos, true, bgn_pos, cur_pos);
 	}
 }

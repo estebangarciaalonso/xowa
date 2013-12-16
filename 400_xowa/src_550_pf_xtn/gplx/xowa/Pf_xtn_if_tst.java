@@ -41,27 +41,5 @@ public class Pf_xtn_if_tst {
 			)
 			, "{{test}}", "a");
 	}
-
-	@Test  public void Ifeq_y()				{fxt.tst_Parse_tmpl_str_test("{{#ifeq:1|1|a|b}}"				, "{{test}}"		, "a");}
-	@Test  public void Ifeq_n()				{fxt.tst_Parse_tmpl_str_test("{{#ifeq:1|2|a|b}}"				, "{{test}}"		, "b");}
-	@Test  public void Ifeq_prm_arg()		{fxt.tst_Parse_tmpl_str_test("{{#ifeq:{{{1}}}|1|a|b}}"			, "{{test|1}}"		, "a");}
-	@Test  public void Ifeq_prm_arg_n()		{fxt.tst_Parse_tmpl_str_test("{{#ifeq:{{{1}}}|1|a|b}}"			, "{{test|2}}"		, "b");}
-	@Test  public void Ifeq_prm_blank_y()	{fxt.tst_Parse_tmpl_str_test("{{#ifeq:||a|b}}"					, "{{test}}"		, "a");}
-	@Test  public void Ifeq_prm_blank_n()	{fxt.tst_Parse_tmpl_str_test("{{#ifeq:|1|a|b}}"					, "{{test}}"		, "b");}
-	@Test  public void Ifeq_numeric()		{fxt.tst_Parse_tmpl_str_test("{{#ifeq:003|3.0|y|n}}"			, "{{test}}"		, "y");}
-	@Test  public void Ifeq_numeric_neg()	{fxt.tst_Parse_tmpl_str_test("{{#ifeq:-1.0|-1|y|n}}"			, "{{test}}"		, "y");}
-	@Test  public void Ifeq_prm_arg0()		{fxt.tst_Parse_tmpl_str_test("{{#ifeq:1|{{{1}}}|a|b}}"			, "{{test|1}}"		, "a");}
-	@Test  public void Ifeq_expr_err()		{fxt.tst_Parse_tmpl_str_test("{{#ifeq:{{#expr:a}}|0|y|n}}"		, "{{test}}"		, "n");}
-	@Test  public void Ifeq_blank()			{fxt.tst_Parse_tmpl_str_test("{{#ifeq:0||y|n}}"					, "{{test}}"		, "n");}
-
-	@Test  public void Ifeq_exc_args_0()	{fxt.tst_Parse_tmpl_str_test("{{#ifeq:}}"						, "{{test}}"		, "");}
-	@Test  public void Ifeq_exc_args_1()	{fxt.tst_Parse_tmpl_str_test("{{#ifeq:1|1}}"					, "{{test}}"		, "");}
-	@Test  public void Ifeq_exc_args_2()	{fxt.tst_Parse_tmpl_str_test("{{#ifeq:1|1|a}}"					, "{{test}}"		, "a");}
-	@Test  public void Ifeq_exp()			{fxt.tst_Parse_tmpl_str_test("{{#ifeq:0.006|+6.0E-3|y|n}}"		, "{{test}}"		, "y");}
-	@Test  public void Ifeq_plus_minus()	{fxt.tst_Parse_tmpl_str_test("{{#ifeq:+|-|y}}"					, "{{test}}"		, "");}	// PURPOSE: was evaluating to y; EX.WP:Permian-Triassic extinction
-	@Test  public void Tab_ent() {	// PURPOSE: hack; tabs are materialized as "&#09;" which causes trimming problems; EX.WP: Template:Cretaceous_graphical_timeline and "|period11=    Campanian\s\t"
-		fxt.tst_Parse_page_all_str("{{#ifeq:a|a &#09;|y|n}}", "y");	// note that "|a\s\t" gets trimmed to "a"
-	}
-	@Test  public void Ifeq_hex()			{fxt.tst_Parse_tmpl_str_test("{{#ifeq:44|0X002C|y|n}}"			, "{{test}}"		, "y");}	// PURPOSE: hex compares to int; EX:w:Comma 
 	@Test  public void If_rel2abs()			{fxt.tst_Parse_tmpl_str_test("{{#if:{{{1}}}|y}}"				, "{{test|http://a.org/c/}}"		, "y");}	// PURPOSE.fix: trailing slash should not trigger rel2abs code; DATE:2013-04-06
 }

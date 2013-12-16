@@ -21,7 +21,7 @@ public class Xoh_lnki_wtr {
 	public Xoh_lnki_wtr(Xow_wiki wiki, Xoh_html_wtr html_wtr) {
 		this.wiki = wiki; this.html_wtr = html_wtr; bfr_mkr = wiki.Utl_bry_bfr_mkr();
 		this.cfg = wiki.Html_mgr();
-	}	private Xow_html_mgr cfg; boolean lnki_title_enabled;
+	}	private Xow_html_mgr cfg; private boolean lnki_title_enabled;
 	private Xow_wiki wiki; private Xoh_html_wtr html_wtr;
 	private ByteAryFmtrArg_html_fmtr media_alt_fmtr = new ByteAryFmtrArg_html_fmtr(), caption_fmtr = new ByteAryFmtrArg_html_fmtr(); private Bry_bfr_mkr bfr_mkr;
 	private Xoa_url tmp_url = new Xoa_url();
@@ -32,7 +32,7 @@ public class Xoh_lnki_wtr {
 	public void Page_bgn(Xoa_page page) {
 		cfg_alt_defaults_to_caption = page.Wiki().App().User().Wiki().Html_mgr().Imgs_mgr().Alt_defaults_to_caption().Val();
 	}	private boolean cfg_alt_defaults_to_caption = true;
-	public Xof_xfer_itm Lnki_eval(Xoa_page page, Xop_lnki_tkn lnki, BoolRef queue_add_ref) {return Lnki_eval(page.File_queue(), lnki.Ttl().Page_url(), lnki.Lnki_type(), lnki.Width().Val(), lnki.Height().Val(), lnki.Upright(), lnki.Thumbtime(), lnki.NmsId() == Xow_ns_.Id_media, queue_add_ref);}
+	public Xof_xfer_itm Lnki_eval(Xoa_page page, Xop_lnki_tkn lnki, BoolRef queue_add_ref) {return Lnki_eval(page.File_queue(), lnki.Ttl().Page_url(), lnki.Lnki_type(), lnki.Width().Val(), lnki.Height().Val(), lnki.Upright(), lnki.Thumbtime(), lnki.Ns_id() == Xow_ns_.Id_media, queue_add_ref);}
 	public Xof_xfer_itm Lnki_eval(Xof_xfer_queue queue, byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, int lnki_seek, boolean lnki_is_media_ns, BoolRef queue_add_ref) {
 		queue_add_ref.Val_n_();
 		tmp_xfer_itm.Clear().Atrs_by_ttl(lnki_ttl, ByteAry_.Empty).Atrs_by_lnki(lnki_type, lnki_w, lnki_h, lnki_upright, lnki_seek);
@@ -101,7 +101,7 @@ public class Xoh_lnki_wtr {
 			html_orig_src = html_view_src = ByteAry_.Empty;		// null out src
 		}
 
-		if (lnki.NmsId() == Xow_ns_.Id_media) {	// REF.MW:Linker.php|makeMediaLinkObj; NOTE: regardless of ext (ogg vs jpeg) and literal status (Media vs :Media), [[Media]] links are always rendered the same way; see Beethoven; EX: [[:Media:De-Ludwig_van_Beethoven.ogg|listen]]); [[File:Beethoven 3.jpg|The [[Media:BeethovenWithLyreGuitar( W. J. Mahler - 1804).jpg|complete painting]]...]]
+		if (lnki.Ns_id() == Xow_ns_.Id_media) {	// REF.MW:Linker.php|makeMediaLinkObj; NOTE: regardless of ext (ogg vs jpeg) and literal status (Media vs :Media), [[Media]] links are always rendered the same way; see Beethoven; EX: [[:Media:De-Ludwig_van_Beethoven.ogg|listen]]); [[File:Beethoven 3.jpg|The [[Media:BeethovenWithLyreGuitar( W. J. Mahler - 1804).jpg|complete painting]]...]]
 			cfg.Lnki_full_media().Bld_bfr_many(bfr, html_view_src, lnki.Ttl().Page_txt(), Caption(src, lnki, Xoh_opts.root_(), depth, html_orig_src));
 			return;
 		}
@@ -156,14 +156,14 @@ public class Xoh_lnki_wtr {
 				}
 				Arg_nde_tkn lnki_link_tkn = lnki.Link_tkn();
 				if (lnki_link_tkn == Arg_nde_tkn.Null)						
-					cfg.Lnki_full_image().Bld_bfr_many(bfr, elem_id, lnki_href, html_view_src, xfer_itm.Html_w(), xfer_itm.Html_h(), lnki_alt_text, lnki_ttl, Xow_html_mgr.Bry_anchor_class_image, Xow_html_mgr.Bry_anchor_rel_blank, anchor_title, Xow_html_mgr.Bry_img_class_none);
+					cfg.Lnki_full_image().Bld_bfr_many(bfr, elem_id, lnki_href, html_view_src, xfer_itm.Html_w(), xfer_itm.Html_h(), lnki_alt_text, lnki_ttl, Xow_html_mgr.Bry_anchor_class_image, Xow_html_mgr.Bry_anchor_rel_blank, anchor_title, Img_cls(lnki));
 				else {
 					Arg_itm_tkn link_tkn = lnki_link_tkn.Val_tkn();
 					byte[] link_ref = link_tkn.Dat_to_bry(src);
 					byte[] link_ref_new = tmp_link_parser.Parse(tmp_bfr, tmp_url, wiki, link_ref, lnki_href);
 					link_ref = link_ref_new == null ? lnki_href: link_ref_new;	// if parse fails, then assign to lnki_href; EX:link={{{1}}}
 					lnki_ttl = ByteAry_.Coalesce(lnki_ttl, tmp_link_parser.Html_xowa_ttl());
-					cfg.Lnki_full_image().Bld_bfr_many(bfr, elem_id, link_ref, html_view_src, xfer_itm.Html_w(), xfer_itm.Html_h(), lnki_alt_text, lnki_ttl, tmp_link_parser.Html_anchor_cls(), tmp_link_parser.Html_anchor_rel(), anchor_title, Xow_html_mgr.Bry_img_class_none);
+					cfg.Lnki_full_image().Bld_bfr_many(bfr, elem_id, link_ref, html_view_src, xfer_itm.Html_w(), xfer_itm.Html_h(), lnki_alt_text, lnki_ttl, tmp_link_parser.Html_anchor_cls(), tmp_link_parser.Html_anchor_rel(), anchor_title, Img_cls(lnki));
 				}
 				switch (lnki.HAlign()) {
 					case Xop_lnki_halign.Left:
@@ -192,7 +192,7 @@ public class Xoh_lnki_wtr {
 		bfr.Add_byte(Byte_ascii.Quote);
 		return bfr.XtoAryAndClear();
 	}
-	byte[] Video(byte[] src, Xoh_opts opts, Xop_lnki_tkn lnki, Xof_xfer_itm xfer_itm, int depth, int elem_id, boolean lnki_thumb, byte[] lnki_href, byte[] html_view_src, byte[] html_orig_src, byte[] lnki_alt_text) {
+	private byte[] Video(byte[] src, Xoh_opts opts, Xop_lnki_tkn lnki, Xof_xfer_itm xfer_itm, int depth, int elem_id, boolean lnki_thumb, byte[] lnki_href, byte[] html_view_src, byte[] html_orig_src, byte[] lnki_alt_text) {
 		int thumb_w = xfer_itm.Html_w();
 		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
 		int play_btn_width = thumb_w; if (play_btn_width < 1) play_btn_width = wiki.Html_mgr().Img_thumb_width();
@@ -202,7 +202,7 @@ public class Xoh_lnki_wtr {
 			cfg.Lnki_thumb_file_video().Bld_bfr_many(tmp_bfr, Play_btn(elem_id, play_btn_width, play_btn_width, html_orig_src, lnki.Ttl().Page_txt()), Img_thumb(lnki, xfer_itm, depth, elem_id, lnki_href, html_view_src, lnki_alt_text), ByteAry_.Empty, ByteAry_.Empty);
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();
 	}
-	byte[] Image_thumb(byte[] src, Xoh_opts opts, Xop_lnki_tkn lnki, Xof_xfer_itm xfer_itm, int depth, int elem_id, byte[] lnki_href, byte[] html_view_src, byte[] html_orig_src, byte[] lnki_alt_text, byte[] lnki_ttl, byte[] anchor_title) {
+	private byte[] Image_thumb(byte[] src, Xoh_opts opts, Xop_lnki_tkn lnki, Xof_xfer_itm xfer_itm, int depth, int elem_id, byte[] lnki_href, byte[] html_view_src, byte[] html_orig_src, byte[] lnki_alt_text, byte[] lnki_ttl, byte[] anchor_title) {
 		byte[] lnki_alt_html = Alt_html(src, lnki, depth);
 		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
 		byte[] lnki_class = xfer_itm.Html_pass()
@@ -214,7 +214,7 @@ public class Xoh_lnki_wtr {
 		cfg.Lnki_thumb_file_image().Bld_bfr_many(tmp_bfr, thumb, Caption_div(src, lnki, depth, html_orig_src, lnki_href), lnki_alt_html);
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();
 	}	static final byte[] Anchor_title = ByteAry_.new_utf8_(" title=\"");
-	byte[] Audio(byte[] src, Xoh_opts opts, Xop_lnki_tkn lnki, int depth, int elem_id, byte[] lnki_href, byte[] html_orig_src, byte[] lnki_alt_text) {
+	private byte[] Audio(byte[] src, Xoh_opts opts, Xop_lnki_tkn lnki, int depth, int elem_id, byte[] lnki_href, byte[] html_orig_src, byte[] lnki_alt_text) {
 		byte[] info_btn = ByteAry_.Empty;
 		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
 		if (lnki.Media_icon()) {
@@ -225,27 +225,34 @@ public class Xoh_lnki_wtr {
 		cfg.Lnki_thumb_file_audio().Bld_bfr_many(tmp_bfr, Play_btn(elem_id, play_btn_width, Play_btn_max_width, html_orig_src, lnki.Ttl().Page_txt()), info_btn, Caption_div(src, lnki, depth, html_orig_src, lnki_href), Alt_html(src, lnki, depth));
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();
 	}
-	byte[] Img_thumb(Xop_lnki_tkn lnki, Xof_xfer_itm xfer_itm, int depth, int elem_id, byte[] lnki_href, byte[] html_view_src, byte[] alt) {
+	private byte[] Img_thumb(Xop_lnki_tkn lnki, Xof_xfer_itm xfer_itm, int depth, int elem_id, byte[] lnki_href, byte[] html_view_src, byte[] alt) {			
 		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
 		cfg.Lnki_thumb_part_image().Bld_bfr_many(tmp_bfr, elem_id, Bry_class_internal, lnki_href, lnki.Ttl().Page_txt(), html_view_src, xfer_itm.Html_w(), xfer_itm.Html_h(), alt);
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();
 	}
+	private byte[] Img_cls(Xop_lnki_tkn lnki) {
+		if (lnki.Border() == Bool_.Y_byte) {
+			return Img_cls_thumbborder;
+		}
+		else
+			return ByteAry_.Empty;
+	}	private static final byte[] Img_cls_thumbborder = ByteAry_.new_ascii_(" class=\"thumbborder\"");
 	public static final byte[] Bry_class_internal = ByteAry_.new_ascii_("image");
-	byte[] Alt_text(byte[] src, Xop_lnki_tkn lnki, int depth) {
+	private byte[] Alt_text(byte[] src, Xop_lnki_tkn lnki, int depth) {
 		if (!lnki.Alt_exists()) return ByteAry_.Empty;
 		media_alt_fmtr.Set(html_wtr, Xoh_opts.lnki_alt_(), src, lnki.Alt_tkn().Val_tkn(), depth, cfg.Plain());
 		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
 		media_alt_fmtr.XferAry(tmp_bfr, 0);
 		return tmp_bfr.Mkr_rls().XtoAryAndClear(); 
 	}
-	byte[] Alt_html(byte[] src, Xop_lnki_tkn lnki, int depth) {
+	private byte[] Alt_html(byte[] src, Xop_lnki_tkn lnki, int depth) {
 		if (!lnki.Alt_exists()) return ByteAry_.Empty;
 		media_alt_fmtr.Set(html_wtr, Xoh_opts.root_(), src, lnki.Alt_tkn().Val_tkn(), depth, cfg.Lnki_thumb_part_alt());
 		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
 		media_alt_fmtr.XferAry(tmp_bfr, 0);
 		return tmp_bfr.Mkr_rls().XtoAryAndClear(); 
 	}
-	byte[] Caption_div(byte[] src, Xop_lnki_tkn lnki, int depth, byte[] html_orig_src, byte[] lnki_href) {
+	private byte[] Caption_div(byte[] src, Xop_lnki_tkn lnki, int depth, byte[] html_orig_src, byte[] lnki_href) {
 		ByteAryFmtrArg caption = Caption(src, lnki, Xoh_opts.root_(), depth, html_orig_src);
 		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
 		byte[] magnify_btn = ByteAry_.Empty;
@@ -256,20 +263,20 @@ public class Xoh_lnki_wtr {
 		cfg.Lnki_thumb_part_caption().Bld_bfr_many(tmp_bfr, magnify_btn, caption);
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();				
 	}
-	ByteAryFmtrArg Caption(byte[] src, Xop_lnki_tkn lnki, Xoh_opts opts, int depth, byte[] html_orig_src) {
+	private ByteAryFmtrArg Caption(byte[] src, Xop_lnki_tkn lnki, Xoh_opts opts, int depth, byte[] html_orig_src) {
 		return lnki.Caption_exists()
 			? caption_fmtr.Set(html_wtr, opts, src, lnki.Caption_val_tkn(), depth, cfg.Plain())
 			: ByteAryFmtrArg_.Null;
 	}
-	byte[] Play_btn(int elem_id, int width, int max_width, byte[] html_orig_src, byte[] lnki_href) {
+	private byte[] Play_btn(int elem_id, int width, int max_width, byte[] html_orig_src, byte[] lnki_href) {
 		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
 		cfg.Lnki_thumb_part_play_btn().Bld_bfr_many(tmp_bfr, elem_id, wiki.Html_mgr().Img_media_play_btn(), width - 2, max_width, html_orig_src, lnki_href);	// NOTE: -2 is fudge factor else play btn will jut out over video thumb; see Earth and ISS video
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();				
 	}
-	static final int Play_btn_max_width = 1024;
+	private static final int Play_btn_max_width = 1024;
 	private static final byte[] Bry_div_bgn_center = ByteAry_.new_ascii_("<div class=\"center\">"), Bry_div_end = ByteAry_.new_ascii_("</div>")
 		, Bry_div_float_none = ByteAry_.new_ascii_("<div class=\"floatnone\">"), Bry_div_float_left = ByteAry_.new_ascii_("<div class=\"floatleft\">"), Bry_div_float_right = ByteAry_.new_ascii_("<div class=\"floatright\">");
 	public static byte[] Lnki_cls_visited(gplx.xowa.users.history.Xou_history_mgr history_mgr, byte[] wiki_key, byte[] page_ttl) {
 		return history_mgr.Has(wiki_key, page_ttl) ? Lnki_cls_visited_bry : ByteAry_.Empty;
-	}	static final byte[] Lnki_cls_visited_bry = ByteAry_.new_ascii_(" class=\"xowa-visited\"");
+	}	private static final byte[] Lnki_cls_visited_bry = ByteAry_.new_ascii_(" class=\"xowa-visited\"");
 }

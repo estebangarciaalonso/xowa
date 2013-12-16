@@ -35,7 +35,7 @@ public class Xtn_gallery_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 			case Xatr_id_heights:		itm_height = xatr.Val_as_int_or(src, 120); break;
 		}
 	}
-	public void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		if (itms_per_row == -1) itms_per_row = wiki.Cfg_gallery().Imgs_per_row();
 		Xop_xatr_itm.Xatr_parse(wiki.App(), this, wiki.Lang().Xatrs_gallery(), wiki, src, xnde);
 		wiki.Xtn_mgr().Xtn_gallery().Parser().Parse_all(itms, src, xnde.Tag_open_end(), xnde.Tag_close_bgn(), itm_width, itm_height);

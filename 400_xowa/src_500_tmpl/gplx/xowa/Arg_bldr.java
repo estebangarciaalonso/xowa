@@ -45,7 +45,9 @@ class Arg_bldr {
 					else			{if (ws_end_idx == -1) ws_end_idx = cur_itm_subs_len;};	// possible ws at end; may be overriden later; see AdjustWsForTxtTkn
 					break;
 				case Xop_tkn_itm_.Tid_colon:
-					if (wkr_typ == Xop_arg_wkr_.Typ_tmpl) {}		// treat colons as text; tmpl will do its own : parsing for 1st arg
+					if (wkr_typ == Xop_arg_wkr_.Typ_tmpl) {			// treat colons as text; tmpl will do its own : parsing for 1st arg; NOTE: must do ws check else 2nd colon will break; EX: "{{#ifeq: :|a|b|c}}"; DATE:2013-12-10
+						if (ws_bgn_chk) ws_bgn_chk = false; else ws_end_idx = -1;		// INLINE: AdjustWsForTxtTkn
+					}
 					else {
 						if (cur_nde_idx == 0 && !colon_chk) {		// if 1st arg, mark colon pos; needed for lnki; EX: [[Category:A]]; {{#ifeq:1}}
 							colon_chk = true;
@@ -88,7 +90,7 @@ class Arg_bldr {
 					else {
 						Arg_itm_end(ctx, cur_nde, cur_itm, ws_bgn_idx, ws_end_idx, cur_itm_subs_len, sub_pos_bgn, wkr_typ, key_exists, false, itm_is_static, src, cur_nde_idx);
 						cur_nde.Val_tkn_(cur_itm);
-						wkr.Args_add(ctx, tkn, cur_nde, cur_nde_idx);
+						wkr.Args_add(ctx, src, tkn, cur_nde, cur_nde_idx);
 						cur_nde = null; cur_itm = null; key_exists = false;			// reset
 						continue;													// do not add tkn to cur_itm
 					}
@@ -112,7 +114,7 @@ class Arg_bldr {
 		}
 		Arg_itm_end(ctx, cur_nde, cur_itm, ws_bgn_idx, ws_end_idx, cur_itm_subs_len, bgnPos, wkr_typ, key_exists, false, itm_is_static, src, cur_nde_idx);
 		cur_nde.Val_tkn_(cur_itm);
-		return wkr.Args_add(ctx, tkn, cur_nde, cur_nde_idx);
+		return wkr.Args_add(ctx, src, tkn, cur_nde, cur_nde_idx);
 	}
 	private void Arg_itm_end(Xop_ctx ctx, Arg_nde_tkn nde, Arg_itm_tkn itm, int ws_bgn_idx, int ws_end_idx, int subs_len, int lxr_bgn, int wkr_typ, boolean key_exists, boolean cur_itm_is_key, boolean itm_is_static, byte[] src, int arg_idx) {
 		// PURPOSE: mark tkns Ignore; find dat_bgn, dat_end

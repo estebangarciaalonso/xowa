@@ -30,7 +30,7 @@ public class Xop_ctx {
 	}
 	public Xoa_app				App()				{return app;} private Xoa_app app;
 	public Xow_wiki				Wiki()				{return wiki;} private Xow_wiki wiki;
-	public Xog_tab Tab() {return tab;} private Xog_tab tab;
+	public Xog_tab				Tab()				{return tab;} private Xog_tab tab;
 	public Xol_lang				Lang()				{return wiki.Lang();}
 	public Xoa_page				Page()				{return page;} public Xop_ctx Page_(Xoa_page v) {page = v; return this;} private Xoa_page page;
 	public Xop_tkn_mkr			Tkn_mkr()			{return app.Tkn_mkr();}
@@ -45,8 +45,6 @@ public class Xop_ctx {
 	public Xop_xnde_wkr			Xnde()				{return xnde;}	private Xop_xnde_wkr xnde = new Xop_xnde_wkr();
 	public Xot_invk_wkr			Invk()				{return invk;}	private Xot_invk_wkr invk = new Xot_invk_wkr();
 	public Xop_curly_wkr		Curly() 			{return curly;} private Xop_curly_wkr curly = new Xop_curly_wkr();
-	public byte[]				Src()				{return src;} private byte[] src; int src_len;
-	public Xop_root_tkn			Root()				{return root;} private Xop_root_tkn root;
 	public Gfo_msg_log			Msg_log()			{return msg_log;} Gfo_msg_log msg_log;
 	public boolean					Sys_load_tmpls()	{return sys_load_tmpls;} public Xop_ctx Sys_load_tmpls_(boolean v) {sys_load_tmpls = v; return this;} private boolean sys_load_tmpls = true;
 	public Xow_wiki_revs		Page_revData()		{return page_revData;} private Xow_wiki_revs page_revData = new Xow_wiki_revs();
@@ -55,9 +53,9 @@ public class Xop_ctx {
 	public byte					Parse_tid()			{return parse_tid;} public Xop_ctx Parse_tid_(byte v) {parse_tid = v; return this;} private byte parse_tid = Xop_parser_.Parse_tid_null;
 	public byte					Cur_tkn_tid()		{return cur_tkn_tid;} public Xop_ctx Cur_tkn_tid_(byte v) {cur_tkn_tid = v; return this;} private byte cur_tkn_tid = Xop_tkn_itm_.Tid_null;
 	public boolean					Lxr_make()			{return lxr_make;} public Xop_ctx Lxr_make_(boolean v) {lxr_make = v; return this;} private boolean lxr_make = false;
-	public boolean Only_include_evaluate() {return only_include_evaluate;} public Xop_ctx Only_include_evaluate_(boolean v) {only_include_evaluate = v; return this;} private boolean only_include_evaluate;
+	public boolean					Only_include_evaluate() {return only_include_evaluate;} public Xop_ctx Only_include_evaluate_(boolean v) {only_include_evaluate = v; return this;} private boolean only_include_evaluate;
 	public Xtn_lst_section_mgr	Lst_section_mgr() {if (lst_section_mgr == null) lst_section_mgr = new Xtn_lst_section_mgr(); return lst_section_mgr;} Xtn_lst_section_mgr lst_section_mgr;
-	public Xop_log_invoke_wkr Xtn__scribunto__invoke_wkr() {return app.Xtn_mgr().Xtn_scribunto().Invoke_wkr();} 
+	public Xop_log_invoke_wkr	Xtn__scribunto__invoke_wkr() {return app.Xtn_mgr().Xtn_scribunto().Invoke_wkr();} 
 	public Xop_log_property_wkr Xtn__wikidata__property_wkr() {return app.Wiki_mgr().Wdata_mgr().Property_wkr();} 
 	private Xop_ctx_wkr[] wkrs = new Xop_ctx_wkr[] {}; private Xop_ctx_wkr[] wkrs_(Xop_ctx_wkr... ary) {return ary;}
 	public int Tag_idx;
@@ -70,25 +68,24 @@ public class Xop_ctx {
 		return this;
 	}
 	public void Page_bgn(Xop_root_tkn root, byte[] src) {
-		this.root = root; this.Msg_log().Clear(); cur_tkn_tid = Xop_tkn_itm_.Tid_null;
-		this.src = src; src_len = src.length;
+		this.Msg_log().Clear(); cur_tkn_tid = Xop_tkn_itm_.Tid_null;
 		empty_ignored = false;
-		for (Xop_ctx_wkr wkr : wkrs) wkr.Page_bgn(this);
+		for (Xop_ctx_wkr wkr : wkrs) wkr.Page_bgn(this, root);
 	}
-	public void Page_end(byte[] src, int srcLen) {
-		Stack_pop_til(0, true, srcLen, srcLen);
+	public void Page_end(Xop_root_tkn root, byte[] src, int srcLen) {
+		Stack_pop_til(root, src, 0, true, srcLen, srcLen);
 		for (Xop_ctx_wkr wkr : wkrs) wkr.Page_end(this, root, src, srcLen);
 	}
 	public int LxrMake_txt_(int pos)									{lxr_make = false; return pos;}
-	public int LxrMake_log_(Gfo_msg_itm itm, int bgn_pos, int cur_pos)	{lxr_make = false; msg_log.Add_itm_none(itm, src, bgn_pos, cur_pos); return cur_pos;}
-	public void StackTkn_add(Xop_tkn_itm sub) {
+	public int LxrMake_log_(Gfo_msg_itm itm, byte[] src, int bgn_pos, int cur_pos)	{lxr_make = false; msg_log.Add_itm_none(itm, src, bgn_pos, cur_pos); return cur_pos;}
+	public void StackTkn_add(Xop_root_tkn root, Xop_tkn_itm sub) {
 		root.Subs_add(sub);
 		this.Stack_add(sub);
 	}
 	public boolean Empty_ignored() {return empty_ignored;}
 	public void Empty_ignored_y_() {empty_ignored = true;} private boolean empty_ignored = false;
 	public void Empty_ignored_n_() {empty_ignored = false;}
-	public void Empty_ignore(int empty_bgn) {
+	public void Empty_ignore(Xop_root_tkn root, int empty_bgn) {
 		int empty_end = root.Subs_len();
 		for (int i = empty_bgn; i < empty_end; i++) {
 			Xop_tkn_itm sub_tkn = root.Subs_get(i);
@@ -96,8 +93,12 @@ public class Xop_ctx {
 		}
 		empty_ignored = false;
 	}
-	public void Subs_add_and_stack(Xop_tkn_itm sub) {this.Subs_add(sub); this.Stack_add(sub);}
-	public void Subs_add(Xop_tkn_itm sub) {
+	public void Subs_add_and_stack_tblw(Xop_root_tkn root, Xop_tblw_tkn owner_tkn, Xop_tkn_itm sub) {
+		if (owner_tkn != null) owner_tkn.Tblw_subs_len_add_();	// owner_tkn can be null;EX: "{|" -> prv_tkn is null
+		Subs_add_and_stack(root, sub);
+	}
+	public void Subs_add_and_stack(Xop_root_tkn root, Xop_tkn_itm sub) {this.Subs_add(root, sub); this.Stack_add(sub);}
+	public void Subs_add(Xop_root_tkn root, Xop_tkn_itm sub) {
 		switch (sub.Tkn_tid()) {
 			case Xop_tkn_itm_.Tid_space: case Xop_tkn_itm_.Tid_tab: case Xop_tkn_itm_.Tid_newLine:
 			case Xop_tkn_itm_.Tid_para:
@@ -130,6 +131,17 @@ public class Xop_ctx {
 				case Xop_tkn_itm_.Tid_tblw_th:
 				case Xop_tkn_itm_.Tid_tblw_tc:
 					return (Xop_tblw_tkn)tkn;
+				case Xop_tkn_itm_.Tid_xnde:
+					Xop_xnde_tkn xnde_tkn = (Xop_xnde_tkn)tkn;
+					switch (xnde_tkn.Tblw_tid()) {
+						case Xop_tkn_itm_.Tid_tblw_tb:
+						case Xop_tkn_itm_.Tid_tblw_tr:
+						case Xop_tkn_itm_.Tid_tblw_td:
+						case Xop_tkn_itm_.Tid_tblw_th:
+						case Xop_tkn_itm_.Tid_tblw_tc:
+							return (Xop_tblw_tkn)tkn;
+					}
+					break;
 			}
 		}
 		return null;
@@ -176,34 +188,35 @@ public class Xop_ctx {
 			}
 		}
 	}
-	public Xop_tkn_itm Stack_pop_til(int tilIdx, boolean include, int bgnPos, int curPos) {
+	public Xop_tkn_itm Stack_pop_til(Xop_root_tkn root, byte[] src, int tilIdx, boolean include, int bgnPos, int curPos) {
 		if (aryLen == 0) return null;
 		int minIdx = include ? tilIdx - 1 : tilIdx;
 		if (minIdx < -1) minIdx = -1;
 		Xop_tkn_itm rv = null;
 		for (int i = aryLen - 1; i > minIdx; i--) {
 			rv = ary[i];
-			Stack_autoClose(rv, bgnPos, curPos);
+			Stack_autoClose(root, src, rv, bgnPos, curPos);
 		}
 		Stack_pop_idx(tilIdx);
 		return include ? rv : ary[aryLen]; // if include, return poppedTkn; if not, return tkn before poppedTkn
 	}
-	public Xop_tkn_itm Stack_pop_before(int tilIdx, boolean include, int bgnPos, int curPos) {	// used by Xop_tblw_lxr to detect \n| in lnki; seems useful as well
+	public Xop_tkn_itm Stack_pop_before(Xop_root_tkn root, byte[] src, int tilIdx, boolean include, int bgnPos, int curPos) {	// used by Xop_tblw_lxr to detect \n| in lnki; seems useful as well
 		if (aryLen == 0) return null;
 		int minIdx = include ? tilIdx - 1 : tilIdx;
 		if (minIdx < -1) minIdx = -1;
 		Xop_tkn_itm rv = null;
 		for (int i = aryLen - 1; i > minIdx; i--) {
 			rv = ary[i];
-			Stack_autoClose(rv, bgnPos, curPos);
+			Stack_autoClose(root, src, rv, bgnPos, curPos);
 		}
 		return include ? rv : ary[aryLen]; // if include, return poppedTkn; if not, return tkn before poppedTkn
 	}
-	public void Stack_autoClose(Xop_tkn_itm tkn, int bgnPos, int curPos) {
+	public void Stack_autoClose(Xop_root_tkn root, byte[] src, Xop_tkn_itm tkn, int bgnPos, int curPos) {
+		int src_len = src.length;
 		switch (tkn.Tkn_tid()) {
 			case Xop_tkn_itm_.Tid_newLine: break;	// NOOP: just a marker
 			case Xop_tkn_itm_.Tid_list: list.AutoClose(this, app.Tkn_mkr(), root, src, src_len, bgnPos, curPos, tkn); break;
-			case Xop_tkn_itm_.Tid_xnde: xnde.AutoClose(this, src, src_len, bgnPos, curPos, tkn); break;
+			case Xop_tkn_itm_.Tid_xnde: xnde.AutoClose(this, root, src, src_len, bgnPos, curPos, tkn); break;
 			case Xop_tkn_itm_.Tid_apos: apos.AutoClose(this, src, src_len, bgnPos, curPos, tkn); break;
 			case Xop_tkn_itm_.Tid_lnke: lnke.AutoClose(this, src, src_len, bgnPos, curPos, tkn); break;
 			case Xop_tkn_itm_.Tid_hdr:  hdr.AutoClose(this, app.Tkn_mkr(), root, src, src_len, bgnPos, curPos, tkn); break;
@@ -211,7 +224,7 @@ public class Xop_ctx {
 			case Xop_tkn_itm_.Tid_tblw_tr:
 			case Xop_tkn_itm_.Tid_tblw_td:
 			case Xop_tkn_itm_.Tid_tblw_th:
-			case Xop_tkn_itm_.Tid_tblw_tc: tblw.AutoClose(this, src, src_len, bgnPos, curPos, tkn); break;
+			case Xop_tkn_itm_.Tid_tblw_tc: tblw.AutoClose(this, root, src, src_len, bgnPos, curPos, tkn); break;
 			case Xop_tkn_itm_.Tid_lnki: lnki.AutoClose(this, app.Tkn_mkr(), root, src, src_len, bgnPos, curPos, tkn); break;
 			case Xop_tkn_itm_.Tid_pre: para.AutoClose(this, app.Tkn_mkr(), root, src, src_len, bgnPos, curPos, tkn); break;
 		}
@@ -236,7 +249,7 @@ public class Xop_ctx {
 			if (stop) break;
 		}
 		if (stack_pos == -1) return;
-		ctx.Stack_pop_til(stack_pos, true, bgnPos, curPos);
+		ctx.Stack_pop_til(root, src, stack_pos, true, bgnPos, curPos);
 	}
 	public static Xop_ctx new_(Xow_wiki wiki) {
 		Xop_ctx rv = new Xop_ctx(wiki);

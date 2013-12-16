@@ -23,30 +23,30 @@ class Xop_nl_lxr implements Xop_lxr {
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		Xop_para_wkr para_wkr = ctx.Para();
 		if (bgn_pos == Xop_parser_.Doc_bgn_bos) {return ctx.LxrMake_txt_(cur_pos);} // simulated nl at beginning of every parse
-		ctx.Apos().EndFrame(ctx, src, bgn_pos, true);	// NOTE: frame should at end at bgn_pos (before \n) not after; else, will create tkn at (5,5), while tkn_mkr.Space creates one at (4,5); DATE:2013-10-31
+		ctx.Apos().EndFrame(ctx, root, src, bgn_pos, true);	// NOTE: frame should at end at bgn_pos (before \n) not after; else, will create tkn at (5,5), while tkn_mkr.Space creates one at (4,5); DATE:2013-10-31
 		ctx.Tblw().Cell_pipe_seen_(false);
 
 		// if hdr is open, then close it
 		int acs_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_hdr);
 		if (acs_pos != -1) {
-			ctx.Stack_pop_til(acs_pos, true, bgn_pos, cur_pos);
-			para_wkr.Process_nl_sect_end(cur_pos);
+			ctx.Stack_pop_til(root, src, acs_pos, true, bgn_pos, cur_pos);
+			para_wkr.Process_nl_sect_end(ctx, cur_pos);
 		}
 
 		// if list/lnke is open/close it
 		switch (ctx.Cur_tkn_tid()) {
 			case Xop_tkn_itm_.Tid_lnki: // NOTE: \n in caption or other multipart lnki; don't call para_wkr.Process
 //					para_wkr.Process_nl_sect_end(cur_pos);
-				Xop_tkn_itm nl_tkn = tkn_mkr.Space(ctx.Root(), bgn_pos, cur_pos);	// convert \n to \s. may result in multiple \s, but rely on htmlViewer to suppress; EX.WP: Schwarzschild radius; and the stellar [[Velocity dispersion|velocity\ndispersion]];
-				ctx.Subs_add(nl_tkn);
+				Xop_tkn_itm nl_tkn = tkn_mkr.Space(root, bgn_pos, cur_pos);	// convert \n to \s. may result in multiple \s, but rely on htmlViewer to suppress; EX.WP: Schwarzschild radius; and the stellar [[Velocity dispersion|velocity\ndispersion]];
+				ctx.Subs_add(root, nl_tkn);
 				return cur_pos;
 			case Xop_tkn_itm_.Tid_list:
-				Xop_list_wkr_.Close_list_if_present(ctx, bgn_pos, cur_pos);
-				para_wkr.Process_nl_sect_end(cur_pos);
+				Xop_list_wkr_.Close_list_if_present(ctx, root, src, bgn_pos, cur_pos);
+				para_wkr.Process_nl_sect_end(ctx, cur_pos);
 				break;
 			case Xop_tkn_itm_.Tid_lnke:
 				if (ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tmpl_invk) == -1) {// only pop if no tmpl; MWR: [[SHA-2]]; * {{cite journal|title=Proposed 
-					ctx.Stack_pop_til(ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnke), true, bgn_pos, cur_pos);
+					ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnke), true, bgn_pos, cur_pos);
 				}
 				break;
 //				case Xop_tkn_itm_.Tid_tblw_tc: case Xop_tkn_itm_.Tid_tblw_td:	// tc/td should not have attributes
@@ -55,15 +55,15 @@ class Xop_nl_lxr implements Xop_lxr {
 				break;
 		}
 		if (para_wkr.Enabled() && ctx.Parse_tid() == Xop_parser_.Parse_tid_page_wiki)
-			para_wkr.Process_nl(bgn_pos, cur_pos, true);
+			para_wkr.Process_nl(ctx, root, src, bgn_pos, cur_pos, true);
 		else {
 			if (poem) {
-				ctx.Subs_add(tkn_mkr.Xnde(bgn_pos, cur_pos).Tag_(Xop_xnde_tag_.Tag_br));
-				ctx.Subs_add(tkn_mkr.NewLine(cur_pos, cur_pos, Xop_nl_tkn.Tid_char, 1));
+				ctx.Subs_add(root, tkn_mkr.Xnde(bgn_pos, cur_pos).Tag_(Xop_xnde_tag_.Tag_br));
+				ctx.Subs_add(root, tkn_mkr.NewLine(cur_pos, cur_pos, Xop_nl_tkn.Tid_char, 1));
 			}
 			else {
 				Xop_nl_tkn nl_tkn = tkn_mkr.NewLine(bgn_pos, cur_pos, Xop_nl_tkn.Tid_char, 1);
-				ctx.Subs_add(nl_tkn);
+				ctx.Subs_add(root, nl_tkn);
 			}
 		}
 		return cur_pos;

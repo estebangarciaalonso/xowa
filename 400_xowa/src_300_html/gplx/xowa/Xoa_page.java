@@ -117,11 +117,14 @@ public class Xoa_page {
 					Hdrs_id_bld_recurse(raw_bfr, src, xnde);
 					break;
 				case Xop_tkn_itm_.Tid_lnki:
-					Xop_lnki_tkn lnki = (Xop_lnki_tkn)sub;						
-					if (lnki.Caption_exists())
-						Hdrs_id_bld_recurse(raw_bfr, src, lnki.Caption_val_tkn());
-					else
-						raw_bfr.Add(lnki.Ttl_ary());
+					Xop_lnki_tkn lnki = (Xop_lnki_tkn)sub;
+					if (lnki.Ns_id() == Xow_ns_.Id_category) {}	// Category text should not print; DATE:2013-12-09
+					else {
+						if (lnki.Caption_exists())
+							Hdrs_id_bld_recurse(raw_bfr, src, lnki.Caption_val_tkn());
+						else
+							raw_bfr.Add(lnki.Ttl_ary());
+					}
 					break;
 				case Xop_tkn_itm_.Tid_html_ncr:
 					Xop_html_ncr_tkn html_ncr = (Xop_html_ncr_tkn)sub;

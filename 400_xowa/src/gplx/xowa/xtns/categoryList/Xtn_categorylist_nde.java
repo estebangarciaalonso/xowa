@@ -19,6 +19,6 @@ package gplx.xowa.xtns.categoryList; import gplx.*; import gplx.xowa.*; import g
 public class Xtn_categorylist_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 	public Xop_root_tkn Xtn_root() {return null;}
 	public boolean Xtn_literal() {return false;}
-	public void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde) {}
+	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {}
 	public void Xatr_parse(Xow_wiki wiki, byte[] src, Xop_xatr_itm xatr, Object xatr_key_obj) {}
 }

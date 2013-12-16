@@ -48,7 +48,7 @@ public class Xtn_gallery_parser {
 			if (cur_itm.Ttl() != null) {
 				if (caption_bfr.Bry_len() > 0)
 					cur_itm.Caption_bry_(caption_bfr.XtoAryAndClearAndTrim());
-				Make_lnki_tkn();
+				Make_lnki_tkn(src);
 				rv.Add(cur_itm);
 				cur_itm = new Xtn_gallery_itm();
 			}
@@ -56,7 +56,7 @@ public class Xtn_gallery_parser {
 				++cur_pos;
 		}
 	}
-	private void Make_lnki_tkn() {
+	private void Make_lnki_tkn(byte[] src) {
 		Xop_lnki_tkn lnki_tkn = ctx.Tkn_mkr().Lnki(cur_itm.Ttl_bgn(), cur_itm.Ttl_end()).Ttl_(cur_itm.Ttl()).Width_(gallery_itm_w).Height_(gallery_itm_h);
 		cur_itm.Lnki_tkn_(lnki_tkn);
 		byte[] lnki_caption = cur_itm.Caption_bry();
@@ -66,7 +66,7 @@ public class Xtn_gallery_parser {
 		}
 		Xop_lnki_logger file_wkr = ctx.Lnki().File_wkr();	// NOTE: do not set file_wkr ref early (as member var); parse_all sets late
 		ctx.Tab().Lnki_file_mgr().Add(lnki_tkn);
-		if (file_wkr != null) file_wkr.Wkr_exec(ctx, lnki_tkn);
+		if (file_wkr != null) file_wkr.Wkr_exec(ctx, src, lnki_tkn);
 	}
 	public byte Parse_itm() {
 		int fld_count = 0;

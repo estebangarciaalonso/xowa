@@ -40,7 +40,7 @@ public class Xtn_ref_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 			case Xatr_id_follow:	follow = xatr.Val_as_bry(src); break;
 		}
 	}
-	public void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		Xop_xatr_itm.Xatr_parse(wiki.App(), this, wiki.Lang().Xatrs_ref(), wiki, src, xnde);
 		if (xnde.CloseMode() == Xop_xnde_tkn.CloseMode_pair) {
 			body = wiki.Parser().Parse_recurse(ctx, ByteAry_.Mid(src, xnde.Tag_open_end(), xnde.Tag_close_bgn()), false);

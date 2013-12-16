@@ -31,11 +31,11 @@ public class Xtn_poem_lxr implements Xop_lxr {
 			}
 		}
 		if (bgnPos != Xop_parser_.Doc_bgn_bos) {	// do not add xnde/nl if \n is BOS \n; EX.WP: Teresa of Ávila; "<poem>\n\s\s"
-			ctx.Subs_add(tkn_mkr.Xnde(curPos, curPos).Tag_(Xop_xnde_tag_.Tag_br));
-			ctx.Subs_add(tkn_mkr.NewLine(curPos, curPos, Xop_nl_tkn.Tid_char, 1));
+			ctx.Subs_add(root, tkn_mkr.Xnde(curPos, curPos).Tag_(Xop_xnde_tag_.Tag_br));
+			ctx.Subs_add(root, tkn_mkr.NewLine(curPos, curPos, Xop_nl_tkn.Tid_char, 1));
 		}
 		for (int i = 0; i < space_count; i++)
-			ctx.Subs_add(tkn_mkr.HtmlNcr(bgnPos + 1, curPos, 160, Nbsp_bry));
+			ctx.Subs_add(root, tkn_mkr.HtmlNcr(bgnPos + 1, curPos, 160, Nbsp_bry));
 		return curPos;
 	}
 	private static final byte[] Nbsp_bry = gplx.intl.Utf8_.EncodeCharAsAry(160);

@@ -58,6 +58,7 @@ class Scrib_lib_ustring implements Scrib_lib {
 		RegxMatch[] regx_rslts = regx_adp.Match_all(text, bgn);
 		int len = regx_rslts.length;
 		if (len == 0) return KeyVal_.Ary_empty;
+		ListAdp tmp_list = ListAdp_.new_();
 		for (int i = 0; i < len; i++) {
 			RegxMatch rslt = regx_rslts[i];
 			tmp_list.Add(rslt.Find_bgn() + Scrib_lib_ustring.Base1);
@@ -84,12 +85,13 @@ class Scrib_lib_ustring implements Scrib_lib {
 		RegxAdp regx_adp = Scrib_lib_ustring.RegxAdp_new_(engine.Ctx(), regx);
 		RegxMatch[] regx_rslts = regx_adp.Match_all(text, bgn);
 		int len = regx_rslts.length;
+		ListAdp tmp_list = ListAdp_.new_();
 		for (int i = 0; i < len; i++) {
 			RegxMatch rslt = regx_rslts[i];
 			AddCapturesFromMatch(tmp_list, rslt, text, true);
 		}
 		return Scrib_kv_utl.base1_list_(tmp_list);
-	}	ListAdp tmp_list = ListAdp_.new_();
+	}
 	public KeyVal[] Gsub(KeyVal[] values) {return gsub_mgr.Exec(values);}
 	public KeyVal[] Gmatch_init(KeyVal[] values) {
 		// String text = Scrib_kv_utl.Val_to_str(values, 0);
@@ -108,6 +110,7 @@ class Scrib_lib_ustring implements Scrib_lib {
 		int len = regx_rslts.length;
 		if (len == 0) return Scrib_kv_utl.base1_many_(pos, KeyVal_.Ary_empty);
 		RegxMatch rslt = regx_rslts[0];	// NOTE: take only 1st result
+		ListAdp tmp_list = ListAdp_.new_();
 		AddCapturesFromMatch(tmp_list, rslt, text, false);
 		return Scrib_kv_utl.base1_many_(rslt.Find_end(), Scrib_kv_utl.base1_list_(tmp_list));
 	}
@@ -248,21 +251,23 @@ class Scrib_lib_ustring_gsub_mgr {
 				break;
 			}
 			case Repl_tid_luacbk: {
+				KeyVal[] luacbk_args = null;
 				RegxGroup[] grps = rslt.Groups();
 				int grps_len = grps.length;
-				if (grps_len == 0) {
+				if (grps_len == 0) {	// no match; use original String
 					String find_str = String_.Mid(text, rslt.Find_bgn(), rslt.Find_end());
-					KeyVal[] rslts = engine.Interpreter().CallFunction(repl_func.Id(), Scrib_kv_utl.base1_obj_(find_str));
-					tmp_bfr.Add_str(Scrib_kv_utl.Val_to_str(rslts, 0));
+					luacbk_args = Scrib_kv_utl.base1_obj_(find_str);
 				}
-				else {
+				else {					// match; build ary of matches; (see UStringLibrary.php)
+					luacbk_args = new KeyVal[grps_len];
 					for (int i = 0; i < grps_len; i++) {
 						RegxGroup grp = grps[i];
 						String find_str = String_.Mid(text, grp.Bgn(), grp.End());
-						KeyVal[] rslts = engine.Interpreter().CallFunction(repl_func.Id(), Scrib_kv_utl.base1_obj_(find_str));
-						tmp_bfr.Add_str(Scrib_kv_utl.Val_to_str(rslts, 0));
+						luacbk_args[i] = KeyVal_.int_(i + Scrib_interpreter.Base_1, find_str);
 					}
 				}
+				KeyVal[] rslts = engine.Interpreter().CallFunction(repl_func.Id(), luacbk_args);
+				tmp_bfr.Add_str(Scrib_kv_utl.Val_to_str(rslts, 0));
 				break;
 			}
 			default: throw Err_.unhandled(repl_tid);

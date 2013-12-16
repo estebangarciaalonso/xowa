@@ -19,10 +19,10 @@ package gplx.xowa; import gplx.*;
 public class Xop_tblw_wkr implements Xop_ctx_wkr {
 	public boolean Cell_pipe_seen() {return cell_pipe_seen;} public Xop_tblw_wkr Cell_pipe_seen_(boolean v) {cell_pipe_seen = v; return this;} private boolean cell_pipe_seen; // status of 1st cell pipe; EX: \n| a | b | c || -> flag pipe between a and b but ignore b and c
 	public void Ctor_ctx(Xop_ctx ctx) {}
-	public void Page_bgn(Xop_ctx ctx) {cell_pipe_seen = false; tblw_tb_suppressed = 0;} private int tblw_tb_suppressed = 0;
+	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {cell_pipe_seen = false; tblw_tb_suppressed = 0;} private int tblw_tb_suppressed = 0;
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {}
-	public void AutoClose(Xop_ctx ctx, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_tkn_itm tkn) {
-		tkn.Subs_move(ctx.Root());
+	public void AutoClose(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_tkn_itm tkn) {
+		tkn.Subs_move(root);
 		tkn.Src_end_(cur_pos);
 	}
 	public int MakeTkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte wlxr_type, boolean ws_enabled, boolean tblw_xml, int atrs_bgn, int atrs_end) {// REF.MW: Parser|doTableStuff
@@ -33,9 +33,9 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 
 		if (	ctx.Cur_tkn_tid() == Xop_tkn_itm_.Tid_list		// list is in effect
 			&& !ws_enabled)										// only close list if tblw starts new line; EX: "* a {|" does not close list, but "* a\n{|" does
-			Xop_list_wkr_.Close_list_if_present(ctx, bgn_pos, cur_pos);
+			Xop_list_wkr_.Close_list_if_present(ctx, root, src, bgn_pos, cur_pos);
 		if (ctx.Apos().Stack_len() > 0)							// open apos; note that apos keeps its own stack, as they are not "structural" (not sure about this)
-			ctx.Apos().EndFrame(ctx, src, cur_pos, true);		// close it
+			ctx.Apos().EndFrame(ctx, root, src, cur_pos, true);		// close it
 
 		Xop_tblw_tkn prv_tkn = ctx.Stack_get_tblw();
 		if (prv_tkn == null) {									// prv_tkn not found; i.e.: no earlier "{|" or "<table>"
@@ -45,16 +45,16 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 				case Tblw_type_td:								// "|"
 				case Tblw_type_td2:								// "||"
 					if (tblw_xml) {
-						ctx.Subs_add_and_stack(tkn_mkr.Tblw_tb(bgn_pos, bgn_pos, tblw_xml));
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tb(bgn_pos, bgn_pos, tblw_xml));
 						prv_tkn = tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tblw_xml);
-						ctx.Subs_add_and_stack(prv_tkn);
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, prv_tkn);
 						break;
 					}					
 					else {
 						if (ctx.Para().Pre_at_line_bgn())	// HACK:pre_section_begun_and_failed_tblw
-							return ctx.Para().Hack_pre_and_false_tblw(bgn_pos);
+							return ctx.Para().Hack_pre_and_false_tblw(ctx, root, src, bgn_pos);
 						else								// interpret as text
-							ctx.Subs_add(tkn_mkr.Pipe(bgn_pos, cur_pos));	//		create pipe_tkn; return;
+							ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, cur_pos));	//		create pipe_tkn; return;
 						return cur_pos;
 					}
 				case Tblw_type_th:								// "!"
@@ -62,7 +62,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 				case Tblw_type_tc:								// "|+"
 				case Tblw_type_tr:								// "|-"
 					if (ctx.Para().Pre_at_line_bgn())	// HACK:pre_section_begun_and_failed_tblw
-						return ctx.Para().Hack_pre_and_false_tblw(bgn_pos);
+						return ctx.Para().Hack_pre_and_false_tblw(ctx, root, src, bgn_pos);
 					else									// interpret as text
 						return ctx.LxrMake_txt_(cur_pos);			//		create txt_tkn; return;
 				case Tblw_type_te:								// "|}"
@@ -72,7 +72,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 					}
 					else {
 						if (ctx.Para().Pre_at_line_bgn())	// HACK:pre_section_begun_and_failed_tblw
-							return ctx.Para().Hack_pre_and_false_tblw(bgn_pos);
+							return ctx.Para().Hack_pre_and_false_tblw(ctx, root, src, bgn_pos);
 						else									// interpret as text
 							return ctx.LxrMake_txt_(cur_pos);		//		create txt_tkn; return;
 					}
@@ -118,17 +118,17 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 					case Xop_tkn_itm_.Tid_tblw_th:			// noop; <th><table>
 						break;
 					case Xop_tkn_itm_.Tid_tblw_tb:			// fix;  <table><table>	    -> <table><tr><td><table>
-						ctx.Subs_add(tkn_mkr.Ignore(bgn_pos, cur_pos, Xop_ignore_tkn.Ignore_tid_htmlTidy_tblw));
+						ctx.Subs_add(root, tkn_mkr.Ignore(bgn_pos, cur_pos, Xop_ignore_tkn.Ignore_tid_htmlTidy_tblw));
 						++tblw_tb_suppressed;
 						cur_pos = Xop_lxr_.FindFwdUntil(src, src_len, cur_pos, Byte_ascii.NewLine);	// NOTE: minor hack; this tblw tkn will be ignored, so ignore any of its attributes as well; gobble up all chars till nl. see:  if two consecutive tbs, ignore attributes on 2nd; en.wikibooks.org/wiki/Wikibooks:Featured books
 						return cur_pos;
 					case Xop_tkn_itm_.Tid_tblw_tr:			// fix:  <tr><table>        -> <tr><td><table>
-						ctx.Subs_add_and_stack(tkn_mkr.Tblw_td(bgn_pos, bgn_pos, tblw_xml));
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_td(bgn_pos, bgn_pos, tblw_xml));
 						break;
 					case Xop_tkn_itm_.Tid_tblw_tc:			// fix;  <caption><table>   -> <caption></caption><tr><td><table>
-						ctx.Stack_pop_til(ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
-						ctx.Subs_add_and_stack(tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tblw_xml));
-						ctx.Subs_add_and_stack(tkn_mkr.Tblw_td(bgn_pos, bgn_pos, tblw_xml));
+						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tblw_xml));
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_td(bgn_pos, bgn_pos, tblw_xml));
 						break;
 				}
 				Xop_tblw_tb_tkn tb_tkn = tkn_mkr.Tblw_tb(bgn_pos, cur_pos, tblw_xml);
@@ -138,17 +138,22 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 				switch (prv_tid) {
 					case Xop_tkn_itm_.Tid_tblw_tb: break;	// noop; <table><tr>
 					case Xop_tkn_itm_.Tid_tblw_tc:			// fix;  <caption><tr>      -> <caption></caption><tr>
-						ctx.Stack_pop_til(ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
+						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
 						break;
 					case Xop_tkn_itm_.Tid_tblw_td:			// fix;  <td><tr>           -> <td></td></tr><tr>
 					case Xop_tkn_itm_.Tid_tblw_th:			// fix;  <th><tr>           -> <th></th></tr><tr>
-						ctx.Para().Process_nl(bgn_pos, bgn_pos + 1, false);	// DUBIOUS: starting tr; process para (which will create paras for cells) 2012-12-08
-						ctx.Stack_pop_til(ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), true, bgn_pos, bgn_pos);
+						ctx.Para().Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1, false);	// DUBIOUS: starting tr; process para (which will create paras for cells) 2012-12-08
+						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), true, bgn_pos, bgn_pos);
 						break;
-					case Xop_tkn_itm_.Tid_tblw_tr:			// fix;  <tr><tr>           -> <tr>
-						// NOTE: set prv_row to ignore, but do not pop; see Tr_dupe_xnde and [[Jupiter]]
-						Xop_tkn_itm prv_row = ctx.Stack_pop_til(ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), false, bgn_pos, bgn_pos);
-						prv_row.Ignore_y_();
+					case Xop_tkn_itm_.Tid_tblw_tr:			// fix;  <tr><tr>           -> <tr>							
+						if (prv_tkn.Tblw_subs_len() == 0) {	// NOTE: set prv_row to ignore, but do not pop; see Tr_dupe_xnde and [[Jupiter]]; only invoke if same type; EX: <tr><tr> but not |-<tr>; DATE:2013-12-09
+							Xop_tkn_itm prv_row = ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), false, bgn_pos, bgn_pos);
+							prv_row.Ignore_y_();
+						}
+						else
+							ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), true, bgn_pos, bgn_pos);						
+						//							}
+//							else	// types are mixed; close previous <tr>; EX: |-<tr>; DATE:2013-12-09
 						break;
 				}					
 				Xop_tblw_tr_tkn tr_tkn = tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tblw_xml);
@@ -160,10 +165,10 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 				switch (prv_tid) {
 					case Xop_tkn_itm_.Tid_tblw_tr: break;	// noop; <tr><td>
 					case Xop_tkn_itm_.Tid_tblw_td:			// fix;  <td><td>           -> <td></td><td>
-						ctx.Stack_pop_til(ctx.Stack_idx_typ(prv_tid), true, bgn_pos, bgn_pos);
+						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(prv_tid), true, bgn_pos, bgn_pos);
 						break;
 					case Xop_tkn_itm_.Tid_tblw_th:			// fix;  <th><td>           -> <th></th><td>
-						ctx.Stack_pop_til(ctx.Stack_idx_typ(prv_tid), true, bgn_pos, bgn_pos);
+						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(prv_tid), true, bgn_pos, bgn_pos);
 						if (wlxr_type == Tblw_type_td2) create_th = true;	// !a||b -> <th><th>; but !a|b -> <th><td>
 						break;
 					case Xop_tkn_itm_.Tid_tblw_tb:			// fix;  <table><td>        -> <table><tr><td>
@@ -173,14 +178,14 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 						}
 						else {
 							new_tkn = tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tblw_xml);
-							ctx.Subs_add_and_stack(new_tkn);
+							ctx.Subs_add_and_stack_tblw(root, prv_tkn, new_tkn);
 							prv_tid = new_tkn.Tkn_tid();
 						}
 						break;
 					case Xop_tkn_itm_.Tid_tblw_tc:			// fix;  <caption><td>      -> <caption></caption><tr><td>
-						ctx.Stack_pop_til(ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
+						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
 						new_tkn = tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tblw_xml);
-						ctx.Subs_add_and_stack(new_tkn);
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, new_tkn);
 						prv_tid = new_tkn.Tkn_tid();
 						break;
 				}
@@ -195,27 +200,27 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 					case Xop_tkn_itm_.Tid_tblw_th:			// fix;  <th><th>           -> <th></th><th>
 						if (tblw_xml																// tblw_xml always closes previous token
 							|| (wlxr_type == Tblw_type_th2 || wlxr_type == Tblw_type_th))	// ! always closes; EX: "! !!"; "!! !!"; REMOVE: 2012-05-07; had (&& !ws_enabled) but caused "\n !" to fail; guard is no longer necessary since tblw_ws changed...
-							ctx.Stack_pop_til(ctx.Stack_idx_typ(prv_tid), true, bgn_pos, bgn_pos);
+							ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(prv_tid), true, bgn_pos, bgn_pos);
 						else {
-							ctx.Subs_add(tkn_mkr.Txt(bgn_pos, cur_pos));
+							ctx.Subs_add(root, tkn_mkr.Txt(bgn_pos, cur_pos));
 							return cur_pos;
 						}
 						break;
 					case Xop_tkn_itm_.Tid_tblw_td:			// fix;  <td><th>           -> <td></td><th> NOTE: common use of using <th> after <td> for formatting
 						if (tblw_xml												// tblw_xml always closes previous token
 							|| (wlxr_type == Tblw_type_th && !ws_enabled))	// "| !" closes; "| !!" does not;
-							ctx.Stack_pop_til(ctx.Stack_idx_typ(prv_tid), true, bgn_pos, bgn_pos);
+							ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(prv_tid), true, bgn_pos, bgn_pos);
 						else {
-							ctx.Subs_add(tkn_mkr.Txt(bgn_pos, cur_pos));
+							ctx.Subs_add(root, tkn_mkr.Txt(bgn_pos, cur_pos));
 							return cur_pos;
 						}
 						break;
 					case Xop_tkn_itm_.Tid_tblw_tb:			// fix;  <table><th>        -> <table><tr><th>
-						ctx.Subs_add_and_stack(tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tblw_xml));
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tblw_xml));
 						break;
 					case Xop_tkn_itm_.Tid_tblw_tc:			// fix;  <caption><th>      -> <caption></caption><tr><th>
-						ctx.Stack_pop_til(ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
-						ctx.Subs_add_and_stack(tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tblw_xml));
+						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tblw_xml));
 						break;
 				}
 				new_tkn = tkn_mkr.Tblw_th(bgn_pos, cur_pos, tblw_xml);
@@ -225,15 +230,15 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 				switch (prv_tid) {
 					case Xop_tkn_itm_.Tid_tblw_tb: break;	// noop; <table><caption>
 					case Xop_tkn_itm_.Tid_tblw_tr:			// fix;  <tr><caption>      -> <tr></tr><caption>  TODO: caption should be ignored and placed in quarantine
-						ctx.Stack_pop_til(ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), true, bgn_pos, bgn_pos);
+						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), true, bgn_pos, bgn_pos);
 						break;
 					case Xop_tkn_itm_.Tid_tblw_td:			// fix;  <td><caption>      -> <td></td><caption>
 					case Xop_tkn_itm_.Tid_tblw_th:			// fix;  <th><caption>		-> <th></th><caption>
-						ctx.Stack_pop_til(ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), true, bgn_pos, bgn_pos);	// NOTE: closing <tr> in order to close <td>/<th>
+						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), true, bgn_pos, bgn_pos);	// NOTE: closing <tr> in order to close <td>/<th>
 						ctx.Msg_log().Add_itm_none(Xop_tblw_log.Caption_after_td, src, prv_tkn.Src_bgn(), bgn_pos);
 						break;
 					case Xop_tkn_itm_.Tid_tblw_tc:			// fix;  <caption><caption> -> <caption></caption><caption>
-						ctx.Stack_pop_til(ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
+						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
 						ctx.Msg_log().Add_itm_none(Xop_tblw_log.Caption_after_tc, src, prv_tkn.Src_bgn(), bgn_pos);
 						break;
 				}
@@ -242,12 +247,12 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 				cell_pipe_seen = false; // NOTE: always mark !seen; see Atrs_tc()
 				break;
 		}
-		ctx.Subs_add_and_stack(new_tkn);
+		ctx.Subs_add_and_stack_tblw(root, prv_tkn, new_tkn);
 		if (atrs_bgn > Xop_tblw_wkr.Atrs_ignore_check) {
 			new_tkn.Atrs_rng_set(atrs_bgn, atrs_end);
 			if (ctx.Parse_tid() == Xop_parser_.Parse_tid_page_wiki) {
 				Xop_xatr_itm[] atrs = ctx.App().Xatr_parser().Parse(ctx.Msg_log(), src, atrs_bgn, atrs_end);
-				new_tkn.Atrs_ary_(atrs);
+				new_tkn.Atrs_ary_as_tblw_(atrs);
 			}
 		}
 		switch (wlxr_type) {
@@ -267,7 +272,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 	}
 	public int MakeTkn_end_tblw(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, int typeId, byte wlxr_type, Xop_tblw_tkn prv_tkn, int prv_tid, boolean tblw_xml) {
 		if (!tblw_xml) {
-			ctx.Para().Process_nl(bgn_pos, bgn_pos + 1, false);	// DUBIOUS: starting tr; process para (which will create paras for cells) 2012-12-08
+			ctx.Para().Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1, false);	// DUBIOUS: starting tr; process para (which will create paras for cells) 2012-12-08
 //				ctx.Para().LastSection_process(bgn_pos + 1);
 //				ctx.Para().Process_nl_sect_end(bgn_pos + 1);
 		}
@@ -276,10 +281,10 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 			switch (prv_tid) {
 				case Xop_tkn_itm_.Tid_tblw_td:			// fix;  <td></table>       -> <td></td></tr></table>
 				case Xop_tkn_itm_.Tid_tblw_th:			// fix;  <th></table>       -> <th></th></tr></table>
-					ctx.Stack_pop_til(ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), true, bgn_pos, bgn_pos);
+					ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), true, bgn_pos, bgn_pos);
 					break;
 				case Xop_tkn_itm_.Tid_tblw_tc:			// fix;  <caption></table>  -> <caption></caption></table>
-					ctx.Stack_pop_til(ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
+					ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
 					break;
 				case Xop_tkn_itm_.Tid_tblw_tr:			// fix;  <tr></table>       -> </table>  : tr but no tds; remove tr
 					if (prv_tkn.Tkn_sub_idx() + 1 == root.Subs_len()) {	// previous tkn was tr; no point creating empty <tr> so delete
@@ -302,17 +307,17 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 					}
 					if (!has_subs) {
 						Xop_tkn_itm new_tkn = tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tblw_xml);
-						ctx.Subs_add_and_stack(new_tkn);
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, new_tkn);
 						new_tkn = tkn_mkr.Tblw_td(bgn_pos, bgn_pos, tblw_xml);
-						ctx.Subs_add_and_stack(new_tkn);
-						ctx.Stack_pop_til(ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tb), true, bgn_pos, bgn_pos);
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, new_tkn);
+						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tb), true, bgn_pos, bgn_pos);
 						return cur_pos;
 					}
 					break;
 			}
 			int tb_idx = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tb); 
 			if (tb_idx == -1) return cur_pos;	// NOTE: tb_idx can be -1 when called from Pipe in Tmpl mode
-			Xop_tblw_tb_tkn tb = (Xop_tblw_tb_tkn)ctx.Stack_pop_til(tb_idx, false, bgn_pos, bgn_pos);	// NOTE: need to pop manually in order to set all intermediate node ends to bgn_pos, but tb ent to cur_pos; EX: for stack of "tb,tr,td" tr and td get End_() of bgn_pos but tb gets End_() of cur_pos
+			Xop_tblw_tb_tkn tb = (Xop_tblw_tb_tkn)ctx.Stack_pop_til(root, src, tb_idx, false, bgn_pos, bgn_pos);	// NOTE: need to pop manually in order to set all intermediate node ends to bgn_pos, but tb ent to cur_pos; EX: for stack of "tb,tr,td" tr and td get End_() of bgn_pos but tb gets End_() of cur_pos
 			tb.Subs_move(root);
 			tb.Src_end_(cur_pos);
 			ctx.Para().Process_xml_block(Xop_para_wkr.Block_mode_end, cur_pos);	// NOTE: must clear block state that was started by <tr>; code implicitly relies on td clearing block state, but no td was created
@@ -347,7 +352,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 			}
 		}
 		if (acs_pos != -1) {
-			Xop_tblw_tkn bgn_tkn = (Xop_tblw_tkn)ctx.Stack_pop_til(acs_pos, false, bgn_pos, cur_pos);
+			Xop_tblw_tkn bgn_tkn = (Xop_tblw_tkn)ctx.Stack_pop_til(root, src, acs_pos, false, bgn_pos, cur_pos);
 			switch (wlxr_type) {
 				case Tblw_type_tb:
 					ctx.Para().Process_xml_block(Xop_xnde_tag.Block_end, cur_pos);
@@ -402,7 +407,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 		prv_tblw.Atrs_rng_set(atrs_bgn, atrs_end);
 		if (ctx.Parse_tid() == Xop_parser_.Parse_tid_page_wiki && atrs_bgn != -1) {
 			Xop_xatr_itm[] atrs = ctx.App().Xatr_parser().Parse(ctx.Msg_log(), src, atrs_bgn, atrs_end);
-			prv_tblw.Atrs_ary_(atrs);
+			prv_tblw.Atrs_ary_as_tblw_(atrs);
 		}
 		wkr.Cell_pipe_seen_(true);
 		return true;

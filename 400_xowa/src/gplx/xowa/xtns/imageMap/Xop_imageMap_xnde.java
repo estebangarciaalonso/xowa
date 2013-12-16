@@ -23,11 +23,10 @@ public class Xop_imageMap_xnde implements Xop_xnde_xtn {
 	public boolean Xtn_literal() {return false;}
 	public Xop_root_tkn Xtn_root() {return lnki_root;} private Xop_root_tkn lnki_root;
 	public ListAdp Shape_list() {return shape_list;} ListAdp shape_list = ListAdp_.new_(); 
-	public void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		int content_bgn = xnde.Tag_open_end(), content_end = xnde.Tag_close_bgn();
 		int nl_0_pos = Xop_lxr_.Find_fwd_while_non_ws(src, content_bgn, content_end);
 		int cur_pos = nl_0_pos, nl_1_pos = -1;//, ws_pos_bgn = -1;
-		Xop_root_tkn root = ctx.Root();
 		int src_len = src.length;
 		Xop_ctx imageMap_ctx = Xop_ctx.new_sub_(wiki);
 		imageMap_ctx.Para().Enabled_n_();
@@ -103,7 +102,7 @@ public class Xop_imageMap_xnde implements Xop_xnde_xtn {
 				}
 				else {
 					orig_ctx.Tab().Lnki_file_mgr().Add(lnki_tkn);
-					if (file_wkr != null) file_wkr.Wkr_exec(orig_ctx, lnki_tkn);
+					if (file_wkr != null) file_wkr.Wkr_exec(orig_ctx, src, lnki_tkn);
 				}
 			}
 			first = false;

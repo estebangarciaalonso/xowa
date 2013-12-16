@@ -42,7 +42,7 @@ abstract class Db_engine_sql_base implements Db_engine, RlsAble {
 			Statement cmd = NewDbCmd(sql);	
 			return cmd.executeUpdate(sql);	
 		}
-		catch (Exception exc) {throw Err_.err_(exc, "exec nonQuery failed").Add("sql", sql);}
+		catch (Exception exc) {throw Err_.err_(exc, "exec nonQuery failed").Add("sql", sql).Add("err", Err_.Message_gplx_brief(exc));}
 	}
 	@gplx.Internal @gplx.Virtual protected DataRdr ExecuteReader(String sql) {
 		try {
@@ -51,7 +51,7 @@ abstract class Db_engine_sql_base implements Db_engine, RlsAble {
 			ResultSet rdr = cmd.getResultSet();	
 			return NewDataRdr(rdr, sql);
 		}
-		catch (Exception exc) {throw Err_.err_(exc, "exec reader failed").Add("sql", sql);}
+		catch (Exception exc) {throw Err_.err_(exc, "exec reader failed").Add("sql", sql).Add("err", Err_.Message_gplx_brief(exc));}
 	}
 	@gplx.Internal protected abstract Connection NewDbCon();	
 	@gplx.Virtual public DataRdr NewDataRdr(ResultSet rdr, String sql) {return gplx.stores.Db_data_rdr_.new_(rdr, sql);}

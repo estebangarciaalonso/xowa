@@ -19,7 +19,7 @@ package gplx.xowa.xtns.poems; import gplx.*; import gplx.xowa.*; import gplx.xow
 public class Xtn_poem_nde implements Xop_xnde_xtn {
 	public Xop_root_tkn Xtn_root() {return body;} private Xop_root_tkn body;
 	public boolean Xtn_literal() {return false;}
-	public void Xtn_compile(Xop_ctx ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, byte[] src, Xop_xnde_tkn xnde) {// REF.MW: Poem.php|wfRenderPoemTag
+	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {// REF.MW: Poem.php|wfRenderPoemTag
 		int itm_bgn = xnde.Tag_open_end(), itm_end = xnde.Tag_close_bgn();
 		if (itm_bgn == src.length)	return;  // NOTE: handle inline where there is no content to parse; EX: <poem/>
 		if (itm_bgn >= itm_end)		return;  // NOTE: handle inline where there is no content to parse; EX: a<poem/>b

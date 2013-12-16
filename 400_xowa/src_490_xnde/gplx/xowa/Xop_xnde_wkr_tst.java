@@ -77,10 +77,10 @@ public class Xop_xnde_wkr_tst {
 		fxt.tst_Parse_page_wiki("<ref / >a</ref>", fxt.tkn_xnde_(0, 15).Atrs_rng_(5, 7).Subs_(fxt.tkn_txt_(8, 9)));
 		fxt.tst_Parse_page_wiki("<ref name=a/b/>", fxt.tkn_xnde_(0, 15).Atrs_rng_(5, 13));
 	}
-	@Test  public void AutoClose() {
+	@Test  public void Auto_close_() {
 		fxt.ini_Log_(Xop_xnde_log.Dangling_xnde).tst_Parse_page_wiki("<div>", fxt.tkn_xnde_(0, 5));
 	}
-	@Test  public void AutoClose_many() {
+	@Test  public void Auto_close__many() {
 		fxt.ini_Log_(Xop_xnde_log.Dangling_xnde, Xop_xnde_log.Dangling_xnde, Xop_xnde_log.Dangling_xnde).tst_Parse_page_wiki("<div><div><div>", fxt.tkn_xnde_(0, 15).Subs_(fxt.tkn_xnde_(5, 15).Subs_(fxt.tkn_xnde_(10, 15))));
 	}
 	@Test  public void Escaped() {
@@ -119,7 +119,7 @@ public class Xop_xnde_wkr_tst {
 	}
 	@Test  public void Lnki() {
 		fxt.tst_Parse_page_wiki("[[Image:a|b<br/>d]]"
-			, fxt.tkn_lnki_().NmsId_(Xow_ns_.Id_file).Trg_tkn_(fxt.tkn_arg_nde_().Val_tkn_(fxt.tkn_arg_itm_(fxt.tkn_txt_(2, 7), fxt.tkn_colon_(7), fxt.tkn_txt_(8, 9))))
+			, fxt.tkn_lnki_().Ns_id_(Xow_ns_.Id_file).Trg_tkn_(fxt.tkn_arg_nde_().Val_tkn_(fxt.tkn_arg_itm_(fxt.tkn_txt_(2, 7), fxt.tkn_colon_(7), fxt.tkn_txt_(8, 9))))
 			.Caption_tkn_(fxt.tkn_arg_nde_(10, 17).Val_tkn_(fxt.tkn_arg_itm_(fxt.tkn_txt_(10, 11), fxt.tkn_xnde_(11, 16), fxt.tkn_txt_(16, 17))))
 			);
 	}
@@ -143,7 +143,7 @@ public class Xop_xnde_wkr_tst {
 			, fxt.tkn_txt_ (35, 36)
 			);
 	}
-	@Test  public void AutoCloseOpenTag_td() {
+	@Test  public void Auto_close_td() {
 		fxt.tst_Parse_page_wiki("<table><tr><td>a<td></tr><tr><td>b</td></tr></table>"
 			, fxt.tkn_tblw_tb_(0, 52).Subs_
 			(	fxt.tkn_tblw_tr_(7, 25).Subs_
@@ -156,7 +156,30 @@ public class Xop_xnde_wkr_tst {
 			)				
 			);
 	}
-	@Test  public void AutoCloseOpenTag_b() {
+	@Test  public void Auto_close_tr() {// PURPOSE: <tr> should auto-close |-; EX:fr.wikipedia.org/wiki/Napol�on_Ier; DATE:2013-12-09
+		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl
+		(	"{|"
+		,	"|-"
+		,	"<td>row1</td>"
+		,	"<tr><td>row2</td>"
+		,	"|}"
+		)
+		,	String_.Concat_lines_nl
+		(	"<table>"
+		,	"  <tr>"
+		,	"    <td>row1"
+		,	"    </td>"
+		,	""
+		,	"  </tr>"
+		,	"  <tr>"
+		,	"    <td>row2"
+		,	"    </td>"
+		,	"  </tr>"
+		,	"</table>"
+		)
+		);
+	}
+	@Test  public void Auto_close_b() {
 		fxt.ini_Log_(Xop_xnde_log.Dangling_xnde).tst_Parse_page_wiki("<table><tr><td><b>a<td></tr></table>"
 			, fxt.tkn_tblw_tb_(0, 36).Subs_
 			(	fxt.tkn_tblw_tr_(7, 28).Subs_
@@ -168,27 +191,27 @@ public class Xop_xnde_wkr_tst {
 			)
 			);
 	}
-	@Test  public void AutoCloseOpenTag_p() {	// WP:
+	@Test  public void Auto_close_p() {	// WP:
 		fxt.ini_Log_(Xop_xnde_log.Auto_closing_section).tst_Parse_page_wiki("a<p>b<p>c</p>"
 			, fxt.tkn_txt_	(0, 1)
 			, fxt.tkn_xnde_	(1, 4).Subs_(fxt.tkn_txt_(4, 5))
 			, fxt.tkn_xnde_	(5, 13).Subs_(fxt.tkn_txt_(8, 9))
 			);
 	}
-	@Test  public void AutoCloseOpenTag_p_blockquote() {	// WP:
+	@Test  public void Auto_close_p_blockquote() {	// WP:
 		fxt.ini_Log_(Xop_xnde_log.Auto_closing_section).tst_Parse_page_wiki("<blockquote>a<p>b</blockquote>"
 			, fxt.tkn_xnde_(0, 30).Subs_
 			(	fxt.tkn_txt_(12, 13)
 			,	fxt.tkn_xnde_(13, 17).Subs_(fxt.tkn_txt_(16, 17))
 			));
 	}
-	@Test  public void Autoclose() {
+	@Test  public void Auto_close_center() {
 		fxt.ini_Log_(Xop_xnde_log.Dangling_xnde).tst_Parse_page_wiki("a<center>b"
 			, fxt.tkn_txt_(0, 1)
 			, fxt.tkn_xnde_(1, 10).CloseMode_(Xop_xnde_tkn.CloseMode_open).Subs_(fxt.tkn_txt_(9, 10))
 			);
 	}
-	@Test  public void Autoclose_list() {
+	@Test  public void Auto_close_list() {
 		fxt.ini_Log_(Xop_xnde_log.Dangling_xnde).tst_Parse_page_wiki("*<b>a\n*"
 			, fxt.tkn_list_bgn_(0, 1, Xop_list_tkn_.List_itmTyp_ul).List_path_(0)
 			, fxt.tkn_xnde_(1, 7).Subs_(fxt.tkn_txt_(4, 5))
@@ -197,7 +220,7 @@ public class Xop_xnde_wkr_tst {
 			, fxt.tkn_list_end_(7).List_path_(1)
 			);
 	}
-	@Test  public void AutoClose_innerNode() {
+	@Test  public void Auto_close_inner_node() {
 		fxt.tst_Parse_page_wiki_str
 			(	"<div><div><center>a</div></div>"
 			,	"<div><div><center>a</center></div></div>"
@@ -389,7 +412,7 @@ public class Xop_xnde_wkr_tst {
 	@Test  public void Source_escape() {
 		fxt.tst_Parse_page_wiki_str("<source><b></source>", "<pre>&lt;b&gt;</pre>");
 	}
-	@Test  public void Code_autoclose() {	// EX.WP: HTML; <code>&lt;i&gt;<code> and <code>&lt;center&gt;<code> tags. There are
+	@Test  public void Code_Auto_close_() {	// EX.WP: HTML; <code>&lt;i&gt;<code> and <code>&lt;center&gt;<code> tags. There are
 		fxt.tst_Parse_page_wiki_str("a<code>b<code>c", "a<code>b</code>c");
 	}
 	@Test  public void Error_br_removed() {
@@ -541,7 +564,7 @@ public class Xop_xnde_wkr_tst {
 			,	"</i>"
 			));
 	}
-	@Test  public void List_autoclose() {
+	@Test  public void List_Auto_close_() {
 		fxt.tst_Parse_page_wiki_str
 			(	"<li>a<li>b"
 			,	String_.Concat_lines_nl_skipLast
@@ -753,6 +776,9 @@ public class Xop_xnde_wkr_tst {
 		,	"</ul>"
 		));
 	}
+//		@Test  public void Small_repeat_ends() {	// PURPOSE: <small><small> -> <small></small>; EX: w:Wikipedia:Size_comparisons; DATE:2013-12-10
+//			fxt.tst_Parse_page_all_str("<small>a<small>b</small>c", "<small>a</small>bc");
+//		}
 
 //		@Test  public void Atrs_invalid_quote() {	// EX.WP:Palace of Versailles
 //			fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast

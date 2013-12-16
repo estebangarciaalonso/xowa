@@ -40,15 +40,15 @@ public class Xob_wdata_db_cmd extends Xob_dump_mgr_base implements Xob_cmd {
 		json_parser = wdata_mgr.Parser();
 		tbl_mgr.Provider().Txn_mgr().Txn_bgn_if_none();
 	}
-	@Override public void Exec_page_hook(Xow_ns ns, Xodb_page page, byte[] page_src) {
+	@Override public void Exec_pg_itm_hook(Xow_ns ns, Xodb_page page, byte[] page_src) {
 		Json_doc jdoc = json_parser.Parse(page_src); if (jdoc == null) return; // not a json document
 		Wdata_doc wdoc = new Wdata_doc(page.Ttl_wo_ns(), wdata_mgr, jdoc);
 		tbl_mgr.Exec_insert_by_wdoc(lang_key, wdata_mgr, page.Id(), wdoc);
 	}
-	@Override public void Exec_commit_bgn() {
+	@Override public void Exec_commit_hook() {
 		tbl_mgr.Provider().Txn_mgr().Txn_end_all_bgn_if_none();
 	}
-	@Override public void Exec_end() {
+	@Override public void Exec_end_hook() {
 		tbl_mgr.Term(usr_dlg);
 	}
 }

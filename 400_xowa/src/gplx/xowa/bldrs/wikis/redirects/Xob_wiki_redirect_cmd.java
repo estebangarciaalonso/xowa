@@ -45,16 +45,16 @@ public class Xob_wiki_redirect_cmd extends Xob_dump_mgr_base {
 		return provider;
 	}
 	@Override protected void Cmd_bgn_end() {}
-	@Override public void Exec_page_hook(Xow_ns ns, Xodb_page page, byte[] page_src) {
+	@Override public void Exec_pg_itm_hook(Xow_ns ns, Xodb_page page, byte[] page_src) {
 		Xoa_ttl redirect_ttl = redirect_mgr.Extract_redirect(page_src, page_src.length);
 		byte[] redirect_ttl_bry = Xoa_ttl.Replace_spaces(redirect_ttl.Page_db());	// NOTE: spaces can still exist b/c redirect is scraped from #REDIRECT which sometimes has a mix; EX: "A_b c"
 		redirect_ttl_bry = encoder.Decode(redirect_ttl_bry);
 		tbl_redirect.Insert(stmt, page.Id(), -1, redirect_ttl.Ns().Id(), redirect_ttl_bry, redirect_ttl.Anch_txt(), 1);
 	}
-	@Override public void Exec_commit_bgn() {
+	@Override public void Exec_commit_hook() {
 		provider.Txn_mgr().Txn_end_all_bgn_if_none();
 	}
-	@Override public void Exec_end() {
+	@Override public void Exec_end_hook() {
 		provider.Txn_mgr().Txn_end_all();			
 		tbl_redirect.Create_indexes(usr_dlg, provider);
 		tbl_redirect.Update_redirects(provider, db_mgr.Fsys_mgr().Get_url(Xodb_file.Tid_core), 4);

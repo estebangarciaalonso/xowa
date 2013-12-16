@@ -19,6 +19,7 @@ package gplx.xowa.bldrs.files; import gplx.*; import gplx.xowa.*; import gplx.xo
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.wdatas.*;
 import gplx.xowa.bldrs.oimgs.*;
 import gplx.xowa.parsers.lnkis.*; import gplx.xowa.parsers.logs.*;
+import gplx.xowa.wikis.*;
 public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_logger {
 	private Db_provider provider; private Db_stmt stmt;
 	private boolean wdata_enabled = true, xtn_ref_enabled = true;
@@ -45,9 +46,9 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 	@Override protected void Cmd_bgn_end() {
 		Xop_log_mgr log_mgr = ctx.App().Log_mgr();
 		log_mgr.Log_dir_(wiki.Fsys_mgr().Root_dir());	// put log in wiki dir, instead of user.temp
-		invoke_wkr = this.Invoke_wkr();	// set member reference
+		invoke_wkr = this.Invoke_wkr();					// set member reference
 		invoke_wkr = log_mgr.Make_wkr_invoke();
-		property_wkr = this.Property_wkr();	// set member reference
+		property_wkr = this.Property_wkr();				// set member reference
 		property_wkr = log_mgr.Make_wkr_property();
 		wiki.App().Wiki_mgr().Wdata_mgr().Enabled_(wdata_enabled);
 		if (!xtn_ref_enabled) gplx.xowa.xtns.refs.Xtn_references_nde.Enabled = false;
@@ -59,10 +60,11 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		provider.Txn_mgr().Txn_bgn_if_none();
 		log_mgr.Txn_bgn();
 	}
-	@Override public void Exec_page_hook(Xow_ns ns, Xodb_page page, byte[] page_src) {
-		byte[] ttl_bry = ns.Gen_ttl(page.Ttl_wo_ns());
-		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
-		ttl_bry = ttl.Page_db();
+	@Override public void Exec_pg_itm_hook(Xow_ns ns, Xodb_page page, byte[] page_src) {
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ns.Gen_ttl(page.Ttl_wo_ns()));
+		byte[] ttl_bry = ttl.Page_db();
+		byte page_tid = Xow_page_tid.Identify(wiki.Wiki_tid(), ns.Id(), ttl_bry);
+		if (page_tid != Xow_page_tid.Tid_wikitext) return; // ignore js, css, lua, json
 		ctx.Page().Page_ttl_(ttl).Page_id_(page.Id());
 		ctx.Tab().Lnki_redlinks_mgr().Page_bgn(ctx);
 		if (ns.Id_tmpl())
@@ -72,15 +74,16 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 			parser.Parse_page_all_clear(root, ctx, ctx.Tkn_mkr(), page_src);
 			root.Clear();
 		}
+		ctx.Tab().Lnki_file_mgr().Clear();
 	}
-	@Override public void Exec_commit_bgn() {
-		provider.Txn_mgr().Txn_end_all_bgn_if_none();
+	@Override public void Exec_commit_hook() {
+		provider.Txn_mgr().Txn_end_all_bgn_if_none();	// save lnki_temp
 	}
-	@Override public void Exec_end() {
+	@Override public void Exec_end_hook() {
 		wiki.App().Log_mgr().Txn_end();
 		provider.Txn_mgr().Txn_end();
 	}
-	public void Wkr_exec(Xop_ctx ctx, Xop_lnki_tkn lnki) {
+	public void Wkr_exec(Xop_ctx ctx, byte[] src, Xop_lnki_tkn lnki) {
 		if (lnki.Ttl().ForceLiteralLink()) return; // ignore literal links which creat a link to file, but do not show the image; EX: [[:File:A.png|thumb|120px]] creates a link to File:A.png, regardless of other display-oriented args
 		byte[] ttl = lnki.Ttl().Page_db();
 		Xof_ext ext = Xof_ext_.new_by_ttl_(ttl);

@@ -237,32 +237,42 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	private void Exec_page_reload_imgs() {
 		if (page.Url().Anchor_str() != null) GfoInvkAble_.InvkCmd_val(async_cmd, Invk_html_box_select_by_id, page.Url().Anchor_str());
 		if (gui_wtr.Canceled()) {gui_wtr.Prog_none(GRP_KEY, "imgs.done", ""); app.Log_wtr().Queue_enabled_(false); return;}
+		Xow_wiki wiki = page.Wiki();
 		int xfer_len = 0;
 		xfer_len = page.File_queue().Count();
+		String page_ttl_str = String_.new_utf8_(wiki.Ctx().Page().Page_ttl().Raw());
 		if (xfer_len > 0){
 			gui_wtr.Prog_one(GRP_KEY, "imgs.download", "downloading images: ~{0}", xfer_len);
-			page.File_queue().Exec(Xof_exec_tid.Tid_wiki_page, gui_wtr, page.Wiki());
+			try {page.File_queue().Exec(Xof_exec_tid.Tid_wiki_page, gui_wtr, wiki);}
+			catch (Exception e) {gui_wtr.Warn_many("", "", "page.thread.image: page=~{0} err=~{1}", page_ttl_str, Err_.Message_gplx_brief(e));}
 		}
 		xfer_len = page.File_math().Count();
 		if (xfer_len > 0){
-			gui_wtr.Prog_one(GRP_KEY, "imgs.math", "generating math: ~{0}", xfer_len);
-			for (int i = 0; i < xfer_len; i++) {
-				if (gui_wtr.Canceled()) {gui_wtr.Prog_none(GRP_KEY, "imgs.done", ""); app.Log_wtr().Queue_enabled_(false); return;}
-				Xof_math_itm itm = (Xof_math_itm)page.File_math().FetchAt(i);
-				String queue_msg = gui_wtr.Prog_many(GRP_KEY, "imgs.math.msg", "generating math ~{0} of ~{1}: ~{2}", i + ListAdp_.Base1, xfer_len, String_.new_utf8_(itm.Math()));
-				app.File_mgr().Math_mgr().MakePng(itm.Math(), itm.Hash(), itm.Png_url(), queue_msg);
-				SizeAdp size = app.File_mgr().Img_mgr().Wkr_query_img_size().Exec(itm.Png_url());
-				gui_wtr.Html_img_update("xowa_math_img_" + itm.Id(), itm.Png_url().To_http_file_str(), size.Width(), size.Height());
-				gui_wtr.Html_elem_delete("xowa_math_txt_" + itm.Id());
+			try {
+				gui_wtr.Prog_one(GRP_KEY, "imgs.math", "generating math: ~{0}", xfer_len);
+				for (int i = 0; i < xfer_len; i++) {
+					if (gui_wtr.Canceled()) {gui_wtr.Prog_none(GRP_KEY, "imgs.done", ""); app.Log_wtr().Queue_enabled_(false); return;}
+					Xof_math_itm itm = (Xof_math_itm)page.File_math().FetchAt(i);
+					String queue_msg = gui_wtr.Prog_many(GRP_KEY, "imgs.math.msg", "generating math ~{0} of ~{1}: ~{2}", i + ListAdp_.Base1, xfer_len, String_.new_utf8_(itm.Math()));
+					app.File_mgr().Math_mgr().MakePng(itm.Math(), itm.Hash(), itm.Png_url(), queue_msg);
+					SizeAdp size = app.File_mgr().Img_mgr().Wkr_query_img_size().Exec(itm.Png_url());
+					gui_wtr.Html_img_update("xowa_math_img_" + itm.Id(), itm.Png_url().To_http_file_str(), size.Width(), size.Height());
+					gui_wtr.Html_elem_delete("xowa_math_txt_" + itm.Id());
 //					gui_wtr.Html_atr_set("xowa_math_txt_" + itm.Id(), "style", "display:none");
+				}
+				page.File_math().Clear();
 			}
-			page.File_math().Clear();			
+			catch (Exception e) {gui_wtr.Warn_many("", "", "page.thread.math: page=~{0} err=~{1}", page_ttl_str, Err_.Message_gplx_brief(e));}
 		}
-		page.Html_cmd_mgr().Exec(app, gui_wtr, page);
-		Xop_lnki_logger_redlinks_wkr redlinks_wkr = new Xop_lnki_logger_redlinks_wkr(this);
-		ThreadAdp_.invk_(redlinks_wkr, Xop_lnki_logger_redlinks_wkr.Invk_run).Start();
-		gui_wtr.Prog_none(GRP_KEY, "imgs.done", "");
-		app.File_mgr().Cache_mgr().Compress_check();
+		try {page.Html_cmd_mgr().Exec(app, gui_wtr, page);}
+		catch (Exception e) {gui_wtr.Warn_many("", "", "page.thread.cmds: page=~{0} err=~{1}", page_ttl_str, Err_.Message_gplx_brief(e));}
+		try {
+			Xop_lnki_logger_redlinks_wkr redlinks_wkr = new Xop_lnki_logger_redlinks_wkr(this);
+			ThreadAdp_.invk_(redlinks_wkr, Xop_lnki_logger_redlinks_wkr.Invk_run).Start();
+			gui_wtr.Prog_none(GRP_KEY, "imgs.done", "");
+		}	catch (Exception e) {gui_wtr.Warn_many("", "", "page.thread.redlinks: page=~{0} err=~{1}", page_ttl_str, Err_.Message_gplx_brief(e));}
+		try {app.File_mgr().Cache_mgr().Compress_check();}
+		catch (Exception e) {gui_wtr.Warn_many("", "", "page.thread.cache: page=~{0} err=~{1}", page_ttl_str, Err_.Message_gplx_brief(e));}
 		app.Log_wtr().Queue_enabled_(false);
 	}
 	private void Exec_navigate(String href) {

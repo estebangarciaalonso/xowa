@@ -28,16 +28,16 @@ class Xop_tblw_lxr implements Xop_lxr {
 				if (ctx.Stack_get_tblw() == null) {
 					int lnki_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnki);
 					if (lnki_pos != Xop_ctx.Stack_not_found && wlxr_type == Xop_tblw_wkr.Tblw_type_td) {// lnki present;// NOTE: added Xop_tblw_wkr.Tblw_type_td b/c th should not apply when tkn_mkr.Pipe() is called below; DATE:2013-04-24
-						Xop_tkn_itm lnki_tkn = ctx.Stack_pop_til(lnki_pos, false, bgn_pos, cur_pos);	// pop any intervening nodes until lnki
+						Xop_tkn_itm lnki_tkn = ctx.Stack_pop_til(root, src, lnki_pos, false, bgn_pos, cur_pos);	// pop any intervening nodes until lnki
 						ctx.Stack_add(lnki_tkn);												// push lnki back onto stack; TODO: combine these 2 lines into 1
 						// NOTE: this is a "\n|" inside a [[ ]]; must create two tokens for lnki to build correctly;
-						ctx.Subs_add(tkn_mkr.NewLine(bgn_pos, bgn_pos + 1, Xop_nl_tkn.Tid_char, 1));
-						ctx.Subs_add(tkn_mkr.Pipe(bgn_pos + 1 , bgn_pos + 2));
+						ctx.Subs_add(root, tkn_mkr.NewLine(bgn_pos, bgn_pos + 1, Xop_nl_tkn.Tid_char, 1));
+						ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos + 1 , bgn_pos + 2));
 						return cur_pos;
 					}
 					else {	// \n| or \n! but no tbl
 						if (ctx.Para().Pre_at_line_bgn())	// HACK:pre_section_begun_and_failed_tblw
-							return ctx.Para().Hack_pre_and_false_tblw(bgn_pos);
+							return ctx.Para().Hack_pre_and_false_tblw(ctx, root, src, bgn_pos);
 						else								// interpret as text
 							return ctx.LxrMake_txt_(cur_pos);
 					}
@@ -52,11 +52,11 @@ class Xop_tblw_lxr implements Xop_lxr {
 				case Xop_tblw_wkr.Tblw_type_tr:		// |-
 				case Xop_tblw_wkr.Tblw_type_td2:	// ||
 				case Xop_tblw_wkr.Tblw_type_te:		// |}
-					ctx.Subs_add(tkn_mkr.Pipe(bgn_pos, bgn_pos + 1));	// 1=pipe.length
+					ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, bgn_pos + 1));	// 1=pipe.length
 					return cur_pos - 1;								// -1 to ignore 2nd char of "+", "-", or "}"
 				case Xop_tblw_wkr.Tblw_type_th2:// !!
 				case Xop_tblw_wkr.Tblw_type_th: // !
-					ctx.Subs_add(tkn_mkr.Txt(bgn_pos, cur_pos));	// NOTE: cur_pos should handle ! and !!
+					ctx.Subs_add(root, tkn_mkr.Txt(bgn_pos, cur_pos));	// NOTE: cur_pos should handle ! and !!
 					return cur_pos;
 //					case Xop_tblw_wkr.Tblw_type_tb:	// {| tblw not allowed, even in caption	// REMOVED: 2012-05-12: MW allows entire table to be put inside anchor; see lnki test; EX.WP:William Penn (Royal Navy officer)
 //						return ctx.LxrMake_txt_(cur_pos);
@@ -96,10 +96,10 @@ class Xop_tblw_lxr_ws {//: Xop_lxr
 				case Xop_tblw_wkr.Tblw_type_tr:		// |-
 				case Xop_tblw_wkr.Tblw_type_td2:	// ||
 				case Xop_tblw_wkr.Tblw_type_te:		// |}
-					ctx.Subs_add(tkn_mkr.Pipe(bgn_pos, bgn_pos + 1));	// 1=pipe.length
+					ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, bgn_pos + 1));	// 1=pipe.length
 					return cur_pos - 1;								// -1 to ignore 2nd char of "+", "-", or "}"
 				case Xop_tblw_wkr.Tblw_type_th: // !
-					ctx.Subs_add(tkn_mkr.Txt(bgn_pos, bgn_pos + 1));	// 1=bang.length
+					ctx.Subs_add(root, tkn_mkr.Txt(bgn_pos, bgn_pos + 1));	// 1=bang.length
 					return cur_pos;
 				case Xop_tblw_wkr.Tblw_type_tb:	// {| tblw not allowed, even in caption
 					return ctx.LxrMake_txt_(cur_pos);

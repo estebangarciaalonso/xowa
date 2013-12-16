@@ -32,7 +32,7 @@ class Xop_tab_lxr implements Xop_lxr {
 		src[bgn_pos] = Byte_ascii.Tab; // HACK: SEE:NOTE_1:tabs
 		for (int i = bgn_pos + 1; i < cur_pos; i++)	
 			src[i] = Byte_ascii.Space;
-		ctx.Subs_add(tkn_mkr.Tab(bgn_pos, cur_pos));
+		ctx.Subs_add(root, tkn_mkr.Tab(bgn_pos, cur_pos));
 		return cur_pos;
 	}
 	public static final Xop_tab_lxr _ = new Xop_tab_lxr();

@@ -30,7 +30,7 @@ public class Xop_tvar_lxr implements Xop_lxr {
 //		byte[] key = ByteAry_.Mid(src, cur_pos, rhs_end);
 //		byte[] body = ByteAry_.Mid(src, rhs_end + Int_.Const_position_after_char, lhs_bgn);
 		int end_pos = lhs_bgn + Close_nde.length;
-		ctx.Subs_add(tkn_mkr.Tvar(bgn_pos, end_pos, cur_pos, rhs_end, rhs_end + Int_.Const_position_after_char, lhs_bgn));
+		ctx.Subs_add(root, tkn_mkr.Tvar(bgn_pos, end_pos, cur_pos, rhs_end, rhs_end + Int_.Const_position_after_char, lhs_bgn));
 		return end_pos;
 	}
 	public static final Xop_tvar_lxr _ = new Xop_tvar_lxr(); Xop_tvar_lxr() {}

@@ -48,6 +48,6 @@ public class Xodb_page_sorter implements ComparerAble {
 	public static final Xodb_page_sorter TitleAsc				= new Xodb_page_sorter(Tid_ttl				, Asc);
 	public static final Xodb_page_sorter EnyLenDsc				= new Xodb_page_sorter(Tid_itm_len			, Dsc);
 	public static final Xodb_page_sorter IdAsc					= new Xodb_page_sorter(Tid_id				, Asc);
-	public static final Xodb_page_sorter NmsId_TtlAsc			= new Xodb_page_sorter(Tid_ns_ttl			, Asc);
+	public static final Xodb_page_sorter Ns_id_TtlAsc			= new Xodb_page_sorter(Tid_ns_ttl			, Asc);
 	public static final Xodb_page_sorter Ctg_tid_sortkey_asc	= new Xodb_page_sorter(Tid_ctg_tid_sortkey	, Asc);
 }

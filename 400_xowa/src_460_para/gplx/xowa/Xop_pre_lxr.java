@@ -22,8 +22,8 @@ class Xop_pre_lxr implements Xop_lxr {
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		if (!ctx.Para().Enabled()) {		// NOTE: para disabled in <gallery>
 			if (bgn_pos != Xop_parser_.Doc_bgn_bos)	// NOTE: guard against <BOS>" a" where bgn_pos would be -1 and no nl is available
-				ctx.Subs_add(tkn_mkr.NewLine(bgn_pos, bgn_pos + 1, Xop_nl_tkn.Tid_char, 1));
-			ctx.Subs_add(tkn_mkr.Space(ctx.Root(), cur_pos - 1, cur_pos));
+				ctx.Subs_add(root, tkn_mkr.NewLine(bgn_pos, bgn_pos + 1, Xop_nl_tkn.Tid_char, 1));
+			ctx.Subs_add(root, tkn_mkr.Space(root, cur_pos - 1, cur_pos));
 			return cur_pos;
 		}
 		// trim is needed for tblw_ws; EX: "  {|"
@@ -49,7 +49,7 @@ class Xop_pre_lxr implements Xop_lxr {
 			byte b = src[txt_pos];
 			if		(b == Byte_ascii.NewLine) {	// next char is nl
 				cur_pos = txt_pos;							// position at nl; NOTE: do not position after nl, else may break wikitext; EX: "\s\n{|" needs to preserve "\n" for tblw
-				ctx.Subs_add(tkn_mkr.Ignore(bgn_pos, cur_pos, Xop_ignore_tkn.Ignore_tid_pre_at_bos));
+				ctx.Subs_add(root, tkn_mkr.Ignore(bgn_pos, cur_pos, Xop_ignore_tkn.Ignore_tid_pre_at_bos));
 				return cur_pos;	// ignore pre if blank line at bos; EX: "\s\n"
 			}
 			else if (b == Byte_ascii.Lt)		// next char is <; possible xnde; flag so that xnde can escape; DATE:2013-11-28

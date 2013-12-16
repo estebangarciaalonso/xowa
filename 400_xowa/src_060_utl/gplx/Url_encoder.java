@@ -17,8 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
 public class Url_encoder implements Url_encoder_interface {
-	Url_encoder_itm[] encode_ary = new Url_encoder_itm[256], decode_ary = new Url_encoder_itm[256];
-	ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	private Url_encoder_itm[] encode_ary = new Url_encoder_itm[256], decode_ary = new Url_encoder_itm[256];
+	private ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	private Url_encoder anchor_encoder = null;
+	private Object thread_guard = new Object();
 	public void Itms_ini(byte primary_encode_marker) {
 		Url_encoder_itm_hex hex = new Url_encoder_itm_hex(primary_encode_marker);
 		for (int i = 0; i < 256; i++) {
@@ -59,39 +61,60 @@ public class Url_encoder implements Url_encoder_interface {
 		return this;
 	}
 	public byte[] Encode_http(Io_url url) {
-		tmp_bfr.Add(Io_url.Http_file_bry);
-		Encode(tmp_bfr, url.RawBry());
-		return tmp_bfr.XtoAryAndClear();
+		synchronized (thread_guard) {
+			tmp_bfr.Add(Io_url.Http_file_bry);
+			Encode(tmp_bfr, url.RawBry());
+			return tmp_bfr.XtoAryAndClear();
+		}
 	}
-	public String Encode_str(String str)					{byte[] bry = ByteAry_.new_utf8_(str); Encode(tmp_bfr, bry, 0, bry.length); return tmp_bfr.XtoStrAndClear();}
+	public String Encode_str(String str)					{
+		synchronized (thread_guard) {
+			byte[] bry = ByteAry_.new_utf8_(str); Encode(tmp_bfr, bry, 0, bry.length); return tmp_bfr.XtoStrAndClear();
+		}
+	}
 	public byte[] Encode(byte[]	bry)						{Encode(tmp_bfr, bry, 0, bry.length); return tmp_bfr.XtoAryAndClear();}
 	public ByteAryBfr Encode(ByteAryBfr bfr, byte[] bry)	{Encode(bfr,	 bry, 0, bry.length); return bfr;}
 	public void Encode(ByteAryBfr bfr, byte[] bry, int bgn, int end) {
-		for (int i = bgn; i < end; i++) {
-			byte b = bry[i];
-			if (anchor_encoder != null && b == Byte_ascii.Hash) {
-				bfr.Add_byte(Byte_ascii.Hash);
-				anchor_encoder.Encode(bfr, bry, i + 1, end);
-				break;
+		synchronized (thread_guard) {
+			for (int i = bgn; i < end; i++) {
+				byte b = bry[i];
+				if (anchor_encoder != null && b == Byte_ascii.Hash) {
+					bfr.Add_byte(Byte_ascii.Hash);
+					anchor_encoder.Encode(bfr, bry, i + 1, end);
+					break;
+				}
+				Url_encoder_itm itm = encode_ary[b & 0xff];// PATCH.JAVA:need to convert to unsigned byte
+				i += itm.Encode(bfr, bry, end, i, b);
 			}
-			Url_encoder_itm itm = encode_ary[b & 0xff];// PATCH.JAVA:need to convert to unsigned byte
-			i += itm.Encode(bfr, bry, end, i, b);
 		}
 	}
-	Url_encoder anchor_encoder = null;
-	public String Decode_str(String str) {byte[] bry = ByteAry_.new_utf8_(str); Decode(bry, 0, bry.length, tmp_bfr, true); return tmp_bfr.XtoStrAndClear();}
-	public byte[] Decode(byte[] bry) {Decode(bry, 0, bry.length, tmp_bfr, false); return tmp_bfr.XtoAryAndClear();}
-	public byte[] Decode_lax(byte[] bry) {Decode(bry, 0, bry.length, tmp_bfr, false); return tmp_bfr.XtoAryAndClear();}
+	public String Decode_str(String str) {
+		synchronized (thread_guard) {
+			byte[] bry = ByteAry_.new_utf8_(str); Decode(bry, 0, bry.length, tmp_bfr, true); return tmp_bfr.XtoStrAndClear();
+		}
+	}
+	public byte[] Decode(byte[] bry) {
+		synchronized (thread_guard) {
+			Decode(bry, 0, bry.length, tmp_bfr, false); return tmp_bfr.XtoAryAndClear();
+		}
+	}
+	public byte[] Decode_lax(byte[] bry) {
+		synchronized (thread_guard) {
+			Decode(bry, 0, bry.length, tmp_bfr, false); return tmp_bfr.XtoAryAndClear();
+		}
+	}
 	public void Decode(byte[] bry, int bgn, int end, ByteAryBfr bfr, boolean fail_when_invalid) {
-		for (int i = bgn; i < end; i++) {
-			byte b = bry[i];
-			if (anchor_encoder != null && b == Byte_ascii.Hash) {
-				bfr.Add_byte(Byte_ascii.Hash);
-				anchor_encoder.Decode(bry, i + 1, end, bfr, false);
-				break;
+		synchronized (thread_guard) {
+			for (int i = bgn; i < end; i++) {
+				byte b = bry[i];
+				if (anchor_encoder != null && b == Byte_ascii.Hash) {
+					bfr.Add_byte(Byte_ascii.Hash);
+					anchor_encoder.Decode(bry, i + 1, end, bfr, false);
+					break;
+				}
+				Url_encoder_itm itm = decode_ary[b & 0xff];// PATCH.JAVA:need to convert to unsigned byte
+				i += itm.Decode(bfr, bry, end, i, b, fail_when_invalid);
 			}
-			Url_encoder_itm itm = decode_ary[b & 0xff];// PATCH.JAVA:need to convert to unsigned byte
-			i += itm.Decode(bfr, bry, end, i, b, fail_when_invalid);
 		}
 	}
 	private static void mediawiki_base(Url_encoder rv) {

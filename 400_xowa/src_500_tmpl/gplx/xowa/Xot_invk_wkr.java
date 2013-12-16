@@ -19,11 +19,11 @@ package gplx.xowa; import gplx.*;
 import gplx.xowa.langs.*;
 public class Xot_invk_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
-	public void Page_bgn(Xop_ctx ctx) {this.ctx = ctx; this.tkn_mkr = ctx.Tkn_mkr(); this.root = ctx.Root(); this.src = ctx.Src(); this.srcLen = src.length;} private Xop_ctx ctx; Xop_tkn_mkr tkn_mkr; Xop_root_tkn root; byte[] src; int srcLen;
+	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {this.tkn_mkr = ctx.Tkn_mkr();} private Xop_tkn_mkr tkn_mkr;
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int srcLen) {}
 	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int lxr_bgn_pos, int lxr_cur_pos, Xop_tkn_itm tkn) {}
 	private static Arg_bldr arg_bldr = Arg_bldr._;
-	public int MakeTkn(int lxr_cur_pos, int lxr_end_pos, Xop_curly_bgn_tkn bgn_tkn, int keep_curly_bgn) {
+	public int MakeTkn(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int lxr_cur_pos, int lxr_end_pos, Xop_curly_bgn_tkn bgn_tkn, int keep_curly_bgn) {
 		Xot_invk_tkn invk = tkn_mkr.Tmpl_invk(bgn_tkn.Src_bgn(), lxr_end_pos);
 		int loop_bgn = bgn_tkn.Tkn_sub_idx() + 1, loop_end = root.Subs_len();
 		if (loop_bgn == loop_end) {			// empty template; EX: "{{}}"
@@ -37,17 +37,17 @@ public class Xot_invk_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		if (!made
 			|| (key_tkn.Dat_bgn() == key_tkn.Dat_end() && key_tkn.Dat_bgn() != -1)) {	// key_tkn is entirely whitespace; EX: {{\n}}
 			invk.TypeId_toText();
-			ctx.Subs_add(tkn_mkr.Txt(lxr_cur_pos, lxr_end_pos));
+			ctx.Subs_add(root, tkn_mkr.Txt(lxr_cur_pos, lxr_end_pos));
 			return lxr_cur_pos;
 		}
 		root.Subs_del_after(bgn_tkn.Tkn_sub_idx() + keep_curly_bgn);	// all tkns should now be converted; delete everything in root
 		root.Subs_add(invk);
 		return lxr_cur_pos;
 	}
-	public boolean Args_add(Xop_ctx ctx, Xop_tkn_itm tkn, Arg_nde_tkn nde, int nde_idx) {
+	public boolean Args_add(Xop_ctx ctx, byte[] src, Xop_tkn_itm tkn, Arg_nde_tkn nde, int nde_idx) {
 		Xot_invk_tkn invk = (Xot_invk_tkn)tkn;
 		if (nde_idx == 0)
-			AddNameArg(ctx, ctx.Src(), invk, nde);
+			AddNameArg(ctx, src, invk, nde);
 		else
 			invk.Args_add(ctx, nde);
 		return true;

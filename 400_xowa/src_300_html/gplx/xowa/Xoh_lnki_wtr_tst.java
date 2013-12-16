@@ -51,6 +51,11 @@ public class Xoh_lnki_wtr_tst {
 		,	""
 		));
 	}
+	@Test  public void Border() {
+		fxt.tst_Parse_page_wiki_str
+			(	"[[File:A.png|border]]"
+			,	"<a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" class=\"thumbborder\" /></a>");
+	}
 	@Test  public void Lnki_full_video() {
 		fxt.tst_Parse_page_wiki_str
 		(	"[[File:A.ogv|400px|a|alt=b]]", String_.Concat_lines_nl_skipLast
@@ -68,6 +73,23 @@ public class Xoh_lnki_wtr_tst {
 		,	"    </div>"
 		));		
 	}
+//		@Test  public void Lnki_full_video_thumbtime() {
+//			fxt.tst_Parse_page_all_str
+//			(	"[[File:A.ogv|400px|a|alt=b|thumbtime=2]]", String_.Concat_lines_nl_skipLast
+//			(	"    <div id=\"xowa_media_div\">"
+//			,	"      <div>"
+//			,	"        <a href=\"/wiki/File:A.ogv\" class=\"image\" title=\"A.ogv\">"
+//			,	"          <img id=\"xowa_file_img_0\" src=\"\" width=\"400\" height=\"0\" alt=\"b\" />"
+//			,	"        </a>"
+//			,	"      </div>"
+//			,	"      <div>"
+//			,	"        <a id=\"xowa_file_play_0\" href=\"file:///mem/wiki/repo/trg/orig/d/0/A.ogv\" xowa_title=\"A.ogv\" class=\"xowa_anchor_button\" style=\"width:398px;max-width:400px;\">"
+//			,	"          <img src=\"file:///mem/xowa/user/test_user/app/img/file/play.png\" width=\"22\" height=\"22\" alt=\"Play sound\" />"
+//			,	"        </a>"
+//			,	"      </div>"
+//			,	"    </div>"
+//			));		
+//		}
 	@Test  public void Lnki_full_video_ogg() {// PURPOSE: ogg should default to video on first load; otherwise dynamic-update won't be able to put in thumb
 		fxt.tst_Parse_page_wiki_str
 		(	"[[File:A.ogg|400px|a|alt=b]]", String_.Concat_lines_nl_skipLast

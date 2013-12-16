@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 class Scrib_lua_encoder {
-	public Scrib_lua_encoder(Gfo_usr_dlg usr_dlg) {this.usr_dlg = usr_dlg;} Gfo_usr_dlg usr_dlg;
+	public Scrib_lua_encoder(Gfo_usr_dlg usr_dlg) {this.usr_dlg = usr_dlg;} private Gfo_usr_dlg usr_dlg;
 	public String Encode(Object o) {
 		ByteAryBfr tmp_bfr = ByteAryBfr.reset_(Io_mgr.Len_kb);
 		Encode_obj(tmp_bfr, o);
@@ -66,7 +66,7 @@ class Scrib_lua_encoder {
 		bfr.Add_byte(Byte_ascii.Curly_end);
 		return true;
 	}
-	boolean Encode_kv(ByteAryBfr bfr, KeyVal kv) {
+	private boolean Encode_kv(ByteAryBfr bfr, KeyVal kv) {
 		bfr.Add_byte(Byte_ascii.Curly_bgn);
 		Encode_key(bfr, kv.Key_as_obj());
 		Encode_obj(bfr, kv.Val());
@@ -94,5 +94,5 @@ class Scrib_lua_encoder {
 		return true;
 	}
 	private static final byte[] CONST_nil = ByteAry_.new_ascii_("nil"), CONST_bool_true = ByteAry_.new_ascii_("true"), CONST_bool_false = ByteAry_.new_ascii_("false"), CONST_escape_000 = ByteAry_.new_ascii_("\\000");
-	static final String GRP_KEY = "xowa-scribunto-lua-srl";
+	private static final String GRP_KEY = "xowa-scribunto-lua-srl";
 }

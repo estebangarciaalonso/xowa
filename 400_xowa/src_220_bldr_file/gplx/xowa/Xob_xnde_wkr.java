@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.ios.*;
 public interface Xob_xnde_wkr {
-	void Wkr_run(Xop_ctx ctx, Xop_xnde_tkn xnde);
+	void Wkr_run(Xop_ctx ctx, Xop_root_tkn root, Xop_xnde_tkn xnde);
 }
 class Xobc_xnde_math_dump extends Xob_itm_dump_base implements Xob_xnde_wkr {	// note: similar to img_dump, except for Wkr_run
 	public Xobc_xnde_math_dump(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki); this.make_fil_len = 100 * Io_mgr.Len_kb;}
@@ -30,9 +30,9 @@ class Xobc_xnde_math_dump extends Xob_itm_dump_base implements Xob_xnde_wkr {	//
 		sort_dir = temp_dir.GenSubDir("sort");
 		make_url_gen = Io_url_gen_.dir_(temp_dir.GenSubDir("make"));
 	}	Io_url sort_dir; Gfo_fld_wtr fld_wtr; ByteAryBfr url_decoder_bfr = ByteAryBfr.new_();
-	public void Wkr_run(Xop_ctx ctx, Xop_xnde_tkn xnde) {
+	public void Wkr_run(Xop_ctx ctx, Xop_root_tkn root, Xop_xnde_tkn xnde) {
 		if (xnde.CloseMode() == Xop_xnde_tkn.CloseMode_inline) return;	// ignore <math/>; EX:FOSD origami
-		byte[] math = ByteAry_.Mid(ctx.Root().Root_src(), xnde.Src_bgn() + 6, xnde.Src_end() - 7); // 6=<math>; 7=</math>
+		byte[] math = ByteAry_.Mid(root.Root_src(), xnde.Src_bgn() + 6, xnde.Src_end() - 7); // 6=<math>; 7=</math>
 		byte[] ttl = ctx.Page().Page_ttl().Full_txt();
 		int entry_len = ttl.length + math.length + 3; // 3=| + | + \n  
 		if (dump_bfr.Bry_len() + entry_len > dump_fil_len) Flush();

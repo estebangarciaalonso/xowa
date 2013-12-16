@@ -53,6 +53,7 @@ import java.util.StringTokenizer;
 public class Xosrv_webserver {
 	public Xosrv_webserver(Xoa_app app) {this.app = app;}
 	public Xoa_app App() {return app;} private Xoa_app app;
+	public int Http_server_port() {return http_server_port;} public Xosrv_webserver Http_server_port_(int v) {http_server_port = v; return this;} private int http_server_port = 8080;
 	public String Parse_page_to_html(Xoa_app app, String wiki_domain_str, String page_ttl_str) {		
 		byte[] wiki_domain = ByteAry_.new_utf8_(wiki_domain_str);
 		byte[] page_ttl = ByteAry_.new_utf8_(page_ttl_str);
@@ -65,13 +66,15 @@ public class Xosrv_webserver {
 		return String_.new_utf8_(output_html);
 	}
 	public void Run_xowa_cmd(Xoa_app app, String url_encoded_str) {
-		String cmd = app.Url_converter_url().Decode_str(url_encoded_str);
+		//String cmd = app.Url_converter_url().Decode_str(url_encoded_str);
+		Url_encoder url_converter = Url_encoder.new_http_url_();
+		String cmd = url_converter.Decode_str(url_encoded_str);
 		app.Gfs_mgr().Run_str(cmd);
 	}
 	public void Run() {
 				HttpServer server = new HttpServer(this);
 		new Thread(server).start();
-				app.Usr_dlg().Note_many("", "", "Webserver started: listening on 8080.");
+				app.Usr_dlg().Note_many("", "", "Webserver started: listening on Port 8080.");
 	}
 }
 class HttpServer implements Runnable {
@@ -90,8 +93,7 @@ class HttpServer implements Runnable {
 		}
 		while (true) {// Listen for a TCP connection request.
 			try {
-				Socket connectionSocket = WebSocket.accept();
-				//Construct object to process HTTP request message
+				Socket connectionSocket = WebSocket.accept(); //Construct object to process HTTP request message
 				HttpRequest request = new HttpRequest(connectionSocket, webserver.App());
 				Thread thread = new Thread(request); //Create new thread to process	      
 				thread.start(); //Start the thread	
@@ -121,32 +123,35 @@ class HttpRequest implements Runnable{
 			String page_name = "Main_Page";
 			
 			if(!req.contains("%file%")){
-				//req = req.substring(req.indexOf("home/matthias/xowa_dev")-1);
 				if(req.equals("/")){
-					req+="home/wiki/Main_Page";
+					req+="home/wiki/Main_Page"; //Forward to main page
+					/*Maybe add here a address from a config file, so that a custom main page could be defined*/
 				}
 				if(req.endsWith("wiki/")) req+="Main_Page";
 				if(req.endsWith("wiki")) req+="/Main_Page";
 			}
 			
 			if(req.contains("%xowa-cmd%")){
-				System.out.println("Command!");
+				System.out.println("Command output:");
 				String cmd = req.substring(req.indexOf("%xowa-cmd%")+20);
 				System.out.println(cmd);
 				app.Webserver().Run_xowa_cmd(app, cmd);
-				dos.writeBytes("test");
+				dos.writeBytes("Command sent, see console log for more details.");
 				dos.close();
 			}else
 			if(req.contains("%file%")){
 				String path = req.replace("/%file%/", app.Fsys_mgr().Root_dir().To_http_file_str());
 				path = path.substring(path.indexOf(app.Fsys_mgr().Root_dir().To_http_file_str())+5);
+				Url_encoder url_converter = Url_encoder.new_http_url_();
+				path = url_converter.Decode_str(path);
+				if(path.contains("?")){
+					path = path.substring(0, path.indexOf("?"));
+				}
+				
 				FileInputStream fis = new FileInputStream(path);
 				
-				String statusLine = "HTTP/1.1 200 OK: "; //Set initial values to null
-				String contentTypeLine = "Content-Type: " + contentType(path) + CRLF;;
-
-				dos.writeBytes(statusLine);
-				dos.writeBytes(contentTypeLine);
+				dos.writeBytes("HTTP/1.1 200 OK: ");
+				dos.writeBytes("Content-Type: " + contentType(path) + CRLF);
 				dos.writeBytes(CRLF);
 				
 				sendBytes(fis, dos);
@@ -165,14 +170,13 @@ class HttpRequest implements Runnable{
 					for(int i = 4; i <= req_split.length-1; i++){
 						page_name += "/"+req_split[i];
 					}
-					page_name = app.Url_converter_url().Decode_str(page_name);
-				}
-				//System.out.println("Wiki_Domain: "+wiki_domain+" Page_Name: "+page_name);
-				String statusLine = "HTTP/1.1 200 OK: "; //Set initial values to null
-				String contentTypeLine = "Content-Type: text/html; charset=utf-8" + CRLF;;
+					Url_encoder url_converter = Url_encoder.new_http_url_();
+					page_name = url_converter.Decode_str(page_name);
+					//page_name = app.Url_converter_url().Decode_str(page_name);
 
-				dos.writeBytes(statusLine);
-				dos.writeBytes(contentTypeLine);
+				}
+				dos.writeBytes("HTTP/1.1 200 OK: ");
+				dos.writeBytes("Content-Type: text/html; charset=utf-8" + CRLF);
 				dos.writeBytes(CRLF);
 				
 				try{
@@ -186,7 +190,7 @@ class HttpRequest implements Runnable{
 					dos.write(page_html.getBytes());
 					dos.close();
 				}catch(Exception err) {
-					dos.writeBytes("Site not found");
+					dos.writeBytes("Site not found. Check address please, or see console log.\n"+err.getMessage());
 					dos.close();
 				}
 			}

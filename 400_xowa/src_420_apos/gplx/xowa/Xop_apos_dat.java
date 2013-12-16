@@ -22,7 +22,7 @@ public class Xop_apos_dat {
 	public int Cmd() {return cmd;} private int cmd;
 	public int LitApos() {return litApos;} private int litApos;
 	public int DualCmd() {return dualCmd;} private int dualCmd;
-	public void Ident(Xop_ctx ctx, int aposLen, int curPos) {
+	public void Ident(Xop_ctx ctx, byte[] src, int aposLen, int curPos) {
 		typ = cmd = litApos = dualCmd = 0;
 		switch (aposLen) {
 			case Xop_apos_tkn_.CmdLen_ital:
@@ -36,7 +36,7 @@ public class Xop_apos_dat {
 				litApos = aposLen - Xop_apos_tkn_.CmdLen_dual;
 				Ident_props(Xop_apos_tkn_.CmdLen_dual);
 				if (litApos > 1)
-					ctx.Msg_log().Add_itm_none(Xop_apos_log.Multiple_apos, ctx.Src(), curPos - aposLen, curPos);
+					ctx.Msg_log().Add_itm_none(Xop_apos_log.Multiple_apos, src, curPos - aposLen, curPos);
 				break;
 		}
 	}

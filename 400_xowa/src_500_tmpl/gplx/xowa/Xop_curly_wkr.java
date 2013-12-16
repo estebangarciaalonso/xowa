@@ -18,12 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public class Xop_curly_wkr implements Xop_ctx_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
-	public void Page_bgn(Xop_ctx ctx) {}
+	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {}
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int srcLen) {}
 	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int lxr_bgn_pos, int lxr_cur_pos, Xop_tkn_itm tkn) {}
 	public int MakeTkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int lxr_bgn_pos, int lxr_cur_pos) {
 		int lxr_end_pos = Xop_lxr_.Find_fwd_while(src, srcLen, lxr_cur_pos, Byte_ascii.Curly_bgn);	// NOTE: can be many consecutive {; EX: {{{{{1}}}|a}}
-		ctx.Subs_add_and_stack(tkn_mkr.Tmpl_curly_bgn(lxr_bgn_pos, lxr_end_pos));
+		ctx.Subs_add_and_stack(root, tkn_mkr.Tmpl_curly_bgn(lxr_bgn_pos, lxr_end_pos));
 		return lxr_end_pos;
 	}
 	public int MakeTkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int lxr_bgn_pos, int lxr_cur_pos) {
@@ -46,10 +46,10 @@ public class Xop_curly_wkr implements Xop_ctx_wkr {
 			}
 			if (acs_pos == -1) {	// "}}+" found but no "{{+" found; warn and output literal tkn
 				ctx.Msg_log().Add_itm_none(Xop_curly_log.Bgn_not_found, src, lxr_bgn_pos, lxr_end_pos);
-				ctx.Subs_add(tkn_mkr.Txt(lxr_bgn_pos, lxr_end_pos));
+				ctx.Subs_add(root, tkn_mkr.Txt(lxr_bgn_pos, lxr_end_pos));
 				return lxr_end_pos;
 			}
-			Xop_curly_bgn_tkn bgn_tkn = (Xop_curly_bgn_tkn)ctx.Stack_pop_til(acs_pos, true, lxr_bgn_pos, lxr_end_pos);	// NOTE: in theory, an unclosed [[ can be on stack; for now, ignore
+			Xop_curly_bgn_tkn bgn_tkn = (Xop_curly_bgn_tkn)ctx.Stack_pop_til(root, src, acs_pos, true, lxr_bgn_pos, lxr_end_pos);	// NOTE: in theory, an unclosed [[ can be on stack; for now, ignore
 			int bgn_tkn_len = bgn_tkn.Src_end() - bgn_tkn.Src_bgn();
 			int new_tkn_len = 0;
 			if		(bgn_tkn_len == end_tkn_len)	// exact match; should be majority of cases
@@ -77,7 +77,7 @@ public class Xop_curly_wkr implements Xop_ctx_wkr {
 //					case 1:			// EXC_CASE: SEE:NOTE_1;
 //						break;
 				case 2:			// USE_CASE: make invk_tkn
-					ctx.Invk().MakeTkn(lxr_bgn_pos, lxr_bgn_pos + new_tkn_len, bgn_tkn, keep_curly_bgn);
+					ctx.Invk().MakeTkn(ctx, root, src, lxr_bgn_pos, lxr_bgn_pos + new_tkn_len, bgn_tkn, keep_curly_bgn);
 					break;
 				default:		// USE_CASE: make prm_tkn; NOTE: 3 or more
 					new_tkn_len = 3;	// gobble 3 at a time; EX: 6 -> 3 -> 0; EX: 7 -> 4 -> 1;
@@ -100,7 +100,7 @@ public class Xop_curly_wkr implements Xop_ctx_wkr {
 			end_tkn_len -= new_tkn_len;
 			lxr_bgn_pos += new_tkn_len;	// move lxr_bgn_pos along
 			if (end_tkn_len == 1) {	// SEE:NOTE_1:
-				ctx.Subs_add(tkn_mkr.Txt(lxr_bgn_pos, lxr_bgn_pos + 1));
+				ctx.Subs_add(root, tkn_mkr.Txt(lxr_bgn_pos, lxr_bgn_pos + 1));
 				end_tkn_len = 0;
 				++lxr_bgn_pos;
 			}

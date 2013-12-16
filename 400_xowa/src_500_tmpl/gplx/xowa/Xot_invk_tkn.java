@@ -102,7 +102,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 					bfr.Add(Xop_curly_end_lxr.Hook);
 					return true;				// NOTE: nothing else to do; return
 				case Xot_defn_.Tid_safesubst:
-					name_ary = ByteAry_.Mid(name_ary, finder.Subst_end(), name_ary_len);		// chop off "safesubst:"
+					name_ary = ByteAry_.Mid(name_ary, finder.Subst_end(), name_ary_len);			// chop off "safesubst:"
 					name_ary_len = name_ary.length;
 					if (defn != Xot_defn_.Null) {	// func found
 						if (finder.Colon_pos() != -1) colon_pos = finder.Func().Name().length;		// set colon_pos; SEE NOTE_1

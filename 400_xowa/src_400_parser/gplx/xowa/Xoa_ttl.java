@@ -91,11 +91,14 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 	public static Xoa_ttl parse_(Xow_wiki wiki, byte[] raw) {return new_(wiki, wiki.App().Msg_log(), raw, raw, 0, raw.length);}
 	public static Xoa_ttl new_(Xow_wiki wiki, Gfo_msg_log msg_log, byte[] raw, byte[] src, int bgn, int end) {
 		Xoa_ttl rv = new Xoa_ttl();
-		boolean pass = rv.Parse(wiki, msg_log, raw, src, bgn, end);
-		return pass ? rv : null;
-	}	private Xoa_ttl() {} static ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
-	private static final Url_encoder anchor_encoder = Url_encoder.new_html_id_(); static final ByteAryBfr anchor_encoder_bfr = ByteAryBfr.reset_(32);
-	private boolean Parse(Xow_wiki wiki, Gfo_msg_log msg_log, byte[] raw, byte[] src, int bgn, int end) {
+		ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
+		try {
+			boolean pass = rv.Parse(bfr, wiki, msg_log, raw, src, bgn, end);
+			return pass ? rv : null;
+		}
+		finally {bfr.Mkr_rls();}
+	}	private Xoa_ttl() {}
+	private boolean Parse(ByteAryBfr bfr, Xow_wiki wiki, Gfo_msg_log msg_log, byte[] raw, byte[] src, int bgn, int end) {
 		/* This proc will
 		- identify all parts: Wiki, Namespace, Base/Leaf, Anchor; it will also identify Subject/Talk ns 
 		- trim whitespace around part delimiters; EX: "Help : Test" --> "Help:Test"; note that it will trim only if the part is real; EX: "Helpx : Test" is unchanged
@@ -111,12 +114,14 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 		- forbid ~~~
 		- handle ip address urls for User and User talk
 		*/
-		tmp_bfr.Clear();
+		Url_encoder anchor_encoder = null;
+		ByteAryBfr anchor_encoder_bfr = null;
+		bfr.Clear();
 		if (end - bgn == 0) {msg_log.Add_itm_none(Xop_ttl_log.Len_0, src, bgn, bgn); return false;}
 		this.raw = raw;
 		Xow_ns_mgr nsMgr = wiki.Ns_mgr(); ns = nsMgr.Ns_main();
 		boolean add_ws = false, ltr_bgn_reset = false;
-		int ltr_bgn = -1, txt_bb_len = 0, colon_count = 0; tmp_bfr.Clear();
+		int ltr_bgn = -1, txt_bb_len = 0, colon_count = 0; bfr.Clear();
 		ByteTrieMgr_slim amp_trie = wiki.App().AmpTrie();
 		//ByteTrieMgr_fast ttlTrie = wiki.App().TtlTrie(); 
 		byte[] b_ary = null;
@@ -128,7 +133,9 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 				case Byte_ascii.Colon:
 					if (cur == bgn) {	// initial colon; flag; note that "  :" is not handled; note that colon_count is not incremented
 						forceLiteralLink = true;
-						++cur;//cur = ttlTrie.Match_pos();
+						++cur;
+						if (cur < end && src[cur] == Byte_ascii.Colon)
+							++cur;
 						continue;	// do not add to bfr
 					}
 					else {
@@ -138,9 +145,9 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 						}
 						boolean part_found = false;
 						if (colon_count == 0) {// 1st colon; 
-							Object o = nsMgr.Trie_match_exact(tmp_bfr.Bry(), ltr_bgn, txt_bb_len);
+							Object o = nsMgr.Trie_match_exact(bfr.Bry(), ltr_bgn, txt_bb_len);
 							if (o == null) {	// not ns; try alias
-								wik_itm = wiki.Xwiki_mgr().Get_by_mid(tmp_bfr.Bry(), ltr_bgn, txt_bb_len); // check if wiki; note: wiki is not possible for other colons
+								wik_itm = wiki.Xwiki_mgr().Get_by_mid(bfr.Bry(), ltr_bgn, txt_bb_len); // check if wiki; note: wiki is not possible for other colons
 								if (wik_itm != null) {
 									wik_bgn = 0;			// wik_bgn can only start at 0
 									part_found = true;
@@ -151,9 +158,9 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 								ns = (Xow_ns)o;
 								byte[] ns_name = ns.Name_txt();
 								int ns_name_len = ns_name.length;
-								int tmp_bfr_end = tmp_bfr.Bry_len();
-								if (!ByteAry_.Eq(ns_name, tmp_bfr.Bry(), ltr_bgn, tmp_bfr_end) && ns_name_len == tmp_bfr_end - ltr_bgn) {	// if (a) ns_name != bfr_txt (b) both are same length; note that (b) should not happen, but want to safeguard against mismatched arrays
-									ByteAry_.Set(tmp_bfr.Bry(), ltr_bgn, tmp_bfr_end, ns_name);
+								int tmp_bfr_end = bfr.Bry_len();
+								if (!ByteAry_.Eq(ns_name, bfr.Bry(), ltr_bgn, tmp_bfr_end) && ns_name_len == tmp_bfr_end - ltr_bgn) {	// if (a) ns_name != bfr_txt (b) both are same length; note that (b) should not happen, but want to safeguard against mismatched arrays
+									ByteAry_.Set(bfr.Bry(), ltr_bgn, tmp_bfr_end, ns_name);
 								}
 								ns_bgn = ltr_bgn;
 								part_found = true;
@@ -215,7 +222,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 							}
 							else {
 								boolean ncr_is_hex = amp_itm.Tid() == Xop_amp_trie_itm.Tid_num_hex;
-								fail.Val_n_();
+								BoolRef fail = BoolRef.n_(); IntRef ncr_val = IntRef.neg1_();
 								int rv = Xop_amp_wkr.CalcNcr(wiki.Ctx().Msg_log(), ncr_is_hex, src, end, cur2, match_pos, ncr_val, fail);
 								if (fail.Val()) {}
 								else {
@@ -245,6 +252,10 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 						}
 					}
 					if (anch_bgn != -1) {
+						if (anchor_encoder == null) {
+							anchor_encoder = Url_encoder.new_html_id_();
+							anchor_encoder_bfr = ByteAryBfr.reset_(32);
+						}
 						anchor_encoder.Encode(anchor_encoder_bfr, src, cur, cur + 1);
 						b_ary = anchor_encoder_bfr.XtoAryAndClear();
 						match_pos = cur + 1;
@@ -271,6 +282,10 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 				case Byte_ascii.Gt: case Byte_ascii.Pipe:
 				case Byte_ascii.Brack_bgn: case Byte_ascii.Brack_end: case Byte_ascii.Curly_bgn: case Byte_ascii.Curly_end:
 					if (anch_bgn != -1) {
+						if (anchor_encoder == null) {
+							anchor_encoder = Url_encoder.new_html_id_();
+							anchor_encoder_bfr = ByteAryBfr.reset_(32);
+						}
 						anchor_encoder.Encode(anchor_encoder_bfr, src, cur, cur + 1);
 						b_ary = anchor_encoder_bfr.XtoAryAndClear();
 						match_pos = cur + 1;
@@ -318,13 +333,13 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 //								}
 //								boolean part_found = false;
 //								if (colon_count == 0) {// 1st colon; 
-//									Object o = wiki.Wiki_mgr().GetByMid(tmp_bfr.Bfr(), ltr_bgn, txt_bb_len); // check if wiki; note: wiki is not possible for other colons
+//									Object o = wiki.Wiki_mgr().GetByMid(bfr.Bfr(), ltr_bgn, txt_bb_len); // check if wiki; note: wiki is not possible for other colons
 //									if (o != null) {
 //										wik_bgn = 0;			// wik_bgn can only start at 0
 //										part_found = true;
 //									}
 //									else {	// not wiki; check if ns; note: if wiki, don't try to extract ns; EX: "fr:Aide:test"
-//										o = nsMgr.Trie_match_exact(tmp_bfr.Bfr(), ltr_bgn, txt_bb_len);
+//										o = nsMgr.Trie_match_exact(bfr.Bfr(), ltr_bgn, txt_bb_len);
 //										if (o != null) {
 //											ns = (Xow_ns)o;
 //											ns_bgn = ltr_bgn;
@@ -382,13 +397,13 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 //					cur = ttlTrie.Match_pos();
 //				}
 			if (add_ws) {	// add ws and toggle flag
-				tmp_bfr.Add_byte(Byte_ascii.Space); ++txt_bb_len;
-//					tmp_bfr.Add_byte(Byte_ascii.Underline); ++txt_bb_len;
+				bfr.Add_byte(Byte_ascii.Space); ++txt_bb_len;
+//					bfr.Add_byte(Byte_ascii.Underline); ++txt_bb_len;
 				add_ws = false;
 			}
 			if (ltr_bgn == -1) ltr_bgn = txt_bb_len; // if 1st letter not seen, mark 1st letter					
-			if		(b_ary == null) {tmp_bfr.Add_byte(b); ++txt_bb_len;} // add to bfr
-			else					{tmp_bfr.Add(b_ary); txt_bb_len += b_ary.length; b_ary = null; cur = match_pos;}	// NOTE: b_ary != null only for amp_trie
+			if		(b_ary == null) {bfr.Add_byte(b); ++txt_bb_len;} // add to bfr
+			else					{bfr.Add(b_ary); txt_bb_len += b_ary.length; b_ary = null; cur = match_pos;}	// NOTE: b_ary != null only for amp_trie
 			if (ltr_bgn_reset)  {// colon found; set ws to bgn mode; note that # and / do not reset 
 				ltr_bgn_reset = false;
 				ltr_bgn = -1;
@@ -401,12 +416,12 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 			msg_log.Add_itm_none(Xop_ttl_log.Ttl_is_ns_only, src, bgn, end);
 			return false;
 		}
-		full_txt = tmp_bfr.XtoAryAndClear();
+		full_txt = bfr.XtoAryAndClear();
 
 //			if (wik_bgn == 0 && txt_bb_len == page_bgn) { // 0-len intrawiki; EX: [[fr:]] on Main Page
 //				Xoa_ttl cur_page_ttl = wiki.Ctx().Page().Ttl();
 //				this.raw = cur_page_ttl == null ? ByteAry_.Empty : ByteAry_.Copy(cur_page_ttl.Page_txt());	// set raw to current page ttl; note that this is needed for lnki_caption to show correctly (otherwise lnki_caption will be blank); this is a quasi-hack as it depends on the ttl of the current page, but passing in another argument feels sloppy
-//				tmp_bfr.Add(this.raw);
+//				bfr.Add(this.raw);
 //			}
 		if (	ns.Case_match() == Xow_ns_.Case_match_1st
 			&&	wik_bgn == -1 ) {	// do not check case if xwiki; EX: "fr:" would have a wik_bgn of 0 (and a wik_end of 3); "A" (and any non-xwiki ttl) would have a wik_bgn == -1
@@ -430,25 +445,26 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 		Xow_ns tors_ns = ns.Id_talk() ? nsMgr.Get_by_ord(ns.Ord_subj_id()) : nsMgr.Get_by_ord(ns.Ord_talk_id());
 		tors_txt = tors_ns.Name_txt_w_colon();
 		return true;
-	}
-	private static final BoolRef fail = BoolRef.new_(false); IntRef ncr_val = IntRef.neg1_(); byte[] Bry_space = ByteAry_.new_ascii_(" ");
+	}		
+	private byte[] Bry_space = ByteAry_.new_ascii_(" ");
 	public static byte[] Replace_spaces(byte[] raw) {return ByteAry_.Replace(raw, Byte_ascii.Space, Byte_ascii.Underline);}
 	public static byte[] Replace_unders(byte[] raw) {return ByteAry_.Replace(raw, Byte_ascii.Underline, Byte_ascii.Space);}
-	private int wik_bgn = -1, ns_bgn = -1, page_bgn = 0, leaf_bgn = -1, anch_bgn = -1, root_bgn = -1; byte[] tors_txt;
+	private int wik_bgn = -1, ns_bgn = -1, page_bgn = 0, leaf_bgn = -1, anch_bgn = -1, root_bgn = -1;
+	private byte[] tors_txt;
 	public static final int Wik_bgn_int = -1;
 	public static final byte Subpage_spr = Byte_ascii.Slash;	// EX: A/B/C
 	public static final int Anch_bgn_anchor_only = 1;	// signifies lnki which is only anchor; EX: [[#anchor]]
-	static final byte 	// NOTE: Bidi characters appear in File titles /\xE2\x80[\x8E\x8F\xAA-\xAE]/S
-			Bidi_0_E2 	= (byte)226
-		,	Bidi_1_80 	= (byte)128
-		,	Bidi_2_8E 	= (byte)142
-		,	Bidi_2_8F	= (byte)143
-		,	Bidi_2_AA	= (byte)170
-		,	Bidi_2_AB	= (byte)171
-		,	Bidi_2_AC	= (byte)172
-		,	Bidi_2_AD	= (byte)173
-		,	Bidi_2_AE	= (byte)174
-		;
+	private static final byte 	// NOTE: Bidi characters appear in File titles /\xE2\x80[\x8E\x8F\xAA-\xAE]/S
+		Bidi_0_E2 	= (byte)226
+	,	Bidi_1_80 	= (byte)128
+	,	Bidi_2_8E 	= (byte)142
+	,	Bidi_2_8F	= (byte)143
+	,	Bidi_2_AA	= (byte)170
+	,	Bidi_2_AB	= (byte)171
+	,	Bidi_2_AC	= (byte)172
+	,	Bidi_2_AD	= (byte)173
+	,	Bidi_2_AE	= (byte)174
+	;
 	public static final int Max_len = 2048;	// ASSUME: max len of 256 * 8 bytes
 }
 class Xoa_url_encoder {

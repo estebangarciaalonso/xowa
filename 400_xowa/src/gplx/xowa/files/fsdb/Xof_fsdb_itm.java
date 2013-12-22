@@ -25,6 +25,7 @@ public class Xof_fsdb_itm {
 	public byte			Lnki_type_as_mode() {return lnki_type_as_mode;} private byte lnki_type_as_mode;
 	public int			Lnki_w() {return lnki_w;} public Xof_fsdb_itm Lnki_w_(int v) {lnki_w = v; return this;} private int lnki_w;
 	public int			Lnki_h() {return lnki_h;} public Xof_fsdb_itm Lnki_h_(int v) {lnki_h = v; return this;} private int lnki_h;
+	public Xof_fsdb_itm Lnki_size_(int w, int h) {lnki_w = w; lnki_h = h; return this;} 
 	public double		Lnki_upright() {return lnki_upright;} private double lnki_upright;
 	public int			Lnki_thumbtime() {return lnki_thumbtime;} public Xof_fsdb_itm Lnki_thumbtime_(int v) {lnki_thumbtime = v; return this;} private int lnki_thumbtime;
 	public Xof_fsdb_itm	Init_by_lnki(byte[] lnki_ttl, Xof_ext ext, byte[] md5, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, int lnki_thumbtime) {			
@@ -65,6 +66,7 @@ public class Xof_fsdb_itm {
 	public boolean			File_is_orig() {return file_is_orig;} public Xof_fsdb_itm File_is_orig_(boolean v) {file_is_orig = v; return this;} private boolean file_is_orig;
 	public int			File_w() {return file_w;} private int file_w;
 	public int			Html_uid() {return html_uid;} public Xof_fsdb_itm Html_uid_(int v) {html_uid = v; return this;} private int html_uid;
+	public byte			Html_elem_tid() {return html_elem_tid;} public Xof_fsdb_itm Html_elem_tid_(byte v) {html_elem_tid = v; return this;} private byte html_elem_tid;
 	public Io_url		Html_url() {return html_url;} public Xof_fsdb_itm Html_url_(Io_url v) {html_url = v; return this;} private Io_url html_url;
 	public int			Html_w() {return html_w;} private int html_w;
 	public int			Html_h() {return html_h;} private int html_h;
@@ -83,7 +85,8 @@ public class Xof_fsdb_itm {
 		html_url = url_bldr.Set_trg_file_(lnki_type_as_mode, repo, lnki_ttl, lnki_md5, lnki_ext, html_w, lnki_thumbtime).Xto_url();
 		html_orig_url = url_bldr.Set_trg_file_(Xof_repo_itm.Mode_orig, repo, lnki_ttl, lnki_md5, lnki_ext, Xof_img_size.Size_null_deprecated, Xop_lnki_tkn.Thumbtime_null).Xto_url();
 	}
-	public Io_url Html_orig_url() {return html_orig_url;} private Io_url html_orig_url;
+	public Io_url Html_orig_url() {return html_orig_url;} private Io_url html_orig_url = Io_url_.Null;
+	public int Gallery_mgr_h() {return gallery_mgr_h;} public Xof_fsdb_itm Gallery_mgr_h_(int v) {gallery_mgr_h = v; return this;} private int gallery_mgr_h = Int_.Neg1;
 	public byte Rslt_reg() {return rslt_reg;} public Xof_fsdb_itm Rslt_reg_(byte v) {this.rslt_reg = v; return this;} private byte rslt_reg = gplx.xowa.files.wiki_orig.Xof_wiki_orig_wkr_.Tid_null;
 	public byte Rslt_qry() {return rslt_qry;} public Xof_fsdb_itm Rslt_qry_(byte v) {this.rslt_qry = v; return this;} private byte rslt_qry;
 	public byte Rslt_bin() {return rslt_bin;} public Xof_fsdb_itm Rslt_bin_(byte v) {this.rslt_bin = v; return this;} private byte rslt_bin;

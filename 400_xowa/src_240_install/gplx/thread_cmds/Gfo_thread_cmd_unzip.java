@@ -16,14 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.thread_cmds; import gplx.*;
-import gplx.gfui.*;
+import gplx.gfui.*; import gplx.xowa.bldrs.files.*;
 public class Gfo_thread_cmd_unzip implements Gfo_thread_cmd {
-	public Gfo_thread_cmd_unzip Init(Gfo_usr_dlg usr_dlg, Gfui_kit kit, ProcessAdp bzip2_process, ProcessAdp zip_process, Io_url src, Io_url trg) {
+	public Gfo_thread_cmd_unzip Init(Gfo_usr_dlg usr_dlg, Gfui_kit kit, ProcessAdp bzip2_process, ProcessAdp zip_process, ProcessAdp gz_process, Io_url src, Io_url trg) {
 		this.src = src; this.trg = trg; this.kit = kit; this.usr_dlg = usr_dlg;
-		this.bzip2_process = bzip2_process;
-		this.zip_process = zip_process;
+		unzip_wkr = new Xob_unzip_wkr().Init(bzip2_process, zip_process, gz_process).Process_run_mode_(ProcessAdp.Run_mode_async);
 		return this;
-	}	Io_url src, trg; ProcessAdp bzip2_process, zip_process, active_process; Gfui_kit kit; Gfo_usr_dlg usr_dlg; String src_ext = ".bz2";
+	}	private Io_url src, trg; private Gfui_kit kit; private Gfo_usr_dlg usr_dlg; private Xob_unzip_wkr unzip_wkr;
 	public GfoInvkAble Owner() {return owner;} public Gfo_thread_cmd_unzip Owner_(GfoInvkAble v) {owner = v; return this;} GfoInvkAble owner;
 	public void Cmd_ctor() {}
 	@gplx.Virtual public String Async_key() {return KEY;}
@@ -55,24 +54,29 @@ public class Gfo_thread_cmd_unzip implements Gfo_thread_cmd {
 		}
 		return Gfo_thread_cmd_.Init_ok;
 	}
-	public boolean Async_running() {return active_process.Exit_code() == ProcessAdp.Exit_init;}
+	public boolean Async_running() {return unzip_wkr.Process_exit_code() == ProcessAdp.Exit_init;}
 	public void Async_run() {
-		active_process =  String_.Eq(src_ext, ".bz2") ? bzip2_process : zip_process;
 		usr_dlg.Prog_many(GRP_KEY, "bgn", "unzipping");
-		Io_mgr._.CreateDirIfAbsent(trg.OwnerDir());
-		active_process.Run_mode_(ProcessAdp.Run_mode_async);
-		Io_url unzip_dir = trg_is_dir ? trg : trg.OwnerDir();
-		active_process.Run(src, trg, unzip_dir.Xto_api());
+		unzip_wkr.Decompress(src, trg);
 	}
 	public boolean Async_term() {
 		if (rename_dir) {
-			Io_url[] dirs = Io_mgr._.QueryDir_args(trg).DirOnly_().Recur_(false).ExecAsUrlAry();
-			if (dirs.length != 1) {
-				kit.Ask_ok(GRP_KEY, "rename.fail", "expected only one directory: dir=~{0} actual=~{1}", trg.Raw(), dirs.length);
+			Io_url[] dirs = Io_mgr._.QueryDir_args(trg.OwnerDir()).DirOnly_().Recur_(false).ExecAsUrlAry();
+			int dirs_len = dirs.length;
+			Io_url zip_dir = Io_url_.Null;
+			for (int i = 0; i < dirs_len; i++) {
+				Io_url dir = dirs[i];
+				if (String_.HasAtBgn(String_.Lower(dir.NameOnly()), String_.Lower(trg.NameOnly()))) {	// HACK: check that directory starts with archive name; DATE:2013-12-22
+					zip_dir = dir;
+					break;
+				}
+			}
+			if (zip_dir == Io_url_.Null) {
+				kit.Ask_ok(GRP_KEY, "rename.fail", "unable to find directory: trg=~{0}", trg.Raw());
 				return false;
 			}
-			Io_url zip_dir = dirs[0];
-			Io_mgr._.MoveDirDeep(zip_dir, trg);
+			if (!String_.Eq(String_.Lower(zip_dir.Raw()), String_.Lower(trg.Raw())))	// HACK: inkscape is itself
+				Io_mgr._.MoveDirDeep(zip_dir, trg);
 		}
 		switch (term_cmd_for_src) {
 			case Term_cmd_for_src_noop: break;
@@ -93,14 +97,13 @@ public class Gfo_thread_cmd_unzip implements Gfo_thread_cmd {
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_owner))					return owner;
 		else if	(ctx.Match(k, Invk_src_))					src = ByteAryFmtr_eval_mgr_.Eval_url(url_eval_mgr, m.ReadBry("v"));
-		else if	(ctx.Match(k, Invk_src_ext_))				src_ext = m.ReadStr("v");
 		else if	(ctx.Match(k, Invk_trg_))					trg = ByteAryFmtr_eval_mgr_.Eval_url(url_eval_mgr, m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_rename_dir_))			rename_dir = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_delete_trg_if_exists_))	delete_trg_if_exists = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_term_cmd_for_src_))		term_cmd_for_src = Term_cmd_for_src_parse_(m.ReadStr("v"));
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
-	}	private static final String Invk_owner = "owner", Invk_src_ = "src_", Invk_trg_ = "trg_", Invk_rename_dir_ = "rename_dir_", Invk_delete_trg_if_exists_ = "delete_trg_if_exists_", Invk_term_cmd_for_src_ = "term_cmd_for_src_", Invk_src_ext_ = "src_ext_";
+	}	private static final String Invk_owner = "owner", Invk_src_ = "src_", Invk_trg_ = "trg_", Invk_rename_dir_ = "rename_dir_", Invk_delete_trg_if_exists_ = "delete_trg_if_exists_", Invk_term_cmd_for_src_ = "term_cmd_for_src_";
 	private static byte Term_cmd_for_src_parse_(String s) {
 		if 		(String_.Eq(s, "noop")) 		return Term_cmd_for_src_noop;
 		else if (String_.Eq(s, "delete")) 		return Term_cmd_for_src_delete;

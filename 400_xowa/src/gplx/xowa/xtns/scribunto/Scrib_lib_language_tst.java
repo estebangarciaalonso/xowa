@@ -58,6 +58,12 @@ public class Scrib_lib_language_tst {
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_formatDate, Object_.Ary("en", "Y-m-d", "2013-03-17", false), "2013-03-17");
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_formatDate, Object_.Ary("en", "Y-m-d"), DateAdp_.Now().XtoStr_fmt_yyyy_MM_dd());	// empty date should default to today;
 	}
+	@Test  public void FormatDate_date_omitted() {	// PURPOSE: some calls skip the date; retrieve arg_4 by int; pl.w:L._Frank_Baum
+		Tfds.Now_enabled_y_();
+		Tfds.Now_set(DateAdp_.new_(2013, 12, 19, 1, 2, 3, 4));
+		fxt.Test_lib_proc_kv(lib, Scrib_lib_language.Invk_formatDate, new KeyVal[] {KeyVal_.int_(1, "en"), KeyVal_.int_(2, "Y-m-d"), KeyVal_.int_(4, false)}, "2013-12-19");
+		Tfds.Now_enabled_n_();
+	}
 	@Test  public void Lc() {
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_lc, Object_.Ary("en", "ABC"), "abc");
 	}

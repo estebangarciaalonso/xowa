@@ -53,7 +53,7 @@ public class Xoh_lnki_wtr {
 	}
 	public static Xof_xfer_itm Queue_add_manual(Xof_xfer_queue queue, Xof_xfer_itm xfer_itm) {
 		int elem_id = queue.Elem_id().Val_add();
-		Xof_xfer_itm rv = xfer_itm.Clone().Html_elem_atrs_(elem_id, Xof_xfer_itm.Html_tid_img);
+		Xof_xfer_itm rv = xfer_itm.Clone().Html_elem_atrs_(elem_id, Xof_html_elem.Tid_img);
 		queue.Add(rv);
 		return rv;
 	}
@@ -111,7 +111,7 @@ public class Xoh_lnki_wtr {
 					&& xfer_itm.Meta_itm() != null		// null check; fsdb_call does not set meta
 					&& xfer_itm.Meta_itm().State_new())	// NOTE: State_new() will always assume that ogg is video; needed for 1st load and dynamic updates
 					) {	
-				xfer_itm.Html_tid_(Xof_xfer_itm.Html_tid_vid);
+				xfer_itm.Html_elem_tid_(Xof_html_elem.Tid_vid);
 				if (Xop_lnki_type.Id_defaults_to_thumb(lnki.Lnki_type())) {
 					content = Video(src, opts, lnki, xfer_itm, depth, elem_id, true, lnki_href, html_view_src, html_orig_src, lnki_alt_text);
 				}

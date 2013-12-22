@@ -32,10 +32,11 @@ class Xob_wiki_redirect_tbl {
 		}
 		Sqlite_engine_.Db_detach(p, "join_db");
 	}
-	public Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_src_id, Fld_trg_id, Fld_trg_ns, Fld_trg_ttl, Fld_trg_anchor, Fld_trg_is_redirect, Fld_redirect_count);}
-	public void Insert(Db_stmt stmt, int src_id, int trg_id, int trg_ns, byte[] trg_ttl, byte[] trg_anchor, int count) {
+	public Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_src_id, Fld_src_ttl, Fld_trg_id, Fld_trg_ns, Fld_trg_ttl, Fld_trg_anchor, Fld_trg_is_redirect, Fld_redirect_count);}
+	public void Insert(Db_stmt stmt, int src_id, byte[] src_ttl, int trg_id, int trg_ns, byte[] trg_ttl, byte[] trg_anchor, int count) {
 		stmt.Clear()
 		.Val_int_(src_id)
+		.Val_str_by_bry_(src_ttl)
 		.Val_int_(trg_id)
 		.Val_int_(trg_ns)
 		.Val_str_by_bry_(trg_ttl)
@@ -45,11 +46,12 @@ class Xob_wiki_redirect_tbl {
 		.Exec_insert();
 	}
 	public static final String Tbl_name = "redirect"
-	, Fld_src_id = "src_id", Fld_trg_id = "trg_id", Fld_trg_ns = "trg_ns", Fld_trg_ttl = "trg_ttl", Fld_trg_anchor = "trg_anchor"
+	, Fld_src_id = "src_id", Fld_src_ttl = "src_ttl", Fld_trg_id = "trg_id", Fld_trg_ns = "trg_ns", Fld_trg_ttl = "trg_ttl", Fld_trg_anchor = "trg_anchor"
 	, Fld_trg_is_redirect = "trg_is_redirect", Fld_redirect_count = "redirect_count";
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS redirect"
 	,	"( src_id            integer             NOT NULL       PRIMARY KEY"
+	,	", src_ttl           varchar(255)        NOT NULL"
 	,	", trg_id            integer             NOT NULL"
 	,	", trg_ns            integer             NOT NULL"
 	,	", trg_ttl           varchar(255)        NOT NULL"
@@ -66,6 +68,7 @@ class Xob_wiki_redirect_tbl {
 	Sql_get_page_data = String_.Concat_lines_nl				// get data from page table for initial redirect dump 
 	(	"REPLACE INTO redirect "
 	,	"SELECT  t.src_id"
+	,	",       t.src_ttl"
 	,	",       j.page_id"
 	,	",       t.trg_ns"
 	,	",       t.trg_ttl"
@@ -82,6 +85,7 @@ class Xob_wiki_redirect_tbl {
 	,	Sql_get_redirect_redirects = String_.Concat_lines_nl	// find redirects that are redirected
 	(	"REPLACE INTO redirect"
 	,	"SELECT  t.src_id"
+	,	",       t.src_ttl"
 	,	",       j.trg_id"
 	,	",       -1"
 	,	",       ''"
@@ -98,6 +102,7 @@ class Xob_wiki_redirect_tbl {
 	,	Sql_get_redirect_page_data = String_.Concat_lines_nl	// get data from page table for redirected redirects
 	(	"REPLACE INTO redirect"
 	,	"SELECT  t.src_id"
+	,	",       t.src_ttl"
 	,	",       t.trg_id"
 	,	",       j.page_namespace"
 	,	",       j.page_title"

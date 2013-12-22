@@ -182,6 +182,7 @@ public class Pf_func_ {
 	,	Xol_kwd_grp_.Id_noexternallanglinks
 	,	Xol_kwd_grp_.Id_ns_num
 	,	Xol_kwd_grp_.Id_page_id
+	,	Xol_kwd_grp_.Id_xowa
 	};
 	public static Xot_defn Get_prototype(int id) {
 		switch (id) {
@@ -314,6 +315,7 @@ public class Pf_func_ {
 			case Xol_kwd_grp_.Id_raw:							return new Xot_defn_subst((byte)id, ByteAry_.Empty);
 
 			case Xol_kwd_grp_.Id_xowa_dbg:						return new Pf_xtn_xowa_dbg();
+			case Xol_kwd_grp_.Id_xowa:							return new gplx.xowa.xtns.xowa_cmds.Xop_xowa_func();
 			case Xol_kwd_grp_.Id_xtn_geodata_coordinates:		return gplx.xowa.xtns.geodata.Pf_xtn_geodata_coordinates._;
 			case Xol_kwd_grp_.Id_lst:							return gplx.xowa.xtns.lst.Xtn_lst._;
 			case Xol_kwd_grp_.Id_lstx:							return gplx.xowa.xtns.lst.Xtn_lstx._;

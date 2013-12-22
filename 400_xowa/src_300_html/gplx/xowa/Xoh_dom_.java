@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.html.*;
-class Xoh_dom_ {
+public class Xoh_dom_ {
 	private static final byte[] Lt_bry = ByteAry_.new_ascii_("<"), Space_bry = ByteAry_.new_ascii_(" ");
 	public static byte[] Query_val_by_where(Xoh_find rv, byte[] src, byte[] where_nde, byte[] where_key, byte[] where_val, byte[] query_key, int bgn) {
 		int src_len = src.length;		
@@ -74,15 +74,4 @@ class Xoh_dom_ {
 		byte[] xowa_title = Xoh_dom_.Query_val_by_where(dom_find, html_src, Xoh_html_tag.Nde_a_bry, Xoh_html_tag.Nde_href_bry, href_enc, Xoh_html_tag.Nde_xowa_title_bry, 0);
 		return String_.new_utf8_(xowa_title);
 	}	static final Xoh_find dom_find = new Xoh_find(); 
-}
-class Xoh_find {
-	public int Tag_bgn() {return tag_bgn;} public Xoh_find Tag_bgn_(int v) {tag_bgn = v; return this;} private int tag_bgn;
-	public int Tag_end() {return tag_end;} public Xoh_find Tag_end_(int v) {tag_end = v; return this;} private int tag_end;
-	public int Key_bgn() {return key_bgn;} public Xoh_find Key_bgn_(int v) {key_bgn = v; return this;} private int key_bgn;
-	public int Key_end() {return key_end;} public Xoh_find Key_end_(int v) {key_end = v; return this;} private int key_end;
-	public int Val_bgn() {return val_bgn;} public Xoh_find Val_bgn_(int v) {val_bgn = v; return this;} private int val_bgn;
-	public int Val_end() {return val_end;} public Xoh_find Val_end_(int v) {val_end = v; return this;} private int val_end;
-	public void Set_all(int tag_bgn, int tag_end, int key_bgn, int key_end, int val_bgn, int val_end) {
-		this.tag_bgn = tag_bgn; this.tag_end = tag_end; this.key_bgn = key_bgn; this.key_end = key_end; this.val_bgn = val_bgn; this.val_end = val_end;
-	}
 }

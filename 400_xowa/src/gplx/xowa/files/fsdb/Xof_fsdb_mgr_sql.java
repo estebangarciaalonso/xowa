@@ -20,7 +20,7 @@ import gplx.dbs.*; import gplx.fsdb.*; import gplx.xowa.files.wiki_orig.*; impor
 public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	private Db_provider img_regy_provider = null;		
 	private Io_url app_file_dir;
-	private Xof_url_bldr url_bldr = new Xof_url_bldr();
+	private Xof_url_bldr url_bldr = Xof_url_bldr.new_v2_();
 	public boolean Tid_is_mem() {return false;}
 	public Xof_qry_mgr Qry_mgr() {return qry_mgr;} private Xof_qry_mgr qry_mgr = new Xof_qry_mgr();
 	public Xof_bin_mgr Bin_mgr() {return bin_mgr;} private Xof_bin_mgr bin_mgr;

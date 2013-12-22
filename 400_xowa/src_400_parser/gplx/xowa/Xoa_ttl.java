@@ -122,7 +122,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 		Xow_ns_mgr nsMgr = wiki.Ns_mgr(); ns = nsMgr.Ns_main();
 		boolean add_ws = false, ltr_bgn_reset = false;
 		int ltr_bgn = -1, txt_bb_len = 0, colon_count = 0; bfr.Clear();
-		ByteTrieMgr_slim amp_trie = wiki.App().AmpTrie();
+		ByteTrieMgr_slim amp_trie = wiki.App().Amp_trie();
 		//ByteTrieMgr_fast ttlTrie = wiki.App().TtlTrie(); 
 		byte[] b_ary = null;
 		int cur = bgn;
@@ -364,7 +364,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 //							cur = ttlTrie.Match_pos();
 //							if (cur == end) {}	// guards against terminating &; EX: [[Bisc &]]; NOTE: needed b/c MatchAtCur does not do bounds checking for cur in src; src[src.length] will be called when & is last character;
 //							else {
-//								Object html_ent_obj = wiki.App().AmpTrie().MatchAtCur(src, cur, end);
+//								Object html_ent_obj = wiki.App().Amp_trie().MatchAtCur(src, cur, end);
 //								if (html_ent_obj != null) {									
 //									Xop_amp_trie_itm amp_itm = (Xop_amp_trie_itm)html_ent_obj;
 //									switch (amp_itm.CharInt()) {
@@ -466,6 +466,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 	,	Bidi_2_AE	= (byte)174
 	;
 	public static final int Max_len = 2048;	// ASSUME: max len of 256 * 8 bytes
+	public static final int Null_wik_bgn = -1;
 }
 class Xoa_url_encoder {
 	public byte[] Encode(byte[] src) {

@@ -189,9 +189,10 @@ public class Xoh_html_wtr {
 		}
 		boolean literal_link = lnki.Ttl().ForceLiteralLink();	// NOTE: if literal link, then override ns behavior; for File, do not show image; for Ctg, do not display at bottom of page
 		redlinks_mgr.Lnki_add(ctx, lnki);
+		boolean stage_is_alt = opts.Lnki_alt();
 		switch (lnki.Ns_id()) {
-			case Xow_ns_.Id_media:		lnki_wtr.Write_or_queue(page, opts, bfr, src, lnki, depth); return; // NOTE: literal ":" has no effect; EX.WP:Beethoven and [[:Media:De-Ludwig_van_Beethoven.ogg|listen]]
-			case Xow_ns_.Id_file:		if (!literal_link) {lnki_wtr.Write_or_queue(page, opts, bfr, src, lnki, depth); return;} break;
+			case Xow_ns_.Id_media:		if (!stage_is_alt) lnki_wtr.Write_or_queue(page, opts, bfr, src, lnki, depth); return; // NOTE: literal ":" has no effect; EX.WP:Beethoven and [[:Media:De-Ludwig_van_Beethoven.ogg|listen]]
+			case Xow_ns_.Id_file:		if (!literal_link && !stage_is_alt) {lnki_wtr.Write_or_queue(page, opts, bfr, src, lnki, depth); return;} break;
 			case Xow_ns_.Id_category:	if (!literal_link) {hctx.Lnki_ctg_add(lnki); return;} break;
 		}
 		Lnki_generic(opts, lnki, bfr, src, depth);
@@ -642,7 +643,7 @@ public class Xoh_html_wtr {
 		return tmp_bfr.XtoAryAndClear();
 	}
 	public static void Bfr_escape(ByteAryBfr bfr, byte[] src, int bgn, int end, Xoa_app app, boolean interpret_amp, boolean nowiki_skip) {
-		ByteTrieMgr_slim amp_trie = app.AmpTrie();
+		ByteTrieMgr_slim amp_trie = app.Amp_trie();
 		bfr_escape_fail.Val_n_();
 		for (int i = bgn; i < end; i++) {
 			byte b = src[i];
@@ -666,7 +667,8 @@ public class Xoh_html_wtr {
 					break;
 				case Byte_ascii.Amp:
 					if (interpret_amp) {
-						Object o = amp_trie.MatchAtCur(src, i + 1, end);	// is this a valid &....
+						int text_bgn = i + 1;	// i is &; i + 1 is first char after amp
+						Object o = (text_bgn < end) ? amp_trie.MatchAtCur(src, text_bgn, end) : null;	// check if this is a valid &; note must check that text_bgn < end or else arrayIndex error; occurs when src is just "&"; DATE:2013-12-19
 						if (o == null)										// nope; invalid; EX: "a&b"; "&bad;"; "&#letters;"; 
 							bfr.Add(Xop_xnde_wkr.Bry_escape_amp);			// escape & and continue
 						else {												// is either (1) a name or (2) an ncr (hex/dec)

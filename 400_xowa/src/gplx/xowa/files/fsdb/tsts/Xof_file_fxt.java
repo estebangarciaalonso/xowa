@@ -32,6 +32,7 @@ class Xof_file_fxt {
 		fsdb_mgr.Qry_mgr().Wkrs_(qry_wkr_mock);
 		fsdb_mgr.Bin_mgr().Wkrs_(fsdb_mgr.Bin_wkr_fsdb());
 		fsdb_mgr.Bin_mgr().Resizer_(Xof_img_wkr_resize_img_mok._);
+		fsdb_mgr.Bin_wkr_fsdb().Bin_wkr_resize_(true);
 	}
 	private static Xof_fsdb_mgr fsdb_mgr_new_(byte mem_tid) {
 		boolean mem = false;

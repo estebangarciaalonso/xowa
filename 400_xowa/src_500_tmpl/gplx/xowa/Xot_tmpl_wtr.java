@@ -45,7 +45,8 @@ class Xot_tmpl_wtr {
 				break;
 			case Xop_tkn_itm_.Tid_xnde:
 				Xop_xnde_tkn xnde = (Xop_xnde_tkn)tkn;
-				if (xnde.Tag().Id() == Xop_xnde_tag_.Tid_onlyinclude) {
+				int xnde_tag_id = xnde.Tag().Id();
+				if (xnde_tag_id == Xop_xnde_tag_.Tid_onlyinclude) {
 					// NOTE: originally "if (ctx.Parse_tid() == Xop_parser_.Parse_tid_page_tmpl) {" but if not needed; Xot_tmpl_wtr should not be called for tmpls and <oi> should not make it to page_wiki
 					ByteAryBfr tmp_bfr = ByteAryBfr.new_();
 					ctx.Only_include_evaluate_(true);
@@ -53,12 +54,12 @@ class Xot_tmpl_wtr {
 					ctx.Only_include_evaluate_(false);
 					bfr.Add_bfr(tmp_bfr);
 				}
-				else if (xnde.Tag().Id() == Xop_xnde_tag_.Tid_nowiki && xnde.Tag_close_bgn() != Int_.MinValue) {	// NOTE: if nowiki then "deactivate" all xndes by swapping out < for &lt; nowiki_xnde_frag; DATE:2013-01-27
+				else if (xnde_tag_id == Xop_xnde_tag_.Tid_nowiki && xnde.Tag_close_bgn() != Int_.MinValue) {	// NOTE: if nowiki then "deactivate" all xndes by swapping out < for &lt; nowiki_xnde_frag; DATE:2013-01-27
 					ByteAryBfr tmp_bfr = ctx.Wiki().App().Utl_bry_bfr_mkr().Get_k004();
 					Nowiki_escape(tmp_bfr, src, xnde.Tag_open_end(), xnde.Tag_close_bgn());
 					bfr.Add_bfr_and_clear(tmp_bfr.Mkr_rls());
 				}
-				else if (xnde.Tag().Id() == Xop_xnde_tag_.Tid_xowa_cmd) {
+				else if (xnde_tag_id == Xop_xnde_tag_.Tid_xowa_cmd) {
 					gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd xowa_cmd = (gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd)xnde.Xnde_data();					
 					bfr.Add(xowa_cmd.Xtn_root().Data_mid());// write contents of eval
 				}
@@ -81,7 +82,10 @@ class Xot_tmpl_wtr {
 				}
 				catch (Exception exc) {
 					Err_string = String_.new_utf8_(src, tkn.Src_bgn(), tkn.Src_end()) + "|" + ClassAdp_.NameOf_obj(exc) + "|" + Err_.Message_lang(exc);
-					ctx.App().Usr_dlg().Warn_many("", "", "failed to write tkn: err=~{0}", Err_string);
+					if (Env_.Mode_testing())
+						throw Err_.err_(exc, Err_string);
+					else
+						ctx.App().Usr_dlg().Warn_many("", "", "failed to write tkn: err=~{0}", Err_string);
 				}
 				break;
 		}

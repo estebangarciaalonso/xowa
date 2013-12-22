@@ -38,14 +38,14 @@ public class Xowh_sidebar_mgr_tst {
 		.Init_msg_itm("href_key", "main_key", "text", "title", "accesskey", "href")
 		.Test_parse
 		(	"** href_key|main_key"
-		,	fxt.nav_itm_("text", "title", "accesskey", "/wiki/href"))
+		,	fxt.nav_itm_("text", "title", "accesskey", "/wiki/Href"))
 		;
 	}
 	@Test  public void Itm_missing_msg() {
 		fxt
 		.Test_parse
 		(	"** href_key|main_key"
-		,	fxt.nav_itm_("main_key", Null_str, Null_str, "/wiki/href_key")
+		,	fxt.nav_itm_("main_key", Null_str, Null_str, "/wiki/Href_key")
 		)
 		;
 	}
@@ -54,7 +54,7 @@ public class Xowh_sidebar_mgr_tst {
 		.Init_msg_itm("href_key", "main_key", "text", Null_str, Null_str, Null_str)	// only define msg for text
 		.Test_parse
 		(	"** href_key|main_key"
-		,	fxt.nav_itm_("text", Null_str, Null_str, "/wiki/href_key"))
+		,	fxt.nav_itm_("text", Null_str, Null_str, "/wiki/Href_key"))
 		;
 	}
 	@Test  public void Itm_href_absolute() {
@@ -114,7 +114,7 @@ public class Xowh_sidebar_mgr_tst {
 		,		fxt.nav_itm_("Itm_1_text", Null_str, Null_str, "/wiki/Portal:Contents")
 		)
 		,	fxt.nav_grp_("interaction", Null_str).Itms_add
-		(		fxt.nav_itm_("help", Null_str, Null_str, "/wiki/helppage")
+		(		fxt.nav_itm_("help", Null_str, Null_str, "/wiki/Helppage")
 		));
 		fxt.Test_html(String_.Concat_lines_nl
 		(	"<div class=\"portal\" id='n-navigation'>"
@@ -130,7 +130,7 @@ public class Xowh_sidebar_mgr_tst {
 		,	"  <h3>interaction</h3>"
 		,	"  <div class=\"body\">"
 		,	"    <ul>"
-		,	"      <li id=\"n-help\"><a href=\"/wiki/helppage\" title=\"\">help</a></li>"
+		,	"      <li id=\"n-help\"><a href=\"/wiki/Helppage\" title=\"\">help</a></li>"
 		,	"    </ul>"
 		,	"  </div>"
 		,	"</div>"

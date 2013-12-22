@@ -15,12 +15,16 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-public class Xtn_gallery_dynamic_data {
-	int mgr_itm_height;
-	public Xtn_gallery_dynamic_data Init(int mgr_itm_height) {this.mgr_itm_height = mgr_itm_height; return this;}
-	public int Calc_vpad(int html_h) {
-		int	min_thumb_height = html_h > 17 ? html_h : 17;					// $minThumbHeight =  $thumb->height > 17 ? $thumb->height : 17;
-		return (int)Math_.Floor((30 + mgr_itm_height - min_thumb_height) / 2);	// $vpad = floor(( self::THUMB_PADDING + $this->mHeights - $minThumbHeight ) /2);
+package gplx.xowa.xtns.xowa_cmds; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import org.junit.*;
+public class Xop_xowa_func_tst {
+	@Before public void init() {
+		Xoa_gfs_mgr.Msg_parser_init();
+	} private Xop_fxt fxt = new Xop_fxt();
+	@Test  public void Template() {
+		GfsCore._.AddCmd(fxt.App(), Xoa_gfs_mgr.Invk_app);
+		fxt.Wiki().Sys_cfg().Xowa_cmd_enabled_(true);
+		fxt.ini_defn_add("A", "{{#xowa|{{{1}}}}}");
+		fxt.tst_Parse_page_all_str("{{A|app.users.get('anonymous').name;}}", "anonymous");
 	}
 }

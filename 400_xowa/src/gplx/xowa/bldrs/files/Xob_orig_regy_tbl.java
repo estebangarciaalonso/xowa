@@ -19,40 +19,64 @@ package gplx.xowa.bldrs.files; import gplx.*; import gplx.xowa.*; import gplx.xo
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.bldrs.oimgs.*;
 class Xob_orig_regy_tbl {
 	public static void Create_table(Db_provider p) {Sqlite_engine_.Tbl_create_and_delete(p, Tbl_name, Tbl_sql);}
-	public static void Create_data(Gfo_usr_dlg usr_dlg, Db_provider p, Xow_wiki cur_wiki, Xow_wiki commons_wiki) {
-		cur_wiki.Init_assert();
+	public static void Create_data2(Gfo_usr_dlg usr_dlg, Db_provider p, boolean repo_0_is_remote, Xow_wiki repo_0_wiki, Xow_wiki repo_1_wiki) {
 		usr_dlg.Prog_many("", "", "inserting lnki_regy");
 		p.Exec_sql(Sql_create_data);
 		Sqlite_engine_.Idx_create(usr_dlg, p, "orig_regy", Idx_ttl, Idx_page_id);
-		Io_url wiki_dir = cur_wiki.Fsys_mgr().Root_dir();
-		Io_url commons_dir = commons_wiki.Fsys_mgr().Root_dir();
-		Create_data__update_page(usr_dlg, p, Byte_.int_(Xof_repo_itm.Repo_remote), commons_wiki.Db_mgr_as_sql().Fsys_mgr().Get_url(Xodb_file.Tid_core));
-		Create_data__update_page(usr_dlg, p, Byte_.int_(Xof_repo_itm.Repo_local), cur_wiki.Db_mgr_as_sql().Fsys_mgr().Get_url(Xodb_file.Tid_core));
-		Create_data__update_redirect(usr_dlg, p, Byte_.int_(Xof_repo_itm.Repo_remote), commons_dir.GenSubFil(Xodb_db_file.Name__wiki_redirect));
-		Create_data__update_redirect(usr_dlg, p, Byte_.int_(Xof_repo_itm.Repo_local), wiki_dir.GenSubFil(Xodb_db_file.Name__wiki_redirect));
+		Io_url repo_0_dir = repo_0_wiki.Fsys_mgr().Root_dir(), repo_1_dir = repo_1_wiki.Fsys_mgr().Root_dir();
+		byte repo_0_tid = Xof_repo_itm.Repo_local, repo_1_tid = Xof_repo_itm.Repo_remote;
+		if (repo_0_is_remote) {
+			repo_0_tid = Xof_repo_itm.Repo_remote;
+			repo_1_tid = Xof_repo_itm.Repo_local;
+		}
+		Create_data__update_page(usr_dlg, p, Byte_.int_(repo_0_tid), repo_0_wiki.Db_mgr_as_sql().Fsys_mgr().Get_url(Xodb_file.Tid_core));
+		Create_data__update_page(usr_dlg, p, Byte_.int_(repo_1_tid), repo_1_wiki.Db_mgr_as_sql().Fsys_mgr().Get_url(Xodb_file.Tid_core));
+		Create_data__update_redirect(usr_dlg, p, Byte_.int_(repo_0_tid), repo_0_dir.GenSubFil(Xodb_db_file.Name__wiki_redirect));
+		Create_data__update_redirect(usr_dlg, p, Byte_.int_(repo_1_tid), repo_1_dir.GenSubFil(Xodb_db_file.Name__wiki_redirect));
 		p.Exec_sql(Sql_update_join_flds);
 		Sqlite_engine_.Idx_create(usr_dlg, p, "orig_regy", Idx_wiki_join_id, Idx_wiki_join_ttl, Idx_join_ttl);
-		Create_data__update_image(usr_dlg, p, Byte_.int_(Xof_repo_itm.Repo_remote), commons_dir.GenSubFil(Xodb_db_file.Name__wiki_image));
-		Create_data__update_image(usr_dlg, p, Byte_.int_(Xof_repo_itm.Repo_local), wiki_dir.GenSubFil(Xodb_db_file.Name__wiki_image));
+		Create_data__update_image(usr_dlg, p, Byte_.int_(repo_0_tid), repo_0_dir.GenSubFil(Xodb_db_file.Name__wiki_image));
+		Create_data__update_image(usr_dlg, p, Byte_.int_(repo_1_tid), repo_1_dir.GenSubFil(Xodb_db_file.Name__wiki_image));
 		Sqlite_engine_.Idx_create(usr_dlg, p, "orig_regy", Idx_redirect);
 	}
+	public static void Create_data(Gfo_usr_dlg usr_dlg, Db_provider p, boolean repo_0_is_remote, Xow_wiki repo_0_wiki, Xow_wiki repo_1_wiki) {
+		usr_dlg.Prog_many("", "", "inserting lnki_regy");
+		p.Exec_sql(Sql_create_data);
+		Sqlite_engine_.Idx_create(usr_dlg, p, "orig_regy", Idx_ttl);
+		Io_url repo_0_dir = repo_0_wiki.Fsys_mgr().Root_dir(), repo_1_dir = repo_1_wiki.Fsys_mgr().Root_dir();
+		byte repo_0_tid = Xof_repo_itm.Repo_local, repo_1_tid = Xof_repo_itm.Repo_remote;
+		if (repo_0_is_remote) {
+			repo_0_tid = Xof_repo_itm.Repo_remote;
+			repo_1_tid = Xof_repo_itm.Repo_local;
+		}
+		Create_data(usr_dlg, p, Byte_.int_(repo_0_tid), repo_0_dir.GenSubFil(Xodb_db_file.Name__wiki_image));
+		Create_data(usr_dlg, p, Byte_.int_(repo_1_tid), repo_1_dir.GenSubFil(Xodb_db_file.Name__wiki_image));
+		Sqlite_engine_.Idx_create(usr_dlg, p, "orig_regy", Idx_xfer_temp);
+	}
 	private static void Create_data__update_page(Gfo_usr_dlg usr_dlg, Db_provider cur, byte wiki_tid, Io_url join) {
-		usr_dlg.Prog_many("", "", "creating temp_page: ~{0}", join.NameOnly());
+		usr_dlg.Note_many("", "", "creating temp_page: ~{0}", join.NameOnly());
 		Sqlite_engine_.Db_attach(cur, "join_db", join.Raw());
 		cur.Exec_sql(String_.Format(Sql_update_page_fmt, wiki_tid));
 		Sqlite_engine_.Db_detach(cur, "join_db");
 	}
 	private static void Create_data__update_redirect(Gfo_usr_dlg usr_dlg, Db_provider cur, byte wiki_tid, Io_url join) {
-		usr_dlg.Prog_many("", "", "creating temp_redirect: ~{0}", join.NameOnly());
+		usr_dlg.Note_many("", "", "creating temp_redirect: ~{0}", join.NameOnly());
 		Sqlite_engine_.Db_attach(cur, "join_db", join.Raw());
 		cur.Exec_sql(String_.Format(Sql_update_redirect_fmt, wiki_tid));
 		Sqlite_engine_.Db_detach(cur, "join_db");
 	}
 	private static void Create_data__update_image(Gfo_usr_dlg usr_dlg, Db_provider cur, byte wiki_tid, Io_url join) {
-		usr_dlg.Prog_many("", "", "creating temp_image: ~{0}", join.NameOnly());
+		usr_dlg.Note_many("", "", "creating temp_image: ~{0}", join.NameOnly());
 		Sqlite_engine_.Db_attach(cur, "join_db", join.Raw());
 		cur.Exec_sql(String_.Format(Sql_update_image_fmt, wiki_tid));
 		Sqlite_engine_.Db_detach(cur, "join_db");
+	}
+	private static void Create_data(Gfo_usr_dlg usr_dlg, Db_provider cur, byte wiki_tid, Io_url join) {
+		usr_dlg.Note_many("", "", "inserting page: ~{0}", join.NameOnly());
+		Sqlite_engine_.Db_attach(cur, "image_db", join.Raw());
+		cur.Exec_sql(String_.Format(Sql_update_repo_page, wiki_tid));
+		cur.Exec_sql(String_.Format(Sql_update_repo_redirect, wiki_tid));
+		Sqlite_engine_.Db_detach(cur, "image_db");
 	}
 	public static final String Tbl_name = "orig_regy"
 	, Fld_lnki_id = "lnki_id", Fld_lnki_ttl = "lnki_ttl", Fld_lnki_ext = "lnki_ext", Fld_lnki_count = "lnki_count"
@@ -66,6 +90,7 @@ class Xob_orig_regy_tbl {
 	,   Idx_wiki_join_id 	= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS orig_regy__wiki_join_id  ON orig_regy (orig_repo, orig_file_id);")
 	,   Idx_wiki_join_ttl 	= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS orig_regy__wiki_join_ttl ON orig_regy (orig_repo, orig_file_ttl);")	    
 	,   Idx_join_ttl 		= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS orig_regy__join_ttl      ON orig_regy (orig_file_ttl);")	    
+	,   Idx_xfer_temp 		= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS orig_regy__xfer_temp     ON orig_regy (lnki_ttl, orig_file_ttl);")
 	;
 	private static final String
 		Tbl_sql = String_.Concat_lines_nl
@@ -120,7 +145,7 @@ class Xob_orig_regy_tbl {
 	,	"        JOIN join_db.page p ON p.page_namespace = 6 AND p.page_title = o.lnki_ttl"
 	,	"WHERE   orig_page_id IS NULL"
 	,	"ORDER BY 1"	// must order by lnki_id since it is PRIMARY KEY, else sqlite will spend hours shuffling rows in table
-	,	"; "
+	,	";"
 	)
 	,	Sql_update_redirect_fmt = String_.Concat_lines_nl
 	(	"REPLACE INTO orig_regy"
@@ -144,7 +169,7 @@ class Xob_orig_regy_tbl {
 	,	"          ON  t.orig_repo = {0}"
 	,	"          AND t.orig_page_id = j.src_id"
 	,	"ORDER BY 1"	// must order by lnki_id since it is PRIMARY KEY, else sqlite will spend hours shuffling rows in table
-	,	"; "
+	,	";"
 	)
 	,	Sql_update_join_flds = String_.Concat_lines_nl
 	(	"UPDATE  orig_regy"
@@ -158,7 +183,7 @@ class Xob_orig_regy_tbl {
 	,	",       t.lnki_ttl"
 	,	",       t.lnki_ext"
 	,	",       t.lnki_count"
-	,	",       t.orig_repo"
+	,	",       r.repo_id"
 	,	",       t.orig_page_id"
 	,	",       t.orig_redirect_id"
 	,	",       t.orig_redirect_ttl"
@@ -174,7 +199,53 @@ class Xob_orig_regy_tbl {
 	,	"          ON  t.orig_repo = {0}"
 	,	"          AND t.orig_file_ttl = j.img_name"
 	,	"ORDER BY 1"	// must order by lnki_id since it is PRIMARY KEY, else sqlite will spend hours shuffling rows in table
-	,	"; "
+	,	";"
+	)
+	,	Sql_update_repo_page = String_.Concat_lines_nl
+	(	"REPLACE INTO orig_regy"
+	,	"SELECT  o.lnki_id"
+	,	",       o.lnki_ttl"
+	,	",       o.lnki_ext"
+	,	",       o.lnki_count"
+	,	",       {0}"
+	,	",       m.src_id"
+	,	",       NULL"
+	,	",       NULL"
+	,	",       m.src_id"
+	,	",       m.src_ttl"
+	,	",       i.img_size"
+	,	",       i.img_width"
+	,	",       i.img_height"
+	,	",       i.img_bits"
+	,	",       i.img_media_type"
+	,	"FROM    orig_regy o"
+	,	"        JOIN image_db.image i ON o.lnki_ttl = i.img_name"
+	,	"        JOIN repo_page m ON m.repo_id = {0} AND m.itm_tid = 0 AND o.lnki_ttl = m.src_ttl"
+	,	"ORDER BY 1"	// must order by lnki_id since it is PRIMARY KEY, else sqlite will spend hours shuffling rows in table
+	,	";"
+	)
+	,	Sql_update_repo_redirect = String_.Concat_lines_nl
+	(	"REPLACE INTO orig_regy"
+	,	"SELECT  o.lnki_id"
+	,	",       o.lnki_ttl"
+	,	",       o.lnki_ext"
+	,	",       o.lnki_count"
+	,	",       {0}"
+	,	",       m.src_id"
+	,	",       m.trg_id"
+	,	",       m.trg_ttl"
+	,	",       m.trg_id"
+	,	",       m.trg_ttl"
+	,	",       i.img_size"
+	,	",       i.img_width"
+	,	",       i.img_height"
+	,	",       i.img_bits"
+	,	",       i.img_media_type"
+	,	"FROM    orig_regy o"
+	,	"        JOIN repo_page m ON m.repo_id = {0} AND m.itm_tid = 1 AND o.lnki_ttl = m.src_ttl"
+	,	"            JOIN image_db.image i ON m.trg_ttl = i.img_name"
+	,	"ORDER BY 1"	// must order by lnki_id since it is PRIMARY KEY, else sqlite will spend hours shuffling rows in table
+	,	";"
 	)
 	;
 }

@@ -339,12 +339,6 @@ public class Xop_lnki_wkr_tst {
 			(	"<a href=\"/wiki/File:B.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"c\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/12px.png\" width=\"12\" height=\"10\" /></a>"
 			));
 	}
-//		@Test  public void Link_html_ent() {// DATE:2013-12-14
-//			fxt.tst_Parse_page_wiki_str
-//				(	"[[File:A.png|link=b&nbsp;c]]", String_.Concat_lines_nl_skipLast
-//				(	"<a href=\"/wiki/File:B.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"c\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/12px.png\" width=\"12\" height=\"10\" /></a>"
-//				));
-//		}
 	@Test  public void Link_blank() {
 		fxt.tst_Parse_page_wiki_str
 			(	"[[File:A.png|12x10px|link=|c]]", String_.Concat_lines_nl_skipLast
@@ -453,6 +447,13 @@ public class Xop_lnki_wkr_tst {
 			(	"<a href=\"/site/commons.wikimedia.org/wiki/A/B\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"c\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/12px.png\" width=\"12\" height=\"10\" /></a>"
 			));
 		fxt.App().Url_alias_mgr().Clear();
+	}
+	@Test  public void Xwiki_file() {	// PURPOSE: if xwiki and File, ignore xwiki (hackish); DATE:2013-12-22
+		Reg_xwiki_alias("test", "test.wikimedia.org");
+		fxt.tst_Parse_page_wiki_str
+			(	"[[test:File:A.png|12x10px]]", String_.Concat_lines_nl_skipLast
+			(	"<a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/12px.png\" width=\"12\" height=\"10\" /></a>"
+			));
 	}
 	@Test  public void Xwiki_anchor() {
 		Reg_xwiki_alias("test", "test.wikimedia.org");
@@ -615,6 +616,12 @@ public class Xop_lnki_wkr_tst {
 		,	"</p>"
 		));
 		fxt.Ctx().Para().Enabled_n_();
+	}
+	@Test  public void Link_html_ent() {// PURPOSE:html entities should be converted to chars; EX:&nbsp; -> _; DATE:2013-12-16
+		fxt.tst_Parse_page_wiki_str
+			(	"[[File:A.png|link=b&nbsp;c]]", String_.Concat_lines_nl_skipLast
+			(	"<a href=\"/wiki/B_c\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
+			));
 	}
 
 //		@Test  public void Errs() {// FUTURE: restore; WHEN: lnki redo

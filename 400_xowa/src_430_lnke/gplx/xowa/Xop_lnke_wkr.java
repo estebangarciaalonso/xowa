@@ -51,7 +51,7 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 		ctx.Subs_add(root, tkn);
 		tkn.Subs_add(tkn_mkr.Txt(txt_bgn, txt_end));
 		return end_pos;
-	}	static final byte[] Bry_quote = new byte[] {Byte_ascii.Quote};
+	}	private static final byte[] Bry_quote = new byte[] {Byte_ascii.Quote};
 	public int MakeTkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte[] protocol, byte proto_tid, byte lnke_type) {
 		if (proto_tid == Xow_cfg_lnke.Tid_xowa) return Make_tkn_xowa(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, protocol, proto_tid, lnke_type);
 		boolean lnke_type_brack = (lnke_type == Xop_lnke_tkn.Lnke_typ_brack);
@@ -200,8 +200,8 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 		}
 		return cur_pos;
 	}
-	static final byte Lnki_linkMode_init = 0, Lnki_linkMode_eq = 1, Lnki_linkMode_text = 2;
-	static final byte EndType_null = 0, EndType_eos = 1, EndType_brack = 2, EndType_space = 3, EndType_nl = 4, EndType_invalid = 5;
+	private static final byte Lnki_linkMode_init = 0, Lnki_linkMode_eq = 1, Lnki_linkMode_text = 2;
+	private static final byte EndType_null = 0, EndType_eos = 1, EndType_brack = 2, EndType_space = 3, EndType_nl = 4, EndType_invalid = 5;
 	public int MakeTkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		int lnke_bgn_idx = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnke);
 		if (lnke_bgn_idx == -1) return ctx.LxrMake_txt_(cur_pos);	// no lnke_bgn tkn; occurs when just ]; EX: "a]b"

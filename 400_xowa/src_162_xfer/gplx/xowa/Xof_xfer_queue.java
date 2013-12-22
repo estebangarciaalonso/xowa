@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*; import gplx.xowa.files.bins.*;
+import gplx.xowa.files.gui.*;
 public class Xof_xfer_queue {
 	private ListAdp list = ListAdp_.new_(); private OrderedHash dirty = OrderedHash_.new_(); private ByteAryRef dirty_key = ByteAryRef.null_();		
 	public IntRef Elem_id() {return elem_id;} private IntRef elem_id = IntRef.neg1_();
@@ -51,22 +52,9 @@ public class Xof_xfer_queue {
 			wiki.File_mgr().Repo_mgr().Xfer_by_meta(xfer_itm, this);
 			xfer_itm.Atrs_by_meta(xfer_itm.Meta_itm(), xfer_itm.Meta_itm().Repo_itm(wiki), wiki.Html_mgr().Img_thumb_width());
 			xfer_itm.Atrs_calc_for_html();
-			if (ByteAry_.Len_gt_0(xfer_itm.Html_view_src())								// only update images that have been found; otherwise "Undefined" shows up in image box
-				&& xfer_itm.Html_tid() != Xof_xfer_itm.Html_tid_none) {	// skip updates when downloading orig on File page (there won't be any frame to update)
-				String file_img_id = "xowa_file_img_" + xfer_itm.Html_uid();
-				wtr.Html_img_update(file_img_id, String_.new_utf8_(xfer_itm.Html_view_src()), xfer_itm.Html_w(), xfer_itm.Html_h());
-				if (xfer_itm.Lnki_type() == Xop_lnki_type.Id_thumb) {
-					wtr.Html_atr_set(file_img_id, "class", gplx.xowa.html.Xow_html_mgr.Str_img_class_thumbimage);
-					wtr.Html_atr_set("xowa_file_div_" + xfer_itm.Html_uid(), "style", "width:" + xfer_itm.Html_w() + "px;");
-				}
-				if (xfer_itm.Html_tid() == Xof_xfer_itm.Html_tid_gallery) {
-					int vpad = ((gplx.xowa.xtns.gallery.Xtn_gallery_dynamic_data)xfer_itm.Gallery_data()).Calc_vpad(xfer_itm.Html_h());
-					wtr.Html_atr_set("xowa_file_gallery_div_" + xfer_itm.Html_uid(), "style", "margin:" + vpad + "px auto;");
-				}
-				else if (xfer_itm.Html_tid() == Xof_xfer_itm.Html_tid_vid) {
-					wtr.Html_atr_set("xowa_file_play_" + xfer_itm.Html_uid(), "style", "width:" + xfer_itm.Html_w() + "px;max-width:" + (xfer_itm.Html_w() - 2) + "px;");
-					wtr.Html_atr_set("xowa_file_play_" + xfer_itm.Html_uid(), "href", String_.new_utf8_(xfer_itm.Html_orig_src()));
-				}
+			if (ByteAry_.Len_gt_0(xfer_itm.Html_view_src())				// only update images that have been found; otherwise "Undefined" shows up in image box
+				&& xfer_itm.Html_elem_tid() != Xof_html_elem.Tid_none) {	// skip updates when downloading orig on File page (there won't be any frame to update)
+				Js_img_mgr.Update_img(wtr, xfer_itm);
 			}
 		}
 		for (int i = 0; i < dirty.Count(); i++) {
@@ -87,6 +75,8 @@ public class Xof_xfer_queue {
 			Xof_fsdb_itm fsdb_itm = new Xof_fsdb_itm();
 			fsdb_itm.Init_by_lnki(xfer_itm.Lnki_ttl(), xfer_itm.Lnki_ext(), xfer_itm.Lnki_md5(), xfer_itm.Lnki_type(), xfer_itm.Lnki_w(), xfer_itm.Lnki_h(), xfer_itm.Lnki_upright(), xfer_itm.Lnki_thumbtime());				
 			fsdb_itm.Html_uid_(xfer_itm.Html_uid());
+			fsdb_itm.Html_elem_tid_(xfer_itm.Html_elem_tid());
+			fsdb_itm.Gallery_mgr_h_(xfer_itm.Gallery_mgr_h());
 			rv.Add(fsdb_itm);
 		}
 		return rv;

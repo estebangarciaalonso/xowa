@@ -35,6 +35,7 @@ public class Xoctg_hiddencat_parser_sql extends Xoctg_hiddencat_parser_base {
 			tbl.Update(stmt, cur_id, cur_is_hiddencat ? Bool_.Y_byte : Bool_.N_byte);
 	}
 	@Override public void Cmd_end() {
+		if (stmt == null) return;	// stmt is null when ctg fails (for example, category files not downloaded); DATE:2013-12-20
 		stmt.Provider().Txn_mgr().Txn_end_all();
 		if (!Env_.Mode_testing())	// NOTE: do not delete when testing
 			Io_mgr._.DeleteDirDeep(wiki.Fsys_mgr().Tmp_dir());	// delete /wiki/wiki_name/tmp

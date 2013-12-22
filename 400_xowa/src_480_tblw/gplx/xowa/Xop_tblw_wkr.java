@@ -243,7 +243,8 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 						break;
 				}
 				new_tkn = tkn_mkr.Tblw_tc(bgn_pos, cur_pos, tblw_xml);
-				((Xop_tblw_tb_tkn)ctx.Stack_get_typ(Xop_tkn_itm_.Tid_tblw_tb)).Caption_count_add_1();
+				Xop_tblw_tb_tkn tblw_tb_tkn = (Xop_tblw_tb_tkn)ctx.Stack_get_typ(Xop_tkn_itm_.Tid_tblw_tb);
+				tblw_tb_tkn.Caption_count_add_1();	// NOTE: null check is not necessary (impossible to have a caption without a tblw); DATE:2013-12-20
 				cell_pipe_seen = false; // NOTE: always mark !seen; see Atrs_tc()
 				break;
 		}

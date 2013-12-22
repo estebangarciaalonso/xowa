@@ -82,7 +82,7 @@ class Scrib_lua_regx_converter {
 									bfr.Add(Bry_bf0_seg_2);
 									Regx_quote(bfr, digit_0);
 								}
-								else {						// $bfr .= "(?<b$bct>$d1(?:(?>[^$d1$d2]+)|(?P>b$bct))*$d2)";
+								else {						// $bfr .= "(?<b$bct>$d1(?:(?>[^$d1$d2]+)|(?>b$bct))*$d2)";
 									++bct;
 									bfr.Add(Bry_bf1_seg_0);
 									bfr.Add_int_variable(bct);
@@ -219,7 +219,9 @@ class Scrib_lua_regx_converter {
 	private static final byte[] Bry_pow_literal = ByteAry_.new_ascii_("^"), Bry_pow_escaped = ByteAry_.new_ascii_("\\^")
 	, Bry_dollar_literal = ByteAry_.new_ascii_("$"), Bry_dollar_escaped = ByteAry_.new_ascii_("\\$")
 	, Bry_bf0_seg_0 = ByteAry_.new_ascii_("{"), Bry_bf0_seg_1 = ByteAry_.new_ascii_("}[^"), Bry_bf0_seg_2 = ByteAry_.new_ascii_("]*")
-	, Bry_bf1_seg_0 = ByteAry_.new_ascii_("(?<b"), Bry_bf1_seg_1 = ByteAry_.new_ascii_(">"), Bry_bf1_seg_2 = ByteAry_.new_ascii_("(?:(?>[^"), Bry_bf1_seg_3 = ByteAry_.new_ascii_("]+)|(?P>b"), Bry_bf1_seg_4 = ByteAry_.new_ascii_("))*"), Bry_bf1_seg_5 = ByteAry_.new_ascii_(")")
+	, Bry_bf1_seg_0 = ByteAry_.new_ascii_("(?<b"), Bry_bf1_seg_1 = ByteAry_.new_ascii_(">")
+	, Bry_bf1_seg_2 = ByteAry_.new_ascii_("(?:(?>[^"), Bry_bf1_seg_3 = ByteAry_.new_ascii_("]+)|(?>b")	// NOTE: PHP uses "]+)|(?P>b", but Java does not support P (named pattern); DATE:2013-12-20
+	, Bry_bf1_seg_4 = ByteAry_.new_ascii_("))*"), Bry_bf1_seg_5 = ByteAry_.new_ascii_(")")
 	, Bry_bf2_seg_0 = ByteAry_.new_ascii_("\\g{m"), Bry_bf2_seg_1 = ByteAry_.new_ascii_("}")
 	, Bry_regx_dash = ByteAry_.new_ascii_("*?")	// was *?
 	//, Bry_grp_bgn = ByteAry_.new_ascii_("(?<m")

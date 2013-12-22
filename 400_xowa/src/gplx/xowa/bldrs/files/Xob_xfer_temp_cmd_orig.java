@@ -89,6 +89,7 @@ public class Xob_xfer_temp_cmd_orig extends Xob_itm_basic_base implements Xob_cm
 	,	",       orig_media_type"
 	,	"FROM    lnki_regy l"
 	,	"        JOIN orig_regy f ON f.lnki_ttl = l.lnki_ttl"
+	,	"WHERE   o.orig_file_ttl IS NOT NULL"
 	,	"ORDER BY f.orig_file_ttl DESC"
 	);
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {

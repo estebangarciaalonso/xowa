@@ -181,10 +181,13 @@ public class Xob_hive_mgr {
 	int Regy__find_file_by_url(byte[] key, Io_url regy_url) {regy.Init(regy_url); return regy.Files_find(key);} private Xowd_regy_mgr regy = new Xowd_regy_mgr();
 	private void Xdat__create_row(byte dir_tid, byte[] key, byte[] row, int xdat_idx) {
 		Io_url xdat_url = fsys_mgr.Url_site_fil(dir_tid, xdat_idx);
-//			byte[] xdat_bry = gplx.ios.Io_stream_rdr_.Load_all(xdat_url);
+		byte[] xdat_bry = gplx.ios.Io_stream_rdr_.Load_all(xdat_url);
+		Xob_xdat_file xdat_fil = new Xob_xdat_file();
+		if (xdat_bry.length > 0)	// if file is not empty, load it and parse it
+			xdat_fil.Parse(xdat_bry, xdat_bry.length, xdat_url);
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
-		xdat.Insert(tmp_bfr, row);
-		xdat.Save(xdat_url);
+		xdat_fil.Insert(tmp_bfr, row);
+		xdat_fil.Save(xdat_url);
 		tmp_bfr.Mkr_rls();
 	}	private Xob_xdat_file xdat = new Xob_xdat_file(); Io_zip_mgr zip_mgr = Io_zip_mgr_base._;
 }

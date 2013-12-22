@@ -228,8 +228,11 @@ public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_AT
 								val_end = i;
 								Make(log_mgr, src, i + 1);	// NOTE: set atr_end *after* quote
 							}
-							else
-								val_bfr.Add_byte(b);
+							prv_is_ws = false; if (val_bfr_on) val_bfr.Add_byte(b);		// INLINE: add char
+//								else {
+//									if (!val_bfr_on) val_bfr.Add_mid(src, val_bgn, i + 1);	// +1 to include '
+//									val_bfr_on = true;
+//								}
 							break;
 						case Byte_ascii.Lt:	// "<" try to find nowiki inside atr
 							int gt_pos = Xnde_find_gt(log_mgr, src, i, end);
@@ -253,8 +256,7 @@ public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_AT
 							}
 							if (prv_is_ws) {}	// noop; only allow one ws at a time
 							else {
-								val_bfr.Add_byte(Byte_ascii.Space);
-								prv_is_ws = true;
+								prv_is_ws = true; val_bfr.Add_byte(Byte_ascii.Space);									
 							}
 							break;
 //							case Byte_ascii.Space:	// DELETE: 2012-10-14: no test to support this construct; causes problems with "a  b c"
@@ -269,8 +271,7 @@ public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_AT
 //								}
 //								break;
 						default:
-							if (val_bfr_on) val_bfr.Add_byte(b);
-							prv_is_ws = false;
+							prv_is_ws = false; if (val_bfr_on) val_bfr.Add_byte(b);		// INLINE: add char
 							break;
 					}
 					break;

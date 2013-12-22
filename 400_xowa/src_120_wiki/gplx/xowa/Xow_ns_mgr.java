@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
-	OrderedHash id_hash = OrderedHash_.new_(); Hash_adp_bry name_hash = new Hash_adp_bry(false); Hash_adp_bry tmpl_hash = new Hash_adp_bry(false);
+	private OrderedHash id_hash = OrderedHash_.new_(); Hash_adp_bry name_hash = new Hash_adp_bry(false); Hash_adp_bry tmpl_hash = new Hash_adp_bry(false);
 	public boolean Type_is_test;
 	public int Ords_len() {return ords_len;} private int ords_len;
 	public Xow_ns[] Ords() {return ords;} private Xow_ns[] ords = new Xow_ns[Xow_ns_mgr_.Ordinal_max];
@@ -224,9 +224,10 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 		else if	(ctx.Match(k, Invk_clear))				this.Clear();
 		else if	(ctx.Match(k, Invk_add_alias_bulk))		Exec_add_alias_bulk(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_get_by_id_or_new))	return this.Get_by_id_or_null(m.ReadInt("v"));
+		else if	(ctx.Match(k, Invk_filter_active))		return this.Filter_active();
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
-	}	private static final String Invk_add_alias_bulk = "add_alias_bulk", Invk_get_by_id_or_new = "get_by_id_or_new";
+	}	private static final String Invk_add_alias_bulk = "add_alias_bulk", Invk_get_by_id_or_new = "get_by_id_or_new", Invk_filter_active = "filter_active";
 	public Xow_ns Get_by_id_or_null(int ns_id) {
 		Xow_ns rv = Get_by_id(ns_id);
 		if (rv == null) return Null_ns;
@@ -262,6 +263,16 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 		int[] rv = new int[len];
 		for (int i = 0; i < len; i++) {
 			rv[i] = ((Xow_ns)list.FetchAt(i)).Id();
+		}
+		return rv;
+	}
+	private ListAdp Filter_active() {
+		ListAdp rv = ListAdp_.new_();
+		int len = id_hash.Count();
+		for (int i = 0; i < len; i++) {
+			Xow_ns ns = (Xow_ns)id_hash.FetchAt(i);
+			if (ns.Id() >= Xow_ns_.Id_main)		// ignore Special, Media
+				rv.Add(ns);
 		}
 		return rv;
 	}

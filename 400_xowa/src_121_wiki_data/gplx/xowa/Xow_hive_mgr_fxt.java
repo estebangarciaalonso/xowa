@@ -71,8 +71,7 @@ public class Xow_hive_mgr_fxt {
 		for (int i = 0; i < pages_len; i++)				
 			bfr.Add_byte_pipe().Add_base85_len_5(pages[i]);
 		bfr.Add_byte_nl();
-		byte[] row = bfr.XtoAryAndClear();
-		bfr.Mkr_rls();
+		byte[] row = bfr.Mkr_rls().XtoAryAndClear();
 		hive_mgr.Create(Xow_dir_info_.Tid_category, key_bry, row);
 	}
 	public Xow_hive_mgr_fxt Create_id(int id, int fil_idx, int row_idx, boolean type_redirect, int itm_len, int ns_id, String ttl) {Create_id(app, hive_mgr, id, fil_idx, row_idx, type_redirect, itm_len, ns_id, ttl); return this;}

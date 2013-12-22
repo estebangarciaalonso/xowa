@@ -16,28 +16,19 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.files; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import gplx.dbs.*;
-public class Xob_download_image_wkr extends Xob_itm_basic_base implements Xob_cmd {
-//		private Io_url prv_url;
-	public Xob_download_image_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
-	public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "file.download_image";
+import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.bldrs.oimgs.*;
+public class Xob_repo_page_cmd extends Xob_itm_basic_base implements Xob_cmd {
+	public Xob_repo_page_cmd(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
+	public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "file.repo_page";
 	public void Cmd_ini(Xob_bldr bldr) {}
-	public void Cmd_bgn(Xob_bldr bldr) {}
-	public void Cmd_run() {
-//			String[] server_urls = wiki.App().Setup_mgr().Dump_mgr().Server_urls();
-//			if (server_urls.length == 0) throw Err_.new_("no server urls defined");
-//			String server_url = server_urls[0];
-//			byte[] wiki_abrv = wiki.Wiki_tid_code();
-//			return server_url + 
-		// http://dumps.wikimedia.org/enwiki/latest/enwiki-latest-image.sql.gz
-		// build url
-		// download file
-		// extract
+	public void Cmd_bgn(Xob_bldr bldr) {
+		Db_provider provider = Xodb_db_file.init__file_make(wiki.Fsys_mgr().Root_dir()).Provider();
+		Xob_repo_page_tbl.Create_table(provider);
+		Xow_wiki commons_wiki = bldr.App().Wiki_mgr().Get_by_key_or_make(Xow_wiki_.Domain_commons_bry).Init_assert();
+		wiki.Init_assert(); commons_wiki.Init_assert();
+		Xob_repo_page_tbl.Create_data(bldr.Usr_dlg(), provider, wiki, commons_wiki);
 	}
-	
+	public void Cmd_run() {}
 	public void Cmd_end() {}
 	public void Cmd_print() {}
-	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		return GfoInvkAble_.Rv_unhandled;
-	}
 }

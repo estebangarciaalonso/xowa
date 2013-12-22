@@ -49,7 +49,7 @@ public class Xob_wiki_redirect_cmd extends Xob_dump_mgr_base {
 		Xoa_ttl redirect_ttl = redirect_mgr.Extract_redirect(page_src, page_src.length);
 		byte[] redirect_ttl_bry = Xoa_ttl.Replace_spaces(redirect_ttl.Page_db());	// NOTE: spaces can still exist b/c redirect is scraped from #REDIRECT which sometimes has a mix; EX: "A_b c"
 		redirect_ttl_bry = encoder.Decode(redirect_ttl_bry);
-		tbl_redirect.Insert(stmt, page.Id(), -1, redirect_ttl.Ns().Id(), redirect_ttl_bry, redirect_ttl.Anch_txt(), 1);
+		tbl_redirect.Insert(stmt, page.Id(), Xoa_ttl.Replace_spaces(page.Ttl_wo_ns()), -1, redirect_ttl.Ns().Id(), redirect_ttl_bry, redirect_ttl.Anch_txt(), 1);
 	}
 	@Override public void Exec_commit_hook() {
 		provider.Txn_mgr().Txn_end_all_bgn_if_none();

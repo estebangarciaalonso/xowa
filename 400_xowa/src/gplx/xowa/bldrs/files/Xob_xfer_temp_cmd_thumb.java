@@ -60,6 +60,7 @@ public class Xob_xfer_temp_cmd_thumb extends Xob_itm_basic_base implements Xob_c
 	,	",       o.orig_media_type"
 	,	"FROM    lnki_regy l"
 	,	"        JOIN orig_regy o ON o.lnki_ttl = l.lnki_ttl"
+	,	"WHERE   o.orig_file_ttl IS NOT NULL"
 	,	"ORDER BY o.orig_file_ttl, l.lnki_w DESC"
 	);
 }

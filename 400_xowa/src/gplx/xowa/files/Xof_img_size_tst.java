@@ -25,16 +25,16 @@ public class Xof_img_size_tst {
 	@Test  	public void Lnki_lt_orig_null() 		{fxt.Lnki_type_(Xop_lnki_type.Id_null)		.Lnki_(200, 100).Test_html(200, 100, Bool_.N);}	// [[File:A.png|200px]]           -> 200,100; File_is_orig = n
 	@Test  	public void Lnki_lt_orig_thumb() 		{fxt.Lnki_type_(Xop_lnki_type.Id_thumb)		.Lnki_(200, 100).Test_html(200, 100, Bool_.N);}	// [[File:A.png|thumb|200px]]     -> 200,100; File_is_orig = n
 	@Test  	public void Lnki_lt_orig_frameless() 	{fxt.Lnki_type_(Xop_lnki_type.Id_frameless)	.Lnki_(200, 100).Test_html(200, 100, Bool_.N);}	// [[File:A.png|frameless|200px]] -> 200,100; File_is_orig = n
-	@Test  	public void Lnki_lt_orig_frame() 		{fxt.Lnki_type_(Xop_lnki_type.Id_frame)		.Lnki_(200, 100).Test_html(400, 200, Bool_.Y);}	// [[File:A.png|frame|200px]]     -> 400,200; File_is_orig = y; frame always ignores parameters and returns orig
+	@Test  	public void Lnki_lt_orig_frame() 		{fxt.Lnki_type_(Xop_lnki_type.Id_frame)		.Lnki_(200,  -1).Test_html(400, 200, Bool_.Y);}	// [[File:A.png|frame|200px]]     -> 400,200; File_is_orig = y; frame always ignores parameters and returns orig
 	@Test  	public void Lnki_gt_orig_null() 		{fxt.Lnki_type_(Xop_lnki_type.Id_null)		.Lnki_(800, 400).Test_html(800, 400, Bool_.Y);}	// [[File:A.png|800px]]           -> 800,400; File_is_orig = n
 	@Test  	public void Lnki_gt_orig_thumb() 		{fxt.Lnki_type_(Xop_lnki_type.Id_thumb)		.Lnki_(800, 400).Test_html(400, 200, Bool_.Y);}	// [[File:A.png|thumb|800px]]     -> 400,200; File_is_orig = n
 	@Test  	public void Lnki_gt_orig_frameless() 	{fxt.Lnki_type_(Xop_lnki_type.Id_frameless)	.Lnki_(800, 400).Test_html(400, 200, Bool_.Y);}	// [[File:A.png|frameless|800px]] -> 400,200; File_is_orig = n
-	@Test  	public void Lnki_gt_orig_frame() 		{fxt.Lnki_type_(Xop_lnki_type.Id_frame)		.Lnki_(800, 400).Test_html(400, 200, Bool_.Y);}	// [[File:A.png|frame|800px]]     -> 400,200; File_is_orig = y; frame always ignores parameters and returns orig
+	@Test  	public void Lnki_gt_orig_frame() 		{fxt.Lnki_type_(Xop_lnki_type.Id_frame)		.Lnki_(800,  -1).Test_html(400, 200, Bool_.Y);}	// [[File:A.png|frame|800px]]     -> 400,200; File_is_orig = y; frame always ignores parameters and returns orig
 	@Test  	public void Lnki_eq_orig_null() 		{fxt.Lnki_type_(Xop_lnki_type.Id_null)		.Lnki_(400, 200).Test_html(400, 200, Bool_.Y);}	// make sure File_is_orig = y
 	@Test  	public void Lnki_gt_orig_null_svg() 	{fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_type_(Xop_lnki_type.Id_null)		.Lnki_(800, 400).Test_html(800, 400, Bool_.N);}	// [[File:A.svg|800px]]           -> 800,400; File_is_orig = n
 	@Test  	public void Lnki_gt_orig_thumb_svg() 	{fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_type_(Xop_lnki_type.Id_thumb)		.Lnki_(800, 400).Test_html(800, 400, Bool_.N);}	// [[File:A.svg|thumb|800px]]     -> 800,400; File_is_orig = n
 	@Test  	public void Lnki_gt_orig_frameless_svg(){fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_type_(Xop_lnki_type.Id_frameless)	.Lnki_(800, 400).Test_html(800, 400, Bool_.N);}	// [[File:A.svg|frameless|800px]] -> 800,400; File_is_orig = n
-	@Test  	public void Lnki_gt_orig_frame_svg() 	{fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_type_(Xop_lnki_type.Id_frame)		.Lnki_(800, 400).Test_html(400, 200, Bool_.N);}	// [[File:A.png|frame|800px]]     -> 400,200; File_is_orig = n; frame always ignores parameters and returns orig
+	@Test  	public void Lnki_gt_orig_frame_svg() 	{fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_type_(Xop_lnki_type.Id_frame)		.Lnki_(800,  -1).Test_html(400, 200, Bool_.N);}	// [[File:A.svg|frame|800px]]     -> 400,200; File_is_orig = n; frame always ignores parameters and returns orig
 	@Test   public void Width_missing()				{fxt.Lnki_( -1, 100).Test_html(200, 100);}	// calc width based on height and orig
 	@Test   public void Height_missing()			{fxt.Lnki_(200,  -1).Test_html(200, 100);}
 	@Test  	public void Orig_missing() 				{fxt.Lnki_(400, 200).Orig_( -1,  -1).Test_html(400, 200);}	// no orig_size; use lnki_w and lnki_h
@@ -66,6 +66,9 @@ public class Xof_img_size_tst {
 	}
 	@Test  	public void Pdf_none_defaults_to_thumb() {	// PURPOSE: if no width is specified, pdf uses thumb width default, not orig width); DATE: 2013-11-27
 		fxt.Lnki_type_(Xop_lnki_type.Id_none).Lnki_ext_(Xof_ext_.Id_pdf).Lnki_(-1, -1).Orig_(440, 220).Test_html(220, 110, Bool_.N);	// NOTE: used to be 1,1
+	}
+	@Test  	public void Frame() {	// PURPOSE: frame incorrectly defaulted to file_is_orig; [[File:MESSENGER.jpg|200x200px|framed]]; DATE:2013-12-22
+		fxt.Lnki_type_(Xop_lnki_type.Id_frame).Lnki_ext_(Xof_ext_.Id_png).Lnki_(200, 200).Orig_(2038, 1529).Test_html(200, 150, Bool_.N);
 	}
 }
 class Xof_img_size_fxt {

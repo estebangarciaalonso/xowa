@@ -21,6 +21,7 @@ public class Xof_bin_wkr_http_wmf implements Xof_bin_wkr {
 	private Xow_repo_mgr repo_mgr; private gplx.ios.IoEngine_xrg_downloadFil download; 
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
 	private int fail_timeout = 0;
+	public boolean Bin_wkr_resize() {return bin_wkr_resize;} public void Bin_wkr_resize_(boolean v) {bin_wkr_resize = v;} private boolean bin_wkr_resize = true;	// NOTE: default to true
 	public Xof_bin_wkr_http_wmf(Xow_repo_mgr repo_mgr, gplx.ios.IoEngine_xrg_downloadFil download) {
 		this.repo_mgr = repo_mgr; this.download = download;
 	}

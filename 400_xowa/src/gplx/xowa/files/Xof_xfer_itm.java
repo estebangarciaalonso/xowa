@@ -50,8 +50,8 @@ public class Xof_xfer_itm implements Xof_file_itm {
 	public void			Atrs_by_meta_only(Xof_meta_itm meta_itm) {this.meta_itm = meta_itm; Atrs_by_ttl(meta_itm.Ttl(), meta_itm.Ptr_ttl());}
 
 	public int			Html_uid() {return html_uid;} private int html_uid = -1;
-	public byte			Html_tid() {return html_tid;} public Xof_xfer_itm Html_tid_(byte v) {html_tid = v; return this;} private byte html_tid = Html_tid_none;
-	public Xof_xfer_itm Html_elem_atrs_(int uid, byte tid) {html_uid = uid; html_tid = tid; return this;} 
+	public byte			Html_elem_tid() {return html_elem_tid;} public Xof_xfer_itm Html_elem_tid_(byte v) {html_elem_tid = v; return this;} private byte html_elem_tid = Xof_html_elem.Tid_none;
+	public Xof_xfer_itm Html_elem_atrs_(int uid, byte tid) {html_uid = uid; html_elem_tid = tid; return this;} 
 	public int			Html_w() {return html_w;} private int html_w;
 	public int			Html_h() {return html_h;} private int html_h;
 	public int			File_w() {return html_w;}	// NOTE: for itm_meta, file_w == html_w
@@ -59,14 +59,14 @@ public class Xof_xfer_itm implements Xof_file_itm {
 	public byte[]		Html_orig_src() {return html_orig_src;} private byte[] html_orig_src = ByteAry_.Empty;
 	public boolean			Html_pass() {return html_pass;} private boolean html_pass;
 	public void			Atrs_by_html_for_tests(int html_w, int html_h, byte[] html_view_src, byte[] html_orig_src) {this.html_w = html_w; this.html_h = html_h; this.html_view_src = html_view_src; this.html_orig_src = html_orig_src;}
-	public Object		Gallery_data() {return gallery_data;} public Xof_xfer_itm Gallery_data_(Object v) {gallery_data = v; return this;} private Object gallery_data;
+	public int			Gallery_mgr_h() {return gallery_mgr_h;} public Xof_xfer_itm Gallery_mgr_h_(int v) {gallery_mgr_h = v; return this;} private int gallery_mgr_h = Int_.Neg1;
 
-	public void			Atrs_calc_by_fsdb(int html_w, int html_h, Io_url html_url) {
+	public void			Atrs_calc_by_fsdb(int html_w, int html_h, Io_url view_url, Io_url orig_url) {
 		html_pass = true;
 		this.html_w = html_w;
 		this.html_h = html_h;
-//			this.html_orig_src = Trg_html(Xof_repo_itm.Mode_orig, Xof_img_size.Size_null_deprecated);
-		this.html_view_src = ByteAry_.new_utf8_(html_url.To_http_file_str());
+		this.html_orig_src = ByteAry_.new_utf8_(orig_url.To_http_file_str());
+		this.html_view_src = ByteAry_.new_utf8_(view_url.To_http_file_str());
 	}
 	public boolean			Atrs_calc_for_html() {return Atrs_calc_for_html(false);}
 	public boolean			Atrs_calc_for_html(boolean caller_is_file_page) {
@@ -178,9 +178,9 @@ public class Xof_xfer_itm implements Xof_file_itm {
 		lnki_type = Byte_.MaxValue_127; lnki_w = Int_.Neg1; lnki_h = Int_.Neg1; lnki_upright = Int_.Neg1; lnki_thumbtime = Int_.Neg1; lnki_thumbable = false;
 		orig_w = Int_.Neg1; orig_h = Int_.Neg1; orig_file_len = 0;	// NOTE: cannot be -1, or else will always download orig; see ext rule chk and (orig_file_len < 0)
 		lnki_redirect = null; lnki_ttl = null; lnki_md5 = null; lnki_ext = null;
-		html_orig_src = html_view_src = ByteAry_.Empty; html_w = Int_.Neg1; html_h = Int_.Neg1;
+		html_orig_src = html_view_src = ByteAry_.Empty; html_w = Int_.Neg1; html_h = Int_.Neg1; gallery_mgr_h = Int_.Neg1;
 		trg_repo_idx = Int_.Neg1; meta_itm = null;
-		html_uid = -1; html_tid = Html_tid_none;
+		html_uid = -1; html_elem_tid = Xof_html_elem.Tid_none;
 		return this;
 	}
 	public Xof_xfer_itm Clone() {
@@ -191,7 +191,8 @@ public class Xof_xfer_itm implements Xof_file_itm {
 		rv.html_w = html_w; rv.html_h = html_h; rv.html_view_src = html_view_src; rv.html_orig_src = html_orig_src; 
 		rv.trg_repo_idx = trg_repo_idx;
 		rv.meta_itm = meta_itm;	 // NOTE: shared reference
-		rv.html_uid = html_uid; rv.html_tid = html_tid;
+		rv.html_uid = html_uid; rv.html_elem_tid = html_elem_tid;
+		rv.gallery_mgr_h = gallery_mgr_h;
 		return rv;
 	}
 	public static byte[] Md5_calc(byte[] v) {return ByteAry_.new_ascii_(gplx.security.HashAlgo_.Md5.CalcHash(ConsoleDlg_.Null, gplx.ios.IoStream_.ary_(v)));}
@@ -211,7 +212,6 @@ public class Xof_xfer_itm implements Xof_file_itm {
 		}
 		return ttl;
 	}
-	public static final byte Html_tid_none = 0, Html_tid_img = 1, Html_tid_vid = 2, Html_tid_gallery = 3;
 }
 /*
 NOTE_1:Lnki_thumbable

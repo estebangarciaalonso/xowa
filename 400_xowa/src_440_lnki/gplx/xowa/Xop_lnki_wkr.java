@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.wikis.*;
 import gplx.xowa.parsers.lnkis.*;
 public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
@@ -78,6 +79,16 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		}
 		return curPos;
 	}
+	private static Xoa_ttl Adj_ttl_for_file(Xop_ctx ctx, Xoa_ttl ttl, byte[] ttl_bry) {
+		byte[] xwiki_bry = ttl.Wik_txt(); if (xwiki_bry == null) return ttl; // should not happen, but just in case
+		int xwiki_bry_len = xwiki_bry.length;
+		int ttl_bry_len = ttl_bry.length;
+		if (xwiki_bry_len + 1 >= ttl_bry_len) return ttl;	// invalid ttl; EX: [[test:]]
+		byte[] ttl_in_xwiki_bry = ByteAry_.Mid(ttl_bry, xwiki_bry_len + 1, ttl_bry_len); // +1 to position after xwiki :; EX: [[test:File:A.png]]; +1 to put after ":" at "F"
+		Xoa_ttl ttl_in_xwiki = Xoa_ttl.parse_(ctx.Wiki(), ttl_in_xwiki_bry);
+		if (ttl_in_xwiki == null) return ttl; // occurs if ttl is bad in xwiki; EX: test:<bad>
+		return ttl_in_xwiki.Ns().Id_file() ? ttl_in_xwiki : ttl;
+	}
 	public boolean Args_add(Xop_ctx ctx, byte[] src, Xop_tkn_itm tkn, Arg_nde_tkn arg, int arg_idx) {
 		Xop_lnki_tkn lnki = (Xop_lnki_tkn)tkn;
 		try {
@@ -96,9 +107,12 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 						name_bry = Pf_xtn_rel2abs.Rel2abs(tmp_bfr, name_bry, ctx.Page().Page_ttl().Raw());
 						tmp_bfr.Mkr_rls();
 					}
-					Xoa_ttl ttl = Xoa_ttl.parse_(ctx.Wiki(), name_bry);
-					//Xoa_ttl ttl = Xoa_ttl.new_(ctx.Wiki(), ctx.Msg_log(), name_bry, src, name_tkn.Dat_bgn(), name_tkn.Dat_end());
+					Xow_wiki wiki = ctx.Wiki();
+					Xoa_ttl ttl = Xoa_ttl.parse_(wiki, name_bry);
 					if (ttl == null) {lnki.TypeId_toText(); return false;}
+					if (	ttl.Wik_bgn() != Xoa_ttl.Null_wik_bgn			// xwiki available; EX: [[en:]]
+						&&	wiki.Wiki_tid() != Xow_wiki_type_.Tid_home)		// not home; ignore for history page wherein [[en.wikipedia.org:File:A.png]] will be listed
+						ttl = Adj_ttl_for_file(ctx, ttl, name_bry);
 					lnki.Ttl_(ttl);
 					lnki.Ns_id_(lnki.Ttl().Ns().Id());
 					lnki.Trg_tkn_(arg);

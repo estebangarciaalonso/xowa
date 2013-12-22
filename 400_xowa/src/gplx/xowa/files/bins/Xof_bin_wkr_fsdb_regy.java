@@ -22,6 +22,7 @@ public class Xof_bin_wkr_fsdb_regy implements Xof_bin_wkr {
 	private Io_url regy_url; private Db_provider provider;
 	public Xof_bin_wkr_fsdb_regy() {
 	}
+	public boolean Bin_wkr_resize() {return bin_wkr_resize;} public void Bin_wkr_resize_(boolean v) {bin_wkr_resize = v;} private boolean bin_wkr_resize = false;
 	public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsdb_regy;}
 	public void Init_by_wiki(Xow_wiki wiki) {
 		if (regy_url == null) regy_url = wiki.App().Fsys_mgr().File_dir().GenSubFil("xowa.fsdb_regy.sqlite3");

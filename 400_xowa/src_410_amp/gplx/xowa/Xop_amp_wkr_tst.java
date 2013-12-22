@@ -45,4 +45,7 @@ public class Xop_amp_wkr_tst {
 		fxt.ini_Log_(Xop_amp_log.Invalid_dec)	.tst_Parse_page_wiki("&#a;"		, fxt.tkn_txt_());
 		fxt.ini_Log_(Xop_amp_log.Invalid_hex)	.tst_Parse_page_wiki("&#x!;"		, fxt.tkn_txt_());
 	}
+	@Test  public void Amp_only() {	// PURPOSE: html_wtr was not handling & only
+		fxt.tst_Parse_page_all_str("&"				, "&amp;");
+	}
 }

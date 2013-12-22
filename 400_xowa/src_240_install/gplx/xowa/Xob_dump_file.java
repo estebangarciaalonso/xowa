@@ -32,10 +32,10 @@ public class Xob_dump_file {
 		this.wiki_type = Xow_wiki_type_.parse_by_domain(ByteAry_.new_ascii_(wiki_domain));
 		this.wiki_alias = Xob_bz2_file.Build_alias(wiki_type);
 		byte[] dump_file_bry = ByteAry_.new_utf8_(dump_file_type);
-		byte dump_file_tid = Xob_bz2_file.Parse__tid(dump_file_bry, 0, dump_file_bry.length);
+		byte dump_file_tid = Xob_bz2_file.Parse__tid(dump_file_bry);
 		byte[] ext = Xob_dump_file_.Ext_xml_bz2;
 		switch (dump_file_tid) {
-			case Xob_bz2_file.Tid_page_props: case Xob_bz2_file.Tid_categorylinks:
+			case Xob_bz2_file.Tid_page_props: case Xob_bz2_file.Tid_categorylinks: case Xob_bz2_file.Tid_image:
 				ext = Xob_dump_file_.Ext_sql_gz;
 				break;
 		}
@@ -58,31 +58,4 @@ public class Xob_dump_file {
 		return rv;
 	}
 	public static Xob_dump_file new_(String wiki_domain, String dump_date, String dump_type) {return new Xob_dump_file().Ctor(wiki_domain, dump_date, dump_type);}
-}
-class Xob_dump_file_ {
-	public static byte[] Bld_dump_dir_url(byte[] server_url, byte[] alias, byte[] date) {
-		return ByteAry_.Add
-			(	server_url																	// "http://dumps.wikimedia.org/"
-			,	ByteAry_.Replace(alias, Byte_ascii.Dash, Byte_ascii.Underline), Bry_slash	// "simplewiki/"
-			,	date, Bry_slash																// "latest/"
-			);
-	}
-	public static byte[] Bld_dump_file_name(byte[] alias, byte[] date, byte[] dump_file_type, byte[] ext) {
-		return ByteAry_.Add
-			(	ByteAry_.Replace(alias, Byte_ascii.Dash, Byte_ascii.Underline), Bry_dash	// "simplewiki-"
-			,	date, Bry_dash																// "latest-"
-			,	dump_file_type																// "pages-articles"
-			,	ext																			// ".xml.bz2"
-			);
-	}
-	private static final byte[] Bry_dash = new byte[] {Byte_ascii.Dash}, Bry_slash = new byte[] {Byte_ascii.Slash};
-	public static final byte[] Ext_xml_bz2 = ByteAry_.new_ascii_(".xml.bz2");
-	public static final byte[] Ext_sql_gz  = ByteAry_.new_ascii_(".sql.gz");
-	public static final String 
-		  Server_wmf			= "http://dumps.wikimedia.org/"
-		, Server_your_org		= "http://dumps.wikimedia.your.org/"
-		, Server_c3sl			= "http://wikipedia.c3sl.ufpr.br/"
-		, Server_masaryk		= "http://ftp.fi.muni.cz/pub/wikimedia/"
-		, Date_latest			= "latest"
-		;
 }

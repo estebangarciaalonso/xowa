@@ -88,6 +88,7 @@ public class Xow_wiki implements GfoInvkAble {
 	public Bry_bfr_mkr			Utl_bry_bfr_mkr() {return app.Utl_bry_bfr_mkr();}
 	public byte Wdata_wiki_tid() {return wdata_wiki_tid;} private byte wdata_wiki_tid;
 	public byte[] Wdata_wiki_lang() {return wdata_wiki_lang;} private byte[] wdata_wiki_lang;
+	public void Wdata_wiki_lang_(byte[] v) {this.wdata_wiki_lang = v;}	// TEST:
 	public Xow_xtn_mgr Xtn_mgr() {return xtn_mgr;} private Xow_xtn_mgr xtn_mgr;
 	public Xow_cache_mgr Cache_mgr() {return cache_mgr;} private Xow_cache_mgr cache_mgr;
 
@@ -182,7 +183,7 @@ public class Xow_wiki implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_db_mgr))				return db_mgr;
 		else if	(ctx.Match(k, Invk_db_mgr_to_sql_))		this.Db_mgr_create_as_sql();
 		else if	(ctx.Match(k, Invk_import_mgr))			return import_mgr;
-		else if	(ctx.Match(k, Invk_maint))			return maint_mgr;
+		else if	(ctx.Match(k, Invk_maint))				return maint_mgr;
 		else if	(ctx.Match(k, Invk_domain))				return domain_str;
 		else if	(ctx.Match(k, Invk_xtns))				return xtn_mgr;
 		else	return GfoInvkAble_.Rv_unhandled;

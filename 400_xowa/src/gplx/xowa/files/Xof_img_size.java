@@ -29,7 +29,8 @@ public class Xof_img_size {
 	}
 	public void Html_size_calc(byte exec_tid, int lnki_w, int lnki_h, byte lnki_type, double lnki_upright, int lnki_ext, int orig_w, int orig_h, int thumb_default_w) {
 		this.Clear();											// always clear before calc; caller should be responsible, but just to be safe.
-		if (lnki_type == Xop_lnki_type.Id_frame) {				// frame: always return orig size; Linker.php!makeThumbLink2; // Use image dimensions, don't scale
+		if (lnki_type == Xop_lnki_type.Id_frame					// frame: always return orig size; Linker.php!makeThumbLink2; // Use image dimensions, don't scale
+			&& lnki_h == Null) {								// unless lnki_h specified; DATE:2013-12-22
 			html_w = file_w = orig_w;
 			html_h = file_h = orig_h;
 			file_is_orig = Xof_ext_.Orig_file_is_img(lnki_ext);	// file_is_orig = true, unless svg, ogv, pdf

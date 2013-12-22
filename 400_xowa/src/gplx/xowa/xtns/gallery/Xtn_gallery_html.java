@@ -48,8 +48,8 @@ public class Xtn_gallery_html {
 				Xop_lnki_tkn lnki = ctx.Tkn_mkr().Lnki(itm.Ttl_bgn(), itm.Ttl_end()).Ttl_(itm_ttl).Width_(itm_w).Height_(itm_h);
 				Xof_xfer_itm xfer_itm = wtr.Lnki_wtr().Lnki_eval(page, lnki, wtr.Queue_add_ref());
 				int elem_id = xfer_itm.Html_uid();
-				xfer_itm.Gallery_data_(new Xtn_gallery_dynamic_data().Init(mgr.Itm_height()));
-				xfer_itm.Html_tid_(Xof_xfer_itm.Html_tid_gallery);
+				xfer_itm.Gallery_mgr_h_(mgr.Itm_height());
+				xfer_itm.Html_elem_tid_(Xof_html_elem.Tid_gallery);
 				byte[] html_src = xfer_itm.Html_view_src();
 				int html_w = xfer_itm.Html_w();
 				int html_h = xfer_itm.Html_h();

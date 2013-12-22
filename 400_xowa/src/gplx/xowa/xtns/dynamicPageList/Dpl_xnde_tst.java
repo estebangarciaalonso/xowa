@@ -18,28 +18,56 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.dynamicPageList; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
 public class Dpl_xnde_tst {
-	Xtn_dynamic_page_list_fxt fxt = new Xtn_dynamic_page_list_fxt();
+	private Dpl_xnde_fxt fxt = new Dpl_xnde_fxt();
 	@Before public void init() {fxt.Clear();}
 	@Test   public void Ctg() {
 		fxt.Ctg_create("Ctg_0", "B", "A");
 		fxt.Ul_pages("<DynamicPageList>category=Ctg_0</DynamicPageList>", fxt.Ul(Itm_html_null, "B", "A"));
 	}
-//		@Test   public void Ctg_multiple() {
-//			fxt.Ctg_create("Ctg_0", "B", "A");
-//			fxt.Ctg_create("Ctg_1", "A");
-//			fxt.Ul_pages(String_.Concat_lines_nl
-//			(	"<DynamicPageList>"
-//			,	"category=Ctg_0"
-//			,	"category=Ctg_1"
-//			,	"</DynamicPageList>"
-//			), fxt.Ul(Itm_html_null, "A"));
-//		}
+	@Test   public void Ctg_multiple() {
+		fxt.Ctg_create_pages("Ctg_0", Dpl_page_mok.new_(101, "A"), Dpl_page_mok.new_(102, "B"));
+		fxt.Ctg_create_pages("Ctg_1", Dpl_page_mok.new_(101, "A"));
+		fxt.Ul_pages(String_.Concat_lines_nl
+		(	"<DynamicPageList>"
+		,	"category=Ctg_0"
+		,	"category=Ctg_1"
+		,	"</DynamicPageList>"
+		), fxt.Ul(Itm_html_null, "A"));
+	}
+	@Test   public void Ctg_multiple_none() {	// PURPOSE: page must be in both categories
+		fxt.Ctg_create("Ctg_0", "A");
+		fxt.Ctg_create("Ctg_1", "B");
+		fxt.Ul_pages(String_.Concat_lines_nl
+		(	"<DynamicPageList>"
+		,	"category=Ctg_0"
+		,	"category=Ctg_1"
+		,	"</DynamicPageList>"
+		),  "Error: No results!");
+	}
+	@Test   public void Notcategory() {
+		fxt.Ctg_create_pages("Ctg_0", Dpl_page_mok.new_(101, "A"), Dpl_page_mok.new_(102, "B"));
+		fxt.Ctg_create_pages("Ctg_1", Dpl_page_mok.new_(101, "A"));
+		fxt.Ul_pages(String_.Concat_lines_nl
+			(	"<DynamicPageList>"
+			,	"category=Ctg_0"
+			,	"notcategory=Ctg_1"
+			,	"</DynamicPageList>"
+			), fxt.Ul(Itm_html_null, "B"));
+	}
 	@Test  public void Ctg_ascending() {
 		fxt.Ctg_create("Ctg_0", "B", "A");
 		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
 		(	"<DynamicPageList>"
 		,	"category=Ctg_0"
 		,	"order=ascending"
+		,	"</DynamicPageList>"), fxt.Ul(Itm_html_null, "A", "B"));
+	}
+	@Test  public void Ctg_ws() {
+		fxt.Ctg_create("Ctg_0", "B", "A");
+		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		(	"<DynamicPageList>"
+		,	"  category  =  Ctg_0  "
+		,	"  order  =  ascending  "
 		,	"</DynamicPageList>"), fxt.Ul(Itm_html_null, "A", "B"));
 	}
 	@Test  public void Ctg_descending() {
@@ -97,43 +125,70 @@ public class Dpl_xnde_tst {
 		,	"count=2"
 		,	"</DynamicPageList>"), fxt.Ul(Itm_html_null, "C"));
 	}
-	
-//	@Test  public void Ns() {
-//		fxt.Page_create("Talk:A");
-//		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
-//		(	"<DynamicPageList>"
-//		,	"namespace=Talk"
-//		,	"</DynamicPageList>"), fxt.Ul(Itm_html_null, "Talk:A"));
-//	}
+	@Test  public void Ns() {
+		fxt.Ctg_create("Ctg_0", "Talk:A", "B");
+		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		(	"<DynamicPageList>"
+		,	"category=Ctg_0"
+		,	"namespace=Talk"
+		,	"</DynamicPageList>"), fxt.Ul(Itm_html_null, "A"));
+	}
+	@Test  public void Showns() {
+		fxt.Ctg_create("Ctg_0", "Talk:A");
+		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		(	"<DynamicPageList>"
+		,	"category=Ctg_0"
+		,	"shownamespace=true"
+		,	"</DynamicPageList>"), fxt.Ul(Itm_html_null, "Talk:A"));
+		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		(	"<DynamicPageList>"
+		,	"category=Ctg_0"
+		,	"shownamespace=false"
+		,	"</DynamicPageList>"), fxt.Ul(Itm_html_null, "A"));
+	}
 	private static final String Itm_html_null = null;
 }
-class Xtn_dynamic_page_list_fxt {	
+class Dpl_page_mok {
+	public Dpl_page_mok(int id, String ttl) {this.id = id; this.ttl = ttl;}
+	public int Id() {return id;} private int id;
+	public String Ttl() {return ttl;} private String ttl;
+	public static Dpl_page_mok new_(int id, String ttl) {return new Dpl_page_mok(id, ttl);}
+}
+class Dpl_xnde_fxt {	
 	private Xop_fxt fxt = new Xop_fxt();
+	private int next_id;
 	public void Clear() {
+		next_id = 100;
 		fxt.Reset();
 		warns = String_.Ary_empty;
 		fxt.App().Usr_dlg().Ui_wkr().Clear();
 		fxt.Wiki().Hive_mgr().Clear();
-//			fxt.Wiki().Db_mgr().Load_mgr().Clear();	// clear regys else earlier ctgs will remain
+		fxt.Wiki().Db_mgr().Save_mgr().Clear();	// NOTE: must clear to reset next_id to 0; Ctg_create assumes clean slate from 0
 		Io_mgr._.InitEngine_mem();
 	}
 	public void Warns(String... v) {warns = v;} private String[] warns;
 	public void Page_create(String page) {fxt.ini_page_create(page);}
-	public void Ctg_create(String ctg, String... pages) {
+	public void Ctg_create(String ctg, String... ttls) {
+		int len = ttls.length;
+		Dpl_page_mok[] ary = new Dpl_page_mok[len];
+		for (int i = 0; i < len; i++)
+			ary[i] = Dpl_page_mok.new_(++next_id, ttls[i]);
+		Ctg_create_pages(ctg, ary);
+	}
+	public void Ctg_create_pages(String ctg, Dpl_page_mok... pages) {
 		int pages_len = pages.length;
 		int[] page_ids = new int[pages_len];
 		for (int i = 0; i < pages_len; i++) {
-			String page = pages[i];
-			int page_id = i;
-			Xoa_ttl page_ttl = Xoa_ttl.parse_(fxt.Wiki(), ByteAry_.new_utf8_(page));
+			Dpl_page_mok page = pages[i];
+			int id = page.Id();
+			String ttl = page.Ttl();
+			Xoa_ttl page_ttl = Xoa_ttl.parse_(fxt.Wiki(), ByteAry_.new_utf8_(ttl));
 			Xoa_page page_obj = fxt.Wiki().Data_mgr().Get_page(page_ttl, false);
 			if (page_obj.Missing()) {
-				fxt.ini_page_create(page);
-				fxt.ini_id_create (page_id, 0, 0, false, 5, Xow_ns_.Id_main, page);
+				fxt.ini_page_create(ttl);
+				fxt.ini_id_create (id, 0, 0, false, 5, Xow_ns_.Id_main, ttl);
 			}
-			else
-				page_id = page_obj.Page_id();
-			page_ids[i] = page_id;
+			page_ids[i] = id;
 		}
 		fxt.ini_ctg_create(ctg, page_ids);
 	}

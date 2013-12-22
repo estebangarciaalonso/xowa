@@ -20,4 +20,5 @@ public class Xtn_lst_section_mgr {
 	public int Count() {return list.Count();} private ListAdp list = ListAdp_.new_();
 	public Xtn_section_nde Get_at(int i) {return (Xtn_section_nde)list.FetchAt(i);}
 	public void Add(Xtn_section_nde xnde) {list.Add(xnde);}
+	public void Clear() {list.Clear();}
 }

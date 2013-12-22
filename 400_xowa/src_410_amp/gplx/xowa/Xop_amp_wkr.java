@@ -22,8 +22,8 @@ public class Xop_amp_wkr implements Xop_ctx_wkr {
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {}
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn, int cur_pos) {
 		if (cur_pos == src_len) return ctx.LxrMake_txt_(cur_pos);	// NOTE: & is last char in page; strange and rare, but don't raise error
-		Object o = ctx.App().AmpTrie().MatchAtCur(src, cur_pos, src_len);
-		cur_pos = ctx.App().AmpTrie().Match_pos();
+		Object o = ctx.App().Amp_trie().MatchAtCur(src, cur_pos, src_len);
+		cur_pos = ctx.App().Amp_trie().Match_pos();
 		if (o == null) return ctx.LxrMake_txt_(cur_pos);
 		Xop_amp_trie_itm itm = (Xop_amp_trie_itm)o;
 		if (itm.Tid() == Xop_amp_trie_itm.Tid_name) {

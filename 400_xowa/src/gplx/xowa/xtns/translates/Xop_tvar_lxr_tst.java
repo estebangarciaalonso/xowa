@@ -23,6 +23,6 @@ import org.junit.*;
 		fxt.tst_Parse_page_all_str("<tvar|1>''a''</>", "<i>a</i>");
 	}
 	@Test  public void Missing_end() {
-		fxt.tst_Parse_page_all_str("<tvar|1>''a''</tvar>", "&lt;tvar|1&gt;<i>a</i>&lt;tvar&gt;");
+		fxt.tst_Parse_page_all_str("<tvar|1>''a''</tvar>", "&lt;tvar|1&gt;<i>a</i>&lt;/tvar&gt;");
 	}
 }

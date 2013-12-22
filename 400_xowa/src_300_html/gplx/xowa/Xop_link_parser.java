@@ -53,7 +53,7 @@ class Xop_link_parser {
 				else // next char is not slash; assume xfer_itm refers to ns; EX:File:A.png
 					raw = tmp_bfr.Add(Xoh_href_parser.Href_wiki_bry).Add(raw).XtoAryAndClear();
 				break;
-			default:
+			default:	// is page only; EX: Abc
 				if (ByteAry_.Len_eq_0(raw))		// NOTE: handle blank link; EX: [[File:Loudspeaker.svg|11px|link=|alt=play]]
 					raw = or;
 				else {
@@ -77,6 +77,8 @@ class Xop_link_parser {
 				wiki_bry = xwiki_itm.Domain();
 				page_bry = ByteAry_.Mid(page_bry, xwiki_itm.Key().length + 1, page_bry.length);	// +1 for ":"
 			}
+			else									// is regular page; use ttl.Full_db() to normalize; EX: &nbsp; -> _
+				page_bry = page_ttl.Full_db();
 		}
 		if (ByteAry_.Eq(wiki_bry, wiki.Key_bry()))	// NOTE: check against wiki.Key_bry() again; EX: in en_wiki, and http://commons.wikimedia.org/wiki/w:A
 			tmp_bfr.Add(Xoh_href_parser.Href_wiki_bry).Add(page_bry);

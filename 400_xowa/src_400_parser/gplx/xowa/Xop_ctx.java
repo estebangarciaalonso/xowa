@@ -65,6 +65,7 @@ public class Xop_ctx {
 		aryLen = aryMax = 0;
 		Tag_idx = 0;
 		app.Wiki_mgr().Wdata_mgr().Clear();
+		if (lst_section_mgr != null) lst_section_mgr.Clear();
 		return this;
 	}
 	public void Page_bgn(Xop_root_tkn root, byte[] src) {
@@ -133,12 +134,12 @@ public class Xop_ctx {
 					return (Xop_tblw_tkn)tkn;
 				case Xop_tkn_itm_.Tid_xnde:
 					Xop_xnde_tkn xnde_tkn = (Xop_xnde_tkn)tkn;
-					switch (xnde_tkn.Tblw_tid()) {
-						case Xop_tkn_itm_.Tid_tblw_tb:
-						case Xop_tkn_itm_.Tid_tblw_tr:
-						case Xop_tkn_itm_.Tid_tblw_td:
-						case Xop_tkn_itm_.Tid_tblw_th:
-						case Xop_tkn_itm_.Tid_tblw_tc:
+					switch (xnde_tkn.Tag().Id()) {
+						case Xop_xnde_tag_.Tid_table:
+						case Xop_xnde_tag_.Tid_tr:
+						case Xop_xnde_tag_.Tid_td:
+						case Xop_xnde_tag_.Tid_th:
+						case Xop_xnde_tag_.Tid_caption:
 							return (Xop_tblw_tkn)tkn;
 					}
 					break;

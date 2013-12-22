@@ -39,6 +39,7 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 		ctx = wiki.Ctx();
 		root = ctx.Tkn_mkr().Root(ByteAry_.Empty);			
 		wiki.Init_assert();	// NOTE: must init wiki for db_mgr_as_sql
+		wiki.Db_mgr_as_sql().Init_load(Db_connect_.sqlite_(Xodb_mgr_sql.Find_core_url(wiki)));	// NOTE: must reinit providers as previous steps may have rls'd (and left member variable provider which is closed)
 		db_fsys_mgr = wiki.Db_mgr_as_sql().Fsys_mgr();
 		db_ary = Xob_dump_src_ttl.Init_text_files_ary(db_fsys_mgr);
 		poll_interval = poll_mgr.Poll_interval();
@@ -67,6 +68,8 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 		if (pg_bgn == Int_.MaxValue) return;
 		if (load_tmpls) Xob_dump_mgr_base_.Load_all_tmpls(usr_dlg, wiki, page_src);
 		time_bgn = Env_.TickCount();
+		Xob_dump_bmk dump_bmk = new Xob_dump_bmk();
+		rate_mgr.Init();
 		int ns_ary_len = ns_ary.length;
 		for (int i = 0; i < ns_ary_len; i++) {
 			int ns_id = ns_ary[i];
@@ -76,12 +79,14 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 				else									// ns_id is not ns_bgn; keep looking
 					continue;
 			}
-			Exec_db_ary(ns_id);
+			dump_bmk.Ns_id_(ns_id);
+			Exec_db_ary(dump_bmk, ns_id);
 			if (ns_id == ns_end) exit_now = true;		// ns_end set; exit
 			if (exit_now) break;						// exit_now b/c of pg_bgn, db_bgn or something else
 		}
+		Exec_commit(dump_bmk.Ns_id(), dump_bmk.Db_id(), dump_bmk.Pg_id(), ByteAry_.Empty);
 	}
-	private void Exec_db_ary(int ns_id) {
+	private void Exec_db_ary(Xob_dump_bmk dump_bmk, int ns_id) {
 		int db_ary_len = db_ary.length;
 		for (int i = 0; i < db_ary_len; i++) {
 			int db_id = db_ary[i].Id();
@@ -91,12 +96,13 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 				else									// db_id is not db_bgn; keep looking
 					continue;
 			}
-			Exec_db_itm(ns_id, db_id);
+			dump_bmk.Db_id_(db_id);
+			Exec_db_itm(dump_bmk, ns_id, db_id);
 			if (db_id == db_end) exit_now = true;		// db_end set; exit;
 			if (exit_now) return;						// exit_now b/c of pg_bgn, db_bgn or something else
 		}
 	}
-	private void Exec_db_itm(int ns_id, int db_id) {
+	private void Exec_db_itm(Xob_dump_bmk dump_bmk, int ns_id, int db_id) {
 		ListAdp pages = ListAdp_.new_();
 		Xow_ns ns = wiki.Ns_mgr().Get_by_id(ns_id);
 		int pg_id = pg_bgn;
@@ -104,16 +110,18 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 		while (true) {
 			page_src.Get_pages(pages, db_id, ns_id, pg_id);
 			int pages_len = pages.Count();
-			usr_dlg.Prog_many("", "", "fetched pages: ~{0}", pages_len);
 			if (pages_len == 0) return;	// no more pages in db;
+			usr_dlg.Prog_many("", "", "fetched pages: ~{0}", pages_len);
 			for (int i = 0; i < pages_len; i++) {
 				Xodb_page page = (Xodb_page)pages.FetchAt(i);
+				dump_bmk.Pg_id_(pg_id);
 				Exec_pg_itm(ns, db_id, page);
 				if (	pg_id		>= pg_end
 					||	exec_count	>= exec_count_max) {
 					exit_now = true;
 				}
 				if (exit_now) return;
+				pg_id = page.Id();
 			}
 		}
 	}
@@ -123,6 +131,7 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 				usr_dlg.Prog_many("", "", "parsing: ns=~{0} db=~{1} pg=~{2} count=~{3} time=~{4} rate=~{5} ttl=~{6}"
 					, ns.Id(), db_id, page.Id(), exec_count
 					, Env_.TickCount_elapsed_in_sec(time_bgn), rate_mgr.Rate_as_str(), String_.new_utf8_(page.Ttl_wo_ns()));
+			ctx.Clear();
 			Exec_pg_itm_hook(ns, page, page.Text());
 			ctx.App().Utl_bry_bfr_mkr().Clear_fail_check();	// make sure all bfrs are released
 			if (ctx.App().Tmpl_result_cache().Count() > 50000) 
@@ -242,7 +251,9 @@ class Xob_dump_bmk_mgr {
 		Io_mgr._.SaveFilBfr(cfg_url, save_bfr);
 	}
 	private void Save_itm(ByteAryBfr save_bfr, String key, int val) {
-		save_bfr.Add_str(key).Add_byte(Byte_ascii.Paren_bgn).Add_int_variable(val).Add_byte(Byte_ascii.Paren_end).Add_byte_nl();
+		String fmt = "{0}('{1}');\n";
+		String str = String_.Format(fmt, key, val);
+		save_bfr.Add_str(str);
 	}
 }
 class Xob_rate_mgr {
@@ -251,6 +262,7 @@ class Xob_rate_mgr {
 	private ByteAryBfr save_bfr = ByteAryBfr.reset_(255);
 	public int Reset_interval() {return reset_interval;} public Xob_rate_mgr Reset_interval_(int v) {reset_interval = v; return this;} private int reset_interval = 10000;
 	public Io_url Log_file() {return log_file;} public Xob_rate_mgr Log_file_(Io_url v) {log_file = v; return this;} private Io_url log_file;
+	public void Init() {time_bgn = Env_.TickCount();}
 	public void Increment() {
 		++item_len;
 		if (item_len % reset_interval == 0) {
@@ -261,7 +273,7 @@ class Xob_rate_mgr {
 		}
 	}
 	private void Save(int count, long bgn, long end) {
-		int dif = (int)(end - bgn);
+		int dif = (int)(end - bgn) / 1000;
 		DecimalAdp rate = DecimalAdp_.divide_safe_(count, dif);
 		save_bfr
 			.Add_str(rate.XtoStr("#,##0.000")).Add_byte_pipe()
@@ -275,4 +287,9 @@ class Xob_rate_mgr {
 		int elapsed = Env_.TickCount_elapsed_in_sec(time_bgn);
 		return Math_.Div_safe_as_int(item_len, elapsed);
 	}
+}
+class Xob_dump_bmk {
+	public int Ns_id() {return ns_id;} public Xob_dump_bmk Ns_id_(int v) {ns_id = v; return this;} private int ns_id;
+	public int Db_id() {return db_id;} public Xob_dump_bmk Db_id_(int v) {db_id = v; return this;} private int db_id;
+	public int Pg_id() {return pg_id;} public Xob_dump_bmk Pg_id_(int v) {pg_id = v; return this;} private int pg_id;
 }

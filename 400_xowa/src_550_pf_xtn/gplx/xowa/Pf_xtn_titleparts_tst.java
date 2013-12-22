@@ -24,7 +24,6 @@ public class Pf_xtn_titleparts_tst {
 	@Test  public void Len2()				{fxt.tst_Parse_tmpl_str_test("{{#titleparts:a/b/c/d|2}}"			, "{{test}}", "A/b");}
 	@Test  public void Len2_Bgn2()			{fxt.tst_Parse_tmpl_str_test("{{#titleparts:a/b/c/d|2|2}}"			, "{{test}}", "b/c");}
 	@Test  public void LenNeg1()			{fxt.tst_Parse_tmpl_str_test("{{#titleparts:a/b/c/d|-1}}"			, "{{test}}", "A/b/c");}
-	@Test  public void BgnNeg1()			{fxt.tst_Parse_tmpl_str_test("{{#titleparts:a/b/c/d||-1}}"			, "{{test}}", "d");}
 	@Test  public void LenNeg1Bgn2()		{fxt.tst_Parse_tmpl_str_test("{{#titleparts:a/b/c/d|-1|2}}"			, "{{test}}", "b/c");}
 
 	@Test  public void Exc_len0()			{fxt.tst_Parse_tmpl_str_test("{{#titleparts:a/b/c/d|0}}"			, "{{test}}", "A/b/c/d");}
@@ -69,6 +68,14 @@ public class Pf_xtn_titleparts_tst {
 		(	"{{#titleparts:a<span id='b'>c</span>d/e|1}}"
 		,	"{{test}}"
 		,	"a<span id='b'>c</span>d/e"
+		);
+	}
+	@Test  public void Bgn_neg_1()	{fxt.tst_Parse_tmpl_str_test("{{#titleparts:a/b/c/d||-1}}"			, "{{test}}", "d");}
+	@Test  public void Bgn_neg_2()  {	// PURPOSE: EX: Wikisource:Requests for comment/Annotations and derivative works; DATE:2013-12-19
+		fxt.tst_Parse_tmpl_str_test
+		(	"{{#titleparts:a/b|-1|-2}}"
+		,	"{{test}}"
+		,	"A"
 		);
 	}
 }

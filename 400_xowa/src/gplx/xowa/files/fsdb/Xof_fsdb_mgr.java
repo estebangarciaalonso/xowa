@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.fsdb.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.wiki_orig.*;
 import gplx.xowa.files.fsdb.caches.*;
+import gplx.xowa.files.gui.*;
 public interface Xof_fsdb_mgr extends RlsAble {
 	boolean Tid_is_mem();
 	Xof_qry_mgr Qry_mgr();
@@ -82,7 +83,7 @@ class Xof_fsdb_mgr_utl {
 				// TODO: this "breaks" tests b/c mock bin_wkr is fsdb; 
 				if (itm.Rslt_bin() != Xof_bin_wkr_.Tid_fsdb_wiki)	// if bin is from fsdb, don't save it; occurs when page has new file listed twice; 1st file inserts into fsdb; 2nd file should find in fsdb and not save again
 					Fsdb_save(fsdb_mgr, itm);
-				Gui_update(win_wtr, itm);
+				Js_img_mgr.Update_img(win_wtr, itm);
 			}
 			else {
 				itm.Rslt_bin_(Xof_bin_wkr_.Tid_not_found);
@@ -98,7 +99,7 @@ class Xof_fsdb_mgr_utl {
 		switch (itm.Rslt_reg()) {
 			case Xof_wiki_orig_wkr_.Tid_found_orig:
 				itm.Html__init(repo_mgr, url_bldr, img_size, exec_tid);
-				Gui_update(win_wtr, itm);
+				Js_img_mgr.Update_img(win_wtr, itm);
 				if (!Env_.Mode_testing()) {
 					Cache_fil_itm cache_fil_itm = fsdb_mgr.Cache_mgr().Reg(fsdb_mgr.Wiki(), itm, 0);
 					if (cache_fil_itm.Fil_size() == 0) {
@@ -148,23 +149,6 @@ class Xof_fsdb_mgr_utl {
 			fsdb_mgr.Usr_dlg().Warn_many("", "", "failed to save file: ttl=~{0} url=~{1} err=~{2}", String_.new_utf8_(itm.Lnki_ttl()), html_url.Raw(), Err_.Message_gplx(e));
 		}
 		finally {bin_rdr.Rls();}
-	}
-	private void Gui_update(Xog_win_wtr win_wtr, Xof_fsdb_itm itm) {
-		int html_uid = itm.Html_uid();
-		String html_id = "xowa_file_img_" + html_uid;
-		win_wtr.Html_img_update(html_id, itm.Html_url().To_http_file_str(), itm.Html_w(), itm.Html_h());
-		if (itm.Lnki_type() == Xop_lnki_type.Id_thumb) {
-			win_wtr.Html_atr_set(html_id, "class", gplx.xowa.html.Xow_html_mgr.Str_img_class_thumbimage);
-			win_wtr.Html_atr_set("xowa_file_div_" + html_uid, "style", "width:" + itm.Html_w() + "px;");
-		}
-//				if (xfer_itm.Html_elem_tid() == Xof_xfer_itm.Html_elem_tid_gallery) {
-//					int vpad = ((gplx.xowa.xtns.gallery.Xtn_gallery_dynamic_data)xfer_itm.Gallery_data()).Calc_vpad(itm.Html_h());
-//					win_wtr.Html_atr_set("xowa_file_gallery_div_" + file_img_id_int, "style", "margin:" + vpad + "px auto;");
-//				}
-//				else if (xfer_itm.Html_elem_tid() == Xof_xfer_itm.Html_elem_tid_vid) {
-//					win_wtr.Html_atr_set("xowa_file_play_" + file_img_id_int, "style", "width:" + itm.Html_w() + "px;max-width:" + (itm.Html_w() - 2) + "px;");
-//					win_wtr.Html_atr_set("xowa_file_play_" + file_img_id_int, "href", String_.new_utf8_(xfer_itm.Html_orig_src()));
-//				}
 	}
 	public static final Xof_fsdb_mgr_utl _ = new Xof_fsdb_mgr_utl(); Xof_fsdb_mgr_utl() {}
 }

@@ -95,6 +95,8 @@ public class Xob_bz2_file {
 		}
 		return null;
 	}
+	public static byte Parse__tid(String src) {return Parse__tid(ByteAry_.new_utf8_(src));}
+	public static byte Parse__tid(byte[] src) {return Parse__tid(src, 0, src.length);}
 	public static byte Parse__tid(byte[] src, int bgn, int end) {
 		if (tid_bry_trie == null) Init_tids();
 		Object o = tid_bry_trie.MatchAtCur(src, bgn, end); if (o == null) throw Err_mgr._.parse_(Xob_bz2_file.class, src);

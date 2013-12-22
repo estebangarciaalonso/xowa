@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.gfui.*;
 public class Xof_url_bldr {
-	ByteAryBfr bfr = ByteAryBfr.reset_(400);
+	private ByteAryBfr bfr = ByteAryBfr.reset_(400);
 	private byte[] area; private boolean wmf_protocol_is_file;
 	public byte Dir_spr() {return dir_spr;} public Xof_url_bldr Dir_spr_(byte v) {dir_spr = v; return this;} private byte dir_spr;
 	public byte[] Root() {return root;} public Xof_url_bldr Root_(byte[] v) {root = v; return this;} private byte[] root;
@@ -29,6 +29,8 @@ public class Xof_url_bldr {
 	public int Seek() {return seek;} public Xof_url_bldr Seek_(int v) {seek = v; return this;} private int seek = -1;
 	public Xof_url_bldr Wmf_dir_hive_(boolean v) {wmf_dir_hive = v; return this;} private boolean wmf_dir_hive;
 	public boolean Thumb() {return thumb;} public Xof_url_bldr Thumb_(boolean v) {thumb = v; return this;} private boolean thumb;
+	public byte Thumbtime_dlm() {return thumbtime_dlm;} private byte thumbtime_dlm = Byte_ascii.At;
+	public Xof_url_bldr Thumbtime_dlm_dash_() {thumbtime_dlm = Byte_ascii.Dash; return this;}
 	public Xof_url_bldr Set_trg_html_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, int seek) {
 		this.wmf_dir_hive = false; this.thumb = mode == Xof_repo_itm.Mode_thumb;
 		this.dir_spr = Byte_ascii.Slash; this.root = repo.Root_http(); this.ttl = repo.Gen_name_trg(ttl, md5, ext); this.area = repo.Mode_names()[mode];
@@ -98,11 +100,11 @@ public class Xof_url_bldr {
 			bfr.Add(ttl);																// add title;				EX: "A.png"
 		return this;
 	}
-	Xof_url_bldr Add_thumb_xowa() {
+	private Xof_url_bldr Add_thumb_xowa() {
 		bfr.Add_byte(dir_spr);															// add dir_spr;				EX: "\"
 		bfr.Add_int_variable(width).Add(Bry_px);										// add width;				EX: "220px"
 		if (seek != Xop_lnki_tkn.Thumbtime_null)
-			bfr.Add_byte(Xof_meta_thumb_parser.Dlm_seek).Add_int_variable(seek);		// add seek					EX: "@5"
+			bfr.Add_byte(thumbtime_dlm).Add_int_variable(seek);							// add seek					EX: "@5"
 		bfr.Add_byte(Byte_ascii.Dot);													// add .					EX: "."
 		if (thumb)
 			bfr.Add(ext.Ext_view());													// add view_ext				EX: ".png"
@@ -142,6 +144,7 @@ public class Xof_url_bldr {
 		bfr.Add(encoder_src_http.Encode(ttl));											// add ttl again;			EX: "A.png"
 		switch (file_ext_id) {
 			case Xof_ext_.Id_svg:
+			case Xof_ext_.Id_xcf:
 				bfr.Add_byte(Byte_ascii.Dot).Add(Xof_ext_.Bry_png);						// add .png;				EX: "A.svg" -> "A.svg.png"		NOTE: MediaWiki always adds as lowercase
 				break;
 			case Xof_ext_.Id_pdf:
@@ -166,4 +169,5 @@ public class Xof_url_bldr {
 	public static final byte[] Bry_reg = ByteAry_.new_ascii_("reg.csv"), Bry_px = ByteAry_.new_ascii_("px"), Bry_px_dash = ByteAry_.new_ascii_("px-"), Bry_thumb = ByteAry_.new_ascii_("thumb"), Bry_mid = ByteAry_.new_ascii_("mid-"), Bry_lossy_page1 = ByteAry_.new_ascii_("lossy-page1-"), Bry_page1 = ByteAry_.new_ascii_("page1-"), Bry_seek = ByteAry_.new_ascii_("seek%3D");
 	public static final Xof_url_bldr Temp = new Xof_url_bldr();
 	private static final Url_encoder encoder_src_http = Url_encoder.new_http_url_(); // NOTE: changed from new_html_href_mw_ to new_url_ on 2012-11-19; issues with A%2Cb becoming A%252Cb
+	public static Xof_url_bldr new_v2_() {return new Xof_url_bldr().Thumbtime_dlm_dash_();}
 }

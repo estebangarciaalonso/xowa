@@ -197,8 +197,9 @@ public static final int
 , Id_page_id = 176
 , Id_disambig = 177
 , Id_nocommafysuffix = 178
+, Id_xowa = 179
 ;
-public static final int Id__max = 179;
+public static final int Id__max = 180;
 
 	private static byte[] ary_itm_(int id) {
 		switch (id) {
@@ -381,6 +382,7 @@ case Xol_kwd_grp_.Id_ns_num: return ByteAry_.new_utf8_("namespacenumber");
 case Xol_kwd_grp_.Id_page_id: return ByteAry_.new_utf8_("pageid");
 case Xol_kwd_grp_.Id_disambig: return ByteAry_.new_utf8_("disambiguation");
 case Xol_kwd_grp_.Id_nocommafysuffix: return ByteAry_.new_utf8_("nosep");
+case Xol_kwd_grp_.Id_xowa: return ByteAry_.new_utf8_("xowa");
 default: throw Err_mgr._.unhandled_(id);
 		}
 	}

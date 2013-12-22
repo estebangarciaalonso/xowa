@@ -63,6 +63,10 @@ public class Io_url implements CompareAble, EqAble, ParseAble, GfoInvkAble {	//_
 	public Io_url GenNewNameAndExt(String val)	{return this.OwnerDir().GenSubFil(val);}
 	public Io_url GenNewNameOnly(String val)	{return this.OwnerDir().GenSubFil(val + this.Ext());}
 	public Io_url GenNewExt(String val) {return this.OwnerDir().GenSubFil(this.NameOnly() + val);}
+	public String Gen_sub_path_for_os(String val) {
+		if (Op_sys.Cur().Tid_is_wnt()) val = String_.Replace(val, Op_sys.Lnx.Fsys_dir_spr_str(), Op_sys.Wnt.Fsys_dir_spr_str());
+		return raw + val;
+	}
 	public String GenRelUrl_orEmpty(Io_url dir) {
 		String dirRaw = dir.Raw();
 		return String_.HasAtBgn(raw, dirRaw)
@@ -99,7 +103,8 @@ public class Io_url implements CompareAble, EqAble, ParseAble, GfoInvkAble {	//_
 	@Override public int hashCode() {return raw.hashCode();}
 	@gplx.Internal protected Io_url(String raw, IoUrlInfo info) {this.raw = raw; this.info = info;}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_to_http_file))		return To_http_file_str();
+		if		(ctx.Match(k, Invk_to_http_file))			return To_http_file_str();
+		else if	(ctx.Match(k, Invk_gen_sub_path_for_os))	return Gen_sub_path_for_os(m.ReadStr("v"));
 		else	return GfoInvkAble_.Rv_unhandled;
-	}	static final String Invk_to_http_file = "to_http_file";
+	}	static final String Invk_to_http_file = "to_http_file", Invk_gen_sub_path_for_os = "gen_sub_path_for_os";
 }

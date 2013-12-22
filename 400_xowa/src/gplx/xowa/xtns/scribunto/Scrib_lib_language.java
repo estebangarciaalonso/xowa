@@ -141,9 +141,23 @@ class Scrib_lib_language implements Scrib_lib {
 	}
 	public KeyVal[] FormatDate(KeyVal[] values) {
 		Xol_lang lang = lang_(values);
-		byte[] fmt_bry = Scrib_kv_utl.Val_to_bry(values, 1);
-		byte[] date_bry = Scrib_kv_utl.Val_to_bry_or(values, 2, ByteAry_.Empty);	// NOTE: must supply or (date sometimes null); use ByteAry_.Empty b/c this is what Pf_xtn_time.ParseDate takes; DATE:2013-04-05
-		boolean utc = Scrib_kv_utl.Val_to_bool_or(values, 3, false);
+		byte[] fmt_bry = null;
+		byte[] date_bry = ByteAry_.Empty;
+		boolean utc = false;
+		int values_len = values.length;
+		for (int i = 1; i < values_len; i++) {
+			KeyVal kv = values[i];
+			int kv_key = Int_.cast_(kv.Key_as_obj());
+			Object kv_val = kv.Val();
+			switch (kv_key) {
+				case 2: fmt_bry = ByteAry_.new_utf8_((String)kv_val); break;
+				case 3: date_bry = ByteAry_.new_utf8_((String)kv_val); break;
+				case 4: utc = Bool_.cast_(kv_val);  break;
+				default: throw Err_.unhandled(kv_key);
+			}
+		}
+//			byte[] date_bry = Scrib_kv_utl.Val_to_bry_or(values, 2, ByteAry_.Empty);	// NOTE: must supply or (date sometimes null); use ByteAry_.Empty b/c this is what Pf_xtn_time.ParseDate takes; DATE:2013-04-05
+//			boolean utc = Scrib_kv_utl.Val_to_bool_or(values, 3, false);
 		ByteAryBfr tmp_bfr = engine.App().Utl_bry_bfr_mkr().Get_b512();
 		DateAdpFormatItm[] fmt_ary = Pf_xtn_time.Parse(engine.Wiki().Ctx(), fmt_bry);
 		DateAdp date = Pf_xtn_time.ParseDate(date_bry, utc, tmp_bfr);	// NOTE: MW is actually more strict about date; however, not sure about PHP's date parse, so using more lax version

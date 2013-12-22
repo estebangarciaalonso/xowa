@@ -25,7 +25,8 @@ class Xop_tblw_lxr implements Xop_lxr {
 			case Xop_tblw_wkr.Tblw_type_th:		// !
 			case Xop_tblw_wkr.Tblw_type_th2:	// !!	
 			case Xop_tblw_wkr.Tblw_type_td:		// |
-				if (ctx.Stack_get_tblw() == null) {
+				Xop_tblw_tkn owner_tblw = ctx.Stack_get_tblw();
+				if (owner_tblw == null) {		// no tblw in stack; highly probably that current sequence is not tblw tkn
 					int lnki_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnki);
 					if (lnki_pos != Xop_ctx.Stack_not_found && wlxr_type == Xop_tblw_wkr.Tblw_type_td) {// lnki present;// NOTE: added Xop_tblw_wkr.Tblw_type_td b/c th should not apply when tkn_mkr.Pipe() is called below; DATE:2013-04-24
 						Xop_tkn_itm lnki_tkn = ctx.Stack_pop_til(root, src, lnki_pos, false, bgn_pos, cur_pos);	// pop any intervening nodes until lnki
@@ -40,6 +41,16 @@ class Xop_tblw_lxr implements Xop_lxr {
 							return ctx.Para().Hack_pre_and_false_tblw(ctx, root, src, bgn_pos);
 						else								// interpret as text
 							return ctx.LxrMake_txt_(cur_pos);
+					}
+				}
+				else {
+					if (wlxr_type == Xop_tblw_wkr.Tblw_type_th2) {
+						int nl_pos = ByteAry_.FindBwd(src, Byte_ascii.NewLine, cur_pos, 0);	// search for preceding nl
+						if (nl_pos != ByteAry_.NotFound) {	
+							if (src[nl_pos + 1] != Byte_ascii.Bang) {
+								return ctx.LxrMake_txt_(cur_pos);
+							}
+						}
 					}
 				}
 				break;
@@ -82,12 +93,48 @@ class Xop_tblw_lxr implements Xop_lxr {
 }
 class Xop_tblw_lxr_ws {//: Xop_lxr 
 	public static int Make(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte wlxr_type) {
+		// NOTE: repeated in tblw_lxr
 		// CASE_1: standalone "!" should be ignored if no tblw present; EX: "a b! c" should not trigger ! for header
 		switch (wlxr_type) {
-			case Xop_tblw_wkr.Tblw_type_th:	// !
-				if (ctx.Stack_get_tblw() == null) return ctx.LxrMake_txt_(cur_pos);	// ! but no tbl; interpret as text
+			case Xop_tblw_wkr.Tblw_type_th:		// !
+			case Xop_tblw_wkr.Tblw_type_th2:	// !!	
+			case Xop_tblw_wkr.Tblw_type_td:		// |
+				Xop_tblw_tkn owner_tblw = ctx.Stack_get_tblw();
+				if (owner_tblw == null) {		// no tblw in stack; highly probably that current sequence is not tblw tkn
+					int lnki_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnki);
+					if (lnki_pos != Xop_ctx.Stack_not_found && wlxr_type == Xop_tblw_wkr.Tblw_type_td) {// lnki present;// NOTE: added Xop_tblw_wkr.Tblw_type_td b/c th should not apply when tkn_mkr.Pipe() is called below; DATE:2013-04-24
+						Xop_tkn_itm lnki_tkn = ctx.Stack_pop_til(root, src, lnki_pos, false, bgn_pos, cur_pos);	// pop any intervening nodes until lnki
+						ctx.Stack_add(lnki_tkn);												// push lnki back onto stack; TODO: combine these 2 lines into 1
+						// NOTE: this is a "\n|" inside a [[ ]]; must create two tokens for lnki to build correctly;
+						ctx.Subs_add(root, tkn_mkr.NewLine(bgn_pos, bgn_pos + 1, Xop_nl_tkn.Tid_char, 1));
+						ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos + 1 , bgn_pos + 2));
+						return cur_pos;
+					}
+					else {	// \n| or \n! but no tbl
+						if (ctx.Para().Pre_at_line_bgn())	// HACK:pre_section_begun_and_failed_tblw
+							return ctx.Para().Hack_pre_and_false_tblw(ctx, root, src, bgn_pos);
+						else								// interpret as text
+							return ctx.LxrMake_txt_(cur_pos);
+					}
+				}
+				else {
+					if (wlxr_type == Xop_tblw_wkr.Tblw_type_th2) {
+						int nl_pos = ByteAry_.FindBwd(src, Byte_ascii.NewLine, cur_pos, 0);	// search for preceding nl
+						if (nl_pos != ByteAry_.NotFound) {	
+							if (src[nl_pos + 1] != Byte_ascii.Bang) {
+								return ctx.LxrMake_txt_(cur_pos);
+							}
+						}
+					}
+				}
 				break;
 		}
+
+//			switch (wlxr_type) {
+//				case Xop_tblw_wkr.Tblw_type_th:	// !
+//					if (ctx.Stack_get_tblw() == null) return ctx.LxrMake_txt_(cur_pos);	// ! but no tbl; interpret as text
+//					break;
+//			}
 
 		// CASE_2: Cur_tkn_tid() is lnki; interpret "|" as separator for lnki and return; EX: UTF-8 [[Plus and minus signs|+]]; |+ is not a tblw sym
 		if (ctx.Cur_tkn_tid() == Xop_tkn_itm_.Tid_lnki) {

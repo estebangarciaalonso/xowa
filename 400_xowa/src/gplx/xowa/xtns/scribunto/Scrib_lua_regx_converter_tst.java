@@ -29,7 +29,7 @@ public class Scrib_lua_regx_converter_tst {
 	@Test   public void Percent_has()		{fxt.Test_parse("%a"					, "\\p{L}");}
 	@Test   public void Percent_na()		{fxt.Test_parse("%y"					, "y");}
 	@Test   public void Percent_b00()		{fxt.Test_parse("%b00"					, "{0}[^0]*0");}
-	@Test   public void Percent_b01()		{fxt.Test_parse("%b01"					, "(?<b1>0(?:(?>[^01]+)|(?P>b1))*1)");}
+	@Test   public void Percent_b01()		{fxt.Test_parse("%b01"					, "(?<b1>0(?:(?>[^01]+)|(?>b1))*1)");}
 //		@Test   public void Percent_num()		{fxt.Test_parse("()%1"					, "(?<m1>)\\g{m1}");}
 	@Test   public void Percent_text()		{fxt.Test_parse("%e"					, "e");}
 	@Test   public void Brack_pow()			{fxt.Test_parse("[^a]"					, "[^a]");}

@@ -66,7 +66,7 @@ class Xob_bz2_file_fxt {
 		Tfds.Eq(tid		, file.Tid());
 	}
 	public void Parse__domain_name(String raw_str, String expd) {byte[] raw = ByteAry_.new_ascii_(raw_str); Tfds.Eq(expd, String_.new_ascii_(Xob_bz2_file.Parse__domain_name(raw, 0, raw.length)));}
-	public void Parse__tid(String raw_str, byte expd) {byte[] raw = ByteAry_.new_ascii_(raw_str); Tfds.Eq(expd, Xob_bz2_file.Parse__tid(raw, 0, raw.length));}
+	public void Parse__tid(String raw_str, byte expd) {Tfds.Eq(expd, Xob_bz2_file.Parse__tid(raw_str));}
 	public void Build_alias(String domain, String expd) {
 		Xow_wiki_type wiki_type = Xow_wiki_type_.parse_by_domain(ByteAry_.new_ascii_(domain));
 		byte[] actl = Xob_bz2_file.Build_alias(wiki_type);

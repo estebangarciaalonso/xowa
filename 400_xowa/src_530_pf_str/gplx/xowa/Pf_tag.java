@@ -24,54 +24,61 @@ class Pf_tag extends Pf_func_base {
 	public void Func_evaluate2(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {
 		byte[] tag_name = Eval_argx(ctx, src, caller, self); if (tag_name.length == 0) return;
 		int args_len = self.Args_len();
-		ByteAryBfr tmp = ctx.App().Utl_bry_bfr_mkr().Get_b512(); // RLSD
-		int tag_idx = ctx.Tag_idx++;
-		tmp.Add(Bry_tag_hdr_lhs).Add_int_variable(tag_idx).Add_byte(Byte_ascii.Gt);
-		tmp.Add_byte(Byte_ascii.Lt).Add(tag_name);	// DEFER: tag_name should be lowered; ISSUE: adds more complication (language-specific/performance); EXCUSE: xml node names are case-insensitive
-		if (args_len > 1) {
-			for (int i = 1; i < args_len; i++) {
-				byte[] arg = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, args_len, i);
-				if (arg.length == 0) continue;	// if atr is empty, skip; see test
-				tmp.Add_byte(Byte_ascii.Space);
-				if (!AddHtmlArg(arg, tmp)) {
-					ctx.Msg_log().Add_itm_none(Xop_tag_log.Invalid, arg, 0, arg.length);
-					tmp.Clear();
-//						return;
+		ByteAryBfr tmp = ctx.App().Utl_bry_bfr_mkr().Get_b512();
+		try {
+			int tag_idx = ctx.Tag_idx++;
+			tmp.Add(Bry_tag_hdr_lhs).Add_int_variable(tag_idx).Add_byte(Byte_ascii.Gt);
+			tmp.Add_byte(Byte_ascii.Lt).Add(tag_name);	// DEFER: tag_name should be lowered; ISSUE: adds more complication (language-specific/performance); EXCUSE: xml node names are case-insensitive
+			if (args_len > 1) {
+				for (int i = 1; i < args_len; i++) {
+					byte[] arg = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, args_len, i);
+					if (arg.length == 0) continue;	// if atr is empty, skip; see test
+					tmp.Add_byte(Byte_ascii.Space);
+					if (!AddHtmlArg(arg, tmp)) {
+						ctx.Msg_log().Add_itm_none(Xop_tag_log.Invalid, arg, 0, arg.length);
+						tmp.Clear();
+	//						return;
+					}
 				}
 			}
+			tmp.Add_byte(Byte_ascii.Gt);
+			if (args_len > 0) {	// FUTURE: trim should not be called on content; WHEN: adding src[] back to tmpl_eval  
+				tmp.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, args_len, 0));
+			}
+			tmp.Add_byte(Byte_ascii.Lt).Add_byte(Byte_ascii.Slash).Add(tag_name).Add_byte(Byte_ascii.Gt);
+			tmp.Add(Bry_tag_hdr_rhs).Add_int_variable(tag_idx).Add_byte(Byte_ascii.Gt);
+			bfr.Add_bfr_and_clear(tmp);
 		}
-		tmp.Add_byte(Byte_ascii.Gt);
-		if (args_len > 0) {	// FUTURE: trim should not be called on content; WHEN: adding src[] back to tmpl_eval  
-			tmp.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, args_len, 0));
-		}
-		tmp.Add_byte(Byte_ascii.Lt).Add_byte(Byte_ascii.Slash).Add(tag_name).Add_byte(Byte_ascii.Gt);
-		tmp.Add(Bry_tag_hdr_rhs).Add_int_variable(tag_idx).Add_byte(Byte_ascii.Gt);
-		bfr.Add_bfr_and_clear(tmp);
-		tmp.Mkr_rls();
+		finally {tmp.Mkr_rls();}
 	}
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {
 		byte[] tag_name = Eval_argx(ctx, src, caller, self); if (tag_name.length == 0) return;
 		int args_len = self.Args_len();
-		ByteAryBfr tmp = ctx.App().Utl_bry_bfr_mkr().Get_b512().Mkr_rls();
-		tmp.Add_byte(Byte_ascii.Lt).Add(tag_name);	// DEFER: tag_name should be lowered; ISSUE: adds more complication (language-specific/performance); EXCUSE: xml node names are case-insensitive
-		if (args_len > 1) {
-			for (int i = 1; i < args_len; i++) {
-				byte[] arg = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, args_len, i);
-				if (arg.length == 0) continue;	// if atr is empty, skip; see test
-				tmp.Add_byte(Byte_ascii.Space);
-				if (!AddHtmlArg(arg, tmp)) {
-					ctx.Msg_log().Add_itm_none(Xop_tag_log.Invalid, arg, 0, arg.length);
-					tmp.Clear();
-//						return;
+		ByteAryBfr tmp = ctx.App().Utl_bry_bfr_mkr().Get_b512();
+		try {
+			tmp.Add_byte(Byte_ascii.Lt).Add(tag_name);	// DEFER: tag_name should be lowered; ISSUE: adds more complication (language-specific/performance); EXCUSE: xml node names are case-insensitive
+			if (args_len > 1) {
+				for (int i = 1; i < args_len; i++) {
+					byte[] arg = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, args_len, i);
+					if (arg.length == 0) continue;	// if atr is empty, skip; see test
+					tmp.Add_byte(Byte_ascii.Space);
+					if (!AddHtmlArg(arg, tmp)) {
+						ctx.Msg_log().Add_itm_none(Xop_tag_log.Invalid, arg, 0, arg.length);
+						tmp.Clear();
+					}
 				}
 			}
+			tmp.Add_byte(Byte_ascii.Gt);
+			if (args_len > 0) {
+				byte[] content = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, args_len, 0);
+				Xop_ctx sub_ctx = Xop_ctx.new_sub_(ctx.Wiki()); Xop_tkn_mkr sub_tkn_mkr = sub_ctx.Tkn_mkr();
+				content = ctx.Wiki().Parser().Parse_page_tmpl(sub_tkn_mkr.Root(content), sub_ctx, sub_tkn_mkr, content);	// NOTE: force reparse; needed for {{#tag:ref|{{A{{!}}B}}}}; EX: de.wikipedia.org/wiki/Freiburg_im_Breisgau; DATE:2013-12-18
+				tmp.Add(content);
+			}
+			tmp.Add_byte(Byte_ascii.Lt).Add_byte(Byte_ascii.Slash).Add(tag_name).Add_byte(Byte_ascii.Gt);
+			bfr.Add_bfr_and_clear(tmp);
 		}
-		tmp.Add_byte(Byte_ascii.Gt);
-		if (args_len > 0) {	// FUTURE: trim should not be called on content; WHEN: adding src[] back to tmpl_eval  
-			tmp.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, args_len, 0));
-		}
-		tmp.Add_byte(Byte_ascii.Lt).Add_byte(Byte_ascii.Slash).Add(tag_name).Add_byte(Byte_ascii.Gt);
-		bfr.Add_bfr_and_clear(tmp);
+		finally {tmp.Mkr_rls();}
 	}	
 	boolean AddHtmlArg(byte[] src, ByteAryBfr tmp) {
 		ParseKeyVal(src, kv_bldr);

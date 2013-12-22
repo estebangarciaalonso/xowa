@@ -53,7 +53,7 @@ public class Xof_lnki_file_mgr {
 				Init_fsdb_itm(fsdb_itm, xfer_itm);				// copy xfer itm props to fsdb_itm
 				fsdb_itm.Html__init(wiki.File_mgr().Repo_mgr(), url_bldr, tmp_img_size, exec_tid);
 				if (Io_mgr._.ExistsFil(fsdb_itm.Html_url())) {
-					xfer_itm.Atrs_calc_by_fsdb(fsdb_itm.Html_w(), fsdb_itm.Html_h(), fsdb_itm.Html_url());
+					xfer_itm.Atrs_calc_by_fsdb(fsdb_itm.Html_w(), fsdb_itm.Html_h(), fsdb_itm.Html_url(), fsdb_itm.Html_orig_url());
 					return true;
 				}
 			}

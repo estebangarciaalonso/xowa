@@ -29,6 +29,7 @@ public class Apps_app_mgr implements GfoInvkAble {
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_tidy_html				, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  1 * 60, "~{<>bin_plat_dir<>}tidy\\tidy", ProcessAdp_tidy_html.Args_fmt, "source", "target");
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_decompress_bz2			, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  0	 , "~{<>bin_plat_dir<>}7-zip\\7za", "x -y \"~{src}\" -o\"~{trg_dir}\"", "src", "trg", "trg_dir");	// e=extract; -y=yes on all queries; -o=output_dir
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_decompress_zip			, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  0	 , "~{<>bin_plat_dir<>}7-zip\\7za", "x -y \"~{src}\" -o\"~{trg_dir}\"", "src", "trg", "trg_dir");	// e=extract; -y=yes on all queries; -o=output_dir
+		ProcessAdp.ini_(this, app.Gui_wtr(), app_decompress_gz			, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  0	 , "~{<>bin_plat_dir<>}7-zip\\7za", "x -y \"~{src}\" -o\"~{trg_dir}\"", "src", "trg", "trg_dir");	// e=extract; -y=yes on all queries; -o=output_dir
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_lua					, cmd_eval, ProcessAdp.Run_mode_async			,  0	 , "~{<>bin_plat_dir<>}lua\\lua", "", "");
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_lilypond				, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  1 * 60, "~{<>bin_plat_dir<>}lilypond\\usr\\bin\\lilypond.exe", "\"-dsafe=#t\" -dbackend=ps --png --header=texidoc -dmidi-extension=midi \"~{file}\"", "file");
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_abc2ly					, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  1 * 60, "~{<>bin_plat_dir<>}lilypond\\usr\\bin\\python.exe", "abc2ly.py -s \"--output=~{target}\" \"~{source}\"", "source", "target");
@@ -52,6 +53,7 @@ public class Apps_app_mgr implements GfoInvkAble {
 	public ProcessAdp App_view_web()					{return app_view_web;}					ProcessAdp app_view_web = new ProcessAdp();
 	public ProcessAdp App_decompress_bz2()				{return app_decompress_bz2;}			ProcessAdp app_decompress_bz2 = new ProcessAdp();
 	public ProcessAdp App_decompress_zip()				{return app_decompress_zip;}			ProcessAdp app_decompress_zip = new ProcessAdp();
+	public ProcessAdp App_decompress_gz()				{return app_decompress_gz;}				ProcessAdp app_decompress_gz  = new ProcessAdp();
 	public ProcessAdp App_lua()							{return app_lua;}						ProcessAdp app_lua = new ProcessAdp();
 	public ProcessAdp App_lilypond()					{return app_lilypond;}					ProcessAdp app_lilypond = new ProcessAdp();
 	public ProcessAdp App_abc2ly()						{return app_abc2ly;}					ProcessAdp app_abc2ly = new ProcessAdp();
@@ -69,6 +71,7 @@ public class Apps_app_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_view_web))					return app_view_web;
 		else if	(ctx.Match(k, Invk_decompress_bz2))				return app_decompress_bz2;
 		else if	(ctx.Match(k, Invk_decompress_zip))				return app_decompress_zip;
+		else if	(ctx.Match(k, Invk_decompress_gz))				return app_decompress_gz;
 		else if	(ctx.Match(k, Invk_lua))						return app_lua;
 		else if	(ctx.Match(k, Invk_lilypond))					return app_lilypond;
 		else if	(ctx.Match(k, Invk_abc2ly))						return app_abc2ly;
@@ -102,8 +105,10 @@ public class Apps_app_mgr implements GfoInvkAble {
 		}
 		return rv;
 	}
-	static final String Invk_query_img_size = "query_img_size", Invk_resize_img = "resize_img", Invk_convert_svg_to_png = "convert_svg_to_png", Invk_convert_tex_to_dvi = "convert_tex_to_dvi", Invk_convert_dvi_to_png = "convert_dvi_to_png"
-		, Invk_convert_djvu_to_tiff = "convert_djvu_to_tiff", Invk_tidy_html = "tidy_html", Invk_view_web = "view_web", Invk_decompress_bz2 = "decompress_bz2", Invk_decompress_zip = "decompress_zip", Invk_view_by_ext = "view_by_ext"
+	private static final String Invk_query_img_size = "query_img_size", Invk_resize_img = "resize_img", Invk_convert_svg_to_png = "convert_svg_to_png", Invk_convert_tex_to_dvi = "convert_tex_to_dvi", Invk_convert_dvi_to_png = "convert_dvi_to_png"
+		, Invk_convert_djvu_to_tiff = "convert_djvu_to_tiff", Invk_tidy_html = "tidy_html", Invk_view_web = "view_web"
+		, Invk_decompress_bz2 = "decompress_bz2", Invk_decompress_zip = "decompress_zip", Invk_decompress_gz = "decompress_gz"
+		, Invk_view_by_ext = "view_by_ext"
 		, Invk_lua = "lua", Invk_lilypond = "lilypond", Invk_abc2ly = "abc2ly", Invk_trim_img = "trim_img", Invk_convert_midi_to_ogg = "convert_midi_to_ogg"
 		, Invk_web = "web"
 		, Invk_media = "media"

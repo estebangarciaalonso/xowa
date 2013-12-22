@@ -82,6 +82,7 @@ class HttpServer implements Runnable {
 	private int webserver_port = 8080;
 	public HttpServer(Xosrv_webserver webserver) {
 		this.webserver = webserver;
+		this.webserver_port = webserver.Http_server_port();
 	}
 	@SuppressWarnings("resource")
 	public void run() {

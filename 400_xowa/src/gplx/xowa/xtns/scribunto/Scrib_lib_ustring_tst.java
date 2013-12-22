@@ -89,6 +89,13 @@ public class Scrib_lib_ustring_tst {
 		fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_callback, Object_.Ary("abcabc", "a(b)", Scrib_kv_utl.base1_obj_ary_(false), 2)	, "5;\n  b");
 		fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_callback, Object_.Ary("abcabc", "a(b)", Scrib_kv_utl.base1_obj_ary_(false), 8)	, "8;{}");
 	}
+	@Test  public void Gsub_balanced_group() {	// PURPOSE: handle balanced group regex; EX:"%b()"; DATE:2013-12-20
+		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);
+		Exec_gsub_regx("(a)", "%b()", 1, "c", "c;1");
+	}
+	@Test  public void Gmatch_callback__text_as_number() { // PURPOSE: Gmatch_callback must be able to take non String value; DATE:2013-12-20
+		fxt.Test_lib_proc(lib, Scrib_lib_ustring.Invk_gmatch_callback, Object_.Ary(1234, "1(2)", Scrib_kv_utl.base1_obj_ary_(false), 0)	, "2;\n  2");
+	}
 	private void Exec_find(String text, String regx, int bgn, boolean plain, String expd) {
 		fxt.Init_lua_module();
 		fxt.Init_lua_rcvd(Scrib_lib_ustring.Invk_find, Scrib_kv_utl.base1_many_(text, regx, bgn, plain));

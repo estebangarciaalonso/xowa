@@ -125,7 +125,10 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 						case Wdata_prop_itm_base_.Val_tid_entity:
 							Wdata_doc entity_doc = Pages_get(ByteAry_.Add(Bry_q, prop.Val()));
 							byte[] label = entity_doc.Label_list_get(lang_key);
-							bfr.Add(label);
+							if (label == null && !ByteAry_.Eq(lang_key, Xol_lang_.Key_en))	// NOTE: some properties may not exist in language of wiki; default to english; DATE:2013-12-19
+								label = entity_doc.Label_list_get(Xol_lang_.Key_en);
+							if (label != null)	// if label is still not found, don't add null reference
+								bfr.Add(label);
 							break;
 						case Wdata_prop_itm_base_.Val_tid_globecoordinate:
 							byte[][] flds = ByteAry_.Split(prop.Val(), Byte_ascii.Pipe);

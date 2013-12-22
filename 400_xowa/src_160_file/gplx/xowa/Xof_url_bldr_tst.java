@@ -23,6 +23,7 @@ public class Xof_url_bldr_tst {
 	@Before public void init() {fxt.ini();}
 	@Test 	public void Ogv() 							{fxt.Dir_spr_http_().Root_("http://test/").Md5_("d0").Ttl_("A.ogv").Expd_src_("http://test/d/d0/A.ogv/mid-A.ogv.jpg").tst();}
 	@Test 	public void Ogv_seek() 						{fxt.Dir_spr_http_().Root_("http://test/").Md5_("d0").Ttl_("A.ogv").Expd_src_("http://test/d/d0/A.ogv/seek%3D5-A.ogv.jpg").Seek_(5).tst();}
+	@Test 	public void Xcf() 							{fxt.Dir_spr_http_().Root_("http://test/").Md5_("44").Ttl_("A.xcf").Expd_src_("http://test/4/44/A.xcf/0px-A.xcf.png").tst();}
 }
 class Xof_url_bldr_fxt {
 	public Xof_url_bldr_fxt ini() {this.Clear(); return this;}

@@ -144,7 +144,7 @@ public class Xob_xdat_file {
 		return this;
 	}
 	public Xob_xdat_file Clear() {src = null; itm_ends = Int_.Ary_empty; return this;}
-	int[] itm_ends = Int_.Ary_empty; int itm_0_bgn;
+	private int[] itm_ends = Int_.Ary_empty; private int itm_0_bgn;
 	public Xob_xdat_file Parse(byte[] src, int src_len, Io_url url) {// SEE:NOTE_1;xdat format
 		if (src_len == 0) throw Err_mgr._.fmt_(GRP_KEY, "parse.empty", "file cannot be empty for parse: ~{0}", url.Raw());
 		int itm_count = 0, tmp_len = Parse_tmp_len; int[] tmp = Parse_tmp;

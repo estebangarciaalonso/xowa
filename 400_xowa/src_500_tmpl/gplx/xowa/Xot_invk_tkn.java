@@ -178,8 +178,12 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 					Eval_func(ctx, src, caller, this, bfr, defn, argx_ary);
 					rv = true;
 				}	catch (Exception e) {
-					wiki.App().Usr_dlg().Warn_many("", "", "failed to evaluate function: page=~{0} defn=~{1} src=~{2} err=~{3}", String_.new_utf8_(ctx.Page().Page_ttl().Full_txt()), String_.new_utf8_(defn.Name()), String_.new_utf8_(src, this.Src_bgn(), this.Src_end()), Err_.Message_gplx_brief(e));
-					rv = false;
+					if (Env_.Mode_testing()) 
+						throw Err_.err_(e, "failed to evaluate function: page={0} defn={1} src={2} err={3}", String_.new_utf8_(ctx.Page().Page_ttl().Full_txt()), String_.new_utf8_(defn.Name()), String_.new_utf8_(src, this.Src_bgn(), this.Src_end()), Err_.Message_gplx_brief(e));
+					else {
+						wiki.App().Usr_dlg().Warn_many("", "", "failed to evaluate function: page=~{0} defn=~{1} src=~{2} err=~{3}", String_.new_utf8_(ctx.Page().Page_ttl().Full_txt()), String_.new_utf8_(defn.Name()), String_.new_utf8_(src, this.Src_bgn(), this.Src_end()), Err_.Message_gplx_brief(e));
+						rv = false;
+					}
 				}
 				break;
 			default:

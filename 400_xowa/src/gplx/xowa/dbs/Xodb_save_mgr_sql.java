@@ -73,5 +73,6 @@ public class Xodb_save_mgr_sql implements Xodb_save_mgr {
 		Db_qry qry = Db_qry_.update_common_("page", Db_crt_.eq_("page_id", page.Page_id()), KeyVal_.new_("page_title", String_.new_utf8_(new_ttl)));
 		db_mgr.Fsys_mgr().Core_provider().Exec_qry(qry);		
 	}
+	public void Clear() {}
 	private static String Xto_touched_str(DateAdp v) {return v.XtoStr_fmt("yyyyMMddHHmmss");}
 }

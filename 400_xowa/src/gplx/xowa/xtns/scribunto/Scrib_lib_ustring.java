@@ -67,7 +67,7 @@ class Scrib_lib_ustring implements Scrib_lib {
 		}
 		return Scrib_kv_utl.base1_list_(tmp_list);
 	}
-	int Bgn_adjust(String text, int bgn) {
+	private int Bgn_adjust(String text, int bgn) {
 //			if (bgn == 0) return 0;
 		if (bgn > 0) bgn -= Scrib_lib_ustring.Base1;
 		int text_len = String_.Len(text);
@@ -101,9 +101,9 @@ class Scrib_lib_ustring implements Scrib_lib {
 		return Scrib_kv_utl.base1_many_(pcre, Scrib_kv_utl.base1_list_(captures));
 	}
 	public KeyVal[] Gmatch_callback(KeyVal[] values) {
-		String text = Scrib_kv_utl.Val_to_str(values, 0);
+		String text = Scrib_kv_utl.Val_to_str_force(values, 0);	// NOTE: UstringLibrary.php!ustringGmatchCallback calls preg_match directly; $s can be any type, and php casts automatically; 
 		String regx = Scrib_kv_utl.Val_to_str(values, 1);
-		// byte[] capt = Scrib_kv_utl.Val_to_bry(values, 2);  // TODO.4: not sure what this does
+		// byte[] capt = Scrib_kv_utl.Val_to_bry(values, 2);	// TODO.4: not sure what this does
 		int pos = Scrib_kv_utl.Val_to_int(values, 3);
 		RegxAdp regx_adp = Scrib_lib_ustring.RegxAdp_new_(engine.Ctx(), regx);
 		RegxMatch[] regx_rslts = regx_adp.Match_all(text, pos);
@@ -121,7 +121,7 @@ class Scrib_lib_ustring implements Scrib_lib {
 			for (int j = 0; j < grps_len; j++) {
 				RegxGroup grp = grps[j];
 				if (grp.End() - grp.Bgn() == 0)	// empty grp; return pos only; EX: "()"
-					tmp_list.Add(grp.Bgn() + Scrib_lib_ustring.Base1);
+					tmp_list.Add(Int_.XtoStr(grp.Bgn() + Scrib_lib_ustring.Base1));	// NOTE: always return as String; callers expect String, and may do operations like len(result), which will fail if int; DATE:2013-12-20
 				else
 					tmp_list.Add(grp.Val());
 			}

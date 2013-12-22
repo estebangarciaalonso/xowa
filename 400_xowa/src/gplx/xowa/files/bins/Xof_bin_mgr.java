@@ -19,7 +19,7 @@ package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xow
 import gplx.xowa.files.fsdb.*; import gplx.xowa.files.cnvs.*; import gplx.ios.*;
 public class Xof_bin_mgr implements GfoInvkAble {
 	private Xof_bin_wkr[] wkrs = Xof_bin_wkr_.Ary_empty; private int wkrs_len;
-	private Xof_url_bldr url_bldr = new Xof_url_bldr();
+	private Xof_url_bldr url_bldr = Xof_url_bldr.new_v2_();
 	private Xof_fsdb_mgr_sql fsdb_mgr;
 	private Xow_wiki wiki;
 	private StringRef resize_warning = StringRef.null_(); private Xof_img_size tmp_size = new Xof_img_size();
@@ -68,6 +68,7 @@ public class Xof_bin_mgr implements GfoInvkAble {
 				}
 				rv = wkr.Bin_wkr_get_as_rdr(temp_files, itm, Bool_.N, itm.Orig_w());		// thumb missing; get orig;
 				if (rv == Io_stream_rdr_.Null) continue;									// nothing found; continue;
+				if (!wkr.Bin_wkr_resize()) continue;
 				Io_url orig = Get_url(itm, Xof_repo_itm.Mode_orig, Bool_.N);				// get orig url
 				Io_stream_wtr_.Save_rdr(orig, rv);
 				boolean resized = Resize(exec_tid, itm, file_is_orig, orig, trg);

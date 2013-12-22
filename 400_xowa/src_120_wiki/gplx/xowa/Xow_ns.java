@@ -79,7 +79,13 @@ public class Xow_ns implements GfoInvkAble {
 	public static final int Bldr_file_idx_heap = -1;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_subpages_enabled_))	subpages_enabled = m.ReadYn("v");
+		else if (ctx.Match(k, Invk_id))					return id;
+		else if (ctx.Match(k, Invk_name_txt))			return name_txt;
+		else if (ctx.Match(k, Invk_name_ui))			return Name_ui();
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
-	}	private static final String Invk_subpages_enabled_ = "subpages_enabled_";
+	}	private static final String Invk_subpages_enabled_ = "subpages_enabled_", Invk_id = "id", Invk_name_txt = "name_txt", Invk_name_ui = "name_ui";
+	private String Name_ui() {
+		return id == Xow_ns_.Id_main ? "(Main)" : name_str;
+	}
 }

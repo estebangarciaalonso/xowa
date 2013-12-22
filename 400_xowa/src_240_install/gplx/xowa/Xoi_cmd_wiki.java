@@ -33,7 +33,7 @@ class Xoi_cmd_wiki_download extends Gfo_thread_cmd_download implements Gfo_threa
 	@Override public byte Async_init() {
 		Xoa_app app = install_mgr.App();
 		Xob_dump_file dump_file = Xob_dump_file.new_(wiki_key, dump_date, dump_type);
-		boolean connected = Connect_first(dump_file, install_mgr.Dump_mgr().Server_urls());
+		boolean connected = Xob_dump_file_.Connect_first(dump_file, install_mgr.Dump_mgr().Server_urls());
 		if (connected)
 			app.Usr_dlg().Note_many("", "", "url: ~{0}", dump_file.File_url());
 		else {
@@ -50,32 +50,6 @@ class Xoi_cmd_wiki_download extends Gfo_thread_cmd_download implements Gfo_threa
 		this.Init("download", dump_file.File_url(), trg);
 		byte rslt = super.Async_init();
 		return rslt;
-	}
-	private static boolean Connect_first(Xob_dump_file rv, String[] server_urls) {
-		int len = server_urls.length;
-		for (int i = 0; i < len; ++i) {
-			String server_url = server_urls[i];
-			rv.Server_url_(server_url);
-			Override_dump_date(rv, server_url);
-			if (rv.Connect()) return true;
-		}
-		return false;
-	}
-	private static void Override_dump_date(Xob_dump_file rv, String dump_server) {
-		String dump_date = rv.Dump_date();
-		if (	String_.Eq(dump_date, Xob_dump_file_.Date_latest)
-			&&	(	String_.Eq(dump_server, Xob_dump_file_.Server_c3sl)
-				||	String_.Eq(dump_server, Xob_dump_file_.Server_masaryk)
-				)
-			){
-			Xoi_mirror_parser mirror_parser = new Xoi_mirror_parser();
-			String dump_wiki_url = dump_server + String_.new_ascii_(rv.Wiki_alias()) + "/";
-			byte[] dump_url_wiki_html = gplx.ios.IoEngine_xrg_downloadFil.new_("", Io_url_.Null).Exec_as_bry(dump_wiki_url); if (ByteAry_.Len_eq_0(dump_url_wiki_html)) return;
-			String[] dump_available_dates = mirror_parser.Parse(String_.new_utf8_(dump_url_wiki_html));
-			String dump_dates_latest = Xoi_mirror_parser.Find_last_lte(dump_available_dates, dump_date);
-			if (String_.Eq(dump_dates_latest, "")) return;	// nothing found
-			rv.Dump_date_(dump_dates_latest);
-		}
 	}
 	static final String GRP_KEY = "xowa.setup.dump.download";
 	private static boolean Dump_servers_offline_msg_shown = false;
@@ -94,7 +68,7 @@ class Xoi_cmd_wiki_unzip extends Gfo_thread_cmd_unzip implements Gfo_thread_cmd 
 		}
 		Io_url src = urls[urls.length - 1];
 		Io_url trg = app.Fsys_mgr().Wiki_dir().GenSubFil_nest(wiki_key, src.NameOnly());	// NOTE: NameOnly() will strip trailing .bz2; EX: a.xml.bz2 -> a.xml
-		super.Init(app.Usr_dlg(), app.Gui_mgr().Kit(), app.Fsys_mgr().App_mgr().App_decompress_bz2(), app.Fsys_mgr().App_mgr().App_decompress_zip(), src, trg);
+		super.Init(app.Usr_dlg(), app.Gui_mgr().Kit(), app.Fsys_mgr().App_mgr().App_decompress_bz2(), app.Fsys_mgr().App_mgr().App_decompress_zip(), app.Fsys_mgr().App_mgr().App_decompress_gz(), src, trg);
 		this.Term_cmd_for_src_(Term_cmd_for_src_move);
 		this.Term_cmd_for_src_url_(app.Fsys_mgr().Wiki_dir().GenSubFil_nest("#dump", "done", src.NameAndExt()));
 		if (Io_mgr._.ExistsFil(trg)) {

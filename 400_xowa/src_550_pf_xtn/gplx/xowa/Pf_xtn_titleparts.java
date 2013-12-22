@@ -45,13 +45,18 @@ class Pf_xtn_titleparts extends Pf_func_base {
 		else if (parts_bgn > 0) parts_bgn -= ListAdp_.Base1;	// adjust for base1
 		bb.Add(TitleParts(argx, parts_len, parts_bgn));
 	}
-	byte[] TitleParts(byte[] src, int parts_len, int parts_bgn) {
+	private byte[] TitleParts(byte[] src, int parts_len, int parts_bgn) {
 		// find dlm positions; EX: ab/cde/f/ will have -1,2,6,8
 		int src_len = src.length; int dlms_ary_len = 1;	// 1 b/c dlms_ary[0] will always be -1
 		for (int i = 0; i < src_len; i++) {
 			if (src[i] == Byte_ascii.Slash) dlms_ary[dlms_ary_len++] = i;
 		}
 		dlms_ary[dlms_ary_len] = src_len;	// put src_len into last dlms_ary; makes dlms_ary[] logic easier
+
+		// calc bgn_idx; must occur before adjust parts_len
+		int bgn_idx = parts_bgn > -1 ? parts_bgn : parts_bgn + dlms_ary_len;			// negative parts_bgn means calc from end of dlms_ary_len; EX a/b/c|1|-1 means start from 2
+		if (	bgn_idx < 0																// bgn_idx can be negative when parts_len is negative and greater than array; EX: {{#titleparts:a/b|-1|-2}} results in dlms_ary_len of 1 and parts_bgn of -2 which will be parts_bgn of -1
+			||	bgn_idx > dlms_ary_len) return ByteAry_.Empty;							// if bgn > len, return ""; EX: {{#titleparts:a/b|1|3}} should return ""
 
 		// adjust parts_len for negative/null
 		if		(parts_len == Int_.MinValue) parts_len = dlms_ary_len;					// no parts_len; default to dlms_ary_len
@@ -63,10 +68,8 @@ class Pf_xtn_titleparts extends Pf_func_base {
 		if (parts_len == 0) return src;													// if no dlms, return orig
 
 		// calc idxs for extraction
-		int bgn_idx = parts_bgn > -1 ? parts_bgn : parts_bgn + dlms_ary_len;			// negative parts_bgn means calc from end of dlms_ary_len; EX a/b/c|1|-1 means start from 2
-		int end_idx = bgn_idx + parts_len;
-		if (bgn_idx > dlms_ary_len) return ByteAry_.Empty;								// if bgn > len, return ""; EX: {{#titleparts:a/b|1|3}} should return ""
 		int bgn_pos = dlms_ary[bgn_idx] + 1; // +1 to start after slash
+		int end_idx = bgn_idx + parts_len;
 		int end_pos = end_idx > dlms_ary_len ? dlms_ary[dlms_ary_len] : dlms_ary[end_idx];
 		if (end_pos < bgn_pos) return ByteAry_.Empty;
 		return ByteAry_.Mid(src, bgn_pos, end_pos);	

@@ -80,10 +80,15 @@ public class Xow_fsys_mgr {
 	public static Io_url Url_fil(Io_url root_dir, int fil_idx, byte[] ext) {return Xos_url_gen.bld_fil_(root_dir, fil_idx, ext);}
 	static final String Const_url_cfg = "cfg";
 	public static Io_url Find_file_or_fail(Io_url dir, String file_name, String file_ext_0, String file_ext_1) {
+		Io_url url = Find_file_or_null(dir, file_name, file_ext_0, file_ext_1);
+		if (url == null) throw Err_mgr._.fmt_("", "", "could not find file: dir=~{0} name=~{1} ext_0=~{2} ext_1=~{3}", dir.Raw(), file_name, file_ext_0, file_ext_1);
+		return url;
+	}
+	public static Io_url Find_file_or_null(Io_url dir, String file_name, String file_ext_0, String file_ext_1) {
 		Io_url url = Xobd_rdr.Find_fil_by(dir, file_name + file_ext_0);
 		if (url == null) {
 			url = Xobd_rdr.Find_fil_by(dir, file_name + file_ext_1);
-			if (url == null) throw Err_mgr._.fmt_("", "", "could not find file: dir=~{0} name=~{1} ext_0=~{2} ext_1=~{3}", dir.Raw(), file_name, file_ext_0, file_ext_1);
+			if (url == null) return null;
 		}
 		return url;
 	}

@@ -23,4 +23,5 @@ public interface Xodb_save_mgr {
 	void Data_create(Xoa_ttl ttl, byte[] text);
 	void Data_update(Xoa_page page, byte[] text);
 	void Data_rename(Xoa_page page, byte[] new_ttl);
+	void Clear();
 }

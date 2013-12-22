@@ -122,7 +122,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 				if (ctx_cur_tid_is_tblw_atr_owner)			// <unknown_tag is occurring inside tblw element (EX: {| style='margin:1em<f'); just add to txt tkn
 					return ctx.LxrMake_txt_(cur_pos);
 				else {										// <unknown_tag is occurring anyhwere else; escape < to &lt; and resume from character just after it;
-					ctx.Subs_add(root, tkn_mkr.Bry(cur_pos - 1, cur_pos, Bry_escape_lt));
+					ctx.Subs_add(root, Make_bry_tkn(tkn_mkr, src, bgn_pos, cur_pos));
 					return cur_pos;
 				}
 			}
@@ -200,6 +200,15 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			return Make_xtag_end(ctx, tkn_mkr, root, src, src_len, bgn_pos, gt_pos, tag);
 		else
 			return Make_xtag_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, gt_pos, tag, atrs_bgn_pos, src[tag_end_pos], force_xtn_for_nowiki);
+	}
+	private static Xop_tkn_itm Make_bry_tkn(Xop_tkn_mkr tkn_mkr, byte[] src, int bgn_pos, int cur_pos) {
+		int len = cur_pos - bgn_pos;
+		byte[] bry = null;
+		if		(len == 1	&& src[cur_pos]		== Byte_ascii.Lt)		bry = Bry_escape_lt;
+		else if	(len == 2	&& src[cur_pos]		== Byte_ascii.Lt
+							&& src[cur_pos + 1]	== Byte_ascii.Slash)	bry = Bry_escape_lt_slash;
+		else															bry = ByteAry_.Add(Bry_escape_lt, ByteAry_.Mid(src, bgn_pos + 1, cur_pos));	// +1 to skip <
+		return tkn_mkr.Bry(bgn_pos, cur_pos, bry);
 	}
 	int Make_noinclude(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int gtPos, Xop_xnde_tag tag, int tag_end_pos, byte tag_end_byte) {
 		if (tag_end_byte == Byte_ascii.Slash) {	// inline
@@ -616,9 +625,13 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 						xnde_data.Xtn_compile(ctx.Wiki(), ctx, tkn_mkr, root, src, xnde);
 					}
 					catch (Exception e) {
-						ctx.Wiki().App().Usr_dlg().Warn_many("", "", "failed to render extension: title=~{0} excerpt=~{1} err=~{2}", String_.new_utf8_(ctx.Page().Page_ttl().Full_txt())
+						String err_msg = String_.Format("failed to render extension: title={0} excerpt={1} err={2}", String_.new_utf8_(ctx.Page().Page_ttl().Full_txt())
 							, String_.new_utf8_(src, xnde.Tag_open_end(), xnde.Tag_close_bgn())
 							, Err_.Message_gplx_brief(e));
+						if (Env_.Mode_testing()) 
+							throw Err_.err_(e, err_msg);
+						else
+							ctx.Wiki().App().Usr_dlg().Warn_many("", "", err_msg);
 					}
 				}
 				break;
@@ -633,7 +646,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		ctx.Subs_add(root, rv);
 		return rv;
 	}
-	public static final byte[] Bry_escape_lt = ByteAry_.new_ascii_("&lt;"), Bry_escape_gt = ByteAry_.new_ascii_("&gt;"), Bry_escape_quote = ByteAry_.new_ascii_("&quot;"), Bry_escape_amp = ByteAry_.new_ascii_("&amp;"), Bry_escape_brack_bgn = ByteAry_.new_ascii_("&#91;"), Bry_apos = new byte[] {Byte_ascii.Apos};
+	public static final byte[] Bry_escape_lt = ByteAry_.new_ascii_("&lt;"), Bry_escape_lt_slash = ByteAry_.new_ascii_("&lt;/"), Bry_escape_gt = ByteAry_.new_ascii_("&gt;"), Bry_escape_quote = ByteAry_.new_ascii_("&quot;"), Bry_escape_amp = ByteAry_.new_ascii_("&amp;"), Bry_escape_brack_bgn = ByteAry_.new_ascii_("&#91;"), Bry_apos = new byte[] {Byte_ascii.Apos};
 	public static final byte[] Bry_lt = new byte[] {Byte_ascii.Lt}, Bry_brack_bgn = new byte[] {Byte_ascii.Brack_bgn}, Bry_pipe = Xoa_consts.Pipe_bry;
 	public static int Find_gt_pos(Xop_ctx ctx, byte[] src, int cur_pos, int src_len) {	// UNUSED
 		int gt_pos = -1;	// find closing >

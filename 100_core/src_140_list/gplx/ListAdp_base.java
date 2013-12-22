@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
 import gplx.lists.*;
-public abstract class ListAdp_base implements ListAdp {
+public abstract class ListAdp_base implements ListAdp, GfoInvkAble {
 	public Object XtoAryAndClear(Class<?> memberType) {Object rv = XtoAry(memberType); this.Clear(); return rv;}
 	public Object XtoAry(Class<?> memberType) {
 		Object rv = Array_.Create(memberType, count);
@@ -175,4 +175,10 @@ public abstract class ListAdp_base implements ListAdp {
 		}
 	}
 	@gplx.Internal protected int Capacity() {return Array_.LenAry(list);}
+	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
+		if		(ctx.Match(k, Invk_len))			return count;
+		else if	(ctx.Match(k, Invk_get_at))			return FetchAt(m.ReadInt("v"));
+		else	return GfoInvkAble_.Rv_unhandled;
+//			return this;
+	}	private static final String Invk_len = "len", Invk_get_at = "get_at";
 }

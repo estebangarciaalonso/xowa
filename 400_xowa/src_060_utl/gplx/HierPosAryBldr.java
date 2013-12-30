@@ -50,7 +50,7 @@ public class HierPosAryBldr {
 		return rv;
 	}
 	public String XtoStr() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < aryIdx; i++)
 			sb.Add_spr_unless_first(Int_.XtoStr(ary[i]), " ", i);
 		return sb.XtoStr();

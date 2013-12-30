@@ -23,16 +23,21 @@ class Cache_dir_tbl {
 	private Db_stmt_bldr stmt_bldr;
 	public void Db_init(Db_provider provider) {this.provider = provider;}
 	public void Db_save(Cache_dir_itm itm) {
-		if (stmt_bldr == null) stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_dir_id), Fld_dir_name).Init(provider);
-		Db_stmt stmt = stmt_bldr.Get(itm.Cmd_mode());
-		switch (itm.Cmd_mode()) {
-			case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Id())	.Val_str_by_bry_(itm.Dir_bry()).Exec_insert(); break;
-			case Db_cmd_mode.Update:	stmt.Clear()					.Val_str_by_bry_(itm.Dir_bry()).Val_int_(itm.Id()).Exec_update(); break;
-			case Db_cmd_mode.Delete:	stmt.Clear().Val_int_(itm.Id()).Exec_delete();	break;
-			case Db_cmd_mode.Ignore:	break;
-			default:					throw Err_.unhandled(itm.Cmd_mode());
+		try {
+			if (stmt_bldr == null) stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_dir_id), Fld_dir_name).Init(provider);
+			Db_stmt stmt = stmt_bldr.Get(itm.Cmd_mode());
+			switch (itm.Cmd_mode()) {
+				case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Id())	.Val_str_by_bry_(itm.Dir_bry()).Exec_insert(); break;
+				case Db_cmd_mode.Update:	stmt.Clear()					.Val_str_by_bry_(itm.Dir_bry()).Val_int_(itm.Id()).Exec_update(); break;
+				case Db_cmd_mode.Delete:	stmt.Clear().Val_int_(itm.Id()).Exec_delete();	break;
+				case Db_cmd_mode.Ignore:	break;
+				default:					throw Err_.unhandled(itm.Cmd_mode());
+			}
+			itm.Cmd_mode_(Db_cmd_mode.Ignore);
+		} catch (Exception e) {
+			Gfo_usr_dlg_._.Warn_many("", "", "failed to save itm: name=~{0} err=~{1}", String_.new_utf8_(itm.Dir_bry()), Err_.Message_gplx_brief(e));
+			stmt_bldr = null;	// null out bldr, else bad stmt will lead to other failures
 		}
-		itm.Cmd_mode_(Db_cmd_mode.Ignore);
 	}
 	public void Db_term() {
 		if (select_stmt != null) select_stmt.Rls();

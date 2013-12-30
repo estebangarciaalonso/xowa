@@ -22,11 +22,11 @@ public class Xof_wiki_orig_tbl {
 		Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);
 		Sqlite_engine_.Idx_create(p, Idx_key);
 	}
-	public static void Select_list(Db_provider p, byte exec_tid, ListAdp itms, Xof_url_bldr url_bldr, Xow_repo_mgr repo_mgr) {
+	public static void Select_list(Db_provider p, byte exec_tid, ListAdp itms, OrderedHash hash, Xof_url_bldr url_bldr, Xow_repo_mgr repo_mgr) {
 		Xof_wiki_orig_tbl_in_wkr in_wkr = new Xof_wiki_orig_tbl_in_wkr();
-		in_wkr.Init(itms);
+		in_wkr.Init(itms, hash);
 		in_wkr.Select_in(p, Cancelable_.Never, 0, itms.Count());
-		Xof_wiki_orig_tbl_evaluator.Rdr_done(exec_tid, itms, in_wkr.Itms_by_ttl(), url_bldr, repo_mgr);
+		Xof_wiki_orig_tbl_evaluator.Rdr_done(exec_tid, itms, hash, url_bldr, repo_mgr);
 	}
 	public static boolean Select_itm_exists(Db_provider p, byte[] ttl) {
 		Object o =  Db_qry_.select_val_(Tbl_name, Fld_uid, Db_crt_.eq_(Fld_orig_ttl, String_.new_utf8_(ttl))).ExecRdr_val(p);

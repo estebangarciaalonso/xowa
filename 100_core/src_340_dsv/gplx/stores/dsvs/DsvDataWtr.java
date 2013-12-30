@@ -105,7 +105,7 @@ class DsvStringBldr {
 		}
 	}
 
-	StringBldr sb = StringBldr.new_(); DsvSymbols sym; boolean isNewRow = true;
+	String_bldr sb = String_bldr_.new_(); DsvSymbols sym; boolean isNewRow = true;
 	public static DsvStringBldr new_(DsvSymbols sym) {
 		DsvStringBldr rv = new DsvStringBldr();
 		rv.sym = sym;

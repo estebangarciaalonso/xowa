@@ -53,7 +53,7 @@ public class GfmlDocPos implements CompareAble {
 	}
 	@Override public String toString() {return path;} public String XtoStr() {return path;}
 	void MakePath() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < ary.length; i++) {
 			sb.Add(ary[i]);
 			sb.Add("_");

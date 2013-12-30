@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 class Xop_hdr_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_hdr;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast coreTrie) {coreTrie.Add(Hook_bgn, this);} static final byte[] Hook_bgn = new byte[] {Byte_ascii.NewLine, Byte_ascii.Eq};
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {return ctx.Hdr().Make_tkn_bgn(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos);}
+	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Hook_bgn, this);} static final byte[] Hook_bgn = new byte[] {Byte_ascii.NewLine, Byte_ascii.Eq};
+	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {return ctx.Hdr().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos);}
 	public static final Xop_hdr_lxr _ = new Xop_hdr_lxr(); Xop_hdr_lxr() {}
 	public static final byte Hook = Byte_ascii.Eq;
 }

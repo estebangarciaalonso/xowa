@@ -252,7 +252,7 @@ class Xol_lang_srl_fxt {
 			int aliases_len = itm.Aliases().length;
 			for (int j = 0; j < aliases_len; j++) {
 				if (j != 0) sb.Add("~");
-				sb.Add(itm.Aliases()[j]).Add_line_nl();
+				sb.Add(itm.Aliases()[j]).Add_char_nl();
 			}
 		}
 		return sb.XtoStrAndClear();
@@ -268,7 +268,7 @@ class Xol_lang_srl_fxt {
 		int len = ary.length;			
 		for (int i = 0; i < len; i++) {
 			Xow_ns ns = ary[i];
-			sb.Add(ns.Id()).Add("|").Add(ns.Name_str()).Add_line_nl();
+			sb.Add(ns.Id()).Add("|").Add(ns.Name_str()).Add_char_nl();
 		}
 		return sb.XtoStrAndClear();
 	}
@@ -299,7 +299,7 @@ class Xol_lang_srl_fxt {
 			for (int j = 0; j < itms_len; j++) {
 				sb.Add(itms[i].Bry()).Add(";");
 			}
-			sb.Add_line_nl();
+			sb.Add_char_nl();
 		}
 		return sb.XtoStrAndClear();
 	}
@@ -317,9 +317,9 @@ class Xol_lang_srl_fxt {
 		int len = ary.length;			
 		for (int i = 0; i < len; i++) {
 			Xol_msg_itm itm = ary[i];
-			sb.Add(itm.Key()).Add("|").Add(itm.Val()).Add_line_nl();
+			sb.Add(itm.Key()).Add("|").Add(itm.Val()).Add_char_nl();
 		}
 		return sb.XtoStrAndClear();
 	}
-	private static StringBldr sb = StringBldr.new_();
+	private static String_bldr sb = String_bldr_.new_();
 }

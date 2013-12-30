@@ -27,16 +27,21 @@ class Cache_fil_tbl {
 		Sqlite_engine_.Idx_create(p, Idx_ttl);
 	}
 	public void Db_save(Cache_fil_itm itm) {
-		if (stmt_bldr == null) stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_uid), Fld_dir_id, Fld_fil_name, Fld_fil_is_orig, Fld_fil_w, Fld_fil_h, Fld_fil_thumbtime, Fld_fil_ext, Fld_fil_size, Fld_cache_time).Init(provider);
-		Db_stmt stmt = stmt_bldr.Get(itm.Cmd_mode());
-		switch (itm.Cmd_mode()) {
-			case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Uid()); Db_save_modify(stmt, itm); stmt.Exec_insert(); break;
-			case Db_cmd_mode.Update:	stmt.Clear();					  Db_save_modify(stmt, itm); stmt.Val_int_(itm.Uid()).Exec_update(); break;
-			case Db_cmd_mode.Delete:	stmt.Clear().Val_int_(itm.Uid()); stmt.Exec_delete();	break;
-			case Db_cmd_mode.Ignore:	break;
-			default:					throw Err_.unhandled(itm.Cmd_mode());
+		try {
+			if (stmt_bldr == null) stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_uid), Fld_dir_id, Fld_fil_name, Fld_fil_is_orig, Fld_fil_w, Fld_fil_h, Fld_fil_thumbtime, Fld_fil_ext, Fld_fil_size, Fld_cache_time).Init(provider);
+			Db_stmt stmt = stmt_bldr.Get(itm.Cmd_mode());
+			switch (itm.Cmd_mode()) {
+				case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Uid()); Db_save_modify(stmt, itm); stmt.Exec_insert(); break;
+				case Db_cmd_mode.Update:	stmt.Clear();					  Db_save_modify(stmt, itm); stmt.Val_int_(itm.Uid()).Exec_update(); break;
+				case Db_cmd_mode.Delete:	stmt.Clear().Val_int_(itm.Uid()); stmt.Exec_delete();	break;
+				case Db_cmd_mode.Ignore:	break;
+				default:					throw Err_.unhandled(itm.Cmd_mode());
+			}
+			itm.Cmd_mode_(Db_cmd_mode.Ignore);
+		} catch (Exception e) {
+			Gfo_usr_dlg_._.Warn_many("", "", "failed to save itm: name=~{0} err=~{1}", String_.new_utf8_(itm.Fil_name()), Err_.Message_gplx_brief(e));
+			stmt_bldr = null;	// null out bldr, else bad stmt will lead to other failures
 		}
-		itm.Cmd_mode_(Db_cmd_mode.Ignore);
 	}
 	private void Db_save_modify(Db_stmt stmt, Cache_fil_itm itm) {
 		stmt.Val_int_(itm.Dir_id())
@@ -74,7 +79,7 @@ class Cache_fil_tbl {
 		catch (Exception e) {select_itm_stmt = null; throw Err_.err_(e, "stmt failed");}
 		finally {rdr.Rls();}
 	}
-	public void Select_all(ByteAryBfr fil_key_bldr, OrderedHash hash) {
+	public void Db_load(ByteAryBfr fil_key_bldr, OrderedHash hash) {
 		hash.Clear();
 		Db_stmt select_all_stmt = Db_stmt_.new_select_all_(provider, Tbl_name);
 		DataRdr rdr = DataRdr_.Null;
@@ -83,7 +88,10 @@ class Cache_fil_tbl {
 			while (rdr.MoveNextPeer()) {
 				Cache_fil_itm fil_itm = new Cache_fil_itm().Init_by_load(rdr);
 				byte[] key = fil_itm.Gen_hash_key(fil_key_bldr);
-				hash.Add(key, fil_itm);
+				if (hash.Has(key))		// NOTE: need to check for uniqueness else dupe file will cause select to fail; shouldn't happen, but somehow did; DATE:2013-12-28
+					Gfo_usr_dlg_._.Warn_many("", "", "cache had duplicate itm: key=~{0}", String_.new_utf8_(key));
+				else
+					hash.Add(key, fil_itm);
 			}
 		}
 		catch (Exception e) {throw Err_.err_(e, "stmt failed");}

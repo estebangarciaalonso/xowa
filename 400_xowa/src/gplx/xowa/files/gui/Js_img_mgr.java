@@ -28,7 +28,7 @@ public class Js_img_mgr {
 	public static void Update_img(Xog_win_wtr wtr, int uid, byte lnki_type, String src, int w, int h, byte elem_tid, String orig_src, int gallery_mgr_h) {
 		String html_id = "xowa_file_img_" + uid;
 		wtr.Html_img_update(html_id, src, w, h);
-		if (lnki_type == Xop_lnki_type.Id_thumb) {	// thumb needs to set cls and width
+		if (Xop_lnki_type.Id_is_thumbable(lnki_type)) {	// thumb needs to set cls and width
 			wtr.Html_atr_set(html_id, "class", gplx.xowa.html.Xow_html_mgr.Str_img_class_thumbimage);
 			wtr.Html_atr_set("xowa_file_div_" + uid, "style", "width:" + w + "px;");
 		}

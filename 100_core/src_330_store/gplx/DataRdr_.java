@@ -61,7 +61,7 @@ class DataRdr_null implements DataRdr {
 	public Object SrlObjOr(String key, Object or) {return or;}
 	public void SrlList(String key, ListAdp list, SrlObj proto, String itmKey) {}
 	public void TypeKey_(String v) {}
-	public void XtoStr_gfml(StringBldr sb) {sb.Add_line("NULL:;");}
+	public void XtoStr_gfml(String_bldr sb) {sb.Add_str_w_crlf("NULL:;");}
 	public SrlMgr SrlMgr_new(Object o) {return this;}
 	public void Rls() {}
 }

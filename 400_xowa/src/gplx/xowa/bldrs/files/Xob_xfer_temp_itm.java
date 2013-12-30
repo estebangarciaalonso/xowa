@@ -22,6 +22,7 @@ class Xob_xfer_temp_itm {
 	public byte Orig_repo() {return orig_repo;} private byte orig_repo;
 	public int Lnki_ext() {return lnki_ext;} private int lnki_ext;
 	public String Orig_media_type() {return orig_media_type;} private String orig_media_type;
+	public String Orig_minor_mime() {return orig_minor_mime;} private String orig_minor_mime;
 	public byte Orig_media_type_tid() {return orig_media_type_tid;} private byte orig_media_type_tid;
 	public int Orig_page_id() {return orig_page_id;} private int orig_page_id;
 	public String Join_ttl() {return join_ttl;} private String join_ttl;
@@ -33,6 +34,7 @@ class Xob_xfer_temp_itm {
 	public int Lnki_page_id() {return lnki_page_id;} private int lnki_page_id;
 	public int Orig_w() {return orig_w;} private int orig_w;
 	public int Orig_h() {return orig_h;} private int orig_h;
+	public int Orig_ext_id() {return orig_ext_id;} private int orig_ext_id;
 	public double Lnki_upright() {return lnki_upright;} private double lnki_upright;
 	public double Lnki_thumbtime() {return lnki_thumbtime;} private double lnki_thumbtime;
 	public void Clear() {		
@@ -62,6 +64,8 @@ class Xob_xfer_temp_itm {
 		orig_w			= rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_orig_w, -1);
 		orig_h			= rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_orig_h, -1);
 		orig_media_type = rdr.ReadStrOr(Xob_orig_regy_tbl.Fld_orig_media_type, "");	// convert nulls to ""
+		orig_minor_mime = rdr.ReadStrOr(Xob_orig_regy_tbl.Fld_orig_minor_mime, "");	// convert nulls to ""
+		orig_ext_id		= rdr.ReadInt(Xob_orig_regy_tbl.Fld_orig_file_ext);
 	}
 	public static final byte 
 		  Chk_tid_none = 0
@@ -70,14 +74,14 @@ class Xob_xfer_temp_itm {
 	;
 	public byte Chk_tid() {return chk_tid;} private byte chk_tid;
 	public boolean Chk(Xof_img_size img_size) {
-		orig_media_type_tid = Xof_media_type.Xto_byte(orig_media_type);
-		if (String_.Eq(join_ttl, redirect_src))	// join_ttl is same as redirect_src; not a redirect; EX:(direct) join="A.png";redirect_src="A.png"; (redirect) join="A.png";redirect_src="B.png" (i.e.: B redirects to A)
+		if (String_.Eq(join_ttl, redirect_src)) // join_ttl is same as redirect_src; not a redirect; EX:(direct) join="A.png";redirect_src="A.png"; (redirect) join="A.png";redirect_src="B.png" (i.e.: B redirects to A)
 			redirect_src = "";
-		else {	// redirect; make sure extension matches; EX: A.png redirects to B.png; lnki_ext will be .png (the lnki's ext); should be .png (the actual file's ext)
-			Xof_ext join_ext = Xof_ext_.new_by_ttl_(ByteAry_.new_utf8_(join_ttl));
-			lnki_ext = join_ext.Id();
-		}
-		lnki_ext = Xof_media_type.Convert_if_ogg_and_video(lnki_ext, orig_media_type_tid);
+//			else {	// redirect; make sure extension matches; EX: A.png redirects to B.png; lnki_ext will be .png (the lnki's ext); should be .png (the actual file's ext)
+//				Xof_ext join_ext = Xof_ext_.new_by_ttl_(ByteAry_.new_utf8_(join_ttl));
+//				lnki_ext = join_ext.Id();
+//			}
+		lnki_ext = orig_ext_id;
+		orig_media_type_tid = Xof_media_type.Xto_byte(orig_media_type);
 		if (	lnki_thumbtime != Xop_lnki_tkn.Thumbtime_null		// thumbtime defined
 			&&	orig_media_type_tid != Xof_media_type.Tid_video		// but not a video;
 			)

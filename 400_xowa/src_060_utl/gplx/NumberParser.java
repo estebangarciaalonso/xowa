@@ -22,6 +22,7 @@ public class NumberParser {
 	public boolean HasErr()  {return hasErr;} private boolean hasErr;
 	public boolean HasFrac() {return hasFrac;} private boolean hasFrac;
 	public boolean Hex_enabled() {return hex_enabled;} public NumberParser Hex_enabled_(boolean v) {hex_enabled = v; return this;} private boolean hex_enabled;
+	public NumberParser Parse(byte[] src) {return Parse(src, 0, src.length);}
 	public NumberParser Parse(byte[] ary, int bgn, int end) {
 		int loop_bgn = end - 1, loop_end = bgn - 1, exp_multiplier = 1, factor = 10;
 		long multiplier = 1, frc_multiplier = 1;

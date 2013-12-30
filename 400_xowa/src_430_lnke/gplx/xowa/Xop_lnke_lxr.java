@@ -35,9 +35,9 @@ class Xop_lnke_lxr implements Xop_lxr {
 		core_trie.Add(protocol_ary						, new Xop_lnke_lxr(Xop_lnke_tkn.Lnke_typ_text, protocol_ary, tid));
 		core_trie.Add(ByteAry_.new_ascii_("[" + itm)	, new Xop_lnke_lxr(Xop_lnke_tkn.Lnke_typ_brack, protocol_ary, tid));
 	}
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {
-		if (this.tid == Xow_cfg_lnke.Tid_xowa && !ctx.Wiki().Sys_cfg().Xowa_proto_enabled()) return ctx.LxrMake_txt_(curPos);
-		return ctx.Lnke().MakeTkn_bgn(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos, protocol, tid, lnke_typ);
+	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+		if (this.tid == Xow_cfg_lnke.Tid_xowa && !ctx.Wiki().Sys_cfg().Xowa_proto_enabled()) return ctx.LxrMake_txt_(cur_pos);
+		return ctx.Lnke().MakeTkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, protocol, tid, lnke_typ);
 	}
 	public static final Xop_lnke_lxr _ = new Xop_lnke_lxr(); Xop_lnke_lxr() {}
 }

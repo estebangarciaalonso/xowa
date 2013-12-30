@@ -61,8 +61,9 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 				bfr.Add(Ary_unknown_bgn).Add(Ary_dynamic_is_blank).Add(Ary_unknown_end);	// FUTURE: excerpt actual String; WHEN: add raw to defn
 				return false;
 			}
-			if 		(name_ary[name_bgn] == Byte_ascii.Colon)						// check 1st letter for transclusion
+			if 		(name_ary[name_bgn] == Byte_ascii.Colon) {						// check 1st letter for transclusion
 				return Transclude(ctx, wiki, bfr, name_ary, caller, src);			// transclusion; EX: {{:Name of page}}
+			}
 
 			// ignore "{{Template:"; EX: {{Template:a}} is the same thing as {{a}}
 			boolean template_prefix_found = false;
@@ -251,7 +252,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 			bfr.Add(nde.Val_tkn().Dat_ary());
 		}
 	}
-	boolean Transclude(Xop_ctx ctx, Xow_wiki wiki, ByteAryBfr bfr, byte[] name_ary, Xot_invk caller, byte[] src) {
+	private boolean Transclude(Xop_ctx ctx, Xow_wiki wiki, ByteAryBfr bfr, byte[] name_ary, Xot_invk caller, byte[] src) {
 		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, name_ary); if (page_ttl == null) return false;	// ttl not valid; EX: {{:[[abc]]}}
 		byte[] transclude_src = null;
 		if (page_ttl.Ns().Id_tmpl()) {					// ttl is template; check tmpl_regy first before going to data_mgr
@@ -267,7 +268,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 			Xot_defn_tmpl transclude_tmpl = ctx.Wiki().Parser().Parse_tmpl(ctx, ctx.Tkn_mkr(), page_ttl.Ns(), page_ttl.Page_db(), transclude_src);
 			return Eval_sub(ctx, transclude_tmpl, caller, src, bfr);
 		}
-		else {
+		else {				
 			Print_not_found(name_ary, bfr);
 			return false;
 		}
@@ -354,7 +355,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 	}
 	public Xot_invk_tkn(int bgn, int end) {this.Tkn_ini_pos(false, bgn, end);}
 	@Override public byte Tkn_tid() {return typeId;} private byte typeId = Xop_tkn_itm_.Tid_tmpl_invk;
-	public void TypeId_toText() {typeId = Xop_tkn_itm_.Tid_txt;}
+	public void Tkn_tid_to_txt() {typeId = Xop_tkn_itm_.Tid_txt;}
 	byte[] Get_first_subst_itm(Xol_kwd_mgr kwd_mgr) {
 		Xol_kwd_grp grp = kwd_mgr.Get_at(Xol_kwd_grp_.Id_subst); if (grp == null) return ByteAry_.Empty;
 		Xol_kwd_itm[] itms = grp.Itms();

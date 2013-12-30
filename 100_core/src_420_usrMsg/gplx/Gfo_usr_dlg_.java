@@ -17,7 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
 public class Gfo_usr_dlg_ {
-        public static final Gfo_usr_dlg Null = new Gfo_usr_dlg_null();
+	public static Gfo_usr_dlg _ = Gfo_usr_dlg_null._;
+        public static final Gfo_usr_dlg Null = Gfo_usr_dlg_null._;
 }
 class Gfo_usr_dlg_null implements Gfo_usr_dlg {
 	public boolean Canceled() {return false;} public void Canceled_y_() {} public void Canceled_n_() {}
@@ -37,4 +38,5 @@ class Gfo_usr_dlg_null implements Gfo_usr_dlg {
 	public String Prog_direct(String msg) {return "";}
 	public String Log_direct(String msg) {return "";}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {return this;}
+        public static final Gfo_usr_dlg_null _ = new Gfo_usr_dlg_null(); Gfo_usr_dlg_null() {}
 }

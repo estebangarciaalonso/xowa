@@ -19,49 +19,46 @@ package gplx.xowa; import gplx.*;
 import gplx.xowa.wikis.*;
 import gplx.xowa.parsers.lnkis.*;
 public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
+	private NumberParser number_parser = new NumberParser();
+	private Arg_bldr arg_bldr = Arg_bldr._;
 	public void Ctor_ctx(Xop_ctx ctx) {}
 	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {}
-	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int srcLen) {}
+	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {}
 	public Xop_lnki_logger File_wkr() {return file_wkr;} public Xop_lnki_wkr File_wkr_(Xop_lnki_logger v) {file_wkr = v; return this;} private Xop_lnki_logger file_wkr;
-	public Xop_lnki_logger Ctg_wkr() {return ctg_wkr;} public Xop_lnki_wkr Ctg_wkr_(Xop_lnki_logger v) {ctg_wkr = v; return this;} private Xop_lnki_logger ctg_wkr;
-	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos, Xop_tkn_itm tkn) {
+	public void Auto_close(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_tkn_itm tkn) {
 		Xop_lnki_tkn lnki = (Xop_lnki_tkn)tkn;
-		ctx.Msg_log().Add_itm_none(Xop_misc_log.Eos, src, lnki.Src_bgn(), lnki.Src_end());	// FUTURE: autoclose
-		lnki.TypeId_toText();
+		lnki.Tkn_tid_to_txt();
+		ctx.Msg_log().Add_itm_none(Xop_misc_log.Eos, src, lnki.Src_bgn(), lnki.Src_end());
 	}
-	private static Arg_bldr arg_bldr = Arg_bldr._;
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {
+	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		if (ctx.Cur_tkn_tid() == Xop_tkn_itm_.Tid_lnke) {	// if lnke then take 1st ] in "]]" and use it close lnke
-			int lnke_end_pos = bgnPos + 1;
-			ctx.Lnke().MakeTkn_end(ctx, tkn_mkr, root, src, srcLen, bgnPos, lnke_end_pos);
+			int lnke_end_pos = bgn_pos + 1;
+			ctx.Lnke().MakeTkn_end(ctx, tkn_mkr, root, src, src_len, bgn_pos, lnke_end_pos);
 			return lnke_end_pos;
 		}
-		int stackPos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnki);
-		if (stackPos == -1) {return ctx.LxrMake_txt_(curPos);}
-		Xop_lnki_tkn lnki = (Xop_lnki_tkn)ctx.Stack_pop_til(root, src, stackPos, false, bgnPos, curPos);
-		lnki.Src_end_(curPos);	// NOTE: must happen after ChkForTail
+		int stack_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnki);
+		if (stack_pos == -1) return ctx.LxrMake_txt_(cur_pos);	// "]]" found but no "[[" in stack;
+		Xop_lnki_tkn lnki = (Xop_lnki_tkn)ctx.Stack_pop_til(root, src, stack_pos, false, bgn_pos, cur_pos);
+		lnki.Src_end_(cur_pos);	// NOTE: must happen after Chk_for_tail
 		int loop_bgn = lnki.Tkn_sub_idx() + 1, loop_end = root.Subs_len();
 		if (loop_bgn == loop_end) {	// NOTE: fixes empty template; EX: [[]]
-			lnki.TypeId_toText();
-			return curPos;
+			lnki.Tkn_tid_to_txt();
+			return cur_pos;
 		}
-		if (!arg_bldr.Bld(ctx, tkn_mkr, this, Xop_arg_wkr_.Typ_lnki, root, lnki, bgnPos, curPos, loop_bgn, loop_end, src)) { // NOTE: fixes blank template; EX: [[ ]]
-			lnki.TypeId_toText();
+		if (!arg_bldr.Bld(ctx, tkn_mkr, this, Xop_arg_wkr_.Typ_lnki, root, lnki, bgn_pos, cur_pos, loop_bgn, loop_end, src)) { // NOTE: fixes blank template; EX: [[ ]]
+			lnki.Tkn_tid_to_txt();
 			root.Subs_del_after(lnki.Tkn_sub_idx() + 1);	// all tkns should now be converted to args in owner; delete everything in root
 			lnki.Subs_clear();
-			return curPos;
+			return cur_pos;
 		}
-		curPos = this.ChkForTail(ctx.Lang(), src, curPos, srcLen, lnki);
-		lnki.Src_end_(curPos);	// NOTE: must happen after ChkForTail; redundant with above, but above needed b/c of returns
+		cur_pos = Xop_lnki_wkr_.Chk_for_tail(ctx.Lang(), src, cur_pos, src_len, lnki);
+		lnki.Src_end_(cur_pos);	// NOTE: must happen after Chk_for_tail; redundant with above, but above needed b/c of returns
 		root.Subs_del_after(lnki.Tkn_sub_idx() + 1);	// all tkns should now be converted to args in owner; delete everything in root
 		boolean lnki_is_file = false;
 		switch (lnki.Ns_id()) {
 			case Xow_ns_.Id_file:
-				switch (lnki.Lnki_type()) {
-					case Xop_lnki_type.Id_thumb: case Xop_lnki_type.Id_frame:
-						ctx.Para().Process_lnki_file_div(ctx, root, lnki.Src_bgn(), curPos);
-						break;
-				}
+				if (Xop_lnki_type.Id_is_thumbable(lnki.Lnki_type()))
+					ctx.Para().Process_lnki_file_div(ctx, root, lnki.Src_bgn(), cur_pos);
 				lnki_is_file = true;
 				break;
 			case Xow_ns_.Id_media:
@@ -69,15 +66,14 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 				break;
 			case Xow_ns_.Id_category:
 				if (!lnki.Ttl().ForceLiteralLink())					// NOTE: do not remove ws if literal; EX:[[Category:A]]\n[[Category:B]] should stay the same; DATE:2013-07-10
-					ctx.Para().Process_lnki_category(ctx, root, curPos);	// removes excessive ws between categories; EX: [[Category:A]]\n\s[[Category:B]] -> [[Category:A]][[Category:B]] (note that both categories will not be rendered directly in html, but go to the bottom of the page)
-				if (ctg_wkr != null) ctg_wkr.Wkr_exec(ctx, src, lnki);
+					ctx.Para().Process_lnki_category(ctx, root, cur_pos);	// removes excessive ws between categories; EX: [[Category:A]]\n\s[[Category:B]] -> [[Category:A]][[Category:B]] (note that both categories will not be rendered directly in html, but go to the bottom of the page)
 				break;
 		}
 		if (lnki_is_file) {
 			ctx.Tab().Lnki_file_mgr().Add(lnki);
 			if (file_wkr != null) file_wkr.Wkr_exec(ctx, src, lnki);
 		}
-		return curPos;
+		return cur_pos;
 	}
 	private static Xoa_ttl Adj_ttl_for_file(Xop_ctx ctx, Xoa_ttl ttl, byte[] ttl_bry) {
 		byte[] xwiki_bry = ttl.Wik_txt(); if (xwiki_bry == null) return ttl; // should not happen, but just in case
@@ -94,7 +90,7 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		try {
 			if (arg_idx == 0) {							// 1st arg; assume trg; process ns;
 				if (arg.Val_tkn().Dat_end() - arg.Val_tkn().Dat_bgn() == 0) {	// blank trg; EX: [[]],[[ ]]
-					lnki.TypeId_toText();
+					lnki.Tkn_tid_to_txt();
 				}
 				else {
 					Arg_itm_tkn name_tkn = arg.Val_tkn();
@@ -109,7 +105,7 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 					}
 					Xow_wiki wiki = ctx.Wiki();
 					Xoa_ttl ttl = Xoa_ttl.parse_(wiki, name_bry);
-					if (ttl == null) {lnki.TypeId_toText(); return false;}
+					if (ttl == null) {lnki.Tkn_tid_to_txt(); return false;}
 					if (	ttl.Wik_bgn() != Xoa_ttl.Null_wik_bgn			// xwiki available; EX: [[en:]]
 						&&	wiki.Wiki_tid() != Xow_wiki_type_.Tid_home)		// not home; ignore for history page wherein [[en.wikipedia.org:File:A.png]] will be listed
 						ttl = Adj_ttl_for_file(ctx, ttl, name_bry);
@@ -122,28 +118,28 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 				int arg_tid = -1;
 				int bgn = arg.Val_tkn().Dat_bgn(), end = arg.Val_tkn().Dat_end();
 				if (arg.KeyTkn_exists()) {bgn = arg.Key_tkn().Dat_bgn(); end = arg.Key_tkn().Dat_end();}
-				arg_tid = ctx.Wiki().Lang().Lnki_arg_parser().Identify_tid(src, bgn, end, lnki.Width(), lnki.Height());
+				arg_tid = ctx.Wiki().Lang().Lnki_arg_parser().Identify_tid(src, bgn, end, lnki);
 				switch (arg_tid) {
-					case Xol_lnki_arg_parser.Tid_none:			lnki.HAlign_(Xop_lnki_type.Id_none); break;
-					case Xol_lnki_arg_parser.Tid_border:		lnki.Border_(Bool_.Y_byte); break;
-					case Xol_lnki_arg_parser.Tid_thumb:			lnki.Lnki_type_(Xop_lnki_type.Id_thumb); break;
-					case Xol_lnki_arg_parser.Tid_frame:			lnki.Lnki_type_(Xop_lnki_type.Id_frame); break;
-					case Xol_lnki_arg_parser.Tid_frameless:		lnki.Lnki_type_(Xop_lnki_type.Id_frameless); break;
-					case Xol_lnki_arg_parser.Tid_left:			lnki.HAlign_(Xop_lnki_halign.Left); break;
-					case Xol_lnki_arg_parser.Tid_center:		lnki.HAlign_(Xop_lnki_halign.Center); break;
-					case Xol_lnki_arg_parser.Tid_right:			lnki.HAlign_(Xop_lnki_halign.Right); break;
-					case Xol_lnki_arg_parser.Tid_top:			lnki.VAlign_(Xop_lnki_valign.Top); break;
-					case Xol_lnki_arg_parser.Tid_middle:		lnki.VAlign_(Xop_lnki_valign.Middle); break;
-					case Xol_lnki_arg_parser.Tid_bottom:		lnki.VAlign_(Xop_lnki_valign.Bottom); break;
-					case Xol_lnki_arg_parser.Tid_super:			lnki.VAlign_(Xop_lnki_valign.Super); break;
-					case Xol_lnki_arg_parser.Tid_sub:			lnki.VAlign_(Xop_lnki_valign.Sub); break;
-					case Xol_lnki_arg_parser.Tid_text_top:		lnki.VAlign_(Xop_lnki_valign.TextTop); break;
-					case Xol_lnki_arg_parser.Tid_text_bottom:	lnki.VAlign_(Xop_lnki_valign.TextBottom); break;
-					case Xol_lnki_arg_parser.Tid_baseline:		lnki.VAlign_(Xop_lnki_valign.Baseline); break;
-					case Xol_lnki_arg_parser.Tid_alt:			lnki.Alt_tkn_(arg); 
+					case Xop_lnki_arg_parser.Tid_none:			lnki.HAlign_(Xop_lnki_type.Id_none); break;
+					case Xop_lnki_arg_parser.Tid_border:		lnki.Border_(Bool_.Y_byte); break;
+					case Xop_lnki_arg_parser.Tid_thumb:			lnki.Lnki_type_(Xop_lnki_type.Id_thumb); break;
+					case Xop_lnki_arg_parser.Tid_frame:			lnki.Lnki_type_(Xop_lnki_type.Id_frame); break;
+					case Xop_lnki_arg_parser.Tid_frameless:		lnki.Lnki_type_(Xop_lnki_type.Id_frameless); break;
+					case Xop_lnki_arg_parser.Tid_left:			lnki.HAlign_(Xop_lnki_halign.Left); break;
+					case Xop_lnki_arg_parser.Tid_center:		lnki.HAlign_(Xop_lnki_halign.Center); break;
+					case Xop_lnki_arg_parser.Tid_right:			lnki.HAlign_(Xop_lnki_halign.Right); break;
+					case Xop_lnki_arg_parser.Tid_top:			lnki.VAlign_(Xop_lnki_valign.Top); break;
+					case Xop_lnki_arg_parser.Tid_middle:		lnki.VAlign_(Xop_lnki_valign.Middle); break;
+					case Xop_lnki_arg_parser.Tid_bottom:		lnki.VAlign_(Xop_lnki_valign.Bottom); break;
+					case Xop_lnki_arg_parser.Tid_super:			lnki.VAlign_(Xop_lnki_valign.Super); break;
+					case Xop_lnki_arg_parser.Tid_sub:			lnki.VAlign_(Xop_lnki_valign.Sub); break;
+					case Xop_lnki_arg_parser.Tid_text_top:		lnki.VAlign_(Xop_lnki_valign.TextTop); break;
+					case Xop_lnki_arg_parser.Tid_text_bottom:	lnki.VAlign_(Xop_lnki_valign.TextBottom); break;
+					case Xop_lnki_arg_parser.Tid_baseline:		lnki.VAlign_(Xop_lnki_valign.Baseline); break;
+					case Xop_lnki_arg_parser.Tid_alt:			lnki.Alt_tkn_(arg); 
 						lnki.Alt_tkn().Tkn_ini_pos(false, arg.Src_bgn(), arg.Src_end());
 						break;
-					case Xol_lnki_arg_parser.Tid_caption:
+					case Xop_lnki_arg_parser.Tid_caption:
 						lnki.Caption_tkn_(arg);
 						if (arg.Eq_tkn() != Xop_tkn_null.Null_tkn) {	// equal tkn exists; add val tkns to key and then swap key with val
 							Arg_itm_tkn key_tkn = arg.Key_tkn(), val_tkn = arg.Val_tkn();
@@ -160,25 +156,23 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 						else	// no equal tkn 
 							lnki.Caption_tkn_pipe_trick_(end - bgn == 0);	// NOTE: pipe_trick check must go here; checks for val_tkn.Bgn == val_tkn.End; if there is an equal token but no val, then Bgn == End which would trigger false pipe trick (EX:"[[A|B=]]")
 						break;
-					case Xol_lnki_arg_parser.Tid_link:			lnki.Link_tkn_(arg); break;
-					case Xol_lnki_arg_parser.Tid_dim:			break;// NOOP: Fetch does actual setting
-					case Xol_lnki_arg_parser.Tid_upright:
+					case Xop_lnki_arg_parser.Tid_link:			lnki.Link_tkn_(arg); break;
+					case Xop_lnki_arg_parser.Tid_dim:			break;// NOOP: Identify_tid does actual setting
+					case Xop_lnki_arg_parser.Tid_upright:
 						if (arg.KeyTkn_exists()) {
 							int valTknBgn = arg.Val_tkn().Src_bgn(), valTknEnd = arg.Val_tkn().Src_end();
-							numberParser.Parse(src, valTknBgn, valTknEnd);
-							if (numberParser.HasErr())
+							number_parser.Parse(src, valTknBgn, valTknEnd);
+							if (number_parser.HasErr())
 								ctx.Msg_log().Add_itm_none(Xop_lnki_log.Upright_val_is_invalid, src, valTknBgn, valTknEnd);
 							else
-								lnki.Upright_(numberParser.AsDec().XtoDouble());
+								lnki.Upright_(number_parser.AsDec().XtoDouble());
 						}
 						else	// no =; EX: [[Image:a|upright]]
 							lnki.Upright_(1);
 						break;
-					case Xol_lnki_arg_parser.Tid_noicon:			lnki.Media_icon_n_();  break;
-					case Xol_lnki_arg_parser.Tid_thumbtime:		{
-						Thumbtime_parse(ctx, lnki, arg, src);
-						break;
-					}
+					case Xop_lnki_arg_parser.Tid_noicon:		lnki.Media_icon_n_();  break;
+					case Xop_lnki_arg_parser.Tid_page:			Xop_lnki_wkr_.Page_parse(ctx, src, number_parser, lnki, arg); break;
+					case Xop_lnki_arg_parser.Tid_thumbtime:		Xop_lnki_wkr_.Thumbtime_parse(ctx, src, number_parser, lnki, arg); break;
 				}
 			}
 			return true;
@@ -187,30 +181,57 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 			return false;
 		}
 	}
-	private void Thumbtime_parse(Xop_ctx ctx, Xop_lnki_tkn lnki, Arg_nde_tkn arg, byte[] src) {
+}
+class Xop_lnki_wkr_ {
+	public static int Chk_for_tail(Xol_lang lang, byte[] src, int cur_pos, int src_len, Xop_lnki_tkn lnki) {
+		int bgn_pos = cur_pos;
+		ByteTrieMgr_slim lnki_trail = lang.Lnki_trail_mgr().Trie();
+		while (true) {	// loop b/c there can be multiple consecutive lnki_trail_chars; EX: [[A]]bcde
+			if (cur_pos == src_len) break;
+			byte[] lnki_trail_bry = (byte[])lnki_trail.Match(src[cur_pos], src, cur_pos, src_len);
+			if (lnki_trail_bry == null) break;	// no longer a lnki_trail char; stop
+			cur_pos += lnki_trail_bry.length;	// lnki_trail char; add
+		}
+		if (bgn_pos != cur_pos && lnki.Ns_id() == Xow_ns_.Id_main) {	// only mark trail if Main ns (skip trail for Image)
+			lnki.Tail_bgn_(bgn_pos).Tail_end_(cur_pos);
+			return cur_pos;
+		}
+		else
+			return bgn_pos;
+	}
+	public static void Page_parse(Xop_ctx ctx, byte[] src, NumberParser number_parser, Xop_lnki_tkn lnki, Arg_nde_tkn arg) {
+		int val_tkn_bgn = arg.Val_tkn().Src_bgn(), val_tkn_end = arg.Val_tkn().Src_end();
+		byte[] val_bry = ByteAry_.Trim(src, val_tkn_bgn, val_tkn_end);	// some tkns have trailing space; EX.WWI: [[File:Bombers of WW1.ogg|thumb |thumbtime=3]]
+		number_parser.Parse(val_bry);
+		if (number_parser.HasErr())
+			ctx.Msg_log().Add_itm_none(Xop_lnki_log.Upright_val_is_invalid, src, val_tkn_bgn, val_tkn_end);
+		else
+			lnki.Page_(number_parser.AsInt());
+	}
+	public static void Thumbtime_parse(Xop_ctx ctx, byte[] src, NumberParser number_parser, Xop_lnki_tkn lnki, Arg_nde_tkn arg) {
 		int val_tkn_bgn = arg.Val_tkn().Src_bgn(), val_tkn_end = arg.Val_tkn().Src_end();
 		byte[] val_bry = ByteAry_.Trim(src, val_tkn_bgn, val_tkn_end);	// some tkns have trailing space; EX.WWI: [[File:Bombers of WW1.ogg|thumb |thumbtime=3]]
 		int val_bry_len = val_bry.length;
 		int colon_pos = ByteAry_.FindBwd(val_bry, Byte_ascii.Colon);
 		if (colon_pos == ByteAry_.NotFound) {	// integer; EX: thumbtime=123
-			numberParser.Parse(val_bry, 0, val_bry_len);
-			if (numberParser.HasErr())
+			number_parser.Parse(val_bry);
+			if (number_parser.HasErr())
 				ctx.Msg_log().Add_itm_none(Xop_lnki_log.Upright_val_is_invalid, src, val_tkn_bgn, val_tkn_end);
 			else
-				lnki.Thumbtime_(numberParser.AsInt());
+				lnki.Thumbtime_(number_parser.AsInt());
 		}
 		else {									// segment; EX: thumbtime=1:23
 			int seconds = 0, multiplier = 1, seg_idx = 0;
 			int seg_bgn = colon_pos + 1, seg_end = val_bry_len;
 			boolean valid = true;
 			while (valid) {
-				numberParser.Parse(val_bry, seg_bgn, seg_end);
-				if (numberParser.HasErr()) {
+				number_parser.Parse(val_bry, seg_bgn, seg_end);
+				if (number_parser.HasErr()) {
 					ctx.Msg_log().Add_itm_none(Xop_lnki_log.Upright_val_is_invalid, src, val_tkn_bgn, val_tkn_end);
 					valid = false;
 				}
 				if (!valid) break;
-				int seg_val = numberParser.AsInt();
+				int seg_val = number_parser.AsInt();
 				switch (seg_idx) {
 					case 0: multiplier =    1; break; // seconds
 					case 1: multiplier =   60; break; // minutes
@@ -235,21 +256,4 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 			}
 		}
 	}
-	public int ChkForTail(Xol_lang lang, byte[] src, int curPos, int srcLen, Xop_lnki_tkn lnki) {
-		int bgnPos = curPos;
-		ByteTrieMgr_slim lnki_trail = lang.Lnki_trail_mgr().Trie();
-		while (true) {	// loop b/c there can be multiple consecutive lnki_trail_chars; EX: [[A]]bcde
-			if (curPos == srcLen) break;
-			byte[] lnki_trail_bry = (byte[])lnki_trail.Match(src[curPos], src, curPos, srcLen);
-			if (lnki_trail_bry == null) break;	// no longer a lnki_trail char; stop
-			curPos += lnki_trail_bry.length;	// lnki_trail char; add
-		}
-		if (bgnPos != curPos && lnki.Ns_id() == Xow_ns_.Id_main) {	// only mark trail if Main ns (skip trail for Image)
-			lnki.Tail_bgn_(bgnPos).Tail_end_(curPos);
-			return curPos;
-		}
-		else
-			return bgnPos;
-	}
-	private NumberParser numberParser = new NumberParser();
 }

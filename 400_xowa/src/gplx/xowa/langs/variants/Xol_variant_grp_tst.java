@@ -15,7 +15,20 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.langs; import gplx.*; import gplx.xowa.*;
-public interface Xol_plural {
-	byte[] Plural_eval(Xol_lang lang, int count, byte[][] words);
+package gplx.xowa.langs.variants; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
+import org.junit.*;
+import gplx.ios.*;
+public class Xol_variant_grp_tst {
+	private Xol_variant_grp_fxt fxt = new Xol_variant_grp_fxt();
+	@Test   public void csv_() {
+		fxt.Test_csv_("zh|zh-hans;zh-hant", "zh", "zh-hans", "zh-hant");
+		fxt.Test_csv_("zh|zh-hans;zh-hant;", "zh", "zh-hans", "zh-hant");
+	}
+}
+class Xol_variant_grp_fxt {
+	public void Test_csv_(String raw, String grp, String... subs) {
+		Xol_variant_grp actl = Xol_variant_grp.csv_(raw);
+		Tfds.Eq(grp, String_.new_ascii_(actl.Grp()));
+		Tfds.Eq_ary_str(subs, String_.Ary(actl.Subs()));
+	}
 }

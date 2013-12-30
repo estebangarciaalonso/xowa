@@ -20,8 +20,8 @@ import gplx.dbs.*; import gplx.xowa.files.fsdb.*;
 class Xof_wiki_orig_tbl_in_wkr extends gplx.xowa.dbs.tbls.Xodb_in_wkr_base {
 	private ListAdp itms_all;
 	@Override public int Interval() {return Sqlite_engine_.Stmt_arg_max;}
-	public OrderedHash Itms_by_ttl() {return itms_by_ttl;} private OrderedHash itms_by_ttl = OrderedHash_.new_bry_();
-	public Xof_wiki_orig_tbl_in_wkr Init(ListAdp v) {this.itms_all = v; itms_by_ttl.Clear(); return this;}
+	private OrderedHash itms_by_ttl;
+	public Xof_wiki_orig_tbl_in_wkr Init(ListAdp v, OrderedHash itms_by_ttl) {this.itms_all = v; this.itms_by_ttl = itms_by_ttl; return this;}
 	@Override public Db_qry Build_qry(int bgn, int end) {
 		Object[] part_ary = gplx.xowa.dbs.tbls.Xodb_in_wkr_base.In_ary(end - bgn);
 		String in_fld_name = Xof_wiki_orig_tbl.Fld_orig_ttl; 

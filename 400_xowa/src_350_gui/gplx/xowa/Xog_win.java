@@ -504,6 +504,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	}
 	public void Exec_page_stack(Xoa_page new_page) {
 		if (new_page.Missing()) return;
+		page.Wiki().Ctx().Tab().Lnki_file_mgr().Clear();
 		boolean new_page_is_same = ByteAry_.Eq(page.Page_ttl().Full_txt(), new_page.Page_ttl().Full_txt());
 		Exec_show_wiki_page(new_page, true, new_page_is_same);
 		Exec_reload_imgs();

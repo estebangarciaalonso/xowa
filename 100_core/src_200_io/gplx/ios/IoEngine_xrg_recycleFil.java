@@ -33,12 +33,12 @@ public class IoEngine_xrg_recycleFil extends IoEngine_xrg_fil_affects1_base {
 		return recycleDir.GenSubFil_ary(appName, ";", timeName, ";", uuidStr, ";", String_.LimitToFirst(this.Url().NameAndExt(), 128));
 	}
 	String ConcatWith_ary(String separator, ListAdp ary) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		int aryLen = ary.Count();
 		for (int i = 0; i < aryLen; i++) {
 			if (i != 0) sb.Add(separator);
 			Object val = ary.FetchAt(i);
-			sb.Add_any(Object_.XtoStr_OrEmpty(val));
+			sb.Add_obj(Object_.XtoStr_OrEmpty(val));
 		}
 		return sb.XtoStr();			
 	}

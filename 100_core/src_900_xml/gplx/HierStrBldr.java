@@ -30,7 +30,7 @@ public class HierStrBldr {
 		return Io_url_.new_fil_(GenStr(subDirs, idx));
 	}
 	String GenStr(String[] subDirs, int idx) {
-		StringBldr sb = StringBldr.new_(); 
+		String_bldr sb = String_bldr_.new_(); 
 		sb.Add(root);
 		for (String subDir : subDirs)
 			sb.Add(subDir).Add(dirSpr);

@@ -28,7 +28,24 @@ class Cache_dir_mgr {
 		int len = name_hash.Count();
 		for (int i = 0; i < len; i++) {
 			Cache_dir_itm dir_itm = (Cache_dir_itm)name_hash.FetchAt(i);
+			if (dir_itm.Cmd_mode() == Db_cmd_mode.Create) {		// create; check if in db;
+				Cache_dir_itm tbl_itm = dir_tbl.Select(dir_itm.Dir_bry());
+				if (tbl_itm != Cache_dir_itm.Null)				// tbl_itm found
+					dir_itm.Cmd_mode_(Db_cmd_mode.Update);		// change dir_itm to update
+			}
 			dir_tbl.Db_save(dir_itm);
+		}
+	}
+	public void Db_load() {
+		ListAdp list = ListAdp_.new_();
+		dir_tbl.Select_all(list);
+		int len = list.Count();
+		id_hash.Clear();
+		name_hash.Clear();
+		for (int i = 0; i < len; i++) {
+			Cache_dir_itm dir_itm = (Cache_dir_itm)list.FetchAt(i);
+			name_hash.Add(dir_itm.Dir_bry(), dir_itm);
+			id_hash.Add(dir_itm.Id(), dir_itm);
 		}
 	}
 	public void Db_term() {
@@ -49,17 +66,5 @@ class Cache_dir_mgr {
 	}
 	public Cache_dir_itm Get_itm_by_id(int id) {
 		return (Cache_dir_itm)id_hash.Fetch(id);
-	}
-	public void Load_all() {
-		ListAdp list = ListAdp_.new_();
-		dir_tbl.Select_all(list);
-		int len = list.Count();
-		id_hash.Clear();
-		name_hash.Clear();
-		for (int i = 0; i < len; i++) {
-			Cache_dir_itm dir_itm = (Cache_dir_itm)list.FetchAt(i);
-			name_hash.Add(dir_itm.Dir_bry(), dir_itm);
-			id_hash.Add(dir_itm.Id(), dir_itm);
-		}
 	}
 }

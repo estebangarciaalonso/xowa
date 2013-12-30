@@ -24,14 +24,8 @@ public class Xob_xfer_temp_itm_tst {
 	@Test   public void Pass()				{fxt.Test_pass().Test_itm_chk_fail_id_none();}
 	@Test   public void Missing_orig()		{fxt.Test_fail(Xob_xfer_temp_itm.Chk_tid_orig_page_id_is_null		, KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_page_id, null));}
 	@Test   public void File_is_audio()		{fxt.Test_fail(Xob_xfer_temp_itm.Chk_tid_orig_media_type_is_audio	, KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_media_type, Xof_media_type.Name_audio));}
-	@Test   public void File_is_midi()		{fxt.Test_fail(Xob_xfer_temp_itm.Chk_tid_orig_media_type_is_audio	, KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_ext, Xof_ext_.Id_mid));}
-	@Test   public void Ogg_to_ogv() {
-		fxt.Test_bgn
-		(	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_ext			, Xof_ext_.Id_ogg)
-		,	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_media_type	, Xof_media_type.Name_video)
-		);
-		fxt.Test_lnki_ext_id(Xof_ext_.Id_ogv);						// confirm ext is ogv
-		fxt.Test_itm_chk_fail_id(Xob_xfer_temp_itm.Chk_tid_none);	// confirm no err
+	@Test   public void File_is_mid()		{
+		fxt.Test_fail(Xob_xfer_temp_itm.Chk_tid_orig_media_type_is_audio	, KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext, Xof_ext_.Id_mid));
 	}
 	@Test   public void Redirect_src_is_empty() {	// orig_cmd sets all direct files to have "orig_join" == "lnki_ttl"
 		fxt.Test_bgn
@@ -51,7 +45,7 @@ public class Xob_xfer_temp_itm_tst {
 		fxt.Test_bgn
 		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ttl	, "B.jpg")
 		,	KeyVal_.new_(Xob_orig_regy_tbl.Fld_lnki_ttl			, "A.png")
-		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_ext			, Xof_ext_.Id_png)	// .png b/c A.png
+		,	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext	, Xof_ext_.Id_jpg)	// .png b/c B.jpg
 		);
 		fxt.Test_lnki_ext_id(Xof_ext_.Id_jpg);						// confirm ext changed to .jpg
 	}
@@ -69,10 +63,10 @@ class Xob_xfer_temp_itm_fxt {
 	private GfoNde nde;
 	public static String[] Flds = new String[] 
 	{ Xob_lnki_regy_tbl.Fld_lnki_ext
-	, Xob_orig_regy_tbl.Fld_orig_media_type
 	, Xob_lnki_regy_tbl.Fld_lnki_id
 	, Xob_orig_regy_tbl.Fld_orig_repo
 	, Xob_orig_regy_tbl.Fld_orig_file_ttl
+	, Xob_orig_regy_tbl.Fld_orig_file_ext
 	, Xob_orig_regy_tbl.Fld_lnki_ttl
 	, Xob_lnki_regy_tbl.Fld_lnki_type
 	, Xob_lnki_regy_tbl.Fld_lnki_w
@@ -84,6 +78,8 @@ class Xob_xfer_temp_itm_fxt {
 	, Xob_orig_regy_tbl.Fld_orig_page_id
 	, Xob_lnki_regy_tbl.Fld_lnki_upright
 	, Xob_lnki_regy_tbl.Fld_lnki_thumbtime
+	, Xob_orig_regy_tbl.Fld_orig_media_type
+	, Xob_orig_regy_tbl.Fld_orig_minor_mime
 	}
 	;
 	public void Reset() {
@@ -93,8 +89,9 @@ class Xob_xfer_temp_itm_fxt {
 	public Xob_xfer_temp_itm_fxt Init_rdr_image() {
 		GfoFldList flds = GfoFldList_.str_(Flds);
 		nde = GfoNde_.vals_(flds, Object_.Ary
-		( Xof_ext_.Id_jpg, Xof_media_type.Name_bitmap, 1, Xof_repo_itm.Repo_remote
-		, "A.png", "A.png", Xop_lnki_type.Id_thumb, 220, 200, 1, 2, 440, 400, 3, (double)-1, (double)-1
+		( Xof_ext_.Id_png, 1, Xof_repo_itm.Repo_remote
+		, "A.png", Xof_ext_.Id_png, "A.png", Xop_lnki_type.Id_thumb, 220, 200, 1, 2, 440, 400, 3, (double)-1, (double)-1
+		, Xof_media_type.Name_bitmap, "png"
 		));
 		GfoNdeList subs = GfoNdeList_.new_();
 		subs.Add(nde);

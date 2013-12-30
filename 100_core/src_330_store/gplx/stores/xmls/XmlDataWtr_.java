@@ -107,6 +107,6 @@ class XmlDataWtr extends DataWtr_base implements DataWtr {
 //		int ndeState = -1; static final int NdeState0_Opened = 0, NdeState0_H = 1;
 //		XmlDocument doc = new XmlDocument(); XmlNode nde;
 	ListAdp names = ListAdp_.new_();
-	StringBldr sb = StringBldr.new_();
+	String_bldr sb = String_bldr_.new_();
 	public static XmlDataWtr new_() {return new XmlDataWtr();} XmlDataWtr() {}
 }

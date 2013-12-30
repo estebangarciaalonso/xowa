@@ -36,7 +36,7 @@ public class Sql_cmd_wtr_ansi_tst {
 		tst_XtoSql_where(Criteria_.Or(Db_crt_.eq_("id", 1), Criteria_.And(Db_crt_.eq_("name", "me"), Db_crt_.eq_("id", 1))), "(id=1 OR (name='me' AND id=1))");
 	}
 	void tst_XtoSql_where(Criteria crt, String expd) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		whereWtr.BldWhere(sb, crt);
 		Tfds.Eq(expd, sb.XtoStr());
 	}

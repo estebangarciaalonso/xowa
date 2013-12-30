@@ -76,7 +76,7 @@ class SqlCmd_quote_str implements GfmlBldrCmd {
 class SqlCmd_quote_end implements GfmlBldrCmd {
 	public String Key() {return "sql:root";}
 	public void Exec(GfmlBldr bldr, GfmlTkn tkn) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		GfmlObjList list = bldr.CurFrame().WaitingTkns();
 		for (int i = 0; i < list.Count(); i++) {
 			GfmlTkn pnd = (GfmlTkn)list.FetchAt(i);

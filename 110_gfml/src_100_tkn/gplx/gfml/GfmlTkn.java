@@ -28,14 +28,14 @@ class GfmlTknAry_ {
 	public static final GfmlTkn[] Empty = new GfmlTkn[0];
 	public static GfmlTkn[] ary_(GfmlTkn... ary) {return ary;}
 	@gplx.Internal protected static String XtoRaw(GfmlTkn[] ary) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (GfmlTkn tkn : ary)
 			sb.Add(tkn.Raw());
 		return sb.XtoStr();
 	}
 	@gplx.Internal protected static String XtoVal(GfmlTkn[] ary) {return XtoVal(ary, 0, ary.length);}
 	static String XtoVal(GfmlTkn[] ary, int bgn, int end) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = bgn; i < end; i++) {
 			GfmlTkn tkn = ary[i];
 			sb.Add(tkn.Val());

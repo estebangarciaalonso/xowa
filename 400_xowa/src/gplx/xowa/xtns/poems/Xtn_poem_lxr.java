@@ -18,25 +18,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.poems; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 public class Xtn_poem_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_poem;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast coreTrie) {coreTrie.Add(Hook_ary, this);} static final byte[] Hook_ary = new byte[] {Byte_ascii.NewLine, Byte_ascii.Space};
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {
+	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Hook_ary, this);} static final byte[] Hook_ary = new byte[] {Byte_ascii.NewLine, Byte_ascii.Space};
+	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		int space_count = 1;
-		while (curPos < srcLen) {
-			if (src[curPos++] == Byte_ascii.Space) {
+		while (cur_pos < src_len) {
+			if (src[cur_pos++] == Byte_ascii.Space) {
 				++space_count;
 			}
 			else {
-				--curPos;
+				--cur_pos;
 				break;
 			}
 		}
-		if (bgnPos != Xop_parser_.Doc_bgn_bos) {	// do not add xnde/nl if \n is BOS \n; EX.WP: Teresa of Ávila; "<poem>\n\s\s"
-			ctx.Subs_add(root, tkn_mkr.Xnde(curPos, curPos).Tag_(Xop_xnde_tag_.Tag_br));
-			ctx.Subs_add(root, tkn_mkr.NewLine(curPos, curPos, Xop_nl_tkn.Tid_char, 1));
+		if (bgn_pos != Xop_parser_.Doc_bgn_bos) {	// do not add xnde/nl if \n is BOS \n; EX.WP: Teresa of Ávila; "<poem>\n\s\s"
+			ctx.Subs_add(root, tkn_mkr.Xnde(cur_pos, cur_pos).Tag_(Xop_xnde_tag_.Tag_br));
+			ctx.Subs_add(root, tkn_mkr.NewLine(cur_pos, cur_pos, Xop_nl_tkn.Tid_char, 1));
 		}
 		for (int i = 0; i < space_count; i++)
-			ctx.Subs_add(root, tkn_mkr.HtmlNcr(bgnPos + 1, curPos, 160, Nbsp_bry));
-		return curPos;
+			ctx.Subs_add(root, tkn_mkr.HtmlNcr(bgn_pos + 1, cur_pos, 160, Nbsp_bry));
+		return cur_pos;
 	}
 	private static final byte[] Nbsp_bry = gplx.intl.Utf8_.EncodeCharAsAry(160);
 	public static final Xtn_poem_lxr Bldr = new Xtn_poem_lxr(); Xtn_poem_lxr() {}

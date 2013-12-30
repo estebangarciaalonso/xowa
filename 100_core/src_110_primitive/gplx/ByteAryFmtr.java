@@ -99,7 +99,7 @@ public class ByteAryFmtr {
 
 	public String Bld_str_many(String... args) {
 		if (dirty) Compile(); 
-		StringBldr rv = StringBldr.new_();
+		String_bldr rv = String_bldr_.new_();
 		int args_len = args.length;
 		for (int i = 0; i < itms_len; i++) {
 			ByteAryFmtrItm itm = itms[i];

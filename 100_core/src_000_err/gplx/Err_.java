@@ -66,11 +66,11 @@ public class Err_ {	//_20110415
 	public static String Message_gplx(Exception e)			{return ErrMsgWtr._.Message_gplx(e);}
 	public static String Message_gplx_brief(Exception e)		{return ErrMsgWtr._.Message_gplx_brief(e);}
 	@gplx.Internal protected static String StackTrace_lang(Exception e) {
-				StringBldr sb = StringBldr.new_();
+				String_bldr sb = String_bldr_.new_();
 		StackTraceElement[] stackTraceAry = e.getStackTrace();
 		int len = stackTraceAry.length;
 		for (int i = 0; i < len; i++) {
-			if (i != 0) sb.Add_line();
+			if (i != 0) sb.Add_char_crlf();
 			sb.Add(stackTraceAry[i].toString());
 		}
 		return sb.XtoStr();

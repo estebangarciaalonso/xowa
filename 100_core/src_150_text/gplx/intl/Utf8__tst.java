@@ -60,9 +60,18 @@ public class Utf8__tst {
 //			}
 ////			Tfds.WriteText(bfr.XtoStrAndClear());
 //		}
+	@Test  public void Encode_as_bry_by_hex() {
+		tst_Encode_as_bry_by_hex("00", 0);
+		tst_Encode_as_bry_by_hex("41", 65);
+		tst_Encode_as_bry_by_hex("0041", 65);
+		tst_Encode_as_bry_by_hex("00C0", 195, 128);
+	}
+	private void tst_Encode_as_bry_by_hex(String raw, int... expd) {
+		byte[] actl = Utf8_.Encode_as_bry_by_hex(raw);
+		Tfds.Eq_ary(Byte_.Ary_by_ints(expd), actl);
+	}
 	private void Tst_EncodeDecode(int expd_c_int, int... expd_int) {
 		byte[] expd = ByteAry_.ints_(expd_int);
-		Tfds.Write(String_.new_utf8_(expd));
 		byte[] bfr = new byte[10];
 		int bfr_len = Utf8_.EncodeChar(expd_c_int, bfr, 0);
 		byte[] actl = ByteAry_.Mid_by_len(bfr, 0, bfr_len);

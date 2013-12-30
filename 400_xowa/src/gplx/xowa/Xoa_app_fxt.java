@@ -40,6 +40,7 @@ public class Xoa_app_fxt {
 		rv.Props().Main_page_(Xoa_page.Bry_main_page);		// TEST: default to Main Page (nothing tests loading Main Page from wiki.gfs)			
 		rv.Ns_mgr().Get_by_id_or_null(Xow_ns_.Id_main).Subpages_enabled_(true);
 		app.Wiki_mgr().Add(rv);
+		rv.Init_post_cfg();
 		return rv;
 	}
 	public static Xob_bldr bldr_(Xoa_app app) {

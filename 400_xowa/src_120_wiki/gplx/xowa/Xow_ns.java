@@ -47,7 +47,7 @@ public class Xow_ns implements GfoInvkAble {
 	public String	Num_str()				{return num_str;} private String num_str;
 	public byte[]	Num_bry()				{return num_bry;} private byte[] num_bry;
 	public int		Id()					{return id;} private int id;
-	public int		Id_subj_id()			{if (id < 0) return id; return Id_talk() ? id - 1	: id;}					// // id< 0: special/media return themself; REF.MW: Namespace.php|getSubject
+	public int		Id_subj_id()			{if (id < 0) return id; return Id_talk() ? id - 1	: id;}					// id< 0: special/media return themself; REF.MW: Namespace.php|getSubject
 	public int		Id_talk_id()			{if (id < 0) return id; return Id_talk() ? id		: id + 1;}				// REF.MW: Namespace.php|getTalk
 	public int		Id_alt_id()				{if (id < 0) return id; return Id_talk() ? Id_subj_id() : Id_talk_id();}	// REF.MW: Namespace.php|getTalk
 	public boolean		Id_subj()				{return !Id_talk();}								// REF.MW: Namespace.php|isMain
@@ -60,7 +60,7 @@ public class Xow_ns implements GfoInvkAble {
 	public boolean		Id_special()			{return id == Xow_ns_.Id_special;}
 	public boolean		Id_module()				{return id == gplx.xowa.xtns.scribunto.Scrib_core_.Ns_id_module;}
 	public int		Ord()					{return ord;} public void Ord_(int v) {this.ord = v;} private int ord;
-	public int		Ord_subj_id()			{if (id < 0) return ord; return Id_talk() ? ord - 1 : ord;}  // id< 0: special/media return themself
+	public int		Ord_subj_id()			{if (id < 0) return ord; return Id_talk() ? ord - 1 : ord;}  // id< 0: special/media returns self
 	public int		Ord_talk_id()			{if (id < 0) return ord; return Id_talk() ? ord : ord + 1;}
 	public byte		Case_match()			{return case_match;} public void Case_match_(byte v) {case_match = v;} private byte case_match;
 	public boolean		Subpages_enabled()		{return subpages_enabled;} private boolean subpages_enabled = false;// CHANGED: id > Xow_ns_.Id_special; only Special, Media does not have subpages; DATE:2013-10-07

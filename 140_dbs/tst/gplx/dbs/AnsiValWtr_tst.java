@@ -28,7 +28,7 @@ public class AnsiValWtr_tst {
 		tst_XtoSqlVal("a'b", "'a''b'");
 					}
 	void tst_XtoSqlVal(Object val, String expd) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		Db_arg prm = new Db_arg("not needed", val);
 		valWtr.BldValStr(sb, prm);
 		Tfds.Eq(expd, sb.XtoStr());

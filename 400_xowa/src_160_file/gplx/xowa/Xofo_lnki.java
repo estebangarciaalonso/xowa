@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.ios.*;
+import gplx.xowa.parsers.lnkis.*;
 class Xofo_lnki {
 	public byte[] Name() {return name;} private byte[] name;
 	public byte Lnki_type() {return lnki_type;} public Xofo_lnki Lnki_type_(byte v) {lnki_type = v; return this;} private byte lnki_type;
@@ -46,13 +47,13 @@ class Xofo_lnki {
 		wtr.Write_bry_escape_fld(ttl);
 		wtr.Bfr()
 			.Add_int_variable(lnki.Lnki_type()).Add_byte(Byte_ascii.Comma)
-			.Add_int_variable(lnki.Width().Val()).Add_byte(Byte_ascii.Comma)
-			.Add_int_variable(lnki.Height().Val())
+			.Add_int_variable(lnki.Width()).Add_byte(Byte_ascii.Comma)
+			.Add_int_variable(lnki.Height())
 			;
 		boolean upright_exists = lnki.Upright() != Xop_lnki_tkn.Upright_null;
 		if (upright_exists) {
 			wtr.Bfr().Add_byte(Byte_ascii.Comma)
-				.Add(Xol_lnki_arg_parser.Bry_upright).Add_byte(Byte_ascii.Eq).Add_double(lnki.Upright());
+				.Add(Xop_lnki_arg_parser.Bry_upright).Add_byte(Byte_ascii.Eq).Add_double(lnki.Upright());
 		}
 		wtr.Write_dlm_row();
 	}

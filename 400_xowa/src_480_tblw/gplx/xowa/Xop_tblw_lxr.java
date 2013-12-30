@@ -77,15 +77,15 @@ class Xop_tblw_lxr implements Xop_lxr {
 	}
 	public Xop_tblw_lxr(byte wlxr_type) {this.wlxr_type = wlxr_type;} private byte wlxr_type;
 	public static final Xop_tblw_lxr Bldr = new Xop_tblw_lxr(); Xop_tblw_lxr() {}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast coreTrie) {
-		coreTrie.Add(Hook_tb,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_tb));
-		coreTrie.Add(Hook_te,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_te));
-		coreTrie.Add(Hook_tr,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_tr));
-		coreTrie.Add(Hook_td,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_td));
-		coreTrie.Add(Hook_th,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_th));
-		coreTrie.Add(Hook_tc,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_tc));
-		coreTrie.Add(Hook_td2,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_td2));
-		coreTrie.Add(Hook_th2,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_th2));
+	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
+		core_trie.Add(Hook_tb,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_tb));
+		core_trie.Add(Hook_te,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_te));
+		core_trie.Add(Hook_tr,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_tr));
+		core_trie.Add(Hook_td,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_td));
+		core_trie.Add(Hook_th,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_th));
+		core_trie.Add(Hook_tc,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_tc));
+		core_trie.Add(Hook_td2,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_td2));
+		core_trie.Add(Hook_th2,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_th2));
 	}
 	public static final byte[] Hook_tb = ByteAry_.new_ascii_("\n{|"), Hook_te = ByteAry_.new_ascii_("\n|}"), Hook_tr = ByteAry_.new_ascii_("\n|-")
 		, Hook_td = ByteAry_.new_ascii_("\n|"), Hook_th = ByteAry_.new_ascii_("\n!"), Hook_tc = ByteAry_.new_ascii_("\n|+")

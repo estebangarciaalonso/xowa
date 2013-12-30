@@ -147,7 +147,7 @@ class Xobc_utl_make_lang_fxt {
 		app = Xoa_app_fxt.app_();
 		mgr = new Xobc_utl_make_lang(app);
 		return this;
-	}	StringBldr sb = StringBldr.new_(); Xoa_app app;
+	}	String_bldr sb = String_bldr_.new_(); Xoa_app app;
 	public Xobcl_kwd_row row_(String key, String... itms) {return new Xobcl_kwd_row(ByteAry_.new_ascii_(key), ByteAry_.Ary(itms));} 
 	public void Parse_rows(String raw, Xobcl_kwd_row... expd) {Tfds.Eq_str_lines(Xto_str(expd), Xto_str(Xobc_utl_make_lang_kwds.Parse(ByteAry_.new_ascii_(raw))));}
 	public void Ini_file_mw_core(String lang, String raw) {
@@ -176,7 +176,7 @@ class Xobc_utl_make_lang_fxt {
 					sb.Add(itm).Add_char_pipe();
 				}
 			}
-			sb.Add_line_nl();
+			sb.Add_char_nl();
 		}
 		return sb.XtoStrAndClear();
 	}

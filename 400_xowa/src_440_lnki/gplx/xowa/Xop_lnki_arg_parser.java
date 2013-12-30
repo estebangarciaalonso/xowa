@@ -16,8 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-public class Xol_lnki_arg_parser {
-	static final byte Key_dim_num = 0, Key_dim_x = 1, Key_dim_px = 2, Key_space = 3; ByteTrieMgr_fast key_trie = ByteTrieMgr_fast.cs_(); int key_trie_max; ByteAryBfr int_bfr = ByteAryBfr.reset_(16);
+public class Xop_lnki_arg_parser {
+	private static final byte Key_dim_num = 0, Key_dim_x = 1, Key_dim_px = 2, Key_space = 3;
+	private ByteTrieMgr_fast key_trie = ByteTrieMgr_fast.cs_(); private int key_trie_max;
+	private ByteAryBfr int_bfr = ByteAryBfr.reset_(16);
 	public void Evt_lang_changed(Xol_lang lang) {
 		ByteAryBfr tmp_bfr = int_bfr;
 		ByteRef rslt = ByteRef.zero_();
@@ -47,7 +49,16 @@ public class Xol_lnki_arg_parser {
 			list = lang.App().Lang_mgr().Lang_en().Kwd_mgr().Get_at(Xol_kwd_grp_.Id_img_width);
 		Init_size_trie(tmp_bfr, list);
 	}
-	public byte Identify_tid(byte[] src, int bgn, int end, IntRef width, IntRef height) {
+	private int lnki_w, lnki_h;
+	public byte Identify_tid(byte[] src, int bgn, int end, Xop_lnki_tkn lnki) {
+		lnki_w = Xop_lnki_tkn.Width_null;
+		lnki_h = Xop_lnki_tkn.Height_null;
+		byte rv = Identify_tid(src, bgn, end);
+		if (lnki_w != Xop_lnki_tkn.Width_null) lnki.Width_(lnki_w);
+		if (lnki_h != Xop_lnki_tkn.Height_null)lnki.Height_(lnki_h);
+		return rv;
+	}
+	public byte Identify_tid(byte[] src, int bgn, int end) {
 		int len = end - bgn;
 		if (len > key_trie_max) return Tid_caption;				// too long for any key in size_trie; return caption
 		ByteVal val = (ByteVal)key_trie.MatchAtCur(src, bgn, end);
@@ -74,7 +85,7 @@ public class Xol_lnki_arg_parser {
 					}
 					case Key_dim_x:		{
 						if (mode_width) {
-							width.Val_(int_bfr.XtoIntAndClear(-1));
+							lnki_w = int_bfr.XtoIntAndClear(-1);
 							mode_width = false;
 							break;
 						}
@@ -83,13 +94,12 @@ public class Xol_lnki_arg_parser {
 				}
 			}
 			int dim = int_bfr.XtoIntAndClear(-1);
-			if	(mode_width)	width.Val_(dim);
-			else				height.Val_(dim);
+			if	(mode_width)	lnki_w = dim;
+			else				lnki_h = dim;
 			return Tid_dim;
 		}
 		return Tid_caption;
-	}	private ByteTrieMgr_bwd_slim bwd_trie = ByteTrieMgr_bwd_slim.cs_();
-	ByteTrieMgr_fast size_trie = ByteTrieMgr_fast.cs_();
+	}	private ByteTrieMgr_bwd_slim bwd_trie = ByteTrieMgr_bwd_slim.cs_(); private ByteTrieMgr_fast size_trie = ByteTrieMgr_fast.cs_();
 	private void Init_key_trie(byte[] key, byte v) {
 		ByteVal val = ByteVal.new_(v);
 		key_trie.Add(key, val);
@@ -107,26 +117,22 @@ public class Xol_lnki_arg_parser {
 		int words_len = words.length;
 		ByteRef rslt = ByteRef.zero_();
 		for (int i = 0; i < words_len; i++) {
-//			if (i == 0) {
-//				dim_px = word_bry;
-//				dim_px_len = dim_px.length;
-//			}
 			byte[] word_bry = Xol_kwd_parse_data.Strip(tmp_bfr, words[i].Bry(), rslt);			
 			if (word_bry.length + 5 > key_trie_max) key_trie_max = word_bry.length + 5; 
 			size_trie.Add(word_bry, ByteVal.new_(Key_dim_px));
 			bwd_trie.Add(word_bry, ByteVal.new_(Tid_dim));
 		}
 	}	
-	private static final byte[] X_bry = ByteAry_.new_utf8_("x"); //byte[] dim_px; int dim_px_len; 
+	private static final byte[] X_bry = ByteAry_.new_utf8_("x");
 	public static final byte[] Bry_upright = ByteAry_.new_utf8_("upright"), Bry_thumbtime = ByteAry_.new_utf8_("thumbtime");
 	public static final byte
 		Tid_unknown = 0, Tid_thumb = 1, Tid_left = 2, Tid_right = 3, Tid_none = 4, Tid_center = 5, Tid_frame = 6, Tid_frameless = 7, Tid_upright = 8, Tid_border = 9
-		, Tid_alt = 10, Tid_link = 11, Tid_baseline = 12, Tid_sub = 13, Tid_super = 14, Tid_top = 15, Tid_text_top = 16, Tid_middle = 17, Tid_bottom = 18, Tid_text_bottom = 19
-		, Tid_dim = 20
-		, Tid_trg = 21, Tid_caption = 22
-		, Tid_page = 23
-		, Tid_noplayer = 24, Tid_noicon = 25, Tid_thumbtime = 26
-		;
+	,	Tid_alt = 10, Tid_link = 11, Tid_baseline = 12, Tid_sub = 13, Tid_super = 14, Tid_top = 15, Tid_text_top = 16, Tid_middle = 17, Tid_bottom = 18, Tid_text_bottom = 19
+	,	Tid_dim = 20
+	,	Tid_trg = 21, Tid_caption = 22
+	,	Tid_page = 23
+	,	Tid_noplayer = 24, Tid_noicon = 25, Tid_thumbtime = 26
+	;
 	private static final int[][] Keys_ids = new int[][] 
 	{	new int[] {Xol_kwd_grp_.Id_img_thumbnail	, Tid_thumb}
 	,	new int[] {Xol_kwd_grp_.Id_img_manualthumb	, Tid_thumb}	// RESEARCH: what is manualthumb? 'thumb=$1' vs 'thumb'
@@ -136,7 +142,7 @@ public class Xol_lnki_arg_parser {
 	,	new int[] {Xol_kwd_grp_.Id_img_center		, Tid_center}
 	,	new int[] {Xol_kwd_grp_.Id_img_framed		, Tid_frame}
 	,	new int[] {Xol_kwd_grp_.Id_img_frameless	, Tid_frameless}
-	,	new int[] {Xol_kwd_grp_.Id_img_page			, Tid_page}		// RESEARCH: what is page? 'page=$1'
+	,	new int[] {Xol_kwd_grp_.Id_img_page			, Tid_page}		// for pdf
 	,	new int[] {Xol_kwd_grp_.Id_img_upright		, Tid_upright}
 	,	new int[] {Xol_kwd_grp_.Id_img_border		, Tid_border}
 	,	new int[] {Xol_kwd_grp_.Id_img_baseline		, Tid_baseline}
@@ -153,5 +159,4 @@ public class Xol_lnki_arg_parser {
 	,	new int[] {Xol_kwd_grp_.Id_ogg_noicon		, Tid_noicon}
 	,	new int[] {Xol_kwd_grp_.Id_ogg_thumbtime	, Tid_thumbtime}
 	};
-//		,	new int[] {Xol_kwd_grp_.Id_img_width		, Tid_dim}		// NOTE: handle px separately;
 }

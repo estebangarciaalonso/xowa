@@ -215,6 +215,7 @@ class Xop_lnki_tkn_chkr extends Xop_tkn_chkr_base {
 	public byte Border() {return border;} public Xop_lnki_tkn_chkr Border_(byte v) {border = v; return this;} private byte border = Bool_.__byte;
 	public double Upright() {return upright;} public Xop_lnki_tkn_chkr Upright_(double v) {upright = v; return this;} double upright = Xop_lnki_tkn.Upright_null;
 	public int Thumbtime() {return thumbtime;} public Xop_lnki_tkn_chkr Thumbtime_(int v) {thumbtime = v; return this;} int thumbtime = Xop_lnki_tkn.Thumbtime_null;
+	public int Page() {return page;} public Xop_lnki_tkn_chkr Page_(int v) {page = v; return this;} int page = Xop_lnki_tkn.Page_null;
 	public int Tail_bgn() {return tail_bgn;} public Xop_lnki_tkn_chkr Tail_bgn_(int v) {tail_bgn = v; return this;} private int tail_bgn = String_.Neg1_pos;
 	public int Tail_end() {return tail_end;} public Xop_lnki_tkn_chkr Tail_end_(int v) {tail_end = v; return this;} private int tail_end = String_.Neg1_pos;
 	public Xop_tkn_chkr_base Trg_tkn() {return trg_tkn;} public Xop_lnki_tkn_chkr Trg_tkn_(Xop_tkn_chkr_base v) {trg_tkn = v; return this;} private Xop_tkn_chkr_base trg_tkn;
@@ -225,8 +226,8 @@ class Xop_lnki_tkn_chkr extends Xop_tkn_chkr_base {
 		Xop_lnki_tkn actl = (Xop_lnki_tkn)actl_obj;
 		err += mgr.Tst_val(nsId == Int_.MinValue, path, "nsId", nsId, actl.Ns_id());
 		err += mgr.Tst_val(imgType == Byte_.MaxValue_127, path, "imgType", imgType, actl.Lnki_type());
-		err += mgr.Tst_val(width == Int_.MinValue, path, "width", width, actl.Width().Val());
-		err += mgr.Tst_val(height == Int_.MinValue, path, "height", height, actl.Height().Val());
+		err += mgr.Tst_val(width == Int_.MinValue, path, "width", width, actl.Width());
+		err += mgr.Tst_val(height == Int_.MinValue, path, "height", height, actl.Height());
 		err += mgr.Tst_val(hAlign == Byte_.MaxValue_127, path, "halign", hAlign, actl.HAlign());
 		err += mgr.Tst_val(vAlign == Byte_.MaxValue_127, path, "valign", vAlign, actl.VAlign());
 		err += mgr.Tst_val(border == Bool_.__byte, path, "border", border, actl.Border());
@@ -234,6 +235,7 @@ class Xop_lnki_tkn_chkr extends Xop_tkn_chkr_base {
 		err += mgr.Tst_val(tail_end == String_.Neg1_pos, path, "tail_end", tail_end, actl.Tail_end());
 		err += mgr.Tst_val(upright == Xop_lnki_tkn.Upright_null, path, "upright", upright, actl.Upright());
 		err += mgr.Tst_val(thumbtime == Xop_lnki_tkn.Thumbtime_null, path, "thumbtime", thumbtime, actl.Thumbtime());
+		err += mgr.Tst_val(page == Xop_lnki_tkn.Page_null, path, "page", page, actl.Page());
 		if (trg_tkn != null) err += mgr.Tst_sub_obj(trg_tkn, actl.Trg_tkn(), path + "." + "trg", err);
 		if (caption_tkn != null) err += mgr.Tst_sub_obj(caption_tkn, actl.Caption_tkn(), path + "." + "caption", err);
 		if (alt_tkn != null) err += mgr.Tst_sub_obj(alt_tkn, actl.Alt_tkn(), path + "." + "alt", err);

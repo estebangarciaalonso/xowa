@@ -20,49 +20,33 @@ import gplx.dbs.*;
 public class Xob_wiki_image_tbl {
 	public Xob_wiki_image_tbl Create_table(Db_provider p) {Sqlite_engine_.Tbl_create_and_delete(p, Tbl_name, Tbl_sql); return this;}
 	public Xob_wiki_image_tbl Create_index(Db_provider p) {Sqlite_engine_.Idx_create(p, Idx_img_name); return this;}
-	public Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_img_name, Fld_img_media_type, Fld_img_size, Fld_img_width, Fld_img_height, Fld_img_bits);}
-	public void Insert(Db_stmt stmt, byte[] ttl, byte[] media_type, int size, int w, int h, int bits) {
+	public Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_img_name, Fld_img_media_type, Fld_img_minor_mime, Fld_img_size, Fld_img_width, Fld_img_height, Fld_img_bits, Fld_img_ext_id);}
+	public void Insert(Db_stmt stmt, byte[] ttl, byte[] media_type, byte[] minor_mime, int size, int w, int h, int bits, int ext_id) {
 		stmt.Clear()
 		.Val_str_by_bry_(ttl)
 		.Val_str_by_bry_(media_type)
+		.Val_str_by_bry_(minor_mime)
 		.Val_int_(size)
 		.Val_int_(w)
 		.Val_int_(h)
 		.Val_int_(bits)
+		.Val_int_(ext_id)
 		.Exec_insert();
 	}
-	public static Db_stmt Select_ttl_stmt(Db_provider p) {return Db_stmt_.new_select_(p, Tbl_name, String_.Ary(Fld_img_name), Fld_img_media_type, Fld_img_name, Fld_img_size, Fld_img_width, Fld_img_height, Fld_img_bits);}
-	public static Xob_wiki_image_itm Select_itm(Db_stmt stmt, String ttl) {
-		DataRdr rdr = DataRdr_.Null;
-		try {
-			rdr = stmt.Val_str_(ttl).Exec_select();
-			return rdr.MoveNextPeer() ? load_(rdr) : Xob_wiki_image_itm.Null;
-		}
-		finally {
-			rdr.Rls();
-		}
-	}
-	private static Xob_wiki_image_itm load_(DataRdr rdr) {
-		Xob_wiki_image_itm rv = new Xob_wiki_image_itm();
-		rv.Name_(rdr.ReadBryByStr(Fld_img_name));
-		rv.Size_(rdr.ReadInt(Fld_img_size));
-		rv.Width_(rdr.ReadInt(Fld_img_width));
-		rv.Height_(rdr.ReadInt(Fld_img_height));
-		rv.Bits_(rdr.ReadByte(Fld_img_bits));
-		return rv;
-	}
 	public static final String Tbl_name = "image"
-	, Fld_img_name = "img_name", Fld_img_media_type = "img_media_type"
-	, Fld_img_size = "img_size", Fld_img_width = "img_width", Fld_img_height = "img_height", Fld_img_bits = "img_bits"
+	, Fld_img_name = "img_name", Fld_img_media_type = "img_media_type", Fld_img_minor_mime = "img_minor_mime"
+	, Fld_img_size = "img_size", Fld_img_width = "img_width", Fld_img_height = "img_height", Fld_img_bits = "img_bits", Fld_img_ext_id = "img_ext_id"
 	;
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS image"
 	,	"( img_name        varchar(255)    NOT NULL -- varbinary(255)"
 	,	", img_media_type  varchar(64)     NOT NULL -- enum('UNKNOWN','BITMAP','DRAWING','AUDIO','VIDEO','MULTIMEDIA','OFFICE','TEXT','EXECUTABLE','ARCHIVE')"
+	,	", img_minor_mime  varchar(32)     NOT NULL -- DEFAULT 'unknown'"
 	,	", img_size        integer         NOT NULL -- int(8) unsigned"
 	,	", img_width       integer         NOT NULL -- int(5)"
 	,	", img_height      integer         NOT NULL -- int(5)"
 	,	", img_bits        smallint        NOT NULL -- int(3)"
+	,	", img_ext_id      int             NOT NULL -- xowa"
 	,	");"
 	);
 	private static final Db_idx_itm

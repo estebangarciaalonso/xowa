@@ -19,7 +19,7 @@ package gplx;
 public class SrlAble_ {
 	public static SrlAble as_(Object obj) {return obj instanceof SrlAble ? (SrlAble)obj : null;}
 	public static String XtoStr(GfoMsg owner) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		XtoStr(owner, sb, 0, false);
 		return sb.XtoStr();
 	}
@@ -29,7 +29,7 @@ public class SrlAble_ {
 		s.Srl(m);
 		return XtoStr(m);
 	}
-	static void XtoStr(GfoMsg owner, StringBldr sb, int depth, boolean indentOn) {
+	static void XtoStr(GfoMsg owner, String_bldr sb, int depth, boolean indentOn) {
 		String indent = String_.Repeat(" ", depth * 4);
 		if (indentOn) sb.Add(indent);
 		sb.Add(owner.Key()).Add(":");
@@ -51,11 +51,11 @@ public class SrlAble_ {
 		}
 		else {
 			sb.Add("{");
-			if (subsCount > 1) sb.Add_line();
+			if (subsCount > 1) sb.Add_char_crlf();
 			for (int i = 0; i < subsCount; i++) {
 				GfoMsg sub = owner.Subs_getAt(i);
 				XtoStr(sub, sb, depth + 1, true);
-				sb.Add_line();
+				sb.Add_char_crlf();
 			}
 			sb.Add(indent);
 			sb.Add("}");

@@ -52,7 +52,7 @@ public class IoSqlCriteriaWriter_tst {
 	Criteria ioCrt_(String fld, Criteria crt) {return Criteria_wrapper.new_(fld, crt);}
 	String fld;
 	void tst_Write(String expd, Criteria crt) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		Sql_cmd_wtr whereWtr = Sql_cmd_wtr_ansi_.default_();
 		whereWtr.BldWhere(sb, crt);
 		Tfds.Eq(expd, sb.XtoStr());

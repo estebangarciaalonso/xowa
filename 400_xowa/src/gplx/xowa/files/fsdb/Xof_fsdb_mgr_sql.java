@@ -66,11 +66,12 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 		bin_wkr_fsdb = new Xof_bin_wkr_fsdb_sql(this).Bin_bfr_len_(64 * Io_mgr.Len_kb);	// most thumbs are 40 kb
 		cache_mgr = wiki.App().File_mgr().Cache_mgr();
 	}	private boolean init = false;
-	public void Reg_select_only(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms) {
-		Xof_wiki_orig_tbl.Select_list(img_regy_provider, exec_tid, itms, url_bldr, bin_mgr.Repo_mgr());
+	public void Reg_select_only(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms, OrderedHash hash) {
+		Xof_wiki_orig_tbl.Select_list(img_regy_provider, exec_tid, itms, hash, url_bldr, bin_mgr.Repo_mgr());
 	}
 	public void Reg_select(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms) {
-		Reg_select_only(win_wtr, exec_tid, itms);
+		OrderedHash hash = OrderedHash_.new_bry_();
+		Reg_select_only(win_wtr, exec_tid, itms, hash);
 		Xof_fsdb_mgr_utl._.Fsdb_search(this, app_file_dir, win_wtr, exec_tid, itms, bin_mgr.Repo_mgr(), url_bldr);
 	}
 	public Fsdb_db_bin_fil Bin_db_get(int mnt_id, int bin_db_id) {

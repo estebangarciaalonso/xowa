@@ -29,6 +29,11 @@ class Cache_fil_mgr {
 		int len = fil_hash.Count();
 		for (int i = 0; i < len; i++) {
 			Cache_fil_itm fil_itm = (Cache_fil_itm)fil_hash.FetchAt(i);
+			if (fil_itm.Cmd_mode() == Db_cmd_mode.Create) {		// create; check if in db;
+				Cache_fil_itm tbl_itm = fil_tbl.Select(fil_itm.Dir_id(), fil_itm.Fil_name(), fil_itm.Fil_is_orig(), fil_itm.Fil_w(), fil_itm.Fil_h(), fil_itm.Fil_thumbtime());
+				if (tbl_itm != Cache_fil_itm.Null)				// tbl_itm found
+					fil_itm.Cmd_mode_(Db_cmd_mode.Update);		// change fil_itm to update
+			}
 			fil_tbl.Db_save(fil_itm);
 		}
 	}
@@ -50,16 +55,17 @@ class Cache_fil_mgr {
 		return fil_itm;
 	}
 	public void Compress(Xoa_app app, Cache_dir_mgr dir_mgr, Cache_cfg_mgr cfg_mgr) {
-		dir_mgr.Db_save();
-		dir_mgr.Load_all();
-		this.Db_save();		// save everything first
-		fil_tbl.Select_all(fil_key_bldr, fil_hash);
-		fil_hash.Sort();	// sorts by cache_time desc
-		int len = fil_hash.Count();
-		long cur_size = 0, actl_size = 0;
-		Xof_url_bldr url_bldr = new Xof_url_bldr();
-		ListAdp deleted = ListAdp_.new_();
 		try {
+			app.Usr_dlg().Note_many("", "", "compressing cache");
+			dir_mgr.Db_save();
+			dir_mgr.Db_load();
+			this.Db_save();		// save everything first
+			fil_tbl.Db_load(fil_key_bldr, fil_hash);
+			fil_hash.Sort();	// sorts by cache_time desc
+			int len = fil_hash.Count();
+			long cur_size = 0, actl_size = 0;
+			Xof_url_bldr url_bldr = new Xof_url_bldr();
+			ListAdp deleted = ListAdp_.new_();
 			fil_tbl.Provider().Txn_mgr().Txn_bgn_if_none();
 			long compress_to = cfg_mgr.Cache_min();
 			for (int i = 0; i < len; i++) {
@@ -84,6 +90,9 @@ class Cache_fil_mgr {
 			}
 			cfg_mgr.Cache_len_(actl_size);
 			this.Db_save();		// save everything again
+		}
+		catch (Exception e) {
+			app.Usr_dlg().Warn_many("", "", "failed to compress cache: err=~{0}", Err_.Message_gplx_brief(e));
 		}
 		finally {fil_tbl.Provider().Txn_mgr().Txn_end_all();}
 	}

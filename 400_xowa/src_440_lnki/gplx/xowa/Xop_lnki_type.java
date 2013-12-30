@@ -18,6 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public class Xop_lnki_type {
 	public static final byte Id_null = 0, Id_none = 1, Id_frameless = 2, Id_frame = 4, Id_thumb = 8;
+	public static boolean Id_is_thumbable(byte id) {
+		switch (id) {
+			case Id_thumb: case Id_frame:	// for purposes of displaying images on page, thumb and frame both create a thumb box
+				return true;
+			default:
+				return false;
+		}
+	}
 	public static boolean Id_defaults_to_thumb(byte id) {
 		switch (id) {			// assuming original of 400,200
 			case Id_thumb:		// [[File:A.png|thumb]]     -> 220,-1

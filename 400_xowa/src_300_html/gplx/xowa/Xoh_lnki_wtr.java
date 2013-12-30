@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.html.*; import gplx.xowa.files.*;
+import gplx.xowa.parsers.lnkis.*;
 public class Xoh_lnki_wtr {
 	public Xoh_lnki_wtr(Xow_wiki wiki, Xoh_html_wtr html_wtr) {
 		this.wiki = wiki; this.html_wtr = html_wtr; bfr_mkr = wiki.Utl_bry_bfr_mkr();
@@ -32,7 +33,7 @@ public class Xoh_lnki_wtr {
 	public void Page_bgn(Xoa_page page) {
 		cfg_alt_defaults_to_caption = page.Wiki().App().User().Wiki().Html_mgr().Imgs_mgr().Alt_defaults_to_caption().Val();
 	}	private boolean cfg_alt_defaults_to_caption = true;
-	public Xof_xfer_itm Lnki_eval(Xoa_page page, Xop_lnki_tkn lnki, BoolRef queue_add_ref) {return Lnki_eval(page.File_queue(), lnki.Ttl().Page_url(), lnki.Lnki_type(), lnki.Width().Val(), lnki.Height().Val(), lnki.Upright(), lnki.Thumbtime(), lnki.Ns_id() == Xow_ns_.Id_media, queue_add_ref);}
+	public Xof_xfer_itm Lnki_eval(Xoa_page page, Xop_lnki_tkn lnki, BoolRef queue_add_ref) {return Lnki_eval(page.File_queue(), lnki.Ttl().Page_url(), lnki.Lnki_type(), lnki.Width(), lnki.Height(), lnki.Upright(), lnki.Thumbtime(), lnki.Ns_id() == Xow_ns_.Id_media, queue_add_ref);}
 	public Xof_xfer_itm Lnki_eval(Xof_xfer_queue queue, byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, int lnki_seek, boolean lnki_is_media_ns, BoolRef queue_add_ref) {
 		queue_add_ref.Val_n_();
 		tmp_xfer_itm.Clear().Atrs_by_ttl(lnki_ttl, ByteAry_.Empty).Atrs_by_lnki(lnki_type, lnki_w, lnki_h, lnki_upright, lnki_seek);
@@ -106,10 +107,14 @@ public class Xoh_lnki_wtr {
 			return;
 		}
 		if (lnki_ext.Id_is_media()) {
-			if		(lnki_ext.Id() == Xof_ext_.Id_ogv || xfer_itm.Html_pass()			// NOTE: xfer_itm.Html_pass() checks for video .ogg files (ext = .ogg and thumb is available); EX: WWI;
-				||	(lnki_ext.Id_is_ogg() 
-					&& xfer_itm.Meta_itm() != null		// null check; fsdb_call does not set meta
-					&& xfer_itm.Meta_itm().State_new())	// NOTE: State_new() will always assume that ogg is video; needed for 1st load and dynamic updates
+			if		(	lnki_ext.Id() == Xof_ext_.Id_ogv || xfer_itm.Html_pass()			// NOTE: xfer_itm.Html_pass() checks for video .ogg files (ext = .ogg and thumb is available); EX: WWI;
+					||	(	lnki_ext.Id_is_ogg()											// itm is ogg
+						&&	(	xfer_itm.Meta_itm() == null									// v2 always marks as vid; DATE:2013-12-29
+							||	(	xfer_itm.Meta_itm() != null								// v1 null check; note thatfsdb_call does not set meta
+								&&	xfer_itm.Meta_itm().State_new()
+								)
+							)
+						)	// NOTE: State_new() will always assume that ogg is video; needed for 1st load and dynamic updates
 					) {	
 				xfer_itm.Html_elem_tid_(Xof_html_elem.Tid_vid);
 				if (Xop_lnki_type.Id_defaults_to_thumb(lnki.Lnki_type())) {
@@ -133,10 +138,9 @@ public class Xoh_lnki_wtr {
 		}
 		else {	// image
 			if (lnki_halign == Xop_lnki_halign.Center) bfr.Add(Bry_div_bgn_center);
-			byte lnki_img_type = lnki.Lnki_type();
 			ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
 			byte[] anchor_title = lnki_title_enabled ? Make_anchor_title(tmp_bfr, src, lnki, lnki_ttl, anchor_title_wkr) : ByteAry_.Empty;
-			if (lnki_img_type == Xop_lnki_type.Id_thumb) {	// is "thumb"
+			if (Xop_lnki_type.Id_is_thumbable(lnki.Lnki_type())) {	// is "thumb"
 				if (bfr.Bry_len() > 0) bfr.Add_byte_nl();
 				content = Image_thumb(src, opts, lnki, xfer_itm, depth, elem_id, lnki_href, html_view_src, html_orig_src, lnki_alt_text, lnki_ttl, anchor_title);
 				cfg.Lnki_thumb_core().Bld_bfr_many(bfr, div_width, lnki_halign_bry, content, elem_id);
@@ -181,6 +185,7 @@ public class Xoh_lnki_wtr {
 	private static byte[] Make_anchor_title(ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, byte[] lnki_ttl, Xohp_title_wkr anchor_title_wkr) {
 		switch (lnki.Lnki_type()) {
 			case Xop_lnki_type.Id_thumb:		// If the image is a thumb, do not add a title / alt, even if a caption is available
+			case Xop_lnki_type.Id_frame:
 				return ByteAry_.Empty;
 			case Xop_lnki_type.Id_frameless:	// If the image is frameless, add the caption as a title / alt. If no caption is available, do not add a title / alt
 				break;
@@ -221,7 +226,7 @@ public class Xoh_lnki_wtr {
 			cfg.Lnki_thumb_part_info_btn().Bld_bfr_many(tmp_bfr, wiki.Html_mgr().Img_media_info_btn(), lnki_href);
 			info_btn = tmp_bfr.XtoAryAndClear();
 		}
-		int play_btn_width = lnki.Width().Val(); if (play_btn_width < 1) play_btn_width = wiki.Html_mgr().Img_thumb_width();	// if no width set width to default thumb width
+		int play_btn_width = lnki.Width(); if (play_btn_width < 1) play_btn_width = wiki.Html_mgr().Img_thumb_width();	// if no width set width to default thumb width
 		cfg.Lnki_thumb_file_audio().Bld_bfr_many(tmp_bfr, Play_btn(elem_id, play_btn_width, Play_btn_max_width, html_orig_src, lnki.Ttl().Page_txt()), info_btn, Caption_div(src, lnki, depth, html_orig_src, lnki_href), Alt_html(src, lnki, depth));
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();
 	}

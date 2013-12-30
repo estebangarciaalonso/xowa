@@ -24,7 +24,7 @@ public class ColorAdp {
 	public int Green()	{return (255 & val >>  8);}
 	public int Blue()	{return (255 & val);}
 	public String XtoHexStr() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		sb.Add("#");
 		sb.Add(HexDecUtl.XtoStr(Alpha(), 2));
 		sb.Add(HexDecUtl.XtoStr(Red(), 2));

@@ -153,7 +153,7 @@ public class Db_mgr_fxt {
 		this.Wiki().Db_mgr_as_sql().Init_make("");
 	}
 	private static String dsv_db_() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		dsv_tbl_files(sb);
 		dsv_tbl_tables(sb);
 		dsv_tbl_xowa_cfg(sb);
@@ -165,9 +165,16 @@ public class Db_mgr_fxt {
 		dsv_tbl_categorylinks(sb);
 		return sb.XtoStrAndClear();
 	}
-	private static void dsv_tbl_files(StringBldr sb) {
-		sb.Add_lines_crlf
-		(	"================================, ,\" \",//"
+	private static void Add_lines_w_crlf(String_bldr sb, String... ary) {
+		int len = ary.length;
+		for (int i = 0; i < len; i++) {
+			sb.Add(ary[i]);
+			sb.Add(String_.CrLf);
+		}
+	}
+	private static void dsv_tbl_files(String_bldr sb) {
+		Add_lines_w_crlf(sb
+		,	"================================, ,\" \",//"
 		,	"_files, ,\" \",#"
 		,	"================================, ,\" \",//"
 		,	"int,string,string, ,\" \",$"
@@ -177,9 +184,9 @@ public class Db_mgr_fxt {
 		,	"2,,dsv"
 		);
 	}
-	private static void dsv_tbl_tables(StringBldr sb) {
-		sb.Add_lines_crlf
-		(	"================================, ,\" \",//"
+	private static void dsv_tbl_tables(String_bldr sb) {
+		Add_lines_w_crlf(sb
+		,	"================================, ,\" \",//"
 		,	"_tables, ,\" \",#"
 		,	"================================, ,\" \",//"
 		,	"int,string,int, ,\" \",$"
@@ -197,9 +204,9 @@ public class Db_mgr_fxt {
 //			,	"10,wdata_pids,1"
 		);
 	}
-	private static void dsv_tbl_xowa_cfg(StringBldr sb) {
-		sb.Add_lines_crlf
-		(	"================================, ,\" \",//"
+	private static void dsv_tbl_xowa_cfg(String_bldr sb) {
+		Add_lines_w_crlf(sb
+		,	"================================, ,\" \",//"
 		,	"xowa_cfg, ,\" \",#"
 		,	"================================, ,\" \",//"
 		,	"string,string,string, ,\" \",$"
@@ -207,9 +214,9 @@ public class Db_mgr_fxt {
 		,	"================================, ,\" \",//"
 		);
 	}
-	private static void dsv_tbl_xowa_db(StringBldr sb) {
-		sb.Add_lines_crlf
-		(	"================================, ,\" \",//"
+	private static void dsv_tbl_xowa_db(String_bldr sb) {
+		Add_lines_w_crlf(sb
+		,	"================================, ,\" \",//"
 		,	"xowa_db, ,\" \",#"
 		,	"================================, ,\" \",//"
 		,	"int,byte,string, ,\" \",$"
@@ -217,9 +224,9 @@ public class Db_mgr_fxt {
 		,	"================================, ,\" \",//"
 		);
 	}
-	private static void dsv_tbl_xowa_ns(StringBldr sb) {
-		sb.Add_lines_crlf
-		(	"================================, ,\" \",//"
+	private static void dsv_tbl_xowa_ns(String_bldr sb) {
+		Add_lines_w_crlf(sb
+		,	"================================, ,\" \",//"
 		,	"xowa_ns, ,\" \",#"
 		,	"================================, ,\" \",//"
 		,	"int,string,byte,bool,int, ,\" \",$"
@@ -227,9 +234,9 @@ public class Db_mgr_fxt {
 		,	"================================, ,\" \",//"
 		);
 	}
-	private static void dsv_tbl_page(StringBldr sb) {
-		sb.Add_lines_crlf
-		(	"================================, ,\" \",//"
+	private static void dsv_tbl_page(String_bldr sb) {
+		Add_lines_w_crlf(sb
+		,	"================================, ,\" \",//"
 		,	"page, ,\" \",#"
 		,	"================================, ,\" \",//"
 		,	"int,int,string,byte,string,int,int,int, ,\" \",$"
@@ -237,9 +244,9 @@ public class Db_mgr_fxt {
 		,	"================================, ,\" \",//"
 		);
 	}
-	private static void dsv_tbl_text(StringBldr sb) {
-		sb.Add_lines_crlf
-		(	"================================, ,\" \",//"
+	private static void dsv_tbl_text(String_bldr sb) {
+		Add_lines_w_crlf(sb
+		,	"================================, ,\" \",//"
 		,	"text, ,\" \",#"
 		,	"================================, ,\" \",//"
 		,	"int,string, ,\" \",$"
@@ -247,9 +254,9 @@ public class Db_mgr_fxt {
 		,	"================================, ,\" \",//"
 		);
 	}
-	private static void dsv_tbl_categorylinks(StringBldr sb) {
-		sb.Add_lines_crlf
-		(	"================================, ,\" \",//"
+	private static void dsv_tbl_categorylinks(String_bldr sb) {
+		Add_lines_w_crlf(sb
+		,	"================================, ,\" \",//"
 		,	"categorylinks, ,\" \",#"
 		,	"================================, ,\" \",//"
 		,	"int,int,string,string,int,byte, ,\" \",$"
@@ -257,9 +264,9 @@ public class Db_mgr_fxt {
 		,	"================================, ,\" \",//"
 		);
 	}	
-	private static void dsv_tbl_category(StringBldr sb) {
-		sb.Add_lines_crlf
-		(	"================================, ,\" \",//"
+	private static void dsv_tbl_category(String_bldr sb) {
+		Add_lines_w_crlf(sb
+		,	"================================, ,\" \",//"
 		,	"category, ,\" \",#"
 		,	"================================, ,\" \",//"
 		,	"int,int,int,int,byte,int, ,\" \",$"

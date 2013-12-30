@@ -192,7 +192,7 @@ public class Int_ implements GfoInvkAble {
 		return String_.Upper(rv);
 	}
 	public static String XtoStr(int[] ary) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < ary.length; i++)
 			sb.Add_spr_unless_first(Int_.XtoStr(ary[i]), " ", i);
 		return sb.XtoStr();

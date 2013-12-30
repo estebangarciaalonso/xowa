@@ -844,4 +844,5 @@ public class ByteAry_ {
 		}
 		return ByteAry_.NotFound;
 	}
+	public static byte[] Null_if_empty(byte[] v) {return Len_eq_0(v) ? null : v;}
 }

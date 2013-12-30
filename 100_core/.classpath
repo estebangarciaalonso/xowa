@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="src_000_err"/>
 	<classpathentry kind="src" path="src_100_interface"/>
 	<classpathentry kind="src" path="src_110_primitive"/>

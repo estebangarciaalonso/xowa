@@ -111,7 +111,7 @@ class Xob_subpage_tst_fxt {
 //		hash.Add(wiki, KeyVal_.new_(wiki, text));
 		return this;
 	}
-	private StringBldr sb = StringBldr.new_();
+	private String_bldr sb = String_bldr_.new_();
 	public void Test_parse(String s) {
 		Xob_subpage_wiki[] actl = parser.Parse(ByteAry_.new_utf8_(s));
 		Tfds.Eq_str_lines("", X_str_wikis(actl));
@@ -121,20 +121,20 @@ class Xob_subpage_tst_fxt {
 		return sb.XtoStrAndClear();
 		
 	}
-	private void X_str_wikis(StringBldr sb, Xob_subpage_wiki[] ary) {
+	private void X_str_wikis(String_bldr sb, Xob_subpage_wiki[] ary) {
 		int len = ary.length;
 		for (int i = 0; i < len; i++) {
 			Xob_subpage_wiki wiki = ary[i];
 			X_str_wiki(sb, wiki);
 		}
 	}
-	private void X_str_wiki(StringBldr sb, Xob_subpage_wiki wiki) {
-		sb.Add(wiki.Name()).Add_line_nl();
+	private void X_str_wiki(String_bldr sb, Xob_subpage_wiki wiki) {
+		sb.Add(wiki.Name()).Add_char_nl();
 		int ns_len = wiki.Ns_list().Count();
 		for (int i = 0; i < ns_len; i++) {
 			Xob_subpage_ns ns = (Xob_subpage_ns)wiki.Ns_list().FetchAt(i);
-			sb.Add(ns.Id()).Add("=").Add(Bool_.XtoStr_lower(ns.Enabled())).Add_line_nl();
+			sb.Add(ns.Id()).Add("=").Add(Bool_.XtoStr_lower(ns.Enabled())).Add_char_nl();
 		}
-		sb.Add_line_nl();
+		sb.Add_char_nl();
 	}
 }

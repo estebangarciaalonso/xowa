@@ -184,7 +184,7 @@ public class Xop_xnde_wkr_tst {
 			, fxt.tkn_tblw_tb_(0, 36).Subs_
 			(	fxt.tkn_tblw_tr_(7, 28).Subs_
 			(		fxt.tkn_tblw_td_(11, 19).Subs_	// FUTURE: change to 11,23
-					(	fxt.tkn_xnde_(15, 36).Subs_(fxt.tkn_txt_(18, 19))	// FUTURE: should be 19, but xnde.Close() is passing in srcLen
+					(	fxt.tkn_xnde_(15, 36).Subs_(fxt.tkn_txt_(18, 19))	// FUTURE: should be 19, but xnde.Close() is passing in src_len
 					)
 			,		fxt.tkn_tblw_td_(19, 28)	// FUTURE: should be 23
 			)

@@ -115,11 +115,11 @@ public abstract class ListAdp_base implements ListAdp, GfoInvkAble {
 		Resize_expand(i);
 	}
 	public String XtoStr() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < count; i++) {
-			if (i != 0) sb.Add_line_only();
+			if (i != 0) sb.Add_char_crlf();
 			Object val = list[i];
-			sb.Add_any(Object_.XtoStr_OrEmpty(val));
+			sb.Add_obj(Object_.XtoStr_OrEmpty(val));
 		}
 		return sb.XtoStr();
 	}

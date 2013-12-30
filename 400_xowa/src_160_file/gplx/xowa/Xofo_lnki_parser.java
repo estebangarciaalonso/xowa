@@ -60,11 +60,11 @@ class Xofo_lnki_parser extends Obj_ary_parser_base {
 			}
 		}
 		else {
-			if		(ByteAry_.Match(bry, fld_bgn, eq_pos, Xol_lnki_arg_parser.Bry_upright))		{
+			if		(ByteAry_.Match(bry, fld_bgn, eq_pos, Xop_lnki_arg_parser.Bry_upright))		{
 				double upright = ByteAry_.XtoDoubleByPos(bry, eq_pos + 1, i);	// +1 to position after eq
 				lnki.Lnki_upright_(upright);
 			}
-			else if (ByteAry_.Match(bry, fld_bgn, eq_pos, Xol_lnki_arg_parser.Bry_thumbtime))	{
+			else if (ByteAry_.Match(bry, fld_bgn, eq_pos, Xop_lnki_arg_parser.Bry_thumbtime))	{
 				fld_val = ByteAry_.XtoIntByPos(bry, eq_pos + 1, i, Int_.MinValue);	// +1 to position after eq
 				if (fld_val == Int_.MinValue) throw Err_.new_fmt_("invalid int: {0}", String_.new_utf8_(bry, eq_pos + 1, i));
 				lnki.Lnki_thumbtime_(fld_val);

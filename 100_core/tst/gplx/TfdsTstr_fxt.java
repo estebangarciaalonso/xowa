@@ -47,9 +47,9 @@ public class TfdsTstr_fxt {
 			if (!itm.Compare()) pass = false;	// don't break early; Compare all vals
 		}
 		if (pass && !manualFail) return;
-		StringBldr sb = StringBldr.new_();
-		sb.Add_line();
-		sb.Add_line(hdr);
+		String_bldr sb = String_bldr_.new_();
+		sb.Add_char_crlf();
+		sb.Add_str_w_crlf(hdr);
 		for (int i = 0; i < list.Count(); i++) {
 			TfdsTstrItm itm = (TfdsTstrItm)list.FetchAt(i);
 			if (itm.TypeOf == 1) {
@@ -77,7 +77,7 @@ class TfdsTstrItm {
 	public void SubName_make(StackAdp stack) {
 		if (stack.Count() == 0) return;
 		ListAdp list = stack.XtoList();
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < list.Count(); i++) {
 			if (i != 0) sb.Add(".");
 			sb.Add((String)list.FetchAt(i));

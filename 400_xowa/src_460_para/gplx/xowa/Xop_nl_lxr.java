@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 class Xop_nl_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_nl;}
 	public Xop_nl_lxr Poem_(boolean v) {poem = v; return this;} private boolean poem = false;
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast coreTrie) {coreTrie.Add(Byte_ascii.NewLine, this);}
+	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Byte_ascii.NewLine, this);}
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		Xop_para_wkr para_wkr = ctx.Para();
 		if (bgn_pos == Xop_parser_.Doc_bgn_bos) {return ctx.LxrMake_txt_(cur_pos);} // simulated nl at beginning of every parse

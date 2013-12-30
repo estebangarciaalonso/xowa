@@ -52,5 +52,5 @@ public class StringTableBldr {
 	public static StringTableBldr new_() {return new StringTableBldr();} StringTableBldr() {}
 	OrderedHash cols = OrderedHash_.new_();
 	ListAdp rows = ListAdp_.new_();
-	StringBldr sb = StringBldr.new_();
+	String_bldr sb = String_bldr_.new_();
 }

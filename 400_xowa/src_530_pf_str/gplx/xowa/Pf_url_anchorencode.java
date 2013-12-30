@@ -21,22 +21,23 @@ public class Pf_url_anchorencode extends Pf_func_base {	// EX: {{anchorencode:a 
 	@Override public int Id() {return Xol_kwd_grp_.Id_url_anchorencode;}
 	@Override public Pf_func New(int id, byte[] name) {return new Pf_url_anchorencode().Name_(name);}
 	public static void Func_init(Xop_ctx ctx) {
-		if (anchorCtx != null) return;// NOTE: called by Scrib_uri
+		if (anchor_ctx != null) return;// NOTE: called by Scrib_uri
 		encode_trie.Add(Byte_ascii.Colon, ByteAryFmtrArg_.byt_(Byte_ascii.Colon));
 		encode_trie.Add(Byte_ascii.Space, ByteAryFmtrArg_.byt_(Byte_ascii.Underline));
-		anchorCtx = Xop_ctx.new_sub_(ctx.Wiki());
-		anchorCtx.Para().Enabled_n_();
-		anchorTknMkr = anchorCtx.Tkn_mkr();
-		anchorParser = Xop_parser.anchorencode_(ctx.Wiki());
+		anchor_ctx = Xop_ctx.new_sub_(ctx.Wiki());
+		anchor_ctx.Para().Enabled_n_();
+		anchor_tkn_mkr = anchor_ctx.Tkn_mkr();
+		anchor_parser = Xop_parser.anchorencode_(ctx.Wiki());
 	}
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {
-		if (anchorCtx == null) Func_init(ctx);
+		if (anchor_ctx == null) Func_init(ctx);
 		byte[] val_ary = Eval_argx(ctx, src, caller, self); if (val_ary == ByteAry_.Empty) return;
-		AnchorEncode(val_ary, bfr, ctx.App().Utl_bry_bfr_mkr().Get_b512().Mkr_rls());
+		Anchor_encode(val_ary, bfr, ctx.App().Utl_bry_bfr_mkr().Get_b512().Mkr_rls());
 	}		
-	public static void AnchorEncode(byte[] src, ByteAryBfr bfr, ByteAryBfr tmp_bfr) {
-		Xop_root_tkn root = anchorCtx.Tkn_mkr().Root(src);
-		anchorParser.Parse_page_wiki(root, anchorCtx, anchorTknMkr, src, Xop_parser_.Doc_bgn_bos);
+	public static void Anchor_encode(byte[] src, ByteAryBfr bfr, ByteAryBfr tmp_bfr) {
+		Xop_root_tkn root = anchor_ctx.Tkn_mkr().Root(src);
+		anchor_parser.Parse_page_wiki(root, anchor_ctx, anchor_tkn_mkr, src, Xop_parser_.Doc_bgn_bos);
+		// anchor_parser.Parse_page_tmpl(root, anchor_ctx, anchor_tkn_mkr, src);
 		int subs_len = root.Subs_len();
 		for (int i = 0; i < subs_len; i++) {
 			Xop_tkn_itm sub = root.Subs_get(i);
@@ -55,6 +56,17 @@ public class Pf_url_anchorencode extends Pf_func_base {	// EX: {{anchorencode:a 
 			case Xop_tkn_itm_.Tid_xnde: Xnde(src, (Xop_xnde_tkn)sub, tmp_bfr); break;
 			case Xop_tkn_itm_.Tid_html_ncr: tmp_bfr.Add_utf8_int(((Xop_html_ncr_tkn)sub).Html_ncr_val()); break;
 			case Xop_tkn_itm_.Tid_html_ref: tmp_bfr.Add_utf8_int(((Xop_html_ref_tkn)sub).HtmlRef_val()); break;
+			case Xop_tkn_itm_.Tid_tmpl_invk:
+				Xot_invk_tkn invk_tkn = (Xot_invk_tkn)sub;
+				Arg_itm_tkn name_tkn = invk_tkn.Name_tkn().Key_tkn();
+				int name_ary_bgn = name_tkn.Src_bgn() + 1, name_ary_end = name_tkn.Src_end();
+				byte[] name_ary = ByteAry_.Mid(src, name_ary_bgn, name_ary_end);	// + 1 to skip :
+				int name_ary_len = name_ary_end - name_ary_bgn; 
+				if (name_ary_len > 0 && name_ary[0] == Byte_ascii.Colon)			// has initial colon; EX: {{:a}
+					tmp_bfr.Add_mid(name_ary, 1, name_ary_len);						// 1 to skip initial colon
+				else																// regular tmpl; EX: {{a}}
+					tmp_bfr.Add(anchor_ctx.Wiki().Ns_mgr().Ns_template().Gen_ttl(name_ary));
+				break;
 			default: tmp_bfr.Add_mid(src, sub.Src_bgn_grp(grp, sub_idx), sub.Src_end_grp(grp, sub_idx)); break;
 		}		
 	}
@@ -69,8 +81,10 @@ public class Pf_url_anchorencode extends Pf_func_base {	// EX: {{anchorencode:a 
 		int src_end = lnki.Src_end();
 		int trg_end = lnki.Trg_tkn().Src_end();
 		
-		if (trg_end == src_end - Xop_tkn_.Lnki_end_len) {	// only trg
-			tmp_bfr.Add_mid(src, lnki.Trg_tkn().Src_bgn(), trg_end);			
+		if (trg_end == src_end - Xop_tkn_.Lnki_end_len) {		// only trg
+			int trg_bgn = lnki.Trg_tkn().Src_bgn();
+			if (lnki.Ttl().ForceLiteralLink()) ++trg_bgn;		// literal link; skip colon; EX: [[:a]] -> a
+			tmp_bfr.Add_mid(src, trg_bgn, trg_end);			
 		}
 		else {
 			tmp_bfr.Add_mid(src, trg_end + 1, src_end - Xop_tkn_.Lnki_end_len); //+1 is len of pipe
@@ -83,6 +97,6 @@ public class Pf_url_anchorencode extends Pf_func_base {	// EX: {{anchorencode:a 
 		}		
 	}
 	private static ByteTrieMgr_fast encode_trie = ByteTrieMgr_fast.cs_();
-	private static Xop_ctx anchorCtx;  static Xop_tkn_mkr anchorTknMkr;
-	private static Xop_parser anchorParser; 
+	private static Xop_ctx anchor_ctx;  static Xop_tkn_mkr anchor_tkn_mkr;
+	private static Xop_parser anchor_parser; 
 }

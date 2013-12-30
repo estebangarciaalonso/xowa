@@ -29,13 +29,13 @@ class Sql_cmd_wtr_ansi implements Sql_cmd_wtr {
 		else throw Err_.unhandled(cmd.KeyOfDb_qry());
 	}
 	public String XtoSql_delete(Db_qry_delete cmd) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		sb.Add_many("DELETE FROM ", cmd.BaseTable());
 		BldWhere(sb, cmd.Where());
 		return sb.XtoStr();
 	}
 	public String XtoSql_insert(Db_qry_insert cmd) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		if (cmd.Select() != null) {
 			sb.Add_many("INSERT INTO ", cmd.BaseTable(), " (");
 			for (int i = 0; i < cmd.Cols().Count(); i++) {
@@ -67,7 +67,7 @@ class Sql_cmd_wtr_ansi implements Sql_cmd_wtr {
 	public String XtoSql_update(Db_qry_update cmd) {
 		int argCount = cmd.Args().Count();
 		if (argCount == 0) throw Err_.new_("Db_qry_update has no columns").Add("baseTable", cmd.BaseTable());
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		sb.Add_many("UPDATE ", cmd.BaseTable(), " SET ");
 		for (int i = 0; i < argCount; i++) {
 			KeyVal pair = cmd.Args().FetchAt(i);
@@ -80,7 +80,7 @@ class Sql_cmd_wtr_ansi implements Sql_cmd_wtr {
 		return sb.XtoStr();
 	}
 	public String XtoSql_select(Db_qry_select cmd) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		sb.Add("SELECT ");
 		if (cmd.Cols().Distinct()) sb.Add("DISTINCT ");
 		Sql_select_fld_list flds = cmd.Cols().Flds();
@@ -97,7 +97,7 @@ class Sql_cmd_wtr_ansi implements Sql_cmd_wtr {
 		XtoSql_limit(sb, cmd.Limit());
 		return sb.XtoStr();
 	}
-	void XtoSql_group_by(StringBldr sb, Sql_group_by groupBy) {
+	void XtoSql_group_by(String_bldr sb, Sql_group_by groupBy) {
 		if (groupBy == null) return;
 		sb.Add(" GROUP BY ");
 		for (int i = 0; i < groupBy.Flds().Count(); i++) {
@@ -106,7 +106,7 @@ class Sql_cmd_wtr_ansi implements Sql_cmd_wtr {
 			sb.Add(item);
 		}
 	}
-	void XtoSql_order_by(StringBldr sb, Sql_order_by orderBy) {
+	void XtoSql_order_by(String_bldr sb, Sql_order_by orderBy) {
 		if (orderBy == null) return;
 		sb.Add(" ORDER BY ");
 		for (int i = 0; i < orderBy.Flds().Count(); i++) {
@@ -115,11 +115,11 @@ class Sql_cmd_wtr_ansi implements Sql_cmd_wtr {
 			sb.Add(item.XtoSql());
 		}
 	}
-	void XtoSql_limit(StringBldr sb, int limit) {
+	void XtoSql_limit(String_bldr sb, int limit) {
 		if (limit == Db_qry_select.Limit_disabled) return;
 		sb.Add(" LIMIT ").Add(limit);
 	}
-	void XtoSql_from(StringBldr sb, Sql_from from) {
+	void XtoSql_from(String_bldr sb, Sql_from from) {
 		for (Object tblObj : from.Tbls()) {
 			Sql_tbl_src tbl = (Sql_tbl_src)tblObj;
 			sb.Add_many
@@ -135,11 +135,11 @@ class Sql_cmd_wtr_ansi implements Sql_cmd_wtr {
 			}
 		}
 	}
-	public void XtoSqlCol(StringBldr sb, Object obj) {
+	public void XtoSqlCol(String_bldr sb, Object obj) {
 		if (obj == null) throw Err_.null_("ColName");
-		sb.Add_any(obj);	// FIXME: options for bracketing; ex: [name]
+		sb.Add_obj(obj);	// FIXME: options for bracketing; ex: [name]
 	}
-	public void BldValStr(StringBldr sb, Db_arg prm) {
+	public void BldValStr(String_bldr sb, Db_arg prm) {
 		if (prepare) {
 			sb.Add("?");
 			return;
@@ -151,7 +151,7 @@ class Sql_cmd_wtr_ansi implements Sql_cmd_wtr {
 		}
 		Class<?> valType = val.getClass();
 				if (valType == Boolean.class)
-			sb.Add_any(Bool_.XtoInt(Bool_.cast_(val)));			// NOTE!: save boolean to 0 or 1, b/c (a) db may not support bit datatype (sqllite) and (b) avoid i18n issues with "true"/"false"
+			sb.Add_obj(Bool_.XtoInt(Bool_.cast_(val)));			// NOTE!: save boolean to 0 or 1, b/c (a) db may not support bit datatype (sqllite) and (b) avoid i18n issues with "true"/"false"
 		else if 
 			(	valType == Byte.class || valType == Short.class 
 			||	valType == Integer.class	|| valType == Long.class
@@ -171,18 +171,18 @@ class Sql_cmd_wtr_ansi implements Sql_cmd_wtr {
 			XtoSqlVal_Str(sb, prm, valString);
 		}
 	}
-	@gplx.Virtual public void XtoSqlVal_Str(StringBldr sb, Db_arg prm, String s) {
+	@gplx.Virtual public void XtoSqlVal_Str(String_bldr sb, Db_arg prm, String s) {
 		sb.Add_many("'", String_.Replace(s, "'", "''"), "'");	// stupid escaping of '
 	}
-	@gplx.Virtual public void XtoSqlVal_DateAdp(StringBldr sb, Db_arg prm, DateAdp s) {
+	@gplx.Virtual public void XtoSqlVal_DateAdp(String_bldr sb, Db_arg prm, DateAdp s) {
 		sb.Add_many("'", s.XtoStr_gplx_long(), "'");	// stupid escaping of '
 	}
-	void BldWhere(StringBldr sb, Sql_where where) {
+	void BldWhere(String_bldr sb, Sql_where where) {
 		if (where == null || where.Crt() == Db_crt_.Wildcard) return;
 		sb.Add(" WHERE ");
 		this.BldWhere(sb, where.Crt());
 	}
-	public void BldWhere(StringBldr sb, Criteria crt) {
+	public void BldWhere(String_bldr sb, Criteria crt) {
 		Criteria_bool_base boolOp = Criteria_bool_base.as_(crt);
 		if (boolOp != null) {
 			sb.Add("(");
@@ -201,7 +201,7 @@ class Sql_cmd_wtr_ansi implements Sql_cmd_wtr {
 			AppendWhereItem(sb, leaf.Crt_of_GfoFldCrt());
 		}
 	}
-	void AppendWhereItem(StringBldr sb, Criteria crt) {
+	void AppendWhereItem(String_bldr sb, Criteria crt) {
 		switch (crt.Crt_tid()) {
 			case Criteria_.Tid_eq:			AppendEqual(sb, Criteria_eq.as_(crt)); break;
 			case Criteria_.Tid_comp:		AppendCompare(sb, Criteria_comp.as_(crt)); break;
@@ -212,26 +212,26 @@ class Sql_cmd_wtr_ansi implements Sql_cmd_wtr {
 			default:						throw Err_.unhandled(crt);
 		}
 	}
-	void AppendEqual(StringBldr sb, Criteria_eq crt) {
+	void AppendEqual(String_bldr sb, Criteria_eq crt) {
 		sb.Add(crt.Negated() ? "!=" : "=");
 		this.BldValStr(sb, Wrap(crt.Value()));
 	}
-	void AppendCompare(StringBldr sb, Criteria_comp crt) {
+	void AppendCompare(String_bldr sb, Criteria_comp crt) {
 		sb.Add_many(crt.XtoSymbol());
 		this.BldValStr(sb, Wrap(crt.Value()));
 	}
-	void AppendBetween(StringBldr sb, Criteria_between crt) {
+	void AppendBetween(String_bldr sb, Criteria_between crt) {
 		sb.Add(crt.Negated() ? " NOT BETWEEN " : " BETWEEN ");
 		this.BldValStr(sb, Wrap(crt.Lhs()));
 		sb.Add(" AND ");
 		this.BldValStr(sb, Wrap(crt.Rhs()));
 	}
-	void AppendLike(StringBldr sb, Criteria_like crt) {
+	void AppendLike(String_bldr sb, Criteria_like crt) {
 		sb.Add(crt.Negated() ? " NOT LIKE " : " LIKE ");
 		this.BldValStr(sb, Wrap(crt.Pattern().Raw()));
 		sb.Add_fmt(" ESCAPE '{0}'", crt.Pattern().Escape());
 	}
-	void AppendIn(StringBldr sb, Criteria_in crt) {
+	void AppendIn(String_bldr sb, Criteria_in crt) {
 		sb.Add(crt.Negated() ? " NOT IN (" : " IN (");
 		int last = crt.Values().length - 1;
 		for (int i = 0; i < crt.Values().length; i++) {
@@ -240,11 +240,11 @@ class Sql_cmd_wtr_ansi implements Sql_cmd_wtr {
 			sb.Add(i == last ? ")" : ", ");
 		}
 	}
-	void AppendIoMatch(StringBldr sb, Criteria_ioMatch crt) {
+	void AppendIoMatch(String_bldr sb, Criteria_ioMatch crt) {
 		sb.Add(crt.Negated() ? " NOT IOMATCH " : " IOMATCH ");
 		this.BldValStr(sb, Wrap(crt.Pattern().Raw()));
 	}
-	public void Append_db_obj_ary(StringBldr sb, Db_obj_ary_crt crt) {
+	public void Append_db_obj_ary(String_bldr sb, Db_obj_ary_crt crt) {
 		Object[][] ary = crt.Vals();
 		int ary_len = ary.length; 
 		Db_fld[] flds = crt.Flds();
@@ -280,7 +280,7 @@ class Sql_cmd_wtr_ansi_ {
 	public static Sql_cmd_wtr default_() {return new Sql_cmd_wtr_ansi();}
 	public static Sql_cmd_wtr backslash_sensitive_() {return Sql_cmd_wtr_ansi_backslashSensitive.new_();}
 }	
-class Sql_cmd_wtr_ansi_backslashSensitive extends Sql_cmd_wtr_ansi {		@Override public void XtoSqlVal_Str(StringBldr sb, Db_arg prm, String s) {
+class Sql_cmd_wtr_ansi_backslashSensitive extends Sql_cmd_wtr_ansi {		@Override public void XtoSqlVal_Str(String_bldr sb, Db_arg prm, String s) {
 		if (String_.Has(s, "\\")) s = String_.Replace(s, "\\", "\\\\");
 		super.XtoSqlVal_Str(sb, prm, s);
 	}

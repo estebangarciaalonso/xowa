@@ -166,10 +166,10 @@ public class Xof_math_subst_regy {
 	ByteTrieMgr_slim trie = ByteTrieMgr_slim.cs_();
 }
 class Xof_math_subst_itm {
-	public int SrcLen() {return srcLen;} private int srcLen;
+	public int SrcLen() {return src_len;} private int src_len;
 	public byte[] Src() {return src;} private byte[] src;
 	public byte[] Trg() {return trg;} private byte[] trg;
 	public boolean DollarSign() {return dollarSign;} private boolean dollarSign;
 	public boolean WholeWord() {return wholeWord;} private boolean wholeWord;
-	public Xof_math_subst_itm(byte[] src, byte[] trg, boolean dollarSign, boolean wholeWord) {this.src = src; srcLen = src.length; this.trg = trg; this.dollarSign = dollarSign; this.wholeWord = wholeWord;}
+	public Xof_math_subst_itm(byte[] src, byte[] trg, boolean dollarSign, boolean wholeWord) {this.src = src; src_len = src.length; this.trg = trg; this.dollarSign = dollarSign; this.wholeWord = wholeWord;}
 }

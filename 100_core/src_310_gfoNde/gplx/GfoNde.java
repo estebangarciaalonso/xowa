@@ -30,7 +30,7 @@ public class GfoNde implements GfoInvkAble {
 	public GfoFldList SubFlds() {return subFlds;} GfoFldList subFlds = GfoFldList_.new_();
 	public void XtoStr_wtr(DataWtr wtr) {XtoStr_wtr(this, wtr);}// TEST
 	public String XtoStr() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < aryLen; i++) {
 			String key = i >= flds.Count()	? "<< NULL " + i + " >>" : flds.FetchAt(i).Key();
 			String val = i >= aryLen		? "<< NULL " + i + " >>" : Object_.XtoStr_OrNullStr(ary[i]);

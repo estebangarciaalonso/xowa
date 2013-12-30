@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 interface Xop_ctx_wkr {
 	void Ctor_ctx(Xop_ctx ctx);
 	void Page_bgn(Xop_ctx ctx, Xop_root_tkn root);
-	void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int srcLen);
+	void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len);
 }
 interface Xop_arg_wkr {
 	boolean Args_add(Xop_ctx ctx, byte[] src, Xop_tkn_itm tkn, Arg_nde_tkn arg, int arg_idx);

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
+import gplx.xowa.langs.casings.*;
 public class Xoa_ttl_tst {
 	private Xop_fxt fxt = new Xop_fxt(); //Mwl_parser_fxt fxt = new Mwl_parser_fxt();
 	@Before public void init() {
@@ -139,15 +140,15 @@ public class Xoa_ttl_tst {
 	@Test  public void Anchor_arg_in_non_main_ns() {
 		ttl_("Help:A#B").Full_txt_("Help:A").Anch_txt_("B").Run();
 	}
-//		@Test  public void Multi_byte_char2() {
-//			ttl_("&#x2c65;").Full_txt_("Help:A").Anch_txt_("B").Run();
-//		}
-//		@Test  public void First_char_is_multi_bypte() {	// PURPOSE: if multi-byte, uppercasing is complicated; EX: µ -> Μ; DATE:2013-11-27
-//			if (!String_.Supports_multibyte_case_conversion) return;
-//			ttl_("µ").Full_txt_("Μ").Run();					// NOTE: this is not an ASCII "Μ"
-//			ttl_("µab").Full_txt_("Μab").Run();				// check that rest of title works fine
-//			ttl_("Help:µab").Full_txt_("Μab").Run();	// check ns
-//		}
+	@Test  public void Multi_byte_char2() { // PURPOSE: multi-byte HTML entity causes array out of index error; EX: w:List_of_Unicode_characters; DATE:2013-12-25
+		ttl_("&#x2c65;").Full_txt_("ⱥ").Run();
+	}
+	@Test  public void First_char_is_multi_byte() {	// PURPOSE: if multi-byte, uppercasing is complicated; EX: µ -> Μ; DATE:2013-11-27
+		fxt.Wiki().Lang().Case_mgr().Add_bulk(Xol_case_itm_.Universal);
+		ttl_("µ").Full_txt_("Μ").Run();					// NOTE: this is not an ASCII "Μ"
+		ttl_("µab").Full_txt_("Μab").Run();				// check that rest of title works fine
+		ttl_("Help:µab").Full_txt_("Help:Μab").Run();		// check ns
+	}
 	private Xoa_ttl_tst ttl_(String raw) {test_raw = raw; return this;} private String test_raw = "";
 	private Xoa_ttl_tst Ns_id_(int v) {expd_nsId = v; return this;} private int expd_nsId = Int_.MinValue;
 	private Xoa_ttl_tst Page_txt_(String v) {expd_page_txt = v; return this;} private String expd_page_txt;

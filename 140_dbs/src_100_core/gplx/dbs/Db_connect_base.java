@@ -25,7 +25,7 @@ public abstract class Db_connect_base implements Db_connect {
 	public abstract Db_connect Clone_of_db_connect(String raw, GfoMsg m);
 	protected void Ctor_of_db_connect(String server, String database, String raw, String api) {this.server = server; this.database = database; this.raw = raw; this.api = api;}
 	protected static String BldApi(GfoMsg m, KeyVal... xtnAry) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		HashAdp hash = HashAdp_.new_();
 		for (int i = 0; i < m.Args_count(); i++) {
 			KeyVal kv = m.Args_getAt(i);
@@ -39,7 +39,7 @@ public abstract class Db_connect_base implements Db_connect {
 		return sb.XtoStr();
 	}
 	protected static String BldRaw(GfoMsg m) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < m.Args_count(); i++) {
 			KeyVal itm = m.Args_getAt(i);
 			sb.Add_fmt("{0}={1};", itm.Key(), itm.Val_to_str_or_empty());

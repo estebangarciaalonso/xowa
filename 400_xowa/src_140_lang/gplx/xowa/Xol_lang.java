@@ -16,7 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.langs.*; import gplx.xowa.langs.grammars.*; import gplx.intl.*; import gplx.xowa.xtns.lst.*; import gplx.xowa.wikis.caches.*;
+import gplx.xowa.langs.*; import gplx.intl.*; import gplx.xowa.xtns.lst.*; import gplx.xowa.wikis.caches.*;
+import gplx.xowa.langs.casings.*;
+import gplx.xowa.langs.grammars.*; import gplx.xowa.langs.plurals.*;
+import gplx.xowa.parsers.lnkis.*;
 public class Xol_lang implements GfoInvkAble {
 	public Xol_lang(Xoa_app app, byte[] key_bry) {
 		this.app = app; this.key_bry = key_bry; this.key_str = String_.new_utf8_(key_bry);
@@ -46,14 +49,14 @@ public class Xol_lang implements GfoInvkAble {
 	public Xol_case_mgr Case_mgr() {return case_mgr;} private Xol_case_mgr case_mgr = new Xol_case_mgr();
 	public Xol_font_info Gui_font() {return gui_font;} private Xol_font_info gui_font = new Xol_font_info(null, 0, gplx.gfui.FontStyleAdp_.Plain);
 	public byte[] Fallback_bry() {return fallback_bry;} public Xol_lang Fallback_bry_(byte[] v) {fallback_bry = v; return this;} private byte[] fallback_bry;
-	public boolean Variants_enabled() {return variants_enabled;} public Xol_lang Variants_enabled_(boolean v) {variants_enabled = v; return this;} private boolean variants_enabled;
+//		public boolean Variants_enabled() {return variants_enabled;} public Xol_lang Variants_enabled_(boolean v) {variants_enabled = v; return this;} private boolean variants_enabled;
 	public Xol_fragment_mgr Fragment_mgr() {return fragment_mgr;} private Xol_fragment_mgr fragment_mgr;
 	public Xol_grammar Grammar() {return grammar;} private Xol_grammar grammar;
 	public Xol_plural Plural() {return plural;} private Xol_plural plural;
 	public Xol_lnki_trail_mgr Lnki_trail_mgr() {return lnki_trail_mgr;} private Xol_lnki_trail_mgr lnki_trail_mgr;
 	public Xol_specials_mgr Specials_mgr() {return specials_mgr;} private Xol_specials_mgr specials_mgr;
 	
-	public Xol_lnki_arg_parser Lnki_arg_parser() {return lnki_arg_parser;} private Xol_lnki_arg_parser lnki_arg_parser = new Xol_lnki_arg_parser(); 
+	public Xop_lnki_arg_parser Lnki_arg_parser() {return lnki_arg_parser;} private Xop_lnki_arg_parser lnki_arg_parser = new Xop_lnki_arg_parser(); 
 	public Xol_func_name_regy Func_regy() {return func_regy;} private Xol_func_name_regy func_regy;
 
 	public Gfo_num_fmt_mgr Num_fmt_mgr() {return num_fmt_mgr;} Gfo_num_fmt_mgr num_fmt_mgr = new Gfo_num_fmt_mgr();
@@ -79,15 +82,17 @@ public class Xol_lang implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_dir_str))				return Dir_bry();
 		else if	(ctx.Match(k, Invk_gui_font_))				gui_font.Name_(m.ReadStr("name")).Size_(m.ReadFloatOr("size", 8));
 		else if	(ctx.Match(k, Invk_fallback_load))			Exec_fallback_load(m.ReadBry("v"));
-		else if (ctx.Match(k, Invk_variants_enabled_))		variants_enabled = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_num_fmt))				return num_fmt_mgr;
 		else if	(ctx.Match(k, Invk_link_trail))				return lnki_trail_mgr;
 		else if	(ctx.Match(k, Invk_this))					return this;
 		else if	(ctx.Match(k, Xoa_gfs_mgr.Invk_app))		return app;
 		else												return GfoInvkAble_.Rv_unhandled;
 		return this;
-	}	public static final String Invk_ns_names = "ns_names", Invk_ns_aliases = "ns_aliases", Invk_keywords = "keywords", Invk_messages = "messages", Invk_specials = "specials", Invk_casings = "casings", Invk_dir_rtl_ = "dir_rtl_", Invk_gui_font_ = "gui_font_"
-			, Invk_fallback_load = "fallback_load", Invk_this = "this", Invk_variants_enabled_ = "variants_enabled_", Invk_num_fmt = "num_fmt", Invk_dir_str = "dir_str", Invk_link_trail = "link_trail";
+	}
+	public static final String Invk_ns_names = "ns_names", Invk_ns_aliases = "ns_aliases"
+	, Invk_keywords = "keywords", Invk_messages = "messages", Invk_specials = "specials", Invk_casings = "casings"
+	, Invk_dir_rtl_ = "dir_rtl_", Invk_gui_font_ = "gui_font_"
+	, Invk_fallback_load = "fallback_load", Invk_this = "this", Invk_num_fmt = "num_fmt", Invk_dir_str = "dir_str", Invk_link_trail = "link_trail";
 	public Xol_lang Load_assert(Xoa_app app) {if (!loaded) Load(app); return this;}
 	public boolean Load(Xoa_app app) {
 		if (this.loaded) return false;

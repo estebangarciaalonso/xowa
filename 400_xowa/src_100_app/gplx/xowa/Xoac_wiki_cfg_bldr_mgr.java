@@ -30,7 +30,7 @@ public class Xoac_wiki_cfg_bldr_mgr implements GfoInvkAble {
 		Io_url cfg_file = app.User().Fsys_mgr().Wiki_root_dir().GenSubFil_nest("#cfg", "system", wiki_key + ".gfs");
 		String cfg_text = Io_mgr._.LoadFilStr_args(cfg_file).MissingIgnored_().Exec();
 		int len = fil.Itms_count();
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < len; i++) {
 			Xoac_wiki_cfg_bldr_cmd cmd = fil.Itms_get_at(i);
 			cfg_text = cmd.Exec(sb, wiki_key, cfg_text);

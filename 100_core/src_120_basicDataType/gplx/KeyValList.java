@@ -23,7 +23,7 @@ public class KeyValList {//20101217
 	public KeyValList Add(String key, Object val) {list.Add(KeyVal_.new_(key, val)); return this;}
 	public KeyVal[] XtoAry() {return (KeyVal[])list.XtoAry(KeyVal.class);}
 	public String XtoStr() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < list.Count(); i++) {
 			KeyVal kv = (KeyVal)list.FetchAt(i);
 			sb.Add_spr_unless_first(kv.Key(), " ", i);

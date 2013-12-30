@@ -29,15 +29,15 @@ public class Xol_mw_lang_parser_tst {
 	}
 	@Test  public void Core_keywords_img_thumb() {
 		fxt.Parse_core("$magicWords = array('img_thumbnail' => array(1, 'thumb', 'thmb'));")
-			.Tst_keyword_img("thumb", Xol_lnki_arg_parser.Tid_thumb)
-			.Tst_keyword_img("thmb"	, Xol_lnki_arg_parser.Tid_thumb)
-			.Tst_keyword_img("thum"	, Xol_lnki_arg_parser.Tid_caption)
+			.Tst_keyword_img("thumb", Xop_lnki_arg_parser.Tid_thumb)
+			.Tst_keyword_img("thmb"	, Xop_lnki_arg_parser.Tid_thumb)
+			.Tst_keyword_img("thum"	, Xop_lnki_arg_parser.Tid_caption)
 			;
 	}
 	@Test  public void Core_keywords_img_upright() {
 		fxt.Parse_core("$magicWords = array('img_upright' => array(1, 'upright', 'upright=$1', 'upright $1'));")
-			.Tst_keyword_img("upright"	, Xol_lnki_arg_parser.Tid_upright)
-			.Tst_keyword_img("upright "	, Xol_lnki_arg_parser.Tid_upright)
+			.Tst_keyword_img("upright"	, Xop_lnki_arg_parser.Tid_upright)
+			.Tst_keyword_img("upright "	, Xop_lnki_arg_parser.Tid_upright)
 			;
 	}
 	@Test  public void Core_keywords_func_currentmonth() {
@@ -54,9 +54,9 @@ public class Xol_mw_lang_parser_tst {
 	}
 	@Test  public void Keywords_img_dim() {
 		fxt.Parse_core("$magicWords = array('img_width' => array(1, '$1pxl'));")
-			.Tst_keyword_img("50pxl", Xol_lnki_arg_parser.Tid_dim)
-			.Tst_keyword_img("50pxlpxl", Xol_lnki_arg_parser.Tid_dim)
-			.Tst_keyword_img("50xl", Xol_lnki_arg_parser.Tid_caption)
+			.Tst_keyword_img("50pxl", Xop_lnki_arg_parser.Tid_dim)
+			.Tst_keyword_img("50pxlpxl", Xop_lnki_arg_parser.Tid_dim)
+			.Tst_keyword_img("50xl", Xop_lnki_arg_parser.Tid_caption)
 			;
 	}
 	@Test  public void Core_namespaces_names() {
@@ -151,6 +151,21 @@ public class Xol_mw_lang_parser_tst {
 		fxt.Parse_core("$rtl = 'true';");
 		Tfds.Eq(false, fxt.Lang().Dir_ltr());
 	}
+	@Test  public void Core_keywords__only_1() {	// PURPOSE: some magic words don't specify case-match; EX: Disambiguator.php; DATE:2013-12-24
+		fxt.Parse_core("$magicWords = array('toc' => array('a1'));")
+			.Tst_keyword(Xol_kwd_grp_.Id_toc, false, "a1")
+			;
+	}
+	@Test  public void Core_keywords__skip_case_match__1() {	// PURPOSE: some magic words don't specify case-match; EX: Disambiguator.php; DATE:2013-12-24
+		fxt.Parse_core("$magicWords = array('toc' => array('a1'));")
+			.Tst_keyword(Xol_kwd_grp_.Id_toc, false, "a1")
+			;
+	}
+	@Test  public void Core_keywords__skip_case_match__2() {	// PURPOSE: some magic words don't specify case-match; EX: Disambiguator.php; DATE:2013-12-24
+		fxt.Parse_core("$magicWords = array('toc' => array('a1', 'a2'));")
+			.Tst_keyword(Xol_kwd_grp_.Id_toc, false, "a1", "a2")
+			;
+	}
 }
 class Xol_mw_lang_parser_fxt {
 	Xoa_app app; Xow_wiki wiki; private Xop_fxt fxt;
@@ -177,7 +192,6 @@ class Xol_mw_lang_parser_fxt {
 	public void Tst_file(String path, String expd) {
 		Io_url url = Io_url_.mem_fil_(path);
 		String actl = Io_mgr._.LoadFilStr(url);
-//            Tfds.Write(actl);
 		Tfds.Eq_str_lines(expd, actl);
 	}
 	public Xol_mw_lang_parser_fxt Parse_core(String raw)				{parser.Parse_core(raw, lang, tmp_bfr, Xol_lang_transform_null._); return this;}
@@ -194,8 +208,7 @@ class Xol_mw_lang_parser_fxt {
 	}
 	public Xol_mw_lang_parser_fxt Tst_keyword_img(String key_str, byte tid) {
 		byte[] key = ByteAry_.new_utf8_(key_str);
-		IntRef width = IntRef.zero_(), height = IntRef.zero_();
-		Tfds.Eq(tid, lang.Lnki_arg_parser().Identify_tid(key, 0, key.length, width, height));
+		Tfds.Eq(tid, lang.Lnki_arg_parser().Identify_tid(key, 0, key.length));
 		return this;
 	}
 	public Xol_mw_lang_parser_fxt Tst_parse(String raw, String expd) {

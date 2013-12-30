@@ -29,7 +29,7 @@ class GfmlStringHighlighter {
 		return rv;
 	}
 	public String[] Gen() {
-		StringBldr posBfr = StringBldr.new_(), rawBfr = StringBldr.new_(), symBfr = StringBldr.new_();
+		String_bldr posBfr = String_bldr_.new_(), rawBfr = String_bldr_.new_(), symBfr = String_bldr_.new_();
 		ListAdp symList = ListAdp_.new_();
 		int bgnPos = 0, endPos = 0;
 		int rawLen = String_.Len(raw); int rawLenDigits = Int_.DigitCount(rawLen);
@@ -74,9 +74,9 @@ class GfmlStringHighlighter {
 				symList.Add(String_.Format("[{0}] {1} {2}", Int_.XtoStr_PadBgn(curMark.Pos(), rawLenDigits), curMark.Sym(), curMark.Msg()));
 		}
 		if (rawBfrBgn == 0) {
-			posBfr.AddAt(0, "<");
-			rawBfr.AddAt(0, " ");
-			symBfr.AddAt(0, " ");
+			posBfr.Add_at(0, "<");
+			rawBfr.Add_at(0, " ");
+			symBfr.Add_at(0, " ");
 		}
 		ListAdp rv = ListAdp_.new_();
 		rv.Add(posBfr.XtoStr());

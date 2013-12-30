@@ -21,7 +21,7 @@ public class RegxBldr {
 	public static String Excludes(String characters) {return String_.Concat_any(RegxBldr.Tkn_CharSetBegin, RegxBldr.Tkn_Not, characters, RegxBldr.Tkn_CharSetEnd);}
 	public static String WholeWord(String word) {return String_.Concat_any("(?<![A-Za-z0-9_])", EscapeAll(word), "(?![A-Za-z0-9_])");}
 	public static String EscapeAll(String text) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		int len = String_.Len(text);
 		for (int i = 0; i < len; i++) {
 			char c = String_.CharAt(text, i);

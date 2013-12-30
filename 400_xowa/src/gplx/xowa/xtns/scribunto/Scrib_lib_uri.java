@@ -40,7 +40,7 @@ class Scrib_lib_uri implements Scrib_lib {
 		ByteAryBfr bfr = engine.App().Utl_bry_bfr_mkr().Get_b512();
 		ByteAryBfr tmp_bfr = engine.App().Utl_bry_bfr_mkr().Get_b512();
 		Pf_url_anchorencode.Func_init(engine.Ctx());
-		Pf_url_anchorencode.AnchorEncode(raw_bry, bfr, tmp_bfr);
+		Pf_url_anchorencode.Anchor_encode(raw_bry, bfr, tmp_bfr);
 		tmp_bfr.Mkr_rls().Clear();
 		return Scrib_kv_utl.base1_obj_(bfr.Mkr_rls().XtoStrAndClear());
 	}

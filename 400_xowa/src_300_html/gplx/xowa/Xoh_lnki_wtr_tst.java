@@ -51,6 +51,26 @@ public class Xoh_lnki_wtr_tst {
 		,	""
 		));
 	}
+	@Test  public void Img_frame() {	// PURPOSE: lnki with "frame" is same as thumb; DATE:2013-12-23
+		fxt.tst_Parse_page_wiki_str
+			(	"[[File:A.png|frame|220x110px|b]]"
+			,	String_.Concat_lines_nl_skipLast
+			(	"<div class=\"thumb tright\">"
+			,	"  <div id=\"xowa_file_div_0\" class=\"thumbinner\" style=\"width:220px;\">"
+			,	"    <a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/220px.png\" width=\"220\" height=\"110\" /></a>"
+			,	"    <div class=\"thumbcaption\">"
+			,	"      <div class=\"magnify\">"
+			,	"        <a href=\"/wiki/File:A.png\" class=\"internal\" title=\"Enlarge\">"
+			,	"          <img src=\"file:///mem/xowa/user/test_user/app/img/file/magnify-clip.png\" width=\"15\" height=\"11\" alt=\"\" />"
+			,	"        </a>"
+			,	"      </div>"
+			,	"      b"
+			,	"    </div>"
+			,	"  </div>"
+			,	"</div>"
+			,	""
+			));
+	}
 	@Test  public void Border() {
 		fxt.tst_Parse_page_wiki_str
 			(	"[[File:A.png|border]]"

@@ -17,10 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files; import gplx.*; import gplx.xowa.*;
 import gplx.xowa.files.fsdb.*; import gplx.xowa.files.bins.*;
+import gplx.xowa.parsers.lnkis.*;
 public class Xof_lnki_file_mgr {
 	private boolean page_init_needed = true;
 	private ListAdp lnki_list = ListAdp_.new_(), fsdb_list = ListAdp_.new_();
-	private Hash_adp_bry xfer_list = new Hash_adp_bry(false);
+	private OrderedHash xfer_list = OrderedHash_.new_bry_();
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
 	private Xof_img_size tmp_img_size = new Xof_img_size();
 	private Xof_fsdb_itm tmp_fsdb_itm = new Xof_fsdb_itm();
@@ -29,21 +30,23 @@ public class Xof_lnki_file_mgr {
 		lnki_list.Clear();
 		fsdb_list.Clear();
 		xfer_list.Clear();
+		temp_list.Clear();
 	}
 	public void Add(Xop_lnki_tkn lnki) {
 		lnki_list.Add(lnki);
 	}
+	private OrderedHash temp_list = OrderedHash_.new_bry_();
 	public boolean Find(Xow_wiki wiki, byte exec_tid, Xof_xfer_itm xfer_itm) {
 		try {
 			if (page_init_needed) {
 				page_init_needed = false;
 				Create_xfer_itms();
 				wiki.File_mgr().Fsdb_mgr().Init_by_wiki__add_bin_wkrs(wiki);	// NOTE: fsdb_mgr may not be init'd for wiki; assert that that it is
-				wiki.File_mgr().Fsdb_mgr().Reg_select_only(wiki.App().Gui_wtr(), exec_tid, fsdb_list);
+				wiki.File_mgr().Fsdb_mgr().Reg_select_only(wiki.App().Gui_wtr(), exec_tid, fsdb_list, temp_list);
 				Hash_xfer_itms();
 			}
 			Init_fsdb_itm(tmp_fsdb_itm, xfer_itm);
-			Xof_fsdb_itm fsdb_itm = (Xof_fsdb_itm)xfer_list.Get_by_bry(tmp_fsdb_itm.Lnki_ttl());
+			Xof_fsdb_itm fsdb_itm = (Xof_fsdb_itm)xfer_list.Fetch(tmp_fsdb_itm.Lnki_ttl());
 			if (fsdb_itm == null) {	// no orig_data found for the current item
 //					if (!xfer_itm.Lnki_ext().Id_is_media())
 //						wiki.App().Usr_dlg().Warn_many("", "", "fsdb:item does not have orig data: ttl=~{0}", String_.new_utf8_(tmp_fsdb_itm.Lnki_ttl()));
@@ -77,18 +80,18 @@ public class Xof_lnki_file_mgr {
 		for (int i = 0; i < len; i++) {
 			Xof_fsdb_itm fsdb_itm = (Xof_fsdb_itm)fsdb_list.FetchAt(i);
 			byte[] fsdb_itm_key = fsdb_itm.Lnki_ttl();
-			if (!xfer_list.Has(fsdb_itm_key))
-				xfer_list.Add_bry_obj(fsdb_itm_key, fsdb_itm);
+			if (!temp_list.Has(fsdb_itm_key) && !xfer_list.Has(fsdb_itm_key))
+				xfer_list.Add(fsdb_itm_key, fsdb_itm);
 			byte[] fsdb_redirect_ttl = fsdb_itm.Orig_ttl();
-			if (fsdb_redirect_ttl != null)
-				xfer_list.Add_bry_obj(fsdb_redirect_ttl, fsdb_itm);
+			if (fsdb_redirect_ttl != null && !temp_list.Has(fsdb_itm_key) && !xfer_list.Has(fsdb_itm_key))
+				xfer_list.Add(fsdb_redirect_ttl, fsdb_itm);
 		}
 	}
 	private void Init_fsdb_itm(Xof_fsdb_itm fsdb_itm, Xop_lnki_tkn lnki_tkn) {
 		byte[] lnki_ttl = lnki_tkn.Ttl().Page_db();
 		Xof_ext lnki_ext = Xof_ext_.new_by_ttl_(lnki_ttl);
 		byte[] lnki_md5 = Xof_xfer_itm.Md5_(lnki_ttl);
-		fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, lnki_tkn.Lnki_type(), lnki_tkn.Width().Val(), lnki_tkn.Height().Val(), lnki_tkn.Upright(), lnki_tkn.Thumbtime());
+		fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, lnki_tkn.Lnki_type(), lnki_tkn.Width(), lnki_tkn.Height(), lnki_tkn.Upright(), lnki_tkn.Thumbtime());
 	}
 	private void Init_fsdb_itm(Xof_fsdb_itm fsdb_itm, Xof_xfer_itm xfer_itm) {
 		byte[] lnki_ttl = xfer_itm.Lnki_ttl();

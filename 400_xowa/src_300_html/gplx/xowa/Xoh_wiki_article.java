@@ -49,7 +49,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 	public byte[] Css_common_bry() {return css_common_bry;} public Xoh_wiki_article Css_common_bry_(Io_url v) {css_common_bry = app.Url_converter_fsys().Encode_http(v); return this;} private byte[] css_common_bry;
 	public byte[] Css_wiki_bry() {return css_wiki_bry;} public Xoh_wiki_article Css_wiki_bry_(Io_url v) {css_wiki_bry = app.Url_converter_fsys().Encode_http(v); return this;} private byte[] css_wiki_bry;
 	ByteAryFmtr page_read_fmtr = ByteAryFmtr.new_(""
-		, "page_name", "page_title", "page_redirect_msg", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
+		, "page_id", "page_name", "page_title", "page_redirect_msg", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
 		, "html_css_common_path", "html_css_wiki_path", "css_xtn", "html_content_editable"
 		, "portal_div_personal", "portal_div_ns", "portal_div_view"
 		, "portal_div_logo", "portal_div_home", "portal_div_wikis", "portal_sidebar"
@@ -57,7 +57,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 		, "app_version", "app_build_date", "app_root_dir", "js_mathjax_script", "js_article_view_vars", "js_wikidata", "js_edit_toolbar", "xowa_mode_is_server"
 		);
 	public ByteAryFmtr Page_edit_fmtr() {return page_edit_fmtr;} ByteAryFmtr page_edit_fmtr = ByteAryFmtr.new_(""
-		, "page_name", "page_title", "page_redirect_msg", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
+		, "page_id", "page_name", "page_title", "page_redirect_msg", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
 		, "html_css_common_path", "html_css_wiki_path", "css_xtn", "html_content_editable"
 		, "portal_div_personal", "portal_div_ns", "portal_div_view"
 		, "portal_div_logo", "portal_div_home", "portal_div_wikis", "portal_sidebar"
@@ -66,7 +66,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 		);
 	public ByteAryFmtr Page_html_fmtr() {return page_html_fmtr;} 
 		ByteAryFmtr page_html_fmtr = ByteAryFmtr.new_(""
-		, "page_name", "page_title", "page_redirect_msg", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
+		, "page_id", "page_name", "page_title", "page_redirect_msg", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
 		, "html_css_common_path", "html_css_wiki_path", "css_xtn", "html_content_editable"
 		, "portal_div_personal", "portal_div_ns", "portal_div_view"
 		, "portal_div_logo", "portal_div_home", "portal_div_wikis", "portal_sidebar"

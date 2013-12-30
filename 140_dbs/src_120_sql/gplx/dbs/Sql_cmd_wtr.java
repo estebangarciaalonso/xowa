@@ -23,8 +23,8 @@ interface Sql_cmd_wtr {
 	String XtoSql_delete(Db_qry_delete qry);
 	String XtoSql_update(Db_qry_update qry);
 	String XtoSql_select(Db_qry_select qry);
-	void BldWhere(StringBldr sb, Criteria crt);
-	void BldValStr(StringBldr sb, Db_arg prm);
+	void BldWhere(String_bldr sb, Criteria crt);
+	void BldValStr(String_bldr sb, Db_arg prm);
 }
 class Sql_cmd_wtr_ {
 	public static final Sql_cmd_wtr Ansi = Sql_cmd_wtr_ansi_.default_();

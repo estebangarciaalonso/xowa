@@ -56,7 +56,7 @@ public class IptBndMgr_tst {
 			Tfds.Eq(expd, output.XtoStr());
 			return this;
 		}
-		StringBldr output = StringBldr.new_();
+		String_bldr output = String_bldr_.new_();
             public IptBndMgr_fx() {}
 	}
 	class IptBnd_mok implements IptBnd {
@@ -67,6 +67,6 @@ public class IptBndMgr_tst {
 		public void Exec(IptEventData iptData) {
 			output.Add(iptData.EventArg().Key());
 		}
-		public IptBnd_mok(StringBldr v) {output = v;} StringBldr output;
+		public IptBnd_mok(String_bldr v) {output = v;} String_bldr output;
 	}
 }

@@ -69,9 +69,9 @@ public class ByteTrieMgr_bwd_slim_tst {
 		tst_MatchAtCur("A", 1);
 	}
 	private void run_Add(String k, int val) {trie.Add(ByteAry_.new_utf8_(k), val);}
-	private void tst_Match(String srcStr, byte b, int bgnPos, int expd) {
+	private void tst_Match(String srcStr, byte b, int bgn_pos, int expd) {
 		byte[] src = ByteAry_.new_utf8_(srcStr);
-		Object actl = trie.Match(b, src, bgnPos, -1);
+		Object actl = trie.Match(b, src, bgn_pos, -1);
 		Tfds.Eq(expd, actl);
 	}
 	private void tst_MatchAtCur(String srcStr, Object expd) {

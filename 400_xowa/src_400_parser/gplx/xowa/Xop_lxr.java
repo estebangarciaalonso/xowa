@@ -18,6 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public interface Xop_lxr {
 	byte Lxr_tid();
-	void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast coreTrie);
-	int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos);
+	void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie);
+	int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos);
 }

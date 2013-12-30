@@ -16,10 +16,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.files; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.wdatas.*;
-import gplx.xowa.bldrs.oimgs.*;
-import gplx.xowa.parsers.lnkis.*; import gplx.xowa.parsers.logs.*;
+import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*;
 import gplx.xowa.wikis.*;
+import gplx.xowa.parsers.lnkis.*; import gplx.xowa.parsers.logs.*;
+import gplx.xowa.bldrs.oimgs.*;
+import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.wdatas.*;
 public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_logger {
 	private Db_provider provider; private Db_stmt stmt;
 	private boolean wdata_enabled = true, xtn_ref_enabled = true;
@@ -87,7 +88,13 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		if (lnki.Ttl().ForceLiteralLink()) return; // ignore literal links which creat a link to file, but do not show the image; EX: [[:File:A.png|thumb|120px]] creates a link to File:A.png, regardless of other display-oriented args
 		byte[] ttl = lnki.Ttl().Page_db();
 		Xof_ext ext = Xof_ext_.new_by_ttl_(ttl);
-		Xob_lnki_temp_tbl.Insert(stmt, ctx.Page().Page_id(), ttl, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki.Width().Val(), lnki.Height().Val(), lnki.Upright(), lnki.Thumbtime());		
+		int arg_1 = lnki.Thumbtime();
+		if (lnki.Page() != Xop_lnki_tkn.Page_null) {	// page set
+			if (arg_1 != Xop_lnki_tkn.Thumbtime_null)	// thumbtime set; warn
+				usr_dlg.Warn_many("", "", "page and thumbtime both set: page=~{0} ttl=~{1}", ctx.Page().Page_ttl().Page_db_as_str(), String_.new_utf8_(ttl));
+			arg_1 = lnki.Page();
+		}
+		Xob_lnki_temp_tbl.Insert(stmt, ctx.Page().Page_id(), ttl, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki.Width(), lnki.Height(), lnki.Upright(), arg_1);
 	}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_wdata_enabled_))				wdata_enabled = m.ReadYn("v");

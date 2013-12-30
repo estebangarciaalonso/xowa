@@ -29,4 +29,7 @@ public class Pf_url_anchorencode_tst {
 	@Test  public void Xnde()				{fxt.tst_Parse_tmpl_str_test("{{anchorencode:a <i>b</i> c}}"					, "{{test}}"	, "a_b_c");}
 	@Test  public void Html_ncr()			{fxt.tst_Parse_tmpl_str_test("{{anchorencode:a &#34; b}}"						, "{{test}}"	, "a_.22_b");}
 	@Test  public void Html_ref()			{fxt.tst_Parse_tmpl_str_test("{{anchorencode:a &quot; b}}"						, "{{test}}"	, "a_.22_b");}
+	@Test  public void Tmpl_missing_basic() {fxt.tst_Parse_tmpl_str_test("{{anchorencode:{{a}}}}"							, "{{test}}"	, "Template:a");}
+	@Test  public void Tmpl_missing_colon() {fxt.tst_Parse_tmpl_str_test("{{anchorencode:{{:a}}}}"							, "{{test}}"	, "a");}
+	@Test  public void Lnki_literal()		{fxt.tst_Parse_tmpl_str_test("{{anchorencode:[[:a]]}}"							, "{{test}}"	, "a");}
 }

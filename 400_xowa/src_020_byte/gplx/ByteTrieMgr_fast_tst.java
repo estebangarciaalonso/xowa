@@ -64,9 +64,9 @@ class ByteTrieMgr_fast_fxt {
 		Init_add(123	, Byte_ascii.Ltr_a, Byte_ascii.Ltr_b, Byte_ascii.Ltr_c);
 	}
 	public void Init_add(int val, byte... ary) {trie.Add(ary, val);}
-	public void Test_match(String src_str, byte b, int bgnPos, int expd) {
+	public void Test_match(String src_str, byte b, int bgn_pos, int expd) {
 		byte[] src = ByteAry_.new_ascii_(src_str);
-		Object actl = trie.Match(b, src, bgnPos, src.length);
+		Object actl = trie.Match(b, src, bgn_pos, src.length);
 		Tfds.Eq(expd, actl);
 	}
 	public void Test_matchAtCur(String src_str, Object expd) {

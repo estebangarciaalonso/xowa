@@ -20,7 +20,7 @@ public class IoRecycleBin {
 	public void							Send(Io_url url) {Send_xrg(url).Exec();}
 	public IoEngine_xrg_recycleFil			Send_xrg(Io_url url) {return IoEngine_xrg_recycleFil.gplx_(url);}
 	public void							Recover(Io_url url) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		ListAdp list = Regy_search(url, sb);
 		int listCount = list.Count(); if (listCount > 1) throw Err_.new_("found more than 1 url").Add("count", list.Count());
 		Io_url trgUrl = (Io_url)list.FetchAt(0);
@@ -33,7 +33,7 @@ public class IoRecycleBin {
 		String text = String_.ConcatWith_any("|", url.NameAndExt_noDirSpr(), xrg.Url().GenRelUrl_orEmpty(url.OwnerRoot()), xrg.Uuid().XtoStr(), xrg.AppName(), xrg.Time());
 		IoEngine_xrg_saveFilStr.new_(regyUrl, text).Append_().Exec();
 	}
-	public ListAdp Regy_search(Io_url url, StringBldr sb) {
+	public ListAdp Regy_search(Io_url url, String_bldr sb) {
 		ListAdp list = ListAdp_.new_();
 		Io_url regyUrl = FetchRegistryUrl(url);
 		String[] lines = IoEngine_xrg_loadFilStr.new_(regyUrl).ExecAsStrAry();
@@ -47,7 +47,7 @@ public class IoRecycleBin {
 				list.Add(origUrl);
 			}
 			else
-				sb.Add_line(line);
+				sb.Add_str_w_crlf(line);
 		}
 		return list;
 	}

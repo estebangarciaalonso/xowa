@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 class Arg_bldr {
-	public boolean Bld(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_arg_wkr wkr, int wkr_typ, Xop_root_tkn root, Xop_tkn_itm tkn, int bgnPos, int curPos, int loop_bgn, int loop_end, byte[] src) {
+	public boolean Bld(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_arg_wkr wkr, int wkr_typ, Xop_root_tkn root, Xop_tkn_itm tkn, int bgn_pos, int cur_pos, int loop_bgn, int loop_end, byte[] src) {
 		boolean ws_bgn_chk = true, colon_chk = false, itm_is_static = true, key_exists = false; int ws_bgn_idx = -1, ws_end_idx = -1, cur_itm_subs_len = 0, cur_nde_idx = -1; Arg_nde_tkn cur_nde = null; Arg_itm_tkn cur_itm = null;
 		int brack_count = 0;
 		for (int i = loop_bgn; i < loop_end; i++) {	// loop over subs between bookends; if lnki, all tkns between [[ and ]]; if tmpl, {{ and }}
@@ -107,12 +107,12 @@ class Arg_bldr {
 		}
 		if (brack_count > 0) return false;
 		if (cur_nde == null)	// occurs when | is last tkn; EX: {{name|a|}};
-			cur_nde = tkn_mkr.ArgNde(++cur_nde_idx, bgnPos);
+			cur_nde = tkn_mkr.ArgNde(++cur_nde_idx, bgn_pos);
 		if (cur_itm == null) {	// occurs when = is last tkn; EX: {{name|a=}};
-			cur_itm = tkn_mkr.ArgItm(bgnPos, -1);
+			cur_itm = tkn_mkr.ArgItm(bgn_pos, -1);
 			itm_is_static = ws_bgn_chk = true; cur_itm_subs_len = 0; ws_bgn_idx = ws_end_idx = -1; key_exists = false;
 		}
-		Arg_itm_end(ctx, cur_nde, cur_itm, ws_bgn_idx, ws_end_idx, cur_itm_subs_len, bgnPos, wkr_typ, key_exists, false, itm_is_static, src, cur_nde_idx);
+		Arg_itm_end(ctx, cur_nde, cur_itm, ws_bgn_idx, ws_end_idx, cur_itm_subs_len, bgn_pos, wkr_typ, key_exists, false, itm_is_static, src, cur_nde_idx);
 		cur_nde.Val_tkn_(cur_itm);
 		return wkr.Args_add(ctx, src, tkn, cur_nde, cur_nde_idx);
 	}

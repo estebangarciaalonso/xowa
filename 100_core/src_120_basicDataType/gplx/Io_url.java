@@ -87,7 +87,7 @@ public class Io_url implements CompareAble, EqAble, ParseAble, GfoInvkAble {	//_
 	public boolean Eq(Object obj)		{if (obj == null) return false; return String_.Eq(raw, ((Io_url)obj).raw);}
 	public boolean EqNull()			{return this.Eq(Io_url_.Null);}
 	Io_url GenSub(boolean isFil, String[] ary) {
-		StringBldr sb = StringBldr.raw_(raw);
+		String_bldr sb = String_bldr_.new_().Add(raw);
 		int len = Array_.Len(ary);
 		for (int i = 0; i < len; i++) {
 			sb.Add(ary[i]);

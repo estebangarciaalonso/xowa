@@ -203,13 +203,13 @@ class Xowh_sidebar_mgr_fxt {
 	
 	String Xto_str(Xowh_sidebar_itm[] ary) {
 		int ary_len = ary.length;
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < ary_len; i++)
 			sb.Add(Xto_str(ary[i]));
 		return sb.XtoStrAndClear();
 	}
 	String Xto_str(Xowh_sidebar_itm cur) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		boolean tid_is_itm = cur.Tid() == Xowh_sidebar_itm.Tid_itm;
 		sb.Add(tid_is_itm ? "itm|" : "grp|");
 		sb.Add(cur.Text()).Add("|");
@@ -218,7 +218,7 @@ class Xowh_sidebar_mgr_fxt {
 			sb.Add(cur.Accesskey()).Add("|");
 			sb.Add(cur.Href()).Add("|");
 		}
-		sb.Add_line_nl();
+		sb.Add_char_nl();
 		int itms_len = cur.Itms_len();
 		for (int i = 0; i< itms_len; i++)
 			sb.Add(Xto_str(cur.Itms_get_at(i)));

@@ -87,7 +87,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		if (app.Html_mgr().Page_mgr().Font_enabled())
 			css_xtn = ByteAry_.Add(css_xtn, app.Html_mgr().Page_mgr().Font_css_bry());
 		css_xtn = ByteAry_.Add(css_xtn, app.Gui_mgr().Html_mgr().Css_xtn());
-		fmtr.Bld_bfr_many(bfr
+		fmtr.Bld_bfr_many(bfr, page.Page_id()
 		, Page_name(tmp_bfr, page.Page_ttl(), null)								// NOTE: page_name does not show display_title (<i>). always pass in null
 		, Page_name(tmp_bfr, page.Page_ttl(), wiki.Ctx().Tab().Display_ttl())
 		, page_redirected, page_data, wtr_page_lang, page_modified_on_msg, lang.Dir_bry(), log_wtr.Html()

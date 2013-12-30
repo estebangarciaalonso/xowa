@@ -128,7 +128,7 @@ public class Tfds {		// URL:doc/gplx.tfds/Tfds.txt
 	}
 	static String XtoStr_Err(Exception e) {
 		Err err = Err_.as_(e); if (err == null) return Err_.Message_lang(e);
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		sb.Add(err.Hdr()).Add(":");
 		for (Object kvo : err.Args()) {
 			KeyVal kv = (KeyVal)kvo;
@@ -156,7 +156,7 @@ public class Tfds {		// URL:doc/gplx.tfds/Tfds.txt
 	public static void Write_bry(byte[] ary) {Write(String_.new_utf8_(ary));}
 	public static void Write() {Write("tmp");}
 	public static void Write(Object... ary) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		int aryLen = Array_.Len(ary);
 		for (int i = 0; i < aryLen; i++)
 			sb.Add_many("'", Object_.XtoStr_OrNullStr(ary[i]), "'", " ");
@@ -186,7 +186,7 @@ class TfdsMsgBldr {
 		return WrapMsg(detail);
 	}
 	public String Eq_ary_xtoStr(ListAdp list, int lhsAryLen, int rhsAryLen, String customMsg) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		sb.Add(CustomMsg_xtoStr(customMsg));
 		if (lhsAryLen != rhsAryLen) 
 			sb.Add_fmt_line("{0}element counts differ: {1} {2}", "\t\t", lhsAryLen, rhsAryLen);

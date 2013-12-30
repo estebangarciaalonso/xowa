@@ -73,9 +73,9 @@ public class Xop_ctx {
 		empty_ignored = false;
 		for (Xop_ctx_wkr wkr : wkrs) wkr.Page_bgn(this, root);
 	}
-	public void Page_end(Xop_root_tkn root, byte[] src, int srcLen) {
-		Stack_pop_til(root, src, 0, true, srcLen, srcLen);
-		for (Xop_ctx_wkr wkr : wkrs) wkr.Page_end(this, root, src, srcLen);
+	public void Page_end(Xop_root_tkn root, byte[] src, int src_len) {
+		Stack_pop_til(root, src, 0, true, src_len, src_len);
+		for (Xop_ctx_wkr wkr : wkrs) wkr.Page_end(this, root, src, src_len);
 	}
 	public int LxrMake_txt_(int pos)									{lxr_make = false; return pos;}
 	public int LxrMake_log_(Gfo_msg_itm itm, byte[] src, int bgn_pos, int cur_pos)	{lxr_make = false; msg_log.Add_itm_none(itm, src, bgn_pos, cur_pos); return cur_pos;}
@@ -189,45 +189,45 @@ public class Xop_ctx {
 			}
 		}
 	}
-	public Xop_tkn_itm Stack_pop_til(Xop_root_tkn root, byte[] src, int tilIdx, boolean include, int bgnPos, int curPos) {
+	public Xop_tkn_itm Stack_pop_til(Xop_root_tkn root, byte[] src, int tilIdx, boolean include, int bgn_pos, int cur_pos) {
 		if (aryLen == 0) return null;
 		int minIdx = include ? tilIdx - 1 : tilIdx;
 		if (minIdx < -1) minIdx = -1;
 		Xop_tkn_itm rv = null;
 		for (int i = aryLen - 1; i > minIdx; i--) {
 			rv = ary[i];
-			Stack_autoClose(root, src, rv, bgnPos, curPos);
+			Stack_autoClose(root, src, rv, bgn_pos, cur_pos);
 		}
 		Stack_pop_idx(tilIdx);
 		return include ? rv : ary[aryLen]; // if include, return poppedTkn; if not, return tkn before poppedTkn
 	}
-	public Xop_tkn_itm Stack_pop_before(Xop_root_tkn root, byte[] src, int tilIdx, boolean include, int bgnPos, int curPos) {	// used by Xop_tblw_lxr to detect \n| in lnki; seems useful as well
+	public Xop_tkn_itm Stack_pop_before(Xop_root_tkn root, byte[] src, int tilIdx, boolean include, int bgn_pos, int cur_pos) {	// used by Xop_tblw_lxr to detect \n| in lnki; seems useful as well
 		if (aryLen == 0) return null;
 		int minIdx = include ? tilIdx - 1 : tilIdx;
 		if (minIdx < -1) minIdx = -1;
 		Xop_tkn_itm rv = null;
 		for (int i = aryLen - 1; i > minIdx; i--) {
 			rv = ary[i];
-			Stack_autoClose(root, src, rv, bgnPos, curPos);
+			Stack_autoClose(root, src, rv, bgn_pos, cur_pos);
 		}
 		return include ? rv : ary[aryLen]; // if include, return poppedTkn; if not, return tkn before poppedTkn
 	}
-	public void Stack_autoClose(Xop_root_tkn root, byte[] src, Xop_tkn_itm tkn, int bgnPos, int curPos) {
+	public void Stack_autoClose(Xop_root_tkn root, byte[] src, Xop_tkn_itm tkn, int bgn_pos, int cur_pos) {
 		int src_len = src.length;
 		switch (tkn.Tkn_tid()) {
 			case Xop_tkn_itm_.Tid_newLine: break;	// NOOP: just a marker
-			case Xop_tkn_itm_.Tid_list: list.AutoClose(this, app.Tkn_mkr(), root, src, src_len, bgnPos, curPos, tkn); break;
-			case Xop_tkn_itm_.Tid_xnde: xnde.AutoClose(this, root, src, src_len, bgnPos, curPos, tkn); break;
-			case Xop_tkn_itm_.Tid_apos: apos.AutoClose(this, src, src_len, bgnPos, curPos, tkn); break;
-			case Xop_tkn_itm_.Tid_lnke: lnke.AutoClose(this, src, src_len, bgnPos, curPos, tkn); break;
-			case Xop_tkn_itm_.Tid_hdr:  hdr.AutoClose(this, app.Tkn_mkr(), root, src, src_len, bgnPos, curPos, tkn); break;
+			case Xop_tkn_itm_.Tid_list: list.AutoClose(this, app.Tkn_mkr(), root, src, src_len, bgn_pos, cur_pos, tkn); break;
+			case Xop_tkn_itm_.Tid_xnde: xnde.AutoClose(this, root, src, src_len, bgn_pos, cur_pos, tkn); break;
+			case Xop_tkn_itm_.Tid_apos: apos.AutoClose(this, src, src_len, bgn_pos, cur_pos, tkn); break;
+			case Xop_tkn_itm_.Tid_lnke: lnke.AutoClose(this, src, src_len, bgn_pos, cur_pos, tkn); break;
+			case Xop_tkn_itm_.Tid_hdr:  hdr.AutoClose(this, app.Tkn_mkr(), root, src, src_len, bgn_pos, cur_pos, tkn); break;
 			case Xop_tkn_itm_.Tid_tblw_tb:
 			case Xop_tkn_itm_.Tid_tblw_tr:
 			case Xop_tkn_itm_.Tid_tblw_td:
 			case Xop_tkn_itm_.Tid_tblw_th:
-			case Xop_tkn_itm_.Tid_tblw_tc: tblw.AutoClose(this, root, src, src_len, bgnPos, curPos, tkn); break;
-			case Xop_tkn_itm_.Tid_lnki: lnki.AutoClose(this, app.Tkn_mkr(), root, src, src_len, bgnPos, curPos, tkn); break;
-			case Xop_tkn_itm_.Tid_pre: para.AutoClose(this, app.Tkn_mkr(), root, src, src_len, bgnPos, curPos, tkn); break;
+			case Xop_tkn_itm_.Tid_tblw_tc: tblw.AutoClose(this, root, src, src_len, bgn_pos, cur_pos, tkn); break;
+			case Xop_tkn_itm_.Tid_lnki: lnki.Auto_close(this, app.Tkn_mkr(), root, src, src_len, bgn_pos, cur_pos, tkn); break;
+			case Xop_tkn_itm_.Tid_pre: para.AutoClose(this, app.Tkn_mkr(), root, src, src_len, bgn_pos, cur_pos, tkn); break;
 		}
 	}
 	public void Stack_pop_idx(int tilIdx) {
@@ -238,7 +238,7 @@ public class Xop_ctx {
 		--aryLen;
 		cur_tkn_tid = aryLen == 0 ? Xop_tkn_itm_.Tid_null : ary[aryLen - 1].Tkn_tid();
 	}
-	public void CloseOpenItms(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {
+	public void CloseOpenItms(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		int stack_pos = -1, stack_len = ctx.Stack_len(); boolean stop = false;
 		for (int i = 0; i < stack_len; i++) {			// loop over stack
 			Xop_tkn_itm prv_tkn = ctx.Stack_get(i);
@@ -250,7 +250,7 @@ public class Xop_ctx {
 			if (stop) break;
 		}
 		if (stack_pos == -1) return;
-		ctx.Stack_pop_til(root, src, stack_pos, true, bgnPos, curPos);
+		ctx.Stack_pop_til(root, src, stack_pos, true, bgn_pos, cur_pos);
 	}
 	public static Xop_ctx new_(Xow_wiki wiki) {
 		Xop_ctx rv = new Xop_ctx(wiki);

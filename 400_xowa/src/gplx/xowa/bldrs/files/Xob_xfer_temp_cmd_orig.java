@@ -32,8 +32,7 @@ public class Xob_xfer_temp_cmd_orig extends Xob_itm_basic_base implements Xob_cm
 		while (rdr.MoveNextPeer()) {
 			int lnki_ext = rdr.ReadByte(Xob_lnki_regy_tbl.Fld_lnki_ext);
 			String orig_media_type = rdr.ReadStrOr(Xob_orig_regy_tbl.Fld_orig_media_type, "");	// convert nulls to ""
-			byte orig_media_type_tid = Xof_media_type.Xto_byte(orig_media_type);
-			lnki_ext = Xof_media_type.Convert_if_ogg_and_video(lnki_ext, orig_media_type_tid);
+			lnki_ext = rdr.ReadInt(Xob_orig_regy_tbl.Fld_orig_file_ext);
 			int lnki_id = rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_id);
 			byte orig_repo = rdr.ReadByte(Xob_orig_regy_tbl.Fld_orig_repo);
 			int orig_page_id = rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_orig_page_id, -1);
@@ -81,6 +80,7 @@ public class Xob_xfer_temp_cmd_orig extends Xob_itm_basic_base implements Xob_cm
 	,	",       orig_page_id"
 	,	",       orig_file_id"
 	,	",       orig_file_ttl"
+	,	",       orig_file_ext"
 	,	",       lnki_ttl"
 	,	",       orig_size"
 	,	",       orig_w"

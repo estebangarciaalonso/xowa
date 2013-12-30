@@ -28,8 +28,8 @@ class GfmlAtr_mok implements GfmlItm_mok {
 		return rv;
 	}
 	public String XtoStrStub() {
-		StringBldr sb = StringBldr.new_();
-		sb.Add_keyVal("key=", key).Add_keyVal("val=", val);
+		String_bldr sb = String_bldr_.new_();
+		sb.Add_kv("key=", key).Add_kv("val=", val);
 		return sb.XtoStr();
 	}
         public static final GfmlAtr_mok Null = new GfmlAtr_mok().Key_(String_.NullStr).Val_(String_.NullStr);
@@ -51,8 +51,8 @@ class GfmlNde_mok implements GfmlItm_mok {
 	public GfmlNde_mok KeyedSubObj_(boolean v) {keyed = v; return this;} private boolean keyed;
 	public ListAdp Subs() {return subs;}
 	public String XtoStrStub() {
-		StringBldr sb = StringBldr.new_();
-		sb.Add_keyVal("key=", key).Add_keyVal("hnd=", hnd).Add_keyVal("typ=", typ).Add_keyVal("subs=", Int_.XtoStr(subs.Count()));
+		String_bldr sb = String_bldr_.new_();
+		sb.Add_kv("key=", key).Add_kv("hnd=", hnd).Add_kv("typ=", typ).Add_kv("subs=", Int_.XtoStr(subs.Count()));
 		return sb.XtoStr();
 	}
 	public GfmlNde_mok Subs_(GfmlItm_mok... ary) {

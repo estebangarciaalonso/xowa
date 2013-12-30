@@ -23,7 +23,7 @@ public class Xoa_app_ {
 		boot_mgr.Run(args);
 	}
 	public static final String Name = "xowa";
-	public static final String Version = "0.12.3.0";
+	public static final String Version = "0.12.4.0";
 	public static String Build_date = "2012-12-30 00:00:00";
 	public static String Op_sys;
 	public static String User_agent = "";
@@ -46,7 +46,7 @@ class Xoa_app_boot_mgr {
 		}
 	}
 	private boolean Init_env(String[] args) {
-		usr_dlg = Gfo_usr_dlg_xowa.console_();
+		Gfo_usr_dlg_._ = usr_dlg = Gfo_usr_dlg_xowa.console_();
 		log_wtr = usr_dlg.Log_wtr(); log_wtr.Log_msg_to_session_fmt("app.diags: version=~{0};", Xoa_app_.Version);
 		GfuiEnv_.Init_swt(args, "xowa.jar", Xoa_app_.class); log_wtr.Log_msg_to_session_fmt("sys diags: jar url=~{0}; op_sys=~{1}", Env_.AppUrl(), Op_sys.Cur().Xto_str());
 		Xoa_app_.Build_date = JarAdp_.ModifiedTime_type(Xoa_app_.class).XtoUtc().XtoStr_fmt("yyyy-MM-dd HH:mm"); log_wtr.Log_msg_to_session_fmt("build_date=~{0};", Xoa_app_.Build_date);

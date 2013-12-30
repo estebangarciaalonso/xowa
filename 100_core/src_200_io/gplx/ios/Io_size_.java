@@ -60,7 +60,7 @@ public class Io_size_ {
 		return unitPow;
 	}
 	static String UnitsXtoStr() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		int len = Array_.Len(Units);
 		for (int i = 0; i < len; i++) {
 			String[] eny = Units[i];

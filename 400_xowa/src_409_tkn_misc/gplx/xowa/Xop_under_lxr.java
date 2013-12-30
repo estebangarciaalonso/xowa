@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 class Xop_under_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_under;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast coreTrie) {
+	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
 		Xol_kwd_mgr kwd_mgr = wiki.Lang().Kwd_mgr();
 		int under_kwds_len = under_kwds.length;
 		Xop_under_lxr lxr = new Xop_under_lxr();
@@ -31,7 +31,7 @@ class Xop_under_lxr implements Xop_lxr {
 			for (int j = 0; j < kwd_itms_len; j++) {
 				Xol_kwd_itm kwd_itm = kwd_itms[j];
 				byte[] kwd_bry = kwd_itm.Bry();
-				coreTrie.Add(kwd_bry, lxr);
+				core_trie.Add(kwd_bry, lxr);
 				lxr.under_words.Add(kwd_bry, IntVal.new_(kwd_id));
 			}
 		}
@@ -43,13 +43,13 @@ class Xop_under_lxr implements Xop_lxr {
 	,	Xol_kwd_grp_.Id_disambig
 	};
 	Hash_adp_bry under_words;
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgnPos, int cur_pos) {
-		Object o = under_words.Get_by_mid(src, bgnPos, cur_pos);
+	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+		Object o = under_words.Get_by_mid(src, bgn_pos, cur_pos);
 		if (o != null) {
 			IntVal id_val = (IntVal)o;
 			Xoa_page page = ctx.Page();
 			switch (id_val.Val()) {
-				case Xol_kwd_grp_.Id_toc:				page.TocFlag_toc_y_(); ctx.Subs_add(root, tkn_mkr.Under(bgnPos, cur_pos, id_val.Val())); break;	// NOTE: only save under_tkn for TOC (b/c its position is needed for insertion); DATE:2013-07-01
+				case Xol_kwd_grp_.Id_toc:				page.TocFlag_toc_y_(); ctx.Subs_add(root, tkn_mkr.Under(bgn_pos, cur_pos, id_val.Val())); break;	// NOTE: only save under_tkn for TOC (b/c its position is needed for insertion); DATE:2013-07-01
 				case Xol_kwd_grp_.Id_forcetoc:			page.TocFlag_toc_force_y_(); break;
 				case Xol_kwd_grp_.Id_notoc:				page.TocFlag_toc_no_y_(); break;
 				case Xol_kwd_grp_.Id_noeditsection:		break;	// ignore; not handling edit sections

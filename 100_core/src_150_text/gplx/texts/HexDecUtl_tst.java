@@ -45,18 +45,18 @@ public class HexDecUtl_tst {
 		tst_Write("[00000000]", 1, 9,  15, "[0000000F]");
 		tst_Write("[00000000]", 1, 9, 255, "[000000FF]");
 	}
-	void tst_Write(String s, int bgn, int end, int val, String expd) {
+	private void tst_Write(String s, int bgn, int end, int val, String expd) {
 		byte[] bry = ByteAry_.new_ascii_(s);
 		HexDecUtl.Write(bry, bgn, end, val);
 		Tfds.Eq(expd, String_.new_ascii_(bry));
 	}
-	void tst_XtoInt(String raw, int expd) {
+	private void tst_XtoInt(String raw, int expd) {
 		int actl = HexDecUtl.parse_(raw);
 		Tfds.Eq(expd, actl);
 	}
-	void tst_XtoInt_bry(String raw, int expd) {Tfds.Eq(expd, HexDecUtl.parse_or_(ByteAry_.new_ascii_(raw), -1));}
-	void tst_XtoStr(int val, String expd) {tst_XtoStr(val, 0, expd);}
-	void tst_XtoStr(int val, int pad, String expd) {
+	private void tst_XtoInt_bry(String raw, int expd) {Tfds.Eq(expd, HexDecUtl.parse_or_(ByteAry_.new_ascii_(raw), -1));}
+	private void tst_XtoStr(int val, String expd) {tst_XtoStr(val, 0, expd);}
+	private void tst_XtoStr(int val, int pad, String expd) {
 		String actl = HexDecUtl.XtoStr(val, pad);
 		Tfds.Eq(expd, actl);
 	}

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
+import gplx.xowa.langs.casings.*;
 public class Xop_lnki_wkr_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {fxt.Reset();}
@@ -622,6 +623,9 @@ public class Xop_lnki_wkr_tst {
 			(	"[[File:A.png|link=b&nbsp;c]]", String_.Concat_lines_nl_skipLast
 			(	"<a href=\"/wiki/B_c\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
 			));
+	}
+	@Test  public void Page() {
+		fxt.tst_Parse_page_wiki("[[File:A.pdf|page=12]]"		, fxt.tkn_lnki_().Page_(12));
 	}
 
 //		@Test  public void Errs() {// FUTURE: restore; WHEN: lnki redo

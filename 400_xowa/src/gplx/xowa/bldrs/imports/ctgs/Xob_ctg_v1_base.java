@@ -95,7 +95,7 @@ public abstract class Xob_ctg_v1_base extends Xob_itm_dump_base implements Xobd_
 	private Gfo_fld_wtr fld_wtr = Gfo_fld_wtr.xowa_();
 	ByteTrieMgr_fast trie = ByteTrieMgr_fast.cs_().Add_stub(Tid_brack_end, "]]").Add_stub(Tid_pipe, "|").Add_stub(Tid_nl, "\n").Add_stub(Tid_brack_bgn, "[[");
 	static final int row_fixed_len = 5 + 1 + 1;	// 5=rowId; 1=|; 1=\n
-	ListAdp category_list = ListAdp_.new_(); IntRef curPos = IntRef.zero_();
+	ListAdp category_list = ListAdp_.new_(); IntRef cur_pos = IntRef.zero_();
 	static final byte Tid_eos = 0, Tid_brack_end = 1, Tid_pipe = 2, Tid_nl = 3, Tid_brack_bgn = 4;
 	private static int Move_fwd_while_space(byte[] src, int src_len, int pos) {
 		while (true) {

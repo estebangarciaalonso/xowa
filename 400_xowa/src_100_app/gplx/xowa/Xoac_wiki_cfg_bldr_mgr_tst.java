@@ -61,7 +61,7 @@ public class Xoac_wiki_cfg_bldr_mgr_tst {
 //			Io_url dir = Io_url_.new_dir_("/var/www/mediawiki/languages/messages/");
 //			Io_url[] fils = Io_mgr._.QueryDir_args(dir).ExecAsUrlAry();
 //			int fils_len = fils.length;
-//			StringBldr sb = StringBldr.new_();
+//			String_bldr sb = String_bldr_.new_();
 //			for (int i = 0; i < fils_len; i++) {
 //				Io_url fil = fils[i];
 //				String lang_code = String_.Lower(String_.Replace(fil.NameOnly(), "Messages", ""));
@@ -120,7 +120,7 @@ public class Xoac_wiki_cfg_bldr_mgr_tst {
 		));
 	}
 	String Query_ns(String protocol, String trg_engine_key, String[] wikis) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		int wikis_len = wikis.length;
 		for (int i = 0; i < wikis_len; i++) {
 			String wiki = wikis[i];
@@ -138,11 +138,11 @@ public class Xoac_wiki_cfg_bldr_mgr_tst {
 				if (!String_.Eq(ns_nde.Name(), "ns")) continue;
 				int id = Int_.parse_(ns_nde.Atrs().FetchValOr("id", "-1"));
 				String name = String_.Replace(String_.Replace(ns_nde.Text_inner(), " ", "_"), "'", "''");
-				sb.Add(Int_.XtoStr(id)).Add("|").Add(String_.Trim(name)).Add_line_nl();
+				sb.Add(Int_.XtoStr(id)).Add("|").Add(String_.Trim(name)).Add_char_nl();
 			}
 			sb.Add("\");');\n");
 			}
-			catch(Exception e) {sb.Add("// fail: " + wiki + " " + Err_.Message_gplx_brief(e)).Add_line_nl();}
+			catch(Exception e) {sb.Add("// fail: " + wiki + " " + Err_.Message_gplx_brief(e)).Add_char_nl();}
 		}
 		return sb.XtoStrAndClear();
 	}

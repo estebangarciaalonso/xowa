@@ -51,7 +51,7 @@ class Xofo_file {
 				.Add_int_variable(lnki.Lnki_w())		.Add_byte(Byte_ascii.Comma)
 				.Add_int_variable(lnki.Lnki_h());
 				if (lnki.Lnki_upright() != Xop_lnki_tkn.Upright_null)
-					bfr.Add_byte(Byte_ascii.Comma).Add(Xol_lnki_arg_parser.Bry_upright).Add_byte(Byte_ascii.Eq).Add_double(lnki.Lnki_upright());
+					bfr.Add_byte(Byte_ascii.Comma).Add(Xop_lnki_arg_parser.Bry_upright).Add_byte(Byte_ascii.Eq).Add_double(lnki.Lnki_upright());
 		}
 		wtr.Write_dlm_row();
 	}

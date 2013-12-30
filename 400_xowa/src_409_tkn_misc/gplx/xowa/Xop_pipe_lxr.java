@@ -22,49 +22,49 @@ class Xop_pipe_tkn extends Xop_tkn_itm_base {
 }
 class Xop_pipe_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_pipe;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast coreTrie) {coreTrie.Add(Byte_ascii.Pipe, this);}
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {
+	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Byte_ascii.Pipe, this);}
+	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		int cur_typeId = ctx.Cur_tkn_tid(), rv = -1;
 		switch (cur_typeId) {
 			case Xop_tkn_itm_.Tid_brack_bgn:
 				switch (ctx.Parse_tid()) {
 					case Xop_parser_.Parse_tid_tmpl:
 					case Xop_parser_.Parse_tid_page_tmpl:
-						ctx.Subs_add(root, tkn_mkr.Txt(bgnPos, curPos));
+						ctx.Subs_add(root, tkn_mkr.Txt(bgn_pos, cur_pos));
 						break;
 					case Xop_parser_.Parse_tid_page_wiki:
-						ctx.Subs_add(root, tkn_mkr.Pipe(bgnPos, curPos));
+						ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, cur_pos));
 						break;
 					default: throw Err_.unhandled(ctx.Parse_tid());
 				}
-				return curPos;
+				return cur_pos;
 			case Xop_tkn_itm_.Tid_tblw_tb:
 			case Xop_tkn_itm_.Tid_tblw_tr:
-				rv = Xop_tblw_lxr_ws.Make(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos, Xop_tblw_wkr.Tblw_type_td);
+				rv = Xop_tblw_lxr_ws.Make(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, Xop_tblw_wkr.Tblw_type_td);
 				if (rv == Xop_tblw_lxr_ws.Tblw_ws_cell_pipe) {
-					ctx.Subs_add(root, tkn_mkr.Pipe(bgnPos, curPos));
-					return curPos;
+					ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, cur_pos));
+					return cur_pos;
 				}
 				else
 					return rv;
 			case Xop_tkn_itm_.Tid_tblw_td:
 			case Xop_tkn_itm_.Tid_tblw_th:
 			case Xop_tkn_itm_.Tid_tblw_tc:
-				rv = Xop_tblw_lxr_ws.Make(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos, Xop_tblw_wkr.Tblw_type_td);
+				rv = Xop_tblw_lxr_ws.Make(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, Xop_tblw_wkr.Tblw_type_td);
 				if (rv != Xop_tblw_lxr_ws.Tblw_ws_cell_pipe) return rv;
 
 				if (ctx.Tblw().Cell_pipe_seen()) {
-					ctx.Subs_add(root, tkn_mkr.Pipe(bgnPos, curPos));
-					return curPos;
+					ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, cur_pos));
+					return cur_pos;
 				}
 				else {
 					Xop_tblw_tkn cur_tkn = (Xop_tblw_tkn)ctx.Stack_get_typ(cur_typeId);
 					Xop_tblw_wkr.Atrs_make(ctx, src, root, ctx.Tblw(), cur_tkn);
-					return curPos;
+					return cur_pos;
 				}
 			default:
-				ctx.Subs_add(root, tkn_mkr.Pipe(bgnPos, curPos));
-				return curPos;
+				ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, cur_pos));
+				return cur_pos;
 		}
 	}
 	public static final Xop_pipe_lxr _ = new Xop_pipe_lxr();

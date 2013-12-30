@@ -19,17 +19,17 @@ package gplx.xowa; import gplx.*;
 public class Xop_curly_wkr implements Xop_ctx_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
 	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {}
-	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int srcLen) {}
-	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int lxr_bgn_pos, int lxr_cur_pos, Xop_tkn_itm tkn) {}
-	public int MakeTkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int lxr_bgn_pos, int lxr_cur_pos) {
-		int lxr_end_pos = Xop_lxr_.Find_fwd_while(src, srcLen, lxr_cur_pos, Byte_ascii.Curly_bgn);	// NOTE: can be many consecutive {; EX: {{{{{1}}}|a}}
+	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {}
+	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int lxr_bgn_pos, int lxr_cur_pos, Xop_tkn_itm tkn) {}
+	public int MakeTkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int lxr_bgn_pos, int lxr_cur_pos) {
+		int lxr_end_pos = Xop_lxr_.Find_fwd_while(src, src_len, lxr_cur_pos, Byte_ascii.Curly_bgn);	// NOTE: can be many consecutive {; EX: {{{{{1}}}|a}}
 		ctx.Subs_add_and_stack(root, tkn_mkr.Tmpl_curly_bgn(lxr_bgn_pos, lxr_end_pos));
 		return lxr_end_pos;
 	}
-	public int MakeTkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int lxr_bgn_pos, int lxr_cur_pos) {
+	public int MakeTkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int lxr_bgn_pos, int lxr_cur_pos) {
 		if (ctx.Cur_tkn_tid() == Xop_tkn_itm_.Tid_brack_bgn)	// WORKAROUND: ignore }} if inside lnki; EX.CM:Template:Protected; {{#switch:a|b=[[a|ja=}}]]}}
 			return ctx.LxrMake_txt_(lxr_cur_pos);
-		int lxr_end_pos = Xop_lxr_.Find_fwd_while(src, srcLen, lxr_cur_pos, Byte_ascii.Curly_end);	// NOTE: can be many consecutive }; EX: {{a|{{{1}}}}}
+		int lxr_end_pos = Xop_lxr_.Find_fwd_while(src, src_len, lxr_cur_pos, Byte_ascii.Curly_end);	// NOTE: can be many consecutive }; EX: {{a|{{{1}}}}}
 		int end_tkn_len = lxr_end_pos - lxr_bgn_pos;
 		while (end_tkn_len > 0) {
 			int acs_pos = -1, acs_len = ctx.Stack_len();
@@ -81,7 +81,7 @@ public class Xop_curly_wkr implements Xop_ctx_wkr {
 					break;
 				default:		// USE_CASE: make prm_tkn; NOTE: 3 or more
 					new_tkn_len = 3;	// gobble 3 at a time; EX: 6 -> 3 -> 0; EX: 7 -> 4 -> 1;
-					prm_wkr.MakeTkn(ctx, tkn_mkr, root, src, srcLen, lxr_bgn_pos, lxr_bgn_pos + new_tkn_len, bgn_tkn, keep_curly_bgn);
+					prm_wkr.MakeTkn(ctx, tkn_mkr, root, src, src_len, lxr_bgn_pos, lxr_bgn_pos + new_tkn_len, bgn_tkn, keep_curly_bgn);
 					break;
 			}
 			switch (bgn_tkn_len - new_tkn_len) {	// continuation of semi-hack above; some bgn still left over; adjust and throw back on stack

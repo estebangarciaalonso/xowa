@@ -45,7 +45,7 @@ public class KeyVal_ {
 	public static KeyVal int_(int key, Object val) {return new KeyVal(key, val);}
 	public static KeyVal obj_(Object key, Object val) {return new KeyVal(key, val);}
 	public static String Xto_str(KeyVal... ary) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		int len = ary.length;
 		for (int i = 0; i < len; i++) {
 			KeyVal itm = ary[i];
@@ -55,7 +55,7 @@ public class KeyVal_ {
 				sb.Add(Xto_str((KeyVal[])itm_val));
 			else
 				sb.Add(Object_.XtoStr_OrNullStr(itm_val));
-			sb.Add_line_nl();
+			sb.Add_char_nl();
 		}
 		return sb.XtoStr();
 	}

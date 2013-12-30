@@ -39,7 +39,7 @@ public class EnmMgr {
 		return rv;
 	}
 	public String GetStr(int v) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		int cur = v, curModifier = bitRngBgn;
 		while (true) {					
 			if (cur == 0						
@@ -56,7 +56,7 @@ public class EnmMgr {
 			AppendRaw(sb, cur);
 		return sb.XtoStr();
 	}
-	void AppendRaw(StringBldr sb, int key) {
+	void AppendRaw(String_bldr sb, int key) {
 		String raw = (String)valRegy.Fetch(key);
 		if (sb.Count() > 0) sb.Add(bitRngSpr);
 		if (prefix != null) sb.Add(prefix);

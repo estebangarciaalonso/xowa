@@ -73,6 +73,3 @@ public class Pf_xtn_switch_tst {
 		Tfds.Eq(1, Pf_xtn_xowa_dbg.Argx_list.Count());
 	}
 }
-/*
-{{#switch:{{{1}}}|off=none|def=off|{{{1|off}}}}}
-*/

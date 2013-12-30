@@ -66,7 +66,7 @@ public class TimeSpanAdp_ {
 		return new TimeSpanAdp(fracs);
 	}
 	@gplx.Internal protected static String XtoStr(long frc, String fmt) {
-		StringBldr sb = new StringBldr();
+		String_bldr sb = String_bldr_.new_();
 		int[] units = Split_long(frc, Divisors);
 
 		if (String_.Eq(fmt, TimeSpanAdp_.Fmt_Short)) {

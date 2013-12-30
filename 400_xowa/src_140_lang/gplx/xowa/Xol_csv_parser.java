@@ -25,6 +25,7 @@ public class Xol_csv_parser {
 				case Byte_ascii.CarriageReturn: 		bfr.Add_byte(Byte_ascii.Backslash); bfr.Add_byte(Byte_ascii.Ltr_r); break;
 				case Byte_ascii.NewLine: 				bfr.Add_byte(Byte_ascii.Backslash); bfr.Add_byte(Byte_ascii.Ltr_n); break;
 				case Byte_ascii.Tab: 					bfr.Add_byte(Byte_ascii.Backslash); bfr.Add_byte(Byte_ascii.Ltr_t); break;
+				case Byte_ascii.Backslash: 				bfr.Add_byte(Byte_ascii.Backslash); bfr.Add_byte(Byte_ascii.Backslash); break;
 				case Byte_ascii.Pipe: 					bfr.Add(Bry_pipe); break;
 				default:								bfr.Add_byte(b); break;
 			}
@@ -40,6 +41,7 @@ public class Xol_csv_parser {
 					int nxt_pos = i + 1; if (nxt_pos == end) throw Err_mgr._.fmt_(GRP_KEY, "parse_backslash_is_last", "backslash cannot be last character");
 					byte nxt_byte = src[nxt_pos];
 					switch (nxt_byte) {
+						case Byte_ascii.Backslash:		bfr.Add_byte(Byte_ascii.Backslash); break;
 						case Byte_ascii.Ltr_r: 			bfr.Add_byte(Byte_ascii.CarriageReturn); break;
 						case Byte_ascii.Ltr_n:			bfr.Add_byte(Byte_ascii.NewLine); break;
 						case Byte_ascii.Ltr_t:			bfr.Add_byte(Byte_ascii.Tab); break;

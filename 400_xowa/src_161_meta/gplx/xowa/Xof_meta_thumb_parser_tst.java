@@ -40,10 +40,10 @@ public class Xof_meta_thumb_parser_tst {
 				sb.Add(i == 0 ? "@" : ",");
 				sb.Add(seek);
 			}
-			sb.Add_line_nl();
+			sb.Add_char_nl();
 		}
 		return sb.XtoStrAndClear();
-	}	StringBldr sb = StringBldr.new_();
+	}	String_bldr sb = String_bldr_.new_();
 //		Xof_meta_img_chkr img_(int w, int h, params int[] seeks) {return new Xof_meta_img_chkr().Width_(w).Height_(h).Seeks_(seeks);}
 	Xof_meta_thumb itm_y_(int w, int h, int... seeks) {return new Xof_meta_thumb(Xof_meta_itm.Exists_y, w, h, seeks);}
 	Xof_meta_thumb itm_n_(int w, int h, int... seeks) {return new Xof_meta_thumb(Xof_meta_itm.Exists_n, w, h, seeks);}

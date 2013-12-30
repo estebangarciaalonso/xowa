@@ -24,7 +24,7 @@ public class RegxPatn_cls_like_ {
 	static String Compile(String raw, char escape) {
 		char Wildcard = '%', AnyChar = '_';
 		boolean insideCharSet = false;
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		sb.Add(RegxBldr.Tkn_LineBegin);
 		int rawLen = String_.Len(raw);
 		for (int i = 0; i < rawLen; i++) {

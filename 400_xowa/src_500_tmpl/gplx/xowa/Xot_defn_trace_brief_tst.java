@@ -54,5 +54,5 @@ class Xot_defn_trace_fxt {
 		}
 		return rv;
 	}
-	StringBldr sb = StringBldr.new_();
+	String_bldr sb = String_bldr_.new_();
 }

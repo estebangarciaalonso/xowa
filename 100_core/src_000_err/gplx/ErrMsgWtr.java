@@ -20,7 +20,7 @@ public class ErrMsgWtr {
 	public String Message_gplx(Exception thrown) {
 		Err err = Err.convert_(thrown);	// convert thrown to Err to make rest of class easier
 		Err[] innerAry = InnerAsAry(err);
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		WriteError(innerAry, sb, 0);
 		WriteInner(innerAry, sb);
 		WriteStack(innerAry, sb);
@@ -28,7 +28,7 @@ public class ErrMsgWtr {
 	}
 	public String Message_gplx_brief(Exception thrown) {
 		Err err = Err.convert_(thrown);	// convert thrown to Err to make rest of proc easier
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		sb.Add(err.Hdr());
 		if (err.Args().Count() > 0) sb.Add(" --");
 		for (Object kvo : err.Args()) {
@@ -39,23 +39,23 @@ public class ErrMsgWtr {
 		sb.Add_fmt(" [{0}]", err.Key());
 		return sb.XtoStr();
 	}
-	void WriteInner(Err[] errAry, StringBldr sb) {
+	void WriteInner(Err[] errAry, String_bldr sb) {
 		int len = Array_.Len(errAry); if (len <= 1) return;	// no inners; return;
 		for (int i = 1; i < len; i++)
 			WriteError(errAry, sb, i);
 	}
-	void WriteError(Err[] errAry, StringBldr sb, int i) {
+	void WriteError(Err[] errAry, String_bldr sb, int i) {
 		Err err = errAry[i];
 		String msg = err.Hdr();
 		String typ = String_.Eq(err.Key(), "") ? "" : String_.Concat(" <", err.Key(), ">");
 		boolean onlyOne = errAry.length == 1;
 		String idxStr = onlyOne ? "" : Int_.XtoStr(i);
-		sb.Add(idxStr).Add("\t").Add(msg).Add(typ).Add_line();	// ex: "	@count must be > 0 <gplx.arg>"
+		sb.Add(idxStr).Add("\t").Add(msg).Add(typ).Add_char_crlf();	// ex: "	@count must be > 0 <gplx.arg>"
 		WriteKeyValAry(sb, err.Args());
-		sb.Add("\t").Add(err.Proc().SignatureRaw()).Add_line();
+		sb.Add("\t").Add(err.Proc().SignatureRaw()).Add_char_crlf();
 //			WriteKeyValAry(sb, err.ProcArgs());
 	}
-	void WriteKeyValAry(StringBldr sb, ListAdp ary) {
+	void WriteKeyValAry(String_bldr sb, ListAdp ary) {
 		// calc keyMax for valIndentLen
 		int keyMax = 0;
 		for (Object o : ary) {
@@ -68,15 +68,15 @@ public class ErrMsgWtr {
 			KeyVal kv = (KeyVal)o;
 			String key = kv.Key(); int keyLen = String_.Len(key);
 			String valIndent = String_.Repeat(" ", keyMax - keyLen);
-			sb.Add("\t\t@").Add(key).Add(valIndent).Add(kv.Val_to_str_or_empty()).Add_line();
+			sb.Add("\t\t@").Add(key).Add(valIndent).Add(kv.Val_to_str_or_empty()).Add_char_crlf();
 		}
 	}
-	void WriteStack(Err[] errAry, StringBldr sb) {
+	void WriteStack(Err[] errAry, String_bldr sb) {
 		if (Env_.Mode_testing()) return; // only write stack when not testing
 		int len = Array_.Len(errAry); if (len == 0) return;	// shouldn't happen, but don't want to throw err
 		Err first = errAry[0];
 		boolean onlyOne = len == 1;
-		sb.Add_line(String_.Repeat("-", 80));
+		sb.Add_str_w_crlf(String_.Repeat("-", 80));
 		ListAdp tmp = ListAdp_.new_();
 		OrderedHash callStack = first.CallStack(); int callStackCount = callStack.Count();
 		for (int i = 0; i < callStackCount ; i++) {
@@ -96,7 +96,7 @@ public class ErrMsgWtr {
 		}
 		tmp.Reverse();
 		for (Object o : tmp)
-			sb.Add_line((String)o);
+			sb.Add_str_w_crlf((String)o);
 	}
 	static Err[] InnerAsAry(Err err) {
 		ListAdp errAry = ListAdp_.new_();

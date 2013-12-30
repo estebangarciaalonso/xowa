@@ -15,25 +15,20 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.bldrs.wikis.images; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.wikis.*;
+package gplx.xowa.langs.variants; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
 import org.junit.*;
-import gplx.ios.*;
-public class Xob_wiki_image_sql_tst {
-	@Before public void init() {fxt.Init();} private Xob_wiki_image_sql_fxt fxt = new Xob_wiki_image_sql_fxt();
-	@After public void term() {fxt.Term();} 
-	@Test   public void Basic() {
-		fxt.Run(String_.Concat
-		(	"INSERT INTO `image` VALUES"
-		,	" ('B.jpg',10,1,2,3,16)"
-		,	",('A.jpg',20,2,4,6,32)"
-		,	",('C.JPG',30,4,6,8,48)"
-		,	";"
-		));
-//			fxt.Tst(String_.Concat_lines_nl
-//			(	"A.jpg||20|2|4|32|"
-//			,	"B.jpg||10|1|2|16|"
-//			,	"C.jpg|JPG|30|4|6|48|"
-//			));
-		;
+public class Xop_variant_lxr_tst {
+	@Test  public void Disabled() {
+		Xop_fxt fxt = new Xop_fxt();
+		fxt.Wiki().Variant_mgr().Set(null, null);
+		fxt.tst_Parse_page_all_str("a-{b}-c", "a-{b}-c");
+	}
+	@Test  public void Enabled() {
+		Xoa_app app = Xoa_app_fxt.app_();
+		Xol_lang lang = new Xol_lang(app, ByteAry_.new_ascii_("zh"));
+		Xow_wiki wiki = Xoa_app_fxt.wiki_(app, "zh.wikipedia.org", lang);
+		Xop_fxt fxt = new Xop_fxt(app, wiki);
+		fxt.tst_Parse_page_all_str("a-{b}-c", "ac");
+		fxt.Wiki().Variant_mgr().Set(null, null);	// set it back to null for other tests
 	}
 }

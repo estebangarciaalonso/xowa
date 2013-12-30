@@ -44,7 +44,7 @@ class Sql_select_fld_list {
 		return rv;
 	}
 	public String XtoStr() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < this.Count(); i++) {
 			Sql_select_fld_base fld = this.FetchAt(i);
 			sb.Add_fmt("{0},{1}|", fld.Fld(), fld.Alias());

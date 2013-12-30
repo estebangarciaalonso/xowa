@@ -118,9 +118,9 @@ public class Xob_xml_parser_tst {
 	ByteAryBfr bfr = ByteAryBfr.new_();
 	Xob_xml_page_bldr page_bldr = new Xob_xml_page_bldr(); Io_buffer_rdr fil; Xob_xml_parser page_parser = new Xob_xml_parser(); Xob_bldr bldr;
 	Gfo_usr_dlg usr_dlg = Gfo_usr_dlg_xowa.test_();
-	int tst_parse(Io_buffer_rdr fil, Xodb_page expd, int curPos) {
+	int tst_parse(Io_buffer_rdr fil, Xodb_page expd, int cur_pos) {
 		Xodb_page actl = new Xodb_page();
-		int rv = page_parser.Parse_page(actl, usr_dlg, fil, fil.Bfr(), curPos, ns_mgr);
+		int rv = page_parser.Parse_page(actl, usr_dlg, fil, fil.Bfr(), cur_pos, ns_mgr);
 		Tfds.Eq(expd.Id(), actl.Id(), "id");
 		Tfds.Eq(String_.new_utf8_(expd.Ttl_w_ns()), String_.new_utf8_(actl.Ttl_w_ns()), "title");
 		Tfds.Eq(String_.new_utf8_(expd.Text()), String_.new_utf8_(actl.Text()), "text");

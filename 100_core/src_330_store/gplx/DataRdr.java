@@ -46,5 +46,5 @@ public interface DataRdr extends SrlMgr, RlsAble {
 	DataRdr Subs();
 	DataRdr Subs_byName(String name);
 	DataRdr Subs_byName_moveFirst(String name);
-	void XtoStr_gfml(StringBldr sb);
+	void XtoStr_gfml(String_bldr sb);
 }

@@ -36,58 +36,58 @@ public class Xop_lxr_ {
 			}
 		}
 	}
-	public static int Find_fwd_while(byte[] src, int srcLen, int curPos, byte continueByte) {
+	public static int Find_fwd_while(byte[] src, int src_len, int cur_pos, byte continueByte) {
 		while (true) {
-			if (curPos == srcLen
-				|| src[curPos] != continueByte) return curPos;
-			curPos++;
+			if (cur_pos == src_len
+				|| src[cur_pos] != continueByte) return cur_pos;
+			cur_pos++;
 		}
 	}
-	public static int Find_fwd_while_ws(byte[] src, int srcLen, int curPos) {
+	public static int Find_fwd_while_ws(byte[] src, int src_len, int cur_pos) {
 		while (true) {
-			if (curPos == srcLen) return curPos;
-			switch (src[curPos]) {
+			if (cur_pos == src_len) return cur_pos;
+			switch (src[cur_pos]) {
 				case Byte_ascii.Space:
 				case Byte_ascii.Tab:
 					break;
 				default:
-					return curPos;
+					return cur_pos;
 			}
-			curPos++;
+			cur_pos++;
 		}
 	}
-	public static int Find_fwd_while_ws_hdr_version(byte[] src, int srcLen, int curPos) {
+	public static int Find_fwd_while_ws_hdr_version(byte[] src, int src_len, int cur_pos) {
 		int last_nl = -1;
 		while (true) {
-			if (curPos == srcLen) return curPos;
-			byte b = src[curPos];
+			if (cur_pos == src_len) return cur_pos;
+			byte b = src[cur_pos];
 			switch (b) {
 				case Byte_ascii.NewLine:
-					curPos++;
-					last_nl = curPos;
+					cur_pos++;
+					last_nl = cur_pos;
 					break;
 				case Byte_ascii.Space:
 				case Byte_ascii.Tab:
-					curPos++;
+					cur_pos++;
 					break;
 				default:
-					return last_nl == -1 ? curPos : last_nl - 1;
+					return last_nl == -1 ? cur_pos : last_nl - 1;
 			}
 		}
 	}
-	public static int FindFwdUntil(byte[] src, int srcLen, int curPos, byte stopByte) {
+	public static int FindFwdUntil(byte[] src, int src_len, int cur_pos, byte stopByte) {
 		while (true) {
-			if (curPos == srcLen
-				|| src[curPos] == stopByte) return curPos;
-			curPos++;
+			if (cur_pos == src_len
+				|| src[cur_pos] == stopByte) return cur_pos;
+			cur_pos++;
 		}
 	}
-	public static int FindFwdUntilPunctuationOrWs(byte[] src, int srcLen, int curPos) {
+	public static int FindFwdUntilPunctuationOrWs(byte[] src, int src_len, int cur_pos) {
 		while (true) {
-			if (curPos == srcLen) return curPos;
-			byte b = src[curPos];
-			if (b < 48 || (b > 57 && b < 65) || (b > 90 && b < 97) || (b > 122 && b < 127)) return curPos;
-			curPos++;
+			if (cur_pos == src_len) return cur_pos;
+			byte b = src[cur_pos];
+			if (b < 48 || (b > 57 && b < 65) || (b > 90 && b < 97) || (b > 122 && b < 127)) return cur_pos;
+			cur_pos++;
 		}
 	}
 	public static int FindNonLetter(byte[] src, int cur, int len) {

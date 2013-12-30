@@ -47,7 +47,7 @@ class Sql_tbl_src {
 	public ListAdp JoinLinks() {return joinLinks;} ListAdp joinLinks = ListAdp_.new_();
 	public String TblName() {return tblName;} public Sql_tbl_src TblName_(String s) {tblName = s; return this;} private String tblName;
 	public String Alias() {return alias;} public Sql_tbl_src Alias_(String s) {alias = s; return this;} private String alias;
-	public void XtoSql(StringBldr sb) {
+	public void XtoSql(String_bldr sb) {
 		sb.Add_many(tblName, alias == null ? "" : " " + alias);
 	}
 	public static Sql_tbl_src new_() {return new Sql_tbl_src();} Sql_tbl_src() {}

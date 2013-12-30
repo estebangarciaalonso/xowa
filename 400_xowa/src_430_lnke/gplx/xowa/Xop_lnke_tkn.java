@@ -40,6 +40,6 @@ public class Xop_lnke_tkn extends Xop_tkn_itm_base {//20111222
 class Xop_lnke_end_lxr implements Xop_lxr {//20111222
 	public byte Lxr_tid() {return Xop_lxr_.Tid_lnke_end;}
 	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Byte_ascii.Brack_end, this);}
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int bgnPos, int curPos) {return ctx.Lnke().MakeTkn_end(ctx, tkn_mkr, root, src, srcLen, bgnPos, curPos);}
+	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {return ctx.Lnke().MakeTkn_end(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos);}
 	public static final Xop_lnke_end_lxr _ = new Xop_lnke_end_lxr(); Xop_lnke_end_lxr() {}
 }

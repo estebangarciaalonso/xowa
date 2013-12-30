@@ -129,7 +129,7 @@ class DsvParser {
 		nextValType = ValType_Data;
 		lineMode = LineType_Data;
 	}
-	StringBldr sb = StringBldr.new_(); ListAdp tkns = ListAdp_.new_(); DsvTblBldr bldr = DsvTblBldr.new_();
+	String_bldr sb = String_bldr_.new_(); ListAdp tkns = ListAdp_.new_(); DsvTblBldr bldr = DsvTblBldr.new_();
 	boolean cmdSeqOn = false, qteOn = false, csvOn = false;
 	int nextValType = ValType_Data, lineMode = LineType_Data;		
 	@gplx.Internal protected static DsvParser dsv_() {return new DsvParser();}
@@ -186,7 +186,7 @@ class DsvTblBldr {
 		if (stage == Stage_Row)				// comments in ROW; ignore; NOTE: tkns.Clear() could be merged, but this seems clearer
 			tkns.Clear();
 		else {								// comments in HDR
-			StringBldr sb = StringBldr.new_();
+			String_bldr sb = String_bldr_.new_();
 			for (int i = 0; i < tkns.Count(); i++)
 				sb.Add((String)tkns.FetchAt(i));
 			layout.HeaderList().Add_Comment(sb.XtoStr());

@@ -39,7 +39,7 @@ public class UsrMsg {
 			}
 			return Object_.XtoStr_OrNullStr(invk.Invk(GfsCtx._, 0, cmd, m));
 		}
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		sb.Add(hdr).Add(spr);
 		for (int i = 0; i < args.Count(); i++) {
 			KeyVal kv = (KeyVal)args.FetchAt(i);

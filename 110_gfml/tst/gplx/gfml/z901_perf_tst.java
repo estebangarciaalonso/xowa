@@ -24,7 +24,7 @@ public class z901_perf_tst {
 	public void Long() {
 //			String longText = String_.Repeat("a", 30 * 1000 * 1000);
 		String longText = Io_mgr._.LoadFilStr(Io_url_.new_any_("C:\\core_weekly.temp.gfio"));
-//			StringBldr sbXml = StringBldr.new_();
+//			String_bldr sbXml = String_bldr_.new_();
 //			sbXml.Add("<");
 //			sbXml.Add(longText);
 //			sbXml.Add("/>");
@@ -32,7 +32,7 @@ public class z901_perf_tst {
 //			gplx.xmls.XmlDoc_.parse_(sbXml.XtoStr());
 //			tmr.End_and_print("xml");	// 400
 
-		StringBldr sbGfml = StringBldr.new_();
+		String_bldr sbGfml = String_bldr_.new_();
 		for (int i = 0; i < 10; i++)  {
 		sbGfml.Add(longText);
 //			sbGfml.Add(longText);

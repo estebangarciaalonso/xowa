@@ -62,7 +62,7 @@ public class GfuiBorderMgr {
 			all = null;
 		}
 	}
-	public String XtoStr() {return StringBldr_kv.new_("all", all).Add("left", left).Add("right", right).Add("top", top).Add("bot", bot).XtoStr();}
+	public String XtoStr() {return String_bldr_.new_().Add_kv_obj("all", all).Add_kv_obj("left", left).Add_kv_obj("right", right).Add_kv_obj("top", top).Add_kv_obj("bot", bot).XtoStr();}
 	@Override public String toString() {return XtoStr();}
 	public static GfuiBorderMgr new_() {return new GfuiBorderMgr();} GfuiBorderMgr() {}
 }

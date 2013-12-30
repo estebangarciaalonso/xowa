@@ -81,7 +81,7 @@ public class TstObj_tst {
 		ListAdp rslts = ListAdp_.new_();
 		Eval(rslts, ruleMgr, OrderedHash_.new_(), "", expdChk, actlChk);
 
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		sb.Add(raw).Add(Op_sys.Lnx.Nl_str());
 		boolean pass = true;
 		int[] cols = new int[3];

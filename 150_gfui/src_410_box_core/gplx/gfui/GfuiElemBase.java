@@ -235,10 +235,10 @@ public class GfuiElemBase implements GfuiElem {
 		else if (ctx.Match(k, Invk_OwnerWin_cmd))					return OwnerWin();
 		else {
 			if (ctx.Help_browseMode()) {
-				StringBldr sb = StringBldr.new_();
+				String_bldr sb = String_bldr_.new_();
 				for (int i = 0; i < this.SubElems().Count(); i++) {
 					GfuiElem subE = (GfuiElem)this.SubElems().FetchAt(i);
-					sb.Add_line(subE.Key_of_GfuiElem());
+					sb.Add_str_w_crlf(subE.Key_of_GfuiElem());
 				}
 				return sb.XtoStr();
 			}

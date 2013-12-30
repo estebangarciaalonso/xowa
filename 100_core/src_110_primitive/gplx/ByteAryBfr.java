@@ -180,6 +180,16 @@ public class ByteAryBfr {
 		bry_len = aryEnd;
 		return this;
 	}
+	public ByteAryBfr Add_bry_comma(byte[] v) {return Add_bry(Byte_ascii.Comma, v);}
+	public ByteAryBfr Add_bry(byte dlm, byte[] v) {
+		if (v == null) return this;
+		int v_len = v.length;
+		for (int i = 0; i < v_len; i++) {
+			if (i != 0) this.Add_byte(dlm);
+			this.Add_int_variable(v[i]);
+		}
+		return this;
+	}
 	public ByteAryBfr Add_str(String v) {return Add(ByteAry_.new_utf8_(v));}
 	public ByteAryBfr Add_float(float f) {Add_str(Float_.XtoStr(f)); return this;}
 	public ByteAryBfr Add_double(double v) {Add_str(Double_.XtoStr(v)); return this;}

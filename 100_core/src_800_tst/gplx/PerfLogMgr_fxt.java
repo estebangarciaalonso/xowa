@@ -35,10 +35,10 @@ public class PerfLogMgr_fxt {
 		tmr.Bgn();
 	}
 	public void Flush() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (Object itmObj : entries) {
 			PerfLogItm itm = (PerfLogItm)itmObj;
-			sb.Add(itm.XtoStr()).Add_line_only();
+			sb.Add(itm.XtoStr()).Add_char_crlf();
 		}
 		Io_mgr._.AppendFilStr(url, sb.XtoStr());
 		entries.Clear();

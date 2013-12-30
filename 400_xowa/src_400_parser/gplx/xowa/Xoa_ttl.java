@@ -428,15 +428,18 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 			byte char_1st = full_txt[page_bgn];
 			int char_1st_len = gplx.intl.Utf8_.CharLen(char_1st);
 			int page_end = page_bgn + char_1st_len;
-			if (	char_1st_len > 1){			// 1st char is multi-byte char
+			if (	char_1st_len > 1) {			// 1st char is multi-byte char
 				int full_txt_len = full_txt.length;
 				if (page_end > full_txt_len)	// ttl is too too short for 1st multi-byte char; EX: [[%D0]] is 208 but in utf8, 208 requires at least another char; DATE:2013-11-11
 					return false;				// ttl is invalid
 				else {							// ttl is long enough for 1st mult-byte char; need to use platform uppercasing; Xol_case_itm_.Universal is not sufficient
-//						String s = String_.new_utf8_(full_txt, page_bgn, page_bgn + char_1st_len); // convert 1st mb char to String
-//						s = String_.Upper(s);
-//						full_txt = ByteAry_.Add(ByteAry_.new_utf8_(s), ByteAry_.Mid(full_txt, page_end, full_txt_len));
-					full_txt = wiki.Lang().Case_mgr().Case_reuse_upper(full_txt, page_bgn, page_end);	// always build; never reuse; (multi-byte character will expand array)
+					ByteAryBfr upper_1st = wiki.Utl_bry_bfr_mkr().Get_b512();
+					byte[] page_txt = wiki.Lang().Case_mgr().Case_build_1st_upper(upper_1st, full_txt, page_bgn, full_txt_len);	// always build; never reuse; (multi-byte character will expand array)
+					if (page_bgn == 0)			// page only; EX: A
+						full_txt = page_txt;
+					else						// ns + page; EX: Help:A
+						full_txt = ByteAry_.Add(ByteAry_.Mid(full_txt, 0, page_bgn), page_txt);	// add page_txt to exsiting ns
+					upper_1st.Mkr_rls();
 				}
 			}
 			else

@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa; import gplx.*;
+package gplx.xowa.langs.casings; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
 public interface Xol_case_itm {
 	byte Tid();
 	byte[] Src_ary();

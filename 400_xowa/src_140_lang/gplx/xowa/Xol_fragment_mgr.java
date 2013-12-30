@@ -62,6 +62,7 @@ public class Xol_fragment_mgr implements GfoInvkAble {
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_somevalue)
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_links_wiki)
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_links_wikivoyage)
+			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_links_special)
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_plus)
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_minus)
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_plusminus)
@@ -85,6 +86,10 @@ public class Xol_fragment_mgr implements GfoInvkAble {
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_years1e9)
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_bc)
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_inTime)
+			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_wikibase_diffview_rank)
+			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_preferred)
+			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_normal)
+			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_deprecated)
 			, lang.App().Fsys_mgr().Root_dir().To_http_file_str()
 			);
 		return bfr.Mkr_rls().XtoAryAndClear();
@@ -137,6 +142,7 @@ public class Xol_fragment_mgr implements GfoInvkAble {
 		,	"    'somevalue'          : '~{somevalue}',"
 		,	"    'links-wiki'         : '~{links_wiki}',"
 		,	"    'links-wikivoyage'   : '~{links_wikivoyage}',"
+		,	"    'links-special'      : '~{links_special}',"
 		,	"    'plus'               : '~{plus}',"
 		,	"    'minus'              : '~{minus}',"
 		,	"    'plusminus'          : '~{plusminus}',"
@@ -159,13 +165,21 @@ public class Xol_fragment_mgr implements GfoInvkAble {
 		,	"    'years1e8'           : '~{years1e8}',"
 		,	"    'years1e9'           : '~{years1e9}',"
 		,	"    'bc'                 : '~{bc}',"
-		,	"    'inTime'             : '~{inTime}'"
+		,	"    'inTime'             : '~{inTime}',"
+		,	"    'rank'               : '~{rank}',"
+		,	"    'preferred'          : '~{preferred}',"
+		,	"    'normal'             : '~{normal}',"
+		,	"    'deprecated'         : '~{deprecated}'"
 		,	"  };"
 		,	"  </script>"
 		,	"  <script src=\"~{app_root_dir}bin/any/javascript/xowa/wikidata/wikidata.js\"></script>"
 		)
-		,	"languages", "toc", "labels", "aliasesHead", "descriptions", "links", "claims", "json", "language", "wiki", "label", "aliases", "description", "link", "property", "value", "references", "qualifiers"
-		,	"comma_separator", "word_separator", "parentheses", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec", "ago", "novalue", "somevalue", "links_wiki", "links_wikivoyage", "plus", "minus", "plusminus", "degree", "minute", "second", "north", "south", "west", "east", "meters", "julian", "decade", "century", "millenium", "years1e4", "years1e5", "years1e6", "years1e7", "years1e8", "years1e9", "bc", "inTime"
+		, "languages", "toc", "labels", "aliasesHead", "descriptions", "links", "claims", "json", "language", "wiki", "label", "aliases", "description", "link", "property", "value", "references", "qualifiers"
+		, "comma_separator", "word_separator", "parentheses", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec", "ago", "novalue", "somevalue"
+		, "links_wiki", "links_wikivoyage", "links_special"
+		, "plus", "minus", "plusminus", "degree", "minute", "second", "north", "south", "west", "east", "meters", "julian"
+		, "decade", "century", "millenium", "years1e4", "years1e5", "years1e6", "years1e7", "years1e8", "years1e9", "bc", "inTime"
+		, "rank", "preferred", "normal", "deprecated"
 		, "app_root_dir"
 		);
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {

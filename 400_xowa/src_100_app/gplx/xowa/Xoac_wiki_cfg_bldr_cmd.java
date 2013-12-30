@@ -20,7 +20,7 @@ public class Xoac_wiki_cfg_bldr_cmd {
 	public Xoac_wiki_cfg_bldr_cmd(String key, String text) {this.key = key; this.text = text;}
 	public String Key() {return key;} private String key;
 	public String Text() {return text;} private String text;
-	public String Exec(StringBldr sb, String wiki, String src) {
+	public String Exec(String_bldr sb, String wiki, String src) {
 		String sect_txt_bgn = sb.Add("// ").Add(key).Add(".bgn\n").XtoStrAndClear();
 		String sect_txt_end = sb.Add("// ").Add(key).Add(".end\n").XtoStrAndClear();
 		String sect_txt_all = sb.Add(sect_txt_bgn).Add(text + "\n").Add(sect_txt_end).XtoStrAndClear();	// NOTE: always add \n; convenience for single line cmds

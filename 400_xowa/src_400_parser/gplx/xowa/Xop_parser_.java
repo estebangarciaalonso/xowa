@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.langs.variants.*;
 public class Xop_parser_ {
 	public static final byte Parse_tid_null = 0, Parse_tid_tmpl = 1, Parse_tid_page_tmpl = 2, Parse_tid_page_wiki = 3;
 	public static final int Doc_bgn_bos = -1, Doc_bgn_char_0 = 0;
@@ -54,7 +55,6 @@ public class Xop_parser_ {
 			, Xop_tblw_lxr.Bldr //, Xop_tblw_lxr_ws.Bldr
 			, Xop_pre_lxr.Bldr
 			, Xop_comm_lxr._
-			, Xop_variant_lxr.Bldr
 			, Xop_under_lxr.Bldr
 			);
 		return rv;
@@ -64,6 +64,7 @@ public class Xop_parser_ {
 		anchorencode_trie = ByteTrieMgr_fast.cs_();
 		Ctor_trie_lxr(wiki, anchorencode_trie
 			, Xop_pipe_lxr._, new Xop_eq_lxr(false), Xop_space_lxr._, Xop_tab_lxr._, Xop_nl_lxr.Bldr
+			, Xop_curly_bgn_lxr._, Xop_curly_end_lxr._
 			, Xop_amp_lxr._, Xop_colon_lxr._
 			, Xop_apos_lxr._
 			, Xop_lnki_lxr_bgn._, Xop_lnki_lxr_end._

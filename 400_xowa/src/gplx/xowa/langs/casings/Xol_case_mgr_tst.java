@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa; import gplx.*;
+package gplx.xowa.langs.casings; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
 import org.junit.*;
 public class Xol_case_mgr_tst {
 	Xol_case_mgr_fxt fxt = new Xol_case_mgr_fxt();
@@ -30,12 +30,23 @@ public class Xol_case_mgr_tst {
 	@Test  public void Upper_ab()		{fxt.Ini_ltrs().Upper("abac", "ABAc");}
 	@Test  public void Lower_a()		{fxt.Ini_ltrs().Lower("aAaZ", "aaaZ");}
 	@Test  public void Lower_ac()		{fxt.Ini_ltrs().Lower("ABAC", "aBac");}
+//		@Test  public void Hack() {
+//			Xol_case_itm[] ary = Xol_case_itm_.Universal;
+//			ByteAryBfr bfr = ByteAryBfr.new_();
+//			for (int i = 0; i < ary.length; i++) {
+//				Xol_case_itm itm = ary[i];
+//				bfr.Add_str("xo|");
+//				bfr.Add_bry_comma(itm.Src_ary()).Add_byte_pipe();
+//				bfr.Add_bry_comma(itm.Trg_ary()).Add_byte_nl();
+//			}
+//			Io_mgr._.SaveFilStr("C:\\test1.txt", bfr.XtoStrAndClear());
+//		}
 }
 class Xol_case_mgr_fxt {
 	Xol_case_mgr case_mgr = new Xol_case_mgr();
 	public void Clear() {
 		case_mgr.Clear();
-	}	StringBldr sb = StringBldr.new_();
+	}	String_bldr sb = String_bldr_.new_();
 	public Xol_case_itm_ary itm_both_(String src, String trg)	{return new Xol_case_itm_ary(Xol_case_itm_.Tid_both , ByteAry_.new_utf8_(src), ByteAry_.new_utf8_(trg));}
 	public Xol_case_itm_ary itm_upper_(String src, String trg) {return new Xol_case_itm_ary(Xol_case_itm_.Tid_upper, ByteAry_.new_utf8_(src), ByteAry_.new_utf8_(trg));}
 	public Xol_case_itm_ary itm_lower_(String src, String trg) {return new Xol_case_itm_ary(Xol_case_itm_.Tid_lower, ByteAry_.new_utf8_(src), ByteAry_.new_utf8_(trg));}
@@ -70,7 +81,7 @@ class Xol_case_mgr_fxt {
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++) {
 			Xol_case_itm itm = ary[i];
-			sb.Add(Byte_.XtoStr(itm.Tid())).Add_char_pipe().Add(String_.new_utf8_(itm.Src_ary())).Add_char_pipe().Add(String_.new_utf8_(itm.Trg_ary())).Add_line_nl();
+			sb.Add(Byte_.XtoStr(itm.Tid())).Add_char_pipe().Add(String_.new_utf8_(itm.Src_ary())).Add_char_pipe().Add(String_.new_utf8_(itm.Trg_ary())).Add_char_nl();
 		}
 		return sb.XtoStrAndClear();
 	}
@@ -99,7 +110,7 @@ class Xol_case_mgr_fxt {
 		sb.Add("}}");
 		return sb.XtoStrAndClear();
 	}
-	private void raw_ary(StringBldr sb, String[] ary) {
+	private void raw_ary(String_bldr sb, String[] ary) {
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++) {
 			String itm = ary[i];

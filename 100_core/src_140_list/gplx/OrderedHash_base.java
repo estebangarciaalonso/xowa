@@ -60,7 +60,7 @@ public class OrderedHash_base extends HashAdp_base implements OrderedHash, GfoIn
 	public int IndexOf(Object obj) {return this.IndexOf_base(obj);}
 	public void MoveTo(int src, int trg) {if (locked) Lock_fail(); ordered.MoveTo(src, trg);}
 	public String XtoStr_ui() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		int count = ordered.Count();
 		int pad = String_.Len(Int_.XtoStr(count));
 		for (int i = 0; i < count; i++) {

@@ -43,7 +43,7 @@ public class Gfs_msg_bldr_tst {
 	}
 }
 class Gfs_msg_bldr_fxt {
-	public void Clear() {} StringBldr sb = StringBldr.new_(); Gfs_msg_bldr msg_bldr = Gfs_msg_bldr._;
+	public void Clear() {} String_bldr sb = String_bldr_.new_(); Gfs_msg_bldr msg_bldr = Gfs_msg_bldr._;
 	public KeyVal kv_(String key, String val) {return KeyVal_.new_(key, val);}
 	public GfoMsg msg_(String key, KeyVal... args) {
 		GfoMsg rv = GfoMsg_.new_parse_(key);
@@ -68,7 +68,7 @@ class Gfs_msg_bldr_fxt {
 	String Xto_str(GfoMsg[] ary) {
 		int len = ary.length;
 		for (int i = 0; i < len; i++) {
-			if (i != 0) sb.Add_line();
+			if (i != 0) sb.Add_char_crlf();
 			sb.Add(ary[i].XtoStr());
 		}
 		return sb.XtoStrAndClear();

@@ -17,12 +17,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.intl.*; import gplx.xowa.bldrs.langs.*;
+import gplx.xowa.langs.variants.*;
 public class Xoa_lang_mgr implements GfoInvkAble {
 	public Xoa_lang_mgr(Xoa_app app) {
 		this.app = app;
 		mw_converter = new Xobc_utl_make_lang(app);
 		lang_en = Lang_en_make(app); this.Add(lang_en);
-	}	private Xoa_app app; Xol_lang lang_en;
+		variant_mgr = new Xol_variant_mgr(this);
+	}	private Xoa_app app; private Xol_lang lang_en;
+	public Xol_variant_mgr Variant_mgr() {return variant_mgr;} private Xol_variant_mgr variant_mgr;
 	public static Xol_lang Lang_en_make(Xoa_app app) {
 		Xol_lang rv = new Xol_lang(app, Xol_lang_.Key_en);
 		Xol_lang_.Lang_init(rv);
@@ -53,10 +56,14 @@ public class Xoa_lang_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_groups))				return groups;
 		else if (ctx.Match(k, Invk_local_set_bulk))		Local_set_bulk(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_load_lang))			Load_lang(m.ReadBry("v"));
+		else if	(ctx.Match(k, Invk_variants))			return variant_mgr;
 		else if	(ctx.Match(k, Invk_mediawiki_converter))return mw_converter;
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
-	}	private static final String Invk_get = "get", Invk_local_set_bulk = "local_set_bulk", Invk_load_lang = "load_lang", Invk_groups = "groups", Invk_mediawiki_converter = "mediawiki_converter";
+	}
+	private static final String Invk_get = "get", Invk_local_set_bulk = "local_set_bulk", Invk_load_lang = "load_lang"
+	, Invk_groups = "groups", Invk_mediawiki_converter = "mediawiki_converter", Invk_variants = "variants"
+	;
 	public Hash_adp_bry Fallback_regy() {return fallback_regy;} Hash_adp_bry fallback_regy = new Hash_adp_bry(false);
 	private void Load_lang(byte[] bry) {this.Get_by_key_or_new(bry).Load(app);}
 	public void Local_set_bulk(byte[] src) {	// NOTE: setting local lang names/grps on app level; may need to move to user level or wiki level (for groups) later

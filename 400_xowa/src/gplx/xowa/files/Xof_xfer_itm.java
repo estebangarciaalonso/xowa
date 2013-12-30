@@ -200,7 +200,12 @@ public class Xof_xfer_itm implements Xof_file_itm {
 		ttl = decoder.Decode_lax(Ttl_standardize(ttl));	// NOTE: this line is repeated in member above
 		return Xof_xfer_itm.Md5_calc(ttl);				// NOTE: md5 is calculated off of url_decoded ttl; EX: A%2Cb is converted to A,b and then md5'd. note that A%2Cb still remains the title
 	}
-	public static boolean Lnki_thumbable_calc(byte lnki_type, int lnki_w, int lnki_h) {return Xop_lnki_type.Id_defaults_to_thumb(lnki_type) || lnki_w != -1 || lnki_h != -1;}	// SEE:NOTE_1
+	public static boolean Lnki_thumbable_calc(byte lnki_type, int lnki_w, int lnki_h) {
+		return 
+			(	lnki_type == Xop_lnki_type.Id_frame && lnki_w != -1 && lnki_h != -1)
+			||	(Xop_lnki_type.Id_defaults_to_thumb(lnki_type) || lnki_w != -1 || lnki_h != -1)
+			;
+	}	// SEE:NOTE_1
 	private static byte[] Ttl_standardize(byte[] ttl) {
 		int ttl_len = ttl.length;
 		for (int i = 0; i < ttl_len; i++) {	// convert all spaces to _; NOTE: not same as lnki.Ttl().Page_url(), b/c Page_url does incompatible encoding

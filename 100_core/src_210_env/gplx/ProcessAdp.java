@@ -210,12 +210,12 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 		return process;
 	}
 	void Process_run_and_end() {
-		StringBldr sb = StringBldr.new_();	
+		String_bldr sb = String_bldr_.new_();	
 	    BufferedReader rdr = new BufferedReader(new InputStreamReader(process.getInputStream()));
         try {
     	    String line = "";
 		    while ((line = rdr.readLine()) != null)
-		    	sb.Add_line(line);
+		    	sb.Add_str_w_crlf(line);
 	    	process.waitFor();
         }
         catch (InterruptedException e) 	{throw Err_.err_key_(e, "gplx.ProcessAdp", "thread interrupted at wait_for").Add("exe_url", exe_url.Xto_api()).Add("exeArgs", args_str);}
@@ -228,7 +228,7 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 	String[] Xto_processBuilder_args(Io_url exe_url, String args_str) {		
 		ListAdp list = ListAdp_.new_();
 		list.Add(exe_url.Xto_api());
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		int len = String_.Len(args_str);
 		boolean inQuotes = false;
 		for (int i = 0; i < len; i++) {
@@ -316,7 +316,7 @@ class StreamGobbler extends Thread {
 	public String Rslt() {return rslt;} String rslt;
 	public void run () {
 		try {
-			StringBldr sb = StringBldr.new_();
+			String_bldr sb = String_bldr_.new_();
 			InputStreamReader isr = new InputStreamReader(stream);
 			BufferedReader br = new BufferedReader(isr);
 			while (true) {

@@ -26,7 +26,7 @@ class IptKeyChain implements IptArg {
 	public IptArg[] Chained()				{return chained;} IptArg[] chained;
 	@gplx.Internal protected IptKeyChain(IptArg[] ary) {
 		chained = ary;
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < ary.length; i++) {
 			IptArg itm = ary[i];
 			sb.Add_spr_unless_first(itm.Key(), ",", i);

@@ -26,7 +26,7 @@ public class Io_sort_tst {
 }
 class Io_sort_fxt {
 	Io_sort externalSort = new Io_sort().Memory_max_(Io_mgr.Len_kb);
-	StringBldr sb = StringBldr.new_();
+	String_bldr sb = String_bldr_.new_();
 	public Io_sort_fxt Clear() {Io_mgr._.InitEngine_mem(); return this;}
 	public Io_sort_fxt Memory_max_(int v) {externalSort.Memory_max_(v); return this;}
 	public Io_sort_fxt Src_(String v) {src = v; return this;} private String src;
@@ -54,7 +54,7 @@ class Io_sort_fxt {
 		list.Shuffle();
 		for (int i = 0; i < rows; i++) {
 			String itm = (String)list.FetchAt(i);
-			sb.Add(itm).Add_line_nl();
+			sb.Add(itm).Add_char_nl();
 		}		
 		return sb.XtoStrAndClear();
 	}

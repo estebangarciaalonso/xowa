@@ -106,11 +106,14 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 		ListAdp pages = ListAdp_.new_();
 		Xow_ns ns = wiki.Ns_mgr().Get_by_id(ns_id);
 		int pg_id = pg_bgn;
-		pg_bgn = 0;
 		while (true) {
 			page_src.Get_pages(pages, db_id, ns_id, pg_id);
 			int pages_len = pages.Count();
-			if (pages_len == 0) return;	// no more pages in db;
+			if (pages_len == 0) {	// no more pages in db;
+				if (pg_id > pg_bgn)	// reset pg_bgn to 0 only if pg_bgn seen;
+					pg_bgn = 0;
+				return;	
+			}
 			usr_dlg.Prog_many("", "", "fetched pages: ~{0}", pages_len);
 			for (int i = 0; i < pages_len; i++) {
 				Xodb_page page = (Xodb_page)pages.FetchAt(i);

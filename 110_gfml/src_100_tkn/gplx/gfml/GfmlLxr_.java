@@ -81,7 +81,7 @@ class GfmlLxr_group implements GfmlLxr {
 	public GfmlTkn MakeTkn(CharStream stream, int hookLength) {
 		while (stream.AtMid()) {
 			if (!ignoreOutput)
-				sb.Add_aryByPos(stream.Ary(), stream.Pos(), hookLength);
+				sb.Add_mid(stream.Ary(), stream.Pos(), hookLength);
 			stream.MoveNextBy(hookLength);
 
 			String found = String_.cast_(trie.FindMatch(stream));
@@ -95,7 +95,7 @@ class GfmlLxr_group implements GfmlLxr {
 	public GfmlLxr SubLxr() {throw Err_sublxr();}
 	public void SubLxr_Add(GfmlLxr... lexer) {throw Err_sublxr();}
 	Err Err_sublxr() {return Err_.not_implemented_msg_("group lxr does not have subLxrs").Add("key", key).Add("outputTkn", outputTkn.Raw());}
-	GfmlTrie trie = GfmlTrie.new_(); StringBldr sb = StringBldr.new_(); boolean ignoreOutput;
+	GfmlTrie trie = GfmlTrie.new_(); String_bldr sb = String_bldr_.new_(); boolean ignoreOutput;
 	public static GfmlLxr_group new_(String key, String[] hooks, GfmlTkn outputTkn, boolean ignoreOutput) {
 		GfmlLxr_group rv = new GfmlLxr_group();
 		rv.key = key;

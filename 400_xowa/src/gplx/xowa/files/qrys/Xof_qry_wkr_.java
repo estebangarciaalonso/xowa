@@ -17,5 +17,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.qrys; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 public class Xof_qry_wkr_ {
-	public static final byte Tid_null = Byte_.MaxValue_127, Tid_noop = 0, Tid_missing = 1, Tid_mock = 2, Tid_xowa_db = 3, Tid_xowa_reg = 4, Tid_wmf_api = 5;
+	public static final byte Tid_null = Byte_.MaxValue_127, Tid_noop = 0, Tid_missing = 1, Tid_mock = 2, Tid_xowa_db = 3, Tid_xowa_reg = 4, Tid_wmf_api = 5, Tid_dir = 6;
 }

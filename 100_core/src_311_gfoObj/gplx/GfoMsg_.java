@@ -185,7 +185,7 @@ class GfoMsg_base implements GfoMsg {
 	void ThrowNotFound(String k) {throw Err_.new_("arg not found in msg").Add("k", k).Add("counter", counter).Add("args", args);}
 	String ArgsXtoStr() {
 		if (this.Args_count() == 0) return "<<EMPTY>>";
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < this.Args_count(); i++) {
 			KeyVal rv = (KeyVal)this.Args_getAt(i);
 			sb.Add_fmt("{0};", rv.Key());
@@ -212,11 +212,11 @@ class GfoMsg_base implements GfoMsg {
 	protected ListAdp args;
 	ListAdp subs;
 	public String XtoStr() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		XtoStr(sb, new XtoStrWkr_gplx(), this);
 		return sb.XtoStrAndClear();
 	}
-	void XtoStr(StringBldr sb, XtoStrWkr wkr, GfoMsg m) {
+	void XtoStr(String_bldr sb, XtoStrWkr wkr, GfoMsg m) {
 		sb.Add(m.Key());
 		if (m.Subs_count() == 0) {
 			sb.Add(":");

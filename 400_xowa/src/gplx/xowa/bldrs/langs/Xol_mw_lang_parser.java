@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.langs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.intl.*; import gplx.php.*;
 public class Xol_mw_lang_parser {
-	Php_parser parser = new Php_parser(); Php_evaluator evaluator;
+	private Php_parser parser = new Php_parser(); private Php_evaluator evaluator;
 	public Xol_mw_lang_parser(Gfo_msg_log msg_log) {evaluator = new Php_evaluator(msg_log);}
 	public void Bld_all(Xoa_app app, Io_url user_root) {Bld_all(app, user_root, Xol_lang_transform_null._);}
 	public static final String Dir_name_xowa = Xoa_app_.Name;
@@ -137,7 +137,8 @@ public class Xol_mw_lang_parser {
 			}
 		}
 		lang.Evt_lang_changed();
-	}	
+	}
+	public static String[] Lang_skip = new String[] {"qqq", "enrtl", "akz", "sxu", "test", "mwv", "rup", "hu-formal", "tzm", "bbc", "bbc-latn", "lrc", "ttt", "gom", "gom-latn"};
 	public void Parse_xtn(String text, Io_url url, Xoa_app app, ByteAryBfr bfr, boolean prepend_hash, Xol_lang_transform lang_transform) {
 		evaluator.Clear();
 		parser.Parse_tkns(text, evaluator);
@@ -153,7 +154,7 @@ public class Xol_mw_lang_parser {
 				if (subs.length == 0) continue;	// ignore if no lang_key; EX: ['en']
 				byte[] lang_key = subs[0].Val_obj_bry();
 				try {
-				if (String_.In(String_.new_utf8_(lang_key), "qqq", "enrtl", "akz", "sxu", "test", "mwv", "rup", "hu-formal", "tzm", "bbc", "bbc-latn")) continue;
+				if (String_.In(String_.new_utf8_(lang_key), Lang_skip)) continue;
 				Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(lang_key);
 				ByteVal stub = (ByteVal)o;
 				switch (stub.Val()) {
@@ -229,15 +230,20 @@ public class Xol_mw_lang_parser {
 			byte[] kv_key = kv.Key().Val_obj_bry();
 			Php_itm_ary kv_ary = (Php_itm_ary)kv.Val();
 			int kv_ary_len = kv_ary.Subs_len();
-			if (kv_ary_len < 2) throw Err_mgr._.fmt_(Err_scope_keywords, "invalid_ary", "array must have 2 or more items", String_.new_utf8_(kv_key));
-			boolean case_match = Parse_int_as_bool(kv_ary.Subs_get(0));
-			int words_len = kv_ary_len - 1;
+			boolean case_match = false;								// if 1 arg, default to false
+			int kv_ary_bgn = 0; int words_len = kv_ary_len;			// if 1 arg, default to entire kv_ary; words_len
+			int case_match_int = Parse_int_or(kv_ary.Subs_get(0), Int_.MinValue);
+			if (case_match_int != Int_.MinValue) {
+				case_match = Parse_int_as_bool(kv_ary.Subs_get(0));	// arg[0] is case_match
+				kv_ary_bgn = 1;										// arg[1] is 1st word
+				words_len = kv_ary_len - 1;							// words.len = kv_len - 1 (skip case_match
+			}
 			byte[][] words = new byte[words_len][];
-			for (int j = 1; j < kv_ary_len; j++) {
+			for (int j = kv_ary_bgn; j < kv_ary_len; j++) {
 				Php_itm_sub kv_sub = kv_ary.Subs_get(j);
 				byte[] word = Parse_bry(kv_sub);
 //					if (prepend_hash && word[0] != Byte_ascii.Hash) word = ByteAry_.Add(Byte_ascii.Hash, word);
-				words[j - 1] = lang_transform.Kwd_transform(lang_key, kv_key, word);
+				words[j - kv_ary_bgn] = lang_transform.Kwd_transform(lang_key, kv_key, word);
 			}
 			int keyword_id = Xol_kwd_grp_.Id_by_bry(kv_key); if (keyword_id == -1) continue; //throw Err_mgr._.fmt_(Err_scope_keywords, "invalid_key", "key does not have id", String_.new_utf8_(kv_key));
 			Xol_kwd_grp grp = mgr.Get_or_new(keyword_id);
@@ -262,23 +268,26 @@ public class Xol_mw_lang_parser {
 			specials_mgr.Add(kv_key, aliases);
 		}
 	}
-	boolean Parse_int_as_bool(Php_itm itm) {
+	private boolean Parse_int_as_bool(Php_itm itm) {
+		int rv = Parse_int_or(itm, Int_.MinValue);
+		if (rv == Int_.MinValue) throw Err_mgr._.fmt_(GRP_KEY, "parse_int_as_bool", "value must be 0 or 1", String_.new_utf8_(itm.Val_obj_bry()));
+		return rv == 1;
+	}
+	private int Parse_int_or(Php_itm itm, int or) {
 		int rv = -1;
 		switch (itm.Itm_tid()) {
 			case Php_itm_.Tid_int:
 				rv = ((Php_itm_int)itm).Val_obj_int();
-				break;
+				return rv;
 			case Php_itm_.Tid_quote:
 				byte[] bry = ((Php_itm_quote)itm).Val_obj_bry();
 				rv = ByteAry_.XtoIntOr(bry, -1);
-				if (rv == -1) throw Err_mgr._.fmt_(GRP_KEY, "parse_int_as_bool", "value must be 0 or 1", String_.new_utf8_(bry));
-				break;
+				return (rv == -1) ? or : rv;
 			default:
-				throw Err_mgr._.unhandled_(itm.Itm_tid());
+				return or;
 		}
-		return rv == 1;
-	}
-	byte[] Parse_bry(Php_itm itm) {
+				}
+	private byte[] Parse_bry(Php_itm itm) {
 		switch (itm.Itm_tid()) {
 			case Php_itm_.Tid_kv:
 			case Php_itm_.Tid_ary:
@@ -305,8 +314,8 @@ public class Xol_mw_lang_parser {
 			else throw Err_mgr._.unhandled_(String_.new_utf8_(key_bry));
 		}
 		num_fmt_mgr.Clear().Dec_dlm_(dec_dlm).Grps_add(new Gfo_num_fmt_grp(grp_dlm, 3, true));
-	}	static final byte[] Bry_separatorTransformTable_comma = new byte[] {Byte_ascii.Comma}, Bry_separatorTransformTable_dot = new byte[] {Byte_ascii.Dot};
-	private static final String GRP_KEY = "xowa.lang.parser"; private static final String Err_scope_keywords = GRP_KEY + ".keywords";
+	}	private static final byte[] Bry_separatorTransformTable_comma = new byte[] {Byte_ascii.Comma}, Bry_separatorTransformTable_dot = new byte[] {Byte_ascii.Dot};
+	private static final String GRP_KEY = "xowa.lang.parser";
 	private static final byte Tid_messages = 0, Tid_magicwords = 1, Tid_namespaceNames = 2, Tid_namespaceAliases = 3, Tid_specialPageAliases = 4
 		, Tid_linkTrail = 5, Tid_dateFormats = 6, Tid_fallback = 7, Tid_separatorTransformTable = 8, Tid_rtl = 9;
 	private static Hash_adp_bry Tid_hash = new Hash_adp_bry(true)
@@ -338,5 +347,5 @@ public class Xol_mw_lang_parser {
 		}
 		Object o = mw_names.MatchAtCurExact(src, 0, src.length);
 		return o == null ? Xow_ns_.Id_null : ((IntVal)o).Val();
-	}	static ByteTrieMgr_slim mw_names;
+	}	private static ByteTrieMgr_slim mw_names;
 }

@@ -15,7 +15,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.langs; import gplx.*; import gplx.xowa.*;
-public interface Xol_grammar {
-	boolean Grammar_eval(ByteAryBfr bfr, Xol_lang lang, byte[] word, byte[] type);
+package gplx;
+public class String_bldr_ {
+	public static String_bldr new_()					{return new String_bldr_thread_single();}
+	public static String_bldr new_thread()				{return new String_bldr_thread_multiple();}
 }

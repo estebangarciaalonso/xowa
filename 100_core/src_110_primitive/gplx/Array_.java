@@ -59,10 +59,10 @@ public class Array_ {
 		return trg;
 	}
 	public static String XtoStr(Object ary) {	
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		int ary_len = Len(ary);
 		for (int i = 0; i < ary_len; i++)
-			sb.Add_any(Get(ary, i)).Add_line_nl();
+			sb.Add_obj(Get(ary, i)).Add_char_nl();
 		return sb.XtoStr();
 	}
 		public static int Len(Object ary) {return Array.getLength(ary);}

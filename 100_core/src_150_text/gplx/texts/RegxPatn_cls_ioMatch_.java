@@ -30,7 +30,7 @@ public class RegxPatn_cls_ioMatch_ {
 	@gplx.Internal protected static String Compile(String raw) {
 		if (raw == ImpossiblePath) return ImpossiblePath;
 
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		sb.Add(RegxBldr.Tkn_LineBegin);									// Char_LineBegin for exact match (else "LIKE a" would match "abc")
 		int rawLen = String_.Len(raw);
 		for (int i = 0; i < rawLen; i++) {

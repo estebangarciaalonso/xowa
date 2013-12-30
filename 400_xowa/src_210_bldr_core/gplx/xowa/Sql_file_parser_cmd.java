@@ -22,7 +22,7 @@ public interface Sql_file_parser_cmd {
 class Sql_file_parser_cmd_max_len implements Sql_file_parser_cmd {
 	public void Log_len_(int v) {log_len = v;} private int log_len = 141;
 	public void Log_print(Io_url url) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < log.Count(); i++) {
 			String itm = (String)log.FetchAt(i);
 			sb.Add(String_.Len(itm) + "|" + itm + "\n");

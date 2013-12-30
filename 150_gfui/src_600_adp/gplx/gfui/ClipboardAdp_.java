@@ -39,7 +39,7 @@ public class ClipboardAdp_ {
 		catch (UnsupportedFlavorException e) {throw Err_.err_key_(e, GfuiEnv_.Err_GfuiException, "clipboard getData failed");}
 		catch (IOException e) {throw Err_.err_key_(e, GfuiEnv_.Err_GfuiException, "clipboard getData failed");}
 		if (Op_sys.Cur().Tid_is_wnt()) {	// WORKAROUND:JAVA: On Windows, Clipboard will have \r\n, but Java automatically converts to \n
-			StringBldr remake = new StringBldr();
+			String_bldr remake = String_bldr_.new_();
 			for (int i = 0; i < String_.Len(rv); i++) {
 				char c = String_.CharAt(rv, i);
 				if (c == '\n' && i > 0) {

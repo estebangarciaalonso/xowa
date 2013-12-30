@@ -38,7 +38,7 @@ public class Xow_xwiki_mgr_tst {
 	@Test  public void Add_bulk_core_wikidata() 				{fxt.Peers_ini().Tst_add_bulk_peers("core", fxt.xwiki_("d", "www.wikidata.org", "http://www.wikidata.org/wiki/~{0}"));}
 }
 class Xow_xwiki_mgr_fxt {
-	Xow_xwiki_mgr xwiki_mgr; Xoa_lang_mgr lang_mgr; StringBldr sb = StringBldr.new_(); Xoa_app app; Xow_wiki wiki;
+	Xow_xwiki_mgr xwiki_mgr; Xoa_lang_mgr lang_mgr; String_bldr sb = String_bldr_.new_(); Xoa_app app; Xow_wiki wiki;
 	public void Clear() {
 		if (xwiki_mgr == null) {
 			app = Xoa_app_fxt.app_();
@@ -114,9 +114,9 @@ class Xow_xwiki_mgr_fxt {
 		for (int i = 0; i < len; i++) {
 			Xow_xwiki_itm itm = itms[i];
 			if (ByteAry_.Len_eq_0(itm.Domain()))	// "null", ignore
-				sb.Add(itm.Key()).Add_line_nl();
+				sb.Add(itm.Key()).Add_char_nl();
 			else {
-				sb.Add(itm.Key()).Add_char_pipe().Add(itm.Domain()).Add_char_pipe().Add(itm.Fmt()).Add_line_nl();
+				sb.Add(itm.Key()).Add_char_pipe().Add(itm.Domain()).Add_char_pipe().Add(itm.Fmt()).Add_char_nl();
 			}
 		}
 		return sb.XtoStrAndClear();

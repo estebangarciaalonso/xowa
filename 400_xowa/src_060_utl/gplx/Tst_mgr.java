@@ -86,9 +86,9 @@ public class Tst_mgr {
 			ary_sb.Add(Object_.XtoStr_OrNullStr(itm)).Add(",");
 		}
 		return ary_sb.XtoStrAndClear();
-	}	StringBldr ary_sb = StringBldr.new_();
+	}	String_bldr ary_sb = String_bldr_.new_();
 	String Build() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		int comp_max = 0, path_max =0, name_max = 0;
 		int len = results.Count();
 		for (int i = 0; i < len; i++) {

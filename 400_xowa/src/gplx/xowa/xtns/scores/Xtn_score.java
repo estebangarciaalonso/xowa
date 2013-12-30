@@ -108,11 +108,11 @@ public class Xtn_score implements Xop_xnde_xtn, Xop_xnde_atr_parser, Xoh_cmd_itm
 			page.Html_cmd_mgr().Add(this);
 		}
 		score_xtn.Html_img().Bld_bfr_many(bfr, html_id_a, html_a_href_tmp, html_a_xowa_ttl, html_id_img, html_img_src_tmp, html_img_alt_tmp);
-	}	byte[] sha1; String sha1_prefix; Io_url output_dir, png_file, aud_file; String html_id_pre, html_id_img, html_id_a, html_a_href, html_img_src, html_img_alt;
-	String Fill_xfer(Xow_wiki wiki, Xoa_page page, byte[] ttl) {
+	}	private byte[] sha1; private String sha1_prefix; private Io_url output_dir, png_file, aud_file; private String html_id_pre, html_id_img, html_id_a, html_a_href, html_img_src, html_img_alt;
+	private String Fill_xfer(Xow_wiki wiki, Xoa_page page, byte[] ttl) {
 		Xof_xfer_itm xfer_itm = wiki.Html_wtr().Lnki_wtr().Lnki_eval(page.File_queue(), ttl, Xop_lnki_type.Id_none, -1, -1, -1, -1, false, Fill_xfer_ref);
 		return String_.new_utf8_(xfer_itm.Html_orig_src());
-	}	BoolRef Fill_xfer_ref = BoolRef.n_();
+	}	private BoolRef Fill_xfer_ref = BoolRef.n_();
 	public void Hcmd_exec(Xoa_app app, Xog_win_wtr gui_wtr, Xoa_page page) {
 		fail_msg = "unknown failure";
 		gui_wtr.Prog_many(GRP_KEY, "exec.msg", "generating lilypond: ~{0}", String_.new_utf8_(code));
@@ -162,7 +162,7 @@ public class Xtn_score implements Xop_xnde_xtn, Xop_xnde_atr_parser, Xoh_cmd_itm
 		app.Fsys_mgr().App_mgr().App_trim_img().Run(png_file_untrimmed, png_file);
 		Io_mgr._.DeleteFil(png_file_untrimmed);
 		fail_msg = null;		
-	}	String fail_msg = null;
+	}	private String fail_msg = null;
 	public void Hcmd_write(Xoa_app app, Xog_win_wtr gui_wtr, Xoa_page page) {
 		if (fail_msg == null) {	// fill in png/midi;			
 			gui_wtr.Html_atr_set(html_id_a, "href", html_a_href);

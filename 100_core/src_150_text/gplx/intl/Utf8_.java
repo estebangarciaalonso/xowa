@@ -148,6 +148,12 @@ public class Utf8_ {
 			return b0 & 0xFF;
 		}
 	}
+	public static byte[] Encode_as_bry_by_hex(String raw) {return Encode_as_bry_by_hex(ByteAry_.new_ascii_(raw));}
+	public static byte[] Encode_as_bry_by_hex(byte[] raw) {
+		if (raw == null) return null;
+		int int_val = gplx.texts.HexDecUtl.parse_or_(raw, Int_.MinValue);
+		return int_val == Int_.MinValue ? null : EncodeCharAsAry(int_val);
+	}
 	public static byte[] EncodeCharAsAry(int charAsInt) {
 		int rv_len = Len(charAsInt);
 		byte[] rv = new byte[rv_len];

@@ -57,7 +57,7 @@ public class TimeSpanAdp implements CompareAble, EqAble {
 		if (fracs == 0) return "0" + UnitAbbrv(0);
 		int[] units = Units();
 		boolean started = false;
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = units.length - 1; i > -1; i--) {
 			int unit = units[i];
 			if (!started) {
@@ -67,7 +67,7 @@ public class TimeSpanAdp implements CompareAble, EqAble {
 					started = true;
 			}
 			if (sb.Count() != 0) sb.Add(" ");
-			sb.Add_any(unit).Add(UnitAbbrv(i));
+			sb.Add_obj(unit).Add(UnitAbbrv(i));
 		}
 		return sb.XtoStr();
 	}

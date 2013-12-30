@@ -49,7 +49,7 @@ public class Xob_text_db_prep extends Xob_itm_basic_base implements Xob_cmd {
 	private void Prep_db(String page_db_url, Xodb_file text_db) {
 		usr_dlg.Note_many("", "", "copying page_rows to text_db: ~{0}", text_db.Url().NameOnly());
 		Db_provider provider = text_db.Provider();
-		Sqlite_engine_.Tbl_create_and_delete(provider, "oimg_page_dump", Sql_create_tbl);
+		Sqlite_engine_.Tbl_create_and_delete(provider, "page_dump", Sql_create_tbl);
 		Sqlite_engine_.Db_attach(provider, "page_db", page_db_url);
 		provider.Txn_mgr().Txn_bgn_if_none();
 		provider.Exec_sql(String_.Format(Sql_insert_data, text_db.Id()));
@@ -57,7 +57,7 @@ public class Xob_text_db_prep extends Xob_itm_basic_base implements Xob_cmd {
 		Sqlite_engine_.Idx_create(provider, Idx_create);
 	}
 	private static final String Sql_create_tbl = String_.Concat_lines_nl
-	( "CREATE TABLE IF NOT EXISTS oimg_page_dump"
+	( "CREATE TABLE IF NOT EXISTS page_dump"
 	, "(    page_id             integer"
 	, ",    page_title          varchar(256)"
 	, ",    page_namespace      integer"
@@ -65,7 +65,7 @@ public class Xob_text_db_prep extends Xob_itm_basic_base implements Xob_cmd {
 	, ");"
 	)
 	, Sql_insert_data = String_.Concat_lines_nl
-	( "INSERT INTO oimg_page_dump (page_id, page_title, page_namespace, page_is_redirect)"
+	( "INSERT INTO page_dump (page_id, page_title, page_namespace, page_is_redirect)"
 	, "SELECT  p.page_id"
 	, ",       p.page_title"
 	, ",       p.page_namespace"
@@ -76,6 +76,6 @@ public class Xob_text_db_prep extends Xob_itm_basic_base implements Xob_cmd {
 	)
 	;
 	private static final Db_idx_itm Idx_create = Db_idx_itm.sql_
-	( "CREATE UNIQUE INDEX oimg_page_dump_index ON oimg_page_dump (page_id, page_namespace, page_is_redirect, page_title);"
+	( "CREATE UNIQUE INDEX page_dump_index ON page_dump (page_id, page_namespace, page_is_redirect, page_title);"
 	);
 }

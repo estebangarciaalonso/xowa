@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 class Scrib_lib_title implements Scrib_lib {
-	public Scrib_lib_title(Scrib_engine engine) {this.engine = engine;} Scrib_engine engine;
-	public Scrib_mod Mod() {return mod;} Scrib_mod mod;
+	public Scrib_lib_title(Scrib_engine engine) {this.engine = engine;} private Scrib_engine engine;
+	public Scrib_mod Mod() {return mod;} private Scrib_mod mod;
 	public Scrib_mod Register(Scrib_engine engine, Io_url script_dir) {
 		mod = engine.RegisterInterface(script_dir.GenSubFil("mw.title.lua"), this
 			, String_.Ary(Invk_newTitle, Invk_makeTitle, Invk_getUrl, Invk_getContent, Invk_fileExists, Invk_getCurrentTitle)
@@ -27,7 +27,7 @@ class Scrib_lib_title implements Scrib_lib {
 			);
 		notify_page_changed_fnc = mod.Fncs_get_by_key("notify_page_changed");
 		return mod;
-	}	Scrib_fnc notify_page_changed_fnc;
+	}	private Scrib_fnc notify_page_changed_fnc;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_newTitle))			return NewTitle((KeyVal[])m.CastObj("v"));
 		else if	(ctx.Match(k, Invk_makeTitle))			return MakeTitle((KeyVal[])m.CastObj("v"));
@@ -61,27 +61,49 @@ class Scrib_lib_title implements Scrib_lib {
 		Object url_func_obj = url_func_hash.Fetch(url_func_bry);
 		if (url_func_obj == null) throw Err_.new_fmt_("url_function is not valid: {0}", String_.new_utf8_(url_func_bry));
 		byte url_func_tid = ((ByteVal)url_func_obj).Val();
-		byte[] qry_bry = Scrib_kv_utl.Val_to_bry_or(values, 2, null);
-		if (qry_bry == null || qry_bry.length == 0) qry_bry = ByteAry_.Empty;
-	//		byte[] proto = Scrib_kv_utl.Val_to_bry_or(values, 3, null);
+		byte[] qry_bry = GetUrl__qry_args(values);
+//			byte[] proto = Scrib_kv_utl.Val_to_bry_or(values, 3, null);
 		Xow_wiki wiki = engine.Wiki();
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry); if (ttl == null) return Scrib_kv_utl.base1_obj_(null);
 		ByteAryBfr bfr = wiki.App().Utl_bry_bfr_mkr().Get_b512();
-	//		if (url_func_tid == Pf_url_urlfunc.Tid_full) {
-	//			if (proto == null) proto = Proto_relative;
-	//			Object proto_obj = proto_hash.Fetch(proto); if (proto_obj == null) throw Err_.new_fmt_("protocol is not valid: {0}", proto);
-	//			//qry_bry = (byte[])proto_obj;
-	//			byte proto_tid = ((ByteVal)proto_obj).Val();
-	//			bfr.Add();
-	//		}
-		Pf_url_urlfunc.UrlString(engine.Ctx(), url_func_tid, false, ttl_bry, bfr,  qry_bry);
+//			if (url_func_tid == Pf_url_urlfunc.Tid_full) {
+//				if (proto == null) proto = Proto_relative;
+//				Object proto_obj = proto_hash.Fetch(proto); if (proto_obj == null) throw Err_.new_fmt_("protocol is not valid: {0}", proto);
+//				//qry_bry = (byte[])proto_obj;
+//				byte proto_tid = ((ByteVal)proto_obj).Val();
+//				bfr.Add();
+//			}
+		Pf_url_urlfunc.UrlString(engine.Ctx(), url_func_tid, false, ttl_bry, bfr, qry_bry);
 		return Scrib_kv_utl.base1_obj_(bfr.Mkr_rls().XtoStrAndClear());
+	}
+	private byte[] GetUrl__qry_args(KeyVal[] values) {
+		Object qry_args_obj = Scrib_kv_utl.Val_to_obj_or(values, 2, null);
+		if (qry_args_obj == null) return ByteAry_.Empty;
+		Class<?> qry_args_cls = ClassAdp_.ClassOf_obj(qry_args_obj);
+		if		(qry_args_cls == String.class)
+			return ByteAry_.new_utf8_((String)qry_args_obj);
+		else if (qry_args_cls == KeyVal[].class) {
+			ByteAryBfr bfr = engine.Wiki().Utl_bry_bfr_mkr().Get_b128();
+			KeyVal[] kvs = (KeyVal[])qry_args_obj;
+			int len = kvs.length;
+			for (int i = 0; i < len; i++) {
+				KeyVal kv = kvs[i];
+				if (i != 0) bfr.Add_byte(Byte_ascii.Amp);
+				bfr.Add_str(kv.Key());
+				bfr.Add_byte(Byte_ascii.Eq);
+				bfr.Add_str(kv.Val_to_str_or_empty());
+			}
+			return bfr.Mkr_rls().XtoAryAndClear();
+		}
+		else {
+			engine.Wiki().App().Gui_wtr().Warn_many("", "", "unknown type for GetUrl query args: ~{0}", ClassAdp_.NameOf_type(qry_args_cls));
+			return ByteAry_.Empty;
+		}
 	}
 	private static final Hash_adp_bry url_func_hash = new Hash_adp_bry(false).Add_str_byteVal("fullUrl", Pf_url_urlfunc.Tid_full).Add_str_byteVal("localUrl", Pf_url_urlfunc.Tid_local).Add_str_byteVal("canonicalUrl", Pf_url_urlfunc.Tid_canonical);
 	// private static final byte[] Proto_relative = ByteAry_.new_ascii_("relative");
 	// private static final Hash_adp_bry proto_hash = new Hash_adp_bry(false).Add_str_obj("http", ByteAry_.new_ascii_("http://")).Add_str_obj("https", ByteAry_.new_ascii_("https://")).Add_str_obj("relative", ByteAry_.new_ascii_("//")).Add_str_obj("canonical", ByteAry_.new_ascii_("1"));
-
-	byte[] Parse_ns(Xow_wiki wiki, Object ns_obj) {
+	private byte[] Parse_ns(Xow_wiki wiki, Object ns_obj) {
 		if (ClassAdp_.Eq_typeSafe(ns_obj, String.class))
 			return ByteAry_.new_utf8_(String_.cast_(ns_obj));
 		else {
@@ -126,7 +148,7 @@ class Scrib_lib_title implements Scrib_lib {
 	public KeyVal[] GetCurrentTitle(KeyVal[] values) {
 		return Scrib_kv_utl.base1_obj_(Xto_kv_ary(engine.Ctx().Page().Page_ttl()));
 	}
-	KeyVal[] Xto_kv_ary(Xoa_ttl ttl) {
+	private KeyVal[] Xto_kv_ary(Xoa_ttl ttl) {
 		Xow_ns ns = ttl.Ns();
 		boolean ttl_exists = engine.Wiki().Db_mgr().Load_mgr().Load_by_ttl(tmp_db_page, ttl.Ns(), ttl.Page_db());
 		boolean ttl_redirect = false; int ttl_id = 0;
@@ -153,7 +175,7 @@ class Scrib_lib_title implements Scrib_lib {
 		if (!ttl_file_or_media)
 			rv[11] = KeyVal_.new_("fileExists"		, false);								// REF.MW: if ( $ns !== NS_FILE && $ns !== NS_MEDIA )  $ret['fileExists'] = false;
 		return rv;
-	}	static final Xodb_page tmp_db_page = Xodb_page.tmp_();
+	}	private static final Xodb_page tmp_db_page = Xodb_page.tmp_();
 }
 class Xoa_content_model {
 	public static final String Key_wikitexet = "wikitext";

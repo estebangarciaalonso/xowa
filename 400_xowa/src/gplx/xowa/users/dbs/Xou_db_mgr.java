@@ -38,12 +38,12 @@ public class Xou_db_mgr {
 	}
 	public void App_save() {
 		try {
+			xtn_mgr.Db_save();			// NOTE: xowa_xtn sometimes empty; save first before any of its xtns; DATE:2013-12-29
 			int wkr_len = wkr_list.Count();
 			for (int i = 0; i < wkr_len; i++) {
 				Xou_db_wkr wkr = (Xou_db_wkr)wkr_list.FetchAt(i);
 				wkr.Db_save(this);
 			}
-			xtn_mgr.Db_save();
 		} 
 		catch (Exception e) {	// NOTE: can fail when two XOWA are launched (and both will have different cache ids); for now, ignore error
 			app.Usr_dlg().Warn_many("", "", "error while saving to user_db; err=~{0}", Err_.Message_gplx(e));
@@ -69,8 +69,8 @@ public class Xou_db_mgr {
 	public void Wkr_reg(Xou_db_wkr wkr) {
 		wkr_list.Add(wkr);
 		if (!xtn_mgr.Xtn_exists(wkr.Xtn_key()))  {
+			xtn_mgr.Xtn_add(wkr.Xtn_key(), wkr.Xtn_version());		// NOTE: xowa_xtn sometimes empty; add xtn before loading; if error below then xtn still added; DATE:2013-12-29
 			wkr.Db_when_new(this);
-			xtn_mgr.Xtn_add(wkr.Xtn_key(), wkr.Xtn_version());
 		}
 	}
 }

@@ -71,7 +71,7 @@ public class Xof_math_mgr implements GfoInvkAble {
 		}
 		return pass;
 	}
-	private StringBldr tmp_sb = StringBldr.new_();
+	private String_bldr tmp_sb = String_bldr_.new_();
 	private String Latex_wrap(byte[] math) {return Latex_doc_fmtr.Bld_str_many(String_.Replace(String_.new_utf8_(math), "\n\n", "\n"));}	// NOTE: remove lines that are completely blank; not sure if this is right; EX.WP: Standard Model (mathematical formulation); <math>(\mathbf{1},\mathbf\n\n{1},0)</math>
 	private static ByteAryFmtr Latex_doc_fmtr = new ByteAryFmtr()
 	.Fmt_(String_.Concat_lines_nl_skipLast

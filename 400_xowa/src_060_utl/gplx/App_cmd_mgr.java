@@ -88,8 +88,8 @@ public class App_cmd_mgr {
 		return this;
 	}
 	public void Print_args(Gfo_usr_dlg usr_dlg) {
-		sb.Add_line();
-		sb.Add_line("arguments:");
+		sb.Add_char_crlf();
+		sb.Add_str_w_crlf("arguments:");
 		int len = orig_ary.length;
 		if (len == 0) {
 			sb.Add_fmt_line("  **** NONE ****");
@@ -100,20 +100,20 @@ public class App_cmd_mgr {
 				sb.Add_fmt_line("  [{0}] = '{1}'", i, orig_ary[i]);			
 		}
 		usr_dlg.Note_none(GRP_KEY, "print.args", sb.XtoStrAndClear());
-	}	StringBldr sb = StringBldr.new_();
+	}	String_bldr sb = String_bldr_.new_();
 	public void Print_fail(Gfo_usr_dlg usr_dlg) {
-		sb.Add("** error: ").Add_line();
+		sb.Add("** error: ").Add_char_crlf();
 		int len = errs.Count();
 		for (int i = 0; i < len; i++) {
 			Gfo_msg_data data = (Gfo_msg_data)errs.FetchAt(i);
 			sb.Add_fmt_line("  " + data.Gen_str_ary());
 		}
-		sb.Add_line();
-		sb.Add_line(String_.Repeat("-", 80));
+		sb.Add_char_crlf();
+		sb.Add_str_w_crlf(String_.Repeat("-", 80));
 		usr_dlg.Note_none(GRP_KEY, "print.fail", sb.XtoStrAndClear());
 	}
 	public void Print_help(Gfo_usr_dlg usr_dlg, String app_name) {
-		sb.Add_line("example:");
+		sb.Add_str_w_crlf("example:");
 		sb.Add_fmt("  java -jar {0}.jar", app_name);
 		int key_max = 0, tid_max = 0;
 		int len = expd_args.Count();
@@ -123,21 +123,21 @@ public class App_cmd_mgr {
 			sb.Add(" ").Add(arg_prefix).Add(arg.Key()).Add(" ").Add(arg.Example());
 			int key_len = String_.Len(arg.Key()); if (key_len > key_max) key_max = key_len;
 			int tid_len = String_.Len(String_.Format("[{0}:{1}]", arg.Reqd_str(), arg.Val_tid_str())); if (tid_len > tid_max) tid_max = tid_len;
-		}	sb.Add_line();
-		sb.Add_line();
-		sb.Add_line("detail:");
+		}	sb.Add_char_crlf();
+		sb.Add_char_crlf();
+		sb.Add_str_w_crlf("detail:");
 		for (int i = 0; i < len; i++) {
 			App_cmd_arg arg = (App_cmd_arg)expd_args.FetchAt(i);
 //				if (arg.Tid() != App_cmd_arg.Tid_general) continue; // skip header, help
 			sb.Add("  ").Add(arg_prefix).Add(String_.PadEnd(arg.Key(), key_max + 1, " ")).Add(String_.PadEnd(String_.Format("[{0}:{1}]", arg.Reqd_str(), arg.Val_tid_str()), tid_max, " "));
 			if (arg.Dflt() != null)
 				sb.Add_fmt(" default={0}", arg.Dflt());
-			sb.Add_line_only();
+			sb.Add_char_crlf();
 			if (arg.Note() != null)
-				sb.Add("    ").Add(arg.Note()).Add_line_only();
+				sb.Add("    ").Add(arg.Note()).Add_char_crlf();
 //				for (int j = 0; j < arg.Itms().Count(); j++) {
 //					App_arg_info expdInf = (App_arg_info)arg.Itms().FetchAt(j);
-//					sb.Add("    ").Add(String_.PadEnd(expdInf.Key(), key_max + 1, " ")).Add_line(expdInf.Descrip());
+//					sb.Add("    ").Add(String_.PadEnd(expdInf.Key(), key_max + 1, " ")).Add_str_w_crlf(expdInf.Descrip());
 //				}
 		}
 		usr_dlg.Note_gui_none(GRP_KEY, "print.info", sb.XtoStrAndClear());

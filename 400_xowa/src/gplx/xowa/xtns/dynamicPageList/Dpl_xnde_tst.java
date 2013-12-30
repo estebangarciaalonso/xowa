@@ -193,19 +193,19 @@ class Dpl_xnde_fxt {
 		fxt.ini_ctg_create(ctg, page_ids);
 	}
 	public String Ul(String itm_html, String... pages) {
-		bfr.Add("<ul>").Add_line_nl();
+		bfr.Add("<ul>").Add_char_nl();
 		int pages_len = pages.length;
 		for (int i = 0; i < pages_len; i++) {
 			String page = pages[i];
 			bfr.Add("  <li><a href=\"/wiki/").Add(page).Add("\" title=\"").Add(page).Add("\"");
 			if (itm_html != null) bfr.Add(itm_html);
-			bfr.Add(">").Add(page).Add("</a></li>").Add_line_nl();
+			bfr.Add(">").Add(page).Add("</a></li>").Add_char_nl();
 		}
-		bfr.Add("</ul>").Add_line_nl();
+		bfr.Add("</ul>").Add_char_nl();
 		return bfr.XtoStrAndClear();
 	}
 	public void Ul_pages(String raw, String expd) {
 		fxt.tst_Parse_page_wiki_str(raw, expd);
 		fxt.tst_Warn(warns);
-	}	StringBldr bfr = new StringBldr();
+	}	String_bldr bfr = String_bldr_.new_();
 }

@@ -20,7 +20,7 @@ class GfsCoreHelp implements GfoInvkAble {
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		String path = m.ReadStrOr("path", "");
 		if (String_.Eq(path, "")) {
-			StringBldr sb = StringBldr.new_();
+			String_bldr sb = String_bldr_.new_();
 			for (int i = 0; i < core.Root_as_regy().Count(); i++) {
 				GfsRegyItm itm = (GfsRegyItm)core.Root_as_regy().FetchAt(i);
 				sb.Add_spr_unless_first(itm.Key(), String_.CrLf, i);
@@ -31,7 +31,7 @@ class GfsCoreHelp implements GfoInvkAble {
 	}
 	public static Err Err_Unhandled(String objPath, String key) {return Err_.new_("obj does not handle msgKey").Add("objPath", objPath).Add("key", key);}
 	static Err Err_Unhandled(String[] itmAry, int i) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int j = 0; j < i; j++)
 			sb.Add_spr_unless_first(itmAry[j], ".", j);
 		return Err_Unhandled(sb.XtoStr(), itmAry[i]);
@@ -54,7 +54,7 @@ class GfsCoreHelp implements GfoInvkAble {
 		else {
 			ctx = GfsCtx.new_().Help_browseMode_(true);
 			invk.Invk(ctx, 0, "", GfoMsg_.Null);
-			StringBldr sb = StringBldr.new_();
+			String_bldr sb = String_bldr_.new_();
 			for (int i = 0; i < ctx.Help_browseList().Count(); i++) {
 				String s = (String)ctx.Help_browseList().FetchAt(i);
 				sb.Add_spr_unless_first(s, String_.CrLf, i);

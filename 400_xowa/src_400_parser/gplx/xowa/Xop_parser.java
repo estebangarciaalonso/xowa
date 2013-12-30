@@ -17,7 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xop_parser {
-	Xop_parser(ByteTrieMgr_fast tmpl_trie, ByteTrieMgr_fast wiki_trie) {this.tmpl_trie = tmpl_trie; this.wiki_trie = wiki_trie;} ByteTrieMgr_fast tmpl_trie; ByteTrieMgr_fast wiki_trie;
+	private ByteTrieMgr_fast wiki_trie;
+	Xop_parser(ByteTrieMgr_fast tmpl_trie, ByteTrieMgr_fast wiki_trie) {this.tmpl_trie = tmpl_trie; this.wiki_trie = wiki_trie;}
+	public ByteTrieMgr_fast Tmpl_trie() {return tmpl_trie;} private ByteTrieMgr_fast tmpl_trie; 
 	public Xop_root_tkn Parse_recurse(Xop_ctx old_ctx, byte[] src, boolean doc_bgn_pos) {return Parse_recurse(old_ctx, Xop_ctx.new_sub_(old_ctx.Wiki()), src, doc_bgn_pos);}
 	public Xop_root_tkn Parse_recurse(Xop_ctx old_ctx, Xop_ctx new_ctx, byte[] src, boolean doc_bgn_pos) {
 		new_ctx.Para().Enabled_n_();

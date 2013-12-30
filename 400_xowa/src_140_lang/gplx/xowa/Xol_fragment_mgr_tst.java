@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xol_fragment_mgr_tst {
-	Xol_fragment_mgr_fxt fxt = new Xol_fragment_mgr_fxt();
+	private Xol_fragment_mgr_fxt fxt = new Xol_fragment_mgr_fxt();
 	@Before public void init()	{fxt.Clear();}
 	@Test   public void Html_wikidata() {
 		fxt.Test_fragment(Xol_fragment_mgr.Invk_html_js_wikidata, String_.Concat_lines_nl
@@ -62,6 +62,7 @@ public class Xol_fragment_mgr_tst {
 		,	"    'somevalue'          : '?',"
 		,	"    'links-wiki'         : 'Links (Wikipedia)',"
 		,	"    'links-wikivoyage'   : 'Links (Wikivoyage)',"
+		,	"    'links-special'      : 'Links (special wikis)',"
 		,	"    'plus'               : '+',"
 		,	"    'minus'              : '−',"
 		,	"    'plusminus'          : '±',"
@@ -84,7 +85,11 @@ public class Xol_fragment_mgr_tst {
 		,	"    'years1e8'           : '$100 million years',"
 		,	"    'years1e9'           : '$1 billion years',"
 		,	"    'bc'                 : '$1 BC',"
-		,	"    'inTime'             : 'in $1'"
+		,	"    'inTime'             : 'in $1',"
+		,	"    'rank'               : 'rank',"
+		,	"    'preferred'          : 'preferred',"
+		,	"    'normal'             : 'normal',"
+		,	"    'deprecated'         : 'deprecated'"
 		,	"  };"
 		,	"  </script>"
 		,	"  <script src=\"file:///mem/xowa/bin/any/javascript/xowa/wikidata/wikidata.js\"></script>"

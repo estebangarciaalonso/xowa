@@ -42,7 +42,7 @@ class GfoFldList_base implements GfoFldList {
 		return this;
 	}
 	public String XtoStr() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < hash.Count(); i++) {
 			GfoFld fld = this.FetchAt(i);
 			sb.Add(fld.Key()).Add("|");

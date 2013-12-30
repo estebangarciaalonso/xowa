@@ -32,7 +32,7 @@ class Db_obj_ary_fxt {
 	public Db_obj_ary_fxt Init_vals(Object... ary) {vals_list.Add(ary); return this;} private ListAdp vals_list = ListAdp_.new_();
 	public Db_obj_ary_fxt Test_sql(String expd) {
 		Sql_cmd_wtr_ansi cmd_wtr = (Sql_cmd_wtr_ansi)Sql_cmd_wtr_ansi_.default_();
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		crt.Flds_((Db_fld[])flds_list.XtoAryAndClear(Db_fld.class));
 		crt.Vals_((Object[][])vals_list.XtoAryAndClear(Object[].class));
 		cmd_wtr.Append_db_obj_ary(sb, crt);

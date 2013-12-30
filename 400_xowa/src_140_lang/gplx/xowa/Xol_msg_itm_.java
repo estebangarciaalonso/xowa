@@ -238,8 +238,13 @@ public static final int
 , Id_statistics_pages = 217
 , Id_statistics_pages_desc = 218
 , Id_statistics_header_ns = 219	
+, Id_wikibase_diffview_rank = 220
+, Id_xowa_wikidata_deprecated = 221
+, Id_xowa_wikidata_normal = 222
+, Id_xowa_wikidata_preferred = 223
+, Id_xowa_wikidata_links_special = 224
 ;
-	public static final int Id__max = 220;
+	public static final int Id__max = 225;
 	public static Xol_msg_itm new_(int id, String key, String val) {return new_(id, ByteAry_.new_utf8_(key), ByteAry_.new_utf8_(val));}
 	public static Xol_msg_itm new_(int id, byte[] key, byte[] val) {
 		Xol_msg_itm rv = new Xol_msg_itm(id, key);
@@ -473,6 +478,11 @@ case Xol_msg_itm_.Id_statistics_articles: return new_(Xol_msg_itm_.Id_statistics
 case Xol_msg_itm_.Id_statistics_pages: return new_(Xol_msg_itm_.Id_statistics_pages, "statistics-pages", "Pages");
 case Xol_msg_itm_.Id_statistics_pages_desc: return new_(Xol_msg_itm_.Id_statistics_pages_desc, "statistics-pages-desc", "All pages in the wiki, including talk pages, redirects, etc.");
 case Xol_msg_itm_.Id_statistics_header_ns: return new_(Xol_msg_itm_.Id_statistics_header_ns, "statistics-header-ns", "Name"+"space statistics");
+case Xol_msg_itm_.Id_wikibase_diffview_rank: return new_(Xol_msg_itm_.Id_wikibase_diffview_rank, "Wikibase-diffview-rank", "rank");
+case Xol_msg_itm_.Id_xowa_wikidata_deprecated: return new_(Xol_msg_itm_.Id_xowa_wikidata_deprecated, "xowa-wikidata-deprecated", "deprecated");
+case Xol_msg_itm_.Id_xowa_wikidata_normal: return new_(Xol_msg_itm_.Id_xowa_wikidata_normal, "xowa-wikidata-normal", "normal");
+case Xol_msg_itm_.Id_xowa_wikidata_preferred: return new_(Xol_msg_itm_.Id_xowa_wikidata_preferred, "xowa-wikidata-preferred", "preferred");
+case Xol_msg_itm_.Id_xowa_wikidata_links_special: return new_(Xol_msg_itm_.Id_xowa_wikidata_links_special, "xowa-wikidata-links-special", "Links (special wikis)");
 			default: throw Err_.unhandled(id);
 		}
 	}

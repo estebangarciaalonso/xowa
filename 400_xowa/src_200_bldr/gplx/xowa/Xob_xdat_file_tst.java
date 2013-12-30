@@ -106,11 +106,11 @@ public class Xob_xdat_file_tst {
 	private void tst_ReadAt(Xob_xdat_file rdr, int i, String expd) {rdr.GetAt(itm, i); Tfds.Eq(expd, String_.new_utf8_(itm.Itm_bry()));}
 	Xob_xdat_itm itm = new Xob_xdat_itm();
 	Xob_xdat_file rdr_(String... lines) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		int len = lines.length;
 		for (int i = 0; i < len; i++) {
 			String line = lines[i];
-			sb.Add(line).Add_line_nl();
+			sb.Add(line).Add_char_nl();
 		}
 		byte[] bry = ByteAry_.new_utf8_(sb.XtoStr());
 		return new Xob_xdat_file().Parse(bry, bry.length, Io_url_.Null);

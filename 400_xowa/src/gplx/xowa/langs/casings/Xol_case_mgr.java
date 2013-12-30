@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa; import gplx.*;
+package gplx.xowa.langs.casings; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
 public class Xol_case_mgr implements GfoInvkAble {
 	ByteAryBfr tmp_bfr = ByteAryBfr.new_(); ByteTrieMgr_fast upper_trie = ByteTrieMgr_fast.cs_(), lower_trie = ByteTrieMgr_fast.cs_(); Xol_case_itm[] itms;
 	public void Clear() {upper_trie.Clear(); lower_trie.Clear();}
@@ -50,7 +50,7 @@ public class Xol_case_mgr implements GfoInvkAble {
 			if (pos >= end) break;
 			byte b = src[pos];
 			int b_len = gplx.intl.Utf8_.CharLen(b);
-			Object o = trie.Match(b, src, bgn, end);
+			Object o = trie.Match(b, src, pos, end);	// NOTE: used to be (b, src, bgn, end) which would never case correctly; DATE:2013-12-25
 			if (o != null && pos < end) {	// pos < end used for casing 1st letter only; upper_1st will pass end of 1
 				Xol_case_itm itm = (Xol_case_itm)o;
 				if (upper)
@@ -74,7 +74,7 @@ public class Xol_case_mgr implements GfoInvkAble {
 			if (pos >= end) break;
 			byte b = src[pos];
 			int b_len = gplx.intl.Utf8_.CharLen(b);
-			Object o = trie.Match(b, src, bgn, end);
+			Object o = trie.Match(b, src, pos, end);	// NOTE: used to be (b, src, bgn, end) which would never case correctly; DATE:2013-12-25
 			if (o != null && pos < end) {	// pos < end used for casing 1st letter only; upper_1st will pass end of 1
 				Xol_case_itm itm = (Xol_case_itm)o;
 				if (upper)

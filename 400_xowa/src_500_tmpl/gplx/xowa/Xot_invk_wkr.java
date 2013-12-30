@@ -20,8 +20,8 @@ import gplx.xowa.langs.*;
 public class Xot_invk_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
 	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {this.tkn_mkr = ctx.Tkn_mkr();} private Xop_tkn_mkr tkn_mkr;
-	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int srcLen) {}
-	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int srcLen, int lxr_bgn_pos, int lxr_cur_pos, Xop_tkn_itm tkn) {}
+	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {}
+	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int lxr_bgn_pos, int lxr_cur_pos, Xop_tkn_itm tkn) {}
 	private static Arg_bldr arg_bldr = Arg_bldr._;
 	public int MakeTkn(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int lxr_cur_pos, int lxr_end_pos, Xop_curly_bgn_tkn bgn_tkn, int keep_curly_bgn) {
 		Xot_invk_tkn invk = tkn_mkr.Tmpl_invk(bgn_tkn.Src_bgn(), lxr_end_pos);
@@ -36,7 +36,7 @@ public class Xot_invk_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		Arg_itm_tkn key_tkn = invk.Name_tkn().Key_tkn();
 		if (!made
 			|| (key_tkn.Dat_bgn() == key_tkn.Dat_end() && key_tkn.Dat_bgn() != -1)) {	// key_tkn is entirely whitespace; EX: {{\n}}
-			invk.TypeId_toText();
+			invk.Tkn_tid_to_txt();
 			ctx.Subs_add(root, tkn_mkr.Txt(lxr_cur_pos, lxr_end_pos));
 			return lxr_cur_pos;
 		}

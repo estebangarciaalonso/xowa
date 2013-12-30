@@ -30,7 +30,7 @@ public class GfmlDocWtr_ {
 				Build(subItm);
 		}
 	}
-	StringBldr sb = StringBldr.new_();
+	String_bldr sb = String_bldr_.new_();
         public static String xtoStr_(GfmlNde nde) {
 		GfmlDocWtr_ wtr = new GfmlDocWtr_();
 		wtr.BuildNode(nde);

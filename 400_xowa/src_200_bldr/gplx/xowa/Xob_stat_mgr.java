@@ -26,12 +26,12 @@ public class Xob_stat_mgr {
 		return rv;
 	}
 	public String Print(Xow_ns_mgr nsMgr) {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < regy.Count(); i++) {
 			Xob_stat_type typ = (Xob_stat_type)regy.FetchAt(i);
 			sb.Add(String_.PadEnd(Xow_dir_info_.Tid_name(typ.Tid()), 6, " "));
 		}
-		sb.Add_line("ns");
+		sb.Add_str_w_crlf("ns");
 		String[] nsAry = GetNmsAry(nsMgr);
 		for (String ns : nsAry) {
 			for (int i = 0; i < regy.Count(); i++) {
@@ -39,12 +39,12 @@ public class Xob_stat_mgr {
 				Xob_stat_itm itm = (Xob_stat_itm)typ.GetOrNew(ns);
 				sb.Add(Int_.XtoStr_PadBgn(itm.Fils, 5)).Add(" ");
 			}
-			sb.Add_line(ns);
+			sb.Add_str_w_crlf(ns);
 		}
 		return sb.XtoStr();
 	}
 	public String XtoStr() {
-		StringBldr sb = StringBldr.new_();
+		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < regy.Count(); i++) {
 			Xob_stat_type typ = (Xob_stat_type)regy.FetchAt(i);
 			typ.XtoStr(sb);

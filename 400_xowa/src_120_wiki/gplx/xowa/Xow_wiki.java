@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.xowa.apps.*;
 import gplx.xowa.wikis.*; import gplx.xowa.users.*; import gplx.xowa.html.*; import gplx.xowa.users.history.*; import gplx.xowa.specials.*; import gplx.xowa.xtns.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*;
+import gplx.xowa.langs.variants.*;
 import gplx.xowa.setup.maints.*; import gplx.xowa.wikis.caches.*;
 public class Xow_wiki implements GfoInvkAble {
 	public Xow_wiki(Xoa_app app, Io_url wiki_dir, Xow_ns_mgr ns_mgr, Xol_lang lang) {
@@ -30,6 +31,7 @@ public class Xow_wiki implements GfoInvkAble {
 		redirect_mgr = new Xop_redirect_mgr(this);
 		data_mgr = new Xow_data_mgr(this);
 		file_mgr = new Xow_file_mgr(this);
+		variant_mgr = new Xow_variant_mgr(this);	// must be inited before parser
 		parser = Xop_parser.new_(this);
 		ctx = Xop_ctx.new_(this);
 		props.SiteName_(wiki_tid).ServerName_(domain_bry);
@@ -74,6 +76,7 @@ public class Xow_wiki implements GfoInvkAble {
 	public Xow_fsys_mgr			Fsys_mgr() {return fsys_mgr;} private Xow_fsys_mgr fsys_mgr;
 	public Xow_ns_mgr			Ns_mgr() {return ns_mgr;}  public void Ns_mgr_(Xow_ns_mgr v) {ns_mgr = v;} private Xow_ns_mgr ns_mgr;
 	public Xol_lang				Lang() {return lang;} private Xol_lang lang;
+	public Xow_variant_mgr		Variant_mgr() {return variant_mgr;} private Xow_variant_mgr variant_mgr;
 	public Xow_gui_mgr Gui_mgr() {return gui_mgr;} private Xow_gui_mgr gui_mgr = new Xow_gui_mgr();
 	public Xow_user User() {return user;} private Xow_user user = new Xow_user();
 	public Xow_data_mgr Data_mgr() {return data_mgr;} private Xow_data_mgr data_mgr;
@@ -199,9 +202,13 @@ public class Xow_wiki implements GfoInvkAble {
 			;
 	public Xodb_mgr_sql Db_mgr_create_as_sql() {Xodb_mgr_sql rv = new Xodb_mgr_sql(this); db_mgr = rv; return rv;}
 	Io_url wiki_dir = Io_url_.Null;
+	public void Init_post_cfg() {
+		variant_mgr.Init_post_cfg(app.Lang_mgr().Variant_mgr(), lang);
+	}
 	public Xow_wiki Init_assert() {if (init_needed) Init_wiki(app.User()); return this;}
 	private void Init_wiki(Xou_user user) {	// NOTE: (a) one-time initialization for all wikis; (b) not called by tests
 		if (app.Stage() == Xoa_stage_.Tid_launch_done) init_needed = false;	// NOTE: only mark inited if app fully launched; otherwise statements in xowa.gfs can fire and premature set home to inited; DATE:2013-03-24
+		Init_post_cfg();
 		Gfo_log_bfr log_bfr = app.Log_bfr();
 		log_bfr.Add("wiki.init.bgn:" + domain_str);
 		app.Cfg_mgr().Init(this);

@@ -105,7 +105,7 @@ class Xob_dump_src_id {
 	( "SELECT  p.page_id"
 	, ",       p.page_title"
 	, ",       t.old_text"
-	, "FROM    oimg_page_dump p"
+	, "FROM    page_dump p"
 	, "        JOIN text t ON t.page_id = p.page_id"
 	, "WHERE   p.page_id > ?"
 	, "AND     p.page_namespace = ?{0}" 

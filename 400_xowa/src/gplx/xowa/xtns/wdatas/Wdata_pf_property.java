@@ -41,7 +41,7 @@ public class Wdata_pf_property extends Pf_func_base {
 		int pid = data.Id_int();
 		if (pid == Wdata_wiki_mgr.Pid_null)
 			pid = wdata_mgr.Pids_get(wiki.Wdata_wiki_lang(), data.Id());
-		if (pid == Wdata_wiki_mgr.Pid_null) {Print_self(app.Usr_dlg(), bfr, src, self, "prop_not_found", "prop id not found: ~{0} ~{1} ~{2}", wiki.Key_str(), ttl.Page_db_as_str(), data.Id()); return;}
+		if (pid == Wdata_wiki_mgr.Pid_null) {Print_self(app.Usr_dlg(), bfr, src, self, "prop_not_found", "prop id not found: ~{0} ~{1} ~{2}", wiki.Domain_str(), ttl.Page_db_as_str(), data.Id()); return;}
 		Wdata_prop_grp prop_grp = prop_doc.Claim_list_get(pid); if (prop_grp == null) return;// NOTE: some props may not exist; EX: {{#property:P345}} for "Unknown_movie" may have a qid, but doesn't have a defined pid
 		wdata_mgr.Resolve_to_bfr(bfr, prop_grp, wiki.Wdata_wiki_lang()); // NOTE: was ctx.Page().Lang().Key_bry(), but fails in simplewiki; DATE:2013-12-02
 		if (property_wkr != null)
@@ -102,5 +102,5 @@ class Wdata_pf_property_data {
 	}
 	static final byte Atr_of_id = 1, Atr_q_id = 2;
 	private static final byte[] Atr_of_bry = ByteAry_.new_ascii_("of"), Atr_q_bry = ByteAry_.new_ascii_("q");
-	private static final Hash_adp_bry Atr_keys = new Hash_adp_bry(false).Add_bry_byteVal(Atr_of_bry, Atr_of_id).Add_bry_byteVal(Atr_q_bry, Atr_q_id);
+	private static final Hash_adp_bry Atr_keys = new Hash_adp_bry(false).Add_bry_byte(Atr_of_bry, Atr_of_id).Add_bry_byte(Atr_q_bry, Atr_q_id);
 } 

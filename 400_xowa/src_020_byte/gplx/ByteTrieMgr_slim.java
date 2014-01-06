@@ -50,6 +50,8 @@ public class ByteTrieMgr_slim {
 	public ByteTrieMgr_slim Add_str_byteVal(String key, byte val) {return Add(ByteAry_.new_utf8_(key), ByteVal.new_(val));}
 	public ByteTrieMgr_slim Add_bry(String key, String val) {return Add(ByteAry_.new_utf8_(key), ByteAry_.new_utf8_(val));}
 	public ByteTrieMgr_slim Add_bry(byte[] v) {return Add(v, v);}
+	public ByteTrieMgr_slim Add_bry_bval(byte b, byte val)			{return Add(new byte[] {b}, ByteVal.new_(val));}
+	public ByteTrieMgr_slim Add_bry_bval(byte[] bry, byte val)		{return Add(bry, ByteVal.new_(val));}
 	public ByteTrieMgr_slim Add_stub(String key, byte val) {byte[] bry = ByteAry_.new_utf8_(key); return Add(bry, new ByteTrie_stub(val, bry));}
 	public ByteTrieMgr_slim Add_stubs(byte[][] ary) {return Add_stubs(ary, ary.length);}
 	public ByteTrieMgr_slim Add_stubs(byte[][] ary, int ary_len) {

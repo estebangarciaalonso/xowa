@@ -31,12 +31,12 @@ public class Xoa_cfg_grp_tid {
 			if		(ByteAry_.Eq(key, Key_all_bry)) rv.tid = Tid_all;
 			else if	(ByteAry_.Eq(key, Key_app_bry)) rv.tid = Tid_app;
 			else {
-				Xow_wiki_type wiki_type = Xow_wiki_type_.parse_by_domain(key);
-				if (wiki_type.Wiki_tid() == Xow_wiki_type_.Tid_other)
+				Xow_wiki_domain wiki_type = Xow_wiki_domain_.parse_by_domain(key);
+				if (wiki_type.Tid() == Xow_wiki_domain_.Tid_other)
 					rv.tid = Tid_wiki;
 				else {
 					rv.tid = Tid_type;
-					rv.wiki_tid = wiki_type.Wiki_tid();
+					rv.wiki_tid = wiki_type.Tid();
 				}				
 			}
 			rv.key = key;

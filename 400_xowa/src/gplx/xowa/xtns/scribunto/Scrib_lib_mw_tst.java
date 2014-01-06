@@ -121,4 +121,19 @@ public class Scrib_lib_mw_tst {
 		fxt.Init_page("{{#invoke:Mod_0|Prc_0}}");
 		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_isSubsting, Object_.Ary_empty, "false");
 	}
+	@Test  public void ExpandTemplate_tmpl() {
+		fxt.Init_page("{{#invoke:Mod_0|Prc_0}}");
+		fxt.Parser_fxt().Data_create("Template:A", "b{{{key1}}}c");
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_expandTemplate, Object_.Ary("current", "A", Scrib_kv_utl.flat_many_("key1", "val1"))				, "bval1c");	// list: args is ary
+	}
+	@Test  public void ExpandTemplate_tmpl_bool() {
+		fxt.Init_page("{{#invoke:Mod_0|Prc_0}}");
+		fxt.Parser_fxt().Data_create("Template:Scribunto_bool", "bool_true={{{bool_true}}};bool_false={{{bool_false}}};");
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_expandTemplate, Object_.Ary("current", "Scribunto_bool", Scrib_kv_utl.flat_many_("bool_true", true, "bool_false", false)), "bool_true=1;bool_false={{{bool_false}}};");
+	}
+	@Test  public void ExpandTemplate_page() {
+		fxt.Init_page("{{#invoke:Mod_0|Prc_0}}");
+		fxt.Parser_fxt().Data_create("A", "b{{{key1}}}c");
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_expandTemplate, Object_.Ary("current", ":A", Scrib_kv_utl.flat_many_("key1", "val1"))				, "bval1c");	// list: args is ary
+	}
 }

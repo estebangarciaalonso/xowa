@@ -302,37 +302,51 @@ public class Xop_lnki_wkr_tst {
 			));
 		fxt.Ctx().Para().Enabled_n_();
 	}
-	@Test  public void Subpage() {
-		fxt.Page_ttl_("A/b");
-		fxt.tst_Parse_page_wiki_str
-			(	"[[../c]]"
-			,	"<a href=\"/wiki/A/c\">A/c</a>"
-			);
-	}
-	@Test   public void Subpage_parent() {
-		fxt.Page_ttl_("A");
-		fxt.tst_Parse_page_wiki_str
-			(	"[[b/../c]]"				
-			,	"<a href=\"/wiki/C\">c</a>"
-			);
-	}
-	@Test  public void Slash() {	// PURPOSE: slash being interpreted as subpage; EX.WP:[[/dev/null]]
+//		@Test   public void Subpage_parent() {	// DISABLED: MW does not allow ../ to go past root; DATE:2014-01-02
+//			fxt.Page_ttl_("A");
+//			fxt.tst_Parse_page_wiki_str
+//				(	"[[b/../c]]"
+//				,	"<a href=\"/wiki/C\">c</a>"
+//				);
+//		}
+	@Test  public void Subpage_disabled() {	// PURPOSE: slash being interpreted as subpage; EX.WP:[[/dev/null]]
 		fxt.Wiki().Ns_mgr().Get_by_id_or_null(Xow_ns_.Id_main).Subpages_enabled_(false);
 		fxt.tst_Parse_page_all_str("[[/dev/null]]", "<a href=\"/wiki//dev/null\">/dev/null</a>");
 		fxt.Wiki().Ns_mgr().Get_by_id_or_null(Xow_ns_.Id_main).Subpages_enabled_(true);
-	}
-	@Test  public void Subpage_slash() {
-		fxt.Page_ttl_("A");
-		fxt.tst_Parse_page_wiki_str
-			(	"[[/b]]"				
-			,	"<a href=\"/wiki/A/b\">A/b</a>"
-			);
 	}
 	@Test  public void Subpage_false_match() {// EX.WP:en.wiktionary.org/wiki/Wiktionary:Requests for cleanup/archive/2006
 		fxt.tst_Parse_page_wiki_str
 			(	"[[.../compare ...]]"
 			,	"<a href=\"/wiki/.../compare_...\">.../compare ...</a>"
 			);
+	}
+	@Test  public void Subpage_owner() {	// PURPOSE: ../c does "A/c", not "c"; DATE:2014-01-02
+		fxt.Page_ttl_("A/b");
+		fxt.tst_Parse_page_wiki_str
+			(	"[[../c]]"
+			,	"<a href=\"/wiki/A/c\">A/c</a>"
+			);
+	}
+	@Test  public void Subpage_owner_w_slash() {	// PURPOSE: ../c/ does "c", not "A/c"; DATE:2014-01-02
+		fxt.Page_ttl_("A/b");
+		fxt.tst_Parse_page_wiki_str
+			(	"[[../c/]]"
+			,	"<a href=\"/wiki/A/c\">c</a>"
+			);
+	}
+	@Test  public void Subpage_slash() {	// PURPOSE: /B should show /B, not A/B; DATE:2014-01-02
+		fxt.Page_ttl_("A");
+		fxt.tst_Parse_page_wiki_str
+			(	"[[/B]]", String_.Concat_lines_nl_skipLast
+			(	"<a href=\"/wiki/A/B\">/B</a>"
+			));
+	}
+	@Test  public void Subpage_slash_w_slash() {	// PURPOSE: /B/ should show B, not /B; DATE:2014-01-02
+		fxt.Page_ttl_("A");
+		fxt.tst_Parse_page_wiki_str
+			(	"[[/B/]]", String_.Concat_lines_nl_skipLast
+			(	"<a href=\"/wiki/A/B\">B</a>"
+			));
 	}
 	@Test  public void Link() {
 		fxt.tst_Parse_page_wiki_str

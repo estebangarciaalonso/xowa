@@ -52,6 +52,6 @@ class Scrib_lib_wikibase implements Scrib_lib {
 		return Scrib_kv_utl.base1_obj_(rv);
 	}
 	public KeyVal[] GetGlobalSiteId(KeyVal[] values) {			
-		return Scrib_kv_utl.base1_obj_(engine.Wiki().Wiki_tid_code());	// ;siteGlobalID: This site's global ID (e.g. <code>'itwiki'</code>), as used in the sites table. Default: <code>$wgDBname</code>.; REF:/xtns/Wikibase/docs/options.wiki
+		return Scrib_kv_utl.base1_obj_(engine.Wiki().Domain_abrv());	// ;siteGlobalID: This site's global ID (e.g. <code>'itwiki'</code>), as used in the sites table. Default: <code>$wgDBname</code>.; REF:/xtns/Wikibase/docs/options.wiki
 	}
 }

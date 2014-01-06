@@ -26,7 +26,7 @@ class Scrib_lib_site implements Scrib_lib {
 			);
 		notify_wiki_changed_fnc = mod.Fncs_get_by_key("notify_wiki_changed");
 		return mod;
-	}	Scrib_fnc notify_wiki_changed_fnc;
+	}	private Scrib_fnc notify_wiki_changed_fnc;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_getNsIndex))				return GetNsIndex((KeyVal[])m.CastObj("v"));
 		else if	(ctx.Match(k, Invk_pagesInCategory))		return PagesInCategory((KeyVal[])m.CastObj("v"));

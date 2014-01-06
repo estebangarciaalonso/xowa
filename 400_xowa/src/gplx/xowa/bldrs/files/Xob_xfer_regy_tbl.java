@@ -23,7 +23,7 @@ public class Xob_xfer_regy_tbl {
 		p.Exec_sql(Sql_create_data_orig);
 		p.Exec_sql(Sql_create_data_thumb);
 	}
-	public static void Create_index(Gfo_usr_dlg usr_dlg, Db_provider p)	{Sqlite_engine_.Idx_create(usr_dlg, p, Xodb_db_file.Name__file_make, Idx_lnki_page_id);}
+	public static void Create_index(Gfo_usr_dlg usr_dlg, Db_provider p)	{Sqlite_engine_.Idx_create(usr_dlg, p, Xodb_db_file.Name__file_make, Idx_lnki_page_id, Idx_lnki_ttl);}
 	public static DataRdr Select(Db_provider p, byte repo_id, byte[] ttl, int limit) {
 		Db_qry qry = Db_qry_.select_().Cols_all_()
 			.From_(Tbl_name)
@@ -110,6 +110,7 @@ public class Xob_xfer_regy_tbl {
 	private static final Db_idx_itm
 //		  Idx_select		= Db_idx_itm.sql_("CREATE        INDEX IF NOT EXISTS xfer_regy__select        ON xfer_regy (xfer_status, orig_repo, lnki_ttl, file_w);")
 	  Idx_lnki_page_id	= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS xfer_regy__lnki_page_id  ON xfer_regy (xfer_status, lnki_page_id, lnki_id, orig_repo, file_is_orig, lnki_ttl, lnki_ext, lnki_thumbtime, file_w, file_h);")
+	, Idx_lnki_ttl		= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS xfer_regy__lnki_ttl ON xfer_regy (lnki_ttl);")	// needed for troubleshooting
 	;
 	public static byte Status_todo = 0, Status_pass = 1, Status_fail = 2, Status_ignore_processed = 3;
 }

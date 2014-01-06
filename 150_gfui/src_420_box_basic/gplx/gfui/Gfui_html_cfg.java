@@ -19,7 +19,7 @@ package gplx.gfui; import gplx.*;
 public class Gfui_html_cfg implements GfoInvkAble {
 	public String Doc_html()													{return Exec_fmt(fmtr_doc_html);}									private ByteAryFmtr fmtr_doc_html = ByteAryFmtr.new_();
 	public String Doc_body_focus()												{return Exec_fmt(fmtr_doc_body_focus);}								private ByteAryFmtr fmtr_doc_body_focus = ByteAryFmtr.new_();
-	public String Doc_selected_get(String site, String page)					{return Exec_fmt(fmtr_doc_selected_get, site, page);}				private ByteAryFmtr fmtr_doc_selected_get = ByteAryFmtr.keys_("site", "page");
+	public String Doc_selected_get(String site, String page)					{return Exec_fmt(fmtr_doc_selected_get, Escape_quote(site), Escape_quote(page));}	private ByteAryFmtr fmtr_doc_selected_get = ByteAryFmtr.keys_("site", "page");
 	public String Doc_find_html(String find, boolean dir_fwd, boolean case_match, boolean wrap_find, boolean search_text_is_diff, int prv_find_bgn) {
 		return Exec_fmt(fmtr_doc_find_html, find, Bool_.XtoStr_lower(dir_fwd), Bool_.XtoStr_lower(case_match), Bool_.XtoStr_lower(wrap_find), Bool_.XtoStr_lower(search_text_is_diff), Int_.XtoStr(prv_find_bgn));
 	}	private ByteAryFmtr fmtr_doc_find_html = ByteAryFmtr.keys_("find_text", "dir_fwd", "case_match", "wrap_find", "find_text_is_diff", "prv_find_bgn");
@@ -49,6 +49,12 @@ public class Gfui_html_cfg implements GfoInvkAble {
 		if (debug_file != null) GfsCore._.ExecFile(debug_file);
 		return fmtr.Bld_str_many(vals);
 	}	private Io_url debug_file = null;
+	private static String Escape_quote(String v) {
+		String rv = v;
+		rv = String_.Replace(rv, "'", "\\'");
+		rv = String_.Replace(rv, "\"", "\\\"");
+		return rv;
+	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_doc_html_))					fmtr_doc_html.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_doc_body_focus_))			fmtr_doc_body_focus.Fmt_(m.ReadBry("v"));

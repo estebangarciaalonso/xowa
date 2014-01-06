@@ -28,7 +28,7 @@ class Xop_link_parser {
 		switch (tmp_url.Protocol_tid()) {
 			case Gfo_url_parser.Protocol_http_tid: case Gfo_url_parser.Protocol_https_tid:	// "http:" or "https:"; check if to offline wiki and redirect 
 				byte[] wiki_bry = tmp_url.Wiki_bry(), page_bry = tmp_url.Page_bry();
-				if (ByteAry_.Eq(wiki_bry, wiki.Key_bry())		// link is to this wiki; check if alias
+				if (ByteAry_.Eq(wiki_bry, wiki.Domain_bry())		// link is to this wiki; check if alias
 					|| app.Xwiki_exists(wiki_bry)) {			// link is to an xwiki
 					page_bry = tmp_url.Page_full();
 					Parse__ttl(tmp_bfr, wiki, wiki_bry, page_bry);
@@ -58,7 +58,7 @@ class Xop_link_parser {
 					raw = or;
 				else {
 					if (raw[0] == Byte_ascii.Colon) raw = ByteAry_.Mid(raw, 1, raw.length);	// ignore initial colon; EX: [[:commons:A.png]]
-					if (!Parse__ttl(tmp_bfr, wiki, wiki.Key_bry(), raw)) {
+					if (!Parse__ttl(tmp_bfr, wiki, wiki.Domain_bry(), raw)) {
 						tmp_bfr.Clear();
 						return null;
 					}
@@ -80,7 +80,7 @@ class Xop_link_parser {
 			else									// is regular page; use ttl.Full_db() to normalize; EX: &nbsp; -> _
 				page_bry = page_ttl.Full_db();
 		}
-		if (ByteAry_.Eq(wiki_bry, wiki.Key_bry()))	// NOTE: check against wiki.Key_bry() again; EX: in en_wiki, and http://commons.wikimedia.org/wiki/w:A
+		if (ByteAry_.Eq(wiki_bry, wiki.Domain_bry()))	// NOTE: check against wiki.Key_bry() again; EX: in en_wiki, and http://commons.wikimedia.org/wiki/w:A
 			tmp_bfr.Add(Xoh_href_parser.Href_wiki_bry).Add(page_bry);
 		else
 			tmp_bfr.Add(Xoh_href_parser.Href_site_bry).Add(wiki_bry).Add(Xoh_href_parser.Href_wiki_bry).Add(page_bry);

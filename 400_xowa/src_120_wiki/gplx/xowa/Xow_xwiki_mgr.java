@@ -30,10 +30,10 @@ public class Xow_xwiki_mgr implements GfoInvkAble {
 	public void Add_full(byte[] alias, byte[] domain, byte[] fmt) {
 		byte wiki_tid = Byte_.Zero;
 		int lang_tid = -1;
-		Xow_wiki_type wiki_type = Xow_wiki_type_.parse_by_domain(domain);
-		wiki_tid = wiki_type.Wiki_tid();
-		if (ByteAry_.Len_gt_0(wiki_type.Lang_key())) {	// domain has lang (EX: "en.")
-			Xol_lang_itm lang_itm = Xol_lang_itm_.Get_by_key(wiki_type.Lang_key());
+		Xow_wiki_domain wiki_type = Xow_wiki_domain_.parse_by_domain(domain);
+		wiki_tid = wiki_type.Tid();
+		if (ByteAry_.Len_gt_0(wiki_type.Lang())) {	// domain has lang (EX: "en.")
+			Xol_lang_itm lang_itm = Xol_lang_itm_.Get_by_key(wiki_type.Lang());
 			if (lang_itm == null) return;	// unknown lang: do not add to wiki collection; EX: en1.wikipedia.org
 			lang_tid = lang_itm.Id();
 		}
@@ -75,15 +75,15 @@ public class Xow_xwiki_mgr implements GfoInvkAble {
 				default:	throw Err_mgr._.unhandled_(j);
 			}
 		}
-		Xow_wiki_type wiki_type = Xow_wiki_type_.parse_by_domain(wiki_type_bry);
+		Xow_wiki_domain wiki_type = Xow_wiki_domain_.parse_by_domain(wiki_type_bry);
 		int lang_tid = Xol_lang_itm_.Id__unknown;
-		if (ByteAry_.Len_gt_0(wiki_type.Lang_key())) {
-			Xol_lang_itm lang_itm = Xol_lang_itm_.Get_by_key(wiki_type.Lang_key());
+		if (ByteAry_.Len_gt_0(wiki_type.Lang())) {
+			Xol_lang_itm lang_itm = Xol_lang_itm_.Get_by_key(wiki_type.Lang());
 			if (lang_itm != null						// lang exists
 				&& ByteAry_.Eq(alias, lang_itm.Key()))	// alias == lang.key; only assign langs to aliases that have lang key; EX: w|en.wikipedia.org; "w" alias should not be registered for "en"; DATE:2013-07-25
 				lang_tid = lang_itm.Id();
 		}				
-		return new Xow_xwiki_itm(alias, ByteAry_.Add(Xoh_href_parser.Href_http_bry, wiki_type_bry, Xoh_href_parser.Href_wiki_bry, Arg_0), wiki_type.Wiki_tid(), lang_tid, wiki_type_bry);
+		return new Xow_xwiki_itm(alias, ByteAry_.Add(Xoh_href_parser.Href_http_bry, wiki_type_bry, Xoh_href_parser.Href_wiki_bry, Arg_0), wiki_type.Tid(), lang_tid, wiki_type_bry);
 	}	static final byte[] Arg_0 = ByteAry_.new_ascii_("~{0}");
 	String Exec_itms_print(byte[] raw) {
 		ByteAryFmtr fmtr = ByteAryFmtr.new_bry_(raw, "wiki_key");//, "wiki_type_url", "wiki_lang", "wiki_name", "wiki_logo_url");
@@ -93,7 +93,7 @@ public class Xow_xwiki_mgr implements GfoInvkAble {
 		for (int i = 0; i < wikis_len; i++) {
 			Xow_xwiki_itm itm = (Xow_xwiki_itm)list.FetchAt(i);
 			byte[] key = itm.Key();
-			if (ByteAry_.Eq(key, Xow_wiki_type_.Key_home_bry)) continue;	// skip home
+			if (ByteAry_.Eq(key, Xow_wiki_domain_.Key_home_bry)) continue;	// skip home
 			byte[] domain = itm.Domain();
 			if (seen.Has(domain)) continue;
 			seen.AddKeyVal(domain);
@@ -116,25 +116,25 @@ public class Xow_xwiki_mgr implements GfoInvkAble {
 		}
 
 		len = peers.Count();
-		byte[] lang_key_bry = wiki.Lang_key();
+		byte[] lang_key_bry = wiki.Lang().Key_bry();
 		if (lang_key_bry == Xol_lang_itm_.Key__unknown) lang_key_bry = Xol_lang_.Key_en;	// default non-lang wikis to english
 		String lang_key_str = String_.new_utf8_(lang_key_bry);
 		int lang_id = Xol_lang_itm_.Get_by_key(lang_key_bry).Id();
-		byte wiki_tid = wiki.Wiki_tid();
+		byte wiki_tid = wiki.Domain_tid();
 		for (int i = 0; i < len; i++) {
 			Xoac_wiki_itm wiki_itm = (Xoac_wiki_itm)peers.FetchAt(i);
 			byte[] wiki_name_bry = wiki_itm.Key_bry();
 			String wiki_name = String_.new_utf8_(wiki_name_bry);
 			String domain_str = null;
-			byte xwiki_tid_val = Xow_wiki_type_.Tid_by_key(wiki_name_bry);
+			byte xwiki_tid_val = Xow_wiki_domain_.Tid_by_key(wiki_name_bry);
 			switch (xwiki_tid_val) {
-				case Xow_wiki_type_.Tid_commons:
-				case Xow_wiki_type_.Tid_species:
-				case Xow_wiki_type_.Tid_meta:
-				case Xow_wiki_type_.Tid_incubator:				domain_str = String_.Format("{0}.wikimedia.org", wiki_name); break;			// EX: commons.wikimedia.org
-				case Xow_wiki_type_.Tid_wikidata:				domain_str = String_.Format("www.wikidata.org", wiki_name); break;			// EX: www.wikidata.org
-				case Xow_wiki_type_.Tid_mediawiki:				domain_str = String_.Format("www.mediawiki.org", wiki_name); break;
-				case Xow_wiki_type_.Tid_wikimediafoundation:	domain_str = String_.Format("wikimediafoundation.org", wiki_name); break;
+				case Xow_wiki_domain_.Tid_commons:
+				case Xow_wiki_domain_.Tid_species:
+				case Xow_wiki_domain_.Tid_meta:
+				case Xow_wiki_domain_.Tid_incubator:				domain_str = String_.Format("{0}.wikimedia.org", wiki_name); break;			// EX: commons.wikimedia.org
+				case Xow_wiki_domain_.Tid_wikidata:				domain_str = String_.Format("www.wikidata.org", wiki_name); break;			// EX: www.wikidata.org
+				case Xow_wiki_domain_.Tid_mediawiki:				domain_str = String_.Format("www.mediawiki.org", wiki_name); break;
+				case Xow_wiki_domain_.Tid_wikimediafoundation:	domain_str = String_.Format("wikimediafoundation.org", wiki_name); break;
 				default:										domain_str = String_.Format("{0}.{1}.org", lang_key_str, wiki_name); break;	// EX: en.wiktionary.org
 			}
 			byte[] domain_bry = ByteAry_.new_utf8_(domain_str);
@@ -153,14 +153,14 @@ public class Xow_xwiki_mgr implements GfoInvkAble {
 	public void Add_bulk_langs(GfoMsg m) {
 		byte[] grp_key = m.ReadBry("grp_key");
 		byte[] wiki_type_name = m.ReadBryOr("wiki_type_name", null);
-		byte wiki_tid = wiki_type_name == null ? wiki.Wiki_tid() : Xow_wiki_type_.Tid_by_key(wiki_type_name);
+		byte wiki_tid = wiki_type_name == null ? wiki.Domain_tid() : Xow_wiki_domain_.Tid_by_key(wiki_type_name);
 		Add_bulk_langs(grp_key, wiki_tid);
 	}
-	public void Add_bulk_langs(byte[] grp_key) {Add_bulk_langs(grp_key, wiki.Wiki_tid());}
+	public void Add_bulk_langs(byte[] grp_key) {Add_bulk_langs(grp_key, wiki.Domain_tid());}
 	private void Add_bulk_langs(byte[] grp_key, byte wiki_tid) {
 		OrderedHash langs = wiki.App().Lang_mgr().Xto_hash(grp_key);
 		int len = langs.Count();
-		byte[] wiki_tid_name = Xow_wiki_type_.Key_by_tid(wiki_tid);
+		byte[] wiki_tid_name = Xow_wiki_domain_.Key_by_tid(wiki_tid);
 		String wiki_tid_name_str = String_.new_utf8_(wiki_tid_name);
 		for (int i = 0; i < len; i++) {
 			Xoac_lang_itm lang = (Xoac_lang_itm)langs.FetchAt(i);

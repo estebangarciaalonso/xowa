@@ -20,6 +20,15 @@ import org.junit.*;
 public class Xoh_lnki_wtr_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {fxt.Reset();}
+	@Test  public void Img_full() {	// PURPOSE: full with title was outputting invalid html; DATE:2013-12-31
+		fxt.Hctx().Lnki_title_(true);
+		fxt.tst_Parse_page_wiki_str
+		(	"[[File:A.png]]"
+		,	String_.Concat_lines_nl_skipLast
+		(	"<a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"	// NOTE: used to output class=\"image\"A.png 
+		));
+		fxt.Hctx().Lnki_title_(false);
+	}
 	@Test  public void Img_embed() {
 		fxt.tst_Parse_page_wiki_str("[[File:A.png|9x8px|alt=abc]]", Xop_fxt.html_img_none("File:A.png", "abc", "file:///mem/wiki/repo/trg/thumb/7/0/A.png/9px.png", "A.png"));
 	}

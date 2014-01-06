@@ -96,4 +96,5 @@ public class Xodb_page implements Xobl_data_itm {
 	public static final Xodb_page[] Ary_empty = new Xodb_page[0];
 	public static final int Timestamp_null = 0;
 	public static final int Id_null = -1;
+	public static final Xodb_page Null = null;
 }

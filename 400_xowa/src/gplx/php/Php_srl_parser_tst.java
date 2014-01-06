@@ -28,6 +28,7 @@ public class Php_srl_parser_tst {
 	@Test   public void Num_double()		{fxt.Test_parse("d:1.23;", fxt.itm_double_(1.23d));}
 	@Test   public void Num_double_inf_pos(){fxt.Test_parse("d:INF;", fxt.itm_double_(Double_.Inf_pos));}
 	@Test   public void Num_double_exp()	{fxt.Test_parse("d:1.2e+2;", fxt.itm_double_(120));}
+	@Test   public void Num_double_nan()	{fxt.Test_parse("d:NAN;", fxt.itm_double_(Double_.NaN));}
 	@Test   public void Str_len_3()			{fxt.Test_parse("s:3:\"abc\";", fxt.itm_str_("abc"));}
 	@Test   public void Str_len_4()			{fxt.Test_parse("s:4:\"abcd\";", fxt.itm_str_("abcd"));}
 	@Test   public void Str_len_0()			{fxt.Test_parse("s:0:\"\";", fxt.itm_str_(""));}

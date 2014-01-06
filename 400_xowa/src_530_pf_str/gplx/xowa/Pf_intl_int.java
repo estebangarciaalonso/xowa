@@ -32,7 +32,7 @@ class Pf_intl_int extends Pf_func_base {
 		}
 		byte[] msg_val = Pf_msg_mgr.Get_msg_by_key(wiki, page_lang, msg_key, args_ary);
 		bfr.Add(msg_val);
-	}	static ByteAryFmtr tmp_fmtr = ByteAryFmtr.tmp_(); static ByteAryBfr tmp_bfr = ByteAryBfr.reset_(256); 
+	}
 	@Override public int Id() {return Xol_kwd_grp_.Id_i18n_int;}
 	@Override public Pf_func New(int id, byte[] name) {return new Pf_intl_int().Name_(name);}
 }

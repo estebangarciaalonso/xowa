@@ -148,6 +148,7 @@ public class Xtn_gallery_parser {
 			case Fld_ttl:
 				cur_itm.Ttl_end_(fld_end);
 				byte[] ttl_bry = ByteAry_.Mid(src, cur_itm.Ttl_bgn(), fld_end);
+				ttl_bry = ctx.App().Url_converter_url_ttl().Decode(ttl_bry);	// NOTE: must decode url-encoded entries; EX: "A%28b%29.png" -> "A(b).png"; DATE:2014-01-01
 				Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
 				if (ttl == null)
 					cur_itm.Reset();

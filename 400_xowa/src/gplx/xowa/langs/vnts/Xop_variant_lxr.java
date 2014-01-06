@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.langs.variants; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
+package gplx.xowa.langs.vnts; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
 public class Xop_variant_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_variant;}
 	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
@@ -24,7 +24,7 @@ public class Xop_variant_lxr implements Xop_lxr {
 		int end_pos = ByteAry_.FindFwd(src, Hook_end, cur_pos, src_len); if (end_pos == ByteAry_.NotFound) return cur_pos;
 		return end_pos + Hook_end.length;	// FUTURE: for now, just ignore the whole String
 	}
-	private static final byte[] Hook_bgn = new byte[] {Byte_ascii.Dash, Byte_ascii.Curly_bgn}, Hook_end = new byte[] {Byte_ascii.Curly_end, Byte_ascii.Dash};
+	public static final byte[] Hook_bgn = new byte[] {Byte_ascii.Dash, Byte_ascii.Curly_bgn}, Hook_end = new byte[] {Byte_ascii.Curly_end, Byte_ascii.Dash};
 	public static void set_(Xow_wiki wiki, byte[] grp) {
 		ByteTrieMgr_fast tmpl_trie = wiki.Parser().Tmpl_trie();
 		if (grp == null) {	// del
@@ -41,14 +41,3 @@ public class Xop_variant_lxr implements Xop_lxr {
 	}
         private static final Xop_variant_lxr _ = new Xop_variant_lxr(); Xop_variant_lxr() {}
 }
-class Xop_variant_tkn extends Xop_tkn_itm_base {
-	@Override public byte Tkn_tid() {return Xop_tkn_itm_.Tid_variant;}
-//		public byte[] Vnt_code() {return vnt_code;} private byte[] vnt_code;
-}
-class Vnt_flag {
-}
-/*
-* -{code1:text1;code2:text2;...}-  or
-* -{flags|code1:text1;code2:text2;...}-  or
-* -{text}- in which case no conversion should take place for text
-*/

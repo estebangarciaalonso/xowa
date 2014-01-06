@@ -27,11 +27,11 @@ public class Wdata_prop_itm_base_ {
 		return ((ByteVal)bval_obj).Val();
 	}
 	private static final Hash_adp_bry Val_tid_regy = new Hash_adp_bry(false)
-		.Add_bry_byteVal(Val_bry_string, Wdata_prop_itm_base_.Val_tid_string)
-		.Add_bry_byteVal(Val_bry_entity, Wdata_prop_itm_base_.Val_tid_entity)
-		.Add_bry_byteVal(Val_bry_time, Wdata_prop_itm_base_.Val_tid_time)
-		.Add_bry_byteVal(Val_bry_globecoordinate, Wdata_prop_itm_base_.Val_tid_globecoordinate)
-		.Add_bry_byteVal(Val_bry_bad, Wdata_prop_itm_base_.Val_tid_bad)
+		.Add_bry_byte(Val_bry_string, Wdata_prop_itm_base_.Val_tid_string)
+		.Add_bry_byte(Val_bry_entity, Wdata_prop_itm_base_.Val_tid_entity)
+		.Add_bry_byte(Val_bry_time, Wdata_prop_itm_base_.Val_tid_time)
+		.Add_bry_byte(Val_bry_globecoordinate, Wdata_prop_itm_base_.Val_tid_globecoordinate)
+		.Add_bry_byte(Val_bry_bad, Wdata_prop_itm_base_.Val_tid_bad)
 		;
 	public static String Val_tid_to_string(byte tid) {
 		switch (tid) {
@@ -50,7 +50,7 @@ public class Wdata_prop_itm_base_ {
 		return ((ByteVal)bval_obj).Val();
 	}
 	private static Hash_adp_bry Snak_tid_regy = new Hash_adp_bry(false)
-		.Add_bry_byteVal(Wdata_doc_consts.Val_prop_novalue_bry, Snak_tid_novalue)
+		.Add_bry_byte(Wdata_doc_consts.Val_prop_novalue_bry, Snak_tid_novalue)
 		.Add_str_byteVal(Wdata_doc_consts.Val_prop_value_str, Snak_tid_value)
 		.Add_str_byteVal(Wdata_doc_consts.Val_prop_somevalue_str, Snak_tid_somevalue)
 		;

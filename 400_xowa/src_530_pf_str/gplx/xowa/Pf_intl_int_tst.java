@@ -28,7 +28,7 @@ public class Pf_intl_int_tst {
 	@Test  public void Lang_specified_by_page() {
 		Xol_lang en_lang = fxt.Wiki().Lang();
 		Xol_lang fr_lang = fxt.App().Lang_mgr().Get_by_key_or_new(ByteAry_.new_ascii_("fr"));
-		fr_lang.Load(fxt.App());
+		fr_lang.Init_by_load();
 		fxt.Ctx().Page().Lang_(fr_lang); 
 		fxt.tst_Parse_tmpl_str_test("{{int:Lang}}", "{{test}}"	, "fr");
 		fxt.Ctx().Page().Lang_(en_lang);	// NOTE: must reset back to en_lang, else rest of tests will look up under fr

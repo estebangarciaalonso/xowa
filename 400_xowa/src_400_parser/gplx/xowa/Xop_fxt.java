@@ -29,8 +29,8 @@ public class Xop_fxt {
 		this.app = app;
 		this.wiki = wiki;
 		app.Wiki_mgr().Add(wiki);
-		app.File_mgr().Repo_mgr().Set("src:wiki", "mem/wiki/repo/src/", wiki.Key_str()).Ext_rules_(Xoft_rule_grp.Grp_app_default).Dir_depth_(2);
-		app.File_mgr().Repo_mgr().Set("trg:wiki", "mem/wiki/repo/trg/", wiki.Key_str()).Ext_rules_(Xoft_rule_grp.Grp_app_default).Dir_depth_(2).Primary_(true);
+		app.File_mgr().Repo_mgr().Set("src:wiki", "mem/wiki/repo/src/", wiki.Domain_str()).Ext_rules_(Xoft_rule_grp.Grp_app_default).Dir_depth_(2);
+		app.File_mgr().Repo_mgr().Set("trg:wiki", "mem/wiki/repo/trg/", wiki.Domain_str()).Ext_rules_(Xoft_rule_grp.Grp_app_default).Dir_depth_(2).Primary_(true);
 		wiki.File_mgr().Repo_mgr().Add_repo(ByteAry_.new_utf8_("src:wiki"), ByteAry_.new_utf8_("trg:wiki"));
 		ctx = wiki.Ctx();
 		mock_wkr.Clear_commons();	// assume all files are in repo 0
@@ -220,7 +220,8 @@ public class Xop_fxt {
 		parser.Parse_page_all_clear(root, ctx, tkn_mkr, raw_bry);
 		Parse_chk(raw_bry, root, expd_ary);
 	}
-	public void Data_create(String ttl_str, String text_str) {
+	public void Data_create(String ttl_str, String text_str) {Init_page_create(wiki, ttl_str, text_str);}
+	public static void Init_page_create(Xow_wiki wiki, String ttl_str, String text_str) {
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(ttl_str));
 		byte[] text = ByteAry_.new_utf8_(text_str);
 		wiki.Db_mgr().Save_mgr().Data_create(ttl, text);

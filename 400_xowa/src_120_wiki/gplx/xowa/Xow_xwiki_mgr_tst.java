@@ -20,11 +20,11 @@ import org.junit.*; import gplx.xowa.wikis.*;
 public class Xow_xwiki_mgr_tst {
 	Xow_xwiki_mgr_fxt fxt = new Xow_xwiki_mgr_fxt();
 	@Before public void init() {fxt.Clear();}
-	@Test  public void Add_bulk_wiki_en() 						{fxt.Tst_add_bulk("w|en.wikipedia.org"				, Xol_lang_itm_.Id__unknown		, Xow_wiki_type_.Tid_wikipedia		, "w"			, "http://en.wikipedia.org/wiki/~{0}", "en.wikipedia.org");}
-	@Test  public void Add_bulk_wiki_fr() 						{fxt.Tst_add_bulk("fr|fr.wikipedia.org"				, Xol_lang_itm_.Id_fr			, Xow_wiki_type_.Tid_wikipedia		, "fr"			, "http://fr.wikipedia.org/wiki/~{0}", "fr.wikipedia.org");}
-	@Test  public void Add_bulk_wikt_en() 						{fxt.Tst_add_bulk("wikt|en.wiktionary.org"			, Xol_lang_itm_.Id__unknown		, Xow_wiki_type_.Tid_wiktionary		, "wikt"		, "http://en.wiktionary.org/wiki/~{0}", "en.wiktionary.org");}
-	@Test  public void Add_bulk_commons() 						{fxt.Tst_add_bulk("commons|commons.wikimedia.org"	, Xol_lang_itm_.Id__unknown		, Xow_wiki_type_.Tid_commons		, "commons"		, "http://commons.wikimedia.org/wiki/~{0}", "commons.wikimedia.org");}
-	@Test  public void Add_bulk_commons_cap() 					{fxt.Tst_add_bulk("Commons|commons.wikimedia.org"	, Xol_lang_itm_.Id__unknown		, Xow_wiki_type_.Tid_commons		, "Commons"		, "http://commons.wikimedia.org/wiki/~{0}", "commons.wikimedia.org");}
+	@Test  public void Add_bulk_wiki_en() 						{fxt.Tst_add_bulk("w|en.wikipedia.org"				, Xol_lang_itm_.Id__unknown		, Xow_wiki_domain_.Tid_wikipedia		, "w"			, "http://en.wikipedia.org/wiki/~{0}", "en.wikipedia.org");}
+	@Test  public void Add_bulk_wiki_fr() 						{fxt.Tst_add_bulk("fr|fr.wikipedia.org"				, Xol_lang_itm_.Id_fr			, Xow_wiki_domain_.Tid_wikipedia		, "fr"			, "http://fr.wikipedia.org/wiki/~{0}", "fr.wikipedia.org");}
+	@Test  public void Add_bulk_wikt_en() 						{fxt.Tst_add_bulk("wikt|en.wiktionary.org"			, Xol_lang_itm_.Id__unknown		, Xow_wiki_domain_.Tid_wiktionary		, "wikt"		, "http://en.wiktionary.org/wiki/~{0}", "en.wiktionary.org");}
+	@Test  public void Add_bulk_commons() 						{fxt.Tst_add_bulk("commons|commons.wikimedia.org"	, Xol_lang_itm_.Id__unknown		, Xow_wiki_domain_.Tid_commons		, "commons"		, "http://commons.wikimedia.org/wiki/~{0}", "commons.wikimedia.org");}
+	@Test  public void Add_bulk_commons_cap() 					{fxt.Tst_add_bulk("Commons|commons.wikimedia.org"	, Xol_lang_itm_.Id__unknown		, Xow_wiki_domain_.Tid_commons		, "Commons"		, "http://commons.wikimedia.org/wiki/~{0}", "commons.wikimedia.org");}
 	@Test  public void Add_bulk_langs_wiki() 					{fxt.Langs_ini().Tst_add_bulk_langs("wiki", fxt.xwiki_("en", "en.wikipedia.org", "http://en.wikipedia.org/wiki/~{0}"), fxt.xwiki_("de", "de.wikipedia.org", "http://de.wikipedia.org/wiki/~{0}"), fxt.xwiki_("fr", "fr.wikipedia.org", "http://fr.wikipedia.org/wiki/~{0}"), fxt.xwiki_("ja", "ja.wikipedia.org", "http://ja.wikipedia.org/wiki/~{0}"));}
 	@Test  public void Add_bulk_langs_grps() 					{fxt.Langs_ini().Tst_add_bulk_langs("europe_west~asia_east", fxt.xwiki_("de", "de.wikipedia.org", "http://de.wikipedia.org/wiki/~{0}"), fxt.xwiki_("fr", "fr.wikipedia.org", "http://fr.wikipedia.org/wiki/~{0}"), fxt.xwiki_("ja", "ja.wikipedia.org", "http://ja.wikipedia.org/wiki/~{0}"));}
 	@Test  public void Add_bulk_langs_grp_itm() 				{fxt.Langs_ini().Tst_add_bulk_langs("europe_west~ja", fxt.xwiki_("de", "de.wikipedia.org", "http://de.wikipedia.org/wiki/~{0}"), fxt.xwiki_("fr", "fr.wikipedia.org", "http://fr.wikipedia.org/wiki/~{0}"), fxt.xwiki_("ja", "ja.wikipedia.org", "http://ja.wikipedia.org/wiki/~{0}"));}
@@ -50,8 +50,8 @@ class Xow_xwiki_mgr_fxt {
 		lang_mgr.Clear();
 	}
 	public Xow_wiki Wiki() {return wiki;}
-	public Xow_xwiki_itm xwiki_null_(String key) {return new Xow_xwiki_itm(ByteAry_.new_utf8_(key), ByteAry_.Empty, Xow_wiki_type_.Tid_other, Xol_lang_itm_.Id__unknown, ByteAry_.Empty);}
-	public Xow_xwiki_itm xwiki_(String key, String domain, String fmt) {return new Xow_xwiki_itm(ByteAry_.new_utf8_(key), ByteAry_.new_utf8_(fmt), Xow_wiki_type_.Tid_other, Xol_lang_itm_.Id__unknown, ByteAry_.new_utf8_(domain));}
+	public Xow_xwiki_itm xwiki_null_(String key) {return new Xow_xwiki_itm(ByteAry_.new_utf8_(key), ByteAry_.Empty, Xow_wiki_domain_.Tid_other, Xol_lang_itm_.Id__unknown, ByteAry_.Empty);}
+	public Xow_xwiki_itm xwiki_(String key, String domain, String fmt) {return new Xow_xwiki_itm(ByteAry_.new_utf8_(key), ByteAry_.new_utf8_(fmt), Xow_wiki_domain_.Tid_other, Xol_lang_itm_.Id__unknown, ByteAry_.new_utf8_(domain));}
 	public Xow_xwiki_mgr_fxt Tst_add_bulk(String raw, int lang_tid, byte wiki_tid, String alias, String fmt, String domain) {
 		Xow_xwiki_itm itm = xwiki_mgr.Add_bulk_row(Xol_lang_itm_.Regy(), ByteAry_.new_ascii_(raw));
 		Tfds.Eq(alias, String_.new_ascii_(itm.Key()));

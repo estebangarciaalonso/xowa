@@ -62,7 +62,6 @@ public class Xtn_lst extends Pf_func_base {
 	@Override public int Id() {return Xol_kwd_grp_.Id_lst;}
 	@Override public Pf_func New(int id, byte[] name) {return new Xtn_lst().Name_(name);}
 	public static final Xtn_lst _ = new Xtn_lst(); Xtn_lst() {}
-	static final String GRP_KEY = "xowa.parser.xtn.lst";
 	public static Hash_adp_bry new_xatrs_(Xol_lang lang) {
 		Hash_adp_bry rv = new Hash_adp_bry(false);
 		rv.Add_str_byteVal("name", Xtn_section_nde.Xatr_name);

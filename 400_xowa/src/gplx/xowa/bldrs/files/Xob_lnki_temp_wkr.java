@@ -64,7 +64,7 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 	@Override public void Exec_pg_itm_hook(Xow_ns ns, Xodb_page page, byte[] page_src) {
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ns.Gen_ttl(page.Ttl_wo_ns()));
 		byte[] ttl_bry = ttl.Page_db();
-		byte page_tid = Xow_page_tid.Identify(wiki.Wiki_tid(), ns.Id(), ttl_bry);
+		byte page_tid = Xow_page_tid.Identify(wiki.Domain_tid(), ns.Id(), ttl_bry);
 		if (page_tid != Xow_page_tid.Tid_wikitext) return; // ignore js, css, lua, json
 		ctx.Page().Page_ttl_(ttl).Page_id_(page.Id());
 		ctx.Tab().Lnki_redlinks_mgr().Page_bgn(ctx);

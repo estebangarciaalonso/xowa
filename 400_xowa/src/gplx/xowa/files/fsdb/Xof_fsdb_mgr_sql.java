@@ -67,7 +67,7 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 		cache_mgr = wiki.App().File_mgr().Cache_mgr();
 	}	private boolean init = false;
 	public void Reg_select_only(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms, OrderedHash hash) {
-		Xof_wiki_orig_tbl.Select_list(img_regy_provider, exec_tid, itms, hash, url_bldr, bin_mgr.Repo_mgr());
+		Xof_wiki_orig_tbl.Select_list(win_wtr, img_regy_provider, exec_tid, itms, hash, url_bldr, bin_mgr.Repo_mgr());
 	}
 	public void Reg_select(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms) {
 		OrderedHash hash = OrderedHash_.new_bry_();

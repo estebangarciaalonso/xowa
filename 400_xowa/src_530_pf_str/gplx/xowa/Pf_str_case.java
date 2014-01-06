@@ -25,7 +25,13 @@ class Pf_str_case extends Pf_func_base {	// EX: {{lc:A}} -> a
 		byte[] val_dat_ary = Eval_argx(ctx, src, caller, self); if (val_dat_ary == ByteAry_.Empty) return;
 		int val_dat_ary_len = val_dat_ary.length;
 		Xol_lang lang = ctx.Wiki().Lang();
-		val_dat_ary = lang.Case_mgr().Case_reuse(case_type == Xol_lang.Tid_upper, val_dat_ary, 0, first ? 1 : val_dat_ary_len);
+		boolean upper = case_type == Xol_lang.Tid_upper;
+		if (first) {
+			byte[] ltr_1 = lang.Case_mgr().Case_build(upper, val_dat_ary, 0, 1);
+			val_dat_ary = ByteAry_.Add(ltr_1, ByteAry_.Mid(val_dat_ary, 1, val_dat_ary_len));
+		}
+		else
+			val_dat_ary = lang.Case_mgr().Case_build(upper, val_dat_ary, 0, val_dat_ary_len);
 		trg.Add(val_dat_ary);
 	}
 	boolean first; int case_type;

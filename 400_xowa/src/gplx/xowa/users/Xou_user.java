@@ -31,7 +31,7 @@ public class Xou_user implements GfoInvkAble {
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public String Key_str() {return key_str;} private String key_str;
 	public byte[] Key_bry() {return key_bry;} private byte[] key_bry;
-	public Xol_lang Lang() {if (lang == null) {lang = app.Lang_mgr().Get_by_key_or_new(app.Sys_cfg().Lang()); lang.Load_assert(app);} return lang;} private Xol_lang lang;
+	public Xol_lang Lang() {if (lang == null) {lang = app.Lang_mgr().Get_by_key_or_new(app.Sys_cfg().Lang()); lang.Init_by_load();} return lang;} private Xol_lang lang;
 	public Xou_fsys_mgr Fsys_mgr() {return fsys_mgr;} private Xou_fsys_mgr fsys_mgr;
 	public Xow_wiki Default_wiki() {return default_wiki_key == null ? app.Wiki_mgr().Get_at(0) : app.Wiki_mgr().Get_by_key_or_make(default_wiki_key);} private byte[] default_wiki_key = ByteAry_.new_ascii_("en.wikipedia.org"); 
 	public Xow_wiki Wiki() {if (wiki == null) wiki = Xou_user_.new_or_create_(this, app); return wiki;} private Xow_wiki wiki;
@@ -57,7 +57,7 @@ public class Xou_user implements GfoInvkAble {
 	}
 	public void Bookmarks_add(Xoa_page page) {
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_k004();
-		bookmarks_add_fmtr.Bld_bfr_many(tmp_bfr, page.Wiki().Key_bry(), page.Page_ttl().Full_txt());
+		bookmarks_add_fmtr.Bld_bfr_many(tmp_bfr, page.Wiki().Domain_bry(), page.Page_ttl().Full_txt());
 		byte[] new_entry = tmp_bfr.Mkr_rls().XtoAryAndClear();
 		Xoa_ttl bookmarks_ttl = Xoa_ttl.parse_(wiki, Bry_data_bookmarks);
 		Xoa_page bookmarks_page = wiki.Data_mgr().Get_page(bookmarks_ttl, false);
@@ -111,9 +111,9 @@ public class Xou_user implements GfoInvkAble {
 }
 class Xou_user_ {
 	public static Xow_wiki new_or_create_(Xou_user user, Xoa_app app) {
-		Io_url wiki_dir = user.Fsys_mgr().Home_wiki_dir().GenSubDir_nest("wiki", Xow_wiki_type_.Key_home_str);
+		Io_url wiki_dir = user.Fsys_mgr().Home_wiki_dir().GenSubDir_nest("wiki", Xow_wiki_domain_.Key_home_str);
 		Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(app.Lang_mgr().Default_lang());
-		lang.Load(app);	// NOTE: lang.Load() must occur before new Xow_wiki b/c wiki will create parsers based on lang
+		lang.Init_by_load();	// NOTE: lang.Load() must occur before new Xow_wiki b/c wiki will create parsers based on lang
 		Xow_wiki rv = new Xow_wiki(app, wiki_dir, ns_home_(), lang);
 		app.Wiki_mgr().Add(rv);
 		rv.Sys_cfg().Xowa_cmd_enabled_(true);

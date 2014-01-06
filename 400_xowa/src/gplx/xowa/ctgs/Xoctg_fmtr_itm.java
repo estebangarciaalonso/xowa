@@ -59,7 +59,7 @@ abstract class Xoctg_fmtr_itm_base implements Xoctg_fmtr_itm {
 	@gplx.Virtual public void Bld_html(ByteAryBfr bfr, Xow_wiki wiki, Xoctg_view_itm itm, Xoa_ttl ttl, byte[] ttl_page, Xoh_href_parser href_parser, ByteAryFmtr html_itm) {
 		byte[] itm_href = href_parser.Build_to_bry(ttl, wiki);
 		byte[] itm_full_ttl = ttl.Full_txt();// NOTE: ttl.Full_txt() to get full ns; EX: Template:A instead of just "A"
-		byte[] itm_atr_cls = Xoh_lnki_wtr.Lnki_cls_visited(history_mgr, wiki.Key_bry(), ttl.Page_txt());	// NOTE: must be ttl.Page_txt() in order to match Xou_history_mgr.Add
+		byte[] itm_atr_cls = Xoh_lnki_wtr.Lnki_cls_visited(history_mgr, wiki.Domain_bry(), ttl.Page_txt());	// NOTE: must be ttl.Page_txt() in order to match Xou_history_mgr.Add
 		ByteAryFmtr fmtr = itm.Id_missing() ? html_itm_missing : html_itm;
 		fmtr.Bld_bfr_many(bfr, itm_href, itm_full_ttl, itm_full_ttl, itm.Id(), itm_atr_cls);
 	}

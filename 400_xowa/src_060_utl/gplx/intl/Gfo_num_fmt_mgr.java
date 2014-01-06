@@ -23,7 +23,7 @@ public class Gfo_num_fmt_mgr implements GfoInvkAble {
 	private ByteAryBfr tmp = ByteAryBfr.new_();
 	public Gfo_num_fmt_mgr() {this.Clear();}
 	public boolean Standard() {return standard;} private boolean standard = true;
-	public byte[] Dec_dlm() {return dec_dlm;} public Gfo_num_fmt_mgr Dec_dlm_(byte[] v) {this.dec_dlm = v; dlm_trie.Add_bry_byte(v, Raw_tid_dec); return this;} private byte[] dec_dlm = Dec_dlm_default;
+	public byte[] Dec_dlm() {return dec_dlm;} public Gfo_num_fmt_mgr Dec_dlm_(byte[] v) {this.dec_dlm = v; dlm_trie.Add_bry_bval(v, Raw_tid_dec); return this;} private byte[] dec_dlm = Dec_dlm_default;
 	private byte[] grp_dlm;
 	public byte[] Raw(byte tid, byte[] src) {
 		int src_len = src.length;
@@ -120,7 +120,7 @@ public class Gfo_num_fmt_mgr implements GfoInvkAble {
 			byte[] itm_dlm = itm.Dlm();
 			Object o = dlm_trie.MatchAtCurExact(itm_dlm, 0, itm_dlm.length);	// check for existing Object
 			if (o == null) {
-				dlm_trie.Add_bry_byte(itm_dlm, Raw_tid_grp);
+				dlm_trie.Add_bry_bval(itm_dlm, Raw_tid_grp);
 				grp_dlm = itm_dlm;
 			}
 		}

@@ -21,13 +21,13 @@ public class Wdata_xwiki_link_wtr_tst {
 	@Before public void init() {fxt.Init();} Wdata_wiki_mgr_fxt fxt = new Wdata_wiki_mgr_fxt();
 	@Test  public void Skip_xwiki_lang_for_self() {	// PURPOSE: list of language links should not include self
 		fxt.Init_xwikis_add("en", "fr", "de");
-		fxt.Init_qids_add("en", Xow_wiki_type_.Tid_wikipedia, "Q1_en", "Q1");
+		fxt.Init_qids_add("en", Xow_wiki_domain_.Tid_wikipedia, "Q1_en", "Q1");
 		fxt.Init_pages_add(fxt.page_bldr_("Q1").Link_add("enwiki", "Q1_en").Link_add("frwiki", "Q1_fr").Link_add("dewiki", "Q1_de").Xto_page_doc());
 		fxt.Test_xwiki_links("Q1_en", "Q1_fr", "Q1_de");
 	}
 	@Test   public void No_external_lang_links__de() {
 		fxt.Init_xwikis_add("fr", "de");
-		fxt.Init_qids_add("en", Xow_wiki_type_.Tid_wikipedia, "Q1_en", "Q1");
+		fxt.Init_qids_add("en", Xow_wiki_domain_.Tid_wikipedia, "Q1_en", "Q1");
 		fxt.Init_pages_add(fxt.page_bldr_("Q1").Link_add("enwiki", "Q1_en").Link_add("frwiki", "Q1_fr").Link_add("dewiki", "Q1_de").Xto_page_doc());
 		fxt.Init_external_links_mgr_add("de");
 		fxt.Test_xwiki_links("Q1_en", "Q1_de");
@@ -46,7 +46,7 @@ public class Wdata_xwiki_link_wtr_tst {
 	}
 	@Test   public void Links_w_name_fmt() {	// PURPOSE: wikidata changed links node from "enwiki:A" to "enwiki:{name:A,badges:[]}"; DATE:2013-09-14
 		fxt.Init_xwikis_add("en", "fr", "de");
-		fxt.Init_qids_add("en", Xow_wiki_type_.Tid_wikipedia, "Q1_en", "Q1");
+		fxt.Init_qids_add("en", Xow_wiki_domain_.Tid_wikipedia, "Q1_en", "Q1");
 		Json_doc jdoc = Json_doc.new_(String_.Concat_lines_nl
 		(	"{ \"entity\":\"q1\""
 		,	", \"links\":"
@@ -75,7 +75,7 @@ public class Wdata_xwiki_link_wtr_tst {
 
 //		@Test   public void No_external_lang_links__sort() {
 //			fxt.Init_xwikis_add("de", "fr");
-//			fxt.Init_qids_add("en", Xow_wiki_type_.Tid_wikipedia, "Q1_en", "Q1");
+//			fxt.Init_qids_add("en", Xow_wiki_domain_.Tid_wikipedia, "Q1_en", "Q1");
 //			fxt.Init_pages_add("Q1", fxt.page_bldr_("Q1").Link_add("enwiki", "Q1_en").Link_add("frwiki", "Q1_fr").Link_add("dewiki", "Q1_de").Xto_page_doc());
 //			fxt.Init_external_links_mgr_add("*");
 //			fxt.Test_xwiki_links("Q1_en", "Q1_de", "Q1_fr");

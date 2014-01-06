@@ -23,7 +23,7 @@ public class Xodb_mgr_sql implements Xodb_mgr, GfoInvkAble {
 		load_mgr = new Xodb_load_mgr_sql(this);
 		save_mgr = new Xodb_save_mgr_sql(this);
 		tbl_text = new Xodb_text_tbl(this);
-		fsys_mgr.Ctor(wiki.App().Fsys_mgr().Bin_db_dir(), wiki.Fsys_mgr().Root_dir(), wiki.Key_str());
+		fsys_mgr.Ctor(wiki.App().Fsys_mgr().Bin_db_dir(), wiki.Fsys_mgr().Root_dir(), wiki.Domain_str());
 	}
 	public byte Tid() {return Tid_sql;} public static final byte Tid_sql = 1;
 	public String Tid_name() {return "sqlite3";}
@@ -165,8 +165,8 @@ public class Xodb_mgr_sql implements Xodb_mgr, GfoInvkAble {
 		Io_url[] ary = Io_mgr._.QueryDir_args(wiki.Fsys_mgr().Root_dir()).FilPath_("*.sqlite3").ExecAsUrlAry();
 		int ary_len = ary.length; if (ary_len == 0) return null;
 		if (ary_len == 1) return ary[0];							// only 1 file; assume it is core
-		String v0_str = wiki.Key_str() + ".000";
-		String v1_str = wiki.Key_str() + "core.000";
+		String v0_str = wiki.Domain_str() + ".000";
+		String v1_str = wiki.Domain_str() + "core.000";
 		for (int i = 0; i < ary_len; i++) {
 			Io_url itm = ary[i];
 			if		(String_.Eq(itm.NameOnly(), v0_str)) return itm;	// EX: "en.wikipedia.org.000"

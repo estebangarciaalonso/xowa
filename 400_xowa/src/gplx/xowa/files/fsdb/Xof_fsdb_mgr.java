@@ -71,7 +71,7 @@ class Xof_fsdb_mgr_utl {
 				fsdb_mgr.Reg_insert(itm, Xof_repo_itm.Repo_unknown, Xof_wiki_orig_wkr_.Tid_missing_qry);
 				return;
 			}
-			byte orig_wiki = repo_pair.Id();
+			byte orig_wiki = repo_pair.Repo_id();	// NOTE: should be itm.Orig_repo, but throws null refs
 			if (itm.Lnki_ext().Id_is_audio_strict() && exec_tid != Xof_exec_tid.Tid_viewer_app) {
 				itm.Rslt_qry_(Xof_qry_wkr_.Tid_mock);
 				itm.Rslt_bin_(Xof_bin_wkr_.Tid_noop);

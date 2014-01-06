@@ -35,7 +35,7 @@ public class Xoa_url_alias_mgr implements GfoInvkAble {
 	}	private static final String Invk_add_bulk = "add_bulk";
 	public void Clear() {hash.Clear();}
 	public void Add_one(byte[] alias, byte[] wiki_key) {hash.Add_bry_obj(alias, wiki_key);}
-	public void Add_bulk(byte[] src) {
+	public void Add_bulk(byte[] src) {	// COPY:add_bulk
 		int len = src.length;
 		int pos = 0, fld_bgn = 0, fld_idx = 0;
 		byte[] alias = ByteAry_.Empty, wiki = ByteAry_.Empty;

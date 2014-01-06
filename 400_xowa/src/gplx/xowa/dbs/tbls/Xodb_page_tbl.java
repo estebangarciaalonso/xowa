@@ -347,6 +347,7 @@ class Xodb_in_wkr_page_title_ns extends Xodb_in_wkr_page_base {
 //		}
 	@Override public Xodb_page Eval_rslts_key(Xodb_page rdr_page) {
 		Xow_ns ns = wiki.Ns_mgr().Get_by_id(rdr_page.Ns_id());
+		if (ns == null) return null;	// NOTE: ns seems to "randomly" be null when threading during redlinks; guard against null; DATE:2014-01-03
 		byte[] ttl_wo_ns = rdr_page.Ttl_wo_ns();
 		rdr_page.Ttl_(ns, ttl_wo_ns);
 		return (Xodb_page)hash.Fetch(rdr_page.Ttl_w_ns());

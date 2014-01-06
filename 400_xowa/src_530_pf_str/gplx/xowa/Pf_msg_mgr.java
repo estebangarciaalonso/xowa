@@ -32,13 +32,16 @@ public class Pf_msg_mgr {
 				}
 			}
 		}
-		Xol_msg_mgr msg_mgr = page_lang.Msg_mgr();
-		Xol_msg_itm msg_itm = msg_mgr.Itm_by_key_or_new(msg_key);
+		boolean src_is_lang = true;
+		Xol_msg_itm msg_itm = page_lang.Msg_mgr().Itm_by_key_or_null(msg_key);		// search for itm in lang
+		if (msg_itm == null) {														// none found in lang
+			msg_itm = wiki.Msg_mgr().Itm_by_key_or_new(msg_key);					// create itm in wiki; do not create in lang, else diff wikis will share same items from [[MediaWiki:]]; DATE:2014-01-05
+			src_is_lang = false;
+		}
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
 		// given {{int:message_key}} look for page of "MediaWiki:message_name/lang_code"
-		if (msg_itm.Search_mediawiki()) {											// NOTE: all msgs will enter this branch once, even if msg is in lang.gfs file; (since MediaWiki msgs override lang.gfs msg); EX: de.w:{{int:Autosumm-replace}}; DATE:2013-01-25
-			Search_wiki_for_msg(tmp_bfr, wiki, page_lang, msg_itm, msg_key);
-		}
+		if (msg_itm.Search_mediawiki())												// NOTE: all msgs will enter this branch once, even if msg is in lang.gfs file; (since MediaWiki msgs override lang.gfs msg); EX: de.w:{{int:Autosumm-replace}}; DATE:2013-01-25
+			msg_itm = Search_wiki_for_msg(src_is_lang, tmp_bfr, wiki, page_lang, msg_itm, msg_key);	// NOTE: reassign msg_itm since Search_wiki_for_msg can create one
 		// if msg has fmt dlms, format it; EX: Expression error: Unrecognised word "~{0}"
 		byte[] tmp_val = msg_itm.Val();
 		boolean has_fmt = msg_itm.Has_fmt_arg(), has_tmpl = msg_itm.Has_tmpl_txt();
@@ -61,11 +64,11 @@ public class Pf_msg_mgr {
 		tmp_bfr.Mkr_rls();
 		return tmp_val;
 	}	static final byte[] Missing_bry = ByteAry_.new_ascii_("$");
-	public static boolean Search_wiki_for_msg(ByteAryBfr tmp_bfr, Xow_wiki wiki, Xol_lang page_lang, Xol_msg_itm msg_itm, byte[] msg_key) {
+	public static Xol_msg_itm Search_wiki_for_msg(boolean src_is_lang, ByteAryBfr tmp_bfr, Xow_wiki wiki, Xol_lang page_lang, Xol_msg_itm msg_itm, byte[] msg_key) {
 		Xow_ns ns = wiki.Ns_mgr().Ns_mediawiki();
 		tmp_bfr	.Add(ns.Name_db_w_colon())										// "MediaWiki:"
 				.Add(msg_key);													// "message_key"
-		byte[] wiki_lang_key = wiki.Lang_key();
+		byte[] wiki_lang_key = wiki.Lang().Key_bry();
 		if (ByteAry_.Len_eq_0(wiki_lang_key)) wiki_lang_key = Xol_lang_.Key_en;
 		if (!ByteAry_.Eq(page_lang.Key_bry(), wiki_lang_key))					// only add lang code if not en; ASSUME: default message is en; EX:commons.wikimedia.org/wiki/Seealso does not have a "/en"
 			tmp_bfr.Add_byte(Byte_ascii.Slash).Add(page_lang.Key_bry());		// "/fr"
@@ -95,9 +98,11 @@ public class Pf_msg_mgr {
 			msg_val = Convert_php_to_gfs(msg_page.Data_raw(), tmp_bfr);
 			found = true;
 		}
+		if (src_is_lang && found)	// src is lang, but data coming from wiki; create msg_itm from wiki (not lang), else dif wikis will share same item via lang; DATE:2014-01-05
+			msg_itm = wiki.Msg_mgr().Itm_by_key_or_new(msg_key);
 		Xol_msg_itm_.update_val_(msg_itm, msg_val);
 		msg_itm.Search_mediawiki_(false);
-		return found;
+		return msg_itm;
 	}
 	public static byte[] Convert_php_to_gfs(byte[] raw, ByteAryBfr bfr) {
 		int raw_len = raw.length;

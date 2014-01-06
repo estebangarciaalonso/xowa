@@ -21,7 +21,7 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 	public Xowh_portal_mgr(Xow_wiki wiki) {
 		this.wiki = wiki;
 		sidebar_mgr = new Xowh_sidebar_mgr(wiki);
-		missing_ns_cls = ByteAry_.Eq(wiki.Key_bry(), Xow_wiki_type_.Key_home_bry) ? Missing_ns_cls_hide : null;	// if home wiki, set missing_ns to application default; if any other wiki, set to null; will be overriden during init
+		missing_ns_cls = ByteAry_.Eq(wiki.Domain_bry(), Xow_wiki_domain_.Key_home_bry) ? Missing_ns_cls_hide : null;	// if home wiki, set missing_ns to application default; if any other wiki, set to null; will be overriden during init
 	}	private Xow_wiki wiki;
 	public Xowh_sidebar_mgr Sidebar_mgr() {return sidebar_mgr;} private Xowh_sidebar_mgr sidebar_mgr;
 	private ByteAryFmtr div_personal_fmtr = ByteAryFmtr.new_("~{portal_personal_subj_href};~{portal_personal_subj_text};~{portal_personal_talk_cls};~{portal_personal_talk_href};~{portal_personal_talk_cls};", "portal_personal_subj_href", "portal_personal_subj_text", "portal_personal_subj_cls", "portal_personal_talk_href", "portal_personal_talk_cls");
@@ -41,8 +41,8 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 		Init_fmtr(tmp_bfr, eval_mgr, div_ns_fmtr);
 		byte[] wiki_user_name = wiki.User().Name();
 		div_personal_bry = Init_fmtr(tmp_bfr, eval_mgr, div_personal_fmtr, ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, wiki.Ns_mgr().Get_by_id(Xow_ns_.Id_user).Name_db_w_colon(), wiki_user_name), wiki_user_name, Ns_cls_by_id(wiki.Ns_mgr(), Xow_ns_.Id_user), ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, wiki.Ns_mgr().Get_by_id(Xow_ns_.Id_user_talk).Name_db_w_colon(), wiki_user_name), Ns_cls_by_id(wiki.Ns_mgr(), Xow_ns_.Id_user_talk));
-		byte[] main_page_href_bry = tmp_bfr.Add(Xoh_href_parser.Href_site_bry).Add(wiki.Key_bry()).Add(Xoh_href_parser.Href_wiki_bry).XtoAryAndClear();	// NOTE: build /site/en.wikipedia.org/wiki/ href; no Main_Page, as that will be inserted by Xoh_href_parser
-		div_logo_bry = Init_fmtr(tmp_bfr, eval_mgr, div_logo_fmtr, main_page_href_bry, wiki.App().Url_converter_fsys().Encode_http(wiki.App().User().Fsys_mgr().Wiki_root_dir().GenSubFil_nest(wiki.Key_str(), "html", "logo.png")));
+		byte[] main_page_href_bry = tmp_bfr.Add(Xoh_href_parser.Href_site_bry).Add(wiki.Domain_bry()).Add(Xoh_href_parser.Href_wiki_bry).XtoAryAndClear();	// NOTE: build /site/en.wikipedia.org/wiki/ href; no Main_Page, as that will be inserted by Xoh_href_parser
+		div_logo_bry = Init_fmtr(tmp_bfr, eval_mgr, div_logo_fmtr, main_page_href_bry, wiki.App().Url_converter_fsys().Encode_http(wiki.App().User().Fsys_mgr().Wiki_root_dir().GenSubFil_nest(wiki.Domain_str(), "html", "logo.png")));
 		div_home_bry = Init_fmtr(tmp_bfr, eval_mgr, div_home_fmtr);
 		div_wikis_fmtr.Eval_mgr_(eval_mgr);
 		tmp_bfr.Mkr_rls();

@@ -28,9 +28,9 @@ public class Wdata_xwiki_link_wtr implements ByteAryFmtrArg {
 	}
 	public static byte[] Write_wdata_links(ListAdp langs, Xow_wiki wiki, Xoa_ttl ttl, Wdata_external_lang_links_data external_links_mgr) {
 		try {
-			switch (wiki.Wiki_tid()) {
-				case Xow_wiki_type_.Tid_home:		// home will never be in wikidata
-				case Xow_wiki_type_.Tid_wikidata:	// wikidata will never be in wikidata
+			switch (wiki.Domain_tid()) {
+				case Xow_wiki_domain_.Tid_home:		// home will never be in wikidata
+				case Xow_wiki_domain_.Tid_wikidata:	// wikidata will never be in wikidata
 					return Qid_null;
 			}
 			Wdata_wiki_mgr wdata_mgr = wiki.App().Wiki_mgr().Wdata_mgr();

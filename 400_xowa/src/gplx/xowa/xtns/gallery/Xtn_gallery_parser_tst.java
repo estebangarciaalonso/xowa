@@ -83,6 +83,9 @@ public class Xtn_gallery_parser_tst {
 		fxt.Init_kwd_set(Xol_kwd_grp_.Id_img_alt, "alt=$1");
 		fxt.Test_parse("File:A.png|alt=a|b", fxt.Expd("File:A.png", "b", "a"));
 	}
+	@Test   public void Url_encoded() {	// PURPOSE: handle url-encoded sequences; DATE:2014-01-01
+		fxt.Test_parse("File:A%28b%29.png", fxt.Expd("File:A(b).png"));
+	}
 }
 class Xtn_gallery_parser_fxt {
 	private Xoa_app app; private Xow_wiki wiki;
@@ -133,7 +136,7 @@ class Xtn_gallery_parser_fxt {
 			Xtn_gallery_itm itm = (Xtn_gallery_itm)list.FetchAt(i);
 			String[] ary = new String[4];
 			rv[i] = ary;
-			ary[0] = To_str_ary_itm(src, itm.Ttl_bgn(), itm.Ttl_end());
+			ary[0] = String_.new_utf8_(itm.Ttl().Full_txt());
 			ary[2] = To_str_ary_itm(src, itm.Alt_bgn(), itm.Alt_end());
 			ary[3] = To_str_ary_itm(src, itm.Link_bgn(), itm.Link_end());
 			byte[] caption = itm.Caption_bry();

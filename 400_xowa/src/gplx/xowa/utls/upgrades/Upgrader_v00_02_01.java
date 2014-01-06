@@ -22,7 +22,7 @@ class Upgrader_v00_02_01 {
 		Io_url cfg_dir = wiki.Fsys_mgr().Root_dir().GenSubDir("cfg");
 		if (!Io_mgr._.ExistsDir(cfg_dir)) return;	// brand-new wiki; nothing to migrate
 		Gfo_usr_dlg usr_dlg = wiki.App().Usr_dlg();
-		usr_dlg.Note_many(GRP_KEY, "run.bgn", "migrate.bgn for ~{0}", wiki.Key_str());
+		usr_dlg.Note_many(GRP_KEY, "run.bgn", "migrate.bgn for ~{0}", wiki.Domain_str());
 		Io_url siteinfo_url = cfg_dir.GenSubFil_nest("siteInfo.xml");
 		usr_dlg.Note_many(GRP_KEY, "siteinfo.bgn", "siteinfo.bgn for ~{0}", siteinfo_url.Raw());
 		String siteinfo_str = Io_mgr._.LoadFilStr_args(siteinfo_url).MissingIgnored_(true).Exec(); if (String_.Len_eq_0(siteinfo_str)) throw Err_mgr._.fmt_(GRP_KEY, "siteinfo.missing", "could not find siteinfo.xml ~{0}", siteinfo_url.Raw());
@@ -31,7 +31,7 @@ class Upgrader_v00_02_01 {
 		usr_dlg.Note_many(GRP_KEY, "siteinfo.save", "saving siteinfo");
 		byte[] wiki_core_bry = wiki.Cfg_wiki_core().Build_gfs();
 		Io_mgr._.SaveFilBry(wiki.Fsys_mgr().Cfg_wiki_core_fil(), wiki_core_bry);
-		usr_dlg.Note_many(GRP_KEY, "siteinfo.end", "siteinfo.end for ~{0}", wiki.Key_str());
+		usr_dlg.Note_many(GRP_KEY, "siteinfo.end", "siteinfo.end for ~{0}", wiki.Domain_str());
 
 		Io_url old_wikistats_url = wiki.Fsys_mgr().Root_dir().GenSubFil_nest("cfg", "wiki.gfs");
 		Io_url new_wikistats_url = wiki.Fsys_mgr().Cfg_wiki_stats_fil();
@@ -49,7 +49,7 @@ class Upgrader_v00_02_01 {
 			usr_dlg.Note_many(GRP_KEY, "wiki_stats.remove_mainpage", "removing mainpages");
 			Io_mgr._.SaveFilBry(new_wikistats_url, new_wikistats_bry);
 		}
-		usr_dlg.Note_many(GRP_KEY, "run.end", "migrate.end for ~{0}", wiki.Key_str());
+		usr_dlg.Note_many(GRP_KEY, "run.end", "migrate.end for ~{0}", wiki.Domain_str());
 		usr_dlg.Note_many("", "", "");
 	}
 	static final String GRP_KEY = "xowa.wiki.upgrades.v00_02_01";

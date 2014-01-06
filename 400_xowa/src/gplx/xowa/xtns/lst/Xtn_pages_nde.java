@@ -47,14 +47,21 @@ public class Xtn_pages_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 		// FUTURE: find canonical ns; proofreadpage_namespace; there's an index ns????
 		ByteAryBfr page_bfr = app.Utl_bry_bfr_mkr().Get_m001();
 		ByteAryBfr ttl_bfr = app.Utl_bry_bfr_mkr().Get_b512();
+		Hash_adp_bry lst_page_regy = ctx.Lst_page_regy();
+		if (lst_page_regy == null) lst_page_regy = new Hash_adp_bry(true);	// SEE:NOTE:page_regy; DATE:2014-01-01
 		for (int i = bgn_page; i <= end_page; i++) {
 			ttl_bfr.Add(page_ns.Name_db_w_colon())		// EX: 'Page:'
 				.Add(root_page)							// EX: 'File.djvu'
 				.Add_byte(Byte_ascii.Slash)				// EX: '/'
 				.Add_int_variable(i)					// EX: '123'
 				;
-			Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bfr.XtoAryAndClear());
+			byte[] ttl_bry = ttl_bfr.XtoAryAndClear();
+			Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
 			Xoa_page page = wiki.Data_mgr().Get_page(ttl, false); if (page == null) {page_bfr.Mkr_rls(); ttl_bfr.Mkr_rls(); return;}
+			if (lst_page_regy.Get_by_bry(ttl_bry) == null)	// check if page was already added; avoids recursive <page> calls which will overflow stack; DATE:2014-01-01
+				lst_page_regy.Add(ttl_bry, ttl_bry);
+			else
+				continue;
 			byte[] page_bry = page.Data_raw();
 			if 		(i == bgn_page && bgn_sect != null) {
 				byte[] page_rhs = Parse_and_extract(wiki, page_bry, Bry_atr_begin, bgn_sect, false);
@@ -77,7 +84,7 @@ public class Xtn_pages_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 		}
 		// FUTURE: include lnkis to page; '[[' . $title->getPrefixedText() . "|$view]] "
 		byte[] combined = page_bfr.XtoAry();
-		Xop_ctx tmp_ctx = Xop_ctx.new_sub_(wiki);
+		Xop_ctx tmp_ctx = Xop_ctx.new_sub_page_(wiki, lst_page_regy);
 		xtn_root = tmp_ctx.Tkn_mkr().Root(combined);
 
 		tmp_ctx.Parse_tid_(Xop_parser_.Parse_tid_tmpl);
@@ -137,3 +144,26 @@ public class Xtn_pages_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 	;
 	private static final byte[] Bry_atr_begin = ByteAry_.new_utf8_("begin"), Bry_atr_end = ByteAry_.new_utf8_("end"); 
 }
+/*
+NOTE:page_regy
+. original implmentation was following
+in Xop_ctx
+	public Hash_adp_bry			Lst_page_regy()		{if (lst_page_regy == null) lst_page_regy = new Hash_adp_bry(true); return lst_page_regy;} 
+in Xtn_pages_nde
+	Hash_adp_bry lst_page_regy = ctx.Lst_page_regy();
+. current implementation is following
+in Xop_ctx
+	public Hash_adp_bry			Lst_page_regy()		{return lst_page_regy;} 
+in Xtn_pages_nde
+	Hash_adp_bry lst_page_regy = ctx.Lst_page_regy();
+	if (lst_page_regy == null) lst_page_regy = new Hash_adp_bry(true);
+. note that this only skips transcluded <pages> within a given <pages> call, not across the entire page
+EX: Page:A/1 has the following text
+<pages index="A" from=1 to=3 />
+<pages index="B" from=1 to=1 />
+text
+<pages index="B" from=1 to=1 />
+. original implementation would correctly include <pages index="A" from=1 to=3 /> only once, but would also include <pages index="B" from=1 to=1 /> once
+. current implmentation would include <pages index="B" from=1 to=1 /> twice
+. also, side-effect of only having Lst_page_regy only be non-null on sub_ctx, which means nothing needs to be cleared on main_ctx
+*/

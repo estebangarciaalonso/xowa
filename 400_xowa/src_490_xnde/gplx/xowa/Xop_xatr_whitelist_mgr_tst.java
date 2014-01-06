@@ -21,13 +21,15 @@ public class Xop_xatr_whitelist_mgr_tst {
 	Xop_xatr_whitelist_fxt fxt = new Xop_xatr_whitelist_fxt();
 	@Before public void init() {fxt.Clear();}
 	@Test  public void Basic() {
-		fxt.Whitelist(Xop_xnde_tag_.Tid_div, "style"			, true);
-		fxt.Whitelist(Xop_xnde_tag_.Tid_div, "xstyle"			, false);
-		fxt.Whitelist(Xop_xnde_tag_.Tid_div, "stylex"			, false);
-		fxt.Whitelist(Xop_xnde_tag_.Tid_div, "styl"				, false);
-		fxt.Whitelist(Xop_xnde_tag_.Tid_img, "alt"				, true);
-		fxt.Whitelist(Xop_xnde_tag_.Tid_img, "span"				, false);
-		fxt.Whitelist(Xop_xnde_tag_.Tid_div, "data-sort-type"	, true);
+		fxt.Whitelist(Xop_xnde_tag_.Tid_div		, "style"			, true);
+		fxt.Whitelist(Xop_xnde_tag_.Tid_div		, "xstyle"			, false);
+		fxt.Whitelist(Xop_xnde_tag_.Tid_div		, "stylex"			, false);
+		fxt.Whitelist(Xop_xnde_tag_.Tid_div		, "styl"			, false);
+		fxt.Whitelist(Xop_xnde_tag_.Tid_img		, "alt"				, true);
+		fxt.Whitelist(Xop_xnde_tag_.Tid_img		, "span"			, false);
+		fxt.Whitelist(Xop_xnde_tag_.Tid_div		, "data-sort-type"	, true);
+		fxt.Whitelist(Xop_xnde_tag_.Tid_data	, "value"			, true);
+		fxt.Whitelist(Xop_xnde_tag_.Tid_data	, "valuex"			, false);
 	}
 	@Test  public void Scrub() {
 		fxt.Scrub_style_fail("expression");

@@ -149,6 +149,13 @@ public class Xoa_ttl_tst {
 		ttl_("µab").Full_txt_("Μab").Run();				// check that rest of title works fine
 		ttl_("Help:µab").Full_txt_("Help:Μab").Run();		// check ns
 	}
+	@Test  public void First_char_is_multi_byte_assymetrical() { // PURPOSE: test multi-byte asymmetry (lc is 3 bytes; uc is 2 bytes)
+		fxt.Wiki().Lang().Case_mgr().Add_bulk(Xol_case_itm_.Universal);
+		ttl_("ⱥ").Full_txt_("Ⱥ").Run();
+		ttl_("ⱥab").Full_txt_("Ⱥab").Run();				// check that rest of title works fine
+		ttl_("Help:ⱥab").Full_txt_("Help:Ⱥab").Run();	// check ns
+	}
+
 	private Xoa_ttl_tst ttl_(String raw) {test_raw = raw; return this;} private String test_raw = "";
 	private Xoa_ttl_tst Ns_id_(int v) {expd_nsId = v; return this;} private int expd_nsId = Int_.MinValue;
 	private Xoa_ttl_tst Page_txt_(String v) {expd_page_txt = v; return this;} private String expd_page_txt;

@@ -41,6 +41,8 @@ public class Xop_lnki_tkn extends Xop_tkn_itm_base {
 	public Arg_nde_tkn		Link_tkn() {return link_tkn;} public Xop_lnki_tkn Link_tkn_(Arg_nde_tkn v) {link_tkn = v; return this;} Arg_nde_tkn link_tkn = Arg_nde_tkn.Null;
 	public Arg_nde_tkn		Alt_tkn() {return alt_tkn;} public Xop_lnki_tkn Alt_tkn_(Arg_nde_tkn v) {alt_tkn = v; return this;} Arg_nde_tkn alt_tkn = Arg_nde_tkn.Null;
 	public boolean				Alt_exists() {return alt_tkn != Arg_nde_tkn.Null;}
+	public int				Subpage_tid() {return subpage_tid;} public Xop_lnki_tkn Subpage_tid_(int v) {subpage_tid = v; return this;} private int subpage_tid;
+	public boolean				Subpage_slash_at_end() {return subpage_slash_at_end;} public Xop_lnki_tkn Subpage_slash_at_end_(boolean v) {subpage_slash_at_end = v; return this;} private boolean subpage_slash_at_end;
 	public Xoa_ttl			Ttl() {return ttl;} public Xop_lnki_tkn Ttl_(Xoa_ttl v) {ttl = v; return this;} private Xoa_ttl ttl;
 	public int				Html_id() {return html_id;} public Xop_lnki_tkn Html_id_(int v) {html_id = v; return this;} private int html_id;
 	public byte[] Ttl_ary() {

@@ -24,8 +24,9 @@ class Scrib_lib_language implements Scrib_lib {
 			( Invk_getContLangCode, Invk_isSupportedLanguage, Invk_isKnownLanguageTag, Invk_isValidCode, Invk_isValidBuiltInCode, Invk_fetchLanguageName
 			, Invk_lcfirst, Invk_ucfirst, Invk_lc, Invk_uc, Invk_caseFold, Invk_formatNum, Invk_formatDate, Invk_parseFormattedNumber, Invk_convertPlural, Invk_convertGrammar, Invk_gender, Invk_isRTL)
 			);
+		notify_lang_changed_fnc = mod.Fncs_get_by_key("notify_lang_changed");
 		return mod;
-	}
+	}	private Scrib_fnc notify_lang_changed_fnc;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_getContLangCode))			return GetContLangCode((KeyVal[])m.CastObj("v"));
 		else if	(ctx.Match(k, Invk_isSupportedLanguage))		return IsSupportedLanguage((KeyVal[])m.CastObj("v"));
@@ -56,6 +57,7 @@ class Scrib_lib_language implements Scrib_lib {
 		, Invk_formatNum = "formatNum", Invk_formatDate = "formatDate", Invk_formatDuration = "formatDuration", Invk_getDurationIntervals = "getDurationIntervals", Invk_parseFormattedNumber = "parseFormattedNumber"
 		, Invk_convertPlural = "convertPlural", Invk_convertGrammar = "convertGrammar", Invk_gender = "gender", Invk_isRTL = "isRTL"
 		;
+	public void Notify_lang_changed() {if (notify_lang_changed_fnc != null) engine.Interpreter().CallFunction(notify_lang_changed_fnc.Id(), KeyVal_.Ary_empty);}
 	public KeyVal[] GetContLangCode(KeyVal[] values) {return Scrib_kv_utl.base1_obj_(engine.Ctx().Lang().Key_str());}
 	public KeyVal[] IsSupportedLanguage(KeyVal[] values) {return IsKnownLanguageTag(values);}	// NOTE: checks if "MessagesXX.php" exists; note that xowa has all "MessagesXX.php"; for now, assume same functionality as IsKnownLanguageTag (worst case is that a small wiki depends on a lang not being there; will need to put in a "wiki.Langs()" then)
 	public KeyVal[] IsKnownLanguageTag(KeyVal[] values) {	// NOTE: checks if in languages/Names.php

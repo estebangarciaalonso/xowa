@@ -191,7 +191,7 @@ public class Xoh_lnki_wtr {
 				break;
 		}
 		Xop_tkn_itm anchor_title_tkn = lnki.Caption_tkn();
-		if (anchor_title_tkn == Xop_tkn_null.Null_tkn) return lnki_ttl; // no caption; return; (do not use lnki)
+		if (anchor_title_tkn == Xop_tkn_null.Null_tkn) return ByteAry_.Empty; // no caption; return empty; (do not use lnki); DATE:2013-12-31
 		bfr.Add(Anchor_title);
 		anchor_title_wkr.Set(src, anchor_title_tkn).XferAry(bfr, 0);
 		bfr.Add_byte(Byte_ascii.Quote);

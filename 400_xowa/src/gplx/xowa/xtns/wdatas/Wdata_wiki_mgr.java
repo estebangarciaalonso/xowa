@@ -44,7 +44,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 	public byte[] Qids_get(Xow_wiki wiki, Xoa_ttl ttl) {return Qids_get(wiki.Wdata_wiki_lang(), wiki.Wdata_wiki_tid(), ttl.Ns().Num_bry(), ttl.Page_db());}
 	public byte[] Qids_get(byte[] lang_key, byte wiki_tid, byte[] ns_num, byte[] ttl) {
 		if (!enabled) return null;
-		if (wiki_tid == Xow_wiki_type_.Tid_other) return null;	// "other" wikis will never call wikidata
+		if (wiki_tid == Xow_wiki_domain_.Tid_other) return null;	// "other" wikis will never call wikidata
 		ByteAryBfr bfr = app.Utl_bry_bfr_mkr().Get_b512();
 		Xob_bz2_file.Build_alias_by_lang_tid(bfr, lang_key, wiki_tid_ref.Val_(wiki_tid));
 		int xwiki_key_len = bfr.Bry_len();
@@ -177,11 +177,11 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 	public static final byte[] Html_json_id = ByteAry_.new_ascii_("xowa-wikidata-json");
 	public static boolean Wiki_page_is_json(byte wiki_tid, int ns_id) {
 		switch (wiki_tid) {
-			case Xow_wiki_type_.Tid_wikidata:
+			case Xow_wiki_domain_.Tid_wikidata:
 				if (ns_id == Xow_ns_.Id_main || ns_id == gplx.xowa.xtns.wdatas.Wdata_wiki_mgr.Ns_property)
 					return true;
 				break;
-			case Xow_wiki_type_.Tid_home:
+			case Xow_wiki_domain_.Tid_home:
 				if (ns_id == gplx.xowa.xtns.wdatas.Wdata_wiki_mgr.Ns_property)
 					return true;
 				break;

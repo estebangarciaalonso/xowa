@@ -27,7 +27,7 @@ public class Xof_math_html_wtr {
 		if (math_bry_clean != null) math_bry = math_bry_clean;	// js found; use clean version; DATE:2013-08-26
 		boolean enabled = app.File_mgr().Math_mgr().Enabled();
 		boolean renderer_is_latex = !app.File_mgr().Math_mgr().Renderer_is_mathjax();
-		if (renderer_is_latex && app.File_mgr().Math_mgr().Find_itm(tmp_math_itm, page.Wiki().Key_str(), math_bry)) {
+		if (renderer_is_latex && app.File_mgr().Math_mgr().Find_itm(tmp_math_itm, page.Wiki().Domain_str(), math_bry)) {
 			bfr.Add(Xoh_consts.Img_bgn);
 			bfr.Add_str(tmp_math_itm.Png_url().To_http_file_str());
 			bfr.Add(Xoh_consts.__inline_quote);

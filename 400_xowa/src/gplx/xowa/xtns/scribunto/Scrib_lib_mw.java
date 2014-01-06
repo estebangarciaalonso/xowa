@@ -188,7 +188,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		cur_wiki.Parser().Parse_page_tmpl(tmp_root, tmp_ctx, tmp_ctx.Tkn_mkr(), text_bry);
 		tmp_root.Tmpl_evaluate(tmp_ctx, text_bry, mock_frame, tmp_bfr);
 		return Scrib_kv_utl.base1_obj_(tmp_bfr.XtoStrAndClear());
-	}	private Xop_root_tkn tmp_root; Xop_ctx tmp_ctx;
+	}
 	public KeyVal[] CallParserFunction(KeyVal[] values) {
 		String frame_id = Scrib_kv_utl.Val_to_str(values, 0);
 		Xot_invk owner_frame = String_.Eq(frame_id, "current") ? engine.Cur_frame_invoke() : engine.Cur_frame_owner();
@@ -207,7 +207,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		bfr.Mkr_rls();
 		return Scrib_kv_utl.base1_obj_(bfr.XtoStrAndClear());
 	}
-	KeyVal[] CallParserFunction_parse_args(NumberParser num_parser, ByteAryRef argx_ref, ByteAryRef fnc_name_ref, KeyVal[] args) {
+	private KeyVal[] CallParserFunction_parse_args(NumberParser num_parser, ByteAryRef argx_ref, ByteAryRef fnc_name_ref, KeyVal[] args) {
 		ListAdp rv = ListAdp_.new_();
 		// flatten args
 		int args_len = args.length;
@@ -249,30 +249,53 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 //			return num_parser.HasErr() || num_parser.HasFrac() ? kv : kv.Key_(key_int.Val_add_post());
 		return kv;
 	}
+//		private KeyVal[] ExpandTemplate_args(KeyVal[] values) {
+//			KeyVal[] rv = Scrib_kv_utl.Val_to_KeyVal_ary(values, 2);
+//			int rv_len = rv.length;
+//			for (int i = 0; i < rv_len; i++) {	// iterate over args and convert any false boolean to a ""; PHP implicitly does this; fr.wikibooks.org/wiki/Chimie_organique/Sommaire; DATE:2014-01-02
+//				KeyVal kv = rv[i];
+//				Object kv_val = kv.Val();
+//				if (ClassAdp_.Eq_typeSafe(kv_val, Bool_.ClassOf)) {
+//					boolean kv_bool = Bool_.cast_(kv_val);
+//					if (kv_bool)
+//						kv.Val_(1);		// true => 1
+//					else
+//						kv.Val_(null);
+//				}
+//			}
+//			return rv;
+//		}
 	public KeyVal[] ExpandTemplate(KeyVal[] values) {
-		String tmpl_ttl_str = Scrib_kv_utl.Val_to_str(values, 1);
-		KeyVal[] tmpl_args = Scrib_kv_utl.Val_to_KeyVal_ary(values, 2);
-		if (tmp_root == null) {
-			tmp_root = ctx.Tkn_mkr().Root(ByteAry_.Empty);
-			tmp_ctx = Xop_ctx.new_sub_(cur_wiki);
+		String ttl_str = Scrib_kv_utl.Val_to_str(values, 1);
+		KeyVal[] args_ary = Scrib_kv_utl.Val_to_KeyVal_ary(values, 2);
+		byte[] ttl_bry = ByteAry_.new_utf8_(ttl_str);
+		Xoa_ttl ttl = Xoa_ttl.parse_(cur_wiki, ttl_bry);	// parse directly; handles titles where template is already part of title; EX: "Template:A"
+		if (ttl == null) return Scrib_lib_mw.Rslts_none;	// invalid ttl;
+		if (!ttl.ForceLiteralLink() && ttl.Ns().Id_main())	// title is not literal and is not prefixed with Template; parse again as template; EX: ":A" and "Template:A" are fine; "A" is parsed again as "Template:A"
+			ttl = Xoa_ttl.parse_(cur_wiki, ByteAry_.Add(cur_wiki.Ns_mgr().Ns_template().Name_db_w_colon(), ttl_bry));	// parse again, but add "Template:"
+		// BLOCK.bgn:Xot_invk_tkn.Transclude; cannot reuse b/c Transclude needs invk_tkn, and invk_tkn is manufactured late; DATE:2014-01-02
+		byte[] sub_src = null;
+		if (ttl.Ns().Id_tmpl()) {					// ttl is template; check tmpl_regy first before going to data_mgr
+			Xot_defn_tmpl tmpl = (Xot_defn_tmpl)engine.Wiki().Cache_mgr().Defn_cache().Get_by_key(ttl.Page_db());
+			if (tmpl != null) sub_src = tmpl.Data_raw();
+		}
+		if (sub_src == null)						// ttl is not in template cache, or is a ttl in non-Template ns; load title
+			sub_src = engine.Wiki().Cache_mgr().Page_cache().Get_or_load(ttl);
+		if (sub_src !=  null) {
+			Xot_invk_mock sub_frame = Xot_invk_mock.new_(engine.Cur_frame_invoke().Defn_tid(), 0, args_ary);
+			Xot_defn_tmpl transclude_tmpl = ctx.Wiki().Parser().Parse_tmpl(ctx, ctx.Tkn_mkr(), ttl.Ns(), ttl.Page_db(), sub_src);
+			ByteAryBfr sub_bfr = cur_wiki.Utl_bry_bfr_mkr().Get_k004();
+			transclude_tmpl.Tmpl_evaluate(ctx, sub_frame, sub_bfr);
+			return Scrib_kv_utl.base1_obj_(sub_bfr.Mkr_rls().XtoStrAndClear());
 		}
 		else {
-			tmp_root.Root_src_(ByteAry_.Empty);
+			String err_msg = "expand_template failed; ttl=" + ttl_str;
+			cur_wiki.App().Usr_dlg().Warn_many("", "", err_msg);
+			return Scrib_kv_utl.base1_obj_(err_msg);
 		}
-		byte[] tmpl_ttl_bry = ByteAry_.new_utf8_(tmpl_ttl_str);
-		Xoa_ttl tmp_ttl = Xoa_ttl.parse_(cur_wiki, tmpl_ttl_bry);	// parse directly; handles titles where template is already part of title; EX: "Template:A"
-		if (!tmp_ttl.Ns().Id_tmpl())								// title is not a template; assume just page passed; EX: "A"
-			tmp_ttl = Xoa_ttl.parse_(cur_wiki, ByteAry_.Add(cur_wiki.Ns_mgr().Ns_template().Name_db_w_colon(), tmpl_ttl_bry));	// parse again, but add "Template:"
-		Xot_invk_mock mock_frame = Xot_invk_mock.new_(engine.Cur_frame_invoke().Defn_tid(), 0, tmpl_args);
-
-		Xot_defn defn = Xot_invk_tkn.Load_defn(cur_wiki, tmp_ctx, tmp_ttl, tmp_ttl.Page_db());
-		Xot_defn_tmpl defn_tmpl = (Xot_defn_tmpl)defn;
-		Xot_invk invk_tmpl = Xot_defn_tmpl_.CopyNew(tmp_ctx, defn_tmpl, mock_frame, mock_frame, ByteAry_.Empty);
-
-		ByteAryBfr tmp_bfr = ByteAryBfr.new_(); // NOTE: do not make modular level variable, else random failures; DATE:2013-10-14
-		defn_tmpl.Tmpl_evaluate(ctx, invk_tmpl, tmp_bfr);
-		return Scrib_kv_utl.base1_obj_(tmp_bfr.XtoStrAndClear());
+		// BLOCK.end:Xot_invk_tkn.Transclude
 	}
+
 	public KeyVal[] IncrementExpensiveFunctionCount(KeyVal[] values) {return Scrib_kv_utl.base1_obj_(KeyVal_.Ary_empty);}	// NOTE: for now, always return null (XOWA does not care about expensive parser functions)
 	public KeyVal[] IsSubsting(KeyVal[] values) {
 		boolean is_substing = false;

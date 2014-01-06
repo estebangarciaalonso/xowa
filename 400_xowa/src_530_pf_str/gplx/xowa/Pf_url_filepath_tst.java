@@ -29,8 +29,8 @@ public class Pf_url_filepath_tst {
 		commons_wiki.Db_mgr().Load_mgr().Clear();
 		en_wiki.Db_mgr().Load_mgr().Clear();
 		app.Wiki_mgr().Add(commons_wiki);
-		app.File_mgr().Repo_mgr().Set("src_commons", "mem/xowa/file/commons/src/", commons_wiki.Key_str()).Ext_rules_(Xoft_rule_grp.Grp_app_default);
-		app.File_mgr().Repo_mgr().Set("trg_commons", "mem/xowa/file/commons/trg/", commons_wiki.Key_str()).Ext_rules_(Xoft_rule_grp.Grp_app_default);
+		app.File_mgr().Repo_mgr().Set("src_commons", "mem/xowa/file/commons/src/", commons_wiki.Domain_str()).Ext_rules_(Xoft_rule_grp.Grp_app_default);
+		app.File_mgr().Repo_mgr().Set("trg_commons", "mem/xowa/file/commons/trg/", commons_wiki.Domain_str()).Ext_rules_(Xoft_rule_grp.Grp_app_default);
 		en_wiki.File_mgr().Repo_mgr().Add_repo(ByteAry_.new_utf8_("src_commons"), ByteAry_.new_utf8_("trg_commons"));
 		Io_mgr._.CreateDir(Io_url_.new_dir_("mem/xowa/wiki/commons.wikimedia.org/ns/000/page/"));	// HACK: create page_dir so Scan_dirs_zip will not identify commons as zipped; FIX: remove; WHEN: after redoing commons.css download logic
 	}	private Xow_wiki en_wiki, commons_wiki; Xofw_wiki_wkr_mock mock_wkr = new Xofw_wiki_wkr_mock(); 

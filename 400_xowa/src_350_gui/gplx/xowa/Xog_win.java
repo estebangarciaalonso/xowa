@@ -460,7 +460,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	}
 	private void Exec_page_dbg(byte view_tid) {
 		Xow_wiki wiki = page.Wiki();
-//			if (ByteAry_.Eq(wiki.Key_bry(), Xow_wiki_type_.Key_home_bry)) {	// OBSOLETE: code to quickly switch to en.wikipedia.org for testing; should probably remove, but may be useful for future testing
+//			if (ByteAry_.Eq(wiki.Key_bry(), Xow_wiki_domain_.Key_home_bry)) {	// OBSOLETE: code to quickly switch to en.wikipedia.org for testing; should probably remove, but may be useful for future testing
 //				wiki = app.Wiki_mgr().Default_wiki();
 //			}
 		wiki.Ctx().Defn_trace().Clear(); // FUTURE: moveme
@@ -598,7 +598,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		app.Gui_mgr().Layout().Find_show();
 		find_box.Text_(Html_doc_selected_get());
 	}
-	String Html_doc_selected_get() {return html_box.Html_doc_selected_get(page.Wiki().Key_str(), String_.new_utf8_(page.Page_ttl().Page_txt()));}
+	String Html_doc_selected_get() {return html_box.Html_doc_selected_get(page.Wiki().Domain_str(), String_.new_utf8_(page.Page_ttl().Page_txt()));}
 	public Xog_win_view_adp Win_adp() {return win_mgr;}
 	GfuiBtn new_btn(Gfui_kit kit, GfuiWin win, Io_url img_dir, String id, String file, int tiptext_id) {
 		GfuiBtn rv = kit.New_btn(id, win);

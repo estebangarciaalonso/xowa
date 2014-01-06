@@ -28,9 +28,9 @@ public class Xow_script_mgr implements GfoInvkAble {
 		ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_k004();
 		for (int i = 0; i < len; i++) {
 			Xow_script_itm itm = (Xow_script_itm)hash.FetchAt(i);
-			byte wiki_tid = wiki.Wiki_tid();
+			byte wiki_tid = wiki.Domain_tid();
 			if (Byte_.In(wiki_tid, itm.Wiki_tids()))	// wiki_tid matches itm
-				itm.Fmtr().Bld_bfr_many(bfr, wiki.Key_bry(), Xow_wiki_type_.Key_by_tid(wiki_tid), wiki.Lang_key());
+				itm.Fmtr().Bld_bfr_many(bfr, wiki.Domain_bry(), Xow_wiki_domain_.Key_by_tid(wiki_tid), wiki.Lang().Key_bry());
 		}
 		String gfs_script = String_.Replace(bfr.XtoStrAndClear(), Op_sys.Wnt.Nl_str(), Op_sys.Lnx.Nl_str());
 		wiki.App().Gfs_mgr().Run_str(gfs_script);
@@ -41,7 +41,7 @@ public class Xow_script_mgr implements GfoInvkAble {
 		int len = wiki_tid_names.length;
 		byte[] wiki_tids = new byte[len];
 		for (int i = 0; i < len; i++)
-			wiki_tids[i] = Xow_wiki_type_.Tid_by_key(wiki_tid_names[i]);
+			wiki_tids[i] = Xow_wiki_domain_.Tid_by_key(wiki_tid_names[i]);
 
 		Xow_script_itm itm = new Xow_script_itm(key, wiki_tids, script);
 		hash.AddReplace(itm.Key(), itm);

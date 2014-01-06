@@ -81,7 +81,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		}
 		Xowh_portal_mgr portal_mgr = wiki.Html_mgr().Portal_mgr().Init_assert();
 		Xol_lang lang = page.Lang();
-		byte[] js_wikidata_bry = Wdata_wiki_mgr.Wiki_page_is_json(wiki.Wiki_tid(), page.Page_ttl().Ns().Id()) ? app.User().Lang().Fragment_mgr().Html_js_wikidata() : ByteAry_.Empty;
+		byte[] js_wikidata_bry = Wdata_wiki_mgr.Wiki_page_is_json(wiki.Domain_tid(), page.Page_ttl().Ns().Id()) ? app.User().Lang().Fragment_mgr().Html_js_wikidata() : ByteAry_.Empty;
 		byte[] js_edit_toolbar_bry = view_tid == Xoh_wiki_article.Tid_view_edit ? wiki.Fragment_mgr().Html_js_edit_toolbar() : ByteAry_.Empty;
 		byte[] css_xtn = app.Ctg_mgr().Missing_ctg_cls_css();
 		if (app.Html_mgr().Page_mgr().Font_enabled())
@@ -136,7 +136,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		Xoa_app app = wiki.App();
 		int ns_id = page.Page_ttl().Ns().Id();
 		int bfr_page_bgn = bfr.Bry_len();
-		byte page_tid = Xow_page_tid.Identify(wiki.Wiki_tid(), ns_id, page.Page_ttl().Page_db());
+		byte page_tid = Xow_page_tid.Identify(wiki.Domain_tid(), ns_id, page.Page_ttl().Page_db());
 		boolean page_tid_uses_pre = false;
 		switch (page_tid) {
 			case Xow_page_tid.Tid_js:
@@ -168,14 +168,14 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 				}
 				break;
 		}
-		if (	wiki.Wiki_tid() != Xow_wiki_type_.Tid_home	// allow home wiki to use javascript
+		if (	wiki.Domain_tid() != Xow_wiki_domain_.Tid_home	// allow home wiki to use javascript
 			&&  !page_tid_uses_pre) {						// if .js, .css or .lua, skip test; may have js fragments, but entire text is escaped and put in pre; don't show spurious warning; DATE:2013-11-21
 			int bfr_page_end = bfr.Bry_len();
 			byte[] cleaned = app.Utl_js_cleaner().Clean(wiki, bfr.Bry(), bfr_page_bgn, bfr_page_end);
 			if (cleaned != null) {
 				bfr.Del_by(bfr_page_end - bfr_page_bgn);
 				bfr.Add(cleaned);
-				app.Usr_dlg().Warn_many("", "", "javascript detected: wiki=~{0} ~{1}", wiki.Key_str(), String_.new_utf8_(page.Page_ttl().Full_txt()));
+				app.Usr_dlg().Warn_many("", "", "javascript detected: wiki=~{0} ~{1}", wiki.Domain_str(), String_.new_utf8_(page.Page_ttl().Full_txt()));
 			}
 		}
 	}

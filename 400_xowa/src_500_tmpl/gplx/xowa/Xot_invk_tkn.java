@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.langs.*;
+import gplx.xowa.langs.vnts.*; import gplx.xowa.langs.cnvs.*;
 public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 	public boolean Root_frame() {return false;}
 	public Arg_nde_tkn Name_tkn() {return name_tkn;} public Xot_invk_tkn Name_tkn_(Arg_nde_tkn v) {name_tkn = v; return this;} Arg_nde_tkn name_tkn = Arg_nde_tkn.Null;
@@ -41,13 +42,13 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 	}
 	@Override public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr) {	// EX: this="{{t|{{{0}}}}}" caller="{{t|1}}"
 		boolean rv = false;
-		Xot_defn defn = tmpl_defn; Xow_wiki wiki = ctx.Wiki();
+		Xot_defn defn = tmpl_defn; Xow_wiki wiki = ctx.Wiki(); Xol_lang lang = wiki.Lang();
 		byte[] name_ary = defn.Name(), argx_ary = ByteAry_.Empty; Arg_itm_tkn name_key_tkn = name_tkn.Key_tkn();
 		int name_bgn = 0, name_ary_len = 0; 
 		if (defn == Xot_defn_.Null) {								// tmpl_name is not exact match; may be dynamic, subst, transclusion, etc..
 			if (name_key_tkn.Itm_static() == Bool_.N_byte) {		// tmpl is dynamic; EX:{{{{{1}}}|a}}
 				ByteAryBfr name_tkn_bfr = new ByteAryBfr(name_tkn.Src_end() - name_tkn.Src_bgn());
-				if (defn_tid == Xot_defn_.Tid_subst) name_tkn_bfr.Add(Get_first_subst_itm(wiki.Lang().Kwd_mgr()));
+				if (defn_tid == Xot_defn_.Tid_subst) name_tkn_bfr.Add(Get_first_subst_itm(lang.Kwd_mgr()));
 				name_tkn.Tmpl_evaluate(ctx, src, caller, name_tkn_bfr);
 				name_ary = name_tkn_bfr.XtoAryAndClear();
 			}
@@ -88,7 +89,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 //					if (pre_len < name_ary_len && name_ary[pre_len] == Byte_ascii.Colon)
 				return SubEval(ctx, wiki, bfr, name_ary, caller, src);
 			}
-			Xol_func_name_itm finder = wiki.Lang().Func_regy().Find_defn(name_ary, name_bgn, name_ary_len);
+			Xol_func_name_itm finder = lang.Func_regy().Find_defn(name_ary, name_bgn, name_ary_len);
 			defn = finder.Func();
 			int colon_pos = -1;
 			switch (finder.Tid()) {
@@ -152,6 +153,24 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 						}
 					}
 				}
+				if (defn == null) defn = Xot_defn_.Null;
+			}
+		}
+		if (	defn.Defn_tid() == Xot_defn_.Tid_null		// name is not a known defn
+			&&	lang.Vnt_mgr().Enabled()) {					// lang has vnts
+			ByteAryBfr convert_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
+			Xodb_page page = lang.Vnt_mgr().Convert_ttl(wiki, convert_bfr, wiki.Ns_mgr().Ns_template(), name_ary);
+			convert_bfr.Mkr_rls();
+			if (page != Xodb_page.Null) {
+				name_ary = page.Ttl_wo_ns();
+				Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.Add(wiki.Ns_mgr().Ns_template().Name_db_w_colon(), name_ary));
+				if (ttl == null) { // ttl is not valid; just output orig; REF.MW:Parser.php|braceSubstitution|if ( !$found ) $text = $frame->virtualBracketedImplode( '{{', '|', '}}', $titleWithSpaces, $args );
+					bfr.Add(Xop_curly_bgn_lxr.Hook).Add(name_ary).Add(Xop_curly_end_lxr.Hook);
+					return false;
+				}
+				defn = wiki.Cache_mgr().Defn_cache().Get_by_key(name_ary);
+				if (defn == null && ctx.Sys_load_tmpls())
+					defn = Load_defn(wiki, ctx, ttl, name_ary);
 				if (defn == null) defn = Xot_defn_.Null;
 			}
 		}
@@ -224,7 +243,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 				break;
 		}
 		return rv;
-	}	static final byte[] Ary_unknown_bgn = ByteAry_.new_ascii_("(? [["), Ary_unknown_end = ByteAry_.new_ascii_("]] ?)"), Ary_dynamic_is_blank = ByteAry_.new_ascii_("dynamic is blank");
+	}	private static final byte[] Ary_unknown_bgn = ByteAry_.new_ascii_("(? [["), Ary_unknown_end = ByteAry_.new_ascii_("]] ?)"), Ary_dynamic_is_blank = ByteAry_.new_ascii_("dynamic is blank");
 	public static void Eval_func(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk invk, ByteAryBfr bfr, Xot_defn defn, byte[] argx_ary) {
 		Pf_func_base defn_func = (Pf_func_base)defn;
 		defn_func = (Pf_func_base)defn_func.New(defn_func.Id(), defn_func.Name());	// NOTE: always make copy b/c argx_ary may be dynamic
@@ -260,7 +279,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 			if (tmpl != null) transclude_src = tmpl.Data_raw();
 		}
 		if (transclude_src == null && ctx.Sys_load_tmpls()) {	// ttl is template not in cache, or some other ns; do load
-			byte[] page_bry = wiki.Cache_mgr().Page_cache().Get_or_fetch(page_ttl);
+			byte[] page_bry = wiki.Cache_mgr().Page_cache().Get_or_load(page_ttl);
 			if (page_bry != null)
 				transclude_src = page_bry;
 		}
@@ -273,8 +292,17 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 			return false;
 		}
 	}
+	private boolean Eval_sub(Xop_ctx ctx, Xot_defn_tmpl transclude_tmpl, Xot_invk caller, byte[] src, ByteAryBfr doc) {
+		boolean rv = false;
+		Xot_invk tmp_tmpl = Xot_defn_tmpl_.CopyNew(ctx, transclude_tmpl, this, caller, src);
+		ByteAryBfr tmp_bfr = ByteAryBfr.new_();
+		rv = transclude_tmpl.Tmpl_evaluate(ctx, tmp_tmpl, tmp_bfr);
+		if (!doc.Match_end_byt(Byte_ascii.NewLine) && ctx.App().TmplBgnTrie().MatchAtCur(tmp_bfr.Bry(), 0, 2) != null) {doc.Add_byte(Byte_ascii.NewLine);}	// if {| : ; # *, auto  add new_line REF.MW:Parser.php|braceSubstitution; note that code does not add new line if one is already there
+		doc.Add_bfr_and_clear(tmp_bfr);
+		return rv;
+	}
 	public static Xot_defn_tmpl Load_defn(Xow_wiki wiki, Xop_ctx ctx, Xoa_ttl ttl, byte[] name_ary) {
-		byte[] tmpl_page_bry = wiki.Cache_mgr().Page_cache().Get_or_fetch(ttl);
+		byte[] tmpl_page_bry = wiki.Cache_mgr().Page_cache().Get_or_load(ttl);
 		Xot_defn_tmpl rv = null;
 		if (tmpl_page_bry != null) {
 			byte old_parse_tid = ctx.Parse_tid(); // NOTE: reusing templates is a bad idea; will change Parse_tid and cause strange errors; however, keeping for PERF reasons
@@ -284,18 +312,8 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		}
 		return rv;
 	}
-
 	public static void Print_not_found(byte[] name_ary, ByteAryBfr bfr) {	// print as {{:page_not_found}}; should change to &#123;&#123;page_not_found}}; need to consider
 		bfr.Add(Xop_curly_bgn_lxr.Hook).Add_byte(Byte_ascii.Colon).Add(name_ary).Add(Xop_curly_end_lxr.Hook);
-	}
-	private boolean Eval_sub(Xop_ctx ctx, Xot_defn_tmpl transclude_tmpl, Xot_invk caller, byte[] src, ByteAryBfr doc) {
-		boolean rv = false;
-		Xot_invk tmp_tmpl = Xot_defn_tmpl_.CopyNew(ctx, transclude_tmpl, this, caller, src);
-		ByteAryBfr tmp_bfr = ByteAryBfr.new_();
-		rv = transclude_tmpl.Tmpl_evaluate(ctx, tmp_tmpl, tmp_bfr);
-		if (!doc.Match_end_byt(Byte_ascii.NewLine) && ctx.App().TmplBgnTrie().MatchAtCur(tmp_bfr.Bry(), 0, 2) != null) {doc.Add_byte(Byte_ascii.NewLine);}	// if {| : ; # *, auto  add new_line REF.MW:Parser.php|braceSubstitution; note that code does not add new line if one is already there
-		doc.Add_bfr_and_clear(tmp_bfr);
-		return rv;
 	}
 	private boolean SubEval(Xop_ctx ctx, Xow_wiki wiki, ByteAryBfr bfr, byte[] name_ary, Xot_invk caller, byte[] src_for_tkn) {
 		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, name_ary); if (page_ttl == null) return false;	// ttl not valid; EX: {{:[[abc]]}}
@@ -313,7 +331,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 				return true;
 		}
 		if (transclude_tmpl == null && ctx.Sys_load_tmpls()) {	// ttl is template not in cache, or some other ns; do load
-			byte[] page_bry = wiki.Cache_mgr().Page_cache().Get_or_fetch(page_ttl);
+			byte[] page_bry = wiki.Cache_mgr().Page_cache().Get_or_load(page_ttl);
 			if (page_bry != null) transclude_tmpl = ctx.Wiki().Parser().Parse_tmpl(ctx, ctx.Tkn_mkr(), page_ttl.Ns(), page_ttl.Page_db(), page_bry);
 		}
 		if (transclude_tmpl == null) return false;

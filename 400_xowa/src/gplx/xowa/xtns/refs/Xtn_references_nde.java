@@ -32,13 +32,11 @@ public class Xtn_references_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 			}
 		}
 	}	static byte[] Bry_group = ByteAry_.new_ascii_("group");
-	private static Xop_ctx inner_ctx;
 	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn cur_root, byte[] src, Xop_xnde_tkn xnde) {
 		Xop_xatr_itm.Xatr_parse(wiki.App(), this, wiki.Lang().Xatrs_references(), wiki, src, xnde);
 		if (xnde.CloseMode() == Xop_xnde_tkn.CloseMode_pair) {
 			int itm_bgn = xnde.Tag_open_end(), itm_end = xnde.Tag_close_bgn();
-			if (inner_ctx == null)	inner_ctx = Xop_ctx.new_sub_(wiki);
-			else					inner_ctx.Clear();
+			Xop_ctx inner_ctx = Xop_ctx.new_sub_(wiki);	// NOTE: was static member (for PERF); removed; DATE:2014-01-03
 			inner_ctx.Para().Enabled_n_();
 			byte[] references_src = ByteAry_.Mid(src, itm_bgn, itm_end);
 			Xop_root_tkn root = tkn_mkr.Root(src);

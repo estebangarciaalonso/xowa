@@ -54,7 +54,8 @@ public class Xop_ctx {
 	public byte					Cur_tkn_tid()		{return cur_tkn_tid;} public Xop_ctx Cur_tkn_tid_(byte v) {cur_tkn_tid = v; return this;} private byte cur_tkn_tid = Xop_tkn_itm_.Tid_null;
 	public boolean					Lxr_make()			{return lxr_make;} public Xop_ctx Lxr_make_(boolean v) {lxr_make = v; return this;} private boolean lxr_make = false;
 	public boolean					Only_include_evaluate() {return only_include_evaluate;} public Xop_ctx Only_include_evaluate_(boolean v) {only_include_evaluate = v; return this;} private boolean only_include_evaluate;
-	public Xtn_lst_section_mgr	Lst_section_mgr() {if (lst_section_mgr == null) lst_section_mgr = new Xtn_lst_section_mgr(); return lst_section_mgr;} Xtn_lst_section_mgr lst_section_mgr;
+	public Xtn_lst_section_mgr	Lst_section_mgr()	{if (lst_section_mgr == null) lst_section_mgr = new Xtn_lst_section_mgr(); return lst_section_mgr;} Xtn_lst_section_mgr lst_section_mgr;
+	public Hash_adp_bry			Lst_page_regy()		{return lst_page_regy;} private Hash_adp_bry lst_page_regy;
 	public Xop_log_invoke_wkr	Xtn__scribunto__invoke_wkr() {return app.Xtn_mgr().Xtn_scribunto().Invoke_wkr();} 
 	public Xop_log_property_wkr Xtn__wikidata__property_wkr() {return app.Wiki_mgr().Wdata_mgr().Property_wkr();} 
 	private Xop_ctx_wkr[] wkrs = new Xop_ctx_wkr[] {}; private Xop_ctx_wkr[] wkrs_(Xop_ctx_wkr... ary) {return ary;}
@@ -66,6 +67,7 @@ public class Xop_ctx {
 		Tag_idx = 0;
 		app.Wiki_mgr().Wdata_mgr().Clear();
 		if (lst_section_mgr != null) lst_section_mgr.Clear();
+		if (lst_page_regy != null) lst_page_regy.Clear();
 		return this;
 	}
 	public void Page_bgn(Xop_root_tkn root, byte[] src) {
@@ -259,8 +261,14 @@ public class Xop_ctx {
 	}
 	public static Xop_ctx new_sub_(Xow_wiki wiki) {
 		Xop_ctx rv = new Xop_ctx(wiki);
-		rv.Page().Page_ttl_(wiki.Ctx().Page().Page_ttl());	// NOTE: sub_ctx must have same page_ttl as owner; see Xtn_lst_tst!Fullpagename
-		rv.tab = wiki.Ctx().Tab();	// NOTE: tab should be same instance across all sub_ctxs; otherwise CallParserFunction will not set DISPLAYTITLE correctly; DATE:2013-08-05
+		Xop_ctx cur = wiki.Ctx();
+		rv.Page().Page_ttl_(cur.Page().Page_ttl());	// NOTE: sub_ctx must have same page_ttl as owner; see Xtn_lst_tst!Fullpagename
+		rv.tab = cur.Tab();	// NOTE: tab should be same instance across all sub_ctxs; otherwise CallParserFunction will not set DISPLAYTITLE correctly; DATE:2013-08-05
+		return rv;
+	}
+	public static Xop_ctx new_sub_page_(Xow_wiki wiki, Hash_adp_bry lst_page_regy) {
+		Xop_ctx rv = new_sub_(wiki);
+		rv.lst_page_regy = lst_page_regy;
 		return rv;
 	}
 }

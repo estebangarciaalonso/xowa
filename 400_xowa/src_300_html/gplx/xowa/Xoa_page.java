@@ -25,7 +25,7 @@ public class Xoa_page {
 		lang = wiki.Lang();	// default to wiki.lang; can be override later in wikitext
 	}
 	public Xow_wiki		Wiki() {return wiki;} private Xow_wiki wiki;
-	public Xoa_ttl		Page_ttl() {return page_ttl;} public Xoa_page Page_ttl_(Xoa_ttl v) {page_ttl = v; url.Wiki_bry_(wiki.Key_bry()).Page_bry_(v.Full_url()); return this;} private Xoa_ttl page_ttl;
+	public Xoa_ttl		Page_ttl() {return page_ttl;} public Xoa_page Page_ttl_(Xoa_ttl v) {page_ttl = v; url.Wiki_bry_(wiki.Domain_bry()).Page_bry_(v.Full_url()); return this;} private Xoa_ttl page_ttl;
 	public int			Page_id() {return page_id;} public Xoa_page Page_id_(int v) {page_id = v; return this;} private int page_id;
 	public DateAdp		Page_date() {return page_date;} public Xoa_page Page_date_(DateAdp v) {page_date = v; return this;} DateAdp page_date = DateAdp_.MinValue;
 	public byte			Page_tid() {return page_tid;} private byte page_tid;

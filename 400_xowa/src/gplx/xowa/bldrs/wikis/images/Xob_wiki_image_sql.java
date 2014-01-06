@@ -101,7 +101,7 @@ public class Xob_wiki_image_sql extends Xob_itm_dump_base implements Xob_cmd, Gf
 				file_ext_id = mime_ext_id;
 			else {
 				if (notify)
-					usr_dlg.Warn_many("", "", "image.ext_calc.mismatch_exts: file=~{0} mime=~{1}", String_.new_utf8_(file), String_.new_utf8_(minor_mime));			
+					usr_dlg.Note_many("", "", "image.ext_calc.mismatch_exts: file=~{0} mime=~{1}", String_.new_utf8_(file), String_.new_utf8_(minor_mime));			
 			}
 		}
 		if (    file_ext_id		== Xof_ext_.Id_ogg			// file_ext is ".ogg"
@@ -110,7 +110,7 @@ public class Xob_wiki_image_sql extends Xob_itm_dump_base implements Xob_cmd, Gf
 			if (w > 0 && h > 0)								// some .ogg files are "VIDEO" but have 0 width, 0 height
 				file_ext_id = Xof_ext_.Id_ogv;				// manually specify ogv
 			else
-				usr_dlg.Warn_many("", "", "image.ext_calc.ogg_video_with_null_size: media_type=~{0} minor_mime=~{1} w=~{2} h=~{3} file=~{4}", String_.new_utf8_(media_type), String_.new_utf8_(minor_mime), w, h, String_.new_utf8_(file));
+				usr_dlg.Note_many("", "", "image.ext_calc.ogg_video_with_null_size: media_type=~{0} minor_mime=~{1} w=~{2} h=~{3} file=~{4}", String_.new_utf8_(media_type), String_.new_utf8_(minor_mime), w, h, String_.new_utf8_(file));
 		}
 		return file_ext_id;
 	}

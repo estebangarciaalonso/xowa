@@ -85,6 +85,7 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		if (ttl_in_xwiki == null) return ttl; // occurs if ttl is bad in xwiki; EX: test:<bad>
 		return ttl_in_xwiki.Ns().Id_file() ? ttl_in_xwiki : ttl;
 	}
+	private IntRef rel2abs_tid = IntRef.zero_();
 	public boolean Args_add(Xop_ctx ctx, byte[] src, Xop_tkn_itm tkn, Arg_nde_tkn arg, int arg_idx) {
 		Xop_lnki_tkn lnki = (Xop_lnki_tkn)tkn;
 		try {
@@ -100,14 +101,17 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 					if (ctx.Page().Page_ttl().Ns().Subpages_enabled()
 						&& Pf_xtn_rel2abs.Rel2abs_ttl(name_bry, 0, name_bry_len)) { // Linker.php|normalizeSubpageLink
 						ByteAryBfr tmp_bfr = ctx.App().Utl_bry_bfr_mkr().Get_b512();
-						name_bry = Pf_xtn_rel2abs.Rel2abs(tmp_bfr, name_bry, ctx.Page().Page_ttl().Raw());
+						byte[] new_bry = Pf_xtn_rel2abs.Rel2abs(tmp_bfr, name_bry, ctx.Page().Page_ttl().Raw(), rel2abs_tid.Val_zero_());
+						lnki.Subpage_tid_(rel2abs_tid.Val());
+						lnki.Subpage_slash_at_end_(ByteAry_.Get_at_end(name_bry) == Byte_ascii.Slash);
+						name_bry = new_bry;
 						tmp_bfr.Mkr_rls();
 					}
 					Xow_wiki wiki = ctx.Wiki();
 					Xoa_ttl ttl = Xoa_ttl.parse_(wiki, name_bry);
 					if (ttl == null) {lnki.Tkn_tid_to_txt(); return false;}
 					if (	ttl.Wik_bgn() != Xoa_ttl.Null_wik_bgn			// xwiki available; EX: [[en:]]
-						&&	wiki.Wiki_tid() != Xow_wiki_type_.Tid_home)		// not home; ignore for history page wherein [[en.wikipedia.org:File:A.png]] will be listed
+						&&	wiki.Domain_tid() != Xow_wiki_domain_.Tid_home)		// not home; ignore for history page wherein [[en.wikipedia.org:File:A.png]] will be listed
 						ttl = Adj_ttl_for_file(ctx, ttl, name_bry);
 					lnki.Ttl_(ttl);
 					lnki.Ns_id_(lnki.Ttl().Ns().Id());

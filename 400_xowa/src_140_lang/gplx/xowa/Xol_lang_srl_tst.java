@@ -165,7 +165,7 @@ public class Xol_lang_srl_tst {
 		Io_mgr._.SaveFilStr(Xol_lang_.xo_lang_fil_(fxt.App(), "pt")		, "fallback_load('pt-br');");
 		Io_mgr._.SaveFilStr(Xol_lang_.xo_lang_fil_(fxt.App(), "pt-br")	, "fallback_load('pt');");
 		Xol_lang lang = new Xol_lang(fxt.App(), ByteAry_.new_ascii_("pt"));
-		lang.Load_assert(fxt.App());
+		lang.Init_by_load();
 	}
 	@Test  public void Num_fmt() {
 		String raw = String_.Concat_lines_nl

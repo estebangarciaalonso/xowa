@@ -124,9 +124,9 @@ public class Wdata_doc_parser {
 	public static final OrderedHash Empty_ordered_hash_bry = OrderedHash_.new_bry_(), Empty_ordered_hash_generic = OrderedHash_.new_();
 	static final byte Prop_tid_m = 0, Prop_tid_q = 1, Prop_tid_g = 2, Prop_tid_rank = 3, Prop_tid_refs = 4;
 	private static final Hash_adp_bry Prop_key_hash = new Hash_adp_bry(false)
-		.Add_bry_byteVal(Wdata_doc_consts.Key_claims_m_bry		, Prop_tid_m)
-		.Add_bry_byteVal(Wdata_doc_consts.Key_claims_q_bry		, Prop_tid_q)
-		.Add_bry_byteVal(Wdata_doc_consts.Key_claims_g_bry		, Prop_tid_g)
-		.Add_bry_byteVal(Wdata_doc_consts.Key_claims_rank_bry	, Prop_tid_rank)
-		.Add_bry_byteVal(Wdata_doc_consts.Key_claims_refs_bry	, Prop_tid_refs);
+		.Add_bry_byte(Wdata_doc_consts.Key_claims_m_bry		, Prop_tid_m)
+		.Add_bry_byte(Wdata_doc_consts.Key_claims_q_bry		, Prop_tid_q)
+		.Add_bry_byte(Wdata_doc_consts.Key_claims_g_bry		, Prop_tid_g)
+		.Add_bry_byte(Wdata_doc_consts.Key_claims_rank_bry	, Prop_tid_rank)
+		.Add_bry_byte(Wdata_doc_consts.Key_claims_refs_bry	, Prop_tid_refs);
 }

@@ -26,7 +26,7 @@ public class Xou_fsys_mgr implements GfoInvkAble {
 		app_temp_dir = app_root_dir.GenSubDir("tmp");
 		app_data_history_fil = app_root_dir.GenSubFil_nest("data", "history", "page_history.csv");
 		wiki_root_dir = cur_root.GenSubDir("wiki");
-		home_wiki_dir = wiki_root_dir.GenSubDir_nest(Xow_wiki_type_.Key_home_str);
+		home_wiki_dir = wiki_root_dir.GenSubDir_nest(Xow_wiki_domain_.Key_home_str);
 	}
 	public Io_url Root_dir()				{return cur_root;}
 	public Io_url Wiki_root_dir()			{return wiki_root_dir;}

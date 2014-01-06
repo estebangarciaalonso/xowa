@@ -25,9 +25,9 @@ public class Xol_mw_lang_parser {
 	public void Bld_all(Xoa_app app, Io_url user_root, Xol_lang_transform lang_transform) {
 		Io_url lang_root = user_root.GenSubDir("lang");
 		Parse_mediawiki(app, lang_root.GenSubDir("mediawiki"), lang_transform);
-		Save_langs(app, lang_root.GenSubDir(Xol_mw_lang_parser.Dir_name_xowa), OrderedHash_.new_bry_());
+		Save_langs(app, lang_root.GenSubDir(Xol_mw_lang_parser.Dir_name_xowa), OrderedHash_.new_bry_(), OrderedHash_.new_bry_());
 	}
-	public void Save_langs(Xoa_app app, Io_url xowa_root, OrderedHash manual_texts) {
+	public void Save_langs(Xoa_app app, Io_url xowa_root, OrderedHash manual_text_bgn, OrderedHash manual_text_end) {
 		Xoa_lang_mgr lang_mgr = app.Lang_mgr();
 		int len = lang_mgr.Len();
 		Gfs_bldr bldr = new Gfs_bldr();
@@ -35,6 +35,8 @@ public class Xol_mw_lang_parser {
 			Xol_lang lang = lang_mgr.Get_at(i);
 			String lang_key = lang.Key_str();
 			Io_url lang_url = xowa_root.GenSubFil(lang_key + ".gfs");
+			Save_langs_by_manual_text(bldr, manual_text_bgn, lang_key);
+
 			Xol_lang_srl.Save_num_fmt(bldr, lang.Num_fmt_mgr());
 			bldr.Add_proc_init_many("this").Add_nl();
 			if (lang.Fallback_bry() != null)	// NOTE: fallback will often be null; EX: en
@@ -48,10 +50,13 @@ public class Xol_mw_lang_parser {
 			Xol_lang_srl.Save_messages(bldr, lang.Msg_mgr(), true);
 			bldr.Add_term_nl();
 
-			byte[][] itm = (byte[][])manual_texts.Fetch(ByteAry_.new_utf8_(lang_key));
-			if (itm != null) bldr.Bfr().Add(itm[1]);
+			Save_langs_by_manual_text(bldr, manual_text_end, lang_key);
 			Io_mgr._.SaveFilBfr(lang_url, bldr.Bfr());
 		}
+	}
+	private void Save_langs_by_manual_text(Gfs_bldr bldr, OrderedHash manual_text_hash, String lang_key) {
+		byte[][] itm = (byte[][])manual_text_hash.Fetch(ByteAry_.new_utf8_(lang_key));
+		if (itm != null) bldr.Bfr().Add(itm[1]);
 	}
 	public void Parse_mediawiki(Xoa_app app, Io_url mediawiki_root, Xol_lang_transform lang_transform) {
 		ByteAryBfr bfr = ByteAryBfr.new_();
@@ -65,11 +70,11 @@ public class Xol_mw_lang_parser {
 		for (int i = 0; i < len; i++) {
 			Io_url url = urls[i];
 			try {
-			String lang_key = String_.Replace(String_.Lower(String_.Mid(url.NameOnly(), 8)), "_", "-");	// 8=Messages.length; lower b/c format is MessagesEn.php (need "en")
-			if (String_.In(lang_key, "qqq", "enrtl", "bbc", "bbc-latn")) continue;
-			String text = Io_mgr._.LoadFilStr(url);
-			Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(ByteAry_.new_utf8_(lang_key));
-			this.Parse_core(text, lang, bfr, lang_transform);
+				String lang_key = String_.Replace(String_.Lower(String_.Mid(url.NameOnly(), 8)), "_", "-");	// 8=Messages.length; lower b/c format is MessagesEn.php (need "en")
+				if (String_.In(lang_key, "qqq", "enrtl", "bbc", "bbc-latn")) continue;
+				String text = Io_mgr._.LoadFilStr(url);
+				Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(ByteAry_.new_utf8_(lang_key));
+				this.Parse_core(text, lang, bfr, lang_transform);
 			} catch (Exception exc) {Err_.Noop(exc); Tfds.WriteText("failed to parse " + url.Raw() + Err_.Message_gplx_brief(exc) + "\n");}
 		}
 	}
@@ -154,31 +159,26 @@ public class Xol_mw_lang_parser {
 				if (subs.length == 0) continue;	// ignore if no lang_key; EX: ['en']
 				byte[] lang_key = subs[0].Val_obj_bry();
 				try {
-				if (String_.In(String_.new_utf8_(lang_key), Lang_skip)) continue;
-				Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(lang_key);
-				ByteVal stub = (ByteVal)o;
-				switch (stub.Val()) {
-					case Tid_messages:		
-						Parse_array_kv(bry_list, line);
-						Parse_messages(bry_list, lang, bfr);
-						break;
-					case Tid_magicwords:
-						if (line.Key_subs().length == 0) continue;	// ignore lines like $magicWords = array();
-						if (line.Key_subs().length > 1) throw Err_mgr._.fmt_(GRP_KEY, "parse_xtn", "magicWords in xtn must have only 1 accessor", line.Key_subs().length);
-						Php_key accessor = line.Key_subs()[0];
-						byte[] accessor_bry = accessor.Val_obj_bry();
-						if (ByteAry_.Eq(accessor_bry, lang_key))	// accessor must match lang_key
-							Parse_magicwords(line, lang.Key_bry(), lang.Kwd_mgr(), prepend_hash, lang_transform); 
-						break;
-				}
-			} catch (Exception exc) {Err_.Noop(exc); Tfds.WriteText("failed to parse " + url.Raw() + Err_.Message_gplx_brief(exc) + "\n");}
+					if (String_.In(String_.new_utf8_(lang_key), Lang_skip)) continue;
+					Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(lang_key);
+					ByteVal stub = (ByteVal)o;
+					switch (stub.Val()) {
+						case Tid_messages:		
+							Parse_array_kv(bry_list, line);
+							Parse_messages(bry_list, lang, bfr);
+							break;
+						case Tid_magicwords:
+							if (line.Key_subs().length == 0) continue;	// ignore lines like $magicWords = array();
+							if (line.Key_subs().length > 1) throw Err_mgr._.fmt_(GRP_KEY, "parse_xtn", "magicWords in xtn must have only 1 accessor", line.Key_subs().length);
+							Php_key accessor = line.Key_subs()[0];
+							byte[] accessor_bry = accessor.Val_obj_bry();
+							if (ByteAry_.Eq(accessor_bry, lang_key))	// accessor must match lang_key
+								Parse_magicwords(line, lang.Key_bry(), lang.Kwd_mgr(), prepend_hash, lang_transform); 
+							break;
+					}
+				} catch (Exception exc) {Err_.Noop(exc); Tfds.WriteText("failed to parse " + url.Raw() + Err_.Message_gplx_brief(exc) + "\n");}
 			}
-//			else {
-//				Tfds.Write_ary(key);
-//			}
 		}
-//		if (trie_rebuild) wiki.Ns_mgr().Trie_rebuild();
-//		lang.Evt_lang_changed();
 	}
 	private void Parse_array_kv(ListAdp rv, Php_line_assign line) {
 		rv.Clear();

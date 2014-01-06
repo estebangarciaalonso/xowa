@@ -51,17 +51,40 @@ public class Xot_invk_mock implements Xot_invk {
 	public Arg_nde_tkn Args_get_by_key(byte[] src, byte[] key) {return (Arg_nde_tkn)args.Fetch(key);}
 	public static Xot_invk_mock new_(byte defn_tid, KeyVal... args)	{return new_(defn_tid, 1, args);}
 	public static Xot_invk_mock new_(KeyVal... args)							{return new_(Xot_defn_.Tid_null, 1, args);}
+//		public static Xot_invk_mock new_(byte defn_tid, int idx_adj, params KeyVal[] args) {
+//			Xot_invk_mock rv = new Xot_invk_mock(defn_tid, idx_adj);
+//			int len = args.length;
+//			for (int i = 0; i < len; i++) {
+//				KeyVal arg = args[i];
+//				Object arg_key_obj = arg.Key_as_obj();
+//				String arg_key = arg.Key();
+//				boolean arg_key_is_int = ClassAdp_.Eq_typeSafe(arg_key_obj, Int_.ClassOf);
+//				byte[] arg_key_bry = ByteAry_.new_utf8_(arg_key);
+////				if (!rv.args.Has(arg_key_bry))	// ignore duplicates; EX:{{Template1|key1=a|key2=b|key1=c}}
+//				rv.args.AddReplace(arg_key_bry, new Arg_nde_tkn_mock(arg_key_is_int, arg_key, arg.Val_to_str_or_empty()));
+//			}
+//			return rv;
+//		}
 	public static Xot_invk_mock new_(byte defn_tid, int idx_adj, KeyVal... args) {
 		Xot_invk_mock rv = new Xot_invk_mock(defn_tid, idx_adj);
 		int len = args.length;
 		for (int i = 0; i < len; i++) {
-			KeyVal arg = args[i];
-			Object arg_key_obj = arg.Key_as_obj();
-			String arg_key = arg.Key();
-			boolean arg_key_is_int = ClassAdp_.Eq_typeSafe(arg_key_obj, Int_.ClassOf);
-			byte[] arg_key_bry = ByteAry_.new_utf8_(arg_key);
-//				if (!rv.args.Has(arg_key_bry))	// ignore duplicates; EX:{{Template1|key1=a|key2=b|key1=c}}
-			rv.args.AddReplace(arg_key_bry, new Arg_nde_tkn_mock(arg_key_is_int, arg_key, arg.Val_to_str_or_empty()));
+			KeyVal kv = args[i];
+			String kv_key_str = kv.Key();
+			Object kv_key_obj = kv.Key_as_obj();
+			Arg_nde_tkn_mock nde_tkn = null;
+			if		(ClassAdp_.Eq_typeSafe(kv_key_obj, Int_.ClassOf))					// key is int; EX: 1 => val
+				nde_tkn = new Arg_nde_tkn_mock(null, kv.Val_to_str_or_empty());			// add w/o key
+			else if	(ClassAdp_.Eq_typeSafe(kv.Val(), Bool_.ClassOf)) {					// val is boolean; EX: key => true || key => false
+				boolean kv_val_bool = Bool_.cast_(kv.Val());
+				if (kv_val_bool)
+					nde_tkn = new Arg_nde_tkn_mock(kv_key_str, "1");					// true => 1 (PHP behavior)
+				else
+					continue;															// false => "" (PHP behavior), but dropped from list (emulate MW behavior) wherein Parser.php!argSubstitution silently drops keyVals with value of false; "if ( $text === false && $Object === false )"; DATE:2014-01-02
+			}
+			else																		// regular nde
+				nde_tkn = new Arg_nde_tkn_mock(kv_key_str, kv.Val_to_str_or_empty());	// add regular key, val strings
+			rv.args.AddReplace(ByteAry_.new_utf8_(kv_key_str), nde_tkn);
 		}
 		return rv;
 	}
@@ -69,6 +92,12 @@ public class Xot_invk_mock implements Xot_invk {
 }
 class Arg_nde_tkn_mock extends Arg_nde_tkn {	public Arg_nde_tkn_mock(boolean arg_key_is_int, String k, String v) {
 		this.key_exists = !arg_key_is_int;
+		if (key_exists)
+			this.Key_tkn_(new Arg_itm_tkn_mock(k));
+		this.Val_tkn_(new Arg_itm_tkn_mock(v));
+	}
+	public Arg_nde_tkn_mock(String k, String v) {
+		key_exists = k != null;
 		if (key_exists)
 			this.Key_tkn_(new Arg_itm_tkn_mock(k));
 		this.Val_tkn_(new Arg_itm_tkn_mock(v));

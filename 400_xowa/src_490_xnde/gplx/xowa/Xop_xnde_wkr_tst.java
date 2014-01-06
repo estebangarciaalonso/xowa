@@ -156,7 +156,7 @@ public class Xop_xnde_wkr_tst {
 			)				
 			);
 	}
-	@Test  public void Auto_close_tr() {// PURPOSE: <tr> should auto-close |-; EX:fr.wikipedia.org/wiki/Napol�on_Ier; DATE:2013-12-09
+	@Test  public void Auto_close_tr() {// PURPOSE: <tr> should auto-close |-; EX:fr.wikipedia.org/wiki/Napoléon_Ier; DATE:2013-12-09
 		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl
 		(	"{|"
 		,	"|-"
@@ -733,9 +733,6 @@ public class Xop_xnde_wkr_tst {
 	@Test  public void Time() {	// HTML5; should output self (i.e.: must be whitelisted)
 		fxt.tst_Parse_page_wiki_str("<time class=\"dtstart\" datetime=\"2010-10-10\">10 October 2010</time>", "<time class=\"dtstart\" datetime=\"2010-10-10\">10 October 2010</time>");
 	}
-	@Test  public void Bdi() {	// HTML5; should output self (i.e.: must be whitelisted); DATE:2013-12-07
-		fxt.tst_Parse_page_wiki_str("<bdi lang=\"en\">a</bdi>", "<bdi lang=\"en\">a</bdi>");
-	}
 	@Test  public void Pre_nowiki() {	// PURPOSE: nowikis inside pre should be ignored; DATE:2013-03-30
 		fxt.tst_Parse_page_all_str("<pre>a<nowiki>&lt;</nowiki>b</pre>"		, "<pre>a&lt;b</pre>");											// basic
 		fxt.tst_Parse_page_all_str("<pre>a<nowiki>&lt;<nowiki>b</pre>"		, "<pre>a&lt;nowiki&gt;&lt;&lt;nowiki&gt;b</pre>");				// not closed
@@ -776,13 +773,30 @@ public class Xop_xnde_wkr_tst {
 		,	"</ul>"
 		));
 	}
+	@Test  public void Html5_bdi() {// HTML5; should output self (i.e.: must be whitelisted); DATE:2013-12-07
+		fxt.tst_Parse_page_wiki_str("<bdi lang=\"en\">a</bdi>", "<bdi lang=\"en\">a</bdi>");
+	}
+	@Test  public void Html5_mark() {// HTML5; should output self (i.e.: must be whitelisted); DATE:2014-01-03
+		fxt.tst_Parse_page_wiki_str("<mark lang=\"en\">a</mark>", "<mark lang=\"en\">a</mark>");
+	}
+	@Test  public void Html5_mark_span() {// PURPOSE: </span> should close <mark> tag; EX: zh.wikipedia.org/wiki/异体字; DATE:2014-01-03
+		fxt.tst_Parse_page_wiki_str("<mark>a</span>", "<mark>a</mark>");
+	}
+	@Test  public void Html5_wbr() {// HTML5; should output self (i.e.: must be whitelisted); DATE:2014-01-03
+		fxt.tst_Parse_page_wiki_str("a<wbr>b<wbr>c", "a<wbr></wbr>b<wbr></wbr>c");
+	}
+	@Test  public void Html5_bdo() {// HTML5; should output self (i.e.: must be whitelisted); DATE:2014-01-03
+		fxt.tst_Parse_page_wiki_str("<bdo>a</bdo>", "<bdo>a</bdo>");
+	}
+
+
 //		@Test  public void Small_repeat_ends() {	// PURPOSE: <small><small> -> <small></small>; EX: w:Wikipedia:Size_comparisons; DATE:2013-12-10
 //			fxt.tst_Parse_page_all_str("<small>a<small>b</small>c", "<small>a</small>bc");
 //		}
 
 //		@Test  public void Atrs_invalid_quote() {	// EX.WP:Palace of Versailles
 //			fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
-//				(	"<span id=\"1�>a"
+//				(	"<span id=\"1”>a"
 //				,	"</span>"
 //				), String_.Concat_lines_nl_skipLast
 //				(	"<span>a"

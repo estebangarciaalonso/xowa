@@ -140,6 +140,8 @@ class Pf_xtn_time_format {
 		rv.Add(Byte_ascii.Ltr_U	, DateAdpFormatItm_.Timestamp_unix);		// 1343865600
 		rv.Add(Byte_ascii.Ltr_c	, DateAdpFormatItm_.Iso_fmt);				// 2012-01-02T03:04:05+00:00
 		rv.Add(Byte_ascii.Ltr_r	, DateAdpFormatItm_.Rfc_5322);				// Mon 02 Jan 2012 08:04:05 +0000
+		rv.Add(Fmt_raw			, DateAdpFormatItm_.Raw);					// NOTE: really does nothing; REF.MW: Language.php|sprintfdate does $s .= $num; DATE:2013-12-31
+		rv.Add(Fmt_raw_toggle	, DateAdpFormatItm_.Raw);					// MCXI
 		// foreign
 		// space
 		// "
@@ -147,11 +149,11 @@ class Pf_xtn_time_format {
 		timeTrie = rv;
 		return rv;
 	}
-	private static final byte[] Fmt_month_gen = ByteAry_.new_utf8_("xg"), Fmt_roman = ByteAry_.new_utf8_("xr");
+	private static final byte[] Fmt_month_gen = ByteAry_.new_utf8_("xg"), Fmt_roman = ByteAry_.new_utf8_("xr"), Fmt_raw = ByteAry_.new_utf8_("xn"), Fmt_raw_toggle = ByteAry_.new_utf8_("xN");
 }
 class DateAdpTranslator_xapp {
 	public static void Translate(Xow_wiki wiki, Xol_lang lang, int type, int val, ByteAryBfr bb) {
-		lang.Load_assert(wiki.App());
+		lang.Init_by_load_assert();
 		byte[] itm_val = lang.Msg_mgr().Val_by_id(type + val); if (itm_val == null) return;
 		bb.Add(itm_val);
 	}

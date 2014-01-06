@@ -39,7 +39,8 @@ public class ByteTrieMgr_fast {
 			++cur_pos;
 		}
 	}
-	public ByteTrieMgr_fast Add_bry_byte(byte[] key, byte val) {return Add(key, ByteVal.new_(val));}
+	public ByteTrieMgr_fast Add_bry_bval(byte   key, byte val) {return Add(new byte[] {key}, ByteVal.new_(val));}
+	public ByteTrieMgr_fast Add_bry_bval(byte[] key, byte val) {return Add(key, ByteVal.new_(val));}
 	public ByteTrieMgr_fast Add(byte key, Object val) {return Add(new byte[] {key}, val);}
 	public ByteTrieMgr_fast Add(byte[] key, Object val) {
 		if (val == null) throw Err_.new_("null objects cannot be registered").Add("key", String_.new_utf8_(key));

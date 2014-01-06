@@ -23,7 +23,7 @@ public class Xog_cmds_bookmarks implements GfoInvkAble {
 		win = app.Gui_mgr().Main_win();
 	}
 	public void Goto(String page)	{win.Exec_url_exec(page);}
-	public void Goto_main_page()	{win.Exec_url_exec(win.Page().Wiki().Key_str());}
+	public void Goto_main_page()	{win.Exec_url_exec(win.Page().Wiki().Domain_str());}
 	public void Add()				{win.Exec_bookmarks_add();}
 	public void Show()				{win.Exec_url_exec("home/wiki/Data:Bookmarks");}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {

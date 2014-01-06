@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.langs.variants.*;
+import gplx.xowa.langs.vnts.*;
 public class Xop_parser_ {
 	public static final byte Parse_tid_null = 0, Parse_tid_tmpl = 1, Parse_tid_page_tmpl = 2, Parse_tid_page_wiki = 3;
 	public static final int Doc_bgn_bos = -1, Doc_bgn_char_0 = 0;

@@ -21,7 +21,7 @@ public class IntRef {
 	public int Val_add() {val++; return val;}
 	public int Val_add_post() {return val++;}
 	public int Val_add(int v) {val += v; return val;}		
-	public void Val_zero_() {val = 0;}
+	public IntRef Val_zero_() {val = 0; return this;}
 	public IntRef Val_neg1_() {val = -1; return this;}
 	@Override public String toString() {return Int_.XtoStr(val);}
 	@Override public int hashCode() {return val;}

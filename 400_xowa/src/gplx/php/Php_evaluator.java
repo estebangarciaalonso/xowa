@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.php; import gplx.*;
 /*
-NOTE: naive implementation of PHP evaluator. intended only for Messages**.php files in MediaWiki. Specifically, it assumes the following:
+NOTE: naive implementation of PHP evaluator. intended only for parsing Messages**.php files in MediaWiki. Specifically, it assumes the following:
 - all lines are assignment lines: EX: $a = b;
-- only the assignment operator is allowed (=); EX: $a = 5 + 7; fails;
+- only the assignment operator is allowed (=); EX: $a = 5 + 7; fails b/c of + operator;
 - no functions are supported: EX: strlen('a') fails
 */
 public class Php_evaluator implements Php_tkn_wkr {

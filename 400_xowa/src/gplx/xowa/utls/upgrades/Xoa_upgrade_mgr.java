@@ -22,13 +22,13 @@ public class Xoa_upgrade_mgr {
 		Upgrade_history(app);
 	}
 	public static void Check(Xow_wiki wiki) {
-		if (wiki.Wiki_tid() == Xow_wiki_type_.Tid_home) return;	// home wiki never needs to be migrated
+		if (wiki.Domain_tid() == Xow_wiki_domain_.Tid_home) return;	// home wiki never needs to be migrated
 		try {
 			if (ByteAry_.Eq(wiki.Props().Bldr_version(), ByteAry_.Empty)) {	// version is ""; wiki must be created prior to v0.2.1; create wiki_core.gfs
 				Upgrader_v00_02_01 mgr = new Upgrader_v00_02_01();
 				mgr.Run(wiki);
 			}
-		} catch (Exception e) {wiki.App().Usr_dlg().Warn_many(GRP_KEY, "migrate.fail", "unknown error during migrate; ~{0} ~{1}", wiki.Key_str(), Err_.Message_gplx_brief(e));}
+		} catch (Exception e) {wiki.App().Usr_dlg().Warn_many(GRP_KEY, "migrate.fail", "unknown error during migrate; ~{0} ~{1}", wiki.Domain_str(), Err_.Message_gplx_brief(e));}
 	}
 	private static void Upgrade_history(Xoa_app app) {
 		Io_url old_history_dir = app.User().Fsys_mgr().App_data_dir();

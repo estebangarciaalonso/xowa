@@ -32,7 +32,7 @@ public class Xol_msg_mgr implements GfoInvkAble {
 	public int Itms_max() {return itms_max;} private Xol_msg_itm[] itms; int itms_max = Xol_msg_itm_.Id__max; int itms_id_next = Xol_msg_itm_.Id__max;
 	public Xol_msg_itm Itm_by_id_or_null(int id) {return id < itms_max ? itms[id] : null;}
 	public Xol_msg_itm Itm_by_key_or_null(byte[] key) {return (Xol_msg_itm)hash.Fetch(key);}
-	public Xol_msg_itm Itms_new(byte msg_src, byte[] msg_key) {
+	public Xol_msg_itm Itms_new(byte[] msg_key) {
 		Xol_msg_itm rv = new Xol_msg_itm(itms_id_next++, msg_key);
 		Itms_reg(rv);
 		return rv;

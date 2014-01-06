@@ -85,4 +85,38 @@ public class Xtn_pages_nde_tst {
 		,	"</p>"
 		));
 	}
+	@Test  public void Recursive() {	// PURPOSE: handle recursive calls that would otherwise cause stack overflow; EX: fr.s:Page:NRF_19.djvu/19; DATE:2014-01-01
+		fxt.ini_page_create("Page:A/1", "<pages index=\"A\" from=1 to=1 />abc");	// NOTE: recursive call to self
+		String main_txt = String_.Concat_lines_nl
+		(	"<pages index=\"A\" from=1 to=1 />"
+		); 
+		fxt.tst_Parse_page_wiki_str(main_txt, String_.Concat_lines_nl
+		(	"<p>abc"
+		,	"</p>"
+		,	""
+		));
+	}
+	@Test  public void Repeated() {	// PURPOSE: repeated pages should still show (and not be excluded by recursive logic); DATE:2014-01-01
+		fxt.ini_page_create("Page:A/1", "<pages index=\"A\" from=1 to=1 />abc");	// NOTE: recursive call to self
+		fxt.ini_page_create("Page:D/1", "d");
+		String main_txt = String_.Concat_lines_nl
+		(	"<pages index=\"A\" from=1 to=1 />"
+		,	"text_0"
+		,	"<pages index=\"D\" from=1 to=1/>"
+		,	"text_1"
+		,	"<pages index=\"D\" from=1 to=1/>"
+		); 
+		fxt.tst_Parse_page_wiki_str(main_txt, String_.Concat_lines_nl
+		(	"<p>abc"
+		,	"</p>"
+		,	""
+		,	"text_0"
+		,	"<p>d"
+		,	"</p>"
+		,	""
+		,	"text_1"
+		,	"<p>d"
+		,	"</p>"
+		));
+	}
 }

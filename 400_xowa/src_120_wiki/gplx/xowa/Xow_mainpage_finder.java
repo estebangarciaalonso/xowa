@@ -20,7 +20,7 @@ class Xow_mainpage_finder {
 	public static byte[] Find(Xow_wiki wiki) {
 		byte[] rv = Find_by_mediawiki_page(wiki); if (rv != null) return rv;
 		rv = Find_by_lang(wiki.Lang()); if (rv != null) return rv;
-		return wiki.Props().Main_page();	// default to mainpage from siteinfo
+		return wiki.Props().Main_page();	// siteinfo
 	}
 	private static byte[] Find_by_mediawiki_page(Xow_wiki wiki) {
 		byte[] rv = wiki.Msg_mgr().Val_by_key_args(Msg_mainpage);

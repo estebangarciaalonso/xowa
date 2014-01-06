@@ -25,7 +25,7 @@ public class Xosrh_core implements GfoInvkAble, Xows_page {
 	public Xosrh_page_mgr Page_mgr() {return page_mgr;} private Xosrh_page_mgr page_mgr = new Xosrh_page_mgr();
 	public Xosrh_rslt_grp Cur_grp() {return cur_grp;} private Xosrh_rslt_grp cur_grp;
 	public void Special_gen(Xoa_url url, Xoa_page page, Xow_wiki wiki, Xoa_ttl ttl) {
-		if (wiki.Wiki_tid() == Xow_wiki_type_.Tid_home) return;	// do not allow search in home wiki; will throw null ref error b/c no search_ttl dirs
+		if (wiki.Domain_tid() == Xow_wiki_domain_.Tid_home) return;	// do not allow search in home wiki; will throw null ref error b/c no search_ttl dirs
 		Xog_search_suggest_mgr search_suggest_mgr = wiki.App().Gui_mgr().Search_suggest_mgr();
 		args_mgr.Clear();
 		Gfo_url_arg[] args_default = search_suggest_mgr.Args_default();
@@ -62,7 +62,7 @@ public class Xosrh_core implements GfoInvkAble, Xows_page {
 			page.Data_raw_(find_page.Data_raw());
 			if (page.Root() != null)	// NOTE: null when going from w:Earth -> q:Earth; DATE:2013-03-20
 				page.Root().Data_htm_(find_page.Root().Data_htm());
-			page.Page_ttl_(page_ttl).Url_(Xoa_url.new_(wiki.Key_bry(), page_ttl.Full_txt())).Url_redirected_(true);
+			page.Page_ttl_(page_ttl).Url_(Xoa_url.new_(wiki.Domain_bry(), page_ttl.Full_txt())).Url_redirected_(true);
 		}
 	}	static final byte[] Bry_page_name = ByteAry_.new_ascii_("Special:Search");
 	private void Sort_tid(byte v) {

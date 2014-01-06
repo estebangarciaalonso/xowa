@@ -470,6 +470,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 	;
 	public static final int Max_len = 2048;	// ASSUME: max len of 256 * 8 bytes
 	public static final int Null_wik_bgn = -1;
+	public static final Xoa_ttl Null = null;
 }
 class Xoa_url_encoder {
 	public byte[] Encode(byte[] src) {

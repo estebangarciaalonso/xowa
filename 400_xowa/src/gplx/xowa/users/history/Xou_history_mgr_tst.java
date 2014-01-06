@@ -70,7 +70,7 @@ class Xou_history_mgr_fxt {
 		if (arg_str != null) url_bry = ByteAry_.Add(url_bry, ByteAry_.new_utf8_(arg_str));
 		Xoa_url url = new Xoa_url();
 		app.Url_parser().Parse(url, url_bry);
-		url.Wiki_bry_(wiki.Key_bry());
+		url.Wiki_bry_(wiki.Domain_bry());
 		page.Url_(url);  // set url b/c history_mgr.Add uses url
 //			page.Url_(Xoa_url.new_(wiki.Key_bry(), url_bry));  // set url b/c history_mgr.Add uses url
 		under.Add(page);

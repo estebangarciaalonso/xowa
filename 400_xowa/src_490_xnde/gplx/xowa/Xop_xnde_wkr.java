@@ -281,7 +281,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		}
 		if (tag.Restricted()) {
 			Xoa_page page = ctx.Page();
-			if (!page.Allow_all_html() && page.Wiki().Wiki_tid() != Xow_wiki_type_.Tid_home) {
+			if (!page.Allow_all_html() && page.Wiki().Domain_tid() != Xow_wiki_domain_.Tid_home) {
 				int end_pos = gtPos + 1;
 				ctx.Subs_add(root, tkn_mkr.Bry(bgn_pos, end_pos, ByteAry_.Add(gplx.html.Html_entities.Lt, tag.Name_bry(), gplx.html.Html_entities.Gt)));
 				return end_pos;
@@ -309,7 +309,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			EndTag(ctx, root, prv_xnde, src, src_len, bgn_pos - 1, bgn_pos - 1, tagId, true, tag);
 		}
 		else if (!tag.Nest() && TagStack_has(ctx, tagId)) return ctx.LxrMake_log_(Xop_xnde_log.Invalid_nest, src, bgn_pos, gtPos);
-		else if (tag.InlineOnly()) inline = true; // <br></br> not allowed; convert <br> to <br/> </br> will be escaped
+		else if (tag.SingleOnly()) inline = true; // <br></br> not allowed; convert <br> to <br/> </br> will be escaped
 		else if (tag.NoInline() && inline) {
 			Xop_xnde_tkn xnde_inline = Xnde_bgn(ctx, tkn_mkr, root, tag, Xop_xnde_tkn.CloseMode_open, bgn_pos, open_tag_end, atrs_bgn, atrs_end, atrs);
 			EndTag(ctx, root, xnde_inline, src, src_len, bgn_pos, gtPos, tagId, false, tag);
@@ -317,7 +317,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			return gtPos + Int_.Const_position_after_char;
 		}
 		else if (tagId == Xop_xnde_tag_.Tid_li) {
-			int subs_len = root.Subs_len();		// ignore redundant <li>; EX: "* <li>a</li>\n" -> "* a"; EX: http://it.wikipedia.org/wiki/Milano#Bibliographie
+			int subs_len = root.Subs_len();			// ignore redundant <li>; EX: "* <li>a</li>\n" -> "* a"; EX: http://it.wikipedia.org/wiki/Milano#Bibliographie
 			for (int i = subs_len - 1; i > -1; i--) {	// iterate backwards
 				Xop_tkn_itm sub = root.Subs_get_or_null(i);
 				switch (sub.Tkn_tid()) {
@@ -434,6 +434,9 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 				break;
 			case Xop_xnde_tag_.Tid_sup:
 				if (endTagId == Xop_xnde_tag_.Tid_sub) {endTagId = Xop_xnde_tag_.Tid_sup; ctx.Msg_log().Add_itm_none(Xop_xnde_log.Sub_sup_swapped, src, bgn_pos, cur_pos);}
+				break;
+			case Xop_xnde_tag_.Tid_mark:
+				if (endTagId == Xop_xnde_tag_.Tid_span) {endTagId = Xop_xnde_tag_.Tid_mark; ctx.Msg_log().Add_itm_none(Xop_xnde_log.Sub_sup_swapped, src, bgn_pos, cur_pos);}
 				break;
 		}
 		if (endTagId == Xop_xnde_tag_.Tid_table || endTag.TblSub()) {

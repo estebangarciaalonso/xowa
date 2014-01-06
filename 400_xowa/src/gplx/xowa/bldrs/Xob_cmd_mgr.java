@@ -92,7 +92,7 @@ public class Xob_cmd_mgr implements GfoInvkAble {
 		return wkr;
 	}
 	private Xobd_rdr Xml_rdr_get(Xow_wiki wiki) {
-		byte[] wiki_key = wiki.Key_bry();
+		byte[] wiki_key = wiki.Domain_bry();
 		Xobd_rdr rv = (Xobd_rdr)dump_rdrs.Fetch(dump_rdrs_ref.Val_(wiki_key));
 		if (rv == null) {
 			rv = new Xobd_rdr(bldr, wiki);
@@ -121,7 +121,7 @@ public class Xob_cmd_mgr implements GfoInvkAble {
 	}
 	private Object Add_many(GfoMsg m) {
 		Xow_wiki wiki = Wiki_get_or_make(m);
-		wiki.Lang().Load_assert(bldr.App());	// NOTE: must check that lang is loaded; else case_mgr will not initialize; DATE:2013-05-11
+		wiki.Lang().Init_by_load_assert();	// NOTE: must check that lang is loaded; else case_mgr will not initialize; DATE:2013-05-11
 		int args_len = m.Args_count();
 		String[] cmds = new String[args_len - 1];	// -1 b/c 1st arg is wiki
 		for (int i = 1; i < args_len; i++) {
@@ -141,7 +141,7 @@ public class Xob_cmd_mgr implements GfoInvkAble {
 		byte[] wiki_key = m.ReadBry("v");
 		Xoa_wiki_mgr wiki_mgr = bldr.App().Wiki_mgr();
 		Xow_wiki rv = wiki_mgr.Get_by_key_or_make(wiki_key);
-		rv.Lang().Load(bldr.App());
+		rv.Lang().Init_by_load();
 		return rv;
 	}
 	public static final String GRP_KEY = "xowa.bldr.cmds";

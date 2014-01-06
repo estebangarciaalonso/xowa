@@ -70,7 +70,7 @@ public class Xows_page_allpages implements GfoInvkAble, ByteAryFmtrArg, Xows_pag
 		wiki.Ctx().Tab().Display_ttl_(wiki.Msg_mgr().Val_by_id(Xol_msg_itm_.Id_sp_allpages_hdr));
 		url.Page_bry_(ByteAry_.Add(ByteAry_.new_ascii_("Special:"), ttl.Page_txt_wo_qargs()));	// HACK: need to re-set Page b/c href_parser does not eliminate qargs; DATE:2013-02-08
 //			url.Page_bry_(ttl.Page_txt_wo_qargs());	// HACK: need to re-set Page b/c href_parser does not eliminate qargs; DATE:2013-02-08
-		if (wiki.Wiki_tid() == Xow_wiki_type_.Tid_home) {wiki.App().Usr_dlg().Prog_many(GRP_KEY, "home.invalid", "AllPages not implemented for home wiki"); return;}
+		if (wiki.Domain_tid() == Xow_wiki_domain_.Tid_home) {wiki.App().Usr_dlg().Prog_many(GRP_KEY, "home.invalid", "AllPages not implemented for home wiki"); return;}
 		if (rslt_list_ttls == null) this.Itms_per_page_(itms_per_page);
 		boolean found = Build_data(url); if (!found) return;
 		Build_html(page);
@@ -159,7 +159,7 @@ public class Xows_page_allpages implements GfoInvkAble, ByteAryFmtrArg, Xows_pag
 }
 class Xos_pagelist_html_itm_fmtr implements ByteAryFmtrArg {
 	public Xos_pagelist_html_itm_fmtr(Xows_page_allpages mgr, Xow_wiki wiki) {
-		this.mgr = mgr; this.wiki = wiki; this.href_parser = wiki.App().Href_parser(); this.wiki_key = wiki.Key_bry();
+		this.mgr = mgr; this.wiki = wiki; this.href_parser = wiki.App().Href_parser(); this.wiki_key = wiki.Domain_bry();
 		this.itm_normal = mgr.Html_list_itm_normal(); this.itm_redirect = mgr.Html_list_itm_redirect();
 		history_mgr = wiki.App().User().History_mgr();
 	}	private Xows_page_allpages mgr; Xow_wiki wiki; Xoh_href_parser href_parser; ByteAryFmtr itm_normal, itm_redirect; byte[] wiki_key; gplx.xowa.users.history.Xou_history_mgr history_mgr;

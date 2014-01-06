@@ -108,7 +108,10 @@ public class Php_srl_parser {
 				pos = Chk(raw, pos + 1, Byte_ascii.Colon);
 				int double_end = ByteAry_.FindFwd(raw, Byte_ascii.Semic, pos, raw_len);
 				String double_str = String_.new_ascii_(raw, pos, double_end);
-				double double_val = String_.Eq(double_str, "INF") ? Double_.Inf_pos : Double_.parse_(double_str);
+				double double_val = 0;
+				if		(String_.Eq(double_str, "INF")) double_val = Double_.Inf_pos;
+				else if (String_.Eq(double_str, "NAN")) double_val = Double_.NaN;
+				else 									double_val = Double_.parse_(double_str);
 				rv = factory.Double(pos, double_end, double_val);
 				pos = Chk(raw, double_end, Byte_ascii.Semic);
 				break;

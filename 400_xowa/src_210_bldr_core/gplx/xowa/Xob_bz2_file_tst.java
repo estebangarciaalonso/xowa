@@ -53,7 +53,7 @@ public class Xob_bz2_file_tst {
 		fxt.Build_wmf_src_name("simplewiki", "latest", Xob_bz2_file.Key_pages_articles, "simplewiki-latest-pages-articles.xml.bz2");
 	}
 	@Test  public void Build_alias_by_lang_tid() {
-		fxt.Build_alias_by_lang_tid("en", Xow_wiki_type_.Tid_wikipedia, "enwiki");
+		fxt.Build_alias_by_lang_tid("en", Xow_wiki_domain_.Tid_wikipedia, "enwiki");
 	}
 }
 class Xob_bz2_file_fxt {
@@ -67,9 +67,9 @@ class Xob_bz2_file_fxt {
 	}
 	public void Parse__domain_name(String raw_str, String expd) {byte[] raw = ByteAry_.new_ascii_(raw_str); Tfds.Eq(expd, String_.new_ascii_(Xob_bz2_file.Parse__domain_name(raw, 0, raw.length)));}
 	public void Parse__tid(String raw_str, byte expd) {Tfds.Eq(expd, Xob_bz2_file.Parse__tid(raw_str));}
-	public void Build_alias(String domain, String expd) {
-		Xow_wiki_type wiki_type = Xow_wiki_type_.parse_by_domain(ByteAry_.new_ascii_(domain));
-		byte[] actl = Xob_bz2_file.Build_alias(wiki_type);
+	public void Build_alias(String domain_str, String expd) {
+		Xow_wiki_domain domain = Xow_wiki_domain_.parse_by_domain(ByteAry_.new_ascii_(domain_str));
+		byte[] actl = Xob_bz2_file.Build_alias(domain);
 		Tfds.Eq(expd, String_.new_ascii_(actl));
 	}	private ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
 	public void Build_wmf_src_dir(String alias, String date, String expd) {

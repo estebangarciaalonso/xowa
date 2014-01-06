@@ -49,7 +49,7 @@ class Pf_i18n_fxt {
 		return this;
 	}
 	public Pf_i18n_fxt Load() {
-		lang.Load(app);
+		lang.Init_by_load();
 		wiki.Fragment_mgr().Evt_lang_changed(lang);
 		return this;
 	}

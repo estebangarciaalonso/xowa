@@ -228,23 +228,23 @@ class Scrib_lua_regx_converter {
 	//, Bry_regx_end = ByteAry_.new_ascii_("/us")
 	;
 	private void Init() {
-		Init_itm(Bool_.Y, "a", "\\p{L}");
-		Init_itm(Bool_.Y, "c", "\\p{Cc}");
 		Init_itm(Bool_.Y, "d", "\\p{Nd}");
 		Init_itm(Bool_.Y, "l", "\\p{Ll}");
-		Init_itm(Bool_.Y, "p", "\\p{P}");
-		Init_itm(Bool_.Y, "s", "\\s");	// JAVA \p{Xps} not valid
 		Init_itm(Bool_.Y, "u", "\\p{Lu}");
+		Init_itm(Bool_.Y, "a", "\\p{L}");
+		Init_itm(Bool_.Y, "c", "\\p{Cc}");
+		Init_itm(Bool_.Y, "p", "\\p{P}");
+		Init_itm(Bool_.Y, "s", "\\s");
 		Init_itm(Bool_.Y, "w", "[\\p{L}\\p{Nd}]");
 		Init_itm(Bool_.Y, "x", "[0-9A-Fa-f0-9A-Fa-f]");
-		Init_itm(Bool_.Y, "z", "\\0");
-		Init_itm(Bool_.Y, "A", "\\P{L}");
-		Init_itm(Bool_.Y, "C", "\\P{Cc}");
+		Init_itm(Bool_.Y, "z", "\\00");
 		Init_itm(Bool_.Y, "D", "\\P{Nd}");
 		Init_itm(Bool_.Y, "L", "\\P{Ll}");
-		Init_itm(Bool_.Y, "P", "\\P{P}");
-		Init_itm(Bool_.Y, "S", "\\S");	// JAVA: \P{Xps} not valid
 		Init_itm(Bool_.Y, "U", "\\P{Lu}");
+		Init_itm(Bool_.Y, "A", "\\P{L}");
+		Init_itm(Bool_.Y, "C", "\\P{Cc}");
+		Init_itm(Bool_.Y, "P", "\\P{P}");
+		Init_itm(Bool_.Y, "S", "\\S");						// JAVA: \P{Xps} not valid
 		Init_itm(Bool_.Y, "W", "[\\P{L}\\P{Nd}]");
 		Init_itm(Bool_.Y, "X", "[^0-9A-Fa-f0-9A-Fa-f]");
 		Init_itm(Bool_.Y, "Z", "[^\\0]");

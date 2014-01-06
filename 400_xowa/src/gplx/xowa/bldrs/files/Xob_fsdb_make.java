@@ -49,7 +49,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 	public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "file.fsdb_make";
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_bgn(Xob_bldr bldr) {
-		this.wiki_key = wiki.Key_bry();
+		this.wiki_key = wiki.Domain_bry();
 		wiki.Init_assert();
 		poll_interval = poll_mgr.Poll_interval();
 	}

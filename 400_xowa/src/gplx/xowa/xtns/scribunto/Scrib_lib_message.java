@@ -107,7 +107,7 @@ class Scrib_lib_message_data {
 		if (ByteAry_.Eq(lang_key, cur_lang) || ByteAry_.Len_eq_0(lang_key))	// if lang_key == engine_lang then use wiki.msg_mgr; also same if lang_key == blank (arg not given)
 			return wiki.Msg_mgr().Val_by_key_args(msg_key, args);
 		else {
-			Xol_lang lang = wiki.App().Lang_mgr().Get_by_key_or_new(lang_key); lang.Load_assert(wiki.App());
+			Xol_lang lang = wiki.App().Lang_mgr().Get_by_key_or_new(lang_key); lang.Init_by_load_assert();
 			Xol_msg_itm msg_itm = lang.Msg_mgr().Itm_by_key_or_null(msg_key); if (msg_itm == null) return ByteAry_.Empty;
 			return msg_itm.Val();
 		}

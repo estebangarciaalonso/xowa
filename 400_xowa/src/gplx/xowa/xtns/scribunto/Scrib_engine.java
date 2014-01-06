@@ -32,6 +32,7 @@ public class Scrib_engine {
 	}
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
+	@gplx.Internal protected void Wiki_(Xow_wiki v) {this.wiki = v;} // TEST:
 	public boolean Enabled() {return enabled;} private boolean enabled = true;
 	@gplx.Internal protected Scrib_fsys_mgr Fsys_mgr() {return fsys_mgr;} Scrib_fsys_mgr fsys_mgr = new Scrib_fsys_mgr();
 	@gplx.Internal protected Scrib_interpreter Interpreter() {return interpreter;} Scrib_interpreter interpreter;
@@ -66,7 +67,7 @@ public class Scrib_engine {
 	public void When_page_changed(Xoa_page page) {
 		mods.Clear();	// clear any loaded modules
 		Xow_wiki wiki = page.Wiki();
-		byte[] new_wiki = wiki.Key_bry();
+		byte[] new_wiki = wiki.Domain_bry();
 		if (!ByteAry_.Eq(cur_wiki, new_wiki)) {
 			cur_wiki = new_wiki;
 			lib_site.Notify_wiki_changed();
@@ -76,6 +77,7 @@ public class Scrib_engine {
 		if (!ByteAry_.Eq(cur_lang, new_lang)) {
 			cur_lang = new_lang;
 			lib_message.Notify_lang_changed();
+			lib_language.Notify_lang_changed();
 		}
 		lib_uri.Notify_page_changed();
 		lib_title.Notify_page_changed();

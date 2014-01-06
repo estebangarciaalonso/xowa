@@ -74,7 +74,7 @@ public abstract class Xob_ctg_v1_base extends Xob_itm_dump_base implements Xobd_
 			case Tid_nl:		err = "bad \\n"; break;
 			case Tid_brack_bgn:	err = "bad [["; break;
 		}
-		bldr.Usr_dlg().Log_many(GRP_KEY, "ctg_fail", "~{0}\n>> ~{1}\n~{2}\n~{3}\n\n", LogErr_hdr, err + " " + ctg_str, "http://" + wiki.Key_str() + "/wiki/" + title, ByteAry_.MidByLenToStr(src, ctg_bgn, 100));
+		bldr.Usr_dlg().Log_many(GRP_KEY, "ctg_fail", "~{0}\n>> ~{1}\n~{2}\n~{3}\n\n", LogErr_hdr, err + " " + ctg_str, "http://" + wiki.Domain_str() + "/wiki/" + title, ByteAry_.MidByLenToStr(src, ctg_bgn, 100));
 		log_idx++;
 	}	int log_idx = 0; final String LogErr_hdr = String_.Repeat("-", 80);
 	@gplx.Virtual public void Process_ctg(Xodb_page page, byte[] src, int src_len, int bgn, int end) {

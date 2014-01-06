@@ -88,7 +88,7 @@ public class Wdata_wiki_mgr_fxt {
 		Tfds.Eq(expd, String_.new_ascii_(Wdata_wiki_mgr.Get_low_qid(ByteAry_.new_ascii_(qid))));
 	}
 	public void Test_link(String lang, String page, String expd) {
-		Tfds.Eq(expd, String_.new_utf8_(wdata_mgr.Qids_get(ByteAry_.new_ascii_(lang), Xow_wiki_type_.Tid_wikipedia, ByteAry_.new_ascii_("000"), ByteAry_.new_utf8_(page))));
+		Tfds.Eq(expd, String_.new_utf8_(wdata_mgr.Qids_get(ByteAry_.new_ascii_(lang), Xow_wiki_domain_.Tid_wikipedia, ByteAry_.new_ascii_("000"), ByteAry_.new_utf8_(page))));
 	}
 	public void Test_parse_pid_null(String val)			{Test_parse_pid(val, Wdata_wiki_mgr.Pid_null);}
 	public void Test_parse_pid(String val, int expd)	{Tfds.Eq(expd, Wdata_pf_property.Parse_pid(num_parser, ByteAry_.new_ascii_(val)));} NumberParser num_parser = new NumberParser();

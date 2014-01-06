@@ -89,4 +89,6 @@ public class Pf_xtn_time_tst {
 	@Test  public void Hour_with_dash()				{fxt.tst_Parse_tmpl_str_test("{{#time:c|January 2, 2001-06}}"					, "{{test}}"			, "2001-01-02T06:00:00-05:00");}	// PURPOSE.fix: w:Vim_(text_editor) generates this during {{time ago|November 2, 1991-06-19|min_magnitude=days}}; DATE:2013-06-19
 	@Test  public void Multiple_dates_gt_12()		{fxt.tst_Parse_tmpl_str_test("{{#time:c|January 2, 2001-06-19}}"				, "{{test}}"			, "2001-01-02T06:00:00-05:00");}	// PURPOSE.fix: w:Vim_(text_editor)
 	@Test  public void Multiple_dates_lt_12()		{fxt.tst_Parse_tmpl_str_test("{{#time:c|January 2, 2001-06-11}}"				, "{{test}}"			, "2001-01-02T06:00:00-05:00");}	// PURPOSE.fix: w:Vim_(text_editor)
+	@Test  public void Raw_H()						{fxt.tst_Parse_tmpl_str_test("{{#time:xnH}}"									, "{{test}}"			, "08");}	// PURPOSE: ignore "xn" for now; chk 0-padded number is generated; DATE:2013-12-31
+	@Test  public void Raw_h()						{fxt.tst_Parse_tmpl_str_test("{{#time:xnh}}"									, "{{test}}"			, "08");}	// PURPOSE: ignore "xn" for now; chk 0-padded number is generated; DATE:2013-12-31
 }

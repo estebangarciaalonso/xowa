@@ -60,7 +60,7 @@ public class Xoa_url_parser {
 			byte[] sub_bry = segs_ary[1];							// lang/type seems to be 2nd seg; EX: "en", "fr"; "commons"
 			byte[] lang_bry = sub_bry;
 			if (upload_segs_hash.Has(sub_bry)) {					// wikimedia links will have fmt of "/wikipedia/commons"; must change to wikimedia
-				domain_bry = Xow_wiki_type_.Seg_wikimedia_bry;
+				domain_bry = Xow_wiki_domain_.Seg_wikimedia_bry;
 				lang_bry = Xol_lang_itm_.Key__unknown;
 			}
 			tmp_bfr.Clear().Add(sub_bry).Add_byte(Byte_ascii.Dot)	// add lang/type + .;	EX: "en."; "fr."; "commons."
@@ -103,7 +103,7 @@ public class Xoa_url_parser {
 	public static Xoa_url Parse_url(Xoa_app app, Xow_wiki cur_wiki, String raw) {Xoa_url rv = new Xoa_url(); byte[] raw_bry = ByteAry_.new_utf8_(raw); return Parse_url(rv, app, cur_wiki, raw_bry, 0, raw_bry.length);}
 	public static Xoa_url Parse_url(Xoa_url rv, Xoa_app app, Xow_wiki cur_wiki, byte[] raw, int bgn, int end) {
 		Xow_wiki wiki = null; Bry_bfr_mkr bfr_mkr = app.Utl_bry_bfr_mkr();
-		byte[] cur_wiki_key = cur_wiki.Key_bry();
+		byte[] cur_wiki_key = cur_wiki.Domain_bry();
 		byte[] page_bry = ByteAry_.Empty;
 		if (app.Url_parser().Parse(rv, raw, bgn, end)) {		// parse passed; take Page; EX: "http://en.wikipedia.org/wiki/Earth"
 			wiki = Parse_url__wiki(app, rv.Wiki_bry());
@@ -180,7 +180,7 @@ public class Xoa_url_parser {
 			}
 		}
 		rv.Wiki_(wiki);
-		rv.Wiki_bry_(wiki.Key_bry());
+		rv.Wiki_bry_(wiki.Domain_bry());
 		rv.Page_bry_(page_bry);
 		return rv;
 	}
@@ -216,8 +216,8 @@ public class Xoa_url_parser {
 	private static final byte[] Bry_arg_redirect = ByteAry_.new_ascii_("redirect"), Bry_arg_uselang = ByteAry_.new_ascii_("uselang"), Bry_arg_title = ByteAry_.new_ascii_("title"), Bry_arg_action = ByteAry_.new_ascii_("action"), Bry_arg_fulltext = ByteAry_.new_ascii_("fulltext");
 	private static final byte[] Bry_upload_wikimedia_org = ByteAry_.new_ascii_("upload.wikimedia.org"), Bry_dot_org = ByteAry_.new_ascii_(".org"), Bry_arg_action_edit = ByteAry_.new_ascii_("edit")
 		, Bry_file = ByteAry_.new_ascii_("File:");	// NOTE: File does not need i18n; is a canonical namespace 
-	private static final Hash_adp_bry qry_args_hash = new Hash_adp_bry(false).Add_bry_byteVal(Bry_arg_redirect, Id_arg_redirect).Add_bry_byteVal(Bry_arg_uselang, Id_arg_uselang).Add_bry_byteVal(Bry_arg_title, Id_arg_title).Add_bry_byteVal(Bry_arg_action, Id_arg_action).Add_bry_byteVal(Bry_arg_fulltext, Id_arg_fulltext);
-	private static final Hash_adp_bry upload_segs_hash = new Hash_adp_bry(false).Add_bry_bry(Xow_wiki_type_.Key_commons_bry);//.Add_bry_bry(Xow_wiki_type_.Key_species_bry).Add_bry_bry(Xow_wiki_type_.Key_meta_bry);
+	private static final Hash_adp_bry qry_args_hash = new Hash_adp_bry(false).Add_bry_byte(Bry_arg_redirect, Id_arg_redirect).Add_bry_byte(Bry_arg_uselang, Id_arg_uselang).Add_bry_byte(Bry_arg_title, Id_arg_title).Add_bry_byte(Bry_arg_action, Id_arg_action).Add_bry_byte(Bry_arg_fulltext, Id_arg_fulltext);
+	private static final Hash_adp_bry upload_segs_hash = new Hash_adp_bry(false).Add_bry_bry(Xow_wiki_domain_.Key_commons_bry);//.Add_bry_bry(Xow_wiki_domain_.Key_species_bry).Add_bry_bry(Xow_wiki_domain_.Key_meta_bry);
 	public static final byte[] Bry_wiki_name = ByteAry_.new_ascii_("wiki");
 	private static final byte[][] Bry_wiki_name_bry = new byte[][] {Bry_wiki_name};
 	public static final byte[] Bry_arg_action_eq_edit = ByteAry_.new_ascii_("action=edit");

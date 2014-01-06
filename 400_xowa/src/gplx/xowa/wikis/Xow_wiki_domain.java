@@ -15,20 +15,12 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.langs.variants; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
-import org.junit.*;
-import gplx.ios.*;
-public class Xol_variant_grp_tst {
-	private Xol_variant_grp_fxt fxt = new Xol_variant_grp_fxt();
-	@Test   public void csv_() {
-		fxt.Test_csv_("zh|zh-hans;zh-hant", "zh", "zh-hans", "zh-hant");
-		fxt.Test_csv_("zh|zh-hans;zh-hant;", "zh", "zh-hans", "zh-hant");
-	}
-}
-class Xol_variant_grp_fxt {
-	public void Test_csv_(String raw, String grp, String... subs) {
-		Xol_variant_grp actl = Xol_variant_grp.csv_(raw);
-		Tfds.Eq(grp, String_.new_ascii_(actl.Grp()));
-		Tfds.Eq_ary_str(subs, String_.Ary(actl.Subs()));
-	}
+package gplx.xowa.wikis; import gplx.*; import gplx.xowa.*;
+public class Xow_wiki_domain {
+	public Xow_wiki_domain(byte[] raw, byte tid, byte[] lang)					{this.raw = raw; this.tid = tid; this.lang = this.lang_orig = lang;}
+	public Xow_wiki_domain(byte[] raw, byte tid, byte[] lang, byte[] lang_orig) {this.raw = raw; this.tid = tid; this.lang = lang; this.lang_orig = lang_orig;}
+	public byte[] Raw() {return raw;} private byte[] raw;
+	public byte Tid() {return tid;} private byte tid;
+	public byte[] Lang_orig() {return lang_orig;} private byte[] lang_orig;
+	public byte[] Lang() {return lang;} private byte[] lang;
 }

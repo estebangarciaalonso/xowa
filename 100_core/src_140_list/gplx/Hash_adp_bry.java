@@ -26,7 +26,7 @@ public class Hash_adp_bry extends gplx.lists.HashAdp_base implements HashAdp {
 	public Hash_adp_bry Add_bry_bry(byte[] key) {this.Add_base(key, key); return this;}
 	public Hash_adp_bry Add_str_byteVal(String key, byte val) {this.Add_base(ByteAry_.new_utf8_(key), ByteVal.new_(val)); return this;}
 	public Hash_adp_bry Add_str_obj(String key, Object val) {this.Add_base(ByteAry_.new_utf8_(key), val); return this;}
-	public Hash_adp_bry Add_bry_byteVal(byte[] key, byte val) {this.Add_base(key, ByteVal.new_(val)); return this;}
+	public Hash_adp_bry Add_bry_byte(byte[] key, byte val) {this.Add_base(key, ByteVal.new_(val)); return this;}
 	public Hash_adp_bry Add_bry_obj(byte[] key, Object val) {this.Add_base(key, val); return this;}
 	@Override protected void Add_base(Object key, Object val) {
 		byte[] key_bry = (byte[])key;

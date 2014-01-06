@@ -25,10 +25,16 @@ public class Pf_str_case_tst {
 	@Test  public void Lc_first()			{fxt.tst_Parse_tmpl_str_test("{{lcfirst:ABC}}"				, "{{test}}", "aBC");}
 	@Test  public void Uc()					{fxt.tst_Parse_tmpl_str_test("{{uc:abc}}"					, "{{test}}", "ABC");}
 	@Test  public void Uc_first()			{fxt.tst_Parse_tmpl_str_test("{{ucfirst:abc}}"				, "{{test}}", "Abc");}
-	@Test  public void Uc_foreign()			{
+	@Test  public void Multi_byte()			{
 		Xol_lang lang = fxt.Wiki().Lang();
 		lang.Case_mgr().Clear();
 		lang.Case_mgr().Add_bulk(Xol_case_itm_.Universal);
 		fxt.tst_Parse_tmpl_str_test("{{uc:ĉ}}"						, "{{test}}", "Ĉ");
+	}
+	@Test  public void Multi_byte_asymmetry() { // PURPOSE: handle multi-byte asymmetry (lc is 3 bytes; uc is 2 bytes)
+		Xol_lang lang = fxt.Wiki().Lang();
+		lang.Case_mgr().Clear();
+		lang.Case_mgr().Add_bulk(Xol_case_itm_.Universal);
+		fxt.tst_Parse_tmpl_str_test("{{uc:ⱥ}}"						, "{{test}}", "Ⱥ");
 	}
 }

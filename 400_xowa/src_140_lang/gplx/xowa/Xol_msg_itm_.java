@@ -491,28 +491,26 @@ case Xol_msg_itm_.Id_xowa_wikidata_links_special: return new_(Xol_msg_itm_.Id_xo
 		Xow_ns ns = wiki.Ns_mgr().Ns_mediawiki();
 		tmp_bfr	.Add(ns.Name_db_w_colon())												// "MediaWiki:"
 				.Add(msg_key);															// "message_key"
-		byte[] wiki_lang_key = wiki.Lang_key();
+		byte[] wiki_lang_key = wiki.Lang().Key_bry();
 		if (ByteAry_.Len_eq_0(wiki_lang_key)) wiki_lang_key = Xol_lang_.Key_en;			// if no lang, default to en (handles commons)
 		if (!ByteAry_.Eq(wiki_lang_key, lang.Key_bry()))								// only add lang code if page != wiki;
-			tmp_bfr.Add_byte(Xoa_ttl.Subpage_spr).Add(lang.Key_bry());						// "/fr"
+			tmp_bfr.Add_byte(Xoa_ttl.Subpage_spr).Add(lang.Key_bry());					// "/fr"
 		byte[] ttl_bry = tmp_bfr.XtoAryAndClear();
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
 
 		// search for itm
-		byte msg_src = Xol_msg_itm.Src_null; byte[] msg_val = ByteAry_.Empty;
+		byte[] msg_val = ByteAry_.Empty;
 		Xoa_page msg_page = ttl == null ? Xoa_page.Null : wiki.Data_mgr().Get_page(ttl, false);	// find page with ttl of "MediaWiki:message_name/lang_code"
 		if (msg_page.Missing()) {															// page not found; check lang
 			Xol_msg_itm msg_itm_in_lang = lang.Msg_mgr().Itm_by_key_or_null(msg_key);
 			if (msg_itm_in_lang != null) return msg_itm_in_lang;						// msg found; return it;
 			msg_itm_in_lang = wiki.App().Lang_mgr().Lang_en().Msg_mgr().Itm_by_key_or_null(msg_key);
 			if (msg_itm_in_lang != null) return msg_itm_in_lang;
-			msg_src = Xol_msg_itm.Src_unknown;
 		}
 		else {																			// page found; dump entire contents; also translate php to gfs (for $1 -> ~{0})
-			msg_src = Xol_msg_itm.Src_wiki;
 			msg_val = Pf_msg_mgr.Convert_php_to_gfs(msg_page.Data_raw(), tmp_bfr);
 		}
-		Xol_msg_itm msg_itm = msg_mgr.Itms_new(msg_src, msg_key);
+		Xol_msg_itm msg_itm = wiki.Msg_mgr().Itm_by_key_or_new(msg_key);
 		update_val_(msg_itm, msg_val);
 		return msg_itm;
 	}

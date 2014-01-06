@@ -37,7 +37,7 @@ public class Xog_cmds_edit implements GfoInvkAble {
 	}
 	String Html_doc_selected_get() {
 		Xoa_page page = win.Page();
-		return win.Html_box().Html_doc_selected_get(page.Wiki().Key_str(), String_.new_utf8_(page.Page_ttl().Page_txt()));
+		return win.Html_box().Html_doc_selected_get(page.Wiki().Domain_str(), String_.new_utf8_(page.Page_ttl().Page_txt()));
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_copy)) 			this.Copy();

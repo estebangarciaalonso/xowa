@@ -15,11 +15,20 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.wikis; import gplx.*; import gplx.xowa.*;
-public class Xow_wiki_type {
-	public Xow_wiki_type(byte[] domain, byte[] lang_key, byte wiki_tid) {this.domain = domain; this.lang_key = lang_key; this.wiki_tid = wiki_tid;}
-	public byte[] Domain() {return domain;} private byte[] domain;
-	public byte[] Lang_key() {return lang_key;} private byte[] lang_key;
-	public byte Wiki_tid() {return wiki_tid;} private byte wiki_tid;
-	public static Xow_wiki_type new_other_(byte[] domain) {return new Xow_wiki_type(domain, Xol_lang_itm_.Key__unknown, Xow_wiki_type_.Tid_other);}
+package gplx.xowa.langs.vnts; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
+import org.junit.*;
+public class Xop_variant_lxr_tst {
+	@Test  public void Disabled() {
+//			Xop_fxt fxt = new Xop_fxt();
+//			fxt.Wiki().Vnt_mgr().Set(null, null);
+//			fxt.tst_Parse_page_all_str("a-{b}-c", "a-{b}-c");
+	}
+	@Test  public void Enabled() {
+//			Xoa_app app = Xoa_app_fxt.app_();
+//			Xol_lang lang = new Xol_lang(app, ByteAry_.new_ascii_("zh"));
+//			Xow_wiki wiki = Xoa_app_fxt.wiki_(app, "zh.wikipedia.org", lang);
+//			Xop_fxt fxt = new Xop_fxt(app, wiki);
+//			fxt.tst_Parse_page_all_str("a-{b}-c", "ac");
+//			fxt.Wiki().Vnt_mgr().Set(null, null);	// set it back to null for other tests
+	}
 }

@@ -104,7 +104,7 @@ public class Xof_url_bldr {
 		bfr.Add_byte(dir_spr);															// add dir_spr;				EX: "\"
 		bfr.Add_int_variable(width).Add(Bry_px);										// add width;				EX: "220px"
 		if (misc_0 != Xop_lnki_tkn.Thumbtime_null)
-			bfr.Add_byte(thumbtime_dlm).Add_int_variable(misc_0);						// add misc_0					EX: "@5"
+			bfr.Add_byte(thumbtime_dlm).Add_int_variable(misc_0);						// add misc_0				EX: "@5"
 		bfr.Add_byte(Byte_ascii.Dot);													// add .					EX: "."
 		if (thumb)
 			bfr.Add(ext.Ext_view());													// add view_ext				EX: ".png"
@@ -144,6 +144,7 @@ public class Xof_url_bldr {
 		bfr.Add(encoder_src_http.Encode(ttl));											// add ttl again;			EX: "A.png"
 		switch (file_ext_id) {
 			case Xof_ext_.Id_svg:
+			case Xof_ext_.Id_bmp:
 			case Xof_ext_.Id_xcf:
 				bfr.Add_byte(Byte_ascii.Dot).Add(Xof_ext_.Bry_png);						// add .png;				EX: "A.svg" -> "A.svg.png"		NOTE: MediaWiki always adds as lowercase
 				break;

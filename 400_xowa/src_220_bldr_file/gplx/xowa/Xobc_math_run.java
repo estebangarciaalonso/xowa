@@ -52,7 +52,7 @@ public class Xobc_math_run extends Xob_itm_basic_base implements Xob_cmd, GfoInv
 				}
 				fld_rdr.Ini(rdr.Bfr(), rdr.Itm_pos_bgn());
 				math = fld_rdr.Read_bry_escape();
-				math_mgr.Make_itm(math_itm, wiki.Key_str(), math);
+				math_mgr.Make_itm(math_itm, wiki.Domain_str(), math);
 				boolean pass = math_mgr.MakePng(math_itm.Math(), math_itm.Hash(), math_itm.Png_url(), "");	// NOTE: no progress needed for batch
 				if (pass)
 					bldr.Usr_dlg().Note_many(GRP_KEY, "run.pass", "pass|~{0}|~{1}", Int_.XtoStr_PadBgn_space(count++, 7), String_.new_utf8_(math_itm.Math()));

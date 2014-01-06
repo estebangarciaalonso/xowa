@@ -831,6 +831,15 @@ public class ByteAry_ {
 		}
 		return ary;
 	}
+	public static byte[] Lower_ascii(byte[] ary) {
+		int len = ary.length;
+		for (int i = 0; i < len; i++) {
+			byte b = ary[i];
+			if (b > 64 && b < 91)
+				ary[i] = (byte)(b + 32);
+		}
+		return ary;
+	}
 	public static int Find_bwd_non_ws(byte[] src, int bgn, int end) { // get pos of 1st char that is not ws; 
 		if (bgn >= src.length) return ByteAry_.NotFound;
 		for (int i = bgn; i >= end; i--) {
@@ -845,4 +854,8 @@ public class ByteAry_ {
 		return ByteAry_.NotFound;
 	}
 	public static byte[] Null_if_empty(byte[] v) {return Len_eq_0(v) ? null : v;}
+	public static byte Get_at_end(byte[] v) {
+		int v_len = v.length;
+		return v_len == 0 ? Byte_ascii.Nil : v[v_len - 1];
+	}
 }

@@ -43,14 +43,14 @@ public class Xoh_href_parser {
 			case Protocol_xowa_tid:
 				bgn = file_slash_end = ByteAry_.While_fwd(raw, Byte_ascii.Slash, tmp_url.Protocol_bry().length, raw_len);
 				rv.Tid_(Xoh_href.Tid_xowa);
-				rv.Wiki_(wiki.Key_bry());											// wiki is always the current wiki
+				rv.Wiki_(wiki.Domain_bry());										// wiki is always the current wiki
 				byte[] page = wiki.App().Url_converter_gfs().Decode(ByteAry_.Mid(raw, bgn, raw_len));
 				rv.Page_(page);														// page is everything after "/xcmd/"; individual cmds will do further parsing; note that it should be decoded; EX: %20 -> " "; also note that anchor (#) or query params (?) are not parsed; the entire String will be reparsed later
 				return;
 		}
 		if (file_slash_end < raw_len && raw[file_slash_end] == Byte_ascii.Hash) {	// 1st character is anchor; extract and return
 			rv.Tid_(Xoh_href.Tid_anchor);
-			rv.Wiki_(wiki.Key_bry());												// wiki is always current
+			rv.Wiki_(wiki.Domain_bry());											// wiki is always current
 			rv.Page_(cur_page);														// page is always current
 			rv.Anchor_(ByteAry_.Mid(raw, file_slash_end + 1, raw_len));				// +1 to skip #; i.e. Anchor should be "A" not "#A"
 			return;
@@ -132,7 +132,7 @@ public class Xoh_href_parser {
 		}
 		if (ttl.Wik_itm() == null) {										// standard href; EX: "/wiki/A"
 			rv.Tid_(Xoh_href.Tid_wiki);
-			rv.Wiki_(wiki.Key_bry());										// wiki is always the current wiki
+			rv.Wiki_(wiki.Domain_bry());										// wiki is always the current wiki
 		}
 		else {																// embedded xwiki prefix; EX: "/wiki/fr:A"
 			rv.Tid_(Xoh_href.Tid_site);
@@ -193,7 +193,7 @@ public class Xoh_href_parser {
 	}
 	private static void Parse_xcmd(Xoh_href rv, Url_encoder encoder, Xow_wiki wiki, byte[] raw, int bgn, int len) {	// /xcmd/; note encoder is passed, but don't decode for now; most invk commands have an _ which will get changed to a " ";
 		rv.Tid_(Xoh_href.Tid_xcmd);
-		rv.Wiki_(wiki.Key_bry());											// wiki is always the current wiki
+		rv.Wiki_(wiki.Domain_bry());										// wiki is always the current wiki
 		rv.Page_(ByteAry_.Mid(raw, bgn, len));								// page is everything after "/xcmd/"; individual cmds will do further parsing; note that it should be decoded; EX: %20 -> " "; also note that anchor (#) or query params (?) are not parsed; the entire String will be reparsed later
 	}
 }

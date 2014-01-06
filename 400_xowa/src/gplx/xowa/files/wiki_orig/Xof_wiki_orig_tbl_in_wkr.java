@@ -64,7 +64,9 @@ class Xof_wiki_orig_tbl_evaluator {
 			Xof_repo_itm repo = null;
 			if (repo_id <= Xof_repo_itm.Repo_local) { // bounds check
 				fsdb_itm.Orig_repo_(repo_id);
-				Xof_repo_pair repo_pair = repo_mgr.Repos_get_at(repo_id);
+				Xof_repo_pair repo_pair = repo_mgr.Repos_get_by_id(repo_id);
+				if (repo_pair == null)	// shouldn't happen, but try to avoid null ref;
+					repo_pair = repo_mgr.Repos_get_at(repo_id);
 				fsdb_itm.Orig_wiki_(repo_pair.Wiki_key());
 				repo = repo_pair.Trg();
 			}

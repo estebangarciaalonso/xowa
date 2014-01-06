@@ -109,6 +109,8 @@ class Xop_xatr_whitelist_mgr {
 		Ini_nde(Xop_xnde_tag_.Tid_math       , "class", "style", "id", "title");
 		Ini_nde(Xop_xnde_tag_.Tid_time		 , "class", "datetime");
 		Ini_nde(Xop_xnde_tag_.Tid_bdi		 , "common");
+		Ini_nde(Xop_xnde_tag_.Tid_data		 , "common", "value");
+		Ini_nde(Xop_xnde_tag_.Tid_mark		 , "common");
 		Ini_all_loose("data");
 		return this;
 	}
@@ -155,7 +157,7 @@ class Xop_xatr_whitelist_mgr {
 		for (int i = 0; i < len; i++)
 			itm.Tags()[i] = 1;
 	}
-	Xop_xatr_whitelist_itm  Ini_key_trie_add(byte[] key, boolean exact) {
+	private Xop_xatr_whitelist_itm  Ini_key_trie_add(byte[] key, boolean exact) {
 		Object key_tid_obj = tid_hash.Fetch(key);
 		byte key_tid = key_tid_obj == null ? Xop_xatr_itm.Key_tid_generic : ((ByteVal)key_tid_obj).Val();
 		Xop_xatr_whitelist_itm rv = new Xop_xatr_whitelist_itm(key, key_tid, exact);

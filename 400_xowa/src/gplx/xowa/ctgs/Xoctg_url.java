@@ -52,12 +52,12 @@ public class Xoctg_url {
 	}		
 	public static final byte Tid_all_bgn = 0, Tid_subc_bgn = 1, Tid_subc_end = 2, Tid_file_bgn = 3, Tid_file_end = 4, Tid_page_bgn = 5, Tid_page_end = 6;
 	public static final Hash_adp_bry Arg_keys = new Hash_adp_bry(false)
-	.Add_bry_byteVal(Xoctg_fmtr_all.Url_arg_all_bgn, Tid_all_bgn)
-	.Add_bry_byteVal(Xoctg_fmtr_all.Url_arg_subc_bgn, Tid_subc_bgn)
-	.Add_bry_byteVal(Xoctg_fmtr_all.Url_arg_subc_end, Tid_subc_end)
-	.Add_bry_byteVal(Xoctg_fmtr_all.Url_arg_file_bgn, Tid_file_bgn)
-	.Add_bry_byteVal(Xoctg_fmtr_all.Url_arg_file_end, Tid_file_end)
-	.Add_bry_byteVal(Xoctg_fmtr_all.Url_arg_page_bgn, Tid_page_bgn)
-	.Add_bry_byteVal(Xoctg_fmtr_all.Url_arg_page_end, Tid_page_end)
+	.Add_bry_byte(Xoctg_fmtr_all.Url_arg_all_bgn, Tid_all_bgn)
+	.Add_bry_byte(Xoctg_fmtr_all.Url_arg_subc_bgn, Tid_subc_bgn)
+	.Add_bry_byte(Xoctg_fmtr_all.Url_arg_subc_end, Tid_subc_end)
+	.Add_bry_byte(Xoctg_fmtr_all.Url_arg_file_bgn, Tid_file_bgn)
+	.Add_bry_byte(Xoctg_fmtr_all.Url_arg_file_end, Tid_file_end)
+	.Add_bry_byte(Xoctg_fmtr_all.Url_arg_page_bgn, Tid_page_bgn)
+	.Add_bry_byte(Xoctg_fmtr_all.Url_arg_page_end, Tid_page_end)
 	;
 }

@@ -119,7 +119,8 @@ public class Xobc_utl_make_lang_tst {
 	@Test  public void Manual_text() {
 		fxt.Mgr().Parse_manual_text(ByteAry_.new_utf8_("fr"), ByteAry_.new_utf8_(String_.Concat_lines_nl
 			(	"app;"
-			)));
+			))
+			, fxt.Mgr().Manual_text_end_hash());
 		fxt.Ini_file_mw_core("fr", String_.Concat_lines_nl
 			(	"$magicWords = array("
 			,	"  'if' => array(0, 'if:', 'si:'),"
@@ -147,7 +148,7 @@ class Xobc_utl_make_lang_fxt {
 		app = Xoa_app_fxt.app_();
 		mgr = new Xobc_utl_make_lang(app);
 		return this;
-	}	String_bldr sb = String_bldr_.new_(); Xoa_app app;
+	}	private String_bldr sb = String_bldr_.new_(); private Xoa_app app;
 	public Xobcl_kwd_row row_(String key, String... itms) {return new Xobcl_kwd_row(ByteAry_.new_ascii_(key), ByteAry_.Ary(itms));} 
 	public void Parse_rows(String raw, Xobcl_kwd_row... expd) {Tfds.Eq_str_lines(Xto_str(expd), Xto_str(Xobc_utl_make_lang_kwds.Parse(ByteAry_.new_ascii_(raw))));}
 	public void Ini_file_mw_core(String lang, String raw) {
@@ -159,10 +160,9 @@ class Xobc_utl_make_lang_fxt {
 		Tfds.Eq_str_lines(expd, Io_mgr._.LoadFilStr(fil));
 	}
 //		public void Parse_trailing_colon(String raw, String[] langs, params Xobcl_kwd_row[] expd) {
-//
 //			Tfds.Eq_str_lines(Xto_str(expd), Xto_str(Xobc_utl_make_lang_kwds.Parse(ByteAry_.new_ascii_(raw))));
 //		}
-	String Xto_str(Xobcl_kwd_row[] expd) {
+	private String Xto_str(Xobcl_kwd_row[] expd) {
 		int len = expd.length;
 		for (int i = 0; i < len; i++) {
 			Xobcl_kwd_row row = expd[i];

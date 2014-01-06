@@ -16,83 +16,69 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.wikis; import gplx.*; import gplx.xowa.*;
-public class Xow_wiki_type_ {
+public class Xow_wiki_domain_ {
 	public static byte[] Key_by_tid(byte tid) {return Key__ary[tid];}
 	public static final byte Tid_by_key_null = Byte_.MaxValue_127;
 	public static byte Tid_by_key(byte[] key) {
-		if (key_hash == null) key_hash_new();
 		Object o = key_hash.Get_by_bry(key);
 		return o == null ? Tid_by_key_null : ((ByteVal)o).Val();
 	}
-	public static Xow_wiki_type parse_by_domain(byte[] raw) {
+	public static Xow_wiki_domain new_other_(byte[] raw) {return new Xow_wiki_domain(raw, Xow_wiki_domain_.Tid_other, Xol_lang_itm_.Key__unknown);}
+	public static Xow_wiki_domain parse_by_domain(byte[] raw) {
 		/*
 		~{type}.org				EX: wikimediafoundation
 		~{type}.wikimedia.org	EX: commons; species; meta; incubator
 		~{lang}.~{type}.org		EX: en.wikipedia, etc;
 		~www.~{type}.org		EX: mediawiki; wikidata;
 		*/
-		if (key_hash == null) key_hash_new();
 		int raw_len = raw.length;
 		int dot_0 = ByteAry_.FindFwd(raw, Byte_ascii.Dot, 0, raw_len);
 		if (dot_0 == ByteAry_.NotFound) {	// 0 dots; check for "home"
 			return ByteAry_.Eq(raw, Key_home_bry)
-				? new Xow_wiki_type(raw, Xol_lang_itm_.Key__unknown, Tid_home)
-				: Xow_wiki_type.new_other_(raw);
+				? new Xow_wiki_domain(raw, Tid_home, Xol_lang_itm_.Key__unknown)
+				: Xow_wiki_domain_.new_other_(raw);
 		}
 		int dot_1 = ByteAry_.FindFwd(raw, Byte_ascii.Dot, dot_0 + 1, raw_len);
 		if (dot_1 == ByteAry_.NotFound) {	// 1 dot; check for "wikimediafoundation.org"
 			return ByteAry_.Match(raw, 0, dot_0, Key_wikimediafoundation_bry)
-				? new Xow_wiki_type(raw, Xol_lang_itm_.Key__unknown, Tid_wikimediafoundation)
-				: Xow_wiki_type.new_other_(raw);
+				? new Xow_wiki_domain(raw, Tid_wikimediafoundation, Xol_lang_itm_.Key__unknown)
+				: Xow_wiki_domain_.new_other_(raw);
 		}
 		// 2 dots
 		Object seg_1_obj = key_hash.Get_by_mid(raw, dot_0 + 1, dot_1);
 		if (seg_1_obj == null) // seg_1 is unknown; should be wikimedia, or any of the other types; return other;
-			return Xow_wiki_type.new_other_(raw);
+			return Xow_wiki_domain_.new_other_(raw);
 		byte seg_1_tid = ((ByteVal)seg_1_obj).Val();
 		switch (seg_1_tid) {
 			case Tid_wikipedia: case Tid_wiktionary: case Tid_wikisource: case Tid_wikibooks:
 			case Tid_wikiversity: case Tid_wikiquote: case Tid_wikinews: case Tid_wikivoyage:	// ~{lang}.~{type}.org
-				byte[] lang_key = ByteAry_.Mid(raw, 0, dot_0);
-				return new Xow_wiki_type(raw, lang_key, seg_1_tid);	// NOTE: seg_tids must match wiki_tids
+				byte[] lang_orig = ByteAry_.Mid(raw, 0, dot_0);
+				byte[] lang_actl = parse_lang(lang_orig);
+				return new Xow_wiki_domain(raw, seg_1_tid, lang_actl, lang_orig);				// NOTE: seg_tids must match wiki_tids
 			case Tid_wikidata: case Tid_mediawiki:												// ~www.~{type}.org
-				return new Xow_wiki_type(raw, Xol_lang_itm_.Key__unknown, seg_1_tid);
+				return new Xow_wiki_domain(raw, seg_1_tid, Xol_lang_itm_.Key__unknown);
 			case Tid_wikimedia:																	// ~{type}.wikimedia.org
-				Object seg_0_obj = key_hash.Get_by_mid(raw, 0, dot_0); if (seg_0_obj == null) return Xow_wiki_type.new_other_(raw);
+				Object seg_0_obj = key_hash.Get_by_mid(raw, 0, dot_0); if (seg_0_obj == null) return Xow_wiki_domain_.new_other_(raw);
 				byte seg_0_tid = ((ByteVal)seg_0_obj).Val();
 				switch (seg_0_tid) {
 					case Tid_commons: case Tid_species: case Tid_meta: case Tid_incubator:
-						return new Xow_wiki_type(raw, Xol_lang_itm_.Key__unknown, seg_0_tid);	// NOTE: seg_tids must match wiki_tids; NOTE: lang_key is "en" (really, "multi" but making things easier)
+						return new Xow_wiki_domain(raw, seg_0_tid, Xol_lang_itm_.Key__unknown);	// NOTE: seg_tids must match wiki_tids; NOTE: lang_key is "en" (really, "multi" but making things easier)
 					default:
-						return Xow_wiki_type.new_other_(raw);
+						return Xow_wiki_domain_.new_other_(raw);
 				}
 			default:
 			case Tid_other:
-				return Xow_wiki_type.new_other_(raw);
+				return Xow_wiki_domain_.new_other_(raw);
 		}
 	}
-	private static Hash_adp_bry key_hash;
-	private static void key_hash_new() {
-		key_hash = new Hash_adp_bry(false);
-		key_hash.Add_bry_byteVal(Seg_wikimedia_bry, Tid_wikimedia);		// PERF: not a "key" but makes Parse quicker
-		key_hash.Add_bry_byteVal(Key_home_bry, Tid_home);
-		key_hash.Add_bry_byteVal(Key_commons_bry, Tid_commons);
-		key_hash.Add_bry_byteVal(Key_species_bry, Tid_species);
-		key_hash.Add_bry_byteVal(Key_meta_bry, Tid_meta);
-		key_hash.Add_bry_byteVal(Key_incubator_bry, Tid_incubator);
-		key_hash.Add_bry_byteVal(Key_wikimediafoundation_bry, Tid_wikimediafoundation);
-		key_hash.Add_bry_byteVal(Key_wikidata_bry, Tid_wikidata);
-		key_hash.Add_bry_byteVal(Key_mediawiki_bry, Tid_mediawiki);
-		key_hash.Add_bry_byteVal(Key_wikipedia_bry, Tid_wikipedia);
-		key_hash.Add_bry_byteVal(Key_wiktionary_bry, Tid_wiktionary);
-		key_hash.Add_bry_byteVal(Key_wikisource_bry, Tid_wikisource);
-		key_hash.Add_bry_byteVal(Key_wikibooks_bry, Tid_wikibooks);
-		key_hash.Add_bry_byteVal(Key_wikiversity_bry, Tid_wikiversity);
-		key_hash.Add_bry_byteVal(Key_wikiquote_bry, Tid_wikiquote);
-		key_hash.Add_bry_byteVal(Key_wikinews_bry, Tid_wikinews);
-		key_hash.Add_bry_byteVal(Key_wikivoyage_bry, Tid_wikivoyage);
-		key_hash.Add_bry_byteVal(Key_other_bry, Tid_other);
+	private static byte[] parse_lang(byte[] v) {
+		Object o = lang_map_hash.Get_by_bry(v);
+		return o == null ? v : (byte[])o;
 	}
+	private static final Hash_adp_bry lang_map_hash = new Hash_adp_bry(false)
+	.Add_str_obj("simple"		, ByteAry_.new_ascii_("en"))
+	.Add_str_obj("zh-classical"	, ByteAry_.new_ascii_("lzh"))
+	;
 	public static final byte 
 		  Tid_other		=  0, Tid_home       =  1
 		, Tid_wikipedia =  2, Tid_wiktionary =  3, Tid_wikisource =  4, Tid_wikibooks =  5, Tid_wikiversity =  6, Tid_wikiquote = 7, Tid_wikinews = 8, Tid_wikivoyage = 9
@@ -118,4 +104,24 @@ public class Xow_wiki_type_ {
 		, Key_wikidata_bry, Key_mediawiki_bry, Key_wikimediafoundation_bry
 		};
 	public static final byte[] Seg_org_bry = ByteAry_.new_ascii_("org"), Seg_wikimedia_bry = ByteAry_.new_ascii_("wikimedia"), Seg_www_bry = ByteAry_.new_utf8_("www");
+	private static final Hash_adp_bry key_hash = new Hash_adp_bry(false)
+	.Add_bry_byte(Seg_wikimedia_bry, Tid_wikimedia)		// PERF: not a "key" but makes Parse quicker
+	.Add_bry_byte(Key_home_bry, Tid_home)
+	.Add_bry_byte(Key_commons_bry, Tid_commons)
+	.Add_bry_byte(Key_species_bry, Tid_species)
+	.Add_bry_byte(Key_meta_bry, Tid_meta)
+	.Add_bry_byte(Key_incubator_bry, Tid_incubator)
+	.Add_bry_byte(Key_wikimediafoundation_bry, Tid_wikimediafoundation)
+	.Add_bry_byte(Key_wikidata_bry, Tid_wikidata)
+	.Add_bry_byte(Key_mediawiki_bry, Tid_mediawiki)
+	.Add_bry_byte(Key_wikipedia_bry, Tid_wikipedia)
+	.Add_bry_byte(Key_wiktionary_bry, Tid_wiktionary)
+	.Add_bry_byte(Key_wikisource_bry, Tid_wikisource)
+	.Add_bry_byte(Key_wikibooks_bry, Tid_wikibooks)
+	.Add_bry_byte(Key_wikiversity_bry, Tid_wikiversity)
+	.Add_bry_byte(Key_wikiquote_bry, Tid_wikiquote)
+	.Add_bry_byte(Key_wikinews_bry, Tid_wikinews)
+	.Add_bry_byte(Key_wikivoyage_bry, Tid_wikivoyage)
+	.Add_bry_byte(Key_other_bry, Tid_other)
+	;
 }

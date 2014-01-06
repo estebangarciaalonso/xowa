@@ -19,7 +19,6 @@ package gplx.xowa; import gplx.*;
 class Pf_xtn_rel2abs extends Pf_func_base {
 	@Override public boolean Func_require_colon_arg() {return true;}
 	private static final byte[] Ary_dot_slash = ByteAry_.new_ascii_("./"), Ary_dot_dot = ByteAry_.new_ascii_(".."), Ary_dot_dot_slash = ByteAry_.new_ascii_("../");
-	static final int Id_slash = 1, Id_dot = 2, Id_dot_slash = 3, Id_dot_dot = 4, Id_dot_dot_slash = 5;
 	private static void qry_bgns_with_init() {
 		qry_bgns_with = ByteTrieMgr_fast.cs_();
 		qry_bgns_with.Add(Byte_ascii.Slash, IntRef.new_(Id_slash));
@@ -55,7 +54,9 @@ class Pf_xtn_rel2abs extends Pf_func_base {
 		}
 		return rv;
 	}
-	public static byte[] Rel2abs(ByteAryBfr tmp_bfr, byte[] qry, byte[] src) {
+	private static final IntRef ignore_rel2abs_tid = IntRef.zero_();
+	public static byte[] Rel2abs(ByteAryBfr tmp_bfr, byte[] qry, byte[] src) {return Rel2abs(tmp_bfr, qry, src, ignore_rel2abs_tid);}
+	public static byte[] Rel2abs(ByteAryBfr tmp_bfr, byte[] qry, byte[] src, IntRef rel2abs_tid) {
 		if (qry_bgns_with == null) qry_bgns_with_init();
 		int qry_len = qry.length, src_len = src.length;
 		
@@ -67,8 +68,9 @@ class Pf_xtn_rel2abs extends Pf_func_base {
 		boolean tmp_is_1st = true;		
 		Object o = qry_bgns_with.MatchAtCur(qry, 0, qry_len);	// check if qry begins with ".", "/", "./", "../"; if it doesn't return;
 		if (o != null) {
-			IntRef id = (IntRef)o;
-			switch (id.Val()) {
+			int id = ((IntRef)o).Val();
+			rel2abs_tid.Val_(id);
+			switch (id) {
 				case Id_dot:							// "."
 					break;
 				case Id_slash:							// "/"
@@ -164,6 +166,7 @@ class Pf_xtn_rel2abs extends Pf_func_base {
 	private static int[] seg_ary = new int[Xoa_ttl.Max_len];
 	@Override public int Id() {return Xol_kwd_grp_.Id_xtn_rel2abs;}
 	@Override public Pf_func New(int id, byte[] name) {return new Pf_xtn_rel2abs().Name_(name);}
+	public static final int Id_slash = 1, Id_dot = 2, Id_dot_slash = 3, Id_dot_dot = 4, Id_dot_dot_slash = 5;
 }
 /*
 NOTE_1:approach (easiest explained with an example)

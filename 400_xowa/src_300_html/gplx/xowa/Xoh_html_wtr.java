@@ -24,7 +24,7 @@ public class Xoh_html_wtr {
 	private Xop_lnki_logger_redlinks_mgr redlinks_mgr;
 	public Xoh_lnki_wtr Lnki_wtr() {return lnki_wtr;} private Xoh_lnki_wtr lnki_wtr;
 	public Xoh_html_wtr(Xow_wiki wiki) {
-		this.wiki = wiki; app = wiki.App(); this.wiki_key = wiki.Key_bry();
+		this.wiki = wiki; app = wiki.App(); this.wiki_key = wiki.Domain_bry();
 		lnki_wtr = new Xoh_lnki_wtr(wiki, this);
 		history_mgr = app.User().History_mgr();
 		this.href_encoder = wiki.App().Url_converter_href();
@@ -235,6 +235,26 @@ public class Xoh_html_wtr {
 		}
 	}	static final byte[] A_xowa_visited = ByteAry_.new_ascii_("\" class=\"xowa-visited"); static final byte[] Bry_anchor = new byte[] {Byte_ascii.Hash};
 	public static byte[] Ttl_to_title(byte[] ttl) {return ttl;}	// FUTURE: swap html chars?
+	private boolean Lnki_caption_subpage(ByteAryBfr bfr, Xop_lnki_tkn lnki) {
+		int subpage_tid = lnki.Subpage_tid();
+		boolean subpage_slash_at_end = lnki.Subpage_slash_at_end();
+		byte[] leaf_txt = lnki.Ttl().Leaf_txt_wo_qarg();
+		switch (subpage_tid) {
+			case Pf_xtn_rel2abs.Id_slash:
+				if (subpage_slash_at_end)		// "/" at end; only add text;		EX: [[/A/]] -> A
+					bfr.Add(leaf_txt);
+				else							// "/" absent; add slash to bgn;	EX: [[/A]]  -> /A
+					bfr.Add_byte(Byte_ascii.Slash).Add(leaf_txt);
+				return true;
+			case Pf_xtn_rel2abs.Id_dot_dot_slash:
+				if (subpage_slash_at_end)		// "/" at end; only add text;		EX: [[../A/]] -> A
+					bfr.Add(leaf_txt);
+				else							// "/" absent; add page;			EX: [[../A]]  -> Page/A
+					bfr.Add(lnki.Ttl().Page_txt());
+				return true;
+		}
+		return false;
+	}
 	private void Lnki_caption(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, byte[] href, boolean tail_enabled, int depth) {
 		if	(lnki.Caption_exists()) {
 			if (lnki.Caption_tkn_pipe_trick())	// "pipe trick"; [[A|]] is same as [[A|A]]; also, [[Help:A|]] -> [[Help:A|A]]
@@ -242,8 +262,10 @@ public class Xoh_html_wtr {
 			else 
 				Write_tkn(opts, bfr, src, depth + 1, lnki, Sub_idx_null, lnki.Caption_val_tkn());
 		}
-		else							// trg only; write trg as caption;
-			bfr.Add(href);
+		else {										// ttl only
+			if (!Lnki_caption_subpage(bfr, lnki))	// chk if subpage
+				bfr.Add(href);						// write trg as caption;
+		}
 		if (tail_enabled) {
 			int tail_bgn = lnki.Tail_bgn();
 			if (tail_bgn != -1) bfr.Add_mid(src, tail_bgn, lnki.Tail_end());
@@ -427,8 +449,9 @@ public class Xoh_html_wtr {
 			case Xop_xnde_tag_.Tid_h1: case Xop_xnde_tag_.Tid_h2: case Xop_xnde_tag_.Tid_h3: case Xop_xnde_tag_.Tid_h4: case Xop_xnde_tag_.Tid_h5: case Xop_xnde_tag_.Tid_h6:
 			case Xop_xnde_tag_.Tid_dt: case Xop_xnde_tag_.Tid_dd: case Xop_xnde_tag_.Tid_ol: case Xop_xnde_tag_.Tid_ul: case Xop_xnde_tag_.Tid_dl:
 			case Xop_xnde_tag_.Tid_table: case Xop_xnde_tag_.Tid_tr: case Xop_xnde_tag_.Tid_td: case Xop_xnde_tag_.Tid_th: case Xop_xnde_tag_.Tid_caption: case Xop_xnde_tag_.Tid_tbody:
-			case Xop_xnde_tag_.Tid_time: case Xop_xnde_tag_.Tid_bdi:
-			case Xop_xnde_tag_.Tid_ruby: case Xop_xnde_tag_.Tid_rt: case Xop_xnde_tag_.Tid_rb: case Xop_xnde_tag_.Tid_rp:  {
+			case Xop_xnde_tag_.Tid_ruby: case Xop_xnde_tag_.Tid_rt: case Xop_xnde_tag_.Tid_rb: case Xop_xnde_tag_.Tid_rp: 
+			case Xop_xnde_tag_.Tid_time: case Xop_xnde_tag_.Tid_bdi: case Xop_xnde_tag_.Tid_data: case Xop_xnde_tag_.Tid_mark: case Xop_xnde_tag_.Tid_wbr: case Xop_xnde_tag_.Tid_bdo:	// HTML 5: write literally and let browser handle them
+			{
 //					byte[] name = tag.Name_bry();
 //					bfr.Add_byte(Tag__bgn).Add(name);
 //					if (xnde.Atrs_bgn() > Xop_tblw_wkr.Atrs_ignore_check) Xnde_atrs(tag_id, opts, src, xnde.Atrs_bgn(), xnde.Atrs_end(), xnde.Atrs_ary(), bfr);
@@ -498,7 +521,7 @@ public class Xoh_html_wtr {
 			case Xop_xnde_tag_.Tid_xowa_cmd:				Xnde_xtn(opts, bfr, src, xnde, depth); break;
 			default:
 				if (tag.Restricted()) {	// a; img; script; etc..
-					if (page.Allow_all_html() || page.Wiki().Wiki_tid() == Xow_wiki_type_.Tid_home) {
+					if (page.Allow_all_html() || page.Wiki().Domain_tid() == Xow_wiki_domain_.Tid_home) {
 						bfr.Add_mid(src, xnde.Src_bgn(), xnde.Src_end());
 						return;
 					}

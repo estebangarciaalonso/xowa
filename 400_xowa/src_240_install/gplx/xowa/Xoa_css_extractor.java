@@ -46,7 +46,7 @@ public class Xoa_css_extractor {
 			Io_url url_css_wiki   = wiki_html_dir.GenSubFil("xowa_wiki.css");
 			Xoh_wiki_article wiki_article = wiki.Html_mgr().Output_mgr();
 			wiki_article.Css_common_bry_(url_css_common).Css_wiki_bry_(url_css_wiki);
-			if (wiki.Wiki_tid() == Xow_wiki_type_.Tid_home || Env_.Mode_testing()) return;		// NOTE: do not download if xowa; also needed for TEST
+			if (wiki.Domain_tid() == Xow_wiki_domain_.Tid_home || Env_.Mode_testing()) return;		// NOTE: do not download if xowa; also needed for TEST
 			if (Io_mgr._.ExistsFil(url_css_wiki)) return;				// css file exists; nothing to generate
 			wiki.App().Usr_dlg().Log_many("", "", "generating css for '~{0}'", wiki.Domain_str());
 			this.Install(wiki, wiki_html_dir);
@@ -60,12 +60,12 @@ public class Xoa_css_extractor {
 		css_stylesheet_common_download = wiki.App().Setup_mgr().Dump_mgr().Css_commons_download();
 		if (!wiki.App().User().Cfg_mgr().Security_mgr().Web_access_enabled()) css_stylesheet_common_download = false;	// if !web_access_enabled, don't download
 		this.wiki_domain = wiki.Domain_bry();
-		mainpage_url = "http://" + wiki.Key_str();	// NOTE: cannot reuse protocol_prefix b/c "//" needs to be added manually; protocol_prefix is used for logo and images which have form of "//domain/image.png"
+		mainpage_url = "http://" + wiki.Domain_str();	// NOTE: cannot reuse protocol_prefix b/c "//" needs to be added manually; protocol_prefix is used for logo and images which have form of "//domain/image.png"
 		if (page_fetcher == null) page_fetcher = new Xow_page_fetcher_wiki();
 		((Xow_page_fetcher_wiki)page_fetcher).Wiki_(wiki);
 		this.wiki_html_dir = wiki_html_dir;
 		this.lang_is_ltr = wiki.Lang().Dir_ltr();
-		this.wiki_code = wiki.Wiki_tid_code();
+		this.wiki_code = wiki.Domain_abrv();
 		mainpage_bry = Mainpage_download_bry();
 		Logo_setup();
 		Css_stylesheet_common_setup();

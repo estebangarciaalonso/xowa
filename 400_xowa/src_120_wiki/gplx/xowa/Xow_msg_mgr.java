@@ -21,11 +21,11 @@ public class Xow_msg_mgr implements GfoInvkAble {
 		this.wiki = wiki;
 		this.lang = lang;
 		this.msg_mgr = new Xol_msg_mgr(wiki, false);
-	}	private Xow_wiki wiki; Xol_lang lang; Xol_msg_mgr msg_mgr;
+	}	private Xow_wiki wiki; Xol_lang lang; private Xol_msg_mgr msg_mgr;
 	public void Clear() {msg_mgr.Clear();}
 	public byte[] Val_by_id_args(int id, Object... args) {return Val_by_id_priv(id, args);}
 	public byte[] Val_by_id(int id) {return Val_by_id_priv(id, null);}
-	byte[] Val_by_id_priv(int id, Object[] args) {
+	private byte[] Val_by_id_priv(int id, Object[] args) {
 		Xol_msg_itm itm = msg_mgr.Itm_by_id_or_null(id);
 		if (itm == null)
 			itm = lang.Msg_mgr().Itm_by_id_or_null(id);
@@ -34,9 +34,10 @@ public class Xow_msg_mgr implements GfoInvkAble {
 		tmp_bfr.Mkr_rls();
 		return rv;
 	}
+	public Xol_msg_itm Itm_by_key_or_new(byte[] key) {return msg_mgr.Itm_by_key_or_new(key);}
 	public byte[] Val_by_key_args(byte[] key, Object... args) {return Val_by_key(key, args);}
 	public byte[] Val_by_key_obj(byte[] key) {return Val_by_key(key, null);}
-	byte[] Val_by_key(byte[] key, Object[] args) {
+	private byte[] Val_by_key(byte[] key, Object[] args) {
 		Xol_msg_itm itm = msg_mgr.Itm_by_key_or_null(key);
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
 		if (itm == null)

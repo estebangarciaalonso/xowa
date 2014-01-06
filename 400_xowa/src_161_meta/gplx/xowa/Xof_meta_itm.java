@@ -34,7 +34,7 @@ public class Xof_meta_itm {
 		switch (vrtl_repo) {
 			case Xof_meta_itm.Repo_missing  : //return null;	// DELETE: used to return null, but this caused Redownload_missing to fail; no reason why missing shouldn't return a default repo; DATE:2013-01-26
 			case Xof_meta_itm.Repo_unknown	:
-			case Xof_meta_itm.Repo_same		: return wiki.App().File_mgr().Repo_mgr().Get_primary(wiki.Key_bry());
+			case Xof_meta_itm.Repo_same		: return wiki.App().File_mgr().Repo_mgr().Get_primary(wiki.Domain_bry());
 			default							: return wiki.File_mgr().Repo_mgr().Repos_get_at(vrtl_repo).Trg();
 		}
 	}

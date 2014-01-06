@@ -29,7 +29,7 @@ public class Xof_xfer_queue {
 	}
 	public void Add(Xof_xfer_itm xfer_itm) {list.Add(xfer_itm);}
 	public void Add_dirty_if_new(Xof_meta_mgr meta_mgr) {
-		byte[] meta_mgr_key = meta_mgr.Wiki().Key_bry();
+		byte[] meta_mgr_key = meta_mgr.Wiki().Domain_bry();
 		if (!dirty.Has(dirty_key.Val_(meta_mgr_key)))
 			dirty.AddReplace(meta_mgr_key, meta_mgr);	// only add if new
 	}

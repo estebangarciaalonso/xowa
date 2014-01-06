@@ -23,7 +23,7 @@ public class Xof_img_wkr_api_size_base_fxt {
 		this.wiki = Xoa_app_fxt.wiki_tst_(app);
 	}
 	public void Bld_api_url_tst(String ttl_str, int w, int h, String expd) {
-		String actl = Xof_img_wkr_api_size_base_wmf.Bld_api_url(wiki.Key_bry(), ByteAry_.new_utf8_(ttl_str), w, h);
+		String actl = Xof_img_wkr_api_size_base_wmf.Bld_api_url(wiki.Domain_bry(), ByteAry_.new_utf8_(ttl_str), w, h);
 		Tfds.Eq(expd, actl);
 	}
 	public void Parse_size_tst(String xml_str, int expd_w, int expd_h) {

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public class Xof_meta_mgr implements GfoInvkAble {
 	Object[] root = new Object[16]; OrderedHash dirty_fils = OrderedHash_.new_bry_();
-	public Xof_meta_mgr(Xow_wiki wiki) {this.wiki = wiki; this.root_dir = wiki.App().Fsys_mgr().File_dir().GenSubDir_nest("#meta", wiki.Key_str());}
+	public Xof_meta_mgr(Xow_wiki wiki) {this.wiki = wiki; this.root_dir = wiki.App().Fsys_mgr().File_dir().GenSubDir_nest("#meta", wiki.Domain_str());}
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	public Io_url Root_dir() {return root_dir;} Io_url root_dir;
 	public int Depth() {return depth;} public Xof_meta_mgr Depth_(int v) {depth = v; return this;} private int depth = 3; // allows a full english wikipedia to have meta files of approximately 32 kb; otherwise would be 480 kb; most wikis will not get to this size, but worst case is wasting 16 kb in (16 * 16) files which is less than 4 mb

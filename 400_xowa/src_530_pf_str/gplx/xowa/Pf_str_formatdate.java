@@ -71,8 +71,9 @@ class DateAdpFormatItm_ {
 		, Tid_roman				= 12
 		, Tid_iso_fmt			= 13
 		, Tid_rfc_5322			= 14
+		, Tid_raw				= 15
 		;
-	public static DateAdpFormatItm 
+	public static final DateAdpFormatItm 
 		  Year_len4				= new DateAdpFormatItm_seg_int(DateAdp_.SegIdx_year			, 4, Bool_.Y)
 		, Year_len2				= new DateAdpFormatItm_seg_int(DateAdp_.SegIdx_year			, 2, Bool_.Y)
 		, Month_int_len2		= new DateAdpFormatItm_seg_int(DateAdp_.SegIdx_month		, 2, Bool_.Y)
@@ -104,11 +105,13 @@ class DateAdpFormatItm_ {
 		, AmPm_lower			= new DateAdpFormatItm_AmPm(true)
 		, AmPm_upper			= new DateAdpFormatItm_AmPm(false)
 		, Roman					= new DateAdpFormatItm_roman()
+		, Raw					= new DateAdpFormatItm_raw()
 		, Iso_fmt				= new DateAdpFormatItm_iso_fmt()
 		, Rfc_5322				= new DateAdpFormatItm_rfc_5322()
 		;
 }
 class DateAdpFormatItm_seg_int implements DateAdpFormatItm {
+	public DateAdpFormatItm_seg_int(int segIdx, int len, boolean fixed_len) {this.segIdx = segIdx; this.fixed_len = fixed_len; this.len = len;} private int segIdx, len; boolean fixed_len;
 	public int TypeId() {return DateAdpFormatItm_.Tid_seg_int;}
 	public int SegIdx() {return segIdx;}
 	public void Fmt(Xow_wiki wiki, Xol_lang lang, Pf_str_formatdate_bldr bldr, DateAdp date, ByteAryBfr bfr) {
@@ -116,7 +119,12 @@ class DateAdpFormatItm_seg_int implements DateAdpFormatItm {
 		if (fixed_len)	bfr.Add_int_fixed(val, len);
 		else			bfr.Add_int_variable(val);
 	}
-	public DateAdpFormatItm_seg_int(int segIdx, int len, boolean fixed_len) {this.segIdx = segIdx; this.fixed_len = fixed_len; this.len = len;} private int segIdx, len; boolean fixed_len;
+}
+class DateAdpFormatItm_raw implements DateAdpFormatItm {
+	public int TypeId() {return DateAdpFormatItm_.Tid_raw;}
+	public void Fmt(Xow_wiki wiki, Xol_lang lang, Pf_str_formatdate_bldr bldr, DateAdp date, ByteAryBfr bfr) {
+		// TODO: should flag .Raw() on bldr to skip transliterating numerals in foreign languages; DATE:2013-12-31
+	}
 }
 class DateAdpFormatItm_seg_str implements DateAdpFormatItm {
 	public DateAdpFormatItm_seg_str(int segIdx, int type) {this.segIdx = segIdx; this.type = type;} private int segIdx, type;

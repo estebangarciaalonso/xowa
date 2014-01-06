@@ -17,8 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.langs.*; import gplx.intl.*; import gplx.xowa.xtns.lst.*; import gplx.xowa.wikis.caches.*;
-import gplx.xowa.langs.casings.*;
-import gplx.xowa.langs.grammars.*; import gplx.xowa.langs.plurals.*;
+import gplx.xowa.langs.casings.*; import gplx.xowa.langs.cnvs.*; import gplx.xowa.langs.grammars.*; import gplx.xowa.langs.plurals.*; import gplx.xowa.langs.vnts.*; 
 import gplx.xowa.parsers.lnkis.*;
 public class Xol_lang implements GfoInvkAble {
 	public Xol_lang(Xoa_app app, byte[] key_bry) {
@@ -36,6 +35,8 @@ public class Xol_lang implements GfoInvkAble {
 		grammar = Xol_grammar_.new_by_lang_id(lang_id);
 		plural = Xol_plural_.new_by_lang_id(lang_id);
 		lnki_trail_mgr = new Xol_lnki_trail_mgr(this);
+		vnt_mgr = new Xol_vnt_mgr(this);
+		cnv_mgr = new Xol_cnv_mgr(this);
 	}
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public byte[] Key_bry() {return key_bry;} private byte[] key_bry; public String Key_str() {return key_str;} private String key_str;
@@ -49,7 +50,8 @@ public class Xol_lang implements GfoInvkAble {
 	public Xol_case_mgr Case_mgr() {return case_mgr;} private Xol_case_mgr case_mgr = new Xol_case_mgr();
 	public Xol_font_info Gui_font() {return gui_font;} private Xol_font_info gui_font = new Xol_font_info(null, 0, gplx.gfui.FontStyleAdp_.Plain);
 	public byte[] Fallback_bry() {return fallback_bry;} public Xol_lang Fallback_bry_(byte[] v) {fallback_bry = v; return this;} private byte[] fallback_bry;
-//		public boolean Variants_enabled() {return variants_enabled;} public Xol_lang Variants_enabled_(boolean v) {variants_enabled = v; return this;} private boolean variants_enabled;
+	public Xol_vnt_mgr Vnt_mgr() {return vnt_mgr;} private Xol_vnt_mgr vnt_mgr;
+	public Xol_cnv_mgr Cnv_mgr() {return cnv_mgr;} private Xol_cnv_mgr cnv_mgr;
 	public Xol_fragment_mgr Fragment_mgr() {return fragment_mgr;} private Xol_fragment_mgr fragment_mgr;
 	public Xol_grammar Grammar() {return grammar;} private Xol_grammar grammar;
 	public Xol_plural Plural() {return plural;} private Xol_plural plural;
@@ -78,6 +80,8 @@ public class Xol_lang implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_messages))				return message_mgr;
 		else if	(ctx.Match(k, Invk_specials))				return specials_mgr;
 		else if	(ctx.Match(k, Invk_casings))				return case_mgr;
+		else if	(ctx.Match(k, Invk_converts))				return cnv_mgr;
+		else if	(ctx.Match(k, Invk_variants))				return vnt_mgr;
 		else if	(ctx.Match(k, Invk_dir_rtl_))				dir_ltr = !m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_dir_str))				return Dir_bry();
 		else if	(ctx.Match(k, Invk_gui_font_))				gui_font.Name_(m.ReadStr("name")).Size_(m.ReadFloatOr("size", 8));
@@ -90,34 +94,34 @@ public class Xol_lang implements GfoInvkAble {
 		return this;
 	}
 	public static final String Invk_ns_names = "ns_names", Invk_ns_aliases = "ns_aliases"
-	, Invk_keywords = "keywords", Invk_messages = "messages", Invk_specials = "specials", Invk_casings = "casings"
+	, Invk_keywords = "keywords", Invk_messages = "messages", Invk_specials = "specials", Invk_casings = "casings", Invk_converts = "converts", Invk_variants = "variants"
 	, Invk_dir_rtl_ = "dir_rtl_", Invk_gui_font_ = "gui_font_"
 	, Invk_fallback_load = "fallback_load", Invk_this = "this", Invk_num_fmt = "num_fmt", Invk_dir_str = "dir_str", Invk_link_trail = "link_trail";
-	public Xol_lang Load_assert(Xoa_app app) {if (!loaded) Load(app); return this;}
-	public boolean Load(Xoa_app app) {
+	public Xol_lang Init_by_load_assert() {if (!loaded) Init_by_load(); return this;}
+	public boolean Init_by_load() {
 		if (this.loaded) return false;
 		app.Lang_mgr().Fallback_regy().Clear();
 		this.loaded = true;
-		this.app = app;
-		if (!ByteAry_.Eq(key_bry, Xol_lang_.Key_en)) Xol_lang_.Lang_init(this);
-		case_mgr.Add_bulk(lang_id == Xol_lang_itm_.Id_en && Env_.Mode_testing() ? Xol_case_itm_.English : Xol_case_itm_.Universal);
-		Xol_msg_itm msg_itm = message_mgr.Itm_by_key_or_new(ByteAry_.new_utf8_("Lang"));
-		msg_itm.Atrs_set(key_bry, false, false);
+		boolean lang_is_en = lang_id == Xol_lang_itm_.Id_en;
+		if (!lang_is_en) Xol_lang_.Lang_init(this);
+		case_mgr.Add_bulk(lang_is_en && Env_.Mode_testing() ? Xol_case_itm_.English : Xol_case_itm_.Universal);
+		message_mgr.Itm_by_key_or_new(ByteAry_.new_utf8_("Lang")).Atrs_set(key_bry, false, false);	// set "Lang" keyword; EX: for "fr", "{{int:Lang}}" -> "fr"
 		Load_lang(key_bry);
 		ns_aliases.Ary_add_(Xow_ns_.Canonical);	// NOTE: always add English canonical as aliases to all languages
 		this.Evt_lang_changed();
 		return true;
 	}
-	private void Exec_fallback_load(byte[] v) {
-		if (app.Lang_mgr().Fallback_regy().Has(v)) return;
-		if (ByteAry_.Eq(v, Xoa_lang_mgr.Fallback_false)) return;
-		app.Lang_mgr().Fallback_regy().Add(v, v);
-		fallback_bry = v;
-		Load_lang(v);
-		app.Lang_mgr().Fallback_regy().Del(v);
+	private void Exec_fallback_load(byte[] fallback_lang) {
+		if (app.Lang_mgr().Fallback_regy().Has(fallback_lang)) return;			// fallback_lang loaded; avoid recursive loop; EX: zh with fallback of zh-hans which has fallback of zh
+		if (ByteAry_.Eq(fallback_lang, Xoa_lang_mgr.Fallback_false)) return;	// fallback_lang is "none" exit
+		app.Lang_mgr().Fallback_regy().Add(fallback_lang, fallback_lang);
+		fallback_bry = fallback_lang;
+		Load_lang(fallback_lang);
+		app.Lang_mgr().Fallback_regy().Del(fallback_lang);
 	}
 	private void Load_lang(byte[] v) {
 		app.Gfs_mgr().Run_url_for(this, Xol_lang_.xo_lang_fil_(app, String_.new_ascii_(v)));
+		app.Gfs_mgr().Run_url_for(app, Xol_cnv_mgr.Bld_url(app, key_str));
 	}
 	private static final byte[] Dir_bry_ltr = ByteAry_.new_ascii_("ltr"), Dir_bry_rtl = ByteAry_.new_ascii_("rtl");
 	public static final int Tid_lower = 1, Tid_upper = 2;

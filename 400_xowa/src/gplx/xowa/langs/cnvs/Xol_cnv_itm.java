@@ -15,20 +15,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.langs.variants; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
-import org.junit.*;
-public class Xop_variant_lxr_tst {
-	@Test  public void Disabled() {
-		Xop_fxt fxt = new Xop_fxt();
-		fxt.Wiki().Variant_mgr().Set(null, null);
-		fxt.tst_Parse_page_all_str("a-{b}-c", "a-{b}-c");
-	}
-	@Test  public void Enabled() {
-		Xoa_app app = Xoa_app_fxt.app_();
-		Xol_lang lang = new Xol_lang(app, ByteAry_.new_ascii_("zh"));
-		Xow_wiki wiki = Xoa_app_fxt.wiki_(app, "zh.wikipedia.org", lang);
-		Xop_fxt fxt = new Xop_fxt(app, wiki);
-		fxt.tst_Parse_page_all_str("a-{b}-c", "ac");
-		fxt.Wiki().Variant_mgr().Set(null, null);	// set it back to null for other tests
-	}
+package gplx.xowa.langs.cnvs; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
+public class Xol_cnv_itm {
+	public Xol_cnv_itm(byte[] src, byte[] trg) {this.src = src; this.trg = trg;}
+	public byte[] Src() {return src;} private byte[] src;
+	public byte[] Trg() {return trg;} private byte[] trg;
 }

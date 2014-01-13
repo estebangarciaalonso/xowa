@@ -24,8 +24,8 @@ class Scrib_interpreter {
 		args_srl = new Scrib_lua_encoder(app.Usr_dlg()); 
 		server = new Process_server_base();
 		scrib_opts = (Xow_xtn_scribunto)app.Xtn_mgr().Get_or_fail(Xow_xtn_scribunto.XTN_KEY);
-	}	Scrib_engine engine; Xoa_app app; Xow_xtn_scribunto scrib_opts;
-	Scrib_lua_server_rsp rsp = new Scrib_lua_server_rsp(); Scrib_lua_encoder args_srl;
+	}	private Scrib_engine engine; private Xoa_app app; private Xow_xtn_scribunto scrib_opts;
+	private Scrib_lua_server_rsp rsp = new Scrib_lua_server_rsp(); private Scrib_lua_encoder args_srl;
 	public Scrib_fnc LoadString(String name, String text) {
 		KeyVal[] rslt = this.Dispatch("op", "loadString", "text", text, "chunkName", name);
 		return new Scrib_fnc(name, Int_.cast_(rslt[0].Val()));
@@ -59,28 +59,31 @@ class Scrib_interpreter {
 	public boolean Dbg_print() {return dbg_print;} public Scrib_interpreter Dbg_print_(boolean v) {dbg_print = v; return this;} private boolean dbg_print;
 	public KeyVal[] Dispatch(Object... ary) {
 		ByteAryBfr bfr = app.Utl_bry_bfr_mkr().Get_k004().Clear();
-		try {
+		while (true) {
 			Dispatch_bld_send(bfr, ary);
+			boolean log_enabled = scrib_opts.Lua_log_enabled();
+			if (log_enabled) app.Usr_dlg().Log_direct("sent:" + bfr.XtoStr() + "\n");
+			byte[] rsp_bry = server.Server_comm(bfr.XtoAryAndClear(), ary);
+			if (log_enabled) app.Usr_dlg().Log_direct("rcvd:" + String_.new_utf8_(rsp_bry) + "\n\n");
+			String op = rsp.Extract(rsp_bry);
+			if		(String_.Eq(op, "return")) {
+				bfr.Mkr_rls();
+				return rsp.Values();
+			}
+			else if (String_.Eq(op, "call")) {
+				String id = rsp.Call_id();
+				KeyVal[] args = rsp.Call_args();
+				Scrib_cbk cbk = this.Cbks_get_by_key(id); if (cbk == null) throw Xow_xtn_scribunto.err_("could not find cbk with id of {0}", id);
+				KeyVal[] cbk_rslts = KeyVal_.Ary_cast_(cbk.Invk(args));
+				ary = Object_.Ary("op", "return", "nvalues", cbk_rslts.length, "values", cbk_rslts);
+			}
+			else {
+				bfr.Mkr_rls();
+//					app.Usr_dlg().Warn_many("", "", "invalid dispatch: op=~{0} page=~{1}", op, String_.new_utf8_(engine.Ctx().Page().Page_ttl().Page_db()));
+				return KeyVal_.Ary_empty;
+			}
 		}
-		finally {
-			bfr.Mkr_rls();
-		}
-		boolean log_enabled = scrib_opts.Lua_log_enabled();
-		if (log_enabled) app.Usr_dlg().Log_direct("sent:" + bfr.XtoStr() + "\n");
-		byte[] rsp_bry = server.Server_comm(bfr.XtoAryAndClear(), ary);
-		if (log_enabled) app.Usr_dlg().Log_direct("rcvd:" + String_.new_utf8_(rsp_bry) + "\n\n");
-		String op = rsp.Extract(rsp_bry);
-		if		(String_.Eq(op, "return")) 
-			return rsp.Values();
-		else if (String_.Eq(op, "call")) {
-			String id = rsp.Call_id();
-			KeyVal[] args = rsp.Call_args();
-			Scrib_cbk cbk = this.Cbks_get_by_key(id); if (cbk == null) throw Xow_xtn_scribunto.err_("could not find cbk with id of {0}", id);
-			KeyVal[] cbk_rslts = KeyVal_.Ary_cast_(cbk.Invk(args));
-			return this.Dispatch("op", "return", "nvalues", cbk_rslts.length, "values", cbk_rslts);
-		}
-		return KeyVal_.Ary_empty;
-	}	static final byte[] Dispatch_hdr = ByteAry_.new_ascii_("0000000000000000");	// itm_len + itm_chk in 8-len HexDec
+	}	private static final byte[] Dispatch_hdr = ByteAry_.new_ascii_("0000000000000000");	// itm_len + itm_chk in 8-len HexDec
 	private void Dispatch_bld_send(ByteAryBfr bfr, Object[] ary) {
 		int len = ary.length; if (len % 2 != 0) throw Err_.new_fmt_("arguments must be factor of 2: {0}", len);
 		bfr.Add(Dispatch_hdr);

@@ -42,14 +42,14 @@ public class Scrib_pf_invoke extends Pf_func_base {
 		if (mod == null) {
 			Xow_ns module_ns = wiki.Ns_mgr().Get_by_id(Scrib_core_.Ns_id_module);
 			Xoa_ttl mod_ttl = Xoa_ttl.parse_(wiki, ByteAry_.Add(module_ns.Name_db_w_colon(), mod_name));
-			mod_raw = wiki.Cache_mgr().Page_cache().Get_or_load(mod_ttl);
-			if (mod_raw == gplx.xowa.wikis.caches.Xow_page_cache.Null) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;} // EX: "{{#invoke:missing_mod}}"
+			mod_raw = wiki.Cache_mgr().Page_cache().Get_or_load_as_src(mod_ttl);
+			if (mod_raw == null) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;} // EX: "{{#invoke:missing_mod}}"
 		}
 		else
 			mod_raw = mod.Text_bry();
 		if (!engine.Enabled()) {bfr.Add_mid(src, self.Src_bgn(), self.Src_end()); return;}
 		try {
-			engine.Invoke(wiki, src, caller, self, bfr, mod_name, mod_raw, fnc_name);
+			engine.Invoke(wiki, ctx, src, caller, self, bfr, mod_name, mod_raw, fnc_name);
 			if (invoke_wkr != null)
 				invoke_wkr.Eval_end(ctx.Page(), mod_name, fnc_name, log_time_bgn);
 		}

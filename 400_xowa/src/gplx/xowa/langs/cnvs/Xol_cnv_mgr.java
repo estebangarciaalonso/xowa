@@ -19,7 +19,6 @@ package gplx.xowa.langs.cnvs; import gplx.*; import gplx.xowa.*; import gplx.xow
 public class Xol_cnv_mgr implements GfoInvkAble {
 	private OrderedHash hash = OrderedHash_.new_bry_();		
 	public Xol_cnv_mgr(Xol_lang lang) {}//this.lang = lang;} private Xol_lang lang;
-	public boolean Enabled() {return enabled;} public Xol_cnv_mgr Enabled_(boolean v) {enabled = v; return this;} private boolean enabled;
 	public Xol_cnv_grp Get_or_null(byte[] key) {return (Xol_cnv_grp)hash.Fetch(key);}
 	public Xol_cnv_grp Get_or_make(byte[] key) {
 		Xol_cnv_grp rv = (Xol_cnv_grp)hash.Fetch(key);

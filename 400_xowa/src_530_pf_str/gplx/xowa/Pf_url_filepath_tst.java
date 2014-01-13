@@ -34,12 +34,12 @@ public class Pf_url_filepath_tst {
 		en_wiki.File_mgr().Repo_mgr().Add_repo(ByteAry_.new_utf8_("src_commons"), ByteAry_.new_utf8_("trg_commons"));
 		Io_mgr._.CreateDir(Io_url_.new_dir_("mem/xowa/wiki/commons.wikimedia.org/ns/000/page/"));	// HACK: create page_dir so Scan_dirs_zip will not identify commons as zipped; FIX: remove; WHEN: after redoing commons.css download logic
 	}	private Xow_wiki en_wiki, commons_wiki; Xofw_wiki_wkr_mock mock_wkr = new Xofw_wiki_wkr_mock(); 
-	@Test  public void Same_wiki() {
+	@Test  public void Wiki_is_local() {
 		fxt.ini_page_create(en_wiki, "File:A.png", "");
 		mock_wkr.Redirect_("A.png", "A.png").Repo_idx_(0);
 		fxt.tst_Parse_tmpl_str_test("{{filepath:A.png}}", "{{test}}", "file:///mem/wiki/repo/trg/orig/7/0/A.png");
 	}
-	@Test  public void Commons_wiki() {
+	@Test  public void Wiki_is_commons() {
 		fxt.ini_page_create(commons_wiki, "File:A.png", "");
 		commons_wiki.Fsys_mgr().Dir_regy()[Xow_dir_info_.Tid_page].Ext_tid_(gplx.ios.Io_stream_.Tid_file);	
 		mock_wkr.Redirect_("A.png", "A.png").Repo_idx_(1);

@@ -15,20 +15,13 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.langs.vnts; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
-import org.junit.*;
-public class Xop_variant_lxr_tst {
-	@Test  public void Disabled() {
-//			Xop_fxt fxt = new Xop_fxt();
-//			fxt.Wiki().Vnt_mgr().Set(null, null);
-//			fxt.tst_Parse_page_all_str("a-{b}-c", "a-{b}-c");
+package gplx.xowa.parsers.lnkis.cfgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.parsers.*; import gplx.xowa.parsers.lnkis.*;
+public class Xoc_lnki_cfg implements GfoInvkAble {
+	public Xoc_lnki_cfg(Xow_wiki wiki) {xwiki_repo_mgr = new Xoc_xwiki_repo_mgr(wiki);}
+	public Xoc_xwiki_repo_mgr Xwiki_repo_mgr() {return xwiki_repo_mgr;} private Xoc_xwiki_repo_mgr xwiki_repo_mgr;
+	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
+		if		(ctx.Match(k, Invk_xwiki_repos))			return xwiki_repo_mgr;
+		else return GfoInvkAble_.Rv_unhandled;
 	}
-	@Test  public void Enabled() {
-//			Xoa_app app = Xoa_app_fxt.app_();
-//			Xol_lang lang = new Xol_lang(app, ByteAry_.new_ascii_("zh"));
-//			Xow_wiki wiki = Xoa_app_fxt.wiki_(app, "zh.wikipedia.org", lang);
-//			Xop_fxt fxt = new Xop_fxt(app, wiki);
-//			fxt.tst_Parse_page_all_str("a-{b}-c", "ac");
-//			fxt.Wiki().Vnt_mgr().Set(null, null);	// set it back to null for other tests
-	}
+	private static final String Invk_xwiki_repos = "xwiki_repos";
 }

@@ -16,27 +16,45 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.langs.vnts; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
-class Xop_vnt_flag {
+public class Xop_vnt_flag {
 	public Xop_vnt_flag(byte tid) {this.tid = tid; this.langs = ByteAry_.Ary_empty;}
 	public Xop_vnt_flag(byte tid, byte[][] langs) {this.tid = tid; this.langs = langs;}
 	public byte Tid() {return tid;} private byte tid;
 	public byte[][] Langs() {return langs;} private byte[][] langs;
 }
 class Xop_vnt_flag_ {
-	public static final byte
+	public static final Xop_vnt_flag[] Ary_empty = new Xop_vnt_flag[0];
+	public static final byte		 
 	  Tid_unknown	=  0
-	, Tid_show		=  1
-	, Tid_all		=  2
-	, Tid_err		=  3
-	, Tid_add		=  4
-	, Tid_title		=  5
-	, Tid_raw		=  6
-	, Tid_descrip	=  7
-	, Tid_del 		=  8
-	, Tid_macro 	=  9
-	, Tid_name 		= 10
-	, Tid_lang		= 11
-	;
+	, Tid_show		=  1	// EX: -{S|zh-hans:A;zh-hant:B}-  -> "A"
+	, Tid_all		=  2	// EX: -{+|zh-hans:A;zh-hant:B}-  -> "A"
+	, Tid_err		=  3	// EX: -{E|zh-hans:A;zh-hant:B}-  -> "A"
+	, Tid_add		=  4	// add and output;		EX: -{A|zh-hans:A;zh-hant:B}-  -> "A"
+	, Tid_title		=  5	// page_title;			EX: -{T|zh-hans:A;zh-hant:B}-  -> ""
+	, Tid_raw		=  6	// raw: no convert;		EX: -{R|zh-hans:A;zh-hant:B}-  -> "zh-hans:A;zh-hant:B"
+	, Tid_descrip	=  7	// describe;			EX: -{D|zh-hans:A;zh-hant:B}-  -> "简体：A；繁體：B；" (简体=Simplified;繁體=Traditional)
+	, Tid_del 		=  8	// remove;				EX: -{-|zh-hans:A;zh-hant:B}-  -> ""
+	, Tid_macro 	=  9	// macro;				EX: -{H|zh-hans:A;zh-hant:B}-  -> ""
+	, Tid_name 		= 10	// EX: -{N|zh-hans:A;zh-hant:B}-		-> ""
+	, Tid_lang		= 11	// EX: -{zh-hant|B}-					-> "B"
+	;		
+	public static String X_to_name(byte tid) {
+		switch (tid) {
+			case Tid_unknown: return "unknown";
+			case Tid_show	: return "show";
+			case Tid_all	: return "all";
+			case Tid_err	: return "err";
+			case Tid_add	: return "add";
+			case Tid_title	: return "title";
+			case Tid_raw	: return "raw";
+			case Tid_descrip: return "descrip";
+			case Tid_del	: return "del";
+			case Tid_macro	: return "macro";
+			case Tid_name	: return "name";
+			case Tid_lang	: return "lang";
+			default			: throw Err_.unhandled(tid);
+		}
+	}
 	public static final byte Tid__max = 12;
 	public static final byte
 	  Key_show		= Byte_ascii.Ltr_S

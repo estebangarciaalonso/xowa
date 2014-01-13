@@ -406,6 +406,11 @@ public class Xot_invk_wkr_tst {
 		fxt.tst_Parse_tmpl_str("{{Template:Wikipedia:A}}"		, "B");
 		fxt.ini_defn_clear();
 	}
+	@Test  public void Transcluded_redirect() {		// PURPOSE: StackOverflowError when transcluded sub-page redirects back to root_page; DATE:2014-01-07
+		fxt.ini_page_create("Root/Leaf", "#REDIRECT [[Root]]");
+		fxt.ini_page_create("Root", "<gallery>A.png|a{{/Leaf}}b</gallery>");		// NOTE: gallery neeeded for XOWA to fail; MW fails if just {{/Leaf}}
+		fxt.Test_parse_page("Root", "<gallery>A.png|a{{/Leaf}}b</gallery>");
+	}
 }
 /*
 NOTE_1: function should expand "*a" to "\n*a" even if "*a" is bos

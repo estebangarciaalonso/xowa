@@ -21,25 +21,20 @@ public class Xop_apos_wkr implements Xop_ctx_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
 	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {
 		Reset();
-	}	ListAdp stack = ListAdp_.new_(); int boldCount, italCount; Xop_apos_tkn dualTkn = null;
+	}	private ListAdp stack = ListAdp_.new_(); private int boldCount, italCount; private Xop_apos_tkn dualTkn = null;
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {
 		this.EndFrame(ctx, root, src, src_len, false);
 	}
+	public void AutoClose(Xop_ctx ctx, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_tkn_itm tkn) {}
 	public int Stack_len() {return stack.Count();}
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
-		int aposLen = Apos_len;
-		while (cur_pos < src_len) {
-			byte cur = src[cur_pos];
-			if (cur != Byte_ascii.Apos) break;
-			++aposLen; ++cur_pos;
-		}
-		dat.Ident(ctx, src, aposLen, cur_pos);
-		Xop_apos_tkn aposTkn = tkn_mkr.Apos(bgn_pos, cur_pos, cur_pos - bgn_pos, dat.Typ(), dat.Cmd(), dat.LitApos(), ctx.Cur_tkn_tid());
-		ctx.Subs_add(root, aposTkn);
-		ctx.Apos().RegTkn(aposTkn, cur_pos);
+		cur_pos = Xop_lxr_.Find_fwd_while(src, src_len, cur_pos, Byte_ascii.Apos);
+		int apos_len = cur_pos - bgn_pos;
+		dat.Ident(ctx, src, apos_len, cur_pos);
+		Xop_apos_tkn apos_tkn = tkn_mkr.Apos(bgn_pos, cur_pos, apos_len, dat.Typ(), dat.Cmd(), dat.LitApos(), ctx.Cur_tkn_tid());
+		ctx.Subs_add(root, apos_tkn);
+		ctx.Apos().RegTkn(apos_tkn, cur_pos);
 		return cur_pos;
-	}	private static final int Apos_len = 2;
-	public void AutoClose(Xop_ctx ctx, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_tkn_itm tkn) {
 	}
 	public void RegTkn(Xop_apos_tkn tkn, int cur_pos) { // REF.MW: Parser|doQuotes
 		stack.Add(tkn);			
@@ -103,7 +98,7 @@ public class Xop_apos_wkr implements Xop_ctx_wkr {
 		dat.State_clear();
 		for (int i = 0; i < tknsLen; i++) {
 			Xop_apos_tkn apos = (Xop_apos_tkn)stack.FetchAt(i);
-			dat.Ident(ctx, src, apos.Apos_tid(), apos.Src_end());	// NOTE: apos.Typ() must map to aposLen
+			dat.Ident(ctx, src, apos.Apos_tid(), apos.Src_end());	// NOTE: apos.Typ() must map to apos_len
 			int newCmd = dat.Cmd();
 			if (newCmd == apos.Apos_cmd()) continue;
 			apos.Apos_cmd_(newCmd);

@@ -42,7 +42,7 @@ public class Xot_invk_sandbox_tst {
 		fxt.tst_Parse_tmpl_str("{{concat|lkp1=a=b}}", "a=b");
 	}
 	@Test  public void Recurse()		{fxt.tst_Parse_tmpl_str_test("<{{concat|{{{1}}}|{{{2}}}}}>"	, "{{test|a|b}}", "<ab>");}
-	@Test  public void Recurse_mix()	{fxt.tst_Parse_tmpl_str_test("{{concat|-{{{1}}}-|{{{2}}}}}"	, "{{test|a|b}}", "-a-b");}
+	@Test  public void Recurse_mix()	{fxt.tst_Parse_tmpl_str_test("{{concat|.{{{1}}}.|{{{2}}}}}"	, "{{test|a|b}}", ".a.b");}
 	@Test  public void Recurse_err()	{fxt.tst_Parse_tmpl_str_test("{{concat|{{{1}}}|{{{2}}}}}"	, "{{test1|a|b}}", "{{:test1}}");} // NOTE: make sure test1 does not match test
 	@Test  public void KeyNewLine()		{fxt.tst_Parse_tmpl_str_test("{{\n  concat|a|b}}"			, "{{\n  test}}", "ab");}
 }

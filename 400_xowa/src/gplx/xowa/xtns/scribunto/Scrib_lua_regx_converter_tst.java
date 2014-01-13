@@ -39,6 +39,7 @@ public class Scrib_lua_regx_converter_tst {
 	@Test   public void Brack_num()			{fxt.Test_parse("[%d]"					, "[\\p{Nd}]");}
 	@Test   public void Brack_text()		{fxt.Test_parse("[abc]"					, "[abc]");}
 	@Test   public void Null()				{fxt.Test_parse("[%z]"					, "[\\00]");}
+	@Test   public void Backslash()			{fxt.Test_parse("\\"					, "\\\\");}		// PURPOSE: make sure \ is preg_quote'd; DATE:2014-01-06
 	@Test   public void Ex_url()			{fxt.Test_parse("^%s*(.-)%s*$"			, "^\\s*(.*?)\\s*$");}
 }
 class Scrib_lua_regx_converter_fxt {

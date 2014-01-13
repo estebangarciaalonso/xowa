@@ -15,9 +15,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa; import gplx.*;
-public class Xoac_wiki_cfg_bldr_mgr implements GfoInvkAble {
-	public Xoac_wiki_cfg_bldr_mgr(Xoa_app app) {this.app = app;} private Xoa_app app;
+package gplx.xowa.bldrs.cfgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
+public class Xob_wiki_cfg_bldr implements GfoInvkAble {
+	public Xob_wiki_cfg_bldr(Xob_bldr bldr) {this.app = bldr.App();} private Xoa_app app;
 	public void Exec() {
 		int len = hash.Count();
 		for (int i = 0; i < len; i++) {

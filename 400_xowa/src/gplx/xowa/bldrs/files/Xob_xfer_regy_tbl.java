@@ -35,14 +35,21 @@ public class Xob_xfer_regy_tbl {
 	}
 	public static Db_stmt Select_by_page_id_stmt(Db_provider p) {return p.Prepare(Db_qry_sql.rdr_(Sql_select));}
 	public static DataRdr Select_by_page_id(Db_stmt stmt, int page_id, int limit) {return stmt.Val_int_(page_id).Val_int_(limit).Exec_select();}
-	private static final String Sql_select = String_.Concat_lines_nl
-	( "SELECT   *"
-	, "FROM     xfer_regy"
-	, "WHERE    xfer_status  =  0"
-	, "AND      lnki_page_id >= ?"
-	, "ORDER BY lnki_page_id, lnki_id"
-	, "LIMIT    ?"
-	);
+	private static final String
+	  Sql_select = String_.Concat_lines_nl
+		( "SELECT   *"
+		, "FROM     xfer_regy"
+		, "WHERE    xfer_status  =  0"
+		, "AND      lnki_page_id >= ?"
+		, "ORDER BY lnki_page_id, lnki_id"
+		, "LIMIT    ?"
+		)
+	, Sql_select_total_pending = String_.Concat_lines_nl
+		( "SELECT   Count(*) AS CountAll"
+		, "FROM     xfer_regy"
+		, "WHERE    xfer_status  =  0"
+		)
+	;
 	public static DataRdr Select_by_lnki_page_id(Db_provider p, int lnki_page_id, int select_interval) {
 		Db_qry qry = Db_qry_.select_().Cols_all_()
 			.From_(Tbl_name)
@@ -51,6 +58,14 @@ public class Xob_xfer_regy_tbl {
 			.Limit_(select_interval)
 			;
 		return p.Exec_qry_as_rdr(qry);
+	}
+	public static int Select_total_pending(Db_provider p) {
+		DataRdr rdr = p.Exec_sql_as_rdr(Sql_select_total_pending);
+		int rv = 0;
+		if (rdr.MoveNextPeer())
+			rv = rdr.ReadInt("CountAll");
+		rdr.Rls();
+		return rv;
 	}
 	public static final String Tbl_name = "xfer_regy"
 	, Fld_lnki_id = "lnki_id", Fld_lnki_page_id = "lnki_page_id", Fld_lnki_ttl = "lnki_ttl", Fld_lnki_ext = "lnki_ext", Fld_lnki_thumbtime = "lnki_thumbtime", Fld_lnki_count = "lnki_count"

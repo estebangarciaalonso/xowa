@@ -72,7 +72,7 @@ public class Xol_lang implements GfoInvkAble {
 	public void Evt_lang_changed() {
 		lnki_arg_parser.Evt_lang_changed(this);
 		func_regy.Evt_lang_changed(this);
-	}	boolean loaded = false;
+	}	private boolean loaded = false;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_ns_names))				return ns_names;
 		else if	(ctx.Match(k, Invk_ns_aliases))				return ns_aliases;

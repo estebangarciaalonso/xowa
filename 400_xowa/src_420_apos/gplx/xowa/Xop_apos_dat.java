@@ -22,27 +22,27 @@ public class Xop_apos_dat {
 	public int Cmd() {return cmd;} private int cmd;
 	public int LitApos() {return litApos;} private int litApos;
 	public int DualCmd() {return dualCmd;} private int dualCmd;
-	public void Ident(Xop_ctx ctx, byte[] src, int aposLen, int cur_pos) {
+	public void Ident(Xop_ctx ctx, byte[] src, int apos_len, int cur_pos) {
 		typ = cmd = litApos = dualCmd = 0;
-		switch (aposLen) {
+		switch (apos_len) {
 			case Xop_apos_tkn_.CmdLen_ital:
 			case Xop_apos_tkn_.CmdLen_bold:
 			case Xop_apos_tkn_.CmdLen_dual:
-				Ident_props(aposLen); break;
+				Ident_props(apos_len); break;
 			case Xop_apos_tkn_.CmdLen_aposBold:
 				litApos = 1;
 				Ident_props(Xop_apos_tkn_.CmdLen_bold); break;
 			default:
-				litApos = aposLen - Xop_apos_tkn_.CmdLen_dual;
+				litApos = apos_len - Xop_apos_tkn_.CmdLen_dual;
 				Ident_props(Xop_apos_tkn_.CmdLen_dual);
 				if (litApos > 1)
-					ctx.Msg_log().Add_itm_none(Xop_apos_log.Multiple_apos, src, cur_pos - aposLen, cur_pos);
+					ctx.Msg_log().Add_itm_none(Xop_apos_log.Multiple_apos, src, cur_pos - apos_len, cur_pos);
 				break;
 		}
 	}
-	private void Ident_props(int aposLen) {
-		typ = aposLen;
-		switch (aposLen) {
+	private void Ident_props(int apos_len) {
+		typ = apos_len;
+		switch (apos_len) {
 			case Xop_apos_tkn_.CmdLen_ital:	{
 				switch (state) {
 					case Xop_apos_tkn_.State_i:		cmd = Xop_apos_tkn_.Cmd_i_end;			state = Xop_apos_tkn_.State_nil;	break;
@@ -79,7 +79,7 @@ public class Xop_apos_dat {
 				}
 				break;
 			}
-			default: throw Err_.unhandled(aposLen);
+			default: throw Err_.unhandled(apos_len);
 		}
 	}
 }

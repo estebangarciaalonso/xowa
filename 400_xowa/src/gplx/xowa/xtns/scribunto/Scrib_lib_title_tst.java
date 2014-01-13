@@ -55,6 +55,15 @@ public class Scrib_lib_title_tst {
 		fxt.Parser_fxt().ini_page_create("File:A.png");
 		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_fileExists, Object_.Ary("File:A.png")									, "true");
 	}
+	@Test   public void FileExists_commons() {	// PURPOSE: check that Scribunto FileExists calls filepath.FileExists; DATE:2014-01-07
+		Xow_wiki commons_wiki = fxt.Parser_fxt().Wiki().App().Wiki_mgr().Get_by_key_or_make(Xow_wiki_.Domain_commons_bry).Init_assert();
+		fxt.Parser_fxt().ini_page_create(commons_wiki, "File:A.png", "text_is_blank");
+		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_fileExists, Object_.Ary("File:A.png")									, "true");
+	}
+	@Test   public void FileExists_media() {	// PURPOSE: [[Media:]] ns should find entries in [[File:]]; DATE:2014-01-07
+		fxt.Parser_fxt().ini_page_create("File:A.png");
+		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_fileExists, Object_.Ary("Media:A.png")									, "true");
+	}
 	@Test   public void GetContent() {
 		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_getContent, Object_.Ary("A")											, "null");
 		fxt.Parser_fxt().ini_page_create("A", "test");

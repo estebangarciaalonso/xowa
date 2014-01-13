@@ -46,7 +46,6 @@ public class Xoa_app implements GfoInvkAble {
 		shell = new Xoa_shell(this);
 		setup_mgr = new Xoi_setup_mgr(this);
 		gfs_mgr = new Xoa_gfs_mgr(this);
-		wiki_cfg_bldr = new Xoac_wiki_cfg_bldr_mgr(this);
 		xtn_mgr = new Xow_xtn_mgr().Ctor_by_app(this);
 		hive_mgr = new Xoa_hive_mgr(this);
 		Io_url.Http_file_str_encoder = url_converter_fsys;
@@ -141,7 +140,6 @@ public class Xoa_app implements GfoInvkAble {
 	public boolean					Xwiki_exists(byte[] wiki_key)	{return user.Wiki().Xwiki_mgr().Get_by_key(wiki_key) != null;}
 	public Xoa_ctg_mgr			Ctg_mgr() {return ctg_mgr;} private Xoa_ctg_mgr ctg_mgr = new Xoa_ctg_mgr();
 	public Apps_app_mgr_eval Url_cmd_eval() {return url_cmd_eval;} Apps_app_mgr_eval url_cmd_eval;
-	public Xoac_wiki_cfg_bldr_mgr Cfg_wiki_bldr() {return wiki_cfg_bldr;} private Xoac_wiki_cfg_bldr_mgr wiki_cfg_bldr;
 	public Xoa_cur Cur_redirect() {return cur_redirect;} private Xoa_cur cur_redirect;
 	public Xoa_cfg_mgr			Cfg_mgr() {return cfg_mgr;} private Xoa_cfg_mgr cfg_mgr;
 	public Io_stream_zip_mgr	Zip_mgr() {return zip_mgr;} Io_stream_zip_mgr zip_mgr = new Io_stream_zip_mgr();
@@ -180,7 +178,6 @@ public class Xoa_app implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_log))					return log_wtr;
 		else if	(ctx.Match(k, Invk_setup))					return setup_mgr;
 		else if	(ctx.Match(k, Invk_scripts))				return gfs_mgr;
-		else if	(ctx.Match(k, Invk_wiki_cfg_bldr))			return wiki_cfg_bldr;
 		else if	(ctx.MatchPriv(k, Invk_term_cbk))			return this.Term_cbk();
 		else if	(ctx.Match(k, Invk_xtns))					return xtn_mgr;
 		else if	(ctx.Match(k, Invk_ctg_mgr))				return ctg_mgr;
@@ -194,7 +191,7 @@ public class Xoa_app implements GfoInvkAble {
 	}
 	public static final String Invk_gui = "gui", Invk_bldr = "bldr", Invk_wikis = "wikis", Invk_files = "files", Invk_langs = "langs", Invk_users = "users"
 	, Invk_sys_cfg = "sys_cfg", Invk_url_aliases = "url_aliases", Invk_fsys = "fsys", Invk_cur = "cur", Invk_shell = "shell", Invk_log = "log"
-	, Invk_setup = "setup", Invk_scripts = "scripts", Invk_wiki_cfg_bldr = "wiki_cfg_bldr", Invk_user = "user", Invk_xtns = "xtns", Invk_ctg_mgr = "ctg_mgr"
+	, Invk_setup = "setup", Invk_scripts = "scripts", Invk_user = "user", Invk_xtns = "xtns", Invk_ctg_mgr = "ctg_mgr"
 	, Invk_cfgs = "cfgs", Invk_app = "app", Invk_usr_dlg = "usr_dlg", Invk_specials = "specials", Invk_html = "html"
 	, Invk_server = "server"
 	, Invk_fmtrs = "fmtrs"

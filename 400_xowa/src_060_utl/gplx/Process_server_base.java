@@ -53,7 +53,7 @@ public class Process_server_base implements Process_server {
 	        stream_write.flush();
         }
         catch (Exception e) {throw Err_.err_(e, "failed to write to output");}
-    }	byte[] cmd_last;
+    }	private byte[] cmd_last;
     public byte[] Server_recv() {
     	long time_bgn = System.currentTimeMillis();
     	long time_woke = time_bgn;

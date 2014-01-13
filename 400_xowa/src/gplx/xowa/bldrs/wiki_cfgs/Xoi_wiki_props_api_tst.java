@@ -16,7 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.wiki_cfgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import org.junit.*; import gplx.xmls.*;
+import org.junit.*;
+import gplx.xmls.*;
+import gplx.xowa.bldrs.cfgs.*;
 public class Xoi_wiki_props_api_tst {
 	private Xoi_wiki_props_fxt fxt = new Xoi_wiki_props_fxt();
 	@Before public void init() {} // private Xob_subpage_tst_fxt fxt = new] Xob_subpage_tst_fxt();
@@ -96,12 +98,12 @@ class Xob_subpage_tst_fxt {
 	public Xob_subpage_tst_fxt Clear() {
 		if (app == null) {
 			app = Xoa_app_fxt.app_();
-			mgr = new Xoac_wiki_cfg_bldr_mgr(app);
+			mgr = app.Bldr().Wiki_cfg_bldr();
 		}
 		mgr.Clear();
 		hash.Clear();
 		return this;
-	}	private Xoa_app app; Xoac_wiki_cfg_bldr_mgr mgr; OrderedHash hash = OrderedHash_.new_();
+	}	private Xoa_app app; Xob_wiki_cfg_bldr mgr; OrderedHash hash = OrderedHash_.new_();
 	private Xob_subpage_parser parser = new Xob_subpage_parser();
 	public Xob_subpage_tst_fxt Init_cmd(String wiki, String key, String text) {
 //		mgr.Itms_get_or_new(wiki).Itms_add(key, text);

@@ -23,6 +23,9 @@ public class Xol_cnv_grp implements GfoInvkAble {
 	public byte[] Key() {return key;} private byte[] key;
 	public int Len() {return hash.Count();}
 	public Xol_cnv_itm Get_at(int i) {return (Xol_cnv_itm)hash.FetchAt(i);}
+	public void Add(byte[] src, byte[] trg) {
+		hash.AddReplace(src, new Xol_cnv_itm(src, trg));
+	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_add_bulk))			Add_bulk(hash, m.ReadBry("v"));
 		else	return GfoInvkAble_.Rv_unhandled;

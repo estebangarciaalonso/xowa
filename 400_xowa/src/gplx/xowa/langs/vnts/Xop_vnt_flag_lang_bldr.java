@@ -17,19 +17,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.langs.vnts; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
 class Xop_vnt_flag_lang_bldr {
-	public ByteTrieMgr_slim Trie() {return trie;} private ByteTrieMgr_slim trie = ByteTrieMgr_slim.ci_();
 	private Xop_vnt_flag_lang_itm[] ary; private int ary_len;
 	private int ary_count;
-	public void Init(byte[]... langs) {
-		int len = langs.length;
+	public Xop_vnt_flag_lang_bldr(Xol_vnt_mgr vnt_mgr) {
+		Xol_vnt_converter[] converter_ary = vnt_mgr.Converter_ary();
+		int len = converter_ary.length;
 		for (int i = 0; i < len; i++) {
-			byte[] lang = langs[i];
+			byte[] lang = converter_ary[i].Owner().Key();
 			Xop_vnt_flag_lang_itm itm = new Xop_vnt_flag_lang_itm(i, lang);
-			trie.Add(itm.Key(), itm);
+			trie.Add(lang, itm);
 		}
 		ary = new Xop_vnt_flag_lang_itm[len];
 		ary_len = len;
 	}
+	public ByteTrieMgr_slim Trie() {return trie;} private ByteTrieMgr_slim trie = ByteTrieMgr_slim.ci_();
 	public void Add(Xop_vnt_flag_lang_itm itm) {
 		int idx = itm.Idx();
 		if (ary[idx] == null) {
@@ -43,6 +44,7 @@ class Xop_vnt_flag_lang_bldr {
 		ary_count = 0;
 	}
 	public Xop_vnt_flag Bld() {
+		if (ary_count == 0) return Xop_vnt_flag_.Flag_unknown;
 		byte[][] langs = new byte[ary_count][];
 		int ary_idx = 0;
 		for (int i = 0; i < ary_len; i++) {

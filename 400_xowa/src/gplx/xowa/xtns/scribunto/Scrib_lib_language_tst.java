@@ -78,6 +78,7 @@ public class Scrib_lib_language_tst {
 	}
 	@Test  public void ParseFormattedNumber() {
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_parseFormattedNumber, Object_.Ary("en", "1,234.56"), "1234.56");
+		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_parseFormattedNumber, Object_.Ary("en"), "null");		// PURPOSE: missing arg should not fail; EX: ru.w:Туйон DATE:2014-01-06
 	}
 	@Test  public void ConvertGrammar() {
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_convertGrammar, Object_.Ary("fi", "talo", "elative"), "talosta");

@@ -80,6 +80,9 @@ public class Xop_tkn_mkr {
 	public gplx.xowa.xtns.translates.Xop_translate_xnde Translate()							{return new gplx.xowa.xtns.translates.Xop_translate_xnde();}
 	public gplx.xowa.xtns.translates.Xop_languages_xnde Languages()							{return new gplx.xowa.xtns.translates.Xop_languages_xnde();}
 	public gplx.xowa.xtns.translates.Xop_tvar_tkn Tvar(int tkn_bgn, int tkn_end, int key_bgn, int key_end, int txt_bgn, int txt_end) {return new gplx.xowa.xtns.translates.Xop_tvar_tkn(tkn_bgn, tkn_end, key_bgn, key_end, txt_bgn, txt_end);}
+	public gplx.xowa.langs.vnts.Xop_vnt_tkn Vnt(int bgn_lhs, int bgn_rhs)					{return new gplx.xowa.langs.vnts.Xop_vnt_tkn(bgn_lhs, bgn_rhs);}
+	public gplx.xowa.langs.vnts.Xop_vnt_eqgt_tkn Vnt_eqgt(int bgn, int end)					{return new gplx.xowa.langs.vnts.Xop_vnt_eqgt_tkn(bgn, end);}
+
 //		public void Clear() {
 //			space_tkns_len = txt_tkns_len = 0;
 //		}

@@ -17,39 +17,54 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.langs.vnts; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
 import org.junit.*;
-public class Xop_vnt_parser_tst {
+public class Xop_vnt_parser_tst {	// uses zh-hant as cur_vnt
 	private Xop_vnt_parser_fxt fxt = new Xop_vnt_parser_fxt();
 	@Before public void init() {fxt.Clear();}
-	@Test  public void Unknown()					{fxt.Exec_parse("-{ X |a}-")					.Test_cmd_unknown();}
-//		@Test  public void Raw_basic()					{fxt.Exec_parse("-{R|a}-")						.Test_cmd_raw();}
-//		@Test  public void Raw_ws()						{fxt.Exec_parse("-{ R |a}-")					.Test_cmd_raw();}
-//		@Test  public void Raw_unknown()				{fxt.Exec_parse("-{ R x |a}-")					.Test_cmd_unknown();}
-//		@Test  public void Vnts_basic()					{fxt.Exec_parse("-{zh-hans;zh-hant|a}-")		.Test_cmd_vnts("zh-hans", "zh-hant");}
-//		@Test  public void Vnts_semic()					{fxt.Exec_parse("-{zh-hans;zh-hant;|a}-")		.Test_cmd_vnts("zh-hans", "zh-hant");}
-//		@Test  public void Vnts_ws()					{fxt.Exec_parse("-{ zh-hans ; zh-hant ; |a}-")	.Test_cmd_vnts("zh-hans", "zh-hant");}
-//		@Test  public void Vnts_unknown_1st()			{fxt.Exec_parse("-{ zh-hans x ; zh-hant ; |a}-").Test_cmd_vnts("zh-hans");}
-//		@Test  public void Vnts_unknown_nth()			{fxt.Exec_parse("-{ zh-hans ; zh-hant x; |a}-")	.Test_cmd_vnts("zh-hans");}
-//		@Test  public void Vnts_unknown_all()			{fxt.Exec_parse("-{ zh-hans x ; zh-hant x;|a}-").Test_cmd_unknown();}
+	@Test  public void Literal()			{fxt.Test_parse("-{A}-", "A");}
+	@Test  public void Bidi()				{fxt.Test_parse("-{zh-hans:A;zh-hant:B}-", "B");}
+	@Test  public void Empty()				{fxt.Test_parse("a-{}-b", "ab");}
+	@Test  public void Unknown_empty()		{fxt.Test_parse("a-{|}-c", "ac");}
+	@Test  public void Unknown_text()		{fxt.Test_parse("a-{|b}-c", "abc");}
+	@Test  public void Unknown_flag()		{fxt.Test_parse("a-{x|b}-c", "abc");}
+	@Test  public void Lang_y()				{fxt.Test_parse("-{zh-hant|A}-", "A");}
+	@Test  public void Lang_n()				{fxt.Test_parse("-{zh-hans|A}-", "");}
+	@Test  public void Raw()				{fxt.Test_parse("-{R|zh-hans:A;}-", "zh-hans:A;");}
+//		@Test  public void Descrip()			{fxt.Test_parse("-{D|zh-hans:A;}-", "zh-hans:A");}
+	@Test  public void Tmpl() {
+		fxt.Parser_fxt().ini_page_create("Template:A", "B");
+		fxt.Test_parse("-{{{A}}}-", "B");
+	}
+	@Test  public void Tmpl_arg() {
+		fxt.Parser_fxt().ini_page_create("Template:A", "-{{{{1}}}}-");
+		fxt.Test_parse("{{A|B}}", "B");
+	}
+	@Test  public void Parser_function() {
+		fxt.Test_parse("-{{{#expr:1}}}-", "1");
+	}
+	@Test  public void Ignore() {
+		fxt.Test_parse("-{{#expr:1}}-", "-1-");
+	}
 }
-class Xop_vnt_parser_fxt {
-	private Xop_vnt_parser parser = new Xop_vnt_parser();
-	public void Clear() {
-		Xop_vnt_flag_lang_bldr flag_lang_bldr = new Xop_vnt_flag_lang_bldr();
-		flag_lang_bldr.Init(ByteAry_.Ary("zh-hans", "zh-hant"));
-		parser.Init(flag_lang_bldr);
-	}
-	public Xop_vnt_parser_fxt Exec_parse(String src_str) {
-		byte[] src_bry = ByteAry_.new_utf8_(src_str);
-		parser.Parse(src_bry, src_bry.length, 0);
+class Xop_vnt_parser_fxt {		
+	public Xop_fxt Parser_fxt() {return fxt;} private Xop_fxt fxt;
+	public Xop_vnt_parser_fxt Clear() {
+		Xoa_app app = Xoa_app_fxt.app_();
+		Xow_wiki wiki = Xoa_app_fxt.wiki_(app, "zh.wikipedia.org");
+		fxt = new Xop_fxt(app, wiki);
+		Init_vnt_mgr(wiki.Lang().Vnt_mgr(), "zh-hans", "zh-hant");
+		Xop_vnt_lxr_.set_(wiki);
+		wiki.Lang().Vnt_mgr().Cur_vnt_(ByteAry_.new_ascii_("zh-hant"));
 		return this;
 	}
-	public Xop_vnt_parser_fxt Test_cmd_raw() {
-		return this;
+	private static void Init_vnt_mgr(Xol_vnt_mgr vnt_mgr, String... vnts_str) {
+		byte[][] vnts_bry = ByteAry_.Ary(vnts_str);
+		int vnts_bry_len = vnts_bry.length;
+		for (int i = 0; i < vnts_bry_len; i++)
+			vnt_mgr.Get_or_new(vnts_bry[i]);
+		vnt_mgr.Convert_ttl_init();
 	}
-	public Xop_vnt_parser_fxt Test_cmd_unknown() {
-		return this;
-	}
-	public Xop_vnt_parser_fxt Test_cmd_vnts(String... vnts) {
+	public Xop_vnt_parser_fxt Test_parse(String raw, String expd) {
+		fxt.tst_Parse_page_all_str(raw, expd);
 		return this;
 	}
 }

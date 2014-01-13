@@ -30,6 +30,7 @@ public class Xol_vnt_itm implements GfoInvkAble {
 	public byte[] Key() {return key;} private byte[] key;
 	public byte[][] Fallback_ary() {return fallback_ary;} private byte[][] fallback_ary = ByteAry_.Ary_empty;
 	public byte[][] Convert_ary() {return convert_ary;} private byte[][] convert_ary = ByteAry_.Ary_empty;
+	public void Convert_ary_(byte[][] v) {convert_ary = v;}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_fallbacks_))			fallback_ary = ByteAry_.Split(m.ReadBry("v"), Byte_ascii.Pipe);
 		else if	(ctx.Match(k, Invk_converts_))			{convert_ary  = ByteAry_.Split(m.ReadBry("v"), Byte_ascii.Pipe); converter.Rebuild();}	// setting converts will always force rebuild

@@ -31,7 +31,7 @@ public class Xop_xowa_cmd implements Xop_xnde_xtn {
 			xtn_src = ByteAry_.new_utf8_(Object_.XtoStr_OrNullStr(rslt));
 		}
 		Xop_ctx inner_ctx = Xop_ctx.new_sub_(wiki);
-		Xop_parser parser = Xop_parser.new_(wiki);
+		Xop_parser parser = Xop_parser.new_sub_(wiki);
 		xtn_root = parser.Parse_recurse(inner_ctx, xtn_src, true);
 	}
 }

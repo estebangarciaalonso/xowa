@@ -18,9 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.langs.vnts; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
 public class Xol_vnt_mgr implements GfoInvkAble {
 	private OrderedHash vnts = OrderedHash_.new_bry_();
+	private int converter_ary_len; private OrderedHash tmp_page_list = OrderedHash_.new_bry_();
 	public Xol_vnt_mgr(Xol_lang lang) {this.lang = lang;}
+	public Xol_vnt_converter[] Converter_ary() {return converter_ary;} private Xol_vnt_converter[] converter_ary; 
 	public Xol_lang Lang() {return lang;} private Xol_lang lang;
-	public boolean Enabled() {return enabled;} private boolean enabled = false;
+	public byte[] Cur_vnt() {return cur_vnt;} public Xol_vnt_mgr Cur_vnt_(byte[] v) {cur_vnt = v; return this;} private byte[] cur_vnt = ByteAry_.Empty;
+	public boolean Enabled() {return enabled;} public void Enabled_(boolean v) {this.enabled = v;} private boolean enabled = false;
+	public String Html_style() {return html_style;} private String html_style = "";
+	public void Init_by_wiki(Xow_wiki wiki) {
+		if (!enabled) return;
+		Xop_vnt_lxr_.set_(wiki);
+	}
 	public Xol_vnt_itm Get_or_new(byte[] key) {
 		Xol_vnt_itm rv = (Xol_vnt_itm)vnts.Fetch(key);
 		if (rv == null) {			
@@ -32,14 +40,21 @@ public class Xol_vnt_mgr implements GfoInvkAble {
 	}
 	public void Convert_ttl_init() {
 		int vnts_len = vnts.Count();
-		tmp_converter_ary_len = vnts_len;
-		tmp_converter_ary = new Xol_vnt_converter[vnts_len];
+		converter_ary_len = vnts_len;
+		converter_ary = new Xol_vnt_converter[vnts_len];
 		for (int i = 0; i < vnts_len; i++) {
 			Xol_vnt_itm itm = (Xol_vnt_itm)vnts.FetchAt(i);
-			tmp_converter_ary[i] = itm.Converter();
+			converter_ary[i] = itm.Converter();
+			if (i == 0) cur_vnt = itm.Key();	// default to 1st item
 		}
 	}
-	private Xol_vnt_converter[] tmp_converter_ary; int tmp_converter_ary_len; private OrderedHash tmp_page_list = OrderedHash_.new_bry_();
+	public Xodb_page Convert_ttl(Xow_wiki wiki, Xoa_ttl ttl) {return Convert_ttl(wiki, ttl.Ns(), ttl.Full_db());}
+	public Xodb_page Convert_ttl(Xow_wiki wiki, Xow_ns ns, byte[] ttl_bry) {
+		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
+		Xodb_page rv = Convert_ttl(wiki, tmp_bfr, ns, ttl_bry);
+		tmp_bfr.Mkr_rls();
+		return rv;
+	}
 	public Xodb_page Convert_ttl(Xow_wiki wiki, ByteAryBfr tmp_bfr, Xow_ns ns, byte[] ttl_bry) {	// REF.MW:LanguageConverter.php|findVariantLink
 		int converted = Convert_ttl_convert(tmp_bfr, ns, ttl_bry);			// convert ttl for each vnt
 		if (converted == 0) return Xodb_page.Null;							// ttl_bry has no conversions; exit;
@@ -53,8 +68,8 @@ public class Xol_vnt_mgr implements GfoInvkAble {
 	private int Convert_ttl_convert(ByteAryBfr tmp_bfr, Xow_ns ns, byte[] ttl_bry) {
 		tmp_page_list.Clear();
 		int rv = 0;
-		for (int i = 0; i < tmp_converter_ary_len; i++) {				// convert ttl for each variant
-			Xol_vnt_converter converter = tmp_converter_ary[i];
+		for (int i = 0; i < converter_ary_len; i++) {				// convert ttl for each variant
+			Xol_vnt_converter converter = converter_ary[i];
 			tmp_bfr.Clear();
 			if (!converter.Convert_text(tmp_bfr, ttl_bry)) continue;	// ttl is not converted for variant; ignore
 			Xodb_page page = new Xodb_page();
@@ -69,7 +84,9 @@ public class Xol_vnt_mgr implements GfoInvkAble {
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_get))					return Get_or_new(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_init_end))				Convert_ttl_init();
+		else if	(ctx.Match(k, Invk_cur_vnt_))				cur_vnt = m.ReadBry("v");
+		else if	(ctx.Match(k, Invk_html_style_))			html_style = m.ReadStr("v");
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
-	}	private static final String Invk_get = "get", Invk_init_end = "init_end";
+	}	private static final String Invk_get = "get", Invk_init_end = "init_end", Invk_cur_vnt_ = "cur_vnt_", Invk_html_style_ = "html_style_";
 }

@@ -74,6 +74,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		ListAdp list = ListAdp_.new_();
 		boolean loop = true;
 		time_bgn = Env_.TickCount();
+		usr_dlg.Note_many("", "", "total pending: ~{0}", Xob_xfer_regy_tbl.Select_total_pending(provider));
 		this.Txn_open();
 		while (loop) {
 			byte rslt = Select_ttls(list);

@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.xowa.wikis.*; import gplx.xowa.users.history.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.dynamicPageList.*; import gplx.xowa.xtns.math.*;
 import gplx.xowa.parsers.lnkis.*;
+import gplx.xowa.langs.vnts.*;
 public class Xoh_html_wtr {
 	Xow_wiki wiki; Xoa_app app; Xop_ctx ctx; Xoa_page page; Xop_root_tkn root; 
 	private gplx.xowa.xtns.refs.Xoh_ref_wtr ref_wtr = new gplx.xowa.xtns.refs.Xoh_ref_wtr();  Url_encoder href_encoder; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
@@ -46,6 +47,13 @@ public class Xoh_html_wtr {
 			hctx.Clear();
 		}
 	}	boolean tbl_para = false;
+	public void Write_tkn_ary(Xoh_opts opts, ByteAryBfr bfr, byte[] src, int depth, Xop_tkn_itm[] ary) {
+		int ary_len = ary.length;
+		for (int i = 0; i < ary_len; i++) {
+			Xop_tkn_itm itm = ary[i];
+			Write_tkn(opts, bfr, src, depth, itm, i, itm);
+		}
+	}
 	public void Write_tkn(Xoh_opts opts, ByteAryBfr bfr, byte[] src, int depth, Xop_tkn_grp grp, int sub_idx, Xop_tkn_itm tkn) {
 		if (tkn.Ignore()) return;
 		switch (tkn.Tkn_tid()) {
@@ -76,6 +84,7 @@ public class Xoh_html_wtr {
 			case Xop_tkn_itm_.Tid_pre:		Pre(opts, bfr, src, (Xop_pre_tkn)tkn); break;
 			case Xop_tkn_itm_.Tid_newLine:	NewLine(opts, bfr, src, (Xop_nl_tkn)tkn); break;
 			case Xop_tkn_itm_.Tid_bry:		Bry(opts, bfr, src, (Xop_bry_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_vnt:		Vnt(opts, bfr, src, depth, (Xop_vnt_tkn)tkn); break;
 //				case Xop_tkn_itm_.Tid_tab:		bfr.Add_byte_repeat(Byte_ascii.Tab, tkn.Src_end() - tkn.Src_bgn()); break;
 			default:
 				Bfr_escape(bfr, src, tkn.Src_bgn(), tkn.Src_end(), app, true, false);	// NOTE: always escape text including (a) lnki_alt text; and (b) any other text, especially failed xndes; DATE:2013-06-18
@@ -122,6 +131,9 @@ public class Xoh_html_wtr {
 	}
 	private void Apos(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_apos_tkn apos) {
 		if (opts.Lnki_alt()) return;	// ignore apos if alt; EX: [[File:A.png|''A'']] should have alt of A; DATE:2013-10-25
+		int literal_apos = apos.Apos_lit();
+		if (literal_apos > 0)
+			bfr.Add_byte_repeat(Byte_ascii.Apos, literal_apos);
 		switch (apos.Apos_cmd()) {
 			case Xop_apos_tkn_.Cmd_b_bgn:			bfr.Add(Xoh_consts.B_bgn); break;
 			case Xop_apos_tkn_.Cmd_b_end:			bfr.Add(Xoh_consts.B_end); break;
@@ -402,6 +414,9 @@ public class Xoh_html_wtr {
 	}
 	@gplx.Virtual public void Bry(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_bry_tkn bry) {
 		bfr.Add(bry.Bry());
+	}
+	@gplx.Virtual public void Vnt(Xoh_opts opts, ByteAryBfr bfr, byte[] src, int depth, Xop_vnt_tkn vnt) {
+		Xop_vnt_html_wtr.Write(this, wiki.Ctx(), opts, bfr, src, depth, vnt);	// NOTE: using wiki, b/c getting nullPointer with ctx during mass parse
 	}
 	@gplx.Virtual public void Under(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_under_tkn under) {
 		if (opts.Lnki_alt()) return;

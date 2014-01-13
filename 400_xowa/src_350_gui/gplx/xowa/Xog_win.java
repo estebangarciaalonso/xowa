@@ -345,7 +345,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		Xow_wiki wiki = page.Wiki();
 		Xoa_page new_page = new Xoa_page(wiki, page.Page_ttl()).Page_id_(page.Page_id());	// NOTE: page_id needed for sqlite (was not needed for xdat)
 		new_page.Data_raw_(new_raw);
-		wiki.Ctx().Tab().Lnki_file_mgr().Clear();
+		wiki.Ctx().Tab().Init(new_page.Page_ttl());
 		wiki.ParsePage_root(new_page, true);		// refresh html
 		ByteAryBfr tmp_bfr = app.Utl_bry_bfr_mkr().Get_m001();
 		Xou_output_wkr wkr = wiki.Html_mgr().Output_mgr().Wkr(Xoh_wiki_article.Tid_view_read);
@@ -408,24 +408,28 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			wiki.Init_assert();	// NOTE: must assert that wiki is inited before parsing; occurs b/c lang (with lang-specific ns) are only loaded on init, and parse Xoa_ttl.parse_ will fail below; EX:pt.wikipedia.org/wiki/Wikipedia:Página principal
 			wiki.View_data().Clear();
 			Xoa_ttl ttl = Xoa_ttl.parse_(wiki, url.Page_bry());
+			if (ttl == null) {gui_wtr.Prog_one(GRP_KEY, "view.load.ttl_is_invalid", "title is invalid: ~{0}", String_.new_utf8_(url.Raw())); return;}
 			gui_wtr.Prog_one(GRP_KEY, "view.load", "loading: ~{0}", String_.new_utf8_(ttl.Raw()));
 			try {
-				wiki.Ctx().Tab().Lnki_file_mgr().Clear();
+				wiki.Ctx().Tab().Init(ttl);
 				new_page = wiki.GetPageByTtl(url, ttl);
 				wiki.Ctx().Page_(new_page);
 			}
 			catch (Exception e) {
-				Xoa_page fail_page = wiki.Data_mgr().Get_page(ttl, false);
-				this.html_box.Html_doc_html_(String_.new_utf8_(fail_page.Data_raw()));
-				gui_wtr.Prog_many(GRP_KEY, "view.load.fail", "fatal error: ~{0} ~{1}", String_.new_utf8_(url.Raw()), Err_.Message_gplx_brief(e));
+				String err_msg = String_.Format("page load fail: page={0} err={1}", String_.new_utf8_(url.Raw()), Err_.Message_gplx_brief(e));
+				gui_wtr.Warn_many(GRP_KEY, "view.load.fail", err_msg);
 				app.Log_wtr().Queue_enabled_(false);
+				Xoa_page fail_page = wiki.Data_mgr().Get_page(ttl, false);
+				cur_view_tid = Xoh_wiki_article.Tid_view_edit;
+				Exec_show_wiki_page(fail_page, false);
+				win.Text_(err_msg);
 				return;
 			}
 			if (new_page.Missing()) {
 				if (ByteAry_.Eq(url.Page_bry(), Xoa_page.Bry_main_page)) {	// HACK: handle missing Main Page; EX: nl.wikivoyage.org
 					url.Page_bry_(wiki.Props().Main_page());
 					ttl = Xoa_ttl.parse_(wiki, url.Page_bry());
-					wiki.Ctx().Tab().Lnki_file_mgr().Clear();
+					wiki.Ctx().Tab().Init(ttl);
 					new_page = wiki.GetPageByTtl(url, ttl);
 					wiki.Ctx().Page_(new_page);
 				}
@@ -504,7 +508,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	}
 	public void Exec_page_stack(Xoa_page new_page) {
 		if (new_page.Missing()) return;
-		page.Wiki().Ctx().Tab().Lnki_file_mgr().Clear();
+		page.Wiki().Ctx().Tab().Init(page.Page_ttl());
 		boolean new_page_is_same = ByteAry_.Eq(page.Page_ttl().Full_txt(), new_page.Page_ttl().Full_txt());
 		Exec_show_wiki_page(new_page, true, new_page_is_same);
 		Exec_reload_imgs();

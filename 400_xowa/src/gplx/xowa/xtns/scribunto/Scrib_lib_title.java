@@ -135,7 +135,8 @@ class Scrib_lib_title implements Scrib_lib {
 		if (	ttl == null
 			|| !ttl.Ns().Id_file_or_media()
 			) return Scrib_kv_utl.base1_obj_(false);
-		Xoa_page file_page = wiki.Data_mgr().Get_page(ttl, false);
+		if (ttl.Ns().Id_media()) ttl = Xoa_ttl.parse_(wiki, Xow_ns_.Id_file, ttl.Page_db());	// if [[Media:]] change to [[File:]]; theoretically, this should be changed in Get_page, but not sure if I want to put this logic that low; DATE:2014-01-07
+		Xoa_page file_page = Pf_url_filepath.Load_page(wiki, ttl);
 		return Scrib_kv_utl.base1_obj_(!file_page.Missing());
 	}
 	public KeyVal[] GetContent(KeyVal[] values) {

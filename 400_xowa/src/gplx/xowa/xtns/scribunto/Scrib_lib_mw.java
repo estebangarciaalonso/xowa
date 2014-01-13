@@ -20,17 +20,17 @@ import gplx.xowa.langs.*;
 class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 	public Scrib_lib_mw(Scrib_engine engine) {this.engine = engine; this.interpreter = engine.Interpreter(); this.fsys_mgr = engine.Fsys_mgr();} Scrib_engine engine; Scrib_interpreter interpreter; Scrib_fsys_mgr fsys_mgr;
 	public Scrib_mod Mod() {return mod;} public void Mod_(Scrib_mod v) {this.mod = v;} private Scrib_mod mod;
-	public boolean Allow_env_funcs() {return allow_env_funcs;} private boolean allow_env_funcs = false;
+	public boolean Allow_env_funcs() {return allow_env_funcs;} private boolean allow_env_funcs = true;
 	public Scrib_mod Register(Scrib_engine engine, Io_url script_dir) {			
 		mod = engine.RegisterInterface(script_dir.GenSubFil("mw.lua")
 			, this, String_.Ary(Invk_loadPackage, Invk_frameExists, Invk_parentFrameExists, Invk_getExpandedArgument, Invk_getAllExpandedArguments, Invk_expandTemplate, Invk_preprocess, Invk_callParserFunction, Invk_incrementExpensiveFunctionCount, Invk_isSubsting)
 			, KeyVal_.new_("allowEnvFuncs", allow_env_funcs));
 		return mod;
 	}
-	public void Invoke_bgn(Xow_wiki wiki, byte[] new_src) {
+	public void Invoke_bgn(Xow_wiki wiki, Xop_ctx ctx, byte[] new_src) {
 		if (src != null)	// src exists; indicates that Invoke being called recursively; push existing src onto stack
 			src_stack.Add(src);
-		this.cur_wiki = wiki; this.ctx = wiki.Ctx(); this.src = new_src;
+		this.cur_wiki = wiki; this.ctx = ctx; this.src = new_src;
 	}	private Xow_wiki cur_wiki; private byte[] src; private Xop_ctx ctx; private ListAdp src_stack = ListAdp_.new_();
 	public void Invoke_end() {
 		if (src_stack.Count() > 0)	// src_stack item exists; pop
@@ -280,7 +280,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 			if (tmpl != null) sub_src = tmpl.Data_raw();
 		}
 		if (sub_src == null)						// ttl is not in template cache, or is a ttl in non-Template ns; load title
-			sub_src = engine.Wiki().Cache_mgr().Page_cache().Get_or_load(ttl);
+			sub_src = engine.Wiki().Cache_mgr().Page_cache().Get_or_load_as_src(ttl);
 		if (sub_src !=  null) {
 			Xot_invk_mock sub_frame = Xot_invk_mock.new_(engine.Cur_frame_invoke().Defn_tid(), 0, args_ary);
 			Xot_defn_tmpl transclude_tmpl = ctx.Wiki().Parser().Parse_tmpl(ctx, ctx.Tkn_mkr(), ttl.Ns(), ttl.Page_db(), sub_src);

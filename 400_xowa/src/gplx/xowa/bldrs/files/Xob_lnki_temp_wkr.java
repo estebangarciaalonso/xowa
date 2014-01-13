@@ -68,6 +68,7 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		if (page_tid != Xow_page_tid.Tid_wikitext) return; // ignore js, css, lua, json
 		ctx.Page().Page_ttl_(ttl).Page_id_(page.Id());
 		ctx.Tab().Lnki_redlinks_mgr().Page_bgn(ctx);
+		ctx.Tab().Init(ttl);
 		if (ns.Id_tmpl())
 			parser.Parse_tmpl(ctx, ctx.Tkn_mkr(), wiki.Ns_mgr().Ns_template(), ttl_bry, page_src);
 		else {
@@ -75,7 +76,6 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 			parser.Parse_page_all_clear(root, ctx, ctx.Tkn_mkr(), page_src);
 			root.Clear();
 		}
-		ctx.Tab().Lnki_file_mgr().Clear();
 	}
 	@Override public void Exec_commit_hook() {
 		provider.Txn_mgr().Txn_end_all_bgn_if_none();	// save lnki_temp

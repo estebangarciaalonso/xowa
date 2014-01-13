@@ -394,7 +394,7 @@ public class Xoh_lnki_wtr_tst {
 		fxt.Hctx().Lnki_title_(false);
 	}
 	private void Tst_img_title(String raw, String expd_ttl) {
-		String actl = fxt.Parse_page_wiki_str(raw);
+		String actl = fxt.Exec_parse_page_wiki_as_str(raw);
 		String actl_ttl = null;
 		int title_bgn = String_.FindFwd(actl, " title=\"");
 		if (title_bgn != String_.NotFound) {

@@ -170,6 +170,8 @@ class Scrib_lib_language implements Scrib_lib {
 	}
 	public KeyVal[] ParseFormattedNumber(KeyVal[] values) {
 		Xol_lang lang = lang_(values);
+		int values_len = values.length;
+		if (values_len == 1 || values[1] == null) return Scrib_kv_utl.base1_obj_(null);	// ParseFormattedNumber can sometimes take 1 arg ({'en'}), or null arg ({'en', null}); return null (not ""); DATE:2014-01-07
 		byte[] num = Scrib_kv_utl.Val_to_bry(values, 1);
 		byte[] rv = lang.Num_fmt_mgr().Raw(gplx.intl.Gfo_num_fmt_mgr.Tid_raw, num);
 		return Scrib_kv_utl.base1_obj_(rv);
@@ -200,7 +202,7 @@ class Scrib_lib_language implements Scrib_lib {
 		Xol_lang lang = lang_(values);
 		return Scrib_kv_utl.base1_obj_(!lang.Dir_ltr());
 	}
-	Xol_lang lang_(KeyVal[] values) {
+	private Xol_lang lang_(KeyVal[] values) {
 		byte[] lang_code = Scrib_kv_utl.Val_to_bry(values, 0);
 		Xol_lang lang = engine.App().Lang_mgr().Get_by_key_or_load(lang_code);
 		if (lang == null) throw Err_.new_fmt_("lang_code is not valid: {0}", String_.new_utf8_(lang_code));

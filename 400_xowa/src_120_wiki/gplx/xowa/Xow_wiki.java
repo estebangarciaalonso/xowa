@@ -30,7 +30,8 @@ public class Xow_wiki implements GfoInvkAble {
 		redirect_mgr = new Xop_redirect_mgr(this);
 		data_mgr = new Xow_data_mgr(this);
 		file_mgr = new Xow_file_mgr(this);
-		parser = Xop_parser.new_(this);
+		parser = Xop_parser.new_wiki_(this);
+		cfg_parser = new Xowc_parser(this);
 		ctx = Xop_ctx.new_(this);
 		props.SiteName_(domain_tid).ServerName_(domain_bry);
 		props.ContentLanguage_(lang.Key_bry());
@@ -111,7 +112,8 @@ public class Xow_wiki implements GfoInvkAble {
 	public Xoh_file_page Cfg_file_page() {return cfg_file_page;} private Xoh_file_page cfg_file_page = new Xoh_file_page();
 	public Xow_cfg_lnke Cfg_lnke() {return cfg_lnke;} private Xow_cfg_lnke cfg_lnke = new Xow_cfg_lnke();
 	public Xow_sys_cfg Sys_cfg() {return sys_cfg;} private Xow_sys_cfg sys_cfg;
-	public Xowc_parser Cfg_parser() {return cfg_parser;} private Xowc_parser cfg_parser = new Xowc_parser();
+	public Xowc_parser Cfg_parser() {return cfg_parser;} private Xowc_parser cfg_parser;
+	public boolean Cfg_parser_lnki_xwiki_repos_enabled() {return cfg_parser_lnki_xwiki_repos_enabled;} public Xow_wiki Cfg_parser_lnki_xwiki_repos_enabled_(boolean v) {cfg_parser_lnki_xwiki_repos_enabled = v; return this;} private boolean cfg_parser_lnki_xwiki_repos_enabled;
 	public Xow_html_util Util() {return util;} private Xow_html_util util;
 	public Xoi_dump_mgr Import_mgr() {return import_mgr;} private Xoi_dump_mgr import_mgr = new Xoi_dump_mgr();
 	public Xow_maint_mgr Maint_mgr() {return maint_mgr;} private Xow_maint_mgr maint_mgr;
@@ -186,15 +188,17 @@ public class Xow_wiki implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_xtns))				return xtn_mgr;
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
-	}	public static final String Invk_ZipDirs = "zip_dirs_", Invk_files = "files", Invk_xwikis = "xwikis", Invk_cfg_gallery_ = "cfg_gallery_", Invk_commons_wiki_ = "commons_wiki_", Invk_stats = "stats"
-			, Invk_lang = "lang", Invk_lang_ = "lang_", Invk_html = "html", Invk_gui = "gui", Invk_cfg_history = "cfg_history", Invk_user = "user", Invk_data_mgr = "data_mgr", Invk_sys_cfg = "sys_cfg", Invk_ns_mgr = "ns_mgr"
-			, Invk_special = "special"
-			, Invk_props = "props", Invk_parser = "parser"
-			, Invk_msgs = "msgs", Invk_app = "app", Invk_util = "util"
-			, Invk_xtns = "xtns", Invk_data_storage_format_ = "data_storage_format_", Invk_import_mgr = "import"
-			, Invk_db_mgr = "db_mgr", Invk_db_mgr_to_sql_ = "db_mgr_to_sql_"
-			, Invk_domain = "domain", Invk_maint = "maint"
-			;
+	}
+	public static final String
+	  Invk_ZipDirs = "zip_dirs_", Invk_files = "files", Invk_xwikis = "xwikis", Invk_cfg_gallery_ = "cfg_gallery_", Invk_commons_wiki_ = "commons_wiki_", Invk_stats = "stats"
+	, Invk_lang = "lang", Invk_lang_ = "lang_", Invk_html = "html", Invk_gui = "gui", Invk_cfg_history = "cfg_history", Invk_user = "user", Invk_data_mgr = "data_mgr", Invk_sys_cfg = "sys_cfg", Invk_ns_mgr = "ns_mgr"
+	, Invk_special = "special"
+	, Invk_props = "props", Invk_parser = "parser"
+	, Invk_msgs = "msgs", Invk_app = "app", Invk_util = "util"
+	, Invk_xtns = "xtns", Invk_data_storage_format_ = "data_storage_format_", Invk_import_mgr = "import"
+	, Invk_db_mgr = "db_mgr", Invk_db_mgr_to_sql_ = "db_mgr_to_sql_"
+	, Invk_domain = "domain", Invk_maint = "maint"
+	;
 	public Xodb_mgr_sql Db_mgr_create_as_sql() {Xodb_mgr_sql rv = new Xodb_mgr_sql(this); db_mgr = rv; return rv;}
 	public Xow_wiki Init_assert() {if (init_needed) Init_wiki(app.User()); return this;}
 	private void Init_wiki(Xou_user user) {	// NOTE: (a) one-time initialization for all wikis; (b) not called by tests
@@ -221,7 +225,8 @@ public class Xow_wiki implements GfoInvkAble {
 		log_bfr.Add("wiki.init.lang");
 		Xow_ns_mgr_.rebuild_(lang, ns_mgr);	// always rebuild; may be changed by user_wiki.gfs; different lang will change namespaces; EX: de.wikisource.org will have Seite for File and none of {{#lst}} will work
 		fragment_mgr.Evt_lang_changed(lang);
-		parser = Xop_parser.new_(this);	// rebuild parser
+//			parser = Xop_parser.new_(this);	// rebuild parser
+		lang.Vnt_mgr().Init_by_wiki(this);
 		ByteAryFmtr.Null.Eval_mgr().Enabled_(false);
 		app.Wiki_mgr().Scripts().Exec(this);
 		ByteAryFmtr.Null.Eval_mgr().Enabled_(true);

@@ -25,7 +25,7 @@ class Pf_xtn_ifexist extends Pf_func_base {
 			bb.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 0));
 		else
 			bb.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 1));
-	}	static final Xodb_page tmp_db_page = Xodb_page.tmp_();
+	}	private static final Xodb_page tmp_db_page = Xodb_page.tmp_();
 	public static int Count = 0;
 	public static boolean Exists(Xodb_page rv, Xop_ctx ctx, byte[] val_dat_ary) {
 		rv.Clear();
@@ -46,6 +46,12 @@ class Pf_xtn_ifexist extends Pf_func_base {
 			return exists;
 		}
 		boolean found = wiki.Db_mgr().Load_mgr().Load_by_ttl(rv, ttl.Ns(), page_ttl);
+		if (	!found
+			&&	wiki.Lang().Vnt_mgr().Enabled()) {
+			Xodb_page page = wiki.Lang().Vnt_mgr().Convert_ttl(wiki, ttl.Ns(), page_ttl);
+			if (page != Xodb_page.Null)
+				found = page.Exists();
+		}
 		rv.Exists_(found);
 		++Count;
 		ctx.Wiki().If_exists_regy().Add(val_dat_ary, found ? BoolVal.True : BoolVal.False);

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.parsers.lnkis; import gplx.*; import gplx.xowa.*; import gplx.xowa.parsers.*;
 import gplx.xowa.dbs.tbls.*;
+import gplx.xowa.langs.vnts.*;
 public class Xop_lnki_logger_redlinks_wkr implements GfoInvkAble {
 	private Xow_wiki wiki; private Xog_win win; private ListAdp lnki_list; private boolean log_enabled; private Gfo_usr_dlg usr_dlg;
 	private int request_idx;
@@ -66,19 +67,32 @@ public class Xop_lnki_logger_redlinks_wkr implements GfoInvkAble {
 		}
 		int redlink_count = 0;
 		ByteAryBfr bfr = null;
+		boolean variants_enabled = wiki.Lang().Vnt_mgr().Enabled();
+		Xol_vnt_mgr vnt_mgr = wiki.Lang().Vnt_mgr();
 		for (int j = 0; j < len; j++) {
 			Xop_lnki_tkn lnki = (Xop_lnki_tkn)work_list.FetchAt(j);
-			byte[] full_txt = lnki.Ttl().Full_db();
-			Xodb_page page = (Xodb_page)page_hash.Fetch(full_txt);
+			byte[] full_db = lnki.Ttl().Full_db();
+			Xodb_page page = (Xodb_page)page_hash.Fetch(full_db);
 			if (page == null) continue;	// pages shouldn't be null, but just in case
-			if (!page.Exists()) {					
+			if (!page.Exists()) {
+				String lnki_id = Xop_lnki_logger_redlinks_mgr.Lnki_id_prefix + Int_.XtoStr(lnki.Html_id());
+				if (variants_enabled) {
+					Xodb_page vnt_page = vnt_mgr.Convert_ttl(wiki, lnki.Ttl());
+					if (vnt_page != null) {
+						Xoa_ttl vnt_ttl = Xoa_ttl.parse_(wiki, lnki.Ttl().Ns().Id(), vnt_page.Ttl_wo_ns());
+						win.Gui_wtr().Html_atr_set(lnki_id, "href", "/wiki/" + String_.new_utf8_(vnt_ttl.Full_url()));
+						if (!String_.Eq(vnt_mgr.Html_style(), ""))
+							win.Gui_wtr().Html_atr_set(lnki_id, "style", vnt_mgr.Html_style());
+						continue;
+					}
+				}
 				if (log_enabled) {
 					if (bfr == null) bfr = ByteAryBfr.new_();
-					bfr.Add_int_variable(lnki.Html_id()).Add_byte_pipe().Add(Xop_tkn_.Lnki_bgn).Add(full_txt).Add(Xop_tkn_.Lnki_end).Add_byte(Byte_ascii.Semic).Add_byte_space();
+					bfr.Add_int_variable(lnki.Html_id()).Add_byte_pipe().Add(Xop_tkn_.Lnki_bgn).Add(full_db).Add(Xop_tkn_.Lnki_end).Add_byte(Byte_ascii.Semic).Add_byte_space();
 				}
 				if (win.Gui_wtr().Canceled()) return;
 				if (redlinks_mgr.Request_idx() != request_idx) return;
-				win.Gui_wtr().Html_elem_atr_set_append(Xop_lnki_logger_redlinks_mgr.Lnki_id_prefix + Int_.XtoStr(lnki.Html_id()), "class", " new");
+				win.Gui_wtr().Html_elem_atr_set_append(lnki_id, "class", " new");
 				++redlink_count;
 			}
 		}

@@ -241,7 +241,7 @@ class Scrib_engine_fxt {
 		return this;
 	}
 	public Scrib_engine_fxt Test_Invoke(String mod_name, String mod_code, String prc_name, KeyVal... args) {
-		engine.Invoke(wiki, ByteAry_.Empty, Xot_invk_mock.Null, Xot_invk_mock.new_(args), tmp_bfr, ByteAry_.new_utf8_(mod_name), ByteAry_.new_utf8_(mod_code), ByteAry_.new_utf8_(prc_name));
+		engine.Invoke(wiki, wiki.Ctx(), ByteAry_.Empty, Xot_invk_mock.Null, Xot_invk_mock.new_(args), tmp_bfr, ByteAry_.new_utf8_(mod_name), ByteAry_.new_utf8_(mod_code), ByteAry_.new_utf8_(prc_name));
 		Test_server_logs();
 		return this;
 	}

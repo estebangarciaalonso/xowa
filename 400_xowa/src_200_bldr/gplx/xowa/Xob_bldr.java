@@ -17,8 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.bldrs.*; import gplx.xowa.apps.*; import gplx.xowa.bldrs.xmls.*;
+import gplx.xowa.bldrs.cfgs.*;
 public class Xob_bldr implements GfoInvkAble {
-	public Xob_bldr(Xoa_app app) {this.app = app; cmd_mgr = new Xob_cmd_mgr(this);}
+	public Xob_bldr(Xoa_app app) {
+		this.app = app;
+		cmd_mgr = new Xob_cmd_mgr(this);
+		wiki_cfg_bldr = new Xob_wiki_cfg_bldr(this);
+	}
 	public Xoa_app				App() {return app;} private Xoa_app app;
 	public Gfo_usr_dlg			Usr_dlg() {return app.Usr_dlg();}
 	public Xob_cmd_mgr			Cmd_mgr() {return cmd_mgr;} private Xob_cmd_mgr cmd_mgr;
@@ -26,6 +31,7 @@ public class Xob_bldr implements GfoInvkAble {
 	public int					Dump_fil_len() {return dump_fil_len;} public Xob_bldr Dump_fil_len_(int v) {dump_fil_len = v; return this;} private int dump_fil_len =  1 * Io_mgr.Len_mb;
 	public int					Make_fil_len() {return make_fil_len;} public Xob_bldr Make_fil_len_(int v) {make_fil_len = v; return this;} private int make_fil_len = 64 * Io_mgr.Len_kb;
 	public Xob_xml_parser		Parser() {if (parser == null) parser = new Xob_xml_parser(); return parser;} private Xob_xml_parser parser;
+	public Xob_wiki_cfg_bldr	Wiki_cfg_bldr() {return wiki_cfg_bldr;} private Xob_wiki_cfg_bldr wiki_cfg_bldr;
 	public void StatusMgr_prog_fmt(long cur, long end, int pct_idx, String fmt, Object... ary) {
 		long now = Env_.TickCount(); if (now - StatusMgr_prog_prv < 100) return;
 		StatusMgr_prog_prv = now;
@@ -70,6 +76,7 @@ public class Xob_bldr implements GfoInvkAble {
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_pause_at_end_))			pause_at_end = m.ReadBoolOrTrue("val");
 		else if	(ctx.Match(k, Invk_cmds))					return cmd_mgr;
+		else if	(ctx.Match(k, Invk_wiki_cfg_bldr))			return wiki_cfg_bldr;
 		else if	(ctx.Match(k, Invk_sort_mem_len_)) 			sort_mem_len = gplx.ios.Io_size_.Load_int_(m);
 		else if	(ctx.Match(k, Invk_dump_fil_len_)) 			dump_fil_len = gplx.ios.Io_size_.Load_int_(m);
 		else if	(ctx.Match(k, Invk_make_fil_len_)) 			make_fil_len = gplx.ios.Io_size_.Load_int_(m);
@@ -78,8 +85,11 @@ public class Xob_bldr implements GfoInvkAble {
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}
-	private static final String Invk_cmds = "cmds", Invk_pause_at_end_ = "pause_at_end_", Invk_sort_mem_len_ = "sort_mem_len_", Invk_dump_fil_len_ = "dump_fil_len_", Invk_make_fil_len_ = "make_fil_len_", Invk_run = "run"
-	, Invk_cancel = "cancel";
+	private static final String 
+	  Invk_cmds = "cmds", Invk_wiki_cfg_bldr = "wiki_cfg_bldr"
+	, Invk_pause_at_end_ = "pause_at_end_", Invk_sort_mem_len_ = "sort_mem_len_", Invk_dump_fil_len_ = "dump_fil_len_", Invk_make_fil_len_ = "make_fil_len_"
+	, Invk_run = "run", Invk_cancel = "cancel"
+	;
 	static final String GRP_KEY = "xowa.bldr";
 }
 /*

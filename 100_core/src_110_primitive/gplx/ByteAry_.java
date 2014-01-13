@@ -234,6 +234,7 @@ public class ByteAry_ {
 		return rv;
 	}
 	public static final byte[] Trim_ary_ws = mask_(256, Byte_ascii.Tab, Byte_ascii.NewLine, Byte_ascii.CarriageReturn, Byte_ascii.Space);
+	public static byte[] Trim(byte[] src) {return Trim(src, 0, src.length, true, true, Trim_ary_ws);}
 	public static byte[] Trim(byte[] src, int bgn, int end) {return Trim(src, bgn, end, true, true, Trim_ary_ws);}
 	public static byte[] Trim(byte[] src, int bgn, int end, boolean trim_bgn, boolean trim_end, byte[] trim_ary) {
 		int txt_bgn = bgn, txt_end = end;

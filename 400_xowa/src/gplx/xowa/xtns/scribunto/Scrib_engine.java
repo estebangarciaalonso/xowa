@@ -115,9 +115,9 @@ public class Scrib_engine {
 		cur_frame_invoke = old_frame_invoke;
 		return rv;
 	}
-	public void Invoke(Xow_wiki wiki, byte[] src, Xot_invk owner_frame, Xot_invk invoke_frame, ByteAryBfr bfr, byte[] mod_name, byte[] mod_text, byte[] fnc_name) {
-		cur_frame_owner = owner_frame; this.wiki = wiki; ctx = wiki.Ctx();
-		lib_mw.Invoke_bgn(wiki, src);
+	public void Invoke(Xow_wiki wiki, Xop_ctx ctx, byte[] src, Xot_invk owner_frame, Xot_invk invoke_frame, ByteAryBfr bfr, byte[] mod_name, byte[] mod_text, byte[] fnc_name) {
+		cur_frame_owner = owner_frame; this.wiki = wiki; this.ctx = ctx;
+		lib_mw.Invoke_bgn(wiki, ctx, src);
 		try {
 			Scrib_mod mod = Mods_get_or_new(mod_name, mod_text);
 			KeyVal[] values = ExecuteFunctionChunk(mod.Fncs_get_by_key(String_.new_utf8_(fnc_name)), invoke_frame);

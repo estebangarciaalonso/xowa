@@ -32,7 +32,12 @@ public class Tfds {		// URL:doc/gplx.tfds/Tfds.txt
 	public static void Eq_str(XtoStrAble expd, XtoStrAble actl, String msg)					{Eq_wkr(expd.XtoStr(), actl.XtoStr(), true, msg);}
 	public static void Eq_str(XtoStrAble expd, XtoStrAble actl)								{Eq_wkr(expd.XtoStr(), actl.XtoStr(), true, String_.Empty);}
 	public static void Eq_str_lines(String lhs, String rhs)									{Eq_str_lines(lhs, rhs, EmptyStr);}
-	public static void Eq_str_lines(String lhs, String rhs, String note)					{Eq_ary_wkr(String_.Split(lhs, Char_.NewLine), String_.Split(rhs, Char_.NewLine), false, note);}
+	public static void Eq_str_lines(String lhs, String rhs, String note)					{
+		if		(lhs == null && rhs == null)	return;	// true
+		else if (lhs == null)					throw Err_.new_("lhs is null" + note);
+		else if (rhs == null)					throw Err_.new_("rhs is null" + note);
+		else									Eq_ary_wkr(String_.Split(lhs, Char_.NewLine), String_.Split(rhs, Char_.NewLine), false, note);
+	}
 	public static void Eq(Object expd, Object actl, String fmt, Object... args)		{Eq_wkr(expd, actl, true, String_.Format(fmt, args));}
 	public static void Eq_rev(Object actl, Object expd)										{Eq_wkr(expd, actl, true, EmptyStr);}
 	public static void Eq_rev(Object actl, Object expd, String fmt, Object... args)	{Eq_wkr(expd, actl, true, String_.Format(fmt, args));}

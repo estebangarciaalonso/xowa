@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.xowa.langs.*;
 import gplx.xowa.langs.vnts.*; import gplx.xowa.langs.cnvs.*;
+import gplx.xowa.wikis.caches.*;
 public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 	public boolean Root_frame() {return false;}
 	public Arg_nde_tkn Name_tkn() {return name_tkn;} public Xot_invk_tkn Name_tkn_(Arg_nde_tkn v) {name_tkn = v; return this;} Arg_nde_tkn name_tkn = Arg_nde_tkn.Null;
@@ -158,9 +159,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		}
 		if (	defn.Defn_tid() == Xot_defn_.Tid_null		// name is not a known defn
 			&&	lang.Vnt_mgr().Enabled()) {					// lang has vnts
-			ByteAryBfr convert_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
-			Xodb_page page = lang.Vnt_mgr().Convert_ttl(wiki, convert_bfr, wiki.Ns_mgr().Ns_template(), name_ary);
-			convert_bfr.Mkr_rls();
+			Xodb_page page = lang.Vnt_mgr().Convert_ttl(wiki, wiki.Ns_mgr().Ns_template(), name_ary);
 			if (page != Xodb_page.Null) {
 				name_ary = page.Ttl_wo_ns();
 				Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.Add(wiki.Ns_mgr().Ns_template().Name_db_w_colon(), name_ary));
@@ -279,9 +278,13 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 			if (tmpl != null) transclude_src = tmpl.Data_raw();
 		}
 		if (transclude_src == null && ctx.Sys_load_tmpls()) {	// ttl is template not in cache, or some other ns; do load
-			byte[] page_bry = wiki.Cache_mgr().Page_cache().Get_or_load(page_ttl);
-			if (page_bry != null)
-				transclude_src = page_bry;
+			Xow_page_cache_itm cache_itm = wiki.Cache_mgr().Page_cache().Get_or_load_as_itm(page_ttl);
+			if (	cache_itm != null
+//					&&  ByteAry_.Eq(cache_itm.Ttl().Full_db(), ctx.Page().Page_ttl().Full_db())	// make sure that transcluded item is not same as page_ttl; DATE:2014-01-10
+				) {
+				transclude_src = cache_itm.Src();
+				page_ttl = cache_itm.Ttl();
+			}
 		}
 		if (transclude_src !=  null) {
 			Xot_defn_tmpl transclude_tmpl = ctx.Wiki().Parser().Parse_tmpl(ctx, ctx.Tkn_mkr(), page_ttl.Ns(), page_ttl.Page_db(), transclude_src);
@@ -302,7 +305,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		return rv;
 	}
 	public static Xot_defn_tmpl Load_defn(Xow_wiki wiki, Xop_ctx ctx, Xoa_ttl ttl, byte[] name_ary) {
-		byte[] tmpl_page_bry = wiki.Cache_mgr().Page_cache().Get_or_load(ttl);
+		byte[] tmpl_page_bry = wiki.Cache_mgr().Page_cache().Get_or_load_as_src(ttl);
 		Xot_defn_tmpl rv = null;
 		if (tmpl_page_bry != null) {
 			byte old_parse_tid = ctx.Parse_tid(); // NOTE: reusing templates is a bad idea; will change Parse_tid and cause strange errors; however, keeping for PERF reasons
@@ -331,8 +334,13 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 				return true;
 		}
 		if (transclude_tmpl == null && ctx.Sys_load_tmpls()) {	// ttl is template not in cache, or some other ns; do load
-			byte[] page_bry = wiki.Cache_mgr().Page_cache().Get_or_load(page_ttl);
-			if (page_bry != null) transclude_tmpl = ctx.Wiki().Parser().Parse_tmpl(ctx, ctx.Tkn_mkr(), page_ttl.Ns(), page_ttl.Page_db(), page_bry);
+			Xow_page_cache_itm cache_itm = wiki.Cache_mgr().Page_cache().Get_or_load_as_itm(page_ttl);
+			if (	cache_itm != null) {
+				if (!ByteAry_.Eq(cache_itm.Ttl().Full_db(), ctx.Page().Page_ttl().Full_db())) {	// make sure that transcluded item is not same as page_ttl; DATE:2014-01-10
+					transclude_tmpl = ctx.Wiki().Parser().Parse_tmpl(ctx, ctx.Tkn_mkr(), page_ttl.Ns(), page_ttl.Page_db(), cache_itm.Src());
+					page_ttl = cache_itm.Ttl();
+				}
+			}
 		}
 		if (transclude_tmpl == null) return false;
 		return Eval_sub(ctx, transclude_tmpl, caller, src_for_tkn, bfr);

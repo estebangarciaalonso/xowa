@@ -204,13 +204,14 @@ class Scrib_lua_regx_converter {
 		if (Regx_char(b)) bfr.Add_byte(Byte_ascii.Backslash);
 		bfr.Add_byte(b);
 	}
-	boolean Regx_char(byte b) {
+	private boolean Regx_char(byte b) {
 		switch (b) {
 			case Byte_ascii.Dot: case Byte_ascii.Slash: case Byte_ascii.Plus: case Byte_ascii.Asterisk: case Byte_ascii.Question:
 			case Byte_ascii.Pow: case Byte_ascii.Dollar: case Byte_ascii.Eq: case Byte_ascii.Bang: case Byte_ascii.Pipe:
 			case Byte_ascii.Colon: case Byte_ascii.Dash:
 			case Byte_ascii.Brack_bgn: case Byte_ascii.Brack_end: case Byte_ascii.Paren_bgn: case Byte_ascii.Paren_end: case Byte_ascii.Curly_bgn: case Byte_ascii.Curly_end:
 			case Byte_ascii.Lt: case Byte_ascii.Gt:
+			case Byte_ascii.Backslash:	// \ must be preg_quote'd; DATE:2014-01-06
 				return true;
 			default:
 				return false;

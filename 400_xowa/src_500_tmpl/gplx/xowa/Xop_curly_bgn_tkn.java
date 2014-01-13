@@ -25,9 +25,9 @@ class Xop_curly_bgn_lxr implements Xop_lxr {
 	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Hook, this);} public static final byte[] Hook = new byte[] {Byte_ascii.Curly_bgn, Byte_ascii.Curly_bgn};
 	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {return ctx.Curly().MakeTkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos);}
 	public static final Xop_curly_bgn_lxr _ = new Xop_curly_bgn_lxr(); Xop_curly_bgn_lxr() {}
-	public static ByteTrieMgr_fast tmpl_bgn_trie_() {
+	public static ByteTrieMgr_fast tmpl_bgn_trie_() {	// hook sequences for adding new_line to tmpl return; "{|" "|-" ":" ";" "#" "*"; EX: "{{a}}" returns "*"; convert to "\n*"
 		ByteTrieMgr_fast rv = ByteTrieMgr_fast.cs_();
-		rv.Add(Xop_tblw_lxr_ws.Hook_tb, ByteAry_.Empty);//{| : ; # *
+		rv.Add(Xop_tblw_lxr_ws.Hook_tb, ByteAry_.Empty);
 		rv.Add(ByteAry_.new_ascii_("|-"), ByteAry_.Empty);
 		rv.Add(Byte_ascii.Colon, ByteAry_.Empty);
 		rv.Add(Byte_ascii.Semic, ByteAry_.Empty);
@@ -35,7 +35,6 @@ class Xop_curly_bgn_lxr implements Xop_lxr {
 		rv.Add(Byte_ascii.Asterisk, ByteAry_.Empty);
 		return rv;
 	}
-
 }
 class Xop_curly_end_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_curly_end;}

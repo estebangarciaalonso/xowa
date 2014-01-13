@@ -18,18 +18,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.php.*;
 class Scrib_lua_server_rsp {
-	Php_srl_parser parser = new Php_srl_parser();
+	private Php_srl_parser parser = new Php_srl_parser();
 	public Scrib_lua_server_rsp() {
 		arg_keys.Add("op"			, ByteVal.new_(Arg_op));
 		arg_keys.Add("values"		, ByteVal.new_(Arg_values));
 		arg_keys.Add("id"			, ByteVal.new_(Arg_id));
 		arg_keys.Add("args"			, ByteVal.new_(Arg_args));
-	}	HashAdp arg_keys = HashAdp_.new_(); static final byte Arg_op = 0, Arg_values = 1, Arg_id = 2, Arg_args = 3;
+	}	private HashAdp arg_keys = HashAdp_.new_(); private static final byte Arg_op = 0, Arg_values = 1, Arg_id = 2, Arg_args = 3;
 	public String Op() {return op;} private String op;
 	public String Call_id() {return call_id;} private String call_id;
-	public KeyVal[] Rslt_ary() {return rslt_ary;} KeyVal[] rslt_ary;
-	public KeyVal[] Values() {return values;} KeyVal[] values;
-	public KeyVal[] Call_args() {return call_args;} KeyVal[] call_args;
+	public KeyVal[] Rslt_ary() {return rslt_ary;} private KeyVal[] rslt_ary;
+	public KeyVal[] Values() {return values;} private KeyVal[] values;
+	public KeyVal[] Call_args() {return call_args;} private KeyVal[] call_args;
 	public String Extract(byte[] rsp) {
 		try {
 			op = call_id = null;

@@ -15,10 +15,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa; import gplx.*;
+package gplx.xowa.bldrs.cfgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import org.junit.*;
-public class Xoac_wiki_cfg_bldr_mgr_tst {
-	Xoac_wiki_cfg_bldr_mgr_fxt fxt = new Xoac_wiki_cfg_bldr_mgr_fxt();
+public class Xob_wiki_cfg_bldr_tst {
+	Xob_wiki_cfg_bldr_fxt fxt = new Xob_wiki_cfg_bldr_fxt();
 	@Before public void init() {fxt.Clear();}
 	@Test  public void Exec() {
 		fxt	.Init_cmd("en.wikipedia.org", "key0", "en.val0")
@@ -147,26 +147,26 @@ public class Xoac_wiki_cfg_bldr_mgr_tst {
 		return sb.XtoStrAndClear();
 	}
 }
-class Xoac_wiki_cfg_bldr_mgr_fxt {
-	public Xoac_wiki_cfg_bldr_mgr_fxt Clear() {
+class Xob_wiki_cfg_bldr_fxt {
+	public Xob_wiki_cfg_bldr_fxt Clear() {
 		if (app == null) {
 			app = Xoa_app_fxt.app_();
-			mgr = new Xoac_wiki_cfg_bldr_mgr(app);
+			wiki_cfg_bldr = app.Bldr().Wiki_cfg_bldr();
 		}
-		mgr.Clear();
+		wiki_cfg_bldr.Clear();
 		hash.Clear();
 		return this;
-	}	private Xoa_app app; Xoac_wiki_cfg_bldr_mgr mgr; OrderedHash hash = OrderedHash_.new_();
-	public Xoac_wiki_cfg_bldr_mgr_fxt Init_cmd(String wiki, String key, String text) {
-		mgr.Itms_get_or_new(wiki).Itms_add(key, text);
+	}	private Xoa_app app; Xob_wiki_cfg_bldr wiki_cfg_bldr; OrderedHash hash = OrderedHash_.new_();
+	public Xob_wiki_cfg_bldr_fxt Init_cmd(String wiki, String key, String text) {
+		wiki_cfg_bldr.Itms_get_or_new(wiki).Itms_add(key, text);
 		return this;
 	}
-	public Xoac_wiki_cfg_bldr_mgr_fxt Expd_txt(String wiki, String text) {
+	public Xob_wiki_cfg_bldr_fxt Expd_txt(String wiki, String text) {
 		hash.Add(wiki, KeyVal_.new_(wiki, text));
 		return this;
 	}
 	public void Test() {
-		mgr.Exec();
+		wiki_cfg_bldr.Exec();
 		int len = hash.Count();
 		for (int i = 0; i < len; i++) {
 			KeyVal kv = (KeyVal)hash.FetchAt(i);
@@ -175,5 +175,5 @@ class Xoac_wiki_cfg_bldr_mgr_fxt {
 			String actl = Io_mgr._.LoadFilStr(app.User().Fsys_mgr().Wiki_root_dir().GenSubFil_nest("#cfg", "system", wiki + ".gfs"));
 			Tfds.Eq_str_lines(expd, actl);
 		}
-	}		
+	}
 }

@@ -62,6 +62,11 @@ class Xop_pipe_lxr implements Xop_lxr {
 					Xop_tblw_wkr.Atrs_make(ctx, src, root, ctx.Tblw(), cur_tkn);
 					return cur_pos;
 				}
+			case Xop_tkn_itm_.Tid_vnt:
+				gplx.xowa.langs.vnts.Xop_vnt_tkn vnt_tkn = (gplx.xowa.langs.vnts.Xop_vnt_tkn)ctx.Stack_get_typ(Xop_tkn_itm_.Tid_vnt);
+				vnt_tkn.Vnt_pipe_tkn_count_add_();
+				ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, cur_pos));
+				return cur_pos;
 			default:
 				ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, cur_pos));
 				return cur_pos;

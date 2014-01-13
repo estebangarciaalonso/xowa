@@ -20,8 +20,9 @@ import gplx.intl.*;
 import gplx.xowa.langs.cnvs.*;
 public class Xol_vnt_converter {
 	private ByteTrieMgr_slim trie = new ByteTrieMgr_slim(true);
-	private Xol_vnt_itm owner;
 	public Xol_vnt_converter(Xol_vnt_itm owner) {this.owner = owner;}
+	public byte[] Owner_key() {return owner.Key();}
+	public Xol_vnt_itm Owner() {return owner;} private Xol_vnt_itm owner;
 	public boolean Convert_text(ByteAryBfr bfr, byte[] src) {return Convert_text(bfr, src, 0, src.length);}
 	public boolean Convert_text(ByteAryBfr bfr, byte[] src, int bgn, int end) {
 		int pos = bgn;

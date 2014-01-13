@@ -464,11 +464,13 @@ public class Xop_lnki_wkr_tst {
 		fxt.App().Url_alias_mgr().Clear();
 	}
 	@Test  public void Xwiki_file() {	// PURPOSE: if xwiki and File, ignore xwiki (hackish); DATE:2013-12-22
-		Reg_xwiki_alias("test", "test.wikimedia.org");
+		Reg_xwiki_alias("test", "test.wikimedia.org");													// must register xwiki, else ttl will not parse it
+		fxt.Wiki().Cfg_parser().Lnki_cfg().Xwiki_repo_mgr().Add_or_mod(ByteAry_.new_ascii_("test"));	// must add to xwiki_repo_mgr
 		fxt.tst_Parse_page_wiki_str
 			(	"[[test:File:A.png|12x10px]]", String_.Concat_lines_nl_skipLast
 			(	"<a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/12px.png\" width=\"12\" height=\"10\" /></a>"
 			));
+		fxt.Wiki().Cfg_parser_lnki_xwiki_repos_enabled_(false);	// disable for other tests
 	}
 	@Test  public void Xwiki_anchor() {
 		Reg_xwiki_alias("test", "test.wikimedia.org");

@@ -16,11 +16,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.parsers.lnkis.cfgs.*;
 public class Xowc_parser implements GfoInvkAble {
+	public Xowc_parser(Xow_wiki wiki) {
+		lnki_cfg = new Xoc_lnki_cfg(wiki);
+	}
 	public boolean Flag_xtns_pages_init() {return flag_xtns_pages_init;} public Xowc_parser Flag_xtns_pages_init_(boolean v) {flag_xtns_pages_init = v; return this;} private boolean flag_xtns_pages_init = true;
+	public Xoc_lnki_cfg Lnki_cfg() {return lnki_cfg;} private Xoc_lnki_cfg lnki_cfg;
 	public Xowc_xtns Xtns() {return xtns;} private Xowc_xtns xtns = new Xowc_xtns();
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_xtns))				return xtns;
+		else if	(ctx.Match(k, Invk_lnki))				return lnki_cfg;
 		else return GfoInvkAble_.Rv_unhandled;
-	}	private static final String Invk_xtns = "xtns";
+	}	private static final String Invk_xtns = "xtns", Invk_lnki = "lnki";
 }

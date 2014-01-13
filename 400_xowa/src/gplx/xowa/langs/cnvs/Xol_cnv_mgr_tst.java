@@ -17,13 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.langs.cnvs; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
 import org.junit.*;
+import gplx.xowa.langs.vnts.*;
 public class Xol_cnv_mgr_tst {
 	private Xol_cnv_mgr_fxt fxt = new Xol_cnv_mgr_fxt();
 	@Before public void init() {fxt.Clear();}
-	@Test   public void Basic() {
-		Xol_cnv_mgr_fxt.Init_convert_file(fxt.App(), "zh", "zh-hant", KeyVal_.new_("a", "A"), KeyVal_.new_("c", "C"));
-		fxt.Test_convert("zh", "zh-hant", "abcd", "AbCd");
-	}
+//		@Test   public void Basic() {
+//			fxt.Test_convert("zh", "zh-hant", "abcd", "AbCd");
+//		}
 //		@Test  public void Convert() {
 //			Xol_cnv_mgr_fxt.Init_convert_file(fxt.App(), "zh", "zh-hans", KeyVal_.new_("a", "x"));
 //			fxt.Parser_fxt().ini_defn_clear();
@@ -31,6 +31,10 @@ public class Xol_cnv_mgr_tst {
 //			fxt.Parser_fxt().tst_Parse_tmpl_str_test("{{convert_a}}", "{{test}}", "val");
 //			fxt.Parser_fxt().ini_defn_clear();
 //		}
+	@Test  public void Ifexists() {
+		fxt.Parser_fxt().ini_page_create("Test_A");
+		fxt.Test_parse("{{#ifexist:Test_a|y|n}}", "y");
+	}
 }
 class Xol_cnv_mgr_fxt {
 	public Xoa_app App() {return app;} private Xoa_app app;
@@ -38,23 +42,25 @@ class Xol_cnv_mgr_fxt {
 	public Xop_fxt Parser_fxt() {return parser_fxt;} private Xop_fxt parser_fxt;
 	public void Clear() {
 		app = Xoa_app_fxt.app_();
-		wiki = Xoa_app_fxt.wiki_(app, "zh.wikipedia.org", app.Lang_mgr().Get_by_key_or_new(ByteAry_.new_utf8_("zh")));
+		Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(ByteAry_.new_utf8_("zh"));
+		Xol_lang_.Lang_init(lang);
+		Init_cnv(app, "zh", "zh-hant", KeyVal_.new_("a", "A"));			
+		lang.Vnt_mgr().Enabled_(true);
+		lang.Vnt_mgr().Convert_ttl_init();
+		wiki = Xoa_app_fxt.wiki_(app, "zh.wikipedia.org", lang);
 		parser_fxt = new Xop_fxt(app, wiki);
 	}
-	public static void Init_convert_file(Xoa_app app, String lang, String vnt, KeyVal... ary) {
-		Xol_mw_parse_grp grp = new Xol_mw_parse_grp();
-		grp.Lng_(ByteAry_.new_ascii_(lang)).Vnt_(ByteAry_.new_utf8_(vnt));
+	public static void Init_cnv(Xoa_app app, String lang_key, String vnt_key, KeyVal... ary) {
+		Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(ByteAry_.new_ascii_(lang_key));
+		Xol_cnv_grp grp = lang.Cnv_mgr().Get_or_make(ByteAry_.new_ascii_(vnt_key));
 		int ary_len = ary.length;
-		Xol_mw_parse_itm[] itms = new Xol_mw_parse_itm[ary_len];
 		for (int i = 0; i < ary_len; i++) {
-			KeyVal kv = ary[i];
-			itms[i] = new Xol_mw_parse_itm(ByteAry_.new_utf8_(kv.Key()), ByteAry_.new_utf8_(kv.Val_to_str_or_empty()));				
+			KeyVal itm = ary[i];
+			grp.Add(ByteAry_.new_utf8_(itm.Key()), ByteAry_.new_utf8_(itm.Val_to_str_or_empty()));
 		}
-		grp.Itms_(itms);
-		ByteAryBfr bfr = ByteAryBfr.new_();
-		grp.Write_as_gfs(bfr);
-		Io_url convert_url = Xol_cnv_mgr.Bld_url(app, lang);
-		Io_mgr._.SaveFilBfr(convert_url, bfr);
+		Xol_vnt_itm vnt_itm = lang.Vnt_mgr().Get_or_new(ByteAry_.new_ascii_(vnt_key));
+		vnt_itm.Convert_ary_(ByteAry_.Ary(vnt_key));
+		vnt_itm.Converter().Rebuild();
 	}
 	public void Test_convert(String lang, String vnt, String raw, String expd) {
 //			Xol_cnv_grp convert_grp = app.Lang_mgr().Get_by_key_or_new(ByteAry_.new_ascii_(lang)).Cnv_mgr().Get_or_new(ByteAry_.new_ascii_(vnt));
@@ -62,5 +68,8 @@ class Xol_cnv_mgr_fxt {
 //			boolean converted = convert_grp.Convert_to_bfr(bfr, ByteAry_.new_utf8_(raw));
 //			String actl = converted ? bfr.XtoStrAndClear() : raw;
 //			Tfds.Eq(expd, actl);
+	}
+	public void Test_parse(String raw, String expd) {
+		parser_fxt.tst_Parse_page_all_str(raw, expd);
 	}
 }

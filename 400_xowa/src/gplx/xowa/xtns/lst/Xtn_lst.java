@@ -27,7 +27,7 @@ public class Xtn_lst extends Pf_func_base {
 		ctx.Wiki().View_data().Lst_recursed_(true);
 		Xoa_ttl src_ttl = Xoa_ttl.parse_(wiki, src_ttl_bry); if (src_ttl == null) return;						// {{#lst:<>}} -> ""
 		Xoa_page src_page = wiki.Data_mgr().Get_page(src_ttl, false); if (src_page.Missing()) return;	// {{#lst:missing}} -> ""
-		Xop_parser src_parser = Xop_parser.new_(wiki);
+		Xop_parser src_parser = Xop_parser.new_sub_(wiki);
 		Xop_ctx src_ctx = Xop_ctx.new_sub_(wiki);
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
 		Xot_defn_tmpl defn_tmpl = src_parser.Parse_tmpl(src_ctx, src_ctx.Tkn_mkr(), src_ttl.Ns(), src_ttl_bry, src_page.Data_raw());	// NOTE: parse as tmpl to ignore <noinclude>

@@ -73,6 +73,7 @@ class Scrib_pf_invoke_fxt {
 		Io_mgr._.InitEngine_mem();
 		fxt.Reset();
 		engine_fxt.Clear();
+		fxt.Wiki().Ctx().Tab().Clear_mgrs();	// NOTE: must clear page_regy else module is missing
 		engine.When_page_changed(fxt.Wiki().Ctx().Page());
 		init_tmpl = init_page = null;
 		fxt.ini_page_create("Module:" + "Mod_0", "");

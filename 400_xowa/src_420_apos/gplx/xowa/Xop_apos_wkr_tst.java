@@ -133,6 +133,10 @@ public class Xop_apos_wkr_tst {
 		)
 		,	"<a href=\"/wiki/A\">b <i> c d </i> e</a>");	// NOTE: c d should be italicized, not c e (latter occurs when apos is ended on each line)
 	}
+	@Test  public void French() {	// PURPOSE: L'''A'' -> L'<i>A</i>; DATE:2014-01-06
+		fxt.tst_Parse_page_all_str("L''''A'''",	"L'<b>A</b>");
+		fxt.tst_Parse_page_all_str("L'''A''",	"L'<i>A</i>");
+	}
 
 //	@Test  public void Mix_lnke() {	// FUTURE: requires rewrite of apos
 //		fxt.tst_Parse_page_wiki("''a[irc://b c''d''e]f''"

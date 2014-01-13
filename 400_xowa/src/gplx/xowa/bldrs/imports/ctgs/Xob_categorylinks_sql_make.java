@@ -42,21 +42,24 @@ public class Xob_categorylinks_sql_make implements Io_make_cmd {
 	int[] cur_cat_counts = new int[Xoa_ctg_mgr.Tid__max]; long cur_cat_file_size, cur_cat_file_max; byte[] cur_cat_ttl = Ttl_first; int cur_cat_id; int cur_cat_file_idx;
 	public byte Line_dlm() {return line_dlm;} public Xob_categorylinks_sql_make Line_dlm_(byte v) {line_dlm = v; return this;} private byte line_dlm = Byte_ascii.Nil;
 	public void Sort_do(Io_line_rdr rdr) {
-		if (line_dlm == Byte_ascii.Nil) line_dlm = rdr.Line_dlm();
-		fld_rdr.Ini(rdr.Bfr(), rdr.Itm_pos_bgn());
-		byte[] ctg_name = fld_rdr.Read_bry_escape();
-		if (!ByteAry_.Eq(ctg_name, cur_cat_ttl)) cur_cat_id = Ctg_grp_end(ctg_name);
-		if (cur_cat_id == Cur_cat_id_null) return;
-		byte ctg_tid = Ctg_tid_ltr_to_byte(fld_rdr.Read_byte());
-		byte[] ctg_sortkey = fld_rdr.Read_bry_escape();
-		int page_id = fld_rdr.Read_int_base85_len5();
-		int ctg_added = fld_rdr.Read_int_base85_len5();			
-		db_mgr.Tbl_categorylinks().Insert(cl_stmt, page_id, cur_cat_id, ctg_sortkey, ctg_added, ctg_tid);
-		cur_cat_file_size += 34 + 20 + 12 + (ctg_sortkey.length * 2);	// see NOTE_1: categorylinks row size
-		++cur_cat_counts[ctg_tid];
-		++row_count;
-		if (row_count % 100000  == 0) usr_dlg.Prog_one("", "", "inserting category row: ~{0}", row_count);
-		if (row_count % 1000000 == 0) cl_provider.Txn_mgr().Txn_end_all_bgn_if_none();
+		byte[] ctg_name = ByteAry_.Empty;
+		try {
+			if (line_dlm == Byte_ascii.Nil) line_dlm = rdr.Line_dlm();
+			fld_rdr.Ini(rdr.Bfr(), rdr.Itm_pos_bgn());
+			ctg_name = fld_rdr.Read_bry_escape();
+			if (!ByteAry_.Eq(ctg_name, cur_cat_ttl)) cur_cat_id = Ctg_grp_end(ctg_name);
+			if (cur_cat_id == Cur_cat_id_null) return;
+			byte ctg_tid = Ctg_tid_ltr_to_byte(fld_rdr.Read_byte());
+			byte[] ctg_sortkey = fld_rdr.Read_bry_escape();
+			int page_id = fld_rdr.Read_int_base85_len5();
+			int ctg_added = fld_rdr.Read_int_base85_len5();			
+			db_mgr.Tbl_categorylinks().Insert(cl_stmt, page_id, cur_cat_id, ctg_sortkey, ctg_added, ctg_tid);
+			cur_cat_file_size += 34 + 20 + 12 + (ctg_sortkey.length * 2);	// see NOTE_1: categorylinks row size
+			++cur_cat_counts[ctg_tid];
+			++row_count;
+			if (row_count % 100000  == 0) usr_dlg.Prog_one("", "", "inserting category row: ~{0}", row_count);
+			if (row_count % 1000000 == 0) cl_provider.Txn_mgr().Txn_end_all_bgn_if_none();
+		}	catch (Exception e) {usr_dlg.Warn_many("", "", "ctg_links.insert failed: name=~{0} err=~{1}", String_.new_utf8_(ctg_name), Err_.Message_gplx_brief(e));}
 	}
 	public void Sort_end() {
 		Xodb_fsys_mgr fsys_mgr = db_mgr.Fsys_mgr();

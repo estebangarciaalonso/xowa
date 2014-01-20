@@ -22,8 +22,9 @@ class Xop_pipe_tkn extends Xop_tkn_itm_base {
 }
 class Xop_pipe_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_pipe;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Byte_ascii.Pipe, this);}
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Byte_ascii.Pipe, this);}
+	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		int cur_typeId = ctx.Cur_tkn_tid(), rv = -1;
 		switch (cur_typeId) {
 			case Xop_tkn_itm_.Tid_brack_bgn:

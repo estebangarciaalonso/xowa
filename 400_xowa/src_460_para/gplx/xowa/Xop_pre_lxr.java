@@ -18,8 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 class Xop_pre_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_pre;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Hook_ary, this);} static final byte[] Hook_ary = new byte[] {Byte_ascii.NewLine, Byte_ascii.Space};
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Hook_ary, this);} static final byte[] Hook_ary = new byte[] {Byte_ascii.NewLine, Byte_ascii.Space};
+	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		if (!ctx.Para().Enabled()) {		// NOTE: para disabled in <gallery>
 			if (bgn_pos != Xop_parser_.Doc_bgn_bos)	// NOTE: guard against <BOS>" a" where bgn_pos would be -1 and no nl is available
 				ctx.Subs_add(root, tkn_mkr.NewLine(bgn_pos, bgn_pos + 1, Xop_nl_tkn.Tid_char, 1));

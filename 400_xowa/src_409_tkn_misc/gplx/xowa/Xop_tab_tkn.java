@@ -23,11 +23,12 @@ public class Xop_tab_tkn extends Xop_tkn_itm_base {
 }
 class Xop_tab_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_tab;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
 		core_trie.Add(Byte_ascii.Tab, this);
 		core_trie.Add(Xop_tab_tkn.Bry_tab_ent, this);
 	}	
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		cur_pos = Xop_lxr_.Find_fwd_while(src, src_len, cur_pos, Byte_ascii.Tab);
 		src[bgn_pos] = Byte_ascii.Tab; // HACK: SEE:NOTE_1:tabs
 		for (int i = bgn_pos + 1; i < cur_pos; i++)	

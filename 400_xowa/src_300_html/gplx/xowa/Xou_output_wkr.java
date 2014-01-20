@@ -25,11 +25,12 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 	Xoh_wiki_article mgr;
 	public Xou_output_wkr Page_(Xoa_page v) {this.page = v; return this;}
 	public Xou_output_wkr Mgr_(Xoh_wiki_article v) {this.mgr = v; return this;}
-	public byte[] Bld_bry(Xoh_wiki_article mgr, Xoa_page page, ByteAryBfr bfr) {
+	private Xop_ctx ctx;
+	public byte[] Bld_bry(Xop_ctx ctx, Xoh_wiki_article mgr, Xoa_page page, ByteAryBfr bfr) {
+		this.ctx = ctx;
 		this.mgr = mgr;
 		this.page = page; 			
 		Xow_wiki wiki = page.Wiki(); Xoa_app app = wiki.App();
-		Xop_ctx ctx = wiki.Ctx();
 		ctx.Page_(page); // HACK: must update page for toc_mgr; WHEN: Xoa_page rewrite
 		log_wtr.Write(page, app.Msg_log());
 		ByteAryFmtr fmtr = null;
@@ -152,10 +153,11 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 				break;
 			case Xow_page_tid.Tid_wikitext:
 				if	(ns_id == Xow_ns_.Id_file)		// if File ns, add boilerplate header
-					app.File_main_wkr().Bld_html(wiki, bfr, page.Page_ttl(), wiki.Cfg_file_page(), page.File_queue());
+					app.File_main_wkr().Bld_html(wiki, ctx, bfr, page.Page_ttl(), wiki.Cfg_file_page(), page.File_queue());
 				if (wiki.Html_mgr().Tidy_enabled())
 					Tidy(wiki, bfr);
-				wiki.Html_wtr().Write_all(page.Wiki().Ctx(), page.Root(), page.Root().Data_mid(), bfr);
+				else
+					wiki.Html_wtr().Write_all(page.Wiki().Ctx(), page.Root(), page.Root().Data_mid(), bfr);
 				if (ns_id == Xow_ns_.Id_category)	// if Category, render rest of html (Subcategories; Pages; Files); note that a category may have other html which requires wikitext processing
 					wiki.Html_mgr().Ns_ctg().Bld_html(page, bfr);
 				int ctgs_len = page.Category_list().length;	// add Categories

@@ -20,7 +20,7 @@ import gplx.xowa.wikis.*; import gplx.xowa.users.history.*; import gplx.xowa.xtn
 import gplx.xowa.parsers.lnkis.*;
 import gplx.xowa.langs.vnts.*;
 public class Xoh_html_wtr {
-	Xow_wiki wiki; Xoa_app app; Xop_ctx ctx; Xoa_page page; Xop_root_tkn root; 
+	private Xow_wiki wiki; private Xoa_app app; private Xoa_page page;
 	private gplx.xowa.xtns.refs.Xoh_ref_wtr ref_wtr = new gplx.xowa.xtns.refs.Xoh_ref_wtr();  Url_encoder href_encoder; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
 	private Xop_lnki_logger_redlinks_mgr redlinks_mgr;
 	public Xoh_lnki_wtr Lnki_wtr() {return lnki_wtr;} private Xoh_lnki_wtr lnki_wtr;
@@ -36,71 +36,71 @@ public class Xoh_html_wtr {
 	public void Write_all(Xop_ctx ctx, Xop_root_tkn root, byte[] src, ByteAryBfr main_bfr) {
 		try {
 			tbl_para = wiki.Html_mgr().Tbl_para();
-			this.ctx = ctx; this.root = root; indent_level = 0; this.page = ctx.Page();
+			indent_level = 0; this.page = ctx.Page();
 			this.page.Langs().Clear();	// HACK: always clear langs; necessary for reload
 			lnki_wtr.Page_bgn(page);
-			Write_tkn(Xoh_opts.root_(), main_bfr, src, 0, null, -1, root);
+			Write_tkn(ctx, Xoh_opts.root_(), main_bfr, src, 0, null, -1, root);
 		}
 		finally {
 			page.Category_list_(hctx.Lnki_ctg_xto_ary());
-			this.ctx = null; this.root = null; this.page = null;
+			this.page = null;
 			hctx.Clear();
 		}
 	}	boolean tbl_para = false;
-	public void Write_tkn_ary(Xoh_opts opts, ByteAryBfr bfr, byte[] src, int depth, Xop_tkn_itm[] ary) {
+	public void Write_tkn_ary(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, int depth, Xop_tkn_itm[] ary) {
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++) {
 			Xop_tkn_itm itm = ary[i];
-			Write_tkn(opts, bfr, src, depth, itm, i, itm);
+			Write_tkn(ctx, opts, bfr, src, depth, itm, i, itm);
 		}
 	}
-	public void Write_tkn(Xoh_opts opts, ByteAryBfr bfr, byte[] src, int depth, Xop_tkn_grp grp, int sub_idx, Xop_tkn_itm tkn) {
+	public void Write_tkn(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, int depth, Xop_tkn_grp grp, int sub_idx, Xop_tkn_itm tkn) {
 		if (tkn.Ignore()) return;
 		switch (tkn.Tkn_tid()) {
 			case Xop_tkn_itm_.Tid_arg_itm:
 			case Xop_tkn_itm_.Tid_root:
 				int subs_len = tkn.Subs_len();
 				for (int i = 0; i < subs_len; i++)
-					Write_tkn(opts, bfr, src, depth + 1, tkn, i, tkn.Subs_get(i));
+					Write_tkn(ctx, opts, bfr, src, depth + 1, tkn, i, tkn.Subs_get(i));
 				break;
 			case Xop_tkn_itm_.Tid_ignore:	break;
-			case Xop_tkn_itm_.Tid_html_ncr:	Html_ncr(opts, bfr, src, (Xop_html_ncr_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_html_ref:	Html_ref(opts, bfr, src, (Xop_html_ref_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_hr:		Hr(opts, bfr, src, (Xop_hr_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_hdr:		Hdr(opts, bfr, src, (Xop_hdr_tkn)tkn, depth); break;
-			case Xop_tkn_itm_.Tid_apos:		Apos(opts, bfr, src, (Xop_apos_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_lnke:		Lnke(opts, bfr, src, (Xop_lnke_tkn)tkn, depth); break;
-			case Xop_tkn_itm_.Tid_lnki:		Lnki(opts, bfr, src, (Xop_lnki_tkn)tkn, depth); break;
-			case Xop_tkn_itm_.Tid_list:		List(opts, bfr, src, (Xop_list_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_xnde:		Xnde(opts, bfr, src, (Xop_xnde_tkn)tkn, depth); break;
-			case Xop_tkn_itm_.Tid_under:	Under(opts, bfr, src, (Xop_under_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_tblw_tb:	Tblw(opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_tb_bgn_atr, Tag_tblw_tb_end, depth, true); break;
-			case Xop_tkn_itm_.Tid_tblw_tr:	Tblw(opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_tr_bgn_atr, Tag_tblw_tr_end, depth, false); break;
-			case Xop_tkn_itm_.Tid_tblw_td:	Tblw(opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_td_bgn_atr, Tag_tblw_td_end, depth, false); break;
-			case Xop_tkn_itm_.Tid_tblw_th:	Tblw(opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_th_bgn_atr, Tag_tblw_th_end, depth, false); break;
-			case Xop_tkn_itm_.Tid_tblw_tc:	Tblw(opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_tc_bgn_atr, Tag_tblw_tc_end, depth, false); break;
-			case Xop_tkn_itm_.Tid_para:		Para(opts, bfr, src, (Xop_para_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_space:	Space(opts, bfr, src, grp, sub_idx, (Xop_space_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_pre:		Pre(opts, bfr, src, (Xop_pre_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_newLine:	NewLine(opts, bfr, src, (Xop_nl_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_bry:		Bry(opts, bfr, src, (Xop_bry_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_vnt:		Vnt(opts, bfr, src, depth, (Xop_vnt_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_html_ncr:	Html_ncr(ctx, opts, bfr, src, (Xop_html_ncr_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_html_ref:	Html_ref(ctx, opts, bfr, src, (Xop_html_ref_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_hr:		Hr(ctx, opts, bfr, src, (Xop_hr_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_hdr:		Hdr(ctx, opts, bfr, src, (Xop_hdr_tkn)tkn, depth); break;
+			case Xop_tkn_itm_.Tid_apos:		Apos(ctx, opts, bfr, src, (Xop_apos_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_lnke:		Lnke(ctx, opts, bfr, src, (Xop_lnke_tkn)tkn, depth); break;
+			case Xop_tkn_itm_.Tid_lnki:		Lnki(ctx, opts, bfr, src, (Xop_lnki_tkn)tkn, depth); break;
+			case Xop_tkn_itm_.Tid_list:		List(ctx, opts, bfr, src, (Xop_list_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_xnde:		Xnde(ctx, opts, bfr, src, (Xop_xnde_tkn)tkn, depth); break;
+			case Xop_tkn_itm_.Tid_under:	Under(ctx, opts, bfr, src, (Xop_under_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_tblw_tb:	Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_tb_bgn_atr, Tag_tblw_tb_end, depth, true); break;
+			case Xop_tkn_itm_.Tid_tblw_tr:	Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_tr_bgn_atr, Tag_tblw_tr_end, depth, false); break;
+			case Xop_tkn_itm_.Tid_tblw_td:	Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_td_bgn_atr, Tag_tblw_td_end, depth, false); break;
+			case Xop_tkn_itm_.Tid_tblw_th:	Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_th_bgn_atr, Tag_tblw_th_end, depth, false); break;
+			case Xop_tkn_itm_.Tid_tblw_tc:	Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_tc_bgn_atr, Tag_tblw_tc_end, depth, false); break;
+			case Xop_tkn_itm_.Tid_para:		Para(ctx, opts, bfr, src, (Xop_para_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_space:	Space(ctx, opts, bfr, src, grp, sub_idx, (Xop_space_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_pre:		Pre(ctx, opts, bfr, src, (Xop_pre_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_newLine:	NewLine(ctx, opts, bfr, src, (Xop_nl_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_bry:		Bry(ctx, opts, bfr, src, (Xop_bry_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_vnt:		Vnt(ctx, opts, bfr, src, depth, (Xop_vnt_tkn)tkn); break;
 //				case Xop_tkn_itm_.Tid_tab:		bfr.Add_byte_repeat(Byte_ascii.Tab, tkn.Src_end() - tkn.Src_bgn()); break;
 			default:
 				Bfr_escape(bfr, src, tkn.Src_bgn(), tkn.Src_end(), app, true, false);	// NOTE: always escape text including (a) lnki_alt text; and (b) any other text, especially failed xndes; DATE:2013-06-18
 				break;
 		}
 	}
-	@gplx.Virtual public void Html_ncr(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_html_ncr_tkn tkn)	{
+	@gplx.Virtual public void Html_ncr(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_html_ncr_tkn tkn)	{
 		if (tkn.Html_ncr_val() < Byte_ascii.Max_7_bit)		// NOTE: must "literalize"; <nowiki> converts wiki chars to ncrs, which must be "literalized: EX: <nowiki>[[A]]</nowiki> -> &#92;&#92;A&#93;&#93; which must be converted back to [[A]]
 			bfr.Add(tkn.Html_ncr_bry());
 		else
 			bfr.Add_byte(Byte_ascii.Amp).Add_byte(Byte_ascii.Hash).Add_int_variable(tkn.Html_ncr_val()).Add_byte(Byte_ascii.Semic);	// NOTE: do not literalize, else browser may not display multi-char bytes properly; EX: &#160; gets added as &#160; not as {192,160}; DATE:2013-12-09
 	}
-	@gplx.Virtual public void Html_ref(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_html_ref_tkn tkn)	{tkn.HtmlRef_itm().Print_to_html(bfr);}
+	@gplx.Virtual public void Html_ref(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_html_ref_tkn tkn)	{tkn.HtmlRef_itm().Print_to_html(bfr);}
 	private static final byte[] Bry_hdr_bgn = ByteAry_.new_ascii_("<span class='mw-headline' id='"), Bry_hdr_end = ByteAry_.new_ascii_("</span>");
-	@gplx.Virtual public void Hr(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_hr_tkn tkn)				{bfr.Add(Tag_hr);}
-	@gplx.Virtual public void Hdr(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_hdr_tkn hdr, int depth) {
+	@gplx.Virtual public void Hr(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_hr_tkn tkn)				{bfr.Add(Tag_hr);}
+	@gplx.Virtual public void Hdr(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_hdr_tkn hdr, int depth) {
 //			page.Hdrs_id_bld(hdr, src);
 		if (hdr.Hdr_html_first() && hctx.Toc_show() && page.TocPos_firstHdr()) {
 			app.Toc_mgr().Html(wiki.Ctx().Page(), src, bfr);
@@ -120,7 +120,7 @@ public class Xoh_html_wtr {
 		if (hdr.Hdr_bgn_manual() > 0) bfr.Add_byte_repeat(Byte_ascii.Eq, hdr.Hdr_bgn_manual());
 		int subs_len = hdr.Subs_len();
 		for (int i = 0; i < subs_len; i++)
-			Write_tkn(opts, bfr, src, depth + 1, hdr, i, hdr.Subs_get(i));
+			Write_tkn(ctx, opts, bfr, src, depth + 1, hdr, i, hdr.Subs_get(i));
 		if (hdr_len > 0) {	// NOTE: need to check hdr_len b/c it could be dangling
 			if (hdr.Hdr_end_manual() > 0) bfr.Add_byte_repeat(Byte_ascii.Eq, hdr.Hdr_end_manual());
 			if (hctx.Toc_show()) {
@@ -129,7 +129,7 @@ public class Xoh_html_wtr {
 			bfr.Add(Tag_hdr_end).Add_int(hdr_len, 1, 1).Add_byte(Tag__end).Add_byte_nl();// NOTE: do not need to check hdr_len b/c it is impossible for end to occur without bgn
 		}
 	}
-	private void Apos(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_apos_tkn apos) {
+	private void Apos(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_apos_tkn apos) {
 		if (opts.Lnki_alt()) return;	// ignore apos if alt; EX: [[File:A.png|''A'']] should have alt of A; DATE:2013-10-25
 		int literal_apos = apos.Apos_lit();
 		if (literal_apos > 0)
@@ -151,7 +151,7 @@ public class Xoh_html_wtr {
 			default: throw Err_.unhandled(apos.Apos_cmd());
 		}
 	}
-	private void Lnke(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnke_tkn lnke, int depth) {
+	private void Lnke(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnke_tkn lnke, int depth) {
 		int lnke_bgn = lnke.Lnke_bgn(), lnke_end = lnke.Lnke_end();
 		byte[] lnke_xwiki_wiki = lnke.Lnke_xwiki_wiki();
 		boolean proto_is_xowa = lnke.Proto_tid() == Xow_cfg_lnke.Tid_xowa;
@@ -185,7 +185,7 @@ public class Xoh_html_wtr {
 		}
 		else {																							// text available
 			for (int i = 0; i < subs_len; i++)
-				Write_tkn(opts, bfr, src, depth + 1, lnke, i, lnke.Subs_get(i));
+				Write_tkn(ctx, opts, bfr, src, depth + 1, lnke, i, lnke.Subs_get(i));
 		}
 		if (!opts.Lnki_alt()) {
 			if (proto_is_xowa)	// add <img />
@@ -193,7 +193,7 @@ public class Xoh_html_wtr {
 			bfr.Add(Xoh_consts.A_end);
 		}
 	}
-	private void Lnki(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, int depth) {
+	private void Lnki(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, int depth) {
 		Xow_xwiki_itm lang = lnki.Ttl().Wik_itm();
 		if (lang != null && lang.Type_is_lang(wiki.Lang().Lang_id()) && !lnki.Ttl().ForceLiteralLink()) {
 			page.Langs().Add(lnki.Ttl());
@@ -203,26 +203,26 @@ public class Xoh_html_wtr {
 		redlinks_mgr.Lnki_add(ctx, lnki);
 		boolean stage_is_alt = opts.Lnki_alt();
 		switch (lnki.Ns_id()) {
-			case Xow_ns_.Id_media:		if (!stage_is_alt) lnki_wtr.Write_or_queue(page, opts, bfr, src, lnki, depth); return; // NOTE: literal ":" has no effect; EX.WP:Beethoven and [[:Media:De-Ludwig_van_Beethoven.ogg|listen]]
-			case Xow_ns_.Id_file:		if (!literal_link && !stage_is_alt) {lnki_wtr.Write_or_queue(page, opts, bfr, src, lnki, depth); return;} break;
+			case Xow_ns_.Id_media:		if (!stage_is_alt) lnki_wtr.Write_or_queue(ctx, page, opts, bfr, src, lnki, depth); return; // NOTE: literal ":" has no effect; EX.WP:Beethoven and [[:Media:De-Ludwig_van_Beethoven.ogg|listen]]
+			case Xow_ns_.Id_file:		if (!literal_link && !stage_is_alt) {lnki_wtr.Write_or_queue(ctx, page, opts, bfr, src, lnki, depth); return;} break;
 			case Xow_ns_.Id_category:	if (!literal_link) {hctx.Lnki_ctg_add(lnki); return;} break;
 		}
-		Lnki_generic(opts, lnki, bfr, src, depth);
+		Lnki_generic(ctx, opts, lnki, bfr, src, depth);
 	}
-	private void Lnki_generic(Xoh_opts opts, Xop_lnki_tkn lnki, ByteAryBfr bfr, byte[] src, int depth) {
+	private void Lnki_generic(Xop_ctx ctx, Xoh_opts opts, Xop_lnki_tkn lnki, ByteAryBfr bfr, byte[] src, int depth) {
 		byte[] ttl_bry = lnki.Ttl_ary();
 		Xoa_ttl lnki_ttl = lnki.Ttl();
 		if (ByteAry_.Len_eq_0(ttl_bry)) ttl_bry = lnki_ttl.Full_txt_raw();		// NOTE: handles ttls like [[fr:]] and [[:fr;]] which have an empty Page_txt, but a valued Full_txt_raw
 		if (ByteAry_.Eq(lnki_ttl.Full_txt(), page.Page_ttl().Full_txt())) {		// lnki is same as pagename; bold; SEE: Month widget on day pages will bold current day; EX.WP: January 1
 			if (lnki_ttl.Anch_bgn() == -1 && ByteAry_.Eq(lnki_ttl.Wik_txt(), page.Page_ttl().Wik_txt())) {		// only bold if lnki is not pointing to anchor on same page; EX.WP: Comet; [[Comet#Physical characteristics|ion tail]]
 				bfr.Add(Xoh_consts.B_bgn);
-				Lnki_caption(opts, bfr, src, lnki, ttl_bry, true, depth);
+				Lnki_caption(ctx, opts, bfr, src, lnki, ttl_bry, true, depth);
 				bfr.Add(Xoh_consts.B_end);
 				return;
 			}
 		}
 		if (opts.Lnki_alt()) {
-			Lnki_caption(opts, bfr, src, lnki, ttl_bry, true, depth);
+			Lnki_caption(ctx, opts, bfr, src, lnki, ttl_bry, true, depth);
 		}
 		else {
 			bfr.Add(Xoh_consts.A_bgn);
@@ -242,7 +242,7 @@ public class Xoh_html_wtr {
 				: Byte_ascii.Hash;	// Anch_txt bgns at 1st letter, so add # for caption; 
 				ttl_bry = ByteAry_.Add_w_dlm(anch_spr, ttl_bry, anch_txt);	// manually add anchor; else "Help:A#b" becomes "Help:A". note that lnki.Ttl_ary() uses .Full_txt (wiki + page but no anchor) to captialize 1st letter of page otherwise "Help:A#b" shows as "Help:A" (so Help:a -> Help:A); DATE:2013-06-21				
 			}
-			Lnki_caption(opts, bfr, src, lnki, ttl_bry, true, depth);
+			Lnki_caption(ctx, opts, bfr, src, lnki, ttl_bry, true, depth);
 			bfr.Add(Xoh_consts.A_end);
 		}
 	}	static final byte[] A_xowa_visited = ByteAry_.new_ascii_("\" class=\"xowa-visited"); static final byte[] Bry_anchor = new byte[] {Byte_ascii.Hash};
@@ -267,12 +267,12 @@ public class Xoh_html_wtr {
 		}
 		return false;
 	}
-	private void Lnki_caption(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, byte[] href, boolean tail_enabled, int depth) {
+	private void Lnki_caption(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, byte[] href, boolean tail_enabled, int depth) {
 		if	(lnki.Caption_exists()) {
 			if (lnki.Caption_tkn_pipe_trick())	// "pipe trick"; [[A|]] is same as [[A|A]]; also, [[Help:A|]] -> [[Help:A|A]]
 				bfr.Add(lnki.Ttl().Page_txt());
 			else 
-				Write_tkn(opts, bfr, src, depth + 1, lnki, Sub_idx_null, lnki.Caption_val_tkn());
+				Write_tkn(ctx, opts, bfr, src, depth + 1, lnki, Sub_idx_null, lnki.Caption_val_tkn());
 		}
 		else {										// ttl only
 			if (!Lnki_caption_subpage(bfr, lnki))	// chk if subpage
@@ -283,7 +283,7 @@ public class Xoh_html_wtr {
 			if (tail_bgn != -1) bfr.Add_mid(src, tail_bgn, lnki.Tail_end());
 		}
 	}
-	public void List(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_list_tkn list) {
+	public void List(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_list_tkn list) {
 		if (opts.Lnki_alt()) {						// alt; add literally; EX: "*" for "\n*"; note that \n is added in NewLine()
 			if (list.List_bgn() == Bool_.Y_byte) {	// bgn tag
 				bfr.Add_byte(list.List_itmTyp());	// add literal byte
@@ -293,16 +293,16 @@ public class Xoh_html_wtr {
 		else {
 			byte list_itm_type = list.List_itmTyp();
 			if (list.List_bgn() == Bool_.Y_byte) {
-				if (list.List_sub_first()) List_grp_bgn(opts, bfr, src, list_itm_type);
-				List_itm_bgn(opts, bfr, src, list_itm_type);
+				if (list.List_sub_first()) List_grp_bgn(ctx, opts, bfr, src, list_itm_type);
+				List_itm_bgn(ctx, opts, bfr, src, list_itm_type);
 			}
 			else {
-				List_itm_end(opts, bfr, src, list_itm_type);
-				if (list.List_sub_last() == Bool_.Y_byte) List_grp_end(opts, bfr, src, list_itm_type);
+				List_itm_end(ctx, opts, bfr, src, list_itm_type);
+				if (list.List_sub_last() == Bool_.Y_byte) List_grp_end(ctx, opts, bfr, src, list_itm_type);
 			}
 		}
 	}
-	@gplx.Virtual public void List_grp_bgn(Xoh_opts opts, ByteAryBfr bfr, byte[] src, byte type) {
+	@gplx.Virtual public void List_grp_bgn(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, byte type) {
 		byte[] tag = null;
 		switch (type) {
 			case Xop_list_tkn_.List_itmTyp_ol: tag = Tag_list_grp_ol_bgn; break;
@@ -316,7 +316,7 @@ public class Xoh_html_wtr {
 		bfr.Add(tag);
 		++indent_level;
 	}
-	@gplx.Virtual public void List_itm_bgn(Xoh_opts opts, ByteAryBfr bfr, byte[] src, byte type) {
+	@gplx.Virtual public void List_itm_bgn(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, byte type) {
 		byte[] tag = null;
 		switch (type) {
 			case Xop_list_tkn_.List_itmTyp_ol:
@@ -330,7 +330,7 @@ public class Xoh_html_wtr {
 		bfr.Add(tag);
 		++indent_level;
 	}
-	@gplx.Virtual public void List_grp_end(Xoh_opts opts, ByteAryBfr bfr, byte[] src, byte type) {
+	@gplx.Virtual public void List_grp_end(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, byte type) {
 		--indent_level;
 		byte[] tag = null;
 		switch (type) {
@@ -344,7 +344,7 @@ public class Xoh_html_wtr {
 		if (indent_level > 0) bfr.Add_byte_repeat(Byte_ascii.Space, indent_level * 2);
 		bfr.Add(tag);
 	}
-	@gplx.Virtual public void List_itm_end(Xoh_opts opts, ByteAryBfr bfr, byte[] src, byte type) {
+	@gplx.Virtual public void List_itm_end(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, byte type) {
 		--indent_level;
 		byte[] tag = null;
 		switch (type) {
@@ -358,7 +358,7 @@ public class Xoh_html_wtr {
 		if (indent_level > 0) bfr.Add_byte_repeat(Byte_ascii.Space, indent_level * 2);
 		bfr.Add(tag);
 	}
-	@gplx.Virtual public void NewLine(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_nl_tkn tkn) {
+	@gplx.Virtual public void NewLine(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_nl_tkn tkn) {
 		if (opts.Lnki_alt())
 			bfr.Add_byte_space();
 		else {
@@ -370,10 +370,10 @@ public class Xoh_html_wtr {
 			}
 		}
 	}
-	public void Space(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_tkn_grp grp, int sub_idx, Xop_space_tkn space) {
+	public void Space(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_tkn_grp grp, int sub_idx, Xop_space_tkn space) {
 		bfr.Add_byte_repeat(Byte_ascii.Space, space.Src_end_grp(grp, sub_idx) - space.Src_bgn_grp(grp, sub_idx));	// NOTE: lnki.caption will convert \n to \s; see Xop_nl_lxr; EX.WP: Schwarzschild radius
 	}
-	@gplx.Virtual public void Para(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_para_tkn para) {
+	@gplx.Virtual public void Para(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_para_tkn para) {
 //			if (opts.Lnki_alt()) {
 //				if (para.Para_bgn() != Xop_para_tkn.Para_typeId_none)	// always add space, uncless tid is none
 //					bfr.Add_byte_space();
@@ -399,7 +399,7 @@ public class Xoh_html_wtr {
 		if (!bfr.Match_end_byt_nl_or_bos()) bfr.Add_byte_nl();
 		if (src_bgn != 0) bfr.Add_byte_nl();
 	}
-	@gplx.Virtual public void Pre(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_pre_tkn pre) {
+	@gplx.Virtual public void Pre(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_pre_tkn pre) {
 		switch (pre.Pre_typeId()) {
 			case Xop_pre_tkn.Pre_typeId_bgn:
 				if (pre.Pre_enable() == Bool_.N_byte)
@@ -412,13 +412,13 @@ public class Xoh_html_wtr {
 				break;
 		}
 	}
-	@gplx.Virtual public void Bry(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_bry_tkn bry) {
+	@gplx.Virtual public void Bry(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_bry_tkn bry) {
 		bfr.Add(bry.Bry());
 	}
-	@gplx.Virtual public void Vnt(Xoh_opts opts, ByteAryBfr bfr, byte[] src, int depth, Xop_vnt_tkn vnt) {
+	@gplx.Virtual public void Vnt(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, int depth, Xop_vnt_tkn vnt) {
 		Xop_vnt_html_wtr.Write(this, wiki.Ctx(), opts, bfr, src, depth, vnt);	// NOTE: using wiki, b/c getting nullPointer with ctx during mass parse
 	}
-	@gplx.Virtual public void Under(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_under_tkn under) {
+	@gplx.Virtual public void Under(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_under_tkn under) {
 		if (opts.Lnki_alt()) return;
 		switch (under.Under_typeId()) {
 			case Xol_kwd_grp_.Id_toc:
@@ -428,12 +428,12 @@ public class Xoh_html_wtr {
 				break;
 		}
 	}
-	@gplx.Virtual public void Xnde(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+	@gplx.Virtual public void Xnde(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		if (opts.Lnki_alt()) {
 			if (xnde.Tag_close_bgn() > 0) // NOTE: some tags are not closed; WP.EX: France; <p>
 				Bfr_escape(bfr, src, xnde.Tag_open_end(), xnde.Tag_close_bgn(), app, true, false);
 			else
-				Xnde_subs(opts, bfr, src, xnde, depth + 1);
+				Xnde_subs(ctx, opts, bfr, src, xnde, depth + 1);
 			return;
 		}
 		Xop_xnde_tag tag = xnde.Tag();
@@ -448,10 +448,10 @@ public class Xoh_html_wtr {
 				break;
 			case Xop_xnde_tag_.Tid_noinclude:		// NOTE: do not write tags
 			case Xop_xnde_tag_.Tid_onlyinclude:	
-				Xnde_subs_escape(opts, bfr, src, xnde, depth + 1, false, false);
+				Xnde_subs_escape(ctx, opts, bfr, src, xnde, depth + 1, false, false);
 				break;
 			case Xop_xnde_tag_.Tid_nowiki:
-				Xnde_subs_escape(opts, bfr, src, xnde, depth + 1, false, false);
+				Xnde_subs_escape(ctx, opts, bfr, src, xnde, depth + 1, false, false);
 				break;
 			case Xop_xnde_tag_.Tid_b: case Xop_xnde_tag_.Tid_strong:
 			case Xop_xnde_tag_.Tid_i: case Xop_xnde_tag_.Tid_em: case Xop_xnde_tag_.Tid_cite: case Xop_xnde_tag_.Tid_dfn: case Xop_xnde_tag_.Tid_var:
@@ -473,7 +473,7 @@ public class Xoh_html_wtr {
 //					bfr.Add_byte(Tag__end);
 //					Xnde_subs(opts, bfr, src, xnde, depth);					// NOTE: do not escape; <p>, <table> etc may have nested nodes
 //					bfr.Add(Tag__end_bgn).Add(name).Add_byte(Tag__end);		// NOTE: inline is never written as <b/>; will be written as <b></b>; SEE: NOTE_1
-				Write_xnde(bfr, opts, xnde, tag, tag_id, src, depth);
+				Write_xnde(bfr, ctx, opts, xnde, tag, tag_id, src, depth);
 				break;
 			}
 			case Xop_xnde_tag_.Tid_pre: {
@@ -481,7 +481,7 @@ public class Xoh_html_wtr {
 				bfr.Add_byte(Tag__bgn).Add(name);
 				if (xnde.Atrs_bgn() > Xop_tblw_wkr.Atrs_ignore_check) Xnde_atrs(tag_id, opts, src, xnde.Atrs_bgn(), xnde.Atrs_end(), xnde.Atrs_ary(), bfr);
 				bfr.Add_byte(Tag__end);
-				Xnde_subs_escape(opts, bfr, src, xnde, depth, false, true);	// NOTE: this is the only difference from above block
+				Xnde_subs_escape(ctx, opts, bfr, src, xnde, depth, false, true);	// NOTE: this is the only difference from above block
 				bfr.Add(Tag__end_bgn).Add(name).Add_byte(Tag__end);
 				break;
 			}
@@ -490,7 +490,7 @@ public class Xoh_html_wtr {
 				bfr.Add_byte(Tag__bgn).Add(name);
 				if (xnde.Atrs_bgn() > Xop_tblw_wkr.Atrs_ignore_check) Xnde_atrs(tag_id, opts, src, xnde.Atrs_bgn(), xnde.Atrs_end(), xnde.Atrs_ary(), bfr);
 				bfr.Add_byte(Tag__end);
-				Xnde_subs_escape(opts, bfr, src, xnde, depth, false, false);
+				Xnde_subs_escape(ctx, opts, bfr, src, xnde, depth, false, false);
 				bfr.Add(Tag__end_bgn).Add(name).Add_byte(Tag__end);
 				break;
 			}
@@ -503,7 +503,7 @@ public class Xoh_html_wtr {
 					if (xnde.Atrs_bgn() > Xop_tblw_wkr.Atrs_ignore_check) Xnde_atrs(tag_id, opts, src, xnde.Atrs_bgn(), xnde.Atrs_end(), xnde.Atrs_ary(), bfr);
 					bfr.Add_byte(Tag__end);
 				}
-				Xnde_subs(opts, bfr, src, xnde, depth);
+				Xnde_subs(ctx, opts, bfr, src, xnde, depth);
 				if (xnde.Tag_visible())
 					bfr.Add(Tag__end_bgn).Add(name).Add_byte(Tag__end);	// NOTE: inline is never written as <b/>; will be written as <b></b>; SEE: NOTE_1
 				break;
@@ -513,9 +513,9 @@ public class Xoh_html_wtr {
 				break;
 			case Xop_xnde_tag_.Tid_syntaxHighlight:			gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde.To_html(this, ctx, opts, bfr, src, xnde, depth); break;
 			case Xop_xnde_tag_.Tid_score:					gplx.xowa.xtns.scores.Xtn_score.To_html(this, ctx, opts, bfr, src, xnde, depth); break;
-			case Xop_xnde_tag_.Tid_dynamicPageList:			Xnde_dynamic_page_list(opts, bfr, src, xnde, depth); break;
+			case Xop_xnde_tag_.Tid_dynamicPageList:			Xnde_dynamic_page_list(ctx, opts, bfr, src, xnde, depth); break;
 			case Xop_xnde_tag_.Tid_gallery:					wiki.Html_mgr().Gallery_mgr().Write_html(app, wiki, ctx, page, this, opts, bfr, src, xnde, depth); break;
-			case Xop_xnde_tag_.Tid_poem:					Xnde_poem(opts, bfr, src, xnde, depth); break;
+			case Xop_xnde_tag_.Tid_poem:					Xnde_poem(ctx, opts, bfr, src, xnde, depth); break;
 			case Xop_xnde_tag_.Tid_ref:						ref_wtr.Xnde_ref(opts, bfr, src, xnde); break;
 			case Xop_xnde_tag_.Tid_references:				ref_wtr.Xnde_references(this, ctx, opts, bfr, src, xnde, depth); break;
 			case Xop_xnde_tag_.Tid_translate:				gplx.xowa.xtns.translates.Xop_translate_xnde.To_html(this, ctx, opts, bfr, src, xnde, depth); break;
@@ -533,7 +533,7 @@ public class Xoh_html_wtr {
 			case Xop_xnde_tag_.Tid_pagequality:
 			case Xop_xnde_tag_.Tid_pagelist:
 			case Xop_xnde_tag_.Tid_section:
-			case Xop_xnde_tag_.Tid_xowa_cmd:				Xnde_xtn(opts, bfr, src, xnde, depth); break;
+			case Xop_xnde_tag_.Tid_xowa_cmd:				Xnde_xtn(ctx, opts, bfr, src, xnde, depth); break;
 			default:
 				if (tag.Restricted()) {	// a; img; script; etc..
 					if (page.Allow_all_html() || page.Wiki().Domain_tid() == Xow_wiki_domain_.Tid_home) {
@@ -552,14 +552,14 @@ public class Xoh_html_wtr {
 						break;
 					default:	// NOTE: close tag, even if dangling; EX: <center>a -> <center>a</center>
 						bfr.Add_byte(Byte_ascii.Gt);
-						Xnde_subs(opts, bfr, src, xnde, depth);
+						Xnde_subs(ctx, opts, bfr, src, xnde, depth);
 						bfr.Add(Ary_escape_bgn).Add_byte(Byte_ascii.Slash).Add(tag.Name_bry()).Add(Ary_escape_end);
 						break;
 				}
 				break;
 		}
 	}
-	private void Write_xnde(ByteAryBfr bfr, Xoh_opts opts, Xop_xnde_tkn xnde, Xop_xnde_tag tag, int tag_id, byte[] src, int depth) {
+	private void Write_xnde(ByteAryBfr bfr, Xop_ctx ctx, Xoh_opts opts, Xop_xnde_tkn xnde, Xop_xnde_tag tag, int tag_id, byte[] src, int depth) {
 		byte[] name = tag.Name_bry();
 		boolean at_bgn = true;
 		ByteAryBfr ws_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();					// create separate ws_bfr to handle "a<b> c </b>d" -> "a <b>c</b> d"
@@ -586,7 +586,7 @@ public class Xoh_html_wtr {
 						if (xnde.Atrs_bgn() > Xop_tblw_wkr.Atrs_ignore_check) Xnde_atrs(tag_id, opts, src, xnde.Atrs_bgn(), xnde.Atrs_end(), xnde.Atrs_ary(), bfr);
 						bfr.Add_byte(Tag__end);
 					}
-					Write_tkn(opts, bfr, src, depth + 1, xnde, i, sub);			// NOTE: never escape; <p>, <table>, <center> etc may have nested nodes
+					Write_tkn(ctx, opts, bfr, src, depth + 1, xnde, i, sub);			// NOTE: never escape; <p>, <table>, <center> etc may have nested nodes
 					break;
 			}
 		}
@@ -740,12 +740,12 @@ public class Xoh_html_wtr {
 			}
 		}
 	}
-	private void Xnde_subs(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+	private void Xnde_subs(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		int subs_len = xnde.Subs_len();
 		for (int i = 0; i < subs_len; i++)
-			Write_tkn(opts, bfr, src, depth + 1, xnde, i, xnde.Subs_get(i));
+			Write_tkn(ctx, opts, bfr, src, depth + 1, xnde, i, xnde.Subs_get(i));
 	}
-	private void Xnde_subs_escape(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth, boolean amp_enable, boolean nowiki) {
+	private void Xnde_subs_escape(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth, boolean amp_enable, boolean nowiki) {
 		int xndesubs_len = xnde.Subs_len();
 		for (int i = 0; i < xndesubs_len; i++) {
 			Xop_tkn_itm sub = xnde.Subs_get(i);
@@ -764,7 +764,7 @@ public class Xoh_html_wtr {
 							bfr.Add(Xop_xnde_wkr.Bry_escape_gt);
 							break;
 					}
-					Xnde_subs_escape(opts, bfr, src, sub_xnde, depth, amp_enable, false);
+					Xnde_subs_escape(ctx, opts, bfr, src, sub_xnde, depth, amp_enable, false);
 					break;
 				case Xop_tkn_itm_.Tid_txt:
 					if (amp_enable)
@@ -773,24 +773,24 @@ public class Xoh_html_wtr {
 						Bfr_escape(bfr, src, sub.Src_bgn(), sub.Src_end(), app, true, nowiki);
 					break;
 				default:
-					Write_tkn(opts, bfr, src, depth + 1, xnde, i, sub);
+					Write_tkn(ctx, opts, bfr, src, depth + 1, xnde, i, sub);
 					break;
 			}
 		}
 	}
 	public BoolRef Queue_add_ref() {return queue_add_ref;} BoolRef queue_add_ref = BoolRef.n_();
-	private void Xnde_dynamic_page_list(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {		
+	private void Xnde_dynamic_page_list(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {		
 		Dpl_xnde nde = (Dpl_xnde)xnde.Xnde_data();
-		nde.Xtn_html(this, opts, bfr, src, xnde, depth);
+		nde.Xtn_html(wiki, this, opts, bfr, src, xnde, depth);
 	}
-	public void Xnde_poem(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
-		gplx.xowa.xtns.poems.Xtn_poem_nde mgr = (gplx.xowa.xtns.poems.Xtn_poem_nde)xnde.Xnde_data();
+	public void Xnde_poem(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+		gplx.xowa.xtns.poems.Poem_nde mgr = (gplx.xowa.xtns.poems.Poem_nde)xnde.Xnde_data();
 		if (mgr.Xtn_root() == null) return;	// NOTE: only happens with <poem/>
 		bfr.Add(Bry_poem_bgn);
-		Write_tkn(opts, bfr, mgr.Xtn_root().Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, mgr.Xtn_root());
+		Write_tkn(ctx, opts, bfr, mgr.Xtn_root().Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, mgr.Xtn_root());
 		bfr.Add(Bry_poem_end);
 	}	static byte[] Bry_poem_bgn = ByteAry_.new_ascii_("<div class=\"poem\">\n"), Bry_poem_end = ByteAry_.new_ascii_("\n</div>"); 
-	public void Tblw(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_tblw_tkn tkn, byte[] bgn, byte[] end, int depth, boolean tblw_bgn) {
+	public void Tblw(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_tblw_tkn tkn, byte[] bgn, byte[] end, int depth, boolean tblw_bgn) {
 		if (opts.Lnki_alt())			// add \s for each \n
 			bfr.Add_byte_space();
 		else {
@@ -807,7 +807,7 @@ public class Xoh_html_wtr {
 		}
 		int subs_len = tkn.Subs_len();
 		for (int i = 0; i < subs_len; i++)
-			Write_tkn(opts, bfr, src, depth + 1, tkn, i, tkn.Subs_get(i));
+			Write_tkn(ctx, opts, bfr, src, depth + 1, tkn, i, tkn.Subs_get(i));
 		if (opts.Lnki_alt()) {
 			if (tblw_bgn)			// only add \s for closing table; |} -> "\s"
 				bfr.Add_byte_space();
@@ -821,14 +821,14 @@ public class Xoh_html_wtr {
 			bfr.Add_byte_nl();
 		}
 	}
-	private void Xnde_xtn(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+	private void Xnde_xtn(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		Xop_xnde_xtn xtn = xnde.Xnde_data(); if (xtn == null) return;
 		if (xtn.Xtn_literal()) {
 			Bfr_escape(bfr, src, xnde.Src_bgn(), xnde.Src_end(), app, true, false);
 			return;
 		}
 		Xop_root_tkn root = xtn.Xtn_root(); if (root == null) return;	// NOTE: some roots will be null; EX: <section/> which has no data to parse/show
-		Write_tkn(opts, bfr, root.Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, root);
+		Write_tkn(ctx, opts, bfr, root.Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, root);
 	}
 	public static final byte[] Tag__end_quote = ByteAry_.new_ascii_("\">"), Tag__end_bgn = ByteAry_.new_ascii_("</")
 		, Tag_hdr_bgn = ByteAry_.new_ascii_("<h"), Tag_hdr_end = ByteAry_.new_ascii_("</h"), Tag_hr = ByteAry_.new_ascii_("<hr/>"), Tag_br = ByteAry_.new_ascii_("<br/>")
@@ -855,22 +855,22 @@ public class Xoh_html_wtr {
 	public static final int Sub_idx_null = -1;	// nonsense placeholder fo
 }
 class ByteAryFmtrArg_html_tkn implements ByteAryFmtrArg {
-	public ByteAryFmtrArg_html_tkn(Xoh_html_wtr wtr, Xoh_opts opts, byte[] src, Xop_tkn_itm tkn, int depth) {this.wtr = wtr; this.opts = opts; this.src = src; this.tkn = tkn; this.depth = depth;}
+	private Xoh_html_wtr wtr; private Xop_ctx ctx; private Xoh_opts opts; private byte[] src; private Xop_tkn_itm tkn; private int depth;
+	public ByteAryFmtrArg_html_tkn(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_opts opts, byte[] src, Xop_tkn_itm tkn, int depth) {this.wtr = wtr; this.ctx = ctx; this.opts = opts; this.src = src; this.tkn = tkn; this.depth = depth;}
 	public void XferAry(ByteAryBfr trg, int idx) {
-		wtr.Write_tkn(opts, trg, src, depth + 1, null, Xoh_html_wtr.Sub_idx_null, tkn);
+		wtr.Write_tkn(ctx, opts, trg, src, depth + 1, null, Xoh_html_wtr.Sub_idx_null, tkn);
 	}
-	Xoh_html_wtr wtr; Xoh_opts opts; byte[] src; Xop_tkn_itm tkn; int depth;
 }
 class ByteAryFmtrArg_html_fmtr implements ByteAryFmtrArg {
-	public ByteAryFmtrArg_html_fmtr Set(Xoh_html_wtr wtr, Xoh_opts opts, byte[] src, Xop_tkn_itm tkn, int depth, ByteAryFmtr fmtr) {this.wtr = wtr; this.opts = opts; this.src = src; this.tkn = tkn; this.depth = depth; this.fmtr = fmtr; return this;}
+	private ByteAryFmtr fmtr; private Xoh_html_wtr wtr; private Xop_ctx ctx; private Xoh_opts opts; private byte[] src; private Xop_tkn_itm tkn; private int depth;
+	public ByteAryFmtrArg_html_fmtr Set(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_opts opts, byte[] src, Xop_tkn_itm tkn, int depth, ByteAryFmtr fmtr) {this.wtr = wtr; this.ctx = ctx; this.opts = opts; this.src = src; this.tkn = tkn; this.depth = depth; this.fmtr = fmtr; return this;}
 	public void XferAry(ByteAryBfr trg, int idx) {
 		ByteAryBfr tmp_bfr = ByteAryBfr.new_();
-		wtr.Write_tkn(opts, tmp_bfr, src, depth + 1, null, Xoh_html_wtr.Sub_idx_null, tkn);
+		wtr.Write_tkn(ctx, opts, tmp_bfr, src, depth + 1, null, Xoh_html_wtr.Sub_idx_null, tkn);
 		byte[] bry = tmp_bfr.XtoAryAndClear();
 		if (bry.length == 0) return;
 		fmtr.Bld_bfr_many(trg, bry);
 	}
-	ByteAryFmtr fmtr; Xoh_html_wtr wtr; Xoh_opts opts; byte[] src; Xop_tkn_itm tkn; int depth;
 }
 class Xoh_html_wtr_env {
 	public Xop_lnki_caption_mgr LnkiMgr() {return lnkiMgr;} private Xop_lnki_caption_mgr lnkiMgr = new Xop_lnki_caption_mgr();

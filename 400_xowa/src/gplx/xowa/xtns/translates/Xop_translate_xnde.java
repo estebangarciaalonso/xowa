@@ -31,6 +31,6 @@ public class Xop_translate_xnde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 	public static void To_html(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		Xop_translate_xnde translate_nde = (Xop_translate_xnde)xnde.Xnde_data();
 		Xop_root_tkn root_tkn = translate_nde.Xtn_root();
-		wtr.Write_tkn(opts, bfr, root_tkn.Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, root_tkn);
+		wtr.Write_tkn(ctx, opts, bfr, root_tkn.Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, root_tkn);
 	}
 }

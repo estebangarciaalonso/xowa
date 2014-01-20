@@ -16,11 +16,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
-public class IntVal {
+public class IntVal implements CompareAble {
 	public int Val() {return val;} int val;
 	@Override public String toString() {return Int_.XtoStr(val);}
 	@Override public int hashCode() {return val;}
 	@Override public boolean equals(Object obj) {return obj == null ? false : val == ((IntVal)obj).Val();}
+	public int compareTo(Object obj) {IntVal comp = (IntVal)obj; return Int_.Compare(val, comp.val);}
         public static IntVal neg1_() {return new_(-1);}
         public static IntVal zero_() {return new_(0);}
         public static IntVal new_(int val) {

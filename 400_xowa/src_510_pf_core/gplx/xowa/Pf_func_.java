@@ -317,8 +317,8 @@ public class Pf_func_ {
 			case Xol_kwd_grp_.Id_xowa_dbg:						return new Pf_xtn_xowa_dbg();
 			case Xol_kwd_grp_.Id_xowa:							return new gplx.xowa.xtns.xowa_cmds.Xop_xowa_func();
 			case Xol_kwd_grp_.Id_xtn_geodata_coordinates:		return gplx.xowa.xtns.geodata.Pf_xtn_geodata_coordinates._;
-			case Xol_kwd_grp_.Id_lst:							return gplx.xowa.xtns.lst.Xtn_lst._;
-			case Xol_kwd_grp_.Id_lstx:							return gplx.xowa.xtns.lst.Xtn_lstx._;
+			case Xol_kwd_grp_.Id_lst:							return gplx.xowa.xtns.lst.Lst_pfunc_lst._;
+			case Xol_kwd_grp_.Id_lstx:							return gplx.xowa.xtns.lst.Lst_pfunc_lstx._;
 			case Xol_kwd_grp_.Id_invoke:						return new gplx.xowa.xtns.scribunto.Scrib_pf_invoke();
 			case Xol_kwd_grp_.Id_property:						return new gplx.xowa.xtns.wdatas.Wdata_pf_property();
 			case Xol_kwd_grp_.Id_noexternallanglinks:			return new gplx.xowa.xtns.wdatas.Wdata_pf_noExternalLangLinks();

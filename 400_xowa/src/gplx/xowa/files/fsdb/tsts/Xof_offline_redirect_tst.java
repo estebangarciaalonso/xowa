@@ -47,6 +47,7 @@ public class Xof_offline_redirect_tst {
 		fxt.Test_fsys("mem/root/enwiki/thumb/7/0/A.png/220px.png", "220,200");
 	}
 	@Test  public void Diff_wiki_orig_copy() {
+		if (fxt.Db_skip()) return;
 		fxt.Init_qry_xowa(Xof_fsdb_arg_init_qry.new_().Init_commons("A.png", 440, 400));
 		fxt.Init_bin_fsdb(Xof_fsdb_arg_init_bin.new_().Init_commons_orig("A.png", 440, 400));
 		fxt.Init_qry_xowa(Xof_fsdb_arg_init_qry.new_().Init_commons_redirect("B.png", "A.png"));

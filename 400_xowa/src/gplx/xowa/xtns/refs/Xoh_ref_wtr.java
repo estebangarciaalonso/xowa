@@ -68,7 +68,7 @@ public class Xoh_ref_wtr {
 			grp_list_fmtr.Init(opt, head_itm);
 			Xtn_ref_nde text_itm = grp_list_fmtr.IdentifyTxt();	// find the item that has the text (there should only be 0 or 1)
 			if (text_itm.Body() != null)
-				wtr.Write_tkn(opts, tmp, text_itm.Body().Root_src(), depth + 1, null, Xoh_html_wtr.Sub_idx_null, text_itm.Body());
+				wtr.Write_tkn(ctx, opts, tmp, text_itm.Body().Root_src(), depth + 1, null, Xoh_html_wtr.Sub_idx_null, text_itm.Body());
 
 			// add follows
 			int related_len = head_itm.Related_len();
@@ -76,7 +76,7 @@ public class Xoh_ref_wtr {
 				Xtn_ref_nde related_itm = head_itm.Related_get(k);
 				if (related_itm.Follow_y()) {	// NOTE: both follow and related are in the related list; only add follow
 					tmp.Add_byte_space();	// always add space; REF.MW:Cite_body.php;$this->mRefs[$group][$follow]['text'] = $this->mRefs[$group][$follow]['text'] . ' ' . $str;
-					wtr.Write_tkn(opts, tmp, related_itm.Body().Root_src(), depth + 1, null, Xoh_html_wtr.Sub_idx_null, related_itm.Body());
+					wtr.Write_tkn(ctx, opts, tmp, related_itm.Body().Root_src(), depth + 1, null, Xoh_html_wtr.Sub_idx_null, related_itm.Body());
 				}
 			}
 

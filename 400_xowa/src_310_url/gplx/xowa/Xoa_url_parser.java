@@ -82,9 +82,14 @@ public class Xoa_url_parser {
 		}
 		Gfo_url_arg[] args = gfo_url.Args();	// parse args
 		int args_len = args.length;
+		boolean args_is_invalid = false;
 		for (int i = 0; i < args_len; i++) {
 			Gfo_url_arg arg = args[i];
 			byte[] key = arg.Key_bry();
+			if (ByteAry_.Len_eq_0(key)) {
+				args_is_invalid = true;
+				break;
+			}
 			Object o = qry_args_hash.Get_by_bry(key);
 			if (o != null) {
 				ByteVal id = (ByteVal)o;
@@ -97,7 +102,17 @@ public class Xoa_url_parser {
 				}
 			} 
 		}
-		url.Args_(args);
+		if (args_is_invalid) {
+			byte[] raw_bry = gfo_url.Raw();
+			byte[] args_bry = ByteAry_.Mid(raw_bry, gfo_url.Args_bgn(), raw_bry.length);
+			byte[] anchor_bry = url.Anchor_bry();
+			if (anchor_bry == null)	// no anchor; set page to rest of url
+				url.Page_bry_(ByteAry_.Add(url.Page_bry(), args_bry));
+			else
+				url.Anchor_bry_(ByteAry_.Add(url.Anchor_bry(), args_bry));
+		}
+		else
+			url.Args_(args);
 		return url.Err() == Gfo_url.Err_none;
 	}
 	public static Xoa_url Parse_url(Xoa_app app, Xow_wiki cur_wiki, String raw) {Xoa_url rv = new Xoa_url(); byte[] raw_bry = ByteAry_.new_utf8_(raw); return Parse_url(rv, app, cur_wiki, raw_bry, 0, raw_bry.length);}

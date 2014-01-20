@@ -82,10 +82,15 @@ class Xob_xfer_temp_itm {
 //			}
 		lnki_ext = orig_ext_id;
 		orig_media_type_tid = Xof_media_type.Xto_byte(orig_media_type);
-		if (	lnki_thumbtime != Xop_lnki_tkn.Thumbtime_null		// thumbtime defined
-			&&	orig_media_type_tid != Xof_media_type.Tid_video		// but not a video;
-			)
-			lnki_thumbtime = Xop_lnki_tkn.Thumbtime_null;			// set thumbtime to NULL; actually occurs for one file: [[File:Crash.arp.600pix.jpg|thumb|thumbtime=2]]
+		if (	lnki_thumbtime != Xop_lnki_tkn.Thumbtime_null) {		// thumbtime defined
+			boolean lnki_thumbtime_reset = true;
+			if	(	orig_media_type_tid == Xof_media_type.Tid_video 	// video can have thumbtime
+				|| Xof_ext_.Id_supports_page(orig_ext_id)				// djvu / pdf can have page parameters, which are currently being stored in thumbtime; DATE:2014-01-18
+				)
+				lnki_thumbtime_reset = false;
+			if (lnki_thumbtime_reset)
+				lnki_thumbtime = Xop_lnki_tkn.Thumbtime_null;			// set thumbtime to NULL; actually occurs for one file: [[File:Crash.arp.600pix.jpg|thumb|thumbtime=2]]
+		}
 		if (orig_page_id == -1) {	// no orig found (i.e.: not in local's / remote's image.sql);
 			chk_tid = Chk_tid_orig_page_id_is_null;
 			return false;

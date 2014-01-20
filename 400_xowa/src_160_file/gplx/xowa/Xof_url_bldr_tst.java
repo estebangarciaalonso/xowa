@@ -42,7 +42,7 @@ class Xof_url_bldr_fxt {
 		seek = -1;
 	}
 	public Xof_url_bldr_fxt tst() {
-		url_bldr.Wmf_dir_hive_(true).Thumb_(true).Dir_spr_(dir_spr).Root_(ByteAry_.new_utf8_(root)).Md5_(ByteAry_.new_utf8_(md5)).Ttl_(ByteAry_.new_utf8_(ttl)).Ext_(ext).Misc_0_(seek);
+		url_bldr.Wmf_dir_hive_(true).Thumb_(true).Dir_spr_(dir_spr).Root_(ByteAry_.new_utf8_(root)).Md5_(ByteAry_.new_utf8_(md5)).Ttl_(ByteAry_.new_utf8_(ttl)).Ext_(ext).Thumbtime_(seek);
 		Tfds.Eq(expd_src, url_bldr.Xto_str());
 		return this;
 	}

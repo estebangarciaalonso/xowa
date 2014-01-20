@@ -17,9 +17,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xop_parser {
-	Xop_parser(ByteTrieMgr_fast tmpl_trie, ByteTrieMgr_fast wiki_trie) {this.tmpl_trie = tmpl_trie; this.wiki_trie = wiki_trie;}
+	public Xop_parser(Xop_lxr_mgr tmpl_lxr_mgr, Xop_lxr_mgr wiki_lxr_mgr) {
+		this.tmpl_lxr_mgr = tmpl_lxr_mgr; this.tmpl_trie = tmpl_lxr_mgr.Trie();
+		this.wiki_lxr_mgr = wiki_lxr_mgr; this.wiki_trie = wiki_lxr_mgr.Trie();
+	}
+	public Xop_lxr_mgr Tmpl_lxr_mgr() {return tmpl_lxr_mgr;} private Xop_lxr_mgr tmpl_lxr_mgr;
+	public Xop_lxr_mgr Wiki_lxr_mgr() {return wiki_lxr_mgr;} private Xop_lxr_mgr wiki_lxr_mgr;
 	public ByteTrieMgr_fast Tmpl_trie() {return tmpl_trie;} private ByteTrieMgr_fast tmpl_trie; 
 	public ByteTrieMgr_fast Wiki_trie() {return wiki_trie;} private ByteTrieMgr_fast wiki_trie;
+	public void Init_by_wiki(Xow_wiki wiki) {
+		tmpl_lxr_mgr.Init_by_wiki(wiki);
+		wiki_lxr_mgr.Init_by_wiki(wiki);
+	}
+	public void Init_by_lang(Xol_lang lang) {
+		tmpl_lxr_mgr.Init_by_lang(lang);
+		wiki_lxr_mgr.Init_by_lang(lang);
+	}
 	public Xop_root_tkn Parse_recurse(Xop_ctx old_ctx, byte[] src, boolean doc_bgn_pos) {return Parse_recurse(old_ctx, Xop_ctx.new_sub_(old_ctx.Wiki()), src, doc_bgn_pos);}
 	public Xop_root_tkn Parse_recurse(Xop_ctx old_ctx, Xop_ctx new_ctx, byte[] src, boolean doc_bgn_pos) {
 		new_ctx.Para().Enabled_n_();
@@ -90,7 +103,7 @@ public class Xop_parser {
 				if (txt_bgn != pos)		// chars exist between pos and txt_bgn; make txt_tkn; see NOTE_1
 					txt_tkn = Txt_add(ctx, tkn_mkr, root, txt_tkn, txt_bgn, pos);
 				ctx.Lxr_make_(true);
-				pos = lxr.MakeTkn(ctx, tkn_mkr, root, src, len, pos, trie.Match_pos());
+				pos = lxr.Make_tkn(ctx, tkn_mkr, root, src, len, pos, trie.Match_pos());
 				if (ctx.Lxr_make()) {txt_bgn = pos; txt_tkn = null;}	// reset txt_tkn
 			}
 			if (pos == len) break;
@@ -109,10 +122,12 @@ public class Xop_parser {
 			tkn.Src_end_(pos);
 		return tkn;
 	}
-	public static Xop_parser new_wiki_(Xow_wiki wiki)			{return new Xop_parser(Xop_parser_.new_trie_tmpl_(wiki), Xop_parser_.new_trie_wiki_(wiki));}
-	public static Xop_parser new_sub_(Xow_wiki wiki)			{return new Xop_parser(wiki.Parser().Tmpl_trie(), wiki.Parser().Wiki_trie());}
-	public static Xop_parser anchorencode_(Xow_wiki wiki)		{return new Xop_parser(wiki.Parser().Tmpl_trie(), Xop_parser_.Anchorencode_trie(wiki));}
-	public static Xop_parser poem_(Xow_wiki wiki)				{return new Xop_parser(wiki.Parser().Tmpl_trie(), Xop_parser_.Poem_trie(wiki));}
+	public static Xop_parser new_wiki_(Xow_wiki wiki) {
+		Xop_parser rv = new Xop_parser(Xop_lxr_mgr.new_tmpl_(), Xop_lxr_mgr.new_wiki_());
+		rv.Init_by_wiki(wiki);
+		rv.Init_by_lang(wiki.Lang());
+		return rv;
+	}
 }
 /*
 NOTE_1
@@ -121,11 +136,11 @@ abc[[\nef[[a]]
 abc		: increment pos
 [[\n	: lnki lxr
 		: (1): txt_tkn == null, so create txt_tkn with (0, 3)
-		: (2): lxr.MakeTkn() entered for lnki; however \n exits lnki
+		: (2): lxr.Make_tkn() entered for lnki; however \n exits lnki
 		: (3): note that ctx.Lxr_make == false, so txt_bgn/txt_tkn is not reset
 ef		: still just text; increment pos
 [[a]]	: lnki entered
 		: (1): txt_tkn != null; set end to 8
-		: (2): lxr.MakeTkn() entered and lnki made
+		: (2): lxr.Make_tkn() entered and lnki made
 		: (3): note that ctx.Lxr_make == true, so txt_bgn = 13 and txt_tkn = null
 */

@@ -16,10 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.lst; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-import org.junit.*;
-public class Xtn_section_nde_tst {
-	private Xop_fxt fxt = new Xop_fxt();
-	@Test  public void Basic() {
-		fxt.tst_Parse_page_all_str("a<section name=\"b\">c</section>d", "ad");
-	}
+public class Lst_section_nde_mgr {
+	public int Count() {return list.Count();} private ListAdp list = ListAdp_.new_();
+	public Lst_section_nde Get_at(int i) {return (Lst_section_nde)list.FetchAt(i);}
+	public void Add(Lst_section_nde xnde) {list.Add(xnde);}
+	public void Clear() {list.Clear();}
 }

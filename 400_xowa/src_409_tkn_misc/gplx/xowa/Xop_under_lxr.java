@@ -17,9 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 class Xop_under_lxr implements Xop_lxr {
+	private Hash_adp_bry under_words;
 	public byte Lxr_tid() {return Xop_lxr_.Tid_under;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
-		Xol_kwd_mgr kwd_mgr = wiki.Lang().Kwd_mgr();
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {}
+	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {
+		Xol_kwd_mgr kwd_mgr = lang.Kwd_mgr();
 		int under_kwds_len = under_kwds.length;
 		Xop_under_lxr lxr = new Xop_under_lxr();
 		lxr.under_words = new Hash_adp_bry(false);
@@ -42,8 +44,7 @@ class Xop_under_lxr implements Xop_lxr {
 	,	Xol_kwd_grp_.Id_hiddencat, Xol_kwd_grp_.Id_index, Xol_kwd_grp_.Id_noindex, Xol_kwd_grp_.Id_staticredirect
 	,	Xol_kwd_grp_.Id_disambig
 	};
-	Hash_adp_bry under_words;
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		Object o = under_words.Get_by_mid(src, bgn_pos, cur_pos);
 		if (o != null) {
 			IntVal id_val = (IntVal)o;
@@ -59,5 +60,5 @@ class Xop_under_lxr implements Xop_lxr {
 		}
 		return ctx.LxrMake_txt_(cur_pos);
 	}
-	public static final Xop_under_lxr Bldr = new Xop_under_lxr();
+        public static final Xop_under_lxr _ = new Xop_under_lxr(); Xop_under_lxr() {}
 }

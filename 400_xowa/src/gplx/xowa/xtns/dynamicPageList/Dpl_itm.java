@@ -43,7 +43,8 @@ class Dpl_itm {
 		byte key_id = 0;
 		Gfo_usr_dlg usr_dlg = wiki.App().Usr_dlg();
 		boolean ws_bgn_chk = true; int ws_bgn_idx = -1, ws_end_idx = -1;
-		while (true) {										// iterate over content
+		boolean loop = true;
+		while (loop) {										// iterate over content
 			boolean done = pos >= content_end;
 			byte b = done ? Dlm_row : src[pos];				// get cur byte
 			switch (b) {
@@ -56,9 +57,9 @@ class Dpl_itm {
 					int fld_end = ws_end_idx == -1 ? pos : ws_end_idx;
 					key_id = Dpl_itm_keys.Parse(src, fld_bgn, fld_end, Dpl_itm_keys.Key_null);
 					if (key_id == Dpl_itm_keys.Key_null) {	// unknown key; warn and set pos to end of line; EX: "unknown=";
-						usr_dlg.Warn_many("", "", "unknown_key: page=~{0} key=~{1}", String_.new_utf8_(page_ttl), String_.new_utf8_(src, fld_bgn, fld_end));
-						fld_bgn = ByteAry_.FindFwd(src, Byte_ascii.NewLine);
-						if (fld_bgn == ByteAry_.NotFound) break; 
+						Parse_missing_key(usr_dlg, page_ttl, src, fld_bgn, fld_end);
+						fld_bgn = ByteAry_.FindFwd(src, Byte_ascii.NewLine, pos);
+						if (fld_bgn == ByteAry_.NotFound) loop = false;
 					}
 					else {									// known key; set pos to val_bgn
 						fld_bgn = pos + Int_.Const_dlm_len;
@@ -111,22 +112,50 @@ class Dpl_itm {
 		}
 	}
 	private void Parse_ctg_date(byte[] val) {
-		//			byte val_key = Keys_get_or(val, Dpl_itm_keys.Key_false);
-		//			if (val_key == Dpl_itm_keys.Key_true)
-		//				ctg_date = true;
-		//			else {
-		//				if (val.length == 8) { 	// HACK: preg_match( '/^(?:[ymd]{2,3}|ISO 8601)$/'
-		//					ctg_date = true;
-		//					ctg_date_fmt = val;
-		//					if (ctg_date_fmt.length == 2) {
-		//						ctg_date_strip = true;
-		//						ctg_date_fmt = ByteAry_.Add(ctg_date_fmt, new byte[] {Byte_ascii.Ltr_y});
-		//					}
-		//				}
-		//				else
-		//					ctg_date = false;
-		//			}
+//			byte val_key = Keys_get_or(val, Dpl_itm_keys.Key_false);
+//			if (val_key == Dpl_itm_keys.Key_true)
+//				ctg_date = true;
+//			else {
+//				if (val.length == 8) { 	// HACK: preg_match( '/^(?:[ymd]{2,3}|ISO 8601)$/'
+//					ctg_date = true;
+//					ctg_date_fmt = val;
+//					if (ctg_date_fmt.length == 2) {
+//						ctg_date_strip = true;
+//						ctg_date_fmt = ByteAry_.Add(ctg_date_fmt, new byte[] {Byte_ascii.Ltr_y});
+//					}
+//				}
+//				else
+//					ctg_date = false;
+//			}
 	}
+	private void Parse_missing_key(Gfo_usr_dlg usr_dlg, byte[] page_ttl, byte[] src, int fld_bgn, int fld_end) {
+		byte[] key_bry = ByteAry_.Mid(src, fld_bgn, fld_end);
+		boolean log = 
+			(	Known_invalid_keys.Get_by_mid(src, fld_bgn, fld_end) != null
+			||	ByteAry_.HasAtBgn(key_bry, Xoh_consts.Comm_bgn)			// ignore comment-like keys; EX: <!--category=Ctg_0--> will have key of "<!--category="
+			);
+		String err_msg = String_.Format("unknown_key: page={0} key={1}", String_.new_utf8_(page_ttl), String_.new_utf8_(key_bry));
+		if (log)
+			usr_dlg.Log_many("", "", err_msg);
+		else
+			usr_dlg.Warn_many("", "", err_msg);
+	}
+	private static final Hash_adp_bry Known_invalid_keys = new Hash_adp_bry(false)
+	.Add_str_obj("orcer"						, BoolVal.True)	// ignore as per http://en.wikinews.org/wiki/Template_talk:United_States; (Note it doesn't make a difference, as categoryadd is the default order method.)
+	.Add_str_obj("addcategorydatefirst"			, BoolVal.True)
+	.Add_str_obj("mainspace"					, BoolVal.True)
+	.Add_str_obj("showcurid"					, BoolVal.True)
+	.Add_str_obj("sort"							, BoolVal.True)	// fr.n
+	.Add_str_obj("supresserror"					, BoolVal.True)	// fr.n
+	.Add_str_obj("supresserrors"				, BoolVal.True)	// frequency: 3 - 10
+	.Add_str_obj("addlasteditor"				, BoolVal.True)
+	.Add_str_obj("noresultsheader"				, BoolVal.True)
+	.Add_str_obj("catergory"					, BoolVal.True)
+	.Add_str_obj("catrgory"						, BoolVal.True)
+	.Add_str_obj("allrevisionssince"			, BoolVal.True)	// frequency: 1
+	.Add_str_obj("limit"						, BoolVal.True)
+	.Add_str_obj("namespacename"				, BoolVal.True)
+	;
 	public static final int Ns_filter_null = Int_.MinValue;
 	// boolean ctg_date = false, ctg_date_strip = false;
 	// byte[] ns_include = null;

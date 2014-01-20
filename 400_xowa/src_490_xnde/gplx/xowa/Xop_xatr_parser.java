@@ -17,13 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_ATTRIBS_REGEX
-	ListAdp xatrs = ListAdp_.new_();
-	static final byte Mode_ini = 0, Mode_atr_bgn = 1, Mode_invalid = 2, Mode_key = 3, Mode_eq = 4, Mode_val_bgn = 5, Mode_val_quote = 6, Mode_val_raw = 7;
-	byte mode = Mode_atr_bgn;
-	int atr_bgn = -1, key_bgn = -1, key_end = -1, eq_pos = -1, val_bgn = -1, val_end = -1; boolean valid = true;
-	byte quote_byte = Byte_ascii.Nil;
-	Hash_adp_bry xnde_hash = new Hash_adp_bry(false).Add_bry_bry(Xop_xnde_tag_.Tag_nowiki.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_noinclude.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_includeonly.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_onlyinclude.Name_bry());
-	ByteAryBfr key_bfr = ByteAryBfr.new_(), val_bfr = ByteAryBfr.new_(); boolean key_bfr_on = false, val_bfr_on = false;
+	private ListAdp xatrs = ListAdp_.new_();
+	private static final byte Mode_atr_bgn = 1, Mode_invalid = 2, Mode_key = 3, Mode_eq = 4, Mode_val_bgn = 5, Mode_val_quote = 6, Mode_val_raw = 7;
+	private byte mode = Mode_atr_bgn;
+	private int atr_bgn = -1, key_bgn = -1, key_end = -1, eq_pos = -1, val_bgn = -1, val_end = -1; boolean valid = true;
+	private byte quote_byte = Byte_ascii.Nil;
+	private Hash_adp_bry xnde_hash = new Hash_adp_bry(false).Add_bry_bry(Xop_xnde_tag_.Tag_nowiki.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_noinclude.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_includeonly.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_onlyinclude.Name_bry());
+	private ByteAryBfr key_bfr = ByteAryBfr.new_(), val_bfr = ByteAryBfr.new_(); boolean key_bfr_on = false, val_bfr_on = false;
 	public int Xnde_find_gt_find(byte[] src, int pos, int end) {
 		byte b = src[pos];
 		if (b == Byte_ascii.Slash && pos + 1 < end) {	// if </ move pos to after /
@@ -167,10 +167,13 @@ public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_AT
 				case Mode_eq:
 					switch (b) {
 						case Byte_ascii.Space: case Byte_ascii.NewLine: case Byte_ascii.Tab: // skip ws
-							val_end = i - 1;
-							Make(log_mgr, src, i);
-							mode = Mode_atr_bgn;
-							continue;
+							if (key_end == -1) {		// EX: "a = b"; key_end != -1 b/c 1st \s sets key_end; EX: "a b = c"; key_end
+								val_end = i - 1;
+								Make(log_mgr, src, i);
+								mode = Mode_atr_bgn;
+								continue;
+							}
+							break;
 						case Byte_ascii.Eq:
 							eq_pos = i;
 							mode = Mode_val_bgn;

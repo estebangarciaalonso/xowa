@@ -20,6 +20,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 	public Xow_ns Ns() {return ns;} private Xow_ns ns;
 	public boolean ForceLiteralLink() {return forceLiteralLink;} private boolean forceLiteralLink;
 	// NOTE: in procs below, all -1 are used to skip previous delimiters; they will only occur for end_pos arguments
+	public boolean Eq_page_db(Xoa_ttl comp) {if (comp == null) return false; return ByteAry_.Eq(this.Page_db(), comp.Page_db());}	// check page is same; ignores anchor and xwiki
 	public byte[] Raw() {return raw;} private byte[] raw = ByteAry_.Empty;
 	public byte[] Wik_txt()  {return wik_bgn == -1 ? ByteAry_.Empty : ByteAry_.Mid(full_txt, wik_bgn, ns_bgn == -1 ? page_bgn - 1 : ns_bgn - 1);}
 	public Xow_xwiki_itm Wik_itm() {return wik_itm;} private Xow_xwiki_itm wik_itm;
@@ -178,7 +179,8 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 				case Byte_ascii.Slash:
 					if (root_bgn == -1)
 						root_bgn = (txt_bb_len) + 1;
-					leaf_bgn = (txt_bb_len) + 1;
+					if (anch_bgn == -1)	// only set leaf if anchor found; guards against A#B/C and / setting leaf; DATE:2014-01-14
+						leaf_bgn = (txt_bb_len) + 1;
 					break;	// flag last leaf_bgn
 				case Byte_ascii.NewLine:	// NOTE: for now, treat nl just like space; not sure if it should accept "a\nb" or "\nab"; need to handle trailing \n for "Argentina\n\n" in {{Infobox settlement|pushpin_map=Argentina|pushpin_label_position=|pushpin_map_alt=|pushpin_map_caption=Location of Salta in Argentina}};
 				case Byte_ascii.Space: case Byte_ascii.Tab: case Byte_ascii.CarriageReturn:	// added \t, \r; DATE:2013-03-27

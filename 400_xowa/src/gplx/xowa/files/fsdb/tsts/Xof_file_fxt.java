@@ -96,7 +96,7 @@ class Xof_file_fxt {
 		byte[] ttl_bry = ByteAry_.new_ascii_(ttl_str);
 		byte[] md5 = Xof_xfer_itm.Md5_(ttl_bry);
 		Xof_ext ext = Xof_ext_.new_by_ttl_(ttl_bry);
-		return new Xof_fsdb_itm().Init_by_lnki(ttl_bry, ext, md5, type, w, h, upright, thumbtime);
+		return new Xof_fsdb_itm().Init_by_lnki(ttl_bry, ext, md5, type, w, h, upright, thumbtime, Xop_lnki_tkn.Page_null);
 	}
 	public void Test_itm_ext(Xof_fsdb_itm itm, int expd_ext_id) {Tfds.Eq(expd_ext_id, itm.Lnki_ext().Id());}
 	public void Rls() {fsdb_mgr.Rls();}

@@ -23,8 +23,8 @@ public class Xoh_href_parser {
 		url_parser.Protocols_add(String_.new_ascii_(Xop_lnke_wkr.Bry_xowa_protocol), Protocol_xowa_tid);
 		segs.Add_stubs(Seg__ary);
 	}	Url_encoder encoder; Gfo_url_parser url_parser; Gfo_url tmp_url = new Gfo_url(); 
-	static final byte Protocol_xowa_tid = Gfo_url_parser.Protocol_file_tid + 1;
-	ByteTrieMgr_slim segs = ByteTrieMgr_slim.ci_(); ByteAryBfr bfr_scratch = ByteAryBfr.reset_(255), bfr_encoder = ByteAryBfr.reset_(255), bfr_temp = ByteAryBfr.reset_(255);		
+	private static final byte Protocol_xowa_tid = Gfo_url_parser.Protocol_file_tid + 1;
+	private ByteTrieMgr_slim segs = ByteTrieMgr_slim.ci_(); ByteAryBfr bfr_scratch = ByteAryBfr.reset_(255), bfr_encoder = ByteAryBfr.reset_(255), bfr_temp = ByteAryBfr.reset_(255);		
 	public void Parse(Xoh_href rv, String raw, Xow_wiki wiki, byte[] cur_page) {Parse(rv, ByteAry_.new_utf8_(raw), wiki, cur_page);}
 	public void Parse(Xoh_href rv, byte[] raw, Xow_wiki wiki, byte[] cur_page) {
 		int bgn = 0, raw_len = raw.length; int file_slash_end = 0;			

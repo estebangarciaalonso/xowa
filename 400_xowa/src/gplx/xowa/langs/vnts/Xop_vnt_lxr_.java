@@ -21,22 +21,21 @@ public class Xop_vnt_lxr_ {
 		ByteTrieMgr_fast wiki_trie = wiki.Parser().Wiki_trie();
 		Object exists = wiki_trie.MatchAtCur(Xop_vnt_lxr_.Hook_bgn, 0, Xop_vnt_lxr_.Hook_bgn.length);
 		if (exists == null) {
-			Xop_vnt_lxr_eqgt._.Ctor_lxr(wiki, wiki_trie);
-			Xop_vnt_lxr_bgn._.Ctor_lxr(wiki, wiki_trie);
-			new Xop_vnt_lxr_end().Ctor_lxr(wiki, wiki_trie);
+			Xop_vnt_lxr_eqgt._.Init_by_wiki(wiki, wiki_trie);
+			Xop_vnt_lxr_bgn._.Init_by_wiki(wiki, wiki_trie);
+			new Xop_vnt_lxr_end().Init_by_wiki(wiki, wiki_trie);
 
 			ByteTrieMgr_fast tmpl_trie = wiki.Parser().Tmpl_trie();
-			Xop_vnt_lxr_tmpl_bgn._.Ctor_lxr(wiki, tmpl_trie);
+			Xop_vnt_lxr_tmpl_bgn._.Init_by_wiki(wiki, tmpl_trie);
 		}
 	}
 	public static final byte[] Hook_bgn = new byte[] {Byte_ascii.Dash, Byte_ascii.Curly_bgn}, Hook_end = new byte[] {Byte_ascii.Curly_end, Byte_ascii.Dash};
 }
 class Xop_vnt_lxr_eqgt implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_vnt_eqgt;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
-		core_trie.Add(Hook, this);
-	}
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Hook, this);}
+	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		ctx.Subs_add_and_stack(root, tkn_mkr.Vnt_eqgt(bgn_pos, cur_pos));
 		return cur_pos;
 	}
@@ -45,10 +44,9 @@ class Xop_vnt_lxr_eqgt implements Xop_lxr {
 }
 class Xop_vnt_lxr_tmpl_bgn implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_vnt_tmpl_bgn;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
-		core_trie.Add(Hook, this);
-	}
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Hook, this);}
+	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		int curly_end_pos  = Xop_lxr_.Find_fwd_while(src, src_len, cur_pos, Byte_ascii.Curly_bgn);	// NOTE: can be many consecutive {; EX: {{{{{1}}}|a}}
 		int curly_len = (curly_end_pos - cur_pos) + 2;
 		byte[] manual_bry = null;
@@ -75,10 +73,9 @@ class Xop_vnt_lxr_tmpl_bgn implements Xop_lxr {
 }
 class Xop_vnt_lxr_bgn implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_vnt_bgn;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
-		core_trie.Add(Xop_vnt_lxr_.Hook_bgn, this);
-	}
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Xop_vnt_lxr_.Hook_bgn, this);}
+	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		ctx.Subs_add_and_stack(root, tkn_mkr.Vnt(bgn_pos, cur_pos));
 		return cur_pos;
 	}
@@ -88,13 +85,14 @@ class Xop_vnt_lxr_end implements Xop_lxr {
 	private Xop_vnt_flag_parser flag_parser;
 	private Xop_vnt_rules_parser rule_parser;
 	public byte Lxr_tid() {return Xop_lxr_.Tid_vnt_end;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
 		core_trie.Add(Xop_vnt_lxr_.Hook_end, this);
 		Xol_vnt_mgr vnt_mgr = wiki.Lang().Vnt_mgr();
 		flag_parser = new Xop_vnt_flag_parser(vnt_mgr);
 		rule_parser = new Xop_vnt_rules_parser(vnt_mgr);
 	}
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		int stack_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_vnt);
 		if (stack_pos == Xop_ctx.Stack_not_found) return ctx.LxrMake_txt_(cur_pos);	// "}-" found but no "-{" in stack;
 		Xop_vnt_tkn vnt_tkn = (Xop_vnt_tkn)ctx.Stack_pop_til(root, src, stack_pos, false, bgn_pos, cur_pos);

@@ -91,7 +91,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 			page_html_fmtr.Eval_mgr_(wiki.Eval_mgr());
 		}
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
-		byte[] bry = wkr.Bld_bry(this, page, tmp_bfr);
+		byte[] bry = wkr.Bld_bry(wiki.Ctx(), this, page, tmp_bfr);
 		tmp_bfr.Mkr_rls();
 		return bry;
 	}

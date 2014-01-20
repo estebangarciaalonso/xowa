@@ -25,17 +25,18 @@ public abstract class Xodb_in_wkr_base {
 	public void Select_in(Db_provider provider, Cancelable cancelable, int full_bgn, int full_end) {
 		DataRdr rdr = DataRdr_.Null; 
 		Db_stmt stmt = Db_stmt_.Null;
-		try {
-			int interval = Interval();
-			for (int i = full_bgn; i < full_end; i += interval) {
-				int part_end = i + interval;
-				if (part_end > full_end) part_end = full_end;
+		int interval = Interval();
+		for (int i = full_bgn; i < full_end; i += interval) {
+			int part_end = i + interval;
+			if (part_end > full_end) part_end = full_end;
+			try {
 				stmt = provider.Prepare(Build_qry(i, part_end));
 				Fill_stmt(stmt, i, part_end);
 				rdr = stmt.Exec_select();
 				Eval_rslts(cancelable, rdr);
 			}
-		}	finally {rdr.Rls(); stmt.Rls();}
+			finally {rdr.Rls(); stmt.Rls();}
+		}
 	}
 	public static Object[] In_ary(int len) {
 		Object[] rv = new Object[len];

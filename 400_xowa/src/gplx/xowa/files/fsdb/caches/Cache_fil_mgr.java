@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb.caches; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
 import gplx.dbs.*;
+import gplx.fsdb.*;
 class Cache_fil_mgr {
 	private Cache_mgr cache_mgr;
 	private OrderedHash fil_hash = OrderedHash_.new_bry_();
@@ -102,9 +103,12 @@ class Cache_fil_mgr {
 		Xow_wiki wiki = repo_mgr.App().Wiki_mgr().Get_by_key_or_make(wiki_domain);
 		wiki.Init_assert();
 		Xof_repo_itm trg_repo = repo_mgr.Get_primary(wiki_domain);
-		byte[] ttl = itm.Fil_name();
+		byte[] ttl = itm.Fil_name();			
 		byte[] md5 = Xof_xfer_itm.Md5_(ttl);
-		Io_url fil_url = url_bldr.Set_trg_file_(mode_id, trg_repo, ttl, md5, itm.Fil_ext(), itm.Fil_w(), itm.Fil_thumbtime()).Xto_url();
+		Io_url fil_url = url_bldr.Set_trg_file_(mode_id, trg_repo, ttl, md5, itm.Fil_ext(), itm.Fil_w()
+			, Fsdb_xtn_thm_itm.X_to_xowa_thumbtime(itm.Fil_ext().Id(), itm.Fil_thumbtime())
+			, Fsdb_xtn_thm_itm.X_to_xowa_page(itm.Fil_ext().Id(), itm.Fil_thumbtime())
+			).Xto_url();
 		Io_mgr._.DeleteFil_args(fil_url).MissingFails_off().Exec();
 		itm.Cmd_mode_delete_();
 	}

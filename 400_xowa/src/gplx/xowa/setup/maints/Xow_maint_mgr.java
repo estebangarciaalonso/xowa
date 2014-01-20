@@ -32,7 +32,8 @@ public class Xow_maint_mgr implements GfoInvkAble {
 			wiki_dump_date = wiki.Db_mgr().Dump_date_query();
 		return wiki_dump_date;
 	}	private DateAdp wiki_dump_date;
-	public boolean Wiki_update_needed() {			
+	public boolean Wiki_update_needed() {
+		if (this.Wiki_dump_date() == null) return false;	// will be null if a custom wiki (i.e.: not on http://dumps.wikimedia.org/backup-index.html)
 		return this.Wmf_dump_date().Diff(this.Wiki_dump_date()).Total_days().XtoDouble() > 1;
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {

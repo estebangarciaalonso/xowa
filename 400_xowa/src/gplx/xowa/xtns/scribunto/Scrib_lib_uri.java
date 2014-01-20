@@ -45,12 +45,13 @@ class Scrib_lib_uri implements Scrib_lib {
 		return Scrib_kv_utl.base1_obj_(bfr.Mkr_rls().XtoStrAndClear());
 	}
 	public KeyVal[] Url_func(KeyVal[] values, byte url_tid) {
+		Xow_wiki wiki = engine.Wiki();
 		ByteAryBfr bfr = engine.App().Utl_bry_bfr_mkr().Get_b512();
 		byte[] ttl_bry = Scrib_kv_utl.Val_to_bry(values, 0);
-		byte[] qry_bry = Scrib_kv_utl.Val_to_bry_or(values, 1, ByteAry_.Empty);
-		Xoa_ttl ttl = Xoa_ttl.parse_(engine.Wiki(), ttl_bry);
+		byte[] qry_bry = Scrib_kv_utl.Val_to_url_qry_args(wiki, values, 1);
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
 		if (ttl.Ns().Id() == Xow_ns_.Id_media) {	// change "Media:" -> "File:"
-			bfr.Add(engine.Wiki().Ns_mgr().Ns_file().Name_db_w_colon());
+			bfr.Add(wiki.Ns_mgr().Ns_file().Name_db_w_colon());
 			bfr.Add(ttl.Page_db());
 			ttl_bry = bfr.XtoAryAndClear();
 		}				

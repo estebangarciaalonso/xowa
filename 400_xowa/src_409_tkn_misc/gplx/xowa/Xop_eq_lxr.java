@@ -19,8 +19,9 @@ package gplx.xowa; import gplx.*;
 class Xop_eq_lxr implements Xop_lxr {//20111222
 	public Xop_eq_lxr(boolean tmpl_mode) {this.tmpl_mode = tmpl_mode;}	boolean tmpl_mode;
 	public byte Lxr_tid() {return Xop_lxr_.Tid_eq;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Byte_ascii.Eq, this);}
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Byte_ascii.Eq, this);}
+	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		if (tmpl_mode) {
 			ctx.Subs_add(root, tkn_mkr.Eq(bgn_pos, cur_pos, 1));
 			return cur_pos;

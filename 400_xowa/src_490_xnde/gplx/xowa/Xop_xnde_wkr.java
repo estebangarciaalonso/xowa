@@ -33,7 +33,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		xnde.Subs_move(root);	// NOTE: ctx.Root used to be root which was a member variable; DATE:2013-12-11
 		ctx.Msg_log().Add_itm_none(Xop_xnde_log.Dangling_xnde, src, xnde.Src_bgn(), xnde.Name_end());	// NOTE: xnde.Src_bgn to start at <; xnde.Name_end b/c xnde.Src_end is -1
 	}
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		if (bgn_pos == Xop_parser_.Doc_bgn_bos) {
 			bgn_pos = 0;	// do not allow -1 pos
 			ctx.Para().Prv_para_disable(bgn_pos);
@@ -144,9 +144,12 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			byte b = src[i];
 			switch (b) {
 				case Byte_ascii.Lt:	// < encountered; may be inner node inside tag which is legal in wikitext; EX: "<ul style=<nowiki>#</nowiki>FFFFFF>"
-					int valid_inner_xnde_gt = ctx.App().Xatr_parser().Xnde_find_gt_find(src, i + 1, src_len);
-					if (valid_inner_xnde_gt != String_.NotFound) {
-						i = valid_inner_xnde_gt;
+					int name_bgn_pos = i + 1;
+					if (name_bgn_pos < src_len) {	// chk that name_bgn is less than src_len else arrayIndex error; EX: <ref><p></p<<ref/>; not that "<" is last char of String; DATE:2014-01-18
+						int valid_inner_xnde_gt = ctx.App().Xatr_parser().Xnde_find_gt_find(src, name_bgn_pos, src_len);
+						if (valid_inner_xnde_gt != String_.NotFound) {
+							i = valid_inner_xnde_gt;
+						}
 					}
 					break;
 				case Byte_ascii.Gt:

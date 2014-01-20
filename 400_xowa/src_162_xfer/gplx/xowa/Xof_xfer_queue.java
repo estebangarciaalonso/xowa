@@ -71,9 +71,9 @@ public class Xof_xfer_queue {
 		ListAdp rv = ListAdp_.new_();
 		int list_len = list.Count();
 		for (int i = 0; i < list_len; i++) {
-			Xof_xfer_itm xfer_itm = (Xof_xfer_itm)list.FetchAt(i);				
+			Xof_xfer_itm xfer_itm = (Xof_xfer_itm)list.FetchAt(i);
 			Xof_fsdb_itm fsdb_itm = new Xof_fsdb_itm();
-			fsdb_itm.Init_by_lnki(xfer_itm.Lnki_ttl(), xfer_itm.Lnki_ext(), xfer_itm.Lnki_md5(), xfer_itm.Lnki_type(), xfer_itm.Lnki_w(), xfer_itm.Lnki_h(), xfer_itm.Lnki_upright(), xfer_itm.Lnki_thumbtime());				
+			fsdb_itm.Init_by_lnki(xfer_itm.Lnki_ttl(), xfer_itm.Lnki_ext(), xfer_itm.Lnki_md5(), xfer_itm.Lnki_type(), xfer_itm.Lnki_w(), xfer_itm.Lnki_h(), xfer_itm.Lnki_upright(), xfer_itm.Lnki_thumbtime(), xfer_itm.Lnki_page());
 			fsdb_itm.Html_uid_(xfer_itm.Html_uid());
 			fsdb_itm.Html_elem_tid_(xfer_itm.Html_elem_tid());
 			fsdb_itm.Gallery_mgr_h_(xfer_itm.Gallery_mgr_h());

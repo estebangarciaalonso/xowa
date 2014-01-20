@@ -18,13 +18,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.gui.wins; import gplx.*; import gplx.xowa.*; import gplx.xowa.gui.*;
 import gplx.xowa.files.*;
 public class Xog_url_wkr {
-	private static Xoh_href tmp_href = new Xoh_href();
-	public static Xoa_url Exec_url(Xog_win win, String href) {
-		if (href == null) return Rslt_handled;	// text is not link; return;
-		byte[] href_bry = ByteAry_.new_utf8_(href);
-		Xoa_app app = win.App(); Xoa_page page = win.Page();
-		app.Href_parser().Parse(tmp_href, href_bry, page.Wiki(), page.Page_ttl().Page_url());
-		switch (tmp_href.Tid()) {
+	private Xoh_href href = new Xoh_href();
+	private Xoa_app app; private Xog_win win; private Xoa_page page;
+	public byte Href_tid() {return href.Tid();}
+	public Xog_url_wkr Parse(Xog_win win, String href_str) {
+		if (href_str == null) return this;	// text is not link; return;
+		byte[] href_bry = ByteAry_.new_utf8_(href_str);
+		this.win = win; this.app = win.App(); this.page = win.Page();
+		app.Href_parser().Parse(href, href_bry, page.Wiki(), page.Page_ttl().Page_url());
+		return this;
+	}
+	public Xoa_url Exec() {
+		byte[] href_bry = href.Raw();
+		switch (href.Tid()) {
 			case Xoh_href.Tid_null:			return Rslt_handled;								// url is invalid; return handled (which effectively ignores)
 			case Xoh_href.Tid_xowa:			return Exec_url_xowa(app);							// xowa:app.version
 			case Xoh_href.Tid_http:			return Exec_url_http(app);							// http://site.org
@@ -34,22 +40,22 @@ public class Xog_url_wkr {
 			default:						return Exec_url_page(app, page, win, href_bry);		// Page /wiki/Page
 		}
 	}
-	private static Xoa_url Exec_url_xowa(Xoa_app app) {		// EX: xowa:app.version
+	private Xoa_url Exec_url_xowa(Xoa_app app) {		// EX: xowa:app.version
 		// NOTE: must catch exception else it will bubble to SWT browser and raise secondary exception of xowa is not a registered protocol
-		try {app.Gfs_mgr().Run_str(String_.new_utf8_(tmp_href.Page()));}
+		try {app.Gfs_mgr().Run_str(String_.new_utf8_(href.Page()));}
 		catch (Exception e) {app.Gui_mgr().Kit().Ask_ok("", "", Err_.Message_gplx_brief(e));}
 		return Rslt_handled;
 	}
-	private static Xoa_url Exec_url_http(Xoa_app app) {		// EX: http:a.org
-		app.Fsys_mgr().App_mgr().Exec_view_web(tmp_href.Raw());
+	private Xoa_url Exec_url_http(Xoa_app app) {		// EX: http:a.org
+		app.Fsys_mgr().App_mgr().Exec_view_web(href.Raw());
 		return Rslt_handled;
 	}
-	private static Xoa_url Exec_url_anchor(Xog_win win) {	// EX: #anchor
-		win.Exec_html_box_select_by_id(String_.new_utf8_(tmp_href.Anchor()));
+	private Xoa_url Exec_url_anchor(Xog_win win) {	// EX: #anchor
+		win.Exec_html_box_select_by_id(String_.new_utf8_(href.Anchor()));
 		return Rslt_handled;
 	}
-	private static Xoa_url Exec_url_xcmd(Xog_win win) {		// EX: /xcmd/
-		byte[] xowa_href_bry = tmp_href.Page();
+	private Xoa_url Exec_url_xcmd(Xog_win win) {		// EX: /xcmd/
+		byte[] xowa_href_bry = href.Page();
 		int xowa_href_bry_len = xowa_href_bry.length;
 		int slash_pos = ByteAry_.FindFwd(xowa_href_bry, Byte_ascii.Slash); if (slash_pos == ByteAry_.NotFound) slash_pos = xowa_href_bry_len;
 		byte[] xowa_cmd_bry = ByteAry_.Mid(xowa_href_bry, 0, slash_pos);
@@ -60,7 +66,7 @@ public class Xog_url_wkr {
 		win.Invk(GfsCtx.new_(), 0, xowa_cmd_str, m);
 		return Rslt_handled;
 	}
-	private static Xoa_url Exec_url_file(Xoa_app app, Xoa_page page, Xog_win win, byte[] href_bry) {	// EX: file:///xowa/A.png
+	private Xoa_url Exec_url_file(Xoa_app app, Xoa_page page, Xog_win win, byte[] href_bry) {	// EX: file:///xowa/A.png
 		href_bry = app.Url_converter_url().Decode(href_bry);
 		String url_str = Io_url.parse_http_file(String_.new_utf8_(href_bry), Op_sys.Cur().Tid_is_wnt());
 		Io_url href_url = Io_url_.new_fil_(url_str);
@@ -70,7 +76,7 @@ public class Xog_url_wkr {
 		if (!Io_mgr._.ExistsFil(href_url)) {
 			Xof_xfer_itm xfer_itm = new Xof_xfer_itm();
 			byte[] title = app.Url_converter_url().Decode(ByteAry_.new_utf8_(xowa_ttl));
-			xfer_itm.Atrs_by_lnki(Xop_lnki_type.Id_none, -1, -1, -1, -1).Atrs_by_ttl(title, ByteAry_.Empty);
+			xfer_itm.Atrs_by_lnki(Xop_lnki_type.Id_none, -1, -1, -1, -1, Xop_lnki_tkn.Page_null).Atrs_by_ttl(title, ByteAry_.Empty);
 			page.Wiki().File_mgr().Find_meta(xfer_itm);
 			page.File_queue().Clear();
 			page.File_queue().Add(xfer_itm);	// NOTE: set elem_id to "impossible" number, otherwise it will auto-update an image on the page with a super-large size; [[File:Alfred Sisley 062.jpg]]
@@ -84,34 +90,50 @@ public class Xog_url_wkr {
 		}
 		return Rslt_handled;
 	}
-	private static Xoa_url Exec_url_page(Xoa_app app, Xoa_page page, Xog_win win, byte[] href_bry) {	// EX: "Page"; "/wiki/Page"
-		// HACK: code to reparse href in wiki; EX: (1) goto w:Anything; (2) click on "anything" in wikt; "anything" will be parsed by en.wiki's rules, not en.wikt; DATE:2013-01-30
-		Xow_wiki tmp_href_wiki = app.Wiki_mgr().Get_by_key_or_make(tmp_href.Wiki());
-		tmp_href_wiki.Init_assert();
-		app.Href_parser().Parse(tmp_href, href_bry, tmp_href_wiki, page.Page_ttl().Page_url());
+	private Xoa_url Exec_url_page(Xoa_app app, Xoa_page page, Xog_win win, byte[] href_bry) {	// EX: "Page"; "/wiki/Page"; // rewritten; DATE:2014-01-19
 		Xoa_url rv = new Xoa_url();
-		app.Url_parser().Parse(rv, href_bry);
-		rv.Wiki_bry_(tmp_href.Wiki());
-		if (!rv.Redirect_force()) {					// HACK: the href's parser page is accurate. it will pick up "en.wiki.org" and "en.wiki.org/wiki" as references to main page; however it does not handle query parameters, and will return "A?redirect=no" as page name; the url parser handles query params
-//				if (!page.Page_ttl().Ns().Id_ctg()) {	
-			Xoa_ttl tmp_ttl = Xoa_ttl.parse_(tmp_href_wiki, tmp_href.Page());	// HACK: make ttl to get "real title" with subpage; else links like en.wikipedia.org/wiki/Page:A/B will not work  DATE:2013-06-22
-			rv.Page_bry_(tmp_ttl.Full_txt_wo_qarg());	// HACK: Category has args like ?from=; do not set Page else Page will be "Category:A?from=B" (needs to fix this hack); DATE:2013-05-01; DATE:2013-06-22
-//				}
-//				else {									// HACK: remove anchor from args
-				for (int i = 0; i < rv.Args().length; i++) {
-					Gfo_url_arg arg = rv.Args()[i];
-					int anchor_pos = ByteAry_.FindBwd(arg.Val_bry(), Byte_ascii.Hash);	// NOTE: must .FindBwd to handle Category args like de.wikipedia.org/wiki/Kategorie:Begriffskl%C3%A4rung?pagefrom=#::12%20PANZERDIVISION#mw-pages; DATE:2013-06-18
-					if (anchor_pos != ByteAry_.NotFound)
-						arg.Val_bry_(ByteAry_.Mid(arg.Val_bry(), 0, anchor_pos));
-				}
-//				}
-			if (tmp_href.Anchor() != null) {
-				byte[] anchor_bry = app.Url_converter_id().Encode(tmp_href.Anchor());	// reencode for anchors (which use . encoding, not % encoding); EX.WP: Enlightenment_Spain#Enlightened_despotism_.281759%E2%80%931788.29
-				rv.Anchor_bry_(anchor_bry);
+		Xow_wiki wiki = page.Wiki();
+		app.Url_parser().Parse(rv, href_bry);						// needed for query_args
+		byte[] anchor_bry = href.Anchor();
+		byte[] page_bry = rv.Page_bry();
+		byte[][] segs_ary = rv.Segs_ary();
+		int segs_ary_len = segs_ary.length;
+		if (segs_ary_len > 0) {	// handle "Special:Search/Earth" which creates segs[1] {"Special:Search"} and page="Earth"
+			ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
+			for (int i = 0; i < segs_ary_len; i++) {
+				tmp_bfr.Add(segs_ary[i]);
+				tmp_bfr.Add_byte(Byte_ascii.Slash);
 			}
+			tmp_bfr.Add(page_bry);
+			page_bry = tmp_bfr.Mkr_rls().XtoAryAndClear();
+			rv.Segs_ary_(ByteAry_.Ary_empty);
 		}
-		rv.Wiki_(app.Wiki_mgr().Get_by_key_or_make(tmp_href.Wiki()));
+		Gfo_url_arg[] qargs = rv.Args();
+		int qargs_len = qargs.length;
+		if (qargs_len > 0) {	// remove anchors from qargs; EX: "to=B#mw_pages"
+			for (int i = 0; i < qargs_len; i++) {
+				Gfo_url_arg arg = qargs[i];
+				int anchor_pos = ByteAry_.FindBwd(arg.Val_bry(), Byte_ascii.Hash);	// NOTE: must .FindBwd to handle Category args like de.wikipedia.org/wiki/Kategorie:Begriffskl%C3%A4rung?pagefrom=#::12%20PANZERDIVISION#mw-pages; DATE:2013-06-18
+				if (anchor_pos != ByteAry_.NotFound)
+					arg.Val_bry_(ByteAry_.Mid(arg.Val_bry(), 0, anchor_pos));
+			}				
+		}
+		if (!ByteAry_.Eq(page.Wiki().Domain_bry(), href.Wiki())) {// xwiki; EX: "file:///site/en.wiktionary.org/wiki/a"; EX: (1) goto w:Anything; (2) click on "anything" in wikt; "anything" will be parsed by en.wiki's rules, not en.wikt; DATE:2013-01-30
+			wiki = app.Wiki_mgr().Get_by_key_or_make(href.Wiki()).Init_assert();
+			Xoh_href alt_href = new Xoh_href();
+			app.Href_parser().Parse(alt_href, href_bry, wiki, page.Page_ttl().Page_url());
+			page_bry = alt_href.Page();		// needed b/c href_parser will use correct caseMatch in alt_wiki
+		}
+		rv.Wiki_(wiki);
+		rv.Wiki_bry_(wiki.Domain_bry());	// needed b/c url_parser.Parse(href) will result in wiki of "wiki" for "/wiki/Page"
+		rv.Page_bry_(page_bry);
+		rv.Anchor_bry_(anchor_bry);
 		return rv;
 	}
 	public static Xoa_url Rslt_handled = null;
+	public static Xoa_url Exec_url(Xog_win win, String href_str) {
+		Xog_url_wkr url_wkr = new Xog_url_wkr();
+		url_wkr.Parse(win, href_str);
+		return url_wkr.Exec();
+	}
 }

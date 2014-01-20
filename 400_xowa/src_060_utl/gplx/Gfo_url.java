@@ -29,6 +29,7 @@ public class Gfo_url {
 	public byte[] Anchor() {return anchor;} public Gfo_url Anchor_(byte[] v) {anchor = v; return this;} private byte[] anchor;
 	public byte[][] Segs() {return segs;} public Gfo_url Segs_(byte[][] v) {segs = v; return this;} private byte[][] segs;
 	public Gfo_url_arg[] Args() {return args;} public Gfo_url Args_(Gfo_url_arg[] v) {args = v; return this;} Gfo_url_arg[] args;
+	public int Args_bgn() {return args_bgn;} public Gfo_url Args_bgn_(int v) {args_bgn = v; return this;} private int args_bgn = -1;
 	public byte Err() {return err;} public Gfo_url Err_(byte v) {err = v; return this;} private byte err;
 	public Gfo_url Ini_(byte[] v) {
 		raw = v;
@@ -37,6 +38,7 @@ public class Gfo_url {
 		segs = ByteAry_.Ary_empty;
 		args = Gfo_url_arg.Ary_empty;
 		err = Err_none;
+		args_bgn = -1;
 		return this;
 	}
 	public static final byte Err_none = 0, Err_protocol_missing = 1, Err_site_missing = 2;

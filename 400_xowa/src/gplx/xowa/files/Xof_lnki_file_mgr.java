@@ -55,6 +55,7 @@ public class Xof_lnki_file_mgr {
 				if (fsdb_itm.Orig_wiki() == null) return false; // itm not found; return now, else null exception later;
 				Init_fsdb_itm(fsdb_itm, xfer_itm);				// copy xfer itm props to fsdb_itm
 				fsdb_itm.Html__init(wiki.File_mgr().Repo_mgr(), url_bldr, tmp_img_size, exec_tid);
+				xfer_itm.Html_orig_src_(ByteAry_.new_utf8_(fsdb_itm.Html_orig_url().To_http_file_str()));	// always set orig_url; note that w,h are not necessary for orig url; orig url needed for [[Media:]] links; DATE:2014-01-19
 				if (Io_mgr._.ExistsFil(fsdb_itm.Html_url())) {
 					xfer_itm.Atrs_calc_by_fsdb(fsdb_itm.Html_w(), fsdb_itm.Html_h(), fsdb_itm.Html_url(), fsdb_itm.Html_orig_url());
 					return true;
@@ -80,10 +81,10 @@ public class Xof_lnki_file_mgr {
 		for (int i = 0; i < len; i++) {
 			Xof_fsdb_itm fsdb_itm = (Xof_fsdb_itm)fsdb_list.FetchAt(i);
 			byte[] fsdb_itm_key = fsdb_itm.Lnki_ttl();
-			if (!temp_list.Has(fsdb_itm_key) && !xfer_list.Has(fsdb_itm_key))
+			if (!xfer_list.Has(fsdb_itm_key) && temp_list.Has(fsdb_itm_key))	// NOTE: was !temp_list; DATE:2014-01-19
 				xfer_list.Add(fsdb_itm_key, fsdb_itm);
 			byte[] fsdb_redirect_ttl = fsdb_itm.Orig_ttl();
-			if (fsdb_redirect_ttl != null && !temp_list.Has(fsdb_itm_key) && !xfer_list.Has(fsdb_itm_key))
+			if (!xfer_list.Has(fsdb_itm_key) && temp_list.Has(fsdb_itm_key) && fsdb_redirect_ttl != null)	// NOTE: was !temp_list; DATE:2014-01-19
 				xfer_list.Add(fsdb_redirect_ttl, fsdb_itm);
 		}
 	}
@@ -91,12 +92,12 @@ public class Xof_lnki_file_mgr {
 		byte[] lnki_ttl = lnki_tkn.Ttl().Page_db();
 		Xof_ext lnki_ext = Xof_ext_.new_by_ttl_(lnki_ttl);
 		byte[] lnki_md5 = Xof_xfer_itm.Md5_(lnki_ttl);
-		fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, lnki_tkn.Lnki_type(), lnki_tkn.Width(), lnki_tkn.Height(), lnki_tkn.Upright(), lnki_tkn.Thumbtime());
+		fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, lnki_tkn.Lnki_type(), lnki_tkn.Width(), lnki_tkn.Height(), lnki_tkn.Upright(), lnki_tkn.Thumbtime(), lnki_tkn.Page());
 	}
 	private void Init_fsdb_itm(Xof_fsdb_itm fsdb_itm, Xof_xfer_itm xfer_itm) {
 		byte[] lnki_ttl = xfer_itm.Lnki_ttl();
 		Xof_ext lnki_ext = xfer_itm.Lnki_ext();
 		byte[] lnki_md5 = Xof_xfer_itm.Md5_(lnki_ttl);
-		fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, xfer_itm.Lnki_type(), xfer_itm.Lnki_w(), xfer_itm.Lnki_h(), xfer_itm.Lnki_upright(), xfer_itm.Lnki_thumbtime());
+		fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, xfer_itm.Lnki_type(), xfer_itm.Lnki_w(), xfer_itm.Lnki_h(), xfer_itm.Lnki_upright(), xfer_itm.Lnki_thumbtime(), xfer_itm.Lnki_page());
 	}
 }

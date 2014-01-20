@@ -532,7 +532,7 @@ public class ByteAry_ {
 		}
 		return ary;
 	}
-	public static int XtoIntOr(byte[] ary, int or) {return XtoIntByPos(ary, 0, ary.length, or);}
+	public static int XtoIntOr(byte[] ary, int or) {if (ary == null) return or; return XtoIntByPos(ary, 0, ary.length, or);}
 	public static int XtoIntByPos_lax(byte[] ary, int bgn, int end, int or) {
 		if (end == bgn) return or;	// null-len
 		int end_num = end;

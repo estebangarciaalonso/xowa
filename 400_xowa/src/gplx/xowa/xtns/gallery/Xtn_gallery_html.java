@@ -40,13 +40,13 @@ public class Xtn_gallery_html {
 			byte[] lnki_caption = itm.Caption_bry();
 			if (ByteAry_.Len_gt_0(lnki_caption)) {
 				Xop_root_tkn caption_root = itm.Caption_tkn();
-				wtr.Write_tkn(opts, caption_bfr, caption_root.Root_src(), depth + 1, caption_root, Xoh_html_wtr.Sub_idx_null, caption_root);
+				wtr.Write_tkn(ctx, opts, caption_bfr, caption_root.Root_src(), depth + 1, caption_root, Xoh_html_wtr.Sub_idx_null, caption_root);
 				lnki_caption = caption_bfr.XtoAryAndClear();
 			}
 			Xoa_ttl itm_ttl = itm.Ttl();
 			if (itm_ttl != null && itm_ttl.Ns().Id_file()) {	// && fileDownloadEnabled
 				Xop_lnki_tkn lnki = ctx.Tkn_mkr().Lnki(itm.Ttl_bgn(), itm.Ttl_end()).Ttl_(itm_ttl).Width_(itm_w).Height_(itm_h);
-				Xof_xfer_itm xfer_itm = wtr.Lnki_wtr().Lnki_eval(page, lnki, wtr.Queue_add_ref());
+				Xof_xfer_itm xfer_itm = wtr.Lnki_wtr().Lnki_eval(ctx, page, lnki, wtr.Queue_add_ref());
 				int elem_id = xfer_itm.Html_uid();
 				xfer_itm.Gallery_mgr_h_(mgr.Itm_height());
 				xfer_itm.Html_elem_tid_(Xof_html_elem.Tid_gallery);

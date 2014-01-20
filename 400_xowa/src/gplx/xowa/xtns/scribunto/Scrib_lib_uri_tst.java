@@ -30,6 +30,9 @@ public class Scrib_lib_uri_tst {
 		fxt.Test_lib_proc(lib, Scrib_lib_uri.Invk_localUrl		, Object_.Ary("a&b! c"		, "action=edit"	), "/wiki/A%26b!_c?action=edit");
 		fxt.Test_lib_proc(lib, Scrib_lib_uri.Invk_localUrl		, Object_.Ary("Media:A.png"					), "/wiki/File:A.png");
 	}
+	@Test  public void Url__args_many() {	// PUPROSE: GetUrl sometimes passes in kvs for qry_args; it.w:Astronomie; DATE:2014-01-18
+		fxt.Test_lib_proc(lib, Scrib_lib_uri.Invk_fullUrl, Object_.Ary("A", KeyVal_.Ary(KeyVal_.new_("action", "edit"))), "//en.wikipedia.org/wiki/A?action=edit");
+	}
 	@Test  public void AnchorEncode() {
 		fxt.Test_lib_proc(lib, Scrib_lib_uri.Invk_anchorEncode	, Object_.Ary("[irc://a b c]"				), "b_c");
 	}

@@ -159,8 +159,8 @@ public class Xodb_page_tbl {
 		for (int i = 0; i < len; i++) {
 			if (cancelable.Canceled()) return false;
 			Xodb_page p = page_ary[i];
-			if (!hash.Has(p.Id()))	// NOTE: must check if file already exists b/c dynamicPageList currently allows dupes; DATE:2013-07-22
-				hash.Add(p.Id(), p);
+			if (!hash.Has(p.Id_val()))	// NOTE: must check if file already exists b/c dynamicPageList currently allows dupes; DATE:2013-07-22
+				hash.Add(p.Id_val(), p);
 		}
 		Xodb_in_wkr_page_id wkr = new Xodb_in_wkr_page_id();
 		wkr.Init(rv, hash);
@@ -284,7 +284,7 @@ class Xodb_in_wkr_page_id extends Xodb_in_wkr_page_base {
 			stmt.Val_int_(page.Id());		
 		}
 	}
-	@Override public Xodb_page Eval_rslts_key(Xodb_page rdr_page) {return (Xodb_page)hash.Fetch(rdr_page.Id());	}
+	@Override public Xodb_page Eval_rslts_key(Xodb_page rdr_page) {return (Xodb_page)hash.Fetch(rdr_page.Id_val());}
 }
 class Xodb_in_wkr_page_title extends Xodb_in_wkr_page_base {
 	private OrderedHash hash;
@@ -406,7 +406,7 @@ class Xodb_in_wkr_category_id extends Xodb_in_wkr_base {
 		while (rdr.MoveNextPeer()) {
 			if (cancelable.Canceled()) return;
 			Xodb_category_itm ctg_data = Xodb_category_tbl.Read_ctg(rdr);
-			Xodb_page page = (Xodb_page)hash.Fetch(ctg_data.Id());
+			Xodb_page page = (Xodb_page)hash.Fetch(ctg_data.Id_val());
 			page.Xtn_(ctg_data);
 		}
 	}

@@ -20,12 +20,12 @@ import gplx.xowa.files.*;
 public class Xoh_file_main_wkr implements ByteAryFmtrArg {
 	Xoh_file_page opt; Xoh_file_main_alts alts = new Xoh_file_main_alts();
 	byte[] file_size_bry; Xoa_ttl ttl; Xow_wiki wiki;
-	public void Bld_html(Xow_wiki wiki, ByteAryBfr bfr, Xoa_ttl ttl, Xoh_file_page opt, Xof_xfer_queue queue) {
+	public void Bld_html(Xow_wiki wiki, Xop_ctx ctx, ByteAryBfr bfr, Xoa_ttl ttl, Xoh_file_page opt, Xof_xfer_queue queue) {
 		this.opt = opt; this.ttl = ttl; this.wiki = wiki;
 		Int_2_ref size_main = opt.Size_main();
 		int main_w = size_main.Val_0();
 		int main_h = size_main.Val_1();
-		this.xfer_itm = wiki.Html_wtr().Lnki_wtr().Lnki_eval(queue, ttl.Page_txt(), Xop_lnki_type.Id_thumb, main_w, main_h, Xop_lnki_tkn.Upright_null, Xop_lnki_tkn.Thumbtime_null, false, queue_add_ref);
+		this.xfer_itm = wiki.Html_wtr().Lnki_wtr().Lnki_eval(ctx, queue, ttl.Page_txt(), Xop_lnki_type.Id_thumb, main_w, main_h, Xop_lnki_tkn.Upright_null, Xop_lnki_tkn.Thumbtime_null, Xop_lnki_tkn.Page_null, false, queue_add_ref);
 		Xof_meta_itm meta_itm = wiki.File_mgr().Meta_mgr().Get_itm_or_new(ttl.Page_db(), Xof_xfer_itm.Md5_(ttl.Page_db()));	// NOTE: can't use Md5 of xfer_itm, b/c xfer_itm.Ttl() b/c may be redirected; EX:w:[[Image:Alcott-L.jpg]]
 		Xof_repo_itm trg_repo = null;
 		trg_repo = meta_itm.Repo_itm(wiki);

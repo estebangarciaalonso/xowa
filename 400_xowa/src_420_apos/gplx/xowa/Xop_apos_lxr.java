@@ -18,7 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 class Xop_apos_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_apos;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Apos_ary, this);} static final byte[] Apos_ary = new byte[] {Byte_ascii.Apos, Byte_ascii.Apos};
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {return ctx.Apos().MakeTkn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos);}
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Apos_ary, this);} static final byte[] Apos_ary = new byte[] {Byte_ascii.Apos, Byte_ascii.Apos};
+	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {return ctx.Apos().Make_tkn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos);}
 	public static final Xop_apos_lxr _ = new Xop_apos_lxr(); Xop_apos_lxr() {}
 }

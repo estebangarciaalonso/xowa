@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 class Xop_tblw_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_tblw;}
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		// NOTE: repeated in tblw_lxr_ws
 		// CASE_1: standalone "!" should be ignored if no tblw present; EX: "a b! c" should not trigger ! for header
 		switch (wlxr_type) {
@@ -77,7 +77,7 @@ class Xop_tblw_lxr implements Xop_lxr {
 	}
 	public Xop_tblw_lxr(byte wlxr_type) {this.wlxr_type = wlxr_type;} private byte wlxr_type;
 	public static final Xop_tblw_lxr Bldr = new Xop_tblw_lxr(); Xop_tblw_lxr() {}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
 		core_trie.Add(Hook_tb,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_tb));
 		core_trie.Add(Hook_te,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_te));
 		core_trie.Add(Hook_tr,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_tr));
@@ -87,6 +87,7 @@ class Xop_tblw_lxr implements Xop_lxr {
 		core_trie.Add(Hook_td2,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_td2));
 		core_trie.Add(Hook_th2,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_th2));
 	}
+	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
 	public static final byte[] Hook_tb = ByteAry_.new_ascii_("\n{|"), Hook_te = ByteAry_.new_ascii_("\n|}"), Hook_tr = ByteAry_.new_ascii_("\n|-")
 		, Hook_td = ByteAry_.new_ascii_("\n|"), Hook_th = ByteAry_.new_ascii_("\n!"), Hook_tc = ByteAry_.new_ascii_("\n|+")
 		, Hook_td2 = ByteAry_.new_ascii_("||"), Hook_th2 = ByteAry_.new_ascii_("!!");

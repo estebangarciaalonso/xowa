@@ -26,8 +26,8 @@ class Dpl_page_sorter implements gplx.lists.ComparerAble {
 		Xodb_page rhs = (Xodb_page)rhsObj;
 		int multiplier = itm.Sort_ascending() == Bool_.Y_byte ? 1 : -1;
 		switch (itm.Sort_tid()) {
-		case Dpl_sort.Tid_categorysortkey: 		
-		case Dpl_sort.Tid_categoryadd: 			return multiplier * ByteAry_.Compare(lhs.Ttl_wo_ns(), rhs.Ttl_wo_ns()); 
+			case Dpl_sort.Tid_categorysortkey: 		
+			case Dpl_sort.Tid_categoryadd: 			return multiplier * ByteAry_.Compare(lhs.Ttl_wo_ns(), rhs.Ttl_wo_ns()); 
 		}
 		return CompareAble_.Same;
 	}

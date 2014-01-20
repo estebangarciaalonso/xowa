@@ -30,6 +30,7 @@ public class Xow_wiki implements GfoInvkAble {
 		redirect_mgr = new Xop_redirect_mgr(this);
 		data_mgr = new Xow_data_mgr(this);
 		file_mgr = new Xow_file_mgr(this);
+		utl_mgr = new Xow_utl_mgr(this);
 		parser = Xop_parser.new_wiki_(this);
 		cfg_parser = new Xowc_parser(this);
 		ctx = Xop_ctx.new_(this);
@@ -71,6 +72,7 @@ public class Xow_wiki implements GfoInvkAble {
 	public byte[]				Domain_abrv() {return domain_abrv;} private byte[] domain_abrv;
 	public Xol_lang				Lang() {return lang;} private Xol_lang lang;
 	public Xow_fsys_mgr			Fsys_mgr() {return fsys_mgr;} private Xow_fsys_mgr fsys_mgr;
+	public Xow_utl_mgr			Utl_mgr() {return utl_mgr;} private Xow_utl_mgr utl_mgr;
 	public Xow_ns_mgr			Ns_mgr() {return ns_mgr;}  public void Ns_mgr_(Xow_ns_mgr v) {ns_mgr = v;} private Xow_ns_mgr ns_mgr;
 	public Xow_gui_mgr Gui_mgr() {return gui_mgr;} private Xow_gui_mgr gui_mgr = new Xow_gui_mgr();
 	public Xow_user User() {return user;} private Xow_user user = new Xow_user();
@@ -223,9 +225,10 @@ public class Xow_wiki implements GfoInvkAble {
 				ns_mgr.Add_alias(Xow_ns_.Id_project, Xow_ns_.Ns_name_wikipedia);
 		}
 		log_bfr.Add("wiki.init.lang");
+		cfg_parser.Xtns().Itm_pages().Init(ns_mgr);	// init ns_mgr for Page / Index ns just before rebuild; usually set by #cfg file
 		Xow_ns_mgr_.rebuild_(lang, ns_mgr);	// always rebuild; may be changed by user_wiki.gfs; different lang will change namespaces; EX: de.wikisource.org will have Seite for File and none of {{#lst}} will work
 		fragment_mgr.Evt_lang_changed(lang);
-//			parser = Xop_parser.new_(this);	// rebuild parser
+		parser.Init_by_lang(lang);
 		lang.Vnt_mgr().Init_by_wiki(this);
 		ByteAryFmtr.Null.Eval_mgr().Enabled_(false);
 		app.Wiki_mgr().Scripts().Exec(this);

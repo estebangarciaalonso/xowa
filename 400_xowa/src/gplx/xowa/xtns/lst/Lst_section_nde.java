@@ -16,14 +16,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.lst; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-public class Xtn_section_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
+public class Lst_section_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 	public boolean Xtn_literal() {return false;}
 	public byte[] Section_name() {return section_name;} private byte[] section_name;
 	public void Xatr_parse(Xow_wiki wiki, byte[] src, Xop_xatr_itm xatr, Object xatr_obj) {
 		if (xatr_obj == null) return;
 		byte xatr_tid = ((ByteVal)xatr_obj).Val();
 		switch (xatr_tid) {
-			case Xatr_name: case Xatr_begin: case Xatr_end:
+			case Xatr_name: case Xatr_bgn: case Xatr_end:
 				section_name = xatr.Val_as_bry(src); name_tid = xatr_tid; break;
 		}
 	}
@@ -37,5 +37,5 @@ public class Xtn_section_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 		xnde.Atrs_ary_(atrs);
 		ctx.Lst_section_mgr().Add(this);
 	}
-	public static final byte Xatr_name = 0, Xatr_begin = 1, Xatr_end = 2;
+	public static final byte Xatr_name = 0, Xatr_bgn = 1, Xatr_end = 2;
 }

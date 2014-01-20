@@ -20,7 +20,7 @@ public class Xop_amp_wkr implements Xop_ctx_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {}
 	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {}
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {}
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn, int cur_pos) {
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn, int cur_pos) {
 		if (cur_pos == src_len) return ctx.LxrMake_txt_(cur_pos);	// NOTE: & is last char in page; strange and rare, but don't raise error
 		Object o = ctx.App().Amp_trie().MatchAtCur(src, cur_pos, src_len);
 		cur_pos = ctx.App().Amp_trie().Match_pos();
@@ -81,5 +81,35 @@ public class Xop_amp_wkr implements Xop_ctx_wkr {
 		msg_log.Add_itm_none(itm, src, int_bgn, cur_pos);
 		return bgn + 1;
 	}
-	IntRef ncr_val = IntRef.neg1_(); BoolRef fail = BoolRef.new_(false); static final int Max_len_hex = 8, Max_len_dec = 10;
+	private IntRef ncr_val = IntRef.neg1_(); private BoolRef fail = BoolRef.new_(false); private static final int Max_len_hex = 8, Max_len_dec = 10;
+	public static byte[] Parse(ByteAryBfr bfr, ByteTrieMgr_slim trie, byte[] src) {
+		if (src == null) return src;
+		int src_len = src.length;
+		boolean dirty = false;
+		int pos = 0;
+		while (pos < src_len) {
+			byte b = src[pos];
+			if (b == Byte_ascii.Amp) {
+				int nxt_pos = pos + 1;
+				if (nxt_pos < src_len) {
+					byte nxt_b = src[nxt_pos];
+					Object amp_obj = trie.Match(nxt_b, src, nxt_pos, src_len);
+					if (amp_obj != null) {
+						if (!dirty) {
+							bfr.Add_mid(src, 0, pos);
+							dirty = true;
+						}
+						Xop_amp_trie_itm amp_itm = (Xop_amp_trie_itm)amp_obj;
+						bfr.Add(amp_itm.Utf8_bry());
+						pos = trie.Match_pos();
+						continue;
+					}
+				}					
+			}
+			if (dirty)
+				bfr.Add_byte(b);
+			++pos;
+		}
+		return dirty ? bfr.XtoAryAndClear() : src;
+	}
 }

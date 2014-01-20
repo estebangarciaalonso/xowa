@@ -48,4 +48,17 @@ public class Xop_amp_wkr_tst {
 	@Test  public void Amp_only() {	// PURPOSE: html_wtr was not handling & only
 		fxt.tst_Parse_page_all_str("&"				, "&amp;");
 	}
+	@Test  public void Parse_static() {
+		Tst_Parse("a", "a");
+		Tst_Parse("a&quot;b", "a\"b");
+		Tst_Parse("a&quotb", "a&quotb");
+		Tst_Parse("a&", "a&");
+	}
+	private void Tst_Parse(String raw, String expd) {
+		ByteTrieMgr_slim amp_trie = fxt.App().Amp_trie();
+		ByteAryBfr bfr = fxt.App().Utl_bry_bfr_mkr().Get_b128();
+		byte[] actl = Xop_amp_wkr.Parse(bfr, amp_trie, ByteAry_.new_ascii_(raw));
+		bfr.Mkr_rls();
+		Tfds.Eq(expd, String_.new_ascii_(actl));
+	}
 }

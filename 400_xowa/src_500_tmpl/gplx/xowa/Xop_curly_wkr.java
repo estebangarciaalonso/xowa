@@ -77,11 +77,11 @@ public class Xop_curly_wkr implements Xop_ctx_wkr {
 //					case 1:			// EXC_CASE: SEE:NOTE_1;
 //						break;
 				case 2:			// USE_CASE: make invk_tkn
-					ctx.Invk().MakeTkn(ctx, root, src, lxr_bgn_pos, lxr_bgn_pos + new_tkn_len, bgn_tkn, keep_curly_bgn);
+					ctx.Invk().Make_tkn(ctx, root, src, lxr_bgn_pos, lxr_bgn_pos + new_tkn_len, bgn_tkn, keep_curly_bgn);
 					break;
 				default:		// USE_CASE: make prm_tkn; NOTE: 3 or more
 					new_tkn_len = 3;	// gobble 3 at a time; EX: 6 -> 3 -> 0; EX: 7 -> 4 -> 1;
-					prm_wkr.MakeTkn(ctx, tkn_mkr, root, src, src_len, lxr_bgn_pos, lxr_bgn_pos + new_tkn_len, bgn_tkn, keep_curly_bgn);
+					prm_wkr.Make_tkn(ctx, tkn_mkr, root, src, src_len, lxr_bgn_pos, lxr_bgn_pos + new_tkn_len, bgn_tkn, keep_curly_bgn);
 					break;
 			}
 			switch (bgn_tkn_len - new_tkn_len) {	// continuation of semi-hack above; some bgn still left over; adjust and throw back on stack
@@ -107,7 +107,7 @@ public class Xop_curly_wkr implements Xop_ctx_wkr {
 		}
 		return lxr_end_pos;
 	}
-	Xot_prm_wkr prm_wkr = Xot_prm_wkr._;
+	private Xot_prm_wkr prm_wkr = Xot_prm_wkr._;
 	public static final byte[] Hook_prm_bgn = new byte[] {Byte_ascii.Curly_bgn, Byte_ascii.Curly_bgn, Byte_ascii.Curly_bgn}, Hook_prm_end = new byte[] {Byte_ascii.Curly_end, Byte_ascii.Curly_end, Byte_ascii.Curly_end};
 }
 /*

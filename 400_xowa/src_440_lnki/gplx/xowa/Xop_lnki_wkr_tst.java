@@ -581,6 +581,9 @@ public class Xop_lnki_wkr_tst {
 	@Test  public void Href_question_2() {	// PURPOSE: ?action=edit should be encoded; DATE:2013-02-10
 		fxt.tst_Parse_page_all_str("[[A?action=edit]]", "<a href=\"/wiki/A%3Faction%3Dedit\">A?action=edit</a>");
 	}
+	@Test  public void Href_question_3() {	// PURPOSE.fix:  DATE:2014-01-16
+		fxt.tst_Parse_page_all_str("[[A?b]]", "<a href=\"/wiki/A%3Fb\">A?b</a>");
+	}
 	@Test  public void Encoded_url() {	// PURPOSE.fix: url-encoded characters broke parser when embedded in link; DATE:2013-03-01
 		fxt.ini_xwiki_add_user_("commons.wikimedia.org");
 		fxt.tst_Parse_page_wiki_str("[[File:A.png|link=//commons.wikimedia.org/wiki/%D0%97%D0%B0%D0%B3%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0?uselang=ru|b]]"

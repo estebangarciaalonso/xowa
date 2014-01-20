@@ -118,4 +118,16 @@ public class Xof_ext_ {
 			default:											return false;
 		}
 	}
+	public static boolean Id_supports_page(int v) {	// identifies if tid supports page in lnki; EX: [[File:A.pdf|page=1]]; REF: https://en.wikipedia.org/wiki/Wikipedia:Picture_tutorial; DATE:2014-01-18
+		switch (v) {
+			case Id_pdf: case Id_djvu:							return true;
+			default:											return false;
+		}
+	}
+	public static boolean Id_supports_thumbtime(int v) {	// identifies if tid supports thumbtime in lnki; EX: [[File:A.ogv|thumbtime=1]]; 
+		switch (v) {
+			case Id_ogg: case Id_ogv: case Id_webm:				return true;
+			default:											return false;
+		}
+	}
 }

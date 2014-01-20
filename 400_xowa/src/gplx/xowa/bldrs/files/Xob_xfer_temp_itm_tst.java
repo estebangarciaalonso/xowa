@@ -49,11 +49,30 @@ public class Xob_xfer_temp_itm_tst {
 		);
 		fxt.Test_lnki_ext_id(Xof_ext_.Id_jpg);						// confirm ext changed to .jpg
 	}
-	@Test   public void Thumbtime_should_only_apply_to_video() {// PURPOSE: one image actually had a thumbtime defined; EX: General_Dynamics_F-16_Fighting_Falcon; [[File:Crash.arp.600pix.jpg|thumb|thumbtime=2]]
+	@Test   public void Thumbtime_check() {// PURPOSE: one image actually had a thumbtime defined; EX: General_Dynamics_F-16_Fighting_Falcon; [[File:Crash.arp.600pix.jpg|thumb|thumbtime=2]]
 		fxt.Test_bgn
-		(	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime, (double)3)	// define thumbtime; note that file is image
+		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext	, Xof_ext_.Id_jpg)
+		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime	, (double)3)
 		);
-		fxt.Test_lnki_thumbtime(Xop_lnki_tkn.Thumbtime_null);			// confirm thumbtime is set to null
+		fxt.Test_lnki_thumbtime(Xop_lnki_tkn.Thumbtime_null);
+
+		fxt.Reset().Test_bgn
+		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_media_type	, Xof_media_type.Name_video)
+		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime	, (double)3)
+		);
+		fxt.Test_lnki_thumbtime(3);
+
+		fxt.Reset().Test_bgn
+		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext	, Xof_ext_.Id_pdf)
+		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime	, (double)3)
+		);
+		fxt.Test_lnki_thumbtime(3);
+
+		fxt.Reset().Test_bgn
+		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext	, Xof_ext_.Id_djvu)
+		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime	, (double)3)
+		);
+		fxt.Test_lnki_thumbtime(3);
 	}
 }
 class Xob_xfer_temp_itm_fxt {
@@ -82,9 +101,10 @@ class Xob_xfer_temp_itm_fxt {
 	, Xob_orig_regy_tbl.Fld_orig_minor_mime
 	}
 	;
-	public void Reset() {
+	public Xob_xfer_temp_itm_fxt Reset() {
 		itm.Clear();
 		img_size.Clear();
+		return this;
 	}
 	public Xob_xfer_temp_itm_fxt Init_rdr_image() {
 		GfoFldList flds = GfoFldList_.str_(Flds);

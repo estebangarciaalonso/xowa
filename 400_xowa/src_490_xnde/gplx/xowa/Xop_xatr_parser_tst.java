@@ -44,6 +44,8 @@ public class Xop_xatr_parser_tst {
 	@Test  public void Quote_ws_mult_mult()		{fxt.tst_("a='b  c d'", fxt.new_atr_("a", "b c d"));}	// PURPOSE: fix wherein 1st-gobble gobbled rest of spaces (was b cd)
 	@Test  public void Quote_apos()				{fxt.tst_("a=\"b c'd\"", fxt.new_atr_("a", "b c'd"));}	// PURPOSE: fix wherein apos was gobbled up; EX: s:Alice's_Adventures_in_Wonderland; DATE:2013-11-22
 	@Test  public void Quote_apos_2()			{fxt.tst_("a=\"b'c d\"", fxt.new_atr_("a", "b'c d"));}	// PURPOSE: fix wherein apos was causing "'b'c d"; EX:s:Grimm's_Household_Tales,_Volume_1; DATE:2013-12-22
+	@Test  public void Multiple()				{fxt.tst_("a b1 c", fxt.new_atr_("a", "a"), fxt.new_atr_("b1", "b1"), fxt.new_atr_("c", "c"));}
+	@Test  public void Ws()						{fxt.tst_("a  = 'b'", fxt.new_atr_("a", "b"));}			// PURPOSE: fix wherein multiple space was causing "a=a"; EX:fr.s:La_Sculpture_dans_les_cimetières_de_Paris/Père-Lachaise; DATE:2014-01-18
 /*
 TODO:
 change ws to be end; EX: "a=b c=d" atr1 ends at 4 (not 3)

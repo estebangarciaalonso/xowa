@@ -38,7 +38,7 @@ public class Xoa_url {
 		else
 			return ByteAry_.Mid(raw, page_bgn, raw_len);
 	}
-	public byte[] Anchor_bry() {return anchor_bry;} public Xoa_url Anchor_bry_(byte[] v) {anchor_bry = v; return this;} private byte[] anchor_bry;
+	public byte[] Anchor_bry() {return anchor_bry;} public Xoa_url Anchor_bry_(byte[] v) {anchor_bry = v; return this;} private byte[] anchor_bry = null;
 	public byte[] Use_lang() {return use_lang;} public Xoa_url Use_lang_(byte[] v) {use_lang = v; return this;} private byte[] use_lang;
 	public boolean Redirect_force() {return redirect_force;} public Xoa_url Redirect_force_(boolean v) {redirect_force = v; return this;} private boolean redirect_force;
 	public boolean Search_fulltext() {return search_fulltext;} public Xoa_url Search_fulltext_(boolean v) {search_fulltext = v; return this;} private boolean search_fulltext;
@@ -87,17 +87,5 @@ public class Xoa_url {
 		rv.Wiki_bry_(wiki);
 		rv.Page_bry_(page);
 		return rv;
-	}
-	public String To_str() {
-		ByteAryBfr bfr = ByteAryBfr.new_();
-		bfr.Add_str("wiki=").Add(wiki_bry).Add_byte_nl();
-		bfr.Add_str("page=").Add(page_bry).Add_byte_nl();
-		bfr.Add_str("anchor=").Add(anchor_bry).Add_byte_nl();
-		int args_len = args.length;
-		for (int i = 0; i < args_len; i++) {
-			Gfo_url_arg arg = args[i];
-			bfr.Add_str("  [").Add_int_variable(i).Add_str("]: ").Add(arg.Key_bry()).Add_byte(Byte_ascii.Eq).Add(arg.Val_bry()).Add_byte_nl();
-		}
-		return bfr.XtoStrAndClear();
 	}
 }

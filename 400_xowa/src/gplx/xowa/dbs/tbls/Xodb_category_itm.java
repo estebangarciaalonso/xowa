@@ -19,6 +19,7 @@ package gplx.xowa.dbs.tbls; import gplx.*; import gplx.xowa.*; import gplx.xowa.
 import gplx.xowa.ctgs.*;
 public class Xodb_category_itm {
 	public int Id() {return id;} private int id;
+	public IntVal Id_val() {if (id_val == null) id_val = IntVal.new_(id); return id_val;} IntVal id_val;
 	public int File_idx() {return file_idx;} private int file_idx;
 	public boolean Hidden() {return hidden;} private boolean hidden;
 	public int Count_all() {return count_subcs + count_files + count_pages;}

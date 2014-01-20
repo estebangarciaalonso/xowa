@@ -27,7 +27,7 @@ public class Pf_url_anchorencode extends Pf_func_base {	// EX: {{anchorencode:a 
 		anchor_ctx = Xop_ctx.new_sub_(ctx.Wiki());
 		anchor_ctx.Para().Enabled_n_();
 		anchor_tkn_mkr = anchor_ctx.Tkn_mkr();
-		anchor_parser = Xop_parser.anchorencode_(ctx.Wiki());
+		anchor_parser = ctx.Wiki().Utl_mgr().Anchor_encode_parser();
 	}
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {
 		if (anchor_ctx == null) Func_init(ctx);

@@ -17,9 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
-public class Xoa_url_parser_tst {
-	Xoa_url_parser_chkr fxt = new Xoa_url_parser_chkr();
-	@Before public void init() {fxt.Reset();}
+public class Xoa_url_parser_tst {		
+	@Before public void init() {fxt.Reset();} private Xoa_url_parser_chkr fxt = new Xoa_url_parser_chkr();
 	@Test  public void Ttl() {
 		fxt.Reset().Raw_("http://en.wikipedia.org/w/index.php?title=A").Page_("A").tst_();
 	}
@@ -118,6 +117,12 @@ public class Xoa_url_parser_tst {
 		fxt.Reset().Raw_("en.wikipedia.org/wiki//A").Wiki_("en.wikipedia.org").Page_("/A").tst_app();
 		fxt.Reset().Raw_("en.wikipedia.org/wiki/A//b").Wiki_("en.wikipedia.org").Page_("A//b").tst_app();
 		fxt.Reset().Raw_("en.wikipedia.org/wiki///A").Wiki_("en.wikipedia.org").Page_("//A").tst_app();
+	}
+	@Test  public void Question_is_page() {
+		fxt.Reset().Raw_("A?B").Wiki_("en.wikipedia.org").Page_("A?B").Anchor_(null).tst_app();
+	}
+	@Test  public void Question_is_anchor() {
+		fxt.Reset().Raw_("A#b?c").Wiki_("en.wikipedia.org").Page_("A").Anchor_("b.3Fc").tst_app();
 	}
 }
 class Xoa_url_parser_chkr implements Tst_chkr {

@@ -161,8 +161,8 @@ public class Xodb_load_mgr_sql implements Xodb_load_mgr {
 		OrderedHash hash2 = OrderedHash_.new_();
 		for (int i = 0; i < len; i++) {
 			Xodb_page page = (Xodb_page)hash.FetchAt(i);
-			if (!hash2.Has(page.Id()))
-				hash2.Add(page.Id(), page);
+			if (!hash2.Has(page.Id_val()))
+				hash2.Add(page.Id_val(), page);
 		}
 		len = hash2.Count();	// must update len (!hash2.Has() may have skipped titles)
 		db_mgr.Tbl_category().Select_by_cat_id_in(Cancelable_.Never, hash2, fsys_mgr.Category_provider(), 0, len);

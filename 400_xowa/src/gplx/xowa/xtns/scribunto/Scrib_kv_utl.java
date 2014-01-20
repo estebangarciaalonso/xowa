@@ -122,6 +122,30 @@ class Scrib_kv_utl {
 		try {return (KeyVal[])ary[idx].Val();}
 		catch (Exception e) {throw Err_.cast_manual_msg_(e, KeyVal[].class, KeyVal_.Xto_str(ary));}
 	}
+	public static byte[] Val_to_url_qry_args(Xow_wiki wiki, KeyVal[] values, int idx) {
+		Object qry_args_obj = Scrib_kv_utl.Val_to_obj_or(values, idx, null);
+		if (qry_args_obj == null) return ByteAry_.Empty;
+		Class<?> qry_args_cls = ClassAdp_.ClassOf_obj(qry_args_obj);
+		if		(qry_args_cls == String.class)
+			return ByteAry_.new_utf8_((String)qry_args_obj);
+		else if (qry_args_cls == KeyVal[].class) {
+			ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
+			KeyVal[] kvs = (KeyVal[])qry_args_obj;
+			int len = kvs.length;
+			for (int i = 0; i < len; i++) {
+				KeyVal kv = kvs[i];
+				if (i != 0) bfr.Add_byte(Byte_ascii.Amp);
+				bfr.Add_str(kv.Key());
+				bfr.Add_byte(Byte_ascii.Eq);
+				bfr.Add_str(kv.Val_to_str_or_empty());
+			}
+			return bfr.Mkr_rls().XtoAryAndClear();
+		}
+		else {
+			wiki.App().Gui_wtr().Warn_many("", "", "unknown type for GetUrl query args: ~{0}", ClassAdp_.NameOf_type(qry_args_cls));
+			return ByteAry_.Empty;
+		}
+	}
 	private static int coerce_(Object o) {
 		try {String s = String_.as_(o); return s == null ? Int_.cast_(o) : Int_.parse_(s);}
 		catch (Exception e) {throw Err_.cast_(e, int.class, o);}

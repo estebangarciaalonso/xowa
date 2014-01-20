@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 class Xot_prm_wkr implements Xop_arg_wkr {
 	private static Arg_bldr arg_bldr = Arg_bldr._;
-	public boolean MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int lxr_bgn_pos, int lxr_cur_pos, Xop_curly_bgn_tkn bgn, int keep_curly_bgn) {
+	public boolean Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int lxr_bgn_pos, int lxr_cur_pos, Xop_curly_bgn_tkn bgn, int keep_curly_bgn) {
 		int loop_bgn = bgn.Tkn_sub_idx() + 1;	// +1 to ignore curly_bgn
 		int loop_end = root.Subs_len();
 		if (loop_bgn == loop_end) {// no tkns; output literal {{{}}}	// 2012.03.27:commented out due to {{{{{{}}}}}}

@@ -15,9 +15,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.xtns.proofreadPage; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-class Xtn_pagequality_nde implements Xop_xnde_xtn {
-	public Xop_root_tkn Xtn_root() {return null;}
-	public boolean Xtn_literal() {return false;}
-	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {}	// FUTURE: noop for now so it doesn't show (since it's useless)
+package gplx.xowa.xtns.lst; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import org.junit.*;
+public class Lst_section_nde_tst {
+	private Xop_fxt fxt = new Xop_fxt();
+	@Test  public void Basic() {
+		fxt.tst_Parse_page_all_str("a<section name=\"b\">c</section>d", "ad");
+	}
 }

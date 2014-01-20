@@ -56,14 +56,14 @@ class Scrib_lib_title implements Scrib_lib {
 	}
 	public void Notify_page_changed() {if (notify_page_changed_fnc != null) engine.Interpreter().CallFunction(notify_page_changed_fnc.Id(), KeyVal_.Ary_empty);}
 	public KeyVal[] GetUrl(KeyVal[] values) {
+		Xow_wiki wiki = engine.Wiki();
 		byte[] ttl_bry = Scrib_kv_utl.Val_to_bry(values, 0);
 		byte[] url_func_bry = Scrib_kv_utl.Val_to_bry(values, 1);
 		Object url_func_obj = url_func_hash.Fetch(url_func_bry);
 		if (url_func_obj == null) throw Err_.new_fmt_("url_function is not valid: {0}", String_.new_utf8_(url_func_bry));
 		byte url_func_tid = ((ByteVal)url_func_obj).Val();
-		byte[] qry_bry = GetUrl__qry_args(values);
+		byte[] qry_bry = Scrib_kv_utl.Val_to_url_qry_args(wiki, values, 2);
 //			byte[] proto = Scrib_kv_utl.Val_to_bry_or(values, 3, null);
-		Xow_wiki wiki = engine.Wiki();
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry); if (ttl == null) return Scrib_kv_utl.base1_obj_(null);
 		ByteAryBfr bfr = wiki.App().Utl_bry_bfr_mkr().Get_b512();
 //			if (url_func_tid == Pf_url_urlfunc.Tid_full) {
@@ -75,30 +75,6 @@ class Scrib_lib_title implements Scrib_lib {
 //			}
 		Pf_url_urlfunc.UrlString(engine.Ctx(), url_func_tid, false, ttl_bry, bfr, qry_bry);
 		return Scrib_kv_utl.base1_obj_(bfr.Mkr_rls().XtoStrAndClear());
-	}
-	private byte[] GetUrl__qry_args(KeyVal[] values) {
-		Object qry_args_obj = Scrib_kv_utl.Val_to_obj_or(values, 2, null);
-		if (qry_args_obj == null) return ByteAry_.Empty;
-		Class<?> qry_args_cls = ClassAdp_.ClassOf_obj(qry_args_obj);
-		if		(qry_args_cls == String.class)
-			return ByteAry_.new_utf8_((String)qry_args_obj);
-		else if (qry_args_cls == KeyVal[].class) {
-			ByteAryBfr bfr = engine.Wiki().Utl_bry_bfr_mkr().Get_b128();
-			KeyVal[] kvs = (KeyVal[])qry_args_obj;
-			int len = kvs.length;
-			for (int i = 0; i < len; i++) {
-				KeyVal kv = kvs[i];
-				if (i != 0) bfr.Add_byte(Byte_ascii.Amp);
-				bfr.Add_str(kv.Key());
-				bfr.Add_byte(Byte_ascii.Eq);
-				bfr.Add_str(kv.Val_to_str_or_empty());
-			}
-			return bfr.Mkr_rls().XtoAryAndClear();
-		}
-		else {
-			engine.Wiki().App().Gui_wtr().Warn_many("", "", "unknown type for GetUrl query args: ~{0}", ClassAdp_.NameOf_type(qry_args_cls));
-			return ByteAry_.Empty;
-		}
 	}
 	private static final Hash_adp_bry url_func_hash = new Hash_adp_bry(false).Add_str_byteVal("fullUrl", Pf_url_urlfunc.Tid_full).Add_str_byteVal("localUrl", Pf_url_urlfunc.Tid_local).Add_str_byteVal("canonicalUrl", Pf_url_urlfunc.Tid_canonical);
 	// private static final byte[] Proto_relative = ByteAry_.new_ascii_("relative");

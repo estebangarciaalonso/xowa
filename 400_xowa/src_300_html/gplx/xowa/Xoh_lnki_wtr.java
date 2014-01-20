@@ -26,17 +26,19 @@ public class Xoh_lnki_wtr {
 	private Xow_wiki wiki; private Xoh_html_wtr html_wtr;
 	private ByteAryFmtrArg_html_fmtr media_alt_fmtr = new ByteAryFmtrArg_html_fmtr(), caption_fmtr = new ByteAryFmtrArg_html_fmtr(); private Bry_bfr_mkr bfr_mkr;
 	private Xoa_url tmp_url = new Xoa_url();
-	public void Write_or_queue(Xoa_page page, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, int depth) {
-		Xof_xfer_itm xfer_itm = this.Lnki_eval(page, lnki, queue_add_ref);
+	public void Write_or_queue(Xop_ctx ctx, Xoa_page page, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, int depth) {
+		Xof_xfer_itm xfer_itm = this.Lnki_eval(ctx, page, lnki, queue_add_ref);
 		this.Write_media(bfr, src, opts, lnki, depth, xfer_itm);
 	}	private BoolRef queue_add_ref = BoolRef.n_();
 	public void Page_bgn(Xoa_page page) {
 		cfg_alt_defaults_to_caption = page.Wiki().App().User().Wiki().Html_mgr().Imgs_mgr().Alt_defaults_to_caption().Val();
 	}	private boolean cfg_alt_defaults_to_caption = true;
-	public Xof_xfer_itm Lnki_eval(Xoa_page page, Xop_lnki_tkn lnki, BoolRef queue_add_ref) {return Lnki_eval(page.File_queue(), lnki.Ttl().Page_url(), lnki.Lnki_type(), lnki.Width(), lnki.Height(), lnki.Upright(), lnki.Thumbtime(), lnki.Ns_id() == Xow_ns_.Id_media, queue_add_ref);}
-	public Xof_xfer_itm Lnki_eval(Xof_xfer_queue queue, byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, int lnki_seek, boolean lnki_is_media_ns, BoolRef queue_add_ref) {
+	private Xop_ctx ctx;
+	public Xof_xfer_itm Lnki_eval(Xop_ctx ctx, Xoa_page page, Xop_lnki_tkn lnki, BoolRef queue_add_ref) {return Lnki_eval(ctx, page.File_queue(), lnki.Ttl().Page_url(), lnki.Lnki_type(), lnki.Width(), lnki.Height(), lnki.Upright(), lnki.Thumbtime(), lnki.Page(), lnki.Ns_id() == Xow_ns_.Id_media, queue_add_ref);}
+	public Xof_xfer_itm Lnki_eval(Xop_ctx ctx, Xof_xfer_queue queue, byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, int lnki_seek, int lnki_page, boolean lnki_is_media_ns, BoolRef queue_add_ref) {
+		this.ctx = ctx;
 		queue_add_ref.Val_n_();
-		tmp_xfer_itm.Clear().Atrs_by_ttl(lnki_ttl, ByteAry_.Empty).Atrs_by_lnki(lnki_type, lnki_w, lnki_h, lnki_upright, lnki_seek);
+		tmp_xfer_itm.Clear().Atrs_by_ttl(lnki_ttl, ByteAry_.Empty).Atrs_by_lnki(lnki_type, lnki_w, lnki_h, lnki_upright, lnki_seek, lnki_page);
 		boolean found = Find_file(tmp_xfer_itm);
 		boolean file_queue_add = File_queue_add(wiki, tmp_xfer_itm, lnki_is_media_ns, found);
 		Xof_xfer_itm rv = tmp_xfer_itm;
@@ -103,7 +105,8 @@ public class Xoh_lnki_wtr {
 		}
 
 		if (lnki.Ns_id() == Xow_ns_.Id_media) {	// REF.MW:Linker.php|makeMediaLinkObj; NOTE: regardless of ext (ogg vs jpeg) and literal status (Media vs :Media), [[Media]] links are always rendered the same way; see Beethoven; EX: [[:Media:De-Ludwig_van_Beethoven.ogg|listen]]); [[File:Beethoven 3.jpg|The [[Media:BeethovenWithLyreGuitar( W. J. Mahler - 1804).jpg|complete painting]]...]]
-			cfg.Lnki_full_media().Bld_bfr_many(bfr, html_view_src, lnki.Ttl().Page_txt(), Caption(src, lnki, Xoh_opts.root_(), depth, html_orig_src));
+			cfg.Lnki_full_media().Bld_bfr_many(bfr, html_orig_src	// NOTE: should always use orig_src; was using view_src; DATE:2014-01-19
+				, lnki.Ttl().Page_txt(), Caption(src, lnki, Xoh_opts.root_(), depth, html_orig_src));
 			return;
 		}
 		if (lnki_ext.Id_is_media()) {
@@ -245,14 +248,14 @@ public class Xoh_lnki_wtr {
 	public static final byte[] Bry_class_internal = ByteAry_.new_ascii_("image");
 	private byte[] Alt_text(byte[] src, Xop_lnki_tkn lnki, int depth) {
 		if (!lnki.Alt_exists()) return ByteAry_.Empty;
-		media_alt_fmtr.Set(html_wtr, Xoh_opts.lnki_alt_(), src, lnki.Alt_tkn().Val_tkn(), depth, cfg.Plain());
+		media_alt_fmtr.Set(html_wtr, ctx, Xoh_opts.lnki_alt_(), src, lnki.Alt_tkn().Val_tkn(), depth, cfg.Plain());
 		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
 		media_alt_fmtr.XferAry(tmp_bfr, 0);
 		return tmp_bfr.Mkr_rls().XtoAryAndClear(); 
 	}
 	private byte[] Alt_html(byte[] src, Xop_lnki_tkn lnki, int depth) {
 		if (!lnki.Alt_exists()) return ByteAry_.Empty;
-		media_alt_fmtr.Set(html_wtr, Xoh_opts.root_(), src, lnki.Alt_tkn().Val_tkn(), depth, cfg.Lnki_thumb_part_alt());
+		media_alt_fmtr.Set(html_wtr, ctx, Xoh_opts.root_(), src, lnki.Alt_tkn().Val_tkn(), depth, cfg.Lnki_thumb_part_alt());
 		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
 		media_alt_fmtr.XferAry(tmp_bfr, 0);
 		return tmp_bfr.Mkr_rls().XtoAryAndClear(); 
@@ -270,7 +273,7 @@ public class Xoh_lnki_wtr {
 	}
 	private ByteAryFmtrArg Caption(byte[] src, Xop_lnki_tkn lnki, Xoh_opts opts, int depth, byte[] html_orig_src) {
 		return lnki.Caption_exists()
-			? caption_fmtr.Set(html_wtr, opts, src, lnki.Caption_val_tkn(), depth, cfg.Plain())
+			? caption_fmtr.Set(html_wtr, ctx, opts, src, lnki.Caption_val_tkn(), depth, cfg.Plain())
 			: ByteAryFmtrArg_.Null;
 	}
 	private byte[] Play_btn(int elem_id, int width, int max_width, byte[] html_orig_src, byte[] lnki_href) {

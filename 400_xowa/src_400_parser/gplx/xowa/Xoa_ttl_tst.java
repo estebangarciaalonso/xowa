@@ -155,6 +155,9 @@ public class Xoa_ttl_tst {
 		ttl_("ⱥab").Full_txt_("Ⱥab").Run();				// check that rest of title works fine
 		ttl_("Help:ⱥab").Full_txt_("Help:Ⱥab").Run();	// check ns
 	}
+	@Test  public void Anchor_and_slash() {	// PURPOSE: slash in anchor was being treated as a subpage; DATE:2014-01-14
+		ttl_("A#b/c").Full_txt_("A").Anch_txt_("b/c").Leaf_txt_("A").Run();	// NOTE: Leaf_txt should be Page_txt; used to fail
+	}
 
 	private Xoa_ttl_tst ttl_(String raw) {test_raw = raw; return this;} private String test_raw = "";
 	private Xoa_ttl_tst Ns_id_(int v) {expd_nsId = v; return this;} private int expd_nsId = Int_.MinValue;

@@ -21,7 +21,6 @@ public class Xoh_href {
 	public byte[] Wiki() {return wiki;} public Xoh_href Wiki_(byte[] v) {wiki = v; return this;} private byte[] wiki;
 	public byte[] Page() {return page;} public Xoh_href Page_(byte[] v) {page = v; return this;} private byte[] page;
 	public byte[] Anchor() {return anchor;} public Xoh_href Anchor_(byte[] v) {anchor = v; return this;} private byte[] anchor;
-//		public byte[] Qarg() {return qarg;} public Xoh_href Qarg_(byte[] v) {qarg = v; return this;} private byte[] qarg;
 	public byte Tid() {return tid;} public Xoh_href Tid_(byte v) {tid = v; return this;} private byte tid;
 	public void Init(byte[] raw) {
 		this.raw = raw;

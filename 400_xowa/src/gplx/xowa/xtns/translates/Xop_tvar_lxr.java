@@ -18,13 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.translates; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 public class Xop_tvar_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_tvar;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
-		core_trie.Add(Hook_bgn, this);
-	}
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Hook_bgn, this);}
+	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
 	private static final byte[] Hook_bgn = ByteAry_.new_ascii_("<tvar|")
 		,	Close_nde = ByteAry_.new_ascii_("</>")
 		;
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		int rhs_end = ByteAry_.FindFwd(src, Byte_ascii.Gt, cur_pos); if (rhs_end == ByteAry_.NotFound) return ctx.LxrMake_txt_(cur_pos);
 		int lhs_bgn = ByteAry_.FindFwd(src, Close_nde    , rhs_end); if (lhs_bgn == ByteAry_.NotFound) return ctx.LxrMake_txt_(cur_pos);
 //		byte[] key = ByteAry_.Mid(src, cur_pos, rhs_end);

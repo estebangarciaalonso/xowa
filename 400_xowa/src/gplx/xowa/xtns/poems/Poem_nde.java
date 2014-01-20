@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.poems; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-public class Xtn_poem_nde implements Xop_xnde_xtn {
+public class Poem_nde implements Xop_xnde_xtn {
 	public Xop_root_tkn Xtn_root() {return body;} private Xop_root_tkn body;
 	public boolean Xtn_literal() {return false;}
 	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {// REF.MW: Poem.php|wfRenderPoemTag
@@ -26,7 +26,6 @@ public class Xtn_poem_nde implements Xop_xnde_xtn {
 		if (src[itm_bgn] 		== Byte_ascii.NewLine)	++itm_bgn;	// ignore 1st \n; 
 		if (src[itm_end - 1] 	== Byte_ascii.NewLine				// ignore last \n; 
 			&& itm_end != itm_bgn)						--itm_end;	// ...if not same as 1st \n; EX: <poem>\n</poem>
-		Xop_parser poem_parser = Xop_parser.poem_(wiki);
-		body = poem_parser.Parse_recurse(ctx, ByteAry_.Mid(src, itm_bgn, itm_end), true); // NOTE: ignoring paragraph mode; technically MW enables para mode, but by replacing "\n" with "<br/>\n" all the logic with para/pre mode is skipped
+		body = wiki.Xtn_mgr().Xtn_poem().Parser().Parse_recurse(ctx, ByteAry_.Mid(src, itm_bgn, itm_end), true); // NOTE: ignoring paragraph mode; technically MW enables para mode, but by replacing "\n" with "<br/>\n" all the logic with para/pre mode is skipped
 	}
 }

@@ -73,6 +73,13 @@ public class Xop_xnde_wkr_tst {
 	@Test  public void Err_eos_while_closing_tag() {
 		fxt.ini_Log_(Xop_xnde_log.Eos_while_closing_tag).tst_Parse_page_wiki("<ref [[a]]", fxt.tkn_txt_(0, 4), fxt.tkn_space_(4, 5), fxt.tkn_lnki_(5, 10));
 	}
+	@Test  public void Err_end_tag_broken() {	// chk that name_bgn is less than src_len else arrayIndex error; EX: <ref><p></p<<ref/>;  DATE:2014-01-18
+		fxt.tst_Parse_page_all_str("<poem><p></p<</poem>", String_.Concat_lines_nl_skipLast
+		( "<div class=\"poem\">"
+		, "<p>&lt;/p&lt;</p>"
+		, "</div>"
+		));
+	}
 	@Test  public void Slash_exc() {// b/c mw allows unquoted attributes
 		fxt.tst_Parse_page_wiki("<ref / >a</ref>", fxt.tkn_xnde_(0, 15).Atrs_rng_(5, 7).Subs_(fxt.tkn_txt_(8, 9)));
 		fxt.tst_Parse_page_wiki("<ref name=a/b/>", fxt.tkn_xnde_(0, 15).Atrs_rng_(5, 13));

@@ -234,7 +234,7 @@ public class Gfo_url_parser {
 		}
 	}
 	private void Parse_args(byte[] src, int bgn, int end) {
-		if (bgn == end) return;
+//			if (bgn == end) return; // make "A?" -> "A" DATE:2014-01-19
 		int pos = bgn;
 		boolean loop = true;
 		int key_bgn = pos, key_end = pos, val_bgn = pos;
@@ -258,6 +258,7 @@ public class Gfo_url_parser {
 			}			
 			++pos;
 		}
+		url.Args_bgn_(bgn - 1);	// NOTE: bgn is 1st char after ?; -1 to place at ?
 		url.Args_((Gfo_url_arg[])args.XtoAry(Gfo_url_arg.class));
 	}
 	private void Site_set(byte[] src, int bgn, int end, int dot_count, int dot_pos_0, int dot_pos_1) {

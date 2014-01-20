@@ -104,8 +104,8 @@ class Xoi_cmd_wiki_goto_page extends Gfo_thread_cmd_base implements Gfo_thread_c
 	}	private static final String Invk_goto_page = "goto_page";
 	public static final String KEY = "wiki.goto_page";
 }
-class Xoi_cmd_imageMagick_download extends Gfo_thread_cmd_download implements Gfo_thread_cmd {	private static final byte[] Bry_windows_zip = ByteAry_.new_ascii_("-x86-windows.zip");
-	static final String Src_imageMagick = "http://www.imagemagick.org/download/binaries/";
+class Xoi_cmd_imageMagick_download extends Gfo_thread_cmd_download implements Gfo_thread_cmd {	private static final byte[] Bry_windows_zip = ByteAry_.new_ascii_("-windows.zip");
+	static final String Src_imageMagick = "http://www.imagemagick.org/download/windows/";
 	public Xoi_cmd_imageMagick_download(Gfo_usr_dlg usr_dlg, Gfui_kit kit, Io_url trg) {this.Ctor(usr_dlg, kit); this.trg = trg;} Io_url trg;
 	@Override public byte Async_init() {	// <a href="ImageMagick-6.8.1-9-Q16-x86-windows.zip">
 		byte[] raw = xrg.Exec_as_bry(Src_imageMagick);

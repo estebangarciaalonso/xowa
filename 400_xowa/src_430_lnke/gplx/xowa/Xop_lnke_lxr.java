@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 class Xop_lnke_lxr implements Xop_lxr {
 	Xop_lnke_lxr(byte lnke_typ, byte[] protocol, byte tid) {this.lnke_typ = lnke_typ; this.protocol = protocol; this.tid = tid;} private byte lnke_typ; byte[] protocol; byte tid;
 	public byte Lxr_tid() {return Xop_lxr_.Tid_lnke_bgn;}
-	public void Ctor_lxr(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
 		String[] ary = wiki.Cfg_lnke().Protocol_ary();
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++)
@@ -30,12 +30,13 @@ class Xop_lnke_lxr implements Xop_lxr {
 		}
 		Ctor_lxr_add(core_trie, "xowa-cmd", Xow_cfg_lnke.Tid_xowa);
 	}	private static final byte[] Bry_relative_1 = ByteAry_.new_ascii_("[//"), Bry_relative_2 = ByteAry_.new_ascii_("[[//");
+	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
 	private void Ctor_lxr_add(ByteTrieMgr_fast core_trie, String itm, byte tid) {
 		byte[] protocol_ary = ByteAry_.new_ascii_(itm);
 		core_trie.Add(protocol_ary						, new Xop_lnke_lxr(Xop_lnke_tkn.Lnke_typ_text, protocol_ary, tid));
 		core_trie.Add(ByteAry_.new_ascii_("[" + itm)	, new Xop_lnke_lxr(Xop_lnke_tkn.Lnke_typ_brack, protocol_ary, tid));
 	}
-	public int MakeTkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		if (this.tid == Xow_cfg_lnke.Tid_xowa && !ctx.Wiki().Sys_cfg().Xowa_proto_enabled()) return ctx.LxrMake_txt_(cur_pos);
 		return ctx.Lnke().MakeTkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, protocol, tid, lnke_typ);
 	}

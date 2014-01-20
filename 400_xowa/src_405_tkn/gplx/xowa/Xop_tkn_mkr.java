@@ -62,15 +62,15 @@ public class Xop_tkn_mkr {
 	public Xop_bry_tkn Bry(int bgn, int end, byte[] bry)									{return new Xop_bry_tkn(bgn, end, bry);}
 	public Xop_under_tkn Under(int bgn, int end, int v)										{return new Xop_under_tkn(bgn, end, v);}
 	public gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd Xowa_cmd_nde()								{return new gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd();}
-	public gplx.xowa.xtns.poems.Xtn_poem_nde Poem_nde()										{return new gplx.xowa.xtns.poems.Xtn_poem_nde();}
+	public gplx.xowa.xtns.poems.Poem_nde Poem_nde()										{return new gplx.xowa.xtns.poems.Poem_nde();}
 	public Xtn_ref_nde Ref_nde()															{return new Xtn_ref_nde();}
 	public Xtn_references_nde References_nde()												{return new Xtn_references_nde();}
 	public gplx.xowa.xtns.gallery.Xtn_gallery_nde Gallery_nde()								{return new gplx.xowa.xtns.gallery.Xtn_gallery_nde();}
-	public gplx.xowa.xtns.gallery.Xtn_gallery_itm Gallery_itm()						{return new gplx.xowa.xtns.gallery.Xtn_gallery_itm();}
+	public gplx.xowa.xtns.gallery.Xtn_gallery_itm Gallery_itm()								{return new gplx.xowa.xtns.gallery.Xtn_gallery_itm();}
 	public gplx.xowa.xtns.imageMap.Xop_imageMap_xnde ImageMap_nde()							{return new gplx.xowa.xtns.imageMap.Xop_imageMap_xnde();}
 	public gplx.xowa.xtns.hiero.Xtn_hiero_nde Hiero_nde()									{return new gplx.xowa.xtns.hiero.Xtn_hiero_nde();}
-	public gplx.xowa.xtns.lst.Xtn_pages_nde Pages_nde()										{return new gplx.xowa.xtns.lst.Xtn_pages_nde();}
-	public gplx.xowa.xtns.lst.Xtn_section_nde Section_nde()									{return new gplx.xowa.xtns.lst.Xtn_section_nde();}
+	public gplx.xowa.xtns.proofreadPage.Pp_pages_nde Pages_nde()							{return new gplx.xowa.xtns.proofreadPage.Pp_pages_nde();}
+	public gplx.xowa.xtns.lst.Lst_section_nde Section_nde()									{return new gplx.xowa.xtns.lst.Lst_section_nde();}
 	public gplx.xowa.xtns.categoryList.Xtn_categorylist_nde CategoryList_nde()				{return new gplx.xowa.xtns.categoryList.Xtn_categorylist_nde();}
 	public gplx.xowa.xtns.dynamicPageList.Dpl_xnde DynamicPageList_nde()		{return new gplx.xowa.xtns.dynamicPageList.Dpl_xnde();}
 	public gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde SyntaxHighlight()			{return new gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde();}

@@ -70,7 +70,7 @@ public class Gfo_url_parser_tst {
 	}
 	@Test  public void Legacy() {
 		fxt.Reset().Raw_("http://en.wikipedia.org/wiki/A" ).Page_("A").tst_();
-		fxt.Reset().Raw_("http://en.wikipedia.org/wiki/A?").Page_("A").tst_();
+		fxt.Reset().Raw_("http://en.wikipedia.org/wiki/A?").Page_("A").Args_("", "").tst_();
 		fxt.Reset().Raw_("http://en.wikipedia.org/wiki/A#").Page_("A").tst_();
 		fxt.Reset().Raw_("http://en.wikipedia.org/wiki/A%27s").Page_("A's").tst_();
 		fxt.Reset().Raw_("https://en.wikipedia.org/wiki/A").Page_("A").tst_();

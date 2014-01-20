@@ -24,8 +24,8 @@ public class Xob_xfer_temp_cmd_orig extends Xob_itm_basic_base implements Xob_cm
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_bgn(Xob_bldr bldr) {
 		Db_provider provider = Xodb_db_file.init__file_make(wiki.Fsys_mgr().Root_dir()).Provider();
+		Xob_xfer_temp_tbl.Create_table(provider);
 		Db_stmt trg_stmt = Xob_xfer_temp_tbl.Insert_stmt(provider);
-
 		provider.Txn_mgr().Txn_bgn_if_none();
 		DataRdr rdr = provider.Exec_sql_as_rdr(Sql_select);
 		long[] ext_maxs = Calc_ext_max();
@@ -72,25 +72,25 @@ public class Xob_xfer_temp_cmd_orig extends Xob_itm_basic_base implements Xob_cm
 	private static final String
 		Sql_select = String_.Concat_lines_nl
 	(	"SELECT  DISTINCT"
-	,   "        lnki_id"
-	,	",       lnki_ttl"
-	,	",       lnki_ext"
-	,	",       lnki_page_id"
-	,	",       orig_repo"
-	,	",       orig_page_id"
-	,	",       orig_file_id"
-	,	",       orig_file_ttl"
-	,	",       orig_file_ext"
-	,	",       lnki_ttl"
-	,	",       orig_size"
-	,	",       orig_w"
-	,	",       orig_h"
-	,	",       orig_bits"
-	,	",       orig_media_type"
+	,   "        l.lnki_id"
+//		,	",       lnki_ttl"
+	,	",       l.lnki_ext"
+	,	",       l.lnki_page_id"
+	,	",       o.orig_repo"
+	,	",       o.orig_page_id"
+//		,	",       orig_file_id"
+	,	",       o.orig_file_ttl"
+	,	",       o.orig_file_ext"
+	,	",       o.lnki_ttl"
+	,	",       o.orig_size"
+	,	",       o.orig_w"
+	,	",       o.orig_h"
+	,	",       o.orig_media_type"
+//		,	",       orig_bits"
 	,	"FROM    lnki_regy l"
-	,	"        JOIN orig_regy f ON f.lnki_ttl = l.lnki_ttl"
+	,	"        JOIN orig_regy o ON o.lnki_ttl = l.lnki_ttl"
 	,	"WHERE   o.orig_file_ttl IS NOT NULL"
-	,	"ORDER BY f.orig_file_ttl DESC"
+	,	"ORDER BY o.orig_file_ttl DESC"
 	);
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_ext_rules_))			ext_rules_key = m.ReadBry("v");

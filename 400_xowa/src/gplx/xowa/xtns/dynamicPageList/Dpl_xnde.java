@@ -19,23 +19,21 @@ package gplx.xowa.xtns.dynamicPageList; import gplx.*; import gplx.xowa.*; impor
 import gplx.xowa.dbs.*; import gplx.xowa.ctgs.*;
 public class Dpl_xnde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 	private Dpl_itm itm = new Dpl_itm(); private ListAdp pages = ListAdp_.new_();
-	private Xow_wiki wiki;
 	public Xop_root_tkn Xtn_root() {return null;}
 	public boolean Xtn_literal() {return false;}
 	public void Xatr_parse(Xow_wiki wiki, byte[] src, Xop_xatr_itm xatr, Object xatr_key_obj) {} // NOTE: <dynamicPageList> has no attributes
 	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
-		this.wiki = wiki;
 		itm.Parse(wiki, ctx.Page().Page_ttl().Full_txt(), src, xnde);
 		Dpl_page_finder.Find_pages(pages, wiki, itm);
 		if (itm.Sort_ascending() != Bool_.__byte)
 			pages.SortBy(new Dpl_page_sorter(itm));
 	}
-	public void Xtn_html(Xoh_html_wtr html_wtr, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+	public void Xtn_html(Xow_wiki wiki, Xoh_html_wtr html_wtr, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		Dpl_html_data html_mode = Dpl_html_data.new_(Dpl_itm_keys.Key_unordered);
 		int itms_len = pages.Count();
 		if (itms_len == 0) {
 			if (!itm.Suppress_errors())
-				bfr.Add_str("Error: No results!");
+				bfr.Add_str("No pages meet these criteria.");
 			return;
 		}
 		int itms_bgn = 0;

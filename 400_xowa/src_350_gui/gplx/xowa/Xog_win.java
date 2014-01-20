@@ -366,8 +366,8 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		url_box.Text_(s);
 		Exec_url_exec(s);
 	}
-	boolean find_box_dir_fwd = true, find_box_case_match = false, find_box_wrap_find = true;
-	boolean Exec_find_box_find() {return html_box.Html_doc_find(cur_view_tid == Xoh_wiki_article.Tid_view_read ? Gfui_html.Elem_id_body : Id_xowa_edit_data_box, find_box.Text(), find_box_dir_fwd, find_box_case_match, find_box_wrap_find);}
+	private boolean find_box_dir_fwd = true, find_box_case_match = false, find_box_wrap_find = true;
+	private boolean Exec_find_box_find() {return html_box.Html_doc_find(cur_view_tid == Xoh_wiki_article.Tid_view_read ? Gfui_html.Elem_id_body : Id_xowa_edit_data_box, find_box.Text(), find_box_dir_fwd, find_box_case_match, find_box_wrap_find);}
 	public void Exec_url_exec(String s) {
 		byte[] bry = ByteAry_.new_utf8_(s);
 		byte[] fmt = app.Url_alias_mgr().Fmt_or_null(bry);
@@ -386,6 +386,15 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	private void Exec_cancel_restart() {
 		Exec_url_exec(restart_url);		
 	}	private Xoa_url restart_url;
+	private void Exec_handle_err(Xow_wiki wiki, Xoa_url url, Xoa_ttl ttl, Exception e) {
+		String err_msg = String_.Format("page load fail: page={0} err={1}", String_.new_utf8_(url.Raw()), Err_.Message_gplx_brief(e));
+		gui_wtr.Warn_many(GRP_KEY, "view.load.fail", err_msg);
+		app.Log_wtr().Queue_enabled_(false);
+		Xoa_page fail_page = wiki.Data_mgr().Get_page(ttl, false);
+		cur_view_tid = Xoh_wiki_article.Tid_view_edit;
+		Exec_show_wiki_page(fail_page, false);
+		win.Text_(err_msg);
+	}
 	private void Exec_url_exec(Xoa_url url) {			
 		if (reload_imgs_thread.IsAlive()) {
 			restart_url = url;
@@ -416,13 +425,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 				wiki.Ctx().Page_(new_page);
 			}
 			catch (Exception e) {
-				String err_msg = String_.Format("page load fail: page={0} err={1}", String_.new_utf8_(url.Raw()), Err_.Message_gplx_brief(e));
-				gui_wtr.Warn_many(GRP_KEY, "view.load.fail", err_msg);
-				app.Log_wtr().Queue_enabled_(false);
-				Xoa_page fail_page = wiki.Data_mgr().Get_page(ttl, false);
-				cur_view_tid = Xoh_wiki_article.Tid_view_edit;
-				Exec_show_wiki_page(fail_page, false);
-				win.Text_(err_msg);
+				Exec_handle_err(wiki, url, ttl, e);
 				return;
 			}
 			if (new_page.Missing()) {
@@ -522,7 +525,11 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			history_mgr.Update_html_doc_pos(page);	// HACK: old_page is already in stack, but need to update its hdoc_pos
 		}
 		gui_wtr.Prog_none(GRP_KEY, "show.locate", "locating images");
-		if (!Exec_html_box_show_text(new_page)) return;
+		try	{Exec_html_box_show_text(new_page);}
+		catch (Exception e) {
+			Exec_handle_err(new_page.Wiki(), new_page.Url(), new_page.Page_ttl(), e);
+			return;
+		}
 		page = new_page;
 		url_box.Text_(app.Url_parser().Build_str(new_page.Url()));
 		win.Text_(String_.new_utf8_(ByteAry_.Add(new_page.Page_ttl().Full_txt(), Xowa_titleBar_suffix)));
@@ -546,13 +553,12 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	public void Exec_sync(String cmd) {GfoInvkAble_.InvkCmd(sync_cmd, cmd);}
 	public void Exec_async(String cmd) {GfoInvkAble_.InvkCmd(async_cmd, cmd);}
 	public void Exec_async_arg(String cmd, String arg) {GfoInvkAble_.InvkCmd_val(async_cmd, cmd, arg);}
-	boolean Exec_html_box_show_text(Xoa_page page) {
+	private void Exec_html_box_show_text(Xoa_page page) {
 		byte[] bry = page.Wiki().Html_mgr().Output_mgr().Gen(page, cur_view_tid);
 		html_box.Html_doc_html_(String_.new_utf8_(bry));
 		html_box.Html_doc_body_focus();
 		if (cur_view_tid == Xoh_wiki_article.Tid_view_read)
 			page.Root().Data_htm_(bry);
-		return true;
 	}
 	public void Init(Gfui_kit kit) {
 		win = kit.New_win_app("win");
@@ -602,22 +608,20 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		app.Gui_mgr().Layout().Find_show();
 		find_box.Text_(Html_doc_selected_get());
 	}
-	String Html_doc_selected_get() {return html_box.Html_doc_selected_get(page.Wiki().Domain_str(), String_.new_utf8_(page.Page_ttl().Page_txt()));}
+	private String Html_doc_selected_get() {return html_box.Html_doc_selected_get(page.Wiki().Domain_str(), String_.new_utf8_(page.Page_ttl().Page_txt()));}
 	public Xog_win_view_adp Win_adp() {return win_mgr;}
-	GfuiBtn new_btn(Gfui_kit kit, GfuiWin win, Io_url img_dir, String id, String file, int tiptext_id) {
+	private GfuiBtn new_btn(Gfui_kit kit, GfuiWin win, Io_url img_dir, String id, String file, int tiptext_id) {
 		GfuiBtn rv = kit.New_btn(id, win);
 		rv.Btn_img_(kit.New_img_load(img_dir.GenSubFil(file))).TipText_(new_tiptext(tiptext_id));
 		return rv;
 	}
-	GfuiTextBox new_txt(Gfui_kit kit, GfuiWin win, FontAdp ui_font, String id, int tiptext_id, boolean border_on) {
+	private GfuiTextBox new_txt(Gfui_kit kit, GfuiWin win, FontAdp ui_font, String id, int tiptext_id, boolean border_on) {
 		GfuiTextBox rv = kit.New_text_box(id, win, KeyVal_.new_(GfuiTextBox.CFG_border_on_, border_on));
 		rv.TextMgr().Font_(ui_font);
 		rv.TipText_(new_tiptext(tiptext_id));
 		return rv;
 	}
-	String new_tiptext(int id) {
-		return String_.new_utf8_(app.User().Lang().Msg_mgr().Val_by_id(app.User().Wiki(), id));
-	}
+	private String new_tiptext(int id) {return String_.new_utf8_(app.User().Lang().Msg_mgr().Val_by_id(app.User().Wiki(), id));}
 	public void Launch() {win_mgr.Launch();}
 	public byte[] Exec_app_retrieve_by_href(String href, boolean output_html) {return Exec_app_retrieve_core(Xog_url_wkr.Exec_url(this, href), output_html);}	// NOTE: used by drd
 	public byte[] Exec_app_retrieve_by_url(String url_str, String output_str) {
@@ -643,14 +647,14 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			;
 	}
 	private Xoh_href tmp_href = new Xoh_href();
-	byte[] Eval_elem_value_edit_box_bry() {return ByteAry_.new_utf8_(Eval_elem_value_edit_box_str());}
-	String Eval_elem_value_edit_box_str() {return html_box.Html_elem_atr_get_str(Id_xowa_edit_data_box, Gfui_html.Atr_value);}
-	String Eval_elem_value(String elem_id) {return html_box.Html_elem_atr_get_str(elem_id, Gfui_html.Atr_value);}		
+	private byte[] Eval_elem_value_edit_box_bry() {return ByteAry_.new_utf8_(Eval_elem_value_edit_box_str());}
+	private String Eval_elem_value_edit_box_str() {return html_box.Html_elem_atr_get_str(Id_xowa_edit_data_box, Gfui_html.Atr_value);}
+	private String Eval_elem_value(String elem_id) {return html_box.Html_elem_atr_get_str(elem_id, Gfui_html.Atr_value);}		
 	private GfoInvkAble async_cmd, sync_cmd;
 	private byte cur_view_tid = Xoh_wiki_article.Tid_view_read;
 	public static final String Id_xowa_edit_data_box = "xowa_edit_data_box", Id_xowa_edit_rename_box = "xowa_edit_rename_box", Html_id_first_heading = "firstHeading";
 	public static final byte[] Xowa_titleBar_suffix = ByteAry_.new_ascii_(" - XOWA");
-	static final String GRP_KEY = "xowa.gui.win";
+	private static final String GRP_KEY = "xowa.gui.win";
 }
 class Xog_win_utl_ {
 	public static String Parse_evt_location_changing(String v) { // EX: about:blank#anchor -> anchor

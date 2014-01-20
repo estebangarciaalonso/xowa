@@ -40,7 +40,7 @@ public class Xof_bin_wkr_fsdb_sql implements Xof_bin_wkr, GfoInvkAble {
 	}
 	private void Bin_wkr_get_ids(Xof_fsdb_itm itm, boolean is_thumb, int w, IntRef tmp_itm_id, IntRef tmp_bin_db_id, IntRef tmp_mnt_id) {
 		byte[] dir = itm.Orig_wiki(), fil = itm.Lnki_ttl();
-		int thumbtime = itm.Lnki_thumbtime();
+		int thumbtime = Fsdb_xtn_thm_itm.X_to_fsdb_thumbtime(itm.Lnki_ext().Id(), itm.Lnki_thumbtime(), itm.Lnki_page());
 		if (is_thumb) {
 			Fsdb_xtn_thm_itm thm_itm = fsdb_mgr.Thm_select_bin(dir, fil, w, thumbtime);
 			tmp_itm_id.Val_(thm_itm.Id());

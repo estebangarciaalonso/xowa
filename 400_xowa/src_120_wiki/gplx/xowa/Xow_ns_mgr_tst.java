@@ -17,9 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
-public class Xow_ns_mgr_tst {
-	Xow_ns_mgr_fxt fxt = new Xow_ns_mgr_fxt();
-	@Before public void init() {fxt.Clear();}
+public class Xow_ns_mgr_tst {		
+	@Before public void init() {fxt.Clear();} private Xow_ns_mgr_fxt fxt = new Xow_ns_mgr_fxt();
 	@Test  public void Basic() 				{fxt.ini_ns_(-2, 0, 1).run_Ords_sort().tst_Ords(-2, -100, 0, 1);}
 	@Test  public void Talk_skip() 			{fxt.ini_ns_(-2, 0, 2, 3).run_Ords_sort().tst_Ords(-2, -100, 0, 1, 2, 3);}
 	@Test  public void Subj_skip() 			{fxt.ini_ns_(-2, 1, 2, 3).run_Ords_sort().tst_Ords(-2, -100, 0, 1, 2, 3);}

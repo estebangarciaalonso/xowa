@@ -44,4 +44,17 @@ public class Fsdb_xtn_thm_itm {
 	public static Fsdb_xtn_thm_itm new_() {return new Fsdb_xtn_thm_itm();}
 	public static final Fsdb_xtn_thm_itm Null = new Fsdb_xtn_thm_itm();
 	public static final Fsdb_xtn_thm_itm[] Ary_empty = new Fsdb_xtn_thm_itm[0];
+	public static int X_to_xowa_thumbtime(int ext, int val) {
+		return gplx.xowa.Xof_ext_.Id_supports_thumbtime(ext) ? val : gplx.xowa.Xop_lnki_tkn.Thumbtime_null;
+	}
+	public static int X_to_xowa_page(int ext, int val) {
+		return gplx.xowa.Xof_ext_.Id_supports_page(ext) ? val : gplx.xowa.Xop_lnki_tkn.Page_null;
+	}
+	public static int X_to_fsdb_thumbtime(int ext, int thumbtime, int page) {
+		return	page != gplx.xowa.Xop_lnki_tkn.Page_null
+			&&	gplx.xowa.Xof_ext_.Id_supports_page(ext)		// redefine thumbtime to page if pdf
+			?	page
+			:	thumbtime
+			;
+	}
 }

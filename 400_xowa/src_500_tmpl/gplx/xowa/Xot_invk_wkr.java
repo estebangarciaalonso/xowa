@@ -23,7 +23,7 @@ public class Xot_invk_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {}
 	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int lxr_bgn_pos, int lxr_cur_pos, Xop_tkn_itm tkn) {}
 	private static Arg_bldr arg_bldr = Arg_bldr._;
-	public int MakeTkn(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int lxr_cur_pos, int lxr_end_pos, Xop_curly_bgn_tkn bgn_tkn, int keep_curly_bgn) {
+	public int Make_tkn(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int lxr_cur_pos, int lxr_end_pos, Xop_curly_bgn_tkn bgn_tkn, int keep_curly_bgn) {
 		Xot_invk_tkn invk = tkn_mkr.Tmpl_invk(bgn_tkn.Src_bgn(), lxr_end_pos);
 		int loop_bgn = bgn_tkn.Tkn_sub_idx() + 1, loop_end = root.Subs_len();
 		if (loop_bgn == loop_end) {			// empty template; EX: "{{}}"

@@ -17,10 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.lst; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
-public class Xtn_lst_tst {
-	Xtn_lst_fxt fxt = new Xtn_lst_fxt();
-	@Before public void init() {fxt.Clear();}
-	@Test  public void Basic() {
+public class Lst_pfunc_lst_tst {		
+	@Before public void init() {fxt.Clear();} private Lst_pfunc_lst_fxt fxt = new Lst_pfunc_lst_fxt();
+	@Test  public void Bgn_only() {
 		fxt.Clear().Page_txt_("a<section begin=key0/>val0<section end=key0/> b").Test_lst("{{#lst:section_test|key0}}", "val0");
 	}
 	@Test  public void Multiple() {
@@ -43,6 +42,14 @@ public class Xtn_lst_tst {
 		,	"</ol>"
 		));
 	}
+	@Test  public void Missing_bgn_end() {
+		fxt.Page_txt_("a<section bgn=key0/> b<section end=key0/> c");
+		fxt.Clear().Test_lst("{{#lst:section_test}}", "a b c");
+	}
+	@Test  public void Missing_bgn() {
+		fxt.Page_txt_("a<section bgn=key0/> b<section end=key0/> c");
+		fxt.Clear().Test_lst("{{#lst:section_test||key0}}", "a b");
+	}
 	@Test  public void Missing_end() {
 		fxt.Page_txt_("a <section begin=key0/>val0<section end=key1/> b");
 		fxt.Clear().Test_lst("{{#lst:section_test|key0}}", "val0 b");	// end is missing; read to end;
@@ -61,20 +68,15 @@ public class Xtn_lst_tst {
 	@Test  public void Fullpagename() {	// PURPOSE.fix: lst creates its own ctx; make sure ctx has same page_name of calling page (Test page) not default (Main page); DATE:2013-07-11
 		fxt.Clear().Page_txt_("a <section begin=key0/>{{FULLPAGENAME}}<section end=key0/> b").Test_lst("{{#lst:section_test|key0}}", "Test page");
 	}
-//			fxt.tst("a<section begin=key0/> val0<section end=key0/> b<section begin=key1/> val1<section end=key1/> c", "{{#lstx:sections|key0}}", "a val1 c");
-//			fxt.tst("a<section begin=key0/> val0<section end=key0/> b<section begin=key1/> val1<section end=key1/> c", "{{#lstx:sections|key0|key1}}", "a c");
-//			fxt.tst("a<section begin=key0/> val0<section end=key0/> b<section begin=key1/> val1<section end=key1/> c", "{{#lstx:sections|key0|val9}}", "a val9 b val1 c");
-//			fxt.tst("a<section begin=key0/> val0<section end=key0/> b<section begin=key1/> val1<section end=key1/> c<section begin=key0/> val2<section end=key0/> d", "{{#lstx:sections|key0| val3}}", "val3 b val1 c val3");
-//			fxt.tst("a<section begin=key0/> val0<section end=key0/> b<section begin=key1/> val1<section end=key1/> c<section begin=key2/> val2<section end=key2/> d", "{{#lstx:sections|key0|valx|key2}}", "a valx d");
 }
-class Xtn_lst_fxt {
-	public Xtn_lst_fxt Clear() {
+class Lst_pfunc_lst_fxt {
+	public Lst_pfunc_lst_fxt Clear() {
 		if (fxt == null) fxt = new Xop_fxt();
 		fxt.Reset();
 		Io_mgr._.InitEngine_mem();
 		return this;
 	}	private Xop_fxt fxt;
-	public Xtn_lst_fxt Page_txt_(String v) {page_txt = v; return this;} private String page_txt;
+	public Lst_pfunc_lst_fxt Page_txt_(String v) {page_txt = v; return this;} private String page_txt;
 	public void Test_lst(String func, String expd) {
 		fxt.ini_page_create("section_test", page_txt);
 		fxt.tst_Parse_page_all_str(func, expd);

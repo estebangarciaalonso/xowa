@@ -66,18 +66,17 @@ class Dpl_itm_keys {
 	, Key_include = 28
 	, Key_only = 29
 	, Key_exclude = 30
-	, Key_tablepages = 31
+	, Key_stablepages = 31
 	, Key_qualitypages = 32
-	, Key_addfirstcategorydate = 33
-	, Key_shownamespace = 34
-	, Key_googlehack = 35
-	, Key_nofollow = 36
-	, Key_descending = 37
-	, Key_ascending = 38
-	, Key_false = 39
-	, Key_true = 40
-	, Key_suppresserrors = 41
-	, Key_stablepages = 42
+	, Key_suppresserrors = 33
+	, Key_addfirstcategorydate = 34
+	, Key_shownamespace = 35
+	, Key_googlehack = 36
+	, Key_nofollow = 37
+	, Key_descending = 38
+	, Key_ascending = 39
+	, Key_false = 40
+	, Key_true = 41
 	;
 	private static final Hash_adp_bry keys = new Hash_adp_bry(false)
 	.Add_str_byteVal("category", Dpl_itm_keys.Key_category)
@@ -110,8 +109,9 @@ class Dpl_itm_keys {
 	.Add_str_byteVal("include", Dpl_itm_keys.Key_include)
 	.Add_str_byteVal("only", Dpl_itm_keys.Key_only)
 	.Add_str_byteVal("exclude", Dpl_itm_keys.Key_exclude)
-	.Add_str_byteVal("tablepages", Dpl_itm_keys.Key_tablepages)
+	.Add_str_byteVal("stablepages", Dpl_itm_keys.Key_stablepages)
 	.Add_str_byteVal("qualitypages", Dpl_itm_keys.Key_qualitypages)
+	.Add_str_byteVal("suppresserrors", Dpl_itm_keys.Key_suppresserrors)
 	.Add_str_byteVal("addfirstcategorydate", Dpl_itm_keys.Key_addfirstcategorydate)
 	.Add_str_byteVal("shownamespace", Dpl_itm_keys.Key_shownamespace)
 	.Add_str_byteVal("googlehack", Dpl_itm_keys.Key_googlehack)
@@ -120,7 +120,5 @@ class Dpl_itm_keys {
 	.Add_str_byteVal("ascending", Dpl_itm_keys.Key_ascending)
 	.Add_str_byteVal("false", Dpl_itm_keys.Key_false)
 	.Add_str_byteVal("true", Dpl_itm_keys.Key_true)
-	.Add_str_byteVal("suppresserrors", Dpl_itm_keys.Key_suppresserrors)
-	.Add_str_byteVal("stablepages", Dpl_itm_keys.Key_stablepages)
 	;
 }

@@ -85,7 +85,7 @@ public class Xop_para_wkr implements Xop_ctx_wkr {
 				case Xop_tblw_ws_itm.Type_xnde:
 					if (cur_mode != Xop_para_wkr.Mode_none || para_stack != ParaStack_none)	// DUBIOUS: if there is a para, create another para for "\n\s"; handles "\n\s</td>" should be equivalent to "\n</td>"; note that without "if" empty para would be be created for " <table>"
 						ctx.Para().Process_nl(ctx, root, src, bgn_pos, cur_pos, true);
-					return ctx.Xnde().MakeTkn(ctx, tkn_mkr, root, src, src_len, txt_pos, txt_pos + 1);
+					return ctx.Xnde().Make_tkn(ctx, tkn_mkr, root, src, src_len, txt_pos, txt_pos + 1);
 			}
 			return ctx.Tblw().MakeTkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, txt_pos + ws_itm.Hook_len(), tblw_type, true, false, -1, -1);
 		}

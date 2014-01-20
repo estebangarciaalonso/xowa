@@ -42,7 +42,7 @@ public class Dpl_xnde_tst {
 		,	"category=Ctg_0"
 		,	"category=Ctg_1"
 		,	"</DynamicPageList>"
-		),  "Error: No results!");
+		),  "No pages meet these criteria.");
 	}
 	@Test   public void Notcategory() {
 		fxt.Ctg_create_pages("Ctg_0", Dpl_page_mok.new_(101, "A"), Dpl_page_mok.new_(102, "B"));
@@ -99,7 +99,7 @@ public class Dpl_xnde_tst {
 		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
 		(	"<DynamicPageList>"
 		,	"category=Ctg_0"
-		,	"</DynamicPageList>"), "Error: No results!");
+		,	"</DynamicPageList>"), "No pages meet these criteria.");
 	}
 	@Test  public void Suppress_errors() {
 		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
@@ -145,6 +145,19 @@ public class Dpl_xnde_tst {
 		,	"category=Ctg_0"
 		,	"shownamespace=false"
 		,	"</DynamicPageList>"), fxt.Ul(Itm_html_null, "A"));
+	}
+	@Test  public void Comment() {	// PURPOSE: comment should be ignored; en.n:Portal:Federally_Administered_Tribal_Areas; DATE:2014-01-18
+		fxt.Ctg_create("Ctg_0", "B", "A");
+		fxt.Ul_pages(String_.Concat_lines_nl
+		(	"<DynamicPageList>"
+		,	"category=Ctg_0"
+		,	"<!--category=Ctg_0-->"
+		,	"</DynamicPageList>"
+		), fxt.Ul(Itm_html_null, "B", "A"));
+	}
+	@Test  public void Error_skip_line() {	// PURPOSE: error should skip rest of line; was failing with array out of bounds; en.n:Portal:Austria/Wikipedia; DATE:2014-01-18
+		fxt.Warns("unknown_key: page=Test page key=Ctg_0 order");	// ignore warning message
+		fxt.Ul_pages("<DynamicPageList> category=Ctg_0 order=descending</DynamicPageList>", "No pages meet these criteria.");
 	}
 	private static final String Itm_html_null = null;
 }

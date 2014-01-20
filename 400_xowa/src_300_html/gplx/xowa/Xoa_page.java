@@ -58,17 +58,17 @@ public class Xoa_page {
 	public Xoh_cmd_mgr Html_cmd_mgr() {return html_cmd_mgr;} private Xoh_cmd_mgr html_cmd_mgr = new Xoh_cmd_mgr();
 	public gplx.xowa.xtns.wdatas.Wdata_external_lang_links_data Wdata_external_lang_links() {return wdata_external_lang_links;} gplx.xowa.xtns.wdatas.Wdata_external_lang_links_data wdata_external_lang_links = new gplx.xowa.xtns.wdatas.Wdata_external_lang_links_data();
 	public Xop_hdr_tkn Hdrs_get(int i) {return hdrs_ary[i];}
-	public void Hdrs_add(Xop_hdr_tkn hdr, byte[] src) {
+	public void Hdrs_add(Xop_ctx ctx, Xop_hdr_tkn hdr, byte[] src) {
 		int new_len = hdrs_len + 1;
 		if (new_len > hdrs_max) {
 			hdrs_max = (new_len * 2) + 1;
 			hdrs_ary = (Xop_hdr_tkn[])Array_.Resize(hdrs_ary, hdrs_max);
 		}
-		Hdrs_reg(hdr, src);
+		Hdrs_reg(ctx, hdr, src);
 		hdrs_ary[hdrs_len] = hdr;
 		hdrs_len = new_len;
 	}	private Xop_hdr_tkn[] hdrs_ary = new Xop_hdr_tkn[0]; int hdrs_max, hdrs_len; HashAdp hdrs_hash = HashAdp_.new_(); ByteAryBfr hdrs_bfr = ByteAryBfr.reset_(255); ByteAryRef hdrs_ref = ByteAryRef.null_();
-	public void Hdrs_reg(Xop_hdr_tkn hdr, byte[] src) {
+	public void Hdrs_reg(Xop_ctx ctx, Xop_hdr_tkn hdr, byte[] src) {
 		if (hdrs_len == 0) hdr.Hdr_html_first_y_();
 		Xoa_app app = wiki.App();
 		ByteAryBfr raw_bfr = app.Utl_bry_bfr_mkr().Get_b128(), enc_bfr = app.Utl_bry_bfr_mkr().Get_b128();
@@ -87,7 +87,7 @@ public class Xoa_page {
 			hdrs_hash.Add(ByteAryRef.new_(hdrs_id), hdr);
 		}
 		hdr.Hdr_html_id_(hdrs_id);
-		hdr.Hdr_toc_text_(gplx.xowa.html.tocs.Xop_toc_mgr.Toc_text(this, src, hdr));
+		hdr.Hdr_toc_text_(gplx.xowa.html.tocs.Xop_toc_mgr.Toc_text(ctx, this, src, hdr));
 		raw_bfr.Mkr_rls(); enc_bfr.Mkr_rls();
 	}
 	private void Hdrs_id_bld_recurse(ByteAryBfr raw_bfr, byte[] src, Xop_tkn_itm tkn) {

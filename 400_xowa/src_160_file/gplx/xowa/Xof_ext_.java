@@ -130,4 +130,58 @@ public class Xof_ext_ {
 			default:											return false;
 		}
 	}
+<<<<<<< HEAD
+=======
+	public static boolean Id_is_image(int id) {
+		switch (id) {
+			case Xof_ext_.Id_png: case Xof_ext_.Id_jpg: case Xof_ext_.Id_jpeg:
+			case Xof_ext_.Id_gif: case Xof_ext_.Id_tif: case Xof_ext_.Id_tiff:
+			case Xof_ext_.Id_svg:
+			case Xof_ext_.Id_bmp: case Xof_ext_.Id_xcf:
+				return true;
+			default:
+				return false;
+		}
+	}
+	public static boolean Id_is_thumbable_img(int id) {
+		switch (id) {
+			case Xof_ext_.Id_png: case Xof_ext_.Id_jpg: case Xof_ext_.Id_jpeg:
+			case Xof_ext_.Id_gif: case Xof_ext_.Id_tif: case Xof_ext_.Id_tiff:
+			case Xof_ext_.Id_svg: case Xof_ext_.Id_djvu: case Xof_ext_.Id_pdf:
+			case Xof_ext_.Id_bmp: case Xof_ext_.Id_xcf:
+				return true;
+			default:
+				return false;
+		}
+	}
+	public static boolean Id_is_audio(int id) {
+		switch (id) {
+			case Xof_ext_.Id_mid: case Xof_ext_.Id_oga: case Xof_ext_.Id_flac: case Xof_ext_.Id_ogg: return true;
+			default: return false;
+		}
+	}
+	public static boolean Id_is_video(int id) {return id == Xof_ext_.Id_ogv || id == Xof_ext_.Id_ogg || id == Xof_ext_.Id_webm;}	// NOTE: ogg can be vid; EX.WP: Comet; Encke_tail_rip_off.ogg
+	public static boolean Id_is_video_strict(int id) {return id == Xof_ext_.Id_ogv || id == Xof_ext_.Id_webm;}	// NOTE: ogg can be aud / vid; EX.WP: Comet; Encke_tail_rip_off.ogg
+	public static boolean Id_is_audio_strict(int id) {	// same as above, but deliberately exclude ambiguous ogg
+		switch (id) {
+			case Xof_ext_.Id_mid: case Xof_ext_.Id_oga: case Xof_ext_.Id_flac: return true;
+			default: return false;
+		}
+	}
+	public static boolean Id_is_media(int id) {return Id_is_audio(id) || Id_is_video(id);}
+	public static boolean Id_needs_convert(int id) {
+		switch (id) {
+			case Xof_ext_.Id_svg: case Xof_ext_.Id_djvu: case Xof_ext_.Id_pdf: return true;
+			default: return false;
+		}
+	}
+	public static int Id_view(int id) {
+		switch (id) {
+			case Xof_ext_.Id_svg: case Xof_ext_.Id_bmp: case Xof_ext_.Id_xcf:								return Xof_ext_.Id_png;
+			case Xof_ext_.Id_tif: case Xof_ext_.Id_tiff: case Xof_ext_.Id_djvu: case Xof_ext_.Id_pdf:
+			case Xof_ext_.Id_ogg: case Xof_ext_.Id_ogv: case Xof_ext_.Id_webm:								return Xof_ext_.Id_jpg;
+			default:																						return id;
+		}
+	}
+>>>>>>> v1.1.4.1
 }

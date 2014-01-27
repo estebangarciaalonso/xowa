@@ -97,11 +97,11 @@ public class Xoctg_html_mgr_tst {
 			,	"  </div>"
 			,	"</div>"
 			));
-//				,	"  <ul class=\"gallery\">"
+//				,	"  <ul id=\"xowa_gallery_ul_0\" class=\"gallery\">"
 //				,	"  <li class=\"gallerybox\" style=\"width:155px;\">"
 //				,	"    <div style=\"width:155px;\">"
 //				,	"      <div class=\"thumb\" style=\"width:155px;\">"
-//				,	"        <div id=\"xowa_file_gallery_div_-1\" style=\"margin:15px auto;\">"
+//				,	"        <div id=\"xowa_gallery_div3_-1\" style=\"margin:15px auto;\">"
 //				,	"          <a href=\"/wiki/File:A1.png\" class=\"image\">"
 //				,	"            <img id=\"xowa_file_img_-1\" alt=\"A1.png\" src=\"\" width=\"-1\" height=\"-1\" />"
 //				,	"          </a>"

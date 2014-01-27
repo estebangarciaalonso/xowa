@@ -17,5 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.html; import gplx.*;
 public class Html_entities {
-	public static final byte[] Lt = ByteAry_.new_ascii_("&lt;"), Gt = ByteAry_.new_ascii_("&gt;"), Amp = ByteAry_.new_ascii_("&amp;"), Quote = ByteAry_.new_ascii_("&quote;"), Eq = ByteAry_.new_ascii_("&#61;");
+	public static final String Nl_str = "&#10;";
+	public static final byte[] Lt = ByteAry_.new_ascii_("&lt;"), Gt = ByteAry_.new_ascii_("&gt;"), Amp = ByteAry_.new_ascii_("&amp;"), Quote = ByteAry_.new_ascii_("&quote;")
+	, Eq = ByteAry_.new_ascii_("&#61;")
+	, Nl_bry = ByteAry_.new_ascii_(Nl_str), Space_bry = ByteAry_.new_ascii_("&#32;")
+	;
 }

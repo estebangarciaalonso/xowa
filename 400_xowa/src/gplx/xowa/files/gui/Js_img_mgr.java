@@ -34,8 +34,13 @@ public class Js_img_mgr {
 		}
 		switch (elem_tid) {
 			case Xof_html_elem.Tid_gallery:
-				int vpad = Xtn_gallery_data.Calc_vpad(gallery_mgr_h, h);
-				wtr.Html_atr_set("xowa_file_gallery_div_" + uid, "style", "margin:" + vpad + "px auto;");
+				// TODO: only apply when mode="packed"
+//					int div_w = Gallery_html.Calc_itm_div_w(w);
+//					int box_w = Gallery_html.Calc_itm_box_w(div_w);
+//					wtr.Html_atr_set("xowa_gallery_li_"   + uid, "style", "width:" + box_w + "px;");
+//					wtr.Html_atr_set("xowa_gallery_div1_" + uid, "style", "width:" + box_w + "px;");
+//					wtr.Html_atr_set("xowa_gallery_div2_" + uid, "style", "width:" + div_w + "px;");
+				wtr.Html_atr_set("xowa_gallery_div3_" + uid, "style", "margin:" + Gallery_html.Calc_vpad(gallery_mgr_h, h) + "px auto;");
 				break;
 			case Xof_html_elem.Tid_vid:
 				String html_id_vid = "xowa_file_play_" + uid;

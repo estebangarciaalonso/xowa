@@ -28,9 +28,10 @@ public class Fsdb_db_atr_fil implements RlsAble {
 		Sqlite_engine_.Pragma_page_size_4096(provider);
 		tbl_dir = new Fsdb_dir_tbl(provider, create);
 		tbl_fil = new Fsdb_fil_tbl(provider, create);
-		tbl_thm = new Fsdb_xtn_thm_tbl(provider, create);
+		tbl_thm = new Fsdb_xtn_thm_tbl(this, provider, create);
 		tbl_img = new Fsdb_xtn_img_tbl(provider, create);
-	}	private Fsdb_db_abc_mgr abc_mgr;
+	}
+	public Fsdb_db_abc_mgr Abc_mgr() {return abc_mgr;} private Fsdb_db_abc_mgr abc_mgr;
 	public int Id() {return id;} private int id;
 	public Io_url Url() {return url;} private Io_url url;
 	public String Path_bgn() {return path_bgn;} private String path_bgn;
@@ -62,8 +63,8 @@ public class Fsdb_db_atr_fil implements RlsAble {
 		if (dir_id == Int_.Neg1) return Fsdb_fil_itm.Null;
 		return tbl_fil.Select_itm_by_name(dir_id, String_.new_utf8_(fil));
 	}
-	public Fsdb_xtn_thm_itm Thm_select(int fil_id, int width, int thumbtime) {
-		return tbl_thm.Select_itm_by_fil_width(fil_id, width, thumbtime);
+	public boolean Thm_select(int owner_id, Fsdb_xtn_thm_itm thm) {
+		return tbl_thm.Select_itm_by_fil_width(owner_id, thm);
 	}
 	public int Fil_insert(Fsdb_fil_itm rv, String dir, String fil, int ext_id, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		int dir_id = Dir_id__get_or_insert(dir);
@@ -80,12 +81,12 @@ public class Fsdb_db_atr_fil implements RlsAble {
 		rv.Id_(fil_id);
 		return fil_id;
 	}
-	public int Thm_insert(Fsdb_xtn_thm_itm rv, String dir, String fil, int ext_id, int thm_w, int thm_h, int thumbtime, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+	public int Thm_insert(Fsdb_xtn_thm_itm rv, String dir, String fil, int ext_id, int thm_w, int thm_h, double thumbtime, int page, DateAdp modified, String hash, int bin_db_id, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		int dir_id = Dir_id__get_or_insert(dir);
 		int fil_id = Fil_id__get_or_insert(Fsdb_xtn_tid_.Tid_thm, dir_id, fil, ext_id, modified, hash, Fsdb_bin_tbl.Null_db_bin_id, Fsdb_bin_tbl.Null_size);	// NOTE: bin_db_id must be set to NULL
 		int thm_id = abc_mgr.Next_id();
-		tbl_thm.Insert(thm_id, fil_id, thm_w, thm_h, thumbtime, bin_db_id, bin_len, modified, hash);
-		rv.Id_(thm_id).Owner_(fil_id).Dir_id_(dir_id);
+		tbl_thm.Insert(thm_id, fil_id, thm_w, thm_h, thumbtime, page, bin_db_id, bin_len, modified, hash);
+		rv.Id_(thm_id).Owner_id_(fil_id).Dir_id_(dir_id);
 		return thm_id;
 	}
 	public static Fsdb_db_atr_fil load_(Fsdb_db_abc_mgr abc_mgr, DataRdr rdr, Io_url dir) {

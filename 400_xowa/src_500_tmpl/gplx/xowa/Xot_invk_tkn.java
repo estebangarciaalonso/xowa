@@ -46,6 +46,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		Xot_defn defn = tmpl_defn; Xow_wiki wiki = ctx.Wiki(); Xol_lang lang = wiki.Lang();
 		byte[] name_ary = defn.Name(), argx_ary = ByteAry_.Empty; Arg_itm_tkn name_key_tkn = name_tkn.Key_tkn();
 		int name_bgn = 0, name_ary_len = 0; 
+		boolean subst_found = false;
 		if (defn == Xot_defn_.Null) {								// tmpl_name is not exact match; may be dynamic, subst, transclusion, etc..
 			if (name_key_tkn.Itm_static() == Bool_.N_byte) {		// tmpl is dynamic; EX:{{{{{1}}}|a}}
 				ByteAryBfr name_tkn_bfr = new ByteAryBfr(name_tkn.Src_end() - name_tkn.Src_bgn());
@@ -103,6 +104,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 					}
 					Xot_fmtr_prm._.Print(bfr);
 					bfr.Add(Xop_curly_end_lxr.Hook);
+					subst_found = true;
 					return true;				// NOTE: nothing else to do; return
 				case Xot_defn_.Tid_safesubst:
 					name_ary = ByteAry_.Mid(name_ary, finder.Subst_end(), name_ary_len);			// chop off "safesubst:"
@@ -110,6 +112,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 					if (defn != Xot_defn_.Null) {	// func found
 						if (finder.Colon_pos() != -1) colon_pos = finder.Func().Name().length;		// set colon_pos; SEE NOTE_1
 					}
+					subst_found = true;
 					break;
 				case Xot_defn_.Tid_func:
 					if (defn.Defn_require_colon_arg()) {
@@ -188,6 +191,8 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 						tmp_bfr.Mkr_rls();
 						return SubEval(ctx, wiki, bfr, name_ary, caller, src);				
 					}
+					if (subst_found)
+						return Transclude(ctx, wiki, bfr, name_ary, caller, src);
 					Print_not_found(name_ary, bfr);
 					return false;
 				}

@@ -27,9 +27,15 @@ public class Xof_fsdb_itm {
 	public int			Lnki_h() {return lnki_h;} public Xof_fsdb_itm Lnki_h_(int v) {lnki_h = v; return this;} private int lnki_h;
 	public Xof_fsdb_itm Lnki_size_(int w, int h) {lnki_w = w; lnki_h = h; return this;} 
 	public double		Lnki_upright() {return lnki_upright;} private double lnki_upright;
+<<<<<<< HEAD
 	public int			Lnki_thumbtime() {return lnki_thumbtime;} public Xof_fsdb_itm Lnki_thumbtime_(int v) {lnki_thumbtime = v; return this;} private int lnki_thumbtime;
 	public int Lnki_page() {return lnki_page;} private int lnki_page = Xop_lnki_tkn.Page_null;
 	public Xof_fsdb_itm	Init_by_lnki(byte[] lnki_ttl, Xof_ext ext, byte[] md5, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, int lnki_thumbtime, int lnki_page) {
+=======
+	public double		Lnki_thumbtime() {return lnki_thumbtime;} public Xof_fsdb_itm Lnki_thumbtime_(double v) {lnki_thumbtime = v; return this;} private double lnki_thumbtime = Xof_doc_thumb.Null;
+	public int			Lnki_page() {return lnki_page;} public Xof_fsdb_itm Lnki_page_(int v) {lnki_page = v; return this;} private int lnki_page = Xof_doc_page.Null;
+	public Xof_fsdb_itm	Init_by_lnki(byte[] lnki_ttl, Xof_ext ext, byte[] md5, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, double lnki_thumbtime, int lnki_page) {
+>>>>>>> v1.1.4.1
 		this.lnki_ttl = lnki_ttl; this.lnki_ext = ext; this.lnki_md5 = md5;
 		this.lnki_w = lnki_w; this.lnki_h = lnki_h; this.lnki_upright = lnki_upright; this.lnki_thumbtime = lnki_thumbtime; this.lnki_page = lnki_page;
 		this.Lnki_type_(lnki_type);
@@ -84,7 +90,11 @@ public class Xof_fsdb_itm {
 		Html_size_calc(img_size, exec_tid);
 		Xof_repo_itm repo = repo_mgr.Repos_get_by_wiki(orig_wiki).Trg();
 		html_url = url_bldr.Set_trg_file_(lnki_type_as_mode, repo, lnki_ttl, lnki_md5, lnki_ext, html_w, lnki_thumbtime, lnki_page).Xto_url();
+<<<<<<< HEAD
 		html_orig_url = url_bldr.Set_trg_file_(Xof_repo_itm.Mode_orig, repo, lnki_ttl, lnki_md5, lnki_ext, Xof_img_size.Size_null_deprecated, Xop_lnki_tkn.Thumbtime_null, Xop_lnki_tkn.Page_null).Xto_url();
+=======
+		html_orig_url = url_bldr.Set_trg_file_(Xof_repo_itm.Mode_orig, repo, lnki_ttl, lnki_md5, lnki_ext, Xof_img_size.Size_null_deprecated, Xof_doc_thumb.Null, Xof_doc_page.Null).Xto_url();
+>>>>>>> v1.1.4.1
 	}
 	public Io_url Html_orig_url() {return html_orig_url;} private Io_url html_orig_url = Io_url_.Null;
 	public int Gallery_mgr_h() {return gallery_mgr_h;} public Xof_fsdb_itm Gallery_mgr_h_(int v) {gallery_mgr_h = v; return this;} private int gallery_mgr_h = Int_.Neg1;

@@ -63,6 +63,15 @@ public class ByteTrieMgr_slim_tst {
 		tst_MatchAtCur("a", 1);
 		tst_MatchAtCur("A", 1);
 	}
+	@Test  public void Del() {
+		ini_setup1();
+		trie.Del(ByteAry_.new_ascii_("a"));	// delete "a"; "abc" still remains;
+		tst_MatchAtCur("a"		, null);
+		tst_MatchAtCur("abc"	, 123);
+
+		trie.Del(ByteAry_.new_ascii_("abc"));
+		tst_MatchAtCur("abc"	, null);
+	}
 
 	private void run_Add(String k, int val) {trie.Add(ByteAry_.new_ascii_(k), val);}
 	private void tst_Match(String srcStr, byte b, int bgn_pos, int expd) {

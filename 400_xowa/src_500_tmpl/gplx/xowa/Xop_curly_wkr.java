@@ -25,12 +25,13 @@ public class Xop_curly_wkr implements Xop_ctx_wkr {
 		int lxr_end_pos = Xop_lxr_.Find_fwd_while(src, src_len, lxr_cur_pos, Byte_ascii.Curly_bgn);	// NOTE: can be many consecutive {; EX: {{{{{1}}}|a}}
 		ctx.Subs_add_and_stack(root, tkn_mkr.Tmpl_curly_bgn(lxr_bgn_pos, lxr_end_pos));
 		return lxr_end_pos;
-	}
+	}		
 	public int MakeTkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int lxr_bgn_pos, int lxr_cur_pos) {
 		if (ctx.Cur_tkn_tid() == Xop_tkn_itm_.Tid_brack_bgn)	// WORKAROUND: ignore }} if inside lnki; EX.CM:Template:Protected; {{#switch:a|b=[[a|ja=}}]]}}
 			return ctx.LxrMake_txt_(lxr_cur_pos);
 		int lxr_end_pos = Xop_lxr_.Find_fwd_while(src, src_len, lxr_cur_pos, Byte_ascii.Curly_end);	// NOTE: can be many consecutive }; EX: {{a|{{{1}}}}}
 		int end_tkn_len = lxr_end_pos - lxr_bgn_pos;
+		boolean vnt_enabled = ctx.Wiki().Lang().Vnt_mgr().Enabled();
 		while (end_tkn_len > 0) {
 			int acs_pos = -1, acs_len = ctx.Stack_len();
 			for (int i = acs_len - 1; i > -1; i--) {		// find auto-close pos
@@ -49,8 +50,27 @@ public class Xop_curly_wkr implements Xop_ctx_wkr {
 				ctx.Subs_add(root, tkn_mkr.Txt(lxr_bgn_pos, lxr_end_pos));
 				return lxr_end_pos;
 			}
+
 			Xop_curly_bgn_tkn bgn_tkn = (Xop_curly_bgn_tkn)ctx.Stack_pop_til(root, src, acs_pos, true, lxr_bgn_pos, lxr_end_pos);	// NOTE: in theory, an unclosed [[ can be on stack; for now, ignore
 			int bgn_tkn_len = bgn_tkn.Src_end() - bgn_tkn.Src_bgn();
+			int bgn_tkn_pos_bgn = bgn_tkn.Src_bgn();// save original pos_bgn
+			boolean vnt_dash_adjust = false;
+			if (vnt_enabled) {
+				int curly_bgn_dash = bgn_tkn.Src_bgn() - 1;
+				if (curly_bgn_dash > -1 && src[curly_bgn_dash] == Byte_ascii.Dash) {			// "-" before curlies; EX: "-{{"
+					int curly_end_dash = lxr_end_pos;
+					if (curly_end_dash < src_len && src[curly_end_dash] == Byte_ascii.Dash) {	// "-" after curlies;  EX: "}}-"
+						if (bgn_tkn_len > 2 && end_tkn_len > 2) {	// more than 3 curlies at bgn / end with flanking dashes; EX: "-{{{ }}}-"; NOTE: 3 is needed b/c 2 will never be reduced; EX: "-{{" will always be "-" and "{{", not "-{" and "{"
+							--bgn_tkn_len;		// reduce bgn curlies by 1; EX: "{{{" -> "{{"
+							++bgn_tkn_pos_bgn;	// add one to bgn tkn_pos;
+							--end_tkn_len;		// reduce end curlies by 1; EX: "}}}" -> "}}"
+							--lxr_end_pos;		// reduce end by 1; this will "reprocess" the final "}" as a text tkn; EX: "}}}-" -> "}}" and position before "}-"
+							vnt_dash_adjust = true;
+						}
+					}
+				}
+			}
+
 			int new_tkn_len = 0;
 			if		(bgn_tkn_len == end_tkn_len)	// exact match; should be majority of cases
 				new_tkn_len = bgn_tkn_len;
@@ -59,7 +79,6 @@ public class Xop_curly_wkr implements Xop_ctx_wkr {
 			else   /*bgn_tkn_len <  end_tkn_len*/	// more end than bgn; use bgn, and deduct end; EX: {{a|{{{1}}}}}
 				new_tkn_len = bgn_tkn_len;
 
-			int bgn_tkn_pos_bgn = bgn_tkn.Src_bgn();// save original pos_bgn
 			int keep_curly_bgn = 0;
 			/* NOTE: this is a semi-hack; if bgn_tkn > new_tkn, then pretend bgn_tkn fits new_tkn, give to bldr, and then adjust back later
 			EX: {{{{{1}}}|a}} -> bgn_tkn_len=5,new_tkn_len=3 -> change bgn(0, 5) to bgn(2, 5)
@@ -95,6 +114,13 @@ public class Xop_curly_wkr implements Xop_ctx_wkr {
 					bgn_tkn.Tkn_ini_pos(false, bgn_tkn_pos_bgn, bgn_tkn.Src_end() - new_tkn_len);	// bgn(2, 5) -> bgn (0, 2)
 					ctx.Stack_add(bgn_tkn);
 					break;
+			}
+			if (vnt_dash_adjust) {
+				Xop_tkn_itm text_tkn = root.Subs_get_or_null(root.Subs_len() - 2);	// -2 to get tkn before newly-created tmpl / prm
+				if (text_tkn == null || text_tkn.Tkn_tid() != Xop_tkn_itm_.Tid_txt)
+					ctx.Wiki().App().Usr_dlg().Warn_many("", "", "token before curly_bgn was not text tkn; src=~{0}", String_.new_utf8_(src, lxr_bgn_pos, lxr_end_pos));
+				else
+					text_tkn.Src_end_(text_tkn.Src_end() + 1);	// +1 to extend txt_tkn with dash be 1 to include curly; EX: "-" "{{{" -> "-{" "{{"
 			}
 
 			end_tkn_len -= new_tkn_len;

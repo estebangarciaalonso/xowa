@@ -25,6 +25,7 @@ public interface HashAdp extends gplx.lists.EnumerAble {
 	void	Add(Object key, Object val);
 	void	AddKeyVal(Object val);
 	void	AddReplace(Object key, Object val);
+	boolean	Add_if_new(Object key, Object val);
 	void	Del(Object key);
 	void	Clear();
 }

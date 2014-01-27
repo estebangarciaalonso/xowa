@@ -15,7 +15,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-public class Xtn_gallery_mgr {
-	public Xtn_gallery_parser Parser() {return parser;} private Xtn_gallery_parser parser = new Xtn_gallery_parser();
+package gplx.xowa.files; import gplx.*; import gplx.xowa.*;
+public class Xof_doc_page {
+	public static final int		Null = -1;
+	public static boolean		Null_y(int v) {return v == Null;}
+	public static boolean		Null_n(int v) {return v != Null;}
+	public static int		Db_load_int(DataRdr rdr, String fld) {return rdr.ReadInt(fld);}
+	public static int		Db_save_int(int v) {return v;}
 }

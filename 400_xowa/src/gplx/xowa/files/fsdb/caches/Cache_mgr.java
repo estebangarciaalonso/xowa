@@ -62,7 +62,7 @@ public class Cache_mgr implements Xou_db_wkr, GfoInvkAble {
 		} catch (Exception e) {app.Usr_dlg().Warn_many("", "", "cache_mgr.term:fatal error: err=~{0}", Err_.Message_gplx_brief(e));}
 	}
 	public Cache_fil_itm Reg(Xow_wiki wiki, Xof_fsdb_itm itm, long bin_len) {return this.Reg(wiki, itm.Orig_wiki(), itm.Lnki_ttl(), itm.File_is_orig(), itm.File_w(), itm.File_w(), itm.Lnki_thumbtime(), itm.Lnki_ext(), bin_len, DateAdp_.MaxValue, "");}
-	public Cache_fil_itm Reg(Xow_wiki wiki, byte[] repo, byte[] ttl, boolean fil_is_orig, int fil_w, int fil_h, int fil_thumbtime, Xof_ext ext, long bin_len, DateAdp modified, String hash) {
+	public Cache_fil_itm Reg(Xow_wiki wiki, byte[] repo, byte[] ttl, boolean fil_is_orig, int fil_w, int fil_h, double fil_thumbtime, Xof_ext ext, long bin_len, DateAdp modified, String hash) {
 		int dir_id = dir_mgr.Get_itm_by_name(repo).Id();
 		Cache_fil_itm fil_itm = fil_mgr.Get_or_new(dir_id, ttl, fil_is_orig, fil_w, fil_h, fil_thumbtime, ext, bin_len, created.Val_n_());
 		fil_itm.Cache_time_now_();

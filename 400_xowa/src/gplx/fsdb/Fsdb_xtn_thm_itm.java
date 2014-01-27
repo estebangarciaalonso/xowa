@@ -17,10 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.fsdb; import gplx.*;
 public class Fsdb_xtn_thm_itm {
+	protected Fsdb_xtn_thm_itm() {}
 	public int Id() {return id;} public Fsdb_xtn_thm_itm Id_(int v) {id = v; return this;} private int id;
-	public int Owner() {return owner;} public Fsdb_xtn_thm_itm Owner_(int v) {owner = v; return this;} private int owner;
+	public Fsdb_fil_itm Owner() {return owner;} public Fsdb_xtn_thm_itm Owner_(Fsdb_fil_itm v) {owner = v; return this;} private Fsdb_fil_itm owner = Fsdb_fil_itm.Null;
+	public int Owner_id() {return owner_id;} public Fsdb_xtn_thm_itm Owner_id_(int v) {owner_id = v; return this;} private int owner_id;
 	public int Width() {return width;} public Fsdb_xtn_thm_itm Width_(int v) {width = v; return this;} private int width;
-	public int Thumbtime() {return thumbtime;} public Fsdb_xtn_thm_itm Thumbtime_(int v) {thumbtime = v; return this;} private int thumbtime;
+	public double Thumbtime() {return thumbtime;} public Fsdb_xtn_thm_itm Thumbtime_(double v) {thumbtime = v; return this;} private double thumbtime;
+	public int Page() {return page;} public Fsdb_xtn_thm_itm Page_(int v) {page = v; return this;} private int page;
 	public int Height() {return height;} public Fsdb_xtn_thm_itm Height_(int v) {height = v; return this;} private int height;
 	public long Size() {return size;} public Fsdb_xtn_thm_itm Size_(long v) {size = v; return this;} private long size;
 	public String Modified() {return modified;} public Fsdb_xtn_thm_itm Modified_(String v) {modified = v; return this;} private String modified;
@@ -28,20 +31,26 @@ public class Fsdb_xtn_thm_itm {
 	public int Dir_id() {return dir_id;} public Fsdb_xtn_thm_itm Dir_id_(int v) {dir_id = v; return this;} private int dir_id;
 	public int Db_bin_id() {return bin_db_id;} public Fsdb_xtn_thm_itm Db_bin_id_(int v) {bin_db_id = v; return this;} private int bin_db_id;
 	public int Mnt_id() {return mnt_id;} public Fsdb_xtn_thm_itm Mnt_id_(int v) {mnt_id = v; return this;} private int mnt_id;
-	public static Fsdb_xtn_thm_itm load_(DataRdr rdr) {
-		Fsdb_xtn_thm_itm rv = new Fsdb_xtn_thm_itm();
-		rv.id = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_id);
-		rv.owner = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_owner_id);
-		rv.width = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_w);
-		rv.thumbtime = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_thumbtime);
-		rv.height = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_h);
-		rv.size = rdr.ReadLong(Fsdb_xtn_thm_tbl.Fld_thm_size);
-		rv.modified = rdr.ReadStr(Fsdb_xtn_thm_tbl.Fld_thm_modified);
-		rv.hash = rdr.ReadStr(Fsdb_xtn_thm_tbl.Fld_thm_hash);
-		rv.bin_db_id = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_bin_db_id);
-		return rv;
+	public void Init_by_load(DataRdr rdr, boolean schema_thm_page) {
+		this.id = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_id);
+		this.owner_id = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_owner_id);
+		this.width = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_w);
+		this.height = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_h);
+		this.size = rdr.ReadLong(Fsdb_xtn_thm_tbl.Fld_thm_size);
+		this.modified = rdr.ReadStr(Fsdb_xtn_thm_tbl.Fld_thm_modified);
+		this.hash = rdr.ReadStr(Fsdb_xtn_thm_tbl.Fld_thm_hash);
+		this.bin_db_id = rdr.ReadInt(Fsdb_xtn_thm_tbl.Fld_thm_bin_db_id);
+		if (schema_thm_page) {
+			this.thumbtime = gplx.xowa.files.Xof_doc_thumb.Db_load_double(rdr, Fsdb_xtn_thm_tbl.Fld_thm_time);
+			this.page = gplx.xowa.files.Xof_doc_page.Db_load_int(rdr, Fsdb_xtn_thm_tbl.Fld_thm_page);
+		}
+		else {
+			this.thumbtime = gplx.xowa.files.Xof_doc_thumb.Db_load_int(rdr, Fsdb_xtn_thm_tbl.Fld_thm_thumbtime);
+			this.page = gplx.xowa.files.Xof_doc_page.Null;
+		}
 	}
-	public static Fsdb_xtn_thm_itm new_() {return new Fsdb_xtn_thm_itm();}
+	public static Fsdb_xtn_thm_itm new_() {return new Fsdb_xtn_thm_itm();}								// NOTE: Owner is null by default
+	public static Fsdb_xtn_thm_itm load_() {return new Fsdb_xtn_thm_itm().Owner_(new Fsdb_fil_itm());}	// NOTE: Owner is new'd b/c load will use owner.Ext_id
 	public static final Fsdb_xtn_thm_itm Null = new Fsdb_xtn_thm_itm();
 	public static final Fsdb_xtn_thm_itm[] Ary_empty = new Fsdb_xtn_thm_itm[0];
 	public static int X_to_xowa_thumbtime(int ext, int val) {

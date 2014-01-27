@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
-public class Xtn_gallery_parser_tst {
-	@Before public void init() {fxt.Init();} private Xtn_gallery_parser_fxt fxt = new Xtn_gallery_parser_fxt();
+public class Gallery_parser_tst {
+	@Before public void init() {fxt.Init();} private Gallery_parser_fxt fxt = new Gallery_parser_fxt();
 	@Test   public void All() {
 		fxt.Test_parse("File:A.png|a|alt=b|link=c", fxt.Expd("File:A.png", "a", "b", "c"));
 	}
@@ -87,13 +87,13 @@ public class Xtn_gallery_parser_tst {
 		fxt.Test_parse("File:A%28b%29.png", fxt.Expd("File:A(b).png"));
 	}
 }
-class Xtn_gallery_parser_fxt {
+class Gallery_parser_fxt {
 	private Xoa_app app; private Xow_wiki wiki;
-	public Xtn_gallery_parser Parser() {return parser;} private Xtn_gallery_parser parser;
-	public Xtn_gallery_parser_fxt Init() {
+	public Gallery_parser Parser() {return parser;} private Gallery_parser parser;
+	public Gallery_parser_fxt Init() {
 		this.app = Xoa_app_fxt.app_();
 		this.wiki = Xoa_app_fxt.wiki_tst_(app);
-		parser = new Xtn_gallery_parser();
+		parser = new Gallery_parser();
 		parser.Init_by_wiki(wiki);
 		return this;
 	}
@@ -108,7 +108,7 @@ class Xtn_gallery_parser_fxt {
 	public void Test_parse(String raw, String[]... expd) {
 		ListAdp actl = ListAdp_.new_();
 		byte[] src = ByteAry_.new_ascii_(raw); int src_len = src.length;
-		parser.Parse_all(actl, src, 0, src_len, Xtn_gallery_nde.Itm_default_w, Xtn_gallery_nde.Itm_default_h);
+		parser.Parse_all(actl, src, 0, src_len, Gallery_nde.Default, Gallery_nde.Default);
 		Tfds.Eq_ary(Ary_flatten(expd), Ary_flatten(To_str_ary(src, actl)));
 	}
 	private String[] Ary_flatten(String[][] src_ary) {
@@ -133,7 +133,7 @@ class Xtn_gallery_parser_fxt {
 		int len = list.Count();
 		String[][] rv = new String[len][];
 		for (int i = 0; i < len; i++) {
-			Xtn_gallery_itm itm = (Xtn_gallery_itm)list.FetchAt(i);
+			Gallery_itm itm = (Gallery_itm)list.FetchAt(i);
 			String[] ary = new String[4];
 			rv[i] = ary;
 			ary[0] = String_.new_utf8_(itm.Ttl().Full_txt());

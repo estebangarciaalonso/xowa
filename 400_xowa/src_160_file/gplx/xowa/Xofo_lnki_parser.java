@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.files.*;
 class Xofo_lnki_parser extends Obj_ary_parser_base {
 	NumberParser parser = new NumberParser(); Xofo_lnki[] ary; int ary_idx;		
 	public Xofo_lnki[] Parse_ary(byte[] bry, int bgn, int end) {
@@ -67,7 +68,7 @@ class Xofo_lnki_parser extends Obj_ary_parser_base {
 			else if (ByteAry_.Match(bry, fld_bgn, eq_pos, Xop_lnki_arg_parser.Bry_thumbtime))	{
 				fld_val = ByteAry_.XtoIntByPos(bry, eq_pos + 1, i, Int_.MinValue);	// +1 to position after eq
 				if (fld_val == Int_.MinValue) throw Err_.new_fmt_("invalid int: {0}", String_.new_utf8_(bry, eq_pos + 1, i));
-				lnki.Lnki_thumbtime_(fld_val);
+				lnki.Lnki_thumbtime_(Xof_doc_thumb.X_int(fld_val));
 			}
 		}
 	}

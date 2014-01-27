@@ -426,6 +426,21 @@ public class Xop_toc_mgr_tst {
 		, "<h2><span class='mw-headline' id='A'>A</span></h2>"
 		));
 	}
+	@Test   public void Category_literal() { // PURPOSE: literal Category should show in in TOC; EX: de.w:1234; DATE:2014-01-21
+		fxt.Test_html_all(String_.Concat_lines_nl_skipLast
+		( "__FORCETOC__"
+		, "==A[[:Category:B]]=="
+		)
+		, String_.Concat_lines_nl
+		( TocTable_nl_n
+		( "  <ul>"
+		, "    <li class=\"toclevel-1 tocsection-1\"><a href=\"#A\"><span class=\"tocnumber\">1</span> <span class=\"toctext\">ACategory:B</span></a>"
+		, "    </li>"
+		, "  </ul>"
+		)
+		, "<h2><span class='mw-headline' id='A'>A<a href=\"/wiki/Category:B\">Category:B</a></span></h2>"
+		));
+	}
 	private String TocTable_nl_y(String... ary) {return TocTable(Bool_.Y, ary);}
 	private String TocTable_nl_n(String... ary) {return TocTable(Bool_.N, ary);}
 	private String TocTable(boolean nl, String... ary) {

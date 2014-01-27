@@ -35,10 +35,17 @@ public class Xoh_lnki_wtr {
 	}	private boolean cfg_alt_defaults_to_caption = true;
 	private Xop_ctx ctx;
 	public Xof_xfer_itm Lnki_eval(Xop_ctx ctx, Xoa_page page, Xop_lnki_tkn lnki, BoolRef queue_add_ref) {return Lnki_eval(ctx, page.File_queue(), lnki.Ttl().Page_url(), lnki.Lnki_type(), lnki.Width(), lnki.Height(), lnki.Upright(), lnki.Thumbtime(), lnki.Page(), lnki.Ns_id() == Xow_ns_.Id_media, queue_add_ref);}
+<<<<<<< HEAD
 	public Xof_xfer_itm Lnki_eval(Xop_ctx ctx, Xof_xfer_queue queue, byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, int lnki_seek, int lnki_page, boolean lnki_is_media_ns, BoolRef queue_add_ref) {
 		this.ctx = ctx;
 		queue_add_ref.Val_n_();
 		tmp_xfer_itm.Clear().Atrs_by_ttl(lnki_ttl, ByteAry_.Empty).Atrs_by_lnki(lnki_type, lnki_w, lnki_h, lnki_upright, lnki_seek, lnki_page);
+=======
+	public Xof_xfer_itm Lnki_eval(Xop_ctx ctx, Xof_xfer_queue queue, byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, double lnki_thumbtime, int lnki_page, boolean lnki_is_media_ns, BoolRef queue_add_ref) {
+		this.ctx = ctx;
+		queue_add_ref.Val_n_();
+		tmp_xfer_itm.Clear().Atrs_by_ttl(lnki_ttl, ByteAry_.Empty).Atrs_by_lnki(lnki_type, lnki_w, lnki_h, lnki_upright, lnki_thumbtime, lnki_page);
+>>>>>>> v1.1.4.1
 		boolean found = Find_file(tmp_xfer_itm);
 		boolean file_queue_add = File_queue_add(wiki, tmp_xfer_itm, lnki_is_media_ns, found);
 		Xof_xfer_itm rv = tmp_xfer_itm;
@@ -110,10 +117,11 @@ public class Xoh_lnki_wtr {
 			return;
 		}
 		if (lnki_ext.Id_is_media()) {
-			if		(	lnki_ext.Id() == Xof_ext_.Id_ogv || xfer_itm.Html_pass()			// NOTE: xfer_itm.Html_pass() checks for video .ogg files (ext = .ogg and thumb is available); EX: WWI;
-					||	(	lnki_ext.Id_is_ogg()											// itm is ogg
-						&&	(	xfer_itm.Meta_itm() == null									// v2 always marks as vid; DATE:2013-12-29
-							||	(	xfer_itm.Meta_itm() != null								// v1 null check; note thatfsdb_call does not set meta
+			if		(	Xof_ext_.Id_is_video_strict(lnki_ext.Id())
+					||	xfer_itm.Html_pass()							// NOTE: xfer_itm.Html_pass() checks for video .ogg files (ext = .ogg and thumb is available); EX: WWI;
+					||	(	lnki_ext.Id_is_ogg()						// itm is ogg
+						&&	(	xfer_itm.Meta_itm() == null				// v2 always marks as vid; DATE:2013-12-29
+							||	(	xfer_itm.Meta_itm() != null			// v1 null check; note thatfsdb_call does not set meta
 								&&	xfer_itm.Meta_itm().State_new()
 								)
 							)

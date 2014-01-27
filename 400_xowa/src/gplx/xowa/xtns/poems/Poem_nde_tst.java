@@ -118,7 +118,7 @@ public class Poem_nde_tst {
 			,	"</div>"
 			));
 	}
-	@Test  public void Ref() {
+	@Test  public void Ref() {	// PURPOSE: <ref> inside poem was not showing up; DATE:2014-01-17
 		fxt.tst_Parse_page_all_str
 			(	String_.Concat_lines_nl_skipLast
 			(	"<poem>a<ref>b</ref></poem>"
@@ -132,4 +132,12 @@ public class Poem_nde_tst {
 			,	""
 			));
 	}
+//		@Test  public void Template() {	// PURPOSE: <poem> inside template was not evaluating args; DATE:2014-01-23
+//			fxt.ini_page_create("Template:A", "<poem>{{{1}}}</poem>");
+//			fxt.tst_Parse_page_all_str("{{A|b}}", String_.Concat_lines_nl_skipLast
+//			(	"<div class=\"poem\">"
+//			,	"b"
+//			,	"</div>"
+//			));
+//		}
 }

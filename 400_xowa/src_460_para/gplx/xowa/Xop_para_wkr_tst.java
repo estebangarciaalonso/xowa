@@ -312,7 +312,7 @@ public class Xop_para_wkr_tst {
 			));
 	}
 	@Test  public void Pre_xnde_gallery() {	// PURPOSE: <gallery> should invalidate pre; EX.WP: Mary, Queen of Scots
-		fxt.Wiki().Xtn_mgr().Xtn_gallery().Parser().Init_by_wiki(fxt.Wiki());
+		fxt.Wiki().Xtn_mgr().Gallery().Parser().Init_by_wiki(fxt.Wiki());
 		raw = String_.Concat_lines_nl_skipLast
 			(	" <gallery>"
 			,	"File:A.png|b"
@@ -326,11 +326,11 @@ public class Xop_para_wkr_tst {
 	}
 	String Gallery_html() {
 		return String_.Concat_lines_nl_skipLast
-			(	"<ul class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
-			,	"  <li class=\"gallerybox\" style=\"width:155px;\">"
-			,	"    <div style=\"width:155px;\">"
-			,	"      <div class=\"thumb\" style=\"width:150px;\">"
-			,	"        <div id=\"xowa_file_gallery_div_0\" style=\"margin:15px auto;\">"
+			(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+			,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
+			,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
+			,	"      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
+			,	"        <div id=\"xowa_gallery_div3_0\" style=\"margin:15px auto;\">"
 			,	"          <a href=\"/wiki/File:A.png\" class=\"image\">"
 			,	"            <img id=\"xowa_file_img_0\" alt=\"A.png\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"120\" />"
 			,	"          </a>"

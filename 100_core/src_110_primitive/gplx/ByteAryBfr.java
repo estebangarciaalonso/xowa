@@ -106,7 +106,7 @@ public class ByteAryBfr {
 		src.Clear();
 		return this;
 	}
-
+	public ByteAryBfr Add_byte_eq() {return Add_byte(Byte_ascii.Eq);}
 	public ByteAryBfr Add_byte_pipe() {return Add_byte(Byte_ascii.Pipe);}
 	public ByteAryBfr Add_byte(byte val) {
 		int newPos = bry_len + 1;

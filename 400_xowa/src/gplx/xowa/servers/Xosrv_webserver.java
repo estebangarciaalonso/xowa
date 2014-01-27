@@ -48,6 +48,7 @@ import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.StringTokenizer;
 public class Xosrv_webserver {
@@ -116,7 +117,7 @@ class HttpRequest implements Runnable{
 		try {
 			InputStream is = socket.getInputStream();
 			DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String request = br.readLine();
 			//System.out.println(request);
 			String req = request.substring(4, request.length() - 9).trim();
@@ -188,7 +189,7 @@ class HttpRequest implements Runnable{
 					page_html = page_html.replaceAll("action=\"/wiki/", "action=\"/"+wiki_domain+"/wiki/");
 					page_html = page_html.replaceAll("/site","");
 
-					dos.write(page_html.getBytes());
+					dos.write(page_html.getBytes(Charset.forName("UTF-8")));
 					dos.close();
 				}catch(Exception err) {
 					dos.writeBytes("Site not found. Check address please, or see console log.\n"+err.getMessage());

@@ -42,6 +42,17 @@ public class Xog_url_wkr_tst {
 		fxt.App().Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_("en.wiktionary.org")).Ns_mgr().Ns_main().Case_match_(Xow_ns_.Case_match_all);
 		fxt.Init_exec("file:///site/en.wiktionary.org/wiki/a").Expd_tid_(Xoh_href.Tid_site).Expd_wiki_("en.wiktionary.org").Expd_page_("a").Test();
 	}
+<<<<<<< HEAD
+=======
+	@Test  public void Xwiki_site_sidebar() {// DATE:2014-01-21
+		fxt.Init_exec("file:///site/en.wikipedia.org/wiki/A").Expd_tid_(Xoh_href.Tid_site).Expd_wiki_("en.wikipedia.org").Expd_page_("A").Test();
+	}
+	@Test  public void Xwiki_site_logo() {	// DATE:2014-01-21
+		fxt.Init_exec("file:///site/en.wikipedia.org/wiki/").Expd_tid_(Xoh_href.Tid_site).Expd_wiki_("en.wikipedia.org").Expd_page_("Main_Page").Test();
+		fxt.Init_exec("file:///site/en.wikipedia.org/wiki").Expd_tid_(Xoh_href.Tid_site).Expd_wiki_("en.wikipedia.org").Expd_page_("Main_Page").Test();
+		fxt.Init_exec("file:///site/en.wikipedia.org/").Expd_tid_(Xoh_href.Tid_site).Expd_wiki_("en.wikipedia.org").Expd_page_("Main_Page").Test();
+	}
+>>>>>>> v1.1.4.1
 }
 class Xog_url_wkr_fxt {
 	private Xoa_app app; private Xow_wiki wiki;

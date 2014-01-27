@@ -28,7 +28,11 @@ class Xoh_file_main_alts implements ByteAryFmtrArg {
 		for (int i = 0; i < len; i++) {
 			Int_2_ref size = size_alts[i];
 			if (xfer_itm.Html_w() < size.Val_0()) continue;
+<<<<<<< HEAD
 			xfer_itm.Atrs_by_lnki(Xop_lnki_type.Id_none, size.Val_0(), size.Val_1(), Xop_lnki_tkn.Upright_null, Xop_lnki_tkn.Thumbtime_null, Xop_lnki_tkn.Page_null);
+=======
+			xfer_itm.Atrs_by_lnki(Xop_lnki_type.Id_none, size.Val_0(), size.Val_1(), Xop_lnki_tkn.Upright_null, Xof_doc_thumb.Null, Xof_doc_page.Null);
+>>>>>>> v1.1.4.1
 			xfer_itm.Atrs_calc_for_html();
 			opt.Html_alts().Bld_bfr_many(bfr, xfer_itm.Html_w(), xfer_itm.Html_h(), xfer_itm.Html_view_src(), i == len - 1 ? opt.Html_alt_dlm_last() : opt.Html_alt_dlm_default());
 		}

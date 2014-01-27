@@ -98,7 +98,7 @@ class Xoctg_fmtr_all {
 //					,	"<div id=\"~{div_id}\">"
 //					,	"  <h2>~{all_label}</h2>"
 //					,	"  <p>~{all_stats}</p>"
-//					,	"  <ul class=\"gallery\">~{grps}"
+//					,	"  <ul id=\"xowa_gallery_ul_0\" class=\"gallery\">~{grps}"
 //					,	"  </ul>"
 //					,	"</div>"
 //					));

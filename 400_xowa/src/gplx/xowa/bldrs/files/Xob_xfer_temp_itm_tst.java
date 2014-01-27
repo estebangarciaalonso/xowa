@@ -54,13 +54,18 @@ public class Xob_xfer_temp_itm_tst {
 		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext	, Xof_ext_.Id_jpg)
 		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime	, (double)3)
 		);
+<<<<<<< HEAD
 		fxt.Test_lnki_thumbtime(Xop_lnki_tkn.Thumbtime_null);
+=======
+		fxt.Test_lnki_thumbtime(Xof_doc_thumb.Null);
+>>>>>>> v1.1.4.1
 
 		fxt.Reset().Test_bgn
 		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_media_type	, Xof_media_type.Name_video)
 		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime	, (double)3)
 		);
 		fxt.Test_lnki_thumbtime(3);
+<<<<<<< HEAD
 
 		fxt.Reset().Test_bgn
 		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext	, Xof_ext_.Id_pdf)
@@ -73,6 +78,27 @@ public class Xob_xfer_temp_itm_tst {
 		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime	, (double)3)
 		);
 		fxt.Test_lnki_thumbtime(3);
+=======
+	}
+	@Test   public void Page_check() {
+		fxt.Test_bgn
+		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext	, Xof_ext_.Id_jpg)
+		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_page		, 3)
+		);
+		fxt.Test_lnki_page(Xof_doc_page.Null);
+
+		fxt.Reset().Test_bgn
+		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext	, Xof_ext_.Id_pdf)
+		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_page		, 3)
+		);
+		fxt.Test_lnki_page(3);
+
+		fxt.Reset().Test_bgn
+		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext	, Xof_ext_.Id_djvu)
+		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_page		, 3)
+		);
+		fxt.Test_lnki_page(3);
+>>>>>>> v1.1.4.1
 	}
 }
 class Xob_xfer_temp_itm_fxt {
@@ -97,6 +123,7 @@ class Xob_xfer_temp_itm_fxt {
 	, Xob_orig_regy_tbl.Fld_orig_page_id
 	, Xob_lnki_regy_tbl.Fld_lnki_upright
 	, Xob_lnki_regy_tbl.Fld_lnki_thumbtime
+	, Xob_lnki_regy_tbl.Fld_lnki_page
 	, Xob_orig_regy_tbl.Fld_orig_media_type
 	, Xob_orig_regy_tbl.Fld_orig_minor_mime
 	}
@@ -110,7 +137,8 @@ class Xob_xfer_temp_itm_fxt {
 		GfoFldList flds = GfoFldList_.str_(Flds);
 		nde = GfoNde_.vals_(flds, Object_.Ary
 		( Xof_ext_.Id_png, 1, Xof_repo_itm.Repo_remote
-		, "A.png", Xof_ext_.Id_png, "A.png", Xop_lnki_type.Id_thumb, 220, 200, 1, 2, 440, 400, 3, (double)-1, (double)-1
+		, "A.png", Xof_ext_.Id_png, "A.png", Xop_lnki_type.Id_thumb, 220, 200, 1, 2, 440, 400, 3
+		, Xop_lnki_tkn.Upright_null, Xof_doc_thumb.Null, Xof_doc_page.Null
 		, Xof_media_type.Name_bitmap, "png"
 		));
 		GfoNdeList subs = GfoNdeList_.new_();
@@ -155,6 +183,7 @@ class Xob_xfer_temp_itm_fxt {
 	}
 	public Xob_xfer_temp_itm_fxt Test_lnki_ext_id(int expd) {Tfds.Eq(expd, itm.Lnki_ext()); return this;}
 	public Xob_xfer_temp_itm_fxt Test_lnki_thumbtime(double expd) {Tfds.Eq(expd, itm.Lnki_thumbtime()); return this;}
+	public Xob_xfer_temp_itm_fxt Test_lnki_page(int expd) {Tfds.Eq(expd, itm.Lnki_page()); return this;}
 	public Xob_xfer_temp_itm_fxt Test_lnki_redirect_src(String expd) {Tfds.Eq(expd, itm.Redirect_src()); return this;}
 	public Xob_xfer_temp_itm_fxt Test_itm_chk_fail_id_none() {return Test_itm_chk_fail_id(Xob_xfer_temp_itm.Chk_tid_none);}
 	public Xob_xfer_temp_itm_fxt Test_itm_chk_fail_id(byte expd) {

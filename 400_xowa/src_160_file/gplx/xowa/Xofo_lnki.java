@@ -18,13 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.ios.*;
 import gplx.xowa.parsers.lnkis.*;
+import gplx.xowa.files.*;
 class Xofo_lnki {
 	public byte[] Name() {return name;} private byte[] name;
 	public byte Lnki_type() {return lnki_type;} public Xofo_lnki Lnki_type_(byte v) {lnki_type = v; return this;} private byte lnki_type;
 	public int Lnki_w() {return lnki_w;} public Xofo_lnki Lnki_w_(int v) {lnki_w = v; return this;} private int lnki_w;
 	public int Lnki_h() {return lnki_h;} public Xofo_lnki Lnki_h_(int v) {lnki_h = v; return this;} private int lnki_h;
 	public double Lnki_upright() {return lnki_upright;} public Xofo_lnki Lnki_upright_(double v) {lnki_upright = v; return this;} double lnki_upright = Xop_lnki_tkn.Upright_null;
-	public int Lnki_thumbtime() {return lnki_thumbtime;} public Xofo_lnki Lnki_thumbtime_(int v) {lnki_thumbtime = v; return this;} private int lnki_thumbtime = Xop_lnki_tkn.Thumbtime_null;
+	public double Lnki_thumbtime() {return lnki_thumbtime;} public Xofo_lnki Lnki_thumbtime_(double v) {lnki_thumbtime = v; return this;} private double lnki_thumbtime = Xof_doc_thumb.Null;
 	public byte Xfer_status() {return xfer_status;} public Xofo_lnki Xfer_status_(byte v) {xfer_status = v; return this;} private byte xfer_status; public static final byte Xfer_status_none = 0, Xfer_status_xfer_pass = 1, Xfer_status_xfer_fail = 2, Xfer_status_convert_pass = 3, Xfer_status_convert_fail = 4;
 	public Xofo_lnki Xfer_status_(boolean v) {return Xfer_status_(v ? Xfer_status_xfer_pass : Xfer_status_xfer_fail);}
 	public boolean Orig() {return !thumb;}

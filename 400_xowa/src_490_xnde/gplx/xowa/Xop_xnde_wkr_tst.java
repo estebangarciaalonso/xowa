@@ -760,7 +760,7 @@ public class Xop_xnde_wkr_tst {
 		fxt.App().File_mgr().Math_mgr().Renderer_is_mathjax_(true);
 	}
 	@Test   public void Anchor_nested() {
-		fxt.tst_Parse_page_all_str("b<a>c<a>d [[e]] f", "b&lt;a&gt;c&lt;a&gt;d <a href=\"/wiki/E\">e</a> f");
+		fxt.tst_Parse_page_all_str("b<a>c<a>d [[e]] f", "b&lt;a>c&lt;a>d <a href=\"/wiki/E\">e</a> f");
 	}
 	@Test  public void Htmltidy_move_ws_char() {
 		fxt.tst_Parse_page_all_str("a<i> b </i>c", "a <i>b</i> c");
@@ -780,20 +780,23 @@ public class Xop_xnde_wkr_tst {
 		,	"</ul>"
 		));
 	}
-	@Test  public void Html5_bdi() {// HTML5; should output self (i.e.: must be whitelisted); DATE:2013-12-07
+	@Test  public void Html5_bdi() {// PURPOSE: HTML5; should output self (i.e.: must be whitelisted); DATE:2013-12-07
 		fxt.tst_Parse_page_wiki_str("<bdi lang=\"en\">a</bdi>", "<bdi lang=\"en\">a</bdi>");
 	}
-	@Test  public void Html5_mark() {// HTML5; should output self (i.e.: must be whitelisted); DATE:2014-01-03
+	@Test  public void Html5_mark() {// PURPOSE: HTML5; should output self (i.e.: must be whitelisted); DATE:2014-01-03
 		fxt.tst_Parse_page_wiki_str("<mark lang=\"en\">a</mark>", "<mark lang=\"en\">a</mark>");
 	}
 	@Test  public void Html5_mark_span() {// PURPOSE: </span> should close <mark> tag; EX: zh.wikipedia.org/wiki/异体字; DATE:2014-01-03
 		fxt.tst_Parse_page_wiki_str("<mark>a</span>", "<mark>a</mark>");
 	}
-	@Test  public void Html5_wbr() {// HTML5; should output self (i.e.: must be whitelisted); DATE:2014-01-03
+	@Test  public void Html5_wbr() {// PURPOSE: HTML5; should output self (i.e.: must be whitelisted); DATE:2014-01-03
 		fxt.tst_Parse_page_wiki_str("a<wbr>b<wbr>c", "a<wbr></wbr>b<wbr></wbr>c");
 	}
-	@Test  public void Html5_bdo() {// HTML5; should output self (i.e.: must be whitelisted); DATE:2014-01-03
+	@Test  public void Html5_bdo() {// PURPOSE: HTML5; should output self (i.e.: must be whitelisted); DATE:2014-01-03
 		fxt.tst_Parse_page_wiki_str("<bdo>a</bdo>", "<bdo>a</bdo>");
+	}
+	@Test  public void Script() { // PURPOSE: nested script should (a) write attributes; (b) write close tag; DATE:2014-01-24
+		fxt.tst_Parse_page_all_str("<code><script src='a'>b</script></code>", "<code>&lt;script src='a'>b&lt;/script></code>");
 	}
 
 

@@ -15,10 +15,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-public class Xtn_gallery_data {
-	public static int Calc_vpad(int mgr_itm_height, int html_h) {
-		int	min_thumb_height = html_h > 17 ? html_h : 17;						// $minThumbHeight =  $thumb->height > 17 ? $thumb->height : 17;
-		return (int)Math_.Floor((30 + mgr_itm_height - min_thumb_height) / 2);	// $vpad = floor(( self::THUMB_PADDING + $this->mHeights - $minThumbHeight ) /2);
+package gplx.xowa.xtns.proofreadPage; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import org.junit.*;
+public class Pp_pagelist_nde_tst {
+	private Xop_fxt fxt = new Xop_fxt();
+	@Test  public void Basic() {
+		fxt.tst_Parse_page_wiki_str("a<pagelist>b</pagelist>c", "ac");
 	}
 }

@@ -24,9 +24,14 @@ public class Xop_vnt_lxr_ {
 			Xop_vnt_lxr_eqgt._.Init_by_wiki(wiki, wiki_trie);
 			Xop_vnt_lxr_bgn._.Init_by_wiki(wiki, wiki_trie);
 			new Xop_vnt_lxr_end().Init_by_wiki(wiki, wiki_trie);
+<<<<<<< HEAD
 
 			ByteTrieMgr_fast tmpl_trie = wiki.Parser().Tmpl_trie();
 			Xop_vnt_lxr_tmpl_bgn._.Init_by_wiki(wiki, tmpl_trie);
+=======
+//				ByteTrieMgr_fast tmpl_trie = wiki.Parser().Tmpl_trie();
+//				Xop_vnt_lxr_tmpl_bgn._.Init_by_wiki(wiki, tmpl_trie);
+>>>>>>> v1.1.4.1
 		}
 	}
 	public static final byte[] Hook_bgn = new byte[] {Byte_ascii.Dash, Byte_ascii.Curly_bgn}, Hook_end = new byte[] {Byte_ascii.Curly_end, Byte_ascii.Dash};
@@ -42,6 +47,7 @@ class Xop_vnt_lxr_eqgt implements Xop_lxr {
 	public static final byte[] Hook = new byte[] {Byte_ascii.Eq, Byte_ascii.Gt};
         public static final Xop_vnt_lxr_eqgt _ = new Xop_vnt_lxr_eqgt(); Xop_vnt_lxr_eqgt() {}
 }
+<<<<<<< HEAD
 class Xop_vnt_lxr_tmpl_bgn implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_vnt_tmpl_bgn;}
 	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Hook, this);}
@@ -71,6 +77,8 @@ class Xop_vnt_lxr_tmpl_bgn implements Xop_lxr {
 	;
         public static final Xop_vnt_lxr_tmpl_bgn _ = new Xop_vnt_lxr_tmpl_bgn(); Xop_vnt_lxr_tmpl_bgn() {}
 }
+=======
+>>>>>>> v1.1.4.1
 class Xop_vnt_lxr_bgn implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_vnt_bgn;}
 	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Xop_vnt_lxr_.Hook_bgn, this);}

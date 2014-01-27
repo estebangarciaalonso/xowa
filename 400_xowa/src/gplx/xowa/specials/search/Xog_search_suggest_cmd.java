@@ -38,7 +38,7 @@ class Xog_search_suggest_cmd implements GfoInvkAble, Cancelable {
 			working = true;
 			boolean pass = false;
 			switch (search_mode) {
-				case Xog_search_suggest_mgr.Tid_search_mode_all_pages_v2:			pass = Search_by_all_pages_v2(); break;					
+				case Xog_search_suggest_mgr.Tid_search_mode_all_pages_v2:			pass = Search_by_all_pages_v2(); break;
 				case Xog_search_suggest_mgr.Tid_search_mode_all_pages_v1:			pass = Search_by_all_pages_v1(); break;
 				case Xog_search_suggest_mgr.Tid_search_mode_search:					pass = Search_by_search(); break;
 			}

@@ -49,7 +49,7 @@ class Cache_fil_tbl {
 			.Val_byte_by_bool_(itm.Fil_is_orig())
 			.Val_int_(itm.Fil_w())
 			.Val_int_(itm.Fil_h())
-			.Val_int_(itm.Fil_thumbtime())
+			.Val_int_(Xof_doc_thumb.Db_save_int(itm.Fil_thumbtime()))
 			.Val_int_(itm.Fil_ext().Id())
 			.Val_long_(itm.Fil_size())
 			.Val_long_(itm.Cache_time())
@@ -59,7 +59,7 @@ class Cache_fil_tbl {
 		if (select_itm_stmt != null) select_itm_stmt.Rls();
 		if (stmt_bldr != null) stmt_bldr.Rls();
 	}
-	public Cache_fil_itm Select(int dir_id, byte[] fil_name, boolean fil_is_orig, int fil_w, int fil_h, int fil_thumbtime) {
+	public Cache_fil_itm Select(int dir_id, byte[] fil_name, boolean fil_is_orig, int fil_w, int fil_h, double fil_thumbtime) {
 		if (select_itm_stmt == null) select_itm_stmt = Db_stmt_.new_select_(provider, Tbl_name, String_.Ary(Fld_dir_id, Fld_fil_name, Fld_fil_is_orig, Fld_fil_w, Fld_fil_h, Fld_fil_thumbtime));
 		DataRdr rdr = DataRdr_.Null;
 		try {
@@ -69,7 +69,7 @@ class Cache_fil_tbl {
 			.Val_byte_by_bool_(fil_is_orig)
 			.Val_int_(fil_w)
 			.Val_int_(fil_h)
-			.Val_int_(fil_thumbtime)
+			.Val_int_(Xof_doc_thumb.Db_save_int(fil_thumbtime))
 			.Exec_select();
 			if (rdr.MoveNextPeer())
 				return new Cache_fil_itm().Init_by_load(rdr);

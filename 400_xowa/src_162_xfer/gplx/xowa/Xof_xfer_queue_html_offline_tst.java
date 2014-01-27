@@ -17,11 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
+import gplx.xowa.files.*;
 public class Xof_xfer_queue_html_offline_tst {
 	Xof_xfer_queue_html_fxt fxt = new Xof_xfer_queue_html_fxt();
 	@Before public void init()		{fxt.Clear(true); fxt.Src_commons_repo().Tarball_(true); fxt.Src_en_wiki_repo().Tarball_(true);}
 	@Test  public void Missing() {	// PURPOSE.fix: missing image was not being marked as missing; DATE:20121227
-		fxt	.Lnki_("A.png", true, 220, -1, Xop_lnki_tkn.Upright_null, Xop_lnki_tkn.Thumbtime_null)
+		fxt	.Lnki_("A.png", true, 220, -1, Xop_lnki_tkn.Upright_null, Xof_doc_thumb.Null_as_int)
 			.Src()
 			.Trg(	fxt.reg_("mem/xowa/file/#meta/en.wikipedia.org/7/70.csv"		, "A.png|x||0?0,0|")
 				)

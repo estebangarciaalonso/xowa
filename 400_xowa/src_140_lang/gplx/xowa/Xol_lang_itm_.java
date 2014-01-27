@@ -411,8 +411,9 @@ public class Xol_lang_itm_ {
 , Id_zh_yue = 389
 , Id_zu = 390
 , Id_azb = 391
+, Id_ban = 392
 	;
-	public static final int Id__max = 392;
+	public static final int Id__max = 393;
 	public static Hash_adp_bry Regy() {
 		if (regy == null) {
 // NOTE: any parenthetical String below will have an "unseen" character of "\xE2\x80\xAA" at the begining and "\xE2\x80\xAC" at the end. They are responsible for parentheses-orientation in RTL langs.
@@ -809,6 +810,7 @@ Regy_add(regy, 388, "zh-tw", "‪中文(台灣)‬");
 Regy_add(regy, 389, "zh-yue", "粵語");
 Regy_add(regy, 390, "zu", "isiZulu");
 Regy_add(regy, 391, "azb", "تورکجه");
+Regy_add(regy, Id_ban, "ban", "ᬩᬲᬩᬮᬶ");
 		}
 		return regy;
 	}

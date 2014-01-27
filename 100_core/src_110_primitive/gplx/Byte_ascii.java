@@ -47,4 +47,5 @@ public class Byte_ascii {
 		return (	b >= Byte_ascii.Ltr_a && b <= Byte_ascii.Ltr_z
 				||	b >= Byte_ascii.Ltr_A && b <= Byte_ascii.Ltr_Z);
 	}
+	public static int X_to_digit(byte b) {return b - Byte_ascii.Num_0;}
 }

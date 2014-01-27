@@ -128,7 +128,8 @@ public class Xop_toc_mgr implements ByteAryFmtrArg {
 					break;
 				case Xop_tkn_itm_.Tid_lnki:
 					Xop_lnki_tkn lnki = (Xop_lnki_tkn)sub;
-					if (lnki.Ns_id() == Xow_ns_.Id_category) {}	// Category text should not print; DATE:2013-12-09
+					if (lnki.Ns_id() == Xow_ns_.Id_category
+						&& !lnki.Ttl().ForceLiteralLink())		{}	// Category text should not print; DATE:2013-12-09
 					else {
 						if (lnki.Caption_exists())
 							Toc_text_recurse(ctx, page, bfr, src, html_wtr, html_wtr_opts, lnki.Caption_val_tkn(), depth);

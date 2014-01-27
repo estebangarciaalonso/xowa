@@ -24,7 +24,7 @@ public class Cache_fil_itm implements CompareAble {
 	public boolean Fil_is_orig() {return fil_is_orig;} private boolean fil_is_orig;
 	public int Fil_w() {return fil_w;} private int fil_w;
 	public int Fil_h() {return fil_h;} private int fil_h;
-	public int Fil_thumbtime() {return fil_thumbtime;} private int fil_thumbtime;
+	public double Fil_thumbtime() {return fil_thumbtime;} private double fil_thumbtime;
 	public Xof_ext Fil_ext() {return fil_ext;} private Xof_ext fil_ext;
 	public long Fil_size() {return fil_size;} private long fil_size;
 	public void Fil_size_(long v) {
@@ -48,14 +48,14 @@ public class Cache_fil_itm implements CompareAble {
 		fil_is_orig = rdr.ReadByte(Cache_fil_tbl.Fld_fil_is_orig) != Byte_.Zero;
 		fil_w = rdr.ReadInt(Cache_fil_tbl.Fld_fil_w);
 		fil_h = rdr.ReadInt(Cache_fil_tbl.Fld_fil_h);
-		fil_thumbtime = rdr.ReadInt(Cache_fil_tbl.Fld_fil_thumbtime);
+		fil_thumbtime = Xof_doc_thumb.Db_load_int(rdr, Cache_fil_tbl.Fld_fil_thumbtime);
 		int fil_ext_id = rdr.ReadInt(Cache_fil_tbl.Fld_fil_ext);
 		fil_ext = Xof_ext_.new_by_id_(fil_ext_id);
 		fil_size = rdr.ReadLong(Cache_fil_tbl.Fld_fil_size);
 		cache_time = rdr.ReadLong(Cache_fil_tbl.Fld_cache_time);
 		return this;
 	}
-	public Cache_fil_itm Init_by_make(int uid, int dir_id, byte[] fil_name, boolean fil_is_orig, int fil_w, int fil_h, int fil_thumbtime, Xof_ext fil_ext, long fil_size) {
+	public Cache_fil_itm Init_by_make(int uid, int dir_id, byte[] fil_name, boolean fil_is_orig, int fil_w, int fil_h, double fil_thumbtime, Xof_ext fil_ext, long fil_size) {
 		cmd_mode = Db_cmd_mode.Create;
 		this.uid = uid;
 		this.dir_id = dir_id;
@@ -70,13 +70,13 @@ public class Cache_fil_itm implements CompareAble {
 		return this;
 	}
 	public byte[] Gen_hash_key(ByteAryBfr bfr) {return Gen_hash_key(bfr, dir_id, fil_name, fil_is_orig, fil_w, fil_h, fil_thumbtime);}
-	public static byte[] Gen_hash_key(ByteAryBfr bfr, int dir_id, byte[] fil_name, boolean fil_is_orig, int fil_w, int fil_h, int fil_thumbtime) {
+	public static byte[] Gen_hash_key(ByteAryBfr bfr, int dir_id, byte[] fil_name, boolean fil_is_orig, int fil_w, int fil_h, double fil_thumbtime) {
 		bfr	.Add_int_variable(dir_id).Add_byte_pipe()
 			.Add(fil_name).Add_byte_pipe()
 			.Add_yn(fil_is_orig).Add_byte_pipe()
 			.Add_int_variable(fil_w).Add_byte_pipe()
 			.Add_int_variable(fil_h).Add_byte_pipe()
-			.Add_int_variable(fil_thumbtime)
+			.Add_int_variable(Xof_doc_thumb.X_int(fil_thumbtime))
 			;
 		return bfr.XtoAryAndClear();
 	}

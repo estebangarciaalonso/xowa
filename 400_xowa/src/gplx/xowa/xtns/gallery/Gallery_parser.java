@@ -17,9 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.xowa.parsers.lnkis.*;
-public class Xtn_gallery_parser {		
+import gplx.xowa.files.*;
+public class Gallery_parser {		
 	private Xow_wiki wiki; private ByteTrieMgr_slim trie = new ByteTrieMgr_slim(false);
-	private Xtn_gallery_itm cur_itm;
+	private Gallery_itm cur_itm;
 	private byte[] src; private int end_pos;
 	private int cur_pos; private byte cur_byte;
 	private byte cur_fld;
@@ -27,7 +28,7 @@ public class Xtn_gallery_parser {
 	private ByteAryBfr caption_bfr = ByteAryBfr.reset_(255); private int caption_bgn;
 	private int gallery_itm_w, gallery_itm_h;
 	private Xop_ctx ctx;
-	public Xtn_gallery_parser Init_by_wiki(Xow_wiki wiki) {
+	public Gallery_parser Init_by_wiki(Xow_wiki wiki) {
 		this.wiki = wiki; Xol_lang lang = wiki.Lang();
 		this.ctx = wiki.Ctx();
 		trie.Clear();
@@ -40,7 +41,7 @@ public class Xtn_gallery_parser {
 		this.src = src;
 		this.cur_pos = content_bgn; this.end_pos = content_end;
 		this.gallery_itm_w = gallery_itm_w; this.gallery_itm_h = gallery_itm_h;
-		cur_itm = new Xtn_gallery_itm();
+		cur_itm = new Gallery_itm();
 		while (cur_pos < end_pos) {
 			cur_itm.Reset();
 			caption_bfr.Clear();
@@ -50,7 +51,7 @@ public class Xtn_gallery_parser {
 					cur_itm.Caption_bry_(caption_bfr.XtoAryAndClearAndTrim());
 				Make_lnki_tkn(src);
 				rv.Add(cur_itm);
-				cur_itm = new Xtn_gallery_itm();
+				cur_itm = new Gallery_itm();
 			}
 			if (cur_mode == Mode_nl)
 				++cur_pos;

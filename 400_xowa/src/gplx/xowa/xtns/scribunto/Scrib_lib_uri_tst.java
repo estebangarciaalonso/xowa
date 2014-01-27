@@ -29,6 +29,11 @@ public class Scrib_lib_uri_tst {
 		fxt.Test_lib_proc(lib, Scrib_lib_uri.Invk_canonicalUrl	, Object_.Ary("a&b! c"						), "http://en.wikipedia.org/wiki/A%26b!_c");
 		fxt.Test_lib_proc(lib, Scrib_lib_uri.Invk_localUrl		, Object_.Ary("a&b! c"		, "action=edit"	), "/wiki/A%26b!_c?action=edit");
 		fxt.Test_lib_proc(lib, Scrib_lib_uri.Invk_localUrl		, Object_.Ary("Media:A.png"					), "/wiki/File:A.png");
+		fxt.Parser_fxt().ini_Log_(Xop_ttl_log.Invalid_char);
+		fxt.Test_lib_proc(lib, Scrib_lib_uri.Invk_localUrl		, Object_.Ary("[bad]"						), Scrib_pf_invoke_fxt.Null_rslt);	// handle invalid titles; EX:it.w:Billy_the_Kid; DATE:2014-01-20
+	}
+	@Test  public void Url__args_many() {	// PUPROSE: GetUrl sometimes passes in kvs for qry_args; it.w:Astronomie; DATE:2014-01-18
+		fxt.Test_lib_proc(lib, Scrib_lib_uri.Invk_fullUrl, Object_.Ary("A", KeyVal_.Ary(KeyVal_.new_("action", "edit"))), "//en.wikipedia.org/wiki/A?action=edit");
 	}
 	@Test  public void Url__args_many() {	// PUPROSE: GetUrl sometimes passes in kvs for qry_args; it.w:Astronomie; DATE:2014-01-18
 		fxt.Test_lib_proc(lib, Scrib_lib_uri.Invk_fullUrl, Object_.Ary("A", KeyVal_.Ary(KeyVal_.new_("action", "edit"))), "//en.wikipedia.org/wiki/A?action=edit");

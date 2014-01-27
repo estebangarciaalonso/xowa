@@ -20,7 +20,7 @@ import gplx.xowa.bldrs.*;
 import gplx.criterias.*;
 public class Xobc_core_cleanup extends Xob_itm_basic_base implements Xob_cmd {
 	private String bz2_cmd;
-	private boolean delete_all;
+	private boolean delete_all, delete_tmp;
 	private Criteria_ioMatch[] delete_by_match_ary;
 	public Xobc_core_cleanup(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	public String Cmd_key() {return KEY;} public static final String KEY = "core.cleanup";
@@ -57,6 +57,8 @@ public class Xobc_core_cleanup extends Xob_itm_basic_base implements Xob_cmd {
 			Io_mgr._.DeleteDirDeep(wiki_root_dir);
 		if (delete_by_match_ary != null)
 			Delete_by_match(wiki_root_dir, delete_by_match_ary);
+		if (delete_tmp)
+			Io_mgr._.DeleteDirDeep(wiki_root_dir.GenSubDir("tmp"));
 	}
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_bgn(Xob_bldr bldr) {}
@@ -70,12 +72,14 @@ public class Xobc_core_cleanup extends Xob_itm_basic_base implements Xob_cmd {
 		else if	(ctx.Match(k, Invk_delete_all_))			delete_all = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_bz2_fil_))				bz2_fil = m.ReadIoUrl("v");
 		else if	(ctx.Match(k, Invk_delete_by_match_))		delete_by_match_ary = Delete_by_match_parse(m.ReadStr("v"));
+		else if	(ctx.Match(k, Invk_delete_tmp_))			delete_tmp = m.ReadYn("v");
 		else	return super.Invk(ctx, ikey, k, m);
 		return this;
 	}
 	private static final String Invk_bz2_cmd_ = "bz2_cmd_", Invk_bz2_fil_ = "bz2_fil_"
 	, Invk_delete_xml_ = "delete_xml_", Invk_delete_wiki_ = "delete_wiki_", Invk_delete_sqlite3_ = "delete_sqlite3_"
 	, Invk_delete_all_ = "delete_all_"
+	, Invk_delete_tmp_ = "delete_tmp_"
 	, Invk_delete_by_match_ = "delete_by_match"
 	;
 	private static Criteria_ioMatch[] Delete_by_match_parse(String raw) {

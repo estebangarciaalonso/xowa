@@ -31,7 +31,7 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	public Gfo_usr_dlg Usr_dlg() {return usr_dlg;} Gfo_usr_dlg usr_dlg = Gfo_usr_dlg_.Null;
 	public Cache_mgr Cache_mgr() {return cache_mgr;} private Cache_mgr cache_mgr;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
-	public void Init_by_wiki__add_bin_wkrs(Xow_wiki wiki) { // helper method to init and add bin wkrs
+	public boolean Init_by_wiki__add_bin_wkrs(Xow_wiki wiki) { // helper method to init and add bin wkrs
 		Xof_fsdb_mgr_sql fsdb_mgr = wiki.File_mgr().Fsdb_mgr();
 		boolean init = fsdb_mgr.Init_by_wiki(wiki);
 		if (init) {
@@ -40,6 +40,7 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 			fsdb_wkr.Fsdb_mgr().Db_dir_(wiki.App().Fsys_mgr().File_dir().GenSubDir(wiki.Domain_str()));
 			bin_mgr.Add(Xof_bin_wkr_.Key_http_wmf, "xowa.http.wmf");
 		}
+		return init;
 	}
 	public boolean Init_by_wiki(Xow_wiki wiki) {
 		if (init) return false;
@@ -77,8 +78,8 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	public Fsdb_db_bin_fil Bin_db_get(int mnt_id, int bin_db_id) {
 		return mnt_mgr.Bin_db_get(mnt_id, bin_db_id);
 	}
-	public Fsdb_fil_itm Fil_select_bin(byte[] dir, byte[] fil, boolean is_thumb, int width, int thumbtime) {return mnt_mgr.Fil_select_bin(dir, fil, is_thumb, width, thumbtime);}
-	public Fsdb_xtn_thm_itm Thm_select_bin(byte[] dir, byte[] fil, int width, int thumbtime)			{return mnt_mgr.Thm_select_bin(dir, fil, width, thumbtime);}
+	public Fsdb_fil_itm Fil_select_bin(byte[] dir, byte[] fil, boolean is_thumb, int width, double thumbtime)	{return mnt_mgr.Fil_select_bin(dir, fil, is_thumb, width, thumbtime);}
+	public boolean Thm_select_bin(byte[] dir, byte[] fil, Fsdb_xtn_thm_itm thm)								{return mnt_mgr.Thm_select_bin(dir, fil, thm);}
 	public void Reg_insert(Xof_fsdb_itm itm, byte repo_id, byte status) {
 		byte[] orig_page = itm.Orig_ttl();
 		if (!Xof_wiki_orig_tbl.Select_itm_exists(img_regy_provider, orig_page))
@@ -87,8 +88,8 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	public void Fil_insert(Fsdb_fil_itm rv    , byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		mnt_mgr.Fil_insert(rv, dir, fil, ext_id, modified, hash, bin_len, bin_rdr);
 	}
-	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int w, int h, int thumbtime, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		mnt_mgr.Thm_insert(rv, dir, fil, ext_id, w, h, thumbtime, modified, hash, bin_len, bin_rdr);
+	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int w, int h, double thumbtime, int page, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+		mnt_mgr.Thm_insert(rv, dir, fil, ext_id, w, h, thumbtime, page, modified, hash, bin_len, bin_rdr);
 	}
 	public void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		mnt_mgr.Img_insert(rv, dir, fil, ext_id, modified, hash, bin_len, bin_rdr, img_w, img_h);

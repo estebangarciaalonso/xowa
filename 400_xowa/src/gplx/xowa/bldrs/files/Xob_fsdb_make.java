@@ -34,16 +34,17 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 	private Xof_bin_mgr src_mgr;
 	private Xof_fsdb_mgr_sql trg_fsdb_mgr = new Xof_fsdb_mgr_sql(); private Fsdb_mnt_mgr trg_mnt_mgr;
 	private ListAdp temp_files = ListAdp_.new_();
-	private Fsdb_xtn_img_itm tmp_img_itm = new Fsdb_xtn_img_itm(); private Fsdb_xtn_thm_itm tmp_thm_itm = new Fsdb_xtn_thm_itm(); private Fsdb_fil_itm tmp_fil_itm = new Fsdb_fil_itm();
+	private Fsdb_xtn_img_itm tmp_img_itm = new Fsdb_xtn_img_itm(); private Fsdb_xtn_thm_itm tmp_thm_itm = Fsdb_xtn_thm_itm.new_(); private Fsdb_fil_itm tmp_fil_itm = new Fsdb_fil_itm();
 	private boolean app_restart_enabled = false;
 	public Xob_fsdb_make(Xob_bldr bldr, Xow_wiki wiki) {
 		this.Cmd_ctor(bldr, wiki);
 		trg_fsdb_mgr.Init_by_wiki(wiki);
 		Xof_fsdb_mgr_sql src_fsdb_mgr = new Xof_fsdb_mgr_sql();
 		src_fsdb_mgr.Init_by_wiki(wiki);
-		src_mgr = src_fsdb_mgr.Bin_mgr();
+		src_mgr = src_fsdb_mgr.Bin_mgr();			
 		trg_mnt_mgr = trg_fsdb_mgr.Mnt_mgr();
 		trg_mnt_mgr.Insert_to_mnt_(Fsdb_mnt_mgr.Mnt_idx_main);
+		trg_mnt_mgr.Abc_mgr_at(Fsdb_mnt_mgr.Mnt_idx_main).Cfg_mgr().Update(gplx.xowa.xtns.gallery.Gallery_nde.Fsdb_cfg_grp, gplx.xowa.xtns.gallery.Gallery_nde.Fsdb_cfg_key_gallery_fix_defaults, "y");
 		poll_mgr = new Xobu_poll_mgr(bldr.App());
 	}
 	public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "file.fsdb_make";
@@ -225,7 +226,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 				trg_fsdb_mgr.Fil_insert(tmp_fil_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);
 		}
 		else
-			trg_fsdb_mgr.Thm_insert(tmp_thm_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), itm.Html_w(), itm.Html_h(), itm.Lnki_thumbtime(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);
+			trg_fsdb_mgr.Thm_insert(tmp_thm_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), itm.Html_w(), itm.Html_h(), itm.Lnki_thumbtime(), itm.Lnki_page(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);			
 	}
 	private void Txn_renew() {
 		this.Txn_save();
@@ -296,7 +297,6 @@ class Xodb_tbl_oimg_xfer_itm extends Xof_fsdb_itm {	public int 			Lnki_id() {ret
 		rv.lnki_id			= rdr.ReadInt(Xob_xfer_regy_tbl.Fld_lnki_id);
 		rv.lnki_page_id		= rdr.ReadInt(Xob_xfer_regy_tbl.Fld_lnki_page_id);
 		rv.lnki_ext_id		= rdr.ReadInt(Xob_xfer_regy_tbl.Fld_lnki_ext);
-		rv.Lnki_thumbtime_	 (rdr.ReadInt(Xob_xfer_regy_tbl.Fld_lnki_thumbtime));
 		rv.Orig_repo_		 (rdr.ReadByte(Xob_xfer_regy_tbl.Fld_orig_repo));
 		rv.File_is_orig_	 (rdr.ReadByte(Xob_xfer_regy_tbl.Fld_file_is_orig) == Bool_.Y_byte);
 		byte[] ttl = rdr.ReadBryByStr(Xob_xfer_regy_tbl.Fld_lnki_ttl);
@@ -304,7 +304,9 @@ class Xodb_tbl_oimg_xfer_itm extends Xof_fsdb_itm {	public int 			Lnki_id() {ret
 		rv.Lnki_ttl_(ttl);
 		rv.Orig_size_(rdr.ReadInt(Xob_xfer_regy_tbl.Fld_orig_w), rdr.ReadInt(Xob_xfer_regy_tbl.Fld_orig_h));
 		rv.Html_size_(rdr.ReadInt(Xob_xfer_regy_tbl.Fld_file_w), rdr.ReadInt(Xob_xfer_regy_tbl.Fld_file_h));	// set html_size as file_size (may try to optimize later by removing similar thumbs (EX: 220,221 -> 220))
-		rv.Lnki_size_(rdr.ReadInt(Xob_xfer_regy_tbl.Fld_file_w), rdr.ReadInt(Xob_xfer_regy_tbl.Fld_file_h));	// set lnki_size; Xof_bin_mgr uses lnki_size;
+		rv.Lnki_size_(rdr.ReadInt(Xob_xfer_regy_tbl.Fld_file_w), rdr.ReadInt(Xob_xfer_regy_tbl.Fld_file_h));	// set lnki_size; Xof_bin_mgr uses lnki_size;			
+		rv.Lnki_page_			(Xof_doc_page.Db_load_int(rdr, Xob_xfer_regy_tbl.Fld_lnki_page));
+		rv.Lnki_thumbtime_		(Xof_doc_thumb.Db_load_double(rdr, Xob_xfer_regy_tbl.Fld_lnki_thumbtime));
 		return rv;
 	}
 }

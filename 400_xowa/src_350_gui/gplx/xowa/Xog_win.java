@@ -370,7 +370,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	private boolean Exec_find_box_find() {return html_box.Html_doc_find(cur_view_tid == Xoh_wiki_article.Tid_view_read ? Gfui_html.Elem_id_body : Id_xowa_edit_data_box, find_box.Text(), find_box_dir_fwd, find_box_case_match, find_box_wrap_find);}
 	public void Exec_url_exec(String s) {
 		byte[] bry = ByteAry_.new_utf8_(s);
-		byte[] fmt = app.Url_alias_mgr().Fmt_or_null(bry);
+		byte[] fmt = app.Gui_mgr().Url_macro_mgr().Fmt_or_null(bry);
 		if (fmt != null) bry = fmt;
 		Xoa_url tmp_url = new Xoa_url();
 		Xoa_url_parser.Parse_url(tmp_url, app, page.Wiki(), bry, 0, bry.length);

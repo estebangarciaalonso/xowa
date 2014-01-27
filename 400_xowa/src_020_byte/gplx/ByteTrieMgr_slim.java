@@ -85,9 +85,14 @@ public class ByteTrieMgr_slim {
 		ByteTrieItm_slim cur = root;
 		for (int i = 0; i < key_len; i++) {
 			byte b = key[i];
-			cur = cur.Ary_find(b);
-			if (cur == null) break;
-			cur.Ary_del(b);
+			ByteTrieItm_slim nxt = cur.Ary_find(b);
+			if (nxt == null) break;
+			Object nxt_val = nxt.Val();
+			if (nxt_val == null)	// cur is end of chain; remove entry; EX: Abc and at c
+				cur.Ary_del(b);
+			else					// cur is mid of chain; null out entry
+				nxt.Val_set(null);
+			cur = nxt;
 		}
 		count--; // FUTURE: do not decrement if not found
 	}

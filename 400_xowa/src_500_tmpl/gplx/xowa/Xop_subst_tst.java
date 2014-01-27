@@ -48,6 +48,7 @@ public class Xop_subst_tst {
 			));
 		fxt.tst_Parse_tmpl_str_test("{{ {{{|safesubst:}}}ifsubst |yes|<includeonly>{{subst:substcheck}}</includeonly>}}", "{{test}}", "{{subst:substcheck}}");
 	}
+
 	// NOTE: these are actually not good tests; MW does subst just before save; it doesn't do subst on load; in this case, the tests are testing load (which will noop); they need to test save (which xowa doesn't do)
 //		@Test  public void Tmpl_txt_subst()				{fxt.tst_Parse_tmpl_str_test("{{subst:mwo_print|a}}"				, "{{test}}"					, "a");}
 //		@Test  public void Tmpl_txt_subst_prm()			{fxt.tst_Parse_tmpl_str_test("{{subst:mwo_print|{{{1}}}}}"			, "{{test|a}}"					, "a");}

@@ -216,50 +216,11 @@ class Xop_lnki_wkr_ {
 	}
 	public static void Thumbtime_parse(Xop_ctx ctx, byte[] src, NumberParser number_parser, Xop_lnki_tkn lnki, Arg_nde_tkn arg) {
 		int val_tkn_bgn = arg.Val_tkn().Src_bgn(), val_tkn_end = arg.Val_tkn().Src_end();
-		byte[] val_bry = ByteAry_.Trim(src, val_tkn_bgn, val_tkn_end);	// some tkns have trailing space; EX.WWI: [[File:Bombers of WW1.ogg|thumb |thumbtime=3]]
-		int val_bry_len = val_bry.length;
-		int colon_pos = ByteAry_.FindBwd(val_bry, Byte_ascii.Colon);
-		if (colon_pos == ByteAry_.NotFound) {	// integer; EX: thumbtime=123
-			number_parser.Parse(val_bry);
-			if (number_parser.HasErr())
-				ctx.Msg_log().Add_itm_none(Xop_lnki_log.Upright_val_is_invalid, src, val_tkn_bgn, val_tkn_end);
-			else
-				lnki.Thumbtime_(number_parser.AsInt());
+		long fracs = TimeSpanAdp_.parse_to_fracs(src, val_tkn_bgn, val_tkn_end, false);
+		if (fracs == TimeSpanAdp_.parse_null) {
+			ctx.Msg_log().Add_itm_none(Xop_lnki_log.Upright_val_is_invalid, src, val_tkn_bgn, val_tkn_end);
 		}
-		else {									// segment; EX: thumbtime=1:23
-			int seconds = 0, multiplier = 1, seg_idx = 0;
-			int seg_bgn = colon_pos + 1, seg_end = val_bry_len;
-			boolean valid = true;
-			while (valid) {
-				number_parser.Parse(val_bry, seg_bgn, seg_end);
-				if (number_parser.HasErr()) {
-					ctx.Msg_log().Add_itm_none(Xop_lnki_log.Upright_val_is_invalid, src, val_tkn_bgn, val_tkn_end);
-					valid = false;
-				}
-				if (!valid) break;
-				int seg_val = number_parser.AsInt();
-				switch (seg_idx) {
-					case 0: multiplier =    1; break; // seconds
-					case 1: multiplier =   60; break; // minutes
-					case 2: multiplier = 3600; break; // hours
-					default:
-						ctx.Msg_log().Add_itm_none(Xop_lnki_log.Upright_val_is_invalid, src, val_tkn_bgn, val_tkn_end);
-						valid = false;
-						break;
-				}
-				if (!valid) break;
-				seconds += (seg_val * multiplier);
-				seg_idx++;
-				if (seg_bgn == 0) {	// right-most seg; exit; EX: 1:23:45; reached "1" so exit
-					lnki.Thumbtime_(seconds);
-					break;
-				}
-				seg_end = seg_bgn - 1;														// -1=place at colon    ; EX: "1:23:45"; seg_end is at ":"
-				colon_pos = ByteAry_.FindBwd(val_bry, Byte_ascii.Colon, seg_end - 1);		// -1=place before colon; EX: "1:23:45"; search at "3" (before colon)
-				seg_bgn = colon_pos == ByteAry_.NotFound
-					? 0
-					: colon_pos + 1;
-			}
-		}
+		else
+			lnki.Thumbtime_(fracs / TimeSpanAdp_.Ratio_f_to_s);
 	}
 }

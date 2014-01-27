@@ -41,7 +41,7 @@ class Cache_fil_mgr {
 	public void Db_term() {
 		fil_tbl.Db_term();
 	}
-	public Cache_fil_itm Get_or_new(int dir_id, byte[] fil_name, boolean fil_is_orig, int fil_w, int fil_h, int fil_thumbtime, Xof_ext fil_ext, long fil_size, BoolRef created) {
+	public Cache_fil_itm Get_or_new(int dir_id, byte[] fil_name, boolean fil_is_orig, int fil_w, int fil_h, double fil_thumbtime, Xof_ext fil_ext, long fil_size, BoolRef created) {
 		byte[] fil_key = Cache_fil_itm.Gen_hash_key(fil_key_bldr, dir_id, fil_name, fil_is_orig, fil_w, fil_h, fil_thumbtime);
 		Cache_fil_itm fil_itm = (Cache_fil_itm)fil_hash.Fetch(fil_key);
 		if (fil_itm == null)			{								// not in memory
@@ -105,9 +105,16 @@ class Cache_fil_mgr {
 		Xof_repo_itm trg_repo = repo_mgr.Get_primary(wiki_domain);
 		byte[] ttl = itm.Fil_name();			
 		byte[] md5 = Xof_xfer_itm.Md5_(ttl);
+<<<<<<< HEAD
 		Io_url fil_url = url_bldr.Set_trg_file_(mode_id, trg_repo, ttl, md5, itm.Fil_ext(), itm.Fil_w()
 			, Fsdb_xtn_thm_itm.X_to_xowa_thumbtime(itm.Fil_ext().Id(), itm.Fil_thumbtime())
 			, Fsdb_xtn_thm_itm.X_to_xowa_page(itm.Fil_ext().Id(), itm.Fil_thumbtime())
+=======
+		int itm_ext_id = itm.Fil_ext().Id();
+		Io_url fil_url = url_bldr.Set_trg_file_(mode_id, trg_repo, ttl, md5, itm.Fil_ext(), itm.Fil_w()
+			, Xof_doc_thumb.Convert_to_xowa_thumbtime	(itm_ext_id, itm.Fil_thumbtime())
+			, Xof_doc_thumb.Convert_to_xowa_page		(itm_ext_id, itm.Fil_thumbtime())
+>>>>>>> v1.1.4.1
 			).Xto_url();
 		Io_mgr._.DeleteFil_args(fil_url).MissingFails_off().Exec();
 		itm.Cmd_mode_delete_();

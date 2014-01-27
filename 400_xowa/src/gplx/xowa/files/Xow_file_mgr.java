@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files; import gplx.*; import gplx.xowa.*;
-import gplx.xowa.files.fsdb.*;
+import gplx.fsdb.*; import gplx.xowa.files.fsdb.*;
 public class Xow_file_mgr implements GfoInvkAble {
 	public Xow_file_mgr(Xow_wiki wiki) {
 		this.wiki = wiki;
@@ -38,6 +38,24 @@ public class Xow_file_mgr implements GfoInvkAble {
 	public Xow_repo_mgr Repo_mgr() {return repo_mgr;} private Xow_repo_mgr repo_mgr;
 	public Xof_meta_mgr  Meta_mgr() {return meta_mgr;} private Xof_meta_mgr meta_mgr;
 	public Xof_cfg_download Cfg_download() {return cfg_download;} private Xof_cfg_download cfg_download = new Xof_cfg_download();
+	public void Cfg_set(String grp, String key, String val) {	// TEST: should only be called by tests
+		if (test_grps == null) test_grps = HashAdp_.new_();
+		Fsdb_cfg_grp grp_itm = (Fsdb_cfg_grp)test_grps.Fetch(grp);
+		if (grp_itm == null) {
+			grp_itm = new Fsdb_cfg_grp(grp);
+			test_grps.Add(grp, grp_itm);
+		}
+		grp_itm.Set(key, val);
+	}	private HashAdp test_grps;
+	public Fsdb_cfg_grp Cfg_get(String grp) {
+		if (test_grps != null) {
+			Fsdb_cfg_grp rv = (Fsdb_cfg_grp)test_grps.Fetch(grp);
+			return rv == null ? Fsdb_cfg_grp.Null : rv;
+		}
+		if (this.Version() == Version_1) return Fsdb_cfg_grp.Null;
+		fsdb_mgr.Init_by_wiki__add_bin_wkrs(wiki);	// make sure fsdb is init'd
+		return fsdb_mgr.Mnt_mgr().Abc_mgr_at(0).Cfg_mgr().Grps_get_or_load(grp);
+	}
 	public Xof_fsdb_mgr_sql Fsdb_mgr() {return fsdb_mgr;} private Xof_fsdb_mgr_sql fsdb_mgr = new Xof_fsdb_mgr_sql();
 	public boolean Find_meta(Xof_xfer_itm xfer_itm) {
 		xfer_itm.Trg_repo_idx_(Xof_meta_itm.Repo_unknown);

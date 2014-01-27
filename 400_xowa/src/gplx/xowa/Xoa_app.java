@@ -41,7 +41,6 @@ public class Xoa_app implements GfoInvkAble {
 		sanitizer = new Xop_sanitizer(amp_trie, msg_log);
 		user_mgr = new Xou_user_mgr(this, user);
 		sys_cfg = new Xoa_sys_cfg(this);
-		url_alias_mgr = new Xoa_url_alias_mgr(this);
 		cur_redirect = new Xoa_cur(this);
 		shell = new Xoa_shell(this);
 		setup_mgr = new Xoi_setup_mgr(this);
@@ -134,7 +133,6 @@ public class Xoa_app implements GfoInvkAble {
 	public gplx.xowa.html.utils.Xoh_js_cleaner Utl_js_cleaner() {return utl_js_cleaner;} gplx.xowa.html.utils.Xoh_js_cleaner utl_js_cleaner = new gplx.xowa.html.utils.Xoh_js_cleaner();
 	public HashAdp				Tmpl_result_cache() {return tmpl_result_cache;} HashAdp tmpl_result_cache = HashAdp_.new_bry_();
 	public Xoa_sys_cfg			Sys_cfg() {return sys_cfg;} private Xoa_sys_cfg sys_cfg;
-	public Xoa_url_alias_mgr	Url_alias_mgr() {return url_alias_mgr;} private Xoa_url_alias_mgr url_alias_mgr;
 	public ByteAryFmtr			Tmp_fmtr() {return tmp_fmtr;} ByteAryFmtr tmp_fmtr = ByteAryFmtr.new_("");
 	public boolean					Xwiki_missing(byte[] wiki_key)	{return user.Wiki().Xwiki_mgr().Get_by_key(wiki_key) == null;} // NOTE: only the user_wiki has a full list of all wikis b/c it has xwiki objects; wiki_mgr does not, b/c it has heavier wiki objects which are loaded dynamically;
 	public boolean					Xwiki_exists(byte[] wiki_key)	{return user.Wiki().Xwiki_mgr().Get_by_key(wiki_key) != null;}
@@ -171,7 +169,6 @@ public class Xoa_app implements GfoInvkAble {
 		else if (ctx.Match(k, Invk_users))					return user_mgr;
 		else if (ctx.Match(k, Invk_user))					return user;
 		else if (ctx.Match(k, Invk_sys_cfg))				return sys_cfg;
-		else if	(ctx.Match(k, Invk_url_aliases))			return url_alias_mgr;
 		else if	(ctx.Match(k, Invk_cur))					return cur_redirect;
 		else if	(ctx.Match(k, Invk_html))					return html_mgr;
 		else if	(ctx.Match(k, Invk_shell))					return shell;
@@ -190,7 +187,7 @@ public class Xoa_app implements GfoInvkAble {
 		else return GfoInvkAble_.Rv_unhandled;
 	}
 	public static final String Invk_gui = "gui", Invk_bldr = "bldr", Invk_wikis = "wikis", Invk_files = "files", Invk_langs = "langs", Invk_users = "users"
-	, Invk_sys_cfg = "sys_cfg", Invk_url_aliases = "url_aliases", Invk_fsys = "fsys", Invk_cur = "cur", Invk_shell = "shell", Invk_log = "log"
+	, Invk_sys_cfg = "sys_cfg", Invk_fsys = "fsys", Invk_cur = "cur", Invk_shell = "shell", Invk_log = "log"
 	, Invk_setup = "setup", Invk_scripts = "scripts", Invk_user = "user", Invk_xtns = "xtns", Invk_ctg_mgr = "ctg_mgr"
 	, Invk_cfgs = "cfgs", Invk_app = "app", Invk_usr_dlg = "usr_dlg", Invk_specials = "specials", Invk_html = "html"
 	, Invk_server = "server"

@@ -23,7 +23,9 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 	public boolean Allow_env_funcs() {return allow_env_funcs;} private boolean allow_env_funcs = true;
 	public Scrib_mod Register(Scrib_engine engine, Io_url script_dir) {			
 		mod = engine.RegisterInterface(script_dir.GenSubFil("mw.lua")
-			, this, String_.Ary(Invk_loadPackage, Invk_frameExists, Invk_parentFrameExists, Invk_getExpandedArgument, Invk_getAllExpandedArguments, Invk_expandTemplate, Invk_preprocess, Invk_callParserFunction, Invk_incrementExpensiveFunctionCount, Invk_isSubsting)
+			, this, String_.Ary(Invk_loadPackage, Invk_frameExists, Invk_parentFrameExists, Invk_getExpandedArgument, Invk_getAllExpandedArguments, Invk_expandTemplate, Invk_preprocess, Invk_callParserFunction, Invk_incrementExpensiveFunctionCount
+			, Invk_isSubsting, Invk_newChildFrame
+			)
 			, KeyVal_.new_("allowEnvFuncs", allow_env_funcs));
 		return mod;
 	}
@@ -49,6 +51,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		else if	(ctx.Match(k, Invk_callParserFunction))					return CallParserFunction((KeyVal[])m.CastObj("v"));
 		else if	(ctx.Match(k, Invk_incrementExpensiveFunctionCount))	return IncrementExpensiveFunctionCount((KeyVal[])m.CastObj("v"));
 		else if	(ctx.Match(k, Invk_isSubsting))							return IsSubsting((KeyVal[])m.CastObj("v"));
+		else if	(ctx.Match(k, Invk_newChildFrame))						return NewChildFrame((KeyVal[])m.CastObj("v"));
 		else	return GfoInvkAble_.Rv_unhandled;
 	}
 	public static final String Invk_loadPackage = "loadPackage", Invk_frameExists = "frameExists", Invk_parentFrameExists = "parentFrameExists"
@@ -56,6 +59,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 	, Invk_expandTemplate = "expandTemplate", Invk_preprocess = "preprocess"
 	, Invk_callParserFunction = "callParserFunction", Invk_incrementExpensiveFunctionCount = "incrementExpensiveFunctionCount"
 	, Invk_isSubsting = "isSubsting"
+	, Invk_newChildFrame = "newChildFrame"
 	;
 	public KeyVal[] LoadPackage(KeyVal[] values) {
 		String mod_name = Scrib_kv_utl.Val_to_str(values, 0);
@@ -308,6 +312,9 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 				is_substing = true;
 		}			
 		return Scrib_kv_utl.base1_obj_(is_substing);
+	}
+	public KeyVal[] NewChildFrame(KeyVal[] values) {
+		return Scrib_kv_utl.base1_obj_(Scrib_kv_utl.Val_to_str(values, 1));	// HACK: return back name of frame; DATE:2014-01-25
 	}
 	private Xot_invk values_get_frame(KeyVal[] values, int idx) {
 		String frame_id = Scrib_kv_utl.Val_to_str(values, idx);

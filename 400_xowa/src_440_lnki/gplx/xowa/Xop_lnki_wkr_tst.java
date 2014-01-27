@@ -69,7 +69,7 @@ public class Xop_lnki_wkr_tst {
 		fxt.tst_Parse_page_wiki("[[File:A.ogv|thumbtime=123]]", fxt.tkn_lnki_().Thumbtime_(123));
 		fxt.tst_Parse_page_wiki("[[File:A.ogv|thumbtime=1:23]]", fxt.tkn_lnki_().Thumbtime_(83));
 		fxt.tst_Parse_page_wiki("[[File:A.ogv|thumbtime=1:01:01]]", fxt.tkn_lnki_().Thumbtime_(3661));
-		fxt.ini_Log_(Xop_lnki_log.Upright_val_is_invalid).tst_Parse_page_wiki("[[File:A.ogv|thumbtime=:1:1]]", fxt.tkn_lnki_().Thumbtime_(-1));
+		fxt.ini_Log_(Xop_lnki_log.Upright_val_is_invalid).tst_Parse_page_wiki("[[File:A.ogv|thumbtime=a]]", fxt.tkn_lnki_().Thumbtime_(-1));
 	}
 	@Test  public void Width_ws() {
 		fxt.tst_Parse_page_wiki("[[Image:a| 123 px]]"		, fxt.tkn_lnki_().Width_(123));
@@ -437,7 +437,7 @@ public class Xop_lnki_wkr_tst {
 			(	"[[File:A.png|12x10px|link=http://en.wikipedia.org/wiki/commons:B|c]]", String_.Concat_lines_nl_skipLast
 			(	"<a href=\"/site/commons.wikimedia.org/wiki/B\" rel=\"nofollow\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"c\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/12px.png\" width=\"12\" height=\"10\" /></a>"
 			));
-		fxt.App().Url_alias_mgr().Clear();
+		fxt.ini_xwiki_clear();
 	}
 	@Test  public void Link_xwiki_alias_sub_page() {	// same as above, but for sub-page; [[File:Commons-logo.svg|25x25px|link=http://en.wikipedia.org/wiki/commons:Special:Search/Earth|alt=|Search Commons]]
 		fxt.ini_xwiki_add_wiki_and_user_("commons", "commons.wikimedia.org");
@@ -445,7 +445,7 @@ public class Xop_lnki_wkr_tst {
 			(	"[[File:A.png|12x10px|link=http://en.wikipedia.org/wiki/commons:Special:Search/B|c]]", String_.Concat_lines_nl_skipLast
 			(	"<a href=\"/site/commons.wikimedia.org/wiki/Special:Search/B\" rel=\"nofollow\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"c\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/12px.png\" width=\"12\" height=\"10\" /></a>"
 			));
-		fxt.App().Url_alias_mgr().Clear();
+		fxt.ini_xwiki_clear();
 	}
 	@Test  public void Link_xwiki_alias_only() {	// only alias; [[File:Commons-logo.svg|25x25px|link=commons:Special:Search/Earth]]; fictitious example; DATE:2013-02-18
 		fxt.ini_xwiki_add_wiki_and_user_("commons", "commons.wikimedia.org");
@@ -453,7 +453,7 @@ public class Xop_lnki_wkr_tst {
 			(	"[[File:A.png|12x10px|link=commons:Special:Search/B|c]]", String_.Concat_lines_nl_skipLast
 			(	"<a href=\"/site/commons.wikimedia.org/wiki/Special:Search/B\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"c\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/12px.png\" width=\"12\" height=\"10\" /></a>"
 			));
-		fxt.App().Url_alias_mgr().Clear();
+		fxt.ini_xwiki_clear();
 	}
 	@Test  public void Link_xwiki_alias_only_colon() {	// only alias, but prepended with ":"; [[File:Wikipedia-logo.svg|40px|link=:w:|Wikipedia]]; DATE:2013-05-06
 		fxt.ini_xwiki_add_wiki_and_user_("commons", "commons.wikimedia.org");
@@ -461,7 +461,7 @@ public class Xop_lnki_wkr_tst {
 			(	"[[File:A.png|12x10px|link=:commons:A/B|c]]", String_.Concat_lines_nl_skipLast
 			(	"<a href=\"/site/commons.wikimedia.org/wiki/A/B\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"c\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/12px.png\" width=\"12\" height=\"10\" /></a>"
 			));
-		fxt.App().Url_alias_mgr().Clear();
+		fxt.ini_xwiki_clear();
 	}
 	@Test  public void Xwiki_file() {	// PURPOSE: if xwiki and File, ignore xwiki (hackish); DATE:2013-12-22
 		Reg_xwiki_alias("test", "test.wikimedia.org");													// must register xwiki, else ttl will not parse it
@@ -608,11 +608,11 @@ public class Xop_lnki_wkr_tst {
 		fxt.tst_Parse_page_all_str("[[Ab]]cd e", "<a href=\"/wiki/Ab\">Abcd</a> e");
 	}
 	@Test   public void Trail_fr() {
-		byte[] c = ByteAry_.new_utf8_("ç");
+		byte[] ltr_c_in_french = ByteAry_.new_utf8_("ç");
 		Xol_lnki_trail_mgr lnki_trail_mgr = fxt.Wiki().Lang().Lnki_trail_mgr();
-		lnki_trail_mgr.Add(c);
+		lnki_trail_mgr.Add(ltr_c_in_french);
 		fxt.tst_Parse_page_all_str("[[Ab]]çd e", "<a href=\"/wiki/Ab\">Abçd</a> e");
-		lnki_trail_mgr.Del(c);
+		lnki_trail_mgr.Del(ltr_c_in_french);
 	}
 	@Test   public void Trim_category_normal() {	// PURPOSE: leading spaces / nls should be removed from normal Category, else false pre's or excessive line breaks
 		fxt.Ctx().Para().Enabled_y_();

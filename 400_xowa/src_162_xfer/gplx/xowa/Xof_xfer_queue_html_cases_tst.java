@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
+import gplx.xowa.files.*;
 public class Xof_xfer_queue_html_cases_tst {
 	Xof_xfer_queue_html_fxt fxt = new Xof_xfer_queue_html_fxt();
 	@Before public void init() {
@@ -190,7 +191,7 @@ public class Xof_xfer_queue_html_cases_tst {
 	}
 	@Test  public void Upright_size_incorrect() {// PURPOSE.fix: incorrect image size being brought down; EX: w:ASCII; [[Image:ASCII Code Chart.svg|thumb|right|upright=1.6]]; 264, but should be 350 
 		fxt	.ini_page_create_en_wiki			("File:A.png");
-		fxt	.Lnki_("A.png", true, -1, -1, 1.6, Xop_lnki_tkn.Thumbtime_null)											// height-only request
+		fxt	.Lnki_("A.png", true, -1, -1, 1.6, Xof_doc_thumb.Null_as_int)											// height-only request
 			.Src(	fxt.img_("mem/src/en.wikipedia.org/7/70/A.png", 830, 328)
 				,	fxt.img_("mem/src/en.wikipedia.org/thumb/7/70/A.png/350px-A.png", 350, 138)	
 				)
@@ -201,7 +202,7 @@ public class Xof_xfer_queue_html_cases_tst {
 	}
 	@Test  public void Ogg_saves_wrong_tid() {// PURPOSE.fix: ogg saves wrong tid; EX: w:ASCII; [[Image:ASCII Code Chart.svg|thumb|right|upright=1.6]]; 264, but should be 350 
 		fxt	.ini_page_create_en_wiki			("File:A.png");
-		fxt	.Lnki_("A.png", true, -1, -1, 1.6, Xop_lnki_tkn.Thumbtime_null)											// height-only request
+		fxt	.Lnki_("A.png", true, -1, -1, 1.6, Xof_doc_thumb.Null_as_int)											// height-only request
 			.Src(	fxt.img_("mem/src/en.wikipedia.org/7/70/A.png", 830, 328)
 				,	fxt.img_("mem/src/en.wikipedia.org/thumb/7/70/A.png/350px-A.png", 350, 138)	
 				)

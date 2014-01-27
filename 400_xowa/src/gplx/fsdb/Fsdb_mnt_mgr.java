@@ -34,6 +34,7 @@ public class Fsdb_mnt_mgr implements GfoInvkAble {
 		insert_to_mnt = tbl_cfg.Select_as_int("core", "mnt.insert_idx");
 	}
 	public int Insert_to_mnt() {return insert_to_mnt;} public Fsdb_mnt_mgr Insert_to_mnt_(int v) {insert_to_mnt = v; return this;} private int insert_to_mnt = Mnt_idx_user;
+	public int Abc_mgr_len() {return ary == null ? 0 : ary.length;}
 	public Fsdb_db_abc_mgr Abc_mgr_at(int i) {return ary[i];}
 	private Fsdb_mnt_itm[] Db_load_or_make(Io_url cur_dir) {
 		BoolRef created = BoolRef.n_();
@@ -51,7 +52,7 @@ public class Fsdb_mnt_mgr implements GfoInvkAble {
 	public Fsdb_db_bin_fil Bin_db_get(int mnt_id, int bin_db_id) {
 		return ary[mnt_id].Bin_mgr().Get_at(bin_db_id);
 	}
-	public Fsdb_fil_itm Fil_select_bin(byte[] dir, byte[] fil, boolean is_thumb, int width, int thumbtime) {
+	public Fsdb_fil_itm Fil_select_bin(byte[] dir, byte[] fil, boolean is_thumb, int width, double thumbtime) {
 		for (int i = 0; i < ary_len; i++) {
 			Fsdb_fil_itm rv = ary[i].Fil_select_bin(dir, fil, is_thumb, width, thumbtime);
 			if (rv != Fsdb_fil_itm.Null && rv.Db_bin_id() != Fsdb_bin_tbl.Null_db_bin_id) {	// NOTE: mnt_0 can have thumb, but mnt_1 can have itm; check for itm with Db_bin_id; DATE:2013-11-16
@@ -61,21 +62,21 @@ public class Fsdb_mnt_mgr implements GfoInvkAble {
 		}
 		return Fsdb_fil_itm.Null;
 	}
-	public Fsdb_xtn_thm_itm Thm_select_bin(byte[] dir, byte[] fil, int width, int thumbtime) {
+	public boolean Thm_select_bin(byte[] dir, byte[] fil, Fsdb_xtn_thm_itm thm) {
 		for (int i = 0; i < ary_len; i++) {
-			Fsdb_xtn_thm_itm rv = ary[i].Thm_select_bin(dir, fil, width, thumbtime);
-			if (rv != Fsdb_xtn_thm_itm.Null) {
-				rv.Mnt_id_(i);
+			boolean rv = ary[i].Thm_select_bin(dir, fil, thm);
+			if (rv) {
+				thm.Mnt_id_(i);
 				return rv;
 			}
 		}
-		return Fsdb_xtn_thm_itm.Null;
+		return false;
 	}
 	public void Fil_insert(Fsdb_fil_itm rv    , byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		ary[insert_to_mnt].Fil_insert(rv, dir, fil, ext_id, modified, hash, bin_len, bin_rdr);
 	}
-	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int w, int h, int thumbtime, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
-		ary[insert_to_mnt].Thm_insert(rv, dir, fil, ext_id, w, h, thumbtime, modified, hash, bin_len, bin_rdr);
+	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int w, int h, double thumbtime, int page, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+		ary[insert_to_mnt].Thm_insert(rv, dir, fil, ext_id, w, h, thumbtime, page, modified, hash, bin_len, bin_rdr);
 	}
 	public void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr, int img_w, int img_h) {
 		ary[insert_to_mnt].Img_insert(rv, dir, fil, ext_id, modified, hash, bin_len, bin_rdr, img_w, img_h);

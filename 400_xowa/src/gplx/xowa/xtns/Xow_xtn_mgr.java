@@ -21,7 +21,7 @@ import gplx.xowa.xtns.gallery.*;
 import gplx.xowa.xtns.scribunto.*;
 public class Xow_xtn_mgr implements GfoInvkAble {
 	private Hash_adp_bry regy = new Hash_adp_bry(true);
-	public Xtn_gallery_mgr Xtn_gallery() {return xtn_gallery;} private Xtn_gallery_mgr xtn_gallery;
+	public Gallery_mgr Gallery() {return xtn_gallery;} private Gallery_mgr xtn_gallery;
 	public Xow_xtn_scribunto Xtn_scribunto() {return xtn_scribunto;} private Xow_xtn_scribunto xtn_scribunto;
 	public Poem_xtn_mgr Xtn_poem() {return xtn_poem;} private Poem_xtn_mgr xtn_poem;
 	public Xow_xtn_mgr Ctor_by_app(Xoa_app app) {
@@ -34,7 +34,7 @@ public class Xow_xtn_mgr implements GfoInvkAble {
 	public Xow_xtn_mgr Ctor_by_wiki(Xow_wiki wiki) {
 		this.wiki = wiki;
 		this.app = wiki.App();
-		xtn_gallery = new Xtn_gallery_mgr();
+		xtn_gallery = new Gallery_mgr();
 		xtn_scribunto = (Xow_xtn_scribunto)Get_or_new(Xow_xtn_scribunto.XTN_KEY);
 		xtn_poem = (Poem_xtn_mgr)Get_or_new(Poem_xtn_mgr.Xtn_key_static);
 		return this;

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
+import gplx.xowa.files.*;
 public class Xofo_lnki_parser_tst {
 	Xofo_lnki_parser_fxt fxt = new Xofo_lnki_parser_fxt();
 	@Before public void init() {fxt.Reset();}
@@ -61,7 +62,7 @@ class Xofo_lnki_chkr implements Tst_chkr {
 		rv += mgr.Tst_val(lnki_w == -1, path, "lnki_w", lnki_w, actl.Lnki_w());
 		rv += mgr.Tst_val(lnki_h == -1, path, "lnki_h", lnki_h, actl.Lnki_h());
 		rv += mgr.Tst_val(lnki_upright == -1, path, "lnki_upright", lnki_upright, actl.Lnki_upright());
-		rv += mgr.Tst_val(lnki_thumbtime == -1, path, "lnki_thumbtime", lnki_thumbtime, actl.Lnki_thumbtime());
+		rv += mgr.Tst_val(lnki_thumbtime == -1, path, "lnki_thumbtime", lnki_thumbtime, Xof_doc_thumb.X_int(actl.Lnki_thumbtime()));
 		return rv;
 	}
 }

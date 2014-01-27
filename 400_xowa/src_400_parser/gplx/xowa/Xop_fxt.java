@@ -166,6 +166,11 @@ public class Xop_fxt {
 		app.User().Wiki().Xwiki_mgr().Add_full(domain, domain);
 		return this;
 	}
+	public Xop_fxt ini_xwiki_clear() {
+		wiki.Xwiki_mgr().Clear();
+		app.User().Wiki().Xwiki_mgr().Clear();
+		return this;
+	}
 	public Xop_fxt ini_xwiki_add_user_(String domain) {
 		app.User().Wiki().Xwiki_mgr().Add_full(domain, domain);
 		return this;

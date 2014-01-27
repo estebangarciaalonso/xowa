@@ -21,6 +21,7 @@ import gplx.xowa.wikis.*;
 import gplx.xowa.parsers.lnkis.*; import gplx.xowa.parsers.logs.*;
 import gplx.xowa.bldrs.oimgs.*;
 import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.wdatas.*;
+import gplx.xowa.files.*;
 public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_logger {
 	private Db_provider provider; private Db_stmt stmt;
 	private boolean wdata_enabled = true, xtn_ref_enabled = true;
@@ -53,7 +54,7 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		property_wkr = log_mgr.Make_wkr_property();
 		wiki.App().Wiki_mgr().Wdata_mgr().Enabled_(wdata_enabled);
 		if (!xtn_ref_enabled) gplx.xowa.xtns.refs.Xtn_references_nde.Enabled = false;
-		gplx.xowa.xtns.gallery.Xtn_gallery_nde.Log_wkr = log_mgr.Make_wkr().Save_src_str_(Bool_.Y);
+		gplx.xowa.xtns.gallery.Gallery_nde.Log_wkr = log_mgr.Make_wkr().Save_src_str_(Bool_.Y);
 		gplx.xowa.xtns.imageMap.Xop_imageMap_xnde.Log_wkr = log_mgr.Make_wkr();
 		gplx.xowa.Xop_xnde_wkr.Timeline_log_wkr = log_mgr.Make_wkr();
 		gplx.xowa.xtns.scores.Xtn_score.Log_wkr = log_mgr.Make_wkr();
@@ -88,13 +89,12 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		if (lnki.Ttl().ForceLiteralLink()) return; // ignore literal links which creat a link to file, but do not show the image; EX: [[:File:A.png|thumb|120px]] creates a link to File:A.png, regardless of other display-oriented args
 		byte[] ttl = lnki.Ttl().Page_db();
 		Xof_ext ext = Xof_ext_.new_by_ttl_(ttl);
-		int arg_1 = lnki.Thumbtime();
-		if (lnki.Page() != Xop_lnki_tkn.Page_null) {	// page set
-			if (arg_1 != Xop_lnki_tkn.Thumbtime_null)	// thumbtime set; warn
-				usr_dlg.Warn_many("", "", "page and thumbtime both set: page=~{0} ttl=~{1}", ctx.Page().Page_ttl().Page_db_as_str(), String_.new_utf8_(ttl));
-			arg_1 = lnki.Page();
-		}
-		Xob_lnki_temp_tbl.Insert(stmt, ctx.Page().Page_id(), ttl, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki.Width(), lnki.Height(), lnki.Upright(), arg_1);
+		double lnki_thumbtime = lnki.Thumbtime();
+		int lnki_page = lnki.Page();
+		if (	Xof_doc_page.Null_n(lnki_page) 					// page set
+			&&	Xof_doc_thumb.Null_n(lnki_thumbtime))			// thumbtime set
+				usr_dlg.Warn_many("", "", "page and thumbtime both set; this may be an issue with fsdb: page=~{0} ttl=~{1}", ctx.Page().Page_ttl().Page_db_as_str(), String_.new_utf8_(ttl));
+		Xob_lnki_temp_tbl.Insert(stmt, ctx.Page().Page_id(), ttl, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki.Width(), lnki.Height(), lnki.Upright(), lnki_thumbtime, lnki_page);
 	}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_wdata_enabled_))				wdata_enabled = m.ReadYn("v");

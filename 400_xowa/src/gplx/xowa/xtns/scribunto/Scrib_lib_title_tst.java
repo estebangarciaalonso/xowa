@@ -27,7 +27,7 @@ public class Scrib_lib_title_tst {
 		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_newTitle, Object_.Ary("Page_0")				, "\n  true;false;;0;;Page 0;0;;wikitext;Page_0;false;false");
 		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_newTitle, Object_.Ary("Page_0", "Template")	, "\n  true;false;;10;Template;Page 0;0;;wikitext;Page_0;false;false");
 		fxt.Parser_fxt().ini_Log_(Xop_ttl_log.Invalid_char);
-		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_newTitle, Object_.Ary("a[b")				, "null");	// invalid
+		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_newTitle, Object_.Ary("a[b")				, Scrib_pf_invoke_fxt.Null_rslt);	// invalid
 	}
 	@Test   public void GetUrl() {
 		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_getUrl, Object_.Ary("Main_Page", "fullUrl")								, "//en.wikipedia.org/wiki/Main_Page");
@@ -46,7 +46,7 @@ public class Scrib_lib_title_tst {
 		fxt.Parser_fxt().Wiki().Xwiki_mgr().Add_full("fr", "fr.wikipedia.org");
 		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_makeTitle, Object_.Ary("Template", "A", "b", "fr")						, ttl_data_("0", "", "Template:A", "b", "fr"));
 		fxt.Parser_fxt().ini_Log_(Xop_ttl_log.Invalid_char);
-		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_makeTitle, Object_.Ary("Template", "a[b"), "null");		// PURPOSE: handle bad MakeTitle cmds; EX: Disney; DATE:2013-10-15
+		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_makeTitle, Object_.Ary("Template", "a[b"), Scrib_pf_invoke_fxt.Null_rslt);		// PURPOSE: handle bad MakeTitle cmds; EX: Disney; DATE:2013-10-15
 	}
 	@Test   public void FileExists() {
 		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_fileExists, Object_.Ary("A")											, "false");
@@ -65,7 +65,7 @@ public class Scrib_lib_title_tst {
 		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_fileExists, Object_.Ary("Media:A.png")									, "true");
 	}
 	@Test   public void GetContent() {
-		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_getContent, Object_.Ary("A")											, "null");
+		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_getContent, Object_.Ary("A")											, Scrib_pf_invoke_fxt.Null_rslt);
 		fxt.Parser_fxt().ini_page_create("A", "test");
 		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_getContent, Object_.Ary("A")											, "test");
 	}

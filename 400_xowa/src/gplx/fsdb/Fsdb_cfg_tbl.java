@@ -63,6 +63,12 @@ public class Fsdb_cfg_tbl {
 			.Val_str_(key)
 			.Exec_select_val();
 	}
+	public DataRdr Select_by_grp(String grp) {
+		Db_qry_select qry = Db_qry_.select_cols_(Tbl_name, gplx.criterias.Criteria_.And_many(Db_crt_.eq_(Fld_cfg_grp, "")), Fld_cfg_key, Fld_cfg_val);
+		return provider.Prepare(qry).Clear()
+			.Val_str_(grp)
+			.Exec_select();
+	}
 	public static final String Tbl_name = "fsdb_cfg", Fld_cfg_grp = "cfg_grp", Fld_cfg_key = "cfg_key", Fld_cfg_val = "cfg_val";
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS fsdb_cfg"

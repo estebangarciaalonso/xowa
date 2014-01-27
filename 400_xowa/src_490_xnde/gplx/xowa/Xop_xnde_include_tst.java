@@ -176,6 +176,15 @@ public class Xop_xnde_include_tst {
 			,	"c"
 			));
 	}
+	@Test  public void Include_only_in_template_name() {// PURPOSE: includeonly in tmpl_name should be ignored; EX:de.w:Wikipedia:Projektdiskussion; DATE:2014-01-24
+		fxt.ini_defn_clear();
+		fxt.ini_defn_add("test", "abc");
+		fxt.tst_Parse_page_all_str("{{<includeonly></includeonly>test}}", "abc");
+	}
+	@Test  public void Include_only_in_transcluded_page() {// PURPOSE: include only int transcluded page should be ignored; EX:de.w:Wikipedia:Projektdiskussion; DATE:2014-01-24
+		fxt.ini_page_create("page", "abc");	// create page in main ns
+		fxt.tst_Parse_page_all_str("{{<includeonly>safesubst:</includeonly>page}}", "abc");	// will become {{safesubst:page}} which should then transclude page
+	}
 
 //		@Test  public void Defect_noinclude_inside_main() {		// PURPOSE: <onlyinclude> inside main was not returning content; EX.WP:Wikipedia:Featured_articles
 //			fxt.ini_defn_clear();

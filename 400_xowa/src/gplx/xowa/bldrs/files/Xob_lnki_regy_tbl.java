@@ -25,7 +25,8 @@ class Xob_lnki_regy_tbl {
 	}
 	public static final String Tbl_name = "lnki_regy"
 	, Fld_lnki_id = "lnki_id", Fld_lnki_page_id = "lnki_page_id", Fld_lnki_ttl = "lnki_ttl", Fld_lnki_ext = "lnki_ext", Fld_lnki_type = "lnki_type"
-	, Fld_lnki_w = "lnki_w", Fld_lnki_h = "lnki_h", Fld_lnki_upright = "lnki_upright", Fld_lnki_thumbtime = "lnki_thumbtime", Fld_lnki_count = "lnki_count"
+	, Fld_lnki_w = "lnki_w", Fld_lnki_h = "lnki_h", Fld_lnki_upright = "lnki_upright", Fld_lnki_thumbtime = "lnki_thumbtime", Fld_lnki_page = "lnki_page"
+	, Fld_lnki_count = "lnki_count"
 	;
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	(	"CREATE TABLE IF NOT EXISTS lnki_regy"
@@ -37,12 +38,13 @@ class Xob_lnki_regy_tbl {
 	,	", lnki_w          integer             NOT NULL"
 	,	", lnki_h          integer             NOT NULL"
 	,	", lnki_upright    double              NOT NULL"
-	,	", lnki_thumbtime  double              NOT NULL"
+	,	", lnki_thumbtime  double             NOT NULL"
+	,	", lnki_page       integer             NOT NULL"
 	,	", lnki_count      integer             NOT NULL"
 	,	");"
 	);
 	private static final String Sql_create_data = String_.Concat_lines_nl
-	(	"INSERT INTO lnki_regy (lnki_id, lnki_page_id, lnki_ttl, lnki_ext, lnki_type, lnki_w, lnki_h, lnki_upright, lnki_thumbtime, lnki_count)"
+	(	"INSERT INTO lnki_regy (lnki_id, lnki_page_id, lnki_ttl, lnki_ext, lnki_type, lnki_w, lnki_h, lnki_upright, lnki_thumbtime, lnki_page, lnki_count)"
 	,	"SELECT  Min(lnki_id)"
 	,	",       Min(lnki_page_id)"
 	,	",       lnki_ttl"
@@ -52,6 +54,7 @@ class Xob_lnki_regy_tbl {
 	,	",       lnki_h"
 	,	",       lnki_upright"
 	,	",       lnki_thumbtime"
+	,	",       lnki_page"
 	,	",       Count(lnki_ttl)"
 	,	"FROM    lnki_temp"
 	,	"GROUP BY"
@@ -62,6 +65,7 @@ class Xob_lnki_regy_tbl {
 	,	",       lnki_h"
 	,	",       lnki_upright"
 	,	",       lnki_thumbtime"
+	,	",       lnki_page"
 	,	";"
 	);
 	private static final Db_idx_itm 

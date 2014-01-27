@@ -25,7 +25,7 @@ public interface Xof_file_itm {
 	int					Lnki_w();
 	int					Lnki_h();
 	double				Lnki_upright();
-	int					Lnki_thumbtime();
+	double				Lnki_thumbtime();
 	int					Orig_w();
 	int					Orig_h();
 //		byte				Orig_repo();

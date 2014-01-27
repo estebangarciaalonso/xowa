@@ -27,24 +27,30 @@ public class Xof_bin_wkr_fsdb_sql implements Xof_bin_wkr, GfoInvkAble {
 	public int Bin_bfr_len() {return bin_bfr_len;} public Xof_bin_wkr_fsdb_sql Bin_bfr_len_(int v) {bin_bfr_len = v; return this;} private int bin_bfr_len = 32;
 	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w) {
 		Bin_wkr_get_ids(itm, is_thumb, w, tmp_itm_id, tmp_bin_db_id, tmp_mnt_id);
-		int bin_db_id = tmp_bin_db_id.Val(); if (bin_db_id == -1) return gplx.ios.Io_stream_rdr_.Null;
+		int bin_db_id = tmp_bin_db_id.Val(); if (bin_db_id == Fsdb_bin_tbl.Null_db_bin_id) return gplx.ios.Io_stream_rdr_.Null;
 		Fsdb_db_bin_fil bin_db = fsdb_mgr.Bin_db_get(tmp_mnt_id.Val(), bin_db_id);
 		return bin_db.Get_as_rdr(tmp_itm_id.Val());
 	}
 	public boolean Bin_wkr_get_to_url(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
 		if (bin_bfr == null) bin_bfr = new byte[bin_bfr_len];
 		Bin_wkr_get_ids(itm, is_thumb, w, tmp_itm_id, tmp_bin_db_id, tmp_mnt_id);
-		int bin_db_id = tmp_bin_db_id.Val(); if (bin_db_id == -1) return false;
+		int bin_db_id = tmp_bin_db_id.Val(); if (bin_db_id == Fsdb_bin_tbl.Null_db_bin_id) return false;
 		Fsdb_db_bin_fil bin_db = fsdb_mgr.Bin_db_get(tmp_mnt_id.Val(), bin_db_id);
 		return bin_db.Get_to_url(tmp_itm_id.Val(), bin_url, bin_bfr, bin_flush_when);
 	}
 	private void Bin_wkr_get_ids(Xof_fsdb_itm itm, boolean is_thumb, int w, IntRef tmp_itm_id, IntRef tmp_bin_db_id, IntRef tmp_mnt_id) {
 		byte[] dir = itm.Orig_wiki(), fil = itm.Lnki_ttl();
+<<<<<<< HEAD
 		int thumbtime = Fsdb_xtn_thm_itm.X_to_fsdb_thumbtime(itm.Lnki_ext().Id(), itm.Lnki_thumbtime(), itm.Lnki_page());
+=======
+		double thumbtime = Xof_doc_thumb.Convert_to_fsdb_thumbtime(itm.Lnki_ext().Id(), itm.Lnki_thumbtime(), itm.Lnki_page());
+>>>>>>> v1.1.4.1
 		if (is_thumb) {
-			Fsdb_xtn_thm_itm thm_itm = fsdb_mgr.Thm_select_bin(dir, fil, w, thumbtime);
+			Fsdb_xtn_thm_itm thm_itm = Fsdb_xtn_thm_itm.load_();
+			Init_thm(itm, thm_itm, w);
+			boolean found = fsdb_mgr.Thm_select_bin(dir, fil, thm_itm);
 			tmp_itm_id.Val_(thm_itm.Id());
-			tmp_bin_db_id.Val_(thm_itm.Db_bin_id());
+			tmp_bin_db_id.Val_(found ? thm_itm.Db_bin_id() : Fsdb_bin_tbl.Null_db_bin_id);
 			tmp_mnt_id.Val_(thm_itm.Mnt_id());
 		}
 		else {
@@ -60,4 +66,11 @@ public class Xof_bin_wkr_fsdb_sql implements Xof_bin_wkr, GfoInvkAble {
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}	private static final String Invk_db_dir_ = "db_dir_", Invk_url_ = "url_";
+	private void Init_thm(Xof_fsdb_itm src, Fsdb_xtn_thm_itm trg, int w) {
+		trg.Owner().Ext_id_(src.Lnki_ext().Id());
+		trg.Width_(w);
+		trg.Thumbtime_(src.Lnki_thumbtime());
+		trg.Page_(src.Lnki_page());
+	}
 }
+

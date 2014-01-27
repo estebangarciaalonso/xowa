@@ -246,6 +246,40 @@ public class Xoh_lnki_wtr_tst {
 		,	""
 		));		
 	}
+	@Test  public void Lnki_thumb_webm() {	// PURPOSE: webm thumb wasn't being shown; DATE:2014-01-25
+		fxt.tst_Parse_page_wiki_str
+		(	"[[File:A.webm|thumb|400px|a|alt=b]]", String_.Concat_lines_nl_skipLast
+		(	"<div class=\"thumb tright\">"
+		,	"  <div id=\"xowa_file_div_0\" class=\"thumbinner\" style=\"width:400px;\">"
+		,	"    <div id=\"xowa_media_div\">"
+		,	"      <div>"
+		,	"        <a href=\"/wiki/File:A.webm\" class=\"image\" title=\"A.webm\">"
+		,	"          <img id=\"xowa_file_img_0\" src=\"\" width=\"400\" height=\"0\" alt=\"b\" />"
+		,	"        </a>"
+		,	"      </div>"
+		,	"      <div>"
+		,	"        <a id=\"xowa_file_play_0\" href=\"file:///mem/wiki/repo/trg/orig/3/4/A.webm\" xowa_title=\"A.webm\" class=\"xowa_anchor_button\" style=\"width:398px;max-width:400px;\">"
+		,	"          <img src=\"file:///mem/xowa/user/test_user/app/img/file/play.png\" width=\"22\" height=\"22\" alt=\"Play sound\" />"
+		,	"        </a>"
+		,	"      </div>"
+		,	"    </div>"
+		,	"    <div class=\"thumbcaption\">"
+		,	"      <div class=\"magnify\">"
+		,	"        <a href=\"/wiki/File:A.webm\" class=\"internal\" title=\"Enlarge\">"
+		,	"          <img src=\"file:///mem/xowa/user/test_user/app/img/file/magnify-clip.png\" width=\"15\" height=\"11\" alt=\"\" />"
+		,	"        </a>"
+		,	"      </div>"
+		,	"      a"
+		,	"    </div>"
+		,	"    <hr/>"
+		,	"    <div class=\"thumbcaption\">"
+		,	"b"
+		,	"    </div>"
+		,	"  </div>"
+		,	"</div>"
+		,	""
+		));		
+	}
 	@Test  public void Lnki_media_normal() {
 		fxt.tst_Parse_page_wiki_str("[[Media:A.png|b]]", String_.Concat_lines_nl_skipLast
 		(	"<a href=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" xowa_title=\"A.png\">b"

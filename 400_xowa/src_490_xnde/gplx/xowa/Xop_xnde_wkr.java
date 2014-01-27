@@ -286,7 +286,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			Xoa_page page = ctx.Page();
 			if (!page.Allow_all_html() && page.Wiki().Domain_tid() != Xow_wiki_domain_.Tid_home) {
 				int end_pos = gtPos + 1;
-				ctx.Subs_add(root, tkn_mkr.Bry(bgn_pos, end_pos, ByteAry_.Add(gplx.html.Html_entities.Lt, tag.Name_bry(), gplx.html.Html_entities.Gt)));
+				ctx.Subs_add(root, tkn_mkr.Bry(bgn_pos, end_pos, ByteAry_.Add(gplx.html.Html_entities.Lt, ByteAry_.Mid(src, bgn_pos + 1, end_pos)))); // +1 to skip <
 				return end_pos;
 			}
 		}
@@ -342,9 +342,8 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		}
 		Xop_xnde_tkn xnde = null;
 		xnde = Xnde_bgn(ctx, tkn_mkr, root, tag, inline ? Xop_xnde_tkn.CloseMode_inline : Xop_xnde_tkn.CloseMode_open, bgn_pos, open_tag_end, atrs_bgn, atrs_end, atrs);
-		if (!inline && tag.BgnNdeMode() != Xop_xnde_tag_.BgnNdeMode_inline) {
+		if (!inline && tag.BgnNdeMode() != Xop_xnde_tag_.BgnNdeMode_inline)
 			ctx.Stack_add(xnde);
-		}
 		if (tag_ignore)
 			xnde.Tag_visible_(false);
 		if (tag.Empty_ignored()) ctx.Empty_ignored_y_();
@@ -423,7 +422,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		ctx.Tblw().MakeTkn_end_tblw(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, typeId, wlxr_type, prv_tkn, prv_tkn_typeId, true);
 		ctx.Para().Process_nl_sect_end(ctx, cur_pos);
 	}		
-	int Make_xtag_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_xnde_tag endTag) {
+	private int Make_xtag_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_xnde_tag endTag) {
 		int endTagId = endTag.Id();
 		cur_pos = Xop_lxr_.Find_fwd_while_non_ws(src, cur_pos, src_len) + 1;
 		int acs_pos = ctx.Stack_idx_typ_tblw(Xop_tkn_itm_.Tid_xnde);
@@ -486,7 +485,10 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 				}
 			}
 		}
-		ctx.Subs_add(root, tkn_mkr.Ignore(bgn_pos, cur_pos, Xop_ignore_tkn.Ignore_tid_xnde_dangling));
+		if (endTag.Restricted())	// restricted tags (like <script>) are not placed on stack; for now, just write it out
+			ctx.Subs_add(root, tkn_mkr.Bry(bgn_pos, cur_pos, ByteAry_.Add(gplx.html.Html_entities.Lt, ByteAry_.Mid(src, bgn_pos + 1, cur_pos)))); // +1 to skip <
+		else
+			ctx.Subs_add(root, tkn_mkr.Ignore(bgn_pos, cur_pos, Xop_ignore_tkn.Ignore_tid_xnde_dangling));
 		ctx.Para().Process_xml_block(endTag.Block_close(), cur_pos);
 
 		ctx.Msg_log().Add_itm_none(Xop_xnde_log.Escaped_xnde, src, bgn_pos, cur_pos - 1);
@@ -591,7 +593,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			case Xop_parser_.Parse_tid_page_tmpl: {
 				Xop_xnde_xtn xnde_data = null;
 				switch (tag.Id()) {
-					case Xop_xnde_tag_.Tid_xowa_cmd:				xnde_data = tkn_mkr.Xowa_cmd_nde(); break;
+					case Xop_xnde_tag_.Tid_xowa_cmd:				xnde_data = tkn_mkr.Xnde_xowa_cmd(); break;
 				}
 				if (xnde_data != null) { 
 					xnde_data.Xtn_compile(ctx.Wiki(), ctx, tkn_mkr, root, src, xnde);
@@ -602,25 +604,26 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			case Xop_parser_.Parse_tid_page_wiki: {
 				Xop_xnde_xtn xnde_data = null;
 				switch (tag.Id()) {
-					case Xop_xnde_tag_.Tid_xowa_cmd:				xnde_data = tkn_mkr.Xowa_cmd_nde(); break;
-					case Xop_xnde_tag_.Tid_poem:					xnde_data = tkn_mkr.Poem_nde(); break;
+					case Xop_xnde_tag_.Tid_xowa_cmd:				xnde_data = tkn_mkr.Xnde_xowa_cmd(); break;
+					case Xop_xnde_tag_.Tid_poem:					xnde_data = tkn_mkr.Xnde_poem(); break;
 //						case Xop_xnde_tag_.Tid_nowiki:					xnde_data = new Xtn_nowiki_nde(); break;
 					case Xop_xnde_tag_.Tid_math:					if (file_wkr != null) file_wkr.Wkr_run(ctx, root, xnde); break;
-					case Xop_xnde_tag_.Tid_ref:						xnde_data = gplx.xowa.xtns.refs.Xtn_references_nde.Enabled ? tkn_mkr.Ref_nde() : null; break;
-					case Xop_xnde_tag_.Tid_references:				xnde_data = gplx.xowa.xtns.refs.Xtn_references_nde.Enabled ? tkn_mkr.References_nde() : null; break;
-					case Xop_xnde_tag_.Tid_gallery:					xnde_data = tkn_mkr.Gallery_nde(); break;
-					case Xop_xnde_tag_.Tid_imageMap:				xnde_data = tkn_mkr.ImageMap_nde(); break;
-					case Xop_xnde_tag_.Tid_hiero:					xnde_data = tkn_mkr.Hiero_nde(); break;
-					case Xop_xnde_tag_.Tid_inputBox:				xnde_data = tkn_mkr.Inputbox_nde(); break;
-					case Xop_xnde_tag_.Tid_pages:					xnde_data = tkn_mkr.Pages_nde(); break;
-					case Xop_xnde_tag_.Tid_section:					xnde_data = tkn_mkr.Section_nde(); break;
-					case Xop_xnde_tag_.Tid_categoryList:			xnde_data = tkn_mkr.CategoryList_nde(); break;
-					case Xop_xnde_tag_.Tid_dynamicPageList:			xnde_data = tkn_mkr.DynamicPageList_nde(); break;
-					case Xop_xnde_tag_.Tid_syntaxHighlight:			xnde_data = tkn_mkr.SyntaxHighlight(); break;
-					case Xop_xnde_tag_.Tid_score:					xnde_data = tkn_mkr.Score_nde(); break;
-					case Xop_xnde_tag_.Tid_translate:				xnde_data = tkn_mkr.Translate(); break;
-					case Xop_xnde_tag_.Tid_languages:				xnde_data = tkn_mkr.Languages(); break;
-					case Xop_xnde_tag_.Tid_templateData:			xnde_data = tkn_mkr.TemplateData(); break;
+					case Xop_xnde_tag_.Tid_ref:						xnde_data = gplx.xowa.xtns.refs.Xtn_references_nde.Enabled ? tkn_mkr.Xnde_ref() : null; break;
+					case Xop_xnde_tag_.Tid_references:				xnde_data = gplx.xowa.xtns.refs.Xtn_references_nde.Enabled ? tkn_mkr.Xnde_references() : null; break;
+					case Xop_xnde_tag_.Tid_gallery:					xnde_data = tkn_mkr.Xnde_gallery(); break;
+					case Xop_xnde_tag_.Tid_imageMap:				xnde_data = tkn_mkr.Xnde_imageMap(); break;
+					case Xop_xnde_tag_.Tid_hiero:					xnde_data = tkn_mkr.Xnde_hiero(); break;
+					case Xop_xnde_tag_.Tid_inputBox:				xnde_data = tkn_mkr.Xnde_inputbox(); break;
+					case Xop_xnde_tag_.Tid_pages:					xnde_data = tkn_mkr.Xnde_pages(); break;
+					case Xop_xnde_tag_.Tid_pagelist:				xnde_data = tkn_mkr.Xnde_pagelist(); break;
+					case Xop_xnde_tag_.Tid_section:					xnde_data = tkn_mkr.Xnde_section(); break;
+					case Xop_xnde_tag_.Tid_categoryList:			xnde_data = tkn_mkr.Xnde_categoryList(); break;
+					case Xop_xnde_tag_.Tid_dynamicPageList:			xnde_data = tkn_mkr.Xnde_dynamicPageList(); break;
+					case Xop_xnde_tag_.Tid_syntaxHighlight:			xnde_data = tkn_mkr.Xnde_syntaxHighlight(); break;
+					case Xop_xnde_tag_.Tid_score:					xnde_data = tkn_mkr.Xnde_score(); break;
+					case Xop_xnde_tag_.Tid_translate:				xnde_data = tkn_mkr.Xnde_translate(); break;
+					case Xop_xnde_tag_.Tid_languages:				xnde_data = tkn_mkr.Xnde_languages(); break;
+					case Xop_xnde_tag_.Tid_templateData:			xnde_data = tkn_mkr.Xnde_templateData(); break;
 					case Xop_xnde_tag_.Tid_timeline:
 						boolean log_wkr_enabled = Timeline_log_wkr != Xop_log_basic_wkr.Null; if (log_wkr_enabled) Timeline_log_wkr.Log_end_xnde(ctx.Page(), Xop_log_basic_wkr.Tid_timeline, src, xnde);
 						break;

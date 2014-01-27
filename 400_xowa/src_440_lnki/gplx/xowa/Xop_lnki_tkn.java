@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.files.*;
 public class Xop_lnki_tkn extends Xop_tkn_itm_base {
 	@Override public byte Tkn_tid() {return typeId;} private byte typeId = Xop_tkn_itm_.Tid_lnki;
 	public void Tkn_tid_to_txt() {typeId = Xop_tkn_itm_.Tid_txt;}
@@ -31,8 +32,8 @@ public class Xop_lnki_tkn extends Xop_tkn_itm_base {
 	public int				Height() {return height;} public Xop_lnki_tkn Height_(int v) {height = v; return this;} int height = Height_null;
 	public double			Upright() {return upright;} public Xop_lnki_tkn Upright_(double v) {upright = v; return this;} double upright = Upright_null;
 	public boolean				Media_icon() {return media_icon;} public Xop_lnki_tkn Media_icon_n_() {media_icon = false; return this;} private boolean media_icon = true;
-	public int				Thumbtime() {return thumbtime;} public Xop_lnki_tkn Thumbtime_(int v) {thumbtime = v; return this;} private int thumbtime = Thumbtime_null;
-	public int				Page() {return page;} public Xop_lnki_tkn Page_(int v) {page = v; return this;} private int page = Page_null;
+	public double	        Thumbtime() {return thumbtime;} public Xop_lnki_tkn Thumbtime_(double v) {thumbtime = v; return this;} private double thumbtime = Xof_doc_thumb.Null;
+	public int				Page() {return page;} public Xop_lnki_tkn Page_(int v) {page = v; return this;} private int page = Xof_doc_page.Null;
 	public int				Args_len() {return args_len;} private int args_len = 0;
 	public Xop_tkn_itm		Trg_tkn() {return trg_tkn;} public Xop_lnki_tkn Trg_tkn_(Xop_tkn_itm v) {trg_tkn = v; return this;} private Xop_tkn_itm trg_tkn = Xop_tkn_null.Null_tkn;
 	public Xop_tkn_itm		Caption_tkn() {return caption_tkn;} public Xop_lnki_tkn Caption_tkn_(Xop_tkn_itm v) {caption_tkn = v; return this;} private Xop_tkn_itm caption_tkn = Xop_tkn_null.Null_tkn;
@@ -56,5 +57,5 @@ public class Xop_lnki_tkn extends Xop_tkn_itm_base {
 					&& !ttl.ForceLiteralLink()));				
 	}
 	public static final double Upright_null = -1;
-	public static final int Width_null = -1, Height_null = -1, Thumbtime_null = -1, Page_null = -1;
+	public static final int Width_null = -1, Height_null = -1;
 }

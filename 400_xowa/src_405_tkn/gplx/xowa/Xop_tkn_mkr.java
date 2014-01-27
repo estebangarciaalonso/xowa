@@ -61,6 +61,7 @@ public class Xop_tkn_mkr {
 	public Xop_ignore_tkn Ignore(int bgn, int end, byte ignore_type)						{return new Xop_ignore_tkn(bgn, end, ignore_type);}
 	public Xop_bry_tkn Bry(int bgn, int end, byte[] bry)									{return new Xop_bry_tkn(bgn, end, bry);}
 	public Xop_under_tkn Under(int bgn, int end, int v)										{return new Xop_under_tkn(bgn, end, v);}
+<<<<<<< HEAD
 	public gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd Xowa_cmd_nde()								{return new gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd();}
 	public gplx.xowa.xtns.poems.Poem_nde Poem_nde()										{return new gplx.xowa.xtns.poems.Poem_nde();}
 	public Xtn_ref_nde Ref_nde()															{return new Xtn_ref_nde();}
@@ -79,6 +80,26 @@ public class Xop_tkn_mkr {
 	public gplx.xowa.xtns.inputBox.Xtn_inputbox_nde Inputbox_nde()							{return new gplx.xowa.xtns.inputBox.Xtn_inputbox_nde();}
 	public gplx.xowa.xtns.translates.Xop_translate_xnde Translate()							{return new gplx.xowa.xtns.translates.Xop_translate_xnde();}
 	public gplx.xowa.xtns.translates.Xop_languages_xnde Languages()							{return new gplx.xowa.xtns.translates.Xop_languages_xnde();}
+=======
+	public gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd Xnde_xowa_cmd()							{return new gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd();}
+	public gplx.xowa.xtns.poems.Poem_nde Xnde_poem()										{return new gplx.xowa.xtns.poems.Poem_nde();}
+	public Xtn_ref_nde Xnde_ref()															{return new Xtn_ref_nde();}
+	public Xtn_references_nde Xnde_references()												{return new Xtn_references_nde();}
+	public gplx.xowa.xtns.gallery.Gallery_nde Xnde_gallery()							{return new gplx.xowa.xtns.gallery.Gallery_nde();}
+	public gplx.xowa.xtns.imageMap.Xop_imageMap_xnde Xnde_imageMap()						{return new gplx.xowa.xtns.imageMap.Xop_imageMap_xnde();}
+	public gplx.xowa.xtns.hiero.Xtn_hiero_nde Xnde_hiero()									{return new gplx.xowa.xtns.hiero.Xtn_hiero_nde();}
+	public gplx.xowa.xtns.proofreadPage.Pp_pages_nde Xnde_pages()							{return new gplx.xowa.xtns.proofreadPage.Pp_pages_nde();}
+	public gplx.xowa.xtns.proofreadPage.Pp_pagelist_nde Xnde_pagelist()						{return new gplx.xowa.xtns.proofreadPage.Pp_pagelist_nde();}
+	public gplx.xowa.xtns.lst.Lst_section_nde Xnde_section()								{return new gplx.xowa.xtns.lst.Lst_section_nde();}
+	public gplx.xowa.xtns.categoryList.Xtn_categorylist_nde Xnde_categoryList()				{return new gplx.xowa.xtns.categoryList.Xtn_categorylist_nde();}
+	public gplx.xowa.xtns.dynamicPageList.Dpl_xnde Xnde_dynamicPageList()					{return new gplx.xowa.xtns.dynamicPageList.Dpl_xnde();}
+	public gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde Xnde_syntaxHighlight()	{return new gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde();}
+	public gplx.xowa.xtns.templateData.Xtn_templateData_nde Xnde_templateData()				{return new gplx.xowa.xtns.templateData.Xtn_templateData_nde();}
+	public gplx.xowa.xtns.scores.Xtn_score Xnde_score()										{return new gplx.xowa.xtns.scores.Xtn_score();}
+	public gplx.xowa.xtns.inputBox.Xtn_inputbox_nde Xnde_inputbox()							{return new gplx.xowa.xtns.inputBox.Xtn_inputbox_nde();}
+	public gplx.xowa.xtns.translates.Xop_translate_xnde Xnde_translate()					{return new gplx.xowa.xtns.translates.Xop_translate_xnde();}
+	public gplx.xowa.xtns.translates.Xop_languages_xnde Xnde_languages()					{return new gplx.xowa.xtns.translates.Xop_languages_xnde();}
+>>>>>>> v1.1.4.1
 	public gplx.xowa.xtns.translates.Xop_tvar_tkn Tvar(int tkn_bgn, int tkn_end, int key_bgn, int key_end, int txt_bgn, int txt_end) {return new gplx.xowa.xtns.translates.Xop_tvar_tkn(tkn_bgn, tkn_end, key_bgn, key_end, txt_bgn, txt_end);}
 	public gplx.xowa.langs.vnts.Xop_vnt_tkn Vnt(int bgn_lhs, int bgn_rhs)					{return new gplx.xowa.langs.vnts.Xop_vnt_tkn(bgn_lhs, bgn_rhs);}
 	public gplx.xowa.langs.vnts.Xop_vnt_eqgt_tkn Vnt_eqgt(int bgn, int end)					{return new gplx.xowa.langs.vnts.Xop_vnt_eqgt_tkn(bgn, end);}

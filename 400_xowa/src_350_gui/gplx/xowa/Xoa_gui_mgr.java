@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.gfui.*; import gplx.xowa.specials.search.*; import gplx.xowa.gui.menus.*; import gplx.xowa.gui.cmds.*;
+import gplx.xowa.gui.wins.url_macros.*;
 public class Xoa_gui_mgr implements GfoInvkAble {
 	public Xoa_gui_mgr(Xoa_app app) {
 		this.app = app;
@@ -36,6 +37,7 @@ public class Xoa_gui_mgr implements GfoInvkAble {
 	public Xoa_html_mgr Html_mgr() {return html_mgr;} private Xoa_html_mgr html_mgr;
 	public Xog_search_suggest_mgr Search_suggest_mgr() {return search_suggest_mgr;} private Xog_search_suggest_mgr search_suggest_mgr;
 	public Xog_menu_mgr Menu_mgr() {return menu_mgr;} private Xog_menu_mgr menu_mgr;
+	public Xog_url_macro_mgr Url_macro_mgr() {return url_macro_mgr;} private Xog_url_macro_mgr url_macro_mgr = new Xog_url_macro_mgr();
 	public void Show_prog() {
 		GfuiWin memo_win = kit.New_win_utl("memo_win", main_win.Win());
 		GfuiTextBox memo_txt = kit.New_text_box("memo_txt", memo_win, KeyVal_.new_(GfuiTextBox_.Ctor_Memo, true));
@@ -74,11 +76,12 @@ public class Xoa_gui_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_search_suggest))		return search_suggest_mgr;
 		else if	(ctx.Match(k, Invk_menus))				return menu_mgr;
 		else if	(ctx.Match(k, Invk_cmds))				return cmd_mgr;
+		else if	(ctx.Match(k, Invk_url_macros))			return url_macro_mgr;
 		else throw Err_mgr._.unhandled_(k);
 		return this;
 	}
 	private static final String Invk_kit = "kit", Invk_kit_ = "kit_", Invk_browser_type = "browser_type_", Invk_xul_runner_path_ = "xul_runner_path_", Invk_run = "run", Invk_bindings = "bindings", Invk_main_win = "main_win", Invk_win_opts = "win_opts", Invk_layout = "layout", Invk_html = "html"
-		, Invk_search_suggest = "search_suggest", Invk_menus = "menus", Invk_cmds = "cmds";
+		, Invk_search_suggest = "search_suggest", Invk_menus = "menus", Invk_cmds = "cmds", Invk_url_macros = "url_macros";
 	public void Run() {
 		Gfo_log_bfr log_bfr = app.Log_bfr();
 		try {

@@ -37,6 +37,7 @@ class Xob_xfer_temp_itm {
 	public int Orig_ext_id() {return orig_ext_id;} private int orig_ext_id;
 	public double Lnki_upright() {return lnki_upright;} private double lnki_upright;
 	public double Lnki_thumbtime() {return lnki_thumbtime;} private double lnki_thumbtime;
+	public int Lnki_page() {return lnki_page;} private int lnki_page;
 	public void Clear() {		
 		lnki_ext = lnki_type 
 				= orig_repo = orig_media_type_tid = Byte_.MaxValue_127;
@@ -45,7 +46,8 @@ class Xob_xfer_temp_itm {
 				= orig_w = orig_h = orig_page_id = Int_.Neg1;
 		join_ttl =  redirect_src = orig_media_type = null;
 		lnki_upright = Xop_lnki_tkn.Upright_null;
-		lnki_thumbtime = Xop_lnki_tkn.Thumbtime_null;
+		lnki_thumbtime = Xof_doc_thumb.Null;
+		lnki_page = Xof_doc_page.Null;
 	}
 	public void Load(DataRdr rdr) {
 		lnki_id			= rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_id);
@@ -55,7 +57,8 @@ class Xob_xfer_temp_itm {
 		lnki_w			= rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_w);
 		lnki_h			= rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_h);
 		lnki_upright	= rdr.ReadDouble(Xob_lnki_regy_tbl.Fld_lnki_upright);
-		lnki_thumbtime	= rdr.ReadDouble(Xob_lnki_regy_tbl.Fld_lnki_thumbtime);
+		lnki_thumbtime	= Xof_doc_thumb.Db_load_double(rdr, Xob_lnki_regy_tbl.Fld_lnki_thumbtime);
+		lnki_page		= rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_page);
 		lnki_count		= rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_count);
 		orig_repo		= rdr.ReadByte(Xob_orig_regy_tbl.Fld_orig_repo);
 		orig_page_id	= rdr.ReadIntOr(Xob_orig_regy_tbl.Fld_orig_page_id, -1);
@@ -82,6 +85,7 @@ class Xob_xfer_temp_itm {
 //			}
 		lnki_ext = orig_ext_id;
 		orig_media_type_tid = Xof_media_type.Xto_byte(orig_media_type);
+<<<<<<< HEAD
 		if (	lnki_thumbtime != Xop_lnki_tkn.Thumbtime_null) {		// thumbtime defined
 			boolean lnki_thumbtime_reset = true;
 			if	(	orig_media_type_tid == Xof_media_type.Tid_video 	// video can have thumbtime
@@ -91,6 +95,15 @@ class Xob_xfer_temp_itm {
 			if (lnki_thumbtime_reset)
 				lnki_thumbtime = Xop_lnki_tkn.Thumbtime_null;			// set thumbtime to NULL; actually occurs for one file: [[File:Crash.arp.600pix.jpg|thumb|thumbtime=2]]
 		}
+=======
+		if (	Xof_doc_thumb.Null_n(lnki_thumbtime)				// thumbtime defined
+			&&	orig_media_type_tid != Xof_media_type.Tid_video 		// video can have thumbtime
+			)
+			lnki_thumbtime = Xof_doc_thumb.Null;					// set thumbtime to NULL; actually occurs for one file: [[File:Crash.arp.600pix.jpg|thumb|thumbtime=2]]
+		if (	Xof_doc_page.Null_n(lnki_page)
+			&&	!Xof_ext_.Id_supports_page(orig_ext_id))				// djvu / pdf can have page parameters, which are currently being stored in thumbtime; DATE:2014-01-18
+			lnki_page = Xof_doc_page.Null;
+>>>>>>> v1.1.4.1
 		if (orig_page_id == -1) {	// no orig found (i.e.: not in local's / remote's image.sql);
 			chk_tid = Chk_tid_orig_page_id_is_null;
 			return false;
@@ -107,6 +120,6 @@ class Xob_xfer_temp_itm {
 		return true;
 	}
 	public void Insert(Db_stmt stmt, Xof_img_size img_size) {
-		Xob_xfer_temp_tbl.Insert(stmt, lnki_id, lnki_page_id, orig_repo, orig_page_id, join_ttl, redirect_src, lnki_ext, lnki_type, orig_media_type, img_size.File_is_orig(), orig_w, orig_h, img_size.File_w(), img_size.File_h(), img_size.Html_w(), img_size.Html_h(), lnki_thumbtime, lnki_count);
+		Xob_xfer_temp_tbl.Insert(stmt, lnki_id, lnki_page_id, orig_repo, orig_page_id, join_ttl, redirect_src, lnki_ext, lnki_type, orig_media_type, img_size.File_is_orig(), orig_w, orig_h, img_size.File_w(), img_size.File_h(), img_size.Html_w(), img_size.Html_h(), lnki_thumbtime, lnki_page, lnki_count);
 	}
 }

@@ -45,7 +45,7 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 		itm.Init(key, dir, fil, bin);
 		bin_hash.Add(key, itm);
 	}
-	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int thm_w, int thm_h, int thumbtime, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
+	public void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int thm_w, int thm_h, double thumbtime, int page, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr) {
 		byte[] key = Key_bld_thm(dir, fil, thm_w, thumbtime);
 		byte[] bin = gplx.ios.Io_stream_rdr_.Load_all_as_bry(bin_rdr);
 		Fsdb_xtn_thm_itm_mem itm = new Fsdb_xtn_thm_itm_mem();
@@ -92,12 +92,12 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 	public gplx.ios.Io_stream_rdr Bin_wkr_get_as_rdr(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w) {
 		byte[] wiki = itm.Orig_wiki();
 		byte[] ttl = itm.Lnki_ttl();
-		int thumbtime = itm.Lnki_thumbtime(); 
+		double thumbtime = itm.Lnki_thumbtime(); 
 		byte[] key = Gen_key(is_thumb, itm.Lnki_ext(), wiki, ttl, w, thumbtime);
 		Fsdb_mem_itm mem_itm = (Fsdb_mem_itm)bin_hash.Get_by_bry(key);
 		return mem_itm == null ? gplx.ios.Io_stream_rdr_.Null : gplx.ios.Io_stream_rdr_.mem_(mem_itm.Bin());
 	}
-	private byte[] Gen_key(boolean is_thumb, Xof_ext ext, byte[] wiki, byte[] ttl, int w, int thumbtime) {
+	private byte[] Gen_key(boolean is_thumb, Xof_ext ext, byte[] wiki, byte[] ttl, int w, double thumbtime) {
 		return ext.Id_is_audio_strict()
 			? Key_bld_fil(wiki, ttl)					// use fil for audio b/c it doesn't have w, thumbtime
 			: Key_bld_thm(wiki, ttl, w, thumbtime)		// use thm for everything else, even if thumb is not specified; [[File:A.png]] -> enwiki|A.png|-1,-1
@@ -106,7 +106,7 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 	public boolean Bin_wkr_get_to_url(ListAdp temp_files, Xof_fsdb_itm itm, boolean is_thumb, int w, Io_url bin_url) {
 		byte[] wiki = itm.Orig_wiki();
 		byte[] ttl = itm.Lnki_ttl();
-		int thumbtime = itm.Lnki_thumbtime(); 
+		double thumbtime = itm.Lnki_thumbtime(); 
 		byte[] key = Gen_key(is_thumb, itm.Lnki_ext(), wiki, ttl, w, thumbtime);
 		Fsdb_mem_itm mem_itm = (Fsdb_mem_itm)bin_hash.Get_by_bry(key);
 		if (mem_itm == null) return false;
@@ -119,12 +119,12 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 			.Add(ttl);
 		return bin_key_bfr.XtoAryAndClear();
 	}
-	private byte[] Key_bld_thm(byte[] wiki, byte[] ttl, int w, int thumbtime) {
+	private byte[] Key_bld_thm(byte[] wiki, byte[] ttl, int w, double thumbtime) {
 		bin_key_bfr	.Add_byte(Byte_ascii.Ltr_t).Add_byte_pipe()
 			.Add(wiki).Add_byte_pipe()
 			.Add(ttl).Add_byte_pipe()
 			.Add_int_variable(w).Add_byte_pipe()
-			.Add_int_variable(thumbtime);
+			.Add_int_variable(Xof_doc_thumb.X_int(thumbtime));
 		;
 		return bin_key_bfr.XtoAryAndClear();
 	}
@@ -143,7 +143,7 @@ class Fsdb_xtn_thm_itm_mem extends Fsdb_xtn_thm_itm implements Fsdb_mem_itm {	pu
 	public byte[] Wiki() {return wiki;} private byte[] wiki;
 	public byte[] Ttl() {return ttl;} private byte[] ttl;
 	public byte[] Bin() {return bin;} private byte[] bin;
-	public void Init(byte[] mem_key, byte[] wiki, byte[] ttl, int w, int h, int thumbtime, byte[] bin) {
+	public void Init(byte[] mem_key, byte[] wiki, byte[] ttl, int w, int h, double thumbtime, byte[] bin) {
 		this.mem_key = mem_key; this.wiki = wiki; this.ttl = ttl; this.bin = bin;
 		this.Width_(w); this.Height_(h);
 		this.Thumbtime_(thumbtime);

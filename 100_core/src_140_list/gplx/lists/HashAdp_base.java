@@ -30,9 +30,14 @@ public abstract class HashAdp_base implements HashAdp {
 	}
 	public void Add(Object key, Object val) {Add_base(key, val);}
 	public void AddKeyVal(Object val) {Add_base(val, val);}
-	@gplx.Virtual public void AddReplace(Object key, Object val) {
+	public void AddReplace(Object key, Object val) {
 		Object existing = Fetch_base(key); if (existing != null) Del(key);	// overwrite if exists
 		Add(key, val);
+	}
+	public boolean Add_if_new(Object key, Object val) {
+		if (Has(key)) return false;
+		Add(key, val);
+		return true;
 	}
 	@gplx.Virtual public void Del(Object key) {Del_base(key);}
 	protected Object FetchOrFail_base(Object key) {

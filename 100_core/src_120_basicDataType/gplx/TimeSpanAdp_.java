@@ -33,37 +33,51 @@ public class TimeSpanAdp_ {
 		return TimeSpanAdp_.fracs_(fracs);
 	}
 	public static TimeSpanAdp from_(long bgn) {return TimeSpanAdp_.fracs_(Env_.TickCount() - bgn);}
-	public static TimeSpanAdp parse_(String raw) {String TimeSpanAdpType = "TimeSpanAdp";
-		char[] ary = String_.XtoCharAry(raw);
-		int sign = 1, frc = 0, sec = 0, min = 0, hou = 0, colonIdx = 0; int val = 0, tmp = 0, multiple = 1;
-		int aryLen = Array_.Len(ary);
-		for (int i = aryLen; i > 0; i --) {	// start from end; fracs should be lowest unit
-			char c = ary[i - 1];
-			tmp = Char_.To_int_or(c, Int_.MinValue);
-			if (tmp != Int_.MinValue) {	// is a number
-				val = (multiple == 1) ? tmp : val + (tmp * multiple);
-				switch (colonIdx) {
-					case 0: sec = val; break; case 1: min = val; break; case 2: hou = val; break;
-					default: throw Err_.parse_msg_(TimeSpanAdpType, raw, "only hour:minute:second supported for ':' separator; ':' count should be <= 2").Add("colonIdx", colonIdx);
-				}
-				multiple *= 10;
+	public static final long parse_null = Long_.MinValue;
+	public static TimeSpanAdp parse_(String raw) {
+		byte[] bry = ByteAry_.new_utf8_(raw);
+		long fracs = parse_to_fracs(bry, 0, bry.length, false);
+		return fracs == parse_null ? null : TimeSpanAdp_.fracs_(fracs);
+	}
+	public static long parse_to_fracs(byte[] raw, int bgn, int end, boolean fail_if_ws) {
+		int sign = 1, val_f = 0, val_s = 0, val_m = 0, val_h = 0, colon_pos = 0, unit_val = 0, unit_multiple = 1;
+		for (int i = end - 1; i >= bgn; i--) {	// start from end; fracs should be lowest unit
+			byte b = raw[i];
+			switch (b) {
+				case Byte_ascii.Num_0: case Byte_ascii.Num_1: case Byte_ascii.Num_2: case Byte_ascii.Num_3: case Byte_ascii.Num_4:
+				case Byte_ascii.Num_5: case Byte_ascii.Num_6: case Byte_ascii.Num_7: case Byte_ascii.Num_8: case Byte_ascii.Num_9:
+					int unit_digit = Byte_ascii.X_to_digit(b);
+					unit_val = (unit_multiple == 1) ? unit_digit : unit_val + (unit_digit * unit_multiple);
+					switch (colon_pos) {
+						case 0:		val_s = unit_val; break;
+						case 1:		val_m = unit_val; break;
+						case 2:		val_h = unit_val; break;
+						default:	return parse_null;	// only hour:minute:second supported for ':' separator; ':' count should be <= 2
+					}
+					unit_multiple *= 10;
+					break;
+				case Byte_ascii.Dot:
+					double factor = (double)1000 / (double)unit_multiple;	// factor is necessary to handle non-standard decimals; ex: .1 -> 100; .00199 -> .001
+					val_f = (int)((double)val_s * factor);	// move val_s unit_val to val_f; logic is indirect, b/c of differing inputs: "123" means 123 seconds; ".123" means 123 fractionals
+					val_s = 0;
+					unit_multiple = 1;
+					break;
+				case Byte_ascii.Colon:
+					colon_pos++;
+					unit_multiple = 1;
+					break;
+				case Byte_ascii.Dash:
+					if	(i == 0 && unit_val > 0)		// only if first char && unit_val > 0 
+						sign = -1;
+					break;
+				case Byte_ascii.Space: case Byte_ascii.Tab: case Byte_ascii.NewLine: case Byte_ascii.CarriageReturn:
+					if (fail_if_ws) return parse_null;
+					break;
+				default:
+					return parse_null;				// invalid char; return null;
 			}
-			else if (c == '.') {
-				double factor = (double)1000 / (double)multiple;// factor is necessary to handle non-standard decimals; ex: .1 -> 100; .00199 -> .001
-				frc = (int)((double)sec * factor); sec = 0;		// move sec val to frc; logic is indirect, b/c of differing inputs: "123" means 123 seconds; ".123" means 123 fractionals
-				multiple = 1;
-			}
-			else if (c == ':') {
-				colonIdx++;
-				multiple = 1;
-			}
-			else if (c == '-' && i == 1 && val >= 0) {	// only if first char && val >=0 
-				sign = -1;
-			}
-			else throw Err_.parse_msg_(TimeSpanAdpType, raw, "char is not valid").Add("char", c).Add("idx", i);
 		}
-		long fracs = sign * (frc + (sec * Divisors[1]) + (min * Divisors[2]) + (hou * Divisors[3]));
-		return new TimeSpanAdp(fracs);
+		return sign * (val_f + (val_s * Divisors[1]) + (val_m * Divisors[2]) + (val_h * Divisors[3]));
 	}
 	@gplx.Internal protected static String XtoStr(long frc, String fmt) {
 		String_bldr sb = String_bldr_.new_();
@@ -143,4 +157,5 @@ public class TimeSpanAdp_ {
 	static int[] ZeroPadding	= {3, 2, 2, 2,};
 	static String[] Sprs	= {".", MajorDelimiter, MajorDelimiter, "",};
 	public static TimeSpanAdp cast_(Object arg) {try {return (TimeSpanAdp)arg;} catch(Exception exc) {throw Err_.type_mismatch_exc_(exc, TimeSpanAdp.class, arg);}}
+	public static final double Ratio_f_to_s = 1000;
 }

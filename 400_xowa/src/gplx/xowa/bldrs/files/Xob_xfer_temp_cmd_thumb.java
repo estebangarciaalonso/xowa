@@ -50,6 +50,7 @@ public class Xob_xfer_temp_cmd_thumb extends Xob_itm_basic_base implements Xob_c
 	,	",       l.lnki_h"
 	,	",       l.lnki_upright"
 	,	",       l.lnki_thumbtime"
+	,	",       l.lnki_page"
 	,	",       l.lnki_count"
 	,	",       o.orig_repo"
 	,	",       o.orig_page_id"

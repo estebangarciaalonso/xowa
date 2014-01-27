@@ -31,6 +31,7 @@ class HashAdp_null implements HashAdp {
 	public void Add(Object key, Object val) {}
 	public void AddKeyVal(Object val) {}
 	public void AddReplace(Object key, Object val) {}
+	public boolean Add_if_new(Object key, Object val) {return false;}
 	public void Del(Object key) {}
 	public void Clear() {}
 	public java.util.Iterator iterator() {return gplx.lists.Iterator_null._;}

@@ -99,6 +99,15 @@ class Arg_bldr {
 					itm_is_static = false;
 					if (ws_bgn_chk) ws_bgn_chk = false; else ws_end_idx = -1;		// INLINE: AdjustWsForTxtTkn
 					break;
+				case Xop_tkn_itm_.Tid_xnde:
+					Xop_xnde_tkn sub_as_xnde = (Xop_xnde_tkn)sub;
+					switch (sub_as_xnde.Tag().Id()) {
+						case Xop_xnde_tag_.Tid_noinclude: case Xop_xnde_tag_.Tid_includeonly: case Xop_xnde_tag_.Tid_onlyinclude:
+							itm_is_static = false;
+							break;
+					}
+					if (ws_bgn_chk) ws_bgn_chk = false; else ws_end_idx = -1;		// INLINE: AdjustWsForTxtTkn
+					break;
 				default:
 					if (ws_bgn_chk) ws_bgn_chk = false; else ws_end_idx = -1;		// INLINE: AdjustWsForTxtTkn
 					break;

@@ -59,7 +59,7 @@ class Xof_wiki_orig_tbl_evaluator {
 			byte regy_itm_status = regy_itm.Status();
 			fsdb_itm.Lnki_ext_(Xof_ext_.new_by_id_(regy_itm.Orig_ext()));	// overwrite ext_id with whatever's in file_orig; needed for ogg -> oga / ogv
 			fsdb_itm.Rslt_reg_(regy_itm_status);
-			if (regy_itm_status != Xof_wiki_orig_wkr_.Tid_found_orig) continue;
+			if (regy_itm_status > Xof_wiki_orig_wkr_.Tid_found_orig) continue;	// only ignore if marked missing; DATE:2014-02-01
 			byte repo_id = regy_itm.Orig_repo();
 			Xof_repo_itm repo = null;
 			if (repo_id <= Xof_repo_itm.Repo_local) { // bounds check

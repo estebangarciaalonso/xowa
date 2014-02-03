@@ -35,7 +35,7 @@ public class Xow_html_mgr implements GfoInvkAble {
 	public boolean Tidy_enabled() {return tidy_enabled;} public Xow_html_mgr Tidy_enabled_(boolean v) {tidy_enabled = v; return this;} private boolean tidy_enabled;
 	public Xoh_wiki_article Output_mgr() {return output_mgr;} private Xoh_wiki_article output_mgr;
 	public boolean Tbl_para() {return tbl_para;} public Xow_html_mgr Tbl_para_y_() {tbl_para = true; return this;} public Xow_html_mgr Tbl_para_n_() {tbl_para = false; return this;} private boolean tbl_para = true;
-	public int Img_thumb_width() {return img_thumb_width;} public Xow_html_mgr Img_thumb_width_(int v) {img_thumb_width = v; return this;} private int img_thumb_width = 220;
+	public int Img_thumb_width() {return img_thumb_width;} private int img_thumb_width = 220;
 	public byte[] Img_media_play_btn() {return img_media_play_btn;} private byte[] img_media_play_btn;
 	public byte[] Img_media_info_btn() {return img_media_info_btn;} private byte[] img_media_info_btn;
 	public byte[] Img_thumb_magnify() {return img_thumb_magnify;} private byte[] img_thumb_magnify;

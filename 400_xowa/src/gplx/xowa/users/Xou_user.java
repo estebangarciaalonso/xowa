@@ -57,7 +57,7 @@ public class Xou_user implements GfoInvkAble {
 	}
 	public void Bookmarks_add(Xoa_page page) {
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_k004();
-		bookmarks_add_fmtr.Bld_bfr_many(tmp_bfr, page.Wiki().Domain_bry(), page.Page_ttl().Full_txt());
+		bookmarks_add_fmtr.Bld_bfr_many(tmp_bfr, page.Wiki().Domain_bry(), page.Ttl().Full_txt());
 		byte[] new_entry = tmp_bfr.Mkr_rls().XtoAryAndClear();
 		Xoa_ttl bookmarks_ttl = Xoa_ttl.parse_(wiki, Bry_data_bookmarks);
 		Xoa_page bookmarks_page = wiki.Data_mgr().Get_page(bookmarks_ttl, false);

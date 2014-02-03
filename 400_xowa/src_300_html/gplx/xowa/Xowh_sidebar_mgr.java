@@ -72,7 +72,7 @@ public class Xowh_sidebar_mgr implements GfoInvkAble {
 //						href_val = tmp_bfr.XtoAryAndClear();
 //					}
 //					else {
-//						app.Href_parser().Parse(tmp_href, href_val, wiki, Xoa_page.Bry_main_page);
+//						app.Href_parser().Parse(tmp_href, href_val, wiki, Xoa_page_.Main_page_bry);
 //						switch (tmp_href.Tid()) {
 //							case Xoh_href.Tid_http:
 //								break;

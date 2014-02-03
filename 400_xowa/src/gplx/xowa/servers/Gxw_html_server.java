@@ -18,8 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.servers; import gplx.*; import gplx.xowa.*;
 import gplx.gfui.*;
 public class Gxw_html_server implements Gxw_html {
-	private Gfui_html_cfg cfg = new Gfui_html_cfg();
-	public Gxw_html_server(Xosrv_server srv) {this.wtr = srv.Wtr(); usr_dlg = srv.App().Usr_dlg();} private Xosrv_socket_wtr wtr; private Gfo_usr_dlg usr_dlg;
+	private Xosrv_socket_wtr wtr; private Gfo_usr_dlg usr_dlg;
+	private Gfui_html_cfg cfg;
+	public Gxw_html_server(Xosrv_server srv) {
+		this.wtr = srv.Wtr(); usr_dlg = srv.App().Usr_dlg();
+		cfg = Swt_kit._.Html_cfg();
+	} 
 	public String		Html_doc_html() {return Exec(cfg.Doc_html());}
 	public void			Html_doc_html_(String s) {Exec("location.reload(true);");}	// HACK: force reload of page
 	public String		Html_doc_selected_get(String site, String page) {return Exec(cfg.Doc_selected_get(site, page));}
@@ -53,8 +57,12 @@ public class Gxw_html_server implements Gxw_html {
 	public GxwCbkHost	Host() {throw Err_.not_implemented_();} public void Host_set(GxwCbkHost host) {throw Err_.not_implemented_();}
 	public String		TextVal() {throw Err_.not_implemented_();} public void TextVal_set(String v) {throw Err_.not_implemented_();} 
 			public void			EnableDoubleBuffering() {throw Err_.not_implemented_();}
-	private boolean Exec_as_bool(String s) {return Bool_.parse_(Exec(s));}
+	private boolean Exec_as_bool(String s) {
+		Exec(s);
+		return true;	// NOTE: js is async, so immediate return value is not possible; return true for now;
+	}
 	private String Exec(String s) {
+		s = "(function () {" + s + "})();"; // NOTE: dependent on firefox addon which does 'var result = Function("with(arguments[0]){return "+cmd_text+"}")(session.window);'; DATE:2014-01-28
 		Xosrv_msg msg = Xosrv_msg.new_(Xosrv_cmd_types.Browser_exec, ByteAry_.Empty, ByteAry_.Empty, ByteAry_.Empty, ByteAry_.Empty, ByteAry_.new_utf8_(s));
 		usr_dlg.Note_many("", "", "sending browser.js: msg=~{0}", s);
 		wtr.Write(msg);

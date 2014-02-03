@@ -23,7 +23,7 @@ public class Dpl_xnde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 	public boolean Xtn_literal() {return false;}
 	public void Xatr_parse(Xow_wiki wiki, byte[] src, Xop_xatr_itm xatr, Object xatr_key_obj) {} // NOTE: <dynamicPageList> has no attributes
 	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
-		itm.Parse(wiki, ctx.Page().Page_ttl().Full_txt(), src, xnde);
+		itm.Parse(wiki, ctx, ctx.Page().Ttl().Full_txt(), src, xnde);
 		Dpl_page_finder.Find_pages(pages, wiki, itm);
 		if (itm.Sort_ascending() != Bool_.__byte)
 			pages.SortBy(new Dpl_page_sorter(itm));

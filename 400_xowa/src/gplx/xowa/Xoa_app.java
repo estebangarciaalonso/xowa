@@ -196,15 +196,23 @@ public class Xoa_app implements GfoInvkAble {
 	public static final String Invk_term_cbk = "term_cbk";
 }
 class Xoa_shell implements GfoInvkAble {
+	private boolean fetch_page_exec_async = true;
 	public Xoa_shell(Xoa_app app) {this.app = app;} private Xoa_app app;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_fetch_page))				return String_.new_utf8_(app.Gui_mgr().Main_win().Exec_app_retrieve_by_url(m.ReadStr("url"), m.ReadStrOr("output_type", "html")));
+		if		(ctx.Match(k, Invk_fetch_page))				return Fetch_page(m);
 		else if	(ctx.Match(k, Invk_chars_per_line_max_))	Chars_per_line_max_(m.ReadInt("v"));
+		else if	(ctx.Match(k, Invk_fetch_page_exec_async_))	fetch_page_exec_async = m.ReadYn("v");
 		else return GfoInvkAble_.Rv_unhandled;
 		return this;
+	}
+	private String Fetch_page(GfoMsg m) {
+		String rv = String_.new_utf8_(app.Gui_mgr().Main_win().Exec_app_retrieve_by_url(m.ReadStr("url"), m.ReadStrOr("output_type", "html")));
+		if (fetch_page_exec_async)
+			app.Gui_mgr().Main_win().Exec_reload_imgs();
+		return rv;
 	}
 	private void Chars_per_line_max_(int v) {
 		ConsoleAdp._.CharsPerLineMax_set(v);
 	}
-	private static final String Invk_fetch_page = "fetch_page", Invk_chars_per_line_max_ = "chars_per_line_max_";
+	private static final String Invk_fetch_page = "fetch_page", Invk_chars_per_line_max_ = "chars_per_line_max_", Invk_fetch_page_exec_async_ = "fetch_page_exec_async_";
 }

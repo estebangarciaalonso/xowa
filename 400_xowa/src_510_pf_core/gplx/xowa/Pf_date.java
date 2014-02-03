@@ -23,7 +23,7 @@ class Pf_date_int extends Pf_func_base {
 	    switch (dateType) {
 	        case DateType_utc: date = DateAdp_.Now().XtoUtc(); break;
 	        case DateType_lcl: date = DateAdp_.Now(); break;
-	        case DateType_rev: date = ctx.Page().Page_date(); break;
+	        case DateType_rev: date = ctx.Page().Modified_on(); break;
 			default: throw Err_.unhandled(dateType);
 	    }
 		switch (id) {
@@ -97,7 +97,7 @@ class Pf_date_name extends Pf_func_base {
 	    switch (dateType) {
 	        case Pf_date_int.DateType_utc: date = DateAdp_.Now().XtoUtc(); break;
 	        case Pf_date_int.DateType_lcl: date = DateAdp_.Now(); break;
-	        case Pf_date_int.DateType_rev: date = ctx.Page().Page_date(); break;
+	        case Pf_date_int.DateType_rev: date = ctx.Page().Modified_on(); break;
 			default: throw Err_.unhandled(dateType);
 	    }
 		byte[] val = ctx.Wiki().Msg_mgr().Val_by_id(baseIdx + date.Segment(segIdx));

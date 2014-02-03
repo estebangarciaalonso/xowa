@@ -33,7 +33,7 @@ public class Wdata_pf_property extends Pf_func_base {
 		Wdata_wiki_mgr wdata_mgr = app.Wiki_mgr().Wdata_mgr();
 		if (!wdata_mgr.Enabled()) return;
 		Xow_wiki wiki = ctx.Wiki();
-		Xoa_ttl ttl = ctx.Page().Page_ttl();
+		Xoa_ttl ttl = ctx.Page().Ttl();
 
 		Wdata_pf_property_data data = new Wdata_pf_property_data();
 		data.Parse(ctx, src, caller, self, this, id);
@@ -86,7 +86,7 @@ class Wdata_pf_property_data {
 			if (nde_key_bgn == nde_key_end && nde_key_bgn == -1) continue;	// null arg; ignore, else will throw warning below; EX: {{#property:p1|}}; DATE:2013-11-15
 			Object o = Atr_keys.Get_by_mid(src, nde_key_bgn, nde_key_end);
 			if (o == null) {
-				ctx.App().Usr_dlg().Warn_many("", "", "unknown key for property: ~{0} ~{1}", String_.new_utf8_(ctx.Page().Page_ttl().Full_txt()), String_.new_utf8_(src, self.Src_bgn(), self.Src_end())); 
+				ctx.App().Usr_dlg().Warn_many("", "", "unknown key for property: ~{0} ~{1}", String_.new_utf8_(ctx.Page().Ttl().Full_txt()), String_.new_utf8_(src, self.Src_bgn(), self.Src_end())); 
 				continue;
 			}
 			nde.Val_tkn().Tmpl_evaluate(ctx, src, self, tmp_bfr);

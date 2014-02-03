@@ -80,7 +80,7 @@ public class Xow_lang_mgr {
 			byte[] ttl_bry = ttl.Page_txt_w_anchor();
 			boolean empty_xwiki = false;
 			if (ByteAry_.Len_eq_0(ttl_bry)) {
-				ttl_bry = wiki.Ctx().Page().Page_ttl().Page_txt();
+				ttl_bry = wiki.Ctx().Page().Ttl().Page_txt();
 				empty_xwiki = true;
 			}			
 			itm.Atrs_set(ttl_bry, empty_xwiki);

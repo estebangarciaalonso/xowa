@@ -25,7 +25,7 @@ public class Xog_cmds_file implements GfoInvkAble {
 	public void Save_as() {
 		gplx.gfui.Gfui_html html_box = app.Gui_mgr().Main_win().Html_box();
 		Xoa_page page = app.Gui_mgr().Main_win().Page();
-		String file_name = app.Url_converter_fsys_safe().Encode_str(String_.new_utf8_(page.Page_ttl().Full_url())) + ".html";			
+		String file_name = app.Url_converter_fsys_safe().Encode_str(String_.new_utf8_(page.Ttl().Full_url())) + ".html";			
 		String file_url = app.Gui_mgr().Kit().New_dlg_file("Select file to save to:").Init_file_(file_name).Ask();
 		if (String_.Len_eq_0(file_url)) return;
 		Io_mgr._.SaveFilStr(file_url, html_box.Text());

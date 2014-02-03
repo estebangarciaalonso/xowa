@@ -26,7 +26,6 @@ public interface Arg_itm_tkn extends Xop_tkn_itm {
 	Arg_itm_tkn Dat_ary_(byte[] dat_ary);
 	byte[] Dat_to_bry(byte[] src);
 	byte Itm_static(); Arg_itm_tkn Itm_static_(boolean v);
-	
 	Arg_itm_tkn Subs_add_ary(Xop_tkn_itm... ary);
 }
 class Arg_itm_tkn_null extends Xop_tkn_null implements Arg_itm_tkn {	public int Dat_bgn() {return -1;}

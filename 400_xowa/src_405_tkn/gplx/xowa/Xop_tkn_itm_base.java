@@ -103,6 +103,13 @@ public abstract class Xop_tkn_itm_base implements Xop_tkn_itm {
 		}
 		tkn.Subs_del_after(nxt_idx);
 	}
+	public void Subs_move(Xop_tkn_itm owner, int sub_idx, int subs_len) {
+		for (int i = sub_idx; i < subs_len; i++) {
+			Xop_tkn_itm sub = owner.Subs_get(i);
+			this.Subs_add(sub);
+		}
+		owner.Subs_del_after(sub_idx);
+	}
 	public Xop_tkn_itm Immutable_clone(Xop_ctx ctx, Xop_tkn_itm tkn, int sub_idx) {
 		int pos_idx = sub_idx * 2;
 		Xop_tkn_itm rv = tkn.Tkn_clone(ctx, subs_pos_ary[pos_idx], subs_pos_ary[pos_idx + 1]);

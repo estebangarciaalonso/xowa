@@ -31,6 +31,7 @@ class Pp_index_parser {
 		Pp_index_page rv = new Pp_index_page();
 		Inspect_tmpl(rv, src, index_root, index_root.Subs_len(), ns_page_id, 1);
 		sub_parser.Parse_page_wiki(index_root, sub_ctx, tkn_mkr, mid_text, Xop_parser_.Doc_bgn_bos);
+		rv.Src_(mid_text);
 		ctx.Wiki().View_data().Lst_recursed_(false);
 		Inspect_wiki(rv, src, index_root, index_root.Subs_len(), ns_page_id, 1);
 		return rv;
@@ -88,6 +89,8 @@ class Pp_index_parser {
 	}
 }
 class Pp_index_page {
+	public Pp_index_page() {}
+	public byte[] Src() {return src;} public Pp_index_page Src_(byte[] v) {src = v; return this;} private byte[] src;
 	public ListAdp		Pagelist_xndes()	{return pagelist_xndes;} private ListAdp pagelist_xndes = ListAdp_.new_();
 	public ListAdp		Page_ttls()			{return page_ttls;} private ListAdp page_ttls = ListAdp_.new_();
 	public ListAdp		Main_lnkis()		{return main_lnkis;} private ListAdp main_lnkis = ListAdp_.new_();
@@ -96,7 +99,7 @@ class Pp_index_page {
 		int list_len = page_ttls.Count(); if (list_len == 0) return Pp_pages_nde.Ttls_null;
 		ListAdp rv = ListAdp_.new_();
 		Xoa_ttl bgn_page_ttl = new_ttl_(wiki, ns_page_id, bgn_page_bry), end_page_ttl = new_ttl_(wiki, ns_page_id, end_page_bry);
-		boolean add = bgn_page_ttl == Xoa_ttl.Null;	// if from is missing, default to bgn; EX: <pages index=A to="A/5"/>
+		boolean add = bgn_page_ttl == Xoa_ttl.Null;		// if from is missing, default to bgn; EX: <pages index=A to="A/5"/>
 		for (int i = 0; i < list_len; i++) {			// REF.MW:ProofreadPageRenderer|renderPages
 			Xoa_ttl ttl = (Xoa_ttl)page_ttls.FetchAt(i);
 			if (	ttl.Eq_page_db(bgn_page_ttl))	{add = Bool_.Y; bgn_page_ref.Val_(i);}

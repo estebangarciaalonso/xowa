@@ -19,6 +19,7 @@ package gplx.xowa; import gplx.*;
 import gplx.xowa.bldrs.*; import gplx.xowa.apps.*; import gplx.xowa.bldrs.xmls.*;
 import gplx.xowa.bldrs.cfgs.*;
 public class Xob_bldr implements GfoInvkAble {
+	private boolean pause_at_end = false;
 	public Xob_bldr(Xoa_app app) {
 		this.app = app;
 		cmd_mgr = new Xob_cmd_mgr(this);
@@ -65,7 +66,7 @@ public class Xob_bldr implements GfoInvkAble {
 			cmd_mgr.Clear();
 			if (pause_at_end && !Env_.Mode_testing()) {ConsoleAdp._.ReadLine("press enter to continue");}
 		}	catch (Exception e) {throw Err_.err_(e, "error during build: ~{0}", Err_.Message_gplx(e));}
-	}	boolean pause_at_end = true;
+	}
 	private void Cancel() {
 		int cmd_mgr_len = cmd_mgr.Len();
 		for (int i = 0; i < cmd_mgr_len; i++) {

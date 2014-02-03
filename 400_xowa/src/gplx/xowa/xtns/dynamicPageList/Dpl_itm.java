@@ -36,7 +36,11 @@ class Dpl_itm {
 	public byte Sort_tid() {return sort_tid;} private byte sort_tid = Dpl_sort.Tid_categoryadd;
 	public byte Quality_pages() {return quality_pages;} private byte quality_pages;
 	public byte Stable_pages() {return stable_pages;} private byte stable_pages;
-	public void Parse(Xow_wiki wiki, byte[] page_ttl, byte[] src, Xop_xnde_tkn xnde) {	// parse kvs in node; EX:<dpl>category=abc\nredirects=y\n</dpl>
+	private Xop_ctx sub_ctx; private Xop_tkn_mkr sub_tkn_mkr; private Xop_root_tkn sub_root;
+	public void Parse(Xow_wiki wiki, Xop_ctx ctx, byte[] page_ttl, byte[] src, Xop_xnde_tkn xnde) {	// parse kvs in node; EX:<dpl>category=abc\nredirects=y\n</dpl>
+		sub_ctx = Xop_ctx.new_sub_(wiki);
+		sub_tkn_mkr = sub_ctx.Tkn_mkr();
+		sub_root = sub_tkn_mkr.Root(ByteAry_.Empty);
 		int content_bgn = xnde.Tag_open_end(), content_end = xnde.Tag_close_bgn();
 		int pos = content_bgn;
 		int fld_bgn = content_bgn;
@@ -88,6 +92,8 @@ class Dpl_itm {
 	}
 	private static final byte Dlm_fld = Byte_ascii.Eq, Dlm_row = Byte_ascii.NewLine;
 	public void Parse_cmd(Xow_wiki wiki, byte key_id, byte[] val) {
+		sub_root.Clear();
+		val = wiki.Parser().Parse_page_tmpl(sub_root, sub_ctx, sub_tkn_mkr, val);
 		switch (key_id) {
 			case Dpl_itm_keys.Key_category: 			if (ctg_includes == null) ctg_includes = ListAdp_.new_(); ctg_includes.Add(Xoa_ttl.Replace_spaces(val)); break;
 			case Dpl_itm_keys.Key_notcategory:		 	if (ctg_excludes == null) ctg_excludes = ListAdp_.new_(); ctg_excludes.Add(Xoa_ttl.Replace_spaces(val)); break;

@@ -27,6 +27,7 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 	private boolean wdata_enabled = true, xtn_ref_enabled = true;
 	private Xop_log_invoke_wkr invoke_wkr; private Xop_log_property_wkr property_wkr;
 	private int[] ns_ids = Int_.Ary(Xow_ns_.Id_main);// , Xow_ns_.Id_category, Xow_ns_.Id_template
+	private boolean wiki_ns_file_is_case_match_all = true; private Xow_wiki commons_wiki;
 	public Xob_lnki_temp_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
 	@Override public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "file.lnki_temp";
 	@Override public byte Init_redirect() {return Bool_.N_byte;}	// lnki will never be found in a redirect
@@ -46,6 +47,8 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		return provider;
 	}
 	@Override protected void Cmd_bgn_end() {
+		wiki_ns_file_is_case_match_all = Wiki_ns_for_file_is_case_match_all(wiki);	// NOTE: must call after wiki.init
+		commons_wiki = app.Wiki_mgr().Get_by_key_or_make(Xow_wiki_.Domain_commons_bry);
 		Xop_log_mgr log_mgr = ctx.App().Log_mgr();
 		log_mgr.Log_dir_(wiki.Fsys_mgr().Root_dir());	// put log in wiki dir, instead of user.temp
 		invoke_wkr = this.Invoke_wkr();					// set member reference
@@ -67,7 +70,7 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		byte[] ttl_bry = ttl.Page_db();
 		byte page_tid = Xow_page_tid.Identify(wiki.Domain_tid(), ns.Id(), ttl_bry);
 		if (page_tid != Xow_page_tid.Tid_wikitext) return; // ignore js, css, lua, json
-		ctx.Page().Page_ttl_(ttl).Page_id_(page.Id());
+		ctx.Page().Ttl_(ttl).Id_(page.Id());
 		ctx.Tab().Lnki_redlinks_mgr().Page_bgn(ctx);
 		ctx.Tab().Init(ttl);
 		if (ns.Id_tmpl())
@@ -91,10 +94,11 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		Xof_ext ext = Xof_ext_.new_by_ttl_(ttl);
 		double lnki_thumbtime = lnki.Thumbtime();
 		int lnki_page = lnki.Page();
+		byte[] ttl_commons = X_to_commons(wiki_ns_file_is_case_match_all, commons_wiki, ttl);
 		if (	Xof_doc_page.Null_n(lnki_page) 					// page set
 			&&	Xof_doc_thumb.Null_n(lnki_thumbtime))			// thumbtime set
-				usr_dlg.Warn_many("", "", "page and thumbtime both set; this may be an issue with fsdb: page=~{0} ttl=~{1}", ctx.Page().Page_ttl().Page_db_as_str(), String_.new_utf8_(ttl));
-		Xob_lnki_temp_tbl.Insert(stmt, ctx.Page().Page_id(), ttl, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki.Width(), lnki.Height(), lnki.Upright(), lnki_thumbtime, lnki_page);
+				usr_dlg.Warn_many("", "", "page and thumbtime both set; this may be an issue with fsdb: page=~{0} ttl=~{1}", ctx.Page().Ttl().Page_db_as_str(), String_.new_utf8_(ttl));
+		Xob_lnki_temp_tbl.Insert(stmt, ctx.Page().Id(), ttl, ttl_commons, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki.Width(), lnki.Height(), lnki.Upright(), lnki_thumbtime, lnki_page);
 	}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_wdata_enabled_))				wdata_enabled = m.ReadYn("v");
@@ -124,5 +128,14 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 	private Xop_log_property_wkr Property_wkr() {
 		if (property_wkr == null) property_wkr = bldr.App().Wiki_mgr().Wdata_mgr().Property_wkr_or_new();
 		return property_wkr;
+	}
+	public static byte[] X_to_commons(boolean wiki_ns_file_is_case_match_all, Xow_wiki commons_wiki, byte[] ttl_bry) {
+		if (!wiki_ns_file_is_case_match_all) return null;	// return "" if wiki matches common
+		Xoa_ttl ttl = Xoa_ttl.parse_(commons_wiki, Xow_ns_.Id_file, ttl_bry);
+		byte[] rv = ttl.Page_db();
+		return ByteAry_.Eq(rv, ttl_bry) ? null : rv;
+	}
+	public static boolean Wiki_ns_for_file_is_case_match_all(Xow_wiki wiki) {
+		return wiki.Ns_mgr().Ns_file().Case_match() == Xow_ns_.Case_match_all;
 	}
 }

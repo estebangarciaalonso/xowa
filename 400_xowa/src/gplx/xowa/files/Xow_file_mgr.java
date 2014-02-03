@@ -34,6 +34,7 @@ public class Xow_file_mgr implements GfoInvkAble {
 		}
 		return version;
 	}	private byte version = Version_null;
+	public boolean Version_1_y() {return this.Version() == Version_1;}
 	public static final byte Version_null = Byte_.MaxValue_127, Version_1 = 1, Version_2 = 2;
 	public Xow_repo_mgr Repo_mgr() {return repo_mgr;} private Xow_repo_mgr repo_mgr;
 	public Xof_meta_mgr  Meta_mgr() {return meta_mgr;} private Xof_meta_mgr meta_mgr;

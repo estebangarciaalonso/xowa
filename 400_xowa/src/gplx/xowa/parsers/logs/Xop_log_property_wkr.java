@@ -37,7 +37,7 @@ public class Xop_log_property_wkr implements GfoInvkAble {
 	public void Eval_end(Xoa_page page, byte[] prop, long invoke_time_bgn) {
 		if (log_enabled && stmt != null) {
 			int eval_time = (int)(Env_.TickCount() - invoke_time_bgn);
-			Xob_log_property_temp_tbl.Insert(stmt, page.Page_ttl().Rest_txt(), prop, eval_time);
+			Xob_log_property_temp_tbl.Insert(stmt, page.Ttl().Rest_txt(), prop, eval_time);
 			log_mgr.Commit_chk();
 		}
 	}

@@ -89,7 +89,7 @@ class Scrib_lib_message_data {
 		if (exec_params) {
 			byte[] data_ttl = title_bry;
 			if (data_ttl == null)
-				ttl = ctx.Page().Page_ttl();
+				ttl = ctx.Page().Ttl();
 			else
 				ttl = Xoa_ttl.parse_(wiki, data_ttl);
 		}

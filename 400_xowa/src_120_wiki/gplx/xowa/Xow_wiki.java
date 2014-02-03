@@ -154,7 +154,7 @@ public class Xow_wiki implements GfoInvkAble {
 		ctx.Page_(page);
 		Xop_root_tkn root = ctx.Tkn_mkr().Root(page.Data_raw());
 		if (clear) {page.Clear();}
-		Xoa_ttl ttl = page.Page_ttl();
+		Xoa_ttl ttl = page.Ttl();
 		if (Xow_page_tid.Identify(domain_tid, ttl.Ns().Id(), ttl.Page_db()) == Xow_page_tid.Tid_wikitext)	// only parse page if wikitext; skip .js, .css, Module; DATE:2013-11-10
 			parser.Parse_page_all(root, ctx, app.Tkn_mkr(), page.Data_raw(), Xop_parser_.Doc_bgn_bos);
 		page.Root_(root);

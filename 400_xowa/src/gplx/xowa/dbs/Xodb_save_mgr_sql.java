@@ -46,9 +46,9 @@ public class Xodb_save_mgr_sql implements Xodb_save_mgr {
 	}
 	public void Data_update(Xoa_page page, byte[] text) {
 		boolean redirect = db_mgr.Wiki().Redirect_mgr().Is_redirect(text, text.length);
-		DateAdp modified = update_modified_on_enabled ? DateAdp_.Now() : page.Page_date();
+		DateAdp modified = update_modified_on_enabled ? DateAdp_.Now() : page.Modified_on();
 		boolean redirect_changed = redirect != db_mgr.Wiki().Redirect_mgr().Is_redirect(page.Data_raw(), page.Data_raw().length);
-		boolean modified_changed = !modified.Eq(page.Page_date());
+		boolean modified_changed = !modified.Eq(page.Modified_on());
 		int kv_len = 0;
 		if (redirect_changed) ++kv_len;
 		if (modified_changed) ++kv_len;
@@ -58,19 +58,19 @@ public class Xodb_save_mgr_sql implements Xodb_save_mgr {
 			int kv_idx = 0;
 			if (redirect_changed) kv_ary[kv_idx++] = KeyVal_.new_("page_is_redirect", redirect_changed);
 			if (modified_changed) kv_ary[kv_idx++] = KeyVal_.new_("page_touched", Xto_touched_str(modified));
-			qry = Db_qry_.update_common_("page", Db_crt_.eq_("page_id", page.Page_id()), kv_ary);
+			qry = Db_qry_.update_common_("page", Db_crt_.eq_("page_id", page.Id()), kv_ary);
 			Db_provider provider = db_mgr.Fsys_mgr().Core_provider();
 			provider.Txn_mgr().Txn_bgn_if_none();
 			provider.Exec_qry(qry);
 			provider.Txn_mgr().Txn_end_all();
 		}
 		Xodb_page db_page = new Xodb_page();
-		db_mgr.Load_mgr().Load_by_id(db_page, page.Page_id());
+		db_mgr.Load_mgr().Load_by_id(db_page, page.Id());
 		text = zip_mgr.Zip(db_mgr.Data_storage_format(), text);
-		db_mgr.Tbl_text().Update(db_page.Db_file_idx(), page.Page_id(), text);
+		db_mgr.Tbl_text().Update(db_page.Db_file_idx(), page.Id(), text);
 	}
 	public void Data_rename(Xoa_page page, byte[] new_ttl) {
-		Db_qry qry = Db_qry_.update_common_("page", Db_crt_.eq_("page_id", page.Page_id()), KeyVal_.new_("page_title", String_.new_utf8_(new_ttl)));
+		Db_qry qry = Db_qry_.update_common_("page", Db_crt_.eq_("page_id", page.Id()), KeyVal_.new_("page_title", String_.new_utf8_(new_ttl)));
 		db_mgr.Fsys_mgr().Core_provider().Exec_qry(qry);		
 	}
 	public void Clear() {}

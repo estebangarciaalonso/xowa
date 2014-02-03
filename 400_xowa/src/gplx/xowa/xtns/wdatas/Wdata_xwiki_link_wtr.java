@@ -21,7 +21,7 @@ public class Wdata_xwiki_link_wtr implements ByteAryFmtrArg {
 	public Wdata_xwiki_link_wtr Page_(Xoa_page page) {this.page = page; return this;} private Xoa_page page;
 	public void XferAry(ByteAryBfr bfr, int idx) {
 		ListAdp langs = page.Langs();
-		byte[] qid = Write_wdata_links(langs, page.Wiki(), page.Page_ttl(), page.Wdata_external_lang_links());
+		byte[] qid = Write_wdata_links(langs, page.Wiki(), page.Ttl(), page.Wdata_external_lang_links());
 		int langs_len = langs.Count();
 		if (langs_len > 0)
 			page.Wiki().Xwiki_mgr().Lang_mgr().Html_bld(bfr, page.Wiki(), langs, qid);

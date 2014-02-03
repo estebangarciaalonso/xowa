@@ -49,10 +49,11 @@ class Xop_under_lxr implements Xop_lxr {
 		if (o != null) {
 			IntVal id_val = (IntVal)o;
 			Xoa_page page = ctx.Page();
+			Xop_hdr_mgr hdr_mgr = page.Hdr_mgr();
 			switch (id_val.Val()) {
-				case Xol_kwd_grp_.Id_toc:				page.TocFlag_toc_y_(); ctx.Subs_add(root, tkn_mkr.Under(bgn_pos, cur_pos, id_val.Val())); break;	// NOTE: only save under_tkn for TOC (b/c its position is needed for insertion); DATE:2013-07-01
-				case Xol_kwd_grp_.Id_forcetoc:			page.TocFlag_toc_force_y_(); break;
-				case Xol_kwd_grp_.Id_notoc:				page.TocFlag_toc_no_y_(); break;
+				case Xol_kwd_grp_.Id_toc:				hdr_mgr.Toc_manual_(); ctx.Subs_add(root, tkn_mkr.Under(bgn_pos, cur_pos, id_val.Val())); break;	// NOTE: only save under_tkn for TOC (b/c its position is needed for insertion); DATE:2013-07-01
+				case Xol_kwd_grp_.Id_forcetoc:			hdr_mgr.Toc_force_(); break;
+				case Xol_kwd_grp_.Id_notoc:				hdr_mgr.Toc_hide_(); break;
 				case Xol_kwd_grp_.Id_noeditsection:		break;	// ignore; not handling edit sections
 				default:								break;	// ignore anything else
 			}				

@@ -187,7 +187,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 				if (ignore_hash.Get_by_bry(name_ary) == null) {
 					if (Pf_xtn_rel2abs.Rel2abs_ttl(name_ary, name_bgn, name_ary_len)) {// rel_path; EX: {{/../Peer page}}; DATE:2013-03-27
 						ByteAryBfr tmp_bfr = ctx.App().Utl_bry_bfr_mkr().Get_b512();
-						name_ary = Pf_xtn_rel2abs.Rel2abs(tmp_bfr, ByteAry_.Mid(name_ary, name_bgn, name_ary_len), ctx.Page().Page_ttl().Raw());
+						name_ary = Pf_xtn_rel2abs.Rel2abs(tmp_bfr, ByteAry_.Mid(name_ary, name_bgn, name_ary_len), ctx.Page().Ttl().Raw());
 						tmp_bfr.Mkr_rls();
 						return SubEval(ctx, wiki, bfr, name_ary, caller, src);				
 					}
@@ -203,9 +203,9 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 					rv = true;
 				}	catch (Exception e) {
 					if (Env_.Mode_testing()) 
-						throw Err_.err_(e, "failed to evaluate function: page={0} defn={1} src={2} err={3}", String_.new_utf8_(ctx.Page().Page_ttl().Full_txt()), String_.new_utf8_(defn.Name()), String_.new_utf8_(src, this.Src_bgn(), this.Src_end()), Err_.Message_gplx_brief(e));
+						throw Err_.err_(e, "failed to evaluate function: page={0} defn={1} src={2} err={3}", String_.new_utf8_(ctx.Page().Ttl().Full_txt()), String_.new_utf8_(defn.Name()), String_.new_utf8_(src, this.Src_bgn(), this.Src_end()), Err_.Message_gplx_brief(e));
 					else {
-						wiki.App().Usr_dlg().Warn_many("", "", "failed to evaluate function: page=~{0} defn=~{1} src=~{2} err=~{3}", String_.new_utf8_(ctx.Page().Page_ttl().Full_txt()), String_.new_utf8_(defn.Name()), String_.new_utf8_(src, this.Src_bgn(), this.Src_end()), Err_.Message_gplx_brief(e));
+						wiki.App().Usr_dlg().Warn_many("", "", "failed to evaluate function: page=~{0} defn=~{1} src=~{2} err=~{3}", String_.new_utf8_(ctx.Page().Ttl().Full_txt()), String_.new_utf8_(defn.Name()), String_.new_utf8_(src, this.Src_bgn(), this.Src_end()), Err_.Message_gplx_brief(e));
 						rv = false;
 					}
 				}
@@ -341,7 +341,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		if (transclude_tmpl == null && ctx.Sys_load_tmpls()) {	// ttl is template not in cache, or some other ns; do load
 			Xow_page_cache_itm cache_itm = wiki.Cache_mgr().Page_cache().Get_or_load_as_itm(page_ttl);
 			if (	cache_itm != null) {
-				if (!ByteAry_.Eq(cache_itm.Ttl().Full_db(), ctx.Page().Page_ttl().Full_db())) {	// make sure that transcluded item is not same as page_ttl; DATE:2014-01-10
+				if (!ByteAry_.Eq(cache_itm.Ttl().Full_db(), ctx.Page().Ttl().Full_db())) {	// make sure that transcluded item is not same as page_ttl; DATE:2014-01-10
 					transclude_tmpl = ctx.Wiki().Parser().Parse_tmpl(ctx, ctx.Tkn_mkr(), page_ttl.Ns(), page_ttl.Page_db(), cache_itm.Src());
 					page_ttl = cache_itm.Ttl();
 				}

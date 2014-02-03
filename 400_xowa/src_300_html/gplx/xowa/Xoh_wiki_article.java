@@ -39,9 +39,9 @@ public class Xoh_wiki_article implements GfoInvkAble {
 		,	"</html>"
 		));
 		this.html_capable = html_capable;
-		wiki_wkr = new Xou_output_wkr(Xoh_wiki_article.Tid_view_edit, Bool_.Y, Bool_.Y);
-		hsrc_wkr = new Xou_output_wkr(Xoh_wiki_article.Tid_view_html, Bool_.Y, Bool_.N);
-		html_wkr = new Xou_output_wkr(Xoh_wiki_article.Tid_view_read, Bool_.N, Bool_.N);
+		wiki_wkr = new Xou_output_wkr(Xog_view_mode.Id_edit, Bool_.Y, Bool_.Y);
+		hsrc_wkr = new Xou_output_wkr(Xog_view_mode.Id_html, Bool_.Y, Bool_.N);
+		html_wkr = new Xou_output_wkr(Xog_view_mode.Id_read, Bool_.N, Bool_.N);
 	}	private Xoa_app app;
 	Xou_output_wkr wiki_wkr, hsrc_wkr, html_wkr;
 	public boolean Html_capable() {return html_capable;} public Xoh_wiki_article Html_capable_(boolean v) {html_capable = v; return this;} private boolean html_capable;
@@ -97,9 +97,9 @@ public class Xoh_wiki_article implements GfoInvkAble {
 	}
 	public Xou_output_wkr Wkr(byte output_tid) {
 		switch (output_tid) {
-			case Xoh_wiki_article.Tid_view_edit: return wiki_wkr;
-			case Xoh_wiki_article.Tid_view_html: return hsrc_wkr;
-			case Xoh_wiki_article.Tid_view_read: return html_wkr;
+			case Xog_view_mode.Id_edit: return wiki_wkr;
+			case Xog_view_mode.Id_html: return hsrc_wkr;
+			case Xog_view_mode.Id_read: return html_wkr;
 			default: throw Err_.unhandled(output_tid);
 		}
 	}
@@ -112,7 +112,6 @@ public class Xoh_wiki_article implements GfoInvkAble {
 		return this;
 	}
 	public static final String Invk_page_read_ = "page_read_", Invk_page_edit_ = "page_edit_", Invk_page_html_ = "page_html_", Invk_xowa_div_edit_rename_ = "xowa_div_edit_rename_";
-	public static final byte Tid_view_read = 0, Tid_view_edit = 1, Tid_view_html = 2;
 }
 /*
 NOTE_1:xowa_anchor_button

@@ -117,14 +117,12 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 					case Xop_tkn_itm_.Tid_tblw_td:			// noop; <td><table>
 					case Xop_tkn_itm_.Tid_tblw_th:			// noop; <th><table>
 						break;
-					case Xop_tkn_itm_.Tid_tblw_tb:			// fix;  <table><table>	    -> <table><tr><td><table>
+					case Xop_tkn_itm_.Tid_tblw_tb:			// fix;  <table><table>			-> <table>; ignore current table; DATE:2014-02-02
+					case Xop_tkn_itm_.Tid_tblw_tr:			// fix:  <table><tr><table>     -> <table><tr>; ignore current table; DATE:2014-02-02
 						ctx.Subs_add(root, tkn_mkr.Ignore(bgn_pos, cur_pos, Xop_ignore_tkn.Ignore_tid_htmlTidy_tblw));
 						++tblw_tb_suppressed;
 						cur_pos = Xop_lxr_.FindFwdUntil(src, src_len, cur_pos, Byte_ascii.NewLine);	// NOTE: minor hack; this tblw tkn will be ignored, so ignore any of its attributes as well; gobble up all chars till nl. see:  if two consecutive tbs, ignore attributes on 2nd; en.wikibooks.org/wiki/Wikibooks:Featured books
 						return cur_pos;
-					case Xop_tkn_itm_.Tid_tblw_tr:			// fix:  <tr><table>        -> <tr><td><table>
-						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_td(bgn_pos, bgn_pos, tblw_xml));
-						break;
 					case Xop_tkn_itm_.Tid_tblw_tc:			// fix;  <caption><table>   -> <caption></caption><tr><td><table>
 						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
 						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tblw_xml));

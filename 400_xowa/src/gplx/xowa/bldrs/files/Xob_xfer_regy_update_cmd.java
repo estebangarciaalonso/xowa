@@ -38,7 +38,11 @@ public class Xob_xfer_regy_update_cmd extends Xob_itm_basic_base implements Xob_
 		Sqlite_engine_.Db_attach(make_db_provider, "fsdb_db", fsdb_atr_url.Raw());
 		make_db_provider.Txn_mgr().Txn_bgn();
 		make_db_provider.Exec_sql(Xob_fsdb_regy_tbl.Insert_fsdb_fil);
-		make_db_provider.Exec_sql(Xob_fsdb_regy_tbl.Insert_fsdb_thm);
+		String insert_sql_fsdb_thm = wiki.File_mgr().Fsdb_mgr().Mnt_mgr().Abc_mgr_at(0).Cfg_mgr().Schema_thm_page()	// Cfg_get(Fsdb_cfg_mgr.Grp_core).Get_yn_or_n(Fsdb_cfg_mgr.Key_schema_thm_page)
+			? Xob_fsdb_regy_tbl.Insert_fsdb_thm
+			: Xob_fsdb_regy_tbl.Insert_fsdb_thm_v0
+			;
+		make_db_provider.Exec_sql(insert_sql_fsdb_thm);
 		make_db_provider.Txn_mgr().Txn_end();
 		Sqlite_engine_.Idx_create(make_db_provider, Xob_fsdb_regy_tbl.Idx_main);
 		Sqlite_engine_.Db_detach(make_db_provider, "fsdb_db");
@@ -59,16 +63,18 @@ class Xob_fsdb_regy_tbl {
 	(	"CREATE TABLE fsdb_regy "
 	,	"( fil_name             varchar(255)        NOT NULL"
 	,	", fil_is_orig          tinyint             NOT NULL"
-	,	", fil_w                int                 NOT NULL"
-	,	", fil_thumbtime        int                 NOT NULL"
+	,	", fil_w                integer             NOT NULL"
+	,	", fil_time		        double              NOT NULL"
+	,	", fil_page		        integer             NOT NULL"
 	,	");"
 	);
-	public static final Db_idx_itm Idx_main = Db_idx_itm.sql_("CREATE INDEX fsdb_regy__main ON fsdb_regy (fil_name, fil_is_orig, fil_w, fil_thumbtime);");
+	public static final Db_idx_itm Idx_main = Db_idx_itm.sql_("CREATE INDEX fsdb_regy__main ON fsdb_regy (fil_name, fil_is_orig, fil_w, fil_time, fil_page);");
 	public static final String 
 		Insert_fsdb_fil = String_.Concat_lines_nl
-	(	"INSERT INTO fsdb_regy (fil_name, fil_is_orig, fil_w, fil_thumbtime)"
+	(	"INSERT INTO fsdb_regy (fil_name, fil_is_orig, fil_w, fil_time, fil_page)"
 	,	"SELECT  fil_name"
 	,	",       1"
+	,	",       -1"
 	,	",       -1"
 	,	",       -1"
 	,	"FROM    fsdb_db.fsdb_fil"
@@ -76,11 +82,23 @@ class Xob_fsdb_regy_tbl {
 	,	";"
 	)
 	,	Insert_fsdb_thm = String_.Concat_lines_nl
-	(	"INSERT INTO fsdb_regy (fil_name, fil_is_orig, fil_w, fil_thumbtime)"
+	(	"INSERT INTO fsdb_regy (fil_name, fil_is_orig, fil_w, fil_time, fil_page)"
+	,	"SELECT  f.fil_name"
+	,	",       0"
+	,	",       t.thm_w"
+	,	",       t.thm_time"
+	,	",       t.thm_page"
+	,	"FROM    fsdb_db.fsdb_fil f"
+	,	"        JOIN fsdb_db.fsdb_xtn_thm t ON f.fil_id = t.thm_owner_id"
+	,	";"
+	)
+	,	Insert_fsdb_thm_v0 = String_.Concat_lines_nl
+	(	"INSERT INTO fsdb_regy (fil_name, fil_is_orig, fil_w, fil_time, fil_page)"
 	,	"SELECT  f.fil_name"
 	,	",       0"
 	,	",       t.thm_w"
 	,	",       t.thm_thumbtime"
+	,	",       -1"
 	,	"FROM    fsdb_db.fsdb_fil f"
 	,	"        JOIN fsdb_db.fsdb_xtn_thm t ON f.fil_id = t.thm_owner_id"
 	,	";"
@@ -88,12 +106,12 @@ class Xob_fsdb_regy_tbl {
 	,	Update_regy_fil = String_.Concat_lines_nl
 	(	"REPLACE INTO xfer_regy "
 	,	"( lnki_id, lnki_page_id, orig_page_id, orig_repo, lnki_ttl, orig_redirect_src, lnki_ext, orig_media_type"
-	,	", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_thumbtime, lnki_page, lnki_count"
+	,	", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_time, lnki_page, lnki_count"
 	,	", xfer_status"
 	,	")"
 	,	"SELECT "
 	,	"  lnki_id, lnki_page_id, orig_page_id, orig_repo, lnki_ttl, orig_redirect_src, lnki_ext, orig_media_type"
-	,	", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_thumbtime, lnki_page, lnki_count"
+	,	", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_time, lnki_page, lnki_count"
 	,	", CASE WHEN f.fil_name IS NOT NULL THEN 1 ELSE 0 END"
 	,	"FROM    xfer_regy x"
 	,	"        LEFT JOIN fsdb_regy f ON x.lnki_ttl = f.fil_name"
@@ -104,16 +122,16 @@ class Xob_fsdb_regy_tbl {
 	,	Update_regy_thm = String_.Concat_lines_nl
 	(	"REPLACE INTO xfer_regy "
 	,	"( lnki_id, lnki_page_id, orig_page_id, orig_repo, lnki_ttl, orig_redirect_src, lnki_ext, orig_media_type"
-	,	", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_thumbtime, lnki_page, lnki_count"
+	,	", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_time, lnki_page, lnki_count"
 	,	", xfer_status"
 	,	")"
 	,	"SELECT "
 	,	"  lnki_id, lnki_page_id, orig_page_id, orig_repo, lnki_ttl, orig_redirect_src, lnki_ext, orig_media_type"
-	,	", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_thumbtime, lnki_page, lnki_count"
+	,	", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_time, lnki_page, lnki_count"
 	,	", CASE WHEN f.fil_name IS NOT NULL THEN 1 ELSE 0 END"
 	,	"FROM    xfer_regy x"
 	,	"        LEFT JOIN fsdb_regy f ON x.lnki_ttl = f.fil_name AND x.file_w = f.fil_w"
-	,   "          AND CASE WHEN x.lnki_thumbtime == -1 THEN x.lnki_page ELSE x.lnki_thumbtime END = f.fil_thumbtime"
+	,   "          AND x.lnki_time = f.fil_time AND x.lnki_page = f.fil_page"
 	,	"WHERE   x.file_is_orig = 0"
 	,	"AND     f.fil_is_orig  = 0"
 	,	";"

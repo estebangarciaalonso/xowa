@@ -168,23 +168,15 @@ public class Xoh_html_wtr_tst {
 			,	"</table>"
 			));
 	}
-	@Test  public void Tblw_exc_tb_tr_tb() {
+	@Test  public void Tblw_exc_tb_tr_tb() {	// PURPOSE: if <tr><table>, ignore <table>; DATE:2014-02-02
 		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			( "{|"
-			, 	"|-"
-			, 	"{|"
-			,	"|}"
+			, "|-"
+			, "{|"
+			, "|}"
 			, "|}"), String_.Concat_lines_nl_skipLast
 			( "<table>"
 			, "  <tr>"
-			, "    <td>"
-			, "      <table>"
-			, "        <tr>"
-			, "          <td>"
-			, "          </td>"
-			, "        </tr>"
-			, "      </table>"
-			, "    </td>"
 			, "  </tr>"
 			, "</table>"
 			, ""

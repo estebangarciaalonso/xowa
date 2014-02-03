@@ -27,8 +27,6 @@ public class Poem_nde implements Xop_xnde_xtn {
 		if (src[itm_end - 1] 	== Byte_ascii.NewLine				// ignore last \n; 
 			&& itm_end != itm_bgn)						--itm_end;	// ...if not same as 1st \n; EX: <poem>\n</poem>
 		body = wiki.Xtn_mgr().Xtn_poem().Parser().Parse_recurse(ctx, ByteAry_.Mid(src, itm_bgn, itm_end), true); // NOTE: ignoring paragraph mode; technically MW enables para mode, but by replacing "\n" with "<br/>\n" all the logic with para/pre mode is skipped
-<<<<<<< HEAD:400_xowa/src/gplx/xowa/xtns/poems/Poem_nde.java
-=======
 
 //			Xop_ctx sub_ctx = Xop_ctx.new_sub_(wiki);
 //			Xot_defn_tmpl defn_tmpl = wiki.Parser().Parse_tmpl(sub_ctx, sub_ctx.Tkn_mkr(), src_ttl.Ns(), src_ttl_bry, src_page.Data_raw());	// NOTE: parse as tmpl to ignore <noinclude>
@@ -36,6 +34,5 @@ public class Poem_nde implements Xop_xnde_xtn {
 //			defn_tmpl.Tmpl_evaluate(sub_ctx, Xot_invk_temp.PageIsCaller, tmp_bfr);
 //			byte[] src = tmp_bfr.Mkr_rls().XtoAryAndClear();
 //			body = wiki.Parser().Parse_recurse(sub_ctx, sub_ctx, src, true);	// NOTE: pass sub_ctx as old_ctx b/c entire document will be parsed, and references outside the section should be ignored;
->>>>>>> v1.1.4.1:400_xowa/src/gplx/xowa/xtns/poems/Poem_nde.java
 	}
 }

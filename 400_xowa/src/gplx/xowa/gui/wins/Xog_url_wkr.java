@@ -25,7 +25,7 @@ public class Xog_url_wkr {
 		if (href_str == null) return this;	// text is not link; return;
 		byte[] href_bry = ByteAry_.new_utf8_(href_str);
 		this.win = win; this.app = win.App(); this.page = win.Page();
-		app.Href_parser().Parse(href, href_bry, page.Wiki(), page.Page_ttl().Page_url());
+		app.Href_parser().Parse(href, href_bry, page.Wiki(), page.Ttl().Page_url());
 		return this;
 	}
 	public Xoa_url Exec() {
@@ -76,11 +76,7 @@ public class Xog_url_wkr {
 		if (!Io_mgr._.ExistsFil(href_url)) {
 			Xof_xfer_itm xfer_itm = new Xof_xfer_itm();
 			byte[] title = app.Url_converter_url().Decode(ByteAry_.new_utf8_(xowa_ttl));
-<<<<<<< HEAD
-			xfer_itm.Atrs_by_lnki(Xop_lnki_type.Id_none, -1, -1, -1, -1, Xop_lnki_tkn.Page_null).Atrs_by_ttl(title, ByteAry_.Empty);
-=======
 			xfer_itm.Atrs_by_lnki(Xop_lnki_type.Id_none, -1, -1, -1, Xof_doc_thumb.Null, Xof_doc_page.Null).Atrs_by_ttl(title, ByteAry_.Empty);
->>>>>>> v1.1.4.1
 			page.Wiki().File_mgr().Find_meta(xfer_itm);
 			page.File_queue().Clear();
 			page.File_queue().Add(xfer_itm);	// NOTE: set elem_id to "impossible" number, otherwise it will auto-update an image on the page with a super-large size; [[File:Alfred Sisley 062.jpg]]
@@ -102,35 +98,13 @@ public class Xog_url_wkr {
 		byte[] page_bry = rv.Page_bry();
 		byte[][] segs_ary = rv.Segs_ary();
 		int segs_ary_len = segs_ary.length;
-<<<<<<< HEAD
-		if (segs_ary_len > 0) {	// handle "Special:Search/Earth" which creates segs[1] {"Special:Search"} and page="Earth"
-			ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
-			for (int i = 0; i < segs_ary_len; i++) {
-				tmp_bfr.Add(segs_ary[i]);
-				tmp_bfr.Add_byte(Byte_ascii.Slash);
-			}
-			tmp_bfr.Add(page_bry);
-			page_bry = tmp_bfr.Mkr_rls().XtoAryAndClear();
-			rv.Segs_ary_(ByteAry_.Ary_empty);
-		}
-		Gfo_url_arg[] qargs = rv.Args();
-		int qargs_len = qargs.length;
-		if (qargs_len > 0) {	// remove anchors from qargs; EX: "to=B#mw_pages"
-			for (int i = 0; i < qargs_len; i++) {
-				Gfo_url_arg arg = qargs[i];
-				int anchor_pos = ByteAry_.FindBwd(arg.Val_bry(), Byte_ascii.Hash);	// NOTE: must .FindBwd to handle Category args like de.wikipedia.org/wiki/Kategorie:Begriffskl%C3%A4rung?pagefrom=#::12%20PANZERDIVISION#mw-pages; DATE:2013-06-18
-				if (anchor_pos != ByteAry_.NotFound)
-					arg.Val_bry_(ByteAry_.Mid(arg.Val_bry(), 0, anchor_pos));
-			}				
-		}
-=======
 		if (	segs_ary_len > 0						// handle "Special:Search/Earth" which creates segs[1] {"Special:Search"} and page="Earth"
 			||	href.Tid() == Xoh_href.Tid_site) {		// NOTE: if site, must always (a) zap Segs_ary and (b) force correct page; see tests; DATE:2014-01-21
 			int segs_bgn = 0;
 			boolean segs_iterate = true;
 			if (href.Tid() == Xoh_href.Tid_site) {		// site, handle multiple segs; EX: "home/wiki/", "home/wiki/Help:Contents"; DATE:2014-01-21
 				if (segs_ary_len < 2) {					// only 0 or 1 seg; usually occurs for logo and other xwiki links to Main_Page; EX: "/site/en.wikipedia.org/wiki/"; "/site/en.wikipedia.org/"
-					page_bry = Xoa_page.Bry_main_page;	// HACK: set to Main_Page; Xog_win will correct
+					page_bry = Xoa_page_.Main_page_bry;	// HACK: set to Main_Page; Xog_win will correct
 					segs_iterate = false;
 				}
 				else 
@@ -157,11 +131,10 @@ public class Xog_url_wkr {
 					arg.Val_bry_(ByteAry_.Mid(arg.Val_bry(), 0, anchor_pos));
 			}				
 		}
->>>>>>> v1.1.4.1
 		if (!ByteAry_.Eq(page.Wiki().Domain_bry(), href.Wiki())) {// xwiki; EX: "file:///site/en.wiktionary.org/wiki/a"; EX: (1) goto w:Anything; (2) click on "anything" in wikt; "anything" will be parsed by en.wiki's rules, not en.wikt; DATE:2013-01-30
 			wiki = app.Wiki_mgr().Get_by_key_or_make(href.Wiki()).Init_assert();
 			Xoh_href alt_href = new Xoh_href();
-			app.Href_parser().Parse(alt_href, href_bry, wiki, page.Page_ttl().Page_url());
+			app.Href_parser().Parse(alt_href, href_bry, wiki, page.Ttl().Page_url());
 			page_bry = alt_href.Page();		// needed b/c href_parser will use correct caseMatch in alt_wiki
 		}
 		rv.Wiki_(wiki);

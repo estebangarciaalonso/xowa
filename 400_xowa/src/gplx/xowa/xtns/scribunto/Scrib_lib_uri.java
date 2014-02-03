@@ -50,10 +50,7 @@ class Scrib_lib_uri implements Scrib_lib {
 		byte[] ttl_bry = Scrib_kv_utl.Val_to_bry(values, 0);
 		byte[] qry_bry = Scrib_kv_utl.Val_to_url_qry_args(wiki, values, 1);
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
-<<<<<<< HEAD
-=======
 		if (ttl == null) return Scrib_kv_utl.base1_obj_(null);
->>>>>>> v1.1.4.1
 		if (ttl.Ns().Id() == Xow_ns_.Id_media) {	// change "Media:" -> "File:"
 			bfr.Add(wiki.Ns_mgr().Ns_file().Name_db_w_colon());
 			bfr.Add(ttl.Page_db());
@@ -64,7 +61,7 @@ class Scrib_lib_uri implements Scrib_lib {
 	}
 	KeyVal[] Init_uri_for_page() {
 		Xop_ctx ctx = engine.Ctx();
-		byte[] ttl_bry = ctx.Page().Page_ttl().Raw();
+		byte[] ttl_bry = ctx.Page().Ttl().Raw();
 		ByteAryBfr tmp_bfr = ctx.Wiki().Utl_bry_bfr_mkr().Get_b512();
 		Pf_url_urlfunc.UrlString(ctx, Pf_url_urlfunc.Tid_full, false, ttl_bry, tmp_bfr, ByteAry_.Empty);
 		return Scrib_kv_utl.base1_obj_(tmp_bfr.Mkr_rls().XtoAryAndClear());

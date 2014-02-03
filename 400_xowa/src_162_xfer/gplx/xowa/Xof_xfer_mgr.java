@@ -24,11 +24,7 @@ public class Xof_xfer_mgr {
 	public Xof_xfer_mgr Force_orig_y_() {return Force_orig_(Bool_.Y);} public Xof_xfer_mgr Force_orig_n_() {return Force_orig_(Bool_.N);}
 	public void Atrs_by_itm(Xof_xfer_itm xfer_itm, Xof_repo_itm src_repo, Xof_repo_itm trg_repo) {
 		this.xfer_itm = xfer_itm;
-<<<<<<< HEAD
-		this.lnki_w = xfer_itm.Lnki_w(); this.lnki_h = xfer_itm.Lnki_h(); this.lnki_thumbable = xfer_itm.Lnki_thumbable(); this.lnki_seek = xfer_itm.Lnki_thumbtime(); this.lnki_page = xfer_itm.Lnki_page();
-=======
 		this.lnki_w = xfer_itm.Lnki_w(); this.lnki_h = xfer_itm.Lnki_h(); this.lnki_thumbable = xfer_itm.Lnki_thumbable(); this.lnki_thumbtime = xfer_itm.Lnki_thumbtime(); this.lnki_page = xfer_itm.Lnki_page();
->>>>>>> v1.1.4.1
 		lnki_upright = xfer_itm.Lnki_upright();
 		this.ttl = xfer_itm.Lnki_ttl(); this.md5 = xfer_itm.Lnki_md5(); this.ext = xfer_itm.Lnki_ext();
 		orig_file_len = xfer_itm.Orig_file_len();
@@ -40,11 +36,7 @@ public class Xof_xfer_mgr {
 	}
 	Xof_xfer_itm xfer_itm; double lnki_thumbtime = Xof_doc_thumb.Null; boolean lnki_thumbable; int lnki_w, lnki_h, file_w, file_h; double lnki_upright;
 	Xof_ext ext; Xoft_rule_itm ext_rule; Xof_repo_itm src_repo, trg_repo; boolean src_repo_is_wmf; byte[] ttl, md5; int orig_w, orig_h, orig_file_len; 
-<<<<<<< HEAD
-	int lnki_page = Xop_lnki_tkn.Page_null;
-=======
 	int lnki_page = Xof_doc_page.Null;
->>>>>>> v1.1.4.1
 	public Xof_meta_itm Meta_itm() {return meta_itm;} private Xof_meta_itm meta_itm;
 	public boolean Download_allowed_by_ext() {return orig_file_len < ext_rule.Make_max();}
 	public Xof_xfer_mgr Check_file_exists_before_xfer_n_() {check_file_exists_before_xfer = false; return this;} private boolean check_file_exists_before_xfer = true;
@@ -151,7 +143,7 @@ public class Xof_xfer_mgr {
 		}
 		return true;
 	}
-	boolean Make_img_thumb(){
+	private boolean Make_img_thumb(){
 		String src_str; Io_url trg_url;
 		boolean limit = !ext.Id_is_svg();	// do not limit if svg
 		if (lnki_w > 0) {								// if width is -1, don't bother (wmf only has > 0 width); EX.WP:Paris;[[File:IMA-Ile-St-Louis.jpg|thumb|x220]]   
@@ -285,7 +277,7 @@ public class Xof_xfer_mgr {
 		}
 		return true;
 	}	StringRef img_convert_rslt = StringRef.null_();
-	boolean Img_convert(Io_url src_url, Io_url trg_url) {
+	private boolean Img_convert(Io_url src_url, Io_url trg_url) {
 		rslt.Atrs_src_trg_(src_url.Xto_api(), trg_url);	// NOTE: must be set at start; Img_rename_by_size may overwrite trg
 		if (Io_mgr._.ExistsFil(trg_url)) return true; // NOTE: already converted; occurs when same image used twice on same page (EX: flags)
 		if (!file_mgr.Img_mgr().Wkr_resize_img().Exec(src_url, trg_url, lnki_w, lnki_h, ext.Id(), img_convert_rslt)) {
@@ -303,7 +295,7 @@ public class Xof_xfer_mgr {
 		meta_itm.Update_thumb_add(file_w, file_h);
 		return true;
 	}
-	boolean Img_rename_by_size(Io_url trg_url) {
+	private boolean Img_rename_by_size(Io_url trg_url) {
 		if (!Cmd_query_size(trg_url)) return false;
 		if (file_w != lnki_w) {	// NOTE: only rename if file_w is different; this proc can be called if file_w is same, but file_h < 1; EX: A.svg|thumb|30px will call this proc to get size of thumb
 			String new_name = Xof_doc_thumb.Null_y(lnki_thumbtime) ? file_w + "px" : file_w + "px" + Xof_meta_thumb_parser.Dlm_seek_str + Xof_doc_thumb.X_str(lnki_thumbtime);
@@ -315,7 +307,7 @@ public class Xof_xfer_mgr {
 		}
 		return true;
 	}
-	boolean Cmd_download(String src_str, Io_url trg_url, boolean cur_is_orig) {
+	private boolean Cmd_download(String src_str, Io_url trg_url, boolean cur_is_orig) {
 		boolean exists = false;
 		if (check_file_exists_before_xfer) {
 			gplx.ios.IoItmFil fil_itm = Io_mgr._.QueryFil(trg_url);
@@ -343,19 +335,14 @@ public class Xof_xfer_mgr {
 			rslt.Fail("download failed|" + src_str);
 		return pass;
 	}
-	boolean Cmd_query_size(Io_url trg_url) {
+	private boolean Cmd_query_size(Io_url trg_url) {
 		SizeAdp file_size = file_mgr.Img_mgr().Wkr_query_img_size().Exec(trg_url);
 		if (file_size == SizeAdp_.Zero) return rslt.Fail("query size failed");
 		file_w = file_size.Width(); file_h = file_size.Height();
 		return true;
 	}
-<<<<<<< HEAD
-	String Src_url(Xof_repo_itm repo, byte mode, int lnki_w)	{return url_bldr.Set_src_file_(mode, repo, ttl, md5, ext, lnki_w, lnki_seek, lnki_page).Xto_str();}
-	Io_url Trg_url(Xof_repo_itm repo, byte mode, int lnki_w)	{return url_bldr.Set_trg_file_(mode, repo, ttl, md5, ext, lnki_w, lnki_seek, lnki_page).Xto_url();}
-=======
 	String Src_url(Xof_repo_itm repo, byte mode, int lnki_w)	{return url_bldr.Set_src_file_(mode, repo, ttl, md5, ext, lnki_w, lnki_thumbtime, lnki_page).Xto_str();}
 	Io_url Trg_url(Xof_repo_itm repo, byte mode, int lnki_w)	{return url_bldr.Set_trg_file_(mode, repo, ttl, md5, ext, lnki_w, lnki_thumbtime, lnki_page).Xto_url();}
->>>>>>> v1.1.4.1
 	Xof_url_bldr url_bldr = new Xof_url_bldr();
 }
 /*

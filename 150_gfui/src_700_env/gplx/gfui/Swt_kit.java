@@ -33,6 +33,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
@@ -79,10 +80,13 @@ public class Swt_kit implements Gfui_kit {
 	public void Kit_run() {
 	    shell.addListener(SWT.Close, new Swt_lnr_shell_close(this));
 		shell.open();
+		Cursor cursor = new Cursor(display, SWT.CURSOR_ARROW);
+		shell.setCursor(cursor);	// set cursor to hand else cursor defaults to Hourglass until mouse is moved; DATE: 2014-01-31
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
+		cursor.dispose();
 		Kit_term();
 	}
 	public void Kit_term() {

@@ -27,44 +27,27 @@ public class Xof_url_bldr {
 	public byte[] Md5() {return md5;} public Xof_url_bldr Md5_(byte[] v) {md5 = v; return this;} private byte[] md5;
 	public Xof_ext Ext() {return ext;} public Xof_url_bldr Ext_(Xof_ext v) {ext = v; return this;} private Xof_ext ext;
 	public int Width() {return width;} public Xof_url_bldr Width_(int v) {width = v; return this;} private int width;
-<<<<<<< HEAD
-	public Xof_url_bldr Thumbtime_(int v) {thumbtime = v; return this;} private int thumbtime = -1;
-	public Xof_url_bldr Page_(int v) {page = v; return this;} private int page = Xop_lnki_tkn.Page_null;
-=======
 	public Xof_url_bldr Thumbtime_(double v) {thumbtime = v; return this;} private double thumbtime = Xof_doc_thumb.Null;
 	public Xof_url_bldr Page_(int v) {page = v; return this;} private int page = Xof_doc_page.Null;
->>>>>>> v1.1.4.1
 	public Xof_url_bldr Wmf_dir_hive_(boolean v) {wmf_dir_hive = v; return this;} private boolean wmf_dir_hive;
 	public boolean Thumb() {return thumb;} public Xof_url_bldr Thumb_(boolean v) {thumb = v; return this;} private boolean thumb;
 	public byte Thumbtime_dlm() {return thumbtime_dlm;} private byte thumbtime_dlm = Byte_ascii.At;
 	public Xof_url_bldr Thumbtime_dlm_dash_() {thumbtime_dlm = Byte_ascii.Dash; return this;}
-<<<<<<< HEAD
-	public Xof_url_bldr Set_trg_html_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, int thumbtime, int page) {
-=======
 	public Xof_url_bldr Set_trg_html_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, double thumbtime, int page) {
->>>>>>> v1.1.4.1
 		this.wmf_dir_hive = false; this.thumb = mode == Xof_repo_itm.Mode_thumb;
 		this.dir_spr = Byte_ascii.Slash; this.root = repo.Root_http(); this.ttl = repo.Gen_name_trg(ttl, md5, ext); this.area = repo.Mode_names()[mode];
 		this.md5 = md5; this.ext = ext; this.width = width; this.thumbtime = thumbtime; this.page = page;
 		this.repo_dir_depth = repo.Dir_depth();
 		return this;
 	}	private int repo_dir_depth;
-<<<<<<< HEAD
-	public Xof_url_bldr Set_src_file_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, int thumbtime, int page) {
-=======
 	public Xof_url_bldr Set_src_file_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, double thumbtime, int page) {
->>>>>>> v1.1.4.1
 		this.wmf_dir_hive = true; this.thumb = mode == Xof_repo_itm.Mode_thumb;
 		this.dir_spr = repo.Dir_spr(); this.root = repo.Root(); this.ttl = repo.Gen_name_src(ttl); this.area = repo.Mode_names()[mode];
 		this.md5 = md5; this.ext = ext; this.width = width; this.thumbtime = thumbtime; this.page = page;
 		this.wmf_protocol_is_file = repo.Tarball();
 		return this;
 	}
-<<<<<<< HEAD
-	public Xof_url_bldr Set_trg_file_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, int thumbtime, int page) {
-=======
 	public Xof_url_bldr Set_trg_file_(byte mode, Xof_repo_itm repo, byte[] ttl, byte[] md5, Xof_ext ext, int width, double thumbtime, int page) {
->>>>>>> v1.1.4.1
 		this.wmf_dir_hive = false; this.thumb = mode == Xof_repo_itm.Mode_thumb;
 		this.dir_spr = repo.Dir_spr(); this.root = repo.Root(); this.ttl = repo.Gen_name_trg(ttl, md5, ext); this.area = repo.Mode_names()[mode];
 		this.md5 = md5; this.ext = ext; this.width = width; this.thumbtime = thumbtime; this.page = page;
@@ -76,11 +59,7 @@ public class Xof_url_bldr {
 		this.fsys_tid_is_wnt = Op_sys.Cur().Tid_is_wnt();
 		return this;
 	}	private boolean fsys_tid_is_wnt;
-<<<<<<< HEAD
-	public Xof_url_bldr Init_by_itm(byte mode, byte[] ttl, byte[] md5, Xof_ext ext, int width, int thumbtime) {
-=======
 	public Xof_url_bldr Init_by_itm(byte mode, byte[] ttl, byte[] md5, Xof_ext ext, int width, double thumbtime) {
->>>>>>> v1.1.4.1
 		this.thumb = mode == Xof_repo_itm.Mode_thumb;
 		this.area = Xof_repo_itm.Mode_names_key[mode];
 		this.ttl = ttl;
@@ -126,15 +105,9 @@ public class Xof_url_bldr {
 	private Xof_url_bldr Add_thumb_xowa() {
 		bfr.Add_byte(dir_spr);															// add dir_spr;				EX: "\"
 		bfr.Add_int_variable(width).Add(Bry_px);										// add width;				EX: "220px"
-<<<<<<< HEAD
-		if (thumbtime != Xop_lnki_tkn.Thumbtime_null)
-			bfr.Add_byte(thumbtime_dlm).Add_int_variable(thumbtime);					// add thumbtime			EX: "@5"
-		else if (page != Xop_lnki_tkn.Page_null)
-=======
 		if (Xof_doc_thumb.Null_n(thumbtime))
 			bfr.Add_byte(thumbtime_dlm).Add_str(Xof_doc_thumb.X_str(thumbtime));		// add thumbtime			EX: "@5"
 		else if (page != Xof_doc_page.Null)
->>>>>>> v1.1.4.1
 			bfr.Add_byte(Byte_ascii.Dash).Add_int_variable(page);						// add page					EX: "-5"
 		bfr.Add_byte(Byte_ascii.Dot);													// add .					EX: "."
 		if (thumb)
@@ -150,13 +123,8 @@ public class Xof_url_bldr {
 			case Xof_ext_.Id_ogg:
 			case Xof_ext_.Id_ogv:
 			case Xof_ext_.Id_webm:
-<<<<<<< HEAD
-				if (thumbtime != -1)
-					bfr.Add(Bry_seek).Add_int_variable(thumbtime).Add_byte(Byte_ascii.Dash);// add seek;				EX: "seek%3D5-"
-=======
 				if (Xof_doc_thumb.Null_n(thumbtime))
 					bfr.Add(Bry_seek).Add_str(Xof_doc_thumb.X_str(thumbtime)).Add_byte(Byte_ascii.Dash);// add seek;				EX: "seek%3D5-"
->>>>>>> v1.1.4.1
 				else
 					bfr.Add(Bry_mid);													// add mid;					EX: "mid-"
 				break;
@@ -197,11 +165,7 @@ public class Xof_url_bldr {
 		return this;
 	}
 	private void Add_thumb_wmf_page(byte[] bry_page_1, byte[] bry_page) {
-<<<<<<< HEAD
-		if (thumbtime == Xop_lnki_tkn.Page_null)
-=======
 		if (Xof_doc_thumb.Null_y(page))
->>>>>>> v1.1.4.1
 			bfr.Add(bry_page_1);												// add "lossy-page1-"		EX: "lossy-page1-"
 		else {
 			bfr.Add(bry_page);													// add "lossy-page"			EX: "lossy-page"
@@ -211,11 +175,7 @@ public class Xof_url_bldr {
 	}
 	private Xof_url_bldr Clear() {
 		root = area = ttl = md5 = null;
-<<<<<<< HEAD
-		width = 0; thumbtime = -1;
-=======
 		width = 0; thumbtime = Xof_doc_thumb.Null;
->>>>>>> v1.1.4.1
 		ext = null;
 		bfr.Clear();
 		return this;

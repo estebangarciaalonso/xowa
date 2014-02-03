@@ -60,7 +60,7 @@ public class Xop_fxt {
 	}
 	public Xoa_ttl Page_ttl_(String txt) {
 		Xoa_ttl rv = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(txt));
-		ctx.Page().Page_ttl_(rv);
+		ctx.Page().Ttl_(rv);
 		return rv;
 	}
 
@@ -159,6 +159,14 @@ public class Xop_fxt {
 		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(ttl));
 		byte[] page_raw = ByteAry_.new_utf8_(txt);
 		wiki.Db_mgr().Save_mgr().Data_create(page_ttl, page_raw);
+		return this;
+	}
+	public Xop_fxt ini_page_update(String ttl, String txt) {return ini_page_update(wiki, ttl, txt);}
+	public Xop_fxt ini_page_update(Xow_wiki wiki, String ttl, String txt) {
+		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(ttl));
+		byte[] page_raw = ByteAry_.new_utf8_(txt);
+		Xoa_page page = wiki.Data_mgr().Get_page(page_ttl, false);
+		wiki.Db_mgr().Save_mgr().Data_update(page, page_raw);
 		return this;
 	}
 	public Xop_fxt ini_xwiki_add_wiki_and_user_(String alias, String domain) {

@@ -38,7 +38,7 @@ class Xot_defn_trace_fxt {
 		Xop_ctx ctx = fxt.Ctx();
 		ctx.Defn_trace().Clear();
 		byte[] src = ByteAry_.new_utf8_(raw);
-		ctx.Page().Page_ttl_(Xoa_ttl.parse_(fxt.Wiki(), ByteAry_.new_ascii_("test")));
+		ctx.Page().Ttl_(Xoa_ttl.parse_(fxt.Wiki(), ByteAry_.new_ascii_("test")));
 		Xop_root_tkn root = ctx.Tkn_mkr().Root(src);
 		fxt.Parser().Parse_page_all_clear(root, ctx, ctx.Tkn_mkr(), src);
 		ctx.Defn_trace().Print(src, tmp);

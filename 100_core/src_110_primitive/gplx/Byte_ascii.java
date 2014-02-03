@@ -48,4 +48,10 @@ public class Byte_ascii {
 				||	b >= Byte_ascii.Ltr_A && b <= Byte_ascii.Ltr_Z);
 	}
 	public static int X_to_digit(byte b) {return b - Byte_ascii.Num_0;}
+	public static byte Uppercase(byte b) {
+		return b > 64 && b < 91
+			? (byte)(b + 32)
+			: b
+		  ;
+	}
 }

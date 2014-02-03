@@ -140,7 +140,7 @@ public class Xoh_href_parser {
 		}
 		byte[] page_bry = encoder.Decode(ttl.Full_txt());					// note that Full is everything except for ns, so it handles "fr:A" ("fr:" being treated as ns, so only "A" will be Full_txt)
 		if (ByteAry_.Len_eq_0(page_bry))									// handle xwiki hrefs like "fr:"; EX: "/wiki/wikipedia:" on en.wikisource.org/Main Page
-			page_bry = Xoa_page.Bry_main_page;
+			page_bry = Xoa_page_.Main_page_bry;
 //			if (ttl.Qarg_bgn() != ByteAry_.NotFound)
 //				rv.Qarg_(ttl.Qarg_txt());
 		rv.Page_(page_bry);							// add page; note that it should be decoded; EX: %20 -> " "; also note that anchor (#) or query params (?) are not parsed; the entire String will be reparsed later

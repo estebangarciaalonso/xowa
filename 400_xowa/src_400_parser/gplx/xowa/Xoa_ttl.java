@@ -21,10 +21,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 	public boolean ForceLiteralLink() {return forceLiteralLink;} private boolean forceLiteralLink;
 	// NOTE: in procs below, all -1 are used to skip previous delimiters; they will only occur for end_pos arguments
 	public boolean Eq_page_db(Xoa_ttl comp) {if (comp == null) return false; return ByteAry_.Eq(this.Page_db(), comp.Page_db());}	// check page is same; ignores anchor and xwiki
-<<<<<<< HEAD
-=======
 	public boolean Eq_full_db(Xoa_ttl comp) {if (comp == null) return false; return ByteAry_.Eq(this.Full_db(), comp.Full_db());}	// check page is same; ignores anchor and xwiki
->>>>>>> v1.1.4.1
 	public byte[] Raw() {return raw;} private byte[] raw = ByteAry_.Empty;
 	public byte[] Wik_txt()  {return wik_bgn == -1 ? ByteAry_.Empty : ByteAry_.Mid(full_txt, wik_bgn, ns_bgn == -1 ? page_bgn - 1 : ns_bgn - 1);}
 	public Xow_xwiki_itm Wik_itm() {return wik_itm;} private Xow_xwiki_itm wik_itm;

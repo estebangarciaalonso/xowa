@@ -36,4 +36,5 @@ public class Xof_wiki_orig_itm {
 		rv.orig_redirect = rdr.ReadBryByStr(Xof_wiki_orig_tbl.Fld_orig_redirect);
 		return rv;
 	}
+	public static final Xof_wiki_orig_itm Null = null;
 }

@@ -26,8 +26,8 @@ public class Xog_history_mgr {
 		if (!hash.Has(page_key))
 			hash.Add(page_key, page);
 	}
-	public void Update_html_doc_pos(Xoa_page page) {
-		itm_stack.Update_html_doc_pos(page);
+	public void Update_html_doc_pos(Xoa_page page, byte nav_type) {
+		itm_stack.Update_html_doc_pos(page, nav_type);
 	}
 	public Xoa_page Cur_page(Xow_wiki wiki) {return Get_or_fetch(wiki, itm_stack.Cur_itm());}
 	public Xoa_page Go_bwd(Xow_wiki wiki) {return Go_by_dir(wiki, true);}
@@ -38,7 +38,7 @@ public class Xog_history_mgr {
 		Xoa_page rv = Get_or_fetch(wiki, itm);
 		byte[] anch_key = itm.Anch_key();
 		rv.Url().Anchor_bry_(anch_key); // must override anchor as it may be different for cached page
-		rv.DocPos_(itm.Html_doc_pos());
+		rv.Html_bmk_pos_(itm.Html_doc_pos());
 		wiki.Ctx().Tab().Display_ttl_(itm.Display_ttl());
 		return rv;
 	}
@@ -49,6 +49,6 @@ public class Xog_history_mgr {
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, itm.Page_key());
 		return wiki.Data_mgr().Get_page(ttl, false);
 	}
-	private static byte[] Build_page_key(Xoa_page page) {return Build_page_key(page.Wiki().Domain_bry(), page.Page_ttl().Full_url(), page.Url().Args_all_as_bry());}
+	private static byte[] Build_page_key(Xoa_page page) {return Build_page_key(page.Wiki().Domain_bry(), page.Ttl().Full_url(), page.Url().Args_all_as_bry());}
 	private static byte[] Build_page_key(byte[] wiki_key, byte[] page_key, byte[] args_key) {return ByteAry_.Add_w_dlm(Byte_ascii.Pipe, wiki_key, page_key, args_key);}
 }

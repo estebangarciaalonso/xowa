@@ -102,7 +102,7 @@ public class Xoh_html_wtr {
 	@gplx.Virtual public void Hr(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_hr_tkn tkn)				{bfr.Add(Tag_hr);}
 	@gplx.Virtual public void Hdr(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_hdr_tkn hdr, int depth) {
 //			page.Hdrs_id_bld(hdr, src);
-		if (hdr.Hdr_html_first() && hctx.Toc_show() && page.TocPos_firstHdr()) {
+		if (hdr.Hdr_html_first() && hctx.Toc_show() && !page.Hdr_mgr().Toc_manual()) {	// __TOC__ not specified; place at top; NOTE: if __TOC__ was specified, then it would be placed wherever __TOC__ appears
 			app.Toc_mgr().Html(wiki.Ctx().Page(), src, bfr);
 		}
 		int hdr_len = hdr.Hdr_len();
@@ -213,8 +213,8 @@ public class Xoh_html_wtr {
 		byte[] ttl_bry = lnki.Ttl_ary();
 		Xoa_ttl lnki_ttl = lnki.Ttl();
 		if (ByteAry_.Len_eq_0(ttl_bry)) ttl_bry = lnki_ttl.Full_txt_raw();		// NOTE: handles ttls like [[fr:]] and [[:fr;]] which have an empty Page_txt, but a valued Full_txt_raw
-		if (ByteAry_.Eq(lnki_ttl.Full_txt(), page.Page_ttl().Full_txt())) {		// lnki is same as pagename; bold; SEE: Month widget on day pages will bold current day; EX.WP: January 1
-			if (lnki_ttl.Anch_bgn() == -1 && ByteAry_.Eq(lnki_ttl.Wik_txt(), page.Page_ttl().Wik_txt())) {		// only bold if lnki is not pointing to anchor on same page; EX.WP: Comet; [[Comet#Physical characteristics|ion tail]]
+		if (ByteAry_.Eq(lnki_ttl.Full_txt(), page.Ttl().Full_txt())) {		// lnki is same as pagename; bold; SEE: Month widget on day pages will bold current day; EX.WP: January 1
+			if (lnki_ttl.Anch_bgn() == -1 && ByteAry_.Eq(lnki_ttl.Wik_txt(), page.Ttl().Wik_txt())) {		// only bold if lnki is not pointing to anchor on same page; EX.WP: Comet; [[Comet#Physical characteristics|ion tail]]
 				bfr.Add(Xoh_consts.B_bgn);
 				Lnki_caption(ctx, opts, bfr, src, lnki, ttl_bry, true, depth);
 				bfr.Add(Xoh_consts.B_end);
@@ -536,7 +536,8 @@ public class Xoh_html_wtr {
 			case Xop_xnde_tag_.Tid_xowa_cmd:				Xnde_xtn(ctx, opts, bfr, src, xnde, depth); break;
 			default:
 				if (tag.Restricted()) {	// a; img; script; etc..
-					if (page.Allow_all_html() || page.Wiki().Domain_tid() == Xow_wiki_domain_.Tid_home) {
+					if (	!page.Html_restricted()										// page is not marked restricted (only [[Special:]])
+						||	page.Wiki().Domain_tid() == Xow_wiki_domain_.Tid_home) {	// page is in home wiki
 						bfr.Add_mid(src, xnde.Src_bgn(), xnde.Src_end());
 						return;
 					}

@@ -30,6 +30,7 @@ public class Xop_lnki_logger_redlinks_wkr implements GfoInvkAble {
 		this.lnki_list = redlinks_mgr.Lnki_list(); this.log_enabled = redlinks_mgr.Log_enabled(); this.usr_dlg = redlinks_mgr.Usr_dlg();
 		this.request_idx = redlinks_mgr.Request_idx();
 	}
+	public int Redlink_count() {return redlink_count;} private int redlink_count;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_run)) Redlink();
 		else	return GfoInvkAble_.Rv_unhandled;
@@ -41,7 +42,7 @@ public class Xop_lnki_logger_redlinks_wkr implements GfoInvkAble {
 		page_hash.Clear(); // NOTE: do not clear in Page_bgn, else will fail b/c of threading; EX: Open Page -> Preview -> Save; DATE:2013-11-17
 		work_list.Clear();
 		int len = lnki_list.Count();
-		if (log_enabled) usr_dlg.Log_many("", "", "redlink.redlink_bgn: page=~{0} total_links=~{1}", String_.new_utf8_(wiki.Ctx().Page().Page_ttl().Raw()), len);
+		if (log_enabled) usr_dlg.Log_many("", "", "redlink.redlink_bgn: page=~{0} total_links=~{1}", String_.new_utf8_(wiki.Ctx().Page().Ttl().Raw()), len);
 		for (int i = 0; i < len; i++) {	// make a copy of list else thread issues
 			if (win.Gui_wtr().Canceled()) return;
 			if (redlinks_mgr.Request_idx() != request_idx) return;
@@ -65,7 +66,7 @@ public class Xop_lnki_logger_redlinks_wkr implements GfoInvkAble {
 			if (end > page_len) end = page_len;
 			wiki.Db_mgr().Load_mgr().Load_by_ttls(win.Gui_wtr(), page_hash, Xodb_page_tbl.Load_idx_flds_only_y, i, end);
 		}
-		int redlink_count = 0;
+		redlink_count = 0;
 		ByteAryBfr bfr = null;
 		boolean variants_enabled = wiki.Lang().Vnt_mgr().Enabled();
 		Xol_vnt_mgr vnt_mgr = wiki.Lang().Vnt_mgr();

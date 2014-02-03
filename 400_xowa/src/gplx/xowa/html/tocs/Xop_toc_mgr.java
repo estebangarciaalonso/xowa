@@ -29,9 +29,10 @@ public class Xop_toc_mgr implements ByteAryFmtrArg {
 	public void XferAry(ByteAryBfr trg, int idx) {
 		int path_idx = 0, toc_idx = 0, lvl_idx = 1, eq_prv = 0;
 		path_bfr.Clear();
-		int hdrs_len = page.Hdrs_len();
+		Xop_hdr_mgr hdr_mgr = page.Hdr_mgr();
+		int hdrs_len = hdr_mgr.Len();
 		for (int i = 0; i < hdrs_len; i++) {
-			Xop_hdr_tkn hdr = page.Hdrs_get(i);
+			Xop_hdr_tkn hdr = hdr_mgr.Get_at(i);
 			int eq_cur = hdr.Hdr_len();
 			switch (CompareAble_.Compare(eq_cur, eq_prv)) {
 				case CompareAble_.More:	// always increase slot
@@ -172,7 +173,7 @@ public class Xop_toc_mgr implements ByteAryFmtrArg {
 		}
 	}
 	public void Html(Xoa_page page, byte[] src, ByteAryBfr bfr) {
-		if (!page.Toc_enabled()) return;	// REF.MW: Parser.php|formatHeadings
+		if (!page.Hdr_mgr().Toc_enabled()) return;	// REF.MW: Parser.php|formatHeadings
 		this.src = src; this.page = page;
 		boolean tbl_para = page.Wiki().Html_mgr().Tbl_para();
 		byte[] tbl_para_bgn = tbl_para ? Xoh_consts.P_bgn : ByteAry_.Empty;

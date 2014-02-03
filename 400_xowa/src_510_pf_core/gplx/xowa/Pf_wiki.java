@@ -74,7 +74,7 @@ class Pf_rev_props extends Pf_func_base {
 		Xow_wiki_revs props = ctx.Page_revData();
 		switch (id) {
 			case Xol_kwd_grp_.Id_page_id:
-			case Xol_kwd_grp_.Id_rev_id: bb.Add_int_variable(ctx.Page().Page_id()); break;	// NOTE: making rev_id and page_id interchangeable; XOWA does not store rev_id
+			case Xol_kwd_grp_.Id_rev_id: bb.Add_int_variable(ctx.Page().Id()); break;	// NOTE: making rev_id and page_id interchangeable; XOWA does not store rev_id
 			case Xol_kwd_grp_.Id_rev_user: bb.Add(props.User()); break;
 			case Xol_kwd_grp_.Id_rev_pagesize:
 				if (argx.length > 0) {

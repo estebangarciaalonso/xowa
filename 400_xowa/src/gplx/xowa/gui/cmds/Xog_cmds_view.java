@@ -36,9 +36,9 @@ public class Xog_cmds_view implements GfoInvkAble {
 		app.Cfg_mgr().Db_save_txt();
 		app.Gui_mgr().Main_win().Exec_page_reload();	// NOTE: force reload; needed if viewing Help:Options/HTML, else Font size won't update
 	}
-	public void Page_read()		{Page(Xoh_wiki_article.Tid_view_read);}
-	public void Page_edit()		{Page(Xoh_wiki_article.Tid_view_edit);}
-	public void Page_html()		{Page(Xoh_wiki_article.Tid_view_html);}
+	public void Page_read()		{Page(Xog_view_mode.Id_read);}
+	public void Page_edit()		{Page(Xog_view_mode.Id_edit);}
+	public void Page_html()		{Page(Xog_view_mode.Id_html);}
 	private void Page(byte v)	{app.Gui_mgr().Main_win().Exec_page_view(v);}
 	public void Reload()		{app.Gui_mgr().Main_win().Exec_page_reload();}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {

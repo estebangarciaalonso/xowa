@@ -19,7 +19,8 @@ package gplx.xowa.files; import gplx.*; import gplx.xowa.*;
 public class Xof_xfer_itm implements Xof_file_itm {
 	public byte[]		Lnki_ttl() {return lnki_ttl;} private byte[] lnki_ttl;
 	public byte[]		Lnki_md5() {return lnki_md5;} private byte[] lnki_md5;
-	public Xof_ext		Lnki_ext() {return lnki_ext;} private Xof_ext lnki_ext;
+	public Xof_ext		Lnki_ext() {return lnki_ext;} public void Lnki_ext_(Xof_ext v) {lnki_ext = v;} private Xof_ext lnki_ext;
+	public Xof_xfer_itm Url_bldr_(Xof_url_bldr v) {url_bldr = v; return this;} private Xof_url_bldr url_bldr = Xof_url_bldr.Temp;
 	public byte[]		Lnki_redirect() {return lnki_redirect;} private byte[] lnki_redirect;
 	public Xof_xfer_itm Atrs_by_ttl(byte[] ttl, byte[] redirect) {
 		this.lnki_redirect = redirect;
@@ -33,21 +34,12 @@ public class Xof_xfer_itm implements Xof_file_itm {
 	public int			Lnki_w() {return lnki_w;} private int lnki_w;
 	public int			Lnki_h() {return lnki_h;} private int lnki_h;
 	public double		Lnki_upright() {return lnki_upright;} double lnki_upright;
-<<<<<<< HEAD
-	public int			Lnki_thumbtime() {return lnki_thumbtime;} private int lnki_thumbtime = Xop_lnki_tkn.Thumbtime_null;
-	public int			Lnki_page() {return lnki_page;} private int lnki_page = Xop_lnki_tkn.Page_null;
-	public boolean			File_is_orig() {return !lnki_thumbable;}
-	public boolean			Lnki_thumbable() {return lnki_thumbable;} private boolean lnki_thumbable;	// SEE:NOTE_1:Lnki_thumbable
-	public Xof_xfer_itm Atrs_by_lnki(byte lnki_type, int w, int h, double upright, int seek, int lnki_page) {
-		this.lnki_type = lnki_type; this.lnki_w = w; this.lnki_h = h; this.lnki_upright = upright; this.lnki_thumbtime = seek; this.lnki_page = lnki_page;
-=======
 	public double		Lnki_thumbtime() {return lnki_thumbtime;} private double lnki_thumbtime = Xof_doc_thumb.Null;
 	public int			Lnki_page() {return lnki_page;} private int lnki_page = Xof_doc_page.Null;
 	public boolean			File_is_orig() {return !lnki_thumbable;}
 	public boolean			Lnki_thumbable() {return lnki_thumbable;} private boolean lnki_thumbable;	// SEE:NOTE_1:Lnki_thumbable
 	public Xof_xfer_itm Atrs_by_lnki(byte lnki_type, int w, int h, double upright, double thumbtime, int lnki_page) {
 		this.lnki_type = lnki_type; this.lnki_w = w; this.lnki_h = h; this.lnki_upright = upright; this.lnki_thumbtime = thumbtime; this.lnki_page = lnki_page;
->>>>>>> v1.1.4.1
 		lnki_thumbable = Xof_xfer_itm.Lnki_thumbable_calc(lnki_type, lnki_w, lnki_h);
 		return this;
 	}
@@ -186,14 +178,10 @@ public class Xof_xfer_itm implements Xof_file_itm {
 		html_pass = true;
 		return true;
 	}
-	private byte[] Trg_html(byte mode_id, int width)	{return Xof_url_bldr.Temp.Set_trg_html_(mode_id, trg_repo, lnki_ttl, lnki_md5, lnki_ext, width, lnki_thumbtime, lnki_page).Xto_bry();}
-	public Io_url Trg_file(byte mode_id, int width)		{return Xof_url_bldr.Temp.Set_trg_file_(mode_id, trg_repo, lnki_ttl, lnki_md5, lnki_ext, width, lnki_thumbtime, lnki_page).Xto_url();}
+	private byte[] Trg_html(byte mode_id, int width)	{return url_bldr.Set_trg_html_(mode_id, trg_repo, lnki_ttl, lnki_md5, lnki_ext, width, lnki_thumbtime, lnki_page).Xto_bry();}
+	public Io_url Trg_file(byte mode_id, int width)		{return url_bldr.Set_trg_file_(mode_id, trg_repo, lnki_ttl, lnki_md5, lnki_ext, width, lnki_thumbtime, lnki_page).Xto_url();}
 	public Xof_xfer_itm Clear() {
-<<<<<<< HEAD
-		lnki_type = Byte_.MaxValue_127; lnki_w = Int_.Neg1; lnki_h = Int_.Neg1; lnki_upright = Int_.Neg1; lnki_thumbtime = Int_.Neg1; lnki_page = Xop_lnki_tkn.Page_null;
-=======
 		lnki_type = Byte_.MaxValue_127; lnki_w = Int_.Neg1; lnki_h = Int_.Neg1; lnki_upright = Int_.Neg1; lnki_thumbtime = Xof_doc_thumb.Null; lnki_page = Xof_doc_page.Null;
->>>>>>> v1.1.4.1
 		lnki_thumbable = false;
 		orig_w = Int_.Neg1; orig_h = Int_.Neg1; orig_file_len = 0;	// NOTE: cannot be -1, or else will always download orig; see ext rule chk and (orig_file_len < 0)
 		lnki_redirect = null; lnki_ttl = null; lnki_md5 = null; lnki_ext = null;

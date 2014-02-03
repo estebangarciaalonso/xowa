@@ -35,7 +35,7 @@ public class Xop_languages_xnde implements Xop_xnde_xtn {
 		return Xoa_ttl.parse_(wiki, ttl.Ns().Id(), root_bry);
 	}
 	private ListAdp Find_lang_pages(Xop_ctx ctx, Xow_wiki wiki) {
-		this.root_ttl = Root_ttl_of(wiki, ctx.Page().Page_ttl());
+		this.root_ttl = Root_ttl_of(wiki, ctx.Page().Ttl());
 		ListAdp rslts = ListAdp_.new_(); 
 		IntRef rslt_count = IntRef.new_(0);
 		Xow_ns page_ns = root_ttl.Ns();

@@ -33,10 +33,15 @@ public class Wdata_pf_property_tst {
 	}
 	@Test   public void Entity_fr() {	// PURPOSE: non-English wiki should default to English label if non-English label not available; DATE:2013-12-19
 		fxt.Wiki().Wdata_wiki_lang_(ByteAry_.new_ascii_("fr"));							// set wiki to French
-		fxt.Init_links_add("frwiki", "Test_page", "q1");								// create link for frwiki -> wikidata
+		fxt.Init_links_add("frwiki", "Test_page", "q1");								// create link for en:Test_page in wikidata
 		fxt.Init_pages_add(fxt.doc_("q1", fxt.prop_entity_(1, 2)));						// create wdata page Q1 with prop entity reference to Q2
 		fxt.Init_pages_add(fxt.page_bldr_("q2").Label_add("en", "b").Xto_page_doc());	// create wdata page Q2 with label in en (not fr)
 		fxt.Test_parse("{{#property:p1}}", "b");										// parse; should get en label
+	}
+	@Test   public void Entity_missing() {	// PURPOSE: wiki may refer to entity that no longer exists; EX: {{#property:p1}} which links to Q1, but p1 links to Q2 and Q2 was deleted; DATE:2014-02-01
+		fxt.Init_links_add("enwiki", "Test_page", "q1");								// create link for en:Test_page in wikidata
+		fxt.Init_pages_add(fxt.doc_("q1", fxt.prop_entity_(1, 2)));						// create wdata page Q1 with prop entity reference to Q2; note that Q2 is not created
+		fxt.Test_parse("{{#property:p1}}", "");											// parse; get ""
 	}
 	@Test   public void Time() {
 		fxt.Init_links_add("enwiki", "Test_page", "q1");

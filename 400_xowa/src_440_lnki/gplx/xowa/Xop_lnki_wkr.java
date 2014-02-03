@@ -70,7 +70,7 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 				break;
 		}
 		if (lnki_is_file) {
-			ctx.Tab().Lnki_file_mgr().Add(lnki);
+			ctx.Page().Lnki_list().Add(lnki);
 			if (file_wkr != null) file_wkr.Wkr_exec(ctx, src, lnki);
 		}
 		return cur_pos;
@@ -99,10 +99,10 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 					byte[] name_bry = ByteAry_.Mid(src, name_tkn.Dat_bgn(), name_tkn.Dat_end());
 					name_bry = ctx.App().Url_converter_url_ttl().Decode(name_bry);
 					int name_bry_len = name_bry.length;
-					if (ctx.Page().Page_ttl().Ns().Subpages_enabled()
+					if (ctx.Page().Ttl().Ns().Subpages_enabled()
 						&& Pf_xtn_rel2abs.Rel2abs_ttl(name_bry, 0, name_bry_len)) { // Linker.php|normalizeSubpageLink
 						ByteAryBfr tmp_bfr = ctx.App().Utl_bry_bfr_mkr().Get_b512();
-						byte[] new_bry = Pf_xtn_rel2abs.Rel2abs(tmp_bfr, name_bry, ctx.Page().Page_ttl().Raw(), rel2abs_tid.Val_zero_());
+						byte[] new_bry = Pf_xtn_rel2abs.Rel2abs(tmp_bfr, name_bry, ctx.Page().Ttl().Raw(), rel2abs_tid.Val_zero_());
 						lnki.Subpage_tid_(rel2abs_tid.Val());
 						lnki.Subpage_slash_at_end_(ByteAry_.Get_at_end(name_bry) == Byte_ascii.Slash);
 						name_bry = new_bry;
@@ -183,7 +183,7 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 			}
 			return true;
 		} catch (Exception e) {
-			ctx.App().Usr_dlg().Warn_many("", "", "fatal error in lnki: page=~{0} src=~{1} err=~{2}", String_.new_utf8_(ctx.Page().Page_ttl().Full_db()), String_.new_utf8_(src, lnki.Src_bgn(), lnki.Src_end()), Err_.Message_gplx(e));
+			ctx.App().Usr_dlg().Warn_many("", "", "fatal error in lnki: page=~{0} src=~{1} err=~{2}", String_.new_utf8_(ctx.Page().Ttl().Full_db()), String_.new_utf8_(src, lnki.Src_bgn(), lnki.Src_end()), Err_.Message_gplx(e));
 			return false;
 		}
 	}

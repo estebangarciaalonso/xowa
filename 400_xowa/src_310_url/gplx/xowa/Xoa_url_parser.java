@@ -123,7 +123,7 @@ public class Xoa_url_parser {
 		if (app.Url_parser().Parse(rv, raw, bgn, end)) {		// parse passed; take Page; EX: "http://en.wikipedia.org/wiki/Earth"
 			wiki = Parse_url__wiki(app, rv.Wiki_bry());
 			if (rv.Segs_ary().length == 0 && rv.Page_bry() != null && ByteAry_.Eq(rv.Page_bry(), Xoa_url_parser.Bry_wiki_name))	// wiki, but directly after site; EX:en.wikipedia.org/wiki
-				page_bry = Xoa_page.Bry_main_page;
+				page_bry = Xoa_page_.Main_page_bry;
 			else
 				page_bry = Parse_url__combine(bfr_mkr, null, rv.Segs_ary(), rv.Page_bry());	// NOTE: pass null in for wiki b/c wiki has value, but should not be used for Page
 		}
@@ -132,7 +132,7 @@ public class Xoa_url_parser {
 			if (rv.Page_bry() == null) {					// only 1 seg; EX: "Earth"; "fr.wikipedia.org"
 				if (app.Xwiki_exists(wiki_bry)) {			// matches wiki_regy; bry_0 must be wiki; EX: "fr.wikipedia.org"
 					wiki = app.Wiki_mgr().Get_by_key_or_make(wiki_bry);
-					page_bry = Xoa_page.Bry_main_page;
+					page_bry = Xoa_page_.Main_page_bry;
 				}
 				else {									// assume page name
 					wiki = Parse_url__wiki(app, cur_wiki_key);
@@ -143,7 +143,7 @@ public class Xoa_url_parser {
 				if (wiki_bry != null && app.Xwiki_exists(wiki_bry)) {			// matches wiki_regy; bry_0 must be wiki; EX: "fr.wikipedia.org"
 					wiki = app.Wiki_mgr().Get_by_key_or_make(wiki_bry);
 					if (rv.Segs_ary().length == 0 && ByteAry_.Eq(rv.Page_bry(), Xoa_url_parser.Bry_wiki_name))
-						page_bry = Xoa_page.Bry_main_page;
+						page_bry = Xoa_page_.Main_page_bry;
 					else
 						page_bry = Parse_url__combine(bfr_mkr, ByteAry_.Empty, rv.Segs_ary(), rv.Page_bry());
 				}

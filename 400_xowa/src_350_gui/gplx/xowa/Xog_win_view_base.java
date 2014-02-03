@@ -53,18 +53,18 @@ public abstract class Xog_win_view_base implements GfoInvkAble {
 		return launch_wiki.GetPageByTtl(launch_url, launch_ttl).Url_(launch_url);	// FUTURE: .Url_() should not be called (needed for anchor); EX: en.wikipedia.org/Earth#Biosphere
 	}
 	private void Show_page(Xoa_page new_page) {
-//			if (reset_to_read) cur_view_tid = Xoh_wiki_article.Tid_view_read;
-//			if (new_page.Url().Action_is_edit()) cur_view_tid = Xoh_wiki_article.Tid_view_edit;
+//			if (reset_to_read) cur_view_tid = Xog_view_mode.Id_read;
+//			if (new_page.Url().Action_is_edit()) cur_view_tid = Xog_view_mode.Id_edit;
 //			if (page != null) page.DocPos_(html_box.Html_window_vpos());
 //			status_box_wtr.Note("locating images");			
 		Page_(new_page);
 		byte[] bry = new_page.Wiki().Html_mgr().Output_mgr().Gen(new_page, cur_view_tid);
 		this.Html_box().Text_(String_.new_utf8_(bry));
 		this.Url_box().Text_(app.Url_parser().Build_str(new_page.Url()));
-		this.Win_box().Text_(String_.new_utf8_(ByteAry_.Add(new_page.Page_ttl().Page_txt(), Xog_win.Xowa_titleBar_suffix)));
+		this.Win_box().Text_(String_.new_utf8_(ByteAry_.Add(new_page.Ttl().Page_txt(), Xog_win.Xowa_titleBar_suffix)));
 		Sync_font_if_needed(new_page.Lang().Gui_font());
 		this.Html_box().Focus();	// focus the html_box; applies mainly to urls entered from the address box;
-		if (cur_view_tid == Xoh_wiki_article.Tid_view_read)
+		if (cur_view_tid == Xog_view_mode.Id_read)
 			this.Exec_async(Xog_win.Invk_html_box_focus_previous_or_firstHeading);
 		if (new_page.Url().Anchor_bry() != null)
 			app.Gui_mgr().Main_win().Exec_async_arg(Xog_win.Invk_html_box_select_by_id, new_page.Url().Anchor_str());

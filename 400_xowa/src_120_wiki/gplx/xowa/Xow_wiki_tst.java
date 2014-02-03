@@ -36,6 +36,6 @@ class Xow_wiki_fxt {
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
 		Xoa_page actl = fxt.Wiki().GetPageByTtl(url, ttl);
 		if (expd == null) Tfds.Eq_true(actl.Missing());
-		else Tfds.Eq(expd, String_.new_utf8_(actl.Page_ttl().Raw()));
+		else Tfds.Eq(expd, String_.new_utf8_(actl.Ttl().Raw()));
 	}
 }

@@ -44,17 +44,10 @@ public class Xop_vnt_parser_tst {	// uses zh-hant as cur_vnt
 	@Test  public void Ignore() {
 		fxt.Test_parse("-{{#expr:1}}-", "-1-");
 	}
-<<<<<<< HEAD
-//		@Test  public void Expr() {
-//			fxt.Parser_fxt().ini_page_create("Template:A", "{{#expr: 0-{{{1|2}}}}}");
-//			fxt.Test_parse("{{A}}", "-2");
-//		}
-=======
 	@Test  public void Expr() {
 		fxt.Parser_fxt().ini_page_create("Template:A", "{{#expr: 0-{{{1|2}}}}}");
 		fxt.Test_parse("{{A}}", "-2");
 	}
->>>>>>> v1.1.4.1
 }
 class Xop_vnt_parser_fxt {		
 	public Xop_fxt Parser_fxt() {return fxt;} private Xop_fxt fxt;

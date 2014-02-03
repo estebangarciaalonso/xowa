@@ -23,14 +23,117 @@ public class Pp_pages_nde_hdr_tst {
 		Io_mgr._.InitEngine_mem();
 		fxt.Wiki().Db_mgr().Load_mgr().Clear(); // must clear; otherwise fails b/c files get deleted, but wiki.data_mgr caches the Xowd_regy_mgr (the .reg file) in memory;
 		fxt.Wiki().Ns_mgr().Add_new(Xowc_xtn_pages.Ns_page_id_default, "Page").Add_new(Xowc_xtn_pages.Ns_index_id_default, "Index").Ords_sort();
-		fxt.ini_page_create("MediaWiki:Proofreadpage_header_template", "value={{{value|nil}}}");
+		fxt.ini_page_create("MediaWiki:Proofreadpage_header_template", String_.Concat
+		( "{{#if:{{{value|}}}|value={{{value}}};|value=nil;}}"
+		, "{{#if:{{{current|}}}|current={{{current}}};|}}"
+		, "{{#if:{{{prev|}}}|prev={{{prev}}};|}}"
+		, "{{#if:{{{next|}}}|next={{{next}}};|}}"
+		, "{{#if:{{{from|}}}|from={{{from}}};|}}"
+		, "{{#if:{{{to|}}}|to={{{to}}};|}}"
+		, "{{#if:{{{custom|}}}|custom={{{custom}}};|}}"
+		, "\n\n"
+		));
 	}
-	@Test  public void Basic() {
-		fxt.ini_page_create("Index:A", "abc");
-		fxt.tst_Parse_page_wiki_str("<pages index=\"A\"/>", String_.Concat_lines_nl
-		(	"<p>value=toc"
+	@Test  public void Default_to_toc() {	// PURPOSE: default header to "toc" if no "from", "to", "include"; DATE:2014-01-27
+		fxt.ini_page_create("Index:A", "");
+		// only index supplied; add header='toc'
+		fxt.tst_Parse_page_wiki_str("<pages index='A'/>", String_.Concat_lines_nl
+		(	"<p>value=toc;"
 		,	"</p>"
 		,	""
+		,	"<p><br/>"
+		,	"</p>"
+		));
+
+		fxt.ini_page_create("Page:A/1", "A/1");
+		// from specified; don't add toc
+		fxt.tst_Parse_page_wiki_str("<pages index='A' from='1'/>", String_.Concat_lines_nl
+		(	"<p>A/1 "
+		,	"</p>"
+		));
+	}
+	@Test  public void From_set() {	// PURPOSE: "from" should (a) appear in toc; and (b) select pages; DATE:2014-01-27
+		fxt.ini_page_create("Index:A" , "idx");
+		fxt.ini_page_create("Page:A/1", "a1");
+		fxt.ini_page_create("Page:A/2", "a2");
+		fxt.ini_page_create("Page:A/3", "a3");
+		fxt.tst_Parse_page_wiki_str("<pages index='A' from=2 to=2 header='toc'/>", String_.Concat_lines_nl
+		(	"<p>value=toc;from=2;to=2;"
+		,	"</p>"
+		,	""
+		,	"<p>a2 "
+		,	"</p>"
+		));
+	}
+	@Test  public void Mainspace_toc() {	// PURPOSE: Mainspace links should be sent to toc; DATE:2014-01-27
+		fxt.ini_page_create("Index:A" , String_.Concat_lines_nl_skipLast
+		( "[[Page/1]]"
+		, "[[Page/2]]"
+		, "[[Page/3]]"
+		));
+		// next only
+		fxt.Page_ttl_("Page/1");
+		fxt.tst_Parse_page_wiki_str("<pages index='A' />", String_.Concat_lines_nl
+		(	"<p>value=toc;current=<b>Page/1</b>;next=<a href=\"/wiki/Page/2\">Page/2</a>;"
+		,	"</p>"
+		,	""
+		,	"<p><br/>"
+		,	"</p>"
+		));
+
+		// next and prev
+		fxt.Page_ttl_("Page/2");
+		fxt.tst_Parse_page_wiki_str("<pages index='A' />", String_.Concat_lines_nl
+		(	"<p>value=toc;current=<b>Page/2</b>;prev=<a href=\"/wiki/Page/1\">Page/1</a>;next=<a href=\"/wiki/Page/3\">Page/3</a>;"
+		,	"</p>"
+		,	""
+		,	"<p><br/>"
+		,	"</p>"
+		));
+
+		// prev only
+		fxt.Page_ttl_("Page/3");
+		fxt.tst_Parse_page_wiki_str("<pages index='A' />", String_.Concat_lines_nl
+		(	"<p>value=toc;current=<b>Page/3</b>;prev=<a href=\"/wiki/Page/2\">Page/2</a>;"
+		,	"</p>"
+		,	""
+		,	"<p><br/>"
+		,	"</p>"
+		));
+
+		// override current only;
+		fxt.Page_ttl_("Page/2");
+		fxt.tst_Parse_page_wiki_str("<pages index='A' current='custom_cur'/>", String_.Concat_lines_nl
+		(	"<p>value=toc;current=custom_cur;prev=<a href=\"/wiki/Page/1\">Page/1</a>;next=<a href=\"/wiki/Page/3\">Page/3</a>;"
+		,	"</p>"
+		,	""
+		,	"<p><br/>"
+		,	"</p>"
+		));
+
+		// override current, prev, next
+		fxt.tst_Parse_page_wiki_str("<pages index='A' current='custom_cur' prev='custom_prv' next='custom_nxt'/>", String_.Concat_lines_nl
+		(	"<p>value=toc;current=custom_cur;prev=custom_prv;next=custom_nxt;"
+		,	"</p>"
+		,	""
+		,	"<p><br/>"
+		,	"</p>"
+		));
+	}
+	@Test  public void Mainspace_caption() {	// PURPOSE: extract caption; DATE:2014-01-27
+		fxt.ini_page_create("Index:A" , String_.Concat_lines_nl_skipLast
+		( "[[Page/1|Caption_1]]"
+		, "[[Page/2]]"
+		, "[[Page/3]]"
+		));
+
+		fxt.Page_ttl_("Page/2");
+		fxt.tst_Parse_page_wiki_str("<pages index='A' />", String_.Concat_lines_nl
+		(	"<p>value=toc;current=<b>Page/2</b>;prev=<a href=\"/wiki/Page/1\">Caption_1</a>;next=<a href=\"/wiki/Page/3\">Page/3</a>;"
+		,	"</p>"
+		,	""
+		,	"<p><br/>"
+		,	"</p>"
 		));
 	}
 }

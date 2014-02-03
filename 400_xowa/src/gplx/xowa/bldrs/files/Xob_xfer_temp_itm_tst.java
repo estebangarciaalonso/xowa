@@ -54,31 +54,13 @@ public class Xob_xfer_temp_itm_tst {
 		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext	, Xof_ext_.Id_jpg)
 		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime	, (double)3)
 		);
-<<<<<<< HEAD
-		fxt.Test_lnki_thumbtime(Xop_lnki_tkn.Thumbtime_null);
-=======
 		fxt.Test_lnki_thumbtime(Xof_doc_thumb.Null);
->>>>>>> v1.1.4.1
 
 		fxt.Reset().Test_bgn
 		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_media_type	, Xof_media_type.Name_video)
 		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime	, (double)3)
 		);
 		fxt.Test_lnki_thumbtime(3);
-<<<<<<< HEAD
-
-		fxt.Reset().Test_bgn
-		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext	, Xof_ext_.Id_pdf)
-		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime	, (double)3)
-		);
-		fxt.Test_lnki_thumbtime(3);
-
-		fxt.Reset().Test_bgn
-		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext	, Xof_ext_.Id_djvu)
-		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime	, (double)3)
-		);
-		fxt.Test_lnki_thumbtime(3);
-=======
 	}
 	@Test   public void Page_check() {
 		fxt.Test_bgn
@@ -98,7 +80,6 @@ public class Xob_xfer_temp_itm_tst {
 		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_page		, 3)
 		);
 		fxt.Test_lnki_page(3);
->>>>>>> v1.1.4.1
 	}
 }
 class Xob_xfer_temp_itm_fxt {

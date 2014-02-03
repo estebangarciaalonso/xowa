@@ -63,7 +63,7 @@ public class Xosrv_webserver {
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, page_ttl);
 		Xoa_page page = wiki.GetPageByTtl(page_url, ttl);
 		app.Gui_mgr().Main_win().Page_(page); // HACK: init gui_mgr's page for output (which server ordinarily doesn't need)
-		byte[] output_html = wiki.Html_mgr().Output_mgr().Gen(page, Xoh_wiki_article.Tid_view_read);
+		byte[] output_html = wiki.Html_mgr().Output_mgr().Gen(page, Xog_view_mode.Id_read);
 		return String_.new_utf8_(output_html);
 	}
 	public void Run_xowa_cmd(Xoa_app app, String url_encoded_str) {

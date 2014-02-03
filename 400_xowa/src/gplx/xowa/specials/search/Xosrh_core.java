@@ -62,7 +62,7 @@ public class Xosrh_core implements GfoInvkAble, Xows_page {
 			page.Data_raw_(find_page.Data_raw());
 			if (page.Root() != null)	// NOTE: null when going from w:Earth -> q:Earth; DATE:2013-03-20
 				page.Root().Data_htm_(find_page.Root().Data_htm());
-			page.Page_ttl_(page_ttl).Url_(Xoa_url.new_(wiki.Domain_bry(), page_ttl.Full_txt())).Url_redirected_(true);
+			page.Ttl_(page_ttl).Url_(Xoa_url.new_(wiki.Domain_bry(), page_ttl.Full_txt())).Redirected_(true);
 		}
 	}	static final byte[] Bry_page_name = ByteAry_.new_ascii_("Special:Search");
 	private void Sort_tid(byte v) {

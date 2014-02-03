@@ -130,8 +130,6 @@ public class Xof_ext_ {
 			default:											return false;
 		}
 	}
-<<<<<<< HEAD
-=======
 	public static boolean Id_is_image(int id) {
 		switch (id) {
 			case Xof_ext_.Id_png: case Xof_ext_.Id_jpg: case Xof_ext_.Id_jpeg:
@@ -183,5 +181,4 @@ public class Xof_ext_ {
 			default:																						return id;
 		}
 	}
->>>>>>> v1.1.4.1
 }

@@ -79,9 +79,9 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
 		byte[] read_cls = ByteAry_.Empty, edit_cls = ByteAry_.Empty, html_cls = ByteAry_.Empty;
 		switch (output_tid) {
-			case Xoh_wiki_article.Tid_view_read: read_cls = Cls_selected_y; break;
-			case Xoh_wiki_article.Tid_view_edit: edit_cls = Cls_selected_y; break;
-			case Xoh_wiki_article.Tid_view_html: html_cls = Cls_selected_y; break;
+			case Xog_view_mode.Id_read: read_cls = Cls_selected_y; break;
+			case Xog_view_mode.Id_edit: edit_cls = Cls_selected_y; break;
+			case Xog_view_mode.Id_html: html_cls = Cls_selected_y; break;
 		}
 		div_view_fmtr.Bld_bfr_many(tmp_bfr, read_cls, edit_cls, html_cls, search_text);
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();

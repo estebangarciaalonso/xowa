@@ -38,14 +38,14 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 			wtr_page_lang.Page_(page);
 			byte view_tid = output_tid;
 			switch (output_tid) {
-				case Xoh_wiki_article.Tid_view_edit:	fmtr = mgr.Page_edit_fmtr(); break;
-				case Xoh_wiki_article.Tid_view_html:	fmtr = mgr.Page_read_fmtr(); view_tid = Xoh_wiki_article.Tid_view_read; break; // set view_tid to read, so that "read" is highlighted in HTML
-				case Xoh_wiki_article.Tid_view_read:	fmtr = mgr.Page_read_fmtr(); 
+				case Xog_view_mode.Id_edit:	fmtr = mgr.Page_edit_fmtr(); break;
+				case Xog_view_mode.Id_html:	fmtr = mgr.Page_read_fmtr(); view_tid = Xog_view_mode.Id_read; break; // set view_tid to read, so that "read" is highlighted in HTML
+				case Xog_view_mode.Id_read:	fmtr = mgr.Page_read_fmtr(); 
 					ctx.Tab().Lnki_redlinks_mgr().Page_bgn(ctx);	// not sure if this is the best place to put it, but redlinks (a) must only fire once; (b) must fire before html generation; (c) cannot fire during edit (preview will handle separately)
 					break;
 			}
 			Fmt(app, wiki, mgr, page, view_tid, bfr, fmtr, this);
-			if (output_tid == Xoh_wiki_article.Tid_view_html)
+			if (output_tid == Xog_view_mode.Id_html)
 				Fmt(app, wiki, mgr, page, output_tid, bfr, mgr.Page_html_fmtr(), String_.Replace(String_.Replace(String_.Replace(bfr.XtoStrAndClear(), "&", "&amp;"), "\"", "&quot;"), "<", "&lt;"));
 			wtr_page_lang.Page_(null);
 		}
@@ -66,7 +66,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 			return ttl.Full_txt();						// NOTE: include ns with ttl as per defect d88a87b3
 	}
 	private void Fmt(Xoa_app app, Xow_wiki wiki, Xoh_wiki_article mgr, Xoa_page page, byte view_tid, ByteAryBfr bfr, ByteAryFmtr fmtr, Object page_data) {
-		DateAdp page_modified_on_dte = page.Page_date();
+		DateAdp page_modified_on_dte = page.Modified_on();
 		byte[] page_modified_on_msg = page.Lang().Msg_mgr().Val_by_id_args(Xol_msg_itm_.Id_portal_lastmodified, tmp_bfr, page_modified_on_dte.XtoStr_fmt_yyyy_MM_dd(), page_modified_on_dte.XtoStr_fmt_HHmm());
 		byte[] html_content_editable = wiki.Gui_mgr().Cfg_browser().Content_editable() ? Content_editable_bry : ByteAry_.Empty;
 		byte[] page_redirected = Build_redirect_msg(app, wiki, page);
@@ -82,18 +82,18 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		}
 		Xowh_portal_mgr portal_mgr = wiki.Html_mgr().Portal_mgr().Init_assert();
 		Xol_lang lang = page.Lang();
-		byte[] js_wikidata_bry = Wdata_wiki_mgr.Wiki_page_is_json(wiki.Domain_tid(), page.Page_ttl().Ns().Id()) ? app.User().Lang().Fragment_mgr().Html_js_wikidata() : ByteAry_.Empty;
-		byte[] js_edit_toolbar_bry = view_tid == Xoh_wiki_article.Tid_view_edit ? wiki.Fragment_mgr().Html_js_edit_toolbar() : ByteAry_.Empty;
+		byte[] js_wikidata_bry = Wdata_wiki_mgr.Wiki_page_is_json(wiki.Domain_tid(), page.Ttl().Ns().Id()) ? app.User().Lang().Fragment_mgr().Html_js_wikidata() : ByteAry_.Empty;
+		byte[] js_edit_toolbar_bry = view_tid == Xog_view_mode.Id_edit ? wiki.Fragment_mgr().Html_js_edit_toolbar() : ByteAry_.Empty;
 		byte[] css_xtn = app.Ctg_mgr().Missing_ctg_cls_css();
 		if (app.Html_mgr().Page_mgr().Font_enabled())
 			css_xtn = ByteAry_.Add(css_xtn, app.Html_mgr().Page_mgr().Font_css_bry());
 		css_xtn = ByteAry_.Add(css_xtn, app.Gui_mgr().Html_mgr().Css_xtn());
-		fmtr.Bld_bfr_many(bfr, page.Page_id()
-		, Page_name(tmp_bfr, page.Page_ttl(), null)								// NOTE: page_name does not show display_title (<i>). always pass in null
-		, Page_name(tmp_bfr, page.Page_ttl(), wiki.Ctx().Tab().Display_ttl())
+		fmtr.Bld_bfr_many(bfr, page.Id()
+		, Page_name(tmp_bfr, page.Ttl(), null)								// NOTE: page_name does not show display_title (<i>). always pass in null
+		, Page_name(tmp_bfr, page.Ttl(), wiki.Ctx().Tab().Display_ttl())
 		, page_redirected, page_data, wtr_page_lang, page_modified_on_msg, lang.Dir_bry(), log_wtr.Html()
 		, mgr.Css_common_bry(), mgr.Css_wiki_bry(), css_xtn, html_content_editable
-		, portal_mgr.Div_personal_bry(), portal_mgr.Div_ns_bry(app.Utl_bry_bfr_mkr(), page.Page_ttl(), wiki.Ns_mgr()), portal_mgr.Div_view_bry(app.Utl_bry_bfr_mkr(), view_tid, page.Search_text())
+		, portal_mgr.Div_personal_bry(), portal_mgr.Div_ns_bry(app.Utl_bry_bfr_mkr(), page.Ttl(), wiki.Ns_mgr()), portal_mgr.Div_view_bry(app.Utl_bry_bfr_mkr(), view_tid, page.Search_text())
 		, portal_mgr.Div_logo_bry(), portal_mgr.Div_home_bry(), portal_mgr.Div_wikis_bry(app.Utl_bry_bfr_mkr()), portal_mgr.Sidebar_mgr().Html_bry()
 		, mgr.Edit_rename_div_bry(), page.Data_preview()
 		, Xoa_app_.Version, Xoa_app_.Build_date, Bry_xowa_root_dir, js_mathjax_script, wiki.Fragment_mgr().Html_js_table(), js_wikidata_bry, js_edit_toolbar_bry, app.Server().Running_str()
@@ -135,9 +135,9 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		}
 		Xow_wiki wiki = page.Wiki();
 		Xoa_app app = wiki.App();
-		int ns_id = page.Page_ttl().Ns().Id();
+		int ns_id = page.Ttl().Ns().Id();
 		int bfr_page_bgn = bfr.Bry_len();
-		byte page_tid = Xow_page_tid.Identify(wiki.Domain_tid(), ns_id, page.Page_ttl().Page_db());
+		byte page_tid = Xow_page_tid.Identify(wiki.Domain_tid(), ns_id, page.Ttl().Page_db());
 		boolean page_tid_uses_pre = false;
 		switch (page_tid) {
 			case Xow_page_tid.Tid_js:
@@ -153,7 +153,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 				break;
 			case Xow_page_tid.Tid_wikitext:
 				if	(ns_id == Xow_ns_.Id_file)		// if File ns, add boilerplate header
-					app.File_main_wkr().Bld_html(wiki, ctx, bfr, page.Page_ttl(), wiki.Cfg_file_page(), page.File_queue());
+					app.File_main_wkr().Bld_html(wiki, ctx, bfr, page.Ttl(), wiki.Cfg_file_page(), page.File_queue());
 				if (wiki.Html_mgr().Tidy_enabled())
 					Tidy(wiki, bfr);
 				else
@@ -177,7 +177,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 			if (cleaned != null) {
 				bfr.Del_by(bfr_page_end - bfr_page_bgn);
 				bfr.Add(cleaned);
-				app.Usr_dlg().Warn_many("", "", "javascript detected: wiki=~{0} ~{1}", wiki.Domain_str(), String_.new_utf8_(page.Page_ttl().Full_txt()));
+				app.Usr_dlg().Warn_many("", "", "javascript detected: wiki=~{0} ~{1}", wiki.Domain_str(), String_.new_utf8_(page.Ttl().Full_txt()));
 			}
 		}
 	}

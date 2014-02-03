@@ -33,7 +33,7 @@ class Xobc_xnde_math_dump extends Xob_itm_dump_base implements Xob_xnde_wkr {	//
 	public void Wkr_run(Xop_ctx ctx, Xop_root_tkn root, Xop_xnde_tkn xnde) {
 		if (xnde.CloseMode() == Xop_xnde_tkn.CloseMode_inline) return;	// ignore <math/>; EX:FOSD origami
 		byte[] math = ByteAry_.Mid(root.Root_src(), xnde.Src_bgn() + 6, xnde.Src_end() - 7); // 6=<math>; 7=</math>
-		byte[] ttl = ctx.Page().Page_ttl().Full_txt();
+		byte[] ttl = ctx.Page().Ttl().Full_txt();
 		int entry_len = ttl.length + math.length + 3; // 3=| + | + \n  
 		if (dump_bfr.Bry_len() + entry_len > dump_fil_len) Flush();
 		fld_wtr.Write_bry_escape_fld(math);

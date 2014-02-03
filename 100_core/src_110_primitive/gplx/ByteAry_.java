@@ -577,6 +577,7 @@ public class ByteAry_ {
 		return rv;
 	}
 	public static float XtoFloatByPos(byte[] ary, int bgn, int end) {return Float_.parse_(String_.new_utf8_(ary, bgn, end));}
+	public static double XtoDoubleByPosOr(byte[] ary, int bgn, int end, double or) {return Double_.parseOr_(String_.new_utf8_(ary, bgn, end), or);}
 	public static double XtoDoubleByPos(byte[] ary, int bgn, int end) {return Double_.parse_(String_.new_utf8_(ary, bgn, end));}
 	public static DecimalAdp XtoDecimalByPos(byte[] ary, int bgn, int end) {return DecimalAdp_.parse_(String_.new_utf8_(ary, bgn, end));}
 	public static final byte Dlm_fld = (byte)'|', Dlm_row = (byte)'\n', Dlm_quote = (byte)'"', Dlm_null = 0, Ascii_zero = 48;

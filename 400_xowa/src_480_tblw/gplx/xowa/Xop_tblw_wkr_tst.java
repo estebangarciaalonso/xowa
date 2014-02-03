@@ -985,23 +985,6 @@ public class Xop_tblw_wkr_tst {
 			,	"</table>"
 			));
 	}
-//		@Test  public void Auto_close_tblw() {// PURPOSE: unclosed tblw should be closed before next == a ==; EX:w:Paris; DATE:2013-12-09
-//			fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
-//			(	"{|"
-//			,	"|-"
-//			,	"|a"
-//			,	"== b =="
-//			), String_.Concat_lines_nl
-//			(	"<table>"
-//			,	"  <tr>"
-//			,	"    <td>a"
-//			,	"    </td>"
-//			,	"  </tr>"
-//			,	"</table>"
-//			,	""
-//			,	"<h2> b </h2>"
-//			));
-//		}
 }
 /*
 */

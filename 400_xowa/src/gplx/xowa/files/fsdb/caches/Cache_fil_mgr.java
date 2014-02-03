@@ -105,16 +105,10 @@ class Cache_fil_mgr {
 		Xof_repo_itm trg_repo = repo_mgr.Get_primary(wiki_domain);
 		byte[] ttl = itm.Fil_name();			
 		byte[] md5 = Xof_xfer_itm.Md5_(ttl);
-<<<<<<< HEAD
-		Io_url fil_url = url_bldr.Set_trg_file_(mode_id, trg_repo, ttl, md5, itm.Fil_ext(), itm.Fil_w()
-			, Fsdb_xtn_thm_itm.X_to_xowa_thumbtime(itm.Fil_ext().Id(), itm.Fil_thumbtime())
-			, Fsdb_xtn_thm_itm.X_to_xowa_page(itm.Fil_ext().Id(), itm.Fil_thumbtime())
-=======
 		int itm_ext_id = itm.Fil_ext().Id();
 		Io_url fil_url = url_bldr.Set_trg_file_(mode_id, trg_repo, ttl, md5, itm.Fil_ext(), itm.Fil_w()
 			, Xof_doc_thumb.Convert_to_xowa_thumbtime	(itm_ext_id, itm.Fil_thumbtime())
 			, Xof_doc_thumb.Convert_to_xowa_page		(itm_ext_id, itm.Fil_thumbtime())
->>>>>>> v1.1.4.1
 			).Xto_url();
 		Io_mgr._.DeleteFil_args(fil_url).MissingFails_off().Exec();
 		itm.Cmd_mode_delete_();

@@ -28,6 +28,15 @@ public class Xof_wiki_orig_tbl {
 		in_wkr.Select_in(p, cancelable, 0, itms.Count());
 		Xof_wiki_orig_tbl_evaluator.Rdr_done(exec_tid, itms, hash, url_bldr, repo_mgr);
 	}
+	public static Xof_wiki_orig_itm Select_itm(Db_provider p, byte[] ttl) {
+		Xof_wiki_orig_itm rv = Xof_wiki_orig_itm.Null;
+		DataRdr rdr = Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(Db_crt_.eq_(String_.new_utf8_(ttl))).Exec_qry_as_rdr(p);
+		if (rdr.MoveNextPeer()) {
+			rv = Xof_wiki_orig_itm.load_(rdr);
+		}
+		rdr.Rls();
+		return rv;
+	}
 	public static boolean Select_itm_exists(Db_provider p, byte[] ttl) {
 		Object o =  Db_qry_.select_val_(Tbl_name, Fld_uid, Db_crt_.eq_(Fld_orig_ttl, String_.new_utf8_(ttl))).ExecRdr_val(p);
 		return o != null;

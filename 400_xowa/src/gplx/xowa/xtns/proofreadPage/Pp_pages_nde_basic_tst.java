@@ -238,4 +238,38 @@ public class Pp_pages_nde_basic_tst {
 		,	""
 		));
 	}
+	@Test  public void Index_various() {// varying logic depending on whether [[Index:]] has [[Page]] or <pagelist> DATE:2014-01-27
+		fxt.ini_page_create("Page:A/0", "A/0");
+		fxt.ini_page_create("Page:A/1", "A/1");
+		fxt.ini_page_create("Page:A/2", "A/2");
+		fxt.ini_page_create("Index:A", "");
+
+		// [[Index:]] has no [[Page:]] links; interpret to=1 as [[Page:A/1]]
+		fxt.ini_page_update("Index:A" , String_.Concat_lines_nl
+		( "no links"
+		));
+		fxt.tst_Parse_page_wiki_str("<pages index='A' to=1 />", String_.Concat_lines_nl
+		( "<p>A/0 A/1 "
+		, "</p>"
+		));
+
+		// [[Index:]] has [[Page:]] links; interpret to=1 as 1st [[Page:]] in [[Index:]]'s [[Page:]] links
+		fxt.ini_page_update("Index:A" , String_.Concat_lines_nl
+		( "[[Page:A/0]]"
+		));
+		fxt.tst_Parse_page_wiki_str("<pages index='A' to=1 />", String_.Concat_lines_nl
+		( "<p>A/0 "
+		, "</p>"
+		));
+
+		// [[Index:]] has [[Page:]] links but also <pagelist>; interpret to=1 as [[Page:A/1]]
+		fxt.ini_page_update("Index:A" , String_.Concat_lines_nl
+		( "[[Page:A/0]]"
+		, "<pagelist/>"
+		));
+		fxt.tst_Parse_page_wiki_str("<pages index='A' to=1 />", String_.Concat_lines_nl
+		( "<p>A/0 A/1 "
+		, "</p>"
+		));
+	}
 }

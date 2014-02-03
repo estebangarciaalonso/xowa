@@ -111,7 +111,7 @@ class App_log_wtr_html implements ByteAryFmtrArg {
 				tmp_fmtr.Fmt_(eny.Item().Fmt());
 				tmp_fmtr.Bld_bfr_ary(tmp_bfr, eny.Vals());
 			}
-			itm_fmtr.Bld_bfr_many(html_bfr, page.Page_ttl().Page_txt(), eny.Item().Path_bry(), eny.Item().Key_bry(), Gfo_msg_itm_.CmdBry[eny.Item().Cmd()], tmp_bfr.XtoAryAndClear(), excerpt_mid);
+			itm_fmtr.Bld_bfr_many(html_bfr, page.Ttl().Page_txt(), eny.Item().Path_bry(), eny.Item().Key_bry(), Gfo_msg_itm_.CmdBry[eny.Item().Cmd()], tmp_bfr.XtoAryAndClear(), excerpt_mid);
 			msg_bfr.Clear();
 			excerpt_bfr.Clear();
 		}

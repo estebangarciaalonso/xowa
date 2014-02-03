@@ -30,7 +30,7 @@ public class Xop_lnki_logger_redlinks_mgr {
 		usr_dlg = log_enabled ? ctx.App().Usr_dlg() : Gfo_usr_dlg_.Null;
 		lnki_idx = 1;	// NOTE: must start at 1; html_wtr checks for > 0
 		lnki_list.Clear();
-		disabled = ctx.Page().Page_ttl().Ns().Id_module();		// never redlink in Module ns; particularly since Lua has multi-line comments for [[ ]]
+		disabled = ctx.Page().Ttl().Ns().Id_module();		// never redlink in Module ns; particularly since Lua has multi-line comments for [[ ]]
 	}
 	public void Lnki_add(Xop_ctx ctx, Xop_lnki_tkn lnki) {
 		if (disabled) return;

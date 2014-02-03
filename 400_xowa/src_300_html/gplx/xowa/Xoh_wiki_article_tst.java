@@ -26,7 +26,7 @@ public class Xoh_wiki_article_tst {
 		GfoInvkAble_.InvkCmd_val(portal_mgr, Xowh_portal_mgr.Invk_div_logo_, ByteAry_.new_ascii_("~{portal_nav_main_href}"));
 		portal_mgr.Init_assert();
 		Xoh_wiki_article html_mgr = new Xoh_wiki_article(app, true);
-		html_mgr.Gen(wiki.Ctx().Page(), Xoh_wiki_article.Tid_view_read);
+		html_mgr.Gen(wiki.Ctx().Page(), Xog_view_mode.Id_read);
 		Tfds.Eq(String_.new_ascii_(portal_mgr.Div_logo_bry()), "/site/en.wikipedia.org/wiki/");
 	}
 }

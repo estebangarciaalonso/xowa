@@ -284,7 +284,8 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		}
 		if (tag.Restricted()) {
 			Xoa_page page = ctx.Page();
-			if (!page.Allow_all_html() && page.Wiki().Domain_tid() != Xow_wiki_domain_.Tid_home) {
+			if (	page.Html_restricted() 
+				&&	page.Wiki().Domain_tid() != Xow_wiki_domain_.Tid_home) {
 				int end_pos = gtPos + 1;
 				ctx.Subs_add(root, tkn_mkr.Bry(bgn_pos, end_pos, ByteAry_.Add(gplx.html.Html_entities.Lt, ByteAry_.Mid(src, bgn_pos + 1, end_pos)))); // +1 to skip <
 				return end_pos;
@@ -634,7 +635,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 						xnde_data.Xtn_compile(ctx.Wiki(), ctx, tkn_mkr, root, src, xnde);
 					}
 					catch (Exception e) {
-						String err_msg = String_.Format("failed to render extension: title={0} excerpt={1} err={2}", String_.new_utf8_(ctx.Page().Page_ttl().Full_txt())
+						String err_msg = String_.Format("failed to render extension: title={0} excerpt={1} err={2}", String_.new_utf8_(ctx.Page().Ttl().Full_txt())
 							, String_.new_utf8_(src, xnde.Tag_open_end(), xnde.Tag_close_bgn())
 							, Err_.Message_gplx_brief(e));
 						if (Env_.Mode_testing()) 

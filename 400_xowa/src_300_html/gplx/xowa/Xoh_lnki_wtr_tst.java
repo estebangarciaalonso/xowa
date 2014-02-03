@@ -293,11 +293,13 @@ public class Xoh_lnki_wtr_tst {
 		));
 	}
 	@Test  public void Lnki_media_literal_pdf() {
+		fxt.Wiki().Html_mgr().Img_suppress_missing_src_(true);	// simulate missing file; DATE:2014-01-30
 		fxt.tst_Parse_page_wiki_str("[[Media:A.pdf|b]]", String_.Concat_lines_nl_skipLast
 		(	"<a href=\"file:///mem/wiki/repo/trg/orig/e/f/A.pdf\" xowa_title=\"A.pdf\">b"
 		,	"</a>"
 		));
-		Tfds.Eq(0, fxt.Page().File_queue().Count());	// make sure media does not add to queue
+		Tfds.Eq(0, fxt.Page().File_queue().Count());			// make sure media does not add to queue
+		fxt.Wiki().Html_mgr().Img_suppress_missing_src_(false);
 	}
 	@Test  public void Lnki_file_alt_link() {	// PURPOSE: lnki in caption should not create alt="b<a href="c">cd</a>"
 		fxt.tst_Parse_page_wiki_str("[[File:A.png|thumb|alt=b [[c]] d]]", String_.Concat_lines_nl_skipLast

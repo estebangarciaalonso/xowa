@@ -28,16 +28,12 @@ public class Pf_url_filepath extends Pf_func_base {
 		Xoa_ttl ttl = Xoa_ttl.new_(wiki, ctx.App().Msg_log_null(), val_ary, val_ary, 0, val_ary.length);  if (ttl == null) return; // text is not valid ttl; return;
 		Xoa_page page = Load_page(wiki, ttl);
 		if (page.Missing()) return; // page not found in commons; exit;
-		byte[] ttl_bry = page.Page_ttl().Page_url();
+		byte[] ttl_bry = page.Ttl().Page_url();
 		Xofw_file_finder_rslt tmp_rslt = wiki.File_mgr().Repo_mgr().Page_finder_locate(ttl_bry);
 		if (tmp_rslt .Repo_idx() == Byte_.MaxValue_127) return;
 		Xof_repo_itm trg_repo = wiki.File_mgr().Repo_mgr().Repos_get_at(tmp_rslt.Repo_idx()).Trg();
 		xfer_itm.Atrs_by_ttl(ttl_bry, ByteAry_.Empty);	// redirect is empty b/c Get_page does all redirect lookups
-<<<<<<< HEAD
-		byte[] url = url_bldr.Set_trg_html_(Xof_repo_itm.Mode_orig, trg_repo, ttl_bry, xfer_itm.Lnki_md5(), xfer_itm.Lnki_ext(), Xof_img_size.Size_null_deprecated, Xop_lnki_tkn.Thumbtime_null, Xop_lnki_tkn.Page_null).Xto_bry();
-=======
 		byte[] url = url_bldr.Set_trg_html_(Xof_repo_itm.Mode_orig, trg_repo, ttl_bry, xfer_itm.Lnki_md5(), xfer_itm.Lnki_ext(), Xof_img_size.Size_null_deprecated, Xof_doc_thumb.Null, Xof_doc_page.Null).Xto_bry();
->>>>>>> v1.1.4.1
 		bb.Add(url);
 	}	private static final byte[] Bry_file = ByteAry_.new_ascii_("File:");
 	private static final Xof_xfer_itm xfer_itm = new Xof_xfer_itm();

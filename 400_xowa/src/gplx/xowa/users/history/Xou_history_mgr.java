@@ -24,7 +24,7 @@ public class Xou_history_mgr implements GfoInvkAble {// app.user.history
 	@gplx.Internal protected Xou_history_itm Get_at(int i) {return (Xou_history_itm)itms.FetchAt(i);}		
 	public String Get_at_last(Xoa_app app) {
 		if (!load_chk) Load(app);
-		int len = itms.Count(); if (len == 0) return String_.new_ascii_(Xoa_page.Bry_main_page);	// if no history, return Main_page (which should go to home/wiki/Main_page)
+		int len = itms.Count(); if (len == 0) return String_.new_ascii_(Xoa_page_.Main_page_bry);	// if no history, return Main_page (which should go to home/wiki/Main_page)
 		Xou_history_itm itm = (Xou_history_itm)itms.FetchAt(0);
 		return String_.new_utf8_(ByteAry_.Add(itm.Wiki(), Xoh_href_parser.Href_wiki_bry, itm.Page()));
 	}
@@ -36,7 +36,7 @@ public class Xou_history_mgr implements GfoInvkAble {// app.user.history
 	public void Add(Xoa_page page) {
 		Xoa_url url = page.Url();
 //			byte[] anchor = url.Anchor_bry() == null ? ByteAry_.Empty : ByteAry_.Add(new byte[] {Byte_ascii.Hash}, url.Anchor_bry());
-		byte[] page_ttl = ByteAry_.Add(page.Page_ttl().Ns().Name_db_w_colon(), page.Page_ttl().Page_txt());  // use ttl.Page_txt() b/c it normalizes space/casing (url.Page_txt does not)
+		byte[] page_ttl = ByteAry_.Add(page.Ttl().Ns().Name_db_w_colon(), page.Ttl().Page_txt());  // use ttl.Page_txt() b/c it normalizes space/casing (url.Page_txt does not)
 		if (url.Args().length > 0)
 			page_ttl = ByteAry_.Add(page_ttl, url.Args_all_as_bry());
 		Add(url, page_ttl);

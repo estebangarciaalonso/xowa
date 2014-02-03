@@ -80,5 +80,5 @@ public class Fsdb_cfg_mgr {
 		return this;
 	}
 	public static final String Grp_core = "core";
-	private static final String Key_next_id = "next_id", Key_schema_thm_page = "schema.thm.page";
+	public static final String Key_next_id = "next_id", Key_schema_thm_page = "schema.thm.page";
 }

@@ -24,7 +24,7 @@ public class Xouc_startup_mgr implements GfoInvkAble {
 		byte v = Page_parse(page);
 		switch (v) {
 			case Page_home: return config.Pages_mgr().Home();
-			case Page_last: return String_.new_utf8_(config.User().App().Gui_mgr().Main_win().Page().Page_ttl().Raw());
+			case Page_last: return String_.new_utf8_(config.User().App().Gui_mgr().Main_win().Page().Ttl().Raw());
 			case Page_xowa: return Xouc_pages_mgr.Page_xowa;
 			default: throw Err_.unhandled(page);
 		}

@@ -58,17 +58,17 @@ class Xou_output_wkr_fxt {
 		Xoa_page page = wiki.Ctx().Page();
 		page.Data_raw_(ByteAry_.new_utf8_(raw));
 		Xoh_wiki_article mgr = wiki.Html_mgr().Output_mgr();
-		Xou_output_wkr wkr = mgr.Wkr(Xoh_wiki_article.Tid_view_edit).Page_(page).Mgr_(mgr);
+		Xou_output_wkr wkr = mgr.Wkr(Xog_view_mode.Id_edit).Page_(page).Mgr_(mgr);
 		wkr.XferAry(tmp_bfr, 0);
 		Tfds.Eq(expd, tmp_bfr.XtoStrAndClear());
 	}
 	public void Test_read(String page_name, String page_text, String expd) {
 		wiki.Html_mgr().Output_mgr().Html_capable_(true);
 		Xoa_page page = wiki.Ctx().Page();
-		page.Page_ttl_(Xoa_ttl.parse_(wiki, ByteAry_.new_ascii_(page_name)));
+		page.Ttl_(Xoa_ttl.parse_(wiki, ByteAry_.new_ascii_(page_name)));
 		page.Data_raw_(ByteAry_.new_utf8_(page_text));
 		Xoh_wiki_article mgr = wiki.Html_mgr().Output_mgr();
-		Xou_output_wkr wkr = mgr.Wkr(Xoh_wiki_article.Tid_view_read).Page_(page).Mgr_(mgr);
+		Xou_output_wkr wkr = mgr.Wkr(Xog_view_mode.Id_read).Page_(page).Mgr_(mgr);
 		wkr.XferAry(tmp_bfr, 0);
 		Tfds.Eq(expd, tmp_bfr.XtoStrAndClear());
 	}

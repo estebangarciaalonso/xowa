@@ -106,7 +106,7 @@ public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoIn
 //			Tfds.Write(String_.new_utf8_(ttl_bry));
 		if (cur_ns.Id() != Xow_ns_.Id_main)	// add ns to ttl_bry; EX: A -> Category:A
 			ttl_bry = ByteAry_.Add(cur_ns.Name_db_w_colon(), ttl_bry);
-		ctx.Page().Page_ttl_(Xoa_ttl.parse_(wiki, ttl_bry));
+		ctx.Page().Ttl_(Xoa_ttl.parse_(wiki, ttl_bry));
 		try {
 			msg_log.Clear();
 			if (ns_is_tmpl)

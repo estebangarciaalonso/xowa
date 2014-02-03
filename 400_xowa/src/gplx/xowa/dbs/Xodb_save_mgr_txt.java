@@ -66,7 +66,7 @@ public class Xodb_save_mgr_txt implements Xodb_save_mgr {
 		Data_update_under(page, null, new_ttl);
 	}
 	private void Data_update_under(Xoa_page page, byte[] text, byte[] new_ttl) {
-		Xoa_ttl ttl = page.Page_ttl();
+		Xoa_ttl ttl = page.Ttl();
 		Xow_ns ns = ttl.Ns(); byte[] ttl_bry = ttl.Page_db();
 		Xodb_page db_page = Xodb_page.tmp_();
 		if (!load_mgr.Load_by_ttl(db_page, ns, ttl_bry)) throw Err_mgr._.fmt_(GRP_KEY, "title_missing", "update requested but title does not exist: ~{0}", String_.new_utf8_(ttl_bry));
@@ -84,7 +84,7 @@ public class Xodb_save_mgr_txt implements Xodb_save_mgr {
 		DateAdp modified_on = tmp_page.Modified_on();
 		if (update_modified_on_enabled) {
 			modified_on = DateAdp_.Now();
-			page.Page_date_(modified_on);
+			page.Modified_on_(modified_on);
 		}
 		Xodb_page_.Txt_page_save(tmp_bfr, db_page.Id(), modified_on, ttl_bry, text, true);
 		page_rdr.Update(tmp_bfr, page_itm, tmp_bfr.XtoAryAndClear());

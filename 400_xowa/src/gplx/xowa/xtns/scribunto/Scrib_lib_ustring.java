@@ -20,7 +20,7 @@ import gplx.texts.*;
 class Scrib_lib_ustring implements Scrib_lib {
 	public Scrib_lib_ustring(Scrib_engine engine) {this.engine = engine; gsub_mgr = new Scrib_lib_ustring_gsub_mgr(engine, regx_converter);} Scrib_engine engine; Scrib_lib_ustring_gsub_mgr gsub_mgr;
 	public Scrib_mod Mod() {return mod;} Scrib_mod mod;
-	public int String_len_max() {return string_len_max;} public Scrib_lib_ustring String_len_max_(int v) {string_len_max = v; return this;} private int string_len_max = Xoa_page.Page_len_max;
+	public int String_len_max() {return string_len_max;} public Scrib_lib_ustring String_len_max_(int v) {string_len_max = v; return this;} private int string_len_max = Xoa_page_.Page_len_max;
 	public int Pattern_len_max() {return pattern_len_max;} public Scrib_lib_ustring Pattern_len_max_(int v) {pattern_len_max = v; return this;} private int pattern_len_max = 10000;
 	public Scrib_lua_regx_converter Regx_converter() {return regx_converter;} Scrib_lua_regx_converter regx_converter = new Scrib_lua_regx_converter();
 	public Scrib_mod Register(Scrib_engine engine, Io_url script_dir) {
@@ -132,7 +132,7 @@ class Scrib_lib_ustring implements Scrib_lib {
 	public static RegxAdp RegxAdp_new_(Xop_ctx ctx, String regx) {
 		RegxAdp rv = RegxAdp_.new_(regx);
 		if (rv.Pattern_is_invalid()) {
-			ctx.App().Usr_dlg().Warn_many("", "", "regx is invalid: regx=~{0} page=~{1}", regx, String_.new_utf8_(ctx.Page().Page_ttl().Page_db()));
+			ctx.App().Usr_dlg().Warn_many("", "", "regx is invalid: regx=~{0} page=~{1}", regx, String_.new_utf8_(ctx.Page().Ttl().Page_db()));
 		}
 		return rv;
 	}

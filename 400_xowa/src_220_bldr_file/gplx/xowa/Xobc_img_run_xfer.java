@@ -86,11 +86,7 @@ public class Xobc_img_run_xfer extends Xob_itm_basic_base implements Xob_cmd, Gf
 				boolean thumb_pass = false, skip = false; //byte orig_pass = Bool_.__byte;
 				for (int i = 0; i < lnks_len; i++) {
 					Xofo_lnki lnk = lnks[i];
-<<<<<<< HEAD
-					xfer_itm.Atrs_by_lnki(lnk.Lnki_type(), lnk.Lnki_w(), lnk.Lnki_h(), lnk.Lnki_upright(), lnk.Lnki_thumbtime(), Xop_lnki_tkn.Page_null);
-=======
 					xfer_itm.Atrs_by_lnki(lnk.Lnki_type(), lnk.Lnki_w(), lnk.Lnki_h(), lnk.Lnki_upright(), lnk.Lnki_thumbtime(), Xof_doc_page.Null);
->>>>>>> v1.1.4.1
 					xfer_itm.Atrs_calc_for_html();
 					xfer.Atrs_by_itm(xfer_itm, src_repo, trg_repo);
 					if (!xfer.Download_allowed_by_ext() || xfer_itm.Meta_itm().Orig_exists() == Xof_meta_itm.Exists_n) {skip = true; break;}

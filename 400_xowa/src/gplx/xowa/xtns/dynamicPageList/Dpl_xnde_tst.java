@@ -159,6 +159,14 @@ public class Dpl_xnde_tst {
 		fxt.Warns("unknown_key: page=Test page key=Ctg_0 order");	// ignore warning message
 		fxt.Ul_pages("<DynamicPageList> category=Ctg_0 order=descending</DynamicPageList>", "No pages meet these criteria.");
 	}
+	@Test  public void Atr_has_template() {	// PURPOSE: attribute also has template; DATE:2014-01-31
+		fxt.Ctg_create("Test_page", "B", "A");
+		fxt.Ul_pages(String_.Concat_lines_nl
+		(	"<DynamicPageList>"
+		,	"category={{PAGENAME}}"
+		,	"</DynamicPageList>"
+		), fxt.Ul(Itm_html_null, "B", "A"));
+	}
 	private static final String Itm_html_null = null;
 }
 class Dpl_page_mok {

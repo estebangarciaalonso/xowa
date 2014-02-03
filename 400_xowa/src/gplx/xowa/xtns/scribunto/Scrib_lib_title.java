@@ -123,7 +123,7 @@ class Scrib_lib_title implements Scrib_lib {
 		return Scrib_kv_utl.base1_obj_(String_.new_utf8_(page.Data_raw()));
 	}
 	public KeyVal[] GetCurrentTitle(KeyVal[] values) {
-		return Scrib_kv_utl.base1_obj_(Xto_kv_ary(engine.Ctx().Page().Page_ttl()));
+		return Scrib_kv_utl.base1_obj_(Xto_kv_ary(engine.Ctx().Page().Ttl()));
 	}
 	private KeyVal[] Xto_kv_ary(Xoa_ttl ttl) {
 		Xow_ns ns = ttl.Ns();

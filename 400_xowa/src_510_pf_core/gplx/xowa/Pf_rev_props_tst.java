@@ -21,8 +21,8 @@ public class Pf_rev_props_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before	public void setup()						{fxt.Reset(); fxt.Wiki().Ctx().Page_revData().User_(ByteAry_.new_ascii_("user")).ProtectionLevel_(ByteAry_.new_ascii_("normal"));}
 	@After public void teardown()				{}
-	@Test  public void RevisionID()					{fxt.Wiki().Ctx().Page().Page_id_(1); fxt.tst_Parse_tmpl_str_test("{{REVISIONID}}"				, "{{test}}", "1");}
-	@Test  public void PageID()						{fxt.Wiki().Ctx().Page().Page_id_(1); fxt.tst_Parse_tmpl_str_test("{{PAGEID}}"					, "{{test}}", "1");}
+	@Test  public void RevisionID()					{fxt.Wiki().Ctx().Page().Id_(1); fxt.tst_Parse_tmpl_str_test("{{REVISIONID}}"				, "{{test}}", "1");}
+	@Test  public void PageID()						{fxt.Wiki().Ctx().Page().Id_(1); fxt.tst_Parse_tmpl_str_test("{{PAGEID}}"					, "{{test}}", "1");}
 	@Test  public void RevisionUser()				{fxt.tst_Parse_tmpl_str_test("{{REVISIONUSER}}"				, "{{test}}", "user");}
 	@Test  public void PageSize()					{fxt.tst_Parse_tmpl_str_test("{{PAGESIZE:Test page}}"		, "{{test}}", "0");}
 	@Test  public void ProtectionLevel()			{fxt.tst_Parse_tmpl_str_test("{{PROTECTIONLEVEL}}"			, "{{test}}", "normal");}

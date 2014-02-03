@@ -834,6 +834,10 @@ public class Xop_para_wkr_tst {
 			, "</ul>"
 			));
 	}
+//		@Test  public void Category_2() {	// PURPOSE: Category strips all preceding ws; EX.WP: NYC (in external links)
+//			fxt.ini_defn_add("Audio", "y\n\n[[Category:z]]");
+//			fxt.tst_Parse_page_all_str("a {{Template:Audio}} b", "a y b");
+//		}
 	@Test   public void Ws_mistakenly_ignored() {// PURPOSE: ws before ''' somehow gets ignored; EX.WP: Vacuum tube; {{Unreferenced section|date=July 2010|reason=date taken from existing cn}}
 		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"<table><tr><td><span>a"

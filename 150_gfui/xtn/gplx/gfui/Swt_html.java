@@ -109,7 +109,7 @@ class Swt_html implements Gxw_html, Swt_control, FocusListener {
 	}
 	private boolean Eval_script_as_exec(String script) 	{Eval_script(script); return eval_rslt.Result_pass();}
 	private String Eval_script_as_str(String script) 	{return (String)Eval_script(script);}
-	private Object Eval_script(String script) {
+	public Object Eval_script(String script) {
 		eval_rslt.Clear();
 		try 				{eval_rslt.Result_set(browser.evaluate(script)); 	return eval_rslt.Result();}
 		catch (Exception e) {eval_rslt.Error_set(e.getMessage()); 				return eval_rslt.Error();}
@@ -194,7 +194,7 @@ class Swt_html_lnr_location implements LocationListener {
 	public void Host_set(GfoEvObj host) {this.host = host;} GfoEvObj host;
 	@Override public void changed(LocationEvent arg) 	{Pub_evt(arg, Gfui_html.Evt_location_changed);}
 	@Override public void changing(LocationEvent arg) 	{Pub_evt(arg, Gfui_html.Evt_location_changing);}
-	void Pub_evt(LocationEvent arg, String evt) {
+	void Pub_evt(LocationEvent arg, String evt) {		
 		String location = arg.location;
 		if (String_.Eq(location, "about:blank")) return;	// location changing event fires once when page is loaded; ignore
 		try {

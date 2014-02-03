@@ -35,12 +35,12 @@ public class Xoctg_html_mgr implements GfoInvkAble {
 		}
 		catch (Exception e) { // ctg error should never cause page to fail
 			tmp_bfr.Mkr_rls();
-			page.Wiki().App().Gui_wtr().Warn_many("", "", "failed to generate category: title=~{0} err=~{1}", String_.new_utf8_(page.Page_ttl().Full_txt()), Err_.Message_gplx_brief(e));
+			page.Wiki().App().Gui_wtr().Warn_many("", "", "failed to generate category: title=~{0} err=~{1}", String_.new_utf8_(page.Ttl().Full_txt()), Err_.Message_gplx_brief(e));
 		}
 	}	private Xoctg_url url_ctg = new Xoctg_url();
 	private void Bld_html_v2(Xow_wiki wiki, Xoa_page page, ByteAryBfr bfr) {
-		byte[] ttl_bry = page.Page_ttl().Page_db();
-		Xoctg_view_ctg view_ctg = new Xoctg_view_ctg().Name_(page.Page_ttl().Page_txt());
+		byte[] ttl_bry = page.Ttl().Page_db();
+		Xoctg_view_ctg view_ctg = new Xoctg_view_ctg().Name_(page.Ttl().Page_txt());
 		url_ctg.Parse(wiki.App().Usr_dlg(), page.Url());
 		wiki.Db_mgr().Load_mgr().Load_ctg_v2a(view_ctg, url_ctg, ttl_bry, Grp_max_default);
 		Bld_all(bfr, wiki, page.Lang(), view_ctg, Xoa_ctg_mgr.Tid_subc);
@@ -80,8 +80,8 @@ public class Xoctg_html_mgr implements GfoInvkAble {
 		}
 	}
 	private void Bld_html_v1(Xow_wiki wiki, Xoa_page page, ByteAryBfr bfr) {
-		Xoctg_view_ctg ctg = new Xoctg_view_ctg().Name_(page.Page_ttl().Page_txt());
-		boolean found = wiki.Db_mgr().Load_mgr().Load_ctg_v1(ctg, page.Page_ttl().Page_db()); if (!found) return;
+		Xoctg_view_ctg ctg = new Xoctg_view_ctg().Name_(page.Ttl().Page_txt());
+		boolean found = wiki.Db_mgr().Load_mgr().Load_ctg_v1(ctg, page.Ttl().Page_db()); if (!found) return;
 		Bld_all(bfr, wiki, page.Lang(), ctg, Xoa_ctg_mgr.Tid_subc);
 		Bld_all(bfr, wiki, page.Lang(), ctg, Xoa_ctg_mgr.Tid_page);
 		Bld_all(bfr, wiki, page.Lang(), ctg, Xoa_ctg_mgr.Tid_file);

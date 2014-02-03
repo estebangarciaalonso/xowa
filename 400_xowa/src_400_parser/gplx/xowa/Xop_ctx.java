@@ -24,7 +24,7 @@ public class Xop_ctx {
 	Xop_ctx(Xow_wiki wiki) {
 		this.app = wiki.App(); this.msg_log = app.Msg_log();
 		this.wiki = wiki;
-		page = new Xoa_page(wiki, Xoa_ttl.parse_(wiki, Xoa_page.Bry_main_page));
+		page = new Xoa_page(wiki, Xoa_ttl.parse_(wiki, Xoa_page_.Main_page_bry));
 		wkrs = wkrs_(para, apos, xnde, list, lnki, hdr, amp, lnke, tblw, invk);
 		for (Xop_ctx_wkr wkr : wkrs) wkr.Ctor_ctx(this);
 	}
@@ -263,25 +263,19 @@ public class Xop_ctx {
 	}
 	public static Xop_ctx new_sub_(Xow_wiki wiki) {
 		Xop_ctx rv = new Xop_ctx(wiki);
-<<<<<<< HEAD
-		Xop_ctx cur = wiki.Ctx();
-		rv.Page().Page_ttl_(cur.Page().Page_ttl());	// NOTE: sub_ctx must have same page_ttl as owner; see Lst_pfunc_lst_tst!Fullpagename
-		rv.tab = cur.Tab();	// NOTE: tab should be same instance across all sub_ctxs; otherwise CallParserFunction will not set DISPLAYTITLE correctly; DATE:2013-08-05
-=======
 		Xop_ctx ctx = wiki.Ctx();
 		rv.Lnki().File_wkr_(ctx.Lnki().File_wkr());
-		rv.Page().Page_id_(ctx.Page().Page_id());
-		rv.Page().Page_ttl_(ctx.Page().Page_ttl());	// NOTE: sub_ctx must have same page_ttl as owner; see Lst_pfunc_lst_tst!Fullpagename
+		rv.Page().Id_(ctx.Page().Id());
+		rv.Page().Ttl_(ctx.Page().Ttl());	// NOTE: sub_ctx must have same page_ttl as owner; see Lst_pfunc_lst_tst!Fullpagename
 		rv.tab = ctx.Tab();	// NOTE: tab should be same instance across all sub_ctxs; otherwise CallParserFunction will not set DISPLAYTITLE correctly; DATE:2013-08-05
->>>>>>> v1.1.4.1
 		return rv;
 	}
 	public static Xop_ctx new_sub_page_(Xow_wiki wiki, Xop_ctx ctx, Hash_adp_bry lst_page_regy) {
 		Xop_ctx rv = new_sub_(wiki);
 		rv.Lnki().File_wkr_(ctx.Lnki().File_wkr());
-		rv.Page().Page_id_(ctx.Page().Page_id());
-		rv.lst_page_regy = lst_page_regy;
+		rv.Page().Id_(ctx.Page().Id());
 		rv.Page().Ref_mgr_(ctx.Page().Ref_mgr());	// NOTE: must share ref_mgr, else references in sub_ctx will not be picked up in root_ctx; EX: en.wikisource.org/wiki/Flatland_(first_edition)/This_World; DATE:2014-01-18
+		rv.lst_page_regy = lst_page_regy;
 		return rv;
 	}
 }

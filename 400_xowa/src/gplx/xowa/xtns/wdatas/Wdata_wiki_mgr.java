@@ -124,6 +124,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 						case Wdata_prop_itm_base_.Val_tid_time	: bfr.Add(prop.Val()); break;
 						case Wdata_prop_itm_base_.Val_tid_entity:
 							Wdata_doc entity_doc = Pages_get(ByteAry_.Add(Bry_q, prop.Val()));
+							if (entity_doc == null) return;	// NOTE: wiki may refer to entity that no longer exists; EX: {{#property:p1}} which links to Q1, but p1 links to Q2 and Q2 was deleted; DATE:2014-02-01
 							byte[] label = entity_doc.Label_list_get(lang_key);
 							if (label == null && !ByteAry_.Eq(lang_key, Xol_lang_.Key_en))	// NOTE: some properties may not exist in language of wiki; default to english; DATE:2013-12-19
 								label = entity_doc.Label_list_get(Xol_lang_.Key_en);

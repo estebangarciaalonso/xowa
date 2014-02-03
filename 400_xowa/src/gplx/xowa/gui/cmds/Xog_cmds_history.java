@@ -24,8 +24,8 @@ public class Xog_cmds_history implements GfoInvkAble {
 		win = app.Gui_mgr().Main_win();
 		history_mgr = win.History_mgr();
 	}
-	public void Go_bwd()			{win.Exec_page_stack(history_mgr.Go_bwd(win.Page().Wiki()));}
-	public void Go_fwd()			{win.Exec_page_stack(history_mgr.Go_fwd(win.Page().Wiki()));}
+	public void Go_bwd()			{win.Exec_page_stack(history_mgr.Go_bwd(win.Page().Wiki()), Xog_history_stack.Nav_bwd);}
+	public void Go_fwd()			{win.Exec_page_stack(history_mgr.Go_fwd(win.Page().Wiki()), Xog_history_stack.Nav_fwd);}
 	public void Show()				{win.Exec_url_exec("home/wiki/Special:XowaPageHistory");}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_go_bwd)) 				this.Go_bwd();

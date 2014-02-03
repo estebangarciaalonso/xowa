@@ -53,7 +53,7 @@ class Xof_fsdb_mgr_utl {
 			Xof_fsdb_itm itm = (Xof_fsdb_itm)itms_list.FetchAt(i);
 			try {
 				Reg_search_itm(fsdb_mgr, file_dir, win_wtr, exec_tid, itms_list, itms_len, repo_mgr, itm );
-			} catch (Exception e) {win_wtr.Warn_many("", "", "file.search.error: page=~{0} img=~{1} err=~{2}", String_.new_utf8_(fsdb_mgr.Wiki().Ctx().Page().Page_ttl().Raw()), String_.new_utf8_(itm.Lnki_ttl()), Err_.Message_gplx_brief(e));}
+			} catch (Exception e) {win_wtr.Warn_many("", "", "file.search.error: page=~{0} img=~{1} err=~{2}", String_.new_utf8_(fsdb_mgr.Wiki().Ctx().Page().Ttl().Raw()), String_.new_utf8_(itm.Lnki_ttl()), Err_.Message_gplx_brief(e));}
 		}
 	}
 	private void Reg_search_itm(Xof_fsdb_mgr fsdb_mgr, Io_url file_dir, Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms_list, int itms_len, Xow_repo_mgr repo_mgr, Xof_fsdb_itm itm) {
@@ -61,7 +61,7 @@ class Xof_fsdb_mgr_utl {
 			case Xof_wiki_orig_wkr_.Tid_missing_qry:
 			case Xof_wiki_orig_wkr_.Tid_missing_bin:	return;	// already missing; do not try to find again
 		}
-		if (itm.Lnki_ext().Id_is_audio_strict() && exec_tid != Xof_exec_tid.Tid_viewer_app) {
+		if (itm.Lnki_ext().Id_is_audio() && exec_tid != Xof_exec_tid.Tid_viewer_app) {	// NOTE: was audio_strict, but v2 always redefines .ogg as .ogv; DATE:2014-02-02
 			itm.Rslt_qry_(Xof_qry_wkr_.Tid_noop);
 			return;
 		}
@@ -72,7 +72,7 @@ class Xof_fsdb_mgr_utl {
 				return;
 			}
 			byte orig_wiki = repo_pair.Repo_id();	// NOTE: should be itm.Orig_repo, but throws null refs
-			if (itm.Lnki_ext().Id_is_audio_strict() && exec_tid != Xof_exec_tid.Tid_viewer_app) {
+			if (itm.Lnki_ext().Id_is_audio() && exec_tid != Xof_exec_tid.Tid_viewer_app) {	// NOTE: was audio_strict, but v2 always redefines .ogg as .ogv; DATE:2014-02-02
 				itm.Rslt_qry_(Xof_qry_wkr_.Tid_mock);
 				itm.Rslt_bin_(Xof_bin_wkr_.Tid_noop);
 				fsdb_mgr.Reg_insert(itm, orig_wiki, Xof_wiki_orig_wkr_.Tid_noop);
@@ -99,7 +99,7 @@ class Xof_fsdb_mgr_utl {
 		switch (itm.Rslt_reg()) {
 			case Xof_wiki_orig_wkr_.Tid_found_orig:
 				itm.Html__init(repo_mgr, url_bldr, img_size, exec_tid);
-				Js_img_mgr.Update_img(win_wtr, itm);
+				//	Js_img_mgr.Update_img(win_wtr, itm);		// DELETE: DATE:2014-02-01
 				if (!Env_.Mode_testing()) {
 					Cache_fil_itm cache_fil_itm = fsdb_mgr.Cache_mgr().Reg(fsdb_mgr.Wiki(), itm, 0);
 					if (cache_fil_itm.Fil_size() == 0) {

@@ -50,10 +50,10 @@ public class Xob_wiki_image_sql extends Xob_itm_dump_base implements Xob_cmd, Gf
 	public void Exec(byte[] src, byte[] fld_key, int fld_idx, int fld_bgn, int fld_end, ByteAryBfr file_bfr, Sql_file_parser_data data) {
 		switch (fld_idx) {
 			case Fld_img_name: 			cur_ttl = ByteAry_.Mid(src, fld_bgn, fld_end); break;
-			case Fld_img_size: 			cur_size = ByteAry_.XtoIntByPos(src, fld_bgn, fld_end, -1); break;
-			case Fld_img_width:			cur_width = ByteAry_.XtoIntByPos(src, fld_bgn, fld_end, -1); break;
-			case Fld_img_height:		cur_height = ByteAry_.XtoIntByPos(src, fld_bgn, fld_end, -1); break;
-			case Fld_img_bits: 			cur_bits = ByteAry_.XtoIntByPos(src, fld_bgn, fld_end, -1); break;
+			case Fld_img_size: 			cur_size = ByteAry_.X_to_int_or(src, fld_bgn, fld_end, -1); break;
+			case Fld_img_width:			cur_width = ByteAry_.X_to_int_or(src, fld_bgn, fld_end, -1); break;
+			case Fld_img_height:		cur_height = ByteAry_.X_to_int_or(src, fld_bgn, fld_end, -1); break;
+			case Fld_img_bits: 			cur_bits = ByteAry_.X_to_int_or(src, fld_bgn, fld_end, -1); break;
 			case Fld_img_media_type:	cur_media_type = ByteAry_.Mid(src, fld_bgn, fld_end); break;
 			case Fld_img_minor_mime:	cur_minor_mime = ByteAry_.Mid(src, fld_bgn, fld_end);
 				cur_ext_id = Calc_ext_id(show_issues ? app.Usr_dlg() : Gfo_usr_dlg_.Null, cur_ttl, cur_media_type, cur_minor_mime, cur_width, cur_height);

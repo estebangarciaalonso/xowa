@@ -22,7 +22,7 @@ public class Xop_xnde_tkn_chkr extends Xop_tkn_chkr_base {
 	@Override public byte Tkn_tid() {return Xop_tkn_itm_.Tid_xnde;}
 	public String Xnde_tagId() {return xnde_tagId;}
 	public Xop_xnde_tkn_chkr Xnde_tagId_(int v) {xnde_tagId = Xop_xnde_tag_.Ary[v].Name_str(); return this;} private String xnde_tagId = null;
-	public Tst_chkr Xnde_data() {return xnde_data;} public Xop_xnde_tkn_chkr Xnde_data_(Tst_chkr v) {xnde_data = v; return this;} Tst_chkr xnde_data = null;
+	public Tst_chkr Xnde_xtn() {return xnde_data;} public Xop_xnde_tkn_chkr Xnde_xtn_(Tst_chkr v) {xnde_data = v; return this;} Tst_chkr xnde_data = null;
 	public byte CloseMode() {return closeMode;} public Xop_xnde_tkn_chkr CloseMode_(byte v) {closeMode = v; return this;} private byte closeMode = Xop_xnde_tkn.CloseMode_null;		
 	public Xop_xnde_tkn_chkr Name_rng_(int bgn, int end) {name_bgn = bgn; name_end = end; return this;} private int name_bgn = String_.Neg1_pos; int name_end = String_.Neg1_pos;
 	public Xop_xnde_tkn_chkr Atrs_rng_(int bgn, int end) {atrs_bgn = bgn; atrs_end = end; return this;} private int atrs_bgn = String_.Neg1_pos; int atrs_end = String_.Neg1_pos;
@@ -35,7 +35,7 @@ public class Xop_xnde_tkn_chkr extends Xop_tkn_chkr_base {
 		err += mgr.Tst_val(atrs_bgn == String_.Neg1_pos, path, "atrs_bgn", atrs_bgn, actl.Atrs_bgn());
 		err += mgr.Tst_val(atrs_end == String_.Neg1_pos, path, "atrs_end", atrs_end, actl.Atrs_end());
 		if (xnde_data != null)
-			err += mgr.Tst_sub_obj(xnde_data, actl.Xnde_data(), path + "." + "xndeData", err);
+			err += mgr.Tst_sub_obj(xnde_data, actl.Xnde_xtn(), path + "." + "xndeData", err);
 		return err;
 	}
 }

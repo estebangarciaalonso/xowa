@@ -95,11 +95,11 @@ public class Xoa_css_img_downloader_tst {
 		)
 		);
 	}
-	@Test  public void Import_url_relative() {
+	@Test  public void Import_url_relative() {	// PURPOSE: if directory, add domain; "/a/b.css" -> "//domain/a/b.css"; DATE:2014-02-03
 		Io_mgr._.InitEngine_mem();
 		Io_mgr._.SaveFilStr("mem/en.wikipedia.org/www/b.css", "imported_css");
 		fxt.Test_css_convert
-		(	"x @import url(\"/www/b.css\") screen; z"
+		(	"x @import url(\"/www/b.css\") screen; z"	// starts with "/"
 		, 	String_.Concat_lines_nl
 		(	"x "
 		,	"/*XOWA:mem/en.wikipedia.org/www/b.css*/"
@@ -109,12 +109,28 @@ public class Xoa_css_img_downloader_tst {
 		)
 		);
 	}
+	@Test  public void Import_url_relative_skip() {	// PURPOSE: if rel path, skip; "//site/a/b.css"; DATE:2014-02-03
+		fxt.Downloader().Stylesheet_prefix_(ByteAry_.new_utf8_("mem"));	// stylesheet prefix prefix defaults to ""; set to "mem", else test will try to retrieve "//url" which will fail
+		Io_mgr._.InitEngine_mem();
+		Io_mgr._.SaveFilStr("mem//en.wikipedia.org/a/b.css", "imported_css");
+		fxt.Test_css_convert
+		(	"x @import url(\"//en.wikipedia.org/a/b.css\") screen; z"	// starts with "//"
+		, 	String_.Concat_lines_nl
+		(	"x "
+		,	"/*XOWA://en.wikipedia.org/a/b.css*/"
+		,	"imported_css"
+		,	""
+		,	" z"
+		)
+		);
+	}
 }
 class Xoa_css_img_downloader_fxt {
+	public Xoa_css_img_downloader Downloader() {return downloader;} private Xoa_css_img_downloader downloader;
 	public void Clear() {
 		downloader = new Xoa_css_img_downloader();
 		downloader.Ctor(Gfo_usr_dlg_xowa.test_(), new Xof_download_wkr_test(), ByteAry_.Empty);
-	}	private Xoa_css_img_downloader downloader;
+	}
 	public void Test_css_convert(String raw, String expd, String... expd_img_ary) {
 		ListAdp actl_img_list = ListAdp_.new_();
 		byte[] actl_bry = downloader.Convert_to_local_urls(ByteAry_.new_ascii_("mem/en.wikipedia.org"), ByteAry_.new_utf8_(raw), actl_img_list);

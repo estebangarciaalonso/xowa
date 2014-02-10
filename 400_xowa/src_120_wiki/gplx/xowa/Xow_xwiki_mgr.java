@@ -131,9 +131,9 @@ public class Xow_xwiki_mgr implements GfoInvkAble {
 				case Xow_wiki_domain_.Tid_commons:
 				case Xow_wiki_domain_.Tid_species:
 				case Xow_wiki_domain_.Tid_meta:
-				case Xow_wiki_domain_.Tid_incubator:				domain_str = String_.Format("{0}.wikimedia.org", wiki_name); break;			// EX: commons.wikimedia.org
+				case Xow_wiki_domain_.Tid_incubator:			domain_str = String_.Format("{0}.wikimedia.org", wiki_name); break;			// EX: commons.wikimedia.org
 				case Xow_wiki_domain_.Tid_wikidata:				domain_str = String_.Format("www.wikidata.org", wiki_name); break;			// EX: www.wikidata.org
-				case Xow_wiki_domain_.Tid_mediawiki:				domain_str = String_.Format("www.mediawiki.org", wiki_name); break;
+				case Xow_wiki_domain_.Tid_mediawiki:			domain_str = String_.Format("www.mediawiki.org", wiki_name); break;
 				case Xow_wiki_domain_.Tid_wikimediafoundation:	domain_str = String_.Format("wikimediafoundation.org", wiki_name); break;
 				default:										domain_str = String_.Format("{0}.{1}.org", lang_key_str, wiki_name); break;	// EX: en.wiktionary.org
 			}

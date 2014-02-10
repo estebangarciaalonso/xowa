@@ -87,7 +87,7 @@ public class Xop_para_wkr implements Xop_ctx_wkr {
 						ctx.Para().Process_nl(ctx, root, src, bgn_pos, cur_pos, true);
 					return ctx.Xnde().Make_tkn(ctx, tkn_mkr, root, src, src_len, txt_pos, txt_pos + 1);
 			}
-			return ctx.Tblw().MakeTkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, txt_pos + ws_itm.Hook_len(), tblw_type, true, false, -1, -1);
+			return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, txt_pos + ws_itm.Hook_len(), tblw_type, true, false, -1, -1);
 		}
 		if (block_mode == Block_mode_bgn) {	// block_mode cancels pre; REF.MW: Parser.php|doBlockLevels|$inBlockElem
 			ctx.Subs_add(root, tkn_mkr.NewLine(bgn_pos, bgn_pos, Xop_nl_tkn.Tid_char, 1));

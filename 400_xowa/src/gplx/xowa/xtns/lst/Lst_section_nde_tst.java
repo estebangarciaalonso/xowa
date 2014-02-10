@@ -20,6 +20,6 @@ import org.junit.*;
 public class Lst_section_nde_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Basic() {
-		fxt.tst_Parse_page_all_str("a<section name=\"b\">c</section>d", "ad");
+		fxt.Test_parse_page_all_str("a<section name=\"b\">c</section>d", "ad");
 	}
 }

@@ -21,8 +21,8 @@ class Xobc_img_xfer_base_fxt {
 	public Xow_wiki En_wiki() {return en_wiki;} private Xow_wiki en_wiki;
 	public Xow_wiki Commons() {return commons;} private Xow_wiki commons;
 	Xofw_wiki_wkr_mock mock_wkr = new Xofw_wiki_wkr_mock();
-	public void ini_page_create(Xow_wiki wiki, String ttl) {ini_page_create(wiki, ttl, "");}
-	public void ini_page_create(Xow_wiki wiki, String ttl, String txt) {
+	public void Init_page_create(Xow_wiki wiki, String ttl) {Init_page_create(wiki, ttl, "");}
+	public void Init_page_create(Xow_wiki wiki, String ttl, String txt) {
 		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(ttl));
 		byte[] page_raw = ByteAry_.new_utf8_(txt);
 		wiki.Db_mgr().Save_mgr().Data_create(page_ttl, page_raw);

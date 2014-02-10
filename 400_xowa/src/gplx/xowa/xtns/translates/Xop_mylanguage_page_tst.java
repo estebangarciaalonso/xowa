@@ -43,7 +43,7 @@ class Xop_mylanguage_page_fxt {
 		wiki = parser_fxt.Wiki();
 		special_page = wiki.Special_mgr().Page_mylanguage();
 	}	private Xop_fxt parser_fxt; private Xoa_app app; private Xop_mylanguage_page special_page; private Xow_wiki wiki;
-	public void Init_create_page(String page) {parser_fxt.ini_page_create(page, page);}
+	public void Init_create_page(String page) {parser_fxt.Init_page_create(page, page);}
 	public void Init_cur_lang(String lang) {app.Sys_cfg().Lang_(ByteAry_.new_ascii_(lang));}
 	public void Test_open(String link, String expd) {
 		Xoa_page page = wiki.Ctx().Page();

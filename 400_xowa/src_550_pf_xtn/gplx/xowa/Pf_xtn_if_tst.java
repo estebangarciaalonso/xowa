@@ -20,20 +20,20 @@ import org.junit.*;
 public class Pf_xtn_if_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()				{fxt.Reset();}
-	@Test  public void If_y()				{fxt.tst_Parse_tmpl_str_test("{{#if:1|a|b}}"								, "{{test}}"		, "a");}
-	@Test  public void If_n()				{fxt.tst_Parse_tmpl_str_test("{{#if:|a|b}}"									, "{{test}}"		, "b");}
-	@Test  public void If_n_ws()			{fxt.tst_Parse_tmpl_str_test("{{#if: |a|b}}"								, "{{test}}"		, "b");}
-	@Test  public void If_y_ws()			{fxt.tst_Parse_tmpl_str_test("{{#if: |a|b \n}}"								, "{{test}}"		, "b");}
-	@Test  public void If_y_ws1()			{fxt.tst_Parse_tmpl_str_test("{{#if: |a|{{#if: |a|b}}\n}}"					, "{{test}}"		, "b");}
-	@Test  public void If_prm_n()			{fxt.tst_Parse_tmpl_str_test("{{#if:{{{1|}}}|{{{1}}}|b}}"					, "{{test}}"		, "b");}
-	@Test  public void If_prm_y()			{fxt.tst_Parse_tmpl_str_test("{{#if:{{{1|}}}|{{{1}}}|b}}"					, "{{test|a}}"		, "a");}
-	@Test  public void If_prm_n_dflt_ws()	{fxt.tst_Parse_tmpl_str_test("{{#if:{{{1| }}}|a|b}}"						, "{{test}}"		, "b");}
-	@Test  public void If_prm_nest_0()		{fxt.tst_Parse_tmpl_str_test("{{#if:{{{1|}}}|{{#if:{{{2|}}}|a|b}}|c}}"		, "{{test}}"		, "c");}
-	@Test  public void If_prm_nest_1()		{fxt.tst_Parse_tmpl_str_test("{{#if:{{{1|}}}|{{#if:{{{2|}}}|a|b}}|c}}"		, "{{test|1}}"		, "b");}
-	@Test  public void If_prm_nest_2()		{fxt.tst_Parse_tmpl_str_test("{{#if:{{{1|}}}|{{#if:{{{2|}}}|a|b}}|c}}"		, "{{test|1|2}}"	, "a");}
-	@Test  public void If_ignore_key()		{fxt.tst_Parse_tmpl_str_test("{{#if:|<i id=1|<i id=2}}"						, "{{test}}"		, "<i id=2");}
+	@Test  public void If_y()				{fxt.Test_parse_tmpl_str_test("{{#if:1|a|b}}"								, "{{test}}"		, "a");}
+	@Test  public void If_n()				{fxt.Test_parse_tmpl_str_test("{{#if:|a|b}}"									, "{{test}}"		, "b");}
+	@Test  public void If_n_ws()			{fxt.Test_parse_tmpl_str_test("{{#if: |a|b}}"								, "{{test}}"		, "b");}
+	@Test  public void If_y_ws()			{fxt.Test_parse_tmpl_str_test("{{#if: |a|b \n}}"								, "{{test}}"		, "b");}
+	@Test  public void If_y_ws1()			{fxt.Test_parse_tmpl_str_test("{{#if: |a|{{#if: |a|b}}\n}}"					, "{{test}}"		, "b");}
+	@Test  public void If_prm_n()			{fxt.Test_parse_tmpl_str_test("{{#if:{{{1|}}}|{{{1}}}|b}}"					, "{{test}}"		, "b");}
+	@Test  public void If_prm_y()			{fxt.Test_parse_tmpl_str_test("{{#if:{{{1|}}}|{{{1}}}|b}}"					, "{{test|a}}"		, "a");}
+	@Test  public void If_prm_n_dflt_ws()	{fxt.Test_parse_tmpl_str_test("{{#if:{{{1| }}}|a|b}}"						, "{{test}}"		, "b");}
+	@Test  public void If_prm_nest_0()		{fxt.Test_parse_tmpl_str_test("{{#if:{{{1|}}}|{{#if:{{{2|}}}|a|b}}|c}}"		, "{{test}}"		, "c");}
+	@Test  public void If_prm_nest_1()		{fxt.Test_parse_tmpl_str_test("{{#if:{{{1|}}}|{{#if:{{{2|}}}|a|b}}|c}}"		, "{{test|1}}"		, "b");}
+	@Test  public void If_prm_nest_2()		{fxt.Test_parse_tmpl_str_test("{{#if:{{{1|}}}|{{#if:{{{2|}}}|a|b}}|c}}"		, "{{test|1|2}}"	, "a");}
+	@Test  public void If_ignore_key()		{fxt.Test_parse_tmpl_str_test("{{#if:|<i id=1|<i id=2}}"						, "{{test}}"		, "<i id=2");}
 	@Test  public void If_newline()	{	// PURPOSE: new_line in comments; WP:[[redirect-distinguish|a|b]]
-		fxt.tst_Parse_tmpl_str_test(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_tmpl_str_test(String_.Concat_lines_nl_skipLast
 			(	"{{#if:1<!--"
 			,	"-->|a<!--"
 			,	"-->|b<!--"
@@ -41,5 +41,5 @@ public class Pf_xtn_if_tst {
 			)
 			, "{{test}}", "a");
 	}
-	@Test  public void If_rel2abs()			{fxt.tst_Parse_tmpl_str_test("{{#if:{{{1}}}|y}}"				, "{{test|http://a.org/c/}}"		, "y");}	// PURPOSE.fix: trailing slash should not trigger rel2abs code; DATE:2013-04-06
+	@Test  public void If_rel2abs()			{fxt.Test_parse_tmpl_str_test("{{#if:{{{1}}}|y}}"				, "{{test|http://a.org/c/}}"		, "y");}	// PURPOSE.fix: trailing slash should not trigger rel2abs code; DATE:2013-04-06
 }

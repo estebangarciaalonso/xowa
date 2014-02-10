@@ -102,7 +102,7 @@ public class Xop_tblw_lxr_ws {//: Xop_lxr
 		if (tkn_idx == -1) {								// bos reached; all tkns are ws;
 			if (wlxr_type == Xop_tblw_wkr.Tblw_type_tb) {	// wlxr_type is {|;
 				root.Subs_del_after(0);						// trim
-				return ctx.Tblw().MakeTkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, true, false, -1, -1);	// process {|
+				return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, true, false, -1, -1);	// process {|
 			}
 			else											// wlxr_type is something else, but invalid since no containing {|
 				return ctx.LxrMake_txt_(cur_pos);
@@ -112,7 +112,7 @@ public class Xop_tblw_lxr_ws {//: Xop_lxr
 			return Tblw_ws_cell_pipe;
 		if (nl_found)
 			root.Subs_del_after(tkn_idx);
-		return ctx.Tblw().MakeTkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, true, false, -1, -1);
+		return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, true, false, -1, -1);
 	}
 	public static final byte[] Hook_tb = ByteAry_.new_ascii_("{|"), Hook_te = ByteAry_.new_ascii_("|}"), Hook_tr = ByteAry_.new_ascii_("|-")
 		, Hook_th = ByteAry_.new_ascii_("!"), Hook_tc = ByteAry_.new_ascii_("|+");

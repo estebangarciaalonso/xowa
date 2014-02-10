@@ -47,8 +47,20 @@ public class Byte_ascii {
 		return (	b >= Byte_ascii.Ltr_a && b <= Byte_ascii.Ltr_z
 				||	b >= Byte_ascii.Ltr_A && b <= Byte_ascii.Ltr_Z);
 	}
+	public static boolean Is_ws(byte b) {
+		switch (b) {
+			case Byte_ascii.Tab: case Byte_ascii.NewLine: case Byte_ascii.CarriageReturn: case Byte_ascii.Space: return true;
+			default: return false;
+		}
+	}
 	public static int X_to_digit(byte b) {return b - Byte_ascii.Num_0;}
 	public static byte Uppercase(byte b) {
+		return b > 96 && b < 123
+			? (byte)(b - 32)
+			: b
+		  ;
+	}
+	public static byte Lowercase(byte b) {
 		return b > 64 && b < 91
 			? (byte)(b + 32)
 			: b

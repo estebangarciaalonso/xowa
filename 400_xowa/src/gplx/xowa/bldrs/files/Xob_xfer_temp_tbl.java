@@ -19,7 +19,7 @@ package gplx.xowa.bldrs.files; import gplx.*; import gplx.xowa.*; import gplx.xo
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*;
 class Xob_xfer_temp_tbl {
 	public static void Create_table(Db_provider p)		{Sqlite_engine_.Tbl_create_and_delete(p, Tbl_name, Tbl_sql);}
-	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_lnki_id, Fld_lnki_page_id, Fld_orig_repo, Fld_orig_page_id, Fld_lnki_ttl, Fld_orig_redirect_src, Fld_lnki_ext, Fld_lnki_type, Fld_orig_media_type, Fld_file_is_orig, Fld_orig_w, Fld_orig_h, Fld_file_w, Fld_file_h, Fld_html_w, Fld_html_h, Fld_lnki_thumbtime, Fld_lnki_page, Fld_lnki_count);}
+	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_lnki_id, Fld_lnki_page_id, Fld_orig_repo, Fld_orig_page_id, Fld_lnki_ttl, Fld_orig_redirect_src, Fld_lnki_ext, Fld_lnki_type, Fld_orig_media_type, Fld_file_is_orig, Fld_orig_w, Fld_orig_h, Fld_file_w, Fld_file_h, Fld_html_w, Fld_html_h, Fld_lnki_time, Fld_lnki_page, Fld_lnki_count);}
 	public static void Insert(Db_stmt stmt, int lnki_id, int lnki_page_id, byte repo_id, int page_id, String ttl, String redirect_src, int ext_id, byte lnki_type, String orig_media_type, boolean file_is_orig, int orig_w, int orig_h, int html_w, int html_h, int file_w, int file_h, double thumbtime, int page, int count) {
 		stmt.Clear()
 		.Val_int_(lnki_id)
@@ -45,7 +45,7 @@ class Xob_xfer_temp_tbl {
 	}
 	public static final String Tbl_name = "xfer_temp"		
 	, Fld_lnki_id = "lnki_id", Fld_lnki_page_id = "lnki_page_id", Fld_lnki_ttl = "lnki_ttl", Fld_lnki_ext = "lnki_ext", Fld_lnki_type = "lnki_type"
-	, Fld_lnki_thumbtime = "lnki_thumbtime", Fld_lnki_page = "lnki_page", Fld_lnki_count = "lnki_count"
+	, Fld_lnki_time = "lnki_time", Fld_lnki_page = "lnki_page", Fld_lnki_count = "lnki_count"
 	, Fld_orig_repo = "orig_repo", Fld_orig_page_id = "orig_page_id", Fld_orig_redirect_src = "orig_redirect_src", Fld_orig_media_type = "orig_media_type"
 	, Fld_orig_w = "orig_w", Fld_orig_h = "orig_h"
 	, Fld_file_w = "file_w", Fld_file_h = "file_h", Fld_file_is_orig = "file_is_orig"
@@ -58,7 +58,7 @@ class Xob_xfer_temp_tbl {
 	,	", lnki_ttl            varchar(255)        NOT NULL"
 	,	", lnki_ext            integer             NOT NULL"
 	,	", lnki_type           integer             NOT NULL"
-	,	", lnki_thumbtime      double              NOT NULL"
+	,	", lnki_time           double              NOT NULL"
 	,	", lnki_page           integer             NOT NULL"
 	,	", lnki_count          integer             NOT NULL"
 	,	", orig_repo           integer             NOT NULL"

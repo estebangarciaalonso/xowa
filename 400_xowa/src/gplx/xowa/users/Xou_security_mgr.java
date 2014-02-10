@@ -23,7 +23,7 @@ public class Xou_security_mgr implements GfoInvkAble {
 		gplx.ios.IoEngine_system.Web_access_enabled = v;
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_web_access_enabled))			return Yn.XtoStr(web_access_enabled);
+		if		(ctx.Match(k, Invk_web_access_enabled))			return Yn.X_to_str(web_access_enabled);
 		else if	(ctx.Match(k, Invk_web_access_enabled_))			Web_access_enabled_(m.ReadYn("v"));
 		return this;
 	}

@@ -17,14 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.proofreadPage; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.xowa.xtns.lst.*;
-public class Pp_pages_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
-	public Xop_root_tkn Xtn_root() {
-		return xtn_root;
-	} private Xop_root_tkn xtn_root;
-	public boolean Xtn_literal() {return xtn_literal;} private boolean xtn_literal = false;
+public class Pp_pages_nde implements Xox_xnde, Xop_xnde_atr_parser {
+	private boolean xtn_literal = false;
+	private Xop_root_tkn xtn_root;
 	private byte[] index_ttl_bry, bgn_page_bry, end_page_bry, bgn_sect_bry, end_sect_bry;		
 	private int step_int;
-	private byte[] include, exclude, step_bry, header;//, onlysection;
+	private byte[] include, exclude, step_bry, header, onlysection;
 	private byte[] toc_cur, toc_nxt, toc_prv;
 	private int ns_index_id = Int_.MinValue, ns_page_id = Int_.MinValue;
 	private int bgn_page_int = -1, end_page_int = -1;
@@ -45,14 +43,14 @@ public class Pp_pages_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 			case Xatr_include:		include			= xatr.Val_as_bry(src); break;
 			case Xatr_exclude:		exclude			= xatr.Val_as_bry(src); break;
 			case Xatr_step:			step_bry		= xatr.Val_as_bry(src); break;
-//				case Xatr_onlysection:	onlysection		= xatr.Val_as_bry(src); break;
+			case Xatr_onlysection:	onlysection		= xatr.Val_as_bry(src); break;
 			case Xatr_header:		header			= xatr.Val_as_bry(src); break;
 			case Xatr_toc_cur:		toc_cur			= xatr.Val_as_bry(src); break;
 			case Xatr_toc_prv:		toc_prv			= xatr.Val_as_bry(src); break;
 			case Xatr_toc_nxt:		toc_nxt			= xatr.Val_as_bry(src); break;
 		}			
 	}
-	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_parse(Xow_wiki wiki, Xop_ctx ctx, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		if (!Init_vars(wiki, ctx, src, xnde)) return;
 		ByteAryBfr full_bfr = app.Utl_bry_bfr_mkr().Get_m001();
 		Hash_adp_bry lst_page_regy = ctx.Lst_page_regy(); if (lst_page_regy == null) lst_page_regy = new Hash_adp_bry(true);	// SEE:NOTE:page_regy; DATE:2014-01-01
@@ -60,6 +58,12 @@ public class Pp_pages_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 		if (page_bry != null)
 			xtn_root = Bld_root_nde(full_bfr, lst_page_regy, page_bry);	// NOTE: this effectively reparses page twice; needed b/c of "if {| : ; # *, auto add new_line" which can build different tokens
 		full_bfr.Mkr_rls();
+	}
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+		if (xtn_literal)
+			Xoh_html_wtr.Bfr_escape(bfr, src, xnde.Src_bgn(), xnde.Src_end(), app, true, false);
+		else
+			html_wtr.Write_tkn(ctx, opts, bfr, xtn_root.Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, xtn_root);
 	}
 	private boolean Init_vars(Xow_wiki wiki, Xop_ctx ctx, byte[] src, Xop_xnde_tkn xnde) {
 		this.wiki = wiki; this.ctx = ctx; app = wiki.App(); usr_dlg = app.Usr_dlg();
@@ -77,6 +81,8 @@ public class Pp_pages_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 		ns_page_id  = cfg_pages.Ns_page_id();  if (ns_page_id  == Int_.MinValue) return Fail_msg("wiki does not have a Page ns");	// occurs when <pages> used in a wiki without a "Page:" ns; EX: de.w:Help:Buchfunktion/Feedback
 		index_ttl = Xoa_ttl.parse_(wiki, ns_index_id, index_ttl_bry); if (index_ttl == null) return Fail_args("index title is not valid: index={0}", String_.new_utf8_(index_ttl_bry));
 		ns_page = wiki.Ns_mgr().Get_by_id(ns_page_id);
+		if (onlysection != null)
+			bgn_sect_bry = end_sect_bry = null;
 		return true;
 	}
 	private byte[] Bld_wikitext(ByteAryBfr full_bfr, Hash_adp_bry lst_page_regy) {
@@ -255,7 +261,7 @@ public class Pp_pages_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 			Xodb_page page = (Xodb_page)rslt.FetchAt(i);
 			Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, ns_page_id, page.Ttl_wo_ns());		if (page_ttl == null) continue;					// page_ttl is not valid; should never happen;
 			byte[] page_ttl_leaf = page_ttl.Leaf_txt();									if (page_ttl_leaf == null) continue;			// page is not leaf; should not happen
-			int page_leaf_val = ByteAry_.XtoIntOr(page_ttl_leaf, Int_.MinValue);		if (page_leaf_val == Int_.MinValue) continue;	// leaf is not int; ignore
+			int page_leaf_val = ByteAry_.X_to_int_or(page_ttl_leaf, Int_.MinValue);		if (page_leaf_val == Int_.MinValue) continue;	// leaf is not int; ignore
 			if (page_leaf_val > page_leaf_max) page_leaf_max = page_leaf_val;
 		}
 		return page_leaf_max;
@@ -304,7 +310,7 @@ public class Pp_pages_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 			step_int = 1;
 			return true;
 		}
-		step_int = ByteAry_.XtoIntOr(step_bry, Int_.MinValue);
+		step_int = ByteAry_.X_to_int_or(step_bry, Int_.MinValue);
 		if (step_int < 1 || step_int > 1000) {
 			Fail_args("pages node does not have a valid 'step': step={0}", String_.new_utf8_(step_bry));
 			return false;
@@ -317,6 +323,7 @@ public class Pp_pages_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 		Xoa_ttl end_page_ttl = end_page_bry == null ? null : ary[ary_len - 1];
 		
 		ByteAryBfr page_bfr = app.Utl_bry_bfr_mkr().Get_m001();
+		ctx.Tmpl_output_(page_bfr);
 		Lst_pfunc_wkr lst_pfunc_wkr = new Lst_pfunc_wkr();
 		for (int i = 0; i < ary_len; i++) {
 			Xoa_ttl ttl = ary[i];
@@ -327,19 +334,24 @@ public class Pp_pages_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 				continue;
 			byte[] cur_sect_bgn = Lst_pfunc_wkr.Null_arg, cur_sect_end = Lst_pfunc_wkr.Null_arg;
 			if		(ttl.Eq_page_db(bgn_page_ttl)) {
-				if	(bgn_sect_bry != null)
+				if		(bgn_sect_bry != null)
 					cur_sect_bgn = bgn_sect_bry;
+				else if (onlysection != null) {
+					cur_sect_bgn = onlysection;
+					cur_sect_end = onlysection;
+				}
 			}
 			else if	(ttl.Eq_page_db(end_page_ttl)) {
 				if	(end_sect_bry != null)
 					cur_sect_end = end_sect_bry;
 			}
 			lst_pfunc_wkr.Init_include(ttl.Full_db(), cur_sect_bgn, cur_sect_end).Exec(page_bfr, ctx);
-			if (page_bfr.Bry_len() > 2 && !full_bfr.Match_end_byt(Byte_ascii.NewLine) && ctx.App().TmplBgnTrie().MatchAtCur(page_bfr.Bry(), 0, 2) != null) full_bfr.Add_byte(Byte_ascii.NewLine);	// if {| : ; # *, auto add new_line REF.MW:Parser.php|braceSubstitution; note that code does not add new line if one is already there
+			ctx.Tmpl_prepend_nl(full_bfr, page_bfr.Bry(), page_bfr.Bry_len());
 			full_bfr.Add_bfr_and_clear(page_bfr);
 			full_bfr.Add(gplx.html.Html_entities.Space_bry);
 		}			
 		page_bfr.Mkr_rls();
+		ctx.Tmpl_output_(null);
 		return full_bfr.XtoAryAndClear();
 	}
 	private Xop_root_tkn Bld_root_nde(ByteAryBfr page_bfr, Hash_adp_bry lst_page_regy, byte[] wikitext) {

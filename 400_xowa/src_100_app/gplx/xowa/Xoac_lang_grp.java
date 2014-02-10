@@ -55,7 +55,7 @@ public class Xoac_lang_grp implements Cfg_nde_obj, Xoac_lang_obj {
 	public void Nde_atrs_set(byte[][] ary) {
 		int ary_len = ary.length;
 		if (ary_len > 0) name_bry = ary[0];
-		if (ary_len > 1) sort_idx = ByteAry_.XtoIntOr(ary[1], -1);
+		if (ary_len > 1) sort_idx = ByteAry_.X_to_int_or(ary[1], -1);
 	}
 	public static final byte[] Make_grp = ByteAry_.new_utf8_("grp"), Make_itm = ByteAry_.new_utf8_("itm");
 	public int Itms_len() {return itms.Count();}

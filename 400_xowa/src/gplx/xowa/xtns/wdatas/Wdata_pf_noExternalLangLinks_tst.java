@@ -47,7 +47,7 @@ class Wdata_pf_noExternalLangLinks_fxt {
 	public Wdata_pf_noExternalLangLinks_fxt Expd_sort_(boolean v) {expd_sort = v ? Bool_.Y_byte : Bool_.N_byte; return this;} private byte expd_sort;
 	public Wdata_pf_noExternalLangLinks_fxt Expd_langs_(String... v) {expd_langs = v; return this;} private String[] expd_langs;
 	public void Test_parse(String raw) {
-		byte[] expd = parser_fxt.tst_Parse_tmpl_str_rv(raw);
+		byte[] expd = parser_fxt.Test_parse_tmpl_str_rv(raw);
 		Tfds.Eq(ByteAry_.Empty, expd);
 		if (expd_enabled != Bool_.__byte) Tfds.Eq(expd_enabled == Bool_.Y_byte, data.Enabled());
 		if (expd_sort != Bool_.__byte) Tfds.Eq(expd_sort == Bool_.Y_byte, data.Sort());

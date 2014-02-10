@@ -20,7 +20,7 @@ import org.junit.*; import gplx.xowa.xtns.wdatas.*;
 public class Xoa_xowa_exec_tst {
 	@Before public void init() {fxt.Clear();} private Xoa_xowa_exec_fxt fxt = new Xoa_xowa_exec_fxt();
 	@Test   public void Get_title() {
-		fxt.Fxt().ini_page_create("exists");
+		fxt.Fxt().Init_page_create("exists");
 		fxt.Test_get_title("exists", "1" , "0" , Int_.XtoStr(Int_.MinValue), "Exists", "false", "0001-01-01 00:00:00", "0");
 		fxt.Test_get_title("absent", "0", "-1", Int_.XtoStr(Int_.MinValue), null	, "false", "0001-01-01 00:00:00", "0");
 	}

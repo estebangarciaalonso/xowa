@@ -22,6 +22,10 @@ public class Int_ implements GfoInvkAble {
 	public static final int Const_dlm_len = 1;
 	public static final int Const_position_after_char = 1;
 	public static final int Null = Int_.MinValue;
+	public static int coerce_(Object v) {
+		try {String s = String_.as_(v); return s == null ? Int_.cast_(v) : Int_.parse_(s);}
+		catch (Exception e) {throw Err_.cast_(e, int.class, v);}
+	}
 	public static int[] Ary_empty = new int[0];
 	public static int[] Ary(int... v) {return v;}
 	public static int[] Ary_copy(int[] ary) {return Ary_copy(ary, ary.length);}

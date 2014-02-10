@@ -129,7 +129,7 @@ class Xosrh_scanner {
 	OrderedHash tmp_list = OrderedHash_.new_(); ByteAryBfr tmp_bfr = ByteAryBfr.new_();
 	Xosrh_qry_tkn new_tkn_(byte tid, int val_bgn, int val_end) {return Xosrh_qry_tkn.new_pos_(tid, val_bgn, val_end);}
 	private static byte[] Bry_and = ByteAry_.new_ascii_("AND");
-	private static final ByteTrieMgr_slim trie = new ByteTrieMgr_slim(false).Add_str_byteVal(" ", Xosrh_qry_tkn.Tid_space).Add_str_byteVal("\"", Xosrh_qry_tkn.Tid_quote).Add_str_byteVal("-", Xosrh_qry_tkn.Tid_not).Add_str_byteVal("(", Xosrh_qry_tkn.Tid_paren_bgn).Add_str_byteVal(")", Xosrh_qry_tkn.Tid_paren_end).Add_str_byteVal("or", Xosrh_qry_tkn.Tid_or).Add_str_byteVal("and", Xosrh_qry_tkn.Tid_and);
+	private static final ByteTrieMgr_slim trie = new ByteTrieMgr_slim(false).Add_str_byte(" ", Xosrh_qry_tkn.Tid_space).Add_str_byte("\"", Xosrh_qry_tkn.Tid_quote).Add_str_byte("-", Xosrh_qry_tkn.Tid_not).Add_str_byte("(", Xosrh_qry_tkn.Tid_paren_bgn).Add_str_byte(")", Xosrh_qry_tkn.Tid_paren_end).Add_str_byte("or", Xosrh_qry_tkn.Tid_or).Add_str_byte("and", Xosrh_qry_tkn.Tid_and);
 	public static final Xosrh_scanner _ = new Xosrh_scanner(); Xosrh_scanner() {}
 }
 class Xosrh_qry_tkn {

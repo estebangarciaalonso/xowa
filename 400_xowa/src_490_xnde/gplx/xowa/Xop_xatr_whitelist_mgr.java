@@ -164,7 +164,7 @@ class Xop_xatr_whitelist_mgr {
 		key_trie.Add(key, rv);
 		return rv;
 	}
-	Hash_adp_bry tid_hash = new Hash_adp_bry(false).Add_str_byteVal("id", Xop_xatr_itm.Key_tid_id).Add_str_byteVal("style", Xop_xatr_itm.Key_tid_style);
+	Hash_adp_bry tid_hash = new Hash_adp_bry(false).Add_str_byte("id", Xop_xatr_itm.Key_tid_id).Add_str_byte("style", Xop_xatr_itm.Key_tid_style);
 	ByteTrieMgr_slim key_trie = new ByteTrieMgr_slim(false);
 	public boolean Scrub_style(Xop_xatr_itm xatr, byte[] raw) { // REF:Sanitizer.php|checkCss; '! expression | filter\s*: | accelerator\s*: | url\s*\( !ix'; NOTE: this seems to affect MS IE only; DATE:2013-04-01
 		byte[] val_bry = xatr.Val_bry();
@@ -230,14 +230,14 @@ class Xop_xatr_whitelist_mgr {
 	}
 	static final byte Style_expression = 0, Style_filter = 1, Style_accelerator = 2, Style_url = 3, Style_urls = 4, Style_comment = 5, Style_image = 6, Style_image_set = 7;
 	private static ByteTrieMgr_slim style_trie = ByteTrieMgr_slim.ci_()
-			.Add_str_byteVal("expression"	, Style_expression)
-			.Add_str_byteVal("filter"		, Style_filter)
-			.Add_str_byteVal("accelerator"	, Style_accelerator)
-			.Add_str_byteVal("url"			, Style_url)
-			.Add_str_byteVal("urls"			, Style_urls)
-			.Add_str_byteVal("image"		, Style_image)
-			.Add_str_byteVal("image-set"	, Style_image_set)
-			.Add_str_byteVal("/*"			, Style_comment)
+			.Add_str_byte("expression"	, Style_expression)
+			.Add_str_byte("filter"		, Style_filter)
+			.Add_str_byte("accelerator"	, Style_accelerator)
+			.Add_str_byte("url"			, Style_url)
+			.Add_str_byte("urls"			, Style_urls)
+			.Add_str_byte("image"		, Style_image)
+			.Add_str_byte("image-set"	, Style_image_set)
+			.Add_str_byte("/*"			, Style_comment)
 			;
 }
 class Xop_xatr_whitelist_itm {

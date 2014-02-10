@@ -20,13 +20,13 @@ import org.junit.*;
 public class Pf_str_formatdate_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()					{fxt.Reset();}
-	@Test  public void Fmt_dmy()				{fxt.tst_Parse_tmpl_str_test("{{#formatdate:2012-01-02|dmy}}"			, "{{test}}"			, "2 January 2012");}
-	@Test  public void Fmt_mdy()				{fxt.tst_Parse_tmpl_str_test("{{#formatdate:2012-01-02|mdy}}"			, "{{test}}"			, "January 2, 2012");}
-	@Test  public void Fmt_ymd()				{fxt.tst_Parse_tmpl_str_test("{{#formatdate:2012-01-02|ymd}}"			, "{{test}}"			, "2012 January 2");}
-	@Test  public void Fmt_ISO_8601()			{fxt.tst_Parse_tmpl_str_test("{{#formatdate:2012-01-02|ISO 8601}}"		, "{{test}}"			, "2012-01-02");}
-	@Test  public void Fmt_default()			{fxt.tst_Parse_tmpl_str_test("{{#formatdate:2012-01-02|default}}"		, "{{test}}"			, "2012-01-02");}	// NOOP?
-	@Test  public void Fmt_none()				{fxt.tst_Parse_tmpl_str_test("{{#formatdate:10 April 2012}}"			, "{{test}}"			, "10 April 2012");}
-	@Test  public void Err_multiple_years()		{fxt.tst_Parse_tmpl_str_test("{{#formatdate:January 2, 1999, 2000|Y}}"	, "{{test}}"			, "January 2, 1999, 2000");}	// PURPOSE: check that multiple years don't fail
+	@Test  public void Fmt_dmy()				{fxt.Test_parse_tmpl_str_test("{{#formatdate:2012-01-02|dmy}}"			, "{{test}}"			, "2 January 2012");}
+	@Test  public void Fmt_mdy()				{fxt.Test_parse_tmpl_str_test("{{#formatdate:2012-01-02|mdy}}"			, "{{test}}"			, "January 2, 2012");}
+	@Test  public void Fmt_ymd()				{fxt.Test_parse_tmpl_str_test("{{#formatdate:2012-01-02|ymd}}"			, "{{test}}"			, "2012 January 2");}
+	@Test  public void Fmt_ISO_8601()			{fxt.Test_parse_tmpl_str_test("{{#formatdate:2012-01-02|ISO 8601}}"		, "{{test}}"			, "2012-01-02");}
+	@Test  public void Fmt_default()			{fxt.Test_parse_tmpl_str_test("{{#formatdate:2012-01-02|default}}"		, "{{test}}"			, "2012-01-02");}	// NOOP?
+	@Test  public void Fmt_none()				{fxt.Test_parse_tmpl_str_test("{{#formatdate:10 April 2012}}"			, "{{test}}"			, "10 April 2012");}
+	@Test  public void Err_multiple_years()		{fxt.Test_parse_tmpl_str_test("{{#formatdate:January 2, 1999, 2000|Y}}"	, "{{test}}"			, "January 2, 1999, 2000");}	// PURPOSE: check that multiple years don't fail
 }
 /*
 {{#formatdate:2012-01-02|dmy}}<br/>

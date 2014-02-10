@@ -107,7 +107,7 @@ class Xosrh_args_mgr {
 			if (tid != null) {
 				switch (((ByteVal)tid).Val()) {
 					case Arg_search: 		search_bry 	= ByteAry_.Replace(arg.Val_bry(), Byte_ascii.Plus, Byte_ascii.Space); break;
-					case Arg_page_idx: 		page_idx 	= ByteAry_.XtoIntOr(arg.Val_bry(), 0); break;
+					case Arg_page_idx: 		page_idx 	= ByteAry_.X_to_int_or(arg.Val_bry(), 0); break;
 					case Arg_sort: 			sort_tid	= Xosrh_rslt_itm_sorter.parse_(String_.new_ascii_(arg.Val_bry())); break;			
 					default:				break;
 				}
@@ -121,8 +121,8 @@ class Xosrh_args_mgr {
 	}	private static final byte Arg_search = 0, Arg_page_idx = 1, Arg_sort = 2;
 	private static byte[] Ns_bry = ByteAry_.new_ascii_("ns");
 	private static final Hash_adp_bry url_args = new Hash_adp_bry(false)
-		.Add_str_byteVal("xowa_page_index", Arg_page_idx)
-		.Add_str_byteVal("xowa_sort", Arg_sort)
-		.Add_str_byteVal("search", Arg_search)
+		.Add_str_byte("xowa_page_index", Arg_page_idx)
+		.Add_str_byte("xowa_sort", Arg_sort)
+		.Add_str_byte("search", Arg_search)
 	;
 }

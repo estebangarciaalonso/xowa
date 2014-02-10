@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-public class Xop_parser {
+public class Xop_parser {	// NOTE: parsers are reused; do not keep any read-write state
 	public Xop_parser(Xop_lxr_mgr tmpl_lxr_mgr, Xop_lxr_mgr wiki_lxr_mgr) {
 		this.tmpl_lxr_mgr = tmpl_lxr_mgr; this.tmpl_trie = tmpl_lxr_mgr.Trie();
 		this.wiki_lxr_mgr = wiki_lxr_mgr; this.wiki_trie = wiki_lxr_mgr.Trie();

@@ -25,7 +25,7 @@ public abstract class Xob_categorylinks_base extends Xob_sql_dump_base implement
 		parser.Fld_cmd_(this).Flds_req_(Fld_cl_from, Fld_cl_to, Fld_cl_timestamp, Fld_cl_collation, Fld_cl_sortkey, Fld_cl_type);
 	}	static final byte[] Fld_cl_from = ByteAry_.new_ascii_("cl_from"), Fld_cl_to = ByteAry_.new_ascii_("cl_to"), Fld_cl_timestamp = ByteAry_.new_ascii_("cl_timestamp"), Fld_cl_collation = ByteAry_.new_ascii_("cl_collation"), Fld_cl_sortkey = ByteAry_.new_ascii_("cl_sortkey"), Fld_cl_type = ByteAry_.new_ascii_("cl_type");
 	public void Exec(byte[] src, byte[] fld_key, int fld_idx, int fld_bgn, int fld_end, ByteAryBfr file_bfr, Sql_file_parser_data data) {
-		if		(ByteAry_.Eq(fld_key, Fld_cl_from))			cur_id = ByteAry_.XtoIntByPos(src, fld_bgn, fld_end, -1);
+		if		(ByteAry_.Eq(fld_key, Fld_cl_from))			cur_id = ByteAry_.X_to_int_or(src, fld_bgn, fld_end, -1);
 		else if (ByteAry_.Eq(fld_key, Fld_cl_to))			cur_ctg = ByteAry_.Mid(src, fld_bgn, fld_end);
 		else if (ByteAry_.Eq(fld_key, Fld_cl_collation))	cur_collation_is_uca = ByteAry_.HasAtBgn(src, Collation_uca, fld_bgn, fld_end);
 		else if (ByteAry_.Eq(fld_key, Fld_cl_timestamp)) {

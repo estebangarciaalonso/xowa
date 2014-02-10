@@ -21,30 +21,30 @@ public class Xot_invk_sandbox_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {
 		fxt.Reset();
-		fxt.ini_defn_clear();
-		fxt.ini_defn_add("concat", "{{{1}}}{{{2}}}");
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("concat", "{{{1}}}{{{2}}}");
 	}
 	@Test  public void Basic() {
-		fxt.tst_Parse_tmpl_str("{{concat|a|b}}", "ab");
+		fxt.Test_parse_tmpl_str("{{concat|a|b}}", "ab");
 	}
 	@Test  public void Basic_too_many() {	// c gets ignored
-		fxt.tst_Parse_tmpl_str("{{concat|a|b|c}}", "ab");
+		fxt.Test_parse_tmpl_str("{{concat|a|b|c}}", "ab");
 	}
 	@Test  public void Basic_too_few() {
-		fxt.tst_Parse_tmpl_str("{{concat|a}}", "a{{{2}}}");
+		fxt.Test_parse_tmpl_str("{{concat|a}}", "a{{{2}}}");
 	}
 	@Test  public void Basic_else() {
-		fxt.ini_defn_add("concat", "{{{1}}}{{{2|?}}}");
-		fxt.tst_Parse_tmpl_str("{{concat|a}}", "a?");
+		fxt.Init_defn_add("concat", "{{{1}}}{{{2|?}}}");
+		fxt.Test_parse_tmpl_str("{{concat|a}}", "a?");
 	}
 	@Test  public void Eq_2() {
-		fxt.ini_defn_add("concat", "{{{lkp1}}}");
-		fxt.tst_Parse_tmpl_str("{{concat|lkp1=a=b}}", "a=b");
+		fxt.Init_defn_add("concat", "{{{lkp1}}}");
+		fxt.Test_parse_tmpl_str("{{concat|lkp1=a=b}}", "a=b");
 	}
-	@Test  public void Recurse()		{fxt.tst_Parse_tmpl_str_test("<{{concat|{{{1}}}|{{{2}}}}}>"	, "{{test|a|b}}", "<ab>");}
-	@Test  public void Recurse_mix()	{fxt.tst_Parse_tmpl_str_test("{{concat|.{{{1}}}.|{{{2}}}}}"	, "{{test|a|b}}", ".a.b");}
-	@Test  public void Recurse_err()	{fxt.tst_Parse_tmpl_str_test("{{concat|{{{1}}}|{{{2}}}}}"	, "{{test1|a|b}}", "{{:test1}}");} // NOTE: make sure test1 does not match test
-	@Test  public void KeyNewLine()		{fxt.tst_Parse_tmpl_str_test("{{\n  concat|a|b}}"			, "{{\n  test}}", "ab");}
+	@Test  public void Recurse()		{fxt.Test_parse_tmpl_str_test("<{{concat|{{{1}}}|{{{2}}}}}>"	, "{{test|a|b}}", "<ab>");}
+	@Test  public void Recurse_mix()	{fxt.Test_parse_tmpl_str_test("{{concat|.{{{1}}}.|{{{2}}}}}"	, "{{test|a|b}}", ".a.b");}
+	@Test  public void Recurse_err()	{fxt.Test_parse_tmpl_str_test("{{concat|{{{1}}}|{{{2}}}}}"	, "{{test1|a|b}}", "{{:test1}}");} // NOTE: make sure test1 does not match test
+	@Test  public void KeyNewLine()		{fxt.Test_parse_tmpl_str_test("{{\n  concat|a|b}}"			, "{{\n  test}}", "ab");}
 }
 /*
 */

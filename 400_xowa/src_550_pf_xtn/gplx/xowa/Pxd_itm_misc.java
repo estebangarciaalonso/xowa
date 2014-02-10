@@ -76,16 +76,16 @@ class Pxd_itm_int_dmy_14 extends Pxd_itm_base {
 	@Override public byte Tkn_tid() {return Pxd_itm_.TypeId_int_dmy_14;}
 	@Override public int Eval_idx() {return eval_idx;} private int eval_idx = 20;
 	@Override public void Time_ini(DateAdpBldr bldr) {
-		bldr.Seg_set(DateAdp_.SegIdx_year	, ByteAry_.XtoIntByPos(src,  0,  4, 0));
-		bldr.Seg_set(DateAdp_.SegIdx_month	, ByteAry_.XtoIntByPos(src,  4,  6, 0));
+		bldr.Seg_set(DateAdp_.SegIdx_year	, ByteAry_.X_to_int_or(src,  0,  4, 0));
+		bldr.Seg_set(DateAdp_.SegIdx_month	, ByteAry_.X_to_int_or(src,  4,  6, 0));
 		if (digits > 6) {
-			bldr.Seg_set(DateAdp_.SegIdx_day	, ByteAry_.XtoIntByPos(src,  6,  8, 0));
+			bldr.Seg_set(DateAdp_.SegIdx_day	, ByteAry_.X_to_int_or(src,  6,  8, 0));
 			if (digits > 8) {
-				bldr.Seg_set(DateAdp_.SegIdx_hour	, ByteAry_.XtoIntByPos(src,  8, 10, 0));
+				bldr.Seg_set(DateAdp_.SegIdx_hour	, ByteAry_.X_to_int_or(src,  8, 10, 0));
 				if (digits > 10) {
-					bldr.Seg_set(DateAdp_.SegIdx_minute	, ByteAry_.XtoIntByPos(src, 10, 12, 0));
+					bldr.Seg_set(DateAdp_.SegIdx_minute	, ByteAry_.X_to_int_or(src, 10, 12, 0));
 					if (digits > 12)
-						bldr.Seg_set(DateAdp_.SegIdx_second	, ByteAry_.XtoIntByPos(src, 12, 14, 0));
+						bldr.Seg_set(DateAdp_.SegIdx_second	, ByteAry_.X_to_int_or(src, 12, 14, 0));
 				}
 			}
 		}
@@ -96,9 +96,9 @@ class Pxd_itm_int_mhs_6 extends Pxd_itm_base {
 	@Override public byte Tkn_tid() {return Pxd_itm_.TypeId_int_hms_6;}
 	@Override public int Eval_idx() {return eval_idx;} private int eval_idx = 20;
 	@Override public void Time_ini(DateAdpBldr bldr) {
-		bldr.Seg_set(DateAdp_.SegIdx_hour	, ByteAry_.XtoIntByPos(src, 0,  2, 0));
-		bldr.Seg_set(DateAdp_.SegIdx_minute	, ByteAry_.XtoIntByPos(src, 2,  4, 0));
-		bldr.Seg_set(DateAdp_.SegIdx_second	, ByteAry_.XtoIntByPos(src, 4,  6, 0));
+		bldr.Seg_set(DateAdp_.SegIdx_hour	, ByteAry_.X_to_int_or(src, 0,  2, 0));
+		bldr.Seg_set(DateAdp_.SegIdx_minute	, ByteAry_.X_to_int_or(src, 2,  4, 0));
+		bldr.Seg_set(DateAdp_.SegIdx_second	, ByteAry_.X_to_int_or(src, 4,  6, 0));
 	}
 	public Pxd_itm_int_mhs_6(int ary_idx, byte[] src) {this.Ctor(ary_idx); this.src = src;} private byte[] src;
 }

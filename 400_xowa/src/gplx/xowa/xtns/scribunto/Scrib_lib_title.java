@@ -76,12 +76,12 @@ class Scrib_lib_title implements Scrib_lib {
 		Pf_url_urlfunc.UrlString(engine.Ctx(), url_func_tid, false, ttl_bry, bfr, qry_bry);
 		return Scrib_kv_utl.base1_obj_(bfr.Mkr_rls().XtoStrAndClear());
 	}
-	private static final Hash_adp_bry url_func_hash = new Hash_adp_bry(false).Add_str_byteVal("fullUrl", Pf_url_urlfunc.Tid_full).Add_str_byteVal("localUrl", Pf_url_urlfunc.Tid_local).Add_str_byteVal("canonicalUrl", Pf_url_urlfunc.Tid_canonical);
+	private static final Hash_adp_bry url_func_hash = new Hash_adp_bry(false).Add_str_byte("fullUrl", Pf_url_urlfunc.Tid_full).Add_str_byte("localUrl", Pf_url_urlfunc.Tid_local).Add_str_byte("canonicalUrl", Pf_url_urlfunc.Tid_canonical);
 	// private static final byte[] Proto_relative = ByteAry_.new_ascii_("relative");
 	// private static final Hash_adp_bry proto_hash = new Hash_adp_bry(false).Add_str_obj("http", ByteAry_.new_ascii_("http://")).Add_str_obj("https", ByteAry_.new_ascii_("https://")).Add_str_obj("relative", ByteAry_.new_ascii_("//")).Add_str_obj("canonical", ByteAry_.new_ascii_("1"));
 	private byte[] Parse_ns(Xow_wiki wiki, Object ns_obj) {
 		if (ClassAdp_.Eq_typeSafe(ns_obj, String.class))
-			return ByteAry_.new_utf8_(String_.cast_(ns_obj));
+			return ByteAry_.new_utf8_(String_.as_or_fail_(ns_obj));
 		else {
 			int ns_id = Int_.cast_(ns_obj);
 			Xow_ns ns = wiki.Ns_mgr().Get_by_id(ns_id);
@@ -123,7 +123,7 @@ class Scrib_lib_title implements Scrib_lib {
 		return Scrib_kv_utl.base1_obj_(String_.new_utf8_(page.Data_raw()));
 	}
 	public KeyVal[] GetCurrentTitle(KeyVal[] values) {
-		return Scrib_kv_utl.base1_obj_(Xto_kv_ary(engine.Ctx().Page().Ttl()));
+		return Scrib_kv_utl.base1_obj_(Xto_kv_ary(engine.Page().Ttl()));
 	}
 	private KeyVal[] Xto_kv_ary(Xoa_ttl ttl) {
 		Xow_ns ns = ttl.Ns();

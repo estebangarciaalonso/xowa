@@ -102,7 +102,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 		for (int i = 0; i < qids_len; i++) {
 			byte[] qid = qids[i];
 			int qid_len = qid.length;
-			int qid_val = ByteAry_.XtoIntByPos(qid, 1, qid_len, Int_.MaxValue);
+			int qid_val = ByteAry_.X_to_int_or(qid, 1, qid_len, Int_.MaxValue);
 			if (qid_val < qid_min) {
 				qid_min = qid_val;
 				qid_idx = i;
@@ -159,7 +159,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 		return parser.Parse(src);
 	}	
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_enabled))			return Yn.XtoStr(enabled);
+		if		(ctx.Match(k, Invk_enabled))			return Yn.X_to_str(enabled);
 		else if	(ctx.Match(k, Invk_enabled_))			enabled = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_domain))				return String_.new_utf8_(domain);
 		else if	(ctx.Match(k, Invk_domain_))			domain = m.ReadBry("v");

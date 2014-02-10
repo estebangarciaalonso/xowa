@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 class Scrib_kv_utl {
+	public static KeyVal[] base1_obj_null()		{return base1_obj_(null);}
 	public static KeyVal[] base1_obj_(Object v) {return new KeyVal[] {KeyVal_.int_(0 + Scrib_interpreter.Base_1, v)};}
 	public static KeyVal[] base1_many_(Object... vals) {
 		int len = vals.length;
@@ -81,13 +82,13 @@ class Scrib_kv_utl {
 	public static int Val_to_int_or(KeyVal[] ary, int idx, int or) {
 		if (ary == null) throw Err_.new_("ary is null"); if (idx >= ary.length) return or;
 		Object o = ary[idx].Val();
-		try {return coerce_(o);}
+		try {return Int_.coerce_(o);}
 		catch (Exception e) {throw Err_.err_(e, "coerce to int failed; {0} {1}", o, KeyVal_.Xto_str(ary));}
 	}
 	public static int Val_to_int(KeyVal[] ary, int idx) {
 		if (ary == null) throw Err_.new_("ary is null"); if (idx >= ary.length) throw Err_.new_fmt_("idx is not in bounds: {0} {1}", idx, KeyVal_.Xto_str(ary));
 		Object o = ary[idx].Val();
-		try {return coerce_(o);}
+		try {return Int_.coerce_(o);}
 		catch (Exception e) {throw Err_.err_(e, "coerce to int failed; {0} {1}", o, KeyVal_.Xto_str(ary));}
 	}
 	public static boolean Val_to_bool_or(KeyVal[] ary, int idx, boolean or) {
@@ -145,10 +146,6 @@ class Scrib_kv_utl {
 			wiki.App().Gui_wtr().Warn_many("", "", "unknown type for GetUrl query args: ~{0}", ClassAdp_.NameOf_type(qry_args_cls));
 			return ByteAry_.Empty;
 		}
-	}
-	private static int coerce_(Object o) {
-		try {String s = String_.as_(o); return s == null ? Int_.cast_(o) : Int_.parse_(s);}
-		catch (Exception e) {throw Err_.cast_(e, int.class, o);}
 	}
 	public static boolean Val_is_KeyVal_ary(KeyVal kv) {return ClassAdp_.Eq_typeSafe(kv.Val(), KeyVal[].class);}
 }

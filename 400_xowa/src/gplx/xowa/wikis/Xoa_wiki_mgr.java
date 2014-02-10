@@ -18,7 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.wikis; import gplx.*; import gplx.xowa.*;
 import gplx.xowa.xtns.wdatas.*;
 public class Xoa_wiki_mgr implements GfoInvkAble {		
-	public Xoa_wiki_mgr(Xoa_app app) {this.app = app; wdata_mgr = new Wdata_wiki_mgr(app);} private Xoa_app app;
+	public Xoa_wiki_mgr(Xoa_app app) {
+		this.app = app;
+		wiki_regy = new Xoa_wiki_regy(app);
+		wdata_mgr = new Wdata_wiki_mgr(app);
+	}	private Xoa_app app;
+	public Xoa_wiki_regy Wiki_regy() {return wiki_regy;} private Xoa_wiki_regy wiki_regy;
 	public Cfg_nde_root Groups() {return groups;} Cfg_nde_root groups = new Cfg_nde_root().Root_(new Xoac_wiki_grp(ByteAry_.Empty), Xoac_lang_grp.Make_grp, ByteAry_.Ary_empty);
 	public Xow_script_mgr Scripts() {return scripts;} private Xow_script_mgr scripts = new Xow_script_mgr();
 	public Wdata_wiki_mgr Wdata_mgr() {return wdata_mgr;} Wdata_wiki_mgr wdata_mgr;

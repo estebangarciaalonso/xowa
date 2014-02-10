@@ -127,7 +127,7 @@ public class ByteAry_tst {
 		tst_XtoInt("", -1);
 	}
 	void tst_XtoInt(String val, int expd)					{tst_XtoInt(val, -1, expd);}
-	void tst_XtoInt(String val, int or, int expd)			{Tfds.Eq(expd, ByteAry_.XtoIntOr(ByteAry_.new_utf8_(val), or));}
+	void tst_XtoInt(String val, int or, int expd)			{Tfds.Eq(expd, ByteAry_.X_to_int_or(ByteAry_.new_utf8_(val), or));}
 	void tst_XtoIntBy4Bytes(int expd, byte... ary)	{Tfds.Eq(expd, ByteAry_.XtoIntBy4Bytes(ary), "XtoInt"); Tfds.Eq_ary(ary, ByteAry_.XbyInt(expd), "XbyInt");}
 	void tst_ReadCsvStr(String raw, String expd)			{tst_ReadCsvStr(raw, IntRef.zero_()  , expd);}
 	void tst_ReadCsvStr(String raw, int bgn, String expd)	{tst_ReadCsvStr(raw, IntRef.new_(bgn), expd);}
@@ -159,14 +159,21 @@ public class ByteAry_tst {
 		Trim_tst("a  c", 1, 3, "");
 		Trim_tst("  ", 0, 2, "");
 	}	void Trim_tst(String raw, int bgn, int end, String expd) {Tfds.Eq(expd, String_.new_utf8_(ByteAry_.Trim(ByteAry_.new_utf8_(raw), bgn, end)));}
-	@Test  public void XtoInt_lax() {
-		tst_XtoInt_lax("12a", 12);
-		tst_XtoInt_lax("1", 1);
-		tst_XtoInt_lax("123", 123);
-		tst_XtoInt_lax("a", 0);
-		tst_XtoInt_lax("-1", -1);
+	@Test  public void X_to_int_lax() {
+		tst_X_to_int_lax("12a", 12);
+		tst_X_to_int_lax("1", 1);
+		tst_X_to_int_lax("123", 123);
+		tst_X_to_int_lax("a", 0);
+		tst_X_to_int_lax("-1", -1);
 	}
-	void tst_XtoInt_lax(String val, int expd)				{Tfds.Eq(expd, ByteAry_.XtoIntByPos_lax(ByteAry_.new_utf8_(val), 0, String_.Len(val), 0));}
+	private void tst_X_to_int_lax(String val, int expd)				{Tfds.Eq(expd, ByteAry_.X_to_int_or_lax(ByteAry_.new_utf8_(val), 0, String_.Len(val), 0));}
+	@Test  public void X_to_int_or_trim() {
+		tst_X_to_int_trim("123 "	, 123);
+		tst_X_to_int_trim(" 123"	, 123);
+		tst_X_to_int_trim(" 123 "	, 123);
+		tst_X_to_int_trim(" 1 3 "	, -1);
+	}
+	private void tst_X_to_int_trim(String val, int expd)			{Tfds.Eq(expd, ByteAry_.X_to_int_or_trim(ByteAry_.new_utf8_(val), 0, String_.Len(val), -1));}
 	@Test  public void Compare() {
 		tst_Compare("abcde", 0, 1, "abcde", 0, 1, CompareAble_.Same);
 		tst_Compare("abcde", 0, 1, "abcde", 1, 2, CompareAble_.Less);

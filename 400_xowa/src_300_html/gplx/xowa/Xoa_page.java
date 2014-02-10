@@ -27,6 +27,8 @@ public class Xoa_page {
 	}	Xoa_page() {}	// called by Null
 	public Xow_wiki			Wiki() {return wiki;} private Xow_wiki wiki;
 	public Xol_lang			Lang() {return lang;} public Xoa_page Lang_(Xol_lang v) {lang = v; return this;} private Xol_lang lang;
+	public boolean				Lang_convert_content() {return lang_convert_content;} public Xoa_page Lang_convert_content_(boolean v) {lang_convert_content = v; return this;} private boolean lang_convert_content = true;
+	public boolean				Lang_convert_title() {return lang_convert_title;} public Xoa_page Lang_convert_title_(boolean v) {lang_convert_title = v; return this;} private boolean lang_convert_title = true;
 	public int				Id() {return id;} public Xoa_page Id_(int v) {id = v; return this;} private int id;
 	public DateAdp			Modified_on() {return modified_on;} public Xoa_page Modified_on_(DateAdp v) {modified_on = v; return this;} DateAdp modified_on = DateAdp_.MinValue;
 	public boolean				Missing() {return missing;} public Xoa_page Missing_() {missing = true; return this;} private boolean missing;
@@ -63,6 +65,7 @@ public class Xoa_page {
 		langs.Clear();
 		wdata_external_lang_links.Reset();
 		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_page_changed(this);
+		lang_convert_content = lang_convert_title = true;
 	}
 	public static Xoa_page blank_page_(Xow_wiki wiki, Xoa_ttl ttl) {
 		Xoa_page rv = new Xoa_page(wiki, ttl);

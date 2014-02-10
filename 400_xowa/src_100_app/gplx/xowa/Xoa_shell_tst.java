@@ -21,7 +21,7 @@ public class Xoa_shell_tst {
 	@Test  public void Fetch_page() {	// PURPOSE.fix: fetch_page failed with nullRef; DATE:2013-04-12
 		Xop_fxt parser_fxt = new Xop_fxt();
 		Xoa_app app = parser_fxt.App(); Xow_wiki wiki = parser_fxt.Wiki();
-		parser_fxt.ini_page_create("A", "test"); // need to create page in order for html output to gen
+		parser_fxt.Init_page_create("A", "test"); // need to create page in order for html output to gen
 		wiki.Html_mgr().Output_mgr().Html_capable_(true);	// need to set html_capable in order for div_home to load
 		Xoa_gfs_mgr.Msg_parser_init();
 		wiki.Html_mgr().Portal_mgr().Div_home_fmtr().Fmt_("~{<>app.user.msgs.get('mainpage-description');<>}");

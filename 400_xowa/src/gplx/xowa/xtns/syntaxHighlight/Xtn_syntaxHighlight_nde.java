@@ -16,15 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.syntaxHighlight; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-public class Xtn_syntaxHighlight_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
-	public boolean Xtn_literal() {return false;}
-	public byte[] Lang() {return lang;} private byte[] lang = ByteAry_.Empty;
-	public byte[] Style() {return style;} private byte[] style = null;
-	public boolean Line_enabled() {return line_enabled;} private boolean line_enabled = false;
-	public int Start() {return start;} private int start = 1;
-	public int[] Highlight() {return highlight;} private int[] highlight = null;
-	public byte[] Enclose() {return enclose;} private byte[] enclose = ByteAry_.Empty;
-	public Int_rng_mgr Highlight_idxs() {return highlight_idxs;} Int_rng_mgr highlight_idxs = Int_rng_mgr_null._;
+public class Xtn_syntaxHighlight_nde implements Xox_xnde, Xop_xnde_atr_parser {
+	private byte[] lang = ByteAry_.Empty; private byte[] style = null; private byte[] enclose = ByteAry_.Empty;
+	private boolean line_enabled = false; private int start = 1; private Int_rng_mgr highlight_idxs = Int_rng_mgr_null._;
+	public Xop_xnde_tkn Xnde() {return xtn_root;} private Xop_xnde_tkn xtn_root;
 	public void Xatr_parse(Xow_wiki wiki, byte[] src, Xop_xatr_itm xatr, Object xatr_obj) {
 		if (xatr_obj == null) return;
 		byte xatr_tid = ((ByteVal)xatr_obj).Val();
@@ -37,42 +32,37 @@ public class Xtn_syntaxHighlight_nde implements Xop_xnde_xtn, Xop_xnde_atr_parse
 			case Xatr_highlight:	highlight_idxs = new Int_rng_mgr_base(); highlight_idxs.Parse(xatr.Val_as_bry(src)); break;
 		}
 	}
-	public Xop_root_tkn Xtn_root() {return null;}
-	public Xop_xnde_tkn Xnde() {return xnde;} private Xop_xnde_tkn xnde;
-	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_parse(Xow_wiki wiki, Xop_ctx ctx, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xtn_root) {
 		Xoa_app app = ctx.App();
-		Xop_xatr_itm[] atrs = Xop_xatr_itm.Xatr_parse(app, this, xatrs_syntaxHighlight, wiki, src, xnde);
-		this.xnde = xnde;
-		xnde.Atrs_ary_(atrs);
+		Xop_xatr_itm[] atrs = Xop_xatr_itm.Xatr_parse(app, this, xatrs_syntaxHighlight, wiki, src, xtn_root);
+		this.xtn_root = xtn_root;
+		xtn_root.Atrs_ary_(atrs);
 	}
-	public static void To_html(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
-		Xtn_syntaxHighlight_nde nde = (Xtn_syntaxHighlight_nde)xnde.Xnde_data();
-		boolean lang_is_text = ByteAry_.Eq(nde.Lang(), Lang_text);
-		boolean enclose_is_none = ByteAry_.Eq(nde.Enclose(), Enclose_none);
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+		boolean lang_is_text = ByteAry_.Eq(lang, Lang_text);
+		boolean enclose_is_none = ByteAry_.Eq(enclose, Enclose_none);
 		if 		(enclose_is_none) {
 			bfr.Add(Xoh_consts.Span_bgn);			
 		}
 		else if (lang_is_text) {
 			bfr.Add(Xoh_consts.Code_bgn_open);
-			if (nde.Style() != null) 
-				bfr.Add(Xoh_consts.Style_atr).Add(nde.style).Add_byte(Byte_ascii.Quote);
+			if (style != null) 
+				bfr.Add(Xoh_consts.Style_atr).Add(this.style).Add_byte(Byte_ascii.Quote);
 			bfr.Add_byte(Byte_ascii.Gt);
 		}
 		else {
 			bfr.Add(Xoh_consts.Pre_bgn_open);
 			bfr.Add(Xoh_consts.Style_atr).Add(Xoh_consts.Pre_style_overflow_auto);
-			if (nde.Style() != null) bfr.Add(nde.Style());
+			if (style != null) bfr.Add(style);
 			bfr.Add(Xoh_consts.__end_quote);
 		}
 		int text_bgn = xnde.Tag_open_end();
 		int text_end = xnde.Tag_close_bgn();
-		Int_rng_mgr highlight_idxs = nde.Highlight_idxs();
-		boolean line_enabled = nde.Line_enabled();
 		if (line_enabled || enclose_is_none) {
 			bfr.Add_byte_nl();
 			byte[][] lines = ByteAry_.Split_lines(ByteAry_.Mid(src, text_bgn, text_end));
 			int lines_len = lines.length;
-			int line_idx = nde.Start();
+			int line_idx = start;
 			int line_end = (line_idx + lines_len) - 1; // EX: line_idx=9 line_len=1; line_end=9
 			int digits_max = Int_.DigitCount(line_end);
 			for (int i = 0; i < lines_len; i++) {
@@ -104,5 +94,5 @@ public class Xtn_syntaxHighlight_nde implements Xop_xnde_xtn, Xop_xnde_atr_parse
 	}
 	private static final byte[] Lang_text = ByteAry_.new_ascii_("text"), Style_line = ByteAry_.new_ascii_("-moz-user-select:none;"), Style_highlight = ByteAry_.new_ascii_("background-color: #FFFFCC;"), Enclose_none = ByteAry_.new_ascii_("none");
 	public static final byte Xatr_enclose = 2, Xatr_lang = 3, Xatr_style = 4, Xatr_line = 5, Xatr_start = 6, Xatr_highlight = 7;
-	private static final Hash_adp_bry xatrs_syntaxHighlight = new Hash_adp_bry(false).Add_str_byteVal("enclose", Xatr_enclose).Add_str_byteVal("lang", Xatr_lang).Add_str_byteVal("style", Xatr_style).Add_str_byteVal("line", Xatr_line).Add_str_byteVal("start", Xatr_start).Add_str_byteVal("highlight", Xatr_highlight);
+	private static final Hash_adp_bry xatrs_syntaxHighlight = new Hash_adp_bry(false).Add_str_byte("enclose", Xatr_enclose).Add_str_byte("lang", Xatr_lang).Add_str_byte("style", Xatr_style).Add_str_byte("line", Xatr_line).Add_str_byte("start", Xatr_start).Add_str_byte("highlight", Xatr_highlight);
 }

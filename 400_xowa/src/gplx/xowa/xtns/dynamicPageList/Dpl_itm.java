@@ -106,11 +106,11 @@ class Dpl_itm {
 			case Dpl_itm_keys.Key_stablepages:			stable_pages = Dpl_stable_tid.Parse(val); break;
 			case Dpl_itm_keys.Key_qualitypages:			quality_pages = Dpl_redirect.Parse(val); break;
 			case Dpl_itm_keys.Key_addfirstcategorydate:	Parse_ctg_date(val); break;
-			case Dpl_itm_keys.Key_count:				count = ByteAry_.XtoIntOr(val, Int_.MinValue); break;
-			case Dpl_itm_keys.Key_offset:				offset = ByteAry_.XtoIntOr(val, Int_.MinValue); break;
-			case Dpl_itm_keys.Key_imagesperow:			gallery_imgs_per_row = ByteAry_.XtoIntOr(val, Int_.MinValue); break;
-			case Dpl_itm_keys.Key_imagewidth:			gallery_img_w = ByteAry_.XtoIntOr(val, Int_.MinValue); break;
-			case Dpl_itm_keys.Key_imageheight:			gallery_img_h = ByteAry_.XtoIntOr(val, Int_.MinValue); break;
+			case Dpl_itm_keys.Key_count:				count = ByteAry_.X_to_int_or(val, Int_.MinValue); break;
+			case Dpl_itm_keys.Key_offset:				offset = ByteAry_.X_to_int_or(val, Int_.MinValue); break;
+			case Dpl_itm_keys.Key_imagesperow:			gallery_imgs_per_row = ByteAry_.X_to_int_or(val, Int_.MinValue); break;
+			case Dpl_itm_keys.Key_imagewidth:			gallery_img_w = ByteAry_.X_to_int_or(val, Int_.MinValue); break;
+			case Dpl_itm_keys.Key_imageheight:			gallery_img_h = ByteAry_.X_to_int_or(val, Int_.MinValue); break;
 			case Dpl_itm_keys.Key_gallerycaption:		gallery_caption = val; break;	// FUTURE: parse for {{int:}}?
 			case Dpl_itm_keys.Key_galleryshowfilesize:	gallery_filesize = Dpl_itm_keys.Parse_as_bool(val, true); break;
 			case Dpl_itm_keys.Key_galleryshowfilename:	gallery_filename = Dpl_itm_keys.Parse_as_bool(val, true); break;

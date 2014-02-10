@@ -23,6 +23,7 @@ public class Xoh_js_cleaner_tst {
 	@Test   public void Js_nde() {fxt.Test_clean("a<script>b</script>c", "a&lt;script>b</script>c");}
 	@Test   public void Js_atr() {fxt.Test_clean("a<span onmouseover = 'fail'>b</span>c", "a<span onMouseOver&#61; 'fail'>b</span>c");} 
 	@Test   public void Js_atr_noop() {fxt.Test_clean("a onmouseover b", "a onmouseover b");} 
+	@Test   public void Js_atr_noop_regionSelect() {fxt.Test_clean("regionSelect=2", "regionSelect=2");} 
 }
 class Xoh_js_cleaner_fxt {
 	public void Init() {

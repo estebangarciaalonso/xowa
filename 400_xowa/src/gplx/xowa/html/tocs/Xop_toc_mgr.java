@@ -154,7 +154,7 @@ public class Xop_toc_mgr implements ByteAryFmtrArg {
 							html_wtr.Write_tkn(ctx, html_wtr_opts, bfr, src, 0, tkn, Xoh_html_wtr.Sub_idx_null, sub);
 							break;
 						case Xop_xnde_tag_.Tid_translate:
-							gplx.xowa.xtns.translates.Xop_translate_xnde translate_xnde = (gplx.xowa.xtns.translates.Xop_translate_xnde)xnde.Xnde_data();
+							gplx.xowa.xtns.translates.Xop_translate_xnde translate_xnde = (gplx.xowa.xtns.translates.Xop_translate_xnde)xnde.Xnde_xtn();
 							html_wtr.Write_tkn(ctx, html_wtr_opts, bfr, translate_xnde.Xtn_root().Data_mid(), 0, tkn, Xoh_html_wtr.Sub_idx_null, translate_xnde.Xtn_root());
 							break;
 						default:

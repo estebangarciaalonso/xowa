@@ -23,9 +23,9 @@ public class Xoh_imgs_mgr implements GfoInvkAble {
 	public BoolRef Alt_defaults_to_caption() {return alt_defaults_to_caption;} BoolRef alt_defaults_to_caption = BoolRef.y_();
 	public void Copy_cfg(Xoh_imgs_mgr copy) {this.alt_in_caption = copy.alt_in_caption;}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_alt_in_caption))					return Yn.XtoStr(alt_in_caption.Val());
+		if		(ctx.Match(k, Invk_alt_in_caption))					return Yn.X_to_str(alt_in_caption.Val());
 		else if	(ctx.Match(k, Invk_alt_in_caption_))				alt_in_caption = Modify(wiki_is_default, alt_in_caption, m.ReadYn("v"));
-		else if	(ctx.Match(k, Invk_alt_defaults_to_caption))		return Yn.XtoStr(alt_defaults_to_caption.Val());
+		else if	(ctx.Match(k, Invk_alt_defaults_to_caption))		return Yn.X_to_str(alt_defaults_to_caption.Val());
 		else if	(ctx.Match(k, Invk_alt_defaults_to_caption_))		alt_defaults_to_caption = Modify(wiki_is_default, alt_defaults_to_caption, m.ReadYn("v"));
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;

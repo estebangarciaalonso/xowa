@@ -105,8 +105,7 @@ public class Xoa_app implements GfoInvkAble {
 	public Xoa_url_parser		Url_parser() {return url_parser;} private Xoa_url_parser url_parser = new Xoa_url_parser();
 	public Xoh_href_parser		Href_parser() {return href_parser;} private Xoh_href_parser href_parser;
 	public Xop_sanitizer		Sanitizer() {return sanitizer;} private Xop_sanitizer sanitizer;
-	public ByteTrieMgr_slim		Amp_trie() {return amp_trie;} private ByteTrieMgr_slim amp_trie = Xop_amp_trie._;
-	public ByteTrieMgr_fast		TmplBgnTrie() {return tmplBgnTrie;} private ByteTrieMgr_fast tmplBgnTrie = Xop_curly_bgn_lxr.tmpl_bgn_trie_();
+	public ByteTrieMgr_slim		Amp_trie() {return amp_trie;} private ByteTrieMgr_slim amp_trie = Xop_amp_trie._;		
 	public ByteTrieMgr_slim		TblwWsTrie() {return tblwWsTrie;} private ByteTrieMgr_slim tblwWsTrie = Xop_tblw_ws_itm.trie_();
 	public Xop_xatr_parser		Xatr_parser() {return xatr_parser;} private Xop_xatr_parser xatr_parser = new Xop_xatr_parser();
 	public Xop_xnde_tag_regy	Xnde_tag_regy() {return xnde_tag_regy;} private Xop_xnde_tag_regy xnde_tag_regy = new Xop_xnde_tag_regy();

@@ -218,7 +218,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 
 //					ByteAryBfr bfr_tmpl = ByteAryBfr.new_();
 //					rv = defn_tmpl.Tmpl_evaluate(ctx, invk_tmpl, bfr_tmpl);
-//					if (!bfr.Match_end_byt(Byte_ascii.NewLine) && ctx.App().TmplBgnTrie().MatchAtCur(bfr_tmpl.Bry(), 0, 2) != null) {bfr.Add_byte(Byte_ascii.NewLine);}	// if {| : ; # *, auto  add new_line REF.MW:Parser.php|braceSubstitution; note that code does not add new line if one is already there
+//					ctx.App().Tmpl_prepend_nl(bfr, bfr_tmpl.Bry(), bfr_tmpl.Bry_len());
 //					bfr.Add_bfr_and_clear(bfr_tmpl);
 
 				ByteAryBfr bfr_tmpl = ByteAryBfr.new_();
@@ -227,21 +227,21 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 				Object o = ctx.App().Tmpl_result_cache().Fetch(rslt_key);
 				if (o != null) {
 					byte[] rslt = (byte[])o;
-					if (rslt.length > 2 && !bfr.Match_end_byt(Byte_ascii.NewLine) && ctx.App().TmplBgnTrie().MatchAtCur(rslt, 0, 2) != null) {bfr.Add_byte(Byte_ascii.NewLine);}	// if {| : ; # *, auto  add new_line REF.MW:Parser.php|braceSubstitution; note that code does not add new line if one is already there
+					ctx.Tmpl_prepend_nl(bfr, rslt, rslt.length);
 					bfr.Add(rslt);
 				}
 				else {
 					rv = defn_tmpl.Tmpl_evaluate(ctx, invk_tmpl, bfr_tmpl);
-					if (!bfr.Match_end_byt(Byte_ascii.NewLine) && ctx.App().TmplBgnTrie().MatchAtCur(bfr_tmpl.Bry(), 0, 2) != null) {bfr.Add_byte(Byte_ascii.NewLine);}	// if {| : ; # *, auto  add new_line REF.MW:Parser.php|braceSubstitution; note that code does not add new line if one is already there
+					ctx.Tmpl_prepend_nl(bfr, bfr_tmpl.Bry(), bfr_tmpl.Bry_len());
 					if (Cache_enabled) {
-						byte[] rslt_val = bfr_tmpl.XtoAryAndClearAndTrim(false, true, Trim_bry_nl);
+						byte[] rslt_val = bfr_tmpl.XtoAryAndClear();
 						bfr.Add(rslt_val);
 						HashAdp cache = ctx.App().Tmpl_result_cache();
 						cache.Del(rslt_key);
 						cache.Add(rslt_key, rslt_val);
 					}
 					else
-						bfr.Add_bfr_trim_and_clear(bfr_tmpl, false, true, Trim_bry_nl);
+						bfr.Add_bfr_and_clear(bfr_tmpl);
 				}
 				trace.Trace_end(trg_bgn, bfr);
 				break;
@@ -255,10 +255,9 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		defn_func.Eval_argx(ctx, src, caller, invk);
 		ByteAryBfr bfr_func = ByteAryBfr.new_();
 		defn_func.Func_evaluate(ctx, src, caller, invk, bfr_func);
-		if (!bfr.Match_end_byt(Byte_ascii.NewLine) && ctx.App().TmplBgnTrie().MatchAtCur(bfr_func.Bry(), 0, 2) != null) {bfr.Add_byte(Byte_ascii.NewLine);}	// if {| : ; # *, auto  add new_line REF.MW:Parser.php|braceSubstitution; note that code does not add new line if one is already there
+		ctx.Tmpl_prepend_nl(bfr, bfr_func.Bry(), bfr_func.Bry_len());
 		bfr.Add_bfr_and_clear(bfr_func);
 	}
-	private static final byte[] Trim_bry_nl = ByteAry_.mask_(256, Byte_ascii.NewLine);
 	private static Hash_adp_bry ignore_hash;
 	public static boolean Cache_enabled = false;
 	private static void Bld_key(Xot_invk invk, byte[] name_ary, ByteAryBfr bfr) {
@@ -305,7 +304,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		Xot_invk tmp_tmpl = Xot_defn_tmpl_.CopyNew(ctx, transclude_tmpl, this, caller, src);
 		ByteAryBfr tmp_bfr = ByteAryBfr.new_();
 		rv = transclude_tmpl.Tmpl_evaluate(ctx, tmp_tmpl, tmp_bfr);
-		if (!doc.Match_end_byt(Byte_ascii.NewLine) && ctx.App().TmplBgnTrie().MatchAtCur(tmp_bfr.Bry(), 0, 2) != null) {doc.Add_byte(Byte_ascii.NewLine);}	// if {| : ; # *, auto  add new_line REF.MW:Parser.php|braceSubstitution; note that code does not add new line if one is already there
+		ctx.Tmpl_prepend_nl(doc, tmp_bfr.Bry(), tmp_bfr.Bry_len());
 		doc.Add_bfr_and_clear(tmp_bfr);
 		return rv;
 	}

@@ -44,5 +44,5 @@ public class Wdata_doc_ {
 				throw Err_.unhandled(kv_val.Tid());
 		}
 	}
-	private static final byte[] Key_name = ByteAry_.new_ascii_("name");
+	public static final byte[] Key_name = ByteAry_.new_ascii_("name");
 }

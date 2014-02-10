@@ -20,5 +20,5 @@ import org.junit.*;
 public class Pf_xtn_geodata_coordinates_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()				{fxt.Reset();}
-	@Test  public void Basic()				{fxt.tst_Parse_tmpl_str_test("{{#coordinates:1|2}}"									, "{{test}}"	, "");}
+	@Test  public void Basic()				{fxt.Test_parse_tmpl_str_test("{{#coordinates:1|2}}"									, "{{test}}"	, "");}
 }

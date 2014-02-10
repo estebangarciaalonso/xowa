@@ -41,16 +41,17 @@ public class Xop_fxt {
 		html_wtr = new Xoh_html_wtr(wiki);
 		wiki.Html_mgr().Img_suppress_missing_src_(false);
 		Page_ttl_(Ttl_str);
-	}	private Xofw_wiki_wkr_mock mock_wkr = new Xofw_wiki_wkr_mock();
-	public static final String Ttl_str = "Test page";
+	}
+	private Xofw_wiki_wkr_mock mock_wkr = new Xofw_wiki_wkr_mock();
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	public Xop_ctx Ctx() {return ctx;} private Xop_ctx ctx;
-	public Xoa_page Page() {return ctx.Page();}
-	public void Page_by_id_(int id) {ctx.Page().Lang_(wiki.App().Lang_mgr().Get_by_key_or_new(Xol_lang_itm_.Get_by_id(id).Key()));}
 	public Xop_parser Parser() {return parser;} private Xop_parser parser; 
+	public Xoa_page Page() {return ctx.Page();}
+	public void Lang_by_id_(int id) {ctx.Page().Lang_(wiki.App().Lang_mgr().Get_by_key_or_new(Xol_lang_itm_.Get_by_id(id).Key()));}
 	public Xoh_ctx Hctx() {return html_wtr.Hctx();} private Xoh_html_wtr html_wtr;
 	public Xop_fxt Reset() {
+		ctx.Clear();
 		ctx.App().Free_mem(false);
 		ctx.Page().Clear();
 		ctx.Wiki().Db_mgr().Load_mgr().Clear();
@@ -145,100 +146,95 @@ public class Xop_fxt {
 		rv.Find_tkn_(tkn_arg_itm_(find));
 		return rv;
 	}
-	public Xop_fxt ini_Log_(Gfo_msg_itm... itms) {for (Gfo_msg_itm itm : itms) log_itms.Add(itm); return this;} ListAdp log_itms = ListAdp_.new_();
-	public void ini_defn_add(String name, String text) {
+	public Xop_fxt	Init_log_(Gfo_msg_itm... itms) {for (Gfo_msg_itm itm : itms) log_itms.Add(itm); return this;} ListAdp log_itms = ListAdp_.new_();
+	public void		Init_defn_add(String name, String text) {
 		Xot_defn_tmpl itm = run_Parse_tmpl(ByteAry_.new_ascii_(name), ByteAry_.new_utf8_(text));
 		wiki.Cache_mgr().Defn_cache().Add(itm, Bool_.Y);
 	}
-	public void ini_defn_clear() {wiki.Cache_mgr().Defn_cache().Free_mem_all();}
-	public Xop_fxt ini_id_create(int id, int fil_idx, int row_idx, boolean type_redirect, int itm_len, int ns_id, String ttl) {Xow_hive_mgr_fxt.Create_id(app, wiki.Hive_mgr(), id, fil_idx, row_idx, type_redirect, itm_len, ns_id, ttl); return this;}
-	public Xop_fxt ini_ctg_create(String ctg, int... pages) {Xow_hive_mgr_fxt.Create_ctg(app, wiki.Hive_mgr(), ctg, pages); return this;}
-	public Xop_fxt ini_page_create(String ttl) {return ini_page_create(wiki, ttl, "");}
-	public Xop_fxt ini_page_create(String ttl, String txt) {return ini_page_create(wiki, ttl, txt);}
-	public Xop_fxt ini_page_create(Xow_wiki wiki, String ttl, String txt) {
-		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(ttl));
-		byte[] page_raw = ByteAry_.new_utf8_(txt);
-		wiki.Db_mgr().Save_mgr().Data_create(page_ttl, page_raw);
-		return this;
+	public void		Init_defn_clear() {wiki.Cache_mgr().Defn_cache().Free_mem_all();}
+	public Xop_fxt	Init_id_create(int id, int fil_idx, int row_idx, boolean type_redirect, int itm_len, int ns_id, String ttl) {Xow_hive_mgr_fxt.Create_id(app, wiki.Hive_mgr(), id, fil_idx, row_idx, type_redirect, itm_len, ns_id, ttl); return this;}
+	public Xop_fxt	Init_ctg_create(String ctg, int... pages) {Xow_hive_mgr_fxt.Create_ctg(app, wiki.Hive_mgr(), ctg, pages); return this;}
+	public Xop_fxt	Init_page_create(String ttl) {return Init_page_create(wiki, ttl, "");}
+	public Xop_fxt	Init_page_create(String ttl, String txt) {return Init_page_create(wiki, ttl, txt);}
+	public Xop_fxt	Init_page_create(Xow_wiki wiki, String ttl, String txt) {Init_page_create_static(wiki, ttl, txt);return this;}
+	public static void Init_page_create_static(Xow_wiki wiki, String ttl_str, String text_str) {
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(ttl_str));
+		byte[] text = ByteAry_.new_utf8_(text_str);
+		wiki.Db_mgr().Save_mgr().Data_create(ttl, text);
 	}
-	public Xop_fxt ini_page_update(String ttl, String txt) {return ini_page_update(wiki, ttl, txt);}
-	public Xop_fxt ini_page_update(Xow_wiki wiki, String ttl, String txt) {
+	public Xop_fxt	Init_page_update(String ttl, String txt) {return Init_page_update(wiki, ttl, txt);}
+	public Xop_fxt	Init_page_update(Xow_wiki wiki, String ttl, String txt) {
 		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(ttl));
 		byte[] page_raw = ByteAry_.new_utf8_(txt);
 		Xoa_page page = wiki.Data_mgr().Get_page(page_ttl, false);
 		wiki.Db_mgr().Save_mgr().Data_update(page, page_raw);
 		return this;
 	}
-	public Xop_fxt ini_xwiki_add_wiki_and_user_(String alias, String domain) {
-		wiki.Xwiki_mgr().Add_full(alias, domain);
-		app.User().Wiki().Xwiki_mgr().Add_full(domain, domain);
-		return this;
-	}
-	public Xop_fxt ini_xwiki_clear() {
+	public Xop_fxt	Init_xwiki_clear() {
 		wiki.Xwiki_mgr().Clear();
 		app.User().Wiki().Xwiki_mgr().Clear();
 		return this;
 	}
-	public Xop_fxt ini_xwiki_add_user_(String domain) {
+	public Xop_fxt	Init_xwiki_add_wiki_and_user_(String alias, String domain) {
+		wiki.Xwiki_mgr().Add_full(alias, domain);
 		app.User().Wiki().Xwiki_mgr().Add_full(domain, domain);
 		return this;
 	}
-	public void tst_Parse_tmpl_str_test(String tmpl_raw, String page_raw, String expd) {
-		ini_defn_add("test", tmpl_raw);
-		tst_Parse_tmpl_str(page_raw, expd);
+	public Xop_fxt	Init_xwiki_add_user_(String domain) {
+		app.User().Wiki().Xwiki_mgr().Add_full(domain, domain);
+		return this;
 	}
-	public void tst_Parse_tmpl_str(String raw, String expd) {
-		byte[] actl = tst_Parse_tmpl_str_rv(raw);
+	public void Test_parse_tmpl_str_test(String tmpl_raw, String page_raw, String expd) {
+		Init_defn_add("test", tmpl_raw);
+		Test_parse_tmpl_str(page_raw, expd);
+	}
+	public void Test_parse_tmpl_str(String raw, String expd) {
+		byte[] actl = Test_parse_tmpl_str_rv(raw);
 		Tfds.Eq_str_lines(expd, String_.new_utf8_(actl));
 		tst_Log_check();
 	}
-	public byte[] tst_Parse_tmpl_str_rv(String raw) {
+	public byte[] Test_parse_tmpl_str_rv(String raw) {
 		byte[] raw_bry = ByteAry_.new_utf8_(raw);
 		Xop_root_tkn root = tkn_mkr.Root(raw_bry);
 		return parser.Parse_page_tmpl(root, ctx, tkn_mkr, raw_bry);
 	}
 	public Xot_defn_tmpl run_Parse_tmpl(byte[] name, byte[] raw) {return parser.Parse_tmpl(ctx, ctx.Tkn_mkr(), wiki.Ns_mgr().Ns_template(), name, raw);}
-	public void tst_Parse_tmpl(String raw, Tst_chkr... expd) {
+	public void Test_parse_tmpl(String raw, Tst_chkr... expd) {
 		byte[] raw_bry = ByteAry_.new_utf8_(raw);
 		Xot_defn_tmpl itm = run_Parse_tmpl(ByteAry_.Empty, raw_bry);
 		Parse_chk(raw_bry, itm.Root(), expd);
 	}
-	public void tst_Parse_page_tmpl_str(String raw, String expd) {
+	public void Test_parse_page_tmpl_str(String raw, String expd) {
 		byte[] raw_bry = ByteAry_.new_utf8_(raw);
 		Xop_root_tkn root = tkn_mkr.Root(raw_bry);
 		byte[] actl = parser.Parse_page_tmpl(root, ctx, tkn_mkr, raw_bry);
 		Tfds.Eq(expd, String_.new_utf8_(actl));
 		tst_Log_check();
 	}
-	public void tst_Parse_page_tmpl(String raw, Tst_chkr... expd_ary) {
+	public void Test_parse_page_tmpl(String raw, Tst_chkr... expd_ary) {
 		byte[] raw_bry = ByteAry_.new_utf8_(raw);
 		Xop_root_tkn root = tkn_mkr.Root(raw_bry);
 		parser.Parse_page_tmpl(root, ctx, tkn_mkr, raw_bry);
 		Parse_chk(raw_bry, root, expd_ary);
 	}
-	public void tst_Parse_page_wiki(String raw, Tst_chkr... expd_ary) {
+	public void Test_parse_page_wiki(String raw, Tst_chkr... expd_ary) {
 		byte[] raw_bry = ByteAry_.new_utf8_(raw);
-		Xop_root_tkn root = tst_Parse_page_wiki_root(raw_bry);
+		Xop_root_tkn root = Test_parse_page_wiki_root(raw_bry);
 		Parse_chk(raw_bry, root, expd_ary);
 	}
-	public Xop_root_tkn tst_Parse_page_wiki_root(String raw) {return tst_Parse_page_wiki_root(ByteAry_.new_utf8_(raw));}
-	Xop_root_tkn tst_Parse_page_wiki_root(byte[] raw_bry) {
+	public Xop_root_tkn Test_parse_page_wiki_root(String raw) {return Test_parse_page_wiki_root(ByteAry_.new_utf8_(raw));}
+	Xop_root_tkn Test_parse_page_wiki_root(byte[] raw_bry) {
 		Xop_root_tkn root = tkn_mkr.Root(raw_bry);
 		parser.Parse_page_wiki(root, ctx, tkn_mkr, raw_bry, Xop_parser_.Doc_bgn_bos);
 		return root;
 	}
-	public void tst_Parse_page_all(String raw, Tst_chkr... expd_ary) {
+	public void Test_parse_page_all(String raw, Tst_chkr... expd_ary) {
 		byte[] raw_bry = ByteAry_.new_utf8_(raw);
 		Xop_root_tkn root = Exec_parse_page_all_as_root(ByteAry_.new_utf8_(raw));
 		Parse_chk(raw_bry, root, expd_ary);
 	}
 	public void Data_create(String ttl_str, String text_str) {Init_page_create(wiki, ttl_str, text_str);}
-	public static void Init_page_create(Xow_wiki wiki, String ttl_str, String text_str) {
-		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(ttl_str));
-		byte[] text = ByteAry_.new_utf8_(text_str);
-		wiki.Db_mgr().Save_mgr().Data_create(ttl, text);
-	}
-	public void tst_Parse_page_all_str(String raw, String expd) {
+	public void Test_parse_page_all_str(String raw, String expd) {
 		String actl = Exec_parse_page_all_as_str(raw);
 		Tfds.Eq_ary_str(String_.SplitLines_nl(expd), String_.SplitLines_nl(actl), raw);
 	}
@@ -270,7 +266,7 @@ public class Xop_fxt {
 		html_wtr.Write_all(ctx, root, raw_bry, actl_bfr);
 		return actl_bfr.XtoStrAndClear();
 	}
-	public Xop_fxt tst_Parse_page_wiki_str(String raw, String expd) {
+	public Xop_fxt Test_parse_page_wiki_str(String raw, String expd) {
 		Tfds.Eq_str_lines(expd, Exec_parse_page_wiki_as_str(raw), raw);
 		return this;
 	}
@@ -325,5 +321,6 @@ public class Xop_fxt {
 	public static String html_img_none(String trg, String alt, String src, String ttl) {
 		return String_.Format(String_.Concat_lines_nl_skipLast("<a href=\"/wiki/{0}\" class=\"image\" xowa_title=\"{3}\"><img id=\"xowa_file_img_0\" alt=\"{1}\" src=\"{2}\" width=\"9\" height=\"8\" /></a>"), trg, alt, src, ttl);
 	}
-	Tst_mgr tst_mgr = new Tst_mgr(); Xop_tkn_mkr tkn_mkr;
+	private Tst_mgr tst_mgr = new Tst_mgr(); private Xop_tkn_mkr tkn_mkr;
+	public static final String Ttl_str = "Test page";
 }

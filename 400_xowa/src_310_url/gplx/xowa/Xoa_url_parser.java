@@ -226,8 +226,21 @@ public class Xoa_url_parser {
 		}
 		return bfr.Mkr_rls().XtoAryAndClear();
 	}
-	static final byte Tid_xowa = (byte)Gfo_url_parser.Protocol_file_tid + 1;
-	static final byte Id_arg_redirect = 0, Id_arg_uselang = 1, Id_arg_title = 2, Id_arg_action = 3, Id_arg_fulltext = 4;
+	public static Xoa_url Parse_from_url_bar(Xoa_app app, Xow_wiki wiki, String s) {
+		byte[] bry = ByteAry_.new_utf8_(s);
+		byte[] fmt = app.Gui_mgr().Url_macro_mgr().Fmt_or_null(bry);
+		if (fmt != null) bry = fmt;
+		Xoa_url rv = new Xoa_url();
+		Xoa_url_parser.Parse_url(rv, app, wiki, bry, 0, bry.length);
+		if (app.Wiki_mgr().Wiki_regy().Url_is_invalid_domain(rv)) {	// handle lang_code entered; EX: "war" should redirect to "war" article in current wiki, not war.wikipedia.org; DATE:2014-02-07
+			rv.Page_bry_(rv.Wiki_bry());
+			rv.Wiki_(wiki);
+			rv.Wiki_bry_(wiki.Domain_bry());
+		}
+		return rv;
+	}
+//		private static final byte Tid_xowa = (byte)Gfo_url_parser.Protocol_file_tid + 1;
+	private static final byte Id_arg_redirect = 0, Id_arg_uselang = 1, Id_arg_title = 2, Id_arg_action = 3, Id_arg_fulltext = 4;
 	private static final byte[] Bry_arg_redirect = ByteAry_.new_ascii_("redirect"), Bry_arg_uselang = ByteAry_.new_ascii_("uselang"), Bry_arg_title = ByteAry_.new_ascii_("title"), Bry_arg_action = ByteAry_.new_ascii_("action"), Bry_arg_fulltext = ByteAry_.new_ascii_("fulltext");
 	private static final byte[] Bry_upload_wikimedia_org = ByteAry_.new_ascii_("upload.wikimedia.org"), Bry_dot_org = ByteAry_.new_ascii_(".org"), Bry_arg_action_edit = ByteAry_.new_ascii_("edit")
 		, Bry_file = ByteAry_.new_ascii_("File:");	// NOTE: File does not need i18n; is a canonical namespace 

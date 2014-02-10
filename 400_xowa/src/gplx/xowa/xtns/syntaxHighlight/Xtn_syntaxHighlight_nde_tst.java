@@ -20,19 +20,19 @@ import org.junit.*;
 public class Xtn_syntaxHighlight_nde_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Test   public void Basic() {
-		fxt.tst_Parse_page_all_str("<syntaxHighlight>abc</syntaxHighlight>", "<pre style=\"overflow:auto;\">abc</pre>");
+		fxt.Test_parse_page_all_str("<syntaxHighlight>abc</syntaxHighlight>", "<pre style=\"overflow:auto;\">abc</pre>");
 	}
 	@Test   public void Text() {
-		fxt.tst_Parse_page_all_str("<syntaxHighlight lang=\"text\">abc</syntaxHighlight>", "<code>abc</code>");
+		fxt.Test_parse_page_all_str("<syntaxHighlight lang=\"text\">abc</syntaxHighlight>", "<code>abc</code>");
 	}
 	@Test   public void Style_pre() {
-		fxt.tst_Parse_page_all_str("<syntaxHighlight style=\"color:red;\">abc</syntaxHighlight>", "<pre style=\"overflow:auto;color:red;\">abc</pre>");
+		fxt.Test_parse_page_all_str("<syntaxHighlight style=\"color:red;\">abc</syntaxHighlight>", "<pre style=\"overflow:auto;color:red;\">abc</pre>");
 	}
 	@Test   public void Style_code() {
-		fxt.tst_Parse_page_all_str("<syntaxHighlight lang=\"text\" style=\"color:red;\">abc</syntaxHighlight>", "<code style=\"color:red;\">abc</code>");
+		fxt.Test_parse_page_all_str("<syntaxHighlight lang=\"text\" style=\"color:red;\">abc</syntaxHighlight>", "<code style=\"color:red;\">abc</code>");
 	}
 	@Test   public void Trim_ws() {
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	"<syntaxHighlight>"
 		,	"abc"
 		,	"</syntaxHighlight>"
@@ -43,7 +43,7 @@ public class Xtn_syntaxHighlight_nde_tst {
 		));
 	}
 	@Test   public void Line() {
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	"<syntaxHighlight line>"
 		,	"a"
 		,	"b"
@@ -56,7 +56,7 @@ public class Xtn_syntaxHighlight_nde_tst {
 		));
 	}
 	@Test   public void Start() {
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	"<syntaxHighlight line start=3>"
 		,	"a"
 		,	"b"
@@ -69,7 +69,7 @@ public class Xtn_syntaxHighlight_nde_tst {
 		));
 	}
 	@Test   public void Highlight() {
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	"<syntaxHighlight line highlight='1,3'>"
 		,	"a"
 		,	"b"
@@ -84,7 +84,7 @@ public class Xtn_syntaxHighlight_nde_tst {
 		));
 	}
 	@Test   public void Enclose_none() {
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	"<syntaxHighlight enclose=none>"
 		,	"a"
 		,	"b"
@@ -99,7 +99,7 @@ public class Xtn_syntaxHighlight_nde_tst {
 		));
 	}
 	@Test   public void Line_padded() {
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	"<syntaxHighlight line start=9>"
 		,	"a"
 		,	"b"

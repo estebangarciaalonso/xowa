@@ -20,13 +20,13 @@ import org.junit.*;
 public class Pf_url_urlencode_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()				{fxt.Reset();}
-	@Test  public void Numbers()			{fxt.tst_Parse_tmpl_str_test("{{urlencode:0123456789}}"						, "{{test}}", "0123456789");}
-	@Test  public void Ltrs_lower()			{fxt.tst_Parse_tmpl_str_test("{{urlencode:abcdefghijklmnopqrstuvwxyz}}"		, "{{test}}", "abcdefghijklmnopqrstuvwxyz");}
-	@Test  public void Ltrs_upper()			{fxt.tst_Parse_tmpl_str_test("{{urlencode:ABCDEFGHIJKLMNOPQRSTUVWXYZ}}"		, "{{test}}", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");}
-	@Test  public void Syms_allowed()		{fxt.tst_Parse_tmpl_str_test("{{urlencode:-_.}}"							, "{{test}}", "-_.");}
-	@Test  public void Space()				{fxt.tst_Parse_tmpl_str_test("{{urlencode:a b}}"							, "{{test}}", "a+b");}
-	@Test  public void Syms()				{fxt.tst_Parse_tmpl_str_test("{{urlencode:!?^~}}"							, "{{test}}", "%21%3F%5E%7E");}
-	@Test  public void Extended()			{fxt.tst_Parse_tmpl_str_test("{{urlencode:aéb}}"							, "{{test}}", "a%C3%A9b");}
+	@Test  public void Numbers()			{fxt.Test_parse_tmpl_str_test("{{urlencode:0123456789}}"						, "{{test}}", "0123456789");}
+	@Test  public void Ltrs_lower()			{fxt.Test_parse_tmpl_str_test("{{urlencode:abcdefghijklmnopqrstuvwxyz}}"		, "{{test}}", "abcdefghijklmnopqrstuvwxyz");}
+	@Test  public void Ltrs_upper()			{fxt.Test_parse_tmpl_str_test("{{urlencode:ABCDEFGHIJKLMNOPQRSTUVWXYZ}}"		, "{{test}}", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");}
+	@Test  public void Syms_allowed()		{fxt.Test_parse_tmpl_str_test("{{urlencode:-_.}}"							, "{{test}}", "-_.");}
+	@Test  public void Space()				{fxt.Test_parse_tmpl_str_test("{{urlencode:a b}}"							, "{{test}}", "a+b");}
+	@Test  public void Syms()				{fxt.Test_parse_tmpl_str_test("{{urlencode:!?^~}}"							, "{{test}}", "%21%3F%5E%7E");}
+	@Test  public void Extended()			{fxt.Test_parse_tmpl_str_test("{{urlencode:aéb}}"							, "{{test}}", "a%C3%A9b");}
 }
 /*
 */

@@ -23,33 +23,33 @@ public class Xot_examples_tst {
 		Io_mgr._.InitEngine_mem();
 		fxt.Reset();
 	}
-	@Test  public void Arg_0()					{Init_tmpl_for(); fxt.tst_Parse_tmpl_str("{{For}}"				, "For other uses, see [[Test page (disambiguation)]].");}
-	@Test  public void Arg_1()					{Init_tmpl_for(); fxt.tst_Parse_tmpl_str("{{For|a}}"			, "For a, see [[Test page (disambiguation)]].");}
-	@Test  public void Arg_2()					{Init_tmpl_for(); fxt.tst_Parse_tmpl_str("{{For|a|b}}"			, "For a, see [[b]].");}
-	@Test  public void Arg_3()					{Init_tmpl_for(); fxt.tst_Parse_tmpl_str("{{For|a|b|c}}"		, "For a, see [[b]]&#32;and [[c]].");}
-	@Test  public void Arg_4()					{Init_tmpl_for(); fxt.tst_Parse_tmpl_str("{{For|a|b|c|d}}"		, "For a, see [[b]], [[c]], and [[d]].");}
-	@Test  public void Arg_5()					{Init_tmpl_for(); fxt.tst_Parse_tmpl_str("{{For|a|b|c|d|e}}"	, "For a, see [[b]], [[c]], [[d]], and [[e]].");}
-	@Test  public void Arg_1_nil()				{Init_tmpl_for(); fxt.tst_Parse_tmpl_str("{{For||a|b}}"			, "For other uses, see [[a]]&#32;and [[b]].");}
+	@Test  public void Arg_0()					{Init_tmpl_for(); fxt.Test_parse_tmpl_str("{{For}}"				, "For other uses, see [[Test page (disambiguation)]].");}
+	@Test  public void Arg_1()					{Init_tmpl_for(); fxt.Test_parse_tmpl_str("{{For|a}}"			, "For a, see [[Test page (disambiguation)]].");}
+	@Test  public void Arg_2()					{Init_tmpl_for(); fxt.Test_parse_tmpl_str("{{For|a|b}}"			, "For a, see [[b]].");}
+	@Test  public void Arg_3()					{Init_tmpl_for(); fxt.Test_parse_tmpl_str("{{For|a|b|c}}"		, "For a, see [[b]]&#32;and [[c]].");}
+	@Test  public void Arg_4()					{Init_tmpl_for(); fxt.Test_parse_tmpl_str("{{For|a|b|c|d}}"		, "For a, see [[b]], [[c]], and [[d]].");}
+	@Test  public void Arg_5()					{Init_tmpl_for(); fxt.Test_parse_tmpl_str("{{For|a|b|c|d|e}}"	, "For a, see [[b]], [[c]], [[d]], and [[e]].");}
+	@Test  public void Arg_1_nil()				{Init_tmpl_for(); fxt.Test_parse_tmpl_str("{{For||a|b}}"			, "For other uses, see [[a]]&#32;and [[b]].");}
 	@Test  public void Main() {
-		Init_tmpl_main(); fxt.tst_Parse_tmpl_str("{{Main|a}}", "Main article: [[a|a]]");
+		Init_tmpl_main(); fxt.Test_parse_tmpl_str("{{Main|a}}", "Main article: [[a|a]]");
 	}
 	@Test  public void About() {
-		Init_tmpl_about(); fxt.tst_Parse_tmpl_str("{{About|abc}}", "This article is about abc.&#32;&#32;For other uses, see [[Test page (disambiguation)]].");
+		Init_tmpl_about(); fxt.Test_parse_tmpl_str("{{About|abc}}", "This article is about abc.&#32;&#32;For other uses, see [[Test page (disambiguation)]].");
 	}
 	@Test  public void About_2() {	// EX.WP: {{About|the NASA space mission||Messenger (disambiguation)}}
-		Init_tmpl_about(); fxt.tst_Parse_tmpl_str("{{About|a||b{{!}}c}}", "This article is about a.&#32;&#32;For other uses, see [[b|c]].");
+		Init_tmpl_about(); fxt.Test_parse_tmpl_str("{{About|a||b{{!}}c}}", "This article is about a.&#32;&#32;For other uses, see [[b|c]].");
 	}
 	@Test  public void OtherUses() {
-		Init_tmpl_other_uses(); fxt.tst_Parse_tmpl_str("{{Other uses|abc}}", "For other uses, see [[abc]].");
+		Init_tmpl_other_uses(); fxt.Test_parse_tmpl_str("{{Other uses|abc}}", "For other uses, see [[abc]].");
 	}
 	@Test  public void SeeAlso() {
-		Init_tmpl_see_also(); fxt.tst_Parse_tmpl_str("{{See also|abc}}", "See also: [[abc]]");
+		Init_tmpl_see_also(); fxt.Test_parse_tmpl_str("{{See also|abc}}", "See also: [[abc]]");
 	}
 	@Test  public void Redirect() {
-		Init_tmpl_redirect(); fxt.tst_Parse_tmpl_str("{{Redirect|abc}}", "\"abc\" redirects here. For other uses, see [[abc (disambiguation)]].");
+		Init_tmpl_redirect(); fxt.Test_parse_tmpl_str("{{Redirect|abc}}", "\"abc\" redirects here. For other uses, see [[abc (disambiguation)]].");
 	}
 	private void Init_tmpl_main() {
-		fxt.ini_page_create("Template:Main", String_.Concat_lines_nl
+		fxt.Init_page_create("Template:Main", String_.Concat_lines_nl
 		(	"{{#ifeq:{{SUBJECTSPACE}}|Category|The main {{#ifeq:{{NAMESPACE:{{{1}}}}}||article|page}}{{#if:{{{2|}}}|s}} for this [[Wikipedia:Categorization|category]] {{#if:{{{2|}}}|are|is}}|Main {{#ifeq:{{NAMESPACE:{{{1}}}}}||article|page}}{{#if:{{{2|}}}|s}}:}} [[{{{1|{{PAGENAME}}}}}|{{{l1|{{{1|{{PAGENAME}}}}}}}}]]{{#if:{{{2| }}}"
 		,	" |{{#if:{{{3|}}}|,&#32;|&#32;and&#32;}}[[{{{2}}}|{{{l2|{{{2}}}}}}]]}}{{#if:{{{3|}}}"
 		,	" |{{#if:{{{4|}}}|,&#32;|,&#32;and&#32;}}[[{{{3}}}|{{{l3|{{{3}}}}}}]]}}{{#if:{{{4|}}}"
@@ -63,15 +63,15 @@ public class Xot_examples_tst {
 		));
 	}
 	private void Init_tmpl_for() {
-		fxt.ini_page_create("Template:For", "For {{#if:{{{1|}}}|{{{1}}}|other uses}}, see [[{{{2|{{PAGENAME}} (disambiguation)}}}]]{{#if:{{{3|}}}|{{#if:{{{4|}}}|, [[{{{3}}}]], {{#if:{{{5|}}}|[[{{{4}}}]], and [[{{{5}}}]]|and [[{{{4}}}]]}}|&#32;and [[{{{3}}}]]}}}}.");
+		fxt.Init_page_create("Template:For", "For {{#if:{{{1|}}}|{{{1}}}|other uses}}, see [[{{{2|{{PAGENAME}} (disambiguation)}}}]]{{#if:{{{3|}}}|{{#if:{{{4|}}}|, [[{{{3}}}]], {{#if:{{{5|}}}|[[{{{4}}}]], and [[{{{5}}}]]|and [[{{{4}}}]]}}|&#32;and [[{{{3}}}]]}}}}.");
 	}
 	private void Init_tmpl_other_uses() {
 		Init_tmpl_about();
-		fxt.ini_page_create("Template:Other uses", "{{#if:{{{2|}}}|{{about|||{{{1}}}|and|{{{2|}}}|_nocat=1}}|{{about|||{{{1|{{PAGENAME}} (disambiguation)}}}|_nocat=1}}}}");
+		fxt.Init_page_create("Template:Other uses", "{{#if:{{{2|}}}|{{about|||{{{1}}}|and|{{{2|}}}|_nocat=1}}|{{about|||{{{1|{{PAGENAME}} (disambiguation)}}}|_nocat=1}}}}");
 	}
 	private void Init_tmpl_about() {
-		fxt.ini_page_create("Template:!", "|");
-		fxt.ini_page_create("Template:About", String_.Concat_lines_nl
+		fxt.Init_page_create("Template:!", "|");
+		fxt.Init_page_create("Template:About", String_.Concat_lines_nl
 		(	"{{#if: {{{1|}}}|<!--"
 		,	"	-->This {{#ifeq:{{NAMESPACE}}|{{ns:0}}|article|page}} is about {{{1}}}.&#32;&#32;}}<!--"
 		,	"-->For {{#if:{{{2|}}}|{{{2}}}|other uses}}, see {{#if:{{{3|}}}|[[{{{3}}}]]{{#ifeq:{{{4|}}}|and|&#32;and {{#if:{{{5|}}}|[[{{{5}}}]]|[[{{PAGENAME}} (disambiguation)]]}}}}|[[{{PAGENAME}} (disambiguation)]]}}.<!--"
@@ -91,7 +91,7 @@ public class Xot_examples_tst {
 		));
 	}
 	private void Init_tmpl_see_also() {
-		fxt.ini_page_create("Template:See also", String_.Concat_lines_nl
+		fxt.Init_page_create("Template:See also", String_.Concat_lines_nl
 		(	"See also: {{#if:{{{1<includeonly>|</includeonly>}}} |<!--then:-->[[{{{1}}}{{#if:{{{label 1|{{{l1|}}}}}}|{{!}}{{{label 1|{{{l1}}}}}}}}]] |<!--else:-->'''Error: [[Template:See also|Template must be given at least one article name]]'''"
 		,	"}}{{#if:{{{2|}}}|{{#if:{{{3|}}}|, |&nbsp;and }} [[{{{2}}}{{#if:{{{label 2|{{{l2|}}}}}}|{{!}}{{{label 2|{{{l2}}}}}}}}]]"
 		,	"}}{{#if:{{{3|}}}|{{#if:{{{4|}}}|, |,&nbsp;and }} [[{{{3}}}{{#if:{{{label 3|{{{l3|}}}}}}|{{!}}{{{label 3|{{{l3}}}}}}}}]]"
@@ -112,7 +112,7 @@ public class Xot_examples_tst {
 		));
 	}
 	private void Init_tmpl_redirect() {
-		fxt.ini_page_create("Template:Redirect", String_.Concat_lines_nl
+		fxt.Init_page_create("Template:Redirect", String_.Concat_lines_nl
 		(	"\"{{{1}}}\" redirects here. For {{#if:{{{2|}}}|{{{2}}}|other uses}}, see {{#if:{{{3|}}}|[[{{{3}}}]]{{#ifeq:{{{4|}}}|and|&#32;and {{#if:{{{5|}}}|[[{{{5}}}]]|[[{{{1}}} (disambiguation)]]}}}}|[[{{{1}}} (disambiguation)]]}}.<!--"
 		,	"-->{{#if:{{{2|}}}|{{#if:{{{4|}}}|<!--"
 		,	"  -->{{#ifeq:{{{4|}}}|and||<!-- \"and\" is a special word, don't output \"For and, ...\""

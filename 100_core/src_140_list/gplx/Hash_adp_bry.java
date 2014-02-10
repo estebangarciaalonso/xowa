@@ -24,10 +24,19 @@ public class Hash_adp_bry extends gplx.lists.HashAdp_base implements HashAdp {
 	public Object Get_by_bry(byte[] src) {return super.Fetch_base(key_ref.Src_all_(src));}
 	public Object Get_by_mid(byte[] src, int bgn, int end) {return super.Fetch_base(key_ref.Src_all_set_(src, bgn, end));}
 	public Hash_adp_bry Add_bry_bry(byte[] key) {this.Add_base(key, key); return this;}
-	public Hash_adp_bry Add_str_byteVal(String key, byte val) {this.Add_base(ByteAry_.new_utf8_(key), ByteVal.new_(val)); return this;}
+	public Hash_adp_bry Add_str_byte(String key, byte val) {this.Add_base(ByteAry_.new_utf8_(key), ByteVal.new_(val)); return this;}
 	public Hash_adp_bry Add_str_obj(String key, Object val) {this.Add_base(ByteAry_.new_utf8_(key), val); return this;}
 	public Hash_adp_bry Add_bry_byte(byte[] key, byte val) {this.Add_base(key, ByteVal.new_(val)); return this;}
 	public Hash_adp_bry Add_bry_obj(byte[] key, Object val) {this.Add_base(key, val); return this;}
+	public Hash_adp_bry Add_many_str(String... ary) {
+		int ary_len = ary.length;
+		for (int i = 0; i < ary_len; i++) {
+			String itm = ary[i];
+			byte[] bry = ByteAry_.new_utf8_(itm);
+			Add_bry_bry(bry);
+		}
+		return this;
+	}
 	@Override protected void Add_base(Object key, Object val) {
 		byte[] key_bry = (byte[])key;
 		super.Add_base(new Hash_adp_bry_ref(case_match, key_bry, 0, key_bry.length), val);

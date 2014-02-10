@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
 import gplx.xowa.xtns.wdatas.*;
+import gplx.json.*;
 public class Scrib_lib_wikibase_srl_tst {
 	@Before public void init() {fxt.Clear();} private Scrib_lib_wikibase_srl_fxt fxt = new Scrib_lib_wikibase_srl_fxt();
 	@Test   public void Label() {
@@ -65,6 +66,29 @@ public class Scrib_lib_wikibase_srl_tst {
 		,	"  dewiki:"
 		,	"    site:'dewiki'"
 		,	"    title:'Erde'"
+		,	""
+		);
+	}
+	@Test   public void Sitelinks_both_formats() {	// PURPOSE: check that both formats are serializable; DATE:2014-02-06
+		Json_doc jdoc = Json_doc.new_apos_concat_nl
+		(	"{ 'entity':['item',2]"
+		,	", 'links':"
+		,	"  {"
+		,	"    'enwiki':'Earth'"							// old format
+		,	"  , 'frwiki':{'name':'Terre','badges':[]}"		// new format
+		,	"  }"
+		,	"}"
+		);
+		Wdata_doc wdoc = new Wdata_doc(ByteAry_.new_ascii_("q2"), fxt.Wdata_fxt().App().Wiki_mgr().Wdata_mgr(), jdoc);
+		fxt.Test
+		(	wdoc
+		,	"sitelinks:"
+		,	"  enwiki:"
+		,	"    site:'enwiki'"
+		,	"    title:'Earth'"
+		,	"  frwiki:"
+		,	"    site:'frwiki'"
+		,	"    title:'Terre'"
 		,	""
 		);
 	}
@@ -191,6 +215,11 @@ class Scrib_lib_wikibase_srl_fxt {
 	public Scrib_lib_wikibase_srl_fxt Init_prop(Wdata_prop_itm_core prop) {doc_bldr.Props_add(prop); return this;}
 	public Scrib_lib_wikibase_srl_fxt Test(String... expd) {
 		KeyVal[] actl = Scrib_lib_wikibase_srl.Srl(parser, doc_bldr.Xto_page_doc(), header_enabled);
+		Tfds.Eq_ary_str(expd, String_.SplitLines_nl(Xto_str(actl)));
+		return this;
+	}
+	public Scrib_lib_wikibase_srl_fxt Test(Wdata_doc wdoc, String... expd) {
+		KeyVal[] actl = Scrib_lib_wikibase_srl.Srl(parser, wdoc, header_enabled);
 		Tfds.Eq_ary_str(expd, String_.SplitLines_nl(Xto_str(actl)));
 		return this;
 	}

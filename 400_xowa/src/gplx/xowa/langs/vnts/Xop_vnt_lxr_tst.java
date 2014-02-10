@@ -50,14 +50,14 @@ public class Xop_vnt_lxr_tst {
 //		@Test  public void Disabled() {
 //			Xop_fxt fxt = new Xop_fxt();
 //			fxt.Wiki().Vnt_mgr().Set(null, null);
-//			fxt.tst_Parse_page_all_str("a-{b}-c", "a-{b}-c");
+//			fxt.Test_parse_page_all_str("a-{b}-c", "a-{b}-c");
 //		}
 //		@Test  public void Enabled() {
 //			Xoa_app app = Xoa_app_fxt.app_();
 //			Xol_lang lang = new Xol_lang(app, ByteAry_.new_ascii_("zh"));
 //			Xow_wiki wiki = Xoa_app_fxt.wiki_(app, "zh.wikipedia.org", lang);
 //			Xop_fxt fxt = new Xop_fxt(app, wiki);
-//			fxt.tst_Parse_page_all_str("a-{b}-c", "ac");
+//			fxt.Test_parse_page_all_str("a-{b}-c", "ac");
 //			fxt.Wiki().Vnt_mgr().Set(null, null);	// set it back to null for other tests
 //		}
 }

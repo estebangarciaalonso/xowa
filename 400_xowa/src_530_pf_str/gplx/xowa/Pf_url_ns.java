@@ -25,7 +25,7 @@ class Pf_url_ns extends Pf_func_base {	// EX: {{ns:6}} -> File
 		byte[] val_dat_ary = Eval_argx(ctx, src, caller, self); if (val_dat_ary == ByteAry_.Empty) return;
 
 		int val_dat_ary_len = val_dat_ary.length;
-		int ns_id = ByteAry_.XtoIntByPos(val_dat_ary, 0, val_dat_ary_len, -1);
+		int ns_id = ByteAry_.X_to_int_or(val_dat_ary, 0, val_dat_ary_len, -1);
 		if (ns_id == -1) {
 			Object o = ctx.Wiki().Ns_mgr().Trie_match_exact(val_dat_ary, 0, val_dat_ary_len);
 			if (o == null

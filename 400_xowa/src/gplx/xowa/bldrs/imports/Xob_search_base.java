@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.ios.*;
+import gplx.xowa.dbs.*;
 public abstract class Xob_search_base extends Xob_itm_dump_base implements Xobd_wkr, GfoInvkAble {
 	public abstract String Wkr_key();
 	public abstract Io_make_cmd Make_cmd_site();
@@ -26,13 +27,15 @@ public abstract class Xob_search_base extends Xob_itm_dump_base implements Xobd_
 		this.Init_dump(this.Wkr_key(), make_dir);
 		lang = wiki.Lang(); // wiki.App().Lang_mgr().Lang_en();	// NOTE: was .Lang_en which is wrong (should match lang of wiki); DATE:2013-05-11
 		tmp_wtr_mgr = new Xob_tmp_wtr_mgr(new Xob_tmp_wtr_wkr__ttl(temp_dir, dump_fil_len));
-	}	private Xob_tmp_wtr_mgr tmp_wtr_mgr;
+		if (wiki.Db_mgr().Tid() == Xodb_mgr_sql.Tid_sql)	// if sqlite, hard-code to ns_main; aggregates all ns into one
+			ns_main = wiki.Ns_mgr().Ns_main();
+	}	private Xob_tmp_wtr_mgr tmp_wtr_mgr; private Xow_ns ns_main;
 	public void Wkr_run(Xodb_page page) {
 //			if (page.Ns_id() != Xow_ns_.Id_main) return; // limit to main ns for now
 		try {
 		byte[] ttl = page.Ttl_wo_ns();
 		byte[][] words = Split(lang, list, dump_bfr, ttl);
-		Xob_tmp_wtr wtr = tmp_wtr_mgr.Get_or_new(page.Ns());
+		Xob_tmp_wtr wtr = tmp_wtr_mgr.Get_or_new(ns_main == null ? page.Ns() : ns_main);
 		int words_len = words.length;
 		int row_len = 0;
 		for (int i = 0; i < words_len; i++) {
@@ -54,6 +57,10 @@ public abstract class Xob_search_base extends Xob_itm_dump_base implements Xobd_
 		Xobdc_merger.Ns(bldr.Usr_dlg(), tmp_wtr_mgr.Regy(), Xow_dir_info_.Name_search_ttl, temp_dir, make_dir, sort_mem_len, Io_line_rdr_key_gen_.first_pipe, this.Make_cmd_site());
 		tmp_wtr_mgr.Rls_all();
 		if (delete_temp) Io_mgr._.DeleteDirDeep(temp_dir);
+		if (wiki.Db_mgr().Tid() == Xodb_mgr_sql.Tid_sql) {
+			Xodb_fsys_mgr db_fs = wiki.Db_mgr_as_sql().Fsys_mgr();
+			wiki.Db_mgr_as_sql().Tbl_xowa_db().Commit_all(db_fs.Core_provider(), db_fs.Ary());	// always save files now; need to commit created search_db_idx to xowa_db, else will be reused by ctg v2; DATE:2014-02-07
+		}
 	}
 	public void Wkr_print() {}
 	OrderedHash list = OrderedHash_.new_(); Xol_lang lang;

@@ -26,13 +26,13 @@ public class Xol_cnv_mgr_tst {
 //		}
 //		@Test  public void Convert() {
 //			Xol_cnv_mgr_fxt.Init_convert_file(fxt.App(), "zh", "zh-hans", KeyVal_.new_("a", "x"));
-//			fxt.Parser_fxt().ini_defn_clear();
-//			fxt.Parser_fxt().ini_defn_add("convert_x", "val");
-//			fxt.Parser_fxt().tst_Parse_tmpl_str_test("{{convert_a}}", "{{test}}", "val");
-//			fxt.Parser_fxt().ini_defn_clear();
+//			fxt.Parser_fxt().Init_defn_clear();
+//			fxt.Parser_fxt().Init_defn_add("convert_x", "val");
+//			fxt.Parser_fxt().Test_parse_tmpl_str_test("{{convert_a}}", "{{test}}", "val");
+//			fxt.Parser_fxt().Init_defn_clear();
 //		}
 	@Test  public void Ifexists() {
-		fxt.Parser_fxt().ini_page_create("Test_A");
+		fxt.Parser_fxt().Init_page_create("Test_A");
 		fxt.Test_parse("{{#ifexist:Test_a|y|n}}", "y");
 	}
 }
@@ -70,6 +70,6 @@ class Xol_cnv_mgr_fxt {
 //			Tfds.Eq(expd, actl);
 	}
 	public void Test_parse(String raw, String expd) {
-		parser_fxt.tst_Parse_page_all_str(raw, expd);
+		parser_fxt.Test_parse_page_all_str(raw, expd);
 	}
 }

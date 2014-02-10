@@ -213,7 +213,7 @@ class Xol_mw_lang_parser_fxt {
 	}
 	public Xol_mw_lang_parser_fxt Tst_parse(String raw, String expd) {
 		fxt.Reset();
-		fxt.tst_Parse_page_all_str(raw, expd);
+		fxt.Test_parse_page_all_str(raw, expd);
 		return this;
 	}
 	public Xol_mw_lang_parser_fxt Tst_ns_lkp(String key_str, int id) {

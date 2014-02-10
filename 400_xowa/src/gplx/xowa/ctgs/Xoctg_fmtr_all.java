@@ -137,7 +137,8 @@ class Xoctg_fmtr_all {
 		html_nav.Bld_bfr(bfr, nav_href, nav_ttl, nav_text);
 	}
 	public static final byte[]
-			Url_arg_all_bgn		= ByteAry_.new_ascii_("from")
+			Url_arg_from		= ByteAry_.new_ascii_("from")
+		,	Url_arg_until 		= ByteAry_.new_ascii_("until")
 		,	Url_arg_subc_bgn 	= ByteAry_.new_ascii_("subcatfrom")
 		,	Url_arg_subc_end	= ByteAry_.new_ascii_("subcatuntil")
 		,	Url_arg_page_bgn 	= ByteAry_.new_ascii_("pagefrom")

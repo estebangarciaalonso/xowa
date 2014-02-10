@@ -21,20 +21,26 @@ import gplx.xowa.langs.casings.*;
 public class Pf_str_case_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()				{fxt.Reset();}
-	@Test  public void Lc()					{fxt.tst_Parse_tmpl_str_test("{{lc:ABC}}"					, "{{test}}", "abc");}
-	@Test  public void Lc_first()			{fxt.tst_Parse_tmpl_str_test("{{lcfirst:ABC}}"				, "{{test}}", "aBC");}
-	@Test  public void Uc()					{fxt.tst_Parse_tmpl_str_test("{{uc:abc}}"					, "{{test}}", "ABC");}
-	@Test  public void Uc_first()			{fxt.tst_Parse_tmpl_str_test("{{ucfirst:abc}}"				, "{{test}}", "Abc");}
-	@Test  public void Multi_byte()			{
+	@Test  public void Lc()					{fxt.Test_parse_tmpl_str_test("{{lc:ABC}}"					, "{{test}}", "abc");}
+	@Test  public void Lc_first()			{fxt.Test_parse_tmpl_str_test("{{lcfirst:ABC}}"				, "{{test}}", "aBC");}
+	@Test  public void Uc()					{fxt.Test_parse_tmpl_str_test("{{uc:abc}}"					, "{{test}}", "ABC");}
+	@Test  public void Uc_first()			{fxt.Test_parse_tmpl_str_test("{{ucfirst:abc}}"				, "{{test}}", "Abc");}
+	@Test  public void Multi_byte()			{// NOTE: separate test b/c will sometimes fail in suite
 		Xol_lang lang = fxt.Wiki().Lang();
 		lang.Case_mgr().Clear();
 		lang.Case_mgr().Add_bulk(Xol_case_itm_.Universal);
-		fxt.tst_Parse_tmpl_str_test("{{uc:ĉ}}"						, "{{test}}", "Ĉ");
+		fxt.Test_parse_tmpl_str_test("{{uc:ĉ}}"						, "{{test}}", "Ĉ");					// upper all
 	}
-	@Test  public void Multi_byte_asymmetry() { // PURPOSE: handle multi-byte asymmetry (lc is 3 bytes; uc is 2 bytes)
+	@Test  public void Multi_byte_asymmetric() {
 		Xol_lang lang = fxt.Wiki().Lang();
 		lang.Case_mgr().Clear();
 		lang.Case_mgr().Add_bulk(Xol_case_itm_.Universal);
-		fxt.tst_Parse_tmpl_str_test("{{uc:ⱥ}}"						, "{{test}}", "Ⱥ");
+		fxt.Test_parse_tmpl_str_test("{{uc:ⱥ}}"						, "{{test}}", "Ⱥ");					// handle multi-byte asymmetry (lc is 3 bytes; uc is 2 bytes)
+	}
+	@Test  public void Multi_byte_first()			{
+		Xol_lang lang = fxt.Wiki().Lang();
+		lang.Case_mgr().Clear();
+		lang.Case_mgr().Add_bulk(Xol_case_itm_.Universal);
+		fxt.Test_parse_tmpl_str_test("{{ucfirst:провинция}}"			, "{{test}}", "Провинция");			// upper first; DATE:2014-02-04
 	}
 }

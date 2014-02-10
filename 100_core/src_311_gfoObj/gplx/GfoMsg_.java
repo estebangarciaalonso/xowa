@@ -251,9 +251,9 @@ class XtoStrWkr_gplx implements XtoStrWkr {
 		if (o == null) return "<<NULL>>";
 		Class<?> type = ClassAdp_.ClassOf_obj(o);
 		String rv = null;
-		if		(type == String.class)	rv = String_.cast_(o);
+		if		(type == String.class)	rv = String_.as_or_fail_(o);
 		else if (Int_.TypeMatch(type))		return Int_.XtoStr(Int_.cast_(o));
-		else if (Bool_.TypeMatch(type))		return Yn.XtoStr(Bool_.cast_(o));
+		else if (Bool_.TypeMatch(type))		return Yn.X_to_str(Bool_.cast_(o));
 		else if (type == DateAdp.class)	return DateAdp_.cast_(o).XtoStr_gplx();
 		else								rv = Object_.XtoStr_OrEmpty(o);
 		return String_.Replace(rv, "'", "''");

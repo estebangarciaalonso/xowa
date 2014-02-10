@@ -19,26 +19,26 @@ package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.x
 import org.junit.*;
 public class Gallery_nde_tst {
 	private Xop_fxt fxt = new Xop_fxt(); String raw_src;
-	@Before public void init() {fxt.Reset(); fxt.Wiki().Xtn_mgr().Gallery().Parser().Init_by_wiki(fxt.Wiki());}
+	@Before public void init() {fxt.Reset(); fxt.Wiki().Xtn_mgr().Init_by_wiki(fxt.Wiki());}
 	@Test   public void Lnki_no_caption() {
-		fxt.tst_Parse_page_wiki("<gallery>File:A.png</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_data_
+		fxt.Test_parse_page_wiki("<gallery>File:A.png</gallery>"
+		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
 		(	new_chkr_gallery_mgr().Expd_subs_
 			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png")
 			)
 		));
 	}
 	@Test   public void Lnki_1() {
-		fxt.tst_Parse_page_wiki("<gallery>File:A.png|b</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_data_
+		fxt.Test_parse_page_wiki("<gallery>File:A.png|b</gallery>"
+		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
 		(	new_chkr_gallery_mgr().Expd_subs_
 			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png")
 			)
 		));
 	}
 	@Test   public void Lnki_3() {
-		fxt.tst_Parse_page_wiki("<gallery>File:A.png|a\nFile:B.png|b\nFile:C.png|c</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_data_
+		fxt.Test_parse_page_wiki("<gallery>File:A.png|a\nFile:B.png|b\nFile:C.png|c</gallery>"
+		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
 		(	new_chkr_gallery_mgr().Expd_subs_
 			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png")
 			,	new_chkr_gallery_itm().Expd_lnki_("File:B.png")
@@ -47,8 +47,8 @@ public class Gallery_nde_tst {
 		));
 	}
 	@Test   public void Ignore_newLines() {
-		fxt.tst_Parse_page_wiki("<gallery>\n\n\nFile:A.png|a\n\n\nFile:B.png|b\n\n\n</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_data_
+		fxt.Test_parse_page_wiki("<gallery>\n\n\nFile:A.png|a\n\n\nFile:B.png|b\n\n\n</gallery>"
+		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
 		(	new_chkr_gallery_mgr().Expd_subs_
 			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png")
 			,	new_chkr_gallery_itm().Expd_lnki_("File:B.png")
@@ -56,24 +56,24 @@ public class Gallery_nde_tst {
 		));
 	}
 	@Test   public void Only_first_pipe() {
-		fxt.tst_Parse_page_wiki("<gallery>File:A.png|File:B.png|cc</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_data_
+		fxt.Test_parse_page_wiki("<gallery>File:A.png|File:B.png|cc</gallery>"
+		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
 		(	new_chkr_gallery_mgr().Expd_subs_
 			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png")
 			)
 		));
 	}
 	@Test   public void Invalid_lnki() {
-		fxt.tst_Parse_page_wiki("<gallery>A.png|cc</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_data_
+		fxt.Test_parse_page_wiki("<gallery>A.png|cc</gallery>"
+		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
 		(	new_chkr_gallery_mgr().Expd_subs_
 			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png")	// NOTE: MW converts "A.png" to "File:A.png"
 			)
 		));
 	}
 	@Test   public void File_only_trailing_nl() {
-		fxt.tst_Parse_page_wiki("<gallery>File:A.png\n</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_data_
+		fxt.Test_parse_page_wiki("<gallery>File:A.png\n</gallery>"
+		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
 		(	new_chkr_gallery_mgr().Expd_subs_
 			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png").Expd_caption_(null)
 			)
@@ -81,8 +81,8 @@ public class Gallery_nde_tst {
 	}
 	@Test   public void Invalid_curly() {
 		raw_src = "a\n";			
-		fxt.ini_Log_(Xop_ttl_log.Invalid_char).tst_Parse_page_wiki("<gallery>File:A.png|" + raw_src + "}}</gallery>"	// NOTE: }} is ignored since it is not a valid title
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_data_
+		fxt.Init_log_(Xop_ttl_log.Invalid_char).Test_parse_page_wiki("<gallery>File:A.png|" + raw_src + "}}</gallery>"	// NOTE: }} is ignored since it is not a valid title
+		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
 		(	new_chkr_gallery_mgr().Expd_subs_
 			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png").Expd_caption_("a")
 			)
@@ -90,8 +90,8 @@ public class Gallery_nde_tst {
 	}
 	@Test   public void Caption() {
 		raw_src = "a<br/>c";
-		fxt.tst_Parse_page_wiki("<gallery>File:A.png|" + raw_src + "</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_data_
+		fxt.Test_parse_page_wiki("<gallery>File:A.png|" + raw_src + "</gallery>"
+		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
 		(	new_chkr_gallery_mgr().Expd_subs_
 			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png").Expd_caption_(raw_src)
 			)
@@ -99,11 +99,11 @@ public class Gallery_nde_tst {
 	}
 	@Test   public void Xnde_atr() {
 		raw_src = "<center>a<br/>b</center>";
-		fxt.tst_Parse_page_wiki(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki(String_.Concat_lines_nl_skipLast
 		(	"<gallery perrow=3>"
 		,	"File:A.jpg|" + raw_src
 		,	"</gallery>"
-		) ,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_data_
+		) ,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
 			(	new_chkr_gallery_mgr().Expd_subs_
 				(	new_chkr_gallery_itm().Expd_lnki_("File:A.jpg").Expd_caption_(raw_src)
 				)
@@ -111,11 +111,11 @@ public class Gallery_nde_tst {
 	}
 	@Test   public void Err_pre() {	// PURPOSE: leading ws was failing; EX.WP: Vlaardingen; "\nA.jpg| <center>Visbank</center>\n"
 		raw_src = " <center>a</center>";
-		fxt.tst_Parse_page_wiki(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki(String_.Concat_lines_nl_skipLast
 		(	"<gallery>"
 		,	"File:A.jpg|" + raw_src
 		,	"</gallery>"
-		) ,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_data_
+		) ,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
 			(	new_chkr_gallery_mgr().Expd_subs_
 				(	new_chkr_gallery_itm().Expd_lnki_("File:A.jpg").Expd_caption_("<center>a</center>")
 				)
@@ -123,18 +123,18 @@ public class Gallery_nde_tst {
 	}
 	@Test   public void Err_comment() {	// PURPOSE: comment was being rendered; EX.WP: Perpetual motion; <!-- removed A.jpg|bcde -->
 		raw_src = "b";
-		fxt.ini_Log_(Xop_ttl_log.Comment_eos).tst_Parse_page_wiki(String_.Concat_lines_nl_skipLast
+		fxt.Init_log_(Xop_ttl_log.Comment_eos).Test_parse_page_wiki(String_.Concat_lines_nl_skipLast
 		(	"<gallery>"
 		,	"<!-- deleted A.jpg|" + raw_src
 		,	"</gallery>"
-		) ,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_data_
+		) ,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
 			(	new_chkr_gallery_mgr().Expd_subs_()
 			)
 		);
 	}
 	@Test   public void Html() {
 		Init_html();
-		fxt.tst_Parse_page_wiki_str("<gallery perrow=2 widths=200px heights=300px>File:A.png|a<br/>c</gallery>", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("<gallery perrow=2 widths=200px heights=300px>File:A.png|a<br/>c</gallery>", String_.Concat_lines_nl_skipLast
 		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:486px; _width:486px;\">"
 		,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:235px;\">"
 		,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:235px;\">"
@@ -153,11 +153,11 @@ public class Gallery_nde_tst {
 		));
 	}
 	@Test   public void Tmpl() {
-		fxt.ini_defn_clear();
-		fxt.ini_defn_add("test_tmpl", "b");
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("test_tmpl", "b");
 		Init_html();
-		fxt.tst_Parse_page_wiki_str("<gallery>File:A.png|a{{test_tmpl}}c</gallery>", String_.Concat_lines_nl_skipLast
-		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+		fxt.Test_parse_page_wiki_str("<gallery>File:A.png|a{{test_tmpl}}c</gallery>", String_.Concat_lines_nl_skipLast
+		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
 		,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
 		,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
 		,	"      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
@@ -173,11 +173,11 @@ public class Gallery_nde_tst {
 		,	"  </li>"
 		,	"</ul>"
 		));
-		fxt.ini_defn_clear();
+		fxt.Init_defn_clear();
 	}
 	@Test   public void Item_defaults_to_120() {
 		Init_html();
-		fxt.tst_Parse_page_wiki_str("<gallery perrow=3>File:A.png|a<br/>c</gallery>", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("<gallery perrow=3>File:A.png|a<br/>c</gallery>", String_.Concat_lines_nl_skipLast
 		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:489px; _width:489px;\">"
 		,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
 		,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
@@ -199,8 +199,8 @@ public class Gallery_nde_tst {
 		fxt.Wiki().File_mgr().Cfg_set(Gallery_nde.Fsdb_cfg_grp, Gallery_nde.Fsdb_cfg_key_gallery_fix_defaults, "y");
 		try {
 		Init_html();
-		fxt.tst_Parse_page_wiki_str("<gallery heights=250>File:A.png|a<br/>c</gallery>", String_.Concat_lines_nl_skipLast
-		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+		fxt.Test_parse_page_wiki_str("<gallery heights=250>File:A.png|a<br/>c</gallery>", String_.Concat_lines_nl_skipLast
+		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
 		,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
 		,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
 		,	"      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
@@ -222,8 +222,8 @@ public class Gallery_nde_tst {
 		}
 	}
 	@Test   public void Alt() {
-		fxt.tst_Parse_page_wiki_str("<gallery>File:A.png|b|alt=c</gallery>", String_.Concat_lines_nl_skipLast
-		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+		fxt.Test_parse_page_wiki_str("<gallery>File:A.png|b|alt=c</gallery>", String_.Concat_lines_nl_skipLast
+		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
 		,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
 		,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
 		,	"      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
@@ -241,8 +241,8 @@ public class Gallery_nde_tst {
 		));
 	}
 	@Test   public void Link() {
-		fxt.tst_Parse_page_wiki_str("<gallery>File:A.png|b|link=c</gallery>", String_.Concat_lines_nl_skipLast
-		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+		fxt.Test_parse_page_wiki_str("<gallery>File:A.png|b|link=c</gallery>", String_.Concat_lines_nl_skipLast
+		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
 		,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
 		,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
 		,	"      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
@@ -260,8 +260,8 @@ public class Gallery_nde_tst {
 		));
 	}
 	@Test   public void Alt_caption_multiple() {
-		fxt.tst_Parse_page_wiki_str("<gallery>File:A.png|alt=b|c[[d|e]]f</gallery>", String_.Concat_lines_nl_skipLast
-		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+		fxt.Test_parse_page_wiki_str("<gallery>File:A.png|alt=b|c[[d|e]]f</gallery>", String_.Concat_lines_nl_skipLast
+		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
 		,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
 		,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
 		,	"      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
@@ -279,8 +279,8 @@ public class Gallery_nde_tst {
 		));
 	}
 	@Test   public void Alt_escape_quote() {
-		fxt.tst_Parse_page_wiki_str("<gallery>File:A.png|b|alt=c\"d'e</gallery>", String_.Concat_lines_nl_skipLast
-		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+		fxt.Test_parse_page_wiki_str("<gallery>File:A.png|b|alt=c\"d'e</gallery>", String_.Concat_lines_nl_skipLast
+		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
 		,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
 		,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
 		,	"      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
@@ -299,8 +299,8 @@ public class Gallery_nde_tst {
 	}
 	@Test   public void Caption_null() {	// PURPOSE: null caption causes page to fail; EX: de.w:Lewis Caroll; <gallery>Datei:A.png</gallery>; DATE:2013-10-09
 		Init_html();
-		fxt.tst_Parse_page_wiki_str("<gallery>File:A.png</gallery>", String_.Concat_lines_nl_skipLast
-		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+		fxt.Test_parse_page_wiki_str("<gallery>File:A.png</gallery>", String_.Concat_lines_nl_skipLast
+		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
 		,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
 		,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
 		,	"      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
@@ -319,8 +319,8 @@ public class Gallery_nde_tst {
 	}
 	@Test   public void Ttl_has_no_ns() {	// PURPOSE: MW allows ttl to not have ns; DATE: 2013-11-18
 		Init_html();
-		fxt.tst_Parse_page_wiki_str("<gallery>A.png|b</gallery>", String_.Concat_lines_nl_skipLast
-		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+		fxt.Test_parse_page_wiki_str("<gallery>A.png|b</gallery>", String_.Concat_lines_nl_skipLast
+		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
 		,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
 		,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
 		,	"      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
@@ -339,8 +339,8 @@ public class Gallery_nde_tst {
 	}
 	@Test   public void Ref() {	// PURPOSE: <ref> inside <gallery> was not showing up in <references>; DATE:2013-10-09
 		Init_html();
-		fxt.tst_Parse_page_wiki_str("<gallery>File:A.png|<ref name='a'>b</ref></gallery><references/>", String_.Concat_lines_nl_skipLast
-		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+		fxt.Test_parse_page_wiki_str("<gallery>File:A.png|<ref name='a'>b</ref></gallery><references/>", String_.Concat_lines_nl_skipLast
+		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
 		,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
 		,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
 		,	"      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"

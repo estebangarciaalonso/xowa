@@ -19,7 +19,7 @@ package gplx.xowa.bldrs.files; import gplx.*; import gplx.xowa.*; import gplx.xo
 import gplx.dbs.*;
 class Xob_lnki_temp_tbl {
 	public static void Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
-	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_lnki_page_id, Fld_lnki_ttl, Fld_lnki_commons_ttl, Fld_lnki_ext, Fld_lnki_type, Fld_lnki_w, Fld_lnki_h, Fld_lnki_upright, Fld_lnki_thumbtime, Fld_lnki_page);}
+	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_lnki_page_id, Fld_lnki_ttl, Fld_lnki_commons_ttl, Fld_lnki_ext, Fld_lnki_type, Fld_lnki_w, Fld_lnki_h, Fld_lnki_upright, Fld_lnki_time, Fld_lnki_page);}
 	public static void Insert(Db_stmt stmt, int page_id, byte[] ttl, byte[] ttl_commons, byte ext_id, byte img_type, int w, int h, double upright, double thumbtime, int page) {
 		stmt.Clear()
 		.Val_int_(page_id)
@@ -39,7 +39,7 @@ class Xob_lnki_temp_tbl {
 	, Fld_lnki_page_id = "lnki_page_id", Fld_lnki_ttl = "lnki_ttl", Fld_lnki_commons_ttl = "lnki_commons_ttl"
 	, Fld_lnki_ext = "lnki_ext", Fld_lnki_type = "lnki_type"
 	, Fld_lnki_w = "lnki_w", Fld_lnki_h = "lnki_h", Fld_lnki_upright = "lnki_upright"
-	, Fld_lnki_thumbtime = "lnki_thumbtime", Fld_lnki_page = "lnki_page"
+	, Fld_lnki_time = "lnki_time", Fld_lnki_page = "lnki_page"
 	;
 	private static final String Tbl_sql = String_.Concat_lines_nl
 	( "CREATE TABLE IF NOT EXISTS lnki_temp"	
@@ -52,7 +52,7 @@ class Xob_lnki_temp_tbl {
 	, ", lnki_w                 integer             NOT NULL"
 	, ", lnki_h                 integer             NOT NULL"
 	, ", lnki_upright           double              NOT NULL"
-	, ", lnki_thumbtime         double              NOT NULL"	// thumbtime is float; using double b/c upright does and would like to keep datatypes same; https://bugzilla.wikimedia.org/show_bug.cgi?id=39014
+	, ", lnki_time              double              NOT NULL"	// thumbtime is float; using double b/c upright does and would like to keep datatypes same; https://bugzilla.wikimedia.org/show_bug.cgi?id=39014
 	, ", lnki_page              integer             NOT NULL"
 	, ");"
 	);

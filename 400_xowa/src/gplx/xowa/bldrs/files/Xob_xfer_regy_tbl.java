@@ -69,7 +69,7 @@ public class Xob_xfer_regy_tbl {
 	}
 	public static final String Tbl_name = "xfer_regy"
 	, Fld_lnki_id = "lnki_id", Fld_lnki_page_id = "lnki_page_id", Fld_lnki_ttl = "lnki_ttl", Fld_lnki_ext = "lnki_ext"
-	, Fld_lnki_thumbtime = "lnki_thumbtime", Fld_lnki_page = "lnki_page", Fld_lnki_count = "lnki_count"
+	, Fld_lnki_time = "lnki_time", Fld_lnki_page = "lnki_page", Fld_lnki_count = "lnki_count"
 	, Fld_orig_repo = "orig_repo", Fld_orig_page_id = "orig_page_id", Fld_orig_redirect_src = "orig_redirect_src", Fld_orig_media_type = "orig_media_type"
 	, Fld_orig_w = "orig_w", Fld_orig_h = "orig_h"
 	, Fld_file_w = "file_w", Fld_file_h = "file_h", Fld_file_is_orig = "file_is_orig"		
@@ -81,7 +81,7 @@ public class Xob_xfer_regy_tbl {
 	,	", lnki_page_id        integer             NOT NULL"
 	,	", lnki_ttl            varchar(255)        NOT NULL"
 	,	", lnki_ext            integer             NOT NULL"
-	,	", lnki_thumbtime      double              NOT NULL"
+	,	", lnki_time           double              NOT NULL"
 	,	", lnki_page           integer             NOT NULL"
 	,	", lnki_count          integer             NOT NULL"
 	,	", orig_repo           tinyint             NOT NULL"
@@ -99,34 +99,34 @@ public class Xob_xfer_regy_tbl {
 	private static final String Sql_create_data_orig = String_.Concat_lines_nl
 	( "INSERT INTO xfer_regy "
 	, "( lnki_id, lnki_page_id, orig_page_id, orig_repo, lnki_ttl, orig_redirect_src, lnki_ext, orig_media_type"
-	, ", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_thumbtime, lnki_page, lnki_count"
+	, ", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_time, lnki_page, lnki_count"
 	, ", xfer_status"
 	, ")"
 	, "SELECT "
 	, "  Min(lnki_id), Min(lnki_page_id), Min(orig_page_id), orig_repo, lnki_ttl, Max(orig_redirect_src), lnki_ext, orig_media_type"	// NOTE: Max(orig_redirect_src) not Min (else would get '')
-	, ", file_is_orig, orig_w, orig_h, -1, -1, lnki_thumbtime, lnki_page, Sum(lnki_count)"
+	, ", file_is_orig, orig_w, orig_h, -1, -1, lnki_time, lnki_page, Sum(lnki_count)"
 	, ", 0"
 	, "FROM    xfer_temp x"
 	, "WHERE   file_is_orig = 1"
-	, "GROUP BY orig_repo, lnki_ttl, lnki_ext, orig_media_type, file_is_orig, orig_w, orig_h, lnki_thumbtime, lnki_page"
+	, "GROUP BY orig_repo, lnki_ttl, lnki_ext, orig_media_type, file_is_orig, orig_w, orig_h, lnki_time, lnki_page"
 	);
 	private static final String Sql_create_data_thumb = String_.Concat_lines_nl
 	( "INSERT INTO xfer_regy "
 	, "( lnki_id, lnki_page_id, orig_page_id, orig_repo, lnki_ttl, orig_redirect_src, lnki_ext, orig_media_type"
-	, ", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_thumbtime, lnki_page, lnki_count"
+	, ", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_time, lnki_page, lnki_count"
 	, ", xfer_status"
 	, ")"
 	, "SELECT "
 	, "  Min(lnki_id), Min(lnki_page_id), Min(orig_page_id), orig_repo, lnki_ttl, Max(orig_redirect_src), lnki_ext, orig_media_type"
-	, ", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_thumbtime, lnki_page, Sum(lnki_count)"
+	, ", file_is_orig, orig_w, orig_h, file_w, file_h, lnki_time, lnki_page, Sum(lnki_count)"
 	, ", 0"
 	, "FROM    xfer_temp x"
 	, "WHERE   file_is_orig = 0"
-	, "GROUP BY orig_repo, lnki_ttl, lnki_ext, orig_media_type, file_is_orig, orig_w, orig_h, file_w, file_h, lnki_thumbtime, lnki_page"
+	, "GROUP BY orig_repo, lnki_ttl, lnki_ext, orig_media_type, file_is_orig, orig_w, orig_h, file_w, file_h, lnki_time, lnki_page"
 	);
 	private static final Db_idx_itm
 //		  Idx_select		= Db_idx_itm.sql_("CREATE        INDEX IF NOT EXISTS xfer_regy__select        ON xfer_regy (xfer_status, orig_repo, lnki_ttl, file_w);")
-	  Idx_lnki_page_id	= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS xfer_regy__lnki_page_id  ON xfer_regy (xfer_status, lnki_page_id, lnki_id, orig_repo, file_is_orig, lnki_ttl, lnki_ext, lnki_thumbtime, lnki_page, file_w, file_h);")
+	  Idx_lnki_page_id	= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS xfer_regy__lnki_page_id  ON xfer_regy (xfer_status, lnki_page_id, lnki_id, orig_repo, file_is_orig, lnki_ttl, lnki_ext, lnki_time, lnki_page, file_w, file_h);")
 	, Idx_lnki_ttl		= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS xfer_regy__lnki_ttl ON xfer_regy (lnki_ttl);")	// needed for troubleshooting
 	;
 	public static byte Status_todo = 0, Status_pass = 1, Status_fail = 2, Status_ignore_processed = 3;

@@ -22,27 +22,27 @@ public class Xop_languages_xnde_tst {
 		Io_mgr._.InitEngine_mem();
 		fxt.Reset();
 		fxt.Page_ttl_("Help:A");
-		fxt.ini_page_create("Help:A", "");				// create for AllPages 
+		fxt.Init_page_create("Help:A", "");				// create for AllPages 
 	} 	private Xop_fxt fxt = new Xop_fxt();
 	@Test   public void None() {
-		fxt.tst_Parse_page_all_str("<languages/>", "");	// empty
+		fxt.Test_parse_page_all_str("<languages/>", "");	// empty
 	}
 	@Test   public void Many() {
-		fxt.ini_page_create("Help:A/de", "");
-		fxt.ini_page_create("Help:A/en", "");
-		fxt.ini_page_create("Help:A/fr", "");
-		fxt.tst_Parse_page_all_str("<languages/>", Many_expd);
+		fxt.Init_page_create("Help:A/de", "");
+		fxt.Init_page_create("Help:A/en", "");
+		fxt.Init_page_create("Help:A/fr", "");
+		fxt.Test_parse_page_all_str("<languages/>", Many_expd);
 	}
 	@Test   public void Many_english_implied() {
-		fxt.ini_page_create("Help:A/de", "");
-		fxt.ini_page_create("Help:A/fr", "");
-		fxt.tst_Parse_page_all_str("<languages/>", Many_expd);
+		fxt.Init_page_create("Help:A/de", "");
+		fxt.Init_page_create("Help:A/fr", "");
+		fxt.Test_parse_page_all_str("<languages/>", Many_expd);
 	}
 	@Test   public void Current_is_french() {
-		fxt.ini_page_create("Help:A/de", "");
-		fxt.ini_page_create("Help:A/fr", "");
+		fxt.Init_page_create("Help:A/de", "");
+		fxt.Init_page_create("Help:A/fr", "");
 		fxt.Page_ttl_("Help:A/fr");
-		fxt.tst_Parse_page_all_str("<languages/>", String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str("<languages/>", String_.Concat_lines_nl
 		(	"<table>"
 		,	"  <tbody>"
 		,	"    <tr valign=\"top\">"

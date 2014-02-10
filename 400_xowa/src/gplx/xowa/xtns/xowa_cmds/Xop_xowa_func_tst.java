@@ -24,7 +24,7 @@ public class Xop_xowa_func_tst {
 	@Test  public void Template() {
 		GfsCore._.AddCmd(fxt.App(), Xoa_gfs_mgr.Invk_app);
 		fxt.Wiki().Sys_cfg().Xowa_cmd_enabled_(true);
-		fxt.ini_defn_add("A", "{{#xowa|{{{1}}}}}");
-		fxt.tst_Parse_page_all_str("{{A|app.users.get('anonymous').name;}}", "anonymous");
+		fxt.Init_defn_add("A", "{{#xowa|{{{1}}}}}");
+		fxt.Test_parse_page_all_str("{{A|app.users.get('anonymous').name;}}", "anonymous");
 	}
 }

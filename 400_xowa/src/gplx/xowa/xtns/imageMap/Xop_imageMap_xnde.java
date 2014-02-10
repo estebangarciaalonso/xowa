@@ -17,19 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.imageMap; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.xowa.parsers.lnkis.*; import gplx.xowa.parsers.logs.*;
-public class Xop_imageMap_xnde implements Xop_xnde_xtn {
+public class Xop_imageMap_xnde implements Xox_xnde {
 	private boolean first = true;
 	public byte[] Xtn_src() {return lnki_src;} private byte[] lnki_src;
-	public boolean Xtn_literal() {return false;}
-	public Xop_root_tkn Xtn_root() {return lnki_root;} private Xop_root_tkn lnki_root;
+	private Xop_root_tkn xtn_root;
 	public ListAdp Shape_list() {return shape_list;} ListAdp shape_list = ListAdp_.new_(); 
-	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_parse(Xow_wiki wiki, Xop_ctx ctx, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		int content_bgn = xnde.Tag_open_end(), content_end = xnde.Tag_close_bgn();
 		int nl_0_pos = Xop_lxr_.Find_fwd_while_non_ws(src, content_bgn, content_end);
 		int cur_pos = nl_0_pos, nl_1_pos = -1;//, ws_pos_bgn = -1;
 		int src_len = src.length;
 		Xop_ctx imageMap_ctx = Xop_ctx.new_sub_(wiki);
 		imageMap_ctx.Para().Enabled_n_();
+		Xop_tkn_mkr tkn_mkr = ctx.Tkn_mkr();
 		while (true) {
 			boolean last = cur_pos == content_end;
 			if (last) nl_1_pos = cur_pos;
@@ -77,21 +77,24 @@ public class Xop_imageMap_xnde implements Xop_xnde_xtn {
 		}
 		boolean log_wkr_enabled = Log_wkr != Xop_log_basic_wkr.Null; if (log_wkr_enabled) Log_wkr.Log_end_xnde(ctx.Page(), Xop_log_basic_wkr.Tid_imageMap, src, xnde);
 	}	public static Xop_log_basic_wkr Log_wkr = Xop_log_basic_wkr.Null;
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+		html_wtr.Write_tkn(ctx, opts, bfr, xtn_root.Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, xtn_root);
+	}
 	private void ParseLine(Xop_ctx orig_ctx, Xop_ctx image_map_ctx, Xow_wiki wiki, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, Xop_xnde_tkn xnde, int nl_0_pos, int nl_1_pos) {
 		int line_len = nl_1_pos - nl_0_pos; 
 		if (line_len == 0 || src[nl_0_pos + 1] == Byte_ascii.Hash) return;
 		if (first) {
 			byte[] lnki_raw = ByteAry_.Add(Xop_tkn_.Lnki_bgn, ByteAry_.Mid(src, nl_0_pos, nl_1_pos), Xop_tkn_.Lnki_end);
-			lnki_root = tkn_mkr.Root(lnki_src);
-			image_map_ctx.Wiki().Parser().Parse_page_all(lnki_root, image_map_ctx, tkn_mkr, lnki_raw, 0);
-			lnki_src = lnki_root.Root_src();	// NOTE: html_wtr will write based on parsed mid (not raw)
-			lnki_root.Root_src_(lnki_src);		// HACK: Xoh_html_wtr uses raw (instead of mid); put data in raw in order to conform to other xtns
+			xtn_root = tkn_mkr.Root(lnki_src);
+			image_map_ctx.Wiki().Parser().Parse_page_all(xtn_root, image_map_ctx, tkn_mkr, lnki_raw, 0);
+			lnki_src = xtn_root.Root_src();	// NOTE: html_wtr will write based on parsed mid (not raw)
+			xtn_root.Root_src_(lnki_src);		// HACK: Xoh_html_wtr uses raw (instead of mid); put data in raw in order to conform to other xtns
 			Xop_lnki_logger file_wkr = orig_ctx.Lnki().File_wkr();	// NOTE: do not do image_map_ctx.Lnki(); image_map_ctx is brand new
 			if (file_wkr != null) {
 				Xop_lnki_tkn lnki_tkn = null;
-				int subs_len = lnki_root.Subs_len();
+				int subs_len = xtn_root.Subs_len();
 				for (int i = 0; i < subs_len; i++) {
-					Xop_tkn_itm sub_tkn = lnki_root.Subs_get(i);
+					Xop_tkn_itm sub_tkn = xtn_root.Subs_get(i);
 					if (sub_tkn.Tkn_tid() == Xop_tkn_itm_.Tid_lnki) {
 						lnki_tkn = (Xop_lnki_tkn)sub_tkn;
 						break;

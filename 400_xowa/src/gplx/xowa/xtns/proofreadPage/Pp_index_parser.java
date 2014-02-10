@@ -20,8 +20,8 @@ import gplx.xowa.parsers.logs.*;
 class Pp_index_parser {
 	public static Pp_index_page Parse(Xow_wiki wiki, Xop_ctx ctx, Xoa_ttl index_ttl, int ns_page_id) {
 		Xoa_page index_page = wiki.Data_mgr().Get_page(index_ttl, false);
-		if (ctx.Wiki().View_data().Lst_recursed()) return Pp_index_page.Null;
-		ctx.Wiki().View_data().Lst_recursed_(true);
+		if (ctx.Wiki().View_data().Pages_recursed()) return Pp_index_page.Null;
+		ctx.Wiki().View_data().Pages_recursed_(true);
 		byte[] src = index_page.Data_raw();
 		Xop_parser sub_parser = new Xop_parser(wiki.Parser().Tmpl_lxr_mgr(), wiki.Parser().Wiki_lxr_mgr());
 		Xop_ctx sub_ctx = Xop_ctx.new_sub_(wiki);
@@ -31,8 +31,8 @@ class Pp_index_parser {
 		Pp_index_page rv = new Pp_index_page();
 		Inspect_tmpl(rv, src, index_root, index_root.Subs_len(), ns_page_id, 1);
 		sub_parser.Parse_page_wiki(index_root, sub_ctx, tkn_mkr, mid_text, Xop_parser_.Doc_bgn_bos);
+		ctx.Wiki().View_data().Pages_recursed_(false);
 		rv.Src_(mid_text);
-		ctx.Wiki().View_data().Lst_recursed_(false);
 		Inspect_wiki(rv, src, index_root, index_root.Subs_len(), ns_page_id, 1);
 		return rv;
 	}

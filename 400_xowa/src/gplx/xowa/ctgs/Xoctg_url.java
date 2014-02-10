@@ -17,11 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.ctgs; import gplx.*; import gplx.xowa.*;
 public class Xoctg_url {
-	public byte[]		All_idx() {return all_idx;} private byte[] all_idx;
 	public byte[][]		Grp_idxs() {return grp_idxs;} private byte[][] grp_idxs = new byte[3][];
 	public byte[]		Grp_fwds() {return grp_fwds;} private byte[] grp_fwds = new byte[3];
 	private void Clear() {
-		all_idx = null;
 		for (int i = 0; i < 3; i++) {
 			grp_fwds[i] = Bool_.__byte;
 			grp_idxs[i] = null;
@@ -39,20 +37,30 @@ public class Xoctg_url {
 			byte[] arg_val = arg.Val_bry();
 			byte tid = ((ByteVal)tid_obj).Val();
 			switch (tid) {
-				case Tid_all_bgn: 	all_idx = arg_val; break;
-				case Tid_subc_bgn: 	grp_fwds[Xoa_ctg_mgr.Tid_subc] = Bool_.Y_byte; grp_idxs[Xoa_ctg_mgr.Tid_subc] = arg_val; break;
-				case Tid_subc_end:  grp_fwds[Xoa_ctg_mgr.Tid_subc] = Bool_.N_byte; grp_idxs[Xoa_ctg_mgr.Tid_subc] = arg_val; break;
-				case Tid_file_bgn:	grp_fwds[Xoa_ctg_mgr.Tid_file] = Bool_.Y_byte; grp_idxs[Xoa_ctg_mgr.Tid_file] = arg_val; break;
-				case Tid_file_end:  grp_fwds[Xoa_ctg_mgr.Tid_file] = Bool_.N_byte; grp_idxs[Xoa_ctg_mgr.Tid_file] = arg_val; break;
-				case Tid_page_bgn:	grp_fwds[Xoa_ctg_mgr.Tid_page] = Bool_.Y_byte; grp_idxs[Xoa_ctg_mgr.Tid_page] = arg_val; break;
-				case Tid_page_end:  grp_fwds[Xoa_ctg_mgr.Tid_page] = Bool_.N_byte; grp_idxs[Xoa_ctg_mgr.Tid_page] = arg_val; break;
+				case Tid_all_bgn: 	Set_grp(arg_val, Bool_.Y_byte, Xoa_ctg_mgr.Tid_subc, Xoa_ctg_mgr.Tid_file, Xoa_ctg_mgr.Tid_page); break;	// if "from", default all grps to val; DATE:2014-02-05
+				case Tid_all_end: 	Set_grp(arg_val, Bool_.N_byte, Xoa_ctg_mgr.Tid_subc, Xoa_ctg_mgr.Tid_file, Xoa_ctg_mgr.Tid_page); break;
+				case Tid_subc_bgn: 	Set_grp(arg_val, Bool_.Y_byte, Xoa_ctg_mgr.Tid_subc); break;
+				case Tid_subc_end:  Set_grp(arg_val, Bool_.N_byte, Xoa_ctg_mgr.Tid_subc); break;
+				case Tid_file_bgn:	Set_grp(arg_val, Bool_.Y_byte, Xoa_ctg_mgr.Tid_file); break;
+				case Tid_file_end:  Set_grp(arg_val, Bool_.N_byte, Xoa_ctg_mgr.Tid_file); break;
+				case Tid_page_bgn:	Set_grp(arg_val, Bool_.Y_byte, Xoa_ctg_mgr.Tid_page); break;
+				case Tid_page_end:  Set_grp(arg_val, Bool_.N_byte, Xoa_ctg_mgr.Tid_page); break;
 			}
 		}
 		return this;
-	}		
-	public static final byte Tid_all_bgn = 0, Tid_subc_bgn = 1, Tid_subc_end = 2, Tid_file_bgn = 3, Tid_file_end = 4, Tid_page_bgn = 5, Tid_page_end = 6;
+	}
+	private void Set_grp(byte[] val, byte fwd, byte... tids) {
+		int tids_len = tids.length;
+		for (int i = 0; i < tids_len; i++) {
+			byte tid = tids[i];
+			grp_fwds[tid] = fwd;
+			grp_idxs[tid] = val;
+		}
+	}
+	public static final byte Tid_all_bgn = 0, Tid_subc_bgn = 1, Tid_subc_end = 2, Tid_file_bgn = 3, Tid_file_end = 4, Tid_page_bgn = 5, Tid_page_end = 6, Tid_all_end = 8;
 	public static final Hash_adp_bry Arg_keys = new Hash_adp_bry(false)
-	.Add_bry_byte(Xoctg_fmtr_all.Url_arg_all_bgn, Tid_all_bgn)
+	.Add_bry_byte(Xoctg_fmtr_all.Url_arg_from, Tid_all_bgn)
+	.Add_bry_byte(Xoctg_fmtr_all.Url_arg_until, Tid_all_end)
 	.Add_bry_byte(Xoctg_fmtr_all.Url_arg_subc_bgn, Tid_subc_bgn)
 	.Add_bry_byte(Xoctg_fmtr_all.Url_arg_subc_end, Tid_subc_end)
 	.Add_bry_byte(Xoctg_fmtr_all.Url_arg_file_bgn, Tid_file_bgn)

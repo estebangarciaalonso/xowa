@@ -16,8 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.lst; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-public class Lst_section_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
-	public boolean Xtn_literal() {return false;}
+public class Lst_section_nde implements Xox_xnde, Xop_xnde_atr_parser {
 	public byte[] Section_name() {return section_name;} private byte[] section_name;
 	public void Xatr_parse(Xow_wiki wiki, byte[] src, Xop_xatr_itm xatr, Object xatr_obj) {
 		if (xatr_obj == null) return;
@@ -27,15 +26,15 @@ public class Lst_section_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 				section_name = xatr.Val_as_bry(src); name_tid = xatr_tid; break;
 		}
 	}
-	public Xop_root_tkn Xtn_root() {return null;}
 	public Xop_xnde_tkn Xnde() {return xnde;} private Xop_xnde_tkn xnde;
 	public byte Name_tid() {return name_tid;} private byte name_tid;
-	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_parse(Xow_wiki wiki, Xop_ctx ctx, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		Xoa_app app = ctx.App();
 		Xop_xatr_itm[] atrs = Xop_xatr_itm.Xatr_parse(app, this, wiki.Lang().Xatrs_section(), wiki, src, xnde);
 		this.xnde = xnde;
 		xnde.Atrs_ary_(atrs);
 		ctx.Lst_section_mgr().Add(this);
 	}
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {}	// NOTE: write nothing; <section> is just a bookmark
 	public static final byte Xatr_name = 0, Xatr_bgn = 1, Xatr_end = 2;
 }

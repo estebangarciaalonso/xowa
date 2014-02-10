@@ -73,7 +73,7 @@ class Xop_tblw_lxr implements Xop_lxr {
 //						return ctx.LxrMake_txt_(cur_pos);
 			}
 		}
-		return ctx.Tblw().MakeTkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, false, false, -1, -1);
+		return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, false, false, -1, -1);
 	}
 	public Xop_tblw_lxr(byte wlxr_type) {this.wlxr_type = wlxr_type;} private byte wlxr_type;
 	public static final Xop_tblw_lxr Bldr = new Xop_tblw_lxr(); Xop_tblw_lxr() {}

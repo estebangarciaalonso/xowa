@@ -23,12 +23,13 @@ class Pf_str_case extends Pf_func_base {	// EX: {{lc:A}} -> a
 	@Override public boolean Func_require_colon_arg() {return true;}
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr trg) {
 		byte[] val_dat_ary = Eval_argx(ctx, src, caller, self); if (val_dat_ary == ByteAry_.Empty) return;
-		int val_dat_ary_len = val_dat_ary.length;
+		int val_dat_ary_len = val_dat_ary.length; if (val_dat_ary_len == 0) return; // nothing to uc / lc; just return
 		Xol_lang lang = ctx.Wiki().Lang();
 		boolean upper = case_type == Xol_lang.Tid_upper;
 		if (first) {
-			byte[] ltr_1 = lang.Case_mgr().Case_build(upper, val_dat_ary, 0, 1);
-			val_dat_ary = ByteAry_.Add(ltr_1, ByteAry_.Mid(val_dat_ary, 1, val_dat_ary_len));
+			ByteAryBfr tmp_bfr = ctx.App().Utl_bry_bfr_mkr().Get_b512();
+			val_dat_ary = lang.Case_mgr().Case_build_1st(tmp_bfr, upper, val_dat_ary, 0, val_dat_ary_len);
+			tmp_bfr.Mkr_rls();
 		}
 		else
 			val_dat_ary = lang.Case_mgr().Case_build(upper, val_dat_ary, 0, val_dat_ary_len);

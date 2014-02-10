@@ -54,8 +54,8 @@ public class Xob_siteinfo_parser {
 		wiki.Props().Siteinfo_misc_(siteinfo_misc_bfr.XtoAryAndClear());
 		wiki.Props().Bldr_version_(ByteAry_.new_ascii_(Xoa_app_.Version));
 	}
-	private static byte[] Siteinfo_parse_mainpage(byte[] url) {
-		byte[] wiki_bry = ByteAry_.new_ascii_("/wiki/");
+	private static byte[] Siteinfo_parse_mainpage(byte[] url) {			
+		byte[] wiki_bry = Xoa_consts.Url_wiki_intermediary;
 		int bgn_pos	= ByteAry_.FindFwd(url, wiki_bry, 0);
 		if (bgn_pos == ByteAry_.NotFound) {							// "/wiki/" not found; EX: http://mywiki/My_main_page
 			bgn_pos	= ByteAry_.FindBwd(url, Byte_ascii.Slash);		// ASSUME last segment is page

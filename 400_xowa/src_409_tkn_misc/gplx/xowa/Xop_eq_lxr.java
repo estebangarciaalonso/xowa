@@ -23,6 +23,27 @@ class Xop_eq_lxr implements Xop_lxr {//20111222
 	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
 	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		if (tmpl_mode) {
+			Xop_tkn_itm owner = ctx.Stack_get_last();									// beginning of "is = part of a hdr tkn sequence?"; DATE:2014-02-09
+			if (owner != null && owner.Tkn_tid() == Xop_tkn_itm_.Tid_tmpl_curly_bgn) {	// inside curly
+				if (	cur_pos < src_len												// bounds check
+					&&	src[cur_pos] == Byte_ascii.Eq									// next char is =; i.e.: "=="
+					) {
+					int rhs = Xop_lxr_.Find_fwd_while(src, src_len, cur_pos, Byte_ascii.Eq);	// find all consecutive "="
+					int prv_pos = bgn_pos - 1;
+					boolean hdr_like = false;
+					if (prv_pos > -1 && src[prv_pos] == Byte_ascii.NewLine)				// is prv char \n; EX: "\n==="
+						hdr_like = true;
+					else {
+						int nxt_pos = rhs + 1;
+						if (	nxt_pos == src_len										// allow ==eos
+							||	src[nxt_pos] == Byte_ascii.NewLine						// is nxt char \n; EX: "===\n"
+							)
+							hdr_like = true;
+					}
+					if (hdr_like)														// ignore hdr tkn;
+						return ctx.LxrMake_txt_(rhs);
+				}
+			}
 			ctx.Subs_add(root, tkn_mkr.Eq(bgn_pos, cur_pos, 1));
 			return cur_pos;
 		}

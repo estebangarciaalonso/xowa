@@ -57,7 +57,7 @@ public class Wdata_doc_bldr {
 		wtr.Kv(Bool_.N, Wdata_doc_consts.Key_atr_entity_bry, qid);
 		Xto_bry__list(Wdata_doc_consts.Key_atr_label_bry, labels);
 		Xto_bry__list(Wdata_doc_consts.Key_atr_description_bry, descriptions);
-		Xto_bry__list(Wdata_doc_consts.Key_atr_links_bry, links);
+		Xto_bry__sitelinks(Wdata_doc_consts.Key_atr_links_bry, links);
 		Xto_bry__aliases();
 		Xto_bry__claims();
 		wtr.Nde_end();
@@ -71,6 +71,22 @@ public class Wdata_doc_bldr {
 		for (int i = 0; i < len; i++) {
 			KeyVal kv = (KeyVal)list.FetchAt(i);
 			wtr.Kv(i != 0, ByteAry_.new_utf8_(kv.Key()), ByteAry_.new_utf8_(kv.Val_to_str_or_empty()));
+		}
+		wtr.Nde_end();
+		list.Clear();
+	}
+	private void Xto_bry__sitelinks(byte[] key, ListAdp list) {	// NOTE: changed to reflect new sitelinks structure; DATE:2014-02-04
+		int len = list.Count();
+		if (len == 0) return;
+		wtr.Key(true, key);
+		wtr.Nde_bgn();
+		for (int i = 0; i < len; i++) {
+			if (i != 0) wtr.Comma();
+			KeyVal kv = (KeyVal)list.FetchAt(i);
+			wtr.Key(false, ByteAry_.new_utf8_(kv.Key()));											// write key;	EX: enwiki:
+			wtr.Nde_bgn();																			// bgn nde;		EX: {
+			wtr.Kv(false, Wdata_doc_.Key_name, ByteAry_.new_utf8_(kv.Val_to_str_or_empty()));		// write name;	EX:   name=Earth
+			wtr.Nde_end();																			// end nde;		EX: }
 		}
 		wtr.Nde_end();
 		list.Clear();
@@ -119,7 +135,7 @@ public class Wdata_doc_bldr {
 						wtr.Comma();
 						wtr.Nde_bgn();
 						wtr.Kv(Bool_.N, Wdata_doc_consts.Key_ent_entity_type_bry, Wdata_doc_consts.Val_ent_entity_type_item_bry);
-						wtr.Kv(Bool_.Y, Wdata_doc_consts.Key_ent_numeric_id_bry, ByteAry_.XtoInt(prop.Val()));
+						wtr.Kv(Bool_.Y, Wdata_doc_consts.Key_ent_numeric_id_bry, ByteAry_.X_to_int(prop.Val()));
 						wtr.Nde_end();
 						break;
 					case Wdata_prop_itm_base_.Val_tid_time:

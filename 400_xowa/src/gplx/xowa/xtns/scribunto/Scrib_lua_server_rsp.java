@@ -53,7 +53,7 @@ class Scrib_lua_server_rsp {
 			return op;
 		}
 		catch (Exception e) {
-			throw Xow_xtn_scribunto.err_(e, "failed to extract data: {0} {1}", Err_.Message_gplx_brief(e), String_.new_utf8_(rsp));
+			throw Scrib_xtn_mgr.err_(e, "failed to extract data: {0} {1}", Err_.Message_gplx_brief(e), String_.new_utf8_(rsp));
 		}
 	}
 }

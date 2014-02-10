@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.wdatas; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.json.*;
 public class Wdata_doc_parser {
-	public Wdata_doc_parser(Gfo_usr_dlg usr_dlg) {this.usr_dlg = usr_dlg;} Gfo_usr_dlg usr_dlg;
+	public Wdata_doc_parser(Gfo_usr_dlg usr_dlg) {this.usr_dlg = usr_dlg;} private Gfo_usr_dlg usr_dlg;
 	public OrderedHash Bld_hash(Json_doc doc, byte[] key) {
 		Json_itm_nde nde = Json_itm_nde.cast_(doc.Get_grp(key)); if (nde == null) return Empty_ordered_hash_bry;
 		OrderedHash rv = OrderedHash_.new_bry_();
@@ -57,7 +57,7 @@ public class Wdata_doc_parser {
 		}
 		return rv;
 	}
-	Wdata_prop_itm_core New_prop(byte[] src, Json_itm_nde prop_nde) {
+	private Wdata_prop_itm_core New_prop(byte[] src, Json_itm_nde prop_nde) {
 		int len = prop_nde.Subs_len();	// should have 5 (m, q, g, rank, refs), but don't enforce (can rely on keys)
 		Wdata_prop_itm_core rv = null;
 		for (int i = 0; i < len; i++) {
@@ -85,7 +85,7 @@ public class Wdata_doc_parser {
 		}
 		return rv;
 	}
-	Wdata_prop_itm_core New_prop_by_m(byte[] src, Json_itm_ary ary) {
+	private Wdata_prop_itm_core New_prop_by_m(byte[] src, Json_itm_ary ary) {
 		byte snak_tid = Wdata_prop_itm_base_.Snak_tid_parse(ary.Subs_get_at(0).Data_bry());
 		int pid = Json_itm_int.cast_(ary.Subs_get_at(1)).Data_as_int();
 		switch (snak_tid) {
@@ -97,7 +97,7 @@ public class Wdata_doc_parser {
 		byte[] val_bry = Parse_val(ary, val_tid);
 		return new Wdata_prop_itm_core(snak_tid, pid, val_tid, val_bry);
 	}
-	byte[] Parse_val(Json_itm_ary ary, byte val_tid) {
+	private byte[] Parse_val(Json_itm_ary ary, byte val_tid) {
 		switch (val_tid) {
 			case Wdata_prop_itm_base_.Val_tid_string:
 				return ary.Subs_get_at(3).Data_bry();
@@ -122,7 +122,7 @@ public class Wdata_doc_parser {
 	}
 	private void Warn(String fmt, Object... args) {usr_dlg.Warn_many("", "", fmt, args);}
 	public static final OrderedHash Empty_ordered_hash_bry = OrderedHash_.new_bry_(), Empty_ordered_hash_generic = OrderedHash_.new_();
-	static final byte Prop_tid_m = 0, Prop_tid_q = 1, Prop_tid_g = 2, Prop_tid_rank = 3, Prop_tid_refs = 4;
+	private static final byte Prop_tid_m = 0, Prop_tid_q = 1, Prop_tid_g = 2, Prop_tid_rank = 3, Prop_tid_refs = 4;
 	private static final Hash_adp_bry Prop_key_hash = new Hash_adp_bry(false)
 		.Add_bry_byte(Wdata_doc_consts.Key_claims_m_bry		, Prop_tid_m)
 		.Add_bry_byte(Wdata_doc_consts.Key_claims_q_bry		, Prop_tid_q)

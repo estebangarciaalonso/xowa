@@ -241,7 +241,7 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 			byte[] line = lines[i];
 			if (line.length == 0) continue;
 			byte[][] flds = ByteAry_.Split(line, Byte_ascii.Pipe);
-			int cur_id = ByteAry_.XtoIntOr(flds[0], Int_.MinValue);
+			int cur_id = ByteAry_.X_to_int_or(flds[0], Int_.MinValue);
 			this.Add_alias(cur_id, String_.new_utf8_(flds[1]));
 		}
 		Ords_sort();

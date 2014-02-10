@@ -21,7 +21,7 @@ public class GfmlTrie {
 	public String[] Symbols() {
 		String[] rv = new String[symbols.Count()];
 		for (int i = 0; i < rv.length; i++)
-			rv[i] = String_.cast_(symbols.FetchAt(i));
+			rv[i] = String_.as_or_fail_(symbols.FetchAt(i));
 		return rv;
 	}	OrderedHash symbols = OrderedHash_.new_();
 	public int LastMatchCount; // PERF: prop is faster than method

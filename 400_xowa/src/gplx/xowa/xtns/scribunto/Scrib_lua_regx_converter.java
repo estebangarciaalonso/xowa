@@ -30,6 +30,7 @@ class Scrib_lua_regx_converter {
 		int bct = 0;
 //			bfr.Add_byte(Byte_ascii.Slash); // NOTE: do not add PHP "/" at start
 		for (int i = 0; i < len; i++) {
+			q_flag = false; // must be reset; REF.MW:UstringLibrary.php|patternToRegex; DATE:2014-02-08
 			byte cur = src[i];
 			switch (cur) {
 				case Byte_ascii.Pow:

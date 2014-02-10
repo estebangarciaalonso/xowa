@@ -20,10 +20,10 @@ import org.junit.*;
 public class Pf_xtn_ifexist_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()					{fxt.Reset();}
-	@Test  public void Basic_pass()				{fxt.tst_Parse_tmpl_str_test("{{#ifexist: Abc | exists | doesn't exist }}"		, "{{test}}"	, "doesn't exist");}
-	@Test  public void Empty()					{fxt.tst_Parse_tmpl_str_test("{{#ifexist:|y|n}}"								, "{{test}}"	, "n");}	// NOTE: {{autolink}} can pass in ""
+	@Test  public void Basic_pass()				{fxt.Test_parse_tmpl_str_test("{{#ifexist: Abc | exists | doesn't exist }}"		, "{{test}}"	, "doesn't exist");}
+	@Test  public void Empty()					{fxt.Test_parse_tmpl_str_test("{{#ifexist:|y|n}}"								, "{{test}}"	, "n");}	// NOTE: {{autolink}} can pass in ""
 	@Test  public void Db_key() {	// PURPOSE: test that (1) & is encoded; (2) " " becomes "_"; EX: {{#ifexist:File:Peter & Paul fortress in SPB 03.jpg|y|n}}
-		fxt.ini_page_create("A_&_b", "");
-		fxt.tst_Parse_tmpl_str_test("{{#ifexist:A & b|y|n}}", "{{test}}", "y");
+		fxt.Init_page_create("A_&_b", "");
+		fxt.Test_parse_tmpl_str_test("{{#ifexist:A & b|y|n}}", "{{test}}", "y");
 	}
 }

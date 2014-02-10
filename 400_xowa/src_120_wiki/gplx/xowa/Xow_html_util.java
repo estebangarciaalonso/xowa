@@ -29,7 +29,7 @@ public class Xow_html_util implements GfoInvkAble {
 		catch (Exception e) {Err_.Noop(e); return "expr failed: " + expr;}
 	}
 	String If_yn(String expr, String true_val, String false_val) {
-		String o = String_.cast_(wiki.App().Gfs_mgr().Run_str(expr));
+		String o = String_.as_or_fail_(wiki.App().Gfs_mgr().Run_str(expr));
 		try {return Yn.parse_(o) ? true_val : false_val;}
 		catch (Exception e) {Err_.Noop(e); return "expr failed: " + expr;}
 	}

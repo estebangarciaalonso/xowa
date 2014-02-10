@@ -20,6 +20,6 @@ import org.junit.*;
 public class Xtn_templateData_nde_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Test   public void Basic() {
-		fxt.tst_Parse_page_all_str("<templateData>{\"description\":\"test\"}</templateData>", "<pre style=\"overflow:auto\">{&quot;description&quot;:&quot;test&quot;}</pre>");
+		fxt.Test_parse_page_all_str("<templateData>{\"description\":\"test\"}</templateData>", "<pre style=\"overflow:auto\">{&quot;description&quot;:&quot;test&quot;}</pre>");
 	}
 }

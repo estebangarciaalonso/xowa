@@ -54,7 +54,7 @@ class Wdata_itemByTitle_page_fxt {
 	public void Init_wdata_page(String qid_ttl, String text) {
 		Wdata_doc doc = wdata_fxt.doc_(qid_ttl);
 		app.Wiki_mgr().Wdata_mgr().Pages_add(ByteAry_.new_ascii_(qid_ttl), doc);
-		parser_fxt.ini_page_create(app.Wiki_mgr().Wdata_mgr().Wdata_wiki(), qid_ttl, text);
+		parser_fxt.Init_page_create(app.Wiki_mgr().Wdata_mgr().Wdata_wiki(), qid_ttl, text);
 	}
 	public void Init_wdata_label(String wmf_key_str, String wdata_label, String qid) {
 		wdata_fxt.Init_qids_add("en", Xow_wiki_domain_.Tid_wikipedia, wdata_label, qid);		

@@ -20,18 +20,18 @@ import org.junit.*;
 public class Pf_url_ns_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()				{fxt.Reset();}
-	@Test  public void Ns_0()				{fxt.tst_Parse_tmpl_str_test("{{ns:0}}"						, "{{test}}", "");}
-	@Test  public void Ns_10()				{fxt.tst_Parse_tmpl_str_test("{{ns:10}}"					, "{{test}}", "Template");}
-	@Test  public void Ns_11()				{fxt.tst_Parse_tmpl_str_test("{{ns:11}}"					, "{{test}}", "Template talk");}
-	@Test  public void Ns_11_ws()			{fxt.tst_Parse_tmpl_str_test("{{ns: 11 }}"					, "{{test}}", "Template talk");}
-	@Test  public void Ns_Template()		{fxt.tst_Parse_tmpl_str_test("{{ns:Template}}"				, "{{test}}", "Template");}
-	@Test  public void Ns_invalid()			{fxt.tst_Parse_tmpl_str_test("{{ns:252}}"					, "{{test}}", "");}
-	@Test  public void Nse_10()				{fxt.tst_Parse_tmpl_str_test("{{nse:10}}"					, "{{test}}", "Template");}
-	@Test  public void Nse_11()				{fxt.tst_Parse_tmpl_str_test("{{nse:11}}"					, "{{test}}", "Template_talk");}
-	@Test  public void Ns_Image()			{fxt.tst_Parse_tmpl_str_test("{{ns:Image}}"					, "{{test}}", "File");}
-	@Test  public void Ns_Templatex()		{fxt.tst_Parse_tmpl_str_test("{{ns:Templatex}}"				, "{{test}}", "");}
+	@Test  public void Ns_0()				{fxt.Test_parse_tmpl_str_test("{{ns:0}}"						, "{{test}}", "");}
+	@Test  public void Ns_10()				{fxt.Test_parse_tmpl_str_test("{{ns:10}}"					, "{{test}}", "Template");}
+	@Test  public void Ns_11()				{fxt.Test_parse_tmpl_str_test("{{ns:11}}"					, "{{test}}", "Template talk");}
+	@Test  public void Ns_11_ws()			{fxt.Test_parse_tmpl_str_test("{{ns: 11 }}"					, "{{test}}", "Template talk");}
+	@Test  public void Ns_Template()		{fxt.Test_parse_tmpl_str_test("{{ns:Template}}"				, "{{test}}", "Template");}
+	@Test  public void Ns_invalid()			{fxt.Test_parse_tmpl_str_test("{{ns:252}}"					, "{{test}}", "");}
+	@Test  public void Nse_10()				{fxt.Test_parse_tmpl_str_test("{{nse:10}}"					, "{{test}}", "Template");}
+	@Test  public void Nse_11()				{fxt.Test_parse_tmpl_str_test("{{nse:11}}"					, "{{test}}", "Template_talk");}
+	@Test  public void Ns_Image()			{fxt.Test_parse_tmpl_str_test("{{ns:Image}}"					, "{{test}}", "File");}
+	@Test  public void Ns_Templatex()		{fxt.Test_parse_tmpl_str_test("{{ns:Templatex}}"				, "{{test}}", "");}
 	@Test  public void Ns_Talk() {	// PURPOSE: non-English wikis may have parameterized Project Talk ($1 talk); swap out with ns:4; REF.MW: Language.php!fixVariableInNamespace
 		fxt.Wiki().Ns_mgr_(new Xow_ns_mgr().Add_new(4, "wiki").Add_new(5, "$1 talk").Add_new(10, "Template").Ords_sort());
-		fxt.tst_Parse_tmpl_str_test("{{ns:5}}"					, "{{test}}", "wiki talk");
+		fxt.Test_parse_tmpl_str_test("{{ns:5}}"					, "{{test}}", "wiki talk");
 	}
 }

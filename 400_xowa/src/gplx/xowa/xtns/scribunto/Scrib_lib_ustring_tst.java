@@ -42,6 +42,10 @@ public class Scrib_lib_ustring_tst {
 		Exec_match("abcd"	, "a"				, 0, "a");							// handle 0; note that php/lua is super-1, but some modules pass in 0; ru.w:Module:Infocards; DATE:2013-11-08
 		Exec_match("abcd"	, "."				, -1, "d");							// -1
 	}
+	@Test  public void Match_args_out_of_order() {
+		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_ustring(), Scrib_lib_ustring.Invk_match);
+		fxt.Test_lib_proc_kv(lib, Scrib_lib_ustring.Invk_match, new KeyVal[] {KeyVal_.int_(2, "[a]")}, "");
+	}
 	@Test  public void Gsub() {
 		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);
 		Exec_gsub_regx("abcd", "[a]"		, -1, "A", "Abcd;1");

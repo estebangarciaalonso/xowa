@@ -84,10 +84,10 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		else if	(ctx.Match(k, Invk_find_box_focus))							app.Gui_mgr().Layout().Find_show();
 		else if	(ctx.Match(k, Invk_find_box_hide))							app.Gui_mgr().Layout().Find_close();
 		else if	(ctx.Match(k, Invk_find_box_find))							{Exec_find_box_find(); gui_wtr.Prog_direct("");}
-		else if	(ctx.Match(k, Invk_find_box_dir_fwd))						{find_box_dir_fwd = Bool_.Y; Exec_find_box_find(); gui_wtr.Prog_direct("find_box dir_fwd=" + Yn.XtoStr(find_box_dir_fwd));}
-		else if	(ctx.Match(k, Invk_find_box_dir_bwd))						{find_box_dir_fwd = Bool_.N; Exec_find_box_find(); gui_wtr.Prog_direct("find_box dir_fwd=" + Yn.XtoStr(find_box_dir_fwd));}
-		else if	(ctx.Match(k, Invk_find_box_case_toggle))					{find_box_case_match = !find_box_case_match; gui_wtr.Prog_direct("find_box case_match=" + Yn.XtoStr(find_box_case_match));}
-		else if	(ctx.Match(k, Invk_find_box_wrap_toggle))					{find_box_wrap_find = !find_box_wrap_find; gui_wtr.Prog_direct("find_box wrap=" + Yn.XtoStr(find_box_wrap_find));}
+		else if	(ctx.Match(k, Invk_find_box_dir_fwd))						{find_box_dir_fwd = Bool_.Y; Exec_find_box_find(); gui_wtr.Prog_direct("find_box dir_fwd=" + Yn.X_to_str(find_box_dir_fwd));}
+		else if	(ctx.Match(k, Invk_find_box_dir_bwd))						{find_box_dir_fwd = Bool_.N; Exec_find_box_find(); gui_wtr.Prog_direct("find_box dir_fwd=" + Yn.X_to_str(find_box_dir_fwd));}
+		else if	(ctx.Match(k, Invk_find_box_case_toggle))					{find_box_case_match = !find_box_case_match; gui_wtr.Prog_direct("find_box case_match=" + Yn.X_to_str(find_box_case_match));}
+		else if	(ctx.Match(k, Invk_find_box_wrap_toggle))					{find_box_wrap_find = !find_box_wrap_find; gui_wtr.Prog_direct("find_box wrap=" + Yn.X_to_str(find_box_wrap_find));}
 		else if	(ctx.Match(k, Invk_app_bookmarks_add))						Exec_bookmarks_add();
 		else if	(ctx.Match(k, Invk_app_exit))								Exec_exit();
 		else if	(ctx.Match(k, Invk_app_exec_cfg))							Exec_app_exec_cfg();
@@ -374,12 +374,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	private boolean find_box_dir_fwd = true, find_box_case_match = false, find_box_wrap_find = true;
 	private boolean Exec_find_box_find() {return html_box.Html_doc_find(tab_box_mgr.View_mode() == Xog_view_mode.Id_read ? Gfui_html.Elem_id_body : Id_xowa_edit_data_box, find_box.Text(), find_box_dir_fwd, find_box_case_match, find_box_wrap_find);}
 	public void Exec_url_exec(String s) {
-		byte[] bry = ByteAry_.new_utf8_(s);
-		byte[] fmt = app.Gui_mgr().Url_macro_mgr().Fmt_or_null(bry);
-		if (fmt != null) bry = fmt;
-		Xoa_url tmp_url = new Xoa_url();
-		Xoa_url_parser.Parse_url(tmp_url, app, page.Wiki(), bry, 0, bry.length);
-		Exec_url_exec(tmp_url);
+		Exec_url_exec(Xoa_url_parser.Parse_from_url_bar(app, page.Wiki(), s));
 	}
 	private void Exec_cancel_wait() {
 		while (reload_imgs_thread.IsAlive()) {

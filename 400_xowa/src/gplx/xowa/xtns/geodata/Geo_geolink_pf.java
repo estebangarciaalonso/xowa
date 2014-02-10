@@ -35,7 +35,7 @@ class Geo_geolink_math {
 		return dir_obj == null ? Dir_unknown_id : ((ByteVal)dir_obj).Val();
 	}
 	private static int Parse_precision(byte[] src, Arg_itm_tkn tkn) {	// REF.MW: MapSourcesMath.php|newCoord
-		int rv = ByteAry_.XtoIntByPos(src, tkn.Src_bgn(), tkn.Src_end(), Int_.MinValue);
+		int rv = ByteAry_.X_to_int_or(src, tkn.Src_bgn(), tkn.Src_end(), Int_.MinValue);
 		if		(rv > -1 && rv < 10)		return rv;
 		else if	(rv == -1)					return 9;
 		else								return 4;
@@ -164,35 +164,35 @@ class Geo_geolink_math {
 	private static final byte[] Input_units = new byte[] {Input_byte_degree, Byte_ascii.Apos, Byte_ascii.Quote, Byte_ascii.Space};
 	private static final byte[] Input_bry_degree = ByteAry_.new_utf8_("°");
 	private static final ByteTrieMgr_slim Input_trie = ByteTrieMgr_slim.cs_()
-	.Add_str_byteVal("'"					, Input_tid_apos)		// NOTE: must add ' so that "'" -> "' "
-	.Add_str_byteVal("‘"					, Input_tid_apos)
-	.Add_str_byteVal("’"					, Input_tid_apos)
-	.Add_str_byteVal("′"					, Input_tid_apos)
-	.Add_str_byteVal("\""					, Input_tid_quote)		// NOTE: must add " so that '"' -> '" '
-	.Add_str_byteVal("''"					, Input_tid_quote)
-	.Add_str_byteVal("“"					, Input_tid_quote)
-	.Add_str_byteVal("”"					, Input_tid_quote)
-	.Add_str_byteVal("″"					, Input_tid_quote)
-	.Add_str_byteVal("-"					, Input_tid_dash)
-	.Add_str_byteVal("−"					, Input_tid_dash)
-	.Add_str_byteVal(" "					, Input_tid_space)
-	.Add_str_byteVal("_"					, Input_tid_space)
-	.Add_str_byteVal("/"					, Input_tid_space)
-	.Add_str_byteVal("\t"					, Input_tid_space)
-	.Add_str_byteVal("\n"					, Input_tid_space)
-	.Add_str_byteVal("\r"					, Input_tid_space)
+	.Add_str_byte("'"					, Input_tid_apos)		// NOTE: must add ' so that "'" -> "' "
+	.Add_str_byte("‘"					, Input_tid_apos)
+	.Add_str_byte("’"					, Input_tid_apos)
+	.Add_str_byte("′"					, Input_tid_apos)
+	.Add_str_byte("\""					, Input_tid_quote)		// NOTE: must add " so that '"' -> '" '
+	.Add_str_byte("''"					, Input_tid_quote)
+	.Add_str_byte("“"					, Input_tid_quote)
+	.Add_str_byte("”"					, Input_tid_quote)
+	.Add_str_byte("″"					, Input_tid_quote)
+	.Add_str_byte("-"					, Input_tid_dash)
+	.Add_str_byte("−"					, Input_tid_dash)
+	.Add_str_byte(" "					, Input_tid_space)
+	.Add_str_byte("_"					, Input_tid_space)
+	.Add_str_byte("/"					, Input_tid_space)
+	.Add_str_byte("\t"					, Input_tid_space)
+	.Add_str_byte("\n"					, Input_tid_space)
+	.Add_str_byte("\r"					, Input_tid_space)
 	.Add_bry_bval(Input_bry_degree			, Input_tid_degree)
-	.Add_str_byteVal("N"					, Input_tid_compass)
-	.Add_str_byteVal("S"					, Input_tid_compass)
-	.Add_str_byteVal("E"					, Input_tid_compass)
-	.Add_str_byteVal("W"					, Input_tid_compass)
-	.Add_str_byteVal("n"					, Input_tid_compass)
-	.Add_str_byteVal("s"					, Input_tid_compass)
-	.Add_str_byteVal("e"					, Input_tid_compass)
-	.Add_str_byteVal("w"					, Input_tid_compass)
+	.Add_str_byte("N"					, Input_tid_compass)
+	.Add_str_byte("S"					, Input_tid_compass)
+	.Add_str_byte("E"					, Input_tid_compass)
+	.Add_str_byte("W"					, Input_tid_compass)
+	.Add_str_byte("n"					, Input_tid_compass)
+	.Add_str_byte("s"					, Input_tid_compass)
+	.Add_str_byte("e"					, Input_tid_compass)
+	.Add_str_byte("w"					, Input_tid_compass)
 	;
 }
 //	public class Geo_geolink_pf_tst {
 //		@Before public void init()				{fxt.Reset();} private Xop_fxt fxt = new Xop_fxt();
-//		@Test  public void Basic()				{fxt.tst_Parse_tmpl_str_test("{{#coordinates:1|2}}"									, "{{test}}"	, "");}
+//		@Test  public void Basic()				{fxt.Test_parse_tmpl_str_test("{{#coordinates:1|2}}"									, "{{test}}"	, "");}
 //	}

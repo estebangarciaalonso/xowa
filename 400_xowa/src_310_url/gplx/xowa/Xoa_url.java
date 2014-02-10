@@ -38,6 +38,9 @@ public class Xoa_url {
 		else
 			return ByteAry_.Mid(raw, page_bgn, raw_len);
 	}
+	public byte[] X_to_full() {
+		return wiki_bry == null ? page_bry : ByteAry_.Add(wiki_bry, Xoa_consts.Url_wiki_intermediary, page_bry);
+	}
 	public byte[] Anchor_bry() {return anchor_bry;} public Xoa_url Anchor_bry_(byte[] v) {anchor_bry = v; return this;} private byte[] anchor_bry = null;
 	public byte[] Use_lang() {return use_lang;} public Xoa_url Use_lang_(byte[] v) {use_lang = v; return this;} private byte[] use_lang;
 	public boolean Redirect_force() {return redirect_force;} public Xoa_url Redirect_force_(boolean v) {redirect_force = v; return this;} private boolean redirect_force;

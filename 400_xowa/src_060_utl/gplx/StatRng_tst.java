@@ -28,9 +28,9 @@ public class StatRng_tst {
 		.Slots_(3, 4);
 		fx.tst_(5,7,2,8,3,4,6);
 	}
-//@Test  public void Basic() {fx.tst_Parse_tmpl_str_test("{{#switch:{{{1}}}|a=1|b=2|3}}", "{{test|a}}", "1");}
-//@Test  public void Basic() {fx.tst_Parse_tmpl_str_test("{{#switch:{{{1}}}|b=2|#default=3|a=1}}", "{{test|a}}", "1");}
-//@Test  public void Basic() {fx.tst_Parse_tmpl_str_test("{{#switch:{{{1}}}|a|b|c=1|d=2}}", "{{test|a}}", "1");}
+//@Test  public void Basic() {fx.Test_parse_tmpl_str_test("{{#switch:{{{1}}}|a=1|b=2|3}}", "{{test|a}}", "1");}
+//@Test  public void Basic() {fx.Test_parse_tmpl_str_test("{{#switch:{{{1}}}|b=2|#default=3|a=1}}", "{{test|a}}", "1");}
+//@Test  public void Basic() {fx.Test_parse_tmpl_str_test("{{#switch:{{{1}}}|a|b|c=1|d=2}}", "{{test|a}}", "1");}
 }
 /*
 public class Pf_func_switch_tst {

@@ -90,7 +90,7 @@ class Scrib_lua_encoder {
 		else if	(Object_.Eq(c, Scrib_fnc.class))			{if (!Encode_prc(bfr, (Scrib_fnc)o)) return false;}
 		else if	(Object_.Eq(c, KeyVal.class))				{if (!Encode_kv(bfr, (KeyVal)o)) return false;}
 		else if	(Object_.Eq(c, KeyVal[].class))			{if (!Encode_ary(bfr, (KeyVal[])o)) return false;}
-		else												{throw Xow_xtn_scribunto.err_("Object cannot be serialized: {0}", ClassAdp_.NameOf_obj(o));}
+		else												{throw Scrib_xtn_mgr.err_("Object cannot be serialized: {0}", ClassAdp_.NameOf_obj(o));}
 		return true;
 	}
 	private static final byte[] CONST_nil = ByteAry_.new_ascii_("nil"), CONST_bool_true = ByteAry_.new_ascii_("true"), CONST_bool_false = ByteAry_.new_ascii_("false"), CONST_escape_000 = ByteAry_.new_ascii_("\\000");

@@ -121,7 +121,7 @@ public class Pf_msg_mgr {
 					break;
 				case Byte_ascii.Dollar:
 					int end_pos = Php_text_itm_parser.Find_fwd_non_int(raw, i + 1, raw_len);
-					int int_val = ByteAry_.XtoIntByPos(raw, i + 1, end_pos, -1);
+					int int_val = ByteAry_.X_to_int_or(raw, i + 1, end_pos, -1);
 					bfr.Add_byte(ByteAryFmtr.char_escape).Add_byte(ByteAryFmtr.char_arg_bgn).Add_int_variable(int_val - 1).Add_byte(ByteAryFmtr.char_arg_end);
 					i = end_pos - 1;
 					break;

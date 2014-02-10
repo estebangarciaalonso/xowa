@@ -23,6 +23,7 @@ public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_AT
 	private int atr_bgn = -1, key_bgn = -1, key_end = -1, eq_pos = -1, val_bgn = -1, val_end = -1; boolean valid = true;
 	private byte quote_byte = Byte_ascii.Nil;
 	private Hash_adp_bry xnde_hash = new Hash_adp_bry(false).Add_bry_bry(Xop_xnde_tag_.Tag_nowiki.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_noinclude.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_includeonly.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_onlyinclude.Name_bry());
+	private Hash_adp_bry repeated_atrs_hash = new Hash_adp_bry(false);
 	private ByteAryBfr key_bfr = ByteAryBfr.new_(), val_bfr = ByteAryBfr.new_(); boolean key_bfr_on = false, val_bfr_on = false;
 	public int Xnde_find_gt_find(byte[] src, int pos, int end) {
 		byte b = src[pos];
@@ -34,7 +35,7 @@ public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_AT
 		Object o = xnde_hash.Get_by_mid(src, pos, gt_pos);
 		return o == null ? String_.NotFound : ((byte[])o).length + pos;
 	}
-	int Xnde_find_gt(Gfo_msg_log log_mgr, byte[] src, int lt_pos, int end) {
+	private int Xnde_find_gt(Gfo_msg_log log_mgr, byte[] src, int lt_pos, int end) {
 		int pos = lt_pos + 1;
 		byte b = src[pos];
 		if (b == Byte_ascii.Slash && pos + 1 < end) {
@@ -62,9 +63,10 @@ public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_AT
 		log_mgr.Add_str_warn_key_none(Msg_mgr, "eos", src, lt_pos);
 		return String_.NotFound;
 	}
-	static final String Msg_mgr = "gplx.xowa.wiki.parser.xatr";
+	private static final String Msg_mgr = "gplx.xowa.wiki.parser.xatr";
 	public Xop_xatr_itm[] Parse(Gfo_msg_log log_mgr, byte[] src, int bgn, int end) {
 		xatrs.Clear();
+		repeated_atrs_hash.Clear();
 		int i = bgn;
 		mode = Mode_atr_bgn;
 		boolean prv_is_ws = false;
@@ -321,6 +323,7 @@ public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_AT
 			val_end = end;
 			Make(log_mgr, src, end);
 		}
+		repeated_atrs_hash.Clear();
 		return (Xop_xatr_itm[])xatrs.XtoAry(Xop_xatr_itm.class);
 	}
 	private void Make(Gfo_msg_log log_mgr, byte[] src, int atr_end) {
@@ -339,12 +342,24 @@ public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_AT
 			xatr = new Xop_xatr_itm(atr_bgn, atr_end);
 			log_mgr.Add_itm_none(Log_invalid_atr, src, atr_bgn, atr_end);
 		}
-		if (key_bfr_on) xatr.Key_bry_(key_bfr.XtoAryAndClear());
+		if (valid) {	// note that invalid will have no key_bgn / key_end
+			byte[] key_bry = key_bfr_on ? key_bfr.XtoAryAndClear() : ByteAry_.Mid(src, xatr.Key_bgn(), xatr.Key_end());
+			xatr.Key_bry_(key_bry);
+			Invalidate_repeated_atr(xatr, key_bry);
+		}
 		if (val_bfr_on) xatr.Val_bry_(val_bfr.XtoAryAndClear());
 		xatrs.Add(xatr);
 		mode = Mode_atr_bgn; quote_byte = Byte_ascii.Nil; valid = true;
 		atr_bgn = key_bgn = val_bgn = key_end = val_end = eq_pos = -1;
 		val_bfr_on = key_bfr_on = false;
+	}
+	private void Invalidate_repeated_atr(Xop_xatr_itm cur, byte[] key_bry) {
+		Xop_xatr_itm prv = (Xop_xatr_itm)repeated_atrs_hash.Fetch(key_bry);
+		if (prv != null) {
+			prv.Tid_to_repeat_();
+			repeated_atrs_hash.Del(key_bry);
+		}
+		repeated_atrs_hash.Add(key_bry, cur);
 	}
 	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "xatr_parser");
 	public static final Gfo_msg_itm

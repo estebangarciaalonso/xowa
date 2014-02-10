@@ -31,11 +31,11 @@ public class Xop_vnt_parser_tst {	// uses zh-hant as cur_vnt
 	@Test  public void Raw()				{fxt.Test_parse("-{R|zh-hans:A;}-", "zh-hans:A;");}
 //		@Test  public void Descrip()			{fxt.Test_parse("-{D|zh-hans:A;}-", "zh-hans:A");}
 	@Test  public void Tmpl() {
-		fxt.Parser_fxt().ini_page_create("Template:A", "B");
+		fxt.Parser_fxt().Init_page_create("Template:A", "B");
 		fxt.Test_parse("-{{{A}}}-", "B");
 	}
 	@Test  public void Tmpl_arg() {
-		fxt.Parser_fxt().ini_page_create("Template:A", "-{{{{1}}}}-");
+		fxt.Parser_fxt().Init_page_create("Template:A", "-{{{{1}}}}-");
 		fxt.Test_parse("{{A|B}}", "B");
 	}
 	@Test  public void Parser_function() {
@@ -45,7 +45,7 @@ public class Xop_vnt_parser_tst {	// uses zh-hant as cur_vnt
 		fxt.Test_parse("-{{#expr:1}}-", "-1-");
 	}
 	@Test  public void Expr() {
-		fxt.Parser_fxt().ini_page_create("Template:A", "{{#expr: 0-{{{1|2}}}}}");
+		fxt.Parser_fxt().Init_page_create("Template:A", "{{#expr: 0-{{{1|2}}}}}");
 		fxt.Test_parse("{{A}}", "-2");
 	}
 }
@@ -68,7 +68,7 @@ class Xop_vnt_parser_fxt {
 		vnt_mgr.Convert_ttl_init();
 	}
 	public Xop_vnt_parser_fxt Test_parse(String raw, String expd) {
-		fxt.tst_Parse_page_all_str(raw, expd);
+		fxt.Test_parse_page_all_str(raw, expd);
 		return this;
 	}
 }

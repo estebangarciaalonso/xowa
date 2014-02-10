@@ -29,8 +29,8 @@ public class Gfo_fld_rdr extends Gfo_fld_base {
 	public byte[] Read_bry_simple() {Move_next_simple(); return ByteAry_.Mid(bry, fld_bgn, fld_end);}	// was Mid_by_len???; 20120915
 	public int Read_int_base85_lenN(int len)	{fld_bgn = pos; fld_end = pos + len - 1	; pos = pos + len + 1	; return Base85_utl.XtoIntByAry(bry, fld_bgn, fld_end);}
 	public int Read_int_base85_len5()			{fld_bgn = pos; fld_end = pos + 4		; pos = pos + 6			; return Base85_utl.XtoIntByAry(bry, fld_bgn, fld_end);}
-	public int Read_int() 			{Move_next_simple(); return ByteAry_.XtoIntByPos(bry, fld_bgn, fld_end, -1);}
-	public byte Read_int_as_byte() 	{Move_next_simple(); return (byte)ByteAry_.XtoIntByPos(bry, fld_bgn, fld_end, -1);}
+	public int Read_int() 			{Move_next_simple(); return ByteAry_.X_to_int_or(bry, fld_bgn, fld_end, -1);}
+	public byte Read_int_as_byte() 	{Move_next_simple(); return (byte)ByteAry_.X_to_int_or(bry, fld_bgn, fld_end, -1);}
 	public byte Read_byte() 		{Move_next_simple(); return bry[fld_bgn];}
 	public double Read_double() 	{Move_next_simple(); return ByteAry_.XtoDoubleByPos(bry, fld_bgn, fld_end);}
 	public DateAdp Read_dte() {// NOTE: fmt = yyyyMMdd HHmmss.fff

@@ -124,9 +124,29 @@ public class Xoa_url_parser_tst {
 	@Test  public void Question_is_anchor() {
 		fxt.Reset().Raw_("A#b?c").Wiki_("en.wikipedia.org").Page_("A").Anchor_("b.3Fc").tst_app();
 	}
+	@Test  public void Parse_from_url_bar() {
+		fxt.Test_parse_from_url_bar("Page_1"					, "en.wikipedia.org/wiki/Page_1");				// basic
+	}
+	@Test  public void Parse_from_url_bar__lang() {
+		fxt.App().User().Wiki().Xwiki_mgr().Add_full("uk", "uk.wikipedia.org");
+		fxt.Test_parse_from_url_bar("uk"						, "en.wikipedia.org/wiki/uk");					// lang-like page (uk=Ukraine) should not try to open wiki; DATE:2014-02-07
+	}
+	@Test  public void Parse_from_url_bar__macro() {
+		fxt.App().User().Wiki().Xwiki_mgr().Add_full("fr.wikisource.org", "fr.wikisource.org");
+		fxt.Test_parse_from_url_bar("fr.s:Auteur:Shakespeare"	, "fr.wikisource.org/wiki/Auteur:Shakespeare");	// url_macros
+	}
+	@Test  public void Parse_from_url_bar__home() {
+		fxt.Test_parse_from_url_bar("home"						, "en.wikipedia.org/wiki/home");				// home should go to current wiki's home; DATE:2014-02-09
+		fxt.Test_parse_from_url_bar("home/wiki/Main_Page"		, "home/wiki/Main_Page");						// home Main_Page should go to home; DATE:2014-02-09
+	}
 }
 class Xoa_url_parser_chkr implements Tst_chkr {
 	Xoa_url_parser parser;
+	public Xoa_url_parser_chkr Test_parse_from_url_bar(String raw, String expd) {
+		Xoa_url actl_url = Xoa_url_parser.Parse_from_url_bar(app, wiki, raw);
+		Tfds.Eq(expd, String_.new_ascii_(actl_url.X_to_full()));
+		return this;
+	}
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	public Xow_wiki Wiki_wikisource() {return wiki_wikisource;} private Xow_wiki wiki_wikisource;

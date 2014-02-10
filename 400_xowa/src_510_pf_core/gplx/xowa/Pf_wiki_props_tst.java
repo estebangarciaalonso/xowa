@@ -21,16 +21,16 @@ public class Pf_wiki_props_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before	public void setup()						{fxt.Reset(); fxt.Wiki().Stats().NumPages_(1).NumArticles_(2).NumFiles_(3).NumEdits_(4).NumViews_(5).NumUsers_(6).NumUsersActive_(7).NumAdmins_(8);}
 	@After public void teardown()				{}
-	@Test  public void NumPages()					{fxt.tst_Parse_tmpl_str_test("{{NUMBEROFPAGES}}"				, "{{test}}", "1");}
-	@Test  public void NumArticles()				{fxt.tst_Parse_tmpl_str_test("{{NUMBEROFARTICLES}}"				, "{{test}}", "2");}
-	@Test  public void NumFiles()					{fxt.tst_Parse_tmpl_str_test("{{NUMBEROFFILES}}"				, "{{test}}", "3");}
-	@Test  public void NumEdits()					{fxt.tst_Parse_tmpl_str_test("{{NUMBEROFEDITS}}"				, "{{test}}", "4");}
-	@Test  public void NumViews()					{fxt.tst_Parse_tmpl_str_test("{{NUMBEROFVIEWS}}"				, "{{test}}", "5");}
-	@Test  public void NumUsers()					{fxt.tst_Parse_tmpl_str_test("{{NUMBEROFUSERS}}"				, "{{test}}", "6");}
-	@Test  public void NumUsersActive()				{fxt.tst_Parse_tmpl_str_test("{{NUMBEROFACTIVEUSERS}}"			, "{{test}}", "7");}
-	@Test  public void NumAdmins()					{fxt.tst_Parse_tmpl_str_test("{{NUMBEROFADMINS}}"				, "{{test}}", "8");}
+	@Test  public void NumPages()					{fxt.Test_parse_tmpl_str_test("{{NUMBEROFPAGES}}"				, "{{test}}", "1");}
+	@Test  public void NumArticles()				{fxt.Test_parse_tmpl_str_test("{{NUMBEROFARTICLES}}"				, "{{test}}", "2");}
+	@Test  public void NumFiles()					{fxt.Test_parse_tmpl_str_test("{{NUMBEROFFILES}}"				, "{{test}}", "3");}
+	@Test  public void NumEdits()					{fxt.Test_parse_tmpl_str_test("{{NUMBEROFEDITS}}"				, "{{test}}", "4");}
+	@Test  public void NumViews()					{fxt.Test_parse_tmpl_str_test("{{NUMBEROFVIEWS}}"				, "{{test}}", "5");}
+	@Test  public void NumUsers()					{fxt.Test_parse_tmpl_str_test("{{NUMBEROFUSERS}}"				, "{{test}}", "6");}
+	@Test  public void NumUsersActive()				{fxt.Test_parse_tmpl_str_test("{{NUMBEROFACTIVEUSERS}}"			, "{{test}}", "7");}
+	@Test  public void NumAdmins()					{fxt.Test_parse_tmpl_str_test("{{NUMBEROFADMINS}}"				, "{{test}}", "8");}
 
-	@Test  public void NumArticles_fmt()			{Set_numArticles_(1234); fxt.tst_Parse_tmpl_str_test("{{NUMBEROFARTICLES}}"				, "{{test}}", "1,234"); Set_numArticles_(2);}
-	@Test  public void NumArticles_raw()			{Set_numArticles_(1234); fxt.tst_Parse_tmpl_str_test("{{NUMBEROFARTICLES:R}}"			, "{{test}}", "1234"); Set_numArticles_(2);}
+	@Test  public void NumArticles_fmt()			{Set_numArticles_(1234); fxt.Test_parse_tmpl_str_test("{{NUMBEROFARTICLES}}"				, "{{test}}", "1,234"); Set_numArticles_(2);}
+	@Test  public void NumArticles_raw()			{Set_numArticles_(1234); fxt.Test_parse_tmpl_str_test("{{NUMBEROFARTICLES:R}}"			, "{{test}}", "1234"); Set_numArticles_(2);}
 	Pf_wiki_props_tst Set_numArticles_(int v) {fxt.Wiki().Stats().NumArticles_(v); return this;}
 }

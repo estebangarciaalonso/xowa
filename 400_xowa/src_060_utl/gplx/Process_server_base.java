@@ -62,7 +62,7 @@ public class Process_server_base implements Process_server {
     		if (rv != null) return rv;
     		long time_now = System.currentTimeMillis();
     		if (time_now > time_woke + server_timeout_busy_wait) {
-				if (time_now > time_bgn + server_timeout) throw Xow_xtn_scribunto.err_("lua_timeout: timeout={0} cmd={1}", server_timeout, String_.new_utf8_(cmd_last));
+				if (time_now > time_bgn + server_timeout) throw Scrib_xtn_mgr.err_("lua_timeout: timeout={0} cmd={1}", server_timeout, String_.new_utf8_(cmd_last));
 				ThreadAdp_.Sleep(server_timeout_polling);
 				time_woke = System.currentTimeMillis();
 			}

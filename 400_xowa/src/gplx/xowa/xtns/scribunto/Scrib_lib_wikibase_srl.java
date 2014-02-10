@@ -31,11 +31,30 @@ class Scrib_lib_wikibase_srl {
 			String key = sub.Key_as_str();
 			if			(String_.Eq(key, Wdata_doc_consts.Key_atr_label_str))			rv.Add(KeyVal_.new_("labels", Srl_nde_langs("language", "value", (Json_grp)sub.Val())));
 			else if		(String_.Eq(key, Wdata_doc_consts.Key_atr_description_str))		rv.Add(KeyVal_.new_("descriptions", Srl_nde_langs("language", "value", (Json_grp)sub.Val())));
-			else if		(String_.Eq(key, Wdata_doc_consts.Key_atr_links_str))			rv.Add(KeyVal_.new_("sitelinks", Srl_nde_langs("site", "title", (Json_grp)sub.Val())));
+			else if		(String_.Eq(key, Wdata_doc_consts.Key_atr_links_str))			rv.Add(KeyVal_.new_("sitelinks", Srl_nde_sitelinks("site", "title", (Json_grp)sub.Val())));
 			else if		(String_.Eq(key, Wdata_doc_consts.Key_atr_aliases_str))			rv.Add(KeyVal_.new_("aliases", Srl_aliases((Json_grp)sub.Val())));
 			else if		(String_.Eq(key, Wdata_doc_consts.Key_atr_claims_str))			rv.Add(KeyVal_.new_(Wdata_doc_consts.Key_atr_claims_str, Srl_claims(parser, doc.Doc().Src(), (Json_itm_ary)sub.Val())));
 		}
 		return (KeyVal[])rv.XtoAry(KeyVal.class);
+	}
+	private static KeyVal[] Srl_nde_sitelinks(String key_label, String val_label, Json_grp grp) {
+		int len = grp.Subs_len();
+		KeyVal[] rv = new KeyVal[len];
+		for (int i = 0; i < len; i++) {
+			Json_itm_kv sub = (Json_itm_kv)grp.Subs_get_at(i);
+			String lang = sub.Key_as_str();													// key is lang; EX: enwiki
+			Json_itm sub_val = sub.Val();
+			Json_itm_kv sub_kv = null;
+			if (sub_val.Tid() == Json_itm_.Tid_nde) {										// new fmt; EX: '"enwiki":{"name":"Earth", "badges":[]}'; DATE:2014-02-03
+				Json_itm_nde sub_nde = (Json_itm_nde)sub.Val();								// key is nde; see EX: above
+				sub_kv = (Json_itm_kv)sub_nde.Subs_get_by_key(Wdata_doc_.Key_name);			// get "name" sub
+			}
+			else																			// old fmt; EX: '"enwiki":"Earth"';DATE:2014-02-06
+				sub_kv = sub;
+			Object description = sub_kv == null ? null : sub_kv.Val().Data();				// get val of "name"; EX: Earth
+			rv[i] = KeyVal_.new_(lang, KeyVal_.Ary(KeyVal_.new_(key_label, lang), KeyVal_.new_(val_label, description)));
+		}
+		return rv;
 	}
 	private static KeyVal[] Srl_nde_langs(String key_label, String val_label, Json_grp grp) {
 		int len = grp.Subs_len();

@@ -20,21 +20,21 @@ import org.junit.*;
 public class Xop_list_wkr_tst {		
 	private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void List_1() {
-		fxt.tst_Parse_page_wiki("\n*a"
+		fxt.Test_parse_page_wiki("\n*a"
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			,	fxt.tkn_txt_(2, 3)
 			,	fxt.tkn_list_end_(3).List_path_(0).List_uid_(0)
 			);
 	}
 	@Test  public void Bos() {
-		fxt.tst_Parse_page_wiki("*a"
+		fxt.Test_parse_page_wiki("*a"
 			,	fxt.tkn_list_bgn_(0, 1, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			,	fxt.tkn_txt_(1, 2)
 			,	fxt.tkn_list_end_(2).List_path_(0).List_uid_(0)
 			);
 	}
 	@Test  public void List_1_2() {
-		fxt.tst_Parse_page_wiki("\n*a\n**b"
+		fxt.Test_parse_page_wiki("\n*a\n**b"
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			,		fxt.tkn_txt_(2, 3)
 			,		fxt.tkn_list_bgn_(3, 6, Xop_list_tkn_.List_itmTyp_ul).List_path_(0, 0).List_uid_(0)
@@ -44,7 +44,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void List_1_2_2() {
-		fxt.tst_Parse_page_wiki("\n*a\n**b\n**c"
+		fxt.Test_parse_page_wiki("\n*a\n**b\n**c"
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			,		fxt.tkn_txt_(2, 3)
 			,		fxt.tkn_list_bgn_(3, 6, Xop_list_tkn_.List_itmTyp_ul).List_path_(0, 0).List_uid_(0)
@@ -57,7 +57,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void List_1_2_3() {
-		fxt.tst_Parse_page_wiki("\n*a\n**b\n***c"
+		fxt.Test_parse_page_wiki("\n*a\n**b\n***c"
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			,		fxt.tkn_txt_(2, 3)
 			,		fxt.tkn_list_bgn_(3, 6, Xop_list_tkn_.List_itmTyp_ul).List_path_(0, 0).List_uid_(0)
@@ -70,7 +70,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void List_2() {
-		fxt.tst_Parse_page_wiki("\n**a"
+		fxt.Test_parse_page_wiki("\n**a"
 			,	fxt.tkn_list_bgn_(0,  3, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			,		fxt.tkn_list_bgn_(0,  3, Xop_list_tkn_.List_itmTyp_ul).List_path_(0, 0).List_uid_(0)
 			,		fxt.tkn_txt_(3, 4)
@@ -79,7 +79,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void List_1_3() {
-		fxt.tst_Parse_page_wiki("\n*a\n***b"
+		fxt.Test_parse_page_wiki("\n*a\n***b"
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			,		fxt.tkn_txt_(2, 3)
 			,		fxt.tkn_list_bgn_(3, 7, Xop_list_tkn_.List_itmTyp_ul).List_path_(0, 0).List_uid_(0)
@@ -91,7 +91,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void List_1_2_1() {
-		fxt.tst_Parse_page_wiki("\n*a\n**b\n*c"
+		fxt.Test_parse_page_wiki("\n*a\n**b\n*c"
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			,		fxt.tkn_txt_(2, 3)
 			,		fxt.tkn_list_bgn_(3, 6, Xop_list_tkn_.List_itmTyp_ul).List_path_(0, 0).List_uid_(0)
@@ -104,7 +104,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void List_1_1_1() {
-		fxt.tst_Parse_page_wiki("\n*a\n*b\n*c"
+		fxt.Test_parse_page_wiki("\n*a\n*b\n*c"
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			,		fxt.tkn_txt_(2, 3)
 			,	fxt.tkn_list_end_(3).List_path_(0)
@@ -117,7 +117,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void List_1___1() {
-		fxt.tst_Parse_page_wiki("\n*a\n\n*b"
+		fxt.Test_parse_page_wiki("\n*a\n\n*b"
 			, fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			, fxt.tkn_txt_(2, 3)
 			, fxt.tkn_list_end_(3).List_path_(0)
@@ -128,7 +128,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void List_1_3_1() {
-		fxt.tst_Parse_page_wiki("\n*a\n***b\n*c"
+		fxt.Test_parse_page_wiki("\n*a\n***b\n*c"
 			, fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			, fxt.tkn_txt_(2, 3)
 			,	fxt.tkn_list_bgn_(3, 7, Xop_list_tkn_.List_itmTyp_ul).List_path_(0, 0).List_uid_(0)
@@ -143,7 +143,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void Mix_2o_2u() {
-		fxt.tst_Parse_page_wiki("\n**a\n##b"
+		fxt.Test_parse_page_wiki("\n**a\n##b"
 			,	fxt.tkn_list_bgn_(0,  3, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			,		fxt.tkn_list_bgn_(0,  3, Xop_list_tkn_.List_itmTyp_ul).List_path_(0, 0).List_uid_(0)
 			,			fxt.tkn_txt_(3, 4)
@@ -157,7 +157,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void Dt_dd() {
-		fxt.tst_Parse_page_wiki(";a\n:b"
+		fxt.Test_parse_page_wiki(";a\n:b"
 			,	fxt.tkn_list_bgn_(0,  1, Xop_list_tkn_.List_itmTyp_dt).List_path_(0).List_uid_(0)
 			,		fxt.tkn_txt_(1, 2)
 			,	fxt.tkn_list_end_(2).List_path_(0)
@@ -167,7 +167,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void Dt_dd_inline() {
-		fxt.tst_Parse_page_wiki(";a:b" // NOTE: no line break
+		fxt.Test_parse_page_wiki(";a:b" // NOTE: no line break
 			,	fxt.tkn_list_bgn_(0, 1, Xop_list_tkn_.List_itmTyp_dt).List_path_(0).List_uid_(0)
 			,		fxt.tkn_txt_(1, 2)
 			,	fxt.tkn_list_end_(2).List_path_(0)
@@ -177,7 +177,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void Mix_1dd_1ul() {
-		fxt.tst_Parse_page_wiki(":*a"
+		fxt.Test_parse_page_wiki(":*a"
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_dd).List_path_(0).List_uid_(0)
 			,		fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_ul).List_path_(0, 0).List_uid_(0)
 			,			fxt.tkn_txt_(2, 3)
@@ -186,7 +186,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void Mix_1ul__1dd_1ul() {
-		fxt.tst_Parse_page_wiki("*a\n:*b"
+		fxt.Test_parse_page_wiki("*a\n:*b"
 			,	fxt.tkn_list_bgn_(0, 1, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			,		fxt.tkn_txt_(1, 2)
 			,	fxt.tkn_list_end_(2).List_path_(0).List_uid_(0)
@@ -198,7 +198,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void Mix_1dd_1ul__1dd_1ul() {
-		fxt.tst_Parse_page_wiki(":*a\n:*b"
+		fxt.Test_parse_page_wiki(":*a\n:*b"
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_dd).List_path_(0).List_uid_(0)
 			,		fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_ul).List_path_(0, 0).List_uid_(0)
 			,			fxt.tkn_txt_(2, 3)
@@ -210,7 +210,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void Mix_1ul_1hdr() {
-		fxt.tst_Parse_page_wiki("*a\n==a==\n"
+		fxt.Test_parse_page_wiki("*a\n==a==\n"
 			,	fxt.tkn_list_bgn_(0, 1, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			,		fxt.tkn_txt_(1, 2)
 			,	fxt.tkn_list_end_(2).List_path_(0).List_uid_(0)
@@ -220,7 +220,7 @@ public class Xop_list_wkr_tst {
 			);	
 	}
 	@Test  public void Mix_1ul_1hdr_1ul() {
-		fxt.tst_Parse_page_wiki("*a\n==a==\n*b"
+		fxt.Test_parse_page_wiki("*a\n==a==\n*b"
 			,	fxt.tkn_list_bgn_(0, 1, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
 			,		fxt.tkn_txt_(1, 2)
 			,	fxt.tkn_list_end_(2).List_path_(0).List_uid_(0)
@@ -233,7 +233,7 @@ public class Xop_list_wkr_tst {
 			);			
 	}
 	@Test  public void Mix_1ol_1hr_1ol() {
-		fxt.tst_Parse_page_wiki("#a\n----\n#b"
+		fxt.Test_parse_page_wiki("#a\n----\n#b"
 			,	fxt.tkn_list_bgn_(0, 1, Xop_list_tkn_.List_itmTyp_ol).List_path_(0).List_uid_(0)
 			,		fxt.tkn_txt_(1, 2)
 			,	fxt.tkn_list_end_(2)
@@ -244,7 +244,7 @@ public class Xop_list_wkr_tst {
 			);			
 	}
 	@Test  public void Mix_tblw() {
-		fxt.tst_Parse_page_wiki("::{|\n|a\n|}"
+		fxt.Test_parse_page_wiki("::{|\n|a\n|}"
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_dd).List_path_(0).List_uid_(0)
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_dd).List_path_(0, 0).List_uid_(0)
 			,	fxt.tkn_tblw_tb_(2, 10).Subs_
@@ -257,7 +257,7 @@ public class Xop_list_wkr_tst {
 			);
 	}
 	@Test  public void Dif_lvls_1_3_1() {
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"*1"
 			,	"***3"
 			,	"*1"
@@ -279,7 +279,7 @@ public class Xop_list_wkr_tst {
 			));
 	}
 	@Test  public void Dif_lvls_1_3_2() {// uneven lists
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"*1"
 			,	"***3"
 			,	"**2"
@@ -301,7 +301,7 @@ public class Xop_list_wkr_tst {
 			));
 	}
 	@Test  public void New_lines() {
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"*a"
 			,	""
 			,	"**b"
@@ -333,7 +333,7 @@ public class Xop_list_wkr_tst {
 			));
 	}
 	@Test  public void Bug_specified_div() {	// FIX: </div> was not clearing state for lnki; EX.WP:Ananke (moon)
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"<div>"
 			,	"#<i>a"
 			,	"</div>"
@@ -352,7 +352,7 @@ public class Xop_list_wkr_tst {
 			));
 	}
 	@Test  public void Bug_mismatched() {	// FIX: </div> was not clearing state for lnki; EX.WP:Ananke (moon)
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"::a"
 			,	":::1"
 			,	"::::11"
@@ -385,7 +385,7 @@ public class Xop_list_wkr_tst {
 	}
 	@Test  public void Empty_li_ignored() {	// PURPOSE: inner template can cause dupe li; EX.WP: any Calendar day and NYT link; EX: 1/1
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"*a"
 			,	"*    "
 			,	"*b"
@@ -404,7 +404,7 @@ public class Xop_list_wkr_tst {
 	}
 	@Test  public void List_in_tblw() {	// PURPOSE: list inside table should not be close outer list; EX.WP: Cato the Elder
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"*a"
 			,	"{|"
 			,	"|b"
@@ -435,7 +435,7 @@ public class Xop_list_wkr_tst {
 	}
 	@Test  public void Dt_dd_colon_at_eol() {		// PURPOSE: dangling ":" should not put next line in <dt>; EX.WP: Stein; b was being wrapped in <dt>b</dt>
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	";a:"
 			,	"*b"
 			,	""
@@ -462,7 +462,7 @@ public class Xop_list_wkr_tst {
 		fxt.Ctx().Para().Enabled_n_();
 	}
 	@Test  public void Dd_should_not_print_colon() {// PURPOSE: ;a:\n should show as ";a" not ";a:". colon should still be considered as part of empty list; DATE:2013-11-07
-		fxt.tst_Parse_page_all_str(";a:\nb"
+		fxt.Test_parse_page_all_str(";a:\nb"
 		,	String_.Concat_lines_nl_skipLast
 		(	"<dl>"
 		,	"  <dt>a"
@@ -473,7 +473,7 @@ public class Xop_list_wkr_tst {
 	}
 	@Test  public void Dt_dd_colon_in_lnki() {	// PURPOSE: "; [[Portal:a]]" should not split lnki; EX.WP: Wikipedia:WikiProject Military history/Operation Majestic Titan; "; [[Wikipedia:WikiProject Military history/Operation Majestic Titan/Phase I|Phase I]]: a b"
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	";[[Portal:a]]"
 			) ,	String_.Concat_lines_nl_skipLast
 			(	"<dl>"
@@ -485,14 +485,14 @@ public class Xop_list_wkr_tst {
 	}			
 	@Test  public void Max_list_depth() {	// PURPOSE: 256+ * caused list parser to fail; ignore; EX.WP:Bariatric surgery
 		String multiple = String_.Repeat("*", 300);
-		fxt.tst_Parse_page_all_str(multiple
+		fxt.Test_parse_page_all_str(multiple
 				,	String_.Concat_lines_nl_skipLast
 				(	multiple
 				));
 	}
 	@Test  public void Numbered_list_resets_incorrectly() {	// PURPOSE: as description
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"#A"
 			,	"#*Aa"
 			,	"#**Aaa"
@@ -519,7 +519,7 @@ public class Xop_list_wkr_tst {
 		fxt.Ctx().Para().Enabled_n_();
 	}			
 	@Test   public void List_should_not_end_indented_table() {// PURPOSE: :{| was being closed by \n*; EX:w:Maxwell's equations; DATE:20121231
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	":{|"
 			,	"|-"
 			,	"|"
@@ -547,7 +547,7 @@ public class Xop_list_wkr_tst {
 			));
 	}
 	@Test  public void Dt_dd_broken_by_xnde() {	// PURPOSE.fix: xnde was resetting dl incorrectly; EX:w:Virus; DATE:2013-01-31 
-		fxt.tst_Parse_page_all_str(";<b>a</b>:c"
+		fxt.Test_parse_page_all_str(";<b>a</b>:c"
 		,	String_.Concat_lines_nl_skipLast
 		(	"<dl>"
 		,	"  <dt><b>a</b>"
@@ -558,13 +558,13 @@ public class Xop_list_wkr_tst {
 		));		
 	}
 	@Test   public void Trim_empty_list_items() {	// PURPOSE: empty list items should be ignored; DATE:2013-07-02
-		fxt.tst_Parse_page_all_str("***   \n"
+		fxt.Test_parse_page_all_str("***   \n"
 		,	String_.Concat_lines_nl
 		(	""
 		));		
 	}
 	@Test   public void Trim_empty_list_items_error() {	// PURPOSE.fix: do not add empty itm's nesting to current list; DATE:2013-07-07
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	"* a"
 		,	"** "	// do not add ** to nest
 		,	"*** b"
@@ -584,6 +584,48 @@ public class Xop_list_wkr_tst {
 		,	"  <li> c"
 		,	"  </li>"
 		,	"</ul>"
+		));		
+	}
+	@Test   public void Tblw_should_autoclose() {// PURPOSE: tblw should auto-close open list
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+			(	"#a"
+			,	"{|"
+			,	"|b"
+			,	"|}"
+			) ,	String_.Concat_lines_nl_skipLast
+			(	"<ol>"
+			,	"  <li>a"
+			,	"  </li>"
+			,	"</ol>"
+			,	"<table>"
+			,	"  <tr>"
+			,	"    <td>b"
+			,	"    </td>"
+			,	"  </tr>"
+			,	"</table>"
+			,	""
+			));
+	}
+	@Test   public void Tblx_should_not_autoclose() {	// PURPOSE: do not auto-close list if table is xnde; DATE:2014-02-05
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
+		(	"#a"
+		,	"# <table><tr><td>b</td></tr></table>"
+		,	"c"
+		) ,	String_.Concat_lines_nl
+		(	"<ol>"
+		,	"  <li>a"
+		,	"  </li>"
+		,	"  <li> "
+		,	"    <table>"
+		,	"      <tr>"
+		,	"        <td>b"
+		,	"        </td>"
+		,	"      </tr>"
+		,	"    </table>"
+		,	""
+		,	"  </li>"
+		,	"</ol>"
+		,	"c"
 		));		
 	}
 }

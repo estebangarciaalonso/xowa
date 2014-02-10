@@ -27,12 +27,12 @@ public class Pf_str_formatnum_de_tst {
 	@After public void term() {
 		fxt.Wiki().Lang().Num_fmt_mgr().Clear().Dec_dlm_(new byte[] {Byte_ascii.Dot}).Grps_add(new Gfo_num_fmt_grp(new byte[] {Byte_ascii.Comma}, 3, true));
 	}
-	@Test  public void Fmt__plain()			{fxt.tst_Parse_tmpl_str_test("{{formatnum:1234,56}}"					, "{{test}}"	, "1.234.56");}	// NOTE: double "." looks strange, but matches MW; DATE:2013-10-24
-	@Test  public void Fmt__grp_dlm()		{fxt.tst_Parse_tmpl_str_test("{{formatnum:1.234,56}}"					, "{{test}}"	, "1,234.56");}
-	@Test  public void Fmt__dec_dlm()		{fxt.tst_Parse_tmpl_str_test("{{formatnum:1234.56}}"					, "{{test}}"	, "1.234,56");} // NOTE: "." should be treated as decimal separator, but replaced with ","; DATE:2013-10-21
-	@Test  public void Raw__grp_dlm()		{fxt.tst_Parse_tmpl_str_test("{{formatnum:1.234,56|R}}"					, "{{test}}"	, "1234.56");}
-	@Test  public void Raw__plain()			{fxt.tst_Parse_tmpl_str_test("{{formatnum:1234,56|R}}"					, "{{test}}"	, "1234.56");}
-	@Test  public void Raw__dec_dlm()		{fxt.tst_Parse_tmpl_str_test("{{formatnum:12,34|R}}"					, "{{test}}"	, "12.34");}	// NOTE: dec_dlm is always ".
-	@Test  public void Nosep__plain()		{fxt.tst_Parse_tmpl_str_test("{{formatnum:1234,56|NOSEP}}"				, "{{test}}"	, "1234,56");}
-	@Test  public void Nosep__grp_dlm()		{fxt.tst_Parse_tmpl_str_test("{{formatnum:1.234,56|NOSEP}}"				, "{{test}}"	, "1.234,56");}
+	@Test  public void Fmt__plain()			{fxt.Test_parse_tmpl_str_test("{{formatnum:1234,56}}"					, "{{test}}"	, "1.234.56");}	// NOTE: double "." looks strange, but matches MW; DATE:2013-10-24
+	@Test  public void Fmt__grp_dlm()		{fxt.Test_parse_tmpl_str_test("{{formatnum:1.234,56}}"					, "{{test}}"	, "1,234.56");}
+	@Test  public void Fmt__dec_dlm()		{fxt.Test_parse_tmpl_str_test("{{formatnum:1234.56}}"					, "{{test}}"	, "1.234,56");} // NOTE: "." should be treated as decimal separator, but replaced with ","; DATE:2013-10-21
+	@Test  public void Raw__grp_dlm()		{fxt.Test_parse_tmpl_str_test("{{formatnum:1.234,56|R}}"					, "{{test}}"	, "1234.56");}
+	@Test  public void Raw__plain()			{fxt.Test_parse_tmpl_str_test("{{formatnum:1234,56|R}}"					, "{{test}}"	, "1234.56");}
+	@Test  public void Raw__dec_dlm()		{fxt.Test_parse_tmpl_str_test("{{formatnum:12,34|R}}"					, "{{test}}"	, "12.34");}	// NOTE: dec_dlm is always ".
+	@Test  public void Nosep__plain()		{fxt.Test_parse_tmpl_str_test("{{formatnum:1234,56|NOSEP}}"				, "{{test}}"	, "1234,56");}
+	@Test  public void Nosep__grp_dlm()		{fxt.Test_parse_tmpl_str_test("{{formatnum:1.234,56|NOSEP}}"				, "{{test}}"	, "1.234,56");}
 }

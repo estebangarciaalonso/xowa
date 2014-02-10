@@ -29,7 +29,7 @@ class Xob_lnki_regy_tbl {
 	, Fld_lnki_id = "lnki_id", Fld_lnki_page_id = "lnki_page_id"
 	, Fld_lnki_ttl = "lnki_ttl", Fld_lnki_commons_ttl = "lnki_commons_ttl"
 	, Fld_lnki_ext = "lnki_ext", Fld_lnki_type = "lnki_type"
-	, Fld_lnki_w = "lnki_w", Fld_lnki_h = "lnki_h", Fld_lnki_upright = "lnki_upright", Fld_lnki_thumbtime = "lnki_thumbtime", Fld_lnki_page = "lnki_page"
+	, Fld_lnki_w = "lnki_w", Fld_lnki_h = "lnki_h", Fld_lnki_upright = "lnki_upright", Fld_lnki_time = "lnki_time", Fld_lnki_page = "lnki_page"
 	, Fld_lnki_count = "lnki_count"
 	;
 	private static final String Tbl_sql = String_.Concat_lines_nl
@@ -44,13 +44,13 @@ class Xob_lnki_regy_tbl {
 	,	", lnki_w                  integer             NOT NULL"
 	,	", lnki_h                  integer             NOT NULL"
 	,	", lnki_upright            double              NOT NULL"
-	,	", lnki_thumbtime          double              NOT NULL"
+	,	", lnki_time               double              NOT NULL"
 	,	", lnki_page               integer             NOT NULL"
 	,	", lnki_count              integer             NOT NULL"
 	,	");"
 	);
 	public static final String Sql_create_data = String_.Concat_lines_nl
-	(	"INSERT INTO lnki_regy (lnki_id, lnki_page_id, lnki_ttl, lnki_commons_ttl, lnki_ext, lnki_type, lnki_w, lnki_h, lnki_upright, lnki_thumbtime, lnki_page, lnki_count)"
+	(	"INSERT INTO lnki_regy (lnki_id, lnki_page_id, lnki_ttl, lnki_commons_ttl, lnki_ext, lnki_type, lnki_w, lnki_h, lnki_upright, lnki_time, lnki_page, lnki_count)"
 	,	"SELECT  Min(lnki_id)"
 	,	",       Min(lnki_page_id)"
 	,	",       lnki_ttl"
@@ -60,7 +60,7 @@ class Xob_lnki_regy_tbl {
 	,	",       lnki_w"
 	,	",       lnki_h"
 	,	",       lnki_upright"
-	,	",       lnki_thumbtime"
+	,	",       lnki_time"
 	,	",       lnki_page"
 	,	",       Count(lnki_ttl)"
 	,	"FROM    lnki_temp"
@@ -72,7 +72,7 @@ class Xob_lnki_regy_tbl {
 	,	",       lnki_w"
 	,	",       lnki_h"
 	,	",       lnki_upright"
-	,	",       lnki_thumbtime"
+	,	",       lnki_time"
 	,	",       lnki_page"
 	,	";"
 	)
@@ -88,7 +88,7 @@ class Xob_lnki_regy_tbl {
 	,	",       l.lnki_w"
 	,	",       l.lnki_h"
 	,	",       l.lnki_upright"
-	,	",       l.lnki_thumbtime"
+	,	",       l.lnki_time"
 	,	",       l.lnki_page"
 	,	",       l.lnki_count"
 	,	"FROM    lnki_regy l"

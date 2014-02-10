@@ -47,7 +47,7 @@ public class ByteTrieMgr_slim {
 		}
 		return this;
 	}
-	public ByteTrieMgr_slim Add_str_byteVal(String key, byte val) {return Add(ByteAry_.new_utf8_(key), ByteVal.new_(val));}
+	public ByteTrieMgr_slim Add_str_byte(String key, byte val) {return Add(ByteAry_.new_utf8_(key), ByteVal.new_(val));}
 	public ByteTrieMgr_slim Add_bry(String key, String val) {return Add(ByteAry_.new_utf8_(key), ByteAry_.new_utf8_(val));}
 	public ByteTrieMgr_slim Add_bry(byte[] v) {return Add(v, v);}
 	public ByteTrieMgr_slim Add_bry_bval(byte b, byte val)			{return Add(new byte[] {b}, ByteVal.new_(val));}

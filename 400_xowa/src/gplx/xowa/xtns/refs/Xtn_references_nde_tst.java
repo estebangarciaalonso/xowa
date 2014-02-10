@@ -21,7 +21,7 @@ public class Xtn_references_nde_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {fxt.Ctx().Page().Ref_mgr().Grps_clear();}
 	@Test  public void Basic() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref>x</ref>"
 			,	"<ref>y</ref>"
 			,	"<ref>z</ref>"
@@ -39,7 +39,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void Name_dif() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref name='r_x'>x</ref>"
 			,	"<ref name='r_y'>y</ref>"
 			,	"<ref name='r_z'>z</ref>"
@@ -57,7 +57,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void Name_same() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref name='r_x'>x</ref>"
 			,	"<ref name='r_y'>y</ref>"
 			,	"<ref name='r_x'>z</ref>"
@@ -74,7 +74,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void Name_same_text_in_last_ref() {	// WP:Hundred Years' War
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref name='ref_a'></ref>"
 			,	"<ref name='ref_a'></ref>"
 			,	"<ref name='ref_a'>x</ref>"
@@ -90,7 +90,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void Group() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref>x</ref>"
 			,	"<ref group='group_a'>y</ref>"
 			,	"<ref>z</ref>"
@@ -112,7 +112,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void Pre_ignored() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref> x</ref>"
 			,	"<references/>"
 			), String_.Concat_lines_nl_skipLast
@@ -124,7 +124,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void Pre_ignored_2() {	// PURPOSE: <ref> creates <li> which will effectively disable all pre; EX.WP: Robert Browning
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref>x"
 			,	" y"
 			,	"</ref>"
@@ -140,7 +140,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void List_ignored() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref>*x</ref>"
 			,	"<references/>"
 			), String_.Concat_lines_nl_skipLast
@@ -152,7 +152,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void Name_mixed_case() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref NAME=A>x</ref>"
 			,	"<ref Name=A>y</ref>"
 			,	"<references/>"
@@ -166,7 +166,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void Name2() { // PURPOSE: make sure inline tag matches open tag
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"a<ref name=name_0>b</ref>"
 			,	"b<ref name=name_0/>"
 			,	"<references/>"
@@ -180,7 +180,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void References_refs() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"a<ref group=group_0 name=name_0/>"
 			,	"<references group=group_0>"
 			,	"  <ref name=name_0>b</ref>"
@@ -194,7 +194,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void Nested() {	// PURPOSE: nested ref was creating 3rd [1]
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"a<ref name=r_x/>"
 			,	"b<ref name=r_x/>"
 			,	"<references>"
@@ -210,7 +210,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void Key_ignore_nl_tab() {	// PURPOSE: \n in ref_name should be escaped to \s; EX.WP:Self-Transcendence 3100 Mile Race
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref name=\"name\na\">b</ref>"
 			,	"<references/>"
 			), String_.Concat_lines_nl_skipLast
@@ -222,7 +222,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void Empty_name() {	// PURPOSE: <references group=""/> is same as <references/>; DATE:2013-02-06
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref>b</ref>"
 			,	"<references group=\"\"/>"
 			), String_.Concat_lines_nl_skipLast
@@ -234,7 +234,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void Multiple_same_name_groups() {	// PURPOSE: multiple groups with same name "clears" out references; DATE:2013-02-11
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref>a</ref>"
 			,	"<references/>"
 			,	"<ref>b</ref>"
@@ -260,10 +260,10 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test   public void Empty_group() {	// PURPOSE: group without items should be blank; should not throw error; DATE:2013-02-12
-		fxt.tst_Parse_page_wiki_str("<references name='group_a'/>", "");
+		fxt.Test_parse_page_wiki_str("<references name='group_a'/>", "");
 	}
 	@Test   public void Empty_group_before_ref() {	// PURPOSE: empty grp before itm should not throw error; DATE:2013-02-18; EX: w:Help:External links and references; Johnstown,_Colorado
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl
 			(	"<references/><references/>a<ref>test</ref>"
 			,	"<references/>"
 			), String_.Concat_lines_nl
@@ -275,7 +275,7 @@ public class Xtn_references_nde_tst {
 			));
 	}
 	@Test  public void Follow() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref name='ref_a'>x</ref>"
 			,	"<ref>y</ref>"
 			,	"<ref follow='ref_a'>z</ref>"
@@ -293,7 +293,7 @@ public class Xtn_references_nde_tst {
 	}
 
 //		@Test  public void Tag() { // PURPOSE: #tag can create nested refs; TODO: WHEN: nested ref test
-//			fxt.tst_Parse_wiki(String_.Concat_lines_nl_skipLast
+//			fxt.Test_parse_wiki(String_.Concat_lines_nl_skipLast
 //				(	"{{#tag:ref|x<ref>y</ref>}}" //"<ref>x<ref>y</ref></ref>"
 //				,	"<references/>"
 //				), String_.Concat_lines_nl_skipLast
@@ -306,7 +306,7 @@ public class Xtn_references_nde_tst {
 //				));
 //		}
 //		@Test  public void Tag_2() { // PURPOSE: more involved nested refs; EX.WP:Battle of Midway; TODO: WHEN: nested ref test
-//			fxt.tst_Parse_wiki(String_.Concat_lines_nl_skipLast
+//			fxt.Test_parse_wiki(String_.Concat_lines_nl_skipLast
 //				(	"a<ref name='itm_0'/> b {{#tag:ref|c<ref name='itm_0'>d</ref>}}"	// <ref>c<ref name='itm_0'>d</ref></ref>
 //				,	"<references/>"
 //				), String_.Concat_lines_nl_skipLast

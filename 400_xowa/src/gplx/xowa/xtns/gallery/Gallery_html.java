@@ -19,7 +19,7 @@ package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.x
 import gplx.xowa.files.*;
 public class Gallery_html {
 	public void Write_html(Xoa_app app, Xow_wiki wiki, Xop_ctx ctx, Xoa_page page, Xoh_html_wtr wtr, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
-		Gallery_nde mgr = (Gallery_nde)xnde.Xnde_data();
+		Gallery_nde mgr = (Gallery_nde)xnde.Xnde_xtn();
 		int itms_len = mgr.Itms_len();
 		int itm_div_w = Calc_itm_div_w(mgr.Itm_w_or_default());
 		int itm_div_h = Calc_itm_div_h(mgr.Itm_h_or_default());

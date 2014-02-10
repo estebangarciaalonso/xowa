@@ -32,7 +32,8 @@ public class Xob_orig_regy_cmd extends Xob_itm_basic_base implements Xob_cmd {
 			repo_1 = wiki;
 		}
 		repo_0.Init_assert(); repo_1.Init_assert();
-		Xob_orig_regy_tbl.Create_data(bldr.Usr_dlg(), provider, repo_0_is_remote, repo_0, repo_1, Xob_lnki_temp_wkr.Wiki_ns_for_file_is_case_match_all(wiki));
+		Xodb_db_file file_registry_db = Xodb_db_file.init__page_regy(commons_wiki.Fsys_mgr().Root_dir());
+		Xob_orig_regy_tbl.Create_data(bldr.Usr_dlg(), provider, file_registry_db, repo_0_is_remote, repo_0, repo_1, Xob_lnki_temp_wkr.Wiki_ns_for_file_is_case_match_all(wiki));
 	}
 	public void Cmd_run() {}
 	public void Cmd_end() {}

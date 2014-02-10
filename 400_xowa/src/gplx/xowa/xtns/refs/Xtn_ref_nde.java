@@ -16,9 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.refs; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-public class Xtn_ref_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
-	public Xop_root_tkn Xtn_root() {return null;}
-	public boolean Xtn_literal() {return false;}
+public class Xtn_ref_nde implements Xox_xnde, Xop_xnde_atr_parser {
 	public static final int Idx_minor_follow = -2;
 	public byte[] Name() {return name;} public Xtn_ref_nde Name_(byte[] v) {name = v; return this;} private byte[] name = ByteAry_.Empty;
 	public byte[] Group() {return group;} public Xtn_ref_nde Group_(byte[] v) {group = v; return this;} private byte[] group = ByteAry_.Empty;
@@ -40,7 +38,7 @@ public class Xtn_ref_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 			case Xatr_id_follow:	follow = xatr.Val_as_bry(src); break;
 		}
 	}
-	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_parse(Xow_wiki wiki, Xop_ctx ctx, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		Xop_xatr_itm.Xatr_parse(wiki.App(), this, wiki.Lang().Xatrs_ref(), wiki, src, xnde);
 		if (xnde.CloseMode() == Xop_xnde_tkn.CloseMode_pair) {
 			body = wiki.Parser().Parse_recurse(ctx, ByteAry_.Mid(src, xnde.Tag_open_end(), xnde.Tag_close_bgn()), false);
@@ -48,6 +46,9 @@ public class Xtn_ref_nde implements Xop_xnde_xtn, Xop_xnde_atr_parser {
 		ctx.Page().Ref_mgr().Grps_add(group, name, follow, this);
 		nested = ctx.Ref_nested();
 		this.xnde = xnde;
+	}
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+		html_wtr.Ref_wtr().Xnde_ref(opts, bfr, src, xnde);
 	}
 	private static final Xtn_ref_nde[] Ary_empty = new Xtn_ref_nde[0];
 	public Xtn_ref_nde[] Related() {return related;} Xtn_ref_nde[] related = Ary_empty;

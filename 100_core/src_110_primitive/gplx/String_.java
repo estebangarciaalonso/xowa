@@ -21,10 +21,11 @@ public class String_ implements GfoInvkAble {
 	public static final int NotFound = -1, Neg1_pos = -1, Pos_after_char = 1;
 	public static final String Empty = "", NullStr = "<<NULL>>", CrLf = "\r\n", Lf = "\n", Tab = "\t";
 	public static final String NullPtr = null;
+	public static String cast_(Object v) {return (String)v;}
 	public static String as_(Object obj) {return obj instanceof String ? (String)obj : null;}
-	public static String cast_(Object obj) {
-		String rv = as_(obj);
-		if (rv == null && obj != null) throw Err_.type_mismatch_(String.class, obj); // NOTE: obj != null needed; EX: cast_(null) --> null
+	public static String as_or_fail_(Object v) {
+		String rv = as_(v);
+		if (rv == null && v != null) throw Err_.type_mismatch_(String.class, v); // NOTE: v != null needed; EX: cast_(null) --> null
 		return rv;
 	}
 	public static String read_(Object obj) {// NOTE: same as cast_; for consistent readability only

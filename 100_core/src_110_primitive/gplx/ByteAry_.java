@@ -207,6 +207,17 @@ public class ByteAry_ {
 		byte[] ary = ByteAry_.Mid(src, bgn, end);
 		return String_.new_utf8_(ary);
 	}
+	public static byte[] Mid(byte[] src, int bgn) {return Mid(src, bgn, src.length);}
+	public static byte[] Mid_or(byte[] src, int bgn, int end, byte[] or) {
+		int src_len = src.length;
+		if (	src == null
+			||	(bgn < 0 || bgn > src_len)
+			||	(end < 0 || end > src_len)
+			||	(end < bgn)
+			)
+			return or;
+		return Mid(src, bgn, src.length);
+	}
 	public static byte[] Mid(byte[] src, int bgn, int end) {
 		try {
 			byte[] rv = new byte[end - bgn];
@@ -532,8 +543,54 @@ public class ByteAry_ {
 		}
 		return ary;
 	}
-	public static int XtoIntOr(byte[] ary, int or) {if (ary == null) return or; return XtoIntByPos(ary, 0, ary.length, or);}
-	public static int XtoIntByPos_lax(byte[] ary, int bgn, int end, int or) {
+	public static byte X_to_byte_by_int(byte[] ary, int bgn, int end, byte or) {return (byte)X_to_int_or(ary, bgn, end, or);}
+	public static int X_to_int(byte[] ary) {return X_to_int_or(ary, 0, ary.length, -1);}
+	public static int X_to_int_or(byte[] ary, int or) {if (ary == null) return or; return X_to_int_or(ary, 0, ary.length, or);}
+	public static int X_to_int_or(byte[] ary, int bgn, int end, int or) {
+		if (end == bgn) return or;	// null-len
+		int rv = 0, multiple = 1;
+		for (int i = end - 1; i >= bgn; i--) {	// -1 b/c end will always be next char; EX: {{{1}}}; bgn = 3, end = 4
+			byte b = ary[i];
+			switch (b) {
+				case Byte_ascii.Num_0: case Byte_ascii.Num_1: case Byte_ascii.Num_2: case Byte_ascii.Num_3: case Byte_ascii.Num_4:
+				case Byte_ascii.Num_5: case Byte_ascii.Num_6: case Byte_ascii.Num_7: case Byte_ascii.Num_8: case Byte_ascii.Num_9:
+					rv += multiple * (b - Byte_ascii.Num_0);
+					multiple *= 10;
+					break;
+				case Byte_ascii.Dash:
+					return i == bgn ? rv * -1 : or;
+				default: return or;
+			}
+		}
+		return rv;
+	}
+	public static int X_to_int_or_trim(byte[] ary, int bgn, int end, int or) {	// NOTE: same as X_to_int_or, except trims ws at bgn / end; DATE:2014-02-09
+		if (end == bgn) return or;	// null len
+		int rv = 0, multiple = 1;
+		boolean numbers_seen = false, ws_seen = false;
+		for (int i = end - 1; i >= bgn; i--) {	// -1 b/c end will always be next char; EX: {{{1}}}; bgn = 3, end = 4
+			byte b = ary[i];
+			switch (b) {
+				case Byte_ascii.Num_0: case Byte_ascii.Num_1: case Byte_ascii.Num_2: case Byte_ascii.Num_3: case Byte_ascii.Num_4:
+				case Byte_ascii.Num_5: case Byte_ascii.Num_6: case Byte_ascii.Num_7: case Byte_ascii.Num_8: case Byte_ascii.Num_9:
+					rv += multiple * (b - Byte_ascii.Num_0);
+					multiple *= 10;
+					if (ws_seen)	// "number ws number" pattern; invalid ws in middle; see tests
+						return or;
+					numbers_seen = true;
+					break;
+				case Byte_ascii.Dash:
+					return i == bgn ? rv * -1 : or;
+				case Byte_ascii.Space: case Byte_ascii.Tab: case Byte_ascii.NewLine: case Byte_ascii.CarriageReturn:
+					if (numbers_seen)
+						ws_seen = true;
+					break;						
+				default: return or;
+			}
+		}
+		return rv;
+	}
+	public static int X_to_int_or_lax(byte[] ary, int bgn, int end, int or) {
 		if (end == bgn) return or;	// null-len
 		int end_num = end;
 		for (int i = bgn; i < end; i++) {
@@ -554,27 +611,7 @@ public class ByteAry_ {
 					break;
 			}
 		}
-		return XtoIntByPos(ary, bgn, end_num, or);
-	}
-	public static byte Xto_byte_by_int(byte[] ary, int bgn, int end, byte or) {return (byte)XtoIntByPos(ary, bgn, end, or);}
-	public static int XtoInt(byte[] ary) {return XtoIntByPos(ary, 0, ary.length, -1);}
-	public static int XtoIntByPos(byte[] ary, int bgn, int end, int or) {
-		if (end == bgn) return or;	// null-len
-		int rv = 0, multiple = 1;
-		for (int i = end - 1; i >= bgn; i--) {	// -1 b/c end will always be next char; EX: {{{1}}}; bgn = 3, end = 4
-			byte b = ary[i];
-			switch (b) {
-				case Byte_ascii.Num_0: case Byte_ascii.Num_1: case Byte_ascii.Num_2: case Byte_ascii.Num_3: case Byte_ascii.Num_4:
-				case Byte_ascii.Num_5: case Byte_ascii.Num_6: case Byte_ascii.Num_7: case Byte_ascii.Num_8: case Byte_ascii.Num_9:
-					rv += multiple * (b - Byte_ascii.Num_0);
-					multiple *= 10;
-					break;
-				case Byte_ascii.Dash:
-					return i == bgn ? rv * -1 : or;
-				default: return or;
-			}
-		}
-		return rv;
+		return X_to_int_or(ary, bgn, end_num, or);
 	}
 	public static float XtoFloatByPos(byte[] ary, int bgn, int end) {return Float_.parse_(String_.new_utf8_(ary, bgn, end));}
 	public static double XtoDoubleByPosOr(byte[] ary, int bgn, int end, double or) {return Double_.parseOr_(String_.new_utf8_(ary, bgn, end), or);}
@@ -650,7 +687,7 @@ public class ByteAry_ {
 		int bgn = posRef.Val();
 		int pos = ByteAry_.FindFwd(ary, lkp, bgn, ary.length);
 		if (pos == ByteAry_.NotFound) throw Err_.new_("lkp failed").Add("lkp", (char)lkp).Add("bgn", bgn);
-		int rv = ByteAry_.XtoIntByPos(ary, posRef.Val(), pos, -1);
+		int rv = ByteAry_.X_to_int_or(ary, posRef.Val(), pos, -1);
 		posRef.Val_(pos + 1);	// +1 = lkp.Len
 		return rv;
 	}

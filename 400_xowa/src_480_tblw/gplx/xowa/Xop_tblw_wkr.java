@@ -25,17 +25,18 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 		tkn.Subs_move(root);
 		tkn.Src_end_(cur_pos);
 	}
-	public int MakeTkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte wlxr_type, boolean ws_enabled, boolean tblw_xml, int atrs_bgn, int atrs_end) {// REF.MW: Parser|doTableStuff
+	public int Make_tkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte wlxr_type, boolean ws_enabled, boolean tblw_xml, int atrs_bgn, int atrs_end) {// REF.MW: Parser|doTableStuff
 		if (bgn_pos == Xop_parser_.Doc_bgn_bos) {
 			bgn_pos = 0;	// do not allow -1 pos
 			ctx.Para().Prv_para_disable(bgn_pos);
 		}
 
 		if (	ctx.Cur_tkn_tid() == Xop_tkn_itm_.Tid_list		// list is in effect
+			&& !tblw_xml										// tbl is wiki-syntax; ie: auto-close if "{|" but do not close if "<table>"; DATE:2014-02-05
 			&& !ws_enabled)										// only close list if tblw starts new line; EX: "* a {|" does not close list, but "* a\n{|" does
 			Xop_list_wkr_.Close_list_if_present(ctx, root, src, bgn_pos, cur_pos);
 		if (ctx.Apos().Stack_len() > 0)							// open apos; note that apos keeps its own stack, as they are not "structural" (not sure about this)
-			ctx.Apos().EndFrame(ctx, root, src, cur_pos, true);		// close it
+			ctx.Apos().EndFrame(ctx, root, src, cur_pos, true);	// close it
 
 		Xop_tblw_tkn prv_tkn = ctx.Stack_get_tblw();
 		if (prv_tkn == null) {									// prv_tkn not found; i.e.: no earlier "{|" or "<table>"
@@ -61,20 +62,20 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 				case Tblw_type_th2:								// "!!"
 				case Tblw_type_tc:								// "|+"
 				case Tblw_type_tr:								// "|-"
-					if (ctx.Para().Pre_at_line_bgn())	// HACK:pre_section_begun_and_failed_tblw
+					if (ctx.Para().Pre_at_line_bgn())			// HACK:pre_section_begun_and_failed_tblw
 						return ctx.Para().Hack_pre_and_false_tblw(ctx, root, src, bgn_pos);
-					else									// interpret as text
-						return ctx.LxrMake_txt_(cur_pos);			//		create txt_tkn; return;
+					else										// interpret as text
+						return ctx.LxrMake_txt_(cur_pos);		//		create txt_tkn; return;
 				case Tblw_type_te:								// "|}"
 					if (tblw_tb_suppressed > 0) {
 						--tblw_tb_suppressed;
 						return cur_pos;
 					}
 					else {
-						if (ctx.Para().Pre_at_line_bgn())	// HACK:pre_section_begun_and_failed_tblw
+						if (ctx.Para().Pre_at_line_bgn())		// HACK:pre_section_begun_and_failed_tblw
 							return ctx.Para().Hack_pre_and_false_tblw(ctx, root, src, bgn_pos);
 						else									// interpret as text
-							return ctx.LxrMake_txt_(cur_pos);		//		create txt_tkn; return;
+							return ctx.LxrMake_txt_(cur_pos);	//		create txt_tkn; return;
 					}
 				default: throw Err_.unhandled(wlxr_type);
 			}
@@ -89,28 +90,17 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 			}
 		}
 		if (wlxr_type == Tblw_type_te)
-			return MakeTkn_end_tblw(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, Xop_tkn_itm_.Tid_tblw_te, wlxr_type, prv_tkn, prv_tid, tblw_xml);
+			return Make_tkn_end(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, Xop_tkn_itm_.Tid_tblw_te, wlxr_type, prv_tkn, prv_tid, tblw_xml);
 		else
-			return MakeTkn_bgn_tblw(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, tblw_xml, atrs_bgn, atrs_end, prv_tkn, prv_tid, ws_enabled);
+			return Make_tkn_bgn_tblw(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, tblw_xml, atrs_bgn, atrs_end, prv_tkn, prv_tid, ws_enabled);
 	}
-	int Find_tblw_tb_end(byte[] src, int src_len, int cur_pos) {
-		while (cur_pos < src_len) {
-			switch (src[cur_pos++]) {
-				case Byte_ascii.NewLine:
-				case Byte_ascii.Lt:
-					return cur_pos - 1;
-				default:
-					break;
-			}
-		}
-		return cur_pos;
-	}
-	int MakeTkn_bgn_tblw(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte wlxr_type, boolean tblw_xml, int atrs_bgn, int atrs_end, Xop_tblw_tkn prv_tkn, int prv_tid, boolean ws_enabled) {
+	private int Make_tkn_bgn_tblw(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte wlxr_type, boolean tblw_xml, int atrs_bgn, int atrs_end, Xop_tblw_tkn prv_tkn, int prv_tid, boolean ws_enabled) {
 		if (wlxr_type != Tblw_type_tb)	// NOTE: do not ignore ws if {|; will cause strange behavior with pre; DATE:2013-02-12
-			IgnoreWs(ctx, root);
+			Ignore_ws(ctx, root);
 		Xop_tblw_tkn new_tkn = null;
 		switch (wlxr_type) {
 			case Tblw_type_tb:								// <table>
+				boolean ignore_prv = false, auto_create = false;
 				switch (prv_tid) {
 					case Xop_tkn_itm_.Tid_null:				// noop; <table>
 						break;
@@ -118,16 +108,28 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 					case Xop_tkn_itm_.Tid_tblw_th:			// noop; <th><table>
 						break;
 					case Xop_tkn_itm_.Tid_tblw_tb:			// fix;  <table><table>			-> <table>; ignore current table; DATE:2014-02-02
+						if (prv_tkn.Tblw_xml())				// fix:  <table><table>			-> <table>; earlier tbl is xnde; ignore; EX:en.b:Wikibooks:Featured books; DATE:2014-02-08
+							ignore_prv = true;
+						else								// fix:  <table><table>			-> <table><tr><td><table>; earlier tbl is tblw; auto-create; EX:it.w:Main_Page; DATE:2014-02-08
+							auto_create = true;
+						break;
 					case Xop_tkn_itm_.Tid_tblw_tr:			// fix:  <table><tr><table>     -> <table><tr>; ignore current table; DATE:2014-02-02
-						ctx.Subs_add(root, tkn_mkr.Ignore(bgn_pos, cur_pos, Xop_ignore_tkn.Ignore_tid_htmlTidy_tblw));
-						++tblw_tb_suppressed;
-						cur_pos = Xop_lxr_.FindFwdUntil(src, src_len, cur_pos, Byte_ascii.NewLine);	// NOTE: minor hack; this tblw tkn will be ignored, so ignore any of its attributes as well; gobble up all chars till nl. see:  if two consecutive tbs, ignore attributes on 2nd; en.wikibooks.org/wiki/Wikibooks:Featured books
-						return cur_pos;
+						ignore_prv = true;
+						break;
 					case Xop_tkn_itm_.Tid_tblw_tc:			// fix;  <caption><table>   -> <caption></caption><tr><td><table>
 						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
-						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tblw_xml));
-						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_td(bgn_pos, bgn_pos, tblw_xml));
+						auto_create = true;
 						break;
+				}
+				if		(ignore_prv) {
+					ctx.Subs_add(root, tkn_mkr.Ignore(bgn_pos, cur_pos, Xop_ignore_tkn.Ignore_tid_htmlTidy_tblw));
+					++tblw_tb_suppressed;
+					cur_pos = Xop_lxr_.FindFwdUntil(src, src_len, cur_pos, Byte_ascii.NewLine);	// NOTE: minor hack; this tblw tkn will be ignored, so ignore any of its attributes as well; gobble up all chars till nl. see:  if two consecutive tbs, ignore attributes on 2nd; en.wikibooks.org/wiki/Wikibooks:Featured books
+					return cur_pos;
+				}
+				if (auto_create) {
+					ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tblw_xml));
+					ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_td(bgn_pos, bgn_pos, tblw_xml));
 				}
 				Xop_tblw_tb_tkn tb_tkn = tkn_mkr.Tblw_tb(bgn_pos, cur_pos, tblw_xml);
 				new_tkn = tb_tkn;
@@ -150,8 +152,6 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 						}
 						else
 							ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), true, bgn_pos, bgn_pos);						
-						//							}
-//							else	// types are mixed; close previous <tr>; EX: |-<tr>; DATE:2013-12-09
 						break;
 				}					
 				Xop_tblw_tr_tkn tr_tkn = tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tblw_xml);
@@ -196,7 +196,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 				switch (prv_tid) {
 					case Xop_tkn_itm_.Tid_tblw_tr: break;	// noop; <tr><th>
 					case Xop_tkn_itm_.Tid_tblw_th:			// fix;  <th><th>           -> <th></th><th>
-						if (tblw_xml																// tblw_xml always closes previous token
+						if (tblw_xml														// tblw_xml always closes previous token
 							|| (wlxr_type == Tblw_type_th2 || wlxr_type == Tblw_type_th))	// ! always closes; EX: "! !!"; "!! !!"; REMOVE: 2012-05-07; had (&& !ws_enabled) but caused "\n !" to fail; guard is no longer necessary since tblw_ws changed...
 							ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(prv_tid), true, bgn_pos, bgn_pos);
 						else {
@@ -206,7 +206,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 						break;
 					case Xop_tkn_itm_.Tid_tblw_td:			// fix;  <td><th>           -> <td></td><th> NOTE: common use of using <th> after <td> for formatting
 						if (tblw_xml												// tblw_xml always closes previous token
-							|| (wlxr_type == Tblw_type_th && !ws_enabled))	// "| !" closes; "| !!" does not;
+							|| (wlxr_type == Tblw_type_th && !ws_enabled))			// "| !" closes; "| !!" does not;
 							ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(prv_tid), true, bgn_pos, bgn_pos);
 						else {
 							ctx.Subs_add(root, tkn_mkr.Txt(bgn_pos, cur_pos));
@@ -269,13 +269,10 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 		}
 		return cur_pos;
 	}
-	public int MakeTkn_end_tblw(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, int typeId, byte wlxr_type, Xop_tblw_tkn prv_tkn, int prv_tid, boolean tblw_xml) {
-		if (!tblw_xml) {
+	public int Make_tkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, int typeId, byte wlxr_type, Xop_tblw_tkn prv_tkn, int prv_tid, boolean tblw_xml) {
+		if (!tblw_xml)
 			ctx.Para().Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1, false);	// DUBIOUS: starting tr; process para (which will create paras for cells) 2012-12-08
-//				ctx.Para().LastSection_process(bgn_pos + 1);
-//				ctx.Para().Process_nl_sect_end(bgn_pos + 1);
-		}
-		IgnoreWs(ctx, root);
+		Ignore_ws(ctx, root);
 		if (wlxr_type == Tblw_type_te) {
 			switch (prv_tid) {
 				case Xop_tkn_itm_.Tid_tblw_td:			// fix;  <td></table>       -> <td></td></tr></table>
@@ -411,7 +408,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 		wkr.Cell_pipe_seen_(true);
 		return true;
 	}
-	private void IgnoreWs(Xop_ctx ctx, Xop_root_tkn root) {
+	private void Ignore_ws(Xop_ctx ctx, Xop_root_tkn root) {
 		int end = root.Subs_len() - 1;
 		// get last tr, tc, tb; cannot use ctx.Stack_get_tblw b/c this gets last open tblw, and we want last tblw; EX: "<table><tr></tr>";  Stack_get_tblw gets <table> want </tr>
 		boolean found = false;
@@ -433,11 +430,11 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 		}
 		if (!found) return;
 		int bgn = prv_tkn.Tkn_sub_idx() + 1;
-		int rv = IgnoreWs_rng(ctx, root, bgn, end, true);
+		int rv = Ignore_ws_rng(ctx, root, bgn, end, true);
 		if (rv == -1) return; // entire range is ws; don't bother trimming end 
-		IgnoreWs_rng(ctx, root, end, bgn, false);
+		Ignore_ws_rng(ctx, root, end, bgn, false);
 	}
-	int IgnoreWs_rng(Xop_ctx ctx, Xop_root_tkn root, int bgn, int end, boolean fwd) {
+	private int Ignore_ws_rng(Xop_ctx ctx, Xop_root_tkn root, int bgn, int end, boolean fwd) {
 		int cur = bgn, adj = fwd ? 1 : -1;
 		while (true) {			
 			if (fwd) {
@@ -453,7 +450,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 					ws_tkn.Ignore_y_grp_(ctx, root, cur);
 					break;
 				case Xop_tkn_itm_.Tid_xnde:
-					if (ws_tkn.Src_bgn() == ws_tkn.Src_end()							// NOTE: para_wkr inserts <br/>. these should be disabled in IgnoreWs_rng; they are identified as having bgn == end; normal <br/>s will have bgn < end
+					if (ws_tkn.Src_bgn() == ws_tkn.Src_end()							// NOTE: para_wkr inserts <br/>. these should be disabled in Ignore_ws_rng; they are identified as having bgn == end; normal <br/>s will have bgn < end
 						&& ((Xop_xnde_tkn)ws_tkn).Tag().Id() == Xop_xnde_tag_.Tid_br)
 						ws_tkn.Ignore_y_grp_(ctx, root, cur);
 					break;

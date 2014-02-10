@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.poems; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
 public class Poem_nde_tst {
-	private Xop_fxt fxt = new Xop_fxt();
+	@Before public void init() {fxt.Wiki().Xtn_mgr().Init_by_wiki(fxt.Wiki());} private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Lines() {	// NOTE: first \n (poem\n) and last \n (\n</poem>)ignored
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<poem>"
 			,	"a"
 			,	"b"
@@ -37,7 +37,7 @@ public class Poem_nde_tst {
 			));
 	}
 	@Test  public void Indent() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 				(	"<poem>"
 				,	"a 1"
 				,	"  b 1"
@@ -54,7 +54,7 @@ public class Poem_nde_tst {
 				));
 	}
 	@Test  public void Indent_2() {	// PURPOSE: indent on 1st line caused page_break
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<poem>"
 			,	"  a"
 			,	"  b"
@@ -71,7 +71,7 @@ public class Poem_nde_tst {
 			));
 	}
 	@Test  public void List() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 				(	"<poem>"
 				,	":a"
 				,	":b"
@@ -89,12 +89,12 @@ public class Poem_nde_tst {
 				));
 	}
 	@Test  public void Xtn() {
-		fxt.ini_defn_clear();
-		fxt.ini_defn_add("test_print", "{{{1}}}");
-		fxt.ini_defn_add("test_outer", String_.Concat_lines_nl_skipLast
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("test_print", "{{{1}}}");
+		fxt.Init_defn_add("test_outer", String_.Concat_lines_nl_skipLast
 			(	"{{test_print|a <poem>b}}c</poem>}}"
 			));
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 				(	"{{test_outer}}"
 //					(	"{{test_print|a <poem>b}}c</poem>}}"
 				), String_.Concat_lines_nl_skipLast
@@ -102,24 +102,24 @@ public class Poem_nde_tst {
 				,	"b}}c"
 				,	"</div>"
 				));
-		fxt.ini_defn_clear();
+		fxt.Init_defn_clear();
 	}
 	@Test  public void Comment() {
-		fxt.tst_Parse_page_wiki_str("<poem>a<!-- b --> c</poem>", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("<poem>a<!-- b --> c</poem>", String_.Concat_lines_nl_skipLast
 			(	"<div class=\"poem\">"
 			,	"a c"
 			,	"</div>"
 			));
 	}
 	@Test  public void Err_empty_line() {
-		fxt.tst_Parse_page_wiki_str("<poem>\n</poem>", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("<poem>\n</poem>", String_.Concat_lines_nl_skipLast
 			(	"<div class=\"poem\">"
 			,	""
 			,	"</div>"
 			));
 	}
 	@Test  public void Ref() {	// PURPOSE: <ref> inside poem was not showing up; DATE:2014-01-17
-		fxt.tst_Parse_page_all_str
+		fxt.Test_parse_page_all_str
 			(	String_.Concat_lines_nl_skipLast
 			(	"<poem>a<ref>b</ref></poem>"
 			,	"<references/>"), String_.Concat_lines_nl_skipLast
@@ -133,8 +133,8 @@ public class Poem_nde_tst {
 			));
 	}
 //		@Test  public void Template() {	// PURPOSE: <poem> inside template was not evaluating args; DATE:2014-01-23
-//			fxt.ini_page_create("Template:A", "<poem>{{{1}}}</poem>");
-//			fxt.tst_Parse_page_all_str("{{A|b}}", String_.Concat_lines_nl_skipLast
+//			fxt.Init_page_create("Template:A", "<poem>{{{1}}}</poem>");
+//			fxt.Test_parse_page_all_str("{{A|b}}", String_.Concat_lines_nl_skipLast
 //			(	"<div class=\"poem\">"
 //			,	"b"
 //			,	"</div>"

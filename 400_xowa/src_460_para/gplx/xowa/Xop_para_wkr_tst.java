@@ -23,12 +23,12 @@ public class Xop_para_wkr_tst {
 	@After public void teardown() {fxt.Ctx().Para().Enabled_n_();}
 	@Test  public void Nl_0() {
 		raw = "a";
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_bgn_para_(0)													//    x0: <bos> -> <p>			1=blank
 			,	fxt.tkn_txt_(0, 1), fxt.tkn_nl_char_(1, 1), fxt.tkn_para_end_para_(1)		// t2/x1: a     -> a\n</p>		1=bgn    2=blank
 			);
@@ -38,13 +38,13 @@ public class Xop_para_wkr_tst {
 			(	"a"
 			,	"b"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"b"			// NOTE: depend on html editor removing \n between a and b
 			,	"</p>"
 			,	""
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_bgn_para_(0)													//    x0: <bos> -> <p>			1=blank
 			,	fxt.tkn_txt_(0, 1), fxt.tkn_nl_char_(1, 2), fxt.tkn_para_blank_(2)			// t2/x1: a\n   -> a\n<-p>		1=bgn    2=blank
 			,	fxt.tkn_txt_(2, 3), fxt.tkn_nl_char_(3, 3), fxt.tkn_para_end_para_(3)		// t3/x1: b     -> b\n</p>		2=blank  3=blank
@@ -56,7 +56,7 @@ public class Xop_para_wkr_tst {
 			,	""
 			,	"b"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -64,7 +64,7 @@ public class Xop_para_wkr_tst {
 			,	"</p>"
 			,	""
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_bgn_para_(0)													//    x0: <bos> -> <p>			1=blank
 			,	fxt.tkn_txt_(0, 1), fxt.tkn_nl_char_(1, 2),	fxt.tkn_para_blank_(2)			// t2/x1: a\n   -> a\n<-p>		1=bgn
 			,	fxt.tkn_para_mid_para_(3)													// n3   : \n    -> </p><p>      3=mid    NOTE: </p><p> doesn't get converted until t1
@@ -78,7 +78,7 @@ public class Xop_para_wkr_tst {
 			,	""
 			,	"b"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -87,7 +87,7 @@ public class Xop_para_wkr_tst {
 			,	"</p>"
 			,	""
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_bgn_para_(0)													//    x0: <bos> -> <p>			1=blank
 			,	fxt.tkn_txt_(0, 1), fxt.tkn_nl_char_(1, 2), fxt.tkn_para_blank_(2)			// t2/x1: a\n   -> a\n<-p>		1=bgn 
 			,	fxt.tkn_para_mid_para_(3)													// n3   : \n    -> </p><p>      3=mid    NOTE: </p><p> doesn't get converted until n1
@@ -103,7 +103,7 @@ public class Xop_para_wkr_tst {
 			,	""
 			,	"c"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -114,7 +114,7 @@ public class Xop_para_wkr_tst {
 			,	"</p>"
 			,	""
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_bgn_para_(0)													//    x0: <bos> -> <p>			1=blank
 			,	fxt.tkn_txt_(0, 1), fxt.tkn_nl_char_(1, 2), fxt.tkn_para_blank_(2)			// t2/x1: a\n   -> a\n<-p>		1=bgn
 			,	fxt.tkn_para_mid_para_(3)													// n3   : \n    -> </p><p>      3=mid    NOTE: </p><p> doesn't get converted until n1
@@ -129,7 +129,7 @@ public class Xop_para_wkr_tst {
 			,	"b"
 			,	"</p>"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"b"
 			,	"</p>"
@@ -141,7 +141,7 @@ public class Xop_para_wkr_tst {
 			,	" b"
 			,	"c"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -152,7 +152,7 @@ public class Xop_para_wkr_tst {
 			,	"</p>"
 			,	""
 			));			
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_bgn_para_(0)
 			,	fxt.tkn_txt_(0, 1), fxt.tkn_nl_char_(1, 2), fxt.tkn_para_end_para_bgn_pre_(2)
 			,	fxt.tkn_txt_(3, 4), fxt.tkn_nl_char_(4, 5),	fxt.tkn_para_end_pre_bgn_para_(5)
@@ -166,7 +166,7 @@ public class Xop_para_wkr_tst {
 			,	" c"
 			,	"d"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -186,7 +186,7 @@ public class Xop_para_wkr_tst {
 			,	"b"
 			,	" c"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -206,7 +206,7 @@ public class Xop_para_wkr_tst {
 			,	""
 			,	"c"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -219,7 +219,7 @@ public class Xop_para_wkr_tst {
 			));			
 	}
 	@Test  public void Pre_5() {	// EX.WP: SHA-2
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"a"
 			,	" b"
 			,	""
@@ -237,7 +237,7 @@ public class Xop_para_wkr_tst {
 			));			
 	}
 	@Test  public void Pre_6() {	// PURPOSE: close list if open; EX.WP: SHA-2
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"*a"
 			,	" b"
 			), String_.Concat_lines_nl_skipLast
@@ -252,7 +252,7 @@ public class Xop_para_wkr_tst {
 			));			
 	}
 	@Test  public void Pre_init() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	" a"
 			), String_.Concat_lines_nl_skipLast
 			(	"<pre>a"
@@ -261,7 +261,7 @@ public class Xop_para_wkr_tst {
 			));
 	}
 	@Test  public void Pre_leading_ws() {	// PURPOSE: preserve leading ws; EX.WP:Merge sort
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	" a"
 			,	"   b"
 			,	"     c"
@@ -281,7 +281,7 @@ public class Xop_para_wkr_tst {
 			,	" c"
 			,	"d"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -301,7 +301,7 @@ public class Xop_para_wkr_tst {
 			,	" b<div>c</div>d"
 			,	"e"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	" b<div>c</div>d"
@@ -312,13 +312,13 @@ public class Xop_para_wkr_tst {
 			));
 	}
 	@Test  public void Pre_xnde_gallery() {	// PURPOSE: <gallery> should invalidate pre; EX.WP: Mary, Queen of Scots
-		fxt.Wiki().Xtn_mgr().Gallery().Parser().Init_by_wiki(fxt.Wiki());
+		fxt.Wiki().Xtn_mgr().Init_by_wiki(fxt.Wiki());
 		raw = String_.Concat_lines_nl_skipLast
 			(	" <gallery>"
 			,	"File:A.png|b"
 			,	"</gallery>"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>" + Gallery_html()
 			,	"</p>"
 			,	""
@@ -326,7 +326,7 @@ public class Xop_para_wkr_tst {
 	}
 	String Gallery_html() {
 		return String_.Concat_lines_nl_skipLast
-			(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:652px; _width:652px;\">"
+			(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
 			,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
 			,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
 			,	"      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
@@ -354,7 +354,7 @@ public class Xop_para_wkr_tst {
 			,	"</tr>"
 			,	"</table>"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"  <tr>"
 			,	"    <td><a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\" \" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
@@ -371,7 +371,7 @@ public class Xop_para_wkr_tst {
 			(	"a"
 			,	" "
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -384,7 +384,7 @@ public class Xop_para_wkr_tst {
 			,	""
 			,	"c"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -406,7 +406,7 @@ public class Xop_para_wkr_tst {
 			,	"</li>"
 			,	"</ul>"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<ul>"
 			,	"<li>"
 			,	"<pre>"
@@ -424,7 +424,7 @@ public class Xop_para_wkr_tst {
 			,	"</tr>"
 			,	"</table>"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"  <tr>"
 			,	"    <td> <a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/30px.png\" width=\"30\" height=\"30\" /></a>"
@@ -442,7 +442,7 @@ public class Xop_para_wkr_tst {
 			,	" "
 			,	"c"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -459,14 +459,14 @@ public class Xop_para_wkr_tst {
 			(	"a"
 			,	"[[Image:Test.png|thumb|caption]]"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
 			,	File_html()
 			,	""
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_bgn_para_(0)
 			,	fxt.tkn_txt_(0, 1), fxt.tkn_nl_char_(1, 2), fxt.tkn_para_end_para_(2)
 			,	fxt.tkn_lnki_(2, 34)
@@ -479,7 +479,7 @@ public class Xop_para_wkr_tst {
 			,	"[[Image:Test.png|thumb|caption]]"
 			,	"b"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -489,7 +489,7 @@ public class Xop_para_wkr_tst {
 			,	"</p>"
 			,	""
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_bgn_para_(0)													//    x0: <bos> -> <p>			1=blank
 			,	fxt.tkn_txt_(0, 1), fxt.tkn_nl_char_(1, 2), fxt.tkn_para_end_para_(2)
 			,	fxt.tkn_lnki_(2, 34)
@@ -503,14 +503,14 @@ public class Xop_para_wkr_tst {
 			,	""
 			,	"c"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	File_html()
 			,	""
 			,	"<p>c"
 			,	"</p>"
 			,	""
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_blank_(0)													//    x0: <bos> -> <p>			1=blank
 			,	fxt.tkn_lnki_(0, 32)
 			,	fxt.tkn_para_blank_(32), fxt.tkn_para_blank_(33)
@@ -526,7 +526,7 @@ public class Xop_para_wkr_tst {
 			,	""
 			,	"c"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -536,7 +536,7 @@ public class Xop_para_wkr_tst {
 			,	"</p>"
 			,	""
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_bgn_para_(0)													//    x0: <bos> -> <p>			1=blank
 			,	fxt.tkn_txt_(0, 1), fxt.tkn_nl_char_(1, 2), fxt.tkn_para_blank_(2)
 			,	fxt.tkn_para_end_para_(3)
@@ -552,14 +552,14 @@ public class Xop_para_wkr_tst {
 			,	"caption]]"
 			,	"a"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	File_html()
 			,	""
 			,	"<p>a"
 			,	"</p>"
 			,	""
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_blank_(0)
 			,	fxt.tkn_lnki_(0, 33)
 			,	fxt.tkn_para_blank_(33), fxt.tkn_para_bgn_para_(34)
@@ -573,7 +573,7 @@ public class Xop_para_wkr_tst {
 			,	""
 			,	"b"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -589,7 +589,7 @@ public class Xop_para_wkr_tst {
 			(	"a"
 			,	"*b"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -598,7 +598,7 @@ public class Xop_para_wkr_tst {
 			,	"  </li>"
 			,	"</ul>"
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_bgn_para_(0)												//    x0: <bos> -> <p>			1=blank
 			,	fxt.tkn_txt_(0, 1), fxt.tkn_nl_char_(1, 2), fxt.tkn_para_end_para_(2)	// t2/x1: a\n   -> a\n</p>		1=bgn    2=blank
 			,	fxt.tkn_list_bgn_(1, 3, Xop_list_tkn_.List_itmTyp_ul)
@@ -611,14 +611,14 @@ public class Xop_para_wkr_tst {
 			(	"a"
 			,	"==b=="
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
 			,	"<h2>b</h2>"
 			,	""
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_bgn_para_(0)													//    x0: <bos> -> <p>			1=blank
 			,	fxt.tkn_txt_(0, 1), fxt.tkn_nl_char_(1, 2), fxt.tkn_para_end_para_(2)		// t2/x1: a\n   -> a\n</p>		1=bgn    2=blank
 			,	fxt.tkn_hdr_(1, 7, 2).Subs_
@@ -634,14 +634,14 @@ public class Xop_para_wkr_tst {
 			,	""
 			,	"==b=="
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
 			,	"<h2>b</h2>"
 			,	""
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_bgn_para_(0)													//    x0: <bos> -> <p>			1=blank
 			,	fxt.tkn_txt_(0, 1), fxt.tkn_nl_char_(1, 2), fxt.tkn_para_blank_(2)
 			,	fxt.tkn_para_end_para_(3)
@@ -657,7 +657,7 @@ public class Xop_para_wkr_tst {
 			(	"==a=="
 			,	"*b"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<h2>a</h2>"
 			,	""
 			,	"<ul>"
@@ -665,7 +665,7 @@ public class Xop_para_wkr_tst {
 			,	"  </li>"
 			,	"</ul>"
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_blank_(0),	fxt.tkn_para_blank_(1)
 			,	fxt.tkn_hdr_(0, 5, 2).Subs_
 			(	fxt.tkn_txt_(2, 3)
@@ -685,7 +685,7 @@ public class Xop_para_wkr_tst {
 			,	"*b"
 			,	"*c"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<h2>a</h2>"
 			,	""
 			,	"<ul>"
@@ -695,7 +695,7 @@ public class Xop_para_wkr_tst {
 			,	"  </li>"
 			,	"</ul>"
 			));
-		fxt.tst_Parse_page_wiki(raw
+		fxt.Test_parse_page_wiki(raw
 			,	fxt.tkn_para_blank_(0), fxt.tkn_para_blank_(1)
 			,	fxt.tkn_hdr_(0, 7, 2).Subs_
 			(		fxt.tkn_txt_(2, 3)
@@ -719,7 +719,7 @@ public class Xop_para_wkr_tst {
 			,	"==c=="
 			,	"d"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -741,7 +741,7 @@ public class Xop_para_wkr_tst {
 			,	"<div>c</div>"
 			,	"d"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -761,7 +761,7 @@ public class Xop_para_wkr_tst {
 			,	"</div>"
 			,	"</div>"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<div><div>"
 			,	""
 			,	"<p>a"
@@ -780,7 +780,7 @@ public class Xop_para_wkr_tst {
 			,	"</tr>"
 			,	"</table>"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"  <tr>"
 			,	"    <td>a"
@@ -799,7 +799,7 @@ public class Xop_para_wkr_tst {
 			,	" |a"
 			,	" |}"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			( "<table>"
 			, "  <tr>"
 			, "    <td>a"
@@ -810,7 +810,7 @@ public class Xop_para_wkr_tst {
 			));
 	}
 	@Test  public void Bos_pipe() {	// PURPOSE: | is interpreted as a tblw dlm and calls a different section of code
-		fxt.tst_Parse_page_wiki_str("|", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("|", String_.Concat_lines_nl_skipLast
 			(	"<p>|"
 			,	"</p>"
 			,	""
@@ -823,7 +823,7 @@ public class Xop_para_wkr_tst {
 			,	" [[Category:c]]"
 			,	"*d"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			( "<ul>"
 			, "  <li>a"
 			, "  </li>"
@@ -835,11 +835,11 @@ public class Xop_para_wkr_tst {
 			));
 	}
 //		@Test  public void Category_2() {	// PURPOSE: Category strips all preceding ws; EX.WP: NYC (in external links)
-//			fxt.ini_defn_add("Audio", "y\n\n[[Category:z]]");
-//			fxt.tst_Parse_page_all_str("a {{Template:Audio}} b", "a y b");
+//			fxt.Init_defn_add("Audio", "y\n\n[[Category:z]]");
+//			fxt.Test_parse_page_all_str("a {{Template:Audio}} b", "a y b");
 //		}
 	@Test   public void Ws_mistakenly_ignored() {// PURPOSE: ws before ''' somehow gets ignored; EX.WP: Vacuum tube; {{Unreferenced section|date=July 2010|reason=date taken from existing cn}}
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"<table><tr><td><span>a"
 			,	" '''b'''</span></td></tr></table>"
 			) ,	String_.Concat_lines_nl_skipLast
@@ -853,7 +853,7 @@ public class Xop_para_wkr_tst {
 			));
 	}
 	@Test  public void Pre_then_xnde_pre() {	// PURPOSE: if ws_pre is in effect, xnde_pre should end it; EX: b:Knowing Knoppix/Other applications
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 		(	" a"
 		,	"b<pre>c"
 		,	"d</pre>"
@@ -870,7 +870,7 @@ public class Xop_para_wkr_tst {
 		));
 	}
 	@Test   public void Pre_7() {	// PURPOSE: alternating pres; EX:w:World Wide Web
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 		(	"a"
 		,	" b"
 		,	"c"
@@ -895,7 +895,7 @@ public class Xop_para_wkr_tst {
 		));
 	}
 	@Test  public void Nowiki() {
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 		(	"a"
 		,	" <nowiki>b</nowiki>"
 		,	"c"
@@ -912,7 +912,7 @@ public class Xop_para_wkr_tst {
 		));
 	}
 	@Test  public void Nowiki_tbl() {	// EX: de.wikipedia.org/wiki/Hilfe:Vorlagenprogrammierung
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 		(	"a"
 		,	" <nowiki>b</nowiki>c"
 		,	""
@@ -937,7 +937,7 @@ public class Xop_para_wkr_tst {
 		));
 	}
 	@Test  public void Pre_at_end_should_autoclose() { // PURPOSE: as per proc_name
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 		(	"a"
 		,	" b"
 		,	""
@@ -951,7 +951,7 @@ public class Xop_para_wkr_tst {
 		));
 	}
 	@Test  public void Pre_xtn() {	// PURPOSE: <ref> (and other xtn) was unnecessarily canceling pre; EX: en.wikipedia.org/wiki/MD5 Hash
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 		(	" <span>a</span>"
 		,	" <ref>b</ref>"
 		,	" c"
@@ -969,7 +969,7 @@ public class Xop_para_wkr_tst {
 		));
 	}
 	@Test   public void Pre_tbl() {	// PURPOSE: pre was being garbled by tables b/c table was ignoring whitespace; DATE:2013-02-11
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 		(	"{|"
 		,	"|a"
 		,	"|}"
@@ -1009,7 +1009,7 @@ public class Xop_para_wkr_tst {
 		));
 	}
 	@Test  public void Nowiki_tbl2() {	// EX: de.wikipedia.org/wiki/Hilfe:Vorlagenprogrammierung
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 		(	"{|"
 		,	"|a"
 		,	"|}"
@@ -1043,7 +1043,7 @@ public class Xop_para_wkr_tst {
 		));
 	}
 	@Test  public void Pre_nowiki() {	// PURPOSE: nowikis inside pre should be ignored; DATE:2013-03-30
-		fxt.tst_Parse_page_all_str("\n a<nowiki>&lt;</nowiki>b"	, "\n<pre>a&lt;b\n</pre>\n");										// basic
+		fxt.Test_parse_page_all_str("\n a<nowiki>&lt;</nowiki>b"	, "\n<pre>a&lt;b\n</pre>\n");										// basic
 	}
 	@Test  public void Para_bos_tblw() {
 		fxt.Wiki().Html_mgr().Tbl_para_y_();
@@ -1053,7 +1053,7 @@ public class Xop_para_wkr_tst {
 			,	"|a"
 			,	"|}"
 			);
-		fxt.tst_Parse_page_all_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"  <tr>"
 			,	"    <td>a"
@@ -1074,7 +1074,7 @@ public class Xop_para_wkr_tst {
 			,	"</tr>"
 			,	"</table>"
 			);
-		fxt.tst_Parse_page_all_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"  <tr>"
 			,	"    <td>a"
@@ -1092,7 +1092,7 @@ public class Xop_para_wkr_tst {
 			,	"|"
 			,	"c"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -1112,7 +1112,7 @@ public class Xop_para_wkr_tst {
 			,	"|-"
 			,	"c"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -1132,7 +1132,7 @@ public class Xop_para_wkr_tst {
 			,	"|}"
 			,	"c"
 			);
-		fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 			(	"<p>a"
 			,	"</p>"
 			,	""
@@ -1147,7 +1147,7 @@ public class Xop_para_wkr_tst {
 	}
 	@Test  public void Pre_ignore_bos() {			// PURPOSE: ignore pre at bgn; DATE:2013-07-09
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	" "
 		,	"b"
 		), String_.Concat_lines_nl
@@ -1159,7 +1159,7 @@ public class Xop_para_wkr_tst {
 	}
 	@Test  public void Pre_ignore_bos_tblw() {		// PURPOSE: ignore pre at bgn shouldn't break tblw; EX:commons.wikimedia.org; DATE:2013-07-11
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	" "
 		,	"{|"
 		,	"|-"
@@ -1177,7 +1177,7 @@ public class Xop_para_wkr_tst {
 	}
 	@Test  public void Pre_ignore_bos_xnde() {		// PURPOSE: space at bgn shouldn't create pre; EX:commons.wikimedia.org; " <center>a\n</center>"; DATE:2013-11-28
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 		(	" <center>a"
 		,	"</center>"
 		), String_.Concat_lines_nl_skipLast	
@@ -1189,7 +1189,7 @@ public class Xop_para_wkr_tst {
 	}
 	@Test  public void List_ignore_pre_lines() {	// PURPOSE: "\s\n" should create new list; was continuing previous list; DATE:2013-07-12
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	": a"
 		,	":* b"
 		,	" "
@@ -1223,7 +1223,7 @@ public class Xop_para_wkr_tst {
 //				(	"[[A|"
 //				,	" b]]"
 //				);
-//			fxt.tst_Parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+//			fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
 //				(	"<p>a"
 //				,	"</p>"
 //				,	""

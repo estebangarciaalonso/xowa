@@ -52,13 +52,13 @@ public class Xob_xfer_temp_itm_tst {
 	@Test   public void Thumbtime_check() {// PURPOSE: one image actually had a thumbtime defined; EX: General_Dynamics_F-16_Fighting_Falcon; [[File:Crash.arp.600pix.jpg|thumb|thumbtime=2]]
 		fxt.Test_bgn
 		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_file_ext	, Xof_ext_.Id_jpg)
-		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime	, (double)3)
+		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_time		, (double)3)
 		);
 		fxt.Test_lnki_thumbtime(Xof_doc_thumb.Null);
 
 		fxt.Reset().Test_bgn
 		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_orig_media_type	, Xof_media_type.Name_video)
-		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_thumbtime	, (double)3)
+		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_time		, (double)3)
 		);
 		fxt.Test_lnki_thumbtime(3);
 	}
@@ -103,7 +103,7 @@ class Xob_xfer_temp_itm_fxt {
 	, Xob_orig_regy_tbl.Fld_orig_h
 	, Xob_orig_regy_tbl.Fld_orig_page_id
 	, Xob_lnki_regy_tbl.Fld_lnki_upright
-	, Xob_lnki_regy_tbl.Fld_lnki_thumbtime
+	, Xob_lnki_regy_tbl.Fld_lnki_time
 	, Xob_lnki_regy_tbl.Fld_lnki_page
 	, Xob_orig_regy_tbl.Fld_orig_media_type
 	, Xob_orig_regy_tbl.Fld_orig_minor_mime

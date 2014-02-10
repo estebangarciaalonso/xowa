@@ -21,14 +21,14 @@ public class Xop_under_lxr_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {fxt.Reset();}
 	@Test   public void Toc_basic() {
-		fxt.tst_Parse_page_all_str("a__TOC__b", "ab");
+		fxt.Test_parse_page_all_str("a__TOC__b", "ab");
 	}
 	@Test   public void Toc_match_failed() {
-		fxt.tst_Parse_page_all_str("a__TOCA__b", "a__TOCA__b");
+		fxt.Test_parse_page_all_str("a__TOCA__b", "a__TOCA__b");
 	}
 	@Test   public void Notoc_basic() {
 		fxt.Hctx().Toc_show_(true);	// NOTE: must enable in order for TOC to show (and to make sure NOTOC suppresses) 
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	"__NOTOC__"
 		,	"==a=="
 		,	"==b=="
@@ -47,7 +47,7 @@ public class Xop_under_lxr_tst {
 	}
 	@Test   public void Ignore_pre() {
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str("a\n   __NOTOC__\n", String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str("a\n   __NOTOC__\n", String_.Concat_lines_nl
 		(	"<p>a"
 		,	"   </p>"
 		,	""
@@ -58,7 +58,7 @@ public class Xop_under_lxr_tst {
 	}
 	@Test   public void Toc_works() {	// PURPOSE: make sure "suppressed" pre does not somehow suppress TOC
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str("a\n__TOC__\n==b==\n", String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str("a\n__TOC__\n==b==\n", String_.Concat_lines_nl
 		( "<p>a"
 		, "<div id=\"toc\" class=\"toc\">"
 		, "  <div id=\"toctitle\">"
@@ -78,7 +78,7 @@ public class Xop_under_lxr_tst {
 	}		
 	@Test  public void Ignore_pre_after() {	// PURPOSE: "__TOC__\s\n" must be trimmed at end, else false pre; assertion only (no code exists to handle this test);  DATE:2013-07-08
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	"a"
 		,	"__NOTOC__ "
 		,	"b"
@@ -92,6 +92,13 @@ public class Xop_under_lxr_tst {
 		fxt.Ctx().Para().Enabled_n_();
 	}
 	@Test  public void Disambig() {	// PURPOSE: ignore "__DISAMBIG__"; EX:{{disambiguation}} DATE:2013-07-24
-		fxt.tst_Parse_page_all_str("__DISAMBIG__", "");
+		fxt.Test_parse_page_all_str("__DISAMBIG__", "");
+	}
+	@Test  public void Nocontentconvert() {	 // simple test; test for flag only; DATE:2014-02-06
+		Tfds.Eq(fxt.Page().Lang_convert_content(), true);
+		Tfds.Eq(fxt.Page().Lang_convert_title(), true);
+		fxt.Test_parse_page_all_str("__NOCONTENTCONVERT__ __NOTITLECONVERT__", " ");
+		Tfds.Eq(fxt.Page().Lang_convert_content(), false);
+		Tfds.Eq(fxt.Page().Lang_convert_title(), false);
 	}
 }

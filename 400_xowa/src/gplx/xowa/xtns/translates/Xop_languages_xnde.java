@@ -17,11 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.translates; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.xowa.langs.*;
-public class Xop_languages_xnde implements Xop_xnde_xtn {
-	public boolean Xtn_literal() {return false;}
-	public Xop_root_tkn Xtn_root() {return null;}
+public class Xop_languages_xnde implements Xox_xnde {
 	public Xop_xnde_tkn Xnde() {return xnde;} private Xop_xnde_tkn xnde;
-	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_parse(Xow_wiki wiki, Xop_ctx ctx, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		this.xnde = xnde;
 		langs = Find_lang_pages(ctx, wiki);
 	}
@@ -68,10 +66,9 @@ public class Xop_languages_xnde implements Xop_xnde_xtn {
 		rv.SortBy(Xol_lang_itm_sorter_by_key._);
 		return rv;
 	}
-	public static void To_html(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
-		Xop_languages_xnde languages_nde = (Xop_languages_xnde)xnde.Xnde_data();
-		if (languages_nde.Langs().Count() == 0) return;	// no langs; don't write anything;
-		fmtr_mgr_itms.Init(languages_nde.Langs(), ctx.Wiki(), languages_nde.Root_ttl(), ctx.Page().Lang().Key_bry());
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+		if (langs.Count() == 0) return; // no langs; don't write anything;
+		fmtr_mgr_itms.Init(langs, ctx.Wiki(), root_ttl, ctx.Page().Lang().Key_bry());
 		fmtr_all.Bld_bfr_many(bfr, "Other languages", fmtr_mgr_itms);
 	}
 	private static final Xop_languages_fmtr fmtr_mgr_itms = new Xop_languages_fmtr();

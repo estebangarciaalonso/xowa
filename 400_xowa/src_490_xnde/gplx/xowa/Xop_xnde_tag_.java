@@ -122,8 +122,15 @@ public class Xop_xnde_tag_ {
 , Tid_mark = 97
 , Tid_wbr = 98
 , Tid_bdo = 99
+, Tid_listing_buy = 100
+, Tid_listing_do = 101
+, Tid_listing_drink = 102
+, Tid_listing_eat = 103
+, Tid_listing_listing = 104
+, Tid_listing_see = 105
+, Tid_listing_sleep = 106
 	;
-	public static final int _MaxLen = 100;
+	public static final int _MaxLen = 107;
 	public static final Xop_xnde_tag[] Ary = new Xop_xnde_tag[_MaxLen];
 	private static Xop_xnde_tag new_(int id, String name) {
 		Xop_xnde_tag rv = new Xop_xnde_tag(id, name);
@@ -231,5 +238,12 @@ public class Xop_xnde_tag_ {
 , Tag_mark = new_(Tid_mark, "mark")
 , Tag_wbr = new_(Tid_wbr, "wbr").SingleOnly_()
 , Tag_bdo = new_(Tid_bdo, "bdo").NoInline_().Nest_().Section_().Block_open_bgn_().Block_close_end_()
+, Tag_listing_buy = new_(Tid_listing_buy, "buy").Xtn_()
+, Tag_listing_do = new_(Tid_listing_do, "do").Xtn_()
+, Tag_listing_drink = new_(Tid_listing_drink, "drink").Xtn_()
+, Tag_listing_eat = new_(Tid_listing_eat, "eat").Xtn_()
+, Tag_listing_listing = new_(Tid_listing_listing, "listing").Xtn_()
+, Tag_listing_see = new_(Tid_listing_see, "see").Xtn_()
+, Tag_listing_sleep = new_(Tid_listing_sleep, "sleep").Xtn_()
 		;
 }

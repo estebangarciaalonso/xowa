@@ -42,7 +42,7 @@ public class Xol_mw_lang_parser {
 			if (lang.Fallback_bry() != null)	// NOTE: fallback will often be null; EX: en
 				bldr.Add_proc_cont_one(Xol_lang.Invk_fallback_load).Add_parens_str(lang.Fallback_bry()).Add_nl();
 			if (!lang.Dir_ltr())				// NOTE: only save dir_ltr if false; EX: en
-				bldr.Add_proc_cont_one(Xol_lang.Invk_dir_rtl_).Add_parens_str(Yn.XtoStr(!lang.Dir_ltr())).Add_nl();
+				bldr.Add_proc_cont_one(Xol_lang.Invk_dir_rtl_).Add_parens_str(Yn.X_to_str(!lang.Dir_ltr())).Add_nl();
 			Xol_lang_srl.Save_ns_grps(bldr, lang.Ns_names(), Xol_lang.Invk_ns_names);
 			Xol_lang_srl.Save_ns_grps(bldr, lang.Ns_aliases(), Xol_lang.Invk_ns_aliases);
 			Xol_lang_srl.Save_specials(bldr, lang.Specials_mgr());
@@ -281,7 +281,7 @@ public class Xol_mw_lang_parser {
 				return rv;
 			case Php_itm_.Tid_quote:
 				byte[] bry = ((Php_itm_quote)itm).Val_obj_bry();
-				rv = ByteAry_.XtoIntOr(bry, -1);
+				rv = ByteAry_.X_to_int_or(bry, -1);
 				return (rv == -1) ? or : rv;
 			default:
 				return or;
@@ -319,10 +319,10 @@ public class Xol_mw_lang_parser {
 	private static final byte Tid_messages = 0, Tid_magicwords = 1, Tid_namespaceNames = 2, Tid_namespaceAliases = 3, Tid_specialPageAliases = 4
 		, Tid_linkTrail = 5, Tid_dateFormats = 6, Tid_fallback = 7, Tid_separatorTransformTable = 8, Tid_rtl = 9;
 	private static Hash_adp_bry Tid_hash = new Hash_adp_bry(true)
-		.Add_str_byteVal("namespaceNames", Tid_namespaceNames).Add_str_byteVal("namespaceAliases", Tid_namespaceAliases).Add_str_byteVal("messages", Tid_messages)
-		.Add_str_byteVal("magicWords", Tid_magicwords).Add_str_byteVal("specialPageAliases", Tid_specialPageAliases)
-		.Add_str_byteVal("linkTrail", Tid_linkTrail).Add_str_byteVal("dateFormats", Tid_dateFormats).Add_str_byteVal("fallback", Tid_fallback)
-		.Add_str_byteVal("separatorTransformTable", Tid_separatorTransformTable).Add_str_byteVal("rtl", Tid_rtl);
+		.Add_str_byte("namespaceNames", Tid_namespaceNames).Add_str_byte("namespaceAliases", Tid_namespaceAliases).Add_str_byte("messages", Tid_messages)
+		.Add_str_byte("magicWords", Tid_magicwords).Add_str_byte("specialPageAliases", Tid_specialPageAliases)
+		.Add_str_byte("linkTrail", Tid_linkTrail).Add_str_byte("dateFormats", Tid_dateFormats).Add_str_byte("fallback", Tid_fallback)
+		.Add_str_byte("separatorTransformTable", Tid_separatorTransformTable).Add_str_byte("rtl", Tid_rtl);
 	public static int Id_by_mw_name(byte[] src) {
 		if (mw_names == null) {
 			mw_names = ByteTrieMgr_slim.cs_();

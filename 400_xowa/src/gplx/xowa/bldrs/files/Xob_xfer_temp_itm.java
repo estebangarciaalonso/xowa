@@ -57,7 +57,7 @@ class Xob_xfer_temp_itm {
 		lnki_w			= rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_w);
 		lnki_h			= rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_h);
 		lnki_upright	= rdr.ReadDouble(Xob_lnki_regy_tbl.Fld_lnki_upright);
-		lnki_thumbtime	= Xof_doc_thumb.Db_load_double(rdr, Xob_lnki_regy_tbl.Fld_lnki_thumbtime);
+		lnki_thumbtime	= Xof_doc_thumb.Db_load_double(rdr, Xob_lnki_regy_tbl.Fld_lnki_time);
 		lnki_page		= rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_page);
 		lnki_count		= rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_count);
 		orig_repo		= rdr.ReadByte(Xob_orig_regy_tbl.Fld_orig_repo);

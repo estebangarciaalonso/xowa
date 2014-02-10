@@ -24,10 +24,11 @@ public class Xodb_db_file {
 	public Db_provider Provider() {return provider;} private Db_provider provider;
 	public boolean Created() {return created;} public void Created_clear() {created = false;} private boolean created;
 
-	public static Xodb_db_file init__file_make(Io_url dir)		{return init_(dir, Name__file_make);}
-	public static Xodb_db_file init__wiki_image(Io_url dir)		{return init_(dir, Name__wiki_image);}
-	public static Xodb_db_file init__wiki_redirect(Io_url dir)	{return init_(dir, Name__wiki_redirect);}
-	public static Xodb_db_file init__temp_log(Io_url dir)		{return init_(dir, Name__temp_log);}
+	public static Xodb_db_file init__file_make(Io_url dir)			{return init_(dir, Name__file_make);}
+	public static Xodb_db_file init__page_regy(Io_url dir)			{return init_(dir, Name__page_regy);}
+	public static Xodb_db_file init__wiki_image(Io_url dir)			{return init_(dir, Name__wiki_image);}
+	public static Xodb_db_file init__wiki_redirect(Io_url dir)		{return init_(dir, Name__wiki_redirect);}
+	public static Xodb_db_file init__temp_log(Io_url dir)			{return init_(dir, Name__temp_log);}
 	public static Xodb_db_file init_(Io_url dir, String name) {
 		Io_url url = dir.GenSubFil(name);
 		BoolRef created = BoolRef.n_();
@@ -41,5 +42,6 @@ public class Xodb_db_file {
 	public static final String 
 	  Name__wiki_image = "xowa.wiki.image.sqlite3", Name__wiki_redirect = "xowa.wiki.redirect.sqlite3"
 	, Name__file_make = "xowa.file.make.sqlite3", Name__temp_log = "xowa.temp.log.sqlite3"
+	, Name__page_regy = "xowa.file.page_regy.sqlite3"
 	;
 }

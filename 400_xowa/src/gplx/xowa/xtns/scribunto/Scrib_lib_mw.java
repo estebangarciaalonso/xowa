@@ -108,12 +108,12 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 				int key_int = ByteAry_.NotFound;
 				byte[] key_dat_ary = nde.Key_tkn().Dat_ary();
 				if (Env_.Mode_testing() && src == null)	// some tests will always pass a null src;
-					key_int = ByteAry_.XtoIntByPos(key_dat_ary, 0, key_dat_ary.length, ByteAry_.NotFound);
+					key_int = ByteAry_.X_to_int_or(key_dat_ary, 0, key_dat_ary.length, ByteAry_.NotFound);
 				else {
 					if (ByteAry_.Len_eq_0(key_dat_ary))	// should be called by current context;
-						key_int = ByteAry_.XtoIntByPos(src, nde.Key_tkn().Src_bgn(), nde.Key_tkn().Src_end(), ByteAry_.NotFound);
+						key_int = ByteAry_.X_to_int_or(src, nde.Key_tkn().Src_bgn(), nde.Key_tkn().Src_end(), ByteAry_.NotFound);
 					else								// will be called by parent context; note that this calls Xot_defn_tmpl_.Make_itm which sets a key_dat_ary; DATE:2013-09-23
-						key_int = ByteAry_.XtoIntByPos(key_dat_ary, 0, key_dat_ary.length, ByteAry_.NotFound);
+						key_int = ByteAry_.X_to_int_or(key_dat_ary, 0, key_dat_ary.length, ByteAry_.NotFound);
 				}
 				if (key_int == ByteAry_.NotFound)
 					continue;
@@ -335,7 +335,7 @@ class Scrib_lib_mw_callParserFunction_sorter implements gplx.lists.ComparerAble 
 		if (lhs_is_int)													// both are ints
 			return Int_.Compare(Int_.cast_(lhs_key), Int_.cast_(rhs_key));
 		else															// both are strings
-			return String_.Compare(String_.cast_(lhs_key), String_.cast_(rhs_key));
+			return String_.Compare(String_.as_or_fail_(lhs_key), String_.as_or_fail_(rhs_key));
 	}
 	public static final Scrib_lib_mw_callParserFunction_sorter _ = new Scrib_lib_mw_callParserFunction_sorter(); Scrib_lib_mw_callParserFunction_sorter() {}
 }

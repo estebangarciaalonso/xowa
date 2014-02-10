@@ -63,7 +63,7 @@ class Xow_mainpage_finder_fxt {
 		fxt.Wiki().Props().Main_page_(ByteAry_.new_ascii_(mainpage_val));
 	}
 	public void Init_mediawiki_page(String mainpage_val) {
-		fxt.ini_page_create(String_.new_ascii_(Xow_mainpage_finder.Ttl_mainpage), mainpage_val);
+		fxt.Init_page_create(String_.new_ascii_(Xow_mainpage_finder.Ttl_mainpage), mainpage_val);
 	}
 	public void Init_lang(String mainpage_val) {
 		Xol_msg_itm msg_itm = fxt.Wiki().Lang().Msg_mgr().Itm_by_key_or_new(Xow_mainpage_finder.Msg_mainpage);

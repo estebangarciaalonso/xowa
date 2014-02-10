@@ -69,7 +69,7 @@ class Xoctg_fmtr_itm_page extends Xoctg_fmtr_itm_base {
 }
 class Xoctg_fmtr_itm_file extends Xoctg_fmtr_itm_base {
 //		public override void XferAry(ByteAryBfr bfr, int idx) {
-//			html_itm = wiki.Html_mgr().Gallery_mgr().Html_gallery_itm_img();
+//			html_itm = wiki.Html_mgr().Gallery_xtn_mgr().Html_gallery_itm_img();
 //			for (int i = list.Bgn(); i < len; i++) {
 //				Xoctg_view_itm itm = list.Itms()[i];
 //				Xoa_ttl ttl = itm.Ttl();

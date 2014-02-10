@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xoa_consts {
+	public static final byte[] Url_wiki_intermediary = ByteAry_.new_ascii_("/wiki/");
 	public static final byte[] Url_relative_prefix = new byte[] {Byte_ascii.Slash, Byte_ascii.Slash};	// "//"
 	public static final byte[] Pipe_bry = new byte[] {Byte_ascii.Pipe};
 	public static final byte[] Nl_bry = new byte[] {Byte_ascii.NewLine};

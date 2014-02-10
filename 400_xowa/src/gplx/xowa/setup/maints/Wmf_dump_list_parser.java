@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.setup.maints; import gplx.*; import gplx.xowa.*; import gplx.xowa.setup.*;
 class Wmf_dump_list_parser {
 	public Wmf_dump_itm[] Parse(byte[] src) {
-		ListAdp itms = ListAdp_.new_();
+		OrderedHash itms = OrderedHash_.new_bry_();
 		int pos = 0;
 		while (true) {
 			int a_pos = ByteAry_.FindFwd(src, Find_anchor, pos); if (a_pos == ByteAry_.NotFound) break;	// no more anchors found
@@ -26,7 +26,8 @@ class Wmf_dump_list_parser {
 			try {
 			Wmf_dump_itm itm = new Wmf_dump_itm();
 			if (!Parse_href(itm, src, a_pos)) continue; 
-			itms.Add(itm);
+			if (itms.Has(itm.Wiki_abrv())) continue;	// ignore dupes
+			itms.Add(itm.Wiki_abrv(), itm);
 			itm.Status_time_(Parse_status_time(src, a_pos));
 			itm.Status_msg_(Parse_status_msg(src, a_pos));
 			} catch (Exception e) {Err_.Noop(e);}
@@ -53,7 +54,7 @@ class Wmf_dump_list_parser {
 		int li_pos = ByteAry_.FindBwd(src, Find_li, a_pos); if (li_pos == ByteAry_.NotFound) return null;
 		int bgn = ByteAry_.FindFwd(src, Byte_ascii.Gt, li_pos + Find_li.length); if (bgn == ByteAry_.NotFound) return null;
 		byte[] rv_bry = ByteAry_.Mid(src, bgn + 1, a_pos);
-		return DateAdp_.parse_fmt(String_.Trim(String_.new_ascii_(rv_bry)), "yyyy-MM-dd hh:mm:ss");
+		return DateAdp_.parse_fmt(String_.Trim(String_.new_ascii_(rv_bry)), "yyyy-MM-dd HH:mm:ss");
 	}
 	private byte[] Parse_status_msg(byte[] src, int a_pos) {
 		int span_pos = ByteAry_.FindFwd(src, Find_span_bgn, a_pos); if (span_pos == ByteAry_.NotFound) return null;
@@ -69,7 +70,7 @@ class Wmf_dump_list_parser {
 	, 	Find_span_end = ByteAry_.new_ascii_("</span>")
 	;
 }
-class Wmf_dump_itm {
+class Wmf_dump_itm implements gplx.CompareAble {
 	public byte[] Wiki_abrv() {return wiki_abrv;} public void Wiki_abrv_(byte[] v) {this.wiki_abrv = v;} private byte[] wiki_abrv;
 	public DateAdp Dump_date() {return dump_date;} public void Dump_date_(DateAdp v) {this.dump_date = v;} private DateAdp dump_date;
 	public byte[] Status_msg() {return status_msg;}
@@ -84,5 +85,6 @@ class Wmf_dump_itm {
 	} 	private byte[] status_msg;
 	public DateAdp Status_time() {return status_time;} public void Status_time_(DateAdp v) {this.status_time = v;} private DateAdp status_time;
 	public boolean Status_completed() {return status_completed;} private boolean status_completed;
+	public int compareTo(Object obj) {Wmf_dump_itm comp = (Wmf_dump_itm)obj; return ByteAry_.Compare(wiki_abrv, comp.wiki_abrv);}
 	private static byte[] Status_msg_dump_complete = ByteAry_.new_ascii_("Dump complete"), Status_msg_dump_in_progress = ByteAry_.new_ascii_("Dump in progress");
 }

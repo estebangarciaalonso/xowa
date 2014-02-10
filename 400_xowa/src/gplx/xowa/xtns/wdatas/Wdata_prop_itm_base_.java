@@ -51,8 +51,8 @@ public class Wdata_prop_itm_base_ {
 	}
 	private static Hash_adp_bry Snak_tid_regy = new Hash_adp_bry(false)
 		.Add_bry_byte(Wdata_doc_consts.Val_prop_novalue_bry, Snak_tid_novalue)
-		.Add_str_byteVal(Wdata_doc_consts.Val_prop_value_str, Snak_tid_value)
-		.Add_str_byteVal(Wdata_doc_consts.Val_prop_somevalue_str, Snak_tid_somevalue)
+		.Add_str_byte(Wdata_doc_consts.Val_prop_value_str, Snak_tid_value)
+		.Add_str_byte(Wdata_doc_consts.Val_prop_somevalue_str, Snak_tid_somevalue)
 		;
 	public static String Snak_tid_string(byte v) {
 		switch (v) {

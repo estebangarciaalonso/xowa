@@ -92,7 +92,7 @@ public class Xof_math_mgr implements GfoInvkAble {
 	));
 	public boolean Enabled() {return enabled;} public Xof_math_mgr Enabled_(boolean v) {enabled = v; return this;} private boolean enabled = true;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_enabled))		return Yn.XtoStr(enabled);
+		if		(ctx.Match(k, Invk_enabled))		return Yn.X_to_str(enabled);
 		else if	(ctx.Match(k, Invk_enabled_))		enabled = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_renderer))		return renderer_is_mathjax ? "mathjax" : "latex";
 		else if	(ctx.Match(k, Invk_renderer_))		renderer_is_mathjax = String_.Eq(m.ReadStr("v"), "mathjax");

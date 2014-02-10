@@ -37,7 +37,7 @@ class Xop_randomRootPage_page_fxt {
 		wiki = parser_fxt.Wiki();
 		special_page = wiki.Special_mgr().Page_randomRootPage();
 	}	private Xop_fxt parser_fxt; private Xop_randomRootPage_page special_page; private Xow_wiki wiki;
-	public void Init_create_page(String page) {parser_fxt.ini_page_create(page, page);}
+	public void Init_create_page(String page) {parser_fxt.Init_page_create(page, page);}
 	public void Test_open(String special_url, String expd) {
 		Xoa_page page = Test_special_open(wiki, special_page, special_url);
 		Tfds.Eq(expd, String_.new_ascii_(page.Url().Page_bry()));

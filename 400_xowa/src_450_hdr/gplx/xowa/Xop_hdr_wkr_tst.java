@@ -19,16 +19,16 @@ package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xop_hdr_wkr_tst {
 	@Before public void init() {fxt.Reset();} private Xop_fxt fxt = new Xop_fxt();
-	@Test  public void H2()							{fxt.tst_Parse_page_wiki_str("==a=="				, "<h2>a</h2>\n");}
-	@Test  public void H3()							{fxt.tst_Parse_page_wiki_str("===a==="				, "<h3>a</h3>\n");}
-	@Test  public void H6_limit()					{fxt.tst_Parse_page_wiki_str("=======a======="		, "<h6>=a=</h6>\n");}
-	@Test  public void Mismatch_bgn()				{fxt.tst_Parse_page_wiki_str("=====a=="				, "<h2>===a</h2>\n");}
-	@Test  public void Mismatch_end()				{fxt.tst_Parse_page_wiki_str("==a====="				, "<h2>a===</h2>\n");}
-	@Test  public void Dangling()					{fxt.tst_Parse_page_wiki_str("==a"					, "==a");}
-	@Test  public void Comment_bgn()				{fxt.tst_Parse_page_all_str ("<!--b-->==a=="		, "<h2>a</h2>\n");}
-	@Test  public void Comment_end()				{fxt.tst_Parse_page_all_str ("==a==<!--b-->"		, "<h2>a</h2>\n");}
+	@Test  public void H2()							{fxt.Test_parse_page_wiki_str("==a=="				, "<h2>a</h2>\n");}
+	@Test  public void H3()							{fxt.Test_parse_page_wiki_str("===a==="				, "<h3>a</h3>\n");}
+	@Test  public void H6_limit()					{fxt.Test_parse_page_wiki_str("=======a======="		, "<h6>=a=</h6>\n");}
+	@Test  public void Mismatch_bgn()				{fxt.Test_parse_page_wiki_str("=====a=="				, "<h2>===a</h2>\n");}
+	@Test  public void Mismatch_end()				{fxt.Test_parse_page_wiki_str("==a====="				, "<h2>a===</h2>\n");}
+	@Test  public void Dangling()					{fxt.Test_parse_page_wiki_str("==a"					, "==a");}
+	@Test  public void Comment_bgn()				{fxt.Test_parse_page_all_str ("<!--b-->==a=="		, "<h2>a</h2>\n");}
+	@Test  public void Comment_end()				{fxt.Test_parse_page_all_str ("==a==<!--b-->"		, "<h2>a</h2>\n");}
 	@Test  public void Ws_end() {	// PURPOSE: "==\n" merges all ws following it; \n\n\n is not transformed by Para_wkr to "<br/>"
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 		(	"==a== \t"
 		,	""
 		,	""
@@ -41,7 +41,7 @@ public class Xop_hdr_wkr_tst {
 		));
 	}
 	@Test  public void Many() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 		(	"==a=="
 		,	"===b==="
 		), String_.Concat_lines_nl_skipLast
@@ -52,7 +52,7 @@ public class Xop_hdr_wkr_tst {
 		));
 	}
 	@Test  public void Hdr_w_tblw() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 		(	"==a=="
 		,	"{|"
 		,	"|+"
@@ -67,7 +67,7 @@ public class Xop_hdr_wkr_tst {
 		));
 	}
 	@Test  public void Hdr_w_hr() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 		(	"==a=="
 		,	"----"
 		), String_.Concat_lines_nl_skipLast
@@ -75,15 +75,15 @@ public class Xop_hdr_wkr_tst {
 		,	"<hr/>"
 		));
 	}
-	@Test  public void Mix_apos_dangling()			{fxt.tst_Parse_page_wiki_str("==''a=="				, "<h2><i>a</i></h2>\n");}
-	@Test  public void Mix_xnde_dangling()			{fxt.tst_Parse_page_wiki_str("==<i>a=="				, "<h2><i>a</i></h2>\n");}
-	@Test  public void Mix_tblw_cell()				{fxt.tst_Parse_page_wiki_str("==a!!=="				, "<h2>a!!</h2>\n");}
-	@Test  public void Ws()							{fxt.tst_Parse_page_wiki_str("== a b =="			, "<h2> a b </h2>\n");}
-	@Test  public void Err_hdr()					{fxt.ini_Log_(Xop_hdr_log.Mismatched)					.tst_Parse_page_wiki_str("====a== =="	, "<h2>==a== </h2>\n").tst_Log_check();}
-	@Test  public void Err_end_hdr_is_1()			{fxt.ini_Log_(Xop_hdr_log.Mismatched, Xop_hdr_log.Len_1).tst_Parse_page_wiki_str("==a="			, "<h1>=a</h1>\n").tst_Log_check();}
+	@Test  public void Mix_apos_dangling()			{fxt.Test_parse_page_wiki_str("==''a=="				, "<h2><i>a</i></h2>\n");}
+	@Test  public void Mix_xnde_dangling()			{fxt.Test_parse_page_wiki_str("==<i>a=="			, "<h2><i>a</i></h2>\n");}
+	@Test  public void Mix_tblw_cell()				{fxt.Test_parse_page_wiki_str("==a!!=="				, "<h2>a!!</h2>\n");}
+	@Test  public void Ws()							{fxt.Test_parse_page_wiki_str("== a b =="			, "<h2> a b </h2>\n");}
+	@Test  public void Err_hdr()					{fxt.Init_log_(Xop_hdr_log.Mismatched)					.Test_parse_page_wiki_str("====a== =="	, "<h2>==a== </h2>\n").tst_Log_check();}
+	@Test  public void Err_end_hdr_is_1()			{fxt.Init_log_(Xop_hdr_log.Mismatched, Xop_hdr_log.Len_1).Test_parse_page_wiki_str("==a="			, "<h1>=a</h1>\n").tst_Log_check();}
 	@Test  public void Html_hdr_many() {
 		fxt.Hctx().Toc_show_(true);
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 		(	"==a=="
 		,	"==a=="
 		,	"==a=="

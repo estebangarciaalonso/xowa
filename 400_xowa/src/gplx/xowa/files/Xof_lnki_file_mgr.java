@@ -47,7 +47,7 @@ public class Xof_lnki_file_mgr {
 				if (fsdb_itm.Orig_wiki() == null) return false;		// itm not found; return now, else null exception later;
 				xfer_itm.Lnki_ext_(fsdb_itm.Lnki_ext());			// WORKAROUND: hacky, but fsdb_itm knows when ogg is ogv whereas xfer_itm does not; so, always override xfer_itm.ext with fsdb's; DATE:2014-02-02
 				xfer_itm.Url_bldr_(url_bldr);						// default Url_bldr for xfer_itm uses @ for thumbtime; switch to -; DATE:2014-02-02
-				Init_fsdb_by_xfer(fsdb_itm, xfer_itm);				// copy xfer itm props to fsdb_itm
+				//Init_fsdb_by_xfer(fsdb_itm, xfer_itm);				// copy xfer itm props to fsdb_itm; DELETE: DATE:2014-02-04
 				fsdb_itm.Html__init(wiki.File_mgr().Repo_mgr(), url_bldr, tmp_img_size, exec_tid);
 				xfer_itm.Html_orig_src_(ByteAry_.new_utf8_(fsdb_itm.Html_orig_url().To_http_file_str()));	// always set orig_url; note that w,h are not necessary for orig url; orig url needed for [[Media:]] links; DATE:2014-01-19
 				if (Io_mgr._.ExistsFil(fsdb_itm.Html_url())) {
@@ -80,7 +80,7 @@ public class Xof_lnki_file_mgr {
 	}
 	private void Hash_xfer_itms_add(byte[] key, Xof_fsdb_itm itm) {
 		if (	ByteAry_.Len_gt_0(key)	// ignore null / empty itms; needed for redirects
-			&&	!xfer_list.Has(key	)	// don't add if already there
+			&&	!xfer_list.Has(key)		// don't add if already there
 			&&	orig_regy.Has(key)		// add if found in orig_regy
 			)
 			xfer_list.Add(key, itm);
@@ -91,10 +91,10 @@ public class Xof_lnki_file_mgr {
 		byte[] lnki_md5 = Xof_xfer_itm.Md5_(lnki_ttl);
 		fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, lnki_tkn.Lnki_type(), lnki_tkn.Width(), lnki_tkn.Height(), lnki_tkn.Upright(), lnki_tkn.Thumbtime(), lnki_tkn.Page());
 	}
-	private void Init_fsdb_by_xfer(Xof_fsdb_itm fsdb_itm, Xof_xfer_itm xfer_itm) {
-		byte[] lnki_ttl = xfer_itm.Lnki_ttl();
-		Xof_ext lnki_ext = xfer_itm.Lnki_ext();
-		byte[] lnki_md5 = Xof_xfer_itm.Md5_(lnki_ttl);
-		fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, xfer_itm.Lnki_type(), xfer_itm.Lnki_w(), xfer_itm.Lnki_h(), xfer_itm.Lnki_upright(), xfer_itm.Lnki_thumbtime(), xfer_itm.Lnki_page());
-	}
+//		private void Init_fsdb_by_xfer(Xof_fsdb_itm fsdb_itm, Xof_xfer_itm xfer_itm) {	// DELETE: DATE:2014-02-04
+//			byte[] lnki_ttl = xfer_itm.Lnki_ttl();
+//			Xof_ext lnki_ext = xfer_itm.Lnki_ext();
+//			byte[] lnki_md5 = Xof_xfer_itm.Md5_(lnki_ttl);
+//			fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, xfer_itm.Lnki_type(), xfer_itm.Lnki_w(), xfer_itm.Lnki_h(), xfer_itm.Lnki_upright(), xfer_itm.Lnki_thumbtime(), xfer_itm.Lnki_page());
+//		}
 }

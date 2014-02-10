@@ -19,7 +19,7 @@ package gplx.xowa.xtns.refs; import gplx.*; import gplx.xowa.*; import gplx.xowa
 public class Xoh_ref_wtr {
 	Xoo_ref opt = Xoo_ref.new_();
 	public void Xnde_ref(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
-		Xtn_ref_nde itm = (Xtn_ref_nde)xnde.Xnde_data();
+		Xtn_ref_nde itm = (Xtn_ref_nde)xnde.Xnde_xtn();
 		if (itm == null) return;	// FUTURE: See Battle of Midway
 		if (itm.Follow_y()) return;	// NOTE: "follow" is always appended to preceding ref; will never generate its own ^ a  
 		opt.Itm_html().Bld_bfr_many(bfr
@@ -55,7 +55,7 @@ public class Xoh_ref_wtr {
 		return rv;
 	}
 	public void Xnde_references(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
-		Xtn_references_nde references = (Xtn_references_nde)xnde.Xnde_data();
+		Xtn_references_nde references = (Xtn_references_nde)xnde.Xnde_xtn();
 		Xtn_ref_lst lst = ctx.Page().Ref_mgr().Lst_get(references.Group(), references.List_idx());	// get group; EX: <references group="note"/>
 		if (lst == null) return;	// NOTE: possible to have a grouped references without references; EX: Infobox planet; <references group=note> in sidebar, but no refs 
 		if (lst.Itms_len() == 0) return;

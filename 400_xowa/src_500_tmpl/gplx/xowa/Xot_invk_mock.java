@@ -31,7 +31,7 @@ public class Xot_invk_mock implements Xot_invk {
 		for (int i = 0; i < list_len; i++) {	// iterate over list to find nth *non-keyd* arg; SEE:NOTE_1
 			Arg_nde_tkn nde = (Arg_nde_tkn)args.FetchAt(i);
 			if (nde.KeyTkn_exists()) {
-				int key_int = ByteAry_.XtoIntOr(nde.Key_tkn().Dat_ary(), -1);
+				int key_int = ByteAry_.X_to_int_or(nde.Key_tkn().Dat_ary(), -1);
 				if (key_int == -1)
 					continue;
 				else {	// key is numeric

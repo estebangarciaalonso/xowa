@@ -43,37 +43,44 @@ public class Xoh_js_cleaner {
 						pos += frag_len; 
 					}
 					else {	// jscript attribue; EX: onmouseover
-						boolean next_byte_is_equal = false; boolean break_loop = false;
-						int atr_pos = pos + frag_len;
-						for (; atr_pos < end; atr_pos++) {
-							byte atr_b = src[atr_pos];
-							switch (atr_b) {
-								case Byte_ascii.Tab: case Byte_ascii.NewLine: case Byte_ascii.CarriageReturn: case Byte_ascii.Space: break;
-								case Byte_ascii.Eq:
-									next_byte_is_equal = true;
-									++atr_pos;
-									break_loop = true;
-									break;
-								default:
-									break_loop = true;
-									break;
-							}
-							if (break_loop) break;
-						}
-						if (next_byte_is_equal) {
+						int atr_pos = Get_pos_eq(src, pos, end, frag_len);
+						if (atr_pos == -1)	// false match; EX: "onSelectNotJs=3"; "regionSelect=2"
+							pos += frag_len;
+						else {
 							if (!dirty) {bfr.Add_mid(src, bgn, pos); dirty = true;}
 							bfr.Add(frag);
 							bfr.Add(gplx.html.Html_entities.Eq);
 							pos = atr_pos;
-						}
-						else {
-							pos += frag_len;
 						}
 					}
 				}
 			}
 		}	finally {if (bfr != null) bfr.Mkr_rls();}
 		return dirty ? bfr.XtoAryAndClear() : null;
+	}
+	private int Get_pos_eq(byte[] src, int pos, int end, int frag_len) {
+		if (	pos > 0								// bounds check
+			&& !Byte_ascii.Is_ws(src[pos - 1])		// previous byte is not whitespace; frag is part of word; EX: "regionSelect=2"; DATE:2014-02-06
+			)
+			return -1;
+		boolean next_byte_is_equal = false; boolean break_loop = false;
+		int atr_pos = pos + frag_len;
+		for (; atr_pos < end; atr_pos++) {
+			byte atr_b = src[atr_pos];
+			switch (atr_b) {
+				case Byte_ascii.Tab: case Byte_ascii.NewLine: case Byte_ascii.CarriageReturn: case Byte_ascii.Space: break;
+				case Byte_ascii.Eq:
+					next_byte_is_equal = true;
+					++atr_pos;
+					break_loop = true;
+					break;
+				default:
+					break_loop = true;
+					break;
+			}
+			if (break_loop) break;
+		}
+		return next_byte_is_equal ? atr_pos : -1;
 	}
 	private void Ctor() {
 		Reg_itm("<script");

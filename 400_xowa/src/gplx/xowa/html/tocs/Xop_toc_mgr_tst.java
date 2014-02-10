@@ -441,6 +441,21 @@ public class Xop_toc_mgr_tst {
 		, "<h2><span class='mw-headline' id='A'>A<a href=\"/wiki/Category:B\">Category:B</a></span></h2>"
 		));
 	}
+	@Test   public void Lnki_invalid() { // PURPOSE: invalid lnki was causing null ref; DATE:2014-02-07
+		fxt.Test_html_all(String_.Concat_lines_nl_skipLast
+		( "__FORCETOC__"
+		, "==[[]]=="
+		)
+		, String_.Concat_lines_nl
+		( TocTable_nl_n
+		( "  <ul>"
+		, "    <li class=\"toclevel-1 tocsection-1\"><a href=\"#.5B.5B.5D.5D\"><span class=\"tocnumber\">1</span> <span class=\"toctext\">[[]]</span></a>"
+		, "    </li>"
+		, "  </ul>"
+		)
+		, "<h2><span class='mw-headline' id='.5B.5B.5D.5D'>[[]]</span></h2>"
+		));
+	}
 	private String TocTable_nl_y(String... ary) {return TocTable(Bool_.Y, ary);}
 	private String TocTable_nl_n(String... ary) {return TocTable(Bool_.N, ary);}
 	private String TocTable(boolean nl, String... ary) {
@@ -474,7 +489,7 @@ class Xop_toc_mgr_fxt {
 	public void Test_html_all(String raw, String expd) {
 		fxt.Hctx().Toc_show_(true);
 		toc_mgr.Clear();
-		fxt.tst_Parse_page_all_str(raw, expd);
+		fxt.Test_parse_page_all_str(raw, expd);
 		fxt.Hctx().Toc_show_(false);
 	}
 }

@@ -49,11 +49,11 @@ public class Xoi_dump_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_wiki_storage_type))					return Wiki_storage_type_str(wiki_storage_type);
 		else if	(ctx.Match(k, Invk_wiki_storage_type_))					wiki_storage_type = Wiki_storage_type_parse(m.ReadStr("v"));
 		else if	(ctx.Match(k, Invk_wiki_storage_type_list))				return Options_storage_type_list;
-		else if	(ctx.Match(k, Invk_css_wiki_update))					return Yn.XtoStr(css_wiki_update);
+		else if	(ctx.Match(k, Invk_css_wiki_update))					return Yn.X_to_str(css_wiki_update);
 		else if	(ctx.Match(k, Invk_css_wiki_update_))					css_wiki_update = m.ReadYn("v");
-		else if	(ctx.Match(k, Invk_css_commons_download))				return Yn.XtoStr(css_commons_download);
+		else if	(ctx.Match(k, Invk_css_commons_download))				return Yn.X_to_str(css_commons_download);
 		else if	(ctx.Match(k, Invk_css_commons_download_))				css_commons_download = m.ReadYn("v");
-		else if	(ctx.Match(k, Invk_delete_xml_file))					return Yn.XtoStr(delete_xml_file);
+		else if	(ctx.Match(k, Invk_delete_xml_file))					return Yn.X_to_str(delete_xml_file);
 		else if	(ctx.Match(k, Invk_delete_xml_file_))					delete_xml_file = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_search_version))						return Options_search_version_str(search_version);
 		else if	(ctx.Match(k, Invk_search_version_))					search_version = Options_search_version_parse(m.ReadStr("v"));

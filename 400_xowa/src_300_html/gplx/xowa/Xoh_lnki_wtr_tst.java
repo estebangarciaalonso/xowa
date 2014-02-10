@@ -22,7 +22,7 @@ public class Xoh_lnki_wtr_tst {
 	@Before public void init() {fxt.Reset();}
 	@Test  public void Img_full() {	// PURPOSE: full with title was outputting invalid html; DATE:2013-12-31
 		fxt.Hctx().Lnki_title_(true);
-		fxt.tst_Parse_page_wiki_str
+		fxt.Test_parse_page_wiki_str
 		(	"[[File:A.png]]"
 		,	String_.Concat_lines_nl_skipLast
 		(	"<a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"	// NOTE: used to output class=\"image\"A.png 
@@ -30,10 +30,10 @@ public class Xoh_lnki_wtr_tst {
 		fxt.Hctx().Lnki_title_(false);
 	}
 	@Test  public void Img_embed() {
-		fxt.tst_Parse_page_wiki_str("[[File:A.png|9x8px|alt=abc]]", Xop_fxt.html_img_none("File:A.png", "abc", "file:///mem/wiki/repo/trg/thumb/7/0/A.png/9px.png", "A.png"));
+		fxt.Test_parse_page_wiki_str("[[File:A.png|9x8px|alt=abc]]", Xop_fxt.html_img_none("File:A.png", "abc", "file:///mem/wiki/repo/trg/thumb/7/0/A.png/9px.png", "A.png"));
 	}
 	@Test  public void Img_none() {	// NOTE: floatnone is WP behavior; MW omits div tag
-		fxt.tst_Parse_page_wiki_str
+		fxt.Test_parse_page_wiki_str
 		(	"[[File:A.png|none|20x30px|b]]"
 		,	String_.Concat_lines_nl_skipLast
 		(	"<div class=\"floatnone\">"
@@ -41,7 +41,7 @@ public class Xoh_lnki_wtr_tst {
 		));
 	}
 	@Test  public void Img_thumb_none() {
-		fxt.tst_Parse_page_wiki_str
+		fxt.Test_parse_page_wiki_str
 		(	"[[File:A.png|thumb|none|b]]"
 		,	String_.Concat_lines_nl_skipLast
 		(	"<div class=\"thumb tnone\">"
@@ -61,7 +61,7 @@ public class Xoh_lnki_wtr_tst {
 		));
 	}
 	@Test  public void Img_frame() {	// PURPOSE: lnki with "frame" is same as thumb; DATE:2013-12-23
-		fxt.tst_Parse_page_wiki_str
+		fxt.Test_parse_page_wiki_str
 			(	"[[File:A.png|frame|220x110px|b]]"
 			,	String_.Concat_lines_nl_skipLast
 			(	"<div class=\"thumb tright\">"
@@ -81,12 +81,12 @@ public class Xoh_lnki_wtr_tst {
 			));
 	}
 	@Test  public void Border() {
-		fxt.tst_Parse_page_wiki_str
+		fxt.Test_parse_page_wiki_str
 			(	"[[File:A.png|border]]"
 			,	"<a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" class=\"thumbborder\" /></a>");
 	}
 	@Test  public void Lnki_full_video() {
-		fxt.tst_Parse_page_wiki_str
+		fxt.Test_parse_page_wiki_str
 		(	"[[File:A.ogv|400px|a|alt=b]]", String_.Concat_lines_nl_skipLast
 		(	"    <div id=\"xowa_media_div\">"
 		,	"      <div>"
@@ -103,7 +103,7 @@ public class Xoh_lnki_wtr_tst {
 		));		
 	}
 	@Test  public void Lnki_full_video_ogg() {// PURPOSE: ogg should default to video on first load; otherwise dynamic-update won't be able to put in thumb
-		fxt.tst_Parse_page_wiki_str
+		fxt.Test_parse_page_wiki_str
 		(	"[[File:A.ogg|400px|a|alt=b]]", String_.Concat_lines_nl_skipLast
 		(	"    <div id=\"xowa_media_div\">"
 		,	"      <div>"
@@ -120,7 +120,7 @@ public class Xoh_lnki_wtr_tst {
 		));		
 	}
 	@Test  public void Lnki_full_audio() {
-		fxt.tst_Parse_page_wiki_str
+		fxt.Test_parse_page_wiki_str
 		(	"[[File:A.oga|noicon]]", String_.Concat_lines_nl_skipLast
 		(	"    <div id=\"xowa_media_div\">"
 		,	"      <div>"
@@ -135,13 +135,13 @@ public class Xoh_lnki_wtr_tst {
 		));		
 	}
 	@Test  public void Lnki_full_svg() {
-		fxt.tst_Parse_page_wiki_str
+		fxt.Test_parse_page_wiki_str
 		(	"[[File:A.svg|a|alt=b]]", String_.Concat_lines_nl_skipLast
 		(	"<a href=\"/wiki/File:A.svg\" class=\"image\" xowa_title=\"A.svg\"><img id=\"xowa_file_img_0\" alt=\"b\" src=\"file:///mem/wiki/repo/trg/thumb/7/5/A.svg/-1px.png\" width=\"0\" height=\"0\" /></a>"	// HACK: tries to get orig_w which is not available
 		));		
 	}
 	@Test  public void Lnki_caption_nested_media() { // EX.WP:Beethoven;
-		fxt.tst_Parse_page_wiki_str("[[File:A.png|thumb|b [[Media:A.ogg]] c]]", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("[[File:A.png|thumb|b [[Media:A.ogg]] c]]", String_.Concat_lines_nl_skipLast
 		(	"<div class=\"thumb tright\">"
 		,	"  <div id=\"xowa_file_div_0\" class=\"thumbinner\" style=\"width:220px;\">"
 		,	"    <a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/220px.png\" width=\"0\" height=\"0\" /></a>"
@@ -160,7 +160,7 @@ public class Xoh_lnki_wtr_tst {
 		));
 	}
 	@Test  public void Lnki_thumb_audio() {
-		fxt.tst_Parse_page_wiki_str
+		fxt.Test_parse_page_wiki_str
 		(	"[[File:A.oga|thumb|a|alt=b]]", String_.Concat_lines_nl_skipLast
 		(	"<div class=\"thumb tright\">"
 		,	"  <div id=\"xowa_file_div_0\" class=\"thumbinner\" style=\"width:220px;\">"
@@ -194,7 +194,7 @@ public class Xoh_lnki_wtr_tst {
 		));		
 	}
 	@Test  public void Lnki_thumb_audio_noicon() {
-		fxt.tst_Parse_page_wiki_str
+		fxt.Test_parse_page_wiki_str
 		(	"[[File:A.oga|thumb|noicon|a|alt=b]]", String_.Concat_lines_nl_skipLast
 		(	"    <div id=\"xowa_media_div\">"
 		,	"      <div>"
@@ -213,7 +213,7 @@ public class Xoh_lnki_wtr_tst {
 		));		
 	}
 	@Test  public void Lnki_thumb_video() {
-		fxt.tst_Parse_page_wiki_str
+		fxt.Test_parse_page_wiki_str
 		(	"[[File:A.ogv|thumb|400px|a|alt=b]]", String_.Concat_lines_nl_skipLast
 		(	"<div class=\"thumb tright\">"
 		,	"  <div id=\"xowa_file_div_0\" class=\"thumbinner\" style=\"width:400px;\">"
@@ -247,7 +247,7 @@ public class Xoh_lnki_wtr_tst {
 		));		
 	}
 	@Test  public void Lnki_thumb_webm() {	// PURPOSE: webm thumb wasn't being shown; DATE:2014-01-25
-		fxt.tst_Parse_page_wiki_str
+		fxt.Test_parse_page_wiki_str
 		(	"[[File:A.webm|thumb|400px|a|alt=b]]", String_.Concat_lines_nl_skipLast
 		(	"<div class=\"thumb tright\">"
 		,	"  <div id=\"xowa_file_div_0\" class=\"thumbinner\" style=\"width:400px;\">"
@@ -281,20 +281,20 @@ public class Xoh_lnki_wtr_tst {
 		));		
 	}
 	@Test  public void Lnki_media_normal() {
-		fxt.tst_Parse_page_wiki_str("[[Media:A.png|b]]", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("[[Media:A.png|b]]", String_.Concat_lines_nl_skipLast
 		(	"<a href=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" xowa_title=\"A.png\">b"
 		,	"</a>"
 		));
 	}
 	@Test  public void Lnki_media_literal() {
-		fxt.tst_Parse_page_wiki_str("[[:Media:A.ogg|b]]", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("[[:Media:A.ogg|b]]", String_.Concat_lines_nl_skipLast
 		(	"<a href=\"file:///mem/wiki/repo/trg/orig/4/2/A.ogg\" xowa_title=\"A.ogg\">b"
 		,	"</a>"
 		));
 	}
 	@Test  public void Lnki_media_literal_pdf() {
 		fxt.Wiki().Html_mgr().Img_suppress_missing_src_(true);	// simulate missing file; DATE:2014-01-30
-		fxt.tst_Parse_page_wiki_str("[[Media:A.pdf|b]]", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("[[Media:A.pdf|b]]", String_.Concat_lines_nl_skipLast
 		(	"<a href=\"file:///mem/wiki/repo/trg/orig/e/f/A.pdf\" xowa_title=\"A.pdf\">b"
 		,	"</a>"
 		));
@@ -302,7 +302,7 @@ public class Xoh_lnki_wtr_tst {
 		fxt.Wiki().Html_mgr().Img_suppress_missing_src_(false);
 	}
 	@Test  public void Lnki_file_alt_link() {	// PURPOSE: lnki in caption should not create alt="b<a href="c">cd</a>"
-		fxt.tst_Parse_page_wiki_str("[[File:A.png|thumb|alt=b [[c]] d]]", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("[[File:A.png|thumb|alt=b [[c]] d]]", String_.Concat_lines_nl_skipLast
 		(	"<div class=\"thumb tright\">"
 		,	"  <div id=\"xowa_file_div_0\" class=\"thumbinner\" style=\"width:220px;\">"
 		,	"    <a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"b c d\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/220px.png\" width=\"0\" height=\"0\" /></a>"
@@ -325,7 +325,7 @@ public class Xoh_lnki_wtr_tst {
 	}
 	@Test  public void Lnki_full_audio_ogg() {// PURPOSE: ogg should show src on first load
 		fxt.Wiki().Html_mgr().Img_suppress_missing_src_(true);	// simulate release-mode wherein missing images will not have src
-		fxt.tst_Parse_page_all_str
+		fxt.Test_parse_page_all_str
 		(	"[[File:A.ogg]]", String_.Concat_lines_nl_skipLast
 		(	"    <div id=\"xowa_media_div\">"
 		,	"      <div>"
@@ -350,7 +350,7 @@ public class Xoh_lnki_wtr_tst {
 	}
 	@Test  public void Lnki_alt_is_text() {	// PURPOSE: (a) alt should default to caption; (b) alt should not show html chars (like <a src=")
 		fxt.Hctx().Lnki_title_(true);
-		fxt.tst_Parse_page_all_str
+		fxt.Test_parse_page_all_str
 		(	"[[File:A.png|a[[b]]c]]"
 		,	"<a href=\"/wiki/File:A.png\" class=\"image\" title=\"a\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"abc\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
 		);
@@ -358,7 +358,7 @@ public class Xoh_lnki_wtr_tst {
 	}
 	@Test  public void Alt_ignore_apos() {// PURPOSE: alt should ignore apos; EX: [[File:A.png|''A'']] should have alt of A; DATE:2013-10-25
 		fxt.Hctx().Lnki_title_(true);
-		fxt.tst_Parse_page_all_str
+		fxt.Test_parse_page_all_str
 			(	"[[File:A.png|''b'']]"
 			,	"<a href=\"/wiki/File:A.png\" class=\"image\" title=\"b\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"b\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
 			);
@@ -366,7 +366,7 @@ public class Xoh_lnki_wtr_tst {
 	}
 	@Test  public void Alt_ignore_lnke() {// PURPOSE: alt should ignore lnke
 		fxt.Hctx().Lnki_title_(true);
-		fxt.tst_Parse_page_all_str
+		fxt.Test_parse_page_all_str
 			(	"[[File:A.png|b[http://c.org d] e]]"
 			,	"<a href=\"/wiki/File:A.png\" class=\"image\" title=\"bd e\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"bd e\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
 			);
@@ -374,7 +374,7 @@ public class Xoh_lnki_wtr_tst {
 	}
 	@Test  public void Alt_ignore_list() {// PURPOSE: alt should ignore list
 		fxt.Hctx().Lnki_title_(true);
-		fxt.tst_Parse_page_all_str
+		fxt.Test_parse_page_all_str
 		(	"[[File:A.png|b\n*c]]"
 		,	"<a href=\"/wiki/File:A.png\" class=\"image\" title=\"bc\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"b*c\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
 		);
@@ -382,7 +382,7 @@ public class Xoh_lnki_wtr_tst {
 	}
 	@Test  public void Alt_ignore_tblw() {// PURPOSE: alt should ignore tblw
 		fxt.Hctx().Lnki_title_(true);
-		fxt.tst_Parse_page_all_str
+		fxt.Test_parse_page_all_str
 			(	"[[File:A.png|\n{|\n|-\n|b\n|}\n]]"
 			,	"<a href=\"/wiki/File:A.png\" class=\"image\" title=\"b&#10;\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"   b \" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
 			);
@@ -391,7 +391,7 @@ public class Xoh_lnki_wtr_tst {
 	@Test  public void Alt_ignore_para() {// PURPOSE: alt should ignore para
 		fxt.Hctx().Lnki_title_(true);
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str
+		fxt.Test_parse_page_all_str
 			(	"[[File:A.png|b\nc]]"
 			,	String_.Concat_lines_nl
 			(	"<p><a href=\"/wiki/File:A.png\" class=\"image\" title=\"b&#10;c\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"b c\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
@@ -402,27 +402,27 @@ public class Xoh_lnki_wtr_tst {
 	}
 	@Test  public void Lnki_empty_alt_is_omitted() {// PURPOSE: empty alt should be ignored; DATE:2013-07-30
 		fxt.Hctx().Lnki_title_(true);
-		fxt.tst_Parse_page_all_str
+		fxt.Test_parse_page_all_str
 		(	"[[File:A.png|a|alt=]]"
 		,	"<a href=\"/wiki/File:A.png\" class=\"image\" title=\"a\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a>"
 		);
 		fxt.Hctx().Lnki_title_(false);
 	}
 	@Test   public void Href_anchor_leading_space() {	// PURPOSE: space before anchor should be preserved, not " " -> "#"
-		fxt.tst_Parse_page_all_str("[[A #b]]", "<a href=\"/wiki/A#b\">A #b</a>");
+		fxt.Test_parse_page_all_str("[[A #b]]", "<a href=\"/wiki/A#b\">A #b</a>");
 	}
 	@Test   public void Href_anchor_leading_space_ns() {	// PURPOSE: same as above, but with ns; DATE:2013-08-29
-		fxt.tst_Parse_page_all_str("[[Help:A   #b]]", "<a href=\"/wiki/Help:A#b\">Help:A #b</a>");
+		fxt.Test_parse_page_all_str("[[Help:A   #b]]", "<a href=\"/wiki/Help:A#b\">Help:A #b</a>");
 	}
 	@Test   public void Href_anchor_leading_ns_lc() {	// PURPOSE: same as above but with lc title
-		fxt.tst_Parse_page_all_str("[[Help:a#b]]", "<a href=\"/wiki/Help:A#b\">Help:A#b</a>");
+		fxt.Test_parse_page_all_str("[[Help:a#b]]", "<a href=\"/wiki/Help:A#b\">Help:A#b</a>");
 	}
 	@Test   public void Href_anchor_leading_space_ns_lc() {	// PURPOSE: same as above but with lc title
-		fxt.tst_Parse_page_all_str("[[Help:a #b]]", "<a href=\"/wiki/Help:A#b\">Help:A #b</a>");
+		fxt.Test_parse_page_all_str("[[Help:a #b]]", "<a href=\"/wiki/Help:A#b\">Help:A #b</a>");
 	}
 	@Test  public void Lnki_caption_nested_file() { // PURPOSE: nested lnki in caption breaks alt with html chars; EX:de.w:Wien; DATE:2013-12-16
 		fxt.Hctx().Lnki_title_(true);
-		fxt.tst_Parse_page_wiki_str("[[File:A.png|none|[[File:B.png|20px|d]] c]]", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("[[File:A.png|none|[[File:B.png|20px|d]] c]]", String_.Concat_lines_nl_skipLast
 			(	"<div class=\"floatnone\">"
 			,	"<a href=\"/wiki/File:A.png\" class=\"image\" title=\" c\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"d c\" src=\"file:///mem/wiki/repo/trg/orig/7/0/A.png\" width=\"0\" height=\"0\" /></a></div>"
 			,	""

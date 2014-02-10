@@ -94,7 +94,7 @@ public class Wdata_wiki_mgr_fxt {
 	public void Test_parse_pid(String val, int expd)	{Tfds.Eq(expd, Wdata_pf_property.Parse_pid(num_parser, ByteAry_.new_ascii_(val)));} NumberParser num_parser = new NumberParser();
 	public void Init_pages_add(Wdata_doc page) {wdata_mgr.Pages_add(page.Qid(), page);}
 	public void Test_parse(String raw, String expd) {
-		parser_fxt.tst_Parse_page_tmpl_str(raw, expd);
+		parser_fxt.Test_parse_page_tmpl_str(raw, expd);
 	}
 	public void Test_parse_langs(String raw, String expd) {
 		// clear langs, else dupes

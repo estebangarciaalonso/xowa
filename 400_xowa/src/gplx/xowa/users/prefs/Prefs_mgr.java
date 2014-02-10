@@ -62,8 +62,9 @@ public class Prefs_mgr implements GfoInvkAble {
 		return bfr.XtoAryAndClear();
 	}	private ByteAryFmtr props_get_fmtr; 
 	private void Props_set_and_reload() {
-		Props_set(app.Gui_mgr().Main_win().Page().Data_raw());
-		app.Gui_mgr().Main_win().Exec_page_reload();
+		Xoa_page page = app.Gui_mgr().Main_win().Page();
+		Props_set(page.Data_raw());
+		page.Wiki().ParsePage_root(page, true);	// reparse in order to save new values to root; needed for history and going back / fwd; DATE:2014-02-07
 		app.Usr_dlg().Prog_direct("options saved (" + DateAdp_.Now().XtoStr_fmt("HH:mm:ss") + ")");
 	}
 	public void Props_set(byte[] src) {

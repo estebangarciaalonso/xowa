@@ -23,8 +23,8 @@ class Scrib_interpreter {
 		this.engine = engine;
 		args_srl = new Scrib_lua_encoder(app.Usr_dlg()); 
 		server = new Process_server_base();
-		scrib_opts = (Xow_xtn_scribunto)app.Xtn_mgr().Get_or_fail(Xow_xtn_scribunto.XTN_KEY);
-	}	private Scrib_engine engine; private Xoa_app app; private Xow_xtn_scribunto scrib_opts;
+		scrib_opts = (Scrib_xtn_mgr)app.Xtn_mgr().Get_or_fail(Scrib_xtn_mgr.XTN_KEY);
+	}	private Scrib_engine engine; private Xoa_app app; private Scrib_xtn_mgr scrib_opts;
 	private Scrib_lua_server_rsp rsp = new Scrib_lua_server_rsp(); private Scrib_lua_encoder args_srl;
 	public Scrib_fnc LoadString(String name, String text) {
 		KeyVal[] rslt = this.Dispatch("op", "loadString", "text", text, "chunkName", name);
@@ -73,7 +73,7 @@ class Scrib_interpreter {
 			else if (String_.Eq(op, "call")) {
 				String id = rsp.Call_id();
 				KeyVal[] args = rsp.Call_args();
-				Scrib_cbk cbk = this.Cbks_get_by_key(id); if (cbk == null) throw Xow_xtn_scribunto.err_("could not find cbk with id of {0}", id);
+				Scrib_cbk cbk = this.Cbks_get_by_key(id); if (cbk == null) throw Scrib_xtn_mgr.err_("could not find cbk with id of {0}", id);
 				KeyVal[] cbk_rslts = KeyVal_.Ary_cast_(cbk.Invk(args));
 				ary = Object_.Ary("op", "return", "nvalues", cbk_rslts.length, "values", cbk_rslts);
 			}

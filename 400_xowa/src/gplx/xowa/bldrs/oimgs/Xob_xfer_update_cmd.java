@@ -62,7 +62,7 @@ public class Xob_xfer_update_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	, ",       cur.orig_h"
 	, ",       cur.file_w"
 	, ",       cur.file_h"
-	, ",       cur.lnki_thumbtime"
+	, ",       cur.lnki_time"
 	, ",       cur.lnki_count"
 	, ",       CASE"
 	, "          WHEN old.lnki_ttl IS NULL THEN"	// not in old table; mark todo

@@ -31,9 +31,16 @@ public class Lst_pfunc_wkr {
 		Xow_wiki wiki = ctx.Wiki();
 		Xoa_ttl src_ttl = Xoa_ttl.parse_(wiki, src_ttl_bry); if (src_ttl == null) return;						// {{#lst:<>}} -> ""
 		Xoa_page src_page = wiki.Data_mgr().Get_page(src_ttl, false); if (src_page.Missing()) return;			// {{#lst:missing}} -> ""
-
-		if (ctx.Wiki().View_data().Lst_recursed()) return;
-		ctx.Wiki().View_data().Lst_recursed_(true);
+//			byte[] recurse_key = src_ttl.Full_db();
+//			boolean recurse_is_tmpl = src_ttl.Ns().Id_tmpl();
+//			if (recurse_is_tmpl) {
+//				if (ctx.Wiki().View_data().Lst_recurse_has(recurse_key)) return;
+//				ctx.Wiki().View_data().Lst_recurse_add(recurse_key);
+//			}
+//			else {
+			if (ctx.Wiki().View_data().Pages_recursed()) return;
+			ctx.Wiki().View_data().Pages_recursed_(true);
+//			}
 		Xop_ctx sub_ctx = Xop_ctx.new_sub_(wiki);
 		Xot_defn_tmpl defn_tmpl = wiki.Parser().Parse_tmpl(sub_ctx, sub_ctx.Tkn_mkr(), src_ttl.Ns(), src_ttl_bry, src_page.Data_raw());	// NOTE: parse as tmpl to ignore <noinclude>
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
@@ -41,7 +48,11 @@ public class Lst_pfunc_wkr {
 		byte[] src = tmp_bfr.Mkr_rls().XtoAryAndClear();
 		Xop_root_tkn root = wiki.Parser().Parse_recurse(sub_ctx, sub_ctx, src, true);	// NOTE: pass sub_ctx as old_ctx b/c entire document will be parsed, and references outside the section should be ignored;
 		src = root.Data_mid();	// NOTE: must set src to root.Data_mid() which is result of parse; else <nowiki> will break text; DATE:2013-07-11
-		ctx.Wiki().View_data().Lst_recursed_(false);
+		
+//			if (recurse_is_tmpl)
+//				ctx.Wiki().View_data().Lst_recurse_del(recurse_key);
+//			else
+			ctx.Wiki().View_data().Pages_recursed_(false);
 
 		if		(mode_include)	Write_include(bfr, sub_ctx, src, sect_bgn, sect_end);
 		else					Write_exclude(bfr, sub_ctx, src, sect_exclude, sect_replace);

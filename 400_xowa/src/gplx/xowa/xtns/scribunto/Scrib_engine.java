@@ -19,6 +19,7 @@ package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx
 public class Scrib_engine {
 	public Scrib_engine(Xoa_app app, Xop_ctx ctx) {// NOTE: ctx needed for language reg
 		this.app = app; this.ctx = ctx; interpreter = new Scrib_interpreter(app, this);
+		this.wiki = ctx.Wiki(); this.page = ctx.Page();	// NOTE: wiki / page needed for title reg; DATE:2014-02-05
 		fsys_mgr.Root_dir_(app.Fsys_mgr().Root_dir().GenSubDir_nest("bin", "any", "lua", "mediawiki", "extensions", "Scribunto"));
 		lib_mw = new Scrib_lib_mw(this);
 		lib_uri = new Scrib_lib_uri(this); 
@@ -33,6 +34,7 @@ public class Scrib_engine {
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	@gplx.Internal protected void Wiki_(Xow_wiki v) {this.wiki = v;} // TEST:
+	public Xoa_page Page() {return page;} private Xoa_page page;
 	public boolean Enabled() {return enabled;} private boolean enabled = true;
 	@gplx.Internal protected Scrib_fsys_mgr Fsys_mgr() {return fsys_mgr;} Scrib_fsys_mgr fsys_mgr = new Scrib_fsys_mgr();
 	@gplx.Internal protected Scrib_interpreter Interpreter() {return interpreter;} Scrib_interpreter interpreter;
@@ -46,7 +48,7 @@ public class Scrib_engine {
 	@gplx.Internal protected Scrib_lib_wikibase Lib_wikibase() {return lib_wikibase;} Scrib_lib_wikibase lib_wikibase;
 	@gplx.Internal protected Scrib_lib_text Lib_text() {return lib_text;} Scrib_lib_text lib_text;
 	public Scrib_engine Init() {	// REF:LuaCommon.php!Load
-		Xow_xtn_scribunto opts = (Xow_xtn_scribunto)app.Xtn_mgr().Get_or_fail(Xow_xtn_scribunto.XTN_KEY);
+		Scrib_xtn_mgr opts = (Scrib_xtn_mgr)app.Xtn_mgr().Get_or_fail(Scrib_xtn_mgr.XTN_KEY);
 		interpreter.Server().Server_timeout_(opts.Lua_timeout()).Server_timeout_polling_(opts.Lua_timeout_polling()).Server_timeout_busy_wait_(opts.Lua_timeout_busy_wait());
 		enabled = opts.Enabled();
 		Io_url root_dir = fsys_mgr.Root_dir(), script_dir = fsys_mgr.Script_dir();
@@ -67,6 +69,7 @@ public class Scrib_engine {
 	public void When_page_changed(Xoa_page page) {
 		mods.Clear();	// clear any loaded modules
 		Xow_wiki wiki = page.Wiki();
+		this.page = page;
 		byte[] new_wiki = wiki.Domain_bry();
 		if (!ByteAry_.Eq(cur_wiki, new_wiki)) {
 			cur_wiki = new_wiki;

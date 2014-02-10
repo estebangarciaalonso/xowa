@@ -21,23 +21,23 @@ public class Xop_imageMap_xnde_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {fxt.Reset();}
 	@Test  public void Basic() {
-		fxt.tst_Parse_page_wiki_str("<imagemap>File:A.png</imagemap>", html_img_none("File:A.png", ""));		
+		fxt.Test_parse_page_wiki_str("<imagemap>File:A.png</imagemap>", html_img_none("File:A.png", ""));		
 	}
 	@Test  public void Caption() {
-		fxt.tst_Parse_page_wiki_str("<imagemap>File:A.png|thumb|bcde</imagemap>", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("<imagemap>File:A.png|thumb|bcde</imagemap>", String_.Concat_lines_nl_skipLast
 			(	Xop_para_wkr_tst.File_html("File", "A.png", "7/0", "bcde")
 			,	""
 			));
 	}
 	@Test  public void Err_trailing_ws() {	// PURPOSE: empty 1st line causes failure
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<imagemap> "
 			,	"File:A.png"
 			,	"</imagemap>"
 			), html_img_none("File:A.png", ""));		
 	}
 	@Test  public void Coords_one() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<imagemap>"
 			,	"File:A.png"
 			,	"circle 1 3 5 [[b|c]]"

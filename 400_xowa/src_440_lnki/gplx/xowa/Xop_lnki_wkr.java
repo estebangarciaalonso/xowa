@@ -39,17 +39,11 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		int stack_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnki);
 		if (stack_pos == -1) return ctx.LxrMake_txt_(cur_pos);	// "]]" found but no "[[" in stack;
 		Xop_lnki_tkn lnki = (Xop_lnki_tkn)ctx.Stack_pop_til(root, src, stack_pos, false, bgn_pos, cur_pos);
-		lnki.Src_end_(cur_pos);	// NOTE: must happen after Chk_for_tail
 		int loop_bgn = lnki.Tkn_sub_idx() + 1, loop_end = root.Subs_len();
-		if (loop_bgn == loop_end) {	// NOTE: fixes empty template; EX: [[]]
-			lnki.Tkn_tid_to_txt();
-			return cur_pos;
-		}
-		if (!arg_bldr.Bld(ctx, tkn_mkr, this, Xop_arg_wkr_.Typ_lnki, root, lnki, bgn_pos, cur_pos, loop_bgn, loop_end, src)) { // NOTE: fixes blank template; EX: [[ ]]
-			lnki.Tkn_tid_to_txt();
-			root.Subs_del_after(lnki.Tkn_sub_idx() + 1);	// all tkns should now be converted to args in owner; delete everything in root
-			lnki.Subs_clear();
-			return cur_pos;
+		if (	loop_bgn == loop_end	// handle empty template; EX: [[]]; DATE:2014-02-07
+			||	!arg_bldr.Bld(ctx, tkn_mkr, this, Xop_arg_wkr_.Typ_lnki, root, lnki, bgn_pos, cur_pos, loop_bgn, loop_end, src)) { // handle blank template; EX: [[ ]]
+			lnki.Tkn_tid_to_txt();				// convert initial "[[" to text; note that text token can have subs; EX: [[[[A]]]]; 1st txt_tkn of "[[" will have lnki_sub of "[[A]]"
+			return ctx.LxrMake_txt_(cur_pos);	// return "]]" as text; note that anything in between is left as is; DATE:2014-02-04
 		}
 		cur_pos = Xop_lnki_wkr_.Chk_for_tail(ctx.Lang(), src, cur_pos, src_len, lnki);
 		lnki.Src_end_(cur_pos);	// NOTE: must happen after Chk_for_tail; redundant with above, but above needed b/c of returns

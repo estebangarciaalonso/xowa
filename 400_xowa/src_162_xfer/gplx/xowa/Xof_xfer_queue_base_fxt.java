@@ -62,11 +62,11 @@ public class Xof_xfer_queue_base_fxt {
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public Xow_wiki En_wiki() {return en_wiki;} private Xow_wiki en_wiki;
 	public Xow_wiki Commons() {return commons;} private Xow_wiki commons;
-	public void ini_page_create_commons(String ttl)								{ini_page_create(commons, ttl, "");}
-	public void ini_page_create_commons_redirect(String ttl, String redirect)	{ini_page_create(commons, ttl, "#REDIRECT [[" + redirect + "]]");}
-	public void ini_page_create_en_wiki(String ttl)								{ini_page_create(en_wiki, ttl, "");}
-	public void ini_page_create_en_wiki_redirect(String ttl, String redirect)	{ini_page_create(en_wiki, ttl, "#REDIRECT [[" + redirect + "]]");}
-	public void ini_page_create(Xow_wiki wiki, String ttl, String txt) {
+	public void ini_page_create_commons(String ttl)								{Init_page_create(commons, ttl, "");}
+	public void ini_page_create_commons_redirect(String ttl, String redirect)	{Init_page_create(commons, ttl, "#REDIRECT [[" + redirect + "]]");}
+	public void ini_page_create_en_wiki(String ttl)								{Init_page_create(en_wiki, ttl, "");}
+	public void ini_page_create_en_wiki_redirect(String ttl, String redirect)	{Init_page_create(en_wiki, ttl, "#REDIRECT [[" + redirect + "]]");}
+	public void Init_page_create(Xow_wiki wiki, String ttl, String txt) {
 		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(ttl));
 		byte[] page_raw = ByteAry_.new_utf8_(txt);
 		wiki.Db_mgr().Save_mgr().Data_create(page_ttl, page_raw);

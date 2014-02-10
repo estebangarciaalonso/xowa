@@ -20,14 +20,14 @@ import org.junit.*;
 public class Xop_tblw_wkr_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Td() {					// Tb_tr_td_te
-		fxt.tst_Parse_page_wiki("{|\n|-\n|a\n|}"
+		fxt.Test_parse_page_wiki("{|\n|-\n|a\n|}"
 			, fxt.tkn_tblw_tb_(0, 11).Subs_
 			(	fxt.tkn_tblw_tr_(2, 8).Subs_
 			(		fxt.tkn_tblw_td_(5, 8).Subs_(fxt.tkn_txt_(7, 8), fxt.tkn_para_(9, Xop_para_tkn.Para_typeId_none, Xop_para_tkn.Para_typeId_none))))
 			);
 	}
 	@Test  public void Td2() {					// Tb_tr_td_td2_te
-		fxt.tst_Parse_page_wiki("{|\n|-\n|a||b\n|}"
+		fxt.Test_parse_page_wiki("{|\n|-\n|a||b\n|}"
 			, fxt.tkn_tblw_tb_(0, 14).Subs_
 			(	fxt.tkn_tblw_tr_(2, 11).Subs_
 			(		fxt.tkn_tblw_td_(5,  8).Subs_(fxt.tkn_txt_( 7,  8))
@@ -35,14 +35,14 @@ public class Xop_tblw_wkr_tst {
 			)));
 	}
 	@Test  public void Tc() {					// Tb_tc_te
-		fxt.tst_Parse_page_wiki("{|\n|+a\n|}"
+		fxt.Test_parse_page_wiki("{|\n|+a\n|}"
 			, fxt.tkn_tblw_tb_(0, 9).Caption_count_(1).Subs_
 			(	fxt.tkn_tblw_tc_(2, 6).Subs_
 			(		fxt.tkn_txt_(5, 6)))
 			);
 	}
 	@Test  public void Tc_longer() {			// Tb_tc_tr_td_te
-		fxt.tst_Parse_page_wiki("{|\n|+a\n|-\n|b\n|}"
+		fxt.Test_parse_page_wiki("{|\n|+a\n|-\n|b\n|}"
 			, fxt.tkn_tblw_tb_(0, 15).Caption_count_(1).Subs_
 			(	fxt.tkn_tblw_tc_(2,  6).Subs_(fxt.tkn_txt_(5, 6))
 			,	fxt.tkn_tblw_tr_(6, 12).Subs_
@@ -51,14 +51,14 @@ public class Xop_tblw_wkr_tst {
 			));
 	}
 	@Test  public void Th() {					// Tb_th_te
-		fxt.tst_Parse_page_wiki("{|\n|-\n!a\n|}"
+		fxt.Test_parse_page_wiki("{|\n|-\n!a\n|}"
 			, fxt.tkn_tblw_tb_(0, 11).Subs_
 			(	fxt.tkn_tblw_tr_(2, 8).Subs_
 			(		fxt.tkn_tblw_th_(5, 8).Subs_(fxt.tkn_txt_(7, 8), fxt.tkn_para_(9, Xop_para_tkn.Para_typeId_none, Xop_para_tkn.Para_typeId_none))
 			)));
 	}
 	@Test  public void Th2() {					// Tb_th_th2_te
-		fxt.tst_Parse_page_wiki("{|\n|-\n!a!!b\n|}"
+		fxt.Test_parse_page_wiki("{|\n|-\n!a!!b\n|}"
 			, fxt.tkn_tblw_tb_(0, 14).Subs_
 			(	fxt.tkn_tblw_tr_(2, 11).Subs_
 			(		fxt.tkn_tblw_th_(5,  8).Subs_(fxt.tkn_txt_( 7,  8))
@@ -66,7 +66,7 @@ public class Xop_tblw_wkr_tst {
 			)));
 	}
 	@Test  public void Th2_td_syntax() {		// Tb_th_td; || should be treated as th
-		fxt.tst_Parse_page_wiki("{|\n|-\n!a||b\n|}"
+		fxt.Test_parse_page_wiki("{|\n|-\n!a||b\n|}"
 			, fxt.tkn_tblw_tb_(0, 14).Subs_
 			(	fxt.tkn_tblw_tr_(2, 11).Subs_
 			(		fxt.tkn_tblw_th_(5,  8).Subs_(fxt.tkn_txt_( 7,  8))
@@ -74,7 +74,7 @@ public class Xop_tblw_wkr_tst {
 			)));
 	}
 	@Test  public void Tb_td2() {	// EX.WP: Hectare; {| class="wikitable" || style="border: 1px solid #FFFFFF;"
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|id='1' || class='a'"
 			,	"|-"
 			,	"|a"
@@ -90,7 +90,7 @@ public class Xop_tblw_wkr_tst {
 			));
 	}
 	@Test  public void Atrs_tr() {				// Tb_tr_td_te
-		fxt.tst_Parse_page_wiki("{|\n|-style='a'\n|b\n|}"
+		fxt.Test_parse_page_wiki("{|\n|-style='a'\n|b\n|}"
 			, fxt.tkn_tblw_tb_(0, 20).Subs_
 			(	fxt.tkn_tblw_tr_(2, 17).Atrs_rng_(5, 14).Subs_
 			(		fxt.tkn_tblw_td_(14, 17).Subs_(fxt.tkn_txt_(16, 17), fxt.tkn_para_(18, Xop_para_tkn.Para_typeId_none, Xop_para_tkn.Para_typeId_none))
@@ -98,7 +98,7 @@ public class Xop_tblw_wkr_tst {
 			);
 	}
 	@Test  public void Atrs_td() {				// Tb_tr_td_te
-		fxt.tst_Parse_page_wiki("{|\n|-\n|style='a'|b\n|}"
+		fxt.Test_parse_page_wiki("{|\n|-\n|style='a'|b\n|}"
 			, fxt.tkn_tblw_tb_(0, 21).Subs_
 			(	fxt.tkn_tblw_tr_(2, 18).Subs_
 			(		fxt.tkn_tblw_td_(5, 18).Atrs_rng_(7, 16).Subs_(fxt.tkn_txt_(17, 18), fxt.tkn_para_(19, Xop_para_tkn.Para_typeId_none, Xop_para_tkn.Para_typeId_none))
@@ -107,7 +107,7 @@ public class Xop_tblw_wkr_tst {
 	}
 	@Test  public void Atrs_td_mult() {
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"|-"
 			,	"|"
@@ -143,7 +143,7 @@ public class Xop_tblw_wkr_tst {
 	}
 	@Test  public void Atrs_tc() {	// REF:WP:[[1920 Palm Sunday tornado outbreak]]
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|id='1'"
 			,	"|+id='2'|a"
 			,	"|}"
@@ -159,7 +159,7 @@ public class Xop_tblw_wkr_tst {
 		fxt.Ctx().Para().Enabled_n_();
 	}
 	@Test  public void Atrs_td_mixed() {		// Tb_tr_td_td2_te
-		fxt.tst_Parse_page_wiki("{|\n|-\n|style='a'|b||c\n|}"
+		fxt.Test_parse_page_wiki("{|\n|-\n|style='a'|b||c\n|}"
 			, fxt.tkn_tblw_tb_(0, 24).Subs_
 			(	fxt.tkn_tblw_tr_(2, 21).Subs_
 			(		fxt.tkn_tblw_td_( 5, 18).Atrs_rng_(7, 16).Subs_(fxt.tkn_txt_(17, 18))
@@ -168,7 +168,7 @@ public class Xop_tblw_wkr_tst {
 			);
 	}
 	@Test  public void Atrs_th() {
-		fxt.tst_Parse_page_wiki("{|\n|-\n!style='a'|b\n|}"
+		fxt.Test_parse_page_wiki("{|\n|-\n!style='a'|b\n|}"
 			, fxt.tkn_tblw_tb_(0, 21).Subs_
 			(	fxt.tkn_tblw_tr_(2, 18).Subs_
 			(		fxt.tkn_tblw_th_(5, 18).Atrs_rng_(7, 16).Subs_(fxt.tkn_txt_(17, 18), fxt.tkn_para_(19, Xop_para_tkn.Para_typeId_none, Xop_para_tkn.Para_typeId_none))
@@ -176,7 +176,7 @@ public class Xop_tblw_wkr_tst {
 			);
 	}
 	@Test  public void Atrs_th_cap() {
-		fxt.tst_Parse_page_wiki("{|\n|+b\n!style='a'|b\n|}"
+		fxt.Test_parse_page_wiki("{|\n|+b\n!style='a'|b\n|}"
 			, fxt.tkn_tblw_tb_(0, 22).Caption_count_(1).Subs_
 			(	fxt.tkn_tblw_tc_(2, 6).Subs_(fxt.tkn_txt_( 5, 6))
 			,	fxt.tkn_tblw_tr_(6, 19).Subs_
@@ -185,7 +185,7 @@ public class Xop_tblw_wkr_tst {
 			));
 	}
 	@Test  public void Atrs_skip_hdr() {
-		fxt.tst_Parse_page_wiki("{|\n|+b\n!style='a'|b\n|}"
+		fxt.Test_parse_page_wiki("{|\n|+b\n!style='a'|b\n|}"
 			, fxt.tkn_tblw_tb_(0, 22).Caption_count_(1).Subs_
 			(	fxt.tkn_tblw_tc_(2, 6).Subs_(fxt.tkn_txt_( 5, 6))
 			,	fxt.tkn_tblw_tr_(6, 19).Subs_
@@ -195,7 +195,7 @@ public class Xop_tblw_wkr_tst {
 	}
 	@Test  public void Atrs_td_bg_color() {	// PURPOSE: atr_parser should treat # as valid character in unquoted val; EX.WP:UTF8; |bgcolor=#eeeeee|<small>Indic</small><br/><small>0800*</small><br/>'''''224'''''
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"|bgcolor=#eeeeee|a"
 			,	"|}"
@@ -213,7 +213,7 @@ public class Xop_tblw_wkr_tst {
 		fxt.Ctx().Para().Enabled_n_();
 	}
 	@Test  public void AutoClose_td_when_new_tr() {	// retain; needed for de.w:Main_Page; DATE:2013-12-09
-		fxt.tst_Parse_page_wiki("{|\n==b==\n|}"
+		fxt.Test_parse_page_wiki("{|\n==b==\n|}"
 			, fxt.tkn_tblw_tb_(0, 8).Subs_
 			(	fxt.tkn_hdr_(2, 8, 2).Subs_
 			(	fxt.tkn_txt_(5, 6)
@@ -223,8 +223,8 @@ public class Xop_tblw_wkr_tst {
 			)
 			);
 	}
-	@Test  public void NestedTbl() {
-		fxt.tst_Parse_page_wiki(String_.Concat_lines_nl_skipLast
+	@Test  public void Nested() {
+		fxt.Test_parse_page_wiki(String_.Concat_lines_nl_skipLast
 			( "{|"
 			,	"|-"
 			,		"|"
@@ -249,9 +249,9 @@ public class Xop_tblw_wkr_tst {
 			)
 			);
 	}
-	@Test  public void NestedTbl_leading_ws() {
+	@Test  public void Nested_leading_ws() {
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|id='a'"
 			,	"|-"
 			,	"|a"
@@ -285,9 +285,65 @@ public class Xop_tblw_wkr_tst {
 			);
 		fxt.Ctx().Para().Enabled_n_();
 	}
+	@Test  public void Nested_tbls_xnde() {	// PURPOSE: if <table> followed by {|, ignore 2nd table; EX: en.b:Wikibooks:Featured books; DATE:2014-02-08
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+			(	"<table cellpadding=\"0\">"
+			,	"{| cellspacing=\"0\""
+			,	"|a"
+			,	"|}"
+			,	"</table>"
+			), String_.Concat_lines_nl_skipLast
+			(	"<table cellpadding=\"0\">"
+			,	"  <tr>"
+			,	"    <td>a"
+			,	"    </td>"
+			,	"  </tr>"
+			,	"</table>"
+			,	""
+			));
+	}
+	@Test  public void Nested_w_xnde() {	// PURPOSE: if multiple tbls auto-create tr; EX: it.w:Main_Page; DATE:2014-02-08
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+			(	"{|"
+			,	"{|"
+			,	"<div>"
+			,	"{|"
+			,	"|-"
+			,	"|a"
+			,	"|}"
+			,	"</div>"
+			,	"|}"
+			,	"|b"
+			,	"|}"
+			), String_.Concat_lines_nl_skipLast
+			(	"<table>"
+			,	"  <tr>"
+			,	"    <td>"
+			,	"      <table>"
+			,	"<div>"
+			,	"        <tr>"
+			,	"          <td>"
+			,	"            <table>"
+			,	"              <tr>"
+			,	"                <td>a"
+			,	"                </td>"
+			,	"              </tr>"
+			,	"            </table>"
+			,	"          </td>"
+			,	"        </tr>"
+			,	"</div>"
+			,	"      </table>"
+			,	"    </td>"
+			,	"    <td>b"
+			,	"    </td>"
+			,	"  </tr>"
+			,	"</table>"
+			,	""
+			));
+	}
 	@Test  public void Ws_leading() {	// EX.WP: AGPLv3
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	" !a"
 			,	" !b"
@@ -309,7 +365,7 @@ public class Xop_tblw_wkr_tst {
 	}
 	@Test  public void Atr_close() {	// PURPOSE: issue with </tr> somehow rolling up everything after <td>; EX.WP: 20th century; {{Decades and years}}
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<table><tr><td>a"
 			,	"{|id=1"
 			,	"|-"
@@ -335,7 +391,7 @@ public class Xop_tblw_wkr_tst {
 		fxt.Ctx().Para().Enabled_n_();
 	}
 	@Test  public void Err_row_empty() {
-		fxt.tst_Parse_page_wiki("{|\n|-\n|-\n|a\n|}"
+		fxt.Test_parse_page_wiki("{|\n|-\n|-\n|a\n|}"
 			,	fxt.tkn_tblw_tb_(0, 14).Subs_
 			(		fxt.tkn_tblw_tr_(2,  5)
 			,		fxt.tkn_tblw_tr_(5, 11).Subs_
@@ -344,7 +400,7 @@ public class Xop_tblw_wkr_tst {
 			);
 	}
 	@Test  public void Err_row_trailing() {
-		fxt.tst_Parse_page_wiki("{|\n|-\n|a\n|-\n|}"
+		fxt.Test_parse_page_wiki("{|\n|-\n|a\n|-\n|}"
 			, fxt.tkn_tblw_tb_(0, 14).Subs_
 			(	fxt.tkn_tblw_tr_(2, 8).Subs_
 			(		fxt.tkn_tblw_td_(5, 8).Subs_(fxt.tkn_txt_(7, 8), fxt.tkn_para_(9, Xop_para_tkn.Para_typeId_none, Xop_para_tkn.Para_typeId_none))
@@ -352,14 +408,14 @@ public class Xop_tblw_wkr_tst {
 			);
 	}
 	@Test  public void Err_caption_after_tr() {
-		fxt.tst_Parse_page_wiki("{|\n|-\n|+a\n|}"
+		fxt.Test_parse_page_wiki("{|\n|-\n|+a\n|}"
 			, fxt.tkn_tblw_tb_(0, 12).Caption_count_(1).Subs_
 			(	fxt.tkn_tblw_tr_(2, 5)
 			,	fxt.tkn_tblw_tc_(5, 9).Subs_(fxt.tkn_txt_(8, 9)))
 			);
 	}
 	@Test  public void Err_caption_after_td() {
-		fxt.ini_Log_(Xop_tblw_log.Caption_after_td).tst_Parse_page_wiki("{|\n|-\n|a\n|+b\n|}"
+		fxt.Init_log_(Xop_tblw_log.Caption_after_td).Test_parse_page_wiki("{|\n|-\n|a\n|+b\n|}"
 			, fxt.tkn_tblw_tb_(0, 15).Caption_count_(1).Subs_
 			(	fxt.tkn_tblw_tr_(2,  8).Subs_
 			(		fxt.tkn_tblw_td_(5, 8).Subs_(fxt.tkn_txt_(7, 8)))
@@ -367,21 +423,21 @@ public class Xop_tblw_wkr_tst {
 			);
 	}
 	@Test  public void Err_caption_after_tc() {
-		fxt.ini_Log_(Xop_tblw_log.Caption_after_tc).tst_Parse_page_wiki("{|\n|+a\n|+b\n|}"
+		fxt.Init_log_(Xop_tblw_log.Caption_after_tc).Test_parse_page_wiki("{|\n|+a\n|+b\n|}"
 			, fxt.tkn_tblw_tb_(0, 13).Caption_count_(2).Subs_
 			(	fxt.tkn_tblw_tc_(2,  6).Subs_(fxt.tkn_txt_( 5, 6))
 			,	fxt.tkn_tblw_tc_(6, 10).Subs_(fxt.tkn_txt_( 9, 10)))
 			);
 	}
 	@Test  public void Err_row_auto_opened() {
-		fxt.tst_Parse_page_wiki("{|\n|a\n|}"
+		fxt.Test_parse_page_wiki("{|\n|a\n|}"
 			, fxt.tkn_tblw_tb_(0, 8).Subs_
 			(	fxt.tkn_tblw_tr_(2, 5).Subs_
 			(		fxt.tkn_tblw_td_(2, 5).Subs_(fxt.tkn_txt_(4, 5), fxt.tkn_para_(6, Xop_para_tkn.Para_typeId_none, Xop_para_tkn.Para_typeId_none))
 			)));
 	}
 	@Test  public void Err_caption_auto_closed() {
-		fxt.tst_Parse_page_wiki("{|\n|+a\n|b\n|}"
+		fxt.Test_parse_page_wiki("{|\n|+a\n|b\n|}"
 			, fxt.tkn_tblw_tb_(0, 12).Caption_count_(1).Subs_
 			(	fxt.tkn_tblw_tc_(2, 6).Subs_(fxt.tkn_txt_(5, 6))
 			,	fxt.tkn_tblw_tr_(6, 9).Subs_
@@ -389,7 +445,7 @@ public class Xop_tblw_wkr_tst {
 			)));
 	}
 	@Test  public void Td_lnki() {
-		fxt.tst_Parse_page_wiki("{|\n|-\n|[[a|b]]\n|}"
+		fxt.Test_parse_page_wiki("{|\n|-\n|[[a|b]]\n|}"
 			, fxt.tkn_tblw_tb_(0, 17).Subs_
 			(	fxt.tkn_tblw_tr_(2, 14).Subs_
 			(		fxt.tkn_tblw_td_(5, 14).Subs_(fxt.tkn_lnki_(7, 14), fxt.tkn_para_(15, Xop_para_tkn.Para_typeId_none, Xop_para_tkn.Para_typeId_none))))
@@ -397,7 +453,7 @@ public class Xop_tblw_wkr_tst {
 	}
 
 	@Test  public void Err_Atrs_dumped_into_text() {	// PURPOSE: [[Prawn]] and {{Taxobox}} was dumping text
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"|-"
 			,	"|-id='a'"
@@ -415,7 +471,7 @@ public class Xop_tblw_wkr_tst {
 			);
 	}
 	@Test  public void Tr_dupe_xnde() {	// PURPOSE: redundant tr should not be dropped; see [[Jupiter]]
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"|-"
 			,	"<tr><td>a</td></tr>"
@@ -433,7 +489,7 @@ public class Xop_tblw_wkr_tst {
 			);
 	}
 	@Test  public void Tr_dupe_xnde_2() {	// <td></th> causes problems
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"<tr><th>a</td></tr>"
 			,	"|}"
@@ -449,7 +505,7 @@ public class Xop_tblw_wkr_tst {
 			);
 	}
 	@Test  public void Tblw_Para() {	// para causing strange breaks; SEE:[[John F. Kennedy]] and "two Supreme Court appointments"
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"<p></p>"
 			,	"|a"
@@ -468,7 +524,7 @@ public class Xop_tblw_wkr_tst {
 			);
 	}
 	@Test  public void Tblw_nl() {	// para causing strange breaks; SEE:[[John F. Kennedy]] and "two Supreme Court appointments"
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"|-"
 			,	"!a"
@@ -487,16 +543,16 @@ public class Xop_tblw_wkr_tst {
 			);
 	}
 	@Test  public void Bang_should_not_make_cell_td_1_bang() {	// PURPOSE: "| a! b" ! should not separate cell
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast("{|", "|-", "|a!b", "|}"),	String_.Concat_lines_nl_skipLast("<table>", "  <tr>", "    <td>a!b"	, "    </td>", "  </tr>", "</table>", ""));
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast("{|", "|-", "|a!b", "|}"),	String_.Concat_lines_nl_skipLast("<table>", "  <tr>", "    <td>a!b"	, "    </td>", "  </tr>", "</table>", ""));
 	}
 	@Test  public void Bang_should_not_make_cell_td_2_bang() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast("{|", "|-", "|a!!b", "|}"),	String_.Concat_lines_nl_skipLast("<table>", "  <tr>", "    <td>a!!b"	, "    </td>", "  </tr>", "</table>", ""));
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast("{|", "|-", "|a!!b", "|}"),	String_.Concat_lines_nl_skipLast("<table>", "  <tr>", "    <td>a!!b"	, "    </td>", "  </tr>", "</table>", ""));
 	}
 	@Test  public void Bang_should_not_make_cell_th_1_bang() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast("{|", "|-", "!a!b", "|}"),	String_.Concat_lines_nl_skipLast("<table>", "  <tr>", "    <th>a!b"	, "    </th>", "  </tr>", "</table>", ""));
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast("{|", "|-", "!a!b", "|}"),	String_.Concat_lines_nl_skipLast("<table>", "  <tr>", "    <th>a!b"	, "    </th>", "  </tr>", "</table>", ""));
 	}
 	@Test  public void Bang_should_not_make_cell_th_2_bang() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast("{|", "|-", "!a!!b", "|}")	
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast("{|", "|-", "!a!!b", "|}")	
 			, String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"  <tr>"
@@ -510,7 +566,7 @@ public class Xop_tblw_wkr_tst {
 			));
 	}
 	@Test  public void Bang_should_not_make_cell_th_mult_line() {	// FIX: make sure code does not disable subsequent bangs
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast("{|", "|-", "!a", "!b", "|}")	
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast("{|", "|-", "!a", "!b", "|}")	
 			, String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"  <tr>"
@@ -525,7 +581,7 @@ public class Xop_tblw_wkr_tst {
 	}
 	@Test  public void Fix_extra_cell() {	// PURPOSE: trim should not affect td; WP:Base32
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"!id='1'|a"
 			,	"|"
@@ -558,7 +614,7 @@ public class Xop_tblw_wkr_tst {
 		fxt.Ctx().Para().Enabled_n_();
 	}
 	@Test  public void Lnki_double_pipe() {	// "||" in "[[File:A.png||a]]" shouldn't be considered cell separator
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"|[[B||b]]"
 			,	"|}"
@@ -575,7 +631,7 @@ public class Xop_tblw_wkr_tst {
 	}
 	@Test  public void Nl_td() {	// PURPOSE: <p> inside <td> does not get enclosed
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"<tr>"
 			,	"<td>"
@@ -608,7 +664,7 @@ public class Xop_tblw_wkr_tst {
 	}
 	@Test  public void Trim_ws() {	// PURPOSE: trim should be done from both sides
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"<tr>"
 			,	"<td>"
@@ -635,7 +691,7 @@ public class Xop_tblw_wkr_tst {
 	}
 	@Test  public void Trim_ws_tr() {	// PURPOSE: trim should be done from both sides
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"<tr>"
 			,	"<td>"
@@ -668,7 +724,7 @@ public class Xop_tblw_wkr_tst {
 	}
 	@Test  public void Trim_ws_td() {	// PURPOSE: trim should not affect td
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"<tr>"
 			,	"<td>"
@@ -700,7 +756,7 @@ public class Xop_tblw_wkr_tst {
 		fxt.Ctx().Para().Enabled_n_();
 	}
 	@Test  public void Atr_xnde() {	// PURPOSE: xnde should close any open xatrs; EX.WP: Western Front (World War I); stray > after == Dramatizations ==
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|id='1'<p></p>"
 			,	"|a"
 			,	"|}"), String_.Concat_lines_nl_skipLast
@@ -714,7 +770,7 @@ public class Xop_tblw_wkr_tst {
 			));
 	}
 	@Test  public void No_wiki_3() {
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"|style=<nowiki>'a[b]c'</nowiki>|d"
 			,	"|}"
@@ -728,46 +784,9 @@ public class Xop_tblw_wkr_tst {
 			,	""
 			));
 	}
-	@Test  public void Mixed_tbls() {	// PURPOSE: if two consecutive tbs, ignore attributes on 2nd; en.wikibooks.org/wiki/Wikibooks:Featured books
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
-			(	"<table cellpadding=\"0\">"
-			,	"{| cellspacing=\"0\""
-			,	"|a"
-			,	"|}"
-			,	"</table>"
-			), String_.Concat_lines_nl_skipLast
-			(	"<table cellpadding=\"0\">"
-			,	"  <tr>"
-			,	"    <td>a"
-			,	"    </td>"
-			,	"  </tr>"
-			,	"</table>"
-			,	""
-			));
-	}
-	@Test  public void Tblw_absorbed_by_list() {// PURPOSE.fix: tblw immediately following list becomes part of list
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
-			(	"#a"
-			,	"{|"
-			,	"|b"
-			,	"|}"
-			) ,	String_.Concat_lines_nl_skipLast
-			(	"<ol>"
-			,	"  <li>a"
-			,	"  </li>"
-			,	"</ol>"
-			,	"<table>"
-			,	"  <tr>"
-			,	"    <td>b"
-			,	"    </td>"
-			,	"  </tr>"
-			,	"</table>"
-			,	""
-			));
-	}
 	@Test  public void Trailing_tr_breaks_para_mode() {// PURPOSE.fix: empty trailing tr breaks para mode; EX:w:Sibelius
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"|a"
 			,	"|-"	// causes lines below not to be put in paras
@@ -794,7 +813,7 @@ public class Xop_tblw_wkr_tst {
 	}
 	@Test  public void Blank_line_should_be_own_para() {// PURPOSE.fix: caption does not begin on own line; EX:w:Old St. Peter's Basilica
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"|a"
 			,	"b"
@@ -815,7 +834,7 @@ public class Xop_tblw_wkr_tst {
 	}
 	@Test  public void Blank_line_should_be_own_para_2() {// PURPOSE.fix: caption does not begin on own line; EX:w:Old St. Peter's Basilica
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"|a"
 			,	"b"
@@ -836,7 +855,7 @@ public class Xop_tblw_wkr_tst {
 		fxt.Ctx().Para().Enabled_n_();
 	}
 	@Test  public void Bold_stops_at_table() {	// PURPOSE: do not allow unclosed bold to extend over tables;
-		fxt.tst_Parse_page_all_str("'''<table><tr><td>a</td></tr></table>", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str("'''<table><tr><td>a</td></tr></table>", String_.Concat_lines_nl_skipLast
 			(	"<b></b>"
 			,	"<table>"
 			,	"  <tr>"
@@ -846,10 +865,10 @@ public class Xop_tblw_wkr_tst {
 			,	"</table>"
 			,	""
 			));
-		fxt.ini_defn_clear();
+		fxt.Init_defn_clear();
 	}
 	@Test  public void Orphaned_tr_breaks_nested_tables() {	// PUPRPOSE: </tr> should not match <tr> outside scope; EX:w:Enthalpy_of_fusion; {{States of matter}}
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 		(	"<table>"
 		,	  "<tr>"
 		,	    "<td>"
@@ -881,7 +900,7 @@ public class Xop_tblw_wkr_tst {
 	}
 	@Test  public void Space_causes_extra_p() {// PURPOSE: "\n\s</td>" should be equivalent to "\n</td>"; EX: w:Earth
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"<table><tr><td>"
 			,	"b"
 			,	"<br/>c"
@@ -903,7 +922,7 @@ public class Xop_tblw_wkr_tst {
 	}
 	@Test  public void Br_should_not_be_ignored() {// PURPOSE: document <br />'s should not be ignored between tables; 20121226
 		fxt.Ctx().Para().Enabled_y_();
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"|-"
 			,	"|a"
@@ -932,7 +951,7 @@ public class Xop_tblw_wkr_tst {
 		fxt.Ctx().Para().Enabled_n_();
 	}
 	@Test  public void Auto_create_table() {// PURPOSE: <td> should create table; EX:w:Hatfield-McCoy_feud; DATE:20121226
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"<td>a"
 			,	"</td>"
 			) ,	String_.Concat_lines_nl_skipLast
@@ -946,7 +965,7 @@ public class Xop_tblw_wkr_tst {
 			));
 	}
 	@Test  public void List_and_orphaned_td2_should_not_create_tblw() {// PURPOSE: !! was creating table; DATE:2013-04-28
-		fxt.tst_Parse_page_all_str("*a !! b", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str("*a !! b", String_.Concat_lines_nl_skipLast
 			(	"<ul>"
 			,	"  <li>a !! b"
 			,	"  </li>"
@@ -954,7 +973,7 @@ public class Xop_tblw_wkr_tst {
 			));
 	}
 	@Test  public void Tr_trailing_dashes_should_be_stripped() {// PURPOSE: trailing dashes should be stripped; |--- -> |-; EX: |--style="x" was being ignored; DATE:2013-06-21
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"|-----style='a'"
 			,	"|b"
@@ -969,7 +988,7 @@ public class Xop_tblw_wkr_tst {
 			));
 	}
 	@Test  public void Th_without_tr() {	// PURPOSE: !! without preceding ! should not create table-cell; DATE:2013-12-18
-		fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	"|-"
 			,	"|"
@@ -986,10 +1005,8 @@ public class Xop_tblw_wkr_tst {
 			));
 	}
 }
-/*
-*/
 //		@Test  public void Tb_under_tr_is_ignored() {	// PURPOSE: table directly under tr is ignored; EX.WP:Category:Dessert stubs; TODO: complicated, especially to handle 2nd |}
-//			fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+//			fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 //				(	"{|"
 //				,	"|-id='a'"
 //				,	"{|style='border:1px;'"
@@ -1008,7 +1025,7 @@ public class Xop_tblw_wkr_tst {
 //				));
 //		}
 //		@Test  public void Leading_ws() { // EX.WP:Corneal dystrophy (human)
-//			fxt.tst_Parse_page_wiki(String_.Concat_lines_nl_skipLast
+//			fxt.Test_parse_page_wiki(String_.Concat_lines_nl_skipLast
 //				( " {|"
 //				, " |-"
 //				, " |a"
@@ -1023,7 +1040,7 @@ public class Xop_tblw_wkr_tst {
 //				);
 //		}
 //		@Test  public void Atrs_tb() {				// Tb_te		// FUTURE: reinstate; WHEN: Template
-//			fxt.ini_Log_(Xop_tblw_log.Tbl_empty).tst_Parse_page_wiki("{|style='a'\n|}"
+//			fxt.Init_log_(Xop_tblw_log.Tbl_empty).Test_parse_page_wiki("{|style='a'\n|}"
 //				, fxt.tkn_tblw_tb_(0, 14).Atrs_rng_(2, 11).Subs_
 //				(	fxt.tkn_tblw_tr_(11, 11).Subs_
 //				(		fxt.tkn_tblw_td_(11, 11)
@@ -1031,7 +1048,7 @@ public class Xop_tblw_wkr_tst {
 //		}
 //		@Test  public void Td_p() {	// PURPOSE: <p> not being closed correctly
 //			fxt.Ctx().Para().Enabled_y_();
-//			fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+//			fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 //				(	"{|"
 //				,	"|-"
 //				,	"|"
@@ -1051,7 +1068,7 @@ public class Xop_tblw_wkr_tst {
 //			fxt.Ctx().Para().Enabled_n_();
 //		}
 //		@Test  public void Tb_tb() {
-//			fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+//			fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 //				(	"{|id='1'"
 //				, 	"{|id='2'"
 //				,	"|-id='3'"
@@ -1068,7 +1085,7 @@ public class Xop_tblw_wkr_tst {
 //				));
 //		}
 //		@Test  public void Tb_tb_2() {
-//			fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+//			fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 //				(	"{|id='1'"
 //				, 	"{|id='2' <table id='3'>"
 //				,	"|a"

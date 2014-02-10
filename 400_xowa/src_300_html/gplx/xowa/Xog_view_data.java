@@ -20,9 +20,14 @@ public class Xog_view_data {
 	public void Clear() {
 		tmpl_stack_ary = ByteAry_.Ary_empty;
 		tmpl_stack_ary_len = tmpl_stack_ary_max = 0;
-		lst_recursed = false;
+		pages_recursed = false;
+//			lst_recurse_stack.Clear();
 	}
-	public boolean Lst_recursed() {return lst_recursed;} public Xog_view_data Lst_recursed_(boolean v) {lst_recursed = v; return this;} private boolean lst_recursed;
+//		private Hash_adp_bry lst_recurse_stack = new Hash_adp_bry(true);
+//		public boolean Lst_recurse_has(byte[] page_bry) {return lst_recurse_stack.Has(page_bry);}
+//		public void Lst_recurse_add(byte[] page_bry) {lst_recurse_stack.AddKeyVal(page_bry);}
+//		public void Lst_recurse_del(byte[] page_bry) {lst_recurse_stack.Del(page_bry);}
+	public boolean Pages_recursed() {return pages_recursed;} public Xog_view_data Pages_recursed_(boolean v) {pages_recursed = v; return this;} private boolean pages_recursed;
 	public void Tmpl_stack_del() {--tmpl_stack_ary_len;}
 	public boolean Tmpl_stack_add(byte[] key) {
 		for (int i = 0; i < tmpl_stack_ary_len; i++) {

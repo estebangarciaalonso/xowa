@@ -21,7 +21,7 @@ public class Xoa_url_arg_hash {
 	public Gfo_url_arg Get_arg(byte[] key) {return (Gfo_url_arg)hash.Fetch(key);}
 	public int Get_val_int_or(byte[] key, int or) {
 		byte[] val_bry = Get_val_bry_or(key, null); if (val_bry == null) return or;		
-		return ByteAry_.XtoIntOr(val_bry, or);		
+		return ByteAry_.X_to_int_or(val_bry, or);		
 	}
 	public byte[] Get_val_bry_or(byte[] key, byte[] or) {
 		Gfo_url_arg arg = (Gfo_url_arg)hash.Fetch(key);

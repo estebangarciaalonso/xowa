@@ -22,7 +22,7 @@ public class Xog_win_mgr_tst {
 	Xog_win_fxt fxt = new Xog_win_fxt();
 	@Before public void init() {
 		fxt.Clear();
-		fxt.Fxt().ini_page_create(fxt.Fxt().App().User().Wiki(), "Main Page", "''a''");
+		fxt.Fxt().Init_page_create(fxt.Fxt().App().User().Wiki(), "Main Page", "''a''");
 	}
 	@Test  public void Launch() {
 		fxt.Launch();

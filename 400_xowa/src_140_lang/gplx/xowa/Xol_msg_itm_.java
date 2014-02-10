@@ -243,8 +243,22 @@ public static final int
 , Id_xowa_wikidata_normal = 222
 , Id_xowa_wikidata_preferred = 223
 , Id_xowa_wikidata_links_special = 224
+, Id_listings_desc = 225
+, Id_listings_unknown = 226
+, Id_listings_phone = 227
+, Id_listings_phone_symbol = 228
+, Id_listings_fax = 229
+, Id_listings_fax_symbol = 230
+, Id_listings_email = 231
+, Id_listings_email_symbol = 232
+, Id_listings_tollfree = 233
+, Id_listings_tollfree_symbol = 234
+, Id_listings_checkin = 235
+, Id_listings_checkout = 236
+, Id_listings_position = 237
+, Id_listings_position_template = 238
 ;
-	public static final int Id__max = 225;
+	public static final int Id__max = 239;
 	public static Xol_msg_itm new_(int id, String key, String val) {return new_(id, ByteAry_.new_utf8_(key), ByteAry_.new_utf8_(val));}
 	public static Xol_msg_itm new_(int id, byte[] key, byte[] val) {
 		Xol_msg_itm rv = new Xol_msg_itm(id, key);
@@ -483,6 +497,20 @@ case Xol_msg_itm_.Id_xowa_wikidata_deprecated: return new_(Xol_msg_itm_.Id_xowa_
 case Xol_msg_itm_.Id_xowa_wikidata_normal: return new_(Xol_msg_itm_.Id_xowa_wikidata_normal, "xowa-wikidata-normal", "normal");
 case Xol_msg_itm_.Id_xowa_wikidata_preferred: return new_(Xol_msg_itm_.Id_xowa_wikidata_preferred, "xowa-wikidata-preferred", "preferred");
 case Xol_msg_itm_.Id_xowa_wikidata_links_special: return new_(Xol_msg_itm_.Id_xowa_wikidata_links_special, "xowa-wikidata-links-special", "Links (special wikis)");
+case Xol_msg_itm_.Id_listings_desc: return new_(Xol_msg_itm_.Id_listings_desc, "listings-desc", "Add tags for listing locations");
+case Xol_msg_itm_.Id_listings_unknown: return new_(Xol_msg_itm_.Id_listings_unknown, "listings-unknown", "Unknown destination");
+case Xol_msg_itm_.Id_listings_phone: return new_(Xol_msg_itm_.Id_listings_phone, "listings-phone", "phone");
+case Xol_msg_itm_.Id_listings_phone_symbol: return new_(Xol_msg_itm_.Id_listings_phone_symbol, "listings-phone-symbol", "☎");
+case Xol_msg_itm_.Id_listings_fax: return new_(Xol_msg_itm_.Id_listings_fax, "listings-fax", "fax");
+case Xol_msg_itm_.Id_listings_fax_symbol: return new_(Xol_msg_itm_.Id_listings_fax_symbol, "listings-fax-symbol", "");
+case Xol_msg_itm_.Id_listings_email: return new_(Xol_msg_itm_.Id_listings_email, "listings-email", "email");
+case Xol_msg_itm_.Id_listings_email_symbol: return new_(Xol_msg_itm_.Id_listings_email_symbol, "listings-email-symbol", "");
+case Xol_msg_itm_.Id_listings_tollfree: return new_(Xol_msg_itm_.Id_listings_tollfree, "listings-tollfree", "toll-free");
+case Xol_msg_itm_.Id_listings_tollfree_symbol: return new_(Xol_msg_itm_.Id_listings_tollfree_symbol, "listings-tollfree-symbol", "");
+case Xol_msg_itm_.Id_listings_checkin: return new_(Xol_msg_itm_.Id_listings_checkin, "listings-checkin", "Check-in: $1");
+case Xol_msg_itm_.Id_listings_checkout: return new_(Xol_msg_itm_.Id_listings_checkout, "listings-checkout", "check-out: $1");
+case Xol_msg_itm_.Id_listings_position: return new_(Xol_msg_itm_.Id_listings_position, "listings-position", "position: $1");
+case Xol_msg_itm_.Id_listings_position_template: return new_(Xol_msg_itm_.Id_listings_position_template, "listings-position-template", "");
 			default: throw Err_.unhandled(id);
 		}
 	}

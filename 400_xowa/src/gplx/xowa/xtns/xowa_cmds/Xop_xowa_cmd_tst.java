@@ -24,7 +24,7 @@ public class Xop_xowa_cmd_tst {
 	@Test  public void Basic() {
 		GfsCore._.AddCmd(fxt.App(), Xoa_gfs_mgr.Invk_app);
 		fxt.Wiki().Sys_cfg().Xowa_cmd_enabled_(false);
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<xowa_cmd>"
 			,	"app.users.get('anonymous').name;"
 			,	"</xowa_cmd>"
@@ -32,7 +32,7 @@ public class Xop_xowa_cmd_tst {
 			(	"app.users.get('anonymous').name;"
 			));
 		fxt.Wiki().Sys_cfg().Xowa_cmd_enabled_(true);
-		fxt.tst_Parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<xowa_cmd>"
 			,	"app.users.get('anonymous').name;"
 			,	"</xowa_cmd>"
@@ -43,7 +43,7 @@ public class Xop_xowa_cmd_tst {
 //		@Test  public void Wiki_list_fmtrs() {
 //			fxt.Wiki().Sys_cfg().Xowa_cmd_enabled_(true);
 //			fxt.App().Setup_mgr().Maint_mgr().Wiki_mgr().Add(ByteAry_.new_ascii_("en.wikipedia.org"));
-//			fxt.tst_Parse_page_all_str(String_.Concat_lines_nl_skipLast
+//			fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 //			(	"{|"
 //			,	"<xowa_cmd>"
 //			,	"app.fmtrs.new_grp {"

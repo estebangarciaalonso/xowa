@@ -38,7 +38,7 @@ public class ByteTrieMgr_bwd_slim {
 			cur = nxt;
 		}
 	}
-	public ByteTrieMgr_bwd_slim Add_str_byteVal(String key, byte val) {return Add(ByteAry_.new_utf8_(key), ByteVal.new_(val));}
+	public ByteTrieMgr_bwd_slim Add_str_byte(String key, byte val) {return Add(ByteAry_.new_utf8_(key), ByteVal.new_(val));}
 	public ByteTrieMgr_bwd_slim Add_byteVal_strAry(byte val, String... ary) {
 		int ary_len = ary.length;
 		ByteVal byteVal = ByteVal.new_(val);

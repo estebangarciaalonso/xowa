@@ -19,13 +19,14 @@ package gplx.xowa.bldrs.files; import gplx.*; import gplx.xowa.*; import gplx.xo
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.bldrs.oimgs.*;
 class Xob_orig_regy_tbl {
 	public static void Create_table(Db_provider p) {Sqlite_engine_.Tbl_create_and_delete(p, Tbl_name, Tbl_sql);}
-	public static void Create_data(Gfo_usr_dlg usr_dlg, Db_provider p, boolean repo_0_is_remote, Xow_wiki repo_0_wiki, Xow_wiki repo_1_wiki, boolean wiki_ns_for_file_is_case_match_all) {
+	public static void Create_data(Gfo_usr_dlg usr_dlg, Db_provider p, Xodb_db_file file_registry_db, boolean repo_0_is_remote, Xow_wiki repo_0_wiki, Xow_wiki repo_1_wiki, boolean wiki_ns_for_file_is_case_match_all) {
 		usr_dlg.Prog_many("", "", "inserting lnki_regy");
 		p.Exec_sql(Sql_create_data);
 		Sqlite_engine_.Idx_create(usr_dlg, p, "orig_regy", Idx_ttl);
+		Sqlite_engine_.Db_attach(p, "page_db", file_registry_db.Url().Raw());
 		Io_url repo_0_dir = repo_0_wiki.Fsys_mgr().Root_dir(), repo_1_dir = repo_1_wiki.Fsys_mgr().Root_dir();
 		byte repo_0_tid = Xof_repo_itm.Repo_local, repo_1_tid = Xof_repo_itm.Repo_remote;
-		boolean local_is_remote = ByteAry_.Eq(repo_0_wiki.Domain_bry(), repo_0_wiki.Domain_bry());
+		boolean local_is_remote = ByteAry_.Eq(repo_0_wiki.Domain_bry(), repo_1_wiki.Domain_bry());
 		if (	repo_0_is_remote														// .gfs manually marked specifes repo_0 as remote
 			||	(	ByteAry_.Eq(repo_0_wiki.Domain_bry(), Xow_wiki_.Domain_commons_bry)	// repo_0 = commons; force repo_0 to be remote; else all orig_repo will be 1; DATE:2014-02-01
 				&&	local_is_remote														// repo_0 = repo_1
@@ -42,6 +43,7 @@ class Xob_orig_regy_tbl {
 				Create_data_for_cs(usr_dlg, p, repo_remote_dir);
 			}
 		}
+		Sqlite_engine_.Db_detach(p, "page_db");
 		Sqlite_engine_.Idx_create(usr_dlg, p, "orig_regy", Idx_xfer_temp);
 	}
 	private static void Create_data_for_repo(Gfo_usr_dlg usr_dlg, Db_provider cur, byte wiki_tid, Io_url join) {
@@ -129,7 +131,7 @@ class Xob_orig_regy_tbl {
 	,	",       i.img_minor_mime"
 	,	"FROM    orig_regy o"
 	,	"        JOIN image_db.image i ON o.lnki_ttl = i.img_name"
-	,	"        JOIN repo_page m ON m.repo_id = {0} AND m.itm_tid = 0 AND o.lnki_ttl = m.src_ttl"
+	,	"        JOIN page_db.page_regy m ON m.repo_id = {0} AND m.itm_tid = 0 AND o.lnki_ttl = m.src_ttl"
 	,	"WHERE   o.orig_file_ttl IS NULL"
 	,	"ORDER BY 1"	// must order by lnki_id since it is PRIMARY KEY, else sqlite will spend hours shuffling rows in table
 	,	";"
@@ -156,7 +158,7 @@ class Xob_orig_regy_tbl {
 	,	",       i.img_media_type"
 	,	",       i.img_minor_mime"
 	,	"FROM    orig_regy o"
-	,	"        JOIN repo_page m ON m.repo_id = {0} AND m.itm_tid = 1 AND o.lnki_ttl = m.src_ttl"
+	,	"        JOIN page_db.page_regy m ON m.repo_id = {0} AND m.itm_tid = 1 AND o.lnki_ttl = m.src_ttl"
 	,	"            JOIN image_db.image i ON m.trg_ttl = i.img_name"
 	,	"WHERE   o.orig_file_ttl IS NULL"
 	,	"ORDER BY 1"	// must order by lnki_id since it is PRIMARY KEY, else sqlite will spend hours shuffling rows in table

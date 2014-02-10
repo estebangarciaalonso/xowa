@@ -17,10 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xoh_cfg_gallery implements GfoInvkAble {
-	public Xoh_cfg_gallery() {
-		imgs_per_row = 4;		// CFG: apparent default for wikipedia (commons seems to be 8 though)
-	}
-	public int Imgs_per_row() {return imgs_per_row;} public Xoh_cfg_gallery Imgs_per_row_(int v) {imgs_per_row = v; return this;} private int imgs_per_row = 4;
+	public int Imgs_per_row() {return imgs_per_row;} public Xoh_cfg_gallery Imgs_per_row_(int v) {imgs_per_row = v; return this;} private int imgs_per_row = 8;	// changed from 4 to 8; DATE:2014-02-04
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_imgs_per_row_))		imgs_per_row = m.ReadInt("v");
 		else	return GfoInvkAble_.Rv_unhandled;

@@ -22,7 +22,8 @@ public class Xoctg_url_tst {
 	@Test   public void Basic() {
 		fxt.Test_parse("A?subcatfrom=B&filefrom=C&pagefrom=D", fxt.url().Grp_idxs_("B", "C", "D").Grp_fwds_(Bool_.Y_byte, Bool_.Y_byte, Bool_.Y_byte));
 		fxt.Test_parse("A?subcatuntil=B&fileuntil=C&pageuntil=D", fxt.url().Grp_idxs_("B", "C", "D").Grp_fwds_(Bool_.N_byte, Bool_.N_byte, Bool_.N_byte));
-		fxt.Test_parse("A?from=B", fxt.url().All_idx_("B"));
+		fxt.Test_parse("A?from=B", fxt.url().Grp_idxs_("B", "B", "B").Grp_fwds_(Bool_.Y_byte, Bool_.Y_byte, Bool_.Y_byte));
+		fxt.Test_parse("A?until=B", fxt.url().Grp_idxs_("B", "B", "B").Grp_fwds_(Bool_.N_byte, Bool_.N_byte, Bool_.N_byte));
 	}
 }
 class Xoctg_url_fxt {
@@ -54,12 +55,10 @@ class Xoctg_url_chkr {
 		grp_fwds[Xoa_ctg_mgr.Tid_file] = file;
 		grp_fwds[Xoa_ctg_mgr.Tid_page] = page;
 		return this;
-	}	byte[] grp_fwds = new byte[Xoa_ctg_mgr.Tid__max];
-	public Xoctg_url_chkr All_idx_(String v) {all_idx = ByteAry_.new_ascii_(v); return this;} private byte[] all_idx;
+	}	byte[] grp_fwds = new byte[Xoa_ctg_mgr.Tid__max];		
 	public void Chk(Xoctg_url actl) {
 		Tfds.Eq_ary_str(String_.Ary(grp_idxs), String_.Ary(actl.Grp_idxs()));
 		Tfds.Eq_ary(grp_fwds, actl.Grp_fwds());
-		Tfds.Eq_bry(all_idx, actl.All_idx());
 	}
 	public Xoctg_url_chkr Clear() {
 		int len = Xoa_ctg_mgr.Tid__max;
@@ -67,7 +66,6 @@ class Xoctg_url_chkr {
 			grp_idxs[i] = null;
 			grp_fwds[i] = Bool_.__byte;
 		}
-		all_idx = null;
 		return this;
 	}
 }

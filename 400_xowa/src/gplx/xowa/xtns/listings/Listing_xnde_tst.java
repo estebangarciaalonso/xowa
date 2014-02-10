@@ -15,16 +15,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.xtns; import gplx.*; import gplx.xowa.*;
-public interface Xow_xtn_itm extends GfoInvkAble {
-	byte[] Xtn_key();
-	void Xtn_init_by_app(Xoa_app app);
-	void Xtn_init_by_wiki(Xow_wiki wiki);
-}
-class Xoa_xtn_null implements Xow_xtn_itm {
-	public byte[] Xtn_key() {return xtn_key;} private byte[] xtn_key = ByteAry_.new_ascii_("null");
-	public void Xtn_init_by_app(Xoa_app app) {}
-	public void Xtn_init_by_wiki(Xow_wiki wiki) {}
-	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {return this;}
-	public static final Xoa_xtn_null _ = new Xoa_xtn_null(); Xoa_xtn_null() {}
+package gplx.xowa.xtns.listings; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import org.junit.*;
+public class Listing_xnde_tst {
+	private Xop_fxt fxt = new Xop_fxt();
+	@Test  public void Basic() {
+		fxt.Test_parse_page_all_str("a<eat/>b", "a&lt;eat/&gt;b");
+	}
 }

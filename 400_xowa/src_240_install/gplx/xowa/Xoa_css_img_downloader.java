@@ -20,7 +20,8 @@ public class Xoa_css_img_downloader {
 	public Xoa_css_img_downloader Ctor(Gfo_usr_dlg usr_dlg, Xof_download_wkr download_wkr, byte[] stylesheet_prefix) {
 		this.usr_dlg = usr_dlg; this.download_wkr = download_wkr; this.stylesheet_prefix = stylesheet_prefix;
 		return this;
-	}	private Gfo_usr_dlg usr_dlg; private Xof_download_wkr download_wkr; private byte[] stylesheet_prefix;
+	}	private Gfo_usr_dlg usr_dlg; private Xof_download_wkr download_wkr;
+	public Xoa_css_img_downloader Stylesheet_prefix_(byte[] v) {stylesheet_prefix = v; return this;} private byte[] stylesheet_prefix;	// TEST: setter exposed b/c tests can handle "mem/" but not "//mem"
 	public void Chk(byte[] wiki_domain, Io_url css_fil) {
 		ListAdp img_list = ListAdp_.new_();
 		byte[] old_bry = Io_mgr._.LoadFilBry(css_fil);
@@ -102,12 +103,18 @@ public class Xoa_css_img_downloader {
 	int Import_url_chk(byte[] rel_url_prefix, byte[] src, int src_len, int old_pos, int find_bgn, byte[] url_raw, ByteAryBfr bfr) {
 		if (find_bgn < Bry_import_len) return ByteAry_.NotFound;
 		if (!ByteAry_.Match(src, find_bgn - Bry_import_len, find_bgn, Bry_import)) return ByteAry_.NotFound;
-		byte[] css_url = url_raw;
-		if (css_url.length > 0 && css_url[0] == Byte_ascii.Slash) css_url = ByteAry_.Add(rel_url_prefix, css_url); // "/w/a.css" -> "//en.wikipedia.org/w/a.css"
+		byte[] css_url = url_raw; int css_url_len = css_url.length;
+		if (css_url_len > 0 && css_url[0] == Byte_ascii.Slash) {		// css_url starts with "/"; EX: "/page" or "//site/page" DATE:2014-02-03
+			if (css_url_len > 1 && css_url[1] != Byte_ascii.Slash)		// skip if css_url starts with "//"; EX: "//site/page"
+				css_url = ByteAry_.Add(rel_url_prefix, css_url);		// "/w/a.css" -> "//en.wikipedia.org/w/a.css"
+		}
 		String css_src_str = String_.new_utf8_(ByteAry_.Add(stylesheet_prefix, css_url));
 		download_wkr.Download_xrg().Prog_fmt_hdr_(usr_dlg.Log_many(GRP_KEY, "logo.download", "downloading import for '~{0}'", css_src_str));
 		byte[] css_trg_bry = download_wkr.Download_xrg().Exec_as_bry(css_src_str);
-		if (css_trg_bry == null) return ByteAry_.NotFound;	// css not found
+		if (css_trg_bry == null) {
+			usr_dlg.Warn_many("", "", "could not import css: url=~{0}", css_src_str);
+			return ByteAry_.NotFound;	// css not found
+		}
 		bfr.Add_mid(src, old_pos, find_bgn - Bry_import_len).Add_byte_nl();
 		bfr.Add(Bry_comment_bgn).Add(css_url).Add(Bry_comment_end).Add_byte_nl();
 		bfr.Add(css_trg_bry).Add_byte_nl();

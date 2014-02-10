@@ -20,8 +20,8 @@ import org.junit.*;
 public class Pf_intl_plural_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()					{fxt.Reset();}
-	@Test  public void Singular()				{fxt.tst_Parse_tmpl_str_test("{{plural:1|wiki|wikis}}"				, "{{test}}"	, "wiki");}
-	@Test  public void Plural()					{fxt.tst_Parse_tmpl_str_test("{{plural:2|wiki|wikis}}"				, "{{test}}"	, "wikis");}
-	@Test  public void Plural_but_one_arg()		{fxt.tst_Parse_tmpl_str_test("{{plural:2|wiki}}"					, "{{test}}"	, "wiki");}
-	@Test  public void Null()					{fxt.tst_Parse_tmpl_str_test("{{plural:|wiki|wikis}}"				, "{{test}}"	, "wikis");}
+	@Test  public void Singular()				{fxt.Test_parse_tmpl_str_test("{{plural:1|wiki|wikis}}"				, "{{test}}"	, "wiki");}
+	@Test  public void Plural()					{fxt.Test_parse_tmpl_str_test("{{plural:2|wiki|wikis}}"				, "{{test}}"	, "wikis");}
+	@Test  public void Plural_but_one_arg()		{fxt.Test_parse_tmpl_str_test("{{plural:2|wiki}}"					, "{{test}}"	, "wiki");}
+	@Test  public void Null()					{fxt.Test_parse_tmpl_str_test("{{plural:|wiki|wikis}}"				, "{{test}}"	, "wikis");}
 }

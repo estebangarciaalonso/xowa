@@ -20,9 +20,9 @@ import org.junit.*;
 public class Xot_defn_trace_brief_tst {
 	Xot_defn_trace_fxt fxt = new Xot_defn_trace_fxt();
 	@Before public void init() {
-		fxt.ini_defn_clear();
-		fxt.ini_defn_add("leaf_a", "{{{1}}}");
-		fxt.ini_defn_add("leaf_b", "{{{1}}}");
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("leaf_a", "{{{1}}}");
+		fxt.Init_defn_add("leaf_b", "{{{1}}}");
 		fxt.Ctx().Defn_trace_(new Xot_defn_trace_brief());
 	}
 	@Test  public void Basic_a_1()				{fxt.tst_("{{leaf_a}}"						, "0001 leaf_a");}
@@ -32,8 +32,8 @@ public class Xot_defn_trace_brief_tst {
 class Xot_defn_trace_fxt {
 	private Xop_fxt fxt = new Xop_fxt();
 	public Xop_ctx Ctx() {return fxt.Ctx();}
-	public void ini_defn_clear() {fxt.ini_defn_clear();}
-	public void ini_defn_add(String name, String raw) {fxt.ini_defn_add(name, raw);}
+	public void Init_defn_clear() {fxt.Init_defn_clear();}
+	public void Init_defn_add(String name, String raw) {fxt.Init_defn_add(name, raw);}
 	public void tst_(String raw, String... expd_ary) {
 		Xop_ctx ctx = fxt.Ctx();
 		ctx.Defn_trace().Clear();

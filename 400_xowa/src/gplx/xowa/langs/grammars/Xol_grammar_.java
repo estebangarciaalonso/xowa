@@ -19,7 +19,7 @@ package gplx.xowa.langs.grammars; import gplx.*; import gplx.xowa.*; import gplx
 public class Xol_grammar_ {
 	public static final byte Tid__max = 9; 
 	public static final byte Tid_genitive = 0, Tid_elative = 1, Tid_partitive = 2, Tid_illative = 3, Tid_inessive = 4, Tid_accusative = 5, Tid_instrumental = 6, Tid_prepositional = 7, Tid_dative = 8, Tid_unknown = Byte_.MaxValue_127;
-	private static final ByteTrieMgr_slim Tid_trie = ByteTrieMgr_slim.ci_().Add_str_byteVal("genitive", Tid_genitive).Add_str_byteVal("elative", Tid_elative).Add_str_byteVal("partitive", Tid_partitive).Add_str_byteVal("illative", Tid_illative).Add_str_byteVal("inessive", Tid_inessive).Add_str_byteVal("accusative", Tid_accusative).Add_str_byteVal("instrumental", Tid_instrumental).Add_str_byteVal("prepositional", Tid_prepositional).Add_str_byteVal("dative", Tid_dative);
+	private static final ByteTrieMgr_slim Tid_trie = ByteTrieMgr_slim.ci_().Add_str_byte("genitive", Tid_genitive).Add_str_byte("elative", Tid_elative).Add_str_byte("partitive", Tid_partitive).Add_str_byte("illative", Tid_illative).Add_str_byte("inessive", Tid_inessive).Add_str_byte("accusative", Tid_accusative).Add_str_byte("instrumental", Tid_instrumental).Add_str_byte("prepositional", Tid_prepositional).Add_str_byte("dative", Tid_dative);
 	public static byte Tid_of_type(byte[] v) {
 		if (ByteAry_.Len_eq_0(v)) return Tid_unknown;
 		Object o = Xol_grammar_.Tid_trie.MatchAtCurExact(v, 0, v.length);

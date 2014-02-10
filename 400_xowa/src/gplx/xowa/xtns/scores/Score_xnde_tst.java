@@ -17,14 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scores; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
-public class Xtn_score_tst {
+public class Score_xnde_tst {
 	@Test  public void Version() {
-		Tfds.Eq_bry(ByteAry_.new_ascii_("2.16.2"), Xtn_score.Get_lilypond_version("GNU LilyPond 2.16.2\nline1\nline2"));
-		Tfds.Eq_bry(ByteAry_.new_ascii_("2.16.2"), Xtn_score.Get_lilypond_version("GNU LilyPond 2.16.2\r\nline1\r\nline2"));
+		Tfds.Eq_bry(ByteAry_.new_ascii_("2.16.2"), Score_xnde.Get_lilypond_version("GNU LilyPond 2.16.2\nline1\nline2"));
+		Tfds.Eq_bry(ByteAry_.new_ascii_("2.16.2"), Score_xnde.Get_lilypond_version("GNU LilyPond 2.16.2\r\nline1\r\nline2"));
 	}
 	@Test  public void Tab() {
 		Xop_fxt fxt = new Xop_fxt();
-		fxt.tst_Parse_page_wiki_str("<score>a&#09;b</score>", String_.Concat_lines_nl
+		fxt.Test_parse_page_wiki_str("<score>a&#09;b</score>", String_.Concat_lines_nl
 			(	""
 			,	"<div id=\"xowa_score_0_pre\" class=\"xowa-score-lilypond\">"
 			,	"  <pre style=\"overflow:auto\">a	b"	// NOTE: embedded tab

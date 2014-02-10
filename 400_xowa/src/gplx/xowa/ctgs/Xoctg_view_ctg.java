@@ -50,7 +50,6 @@ public class Xoctg_view_ctg {
 		Xoctg_view_grp view_grp = Grp_by_tid(i);
 		Xoctg_idx_mgr data_grp = data_ctg.Grp_by_tid(i); if (data_grp == null) return; // no itms in grp
 		byte[] url_bmk = url_ctg.Grp_idxs()[i]; byte url_bmk_fwd = url_ctg.Grp_fwds()[i];
-		if (url_bmk == null) url_bmk = url_ctg.All_idx();	// EX: if "page_from=" is blank, use "from="
 		data_grp.Find(view_grp.Itms_list(), data_grp.Src(), url_bmk_fwd != Bool_.N_byte, url_bmk, 200, tmp_last_plus_one);
 		view_grp.Itms_last_sortkey_(tmp_last_plus_one.Sortkey());
 		view_grp.Itms_make();

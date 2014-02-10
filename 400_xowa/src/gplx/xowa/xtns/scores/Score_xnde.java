@@ -18,16 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.scores; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.xowa.html.*; import gplx.xowa.files.*;
 import gplx.xowa.parsers.logs.*;
-public class Xtn_score implements Xop_xnde_xtn, Xop_xnde_atr_parser, Xoh_cmd_itm {
-	public Xop_root_tkn Xtn_root() {return null;}
-	public boolean Xtn_literal() {return false;}
+public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 	public boolean Lang_is_abc() {return lang_is_abc;} private boolean lang_is_abc;
 	public boolean Code_is_raw() {return code_is_raw;} private boolean code_is_raw;
 	public boolean Output_midi() {return output_midi;} private boolean output_midi;
 	public boolean Output_ogg() {return output_ogg;} private boolean output_ogg;
 	public byte[] File_midi() {return file_midi;} private byte[] file_midi;
 	public byte[] File_ogg() {return file_ogg;} private byte[] file_ogg;
-	public Xop_root_tkn Body() {return body;} public Xtn_score Body_(Xop_root_tkn v) {body = v; return this;} private Xop_root_tkn body;
+	public Xop_root_tkn Body() {return body;} public Score_xnde Body_(Xop_root_tkn v) {body = v; return this;} private Xop_root_tkn body;
 	public Xop_xnde_tkn Xnde() {return xnde;} private Xop_xnde_tkn xnde = null;
 	public void Xatr_parse(Xow_wiki wiki, byte[] src, Xop_xatr_itm xatr, Object xatr_key_obj) {
 		if (xatr_key_obj == null) return;
@@ -42,29 +40,23 @@ public class Xtn_score implements Xop_xnde_xtn, Xop_xnde_atr_parser, Xoh_cmd_itm
 			default:					throw Err_.unhandled(xatr_key.Val());
 		}
 	}
-	public void Xtn_compile(Xow_wiki wiki, Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_parse(Xow_wiki wiki, Xop_ctx ctx, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		Xop_xatr_itm.Xatr_parse(wiki.App(), this, atr_hash, wiki, src, xnde);
 		this.xnde = xnde;
 		code = ByteAry_.Mid(src, xnde.Tag_open_end(), xnde.Tag_close_bgn());
 		code = ByteAry_.Replace(code, gplx.xowa.bldrs.xmls.Xob_xml_parser_.Bry_tab_ent, gplx.xowa.bldrs.xmls.Xob_xml_parser_.Bry_tab);
-		ttl = ctx.Page().Ttl();
 		boolean log_wkr_enabled = Log_wkr != Xop_log_basic_wkr.Null; if (log_wkr_enabled) Log_wkr.Log_end_xnde(ctx.Page(), Xop_log_basic_wkr.Tid_score, src, xnde);
 	}	public static Xop_log_basic_wkr Log_wkr = Xop_log_basic_wkr.Null;
-	private byte[] code; Xoa_ttl ttl; 	
-
-	public static void To_html(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
-		Xtn_score nde = (Xtn_score)xnde.Xnde_data();
-		nde.Html_write(ctx.Wiki(), ctx, ctx.Page(), bfr);
-	}
+	private byte[] code;
 	public String Hcmd_id() {return hcmd_id;} private String hcmd_id;
 	private void Html_write_code_as_pre(ByteAryBfr bfr, Xoa_app app) {
 		bfr.Add(Xoh_consts.Pre_bgn_overflow);
 		Xoh_html_wtr.Bfr_escape(bfr, code, 0, code.length, app, true, false);
 		bfr.Add(Xoh_consts.Pre_end);
 	}
-	public void Html_write(Xow_wiki wiki, Xop_ctx ctx, Xoa_page page, ByteAryBfr bfr) {
-		Xoa_app app = wiki.App();
-		Xow_xtn_score score_xtn = (Xow_xtn_score)wiki.Xtn_mgr().Get_or_new(Xow_xtn_score.KEY);
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+		Xow_wiki wiki = ctx.Wiki(); Xoa_page page = ctx.Page();
+		Score_xtn_mgr score_xtn = (Score_xtn_mgr)wiki.Xtn_mgr().Get_or_fail(Score_xtn_mgr.XTN_KEY);
 		if (!score_xtn.Enabled()) {Html_write_code_as_pre(bfr, app); return;}
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
 		ProcessAdp ly_process = app.Fsys_mgr().App_mgr().App_lilypond();
@@ -118,11 +110,11 @@ public class Xtn_score implements Xop_xnde_xtn, Xop_xnde_atr_parser, Xoh_cmd_itm
 		gui_wtr.Prog_many(GRP_KEY, "exec.msg", "generating lilypond: ~{0}", String_.new_utf8_(code));
 		gui_wtr.Prog_many(GRP_KEY, "exec.msg", "generating lilypond: ~{0}", String_.new_utf8_(code));
 		Xow_wiki wiki = page.Wiki();
-		Xow_xtn_score score_xtn = (Xow_xtn_score)wiki.Xtn_mgr().Get_or_new(Xow_xtn_score.KEY);
+		Score_xtn_mgr score_xtn = (Score_xtn_mgr)wiki.Xtn_mgr().Get_or_fail(Score_xtn_mgr.XTN_KEY);
 		Io_url ly_file = output_dir.GenSubFil(sha1_prefix + ".ly");
 		byte[] ly_text = null;
 		ProcessAdp ly_process = app.Fsys_mgr().App_mgr().App_lilypond();
-		if (Xow_xtn_score.Lilypond_version == null) Xow_xtn_score.Lilypond_version = Get_lilypond_version(ly_process);
+		if (Score_xtn_mgr.Lilypond_version == null) Score_xtn_mgr.Lilypond_version = Get_lilypond_version(ly_process);
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
 		if	(lang_is_abc) {
 			Io_url abc_file = output_dir.GenSubFil(sha1_prefix + ".abc");
@@ -138,7 +130,7 @@ public class Xtn_score implements Xop_xnde_xtn, Xop_xnde_atr_parser, Xoh_cmd_itm
 			Io_mgr._.SaveFilBry(ly_file, ly_text);
 		}	
 		else {
-			ly_text = code_is_raw ? code : score_xtn.Lilypond_fmtr().Bld_bry_many(tmp_bfr, Xow_xtn_score.Lilypond_version, code);
+			ly_text = code_is_raw ? code : score_xtn.Lilypond_fmtr().Bld_bry_many(tmp_bfr, Score_xtn_mgr.Lilypond_version, code);
 			Io_mgr._.SaveFilBry(ly_file, ly_text);
 		}
 		ly_process.Working_dir_(ly_file.OwnerDir());	// NOTE: must change working_dir, else file will be dumped into same dir as lilypond.exe
@@ -191,7 +183,7 @@ public class Xtn_score implements Xop_xnde_xtn, Xop_xnde_atr_parser, Xoh_cmd_itm
 		return ByteAry_.Mid(rslt, bgn_pos, end_pos);
 	}
 	public static final byte Xatr_id_lang_is_abc = 0, Xatr_id_code_is_raw = 1, Xatr_id_output_midi = 2, Xatr_id_output_ogg = 3, Xatr_id_file_midi = 4, Xatr_id_file_ogg = 5;
-	private static final Hash_adp_bry atr_hash = new Hash_adp_bry(false).Add_str_byteVal("lang", Xatr_id_lang_is_abc).Add_str_byteVal("raw", Xatr_id_code_is_raw).Add_str_byteVal("midi", Xatr_id_output_midi).Add_str_byteVal("vorbis", Xatr_id_output_ogg).Add_str_byteVal("over"+"ride_midi", Xatr_id_file_midi).Add_str_byteVal("over"+"ride_ogg", Xatr_id_file_ogg);
+	private static final Hash_adp_bry atr_hash = new Hash_adp_bry(false).Add_str_byte("lang", Xatr_id_lang_is_abc).Add_str_byte("raw", Xatr_id_code_is_raw).Add_str_byte("midi", Xatr_id_output_midi).Add_str_byte("vorbis", Xatr_id_output_ogg).Add_str_byte("over"+"ride_midi", Xatr_id_file_midi).Add_str_byte("over"+"ride_ogg", Xatr_id_file_ogg);
 	private static final byte[] 
 		  Lang_abc = ByteAry_.new_ascii_("ABC")
 		, Abc_tagline_bgn = ByteAry_.new_ascii_("tagline ="), Abc_tagline_end = new byte[] {Byte_ascii.NewLine}, Abc_tagline_repl = ByteAry_.new_ascii_("tagline = \"\"\n")

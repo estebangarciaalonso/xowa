@@ -27,10 +27,10 @@ class Pf_xtn_switch extends Pf_func_base {
 		ByteAryBfr tmp = ByteAryBfr.new_();
 		for (int i = 0; i < self_args_len; i++) {
 			arg = self.Args_get_by_idx(i);
-			byte[] key = GetOrEvaluate(ctx, src, caller, self, bfr, arg.Key_tkn(), tmp);
+			byte[] key = Get_or_eval(ctx, src, caller, self, bfr, arg.Key_tkn(), tmp);
 			if (arg.KeyTkn_exists()) {	// = exists
 				if		(fall_thru_found || Pf_func_.Eq_(key, argx)) {
-					found = GetOrEvaluate(ctx, src, caller, self, bfr, arg.Val_tkn(), tmp);
+					found = Get_or_eval(ctx, src, caller, self, bfr, arg.Val_tkn(), tmp);
 					break;
 				}
 				else if (dflt_found || Pf_func_.Eq_(key, Dflt_keyword)) {
@@ -39,7 +39,7 @@ class Pf_xtn_switch extends Pf_func_base {
 				else {} // argx != key; continue
 			}
 			else {
-				byte[] val = GetOrEvaluate(ctx, src, caller, self, bfr, arg.Val_tkn(), tmp);
+				byte[] val = Get_or_eval(ctx, src, caller, self, bfr, arg.Val_tkn(), tmp);
 				if		(Pf_func_.Eq_(val, argx))
 					fall_thru_found = true;
 				else if (Pf_func_.Eq_(key, Dflt_keyword))
@@ -47,13 +47,13 @@ class Pf_xtn_switch extends Pf_func_base {
 			}
 		}
 		if (found == null) {
-			if		(!arg.KeyTkn_exists())	found = GetOrEvaluate(ctx, src, caller, self, bfr, arg.Val_tkn(), tmp);
-			else if (dflt_val != null)		found = GetOrEvaluate(ctx, src, caller, self, bfr, dflt_val, tmp);
+			if		(!arg.KeyTkn_exists())	found = Get_or_eval(ctx, src, caller, self, bfr, arg.Val_tkn(), tmp);
+			else if (dflt_val != null)		found = Get_or_eval(ctx, src, caller, self, bfr, dflt_val, tmp);
 			else return;
 		}
 		bfr.Add(found);
 	}
-	byte[] GetOrEvaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bb, Arg_itm_tkn itm, ByteAryBfr tmp) {
+	private byte[] Get_or_eval(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bb, Arg_itm_tkn itm, ByteAryBfr tmp) {
 		if (itm.Itm_static() == Bool_.Y_byte)
 			return ByteAry_.Trim(src, itm.Dat_bgn(), itm.Dat_end());
 		else {

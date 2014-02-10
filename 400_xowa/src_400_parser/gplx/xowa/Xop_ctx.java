@@ -21,6 +21,7 @@ import gplx.xowa.xtns.scribunto.*;
 import gplx.xowa.xtns.wdatas.*;
 import gplx.xowa.parsers.logs.*;
 public class Xop_ctx {
+//		public boolean Prepended_nl = false;
 	Xop_ctx(Xow_wiki wiki) {
 		this.app = wiki.App(); this.msg_log = app.Msg_log();
 		this.wiki = wiki;
@@ -52,14 +53,17 @@ public class Xop_ctx {
 	public Xot_defn_trace		Defn_trace()		{return defn_trace;} public Xop_ctx Defn_trace_(Xot_defn_trace v) {defn_trace = v; return this;} private Xot_defn_trace defn_trace = Xot_defn_trace_null._;
 	public byte					Parse_tid()			{return parse_tid;} public Xop_ctx Parse_tid_(byte v) {parse_tid = v; return this;} private byte parse_tid = Xop_parser_.Parse_tid_null;
 	public byte					Cur_tkn_tid()		{return cur_tkn_tid;} public Xop_ctx Cur_tkn_tid_(byte v) {cur_tkn_tid = v; return this;} private byte cur_tkn_tid = Xop_tkn_itm_.Tid_null;
-	public boolean					Lxr_make()			{return lxr_make;} public Xop_ctx Lxr_make_(boolean v) {
-																		   lxr_make = v; 
-																		   return this;} private boolean lxr_make = false;
+	public boolean					Lxr_make()			{return lxr_make;} public Xop_ctx Lxr_make_(boolean v) {lxr_make = v; return this;} private boolean lxr_make = false;
 	public boolean					Only_include_evaluate() {return only_include_evaluate;} public Xop_ctx Only_include_evaluate_(boolean v) {only_include_evaluate = v; return this;} private boolean only_include_evaluate;
 	public Lst_section_nde_mgr	Lst_section_mgr()	{if (lst_section_mgr == null) lst_section_mgr = new Lst_section_nde_mgr(); return lst_section_mgr;} Lst_section_nde_mgr lst_section_mgr;
 	public Hash_adp_bry			Lst_page_regy()		{return lst_page_regy;} private Hash_adp_bry lst_page_regy;
-	public Xop_log_invoke_wkr	Xtn__scribunto__invoke_wkr() {return app.Xtn_mgr().Xtn_scribunto().Invoke_wkr();} 
-	public Xop_log_property_wkr Xtn__wikidata__property_wkr() {return app.Wiki_mgr().Wdata_mgr().Property_wkr();} 
+	public Xop_log_invoke_wkr	Xtn__scribunto__invoke_wkr() {
+		if (scrib_invoke_wkr == null)
+			scrib_invoke_wkr = ((Scrib_xtn_mgr)(app.Xtn_mgr().Get_or_fail(Scrib_xtn_mgr.XTN_KEY))).Invoke_wkr();
+		return scrib_invoke_wkr;
+	}	private Xop_log_invoke_wkr scrib_invoke_wkr;
+	public Xop_log_property_wkr Xtn__wikidata__property_wkr() {return app.Wiki_mgr().Wdata_mgr().Property_wkr();}
+	public ByteAryBfr Tmpl_output() {return tmpl_output;} public Xop_ctx Tmpl_output_(ByteAryBfr v) {tmpl_output = v; return this;} private ByteAryBfr tmpl_output;
 	private Xop_ctx_wkr[] wkrs = new Xop_ctx_wkr[] {}; private Xop_ctx_wkr[] wkrs_(Xop_ctx_wkr... ary) {return ary;}
 	public int Tag_idx;
 	public Xop_ctx Clear() {
@@ -70,6 +74,8 @@ public class Xop_ctx {
 		app.Wiki_mgr().Wdata_mgr().Clear();
 		if (lst_section_mgr != null) lst_section_mgr.Clear();
 		if (lst_page_regy != null) lst_page_regy.Clear();
+//			this.Prepended_nl = false;
+		tmpl_output = null;
 		return this;
 	}
 	public void Page_bgn(Xop_root_tkn root, byte[] src) {
@@ -125,6 +131,7 @@ public class Xop_ctx {
 		aryLen = newLen;
 	}	private Xop_tkn_itm[] ary = Xop_tkn_itm_.Ary_empty; int aryLen = 0, aryMax = 0;
 	public int Stack_len() {return aryLen;}
+	public Xop_tkn_itm Stack_get_last()		{return aryLen == 0 ? null : ary[aryLen - 1];}
 	public Xop_tkn_itm Stack_get(int i)		{return i < 0 || i >= aryLen ? null : ary[i];}
 	public Xop_tblw_tkn Stack_get_tblw() {
 		for (int i = aryLen - 1; i > -1	; i--) {
@@ -256,6 +263,18 @@ public class Xop_ctx {
 		if (stack_pos == -1) return;
 		ctx.Stack_pop_til(root, src, stack_pos, true, bgn_pos, cur_pos);
 	}
+	public void Tmpl_prepend_nl(ByteAryBfr cur, byte[] bry, int bry_len) {
+		if (	bry_len == 0													// bry is empty
+			||	tmpl_prepend_nl_trie.MatchAtCur(bry, 0, bry_len) == null		// bry does not start with {| : ; # *; REF.MW:Parser.php|braceSubstitution
+			) return;												
+		ByteAryBfr prv_bfr														// note that cur_bfr should be checked first before tmpl_output
+			= cur.Bry_len() == 0 //&& tmpl_output != null
+			? tmpl_output
+			: cur
+			;
+		if (!prv_bfr.Match_end_byt(Byte_ascii.NewLine))							// previous char is not \n;
+			cur.Add_byte(Byte_ascii.NewLine);
+	}
 	public static Xop_ctx new_(Xow_wiki wiki) {
 		Xop_ctx rv = new Xop_ctx(wiki);
 		rv.tab = new Xog_tab();
@@ -268,6 +287,7 @@ public class Xop_ctx {
 		rv.Page().Id_(ctx.Page().Id());
 		rv.Page().Ttl_(ctx.Page().Ttl());	// NOTE: sub_ctx must have same page_ttl as owner; see Lst_pfunc_lst_tst!Fullpagename
 		rv.tab = ctx.Tab();	// NOTE: tab should be same instance across all sub_ctxs; otherwise CallParserFunction will not set DISPLAYTITLE correctly; DATE:2013-08-05
+		rv.tmpl_output = ctx.tmpl_output;
 		return rv;
 	}
 	public static Xop_ctx new_sub_page_(Xow_wiki wiki, Xop_ctx ctx, Hash_adp_bry lst_page_regy) {
@@ -276,6 +296,9 @@ public class Xop_ctx {
 		rv.Page().Id_(ctx.Page().Id());
 		rv.Page().Ref_mgr_(ctx.Page().Ref_mgr());	// NOTE: must share ref_mgr, else references in sub_ctx will not be picked up in root_ctx; EX: en.wikisource.org/wiki/Flatland_(first_edition)/This_World; DATE:2014-01-18
 		rv.lst_page_regy = lst_page_regy;
+		rv.tmpl_output = ctx.tmpl_output;
 		return rv;
 	}
+	private static final ByteTrieMgr_fast tmpl_prepend_nl_trie = Xop_curly_bgn_lxr.tmpl_bgn_trie_();
+
 }

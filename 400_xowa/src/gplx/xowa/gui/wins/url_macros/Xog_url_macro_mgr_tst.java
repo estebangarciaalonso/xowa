@@ -26,7 +26,9 @@ public class Xog_url_macro_mgr_tst {
 	@Test  public void Type_lang()			{fxt.Test("fr.w:Page"			, "fr.wikipedia.org/wiki/Page");}
 	@Test  public void Type_unhandled()		{fxt.Test("x:A"					, null);}
 	@Test  public void Type_unhandled_ns()	{fxt.Test("Help:A"				, null);}
+	@Test  public void Type_custom()		{fxt.Test("wd.q:123"			, "www.wikidata.org/wiki/Q123");}
 	@Test  public void Type_del() {
+		fxt.Test("w:A", "en.wikipedia.org/wiki/A");
 		fxt.Abrv_mgr().Types_mgr().Del(ByteAry_.new_utf8_("w"));
 		fxt.Test("w:A", null);
 	}

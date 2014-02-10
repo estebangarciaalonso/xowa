@@ -188,7 +188,7 @@ class Dpl_xnde_fxt {
 		Io_mgr._.InitEngine_mem();
 	}
 	public void Warns(String... v) {warns = v;} private String[] warns;
-	public void Page_create(String page) {fxt.ini_page_create(page);}
+	public void Page_create(String page) {fxt.Init_page_create(page);}
 	public void Ctg_create(String ctg, String... ttls) {
 		int len = ttls.length;
 		Dpl_page_mok[] ary = new Dpl_page_mok[len];
@@ -206,12 +206,12 @@ class Dpl_xnde_fxt {
 			Xoa_ttl page_ttl = Xoa_ttl.parse_(fxt.Wiki(), ByteAry_.new_utf8_(ttl));
 			Xoa_page page_obj = fxt.Wiki().Data_mgr().Get_page(page_ttl, false);
 			if (page_obj.Missing()) {
-				fxt.ini_page_create(ttl);
-				fxt.ini_id_create (id, 0, 0, false, 5, Xow_ns_.Id_main, ttl);
+				fxt.Init_page_create(ttl);
+				fxt.Init_id_create (id, 0, 0, false, 5, Xow_ns_.Id_main, ttl);
 			}
 			page_ids[i] = id;
 		}
-		fxt.ini_ctg_create(ctg, page_ids);
+		fxt.Init_ctg_create(ctg, page_ids);
 	}
 	public String Ul(String itm_html, String... pages) {
 		bfr.Add("<ul>").Add_char_nl();
@@ -226,7 +226,7 @@ class Dpl_xnde_fxt {
 		return bfr.XtoStrAndClear();
 	}
 	public void Ul_pages(String raw, String expd) {
-		fxt.tst_Parse_page_wiki_str(raw, expd);
+		fxt.Test_parse_page_wiki_str(raw, expd);
 		fxt.tst_Warn(warns);
 	}	String_bldr bfr = String_bldr_.new_();
 }

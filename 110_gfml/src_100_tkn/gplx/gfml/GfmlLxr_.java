@@ -84,7 +84,7 @@ class GfmlLxr_group implements GfmlLxr {
 				sb.Add_mid(stream.Ary(), stream.Pos(), hookLength);
 			stream.MoveNextBy(hookLength);
 
-			String found = String_.cast_(trie.FindMatch(stream));
+			String found = String_.as_or_fail_(trie.FindMatch(stream));
 			if (found == null) break;
 			hookLength = trie.LastMatchCount;
 		}

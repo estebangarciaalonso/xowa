@@ -30,14 +30,14 @@ public class Scrib_pf_invoke_tst {
 	}
 	@Test  public void ExpandTemplate() {
 		this.Init_expandTemplate();
-		fxt.Parser_fxt().ini_page_create("Template:Format", "{{{1}}}");
+		fxt.Parser_fxt().Init_page_create("Template:Format", "{{{1}}}");
 		fxt.Init_lua_module();
 		fxt.Init_lua_rcvd_expandTemplate(Scrib_engine.Frame_key_current	, "Format", KeyVal_.int_(1, "a"));
 		fxt.Test_invoke("a");
 	}
 	@Test  public void ExpandTemplate_ns_name() {
 		this.Init_expandTemplate();
-		fxt.Parser_fxt().ini_page_create("Template:Format", "{{{1}}}");
+		fxt.Parser_fxt().Init_page_create("Template:Format", "{{{1}}}");
 		fxt.Init_lua_module();
 		fxt.Init_lua_rcvd_expandTemplate(Scrib_engine.Frame_key_current	, "Template:Format", KeyVal_.int_(1, "a"));
 		fxt.Test_invoke("a");
@@ -76,14 +76,14 @@ class Scrib_pf_invoke_fxt {
 		fxt.Wiki().Ctx().Tab().Clear_mgrs();	// NOTE: must clear page_regy else module is missing
 		engine.When_page_changed(fxt.Wiki().Ctx().Page());
 		init_tmpl = init_page = null;
-		fxt.ini_page_create("Module:" + "Mod_0", "");
+		fxt.Init_page_create("Module:" + "Mod_0", "");
 		this.Init_lua_rcvd_loadModule(); 
 	}	private Xop_fxt fxt; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); Scrib_engine engine; Process_server_mock server; Scrib_lua_rsp_bldr rsp_bldr = new Scrib_lua_rsp_bldr();
 	public Xop_fxt Parser_fxt() {return fxt;}
 	public Scrib_engine_fxt Engine_fxt() {return engine_fxt;} Scrib_engine_fxt engine_fxt;
 	public Scrib_engine Engine() {return engine;}
 	public Scrib_pf_invoke_fxt Init_module(String ttl, String text) {
-		fxt.ini_page_create("Module:" + ttl, text);
+		fxt.Init_page_create("Module:" + ttl, text);
 		return this;
 	}
 	public Scrib_pf_invoke_fxt Init_cbk(String lib_name, GfoInvkAble invk, String... func_names) {
@@ -137,13 +137,13 @@ class Scrib_pf_invoke_fxt {
 		return this;
 	}	String expd_lua_send;
 	public void Test_invoke(String expd) {
-		if (init_tmpl != null) fxt.ini_defn_add("test", init_tmpl);
-		fxt.tst_Parse_tmpl_str(init_page, expd);
+		if (init_tmpl != null) fxt.Init_defn_add("test", init_tmpl);
+		fxt.Test_parse_tmpl_str(init_page, expd);
 	}
 	public void Test_parse_err(String raw, String expd_err_type) {
 		Scrib_pf_invoke.Error(tmp_bfr, fxt.Wiki().Msg_mgr(), expd_err_type);
 		byte[] expd_err = tmp_bfr.XtoAryAndClear();
-		fxt.tst_Parse_page_tmpl_str(raw, String_.new_utf8_(expd_err));
+		fxt.Test_parse_page_tmpl_str(raw, String_.new_utf8_(expd_err));
 	}
 	public void Test_lib_proc(Scrib_lib lib, String func_name, Object[] args, String expd) {Test_lib_proc_kv(lib, func_name, Scrib_kv_utl.base1_many_(args), expd);}
 	public void Test_lib_proc_kv(Scrib_lib lib, String func_name, KeyVal[] args, String expd) {
@@ -152,8 +152,8 @@ class Scrib_pf_invoke_fxt {
 	}
 	public byte[] Test_lib_proc_rv(Scrib_lib lib, String func_name, Object[] args) {
 		Test_lib_proc_internal(lib, func_name, Scrib_kv_utl.base1_many_(args));
-		if (init_tmpl != null) fxt.ini_defn_add("test", init_tmpl);
-		return fxt.tst_Parse_tmpl_str_rv(init_page);
+		if (init_tmpl != null) fxt.Init_defn_add("test", init_tmpl);
+		return fxt.Test_parse_tmpl_str_rv(init_page);
 	}
 	private void Test_lib_proc_internal(Scrib_lib lib, String func_name, KeyVal[] args) {
 		Init_lua_module();
@@ -180,7 +180,7 @@ class Scrib_lua_rsp_bldr {
 	private void Bld_obj(ByteAryBfr bfr, Object v) {
 		Class<?> v_type = v.getClass();
 		if		(Object_.Eq(v_type, Int_.ClassOf))				Bld_int(bfr, Int_.cast_(v));
-		else if	(Object_.Eq(v_type, String_.ClassOf))			Bld_str(bfr, String_.cast_(v));
+		else if	(Object_.Eq(v_type, String_.ClassOf))			Bld_str(bfr, String_.as_or_fail_(v));
 		else if	(Object_.Eq(v_type, Bool_.ClassOf))				Bld_bool(bfr, Bool_.cast_(v));
 		else if	(Object_.Eq(v_type, KeyVal[].class))			Bld_kv_ary(bfr, (KeyVal[])v);
 		else if	(Object_.Eq(v_type, Scrib_fnc.class))			Bld_fnc(bfr, (Scrib_fnc)v);

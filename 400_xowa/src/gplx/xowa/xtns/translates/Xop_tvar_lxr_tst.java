@@ -20,9 +20,9 @@ import org.junit.*;
 	public class Xop_tvar_lxr_tst {
 	@Before public void init() {fxt.Reset();} private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Basic() {
-		fxt.tst_Parse_page_all_str("<tvar|1>''a''</>", "<i>a</i>");
+		fxt.Test_parse_page_all_str("<tvar|1>''a''</>", "<i>a</i>");
 	}
 	@Test  public void Missing_end() {
-		fxt.tst_Parse_page_all_str("<tvar|1>''a''</tvar>", "&lt;tvar|1&gt;<i>a</i>&lt;/tvar&gt;");
+		fxt.Test_parse_page_all_str("<tvar|1>''a''</tvar>", "&lt;tvar|1&gt;<i>a</i>&lt;/tvar&gt;");
 	}
 }

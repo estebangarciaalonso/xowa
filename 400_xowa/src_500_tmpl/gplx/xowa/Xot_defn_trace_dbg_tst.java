@@ -20,11 +20,11 @@ import org.junit.*;
 public class Xot_defn_trace_dbg_tst {
 	Xot_defn_trace_fxt fx = new Xot_defn_trace_fxt();
 	@Before public void init() {
-		fx.ini_defn_clear();
-		fx.ini_defn_add("print", "{{{1}}}");
-		fx.ini_defn_add("concat", "{{{1}}}{{{2}}}");
-		fx.ini_defn_add("bool_str", "{{#ifeq:{{{1}}}|1|y|n}}");
-		fx.ini_defn_add("mid_1", "{{print|[ {{concat|{{{1}}}|{{{2}}}}} ]}}");
+		fx.Init_defn_clear();
+		fx.Init_defn_add("print", "{{{1}}}");
+		fx.Init_defn_add("concat", "{{{1}}}{{{2}}}");
+		fx.Init_defn_add("bool_str", "{{#ifeq:{{{1}}}|1|y|n}}");
+		fx.Init_defn_add("mid_1", "{{print|[ {{concat|{{{1}}}|{{{2}}}}} ]}}");
 		fx.Ctx().Defn_trace_(Xot_defn_trace_dbg._);
 	}
 	@Test  public void Tmpl() {

@@ -306,7 +306,7 @@ class Xodb_tbl_oimg_xfer_itm extends Xof_fsdb_itm {	public int 			Lnki_id() {ret
 		rv.Html_size_(rdr.ReadInt(Xob_xfer_regy_tbl.Fld_file_w), rdr.ReadInt(Xob_xfer_regy_tbl.Fld_file_h));	// set html_size as file_size (may try to optimize later by removing similar thumbs (EX: 220,221 -> 220))
 		rv.Lnki_size_(rdr.ReadInt(Xob_xfer_regy_tbl.Fld_file_w), rdr.ReadInt(Xob_xfer_regy_tbl.Fld_file_h));	// set lnki_size; Xof_bin_mgr uses lnki_size;			
 		rv.Lnki_page_			(Xof_doc_page.Db_load_int(rdr, Xob_xfer_regy_tbl.Fld_lnki_page));
-		rv.Lnki_thumbtime_		(Xof_doc_thumb.Db_load_double(rdr, Xob_xfer_regy_tbl.Fld_lnki_thumbtime));
+		rv.Lnki_thumbtime_		(Xof_doc_thumb.Db_load_double(rdr, Xob_xfer_regy_tbl.Fld_lnki_time));
 		return rv;
 	}
 }

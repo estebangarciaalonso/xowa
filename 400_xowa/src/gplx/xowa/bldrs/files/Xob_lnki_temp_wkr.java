@@ -60,7 +60,7 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		gplx.xowa.xtns.gallery.Gallery_nde.Log_wkr = log_mgr.Make_wkr().Save_src_str_(Bool_.Y);
 		gplx.xowa.xtns.imageMap.Xop_imageMap_xnde.Log_wkr = log_mgr.Make_wkr();
 		gplx.xowa.Xop_xnde_wkr.Timeline_log_wkr = log_mgr.Make_wkr();
-		gplx.xowa.xtns.scores.Xtn_score.Log_wkr = log_mgr.Make_wkr();
+		gplx.xowa.xtns.scores.Score_xnde.Log_wkr = log_mgr.Make_wkr();
 		gplx.xowa.xtns.hiero.Xtn_hiero_nde.Log_wkr = log_mgr.Make_wkr();
 		provider.Txn_mgr().Txn_bgn_if_none();
 		log_mgr.Txn_bgn();
@@ -122,7 +122,7 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		if (aliases_len != ids_len) throw Err_.new_fmt_("mismatch in aliases and ids: {0} vs {1}", aliases_len, ids_len);
 	}
 	private Xop_log_invoke_wkr Invoke_wkr() {
-		if (invoke_wkr == null) invoke_wkr = bldr.App().Xtn_mgr().Xtn_scribunto().Invoke_wkr_or_new();
+		if (invoke_wkr == null) invoke_wkr = ((Scrib_xtn_mgr)bldr.App().Xtn_mgr().Get_or_fail(Scrib_xtn_mgr.XTN_KEY)).Invoke_wkr_or_new();
 		return invoke_wkr;
 	}
 	private Xop_log_property_wkr Property_wkr() {

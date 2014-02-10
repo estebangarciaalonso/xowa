@@ -42,7 +42,7 @@ public class Xop_xnde_tkn extends Xop_tkn_itm_base implements Xop_tblw_tkn {
 	public int Tag_close_end() {return tag_close_end;} private int tag_close_end = Int_.Null;
 	public Xop_xnde_tkn Tag_close_rng_(int bgn, int end) {this.tag_close_bgn = bgn; this.tag_close_end = end; return this;}
 	public Xop_xnde_tkn Subs_add_ary(Xop_tkn_itm... ary) {for (Xop_tkn_itm itm : ary) Subs_add(itm); return this;}
-	public Xop_xnde_xtn Xnde_data() {return xnde_data;} public Xop_xnde_tkn Xnde_data_(Xop_xnde_xtn v) {xnde_data = v; return this;} private Xop_xnde_xtn xnde_data;
+	public Xox_xnde Xnde_xtn() {return xnde_xtn;} public Xop_xnde_tkn Xnde_xtn_(Xox_xnde v) {xnde_xtn = v; return this;} private Xox_xnde xnde_xtn;
 	@Override public void Tmpl_compile(Xop_ctx ctx, byte[] src, Xot_compile_data prep_data) {
 		switch (tag.Id()) {
 			case Xop_xnde_tag_.Tid_noinclude:	// NOTE: prep_mode is false to force recompile; see Ex_Tmpl_noinclude and {{{1<ni>|a</ni>}}}

@@ -20,6 +20,6 @@ import org.junit.*;
 public class Pp_pagelist_nde_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Basic() {
-		fxt.tst_Parse_page_wiki_str("a<pagelist>b</pagelist>c", "ac");
+		fxt.Test_parse_page_wiki_str("a<pagelist>b</pagelist>c", "ac");
 	}
 }

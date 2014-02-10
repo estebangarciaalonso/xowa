@@ -19,16 +19,16 @@ package gplx.xowa; import gplx.*;
 import gplx.xowa.wikis.*; import gplx.xowa.users.history.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.dynamicPageList.*; import gplx.xowa.xtns.math.*;
 import gplx.xowa.parsers.lnkis.*;
 import gplx.xowa.langs.vnts.*;
+import gplx.xowa.xtns.refs.*;
 public class Xoh_html_wtr {
 	private Xow_wiki wiki; private Xoa_app app; private Xoa_page page;
-	private gplx.xowa.xtns.refs.Xoh_ref_wtr ref_wtr = new gplx.xowa.xtns.refs.Xoh_ref_wtr();  Url_encoder href_encoder; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
 	private Xop_lnki_logger_redlinks_mgr redlinks_mgr;
 	public Xoh_lnki_wtr Lnki_wtr() {return lnki_wtr;} private Xoh_lnki_wtr lnki_wtr;
+	public Xoh_ref_wtr Ref_wtr() {return ref_wtr;} private Xoh_ref_wtr ref_wtr = new Xoh_ref_wtr(); 
 	public Xoh_html_wtr(Xow_wiki wiki) {
 		this.wiki = wiki; app = wiki.App(); this.wiki_key = wiki.Domain_bry();
 		lnki_wtr = new Xoh_lnki_wtr(wiki, this);
 		history_mgr = app.User().History_mgr();
-		this.href_encoder = wiki.App().Url_converter_href();
 		redlinks_mgr = wiki.Ctx().Tab().Lnki_redlinks_mgr();
 	}	private byte[] wiki_key; Xou_history_mgr history_mgr;
 	public Xoh_ctx Hctx() {return hctx;} private Xoh_ctx hctx = new Xoh_ctx();
@@ -63,29 +63,29 @@ public class Xoh_html_wtr {
 				for (int i = 0; i < subs_len; i++)
 					Write_tkn(ctx, opts, bfr, src, depth + 1, tkn, i, tkn.Subs_get(i));
 				break;
-			case Xop_tkn_itm_.Tid_ignore:	break;
-			case Xop_tkn_itm_.Tid_html_ncr:	Html_ncr(ctx, opts, bfr, src, (Xop_html_ncr_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_html_ref:	Html_ref(ctx, opts, bfr, src, (Xop_html_ref_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_hr:		Hr(ctx, opts, bfr, src, (Xop_hr_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_hdr:		Hdr(ctx, opts, bfr, src, (Xop_hdr_tkn)tkn, depth); break;
-			case Xop_tkn_itm_.Tid_apos:		Apos(ctx, opts, bfr, src, (Xop_apos_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_lnke:		Lnke(ctx, opts, bfr, src, (Xop_lnke_tkn)tkn, depth); break;
-			case Xop_tkn_itm_.Tid_lnki:		Lnki(ctx, opts, bfr, src, (Xop_lnki_tkn)tkn, depth); break;
-			case Xop_tkn_itm_.Tid_list:		List(ctx, opts, bfr, src, (Xop_list_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_xnde:		Xnde(ctx, opts, bfr, src, (Xop_xnde_tkn)tkn, depth); break;
-			case Xop_tkn_itm_.Tid_under:	Under(ctx, opts, bfr, src, (Xop_under_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_tblw_tb:	Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_tb_bgn_atr, Tag_tblw_tb_end, depth, true); break;
-			case Xop_tkn_itm_.Tid_tblw_tr:	Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_tr_bgn_atr, Tag_tblw_tr_end, depth, false); break;
-			case Xop_tkn_itm_.Tid_tblw_td:	Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_td_bgn_atr, Tag_tblw_td_end, depth, false); break;
-			case Xop_tkn_itm_.Tid_tblw_th:	Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_th_bgn_atr, Tag_tblw_th_end, depth, false); break;
-			case Xop_tkn_itm_.Tid_tblw_tc:	Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_tc_bgn_atr, Tag_tblw_tc_end, depth, false); break;
-			case Xop_tkn_itm_.Tid_para:		Para(ctx, opts, bfr, src, (Xop_para_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_space:	Space(ctx, opts, bfr, src, grp, sub_idx, (Xop_space_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_pre:		Pre(ctx, opts, bfr, src, (Xop_pre_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_newLine:	NewLine(ctx, opts, bfr, src, (Xop_nl_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_bry:		Bry(ctx, opts, bfr, src, (Xop_bry_tkn)tkn); break;
-			case Xop_tkn_itm_.Tid_vnt:		Vnt(ctx, opts, bfr, src, depth, (Xop_vnt_tkn)tkn); break;
-//				case Xop_tkn_itm_.Tid_tab:		bfr.Add_byte_repeat(Byte_ascii.Tab, tkn.Src_end() - tkn.Src_bgn()); break;
+			case Xop_tkn_itm_.Tid_ignore:			break;
+			case Xop_tkn_itm_.Tid_html_ncr:			Html_ncr(ctx, opts, bfr, src, (Xop_html_ncr_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_html_ref:			Html_ref(ctx, opts, bfr, src, (Xop_html_ref_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_hr:				Hr(ctx, opts, bfr, src, (Xop_hr_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_hdr:				Hdr(ctx, opts, bfr, src, (Xop_hdr_tkn)tkn, depth); break;
+			case Xop_tkn_itm_.Tid_apos:				Apos(ctx, opts, bfr, src, (Xop_apos_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_lnke:				Lnke(ctx, opts, bfr, src, (Xop_lnke_tkn)tkn, depth); break;
+			case Xop_tkn_itm_.Tid_lnki:				Lnki(ctx, opts, bfr, src, (Xop_lnki_tkn)tkn, depth); break;
+			case Xop_tkn_itm_.Tid_list:				List(ctx, opts, bfr, src, (Xop_list_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_xnde:				Xnde(ctx, opts, bfr, src, (Xop_xnde_tkn)tkn, depth); break;
+			case Xop_tkn_itm_.Tid_under:			Under(ctx, opts, bfr, src, (Xop_under_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_tblw_tb:			Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_tb_bgn_atr, Tag_tblw_tb_end, depth, true); break;
+			case Xop_tkn_itm_.Tid_tblw_tr:			Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_tr_bgn_atr, Tag_tblw_tr_end, depth, false); break;
+			case Xop_tkn_itm_.Tid_tblw_td:			Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_td_bgn_atr, Tag_tblw_td_end, depth, false); break;
+			case Xop_tkn_itm_.Tid_tblw_th:			Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_th_bgn_atr, Tag_tblw_th_end, depth, false); break;
+			case Xop_tkn_itm_.Tid_tblw_tc:			Tblw(ctx, opts, bfr, src, (Xop_tblw_tkn)tkn, Tag_tblw_tc_bgn_atr, Tag_tblw_tc_end, depth, false); break;
+			case Xop_tkn_itm_.Tid_para:				Para(ctx, opts, bfr, src, (Xop_para_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_space:			Space(ctx, opts, bfr, src, grp, sub_idx, (Xop_space_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_pre:				Pre(ctx, opts, bfr, src, (Xop_pre_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_newLine:			NewLine(ctx, opts, bfr, src, (Xop_nl_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_bry:				Bry(ctx, opts, bfr, src, (Xop_bry_tkn)tkn); break;
+			case Xop_tkn_itm_.Tid_vnt:				Vnt(ctx, opts, bfr, src, depth, (Xop_vnt_tkn)tkn); break;
+//				case Xop_tkn_itm_.Tid_tab:				bfr.Add_byte_repeat(Byte_ascii.Tab, tkn.Src_end() - tkn.Src_bgn()); break;
 			default:
 				Bfr_escape(bfr, src, tkn.Src_bgn(), tkn.Src_end(), app, true, false);	// NOTE: always escape text including (a) lnki_alt text; and (b) any other text, especially failed xndes; DATE:2013-06-18
 				break;
@@ -508,32 +508,33 @@ public class Xoh_html_wtr {
 					bfr.Add(Tag__end_bgn).Add(name).Add_byte(Tag__end);	// NOTE: inline is never written as <b/>; will be written as <b></b>; SEE: NOTE_1
 				break;
 			}
-			case Xop_xnde_tag_.Tid_math:
-				app.File_mgr().Math_mgr().Html_wtr().Write(this, ctx, opts, bfr, src, xnde, depth);
-				break;
-			case Xop_xnde_tag_.Tid_syntaxHighlight:			gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde.To_html(this, ctx, opts, bfr, src, xnde, depth); break;
-			case Xop_xnde_tag_.Tid_score:					gplx.xowa.xtns.scores.Xtn_score.To_html(this, ctx, opts, bfr, src, xnde, depth); break;
-			case Xop_xnde_tag_.Tid_dynamicPageList:			Xnde_dynamic_page_list(ctx, opts, bfr, src, xnde, depth); break;
-			case Xop_xnde_tag_.Tid_gallery:					wiki.Html_mgr().Gallery_mgr().Write_html(app, wiki, ctx, page, this, opts, bfr, src, xnde, depth); break;
-			case Xop_xnde_tag_.Tid_poem:					Xnde_poem(ctx, opts, bfr, src, xnde, depth); break;
-			case Xop_xnde_tag_.Tid_ref:						ref_wtr.Xnde_ref(opts, bfr, src, xnde); break;
-			case Xop_xnde_tag_.Tid_references:				ref_wtr.Xnde_references(this, ctx, opts, bfr, src, xnde, depth); break;
-			case Xop_xnde_tag_.Tid_translate:				gplx.xowa.xtns.translates.Xop_translate_xnde.To_html(this, ctx, opts, bfr, src, xnde, depth); break;
-			case Xop_xnde_tag_.Tid_languages:				gplx.xowa.xtns.translates.Xop_languages_xnde.To_html(this, ctx, opts, bfr, src, xnde, depth); break;
-			case Xop_xnde_tag_.Tid_templateData:			gplx.xowa.xtns.templateData.Xtn_templateData_nde.To_html(this, ctx, opts, bfr, src, xnde, depth); break;
+			case Xop_xnde_tag_.Tid_math:					app.File_mgr().Math_mgr().Html_wtr().Write(this, ctx, opts, bfr, src, xnde, depth); break;
 			case Xop_xnde_tag_.Tid_timeline: {
 				bfr.Add_str("<pre class='xowa-timeline'>");
 				bfr.Add_mid(src, xnde.Src_bgn(), xnde.Src_end());
 				bfr.Add_str("</pre>");
 				break;
 			}
+			case Xop_xnde_tag_.Tid_ref:
+			case Xop_xnde_tag_.Tid_references:
+			case Xop_xnde_tag_.Tid_gallery:
 			case Xop_xnde_tag_.Tid_inputBox:
 			case Xop_xnde_tag_.Tid_imageMap:
 			case Xop_xnde_tag_.Tid_pages:
 			case Xop_xnde_tag_.Tid_pagequality:
 			case Xop_xnde_tag_.Tid_pagelist:
 			case Xop_xnde_tag_.Tid_section:
-			case Xop_xnde_tag_.Tid_xowa_cmd:				Xnde_xtn(ctx, opts, bfr, src, xnde, depth); break;
+			case Xop_xnde_tag_.Tid_translate:
+			case Xop_xnde_tag_.Tid_dynamicPageList:
+			case Xop_xnde_tag_.Tid_languages:
+			case Xop_xnde_tag_.Tid_templateData:
+			case Xop_xnde_tag_.Tid_syntaxHighlight:
+			case Xop_xnde_tag_.Tid_score:
+			case Xop_xnde_tag_.Tid_poem:
+			case Xop_xnde_tag_.Tid_xowa_cmd:
+				Xox_xnde xtn = xnde.Xnde_xtn();
+				xtn.Xtn_write(app, this, opts, ctx, bfr, src, xnde, depth);
+				break;
 			default:
 				if (tag.Restricted()) {	// a; img; script; etc..
 					if (	!page.Html_restricted()										// page is not marked restricted (only [[Special:]])
@@ -606,20 +607,15 @@ public class Xoh_html_wtr {
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++) {
 			Xop_xatr_itm atr = ary[i];
-			if (!whitelist_mgr.Chk(tag_id, src, atr)) continue;
 			if (atr.Invalid()) continue;
+			if (!whitelist_mgr.Chk(tag_id, src, atr)) continue;
 			bfr.Add_byte(Byte_ascii.Space);	// add space before every attribute
 			Xnde_atr_write(bfr, src, atr);
 		}
 	}
 	private void Xnde_atr_write(ByteAryBfr bfr, byte[] src, Xop_xatr_itm atr) {
-		int key_bgn = atr.Key_bgn();
 		if (atr.Key_bry() != null) {
 			bfr.Add(atr.Key_bry());
-			bfr.Add_byte(Byte_ascii.Eq);
-		}
-		else if (key_bgn != -1) {
-			bfr.Add_mid(src, atr.Key_bgn(), atr.Key_end());
 			bfr.Add_byte(Byte_ascii.Eq);
 		}
 		byte quote_byte = atr.Quote_byte(); if (quote_byte == Byte_ascii.Nil) quote_byte = Byte_ascii.Quote;
@@ -780,17 +776,6 @@ public class Xoh_html_wtr {
 		}
 	}
 	public BoolRef Queue_add_ref() {return queue_add_ref;} BoolRef queue_add_ref = BoolRef.n_();
-	private void Xnde_dynamic_page_list(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {		
-		Dpl_xnde nde = (Dpl_xnde)xnde.Xnde_data();
-		nde.Xtn_html(wiki, this, opts, bfr, src, xnde, depth);
-	}
-	public void Xnde_poem(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
-		gplx.xowa.xtns.poems.Poem_nde mgr = (gplx.xowa.xtns.poems.Poem_nde)xnde.Xnde_data();
-		if (mgr.Xtn_root() == null) return;	// NOTE: only happens with <poem/>
-		bfr.Add(Bry_poem_bgn);
-		Write_tkn(ctx, opts, bfr, mgr.Xtn_root().Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, mgr.Xtn_root());
-		bfr.Add(Bry_poem_end);
-	}	static byte[] Bry_poem_bgn = ByteAry_.new_ascii_("<div class=\"poem\">\n"), Bry_poem_end = ByteAry_.new_ascii_("\n</div>"); 
 	public void Tblw(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_tblw_tkn tkn, byte[] bgn, byte[] end, int depth, boolean tblw_bgn) {
 		if (opts.Lnki_alt())			// add \s for each \n
 			bfr.Add_byte_space();
@@ -821,15 +806,6 @@ public class Xoh_html_wtr {
 //			if (para_mode) {bfr.Add(Xoh_consts.P_end);}				// DELETE: old code; adding <p> to handle strange mozilla key down behavior on linux; DATE:2013-03-30
 			bfr.Add_byte_nl();
 		}
-	}
-	private void Xnde_xtn(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
-		Xop_xnde_xtn xtn = xnde.Xnde_data(); if (xtn == null) return;
-		if (xtn.Xtn_literal()) {
-			Bfr_escape(bfr, src, xnde.Src_bgn(), xnde.Src_end(), app, true, false);
-			return;
-		}
-		Xop_root_tkn root = xtn.Xtn_root(); if (root == null) return;	// NOTE: some roots will be null; EX: <section/> which has no data to parse/show
-		Write_tkn(ctx, opts, bfr, root.Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, root);
 	}
 	public static final byte[] Tag__end_quote = ByteAry_.new_ascii_("\">"), Tag__end_bgn = ByteAry_.new_ascii_("</")
 		, Tag_hdr_bgn = ByteAry_.new_ascii_("<h"), Tag_hdr_end = ByteAry_.new_ascii_("</h"), Tag_hr = ByteAry_.new_ascii_("<hr/>"), Tag_br = ByteAry_.new_ascii_("<br/>")

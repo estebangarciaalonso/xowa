@@ -28,16 +28,16 @@ public class Xous_window_mgr implements GfoInvkAble {
 	public void Save_window(gplx.gfui.GfuiWin win) {
 		gplx.xowa.cfgs.Xoa_cfg_mgr cfg_mgr = user.App().Cfg_mgr();
 		if (user.Cfg_mgr().Startup_mgr().Window_mgr().Mode_tid() == Xouc_window_mgr.Mode_tid_previous) {
-			cfg_mgr.Set_by_app("app.user.session.window.maximized"	, Yn.XtoStr(win.Maximized()));
+			cfg_mgr.Set_by_app("app.user.session.window.maximized"	, Yn.X_to_str(win.Maximized()));
 			cfg_mgr.Set_by_app("app.user.session.window.rect"		, win.Rect().Xto_str());
 		}
-		cfg_mgr.Set_by_app("app.gui.html.portal.wikis.visible"	, Yn.XtoStr(user.App().Gui_mgr().Html_mgr().Portal_mgr().Wikis().Visible()));
+		cfg_mgr.Set_by_app("app.gui.html.portal.wikis.visible"	, Yn.X_to_str(user.App().Gui_mgr().Html_mgr().Portal_mgr().Wikis().Visible()));
 		cfg_mgr.Db_save_txt();
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_rect))					return rect;
 		else if	(ctx.Match(k, Invk_rect_))					rect = Rect_ref.parse_(m.ReadStr("v"));
-		else if	(ctx.Match(k, Invk_maximized))				return Yn.XtoStr(maximized);
+		else if	(ctx.Match(k, Invk_maximized))				return Yn.X_to_str(maximized);
 		else if	(ctx.Match(k, Invk_maximized_))				maximized = m.ReadYn("v");
 		return this;
 	}	public static final String Invk_rect = "rect", Invk_rect_ = "rect_", Invk_maximized = "maximized", Invk_maximized_ = "maximized_";

@@ -30,6 +30,7 @@ public class Xoi_dump_mgr implements GfoInvkAble {
 	public boolean Css_commons_download() {return css_commons_download;} private boolean css_commons_download = false;
 	public boolean Delete_xml_file() {return delete_xml_file;} private boolean delete_xml_file = true;
 	public byte Search_version() {return search_version;} private byte search_version = gplx.xowa.specials.search.Xosrh_core.Version_2;
+	public boolean Import_bz2_by_stdout() {return import_bz2_by_stdout;} private boolean import_bz2_by_stdout;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_server_urls))						return String_.Concat_with_str(",\n", server_urls);
 		else if	(ctx.Match(k, Invk_server_urls_))						server_urls = m.ReadStrAryIgnore("v", ",", "\n");
@@ -58,6 +59,8 @@ public class Xoi_dump_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_search_version))						return Options_search_version_str(search_version);
 		else if	(ctx.Match(k, Invk_search_version_))					search_version = Options_search_version_parse(m.ReadStr("v"));
 		else if	(ctx.Match(k, Invk_search_version_list))				return Options_search_version_list;
+		else if	(ctx.Match(k, Invk_import_bz2_by_stdout))				return Yn.X_to_str(import_bz2_by_stdout);
+		else if	(ctx.Match(k, Invk_import_bz2_by_stdout_))				import_bz2_by_stdout = m.ReadYn("v");
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}
@@ -70,6 +73,7 @@ public class Xoi_dump_mgr implements GfoInvkAble {
 		, Invk_css_commons_download = "css_commons_download", Invk_css_commons_download_ = "css_commons_download_"
 		, Invk_delete_xml_file = "delete_xml_file", Invk_delete_xml_file_ = "delete_xml_file_"
 		, Invk_search_version = "search_version", Invk_search_version_ = "search_version_", Invk_search_version_list = "search_version_list"
+		, Invk_import_bz2_by_stdout = "import_bz2_by_stdout", Invk_import_bz2_by_stdout_ = "import_bz2_by_stdout_"
 		;
 	private static KeyVal[] Options_data_storage_format_list = KeyVal_.Ary(KeyVal_.new_(".xdat"), KeyVal_.new_(".gz"), KeyVal_.new_(".zip"), KeyVal_.new_(".bz2")); 
 	public static String Wtr_tid_to_str(byte v) {

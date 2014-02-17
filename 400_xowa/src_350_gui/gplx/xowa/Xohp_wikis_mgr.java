@@ -35,7 +35,7 @@ public class Xohp_wikis_mgr implements GfoInvkAble {
 		return itms_as_html;
 	}	String itms_as_html;
 	public void Itms_refresh() {itms_as_html = null;}
-	ByteAryFmtr itms_as_html_fmtr = ByteAryFmtr.new_("\n        <li><a href=\"/site/~{domain}/wiki\">~{domain}</a></li>", "domain");
+	ByteAryFmtr itms_as_html_fmtr = ByteAryFmtr.new_("\n        <li><a href=\"/site/~{domain}/\">~{domain}</a></li>", "domain");
 	public boolean Visible() {return visible;} private boolean visible = false;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_itms_as_html))		return this.Itms_as_html();

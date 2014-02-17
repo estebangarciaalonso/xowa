@@ -315,6 +315,9 @@ public class Xot_invk_wkr_tst {
 		fxt.Test_parse_tmpl_str("{{raw:Test 1|a}}", "a");
 		fxt.Init_defn_clear();
 	}
+	@Test  public void Raw_spanish() { // PURPOSE.fix: {{raw}} should not fail; EX:es.s:Carta_a_Silvia; DATE:2014-02-11
+		fxt.Test_parse_tmpl_str("{{raw}}", "{{:raw}}");	// used to fail; now tries to get Template:Raw which doesn't exist
+	}
 	@Test  public void Special() { // PURPOSE: {{Special:Whatlinkshere}} is same as [[:Special:Whatlinkshere]]; EX.WIKT:android; isValidPageName
 		fxt.Test_parse_page_tmpl_str("{{Special:Whatlinkshere}}", "[[:Special:Whatlinkshere]]");
 	}
@@ -352,16 +355,16 @@ public class Xot_invk_wkr_tst {
 		fxt.Init_defn_clear();
 	}
 	@Test  public void Tmpl_aliases() { // PURPOSE: handled aliases for Template ns
-		fxt.Wiki().Ns_mgr().Add_alias(Xow_ns_.Id_template, "TemplateAlias");
-		fxt.Wiki().Ns_mgr().Ords_sort();
+		fxt.Wiki().Ns_mgr().Aliases_add(Xow_ns_.Id_template, "TemplateAlias");
+		fxt.Wiki().Ns_mgr().Init();
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("tmpl_key", "tmpl_val");
 		fxt.Test_parse_tmpl_str("{{TemplateAlias:tmpl_key}}"		, "tmpl_val");
 		fxt.Init_defn_clear();
 	}
 	@Test  public void Tmpl_aliases_2() { // PURPOSE: handled aliases for other ns; DATE:2013-02-08
-		fxt.Wiki().Ns_mgr().Add_alias(Xow_ns_.Id_project, "WP");
-		fxt.Wiki().Ns_mgr().Ords_sort();
+		fxt.Wiki().Ns_mgr().Aliases_add(Xow_ns_.Id_project, "WP");
+		fxt.Wiki().Ns_mgr().Init();
 		fxt.Init_defn_clear();
 		fxt.Init_page_create("Project:tmpl_key", "tmpl_val");
 		fxt.Test_parse_tmpl_str("{{WP:tmpl_key}}"		, "tmpl_val");
@@ -441,6 +444,17 @@ public class Xot_invk_wkr_tst {
 		)
 		,	"a ="
 		);
+		fxt.Init_defn_clear();
+	}
+	@Test  public void Missing_transcluded() {	// PURPOSE: transclusion of a missing page should create a link, not print an empty String; EX: it.u:Dipartimento:Design; DATE:2014-02-12
+		fxt.Page_ttl_("Test_Page");
+		fxt.Test_parse_tmpl_str("{{/Sub}}", "[[Test_Page/Sub]]");
+	}
+	@Test  public void Tmpl_case_match() {	// PURPOSE: template name should match by case; EX:es.d:eclipse; DATE:2014-02-12
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("CASE_MATCH", "found", Xow_ns_case_.Id_all);
+		fxt.Test_parse_tmpl_str("{{case_match}}",	"{{:case_match}}");		// Xot_invk_tkn will do 2 searches: "test" and "Test"
+		fxt.Test_parse_tmpl_str("{{cASE_MATCH}}",	"found");				// Xot_invk_tkn will do 2 searches: "tEST" and "TEST"
 		fxt.Init_defn_clear();
 	}
 }

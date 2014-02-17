@@ -206,59 +206,65 @@ public static final int
 , Id_xowa_wikidata_novalue = 185
 , Id_xowa_wikidata_somevalue = 186
 , Id_xowa_wikidata_links_wiki = 187
-, Id_xowa_wikidata_links_wikivoyage = 188
-, Id_xowa_wikidata_plus = 189
-, Id_xowa_wikidata_minus = 190
-, Id_xowa_wikidata_plusminus = 191
-, Id_xowa_wikidata_degree = 192
-, Id_xowa_wikidata_minute = 193
-, Id_xowa_wikidata_second = 194
-, Id_xowa_wikidata_north = 195
-, Id_xowa_wikidata_south = 196
-, Id_xowa_wikidata_west = 197
-, Id_xowa_wikidata_east = 198
-, Id_xowa_wikidata_meters = 199
-, Id_xowa_wikidata_julian = 200
-, Id_xowa_wikidata_decade = 201
-, Id_xowa_wikidata_century = 202
-, Id_xowa_wikidata_millenium = 203
-, Id_xowa_wikidata_years1e4 = 204
-, Id_xowa_wikidata_years1e5 = 205
-, Id_xowa_wikidata_years1e6 = 206
-, Id_xowa_wikidata_years1e7 = 207
-, Id_xowa_wikidata_years1e8 = 208
-, Id_xowa_wikidata_years1e9 = 209
-, Id_xowa_wikidata_bc = 210
-, Id_xowa_wikidata_inTime = 211
-, Id_ctg_tbl_hidden = 212
-, Id_ctg_help_page = 213
-, Id_statistics_title = 214
-, Id_statistics_header_pages = 215
-, Id_statistics_articles = 216
-, Id_statistics_pages = 217
-, Id_statistics_pages_desc = 218
-, Id_statistics_header_ns = 219	
-, Id_wikibase_diffview_rank = 220
-, Id_xowa_wikidata_deprecated = 221
-, Id_xowa_wikidata_normal = 222
-, Id_xowa_wikidata_preferred = 223
-, Id_xowa_wikidata_links_special = 224
-, Id_listings_desc = 225
-, Id_listings_unknown = 226
-, Id_listings_phone = 227
-, Id_listings_phone_symbol = 228
-, Id_listings_fax = 229
-, Id_listings_fax_symbol = 230
-, Id_listings_email = 231
-, Id_listings_email_symbol = 232
-, Id_listings_tollfree = 233
-, Id_listings_tollfree_symbol = 234
-, Id_listings_checkin = 235
-, Id_listings_checkout = 236
-, Id_listings_position = 237
-, Id_listings_position_template = 238
+, Id_xowa_wikidata_links_wiktionary = 188
+, Id_xowa_wikidata_links_wikisource = 189
+, Id_xowa_wikidata_links_wikivoyage = 190
+, Id_xowa_wikidata_links_wikiquote = 191
+, Id_xowa_wikidata_links_wikibooks = 192
+, Id_xowa_wikidata_links_wikiversity = 193
+, Id_xowa_wikidata_links_wikinews = 194
+, Id_xowa_wikidata_plus = 195
+, Id_xowa_wikidata_minus = 196
+, Id_xowa_wikidata_plusminus = 197
+, Id_xowa_wikidata_degree = 198
+, Id_xowa_wikidata_minute = 199
+, Id_xowa_wikidata_second = 200
+, Id_xowa_wikidata_north = 201
+, Id_xowa_wikidata_south = 202
+, Id_xowa_wikidata_west = 203
+, Id_xowa_wikidata_east = 204
+, Id_xowa_wikidata_meters = 205
+, Id_xowa_wikidata_julian = 206
+, Id_xowa_wikidata_decade = 207
+, Id_xowa_wikidata_century = 208
+, Id_xowa_wikidata_millenium = 209
+, Id_xowa_wikidata_years1e4 = 210
+, Id_xowa_wikidata_years1e5 = 211
+, Id_xowa_wikidata_years1e6 = 212
+, Id_xowa_wikidata_years1e7 = 213
+, Id_xowa_wikidata_years1e8 = 214
+, Id_xowa_wikidata_years1e9 = 215
+, Id_xowa_wikidata_bc = 216
+, Id_xowa_wikidata_inTime = 217
+, Id_ctg_tbl_hidden = 218
+, Id_ctg_help_page = 219
+, Id_statistics_title = 220
+, Id_statistics_header_pages = 221
+, Id_statistics_articles = 222
+, Id_statistics_pages = 223
+, Id_statistics_pages_desc = 224
+, Id_statistics_header_ns = 225
+, Id_wikibase_diffview_rank = 226
+, Id_xowa_wikidata_deprecated = 227
+, Id_xowa_wikidata_normal = 228
+, Id_xowa_wikidata_preferred = 229
+, Id_xowa_wikidata_links_special = 230
+, Id_listings_desc = 231
+, Id_listings_unknown = 232
+, Id_listings_phone = 233
+, Id_listings_phone_symbol = 234
+, Id_listings_fax = 235
+, Id_listings_fax_symbol = 236
+, Id_listings_email = 237
+, Id_listings_email_symbol = 238
+, Id_listings_tollfree = 239
+, Id_listings_tollfree_symbol = 240
+, Id_listings_checkin = 241
+, Id_listings_checkout = 242
+, Id_listings_position = 243
+, Id_listings_position_template = 244
 ;
-	public static final int Id__max = 239;
+	public static final int Id__max = 245;
 	public static Xol_msg_itm new_(int id, String key, String val) {return new_(id, ByteAry_.new_utf8_(key), ByteAry_.new_utf8_(val));}
 	public static Xol_msg_itm new_(int id, byte[] key, byte[] val) {
 		Xol_msg_itm rv = new Xol_msg_itm(id, key);
@@ -460,7 +466,13 @@ case Xol_msg_itm_.Id_duration_ago: return new_(Xol_msg_itm_.Id_duration_ago, "ag
 case Xol_msg_itm_.Id_xowa_wikidata_novalue: return new_(Xol_msg_itm_.Id_xowa_wikidata_novalue, "xowa-wikidata-novalue", "—");
 case Xol_msg_itm_.Id_xowa_wikidata_somevalue: return new_(Xol_msg_itm_.Id_xowa_wikidata_somevalue, "xowa-wikidata-somevalue", "?");
 case Xol_msg_itm_.Id_xowa_wikidata_links_wiki: return new_(Xol_msg_itm_.Id_xowa_wikidata_links_wiki, "xowa-wikidata-links-wiki", "Links (Wikipedia)");
+case Xol_msg_itm_.Id_xowa_wikidata_links_wiktionary: return new_(Xol_msg_itm_.Id_xowa_wikidata_links_wiktionary, "xowa-wikidata-links-wiktionary", "Links (Wiktionary)");
+case Xol_msg_itm_.Id_xowa_wikidata_links_wikisource: return new_(Xol_msg_itm_.Id_xowa_wikidata_links_wikisource, "xowa-wikidata-links-wikisource", "Links (Wikisource)");
 case Xol_msg_itm_.Id_xowa_wikidata_links_wikivoyage: return new_(Xol_msg_itm_.Id_xowa_wikidata_links_wikivoyage, "xowa-wikidata-links-wikivoyage", "Links (Wikivoyage)");
+case Xol_msg_itm_.Id_xowa_wikidata_links_wikiquote: return new_(Xol_msg_itm_.Id_xowa_wikidata_links_wikiquote, "xowa-wikidata-links-wikiquote", "Links (Wikiquote)");
+case Xol_msg_itm_.Id_xowa_wikidata_links_wikibooks: return new_(Xol_msg_itm_.Id_xowa_wikidata_links_wikibooks, "xowa-wikidata-links-wikibooks", "Links (Wikibooks)");
+case Xol_msg_itm_.Id_xowa_wikidata_links_wikiversity: return new_(Xol_msg_itm_.Id_xowa_wikidata_links_wikiversity, "xowa-wikidata-links-wikiversity", "Links (Wikiversity)");
+case Xol_msg_itm_.Id_xowa_wikidata_links_wikinews: return new_(Xol_msg_itm_.Id_xowa_wikidata_links_wikinews, "xowa-wikidata-links-wikinews", "Links (Wikinews)");
 case Xol_msg_itm_.Id_xowa_wikidata_plus: return new_(Xol_msg_itm_.Id_xowa_wikidata_plus, "xowa-wikidata-plus", "+");
 case Xol_msg_itm_.Id_xowa_wikidata_minus: return new_(Xol_msg_itm_.Id_xowa_wikidata_minus, "xowa-wikidata-minus", "−");
 case Xol_msg_itm_.Id_xowa_wikidata_plusminus: return new_(Xol_msg_itm_.Id_xowa_wikidata_plusminus, "xowa-wikidata-plusminus", "±");
@@ -491,7 +503,7 @@ case Xol_msg_itm_.Id_statistics_header_pages: return new_(Xol_msg_itm_.Id_statis
 case Xol_msg_itm_.Id_statistics_articles: return new_(Xol_msg_itm_.Id_statistics_articles, "statistics-articles", "Content pages");
 case Xol_msg_itm_.Id_statistics_pages: return new_(Xol_msg_itm_.Id_statistics_pages, "statistics-pages", "Pages");
 case Xol_msg_itm_.Id_statistics_pages_desc: return new_(Xol_msg_itm_.Id_statistics_pages_desc, "statistics-pages-desc", "All pages in the wiki, including talk pages, redirects, etc.");
-case Xol_msg_itm_.Id_statistics_header_ns: return new_(Xol_msg_itm_.Id_statistics_header_ns, "statistics-header-ns", "Name"+"space statistics");
+case Xol_msg_itm_.Id_statistics_header_ns: return new_(Xol_msg_itm_.Id_statistics_header_ns, "statistics-header-ns", "Namespace statistics");
 case Xol_msg_itm_.Id_wikibase_diffview_rank: return new_(Xol_msg_itm_.Id_wikibase_diffview_rank, "Wikibase-diffview-rank", "rank");
 case Xol_msg_itm_.Id_xowa_wikidata_deprecated: return new_(Xol_msg_itm_.Id_xowa_wikidata_deprecated, "xowa-wikidata-deprecated", "deprecated");
 case Xol_msg_itm_.Id_xowa_wikidata_normal: return new_(Xol_msg_itm_.Id_xowa_wikidata_normal, "xowa-wikidata-normal", "normal");

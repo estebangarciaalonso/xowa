@@ -46,7 +46,7 @@ class Nearby_mgr_fxt {
 		if (fxt == null) {
 			fxt = new Xop_fxt();
 			nearby_mgr = new Nearby_mgr();
-			excluded = new Hash_adp_bry(false);
+			excluded = Hash_adp_bry.ci_();
 			tmp_bfr = ByteAryBfr.new_();
 		}
 		fxt.Reset();

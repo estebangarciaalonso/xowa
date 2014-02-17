@@ -417,7 +417,7 @@ public class Xol_lang_itm_ {
 	public static Hash_adp_bry Regy() {
 		if (regy == null) {
 // NOTE: any parenthetical String below will have an "unseen" character of "\xE2\x80\xAA" at the begining and "\xE2\x80\xAC" at the end. They are responsible for parentheses-orientation in RTL langs.
-regy = new Hash_adp_bry(false);	// NOTE: must be ci; EX: {{#languages:FR}}
+regy = Hash_adp_bry.ci_();	// NOTE: must be ci; EX: {{#languages:FR}}
 Regy_add(regy, 0, "aa", "Qafár af");
 Regy_add(regy, 1, "ab", "Аҧсуа");
 Regy_add(regy, 2, "ace", "Acèh");

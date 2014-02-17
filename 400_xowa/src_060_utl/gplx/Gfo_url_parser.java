@@ -20,7 +20,7 @@ public class Gfo_url_parser {
 	boolean pass = true;
 	Gfo_url url;
 	ListAdp segs = ListAdp_.new_(), args = ListAdp_.new_();
-	Url_encoder encoder = Url_encoder.new_html_href_mw_().Itms_raw_same_many(Byte_ascii.Underline); Hash_adp_bry protocols = new Hash_adp_bry(false);
+	Url_encoder encoder = Url_encoder.new_html_href_mw_().Itms_raw_same_many(Byte_ascii.Underline); Hash_adp_bry protocols = Hash_adp_bry.ci_();
 	public Gfo_url_parser() {
 		Bry_val_itm.hash_add_ary_(protocols, Protocol__ary);
 	}

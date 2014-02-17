@@ -31,7 +31,7 @@ public class ByteAry_tst {
 	@Test  public void FindBwd() {
 		tst_FindBwd("abcba",  "b", 4, 3);
 		tst_FindBwd("abcba",  "z", 4, -1);
-		tst_FindBwd("abcba",  "b", 3, 3);
+		tst_FindBwd("abcba",  "b", 3, 1);
 		tst_FindBwd("abcba",  "b", 2, 1);
 		tst_FindBwd("abcba",  "b", 0, -1);
 		tst_FindBwd("abcba", "zb", 4, -1);
@@ -124,6 +124,7 @@ public class ByteAry_tst {
 		tst_XtoInt("-1", Int_.MinValue, -1);
 		tst_XtoInt("-123", Int_.MinValue, -123);
 		tst_XtoInt("123-1", Int_.MinValue, Int_.MinValue);
+		tst_XtoInt("+123", Int_.MinValue, 123);
 		tst_XtoInt("", -1);
 	}
 	void tst_XtoInt(String val, int expd)					{tst_XtoInt(val, -1, expd);}
@@ -222,7 +223,7 @@ public class ByteAry_tst {
 		Tfds.Eq_ary_str(expd, actl);
 	}
 	@Test  public void FindBwd_last_ws() {
-		FindBwd_1st_ws_tst("a b"		, 1, 1);					// basic
+		FindBwd_1st_ws_tst("a b"		, 2, 1);					// basic
 		FindBwd_1st_ws_tst("a   b"		, 3, 1);					// multiple
 		FindBwd_1st_ws_tst("ab"			, 1, ByteAry_.NotFound);	// none
 	}

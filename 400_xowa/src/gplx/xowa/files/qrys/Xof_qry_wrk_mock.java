@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files.qrys; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.xowa.files.fsdb.*;
 public class Xof_qry_wrk_mock implements Xof_qry_wkr {
-	private Hash_adp_bry hash = new Hash_adp_bry(true);
+	private Hash_adp_bry hash = Hash_adp_bry.cs_();
 	public byte Tid() {return Xof_qry_wkr_.Tid_mock;}
 	public void Clear() {hash.Clear();}
 	public Xof_qry_wrk_mock Add_wiki_size(byte[] ttl, byte[] wiki, int w, int h) {

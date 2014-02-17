@@ -323,7 +323,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			Exec_reload_imgs();
 	}
 	private void Exec_page_edit_rename() {
-		if (ByteAry_.Eq(page.Ttl().Page_db(), Xoa_page_.Main_page_bry)) {
+		if (ByteAry_.Eq(page.Ttl().Page_db(), page.Wiki().Props().Main_page())) {
 			gui_wtr.Warn_many(GRP_KEY, "edit.rename.invalid_for_main_page", "The Main Page cannot be renamed");
 			return;
 		}
@@ -429,29 +429,20 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 				return;
 			}
 			if (new_page.Missing()) {
-				if (ByteAry_.Eq(url.Page_bry(), Xoa_page_.Main_page_bry)) {	// HACK: handle missing Main Page; EX: nl.wikivoyage.org
-					url.Page_bry_(wiki.Props().Main_page());
-					ttl = Xoa_ttl.parse_(wiki, url.Page_bry());
-					wiki.Ctx().Tab().Init(ttl);
-					new_page = wiki.GetPageByTtl(url, ttl);
-					wiki.Ctx().Page_(new_page);
+				if (wiki.Db_mgr().Save_mgr().Create_enabled()) {
+					new_page = Xoa_page.blank_page_(wiki, ttl);
+					tab_box_mgr.View_mode_(Xog_view_mode.Id_edit);
+					history_mgr.Add(new_page);	// NOTE: must put new_page on stack b/c pressing back will pop whatever's last
+					Exec_show_wiki_page(new_page, false);
 				}
-				if (new_page.Missing()) {
-					if (wiki.Db_mgr().Save_mgr().Create_enabled()) {
-						new_page = Xoa_page.blank_page_(wiki, ttl);
-						tab_box_mgr.View_mode_(Xog_view_mode.Id_edit);
-						history_mgr.Add(new_page);	// NOTE: must put new_page on stack b/c pressing back will pop whatever's last
-						Exec_show_wiki_page(new_page, false);
-					}
-					else {
-						if (new_page.Redirect_list().Count() > 0)
-							gui_wtr.Prog_many(GRP_KEY, "view.find.fail", "could not find: ~{0} (redirected from ~{1})", String_.new_utf8_(new_page.Url().Page_bry()), String_.new_utf8_((byte[])new_page.Redirect_list().FetchAt(0)));
-						else
-							gui_wtr.Prog_one(GRP_KEY, "view.find.fail", "could not find: ~{0}", String_.new_utf8_(url.Raw()));
-					}
-					app.Log_wtr().Queue_enabled_(false);
-					return;
+				else {
+					if (new_page.Redirect_list().Count() > 0)
+						gui_wtr.Prog_many(GRP_KEY, "view.find.fail", "could not find: ~{0} (redirected from ~{1})", String_.new_utf8_(new_page.Url().Page_bry()), String_.new_utf8_((byte[])new_page.Redirect_list().FetchAt(0)));
+					else
+						gui_wtr.Prog_one(GRP_KEY, "view.find.fail", "could not find: ~{0}", String_.new_utf8_(url.Raw()));
 				}
+				app.Log_wtr().Queue_enabled_(false);
+				return;
 			}
 			if (!new_page.Redirected()) new_page.Url_(url);	// NOTE: handle redirect from commons
 			if (new_page.Ttl().Anch_bgn() != ByteAry_.NotFound) new_page.Url().Anchor_bry_(new_page.Ttl().Anch_txt());	// NOTE: occurs when page is a redirect to an anchor; EX: w:Duck race -> Rubber duck#Races
@@ -618,15 +609,18 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	private String new_tiptext(int id) {return String_.new_utf8_(app.User().Lang().Msg_mgr().Val_by_id(app.User().Wiki(), id));}
 	public void Launch() {win_mgr.Launch();}
 	public byte[] Exec_app_retrieve_by_href(String href, boolean output_html) {return Exec_app_retrieve_core(Xog_url_wkr.Exec_url(this, href), output_html);}	// NOTE: used by drd
+	private Object Exec_app_retrieve_lock = new Object();
 	public byte[] Exec_app_retrieve_by_url(String url_str, String output_str) {
-		boolean output_html = String_.Eq(output_str, "html");
-		Xoa_url url = new Xoa_url();
-		byte[] url_bry = ByteAry_.new_utf8_(url_str);
-		Xow_wiki home_wiki = app.User().Wiki();
-		Xoa_ttl ttl = Xoa_ttl.parse_(home_wiki, Xoa_page_.Main_page_bry);
-		page = Xoa_page.blank_page_(home_wiki, ttl);
-		Xoa_url_parser.Parse_url(url, app, page.Wiki(), url_bry, 0, url_bry.length);
-		return Exec_app_retrieve_core(url, output_html);
+		synchronized (Exec_app_retrieve_lock) {
+			boolean output_html = String_.Eq(output_str, "html");
+			Xoa_url url = new Xoa_url();
+			byte[] url_bry = ByteAry_.new_utf8_(url_str);
+			Xow_wiki home_wiki = app.User().Wiki();
+			Xoa_ttl ttl = Xoa_ttl.parse_(home_wiki, Xoa_page_.Main_page_bry_empty);
+			page = Xoa_page.blank_page_(home_wiki, ttl);
+			Xoa_url_parser.Parse_url(url, app, page.Wiki(), url_bry, 0, url_bry.length, true);
+			return Exec_app_retrieve_core(url, output_html);
+		}
 	}
 	private byte[] Exec_app_retrieve_core(Xoa_url url, boolean output_html) {
 		if (url == null) return ByteAry_.new_ascii_("missing");
@@ -635,10 +629,14 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		if (new_page.Missing()) {return ByteAry_.Empty;}
 		page = new_page;
 		history_mgr.Add(new_page);			
-		return output_html
+		page.Wiki().Ctx().Tab().Init(ttl);	// NOTE: must clear state else images won't show
+		byte[] rv = output_html
 			? url.Wiki().Html_mgr().Output_mgr().Gen(new_page, tab_box_mgr.View_mode())
 			: new_page.Data_raw()
 			;
+		if (app.Shell().Fetch_page_exec_async())
+			app.Gui_mgr().Main_win().Exec_reload_imgs();
+		return rv;
 	}
 	private Xoh_href tmp_href = new Xoh_href();
 	private byte[] Eval_elem_value_edit_box_bry() {return ByteAry_.new_utf8_(Eval_elem_value_edit_box_str());}

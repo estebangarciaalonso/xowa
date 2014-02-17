@@ -20,6 +20,7 @@ import gplx.xowa.apps.*;
 import gplx.xowa.wikis.*; import gplx.xowa.users.*; import gplx.xowa.html.*; import gplx.xowa.users.history.*; import gplx.xowa.specials.*; import gplx.xowa.xtns.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*;
 import gplx.xowa.langs.vnts.*;
 import gplx.xowa.setup.maints.*; import gplx.xowa.wikis.caches.*;
+import gplx.xowa.bldrs.imports.*;
 public class Xow_wiki implements GfoInvkAble {
 	public Xow_wiki(Xoa_app app, Io_url wiki_dir, Xow_ns_mgr ns_mgr, Xol_lang lang) {
 		this.app = app; this.ns_mgr = ns_mgr; this.lang = lang;
@@ -47,7 +48,7 @@ public class Xow_wiki implements GfoInvkAble {
 		hive_mgr = new Xob_hive_mgr(this);
 		util = new Xow_html_util(this);
 		cfg_wiki_core = new Xow_cfg_wiki_core(this);
-		bldr_props = new Xow_bldr_props(this);
+		import_cfg = new Xob_import_cfg(this);
 		msg_mgr = new Xow_msg_mgr(this, lang);
 		eval_mgr = new Bfmtr_eval_wiki(this);
 		fragment_mgr = new Xow_fragment_mgr(this);
@@ -104,7 +105,7 @@ public class Xow_wiki implements GfoInvkAble {
 	public Xow_file_mgr File_mgr() {return file_mgr;} private Xow_file_mgr file_mgr;
 	public Xoh_html_wtr Html_wtr() {return html_wtr;} private Xoh_html_wtr html_wtr;
 	public Xow_cfg_wiki_core Cfg_wiki_core() {return cfg_wiki_core;} private Xow_cfg_wiki_core cfg_wiki_core;
-	public Xow_bldr_props Bldr_props() {return bldr_props;} private Xow_bldr_props bldr_props;
+	public Xob_import_cfg		Import_cfg() {return import_cfg;} private Xob_import_cfg import_cfg;
 
 	public Xow_wiki_stats Stats() {return stats;} private Xow_wiki_stats stats;
 	public Xow_wiki_props Props() {return props;} private Xow_wiki_props props = new Xow_wiki_props();
@@ -222,7 +223,7 @@ public class Xow_wiki implements GfoInvkAble {
 		fsys_mgr.Scan_dirs();
 		if (lang.Init_by_load()) {
 			if (domain_tid == Xow_wiki_domain_.Tid_wikipedia)	// NOTE: if type is wikipedia, add "Wikipedia" as an alias; EX.WP: pt.wikipedia.org/wiki/Página principal which redirects to Wikipedia:Página principal
-				ns_mgr.Add_alias(Xow_ns_.Id_project, Xow_ns_.Ns_name_wikipedia);
+				ns_mgr.Aliases_add(Xow_ns_.Id_project, Xow_ns_.Ns_name_wikipedia);
 		}
 		log_bfr.Add("wiki.init.lang");
 		cfg_parser.Xtns().Itm_pages().Init(ns_mgr);	// init ns_mgr for Page / Index ns just before rebuild; usually set by #cfg file
@@ -233,7 +234,7 @@ public class Xow_wiki implements GfoInvkAble {
 		ByteAryFmtr.Null.Eval_mgr().Enabled_(false);
 		app.Wiki_mgr().Scripts().Exec(this);
 		ByteAryFmtr.Null.Eval_mgr().Enabled_(true);
-		app.Wiki_mgr().Css_installer().Chk(this, user.Fsys_mgr().Wiki_html_dir(domain_str)); log_bfr.Add("wiki.init.css");
+		app.Wiki_mgr().Css_installer().Install_assert(this, user.Fsys_mgr().Wiki_html_dir(domain_str)); log_bfr.Add("wiki.init.css");
 		html_wtr.Hctx().Toc_show_(true).Lnki_title_(true).Lnki_visited_(true).Lnki_id_(true);
 		this.Copy_cfg(app.User().Wiki());
 		File_repos_assert(app, this);

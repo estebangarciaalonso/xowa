@@ -103,6 +103,7 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 		img_regy_provider.Txn_mgr().Txn_end_all();
 	}
 	public void Rls() {
+		this.Txn_save();	// NOTE: must call save, else user db will not update next id; DATE:2014-02-11
 		mnt_mgr.Rls();
 		img_regy_provider.Rls();
 	}

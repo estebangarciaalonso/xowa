@@ -63,6 +63,7 @@ public class Xol_case_mgr implements GfoInvkAble {
 		}
 		return src;
 	}
+	public byte[] Case_build_upper(byte[] src) {return Case_build_upper(src, 0, src.length);}
 	public byte[] Case_build_upper(byte[] src, int bgn, int end) {return Case_build(Bool_.Y, src, bgn, end);}
 	public byte[] Case_build_lower(byte[] src) {return Case_build_lower(src, 0, src.length);}
 	public byte[] Case_build_lower(byte[] src, int bgn, int end) {return Case_build(Bool_.N, src, bgn, end);}
@@ -92,6 +93,7 @@ public class Xol_case_mgr implements GfoInvkAble {
 	public byte[] Case_build_1st_upper(ByteAryBfr bfr, byte[] src, int bgn, int end) {return Case_build_1st(bfr, Bool_.Y, src, bgn, end);}
 	public byte[] Case_build_1st_lower(ByteAryBfr bfr, byte[] src, int bgn, int end) {return Case_build_1st(bfr, Bool_.N, src, bgn, end);}
 	public byte[] Case_build_1st(ByteAryBfr bfr, boolean upper, byte[] src, int bgn, int end) {
+		if (bgn == end) return ByteAry_.Empty;	// upper "" -> ""
 		int b_len = gplx.intl.Utf8_.CharLen(src[bgn]);
 		bfr.Add(Case_build(upper, src, bgn			, bgn + b_len));
 		bfr.Add_mid(src, bgn + b_len	, end);

@@ -40,6 +40,7 @@ public class Xop_fxt {
 		ctx.Para().Enabled_n_();
 		html_wtr = new Xoh_html_wtr(wiki);
 		wiki.Html_mgr().Img_suppress_missing_src_(false);
+		wiki.Xtn_mgr().Init_by_wiki(wiki);
 		Page_ttl_(Ttl_str);
 	}
 	private Xofw_wiki_wkr_mock mock_wkr = new Xofw_wiki_wkr_mock();
@@ -147,9 +148,10 @@ public class Xop_fxt {
 		return rv;
 	}
 	public Xop_fxt	Init_log_(Gfo_msg_itm... itms) {for (Gfo_msg_itm itm : itms) log_itms.Add(itm); return this;} ListAdp log_itms = ListAdp_.new_();
-	public void		Init_defn_add(String name, String text) {
+	public void		Init_defn_add(String name, String text) {Init_defn_add(name, text, Xow_ns_case_.Id_all);}
+	public void		Init_defn_add(String name, String text, byte case_match) {
 		Xot_defn_tmpl itm = run_Parse_tmpl(ByteAry_.new_ascii_(name), ByteAry_.new_utf8_(text));
-		wiki.Cache_mgr().Defn_cache().Add(itm, Bool_.Y);
+		wiki.Cache_mgr().Defn_cache().Add(itm, case_match);
 	}
 	public void		Init_defn_clear() {wiki.Cache_mgr().Defn_cache().Free_mem_all();}
 	public Xop_fxt	Init_id_create(int id, int fil_idx, int row_idx, boolean type_redirect, int itm_len, int ns_id, String ttl) {Xow_hive_mgr_fxt.Create_id(app, wiki.Hive_mgr(), id, fil_idx, row_idx, type_redirect, itm_len, ns_id, ttl); return this;}

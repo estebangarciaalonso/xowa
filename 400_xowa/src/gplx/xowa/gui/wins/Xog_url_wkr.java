@@ -104,7 +104,7 @@ public class Xog_url_wkr {
 			boolean segs_iterate = true;
 			if (href.Tid() == Xoh_href.Tid_site) {		// site, handle multiple segs; EX: "home/wiki/", "home/wiki/Help:Contents"; DATE:2014-01-21
 				if (segs_ary_len < 2) {					// only 0 or 1 seg; usually occurs for logo and other xwiki links to Main_Page; EX: "/site/en.wikipedia.org/wiki/"; "/site/en.wikipedia.org/"
-					page_bry = Xoa_page_.Main_page_bry;	// HACK: set to Main_Page; Xog_win will correct
+					page_bry = wiki.Init_assert().Props().Main_page();	// use Main_page; DATE:2014-02-16
 					segs_iterate = false;
 				}
 				else 

@@ -57,7 +57,7 @@ class Xosrh_html_mgr implements GfoInvkAble {
 			byte[] itm_ttl = Xoa_ttl.Replace_unders(itm.Ttl_wo_ns());
 			int itm_ns_id = itm.Ns_id();
 			if (itm_ns_id != Xow_ns_.Id_main) {
-				Xow_ns itm_ns = ns_mgr.Get_by_id(itm_ns_id);
+				Xow_ns itm_ns = ns_mgr.Ids_get_or_null(itm_ns_id);
 				tmp_ttl_bfr.Add_byte(Byte_ascii.Colon)	// NOTE: need to add : to literalize ns; EX: [[Category:A]] will get thrown into category list; [[:Category:A]] will print
 					.Add(itm_ns.Name_db_w_colon())
 					.Add(itm_ttl);

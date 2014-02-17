@@ -37,7 +37,7 @@ public class Xow_wiki_stats implements GfoInvkAble {
 	Object Number_of_articles_in_ns_(GfoMsg m) {
 		int ns_id = m.ReadInt("ns_id");
 		int count = m.ReadInt("count");
-		Xow_ns ns = wiki.Ns_mgr().Get_by_id(ns_id);
+		Xow_ns ns = wiki.Ns_mgr().Ids_get_or_null(ns_id);
 		if (ns != null) ns.Count_(count);
 		return this;
 	}

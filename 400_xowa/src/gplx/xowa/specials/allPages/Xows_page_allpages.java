@@ -80,7 +80,7 @@ public class Xows_page_allpages implements GfoInvkAble, ByteAryFmtrArg, Xows_pag
 		arg_hash.Load(url);
 		byte[] from_val = arg_hash.Get_val_bry_or(Bry_arg_from, null); if (from_val == null) return false;
 		from_val = wiki.App().Url_converter_id().Decode(from_val);
-		int ns_val = arg_hash.Get_val_int_or(Bry_arg_ns, init_ns.Id()); init_ns = wiki.Ns_mgr().Get_by_id(ns_val);
+		int ns_val = arg_hash.Get_val_int_or(Bry_arg_ns, init_ns.Id()); init_ns = wiki.Ns_mgr().Ids_get_or_null(ns_val);
 		boolean hide_redirects_val = arg_hash.Get_val_int_or(Bry_arg_hideredirects, 0) == 1; 
 		for (int i = 0; i < itms_per_page; i++)
 			rslt_list_ttls[i] = null;

@@ -267,5 +267,5 @@ class Scrib_lua_regx_converter {
 			brack_hash.AddReplace(lua_bry, php_bry);	// replace percent_hash definitions
 		}
 	}
-	private final Hash_adp_bry percent_hash = new Hash_adp_bry(true), brack_hash = new Hash_adp_bry(true);
+	private final Hash_adp_bry percent_hash = Hash_adp_bry.cs_(), brack_hash = Hash_adp_bry.cs_();
 }

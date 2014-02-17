@@ -38,7 +38,7 @@ public class Xowc_xtn_pages implements GfoInvkAble {
 		init_needed = false;
 		int len = ns_mgr.Ords_len();
 		for (int i = 0; i < len; i++) {	// Page / Index ns_ids are variable per wiki; iterate over ns, and set ns_id
-			Xow_ns ns = ns_mgr.Get_by_ord(i); if (ns == null) continue;
+			Xow_ns ns = ns_mgr.Ords_get_at(i); if (ns == null) continue;
 			byte[] ns_name = ns.Name_enc();
 			if		(ByteAry_.Eq(ns_name, page_name))		ns_page_id = ns.Id();
 			else if (ByteAry_.Eq(ns_name, page_talk_name))	ns_page_talk_id = ns.Id();
@@ -51,14 +51,14 @@ public class Xowc_xtn_pages implements GfoInvkAble {
 		aliases_added = Set_canonical(ns_mgr, aliases_added, ns_index_id		, Default_ns_index_name);
 		aliases_added = Set_canonical(ns_mgr, aliases_added, ns_index_talk_id	, Default_ns_index_talk_name);
 		if (aliases_added > 0)	// NOTE: will probably only be 0 for English Wikisource
-			ns_mgr.Init_done();
+			ns_mgr.Init_w_defaults();
 	}
 	private int Set_canonical(Xow_ns_mgr ns_mgr, int aliases_added, int id, byte[] name) {
-		Xow_ns ns =  ns_mgr.Get_by_id_or_null(id);
+		Xow_ns ns =  ns_mgr.Ids_get_or_null(id);
 		if (	ns == null							// ns doesn't exist; should throw error;
 			||	!ByteAry_.Eq(ns.Name_bry(), name)	// ns exists, but name doesn't match canonical
 			) {
-			ns_mgr.Add_alias(id, String_.new_ascii_(name));
+			ns_mgr.Aliases_add(id, String_.new_ascii_(name));
 			++aliases_added;
 		}
 		return aliases_added;

@@ -186,7 +186,7 @@ public class Gallery_parser {
 	private static final byte Mode_eos = 1, Mode_nl = 2, Mode_pipe = 3, Mode_text = 4;
 	private void Init_keyword(ByteRef tmp_bref, Xol_lang lang, int kwd_id, byte trie_key) {
 		Xol_kwd_grp grp = lang.Kwd_mgr().Get_at(kwd_id);
-		if (grp == null) lang.App().Usr_dlg().Warn_many("", "", "could not find gallery keyword: ~{0}", String_.new_utf8_(Xol_kwd_grp_.Bry_by_id(kwd_id)));
+		if (grp == null) {lang.App().Usr_dlg().Warn_many("", "", "could not find gallery keyword: ~{0}", String_.new_utf8_(Xol_kwd_grp_.Bry_by_id(kwd_id))); return;}
 		Xol_kwd_itm[] itms = grp.Itms();
 		int len = itms.length;
 		ByteVal trie_ref = ByteVal.new_(trie_key);

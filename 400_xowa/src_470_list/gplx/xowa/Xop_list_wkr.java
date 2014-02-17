@@ -103,7 +103,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 			}
 		}
 		if (allDd && cur_pos < src_len - 2 && src[cur_pos] == '{' && src[cur_pos + 1] == '|') // NOTE: if indent && next == {| then invoke table; EX: ":::{|"
-			return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, cur_pos, cur_pos + 2, Xop_tblw_wkr.Tblw_type_tb, true, false, -1, -1);	// NOTE: ws_enabled must be set to true; see test for Adinkras; Cato the Elder
+			return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, cur_pos, cur_pos + 2, false, Xop_tblw_wkr.Tblw_type_tb, true, -1, -1);	// NOTE: ws_enabled must be set to true; see test for Adinkras; Cato the Elder
 		else {
 			dd_chk = symByt == Xop_list_tkn_.List_itmTyp_dt;
 			return cur_pos;

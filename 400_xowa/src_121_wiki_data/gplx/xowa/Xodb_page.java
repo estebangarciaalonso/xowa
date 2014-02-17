@@ -48,18 +48,18 @@ public class Xodb_page implements Xobl_data_itm {
 	}
 	public Xodb_page Ttl_(byte[] v, Xow_ns_mgr ns_mgr) {
 		ttl_w_ns = v;
-		Object o = ns_mgr.Trie_match_colon(v, 0, v.length, colon_pos_tmp);
+		Object o = ns_mgr.Names_get_w_colon(v, 0, v.length);
 		if (o == null)	{
 			ns = ns_mgr.Ns_main();
 			ttl_wo_ns = v;
 		}
 		else			{
 			ns = (Xow_ns)o;
-			ttl_wo_ns = ByteAry_.Mid(v, colon_pos_tmp.Val() + 1, v.length);
+			ttl_wo_ns = ByteAry_.Mid(v, ns.Name_txt_w_colon().length, v.length);	// EX: "Template:A" -> "Template:" + "A"
 		}
 		ns_id = ns.Id();
 		return this;
-	}	static final IntRef colon_pos_tmp = IntRef.neg1_();
+	}
 	public void Clear() {
 		id = Id_null; text_len = 0;	// text_len should be 0 b/c text defaults to 0;
 		db_file_idx = db_row_idx = 0; // default to 0, b/c some tests do not set and will fail at -1

@@ -18,8 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.fsdb; import gplx.*;
 import gplx.dbs.*; import gplx.cache.*;
 public class Fsdb_db_atr_fil implements RlsAble {
-	private Gfo_cache_mgr_bry dir_cache = new Gfo_cache_mgr_bry();
-	private Db_provider provider;
+	private Gfo_cache_mgr_bry dir_cache = new Gfo_cache_mgr_bry();		
 	private Fsdb_dir_tbl tbl_dir; private Fsdb_fil_tbl tbl_fil; private Fsdb_xtn_thm_tbl tbl_thm; private Fsdb_xtn_img_tbl tbl_img; private BoolRef img_needs_create = BoolRef.n_();
 	public Fsdb_db_atr_fil(Fsdb_db_abc_mgr abc_mgr, Io_url url, boolean create) {
 		this.abc_mgr = abc_mgr;
@@ -32,6 +31,7 @@ public class Fsdb_db_atr_fil implements RlsAble {
 		tbl_img = new Fsdb_xtn_img_tbl(provider, create);
 	}
 	public Fsdb_db_abc_mgr Abc_mgr() {return abc_mgr;} private Fsdb_db_abc_mgr abc_mgr;
+	public Db_provider Provider() {return provider;} private Db_provider provider;
 	public int Id() {return id;} private int id;
 	public Io_url Url() {return url;} private Io_url url;
 	public String Path_bgn() {return path_bgn;} private String path_bgn;

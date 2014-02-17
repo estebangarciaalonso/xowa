@@ -157,8 +157,15 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 			Object key = null;
 			if (key_missing)	// key missing; EX: {{a|val}}
 				key = ++arg_idx;// NOTE: MW requires a key; if none, then default to int index; NOTE: must be int, not String; NOTE: must be indexed to keyless args; EX: in "key1=val1,val2", "val2" must be "1" (1st keyless arg) not "2" (2nd arg); DATE:2013-11-09
-			else				// key absent; EX:{{a|key=val}}
-				key = tmp_bfr.XtoStrAndClear();		
+			else {				// key exists; EX:{{a|key=val}}
+				int key_int = ByteAry_.X_to_int_or(tmp_bfr.Bry(), 0, tmp_bfr.Bry_len(), Int_.MinValue);
+				if (key_int == Int_.MinValue)			// key is not int; create str
+					key = tmp_bfr.XtoStrAndClear();
+				else {									// key is int; must return int for key b/c lua treats table[1] different than table["1"]; DATE:2014-02-13
+					tmp_bfr.Clear();					// must clear bfr, else key will be added to val;
+					key = key_int;
+				}
+			}
 			nde.Val_tkn().Tmpl_evaluate(ctx, src, owner_frame, tmp_bfr);
 			String val = key_missing ? tmp_bfr.XtoStrAndClear() : tmp_bfr.XtoStrAndClearAndTrim(); // NOTE: must trim if key_exists; DUPE:TRIM_IF_KEY
 			rv[i] = KeyVal_.obj_(key, val);

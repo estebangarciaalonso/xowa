@@ -65,7 +65,7 @@ public class Xop_tkn_mkr {
 	public gplx.xowa.xtns.poems.Poem_nde Xnde_poem()										{return new gplx.xowa.xtns.poems.Poem_nde();}
 	public Xtn_ref_nde Xnde_ref()															{return new Xtn_ref_nde();}
 	public Xtn_references_nde Xnde_references()												{return new Xtn_references_nde();}
-	public gplx.xowa.xtns.gallery.Gallery_nde Xnde_gallery()							{return new gplx.xowa.xtns.gallery.Gallery_nde();}
+	public gplx.xowa.xtns.gallery.Gallery_nde Xnde_gallery()								{return new gplx.xowa.xtns.gallery.Gallery_nde();}
 	public gplx.xowa.xtns.imageMap.Xop_imageMap_xnde Xnde_imageMap()						{return new gplx.xowa.xtns.imageMap.Xop_imageMap_xnde();}
 	public gplx.xowa.xtns.hiero.Xtn_hiero_nde Xnde_hiero()									{return new gplx.xowa.xtns.hiero.Xtn_hiero_nde();}
 	public gplx.xowa.xtns.proofreadPage.Pp_pages_nde Xnde_pages()							{return new gplx.xowa.xtns.proofreadPage.Pp_pages_nde();}
@@ -76,8 +76,9 @@ public class Xop_tkn_mkr {
 	public gplx.xowa.xtns.dynamicPageList.Dpl_xnde Xnde_dynamicPageList()					{return new gplx.xowa.xtns.dynamicPageList.Dpl_xnde();}
 	public gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde Xnde_syntaxHighlight()	{return new gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde();}
 	public gplx.xowa.xtns.templateData.Xtn_templateData_nde Xnde_templateData()				{return new gplx.xowa.xtns.templateData.Xtn_templateData_nde();}
-	public gplx.xowa.xtns.listings.Listing_xnde Xnde_listing(int tag_id)						{return new gplx.xowa.xtns.listings.Listing_xnde(tag_id);}
-	public gplx.xowa.xtns.scores.Score_xnde Xnde_score()										{return new gplx.xowa.xtns.scores.Score_xnde();}
+	public gplx.xowa.xtns.rss.Rss_xnde Xnde_rss()											{return new gplx.xowa.xtns.rss.Rss_xnde();}
+	public gplx.xowa.xtns.listings.Listing_xnde Xnde_listing(int tag_id)					{return new gplx.xowa.xtns.listings.Listing_xnde(tag_id);}
+	public gplx.xowa.xtns.scores.Score_xnde Xnde_score()									{return new gplx.xowa.xtns.scores.Score_xnde();}
 	public gplx.xowa.xtns.inputBox.Xtn_inputbox_nde Xnde_inputbox()							{return new gplx.xowa.xtns.inputBox.Xtn_inputbox_nde();}
 	public gplx.xowa.xtns.translates.Xop_translate_xnde Xnde_translate()					{return new gplx.xowa.xtns.translates.Xop_translate_xnde();}
 	public gplx.xowa.xtns.translates.Xop_languages_xnde Xnde_languages()					{return new gplx.xowa.xtns.translates.Xop_languages_xnde();}

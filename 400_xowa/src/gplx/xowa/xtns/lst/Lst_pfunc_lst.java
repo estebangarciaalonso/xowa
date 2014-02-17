@@ -28,7 +28,7 @@ public class Lst_pfunc_lst extends Pf_func_base {
 	}
 	public static final Lst_pfunc_lst _ = new Lst_pfunc_lst(); Lst_pfunc_lst() {}
 	public static Hash_adp_bry new_xatrs_(Xol_lang lang) {
-		Hash_adp_bry rv = new Hash_adp_bry(false);
+		Hash_adp_bry rv = Hash_adp_bry.ci_();
 		rv.Add_str_byte("name", Lst_section_nde.Xatr_name);
 		Xatrs_add(rv, "begin", "end");
 		switch (lang.Lang_id()) {	// NOTE: as of v315572b, i18n is done directly in code, not in magic.php; am wary of adding keywords for general words like begin/end, so adding them manually per language; DATE:2013-02-09

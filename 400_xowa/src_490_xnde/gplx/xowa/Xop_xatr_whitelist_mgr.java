@@ -114,7 +114,7 @@ class Xop_xatr_whitelist_mgr {
 		Ini_all_loose("data");
 		return this;
 	}
-	Hash_adp_bry grp_hash = new Hash_adp_bry(true);
+	Hash_adp_bry grp_hash = Hash_adp_bry.cs_();
 	private void Ini_grp(String key_str, String base_grp, String... cur_itms) {
 		byte[][] itms = ByteAry_.Ary(cur_itms);
 		if (base_grp != null)
@@ -164,7 +164,7 @@ class Xop_xatr_whitelist_mgr {
 		key_trie.Add(key, rv);
 		return rv;
 	}
-	Hash_adp_bry tid_hash = new Hash_adp_bry(false).Add_str_byte("id", Xop_xatr_itm.Key_tid_id).Add_str_byte("style", Xop_xatr_itm.Key_tid_style);
+	Hash_adp_bry tid_hash = Hash_adp_bry.ci_().Add_str_byte("id", Xop_xatr_itm.Key_tid_id).Add_str_byte("style", Xop_xatr_itm.Key_tid_style);
 	ByteTrieMgr_slim key_trie = new ByteTrieMgr_slim(false);
 	public boolean Scrub_style(Xop_xatr_itm xatr, byte[] raw) { // REF:Sanitizer.php|checkCss; '! expression | filter\s*: | accelerator\s*: | url\s*\( !ix'; NOTE: this seems to affect MS IE only; DATE:2013-04-01
 		byte[] val_bry = xatr.Val_bry();

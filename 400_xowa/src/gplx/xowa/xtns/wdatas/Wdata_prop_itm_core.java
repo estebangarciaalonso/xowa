@@ -25,12 +25,15 @@ public class Wdata_prop_itm_core extends Wdata_prop_itm_base {
 	public Wdata_prop_itm_base[] Qual_ary() {return qual_ary;} public void Qual_ary_(Wdata_prop_itm_base[] v) {this.qual_ary = v;} Wdata_prop_itm_base[] qual_ary;
 	public Wdata_prop_itm_base[] Ref_ary() {return ref_ary;} public void Ref_ary_(Wdata_prop_itm_base[] v) {this.ref_ary = v;} Wdata_prop_itm_base[] ref_ary;
 
+	public static final byte Prop_dlm = Byte_ascii.Pipe;
 	public static Wdata_prop_itm_core new_novalue_(int pid)							{return new Wdata_prop_itm_core(Wdata_prop_itm_base_.Snak_tid_novalue  , pid, Wdata_prop_itm_base_.Val_tid_unknown, ByteAry_.Empty);}
 	public static Wdata_prop_itm_core new_somevalue_(int pid)						{return new Wdata_prop_itm_core(Wdata_prop_itm_base_.Snak_tid_somevalue, pid, Wdata_prop_itm_base_.Val_tid_unknown, ByteAry_.Empty);}
 	public static Wdata_prop_itm_core new_str_(int pid, String val)					{return new_(Wdata_prop_itm_base_.Val_tid_string, pid, ByteAry_.new_utf8_(val));}
 	public static Wdata_prop_itm_core new_str_(int pid, byte[] val)					{return new_(Wdata_prop_itm_base_.Val_tid_string, pid, val);}
 	public static Wdata_prop_itm_core new_time_(int pid, String val)				{return new_(Wdata_prop_itm_base_.Val_tid_time, pid, Wdata_doc_bldr.Xto_time(DateAdp_.parse_fmt(val, "yyyy-MM-dd HH:mm:ss")));}
-	public static Wdata_prop_itm_core new_geodata_(int pid, String lat, String lon)	{return new_(Wdata_prop_itm_base_.Val_tid_globecoordinate, pid, ByteAry_.Add(ByteAry_.new_ascii_(lat), Wdata_doc_bldr.Geodata_dlm, ByteAry_.new_ascii_(lon)));}
+	public static Wdata_prop_itm_core new_geodata_(int pid, String lat, String lon)	{return new_(Wdata_prop_itm_base_.Val_tid_globecoordinate, pid, ByteAry_.Add_w_dlm(Prop_dlm, ByteAry_.new_ascii_(lat), ByteAry_.new_ascii_(lon)));}
+	public static Wdata_prop_itm_core new_quantity_(int pid, String amount, String unit, String ubound, String lbound)	
+																					{return new_(Wdata_prop_itm_base_.Val_tid_quantity, pid, ByteAry_.Add_w_dlm(Prop_dlm, ByteAry_.new_ascii_(amount), ByteAry_.new_ascii_(unit), ByteAry_.new_ascii_(ubound), ByteAry_.new_ascii_(lbound)));}
 	public static Wdata_prop_itm_core new_entity_(int pid, int v)					{return new_(Wdata_prop_itm_base_.Val_tid_entity, pid, ByteAry_.XtoStrBytesByInt(v, 0));}
 	private static Wdata_prop_itm_core new_(byte tid, int pid, byte[] val)			{return new Wdata_prop_itm_core(Wdata_prop_itm_base_.Snak_tid_value, pid, tid, val);}
 }

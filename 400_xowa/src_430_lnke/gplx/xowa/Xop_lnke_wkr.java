@@ -165,7 +165,7 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 		Xow_xwiki_itm xwiki = ctx.App().User().Wiki().Xwiki_mgr().Get_by_mid(src, site_bgn, site_end);	// NOTE: check User_wiki.Xwiki_mgr, not App.Wiki_mgr() b/c only it is guaranteed to know all wikis on system
 		if (xwiki != null) {	// lnke is to an xwiki; EX: [http://en.wikipedia.org/A a]
 			Xow_wiki wiki = ctx.Wiki();
-			Xoa_url_parser.Parse_url(xo_url_parser_url, ctx.App(), wiki, src, lnke_bgn, lnke_end);
+			Xoa_url_parser.Parse_url(xo_url_parser_url, ctx.App(), wiki, src, lnke_bgn, lnke_end, false);
 			byte[] xwiki_wiki = xo_url_parser_url.Wiki_bry();
 			byte[] xwiki_page = xo_url_parser_url.Page_bry();
 			byte[] ttl_bry = xo_url_parser_url.Page_bry();

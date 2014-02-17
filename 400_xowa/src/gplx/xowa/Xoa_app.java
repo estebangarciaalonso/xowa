@@ -59,8 +59,8 @@ public class Xoa_app implements GfoInvkAble {
 		gui_mgr.Init();
 		fsys_mgr.Init();
 		user.App_init();
-		file_mgr.App_init();
-		wiki_mgr.App_init();
+		file_mgr.Init_by_app();
+		wiki_mgr.Init_by_app();
 		gplx.xowa.utls.upgrades.Xoa_upgrade_mgr.Check(this);
 		stage = Xoa_stage_.Tid_init_done;
 		ctg_mgr.Init_by_app(this);
@@ -99,6 +99,7 @@ public class Xoa_app implements GfoInvkAble {
 	public Xoa_gfs_mgr			Gfs_mgr() {return gfs_mgr;} private Xoa_gfs_mgr gfs_mgr;
 	public Xoa_special_mgr		Special_mgr() {return special_mgr;} private Xoa_special_mgr special_mgr = new gplx.xowa.specials.Xoa_special_mgr();
 	public Xop_log_mgr			Log_mgr() {return log_mgr;} private Xop_log_mgr log_mgr;
+	public Xoa_shell			Shell() {return shell;} private Xoa_shell shell;
 
 	public Apps_fsys_mgr		Fsys_mgr() {return fsys_mgr;} private Apps_fsys_mgr fsys_mgr;
 	public Xoa_hive_mgr			Hive_mgr() {return hive_mgr;} private Xoa_hive_mgr hive_mgr;
@@ -146,7 +147,7 @@ public class Xoa_app implements GfoInvkAble {
 	public Xosrv_server			Server() {return server;} private Xosrv_server server = new Xosrv_server();
 	public Xosrv_webserver		Webserver() {return webserver;} private Xosrv_webserver webserver;
 
-	private Xoa_shell shell; private Xoa_fmtr_mgr fmtr_mgr;
+	private Xoa_fmtr_mgr fmtr_mgr;
 	public void Reset_all() {
 		this.Free_mem(true);
 		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_invalidate();
@@ -193,25 +194,4 @@ public class Xoa_app implements GfoInvkAble {
 	, Invk_fmtrs = "fmtrs"
 	;
 	public static final String Invk_term_cbk = "term_cbk";
-}
-class Xoa_shell implements GfoInvkAble {
-	private boolean fetch_page_exec_async = true;
-	public Xoa_shell(Xoa_app app) {this.app = app;} private Xoa_app app;
-	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_fetch_page))				return Fetch_page(m);
-		else if	(ctx.Match(k, Invk_chars_per_line_max_))	Chars_per_line_max_(m.ReadInt("v"));
-		else if	(ctx.Match(k, Invk_fetch_page_exec_async_))	fetch_page_exec_async = m.ReadYn("v");
-		else return GfoInvkAble_.Rv_unhandled;
-		return this;
-	}
-	private String Fetch_page(GfoMsg m) {
-		String rv = String_.new_utf8_(app.Gui_mgr().Main_win().Exec_app_retrieve_by_url(m.ReadStr("url"), m.ReadStrOr("output_type", "html")));
-		if (fetch_page_exec_async)
-			app.Gui_mgr().Main_win().Exec_reload_imgs();
-		return rv;
-	}
-	private void Chars_per_line_max_(int v) {
-		ConsoleAdp._.CharsPerLineMax_set(v);
-	}
-	private static final String Invk_fetch_page = "fetch_page", Invk_chars_per_line_max_ = "chars_per_line_max_", Invk_fetch_page_exec_async_ = "fetch_page_exec_async_";
 }

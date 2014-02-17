@@ -148,7 +148,7 @@ public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoIn
 		while (raw_parser.Read(xml_page)) {
 			Xot_defn_tmpl defn = new Xot_defn_tmpl();
 			defn.Init_by_new(ns_tmpl, xml_page.Ttl_w_ns(), xml_page.Text(), null, false);	// NOTE: passing null, false; will be overriden later when Parse is called
-			tmpl_regy.Add(defn, wiki.Ns_mgr().Ns_template().Case_match() == Xow_ns_.Case_match_1st);
+			tmpl_regy.Add(defn, ns_tmpl.Case_match() );
 		}
 		bldr.Usr_dlg().Prog_none(GRP_KEY, "done", "tmpl_load done");
 	}

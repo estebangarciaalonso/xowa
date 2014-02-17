@@ -75,7 +75,7 @@ class Xoi_cmd_category2_build extends Xoi_cmd_base {
 	public Xoi_cmd_category2_build(Xoi_setup_mgr install_mgr, String wiki_key) {this.Ctor(install_mgr, wiki_key); this.app = install_mgr.App(); this.wiki_key = wiki_key;} private Xoa_app app; private String wiki_key;
 	@Override public void Cmd_ctor() {
 		Xow_wiki wiki = app.Wiki_mgr().Get_by_key_or_make(ByteAry_.new_utf8_(wiki_key));
-		wiki.Bldr_props().Category_version_(gplx.xowa.ctgs.Xoa_ctg_mgr.Version_2);
+		wiki.Import_cfg().Category_version_(gplx.xowa.ctgs.Xoa_ctg_mgr.Version_2);
 	}
 	@Override public String Async_key() {return KEY;} public static final String KEY = "wiki.category2.build";
 	@Override public void Process_async_init(Xoa_app app, Xow_wiki wiki, Xob_bldr bldr) {

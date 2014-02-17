@@ -392,7 +392,7 @@ default: throw Err_mgr._.unhandled_(id);
 	}	static byte[][] Bry__;
 	public static int Id_by_bry(byte[] find) {
 		if (hash == null) {
-			hash = new Hash_adp_bry(false);
+			hash = Hash_adp_bry.ci_();
 			if (Bry__ == null) Bry_init();
 			int len = Bry__.length;
 			for (int i = 0; i < len; i++) {

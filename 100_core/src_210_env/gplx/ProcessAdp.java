@@ -70,6 +70,10 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 			default:					throw Err_mgr._.unhandled_(run_mode);
 		}
 	}
+	public String[] X_to_process_bldr_args(String... args) {
+		String args_str = args_fmtr.Bld_str_many(args);
+		return X_to_process_bldr_args_utl(exe_url, args_str);
+	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_enabled))					return enabled;
 		else if	(ctx.Match(k, Invk_enabled_))					enabled = m.ReadBool("v");
@@ -197,7 +201,7 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 		exit_code = Exit_init;
 		rslt_out = "";
 		WhenBgn_run();
-		pb = new ProcessBuilder(Xto_processBuilder_args(exe_url, args_str));
+		pb = new ProcessBuilder(X_to_process_bldr_args_utl(exe_url, args_str));
 		pb.redirectErrorStream(true);								// NOTE: need to redirectErrorStream or rdr.readLine() will hang; see inkscape and Ostfriesland Verkehr-de.svg
 		if (working_dir != null)
 			pb.directory(new File(working_dir.Xto_api()));
@@ -225,26 +229,6 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
         process.destroy();
     	rslt_out = sb.XtoStrAndClear();    	
 	}
-	String[] Xto_processBuilder_args(Io_url exe_url, String args_str) {		
-		ListAdp list = ListAdp_.new_();
-		list.Add(exe_url.Xto_api());
-		String_bldr sb = String_bldr_.new_();
-		int len = String_.Len(args_str);
-		boolean inQuotes = false;
-		for (int i = 0; i < len; i++) {
-			char c = String_.CharAt(args_str, i);
-			if (c == ' ' && !inQuotes) {	// space encountered; assume arg done
-				list.Add(sb.XtoStr());
-				sb.Clear();
-			}
-			else if (c == '"')				// NOTE: ProcessBuilder seems to have issues with quotes; do not call sb.Add()
-				inQuotes = !inQuotes;
-			else
-				sb.Add(c);
-		}
-		if (sb.Has_some()) list.Add(sb.XtoStr());
-		return list.XtoStrAry();
-	}
 	public void Process_term() {
 		try {
 			process.getInputStream().close();
@@ -265,8 +249,28 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 		process.Exe_url_(url).Args_str_(arg).Run_wait();
 		return process.Exit_code();
 	}
-	static final String GRP_KEY = "gplx.process";
+	private static final String GRP_KEY = "gplx.process";
 	public static final int Exit_pass = 0, Exit_init = -1;
+	public static String[] X_to_process_bldr_args_utl(Io_url exe_url, String args_str) {		
+		ListAdp list = ListAdp_.new_();
+		list.Add(exe_url.Xto_api());
+		String_bldr sb = String_bldr_.new_();
+		int len = String_.Len(args_str);
+		boolean in_quotes = false;
+		for (int i = 0; i < len; i++) {
+			char c = String_.CharAt(args_str, i);
+			if (c == ' ' && !in_quotes) {	// space encountered; assume arg done
+				list.Add(sb.XtoStr());
+				sb.Clear();
+			}
+			else if (c == '"')				// NOTE: ProcessBuilder seems to have issues with quotes; do not call sb.Add()
+				in_quotes = !in_quotes;
+			else
+				sb.Add(c);
+		}
+		if (sb.Has_some()) list.Add(sb.XtoStr());
+		return list.XtoStrAry();
+	}
 }
 class Thread_ProcessAdp_async extends Thread {
 	public Thread_ProcessAdp_async(ProcessAdp process_adp) {this.process_adp = process_adp;} ProcessAdp process_adp;

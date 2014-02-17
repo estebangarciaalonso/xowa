@@ -51,7 +51,7 @@ class Io_line_rdr_key_gen_img implements Io_line_rdr_key_gen {
 		int itm_bgn = rdr.Itm_pos_bgn();
 		int itm_end = rdr.Itm_pos_end();
 		rdr.Key_pos_bgn_(itm_bgn);
-		int key_end = ByteAry_.FindBwd(rdr.Bfr(), Byte_ascii.Pipe, itm_end - 3, itm_bgn); // NOTE: -2 to skip terminating |\n; -1 b/c itm_pos_end is positioned after \n
+		int key_end = ByteAry_.FindBwd(rdr.Bfr(), Byte_ascii.Pipe, itm_end - 2, itm_bgn); // NOTE: -2 to skip terminating |\n
 		rdr.Key_pos_end_(key_end + 1); // NOTE: +1 to include terminating |; enforces every field terminating with |; EX: A.png|0|220|120|.8|\n
 	}
 }

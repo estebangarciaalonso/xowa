@@ -150,6 +150,7 @@ public class Int_ implements GfoInvkAble {
 	public static int read_(Object o) {String s = String_.as_(o); return s != null ? Int_.parse_(s) : Int_.cast_(o);}
 	public static int parse_(String raw) {try {return Integer.parseInt(raw);} catch(Exception e) {throw Err_.parse_type_exc_(e, int.class, raw);}}
 	public static int cast_(Object obj) {try {return (Integer)obj;} catch(Exception exc) {throw Err_.type_mismatch_exc_(exc, int.class, obj);}}
+	public static int cast_or_(Object obj, int or) {try {return (Integer)obj;} catch(Exception e) {Err_.Noop(e); return or;}}
 	public static int X_by_double_(double v) {return (int)v;}
 	public static String XtoStr(int v) {return new Integer(v).toString();}
 	public static String XtoStr_fmt(int v, String fmt) {return new java.text.DecimalFormat(fmt).format(v);}

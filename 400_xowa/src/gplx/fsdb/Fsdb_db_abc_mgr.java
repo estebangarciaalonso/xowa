@@ -83,6 +83,7 @@ public class Fsdb_db_abc_mgr implements RlsAble {
 		atr_mgr = Fsdb_db_atr_mgr.load_(this, boot_provider, dir);
 		bin_mgr = Fsdb_db_bin_mgr.load_(boot_provider, dir);
 		cfg_mgr = Fsdb_cfg_mgr.load_(this, boot_provider);
+		if (!cfg_mgr.Patch_next_id()) Fsdb_db_abc_mgr_.Patch_next_id(this, dir);
 	}
 	private void Init_make(Io_url dir, Io_url boot_url) {
 		Db_connect connect = Db_connect_sqlite.make_(boot_url);
@@ -92,5 +93,36 @@ public class Fsdb_db_abc_mgr implements RlsAble {
 		bin_mgr = Fsdb_db_bin_mgr.make_(boot_provider, dir);
 		cfg_mgr = Fsdb_cfg_mgr.make_(this, boot_provider);
 		this.Txn_save();	// immediately save new entries in atr,cfg
+	}
+}
+class Fsdb_db_abc_mgr_ {
+	public static void Patch_next_id(Fsdb_db_abc_mgr abc_mgr, Io_url dir) {
+		if (!String_.Eq(dir.NameOnly(), "fsdb.user")) return;
+		Fsdb_db_atr_mgr atr_mgr = abc_mgr.Atr_mgr();
+		Fsdb_cfg_mgr cfg_mgr = abc_mgr.Cfg_mgr();
+		int last_id = -1;
+		if (atr_mgr.Len() > 0) {
+			Fsdb_db_atr_fil atr_fil = atr_mgr.Get_at(0);
+			int max_fil_id = Select_fld0_as_int_or(atr_fil.Provider(), "SELECT Max(fil_id) AS MaxId FROM fsdb_fil;", -1);
+			int max_thm_id = Select_fld0_as_int_or(atr_fil.Provider(), "SELECT Max(thm_id) AS MaxId FROM fsdb_xtn_thm;", -1);
+			last_id = max_fil_id > max_thm_id ? max_fil_id : max_thm_id;
+		}
+		cfg_mgr.Patch_next_id_exec(last_id);
+	}
+	private static int Select_fld0_as_int_or(Db_provider p, String sql, int or) {
+		DataRdr rdr = DataRdr_.Null;
+		try {
+			rdr = p.Exec_qry_as_rdr(Db_qry_sql.rdr_(sql));
+			int rv = or;
+			if (rdr.MoveNextPeer()) {
+				Object rv_obj = rdr.ReadAt(0);
+				if (rv_obj != null)		// Max(fil_id) will be NULL if tbl is empty
+					rv = Int_.cast_or_(rv_obj, or);
+			}
+			return rv;
+		}
+		finally {
+			rdr.Rls();
+		}
 	}
 }

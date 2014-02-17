@@ -49,8 +49,8 @@ public class Hash_adp_bry_tst {
 class Hash_adp_bry_fxt {
 	Hash_adp_bry hash; 
 	public void Clear() {}
-	public Hash_adp_bry_fxt New_cs() {hash = new Hash_adp_bry(Bool_.Y); return this;}
-	public Hash_adp_bry_fxt New_ci() {hash = new Hash_adp_bry(Bool_.N); return this;}
+	public Hash_adp_bry_fxt New_cs() {hash = Hash_adp_bry.cs_(); return this;}
+	public Hash_adp_bry_fxt New_ci() {hash = Hash_adp_bry.ci_(); return this;}
 	public Hash_adp_bry_fxt Add(String key) {byte[] key_bry = ByteAry_.new_utf8_(key); hash.Add(key_bry, key_bry); return this;}
 	public Hash_adp_bry_fxt Count_tst(int expd) {Tfds.Eq(expd, hash.Count()); return this;}
 	public Hash_adp_bry_fxt Get_bry_tst(String key) {return Get_bry_tst(key, key);}

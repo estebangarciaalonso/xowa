@@ -21,7 +21,7 @@ public class Xop_log_invoke_wkr implements GfoInvkAble {
 	private Xop_log_mgr log_mgr;
 	private Db_provider provider; private Db_stmt stmt;
 	private boolean log_enabled = true;
-	private Hash_adp_bry exclude_mod_names = new Hash_adp_bry(true);
+	private Hash_adp_bry exclude_mod_names = Hash_adp_bry.cs_();
 	public Xop_log_invoke_wkr(Xop_log_mgr log_mgr, Db_provider provider) {
 		this.log_mgr = log_mgr;
 		this.provider = provider;

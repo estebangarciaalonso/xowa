@@ -71,7 +71,7 @@ public class Xodb_fsys_mgr {
 			Xodb_file file = Make(Xodb_file.Tid_text);
 			for (int j = 0; j < ns_ids_len; j++) {
 				int ns_id = ns_ids[j];
-				Xow_ns ns = ns_mgr.Get_by_id(ns_id); if (ns == null) continue; // some dumps may not have ns; for example, pre-2013 dumps won't have Module (828)
+				Xow_ns ns = ns_mgr.Ids_get_or_null(ns_id); if (ns == null) continue; // some dumps may not have ns; for example, pre-2013 dumps won't have Module (828)
 				ns.Bldr_file_idx_(file.Id());
 			}
 		}

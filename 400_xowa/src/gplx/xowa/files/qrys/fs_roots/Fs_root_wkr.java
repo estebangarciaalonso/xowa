@@ -15,33 +15,33 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.files.qrys.dirs; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.qrys.*;
+package gplx.xowa.files.qrys.fs_roots; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.qrys.*;
 import gplx.dbs.*;
 import gplx.xowa.files.fsdb.*;
 import gplx.xowa.files.wiki_orig.*;
-public class Xof_qry_wkr_dir implements Xof_qry_wkr {
+public class Fs_root_wkr implements Xof_qry_wkr {
 //		private Xow_wiki wiki;
 	private ListAdp dirs = ListAdp_.new_();
 	private OrderedHash fils = OrderedHash_.new_bry_();
-	public Xof_qry_wkr_dir(Xow_wiki wiki) {}//this.wiki = wiki;}
+	public Fs_root_wkr(Xow_wiki wiki) {}//this.wiki = wiki;}
 	public byte Tid() {return Xof_qry_wkr_.Tid_dir;}
 	public boolean Qry_file(Xof_fsdb_itm itm) {
 		byte[] lnki_ttl = itm.Lnki_ttl();
-		Xoq_fil fil = (Xoq_fil)fils.Fetch(lnki_ttl);	// search local hash
+		Orig_fil_itm fil = (Orig_fil_itm)fils.Fetch(lnki_ttl);	// search local hash
 		if (fil == null) {								// not found
 			fil = Find_in_dirs(lnki_ttl);				// query each dir
 			if (fil != null)							// file found
 				fils.Add(lnki_ttl, fil);				// add to local hash
 		}
 		if (fil == null) return false;					// file not found; return false;
-		itm.Orig_size_(fil.Orig_w(), fil.Orig_h());
+		itm.Orig_size_(fil.Fil_w(), fil.Fil_h());
 		return true;
 	}
-	private Xoq_fil Find_in_dirs(byte[] lnki_ttl) {
+	private Orig_fil_itm Find_in_dirs(byte[] lnki_ttl) {
 		int dirs_len = dirs.Count();
 		for (int i = 0; i < dirs_len; i++) {
-			Xoq_dir qry_dir = (Xoq_dir)dirs.FetchAt(i);
-			Xoq_fil rv = (Xoq_fil)qry_dir.Get_by_ttl(lnki_ttl);
+			Fs_root_dir qry_dir = (Fs_root_dir)dirs.FetchAt(i);
+			Orig_fil_itm rv = (Orig_fil_itm)qry_dir.Get_by_ttl(lnki_ttl);
 			if (rv != null) return rv;
 		}
 		return null;

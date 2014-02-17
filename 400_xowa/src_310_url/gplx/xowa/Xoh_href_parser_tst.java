@@ -63,8 +63,8 @@ public class Xoh_href_parser_tst {
 	@Test   public void Parse_full_xwiki_domain_only()	{
 		fxt	.Prep_raw_("/wiki/wikt:")
 			.Init_xwiki_alias("wikt", "en.wiktionary.org")			
-			.Expd_full_("en.wiktionary.org/wiki/Main_Page")
-			.Expd_page_("Main_Page")
+			.Expd_full_("en.wiktionary.org/wiki/")
+			.Expd_page_("")
 			.Test_parse();
 	}
 	@Test   public void Parse_full_wiki_page() {
@@ -164,7 +164,7 @@ public class Xoh_href_parser_tst {
 		fxt	.Prep_raw_("/site/en.wiktionary.org/wiki/alphabet")
 			.Init_xwiki_alias("en.wiktionary.org", "en.wiktionary.org");
 		Xow_wiki en_wiktionary_org = fxt.App().Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_("en.wiktionary.org"));
-		en_wiktionary_org.Ns_mgr().Ns_main().Case_match_(Xow_ns_.Case_match_all);
+		en_wiktionary_org.Ns_mgr().Ns_main().Case_match_(Xow_ns_case_.Id_all);
 		fxt	.Expd_tid_(Xoh_href.Tid_site)
 			.Expd_full_("en.wiktionary.org/wiki/alphabet")
 			.Expd_page_("alphabet")

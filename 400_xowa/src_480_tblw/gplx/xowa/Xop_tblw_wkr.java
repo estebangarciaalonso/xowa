@@ -25,7 +25,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 		tkn.Subs_move(root);
 		tkn.Src_end_(cur_pos);
 	}
-	public int Make_tkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte wlxr_type, boolean ws_enabled, boolean tblw_xml, int atrs_bgn, int atrs_end) {// REF.MW: Parser|doTableStuff
+	public int Make_tkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, boolean tblw_xml, byte wlxr_type, boolean called_from_list, int atrs_bgn, int atrs_end) {// REF.MW: Parser|doTableStuff
 		if (bgn_pos == Xop_parser_.Doc_bgn_bos) {
 			bgn_pos = 0;	// do not allow -1 pos
 			ctx.Para().Prv_para_disable(bgn_pos);
@@ -33,8 +33,13 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 
 		if (	ctx.Cur_tkn_tid() == Xop_tkn_itm_.Tid_list		// list is in effect
 			&& !tblw_xml										// tbl is wiki-syntax; ie: auto-close if "{|" but do not close if "<table>"; DATE:2014-02-05
-			&& !ws_enabled)										// only close list if tblw starts new line; EX: "* a {|" does not close list, but "* a\n{|" does
-			Xop_list_wkr_.Close_list_if_present(ctx, root, src, bgn_pos, cur_pos);
+			&& !called_from_list								// do not close if called from list; EX: consider "{|"; "* a {|" is called from list_wkr, and should not close; "* a\n{|" is called from tblw_lxr and should close; DATE:2014-02-14			
+			) {
+			if (wlxr_type == Tblw_type_td2)						// ignore "||" if in list; EX: es.d:casa; es.d:tres; DATE:2014-02-15
+				return ctx.LxrMake_txt_(cur_pos);
+			else
+				Xop_list_wkr_.Close_list_if_present(ctx, root, src, bgn_pos, cur_pos);
+		}
 		if (ctx.Apos().Stack_len() > 0)							// open apos; note that apos keeps its own stack, as they are not "structural" (not sure about this)
 			ctx.Apos().EndFrame(ctx, root, src, cur_pos, true);	// close it
 
@@ -45,16 +50,16 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 					break;										//		noop; by definition "{|" does not need to have a previous "{|"
 				case Tblw_type_td:								// "|"
 				case Tblw_type_td2:								// "||"
-					if (tblw_xml) {
+					if (tblw_xml) {								// <td> should automatically add <table><tr>
 						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tb(bgn_pos, bgn_pos, tblw_xml));
 						prv_tkn = tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tblw_xml);
 						ctx.Subs_add_and_stack_tblw(root, prv_tkn, prv_tkn);
 						break;
 					}					
 					else {
-						if (ctx.Para().Pre_at_line_bgn())	// HACK:pre_section_begun_and_failed_tblw
+						if (ctx.Para().Pre_at_line_bgn())		// HACK:pre_section_begun_and_failed_tblw
 							return ctx.Para().Hack_pre_and_false_tblw(ctx, root, src, bgn_pos);
-						else								// interpret as text
+						else									// interpret as text
 							ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, cur_pos));	//		create pipe_tkn; return;
 						return cur_pos;
 					}
@@ -62,10 +67,17 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 				case Tblw_type_th2:								// "!!"
 				case Tblw_type_tc:								// "|+"
 				case Tblw_type_tr:								// "|-"
-					if (ctx.Para().Pre_at_line_bgn())			// HACK:pre_section_begun_and_failed_tblw
-						return ctx.Para().Hack_pre_and_false_tblw(ctx, root, src, bgn_pos);
-					else										// interpret as text
-						return ctx.LxrMake_txt_(cur_pos);		//		create txt_tkn; return;
+					if (tblw_xml) {								// <tr> should automatically add <table>; DATE:2014-02-13
+						prv_tkn = tkn_mkr.Tblw_tb(bgn_pos, bgn_pos, tblw_xml);
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, prv_tkn);
+						break;
+					}				
+					else {
+						if (ctx.Para().Pre_at_line_bgn())		// HACK:pre_section_begun_and_failed_tblw
+							return ctx.Para().Hack_pre_and_false_tblw(ctx, root, src, bgn_pos);
+						else									// interpret as text
+							return ctx.LxrMake_txt_(cur_pos);	//		create txt_tkn; return;
+					}
 				case Tblw_type_te:								// "|}"
 					if (tblw_tb_suppressed > 0) {
 						--tblw_tb_suppressed;
@@ -92,9 +104,9 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 		if (wlxr_type == Tblw_type_te)
 			return Make_tkn_end(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, Xop_tkn_itm_.Tid_tblw_te, wlxr_type, prv_tkn, prv_tid, tblw_xml);
 		else
-			return Make_tkn_bgn_tblw(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, tblw_xml, atrs_bgn, atrs_end, prv_tkn, prv_tid, ws_enabled);
+			return Make_tkn_bgn_tblw(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, tblw_xml, atrs_bgn, atrs_end, prv_tkn, prv_tid);
 	}
-	private int Make_tkn_bgn_tblw(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte wlxr_type, boolean tblw_xml, int atrs_bgn, int atrs_end, Xop_tblw_tkn prv_tkn, int prv_tid, boolean ws_enabled) {
+	private int Make_tkn_bgn_tblw(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte wlxr_type, boolean tblw_xml, int atrs_bgn, int atrs_end, Xop_tblw_tkn prv_tkn, int prv_tid) {
 		if (wlxr_type != Tblw_type_tb)	// NOTE: do not ignore ws if {|; will cause strange behavior with pre; DATE:2013-02-12
 			Ignore_ws(ctx, root);
 		Xop_tblw_tkn new_tkn = null;
@@ -205,8 +217,8 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 						}
 						break;
 					case Xop_tkn_itm_.Tid_tblw_td:			// fix;  <td><th>           -> <td></td><th> NOTE: common use of using <th> after <td> for formatting
-						if (tblw_xml												// tblw_xml always closes previous token
-							|| (wlxr_type == Tblw_type_th && !ws_enabled))			// "| !" closes; "| !!" does not;
+						if (tblw_xml													// tblw_xml always closes previous token
+							|| (wlxr_type == Tblw_type_th))								// "| !" closes; "| !!" does not;
 							ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(prv_tid), true, bgn_pos, bgn_pos);
 						else {
 							ctx.Subs_add(root, tkn_mkr.Txt(bgn_pos, cur_pos));
@@ -270,6 +282,8 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 		return cur_pos;
 	}
 	public int Make_tkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, int typeId, byte wlxr_type, Xop_tblw_tkn prv_tkn, int prv_tid, boolean tblw_xml) {
+		if (tblw_xml && prv_tkn != null && !prv_tkn.Tblw_xml()) // </table> should not close {|; DATE:2014-02-13
+			return cur_pos;
 		if (!tblw_xml)
 			ctx.Para().Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1, false);	// DUBIOUS: starting tr; process para (which will create paras for cells) 2012-12-08
 		Ignore_ws(ctx, root);

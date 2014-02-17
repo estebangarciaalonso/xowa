@@ -17,18 +17,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.fsdb; import gplx.*;
 import gplx.dbs.*;
-public class Fsdb_cfg_mgr {
-	private Fsdb_cfg_tbl cfg_tbl;
+public class Fsdb_cfg_mgr {		
 	private HashAdp grps = HashAdp_.new_();
+	private Fsdb_cfg_tbl cfg_tbl;
 	public int Next_id()			{return next_id++;} private int next_id = 1;
 	public boolean Schema_thm_page()	{return schema_thm_page;} private boolean schema_thm_page = true;
+	public boolean Patch_next_id()		{return patch_next_id;} private boolean patch_next_id = true;
+	public void Patch_next_id_exec(int last_id) {
+		if (last_id >= next_id)
+			next_id = last_id + 1;
+		cfg_tbl.Insert(Grp_core, Key_patch_next_id, "y");
+	}
 	public void Txn_save() {
 		this.Update_next_id();
 	}
 	public void Rls() {cfg_tbl.Rls();}
 	private void Update_next_id()	{cfg_tbl.Update("core", "next_id", Int_.XtoStr(next_id));}
 	public void Update(String grp, String key, String new_val) {
-		String cur_val = cfg_tbl.Select_as_str(grp, key);
+		String cur_val = cfg_tbl.Select_as_str_or(grp, key, null);
 		if (cur_val == null)
 			cfg_tbl.Insert(grp, key, new_val);
 		else
@@ -37,7 +43,7 @@ public class Fsdb_cfg_mgr {
 	public Fsdb_cfg_grp Grps_get_or_load(String grp_key) {
 		Fsdb_cfg_grp grp = (Fsdb_cfg_grp)grps.Fetch(grp_key);
 		if (grp == null) {
-			grp = Grps_load(grp_key);
+			grp = cfg_tbl.Select_as_grp(grp_key);
 			grps.Add(grp_key, grp);
 		}
 		return grp;
@@ -50,35 +56,23 @@ public class Fsdb_cfg_mgr {
 		}
 		return grp;
 	}
-	private Fsdb_cfg_grp Grps_load(String grp_key) {
-		Fsdb_cfg_grp rv = null;
-		DataRdr rdr = cfg_tbl.Select_by_grp(grp_key);
-		try {
-			while (rdr.MoveNextPeer()) {
-				if (rv == null) rv = new Fsdb_cfg_grp(grp_key);
-				String key = rdr.ReadStr(Fsdb_cfg_tbl.Fld_cfg_key);
-				String val = rdr.ReadStr(Fsdb_cfg_tbl.Fld_cfg_val);
-				rv.Set(key, val);
-			}
-		}
-		finally {rdr.Rls();}
-		return rv == null ? Fsdb_cfg_grp.Null : rv;
-	}
 	public static Fsdb_cfg_mgr load_(Fsdb_db_abc_mgr abc_mgr, Db_provider p) {return new Fsdb_cfg_mgr().Init_by_load(p);}
 	public static Fsdb_cfg_mgr make_(Fsdb_db_abc_mgr abc_mgr, Db_provider p) {return new Fsdb_cfg_mgr().Init_by_make(p);}
 	private Fsdb_cfg_mgr Init_by_load(Db_provider p) {
-		this.cfg_tbl = new Fsdb_cfg_tbl(p, false);
+		this.cfg_tbl = new Fsdb_cfg_tbl_sql().Ctor(p, false);
 		Fsdb_cfg_grp core_grp = Grps_get_or_load(Grp_core);
 		this.next_id			= core_grp.Get_int_or(Key_next_id, -1); if (next_id == -1) throw Err_.new_("next_id not found in fsdb_cfg");
 		this.schema_thm_page	= core_grp.Get_yn_or_n(Key_schema_thm_page);
+		this.patch_next_id		= core_grp.Get_yn_or_n(Key_patch_next_id);
 		return this;
 	}
 	private Fsdb_cfg_mgr Init_by_make(Db_provider p) {
-		this.cfg_tbl = new Fsdb_cfg_tbl(p, true);
-		this.cfg_tbl.Insert(Grp_core, Key_next_id				, "1");
-		this.cfg_tbl.Insert(Grp_core, Key_schema_thm_page		, "y");
+		this.cfg_tbl = new Fsdb_cfg_tbl_sql().Ctor(p, true);
+		this.cfg_tbl.Insert(Grp_core, Key_next_id				, "1");	// start next_id at 1
+		this.cfg_tbl.Insert(Grp_core, Key_schema_thm_page		, "y");	// new dbs automatically have page and time in fsdb_xtn_tm
+		this.cfg_tbl.Insert(Grp_core, Key_patch_next_id			, "y");	// new dbs automatically have correct next_id
 		return this;
 	}
 	public static final String Grp_core = "core";
-	public static final String Key_next_id = "next_id", Key_schema_thm_page = "schema.thm.page";
+	public static final String Key_next_id = "next_id", Key_schema_thm_page = "schema.thm.page", Key_patch_next_id = "patch.next_id";
 }

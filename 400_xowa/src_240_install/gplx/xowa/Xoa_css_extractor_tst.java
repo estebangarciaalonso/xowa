@@ -30,26 +30,20 @@ public class Xoa_css_extractor_tst {
 		fxt.Exec_logo_setup();
 		fxt.Test_fil("mem/xowa/user/anonymous/wiki/en.wikipedia.org/html/logo.png", "failover");
 	}
-	@Test   public void Css_common_download() {
-		fxt.Css_installer().Css_stylesheet_common_download_(true);
-		fxt.Init_fil("mem/http/en.wikipedia.org/common.css"					, "download");
-		fxt.Exec_css_common_setup();
-		fxt.Test_fil("mem/xowa/user/anonymous/wiki/en.wikipedia.org/html/xowa_common.css", "download");
-	}
 	@Test   public void Css_common_download_failover() {
-		fxt.Css_installer().Css_stylesheet_common_download_(true);
+		fxt.Css_installer().Opt_download_css_common_(true);
 		fxt.Init_fil("mem/xowa/bin/any/html/xowa/import/xowa_common_ltr.css", "failover");
 		fxt.Exec_css_common_setup();
 		fxt.Test_fil("mem/xowa/user/anonymous/wiki/en.wikipedia.org/html/xowa_common.css", "failover");
 	}
 	@Test   public void Css_common_copy() {
-		fxt.Css_installer().Css_stylesheet_common_download_(false);
+		fxt.Css_installer().Opt_download_css_common_(false);
 		fxt.Init_fil("mem/xowa/bin/any/html/xowa/import/xowa_common_ltr.css", "failover");
 		fxt.Exec_css_common_setup();
 		fxt.Test_fil("mem/xowa/user/anonymous/wiki/en.wikipedia.org/html/xowa_common.css", "failover");
 	}
 	@Test   public void Css_common_copy_specific_wiki() {	// PURPOSE: css for specific wiki
-		fxt.Css_installer().Css_stylesheet_common_download_(false).Wiki_code_(ByteAry_.new_ascii_("enwiki"));
+		fxt.Css_installer().Opt_download_css_common_(false).Wiki_code_(ByteAry_.new_ascii_("enwiki"));
 		fxt.Init_fil("mem/xowa/bin/any/html/xowa/import/xowa_common_override/xowa_common_enwiki.css", "failover");
 		fxt.Exec_css_common_setup();
 		fxt.Test_fil("mem/xowa/user/anonymous/wiki/en.wikipedia.org/html/xowa_common.css", "failover");
@@ -70,7 +64,7 @@ public class Xoa_css_extractor_tst {
 		));
 	}
 	@Test   public void Css_scrape_failover() {
-		fxt.Init_fil("mem/xowa/bin/any/html/xowa/import/xowa_common.css"	, "failover");
+		fxt.Init_fil("mem/xowa/bin/any/html/xowa/import/xowa_common_ltr.css", "failover");
 		fxt.Exec_css_mainpage_setup();
 		fxt.Test_fil("mem/xowa/user/anonymous/wiki/en.wikipedia.org/html/xowa_common.css", "failover");
 	}
@@ -111,7 +105,6 @@ class Xoa_css_extractor_fxt {
 			.Protocol_prefix_("mem/http/")
 			.Mainpage_url_("mem/http/en.wikipedia.org")
 			.Failover_dir_(Io_url_.new_any_("mem/xowa/bin/any/html/xowa/import/"))	// "mem/xowa/user/anonymous/wiki/home/html/"
-			.Css_stylesheet_common_src_fmt_("mem/http/{0}/common.css")
 			.Wiki_html_dir_(Io_url_.new_any_("mem/xowa/user/anonymous/wiki/en.wikipedia.org/html/"))
 			;
 		page_fetcher = new Xow_page_fetcher_mok();
@@ -131,8 +124,11 @@ class Xoa_css_extractor_fxt {
 		css_installer.Mainpage_download();
 		css_installer.Logo_setup();
 	}
-	public void Exec_css_common_setup() {css_installer.Css_stylesheet_common_setup();}
-	public void Exec_css_wiki_setup() {css_installer.Css_stylesheet_wiki_setup();}
+	public void Exec_css_common_setup() {
+		css_installer.Mainpage_download();
+		css_installer.Css_common_setup();
+	}
+	public void Exec_css_wiki_setup() {css_installer.Css_wiki_setup();}
 	public void Exec_css_mainpage_setup() {
 		css_installer.Mainpage_download();
 		css_installer.Css_scrape_setup();

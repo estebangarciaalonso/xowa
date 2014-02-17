@@ -17,8 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns; import gplx.*; import gplx.xowa.*;
 public abstract class Xox_mgr_base implements Xox_mgr {
+	public Xox_mgr_base() {
+		this.enabled = Enabled_default();
+	}
 	public abstract byte[] Xtn_key();
-	public boolean Enabled() {return enabled;} private boolean enabled = true;
+	public abstract Xox_mgr Clone_new();
+	public boolean Enabled() {return enabled;} private boolean enabled;
+	@gplx.Virtual public boolean Enabled_default() {return true;}
+	public void Enabled_y_() {enabled = true;}	// TEST:
 	@gplx.Virtual public void Xtn_ctor_by_app(Xoa_app app) {}
 	@gplx.Virtual public void Xtn_ctor_by_wiki(Xow_wiki wiki) {}
 	@gplx.Virtual public void Xtn_init_by_wiki(Xow_wiki wiki) {}
@@ -27,5 +33,20 @@ public abstract class Xox_mgr_base implements Xox_mgr {
 		else if	(ctx.Match(k, Invk_enabled_))			enabled = m.ReadYn("v");
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
-	}	private static final String Invk_enabled = "enabled", Invk_enabled_ = "enabled_";		
+	}
+	private static final String Invk_enabled = "enabled", Invk_enabled_ = "enabled_";
+	public static void Xtn_write_escape(Xoa_app app, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {Xtn_write_escape(app, bfr, src, xnde.Src_bgn(), xnde.Src_end());}
+	public static void Xtn_write_escape(Xoa_app app, ByteAryBfr bfr, byte[] src)					{Xtn_write_escape(app, bfr, src, 0, src.length);}
+	public static void Xtn_write_escape(Xoa_app app, ByteAryBfr bfr, byte[] src, int bgn, int end)	{Xoh_html_wtr.Bfr_escape(bfr, src, bgn, end, app, true, false);}
+	public static void Xtn_write_unsupported(Xoa_app app, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, boolean parse_content) {
+		bfr.Add(Xowa_not_implemented);
+		Xox_mgr_base.Xtn_write_escape(app, bfr, src, xnde.Tag_open_bgn(), xnde.Tag_open_end());
+		if (xnde.CloseMode() != Xop_xnde_tkn.CloseMode_pair) return;	// inline node
+		if (parse_content)
+			bfr.Add(ctx.Wiki().Parser().Parse_fragment_to_html(ctx, ByteAry_.Mid(src, xnde.Tag_open_end(), xnde.Tag_close_bgn())));
+		else
+			Xox_mgr_base.Xtn_write_escape(app, bfr, src, xnde.Tag_open_end(), xnde.Tag_close_bgn());
+		Xox_mgr_base.Xtn_write_escape(app, bfr, src, xnde.Tag_close_bgn(), xnde.Tag_close_end());
+	}
+	private static final byte[] Xowa_not_implemented = ByteAry_.new_ascii_("XOWA does not support this extension: ");
 }

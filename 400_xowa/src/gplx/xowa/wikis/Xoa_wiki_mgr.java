@@ -28,10 +28,10 @@ public class Xoa_wiki_mgr implements GfoInvkAble {
 	public Xow_script_mgr Scripts() {return scripts;} private Xow_script_mgr scripts = new Xow_script_mgr();
 	public Wdata_wiki_mgr Wdata_mgr() {return wdata_mgr;} Wdata_wiki_mgr wdata_mgr;
 	public Xoa_css_extractor Css_installer() {return css_installer;} private Xoa_css_extractor css_installer = new Xoa_css_extractor();
-	public void App_init() {
-		css_installer.App_init(app);
+	public void Init_by_app() {
+		css_installer.Init_by_app(app);
 	}
-	public int Count() {return hash.Count();} Hash_adp_bry hash = new Hash_adp_bry(false); ListAdp list = ListAdp_.new_();
+	public int Count() {return hash.Count();} Hash_adp_bry hash = Hash_adp_bry.ci_(); ListAdp list = ListAdp_.new_();
 	public Xow_wiki Get_at(int i) {return Int_.Between(i, 0, this.Count() - 1) ? (Xow_wiki)list.FetchAt(i) : null;}
 	public Xow_wiki Get_by_key_or_null(byte[] key) {return ByteAry_.Len_eq_0(key) ? null : (Xow_wiki)hash.Fetch(key);}
 	public Xow_wiki Get_by_key_or_null(byte[] src, int bgn, int end) {return (Xow_wiki)hash.Get_by_mid(src, bgn, end);}

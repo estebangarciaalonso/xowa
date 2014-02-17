@@ -87,7 +87,7 @@ public class Xol_msg_mgr implements GfoInvkAble {
 		return rv;
 	}
 	private static HashAdp Hash_new(Xol_msg_itm[] ary) {
-		HashAdp rv = new Hash_adp_bry(false);
+		HashAdp rv = Hash_adp_bry.ci_();
 		for (int i = 0; i < Xol_msg_itm_.Id__max; i++) {
 			Xol_msg_itm itm = ary[i]; if (itm == null) continue;	// NOTE: can be null when msg_mgr is owned by wiki
 			rv.Add(itm.Key(), itm);

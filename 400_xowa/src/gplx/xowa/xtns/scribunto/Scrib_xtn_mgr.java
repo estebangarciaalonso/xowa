@@ -20,6 +20,7 @@ import gplx.xowa.parsers.logs.*;
 public class Scrib_xtn_mgr extends Xox_mgr_base {
 	@Override public byte[] Xtn_key() {return XTN_KEY;} public static final byte[] XTN_KEY = ByteAry_.new_ascii_("scribunto");
 	@Override public void Xtn_ctor_by_app(Xoa_app app) {this.app = app;} private Xoa_app app;
+	@Override public Xox_mgr Clone_new() {return new Scrib_xtn_mgr();}
 	public int Lua_timeout() {return lua_timeout;} private int lua_timeout = 4000;
 	public int Lua_timeout_polling() {return lua_timeout_polling;} private int lua_timeout_polling = 1;
 	public int Lua_timeout_busy_wait() {return lua_timeout_busy_wait;} private int lua_timeout_busy_wait = 250;

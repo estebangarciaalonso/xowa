@@ -28,7 +28,7 @@ public class Xow_wiki_props implements GfoInvkAble {
 	public byte[] DirectionMark() {return directionMark;} public Xow_wiki_props DirectionMark_(byte[] v) {directionMark = v; return this;} private byte[] directionMark = ByteAry_.Empty;
 	public byte[] CurrentVersion() {return MediaWiki_version;}
 	public byte[] Main_page() {return main_page;}
-	public Xow_wiki_props Main_page_(byte[] v) {main_page = v; return this;} private byte[] main_page = Xoa_page_.Main_page_bry;
+	public Xow_wiki_props Main_page_(byte[] v) {main_page = v; return this;} private byte[] main_page = Xoa_page_.Main_page_bry;	// HACK: default to Main_Page b/c some code tries to do Xoa_ttl.parse_() which will not work with ""; DATE:2014-02-16
 	public byte[] Bldr_version() {return bldr_version;} public Xow_wiki_props Bldr_version_(byte[] v) {bldr_version = v; return this;} private byte[] bldr_version = ByteAry_.Empty;
 	public int Css_version() {return css_version;} public Xow_wiki_props Css_version_(int v) {css_version = v; return this;} private int css_version = 1;
 	public byte[] Siteinfo_misc() {return siteinfo_misc;}

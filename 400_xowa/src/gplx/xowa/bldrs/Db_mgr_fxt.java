@@ -50,7 +50,7 @@ public class Db_mgr_fxt {
 	}
 	public void Test_load_ttl(int ns_id, String ttl_str, Xodb_page expd) {
 		Xow_wiki wiki = bldr_fxt.Wiki();
-		Xow_ns ns = wiki.Ns_mgr().Get_by_id(ns_id);
+		Xow_ns ns = wiki.Ns_mgr().Ids_get_or_null(ns_id);
 		byte[] ttl_bry = ByteAry_.new_ascii_(ttl_str);
 		wiki.Db_mgr_as_sql().Load_mgr().Load_by_ttl(actl, ns, ttl_bry);
 		Tfds.Eq(expd.Id(), actl.Id());
@@ -60,7 +60,7 @@ public class Db_mgr_fxt {
 	}	private Xodb_page actl = new Xodb_page();
 	public void Test_load_page(int ns_id, int page_id, String expd) {
 		Xow_wiki wiki = bldr_fxt.Wiki();
-		Xow_ns ns = wiki.Ns_mgr().Get_by_id(ns_id);
+		Xow_ns ns = wiki.Ns_mgr().Ids_get_or_null(ns_id);
 		wiki.Db_mgr_as_sql().Load_mgr().Load_page(actl.Id_(page_id), ns, false);
 		Tfds.Eq(expd, String_.new_ascii_(actl.Text()));
 	}

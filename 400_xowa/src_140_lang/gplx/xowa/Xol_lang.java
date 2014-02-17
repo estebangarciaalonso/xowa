@@ -64,10 +64,10 @@ public class Xol_lang implements GfoInvkAble {
 	public Gfo_num_fmt_mgr Num_fmt_mgr() {return num_fmt_mgr;} Gfo_num_fmt_mgr num_fmt_mgr = new Gfo_num_fmt_mgr();
 	public byte Img_thumb_halign_default() {return Xop_lnki_halign.Right;}	// change for rtl languages
 
-	public Hash_adp_bry Xatrs_ref() {return xatrs_ref;} private Hash_adp_bry xatrs_ref = new Hash_adp_bry(false);
-	public Hash_adp_bry Xatrs_references() {return xatrs_references;} private Hash_adp_bry xatrs_references = new Hash_adp_bry(false);
-	public Hash_adp_bry Xatrs_gallery() {return xatrs_gallery;} private Hash_adp_bry xatrs_gallery = new Hash_adp_bry(false);
-	public Hash_adp_bry Xatrs_pages() {return xatrs_pages;} private Hash_adp_bry xatrs_pages = new Hash_adp_bry(false);
+	public Hash_adp_bry Xatrs_ref() {return xatrs_ref;} private Hash_adp_bry xatrs_ref = Hash_adp_bry.ci_();
+	public Hash_adp_bry Xatrs_references() {return xatrs_references;} private Hash_adp_bry xatrs_references = Hash_adp_bry.ci_();
+	public Hash_adp_bry Xatrs_gallery() {return xatrs_gallery;} private Hash_adp_bry xatrs_gallery = Hash_adp_bry.ci_();
+	public Hash_adp_bry Xatrs_pages() {return xatrs_pages;} private Hash_adp_bry xatrs_pages = Hash_adp_bry.ci_();
 	public Hash_adp_bry Xatrs_section() {if (xatrs_section == null) xatrs_section = Lst_pfunc_lst.new_xatrs_(this); return xatrs_section;} private Hash_adp_bry xatrs_section;
 	public void Evt_lang_changed() {
 		lnki_arg_parser.Evt_lang_changed(this);

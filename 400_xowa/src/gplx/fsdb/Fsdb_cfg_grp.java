@@ -20,9 +20,24 @@ public class Fsdb_cfg_grp {
 	private OrderedHash itms = OrderedHash_.new_();
 	public Fsdb_cfg_grp(String grp) {this.grp = grp;}
 	public String Grp() {return grp;} private String grp;
-	public void Set(String key, String val) {
+	public void Insert(String key, String val) {
+		if (itms.Has(key)) throw Err_.new_fmt_("cfg_grp.Insert failed; key={0}", key);
 		Fsdb_cfg_itm itm = new Fsdb_cfg_itm(grp, key, val);
-		itms.AddReplace(key, itm);	// AddReplace needed for tests
+		itms.Add(key, itm);
+	}
+	public void Update(String key, String val) {
+		Fsdb_cfg_itm itm = (Fsdb_cfg_itm)itms.Fetch(key);
+		if (itm == null) throw Err_.new_fmt_("cfg_grp.Update failed; key={0}", key);
+		itm.Val_(val);
+	}
+	public void Upsert(String key, String val) {
+		Fsdb_cfg_itm itm = (Fsdb_cfg_itm)itms.Fetch(key);
+		if (itm == null) {
+			itm = new Fsdb_cfg_itm(grp, key, val);
+			itms.Add(key, itm);
+		}
+		else
+			itm.Val_(val);
 	}
 	public boolean Get_yn_or_y(String key) {return Get_yn_or(key, Bool_.Y);}
 	public boolean Get_yn_or_n(String key) {return Get_yn_or(key, Bool_.N);}
@@ -44,5 +59,5 @@ class Fsdb_cfg_itm {
 	public Fsdb_cfg_itm(String grp, String key, String val) {this.grp = grp; this.key = key; this.val = val;}
 	public String Grp() {return grp;} private String grp;
 	public String Key() {return key;} private String key;
-	public String Val() {return val;} private String val;
+	public String Val() {return val;} public Fsdb_cfg_itm Val_(String v) {val = v; return this;} private String val;
 }

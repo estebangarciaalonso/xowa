@@ -269,10 +269,15 @@ class Wdata_claim_tbl extends Wdata_tbl_base {
 							claim_val = entity_doc.Label_list_get(lang_key);
 						break;
 					case Wdata_prop_itm_base_.Val_tid_globecoordinate:
-					case Wdata_prop_itm_base_.Val_tid_bad:
-						byte[][] flds = ByteAry_.Split(claim.Val(), Byte_ascii.Pipe);
+					case Wdata_prop_itm_base_.Val_tid_bad: {
+						byte[][] flds = ByteAry_.Split(claim.Val(),Wdata_prop_itm_core.Prop_dlm);
 						claim_val = ByteAry_.Add_w_dlm(Byte_ascii.Comma, flds[0], flds[1]);
 						break;
+					}
+					case Wdata_prop_itm_base_.Val_tid_quantity: {
+						claim_val = claim.Val();
+						break;
+					}
 					default: 
 						if (   claim.Snak_tid() == Wdata_prop_itm_base_.Snak_tid_somevalue		// somevalue has no val_tid; not sure why; see Q17 and prop 138
 							|| claim.Snak_tid() == Wdata_prop_itm_base_.Snak_tid_novalue) {}	// novalue has no val_tid; see q30 and official language

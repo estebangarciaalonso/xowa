@@ -40,7 +40,7 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 		Init_fmtr(tmp_bfr, eval_mgr, div_view_fmtr);
 		Init_fmtr(tmp_bfr, eval_mgr, div_ns_fmtr);
 		byte[] wiki_user_name = wiki.User().Name();
-		div_personal_bry = Init_fmtr(tmp_bfr, eval_mgr, div_personal_fmtr, ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, wiki.Ns_mgr().Get_by_id(Xow_ns_.Id_user).Name_db_w_colon(), wiki_user_name), wiki_user_name, Ns_cls_by_id(wiki.Ns_mgr(), Xow_ns_.Id_user), ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, wiki.Ns_mgr().Get_by_id(Xow_ns_.Id_user_talk).Name_db_w_colon(), wiki_user_name), Ns_cls_by_id(wiki.Ns_mgr(), Xow_ns_.Id_user_talk));
+		div_personal_bry = Init_fmtr(tmp_bfr, eval_mgr, div_personal_fmtr, ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, wiki.Ns_mgr().Ids_get_or_null(Xow_ns_.Id_user).Name_db_w_colon(), wiki_user_name), wiki_user_name, Ns_cls_by_id(wiki.Ns_mgr(), Xow_ns_.Id_user), ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, wiki.Ns_mgr().Ids_get_or_null(Xow_ns_.Id_user_talk).Name_db_w_colon(), wiki_user_name), Ns_cls_by_id(wiki.Ns_mgr(), Xow_ns_.Id_user_talk));
 		byte[] main_page_href_bry = tmp_bfr.Add(Xoh_href_parser.Href_site_bry).Add(wiki.Domain_bry()).Add(Xoh_href_parser.Href_wiki_bry).XtoAryAndClear();	// NOTE: build /site/en.wikipedia.org/wiki/ href; no Main_Page, as that will be inserted by Xoh_href_parser
 		div_logo_bry = Init_fmtr(tmp_bfr, eval_mgr, div_logo_fmtr, main_page_href_bry, wiki.App().Url_converter_fsys().Encode_http(wiki.App().User().Fsys_mgr().Wiki_root_dir().GenSubFil_nest(wiki.Domain_str(), "html", "logo.png")));
 		div_home_bry = Init_fmtr(tmp_bfr, eval_mgr, div_home_fmtr);
@@ -68,11 +68,11 @@ public class Xowh_portal_mgr implements GfoInvkAble {
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();
 	}
 	private byte[] Ns_cls_by_ord(Xow_ns_mgr ns_mgr, int ns_ord) {
-		Xow_ns ns = ns_mgr.Get_by_ord(ns_ord);
+		Xow_ns ns = ns_mgr.Ords_get_at(ns_ord);
 		return ns == null || ns.Exists() ? ByteAry_.Empty : missing_ns_cls;
 	}
 	private byte[] Ns_cls_by_id(Xow_ns_mgr ns_mgr, int ns_id) {
-		Xow_ns ns = ns_mgr.Get_by_id(ns_id);
+		Xow_ns ns = ns_mgr.Ids_get_or_null(ns_id);
 		return ns == null || ns.Exists() ? ByteAry_.Empty : missing_ns_cls;			
 	}
 	public byte[] Div_view_bry(Bry_bfr_mkr bfr_mkr, byte output_tid, byte[] search_text) {

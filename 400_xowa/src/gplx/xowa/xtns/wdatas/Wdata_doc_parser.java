@@ -113,17 +113,28 @@ public class Wdata_doc_parser {
 			}
 			case Wdata_prop_itm_base_.Val_tid_globecoordinate: case Wdata_prop_itm_base_.Val_tid_bad: {
 				Json_itm_nde sub_nde = Json_itm_nde.cast_(ary.Subs_get_at(3));
-				Json_itm_kv latitude_kv = Json_itm_kv.cast_(sub_nde.Subs_get_at(0));
-				Json_itm_kv longitude_kv = Json_itm_kv.cast_(sub_nde.Subs_get_at(1));
-				return ByteAry_.Add(latitude_kv.Val().Data_bry(), Wdata_doc_bldr.Geodata_dlm, longitude_kv.Val().Data_bry());
+				return Add_kvs(tmp_parse_bfr, sub_nde, 0, 2);
+			}
+			case Wdata_prop_itm_base_.Val_tid_quantity: {
+				Json_itm_nde sub_nde = Json_itm_nde.cast_(ary.Subs_get_at(3));
+				return Add_kvs(tmp_parse_bfr, sub_nde, 0, 4);
 			}
 			default: {throw Err_.unhandled(val_tid);}
 		}		
 	}
+	private ByteAryBfr tmp_parse_bfr = ByteAryBfr.reset_(32);
+	private static byte[] Add_kvs(ByteAryBfr bfr, Json_itm_nde sub_nde, int bgn, int end) {
+		for (int i = bgn; i < end; i++) {
+			Json_itm_kv kv = Json_itm_kv.cast_(sub_nde.Subs_get_at(i));
+			if (i != 0) bfr.Add_byte(Wdata_prop_itm_core.Prop_dlm);
+			bfr.Add(kv.Val().Data_bry());
+		}
+		return bfr.XtoAryAndClear();
+	}
 	private void Warn(String fmt, Object... args) {usr_dlg.Warn_many("", "", fmt, args);}
 	public static final OrderedHash Empty_ordered_hash_bry = OrderedHash_.new_bry_(), Empty_ordered_hash_generic = OrderedHash_.new_();
 	private static final byte Prop_tid_m = 0, Prop_tid_q = 1, Prop_tid_g = 2, Prop_tid_rank = 3, Prop_tid_refs = 4;
-	private static final Hash_adp_bry Prop_key_hash = new Hash_adp_bry(false)
+	private static final Hash_adp_bry Prop_key_hash = Hash_adp_bry.ci_()
 		.Add_bry_byte(Wdata_doc_consts.Key_claims_m_bry		, Prop_tid_m)
 		.Add_bry_byte(Wdata_doc_consts.Key_claims_q_bry		, Prop_tid_q)
 		.Add_bry_byte(Wdata_doc_consts.Key_claims_g_bry		, Prop_tid_g)

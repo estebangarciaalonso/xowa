@@ -39,7 +39,7 @@ class Xodb_ns_map_mgr {
 		int[] ns_ids = new int[len];
 		for (int i = 0; i < len; i++) {
 			byte[] ns_name = ns_names[i];
-			Xow_ns ns = ns_mgr.Trie_match_exact(ns_name, 0, ns_name.length);
+			Xow_ns ns = ns_mgr.Names_get_or_null(ns_name, 0, ns_name.length);
 			ns_ids[i] = ns.Id();
 		}
 		return new Xodb_ns_map_itm(ns_ids);

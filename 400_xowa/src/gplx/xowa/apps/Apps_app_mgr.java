@@ -27,9 +27,10 @@ public class Apps_app_mgr implements GfoInvkAble {
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_convert_dvi_to_png		, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  2 * 60, "~{<>bin_plat_dir<>}miktex\\miktex\\bin\\dvipng", "~{dvi_file} -o ~{png_file} -q* -T tight -bg Transparent", "dvi_file", "png_file", "temp_dir");
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_convert_djvu_to_tiff	, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  1 * 60, "~{<>bin_plat_dir<>}djvulibre\\ddjvu", "-format=tiff -page=1 \"~{source}\" \"~{target}\"", "source", "target");
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_tidy_html				, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  1 * 60, "~{<>bin_plat_dir<>}tidy\\tidy", ProcessAdp_tidy_html.Args_fmt, "source", "target");
-		ProcessAdp.ini_(this, app.Gui_wtr(), app_decompress_bz2			, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  0	 , "~{<>bin_plat_dir<>}7-zip\\7za", "x -y \"~{src}\" -o\"~{trg_dir}\"", "src", "trg", "trg_dir");	// e=extract; -y=yes on all queries; -o=output_dir
-		ProcessAdp.ini_(this, app.Gui_wtr(), app_decompress_zip			, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  0	 , "~{<>bin_plat_dir<>}7-zip\\7za", "x -y \"~{src}\" -o\"~{trg_dir}\"", "src", "trg", "trg_dir");	// e=extract; -y=yes on all queries; -o=output_dir
-		ProcessAdp.ini_(this, app.Gui_wtr(), app_decompress_gz			, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  0	 , "~{<>bin_plat_dir<>}7-zip\\7za", "x -y \"~{src}\" -o\"~{trg_dir}\"", "src", "trg", "trg_dir");	// e=extract; -y=yes on all queries; -o=output_dir
+		ProcessAdp.ini_(this, app.Gui_wtr(), app_decompress_bz2			, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  0	 , "~{<>bin_plat_dir<>}7-zip\\7za", "x -y \"~{src}\" -o\"~{trg_dir}\"", "src", "trg", "trg_dir");	// x=extract; -y=yes on all queries; -o=output_dir
+		ProcessAdp.ini_(this, app.Gui_wtr(), app_decompress_bz2_by_stdout, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  0	 , "~{<>bin_plat_dir<>}7-zip\\7za", "x -so \"~{src}\"", "src");	// x=extract; -so=stdout
+		ProcessAdp.ini_(this, app.Gui_wtr(), app_decompress_zip			, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  0	 , "~{<>bin_plat_dir<>}7-zip\\7za", "x -y \"~{src}\" -o\"~{trg_dir}\"", "src", "trg", "trg_dir");	// x=extract; -y=yes on all queries; -o=output_dir
+		ProcessAdp.ini_(this, app.Gui_wtr(), app_decompress_gz			, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  0	 , "~{<>bin_plat_dir<>}7-zip\\7za", "x -y \"~{src}\" -o\"~{trg_dir}\"", "src", "trg", "trg_dir");	// x=extract; -y=yes on all queries; -o=output_dir
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_lua					, cmd_eval, ProcessAdp.Run_mode_async			,  0	 , "~{<>bin_plat_dir<>}lua\\lua", "", "");
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_lilypond				, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  1 * 60, "~{<>bin_plat_dir<>}lilypond\\usr\\bin\\lilypond.exe", "\"-dsafe=#t\" -dbackend=ps --png --header=texidoc -dmidi-extension=midi \"~{file}\"", "file");
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_abc2ly					, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  1 * 60, "~{<>bin_plat_dir<>}lilypond\\usr\\bin\\python.exe", "abc2ly.py -s \"--output=~{target}\" \"~{source}\"", "source", "target");
@@ -43,22 +44,23 @@ public class Apps_app_mgr implements GfoInvkAble {
 			ProcessAdp.ini_(this, app.Gui_wtr(), cmd					, cmd_eval, ProcessAdp.Run_mode_async		,  0	, "cmd", "/c start \"~{file}\"", "file");
 		}
 	}
-	public ProcessAdp App_query_img_size()				{return app_query_img_size;}			ProcessAdp app_query_img_size = new ProcessAdp();
-	public ProcessAdp App_resize_img()					{return app_resize_img;}				ProcessAdp app_resize_img = new ProcessAdp();
-	public ProcessAdp App_convert_svg_to_png()			{return app_convert_svg_to_png;}		ProcessAdp app_convert_svg_to_png = new ProcessAdp();
-	public ProcessAdp App_convert_tex_to_dvi()			{return app_convert_tex_to_dvi;}		ProcessAdp app_convert_tex_to_dvi = new ProcessAdp();
-	public ProcessAdp App_convert_dvi_to_png()			{return app_convert_dvi_to_png;}		ProcessAdp app_convert_dvi_to_png = new ProcessAdp();
-	public ProcessAdp App_convert_djvu_to_tiff()		{return app_convert_djvu_to_tiff;}		ProcessAdp app_convert_djvu_to_tiff = new ProcessAdp();
-	public ProcessAdp_tidy_html App_tidy_html()			{return app_tidy_html;}					ProcessAdp_tidy_html app_tidy_html = new ProcessAdp_tidy_html();
-	public ProcessAdp App_view_web()					{return app_view_web;}					ProcessAdp app_view_web = new ProcessAdp();
-	public ProcessAdp App_decompress_bz2()				{return app_decompress_bz2;}			ProcessAdp app_decompress_bz2 = new ProcessAdp();
-	public ProcessAdp App_decompress_zip()				{return app_decompress_zip;}			ProcessAdp app_decompress_zip = new ProcessAdp();
-	public ProcessAdp App_decompress_gz()				{return app_decompress_gz;}				ProcessAdp app_decompress_gz  = new ProcessAdp();
-	public ProcessAdp App_lua()							{return app_lua;}						ProcessAdp app_lua = new ProcessAdp();
-	public ProcessAdp App_lilypond()					{return app_lilypond;}					ProcessAdp app_lilypond = new ProcessAdp();
-	public ProcessAdp App_abc2ly()						{return app_abc2ly;}					ProcessAdp app_abc2ly = new ProcessAdp();
-	public ProcessAdp App_trim_img()					{return app_trim_img;}					ProcessAdp app_trim_img = new ProcessAdp();
-	public ProcessAdp App_convert_midi_to_ogg()			{return app_convert_midi_to_ogg;}		ProcessAdp app_convert_midi_to_ogg = new ProcessAdp();
+	public ProcessAdp App_query_img_size()				{return app_query_img_size;}			private ProcessAdp app_query_img_size = new ProcessAdp();
+	public ProcessAdp App_resize_img()					{return app_resize_img;}				private ProcessAdp app_resize_img = new ProcessAdp();
+	public ProcessAdp App_convert_svg_to_png()			{return app_convert_svg_to_png;}		private ProcessAdp app_convert_svg_to_png = new ProcessAdp();
+	public ProcessAdp App_convert_tex_to_dvi()			{return app_convert_tex_to_dvi;}		private ProcessAdp app_convert_tex_to_dvi = new ProcessAdp();
+	public ProcessAdp App_convert_dvi_to_png()			{return app_convert_dvi_to_png;}		private ProcessAdp app_convert_dvi_to_png = new ProcessAdp();
+	public ProcessAdp App_convert_djvu_to_tiff()		{return app_convert_djvu_to_tiff;}		private ProcessAdp app_convert_djvu_to_tiff = new ProcessAdp();
+	public ProcessAdp_tidy_html App_tidy_html()			{return app_tidy_html;}					private ProcessAdp_tidy_html app_tidy_html = new ProcessAdp_tidy_html();
+	public ProcessAdp App_view_web()					{return app_view_web;}					private ProcessAdp app_view_web = new ProcessAdp();
+	public ProcessAdp App_decompress_bz2()				{return app_decompress_bz2;}			private ProcessAdp app_decompress_bz2 = new ProcessAdp();
+	public ProcessAdp App_decompress_zip()				{return app_decompress_zip;}			private ProcessAdp app_decompress_zip = new ProcessAdp();
+	public ProcessAdp App_decompress_gz()				{return app_decompress_gz;}				private ProcessAdp app_decompress_gz  = new ProcessAdp();
+	public ProcessAdp App_decompress_bz2_by_stdout()	{return app_decompress_bz2_by_stdout;}	private ProcessAdp app_decompress_bz2_by_stdout = new ProcessAdp();
+	public ProcessAdp App_lua()							{return app_lua;}						private ProcessAdp app_lua = new ProcessAdp();
+	public ProcessAdp App_lilypond()					{return app_lilypond;}					private ProcessAdp app_lilypond = new ProcessAdp();
+	public ProcessAdp App_abc2ly()						{return app_abc2ly;}					private ProcessAdp app_abc2ly = new ProcessAdp();
+	public ProcessAdp App_trim_img()					{return app_trim_img;}					private ProcessAdp app_trim_img = new ProcessAdp();
+	public ProcessAdp App_convert_midi_to_ogg()			{return app_convert_midi_to_ogg;}		private ProcessAdp app_convert_midi_to_ogg = new ProcessAdp();
 	public ProcessAdp App_by_ext(String ext)			{return App_by_ext_key(String_.Mid(ext, 1));}	// ignore 1st . in ext; EX: ".png" -> "png"
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_query_img_size))				return app_query_img_size;
@@ -72,6 +74,7 @@ public class Apps_app_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_decompress_bz2))				return app_decompress_bz2;
 		else if	(ctx.Match(k, Invk_decompress_zip))				return app_decompress_zip;
 		else if	(ctx.Match(k, Invk_decompress_gz))				return app_decompress_gz;
+		else if	(ctx.Match(k, Invk_decompress_bz2_by_stdout))	return app_decompress_bz2_by_stdout;
 		else if	(ctx.Match(k, Invk_lua))						return app_lua;
 		else if	(ctx.Match(k, Invk_lilypond))					return app_lilypond;
 		else if	(ctx.Match(k, Invk_abc2ly))						return app_abc2ly;
@@ -89,15 +92,15 @@ public class Apps_app_mgr implements GfoInvkAble {
 	}
 	public void Exec_view_web(byte[] url) {
 		app_view_web.Run(ByteAry_.Replace(url, Quote_normal, Quote_escape)); // escape quotes; DATE:2013-03-31
-	}	static final byte[] Quote_normal = new byte[] {Byte_ascii.Quote}, Quote_escape = new byte[] {Byte_ascii.Quote, Byte_ascii.Quote};
-	ProcessAdp App_by_ext_key(String ext) {return cmds_view_file_by_ext[Xof_ext_.Get_id_by_ext_(ByteAry_.new_ascii_(ext))];}
+	}	private static final byte[] Quote_normal = new byte[] {Byte_ascii.Quote}, Quote_escape = new byte[] {Byte_ascii.Quote, Byte_ascii.Quote};
+	private ProcessAdp App_by_ext_key(String ext) {return cmds_view_file_by_ext[Xof_ext_.Get_id_by_ext_(ByteAry_.new_ascii_(ext))];}
 	public void Exec_view_by_ext(String exts_raw, String cmd, String args) {
 		String[] exts_ary = String_.Split(exts_raw, '|');
 		int exts_ary_len = exts_ary.length;
 		for (int i = 0; i < exts_ary_len; i++) 
 			App_by_ext_key(exts_ary[i]).Cmd_args(cmd, args);
 	}	ProcessAdp[] cmds_view_file_by_ext = new ProcessAdp[Xof_ext_.Id__max];
-	ProcessAdp Init_by_exts(String... exts) {
+	private ProcessAdp Init_by_exts(String... exts) {
 		ProcessAdp rv = App_by_ext_key(exts[0]);
 		int len = exts.length;
 		for (int i = 0; i < len; i++) {
@@ -107,7 +110,7 @@ public class Apps_app_mgr implements GfoInvkAble {
 	}
 	private static final String Invk_query_img_size = "query_img_size", Invk_resize_img = "resize_img", Invk_convert_svg_to_png = "convert_svg_to_png", Invk_convert_tex_to_dvi = "convert_tex_to_dvi", Invk_convert_dvi_to_png = "convert_dvi_to_png"
 		, Invk_convert_djvu_to_tiff = "convert_djvu_to_tiff", Invk_tidy_html = "tidy_html", Invk_view_web = "view_web"
-		, Invk_decompress_bz2 = "decompress_bz2", Invk_decompress_zip = "decompress_zip", Invk_decompress_gz = "decompress_gz"
+		, Invk_decompress_bz2 = "decompress_bz2", Invk_decompress_zip = "decompress_zip", Invk_decompress_gz = "decompress_gz", Invk_decompress_bz2_by_stdout = "decompress_bz2_by_stdout"
 		, Invk_view_by_ext = "view_by_ext"
 		, Invk_lua = "lua", Invk_lilypond = "lilypond", Invk_abc2ly = "abc2ly", Invk_trim_img = "trim_img", Invk_convert_midi_to_ogg = "convert_midi_to_ogg"
 		, Invk_web = "web"

@@ -31,7 +31,7 @@ class Prefs_trg_mgr {
 public class Prefs_mgr implements GfoInvkAble {
 	public Prefs_mgr(Xoa_app app) {
 		this.app = app;
-		atrs_hash = new Hash_adp_bry(true);
+		atrs_hash = Hash_adp_bry.cs_();
 		atrs_hash.Add(Bry_prop, ByteVal.new_(Tid_prop));
 		atrs_hash.Add(Bry_prop_get, ByteVal.new_(Tid_prop_get));
 		atrs_hash.Add(Bry_prop_set, ByteVal.new_(Tid_prop_set));

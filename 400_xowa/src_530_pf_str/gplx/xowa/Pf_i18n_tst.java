@@ -17,9 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
-public class Pf_i18n_tst {
-	Pf_i18n_fxt fxt = new Pf_i18n_fxt();
-	@Before public void init() {fxt.Clear();}
+public class Pf_i18n_tst {		
+	@Before public void init() {fxt.Clear();} private Pf_i18n_fxt fxt = new Pf_i18n_fxt();
 	@Test  public void Casing()	{fxt.lang_("de").Ini().Reg_func("fullurl", false, "VOLLSTÄNDIGE_URL").Load().Fxt().Test_parse_tmpl_str_test("{{vollstÄndige_url:a}}", "{{test}}"	, "//de.wikipedia.org/wiki/A");}
 	@Test  public void Time()	{fxt.lang_("de").Ini().Reg_msg("march", "März").Load().Fxt().Test_parse_tmpl_str_test("{{#time: d F Y|1 Mar 2013}}", "{{test}}"	, "01 März 2013");}
 }

@@ -22,8 +22,8 @@ public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_AT
 	private byte mode = Mode_atr_bgn;
 	private int atr_bgn = -1, key_bgn = -1, key_end = -1, eq_pos = -1, val_bgn = -1, val_end = -1; boolean valid = true;
 	private byte quote_byte = Byte_ascii.Nil;
-	private Hash_adp_bry xnde_hash = new Hash_adp_bry(false).Add_bry_bry(Xop_xnde_tag_.Tag_nowiki.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_noinclude.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_includeonly.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_onlyinclude.Name_bry());
-	private Hash_adp_bry repeated_atrs_hash = new Hash_adp_bry(false);
+	private Hash_adp_bry xnde_hash = Hash_adp_bry.ci_().Add_bry_bry(Xop_xnde_tag_.Tag_nowiki.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_noinclude.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_includeonly.Name_bry()).Add_bry_bry(Xop_xnde_tag_.Tag_onlyinclude.Name_bry());
+	private Hash_adp_bry repeated_atrs_hash = Hash_adp_bry.ci_();
 	private ByteAryBfr key_bfr = ByteAryBfr.new_(), val_bfr = ByteAryBfr.new_(); boolean key_bfr_on = false, val_bfr_on = false;
 	public int Xnde_find_gt_find(byte[] src, int pos, int end) {
 		byte b = src[pos];

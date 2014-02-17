@@ -33,7 +33,7 @@ public class Xol_lang_srl {
 					break;
 				case Byte_ascii.NewLine:
 					byte[] cur_name = csv_parser.Load(src, fld_bgn, pos);
-					Xow_ns ns = new Xow_ns(cur_id, Xow_ns_.Case_match_1st, cur_name, false);
+					Xow_ns ns = new Xow_ns(cur_id, Xow_ns_case_.Id_1st, cur_name, false);
 					rv.Add(ns);
 					fld_bgn = pos + 1;
 					cur_id = -1;

@@ -150,7 +150,7 @@ class Xou_user_ {
 			.Add_new(Scrib_core_.Ns_id_module, Scrib_core_.Ns_name_module).Add_new(Scrib_core_.Ns_id_module_talk, Scrib_core_.Ns_name_module_talk)
 			.Add_defaults()
 			;
-		rv.Ords_sort();
+		rv.Init();
 		return rv;
 	}
 	static final String GRP_KEY = "xowa.user_";

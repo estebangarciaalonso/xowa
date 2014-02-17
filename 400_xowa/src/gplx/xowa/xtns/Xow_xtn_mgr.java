@@ -29,7 +29,7 @@ public class Xow_xtn_mgr implements GfoInvkAble {
 		Add(app, new Gallery_xtn_mgr());
 		Add(app, new Poem_xtn_mgr());
 		Add(app, new Score_xtn_mgr());
-//			Add(app, new Listing_xtn_mgr());
+		Add(app, new Listing_xtn_mgr());
 		return this;
 	}
 	public Xow_xtn_mgr Ctor_by_wiki(Xow_wiki wiki) {
@@ -37,8 +37,9 @@ public class Xow_xtn_mgr implements GfoInvkAble {
 		Xow_xtn_mgr app_xtn_mgr = app.Xtn_mgr();
 		int regy_len = app_xtn_mgr.Count();
 		for (int i = 0; i < regy_len; i++) {
-			Xox_mgr mgr = (Xox_mgr)app_xtn_mgr.Get_at(i);
-			mgr.Xtn_ctor_by_wiki(wiki);	// TODO: clone in order to have separate settings per wiki
+			Xox_mgr proto = (Xox_mgr)app_xtn_mgr.Get_at(i);
+			Xox_mgr mgr = proto.Clone_new();
+			mgr.Xtn_ctor_by_wiki(wiki);
 			regy.Add(mgr.Xtn_key(), mgr);
 		}
 		return this;

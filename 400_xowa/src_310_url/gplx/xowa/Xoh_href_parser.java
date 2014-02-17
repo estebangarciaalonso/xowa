@@ -110,7 +110,7 @@ public class Xoh_href_parser {
 		if (anch_bgn == ByteAry_.NotFound)	// no anchor; just add page
 			encoder.Encode(bfr_encoder, ttl_full, page_bgn, ttl_full.length);
 		else {								// anchor exists; check if anchor is preceded by ws; EX: [[A #b]] -> "/wiki/A#b"
-			int page_end = ByteAry_.FindBwd_last_ws(ttl_full, anch_bgn - 1);		// first 1st ws before #; handles multiple ws
+			int page_end = ByteAry_.FindBwd_last_ws(ttl_full, anch_bgn);		// first 1st ws before #; handles multiple ws
 			page_end = page_end == ByteAry_.NotFound ? anch_bgn : page_end;		// if ws not found, use # pos; else use 1st ws pos
 			encoder.Encode(bfr_encoder, ttl_full, page_bgn, page_end);			// add page
 			encoder.Encode(bfr_encoder, ttl_full, anch_bgn, ttl_full.length);	// add anchor
@@ -140,7 +140,7 @@ public class Xoh_href_parser {
 		}
 		byte[] page_bry = encoder.Decode(ttl.Full_txt());					// note that Full is everything except for ns, so it handles "fr:A" ("fr:" being treated as ns, so only "A" will be Full_txt)
 		if (ByteAry_.Len_eq_0(page_bry))									// handle xwiki hrefs like "fr:"; EX: "/wiki/wikipedia:" on en.wikisource.org/Main Page
-			page_bry = Xoa_page_.Main_page_bry;
+			page_bry = Xoa_page_.Main_page_bry_empty;
 //			if (ttl.Qarg_bgn() != ByteAry_.NotFound)
 //				rv.Qarg_(ttl.Qarg_txt());
 		rv.Page_(page_bry);							// add page; note that it should be decoded; EX: %20 -> " "; also note that anchor (#) or query params (?) are not parsed; the entire String will be reparsed later

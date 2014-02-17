@@ -88,7 +88,7 @@ class Xop_statistics_stats_ns_itm implements ByteAryFmtrArg {
 		Xow_ns_mgr ns_mgr = wiki.Ns_mgr();
 		int ns_len = ns_mgr.Count();
 		for (int i = 0; i < ns_len; i++) {
-			Xow_ns ns = ns_mgr.Id_get_at(i);
+			Xow_ns ns = ns_mgr.Ids_get_at(i);
 			if (ns.Is_meta()) continue;
 			if (ns.Count() == 0) continue;
 			byte[] ns_name = ns.Id_main() ? wiki.Msg_mgr().Val_by_id(Xol_msg_itm_.Id_ns_blankns) : ns.Name_txt();

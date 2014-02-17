@@ -19,8 +19,8 @@ package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xow
 import gplx.fsdb.*; import gplx.xowa.files.wiki_orig.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.bins.*;
 import gplx.xowa.files.fsdb.caches.*;
 public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
-	private Hash_adp_bry bin_hash = new Hash_adp_bry(true); private ByteAryBfr bin_key_bfr = ByteAryBfr.new_();
-	private Hash_adp_bry reg_hash = new Hash_adp_bry(true);		
+	private Hash_adp_bry bin_hash = Hash_adp_bry.cs_(); private ByteAryBfr bin_key_bfr = ByteAryBfr.new_();
+	private Hash_adp_bry reg_hash = Hash_adp_bry.cs_();		
 	public boolean Tid_is_mem() {return true;}
 	public Xof_qry_mgr Qry_mgr() {return qry_mgr;} private Xof_qry_mgr qry_mgr = new Xof_qry_mgr();
 	public Xof_bin_mgr Bin_mgr() {return bin_mgr;} private Xof_bin_mgr bin_mgr;

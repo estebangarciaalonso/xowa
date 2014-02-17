@@ -93,7 +93,7 @@ public class Xop_lnki_logger_redlinks_wkr implements GfoInvkAble {
 				}
 				if (win.Gui_wtr().Canceled()) return;
 				if (redlinks_mgr.Request_idx() != request_idx) return;
-				win.Gui_wtr().Html_elem_atr_set_append(lnki_id, "class", " new");
+				gplx.xowa.files.gui.Js_img_mgr.Update_link_missing(win.Gui_wtr(), Xop_lnki_logger_redlinks_mgr.Lnki_id_prefix + Int_.XtoStr(lnki.Html_id()));
 				++redlink_count;
 			}
 		}

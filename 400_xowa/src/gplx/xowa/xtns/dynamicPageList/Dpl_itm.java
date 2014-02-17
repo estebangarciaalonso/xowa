@@ -97,7 +97,7 @@ class Dpl_itm {
 		switch (key_id) {
 			case Dpl_itm_keys.Key_category: 			if (ctg_includes == null) ctg_includes = ListAdp_.new_(); ctg_includes.Add(Xoa_ttl.Replace_spaces(val)); break;
 			case Dpl_itm_keys.Key_notcategory:		 	if (ctg_excludes == null) ctg_excludes = ListAdp_.new_(); ctg_excludes.Add(Xoa_ttl.Replace_spaces(val)); break;
-			case Dpl_itm_keys.Key_ns:		 			{Xow_ns ns = (Xow_ns)wiki.Ns_mgr().Trie_match_exact(val, 0, val.length); ns_filter = ns == null ? Xow_ns_.Id_main : ns.Id(); break;}
+			case Dpl_itm_keys.Key_ns:		 			{Xow_ns ns = (Xow_ns)wiki.Ns_mgr().Names_get_or_null(val, 0, val.length); ns_filter = ns == null ? Xow_ns_.Id_main : ns.Id(); break;}
 			case Dpl_itm_keys.Key_order:				sort_ascending = Dpl_sort.Parse_as_bool_byte(val); break;
 			case Dpl_itm_keys.Key_suppresserrors:		suppress_errors = Dpl_itm_keys.Parse_as_bool(val, false); break;
 			case Dpl_itm_keys.Key_nofollow:				no_follow = Dpl_itm_keys.Parse_as_bool(val, true); break;	// NOTE: default to true; allows passing nofollow=nofollow; MW: if ('false' != $arg)
@@ -146,7 +146,7 @@ class Dpl_itm {
 		else
 			usr_dlg.Warn_many("", "", err_msg);
 	}
-	private static final Hash_adp_bry Known_invalid_keys = new Hash_adp_bry(false)
+	private static final Hash_adp_bry Known_invalid_keys = Hash_adp_bry.ci_()
 	.Add_str_obj("orcer"						, BoolVal.True)	// ignore as per http://en.wikinews.org/wiki/Template_talk:United_States; (Note it doesn't make a difference, as categoryadd is the default order method.)
 	.Add_str_obj("addcategorydatefirst"			, BoolVal.True)
 	.Add_str_obj("mainspace"					, BoolVal.True)

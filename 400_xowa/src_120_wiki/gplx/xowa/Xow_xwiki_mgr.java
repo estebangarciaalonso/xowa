@@ -20,7 +20,7 @@ import gplx.xowa.wikis.*;
 public class Xow_xwiki_mgr implements GfoInvkAble {
 	public Xow_xwiki_mgr(Xow_wiki wiki) {this.wiki = wiki;} private Xow_wiki wiki;
 	public Xow_lang_mgr Lang_mgr() {return lang_mgr;} private Xow_lang_mgr lang_mgr = Xow_lang_mgr.dflt_();
-	public int Len() {return list.Count();} private OrderedHash list = OrderedHash_.new_bry_(); Hash_adp_bry hash = new Hash_adp_bry(false); 
+	public int Len() {return list.Count();} private OrderedHash list = OrderedHash_.new_bry_(); Hash_adp_bry hash = Hash_adp_bry.ci_(); 
 	public void Clear() {hash.Clear(); list.Clear();}
 	public Xow_xwiki_itm Get_at(int i)								{return (Xow_xwiki_itm)list.FetchAt(i);}
 	public Xow_xwiki_itm Get_by_key(byte[] key)						{return (Xow_xwiki_itm)hash.Get_by_bry(key);}
@@ -88,7 +88,7 @@ public class Xow_xwiki_mgr implements GfoInvkAble {
 	String Exec_itms_print(byte[] raw) {
 		ByteAryFmtr fmtr = ByteAryFmtr.new_bry_(raw, "wiki_key");//, "wiki_type_url", "wiki_lang", "wiki_name", "wiki_logo_url");
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_k004();
-		Hash_adp_bry seen = new Hash_adp_bry(false);
+		Hash_adp_bry seen = Hash_adp_bry.ci_();
 		int wikis_len = list.Count();
 		for (int i = 0; i < wikis_len; i++) {
 			Xow_xwiki_itm itm = (Xow_xwiki_itm)list.FetchAt(i);
@@ -144,7 +144,7 @@ public class Xow_xwiki_mgr implements GfoInvkAble {
 			int aliases_len = wiki_itm.Aliases().length;
 			for (int j = 0; j < aliases_len; j++) {
 				byte[] alias = wiki_itm.Aliases()[j];
-				if (wiki.Ns_mgr().Trie_match_exact(alias, 0, alias.length) != null) continue;	// NOTE: do not add xwiki if alias matches namespace; EX: en.wiktionary.org has ns of "Wiktionary"; do not add alias of "wiktionary"; note that wikipedia does have an alias to wiktionary
+				if (wiki.Ns_mgr().Names_get_or_null(alias, 0, alias.length) != null) continue;	// NOTE: do not add xwiki if alias matches namespace; EX: en.wiktionary.org has ns of "Wiktionary"; do not add alias of "wiktionary"; note that wikipedia does have an alias to wiktionary
 				Xow_xwiki_itm xwiki = new Xow_xwiki_itm(alias, ByteAry_.new_utf8_(fmt), wiki_tid, lang_id, domain_bry).Offline_(offline_exists);
 				Add_itm(xwiki, null);
 			}

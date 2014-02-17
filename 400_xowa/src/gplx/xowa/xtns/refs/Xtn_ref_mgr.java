@@ -45,7 +45,7 @@ public class Xtn_ref_mgr {
 		else
 			return (Xtn_ref_grp)o;
 	}
-	Hash_adp_bry grps = new Hash_adp_bry(false);
+	Hash_adp_bry grps = Hash_adp_bry.ci_();
 	Xtn_ref_grp grp_default = new Xtn_ref_grp(ByteAry_.Empty);
 	int uid_last;		
 }

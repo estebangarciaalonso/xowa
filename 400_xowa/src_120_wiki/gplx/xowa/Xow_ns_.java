@@ -46,12 +46,6 @@ public class Xow_ns_ {
 		, Key_module			= "Module"			, Key_module_talk		= "Module talk"
 	    , Key_null				= "null"
 		;
-	public static final byte Case_match_all = 0, Case_match_1st = 1;
-	public static byte Case_match_parse_(String s) {
-		if		(String_.Eq(s, "first-letter"))		return Case_match_1st;
-		else if	(String_.Eq(s, "case-sensitive"))	return Case_match_all;
-		else										throw Err_mgr._.unhandled_(s);
-	}
 	public static int Canonical_id(byte[] canonical_name) {
 		if (canonical_hash == null) {
 			Xow_ns[] ary = Canonical;
@@ -88,5 +82,5 @@ public class Xow_ns_ {
 	public static final String Ns_name_wikipedia = "Wikipedia";
 	public static final String Ns_name_main = "Main";
 	public static final byte[] Ns_prefix_main = ByteAry_.new_ascii_("Main:");
-	private static Xow_ns Canonical_new_(int id, String name) {return new Xow_ns(id, Case_match_1st, ByteAry_.new_ascii_(name), false);}	// NOTE: for id/name reference only; case_match and alias does not matter;
+	private static Xow_ns Canonical_new_(int id, String name) {return new Xow_ns(id, Xow_ns_case_.Id_1st, ByteAry_.new_ascii_(name), false);}	// NOTE: for id/name reference only; case_match and alias does not matter;
 }

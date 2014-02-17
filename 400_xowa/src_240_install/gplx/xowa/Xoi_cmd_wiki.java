@@ -60,7 +60,7 @@ class Xoi_cmd_wiki_unzip extends Gfo_thread_cmd_unzip implements Gfo_thread_cmd 
 	@Override public byte Async_init() {
 		Xoa_app app = install_mgr.App(); Gfui_kit kit = app.Gui_mgr().Kit();
 		Xow_wiki wiki = app.Wiki_mgr().Get_by_key_or_make(ByteAry_.new_utf8_(wiki_key));
-		Io_url wiki_dir = wiki.Bldr_props().Src_dir();
+		Io_url wiki_dir = wiki.Import_cfg().Src_dir();
 		Io_url[] urls = Io_mgr._.QueryDir_args(wiki_dir).Recur_(false).FilPath_("*.xml.bz2").ExecAsUrlAry();
 		if (urls.length == 0) {
 			kit.Ask_ok(GRP_KEY, "dump.unzip_latest.file_missing", "Could not find a dump file for ~{0} in ~{1}", wiki_key, wiki_dir.Raw());

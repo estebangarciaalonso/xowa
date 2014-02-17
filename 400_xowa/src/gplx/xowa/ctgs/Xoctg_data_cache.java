@@ -26,5 +26,5 @@ public class Xoctg_data_cache {
 		regy.Add(ctg_name, rv);
 		return rv;
 	}
-	Hash_adp_bry regy = new Hash_adp_bry(false);
+	Hash_adp_bry regy = Hash_adp_bry.ci_();
 }

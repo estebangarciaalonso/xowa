@@ -45,7 +45,7 @@ class Xop_tblw_lxr implements Xop_lxr {
 				}
 				else {
 					if (wlxr_type == Xop_tblw_wkr.Tblw_type_th2) {
-						int nl_pos = ByteAry_.FindBwd(src, Byte_ascii.NewLine, cur_pos, 0);	// search for preceding nl
+						int nl_pos = ByteAry_.FindBwd(src, Byte_ascii.NewLine, cur_pos);	// search for preceding nl
 						if (nl_pos != ByteAry_.NotFound) {	
 							if (src[nl_pos + 1] != Byte_ascii.Bang) {
 								return ctx.LxrMake_txt_(cur_pos);
@@ -73,7 +73,7 @@ class Xop_tblw_lxr implements Xop_lxr {
 //						return ctx.LxrMake_txt_(cur_pos);
 			}
 		}
-		return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, false, false, -1, -1);
+		return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, false, wlxr_type, false, -1, -1);
 	}
 	public Xop_tblw_lxr(byte wlxr_type) {this.wlxr_type = wlxr_type;} private byte wlxr_type;
 	public static final Xop_tblw_lxr Bldr = new Xop_tblw_lxr(); Xop_tblw_lxr() {}

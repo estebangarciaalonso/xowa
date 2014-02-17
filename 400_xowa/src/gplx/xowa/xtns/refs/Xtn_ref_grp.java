@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.refs; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 public class Xtn_ref_grp {
+	private ListAdp lsts = ListAdp_.new_();
 	public Xtn_ref_grp(byte[] grp_name) {this.grp_name = grp_name;}
 	public byte[] Grp_name() {return grp_name;} private byte[] grp_name;
 	public int Grp_seal() {
@@ -46,5 +47,4 @@ public class Xtn_ref_grp {
 		lsts.Clear();
 		lst_idx = 0;
 	}
-	ListAdp lsts = ListAdp_.new_();
 }	

@@ -104,23 +104,12 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		if		(ctx.Match(k, Invk_wdata_enabled_))				wdata_enabled = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_xtn_ref_enabled_))			xtn_ref_enabled = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_ns_ids_))					ns_ids = Int_.Ary_parse(m.ReadStr("v"), "|");
-		else if	(ctx.Match(k, Invk_ns_ids_by_aliases))			Ns_ids_by_aliases(m.ReadStrAry("v", "|"));
+		else if	(ctx.Match(k, Invk_ns_ids_by_aliases))			ns_ids = Xob_lnki_temp_wkr_.Ns_ids_by_aliases(wiki, m.ReadStrAry("v", "|"));
 		else if	(ctx.Match(k, Invk_property_wkr))				return this.Property_wkr();
 		else if	(ctx.Match(k, Invk_invoke_wkr))					return this.Invoke_wkr();
 		else	return super.Invk(ctx, ikey, k, m);
 		return this;
 	}	private static final String Invk_wdata_enabled_ = "wdata_enabled_", Invk_xtn_ref_enabled_ = "xtn_ref_enabled_", Invk_ns_ids_ = "ns_ids_", Invk_ns_ids_by_aliases = "ns_ids_by_aliases", Invk_invoke_wkr = "invoke_wkr", Invk_property_wkr = "property_wkr";
-	private void Ns_ids_by_aliases(String[] aliases) {
-		ns_ids = wiki.Ns_mgr().Ids_by_aliases(aliases);
-		int aliases_len = aliases.length;
-		int ids_len = ns_ids.length;
-		for (int i = 0; i < aliases_len; i++) {
-			String alias = aliases[i];
-			int id = i < ids_len ? ns_ids[i] : -1;
-			usr_dlg.Note_many("", "", "ns: ~{0} <- ~{1}", Int_.XtoStr_fmt(id, "0000"), alias);
-		}
-		if (aliases_len != ids_len) throw Err_.new_fmt_("mismatch in aliases and ids: {0} vs {1}", aliases_len, ids_len);
-	}
 	private Xop_log_invoke_wkr Invoke_wkr() {
 		if (invoke_wkr == null) invoke_wkr = ((Scrib_xtn_mgr)bldr.App().Xtn_mgr().Get_or_fail(Scrib_xtn_mgr.XTN_KEY)).Invoke_wkr_or_new();
 		return invoke_wkr;
@@ -136,6 +125,40 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		return ByteAry_.Eq(rv, ttl_bry) ? null : rv;
 	}
 	public static boolean Wiki_ns_for_file_is_case_match_all(Xow_wiki wiki) {
-		return wiki.Ns_mgr().Ns_file().Case_match() == Xow_ns_.Case_match_all;
+		return wiki.Ns_mgr().Ns_file().Case_match() == Xow_ns_case_.Id_all;
+	}
+}
+class Xob_lnki_temp_wkr_ {
+	public static int[] Ns_ids_by_aliases(Xow_wiki wiki, String[] aliases) {
+		int[] rv = Xob_lnki_temp_wkr_.Ids_by_aliases(wiki.Ns_mgr(), aliases);
+		int aliases_len = aliases.length;
+		int ids_len = rv.length;
+		for (int i = 0; i < aliases_len; i++) {
+			String alias = aliases[i];
+			int id = i < ids_len ? rv[i] : -1;
+			wiki.App().Usr_dlg().Note_many("", "", "ns: ~{0} <- ~{1}", Int_.XtoStr_fmt(id, "0000"), alias);
+		}
+		if (aliases_len != ids_len) throw Err_.new_fmt_("mismatch in aliases and ids: {0} vs {1}", aliases_len, ids_len);
+		return rv;
+	}
+	private static int[] Ids_by_aliases(Xow_ns_mgr ns_mgr, String[] aliases) {
+		ListAdp list = ListAdp_.new_();
+		int len = aliases.length;
+		for (int i = 0; i < len; i++) {
+			String alias = aliases[i];
+			if (String_.Eq(alias, Xow_ns_.Key_main))
+				list.Add(ns_mgr.Ns_main());
+			else {
+				Xow_ns ns = ns_mgr.Names_get_or_null(ByteAry_.new_utf8_(alias));
+				if (ns != null)
+					list.Add(ns);
+			}
+		}
+		len = list.Count();
+		int[] rv = new int[len];
+		for (int i = 0; i < len; i++) {
+			rv[i] = ((Xow_ns)list.FetchAt(i)).Id();
+		}
+		return rv;
 	}
 }

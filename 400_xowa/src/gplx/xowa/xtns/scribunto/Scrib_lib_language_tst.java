@@ -66,6 +66,7 @@ public class Scrib_lib_language_tst {
 	}
 	@Test  public void Lc() {
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_lc, Object_.Ary("en", "ABC"), "abc");
+		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_lc, Object_.Ary("en"), "");
 	}
 	@Test  public void Uc() {
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_uc, Object_.Ary("en", "abc"), "ABC");

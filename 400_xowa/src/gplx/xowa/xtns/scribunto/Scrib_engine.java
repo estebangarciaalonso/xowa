@@ -139,7 +139,7 @@ public class Scrib_engine {
 		}
 		rv.Execute();
 		return rv;
-	}	Hash_adp_bry mods = new Hash_adp_bry(true);
+	}	Hash_adp_bry mods = Hash_adp_bry.cs_();
 	public static Scrib_engine Engine() {return engine;} public static Scrib_engine Engine_new_(Xoa_app app, Xop_ctx ctx) {engine = new Scrib_engine(app, ctx); return engine;} static Scrib_engine engine;
 	public static void Engine_page_changed(Xoa_page page) {
 		if (engine != null)

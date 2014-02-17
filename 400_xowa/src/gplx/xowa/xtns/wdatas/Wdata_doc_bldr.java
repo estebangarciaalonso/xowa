@@ -150,7 +150,7 @@ public class Wdata_doc_bldr {
 						wtr.Kv(Bool_.Y, Wdata_doc_consts.Key_time_calendarmodel_bry			, Wdata_doc_consts.Val_time_calendarmodel_bry);
 						wtr.Nde_end();
 						break;
-					case Wdata_prop_itm_base_.Val_tid_globecoordinate:
+					case Wdata_prop_itm_base_.Val_tid_globecoordinate: {
 						wtr.Val(Bool_.Y, Wdata_prop_itm_base_.Val_bry_globecoordinate);
 						wtr.Comma();
 						wtr.Nde_bgn();
@@ -162,6 +162,19 @@ public class Wdata_doc_bldr {
 						wtr.Kv_double	(Bool_.Y, Wdata_doc_consts.Key_geo_precision_bry	, .00001d);
 						wtr.Nde_end();
 						break;
+					}
+					case Wdata_prop_itm_base_.Val_tid_quantity: {
+						wtr.Val(Bool_.Y, Wdata_prop_itm_base_.Val_bry_quantity);
+						wtr.Comma();
+						wtr.Nde_bgn();
+						byte[][] flds = ByteAry_.Split(prop.Val(), Byte_ascii.Pipe);
+						wtr.Kv			(Bool_.N, Wdata_doc_consts.Key_quantity_amount_bry	, flds[0]);		// +1,234
+						wtr.Kv			(Bool_.Y, Wdata_doc_consts.Key_quantity_unit_bry	, flds[1]);		// 1
+						wtr.Kv			(Bool_.Y, Wdata_doc_consts.Key_quantity_ubound_bry	, flds[2]);		// +1,235
+						wtr.Kv			(Bool_.Y, Wdata_doc_consts.Key_quantity_lbound_bry	, flds[3]);		// +1,233
+						wtr.Nde_end();
+						break;
+					}
 					default: throw Err_.unhandled(prop.Val_tid_byte());
 				}
 			}
@@ -176,7 +189,6 @@ public class Wdata_doc_bldr {
 		props.Clear();
 	}
 	public Wdata_doc Xto_page_doc() {return new Wdata_doc(qid, mgr, mgr.Parser().Parse(Xto_bry()));}
-	public static final byte[] Geodata_dlm = ByteAry_.new_ascii_("|");
 }
 class Wdata_doc_alias {
 	public Wdata_doc_alias(String lang, String[] aliases) {this.lang = lang; this.aliases = aliases;}

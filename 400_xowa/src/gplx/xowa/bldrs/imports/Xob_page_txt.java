@@ -71,7 +71,7 @@ public class Xob_page_txt extends Xob_itm_dump_base implements Xobd_wkr, GfoInvk
 		for (int i = 0; i < Ns_ordinal_max; i++) {
 			Xob_xdat_file_wtr wtr = regy[i];
 			if (wtr != null) {
-				Xow_ns ns_itm = wiki.Ns_mgr().Get_by_ord(wtr.Ns_ord_idx());
+				Xow_ns ns_itm = wiki.Ns_mgr().Ords_get_at(wtr.Ns_ord_idx());
 				Xob_stat_itm datRptItm = data_rpt_typ.GetOrNew(ns_itm.Name_str());
 				datRptItm.Tally(wtr.Fil_len(), wtr.Fil_idx());
 				wtr.Flush(bldr.Usr_dlg());

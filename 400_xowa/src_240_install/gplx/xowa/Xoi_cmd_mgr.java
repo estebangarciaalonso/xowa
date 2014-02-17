@@ -45,6 +45,10 @@ public class Xoi_cmd_mgr implements GfoInvkAble {
 	}
 	private void Run_async(Gfo_thread_cmd cmd) {ThreadAdp_.invk_msg_(this, GfoMsg_.new_cast_(Invk_process_async).Add("v", cmd)).Start();}
 	private void Cmds_run() {
+		if (working) {
+			app.Gui_mgr().Kit().Ask_ok("", "", "An import is in progress. Please wait for it to complete. If you want to do multiple imports at once, see Help:Import/Script.");
+			return;
+		}
 		int cmds_len = cmds.Count();
 		if (cmds_len == 0) return;
 		for (int i = 0; i < cmds_len - 1; i++) {
@@ -87,7 +91,7 @@ public class Xoi_cmd_mgr implements GfoInvkAble {
 				if		(String_.Eq(cmd.Async_key(), Xoi_cmd_wiki_download.KEY_dump)) continue;	// skip download if wiki.dump_file
 				else if	(String_.Eq(cmd.Async_key(), Xoi_cmd_wiki_unzip.KEY_dump)) {
 					Xow_wiki wiki = app.Wiki_mgr().Get_by_key_or_make(ByteAry_.new_utf8_(wiki_key));
-					if (wiki.Bldr_props().Src_fil_xml()  != null) continue;	// skip unzip if xml exists
+					if (wiki.Import_cfg().Src_fil_xml()  != null) continue;	// skip unzip if xml exists
 				}
 				else if (String_.Eq(cmd.Async_key(), Xoi_cmd_wiki_import.KEY)) {
 					((Xoi_cmd_wiki_import)cmd).Import_move_bz2_to_done_(false);

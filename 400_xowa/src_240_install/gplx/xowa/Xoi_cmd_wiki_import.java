@@ -48,7 +48,7 @@ class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 		bldr.Cmd_mgr().Add_cmd(wiki, "core.make_page");
 		bldr.Cmd_mgr().Add_cmd(wiki, "core.make_id");
 		bldr.Cmd_mgr().Add_cmd(wiki, "core.make_search_title");
-		if (wiki.Bldr_props().Category_version() == gplx.xowa.ctgs.Xoa_ctg_mgr.Version_1)
+		if (wiki.Import_cfg().Category_version() == gplx.xowa.ctgs.Xoa_ctg_mgr.Version_1)
 			bldr.Cmd_mgr().Add_cmd(wiki, "core.make_category");
 		bldr.Cmd_mgr().Add_cmd(wiki, "core.calc_stats");	
 		bldr.Cmd_mgr().Add_cmd(wiki, "core.term");
@@ -57,7 +57,7 @@ class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 		((gplx.xowa.bldrs.imports.Xobc_core_cleanup)bldr.Cmd_mgr().Add_cmd(wiki, "core.cleanup")).Delete_wiki_(true).Delete_sqlite3_(true);
 		bldr.Cmd_mgr().Add_cmd(wiki, "import.sql.init");
 		bldr.Cmd_mgr().Add_cmd(wiki, "import.sql.page");
-		if (wiki.Bldr_props().Category_version() == gplx.xowa.ctgs.Xoa_ctg_mgr.Version_1) {
+		if (wiki.Import_cfg().Category_version() == gplx.xowa.ctgs.Xoa_ctg_mgr.Version_1) {
 			bldr.Cmd_mgr().Add_cmd(wiki, "import.sql.category_v1");
 			bldr.Cmd_mgr().Add_cmd(wiki, "import.sql.category_registry");
 			bldr.Cmd_mgr().Add_cmd(wiki, "import.sql.categorylinks");
@@ -74,7 +74,7 @@ class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 		wiki.Init_assert();
 		bldr.Cmd_mgr().Clear();
 		bldr.Pause_at_end_(false);
-		Io_url src_url = wiki.Bldr_props().Src_rdr().Url();
+		Io_url src_url = wiki.Import_cfg().Src_rdr().Url();
 		if (install_mgr.Dump_mgr().Wiki_storage_type_is_sql())
 			Process_sql(bldr);
 		else
@@ -96,7 +96,7 @@ class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 				Io_mgr._.MoveFil_args(src_url, trg_fil, true).Exec();
 		}
 		running = false;
-		wiki.Bldr_props().Src_fil_xml_(null).Src_fil_bz2_(null);	// reset file else error when going from Import/Script to Import/List
+		wiki.Import_cfg().Src_fil_xml_(null).Src_fil_bz2_(null);	// reset file else error when going from Import/Script to Import/List
 		app.Gui_mgr().Kit().New_cmd_sync(this).Invk(GfsCtx.new_(), 0, Invk_open_wiki, GfoMsg_.Null);
 	}	private Xow_wiki wiki;
 	private void Open_wiki(String wiki_key) {

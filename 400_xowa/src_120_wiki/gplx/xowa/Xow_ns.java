@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xow_ns implements GfoInvkAble {
-	public Xow_ns(int id, byte case_match, byte[] name, boolean alias) {
-		this.id = id; this.case_match = case_match; this.alias = alias;
+	public Xow_ns(int id, byte case_match, byte[] name, boolean is_alias) {
+		this.id = id; this.case_match = case_match; this.is_alias = is_alias;
 		Name_bry_(name);
 	}
 	public void Name_bry_(byte[] v) {
@@ -36,7 +36,7 @@ public class Xow_ns implements GfoInvkAble {
 		this.num_bry = ByteAry_.new_ascii_(num_str);
 		this.name_enc = Xoa_url_encoder._.Encode(name_bry);
 		this.name_txt = ByteAry_.Replace(name_enc, Byte_ascii.Underline, Byte_ascii.Space);
-		name_txt_w_colon = ByteAry_.Replace(name_db_w_colon, Byte_ascii.Underline, Byte_ascii.Space);
+		this.name_txt_w_colon = ByteAry_.Replace(name_db_w_colon, Byte_ascii.Underline, Byte_ascii.Space);
 	}
 	public byte[]	Name_bry()				{return name_bry;} private byte[] name_bry;
 	public String	Name_str()				{return name_str;} private String name_str;
@@ -72,9 +72,20 @@ public class Xow_ns implements GfoInvkAble {
 	public boolean		Is_includable()			{return true;}													// ASSUME: always true (be transcluded?)
 	public boolean		Is_movable()			{return id > Xow_ns_.Id_special;}								// ASSUME: only Special, Media cannot move (be renamed?)
 	public boolean		Is_meta()				{return id < Xow_ns_.Id_main;}									// ASSUME: only Special, Media
-	public boolean		Alias()					{return alias;} private boolean alias;
+	public boolean		Is_alias()				{return is_alias;} private boolean is_alias;
 	public int		Count()					{return count;} public Xow_ns Count_(int v) {count = v; return this;} private int count;
 	public byte[]	Gen_ttl(byte[] page)	{return id == Xow_ns_.Id_main ? page : ByteAry_.Add(name_db_w_colon, page);}
+	public OrderedHash Aliases()			{if (aliases == null) aliases = OrderedHash_.new_(); return aliases;} private OrderedHash aliases;
+	public KeyVal[] Aliases_as_scrib_ary() {	// NOTE: intended for Scrib_lib_site; DATE:2014-02-15
+		if (aliases == null) return KeyVal_.Ary_empty;
+		int len = aliases.Count();
+		KeyVal[] rv = new KeyVal[len];
+		for (int i = 0; i < len; i++) {
+			String alias = (String)aliases.FetchAt(i);
+			rv[i] = KeyVal_.int_(i + ListAdp_.Base1, alias);
+		}
+		return rv;
+	}
 	public boolean Exists() {return exists;} public Xow_ns Exists_(boolean v) {exists = v; return this;} private boolean exists;
 	public int Bldr_file_idx() {return bldr_file_idx;} public void Bldr_file_idx_(int v) {bldr_file_idx = v;} private int bldr_file_idx = Bldr_file_idx_heap;
 	public static final int Bldr_file_idx_heap = -1;
@@ -86,7 +97,5 @@ public class Xow_ns implements GfoInvkAble {
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}	private static final String Invk_subpages_enabled_ = "subpages_enabled_", Invk_id = "id", Invk_name_txt = "name_txt", Invk_name_ui = "name_ui";
-	private String Name_ui() {
-		return id == Xow_ns_.Id_main ? "(Main)" : name_str;
-	}
+	private String Name_ui() {return id == Xow_ns_.Id_main ? "(Main)" : name_str;}
 }

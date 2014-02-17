@@ -24,6 +24,10 @@ public class Gxw_html_server implements Gxw_html {
 		this.wtr = srv.Wtr(); usr_dlg = srv.App().Usr_dlg();
 		cfg = Swt_kit._.Html_cfg();
 	} 
+	public Gxw_html_server(Xosrv_webserver srv) {
+		usr_dlg = srv.App().Usr_dlg();
+		cfg = Swt_kit._.Html_cfg();
+	} 
 	public String		Html_doc_html() {return Exec(cfg.Doc_html());}
 	public void			Html_doc_html_(String s) {Exec("location.reload(true);");}	// HACK: force reload of page
 	public String		Html_doc_selected_get(String site, String page) {return Exec(cfg.Doc_selected_get(site, page));}
@@ -62,6 +66,7 @@ public class Gxw_html_server implements Gxw_html {
 		return true;	// NOTE: js is async, so immediate return value is not possible; return true for now;
 	}
 	private String Exec(String s) {
+		if (wtr == null) return "";	// HACK: handles http_server
 		s = "(function () {" + s + "})();"; // NOTE: dependent on firefox addon which does 'var result = Function("with(arguments[0]){return "+cmd_text+"}")(session.window);'; DATE:2014-01-28
 		Xosrv_msg msg = Xosrv_msg.new_(Xosrv_cmd_types.Browser_exec, ByteAry_.Empty, ByteAry_.Empty, ByteAry_.Empty, ByteAry_.Empty, ByteAry_.new_utf8_(s));
 		usr_dlg.Note_many("", "", "sending browser.js: msg=~{0}", s);

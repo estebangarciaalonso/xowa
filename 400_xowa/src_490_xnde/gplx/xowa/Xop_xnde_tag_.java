@@ -129,8 +129,9 @@ public class Xop_xnde_tag_ {
 , Tid_listing_listing = 104
 , Tid_listing_see = 105
 , Tid_listing_sleep = 106
+, Tid_rss = 107
 	;
-	public static final int _MaxLen = 107;
+	public static final int _MaxLen = 108;
 	public static final Xop_xnde_tag[] Ary = new Xop_xnde_tag[_MaxLen];
 	private static Xop_xnde_tag new_(int id, String name) {
 		Xop_xnde_tag rv = new Xop_xnde_tag(id, name);
@@ -245,5 +246,6 @@ public class Xop_xnde_tag_ {
 , Tag_listing_listing = new_(Tid_listing_listing, "listing").Xtn_()
 , Tag_listing_see = new_(Tid_listing_see, "see").Xtn_()
 , Tag_listing_sleep = new_(Tid_listing_sleep, "sleep").Xtn_()
-		;
+, Tag_rss = new_(Tid_rss, "rss").Xtn_()
+	;
 }

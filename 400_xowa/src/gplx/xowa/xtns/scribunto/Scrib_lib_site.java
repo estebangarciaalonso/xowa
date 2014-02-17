@@ -37,7 +37,7 @@ class Scrib_lib_site implements Scrib_lib {
 	}	public static final String Invk_getNsIndex = "getNsIndex", Invk_pagesInCategory = "pagesInCategory", Invk_pagesInNs = "pagesInName"+"space", Invk_usersInGroup = "usersInGroup", Invk_init_site_for_wiki = "init_site_for_wiki";
 	public KeyVal[] GetNsIndex(KeyVal[] values) {
 		byte[] ns_name = Scrib_kv_utl.Val_to_bry(values, 0);
-		Object ns_obj = engine.Wiki().Ns_mgr().Trie_match_exact(ns_name, 0, ns_name.length);
+		Object ns_obj = engine.Wiki().Ns_mgr().Names_get_or_null(ns_name, 0, ns_name.length);
 		return ns_obj == null ? KeyVal_.Ary_empty : Scrib_kv_utl.base1_obj_(((Xow_ns)ns_obj).Id());
 	}
 	public KeyVal[] PagesInCategory(KeyVal[] values) {
@@ -48,7 +48,7 @@ class Scrib_lib_site implements Scrib_lib {
 	}
 	public KeyVal[] PagesInNs(KeyVal[] values) {
 		int ns_id = Scrib_kv_utl.Val_to_int(values, 0);
-		Xow_ns ns = engine.Wiki().Ns_mgr().Get_by_id(ns_id);
+		Xow_ns ns = engine.Wiki().Ns_mgr().Ids_get_or_null(ns_id);
 		int ns_count = ns == null ? 0 : ns.Count();
 		return Scrib_kv_utl.base1_obj_(ns_count);
 	}
@@ -73,20 +73,20 @@ class Scrib_lib_site implements Scrib_lib {
 		rv[3] = KeyVal_.new_("stylePath"		, props.StylePath());
 		rv[4] = KeyVal_.new_("currentVersion"	, props.CurrentVersion());
 	}
-	KeyVal[] Bld_ns_ary(Xow_wiki wiki) {
+	private KeyVal[] Bld_ns_ary(Xow_wiki wiki) {
 		Xow_ns_mgr ns_mgr = wiki.Ns_mgr();
-		int len = ns_mgr.Id_count();
+		int len = ns_mgr.Ids_len();
 		KeyVal[] rv = new KeyVal[len];
 		int rv_idx = 0;
 		for (int i = 0; i < len; i++) {
-			Xow_ns ns = ns_mgr.Id_get_at(i);
+			Xow_ns ns = ns_mgr.Ids_get_at(i);
 			if (ns == null) continue;
 			int ns_id = ns.Id();
 			rv[rv_idx++] = KeyVal_.int_(ns_id, Bld_ns(wiki, ns, ns_id));
 		}
 		return rv;
 	}
-	KeyVal[] Bld_ns(Xow_wiki wiki, Xow_ns ns, int ns_id) {
+	private KeyVal[] Bld_ns(Xow_wiki wiki, Xow_ns ns, int ns_id) {
 		int len = 16;
 		if		(ns_id <  Xow_ns_.Id_main) len = 14;
 		else if (ns_id == Xow_ns_.Id_main) len = 17;
@@ -103,20 +103,19 @@ class Scrib_lib_site implements Scrib_lib {
 		rv[ 9] = KeyVal_.new_("isSubject"				, ns.Id_subj());
 		rv[10] = KeyVal_.new_("isTalk"					, ns.Id_talk());
 		rv[11] = KeyVal_.new_("defaultContentModel"		, null);						// MWNs::getNsContentModel( $ns ), ASSUME: always null?
-		rv[12] = KeyVal_.new_("aliases"					, KeyVal_.Ary_empty);			// array(),
+		rv[12] = KeyVal_.new_("aliases"					, ns.Aliases_as_scrib_ary());	// DATE:2014-02-15
 		if (ns_id < 0)
 			rv[13] = KeyVal_.new_("subject"				, ns_id);						// MWNs::getSubject( $ns );
 		else {
 			rv[13] = KeyVal_.new_("subject"				, ns_id);						// MWNs::getSubject( $ns );
 			rv[14] = KeyVal_.new_("talk"				, ns.Id_talk_id());				// MWNs::getTalk( $ns );
 			rv[15] = KeyVal_.new_("associated"			, ns.Id_alt_id());				// MWNs::getAssociated( $ns );
-			// TODO.3: get aliases for ns
 			if (ns_id == Xow_ns_.Id_main)
 				rv[16] = KeyVal_.new_("displayName"		, wiki.Msg_mgr().Val_by_id(Xol_msg_itm_.Id_ns_blankns));	// MWNs::getAssociated( $ns );
 		}
 		return rv;
 	}
-	KeyVal[] Bld_stats(Xow_wiki wiki) {
+	private KeyVal[] Bld_stats(Xow_wiki wiki) {
 		Xow_wiki_stats stats = wiki.Stats();
 		KeyVal[] rv = new KeyVal[8];
 		rv[0] = KeyVal_.new_("pages", stats.NumPages());			// SiteStats::pages(),

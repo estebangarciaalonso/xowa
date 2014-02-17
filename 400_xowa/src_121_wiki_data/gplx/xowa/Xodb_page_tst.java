@@ -30,7 +30,7 @@ class Xodb_page_fxt {
 			ns_mgr = new Xow_ns_mgr();
 			ns_mgr.Add_new(Xow_ns_.Id_main, "");
 			ns_mgr.Add_new(Xow_ns_.Id_user_talk, "User talk");
-			ns_mgr.Init_done();
+			ns_mgr.Init_w_defaults();
 			tmp_page = new Xodb_page();
 		}
 	}	private Xow_ns_mgr ns_mgr; Xodb_page tmp_page;

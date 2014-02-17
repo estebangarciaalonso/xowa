@@ -51,7 +51,7 @@ public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 	public String Hcmd_id() {return hcmd_id;} private String hcmd_id;
 	private void Html_write_code_as_pre(ByteAryBfr bfr, Xoa_app app) {
 		bfr.Add(Xoh_consts.Pre_bgn_overflow);
-		Xoh_html_wtr.Bfr_escape(bfr, code, 0, code.length, app, true, false);
+		Xox_mgr_base.Xtn_write_escape(app, bfr, code);
 		bfr.Add(Xoh_consts.Pre_end);
 	}
 	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
@@ -183,7 +183,7 @@ public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 		return ByteAry_.Mid(rslt, bgn_pos, end_pos);
 	}
 	public static final byte Xatr_id_lang_is_abc = 0, Xatr_id_code_is_raw = 1, Xatr_id_output_midi = 2, Xatr_id_output_ogg = 3, Xatr_id_file_midi = 4, Xatr_id_file_ogg = 5;
-	private static final Hash_adp_bry atr_hash = new Hash_adp_bry(false).Add_str_byte("lang", Xatr_id_lang_is_abc).Add_str_byte("raw", Xatr_id_code_is_raw).Add_str_byte("midi", Xatr_id_output_midi).Add_str_byte("vorbis", Xatr_id_output_ogg).Add_str_byte("over"+"ride_midi", Xatr_id_file_midi).Add_str_byte("over"+"ride_ogg", Xatr_id_file_ogg);
+	private static final Hash_adp_bry atr_hash = Hash_adp_bry.ci_().Add_str_byte("lang", Xatr_id_lang_is_abc).Add_str_byte("raw", Xatr_id_code_is_raw).Add_str_byte("midi", Xatr_id_output_midi).Add_str_byte("vorbis", Xatr_id_output_ogg).Add_str_byte("over"+"ride_midi", Xatr_id_file_midi).Add_str_byte("over"+"ride_ogg", Xatr_id_file_ogg);
 	private static final byte[] 
 		  Lang_abc = ByteAry_.new_ascii_("ABC")
 		, Abc_tagline_bgn = ByteAry_.new_ascii_("tagline ="), Abc_tagline_end = new byte[] {Byte_ascii.NewLine}, Abc_tagline_repl = ByteAry_.new_ascii_("tagline = \"\"\n")

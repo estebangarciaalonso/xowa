@@ -115,24 +115,25 @@ public class Xoa_url_parser {
 			url.Args_(args);
 		return url.Err() == Gfo_url.Err_none;
 	}
-	public static Xoa_url Parse_url(Xoa_app app, Xow_wiki cur_wiki, String raw) {Xoa_url rv = new Xoa_url(); byte[] raw_bry = ByteAry_.new_utf8_(raw); return Parse_url(rv, app, cur_wiki, raw_bry, 0, raw_bry.length);}
-	public static Xoa_url Parse_url(Xoa_url rv, Xoa_app app, Xow_wiki cur_wiki, byte[] raw, int bgn, int end) {
+	public static Xoa_url Parse_url(Xoa_app app, Xow_wiki cur_wiki, String raw) {Xoa_url rv = new Xoa_url(); byte[] raw_bry = ByteAry_.new_utf8_(raw); return Parse_url(rv, app, cur_wiki, raw_bry, 0, raw_bry.length, false);}
+	public static Xoa_url Parse_url(Xoa_url rv, Xoa_app app, Xow_wiki cur_wiki, byte[] raw, int bgn, int end, boolean from_url_bar) {
 		Xow_wiki wiki = null; Bry_bfr_mkr bfr_mkr = app.Utl_bry_bfr_mkr();
 		byte[] cur_wiki_key = cur_wiki.Domain_bry();
 		byte[] page_bry = ByteAry_.Empty;
-		if (app.Url_parser().Parse(rv, raw, bgn, end)) {		// parse passed; take Page; EX: "http://en.wikipedia.org/wiki/Earth"
+		boolean page_is_main_page = false;
+		if (app.Url_parser().Parse(rv, raw, bgn, end)) {	// parse passed; take Page; EX: "http://en.wikipedia.org/wiki/Earth"
 			wiki = Parse_url__wiki(app, rv.Wiki_bry());
 			if (rv.Segs_ary().length == 0 && rv.Page_bry() != null && ByteAry_.Eq(rv.Page_bry(), Xoa_url_parser.Bry_wiki_name))	// wiki, but directly after site; EX:en.wikipedia.org/wiki
-				page_bry = Xoa_page_.Main_page_bry;
+				page_is_main_page = true;
 			else
 				page_bry = Parse_url__combine(bfr_mkr, null, rv.Segs_ary(), rv.Page_bry());	// NOTE: pass null in for wiki b/c wiki has value, but should not be used for Page
 		}
-		else {											// parse failed; 
+		else {												// parse failed; 
 			byte[] wiki_bry = rv.Wiki_bry();
 			if (rv.Page_bry() == null) {					// only 1 seg; EX: "Earth"; "fr.wikipedia.org"
 				if (app.Xwiki_exists(wiki_bry)) {			// matches wiki_regy; bry_0 must be wiki; EX: "fr.wikipedia.org"
 					wiki = app.Wiki_mgr().Get_by_key_or_make(wiki_bry);
-					page_bry = Xoa_page_.Main_page_bry;
+					page_is_main_page = true;
 				}
 				else {									// assume page name
 					wiki = Parse_url__wiki(app, cur_wiki_key);
@@ -143,9 +144,9 @@ public class Xoa_url_parser {
 				if (wiki_bry != null && app.Xwiki_exists(wiki_bry)) {			// matches wiki_regy; bry_0 must be wiki; EX: "fr.wikipedia.org"
 					wiki = app.Wiki_mgr().Get_by_key_or_make(wiki_bry);
 					if (rv.Segs_ary().length == 0 && ByteAry_.Eq(rv.Page_bry(), Xoa_url_parser.Bry_wiki_name))
-						page_bry = Xoa_page_.Main_page_bry;
+						page_is_main_page = true;
 					else
-						page_bry = Parse_url__combine(bfr_mkr, ByteAry_.Empty, rv.Segs_ary(), rv.Page_bry());
+						page_bry = Parse_url__combine(bfr_mkr, Xoa_page_.Main_page_bry_empty, rv.Segs_ary(), rv.Page_bry());
 				}
 				else {
 					if (ByteAry_.Len_gt_0(wiki_bry)) {		// HACK: wiki_bry null when passing in Category:A from home_wiki
@@ -181,6 +182,14 @@ public class Xoa_url_parser {
 					}
 				}
 			}
+		}
+		if (page_is_main_page) {	// Main_Page requested; EX: "zh.wikipedia.org"; "zh.wikipedia.org/wiki/"; DATE:2014-02-16
+			if (from_url_bar) {
+				wiki.Init_assert();	// NOTE: must call Init_assert to load Main_Page; only call if from url_bar, else wikis will be loaded in Sister_wikis panel
+				page_bry = wiki.Props().Main_page();
+			}
+			else
+				page_bry = Xoa_page_.Main_page_bry_empty;
 		}
 		if (rv.Anchor_bry() != null) {
 			byte[] anchor_bry = app.Url_converter_id().Encode(rv.Anchor_bry());	// reencode for anchors (which use . encoding, not % encoding); EX.WP: Enlightenment_Spain#Enlightened_despotism_.281759%E2%80%931788.29
@@ -231,7 +240,7 @@ public class Xoa_url_parser {
 		byte[] fmt = app.Gui_mgr().Url_macro_mgr().Fmt_or_null(bry);
 		if (fmt != null) bry = fmt;
 		Xoa_url rv = new Xoa_url();
-		Xoa_url_parser.Parse_url(rv, app, wiki, bry, 0, bry.length);
+		Xoa_url_parser.Parse_url(rv, app, wiki, bry, 0, bry.length, true);
 		if (app.Wiki_mgr().Wiki_regy().Url_is_invalid_domain(rv)) {	// handle lang_code entered; EX: "war" should redirect to "war" article in current wiki, not war.wikipedia.org; DATE:2014-02-07
 			rv.Page_bry_(rv.Wiki_bry());
 			rv.Wiki_(wiki);
@@ -244,8 +253,8 @@ public class Xoa_url_parser {
 	private static final byte[] Bry_arg_redirect = ByteAry_.new_ascii_("redirect"), Bry_arg_uselang = ByteAry_.new_ascii_("uselang"), Bry_arg_title = ByteAry_.new_ascii_("title"), Bry_arg_action = ByteAry_.new_ascii_("action"), Bry_arg_fulltext = ByteAry_.new_ascii_("fulltext");
 	private static final byte[] Bry_upload_wikimedia_org = ByteAry_.new_ascii_("upload.wikimedia.org"), Bry_dot_org = ByteAry_.new_ascii_(".org"), Bry_arg_action_edit = ByteAry_.new_ascii_("edit")
 		, Bry_file = ByteAry_.new_ascii_("File:");	// NOTE: File does not need i18n; is a canonical namespace 
-	private static final Hash_adp_bry qry_args_hash = new Hash_adp_bry(false).Add_bry_byte(Bry_arg_redirect, Id_arg_redirect).Add_bry_byte(Bry_arg_uselang, Id_arg_uselang).Add_bry_byte(Bry_arg_title, Id_arg_title).Add_bry_byte(Bry_arg_action, Id_arg_action).Add_bry_byte(Bry_arg_fulltext, Id_arg_fulltext);
-	private static final Hash_adp_bry upload_segs_hash = new Hash_adp_bry(false).Add_bry_bry(Xow_wiki_domain_.Key_commons_bry);//.Add_bry_bry(Xow_wiki_domain_.Key_species_bry).Add_bry_bry(Xow_wiki_domain_.Key_meta_bry);
+	private static final Hash_adp_bry qry_args_hash = Hash_adp_bry.ci_().Add_bry_byte(Bry_arg_redirect, Id_arg_redirect).Add_bry_byte(Bry_arg_uselang, Id_arg_uselang).Add_bry_byte(Bry_arg_title, Id_arg_title).Add_bry_byte(Bry_arg_action, Id_arg_action).Add_bry_byte(Bry_arg_fulltext, Id_arg_fulltext);
+	private static final Hash_adp_bry upload_segs_hash = Hash_adp_bry.ci_().Add_bry_bry(Xow_wiki_domain_.Key_commons_bry);//.Add_bry_bry(Xow_wiki_domain_.Key_species_bry).Add_bry_bry(Xow_wiki_domain_.Key_meta_bry);
 	public static final byte[] Bry_wiki_name = ByteAry_.new_ascii_("wiki");
 	private static final byte[][] Bry_wiki_name_bry = new byte[][] {Bry_wiki_name};
 	public static final byte[] Bry_arg_action_eq_edit = ByteAry_.new_ascii_("action=edit");

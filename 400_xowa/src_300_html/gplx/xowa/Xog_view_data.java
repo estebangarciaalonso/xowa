@@ -23,7 +23,7 @@ public class Xog_view_data {
 		pages_recursed = false;
 //			lst_recurse_stack.Clear();
 	}
-//		private Hash_adp_bry lst_recurse_stack = new Hash_adp_bry(true);
+//		private Hash_adp_bry lst_recurse_stack = Hash_adp_bry.cs_();
 //		public boolean Lst_recurse_has(byte[] page_bry) {return lst_recurse_stack.Has(page_bry);}
 //		public void Lst_recurse_add(byte[] page_bry) {lst_recurse_stack.AddKeyVal(page_bry);}
 //		public void Lst_recurse_del(byte[] page_bry) {lst_recurse_stack.Del(page_bry);}

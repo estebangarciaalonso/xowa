@@ -21,7 +21,7 @@ public class Xop_log_property_wkr implements GfoInvkAble {
 	private Xop_log_mgr log_mgr; private Db_provider provider; private Db_stmt stmt;
 	private boolean log_enabled = true;
 	private boolean include_all = true;
-	private Hash_adp_bry include_props = new Hash_adp_bry(true);
+	private Hash_adp_bry include_props = Hash_adp_bry.cs_();
 	public Xop_log_property_wkr(Xop_log_mgr log_mgr, Db_provider provider) {
 		this.log_mgr = log_mgr;
 		this.provider = provider;

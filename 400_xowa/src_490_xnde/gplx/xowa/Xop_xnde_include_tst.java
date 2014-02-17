@@ -61,8 +61,6 @@ public class Xop_xnde_include_tst {
 			,	""
 			));
 	}
-
-	// @Test  public void Wiki_includeonly_ignore() {fxt.Test_parse_wiki_text("[[a<includeonly>b</includeonly>c]]", "[[ac]]");}	// FUTURE: ttl parses by idx, and ignores includeonly: WHEN: upon encountering; may need to redo in other parsers?
 	@Test  public void Ex_Tmpl_io_oi()		{		// PURPOSE: <includeonly> not parsing internals; EX.WP: [[Template:MONTHNAME]]
 		fxt.Test_parse_tmpl_str_test("<includeonly>{{#if:{{{1}}}|a|b}}</includeonly><noinclude>c</noinclude>", "{{test|1}}", "a");
 	}
@@ -185,7 +183,11 @@ public class Xop_xnde_include_tst {
 		fxt.Init_page_create("page", "abc");	// create page in main ns
 		fxt.Test_parse_page_all_str("{{<includeonly>safesubst:</includeonly>page}}", "abc");	// will become {{safesubst:page}} which should then transclude page
 	}
+	@Test  public void Hdr() {	// PURPOSE: includeonly should be evaluated during template parse; EX: es.b:Billar/T�cnica/Clases_de_puentes; DATE:2014-02-12
+		fxt.Test_parse_page_all_str("=<includeonly>=</includeonly>A=<includeonly>=</includeonly>", "<h1>A</h1>\n");
+	}
 
+//		@Test  public void Wiki_includeonly_ignore() {fxt.Test_parse_wiki_text("[[a<includeonly>b</includeonly>c]]", "[[ac]]");}	// FUTURE: ttl parses by idx, and ignores includeonly: WHEN: upon encountering; may need to redo in other parsers?
 //		@Test  public void Defect_noinclude_inside_main() {		// PURPOSE: <onlyinclude> inside main was not returning content; EX.WP:Wikipedia:Featured_articles
 //			fxt.Init_defn_clear();
 //			fxt.Init_defn_add("Test_tmpl", "{{:Test_page}}");

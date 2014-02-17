@@ -25,6 +25,9 @@ public class Js_img_mgr {
 	public static void Update_img(Xog_win_wtr wtr, Xof_fsdb_itm itm) {
 		Js_img_mgr.Update_img(wtr, itm.Html_uid(), itm.Lnki_type(), itm.Html_url().To_http_file_str(), itm.Html_w(), itm.Html_h(), itm.Html_elem_tid(), itm.Html_orig_url().To_http_file_str(), itm.Gallery_mgr_h());
 	}
+	public static void Update_link_missing(Xog_win_wtr wtr, String html_id) {
+		wtr.Html_elem_atr_set_append(html_id, "class", " new");
+	}
 	public static void Update_img(Xog_win_wtr wtr, int uid, byte lnki_type, String src, int w, int h, byte elem_tid, String orig_src, int gallery_mgr_h) {
 		String html_id = "xowa_file_img_" + uid;
 		wtr.Html_img_update(html_id, src, w, h);

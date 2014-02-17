@@ -48,25 +48,36 @@ class Xot_tmpl_wtr {
 			case Xop_tkn_itm_.Tid_xnde:
 				Xop_xnde_tkn xnde = (Xop_xnde_tkn)tkn;
 				int xnde_tag_id = xnde.Tag().Id();
-				if (xnde_tag_id == Xop_xnde_tag_.Tid_onlyinclude) {
-					// NOTE: originally "if (ctx.Parse_tid() == Xop_parser_.Parse_tid_page_tmpl) {" but if not needed; Xot_tmpl_wtr should not be called for tmpls and <oi> should not make it to page_wiki
-					ByteAryBfr tmp_bfr = ByteAryBfr.new_();
-					ctx.Only_include_evaluate_(true);
-					xnde.Tmpl_evaluate(ctx, src, Xot_invk_temp.PageIsCaller, tmp_bfr);
-					ctx.Only_include_evaluate_(false);
-					trg.Add_bfr(tmp_bfr);
+				switch (xnde_tag_id) {
+					case Xop_xnde_tag_.Tid_onlyinclude: {
+						// NOTE: originally "if (ctx.Parse_tid() == Xop_parser_.Parse_tid_page_tmpl) {" but if not needed; Xot_tmpl_wtr should not be called for tmpls and <oi> should not make it to page_wiki
+						ByteAryBfr tmp_bfr = ByteAryBfr.new_();
+						ctx.Only_include_evaluate_(true);
+						xnde.Tmpl_evaluate(ctx, src, Xot_invk_temp.PageIsCaller, tmp_bfr);
+						ctx.Only_include_evaluate_(false);
+						trg.Add_bfr(tmp_bfr);
+						break;
+					}
+					case Xop_xnde_tag_.Tid_includeonly:	// noop; DATE:2014-02-12
+						break;
+					case Xop_xnde_tag_.Tid_nowiki: {
+						if (xnde.Tag_close_bgn() == Int_.MinValue)
+							trg.Add_mid(src, tkn.Src_bgn(), tkn.Src_end());	// write src from bgn/end
+						else {												// NOTE: if nowiki then "deactivate" all xndes by swapping out < for &lt; nowiki_xnde_frag; DATE:2013-01-27
+							ByteAryBfr tmp_bfr = ctx.Wiki().App().Utl_bry_bfr_mkr().Get_k004();
+							Nowiki_escape(tmp_bfr, src, xnde.Tag_open_end(), xnde.Tag_close_bgn());
+							trg.Add_bfr_and_clear(tmp_bfr.Mkr_rls());
+						}
+						break;
+					}
+					case Xop_xnde_tag_.Tid_xowa_cmd:
+						gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd xowa_cmd = (gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd)xnde.Xnde_xtn();					
+						trg.Add(xowa_cmd.Xtn_root().Data_mid());// write contents of eval
+						break;
+					default:
+						trg.Add_mid(src, tkn.Src_bgn(), tkn.Src_end());				// write src from bgn/end
+						break;
 				}
-				else if (xnde_tag_id == Xop_xnde_tag_.Tid_nowiki && xnde.Tag_close_bgn() != Int_.MinValue) {	// NOTE: if nowiki then "deactivate" all xndes by swapping out < for &lt; nowiki_xnde_frag; DATE:2013-01-27
-					ByteAryBfr tmp_bfr = ctx.Wiki().App().Utl_bry_bfr_mkr().Get_k004();
-					Nowiki_escape(tmp_bfr, src, xnde.Tag_open_end(), xnde.Tag_close_bgn());
-					trg.Add_bfr_and_clear(tmp_bfr.Mkr_rls());
-				}
-				else if (xnde_tag_id == Xop_xnde_tag_.Tid_xowa_cmd) {
-					gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd xowa_cmd = (gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd)xnde.Xnde_xtn();					
-					trg.Add(xowa_cmd.Xtn_root().Data_mid());// write contents of eval
-				}
-				else
-					trg.Add_mid(src, tkn.Src_bgn(), tkn.Src_end());			// write src from bgn/end
 				break;
 			default:
 				trg.Add_mid(src, tkn.Src_bgn(), tkn.Src_end()); break;			// write src from bgn/end
@@ -87,7 +98,7 @@ class Xot_tmpl_wtr {
 					if (Env_.Mode_testing())
 						throw Err_.err_(exc, Err_string);
 					else
-						ctx.App().Usr_dlg().Warn_many("", "", "failed to write tkn: err=~{0}", Err_string);
+						ctx.App().Usr_dlg().Warn_many("", "", "failed to write tkn: page=~{0} err=~{1}", String_.new_utf8_(ctx.Page().Ttl().Page_db()), Err_string);
 				}
 				break;
 		}

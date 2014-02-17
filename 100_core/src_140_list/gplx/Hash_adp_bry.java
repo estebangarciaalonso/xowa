@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
 public class Hash_adp_bry extends gplx.lists.HashAdp_base implements HashAdp {
-	public Hash_adp_bry(boolean case_match) {
+	Hash_adp_bry(boolean case_match) {
 		this.case_match = case_match;
 		key_ref = new Hash_adp_bry_ref(case_match, null, -1, -1);
-	} 	final boolean case_match; Hash_adp_bry_ref key_ref;
+	} 	private final boolean case_match; private Hash_adp_bry_ref key_ref;
 	public Object Get_by_bry(byte[] src) {return super.Fetch_base(key_ref.Src_all_(src));}
 	public Object Get_by_mid(byte[] src, int bgn, int end) {return super.Fetch_base(key_ref.Src_all_set_(src, bgn, end));}
 	public Hash_adp_bry Add_bry_bry(byte[] key) {this.Add_base(key, key); return this;}
@@ -44,6 +44,8 @@ public class Hash_adp_bry extends gplx.lists.HashAdp_base implements HashAdp {
 	@Override protected void Del_base(Object key) {super.Del_base(key_ref.Src_all_((byte[])key));}
 	@Override protected boolean Has_base(Object key) {return super.Has_base(key_ref.Src_all_((byte[])key));}
 	@Override protected Object Fetch_base(Object key) {return super.Fetch_base(key_ref.Src_all_((byte[])key));}
+	public static Hash_adp_bry cs_() {return new Hash_adp_bry(true);}
+	public static Hash_adp_bry ci_() {return new Hash_adp_bry(false);}
 }
 class Hash_adp_bry_ref {
 	public Hash_adp_bry_ref(boolean case_match, byte[] src, int src_bgn, int src_end) {this.case_match = case_match; this.src = src; this.src_bgn = src_bgn; this.src_end = src_end;}

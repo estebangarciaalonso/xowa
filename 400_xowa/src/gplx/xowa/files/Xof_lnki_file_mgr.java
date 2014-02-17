@@ -47,7 +47,8 @@ public class Xof_lnki_file_mgr {
 				if (fsdb_itm.Orig_wiki() == null) return false;		// itm not found; return now, else null exception later;
 				xfer_itm.Lnki_ext_(fsdb_itm.Lnki_ext());			// WORKAROUND: hacky, but fsdb_itm knows when ogg is ogv whereas xfer_itm does not; so, always override xfer_itm.ext with fsdb's; DATE:2014-02-02
 				xfer_itm.Url_bldr_(url_bldr);						// default Url_bldr for xfer_itm uses @ for thumbtime; switch to -; DATE:2014-02-02
-				//Init_fsdb_by_xfer(fsdb_itm, xfer_itm);				// copy xfer itm props to fsdb_itm; DELETE: DATE:2014-02-04
+				fsdb_itm.Lnki_size_(xfer_itm.Lnki_w(), xfer_itm.Lnki_h());	// NOTE: must overwrite fsdb_itm.size with xfer_itm.size when the same image shows up in multiple sizes on a page; (only one item in wiki_orig); EX: w:Portal:Canada; [[File:Flag of Canada.svg|300x150px]]; [[File:Flag of Canada.svg|23px]]; DATE:2014-02-14
+				//Init_fsdb_by_xfer(fsdb_itm, xfer_itm);			// copy xfer itm props to fsdb_itm; DELETE: was causing redirect to fail DATE:2014-02-04;
 				fsdb_itm.Html__init(wiki.File_mgr().Repo_mgr(), url_bldr, tmp_img_size, exec_tid);
 				xfer_itm.Html_orig_src_(ByteAry_.new_utf8_(fsdb_itm.Html_orig_url().To_http_file_str()));	// always set orig_url; note that w,h are not necessary for orig url; orig url needed for [[Media:]] links; DATE:2014-01-19
 				if (Io_mgr._.ExistsFil(fsdb_itm.Html_url())) {

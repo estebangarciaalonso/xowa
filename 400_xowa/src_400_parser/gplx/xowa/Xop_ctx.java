@@ -21,11 +21,10 @@ import gplx.xowa.xtns.scribunto.*;
 import gplx.xowa.xtns.wdatas.*;
 import gplx.xowa.parsers.logs.*;
 public class Xop_ctx {
-//		public boolean Prepended_nl = false;
 	Xop_ctx(Xow_wiki wiki) {
 		this.app = wiki.App(); this.msg_log = app.Msg_log();
 		this.wiki = wiki;
-		page = new Xoa_page(wiki, Xoa_ttl.parse_(wiki, Xoa_page_.Main_page_bry));
+		page = new Xoa_page(wiki, Xoa_ttl.parse_(wiki, Xoa_page_.Main_page_bry));	// HACK: use "Main_Page" to put in valid page title
 		wkrs = wkrs_(para, apos, xnde, list, lnki, hdr, amp, lnke, tblw, invk);
 		for (Xop_ctx_wkr wkr : wkrs) wkr.Ctor_ctx(this);
 	}
@@ -68,13 +67,12 @@ public class Xop_ctx {
 	public int Tag_idx;
 	public Xop_ctx Clear() {
 		page.Clear();
-		ary = Xop_tkn_itm_.Ary_empty;
-		aryLen = aryMax = 0;
+		stack = Xop_tkn_itm_.Ary_empty;
+		stack_len = stack_max = 0;
 		Tag_idx = 0;
 		app.Wiki_mgr().Wdata_mgr().Clear();
 		if (lst_section_mgr != null) lst_section_mgr.Clear();
 		if (lst_page_regy != null) lst_page_regy.Clear();
-//			this.Prepended_nl = false;
 		tmpl_output = null;
 		return this;
 	}
@@ -121,21 +119,21 @@ public class Xop_ctx {
 		root.Subs_add(sub);
 	}
 	public void Stack_add(Xop_tkn_itm tkn) {
-		int newLen = aryLen + 1;
-		if (newLen > aryMax) {
-			aryMax = newLen * 2;
-			ary = (Xop_tkn_itm[])Array_.Resize(ary, aryMax);
+		int newLen = stack_len + 1;
+		if (newLen > stack_max) {
+			stack_max = newLen * 2;
+			stack = (Xop_tkn_itm[])Array_.Resize(stack, stack_max);
 		}
-		ary[aryLen] = tkn;
+		stack[stack_len] = tkn;
 		cur_tkn_tid = tkn.Tkn_tid();
-		aryLen = newLen;
-	}	private Xop_tkn_itm[] ary = Xop_tkn_itm_.Ary_empty; int aryLen = 0, aryMax = 0;
-	public int Stack_len() {return aryLen;}
-	public Xop_tkn_itm Stack_get_last()		{return aryLen == 0 ? null : ary[aryLen - 1];}
-	public Xop_tkn_itm Stack_get(int i)		{return i < 0 || i >= aryLen ? null : ary[i];}
+		stack_len = newLen;
+	}	private Xop_tkn_itm[] stack = Xop_tkn_itm_.Ary_empty; int stack_len = 0, stack_max = 0;
+	public int Stack_len() {return stack_len;}
+	public Xop_tkn_itm Stack_get_last()		{return stack_len == 0 ? null : stack[stack_len - 1];}
+	public Xop_tkn_itm Stack_get(int i)		{return i < 0 || i >= stack_len ? null : stack[i];}
 	public Xop_tblw_tkn Stack_get_tblw() {
-		for (int i = aryLen - 1; i > -1	; i--) {
-			Xop_tkn_itm tkn = ary[i];
+		for (int i = stack_len - 1; i > -1	; i--) {
+			Xop_tkn_itm tkn = stack[i];
 			switch (tkn.Tkn_tid()) {
 				case Xop_tkn_itm_.Tid_tblw_tb:
 				case Xop_tkn_itm_.Tid_tblw_tr:
@@ -161,14 +159,14 @@ public class Xop_ctx {
 	public static final int Stack_not_found = -1;
 	public boolean Stack_has(int typeId) {return Stack_idx_typ(typeId) != Stack_not_found;}
 	public int Stack_idx_typ(int typeId)	{
-		for (int i = aryLen - 1; i > -1; i--)
-			if (ary[i].Tkn_tid() == typeId)
+		for (int i = stack_len - 1; i > -1; i--)
+			if (stack[i].Tkn_tid() == typeId)
 				return i; 
 		return Stack_not_found;
 	}
 	public int Stack_idx_typ_tblw(int typeId) { // NOTE: separate proc for xnde which may try to pop past a td/th/tc (and thus break a table unnecessarily)
-		for (int i = aryLen - 1; i > -1	; i--) {
-			int itm_typeId = ary[i].Tkn_tid();				
+		for (int i = stack_len - 1; i > -1	; i--) {
+			int itm_typeId = stack[i].Tkn_tid();				
 			switch (itm_typeId) {
 				case Xop_tkn_itm_.Tid_tblw_td:
 				case Xop_tkn_itm_.Tid_tblw_th:
@@ -180,48 +178,48 @@ public class Xop_ctx {
 		}
 		return -1;
 	}
-	public Xop_tkn_itm Stack_get_typ(int typeId) {
-		for (int i = aryLen - 1; i > -1	; i--) {
-			Xop_tkn_itm tkn = ary[i];
-			if (tkn.Tkn_tid() == typeId) return tkn;
+	public Xop_tkn_itm Stack_get_typ(int tid) {
+		for (int i = stack_len - 1; i > -1	; i--) {
+			Xop_tkn_itm tkn = stack[i];
+			if (tkn.Tkn_tid() == tid) return tkn;
 		}
 		return null;
 	}
 	public void Stack_del(Xop_tkn_itm del) {
-		if (aryLen == 0) return;
-		for (int i = aryLen - 1; i > -1; i--) {
-			Xop_tkn_itm tkn = ary[i];
+		if (stack_len == 0) return;
+		for (int i = stack_len - 1; i > -1; i--) {
+			Xop_tkn_itm tkn = stack[i];
 			if (tkn == del) {
-				for (int j = i + 1; j < aryLen; j++) {
-					ary[j - 1] = ary[j];
+				for (int j = i + 1; j < stack_len; j++) {
+					stack[j - 1] = stack[j];
 				}
-				--aryLen;
+				--stack_len;
 				break;
 			}
 		}
 	}
-	public Xop_tkn_itm Stack_pop_til(Xop_root_tkn root, byte[] src, int tilIdx, boolean include, int bgn_pos, int cur_pos) {
-		if (aryLen == 0) return null;
-		int minIdx = include ? tilIdx - 1 : tilIdx;
-		if (minIdx < -1) minIdx = -1;
+	public Xop_tkn_itm Stack_pop_til(Xop_root_tkn root, byte[] src, int til_idx, boolean include, int bgn_pos, int cur_pos) {
+		if (stack_len == 0) return null;
+		int min_idx = include ? til_idx - 1 : til_idx;
+		if (min_idx < -1) min_idx = -1;
 		Xop_tkn_itm rv = null;
-		for (int i = aryLen - 1; i > minIdx; i--) {
-			rv = ary[i];
+		for (int i = stack_len - 1; i > min_idx; i--) {
+			rv = stack[i];
 			Stack_autoClose(root, src, rv, bgn_pos, cur_pos);
 		}
-		Stack_pop_idx(tilIdx);
-		return include ? rv : ary[aryLen]; // if include, return poppedTkn; if not, return tkn before poppedTkn
+		Stack_pop_idx(til_idx);
+		return include ? rv : stack[stack_len]; // if include, return poppedTkn; if not, return tkn before poppedTkn
 	}
-	public Xop_tkn_itm Stack_pop_before(Xop_root_tkn root, byte[] src, int tilIdx, boolean include, int bgn_pos, int cur_pos) {	// used by Xop_tblw_lxr to detect \n| in lnki; seems useful as well
-		if (aryLen == 0) return null;
-		int minIdx = include ? tilIdx - 1 : tilIdx;
-		if (minIdx < -1) minIdx = -1;
+	public Xop_tkn_itm Stack_pop_before(Xop_root_tkn root, byte[] src, int til_idx, boolean include, int bgn_pos, int cur_pos) {	// used by Xop_tblw_lxr to detect \n| in lnki; seems useful as well
+		if (stack_len == 0) return null;
+		int min_idx = include ? til_idx - 1 : til_idx;
+		if (min_idx < -1) min_idx = -1;
 		Xop_tkn_itm rv = null;
-		for (int i = aryLen - 1; i > minIdx; i--) {
-			rv = ary[i];
+		for (int i = stack_len - 1; i > min_idx; i--) {
+			rv = stack[i];
 			Stack_autoClose(root, src, rv, bgn_pos, cur_pos);
 		}
-		return include ? rv : ary[aryLen]; // if include, return poppedTkn; if not, return tkn before poppedTkn
+		return include ? rv : stack[stack_len]; // if include, return poppedTkn; if not, return tkn before poppedTkn
 	}
 	public void Stack_autoClose(Xop_root_tkn root, byte[] src, Xop_tkn_itm tkn, int bgn_pos, int cur_pos) {
 		int src_len = src.length;
@@ -242,12 +240,12 @@ public class Xop_ctx {
 		}
 	}
 	public void Stack_pop_idx(int tilIdx) {
-		aryLen = tilIdx < 0 ? 0 : tilIdx;
-		cur_tkn_tid = aryLen == 0 ? Xop_tkn_itm_.Tid_null : ary[aryLen - 1].Tkn_tid();
+		stack_len = tilIdx < 0 ? 0 : tilIdx;
+		cur_tkn_tid = stack_len == 0 ? Xop_tkn_itm_.Tid_null : stack[stack_len - 1].Tkn_tid();
 	}
 	public void Stack_pop_lnki() {	// used primarily by lnke to remove lnke from stack
-		--aryLen;
-		cur_tkn_tid = aryLen == 0 ? Xop_tkn_itm_.Tid_null : ary[aryLen - 1].Tkn_tid();
+		--stack_len;
+		cur_tkn_tid = stack_len == 0 ? Xop_tkn_itm_.Tid_null : stack[stack_len - 1].Tkn_tid();
 	}
 	public void CloseOpenItms(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		int stack_pos = -1, stack_len = ctx.Stack_len(); boolean stop = false;
@@ -272,7 +270,8 @@ public class Xop_ctx {
 			? tmpl_output
 			: cur
 			;
-		if (!prv_bfr.Match_end_byt(Byte_ascii.NewLine))							// previous char is not \n;
+		if (	prv_bfr != null													// note that prv_bfr can be null when called from a subparse, as in Scrib.Preprocess; EX:w:Portal:Canada; DATE:2014-02-13
+			&& !prv_bfr.Match_end_byt(Byte_ascii.NewLine))						// previous char is not \n;
 			cur.Add_byte(Byte_ascii.NewLine);
 	}
 	public static Xop_ctx new_(Xow_wiki wiki) {
@@ -283,22 +282,23 @@ public class Xop_ctx {
 	public static Xop_ctx new_sub_(Xow_wiki wiki) {
 		Xop_ctx rv = new Xop_ctx(wiki);
 		Xop_ctx ctx = wiki.Ctx();
-		rv.Lnki().File_wkr_(ctx.Lnki().File_wkr());
-		rv.Page().Id_(ctx.Page().Id());
-		rv.Page().Ttl_(ctx.Page().Ttl());	// NOTE: sub_ctx must have same page_ttl as owner; see Lst_pfunc_lst_tst!Fullpagename
-		rv.tab = ctx.Tab();	// NOTE: tab should be same instance across all sub_ctxs; otherwise CallParserFunction will not set DISPLAYTITLE correctly; DATE:2013-08-05
-		rv.tmpl_output = ctx.tmpl_output;
+		new_copy(ctx, rv);
 		return rv;
 	}
 	public static Xop_ctx new_sub_page_(Xow_wiki wiki, Xop_ctx ctx, Hash_adp_bry lst_page_regy) {
 		Xop_ctx rv = new_sub_(wiki);
-		rv.Lnki().File_wkr_(ctx.Lnki().File_wkr());
-		rv.Page().Id_(ctx.Page().Id());
+		new_copy(ctx, rv);
+		rv.lst_page_regy = lst_page_regy;			// NOTE: must share ref for lst only (do not share for sub_(), else stack overflow)
 		rv.Page().Ref_mgr_(ctx.Page().Ref_mgr());	// NOTE: must share ref_mgr, else references in sub_ctx will not be picked up in root_ctx; EX: en.wikisource.org/wiki/Flatland_(first_edition)/This_World; DATE:2014-01-18
-		rv.lst_page_regy = lst_page_regy;
-		rv.tmpl_output = ctx.tmpl_output;
 		return rv;
 	}
+	private static void new_copy(Xop_ctx src, Xop_ctx trg) {
+		trg.Lnki().File_wkr_(src.Lnki().File_wkr());
+		trg.Page().Id_(src.Page().Id());
+		trg.Page().Ttl_(src.Page().Ttl());				// NOTE: sub_ctx must have same page_ttl as owner; see Lst_pfunc_lst_tst!Fullpagename
+		trg.Page().Lnki_list_(src.Page().Lnki_list());	// FIXED: must share lnki_list, else image_map won't render; DATE:2014-02-14
+		trg.tab = src.Tab();							// NOTE: tab should be same instance across all sub_ctxs; otherwise CallParserFunction will not set DISPLAYTITLE correctly; DATE:2013-08-05
+		trg.tmpl_output = src.tmpl_output;
+	}
 	private static final ByteTrieMgr_fast tmpl_prepend_nl_trie = Xop_curly_bgn_lxr.tmpl_bgn_trie_();
-
 }

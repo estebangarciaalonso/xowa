@@ -31,7 +31,7 @@ public class Xows_mgr {
 		page_search = new Xosrh_core(wiki);
 		page_random = new Xows_page_random(wiki);
 		Evt_lang_changed(wiki.Lang());
-	}	private Hash_adp_bry hash = new Hash_adp_bry(false);
+	}	private Hash_adp_bry hash = Hash_adp_bry.ci_();
 	public Xows_page_allpages			Page_allpages() {return page_allpages;} private Xows_page_allpages page_allpages;
 	public Xosrh_core					Page_search() {return page_search;} private Xosrh_core page_search;
 	public Xows_page_random				Page_random() {return page_random;} private Xows_page_random page_random;

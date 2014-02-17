@@ -36,7 +36,7 @@ public class Xow_cfg_wiki_core {
 		Xol_csv_parser csv_parser = Xol_csv_parser._;
 		int nms_len = wiki.Ns_mgr().Count();
 		for (int i = 0; i < nms_len; i++) {
-			Xow_ns ns = wiki.Ns_mgr().Get_by_ord(i);
+			Xow_ns ns = wiki.Ns_mgr().Ords_get_at(i);
 			wtr.Bfr().Add_int_variable(ns.Id()).Add_byte_pipe().Add_int_fixed(ns.Case_match(), 1).Add_byte_pipe();
 			csv_parser.Save(wtr.Bfr(), ns.Name_txt());
 			wtr.Add_nl();
@@ -79,7 +79,7 @@ public class Xow_cfg_wiki_core {
 			if (last) break;
 			++pos;
 		}
-		ns_mgr.Init_done();
+		ns_mgr.Init_w_defaults();
 	}
 	static final String Url_wiki_core_gfs = "wiki_core.gfs";
 	static final String GRP_KEY = "xowa.wiki.cfg.wiki_core";

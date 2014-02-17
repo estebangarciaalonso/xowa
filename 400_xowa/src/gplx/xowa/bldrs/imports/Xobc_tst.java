@@ -211,7 +211,7 @@ public class Xobc_tst {
 		Io_mgr._.SaveFilStr(url, raw);
 		Xodb_page_raw_parser parser = new Xodb_page_raw_parser();
 		Xow_wiki wiki = Xoa_app_fxt.wiki_tst_(app);
-		parser.Load(Gfo_usr_dlg_base.test_(), wiki, new Xow_ns(Xow_ns_.Id_template, Xow_ns_.Case_match_1st, ByteAry_.new_utf8_("Template"), false), new Io_url[] {url}, 1 * Io_mgr.Len_kb);
+		parser.Load(Gfo_usr_dlg_base.test_(), wiki, new Xow_ns(Xow_ns_.Id_template, Xow_ns_case_.Id_1st, ByteAry_.new_utf8_("Template"), false), new Io_url[] {url}, 1 * Io_mgr.Len_kb);
 		ListAdp actl = ListAdp_.new_();
 		Xodb_page page = new Xodb_page();
 		while (parser.Read(page)) {

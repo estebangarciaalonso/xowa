@@ -17,10 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public interface Xow_page_fetcher {
+	Xow_page_fetcher Wiki_(Xow_wiki v);
 	byte[] Fetch(int ns_id, byte[] ttl);
 }
 class Xow_page_fetcher_wiki implements Xow_page_fetcher {
-	public void Wiki_(Xow_wiki v) {this.wiki = v;} private Xow_wiki wiki;
+	public Xow_page_fetcher Wiki_(Xow_wiki v) {this.wiki = v; return this;} private Xow_wiki wiki;
 	public byte[] Fetch(int ns_id, byte[] ttl_bry) {
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ns_id, ttl_bry);
 		Xoa_page page = wiki.Data_mgr().Get_page(ttl, false);	// go through data_mgr in case of redirects
@@ -28,6 +29,7 @@ class Xow_page_fetcher_wiki implements Xow_page_fetcher {
 	}
 }
 class Xow_page_fetcher_mok implements Xow_page_fetcher {
+	public Xow_page_fetcher Wiki_(Xow_wiki v) {return this;}
 	public void Clear() {pages.Clear();}	private HashAdp pages = HashAdp_.new_();
 	public void Add(int ns_id, byte[] ttl, byte[] text) {
 		Xodb_page page = new Xodb_page().Ns_id_(ns_id).Ttl_wo_ns_(ttl).Text_(text);

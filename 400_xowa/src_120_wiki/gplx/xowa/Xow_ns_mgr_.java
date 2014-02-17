@@ -26,8 +26,7 @@ public class Xow_ns_mgr_ {
 			.Add_new(gplx.xowa.xtns.scribunto.Scrib_core_.Ns_id_module, gplx.xowa.xtns.scribunto.Scrib_core_.Ns_name_module).Add_new(gplx.xowa.xtns.scribunto.Scrib_core_.Ns_id_module_talk, gplx.xowa.xtns.scribunto.Scrib_core_.Ns_name_module_talk)
 			.Add_defaults()
 			;
-		rv.Ords_sort();
-		rv.Type_is_test = true;
+		rv.Init();
 		return rv;
 	}
 	public static void rebuild_(Xol_lang lang, Xow_ns_mgr ns_mgr) {
@@ -36,7 +35,7 @@ public class Xow_ns_mgr_ {
 		for (int i = 0; i < ns_names_len; i++) {
 			Xow_ns ns_name = ns_names.Get_at(i);
 			int ns_id = ns_name.Id();
-			Xow_ns ns = ns_mgr.Get_by_id(ns_id);
+			Xow_ns ns = ns_mgr.Ids_get_or_null(ns_id);
 			ns.Name_bry_(ns_name.Name_bry());
 		}
 		ns_names = lang.Ns_aliases();
@@ -44,8 +43,8 @@ public class Xow_ns_mgr_ {
 		for (int i = 0; i < ns_names_len; i++) {
 			Xow_ns ns_name = ns_names.Get_at(i);
 			int ns_id = ns_name.Id();
-			ns_mgr.Add_alias(ns_id, ns_name.Name_str());
+			ns_mgr.Aliases_add(ns_id, ns_name.Name_str());
 		}
-		ns_mgr.Ords_sort();
+		ns_mgr.Init();
 	}
 }

@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 public class Gallery_xtn_mgr extends Xox_mgr_base {
 	@Override public byte[] Xtn_key() {return XTN_KEY;} public static final byte[] XTN_KEY = ByteAry_.new_ascii_("gallery");
+	@Override public Xox_mgr Clone_new() {return new Gallery_xtn_mgr();}
 	public Gallery_parser Parser() {return parser;} private Gallery_parser parser;
 	@Override public void Xtn_init_by_wiki(Xow_wiki wiki) {
 		parser = new Gallery_parser();

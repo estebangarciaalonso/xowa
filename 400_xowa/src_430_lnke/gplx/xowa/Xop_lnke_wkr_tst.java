@@ -130,7 +130,7 @@ public class Xop_lnke_wkr_tst {
 	}
 	@Test  public void Relative_internal() {
 		fxt.Init_xwiki_add_user_("en.wikipedia.org");
-		fxt.Test_parse_page_wiki_str("[//en.wikipedia.org/wiki Wikipedia]", "<a href=\"/site/en.wikipedia.org/wiki/Main_Page\">Wikipedia</a>");
+		fxt.Test_parse_page_wiki_str("[//en.wikipedia.org/wiki Wikipedia]", "<a href=\"/site/en.wikipedia.org/wiki/\">Wikipedia</a>");
 	}
 	@Test  public void Relative_w_category() {	// EX: [//commons.wikimedia.org/wiki/Category:Diomedeidae A]
 		fxt.Init_xwiki_add_user_("en.wikipedia.org");

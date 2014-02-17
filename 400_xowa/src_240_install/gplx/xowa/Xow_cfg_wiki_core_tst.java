@@ -89,7 +89,7 @@ class Xow_cfg_wiki_core_fxt {
 	}
 	public void Save_tst(String bldr_version, String main_page, String siteinfo_misc, int ns_user_case_match, String ns_user_name, String expd) {
 		wiki.Props().Bldr_version_(ByteAry_.new_ascii_(bldr_version)).Main_page_(ByteAry_.new_ascii_(main_page)).Siteinfo_misc_(ByteAry_.new_ascii_(siteinfo_misc));
-		Xow_ns ns_user = wiki.Ns_mgr().Get_by_id(Xow_ns_.Id_user);
+		Xow_ns ns_user = wiki.Ns_mgr().Ids_get_or_null(Xow_ns_.Id_user);
 		ns_user.Case_match_((byte)ns_user_case_match); ns_user.Name_bry_(ByteAry_.new_ascii_(ns_user_name));
 		Tfds.Eq_str_lines(expd, String_.new_ascii_(wiki.Cfg_wiki_core().Build_gfs()));
 	}
@@ -97,13 +97,13 @@ class Xow_cfg_wiki_core_fxt {
 		wiki.Cfg_wiki_core().Load(raw);
 		Tfds.Eq_str_lines(raw, String_.new_ascii_(wiki.Cfg_wiki_core().Build_gfs()));
 	}
-	public Xow_ns ns_(int id, boolean case_match, String name) {return new Xow_ns(id, case_match ? Xow_ns_.Case_match_all : Xow_ns_.Case_match_1st, ByteAry_.new_utf8_(name), false);}
+	public Xow_ns ns_(int id, boolean case_match, String name) {return new Xow_ns(id, case_match ? Xow_ns_case_.Id_all : Xow_ns_case_.Id_1st, ByteAry_.new_utf8_(name), false);}
 	public void Load_tst(String raw, Xow_ns... expd_ary) {
 		wiki.Cfg_wiki_core().Load(raw);
 		int expd_len = expd_ary.length;
 		for (int i = 0; i < expd_len; i++) {
 			Xow_ns expd = expd_ary[i];
-			Xow_ns actl = wiki.Ns_mgr().Get_by_id(expd.Id());
+			Xow_ns actl = wiki.Ns_mgr().Ids_get_or_null(expd.Id());
 			Tfds.Eq(expd.Case_match(), actl.Case_match(), Int_.XtoStr(expd.Id()));
 			Tfds.Eq(expd.Name_str(), actl.Name_str(), Int_.XtoStr(expd.Id()));
 		}

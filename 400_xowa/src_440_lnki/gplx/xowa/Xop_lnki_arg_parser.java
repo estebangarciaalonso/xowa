@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public class Xop_lnki_arg_parser {
 	private static final byte Key_dim_num = 0, Key_dim_x = 1, Key_dim_px = 2, Key_space = 3;
-	private ByteTrieMgr_fast key_trie = ByteTrieMgr_fast.cs_(); private int key_trie_max;
+	private ByteTrieMgr_fast key_trie = ByteTrieMgr_fast.cs_();
 	private ByteAryBfr int_bfr = ByteAryBfr.reset_(16);
 	public void Evt_lang_changed(Xol_lang lang) {
 		ByteAryBfr tmp_bfr = int_bfr;
@@ -60,7 +60,6 @@ public class Xop_lnki_arg_parser {
 	}
 	public byte Identify_tid(byte[] src, int bgn, int end) {
 		int len = end - bgn;
-		if (len > key_trie_max) return Tid_caption;				// too long for any key in size_trie; return caption
 		ByteVal val = (ByteVal)key_trie.MatchAtCur(src, bgn, end);
 		if (val != null && len == key_trie.Match_pos() - bgn)	// check for false matches; EX: alternate= should not match alt=
 			return val.Val();									// match; return val;
@@ -103,8 +102,6 @@ public class Xop_lnki_arg_parser {
 	private void Init_key_trie(byte[] key, byte v) {
 		ByteVal val = ByteVal.new_(v);
 		key_trie.Add(key, val);
-		int key_len = key.length;
-		if (key_len > key_trie_max) key_trie_max = key_len;
 	}
 	private void Init_size_trie(ByteAryBfr tmp_bfr, Xol_kwd_grp list) {
 		if (list == null && Env_.Mode_testing()) return;	// TEST: allows partial parsing of $magicWords
@@ -118,7 +115,6 @@ public class Xop_lnki_arg_parser {
 		ByteRef rslt = ByteRef.zero_();
 		for (int i = 0; i < words_len; i++) {
 			byte[] word_bry = Xol_kwd_parse_data.Strip(tmp_bfr, words[i].Bry(), rslt);			
-			if (word_bry.length + 5 > key_trie_max) key_trie_max = word_bry.length + 5; 
 			size_trie.Add(word_bry, ByteVal.new_(Key_dim_px));
 			bwd_trie.Add(word_bry, ByteVal.new_(Tid_dim));
 		}

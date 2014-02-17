@@ -35,6 +35,12 @@ public class Xowh_sidebar_mgr implements GfoInvkAble {
 			html_bry = ByteAry_.Empty;
 		}
 	}
+	private static boolean Ignore(byte[] wiki, byte[] item) {
+		return 
+			(	ByteAry_.Eq(wiki, Ignore_wiki_ess)			// occurs in 2014-02-03 dump; ignored by MW
+			&&	ByteAry_.Eq(item, Ignore_item_ess_random)
+			);
+	}	private static byte[] Ignore_wiki_ess = ByteAry_.new_ascii_("es.wikisource.org"), Ignore_item_ess_random = ByteAry_.new_utf8_("special:Random/Página djvu");
 	public void Parse(ByteAryBfr tmp_bfr, byte[] src) {
 		byte[][] lines = ByteAry_.Split(src, Byte_ascii.NewLine);
 		int lines_len = lines.length;
@@ -59,28 +65,14 @@ public class Xowh_sidebar_mgr implements GfoInvkAble {
 				grps.Add(cur_grp);
 			}
 			else {
-				if (pipe_pos == ByteAry_.NotFound) {	// not of format of "href|main"; (EX: "href_only")
-					wiki.App().Usr_dlg().Warn_many(GRP_KEY, "parse.line.missing_text", "pipe missing; only one word is available: ~{0}", String_.new_utf8_(bry));
+				if (pipe_pos == ByteAry_.NotFound) {		// not of format of "href|main"; (EX: "href_only")
+					if (!Ignore(wiki.Domain_bry(), bry))	// suppress warning if ignored; DATE:2014-02-11
+						wiki.App().Usr_dlg().Warn_many(GRP_KEY, "parse.line.missing_text", "sidebar item is missing pipe; only href is available; item will be hidden: item=~{0}", String_.new_utf8_(bry));
 					continue;
 				}
 				byte[] href_key = ByteAry_.Mid(bry, 0, pipe_pos);
 				byte[] href_val = Resolve_key(href_key);
 				href_val = link_parser.Parse(tmp_bfr, tmp_url, wiki, href_val, ByteAry_.Empty);
-//					Xoa_ttl href_ttl = Xoa_ttl.parse_(wiki, href_val);
-//					if (href_ttl != null && href_ttl.Wik_bgn() != -1) {	// NOTE: some href_vals can be invalid titles; EX: http://a.org/possibly_invalid_chars
-//						Xop_link_parser.Link_add(tmp_bfr, Segs_bry, href_ttl.Wik_itm().Domain(), href_ttl.Page_db());
-//						href_val = tmp_bfr.XtoAryAndClear();
-//					}
-//					else {
-//						app.Href_parser().Parse(tmp_href, href_val, wiki, Xoa_page_.Main_page_bry);
-//						switch (tmp_href.Tid()) {
-//							case Xoh_href.Tid_http:
-//								break;
-//							default:
-//								href_val = ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, href_val);	// href_key is actual ttl, not msg_key										
-//								break;
-//						}
-//					}
 				cur_itm.Href_(href_val);
 				if (cur_grp == null)	// handle null_ref; should only occur for tests
 					grps.Add(cur_itm);

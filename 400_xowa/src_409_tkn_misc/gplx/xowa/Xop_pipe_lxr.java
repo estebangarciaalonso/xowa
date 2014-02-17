@@ -41,7 +41,7 @@ class Xop_pipe_lxr implements Xop_lxr {
 				return cur_pos;
 			case Xop_tkn_itm_.Tid_tblw_tb:
 			case Xop_tkn_itm_.Tid_tblw_tr:
-				rv = Xop_tblw_lxr_ws.Make(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, Xop_tblw_wkr.Tblw_type_td);
+				rv = Xop_tblw_lxr_ws.Make(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, Xop_tblw_wkr.Tblw_type_td, false);
 				if (rv == Xop_tblw_lxr_ws.Tblw_ws_cell_pipe) {
 					ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, cur_pos));
 					return cur_pos;
@@ -51,7 +51,7 @@ class Xop_pipe_lxr implements Xop_lxr {
 			case Xop_tkn_itm_.Tid_tblw_td:
 			case Xop_tkn_itm_.Tid_tblw_th:
 			case Xop_tkn_itm_.Tid_tblw_tc:
-				rv = Xop_tblw_lxr_ws.Make(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, Xop_tblw_wkr.Tblw_type_td);
+				rv = Xop_tblw_lxr_ws.Make(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, Xop_tblw_wkr.Tblw_type_td, false);
 				if (rv != Xop_tblw_lxr_ws.Tblw_ws_cell_pipe) return rv;
 
 				if (ctx.Tblw().Cell_pipe_seen()) {

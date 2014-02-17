@@ -37,7 +37,7 @@ public class Xoctg_idx_mgr implements GfoInvkAble {
 			Index_itm(ctg, src, pipe_pos_cur + 1, len);	// +1 to skip pipe
 			pipe_pos_prv = pipe_pos_cur;
 		}
-		pipe_pos_cur = ByteAry_.FindBwd(src, Byte_ascii.Pipe, len - 2, 0); if (pipe_pos_cur == ByteAry_.NotFound) pipe_pos_cur = 0; // 1 entry only; will not have preceding pipe
+		pipe_pos_cur = ByteAry_.FindBwd(src, Byte_ascii.Pipe, len - 1, 0); if (pipe_pos_cur == ByteAry_.NotFound) pipe_pos_cur = 0; // 1 entry only; will not have preceding pipe
 		if (pipe_pos_cur != pipe_pos_prv)	// if last itm was not indexed, index it
 			Index_itm(ctg, src, pipe_pos_cur + 1, len);
 	}
@@ -82,7 +82,7 @@ public class Xoctg_idx_mgr implements GfoInvkAble {
 		int comp_prv = bmk_comp, comp_cur = Int_.MinValue; int pos_cur = bmk_bgn;
 		tmp_prv_itm.Parse(fld_rdr.Pos_(pos_cur), pos_cur);	// fill prv_itm to whatever binary search found
 		while (true) {
-			int itm_bgn = dir_fwd ? ByteAry_.FindFwd(src, Byte_ascii.Pipe, pos_cur, src_len) : ByteAry_.FindBwd(src, Byte_ascii.Pipe, pos_cur - 1, 0);	// -1 to skip pipe
+			int itm_bgn = dir_fwd ? ByteAry_.FindFwd(src, Byte_ascii.Pipe, pos_cur, src_len) : ByteAry_.FindBwd(src, Byte_ascii.Pipe, pos_cur);
 			if (itm_bgn == ByteAry_.NotFound) {			// stop: at first && searched bwd; note that at last && searched fwd will never return ByteAry_.NotFound b/c all srcs are terminated with |
 				if (!arg_is_from)	return null;		// arg is until and nothing found; return null: EX: range of B-Y and find of until=A; no results
 				else				break;				// arg is from; stop loop; (will use first item)
@@ -113,7 +113,7 @@ public class Xoctg_idx_mgr implements GfoInvkAble {
 			}
 			tmp_pos = itm_0.Pos();
 			if (!arg_is_from && ByteAry_.Compare(find, itm_0.Sortkey()) != CompareAble_.More) {	// "until" means do *not* include last; go back one more; note: only do this logic if find is either < or == to slot; EX: find=AM && slot=AL; do not go back one more
-				tmp_pos = ByteAry_.FindBwd(src, Byte_ascii.Pipe, tmp_pos - 2, 0);	// -1 to position at pipe; -1 to position before pipe
+				tmp_pos = ByteAry_.FindBwd(src, Byte_ascii.Pipe, tmp_pos - 1);	// -1 to position before pipe
 				if (tmp_pos == ByteAry_.NotFound) return;	// already 1st and nothing found
 				else tmp_pos++;
 			}
@@ -124,7 +124,7 @@ public class Xoctg_idx_mgr implements GfoInvkAble {
 			Xoctg_view_itm itm = new Xoctg_view_itm().Parse(fld_rdr.Pos_(tmp_pos), tmp_pos);
 			rv.Add(itm);
 			if (!arg_is_from && tmp_pos == 0) break;	// 1st item and moving bwd; stop; note that 1st item does not have preceding |
-			tmp_pos = arg_is_from ? ByteAry_.FindFwd(src, Byte_ascii.Pipe, tmp_pos, src_len) : ByteAry_.FindBwd(src, Byte_ascii.Pipe, tmp_pos - 2, 0);	// -2 to position before pipe
+			tmp_pos = arg_is_from ? ByteAry_.FindFwd(src, Byte_ascii.Pipe, tmp_pos, src_len) : ByteAry_.FindBwd(src, Byte_ascii.Pipe, tmp_pos - 1);	// -1 to position before pipe
 			if (tmp_pos == ByteAry_.NotFound) {
 				if (arg_is_from)	// moving fwd and no pipe found; exit;
 					break;

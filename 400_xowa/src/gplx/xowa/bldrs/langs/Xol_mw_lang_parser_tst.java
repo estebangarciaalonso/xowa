@@ -218,7 +218,7 @@ class Xol_mw_lang_parser_fxt {
 	}
 	public Xol_mw_lang_parser_fxt Tst_ns_lkp(String key_str, int id) {
 		byte[] key = ByteAry_.new_utf8_(key_str);
-		Xow_ns ns = (Xow_ns)wiki.Ns_mgr().Trie_match_exact(key, 0, key.length);
+		Xow_ns ns = (Xow_ns)wiki.Ns_mgr().Names_get_or_null(key, 0, key.length);
 		int actl = ns == null ? Xow_ns_.Id_null : ns.Id();
 		Tfds.Eq(id, actl);
 		return this;

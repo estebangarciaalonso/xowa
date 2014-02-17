@@ -22,8 +22,8 @@ public class Xop_hdr_wkr_tst {
 	@Test  public void H2()							{fxt.Test_parse_page_wiki_str("==a=="				, "<h2>a</h2>\n");}
 	@Test  public void H3()							{fxt.Test_parse_page_wiki_str("===a==="				, "<h3>a</h3>\n");}
 	@Test  public void H6_limit()					{fxt.Test_parse_page_wiki_str("=======a======="		, "<h6>=a=</h6>\n");}
-	@Test  public void Mismatch_bgn()				{fxt.Test_parse_page_wiki_str("=====a=="				, "<h2>===a</h2>\n");}
-	@Test  public void Mismatch_end()				{fxt.Test_parse_page_wiki_str("==a====="				, "<h2>a===</h2>\n");}
+	@Test  public void Mismatch_bgn()				{fxt.Test_parse_page_wiki_str("=====a=="			, "<h2>===a</h2>\n");}
+	@Test  public void Mismatch_end()				{fxt.Test_parse_page_wiki_str("==a====="			, "<h2>a===</h2>\n");}
 	@Test  public void Dangling()					{fxt.Test_parse_page_wiki_str("==a"					, "==a");}
 	@Test  public void Comment_bgn()				{fxt.Test_parse_page_all_str ("<!--b-->==a=="		, "<h2>a</h2>\n");}
 	@Test  public void Comment_end()				{fxt.Test_parse_page_all_str ("==a==<!--b-->"		, "<h2>a</h2>\n");}
@@ -96,5 +96,14 @@ public class Xop_hdr_wkr_tst {
 		,	""
 		));
 		fxt.Hctx().Toc_show_(false);
+	}
+	@Test  public void Hdr_inside_dangling_tmpl_fix() {	// PURPOSE: one-off fix to handle == inside dangling tmpl; DATE:2014-02-11
+		fxt.Test_parse_page_all_str("{{a|}\n==b=="
+		, String_.Concat_lines_nl_skipLast
+		(	"{{a|}"
+		,	""
+		,	"<h2>b</h2>"
+		,	""
+		));
 	}
 }

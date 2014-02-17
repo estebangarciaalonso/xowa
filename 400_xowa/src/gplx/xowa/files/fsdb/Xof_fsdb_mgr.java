@@ -88,10 +88,12 @@ class Xof_fsdb_mgr_utl {
 			else {
 				itm.Rslt_bin_(Xof_bin_wkr_.Tid_not_found);
 				fsdb_mgr.Reg_insert(itm, orig_wiki, Xof_wiki_orig_wkr_.Tid_missing_bin);
+//					gplx.xowa.files.gui.Js_img_mgr.Update_img_missing(win_wtr, itm.Html_uid());
 			}
 		}
 		else {
 			fsdb_mgr.Reg_insert(itm, Xof_repo_itm.Repo_unknown, Xof_wiki_orig_wkr_.Tid_missing_qry);
+//				gplx.xowa.files.gui.Js_img_mgr.Update_img_missing(win_wtr, itm.Html_uid());
 		}
 	}
 	private Xof_img_size img_size = new Xof_img_size();

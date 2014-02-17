@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.ios; import gplx.*;
-public class Io_stream_ {
+public class Io_stream_ {	// SERIALIZED
 	public static final byte Tid_null = 0, Tid_file = 1, Tid_zip = 2, Tid_gzip = 3, Tid_bzip2 = 4;
 	public static final String Ext_zip = ".zip", Ext_gz = ".gz", Ext_bz2 = ".bz2";
 }

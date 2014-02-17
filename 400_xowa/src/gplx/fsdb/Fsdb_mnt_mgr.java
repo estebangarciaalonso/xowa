@@ -31,7 +31,7 @@ public class Fsdb_mnt_mgr implements GfoInvkAble {
 			Io_url abc_url = cur_dir.GenSubFil_nest(itm.Url(), "fsdb.abc.sqlite3");
 			ary[i] = new Fsdb_db_abc_mgr(this).Init(abc_url.OwnerDir());
 		}
-		insert_to_mnt = tbl_cfg.Select_as_int("core", "mnt.insert_idx");
+		insert_to_mnt = tbl_cfg.Select_as_int_or_fail("core", "mnt.insert_idx");
 	}
 	public int Insert_to_mnt() {return insert_to_mnt;} public Fsdb_mnt_mgr Insert_to_mnt_(int v) {insert_to_mnt = v; return this;} private int insert_to_mnt = Mnt_idx_user;
 	public int Abc_mgr_len() {return ary == null ? 0 : ary.length;}
@@ -39,11 +39,10 @@ public class Fsdb_mnt_mgr implements GfoInvkAble {
 	private Fsdb_mnt_itm[] Db_load_or_make(Io_url cur_dir) {
 		BoolRef created = BoolRef.n_();
 		provider = Sqlite_engine_.Provider_load_or_make_(cur_dir.GenSubFil("wiki.mnt.sqlite3"), created);
-		tbl_cfg = new Fsdb_cfg_tbl(provider, created.Val());
+		tbl_cfg = new Fsdb_cfg_tbl_sql().Ctor(provider, created.Val());
 		if (created.Val()) {
 			Fsdb_mnt_tbl.Create_table(provider);
 			Fsdb_mnt_tbl.Insert(provider, Mnt_idx_main, "fsdb.main", "fsdb.main");
-			Fsdb_mnt_tbl.Insert(provider, Mnt_idx_update, "fsdb.update_00", "fsdb.update_00");
 			Fsdb_mnt_tbl.Insert(provider, Mnt_idx_user, "fsdb.user", "fsdb.user");
 			tbl_cfg.Insert("core", "mnt.insert_idx", Int_.XtoStr(Mnt_idx_user));
 		}
@@ -109,5 +108,5 @@ public class Fsdb_mnt_mgr implements GfoInvkAble {
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}	private static final String Invk_bin_db_max_in_mb_ = "bin_db_max_in_mb_", Invk_insert_to_mnt_ = "insert_to_mnt_", Invk_insert_to_bin_ = "insert_to_bin_";
-	public static final int Mnt_idx_main = 0, Mnt_idx_update = 1, Mnt_idx_user = 2, Insert_to_bin_null = -1;
+	public static final int Mnt_idx_main = 0, Mnt_idx_user = 1, Insert_to_bin_null = -1;
 }

@@ -24,7 +24,7 @@ public class Xtn_templateData_nde implements Xox_xnde, Xop_xnde_atr_parser {
 	}
 	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		bfr.Add(Xoh_consts.Pre_bgn_overflow);
-		Xoh_html_wtr.Bfr_escape(bfr, src, xnde.Tag_open_end(), xnde.Tag_close_bgn(), ctx.App(), true, false);
+		Xox_mgr_base.Xtn_write_escape(app, bfr, src, xnde.Tag_open_end(), xnde.Tag_close_bgn());
 		bfr.Add(Xoh_consts.Pre_end);
 	}
 }

@@ -15,12 +15,12 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.files.qrys.dirs; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.qrys.*;
-class Xoq_fil_mgr {
-	private OrderedHash hash = OrderedHash_.new_bry_();
-	public boolean Case_match() {return case_match;} public Xoq_fil_mgr Case_match_(boolean v) {case_match = v; return this;} private boolean case_match;
-	public boolean Has(byte[] lnki_ttl) {return hash.Has(key_bld(lnki_ttl));}
-	public Xoq_fil Get_by_ttl(byte[] lnki_ttl) {return (Xoq_fil)hash.Fetch(key_bld(lnki_ttl));}
-	public void Add(Xoq_fil fil) {hash.Add(key_bld(fil.Lnki_ttl()), fil);}
-	private byte[] key_bld(byte[] v) {return case_match ? v : ByteAry_.Lower_ascii(v);}
+package gplx.xowa; import gplx.*;
+public class Xow_ns_case_ {
+	public static final byte Id_all = 0, Id_1st = 1;
+	public static byte parse_(String s) {
+		if		(String_.Eq(s, "first-letter"))		return Id_1st;
+		else if	(String_.Eq(s, "case-sensitive"))	return Id_all;
+		else										throw Err_mgr._.unhandled_(s);
+	}
 }

@@ -35,7 +35,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 		qids_cache.Clear();
 		pids_cache.Clear();
 		doc_cache.Clear();
-	}	private Hash_adp_bry qids_cache = new Hash_adp_bry(true), pids_cache = new Hash_adp_bry(true);
+	}	private Hash_adp_bry qids_cache = Hash_adp_bry.cs_(), pids_cache = Hash_adp_bry.cs_();
 	public void Qids_add(ByteAryBfr bfr, byte[] lang_key, byte wiki_tid, byte[] ns_num, byte[] ttl, byte[] qid) {
 		Xob_bz2_file.Build_alias_by_lang_tid(bfr, lang_key, wiki_tid_ref.Val_(wiki_tid));
 		byte[] qids_key = bfr.Add_byte(Byte_ascii.Pipe).Add(ns_num).Add_byte(Byte_ascii.Pipe).Add(ttl).XtoAry();
@@ -131,12 +131,23 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 							if (label != null)	// if label is still not found, don't add null reference
 								bfr.Add(label);
 							break;
-						case Wdata_prop_itm_base_.Val_tid_globecoordinate:
-							byte[][] flds = ByteAry_.Split(prop.Val(), Byte_ascii.Pipe);
+						case Wdata_prop_itm_base_.Val_tid_globecoordinate: {
+							byte[][] flds = ByteAry_.Split(prop.Val(), Wdata_prop_itm_core.Prop_dlm);
 							bfr.Add(flds[0]);
 							bfr.Add_byte(Byte_ascii.Comma).Add_byte(Byte_ascii.Space);
 							bfr.Add(flds[1]);
 							break;
+						}
+						case Wdata_prop_itm_base_.Val_tid_quantity: {
+							byte[][] flds = ByteAry_.Split(prop.Val(), Wdata_prop_itm_core.Prop_dlm);
+							byte[] amount_bry = flds[0];
+							int val = ByteAry_.X_to_int_or(amount_bry, Ignore_comma, 0, amount_bry.length, 0);
+							Xol_lang lang = app.Lang_mgr().Get_by_key(lang_key);
+							bfr.Add(lang.Num_fmt_mgr().Fmt(val));		// amount; EX: 1,234
+							bfr.Add(Bry_quantity_margin_of_error);		// symbol: EX: ±
+							bfr.Add(flds[1]);							// unit;   EX: 1
+							break;
+						}
 						default: throw Err_.unhandled(prop.Val_tid_byte());
 					}
 					break;
@@ -144,6 +155,8 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 			}
 		}
 	}
+	private static final byte[] Ignore_comma = new byte[]{Byte_ascii.Comma};
+	private static final byte[] Bry_quantity_margin_of_error = ByteAry_.new_utf8_("±");
 	public static final byte[] Bry_q = ByteAry_.new_ascii_("q"), Prop_tmpl_val_dlm = ByteAry_.new_ascii_(", ");
 	public void Write_json_as_html(ByteAryBfr bfr, byte[] data_raw) {
 		bfr.Add(Xoh_consts.Span_bgn_open).Add(Xoh_consts.Id_atr).Add(Html_json_id).Add(Xoh_consts.__end_quote);	// <span id="xowa-wikidata-json">

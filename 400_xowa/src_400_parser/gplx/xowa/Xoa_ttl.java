@@ -82,11 +82,11 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 	}
 	public byte[] Page_txt_wo_qargs() {	// assume that no Special page has non-ascii characters
 		int full_txt_len = full_txt.length;
-		int ques_pos = ByteAry_.FindBwd(full_txt, Byte_ascii.Question, full_txt_len - 1, page_bgn);
+		int ques_pos = ByteAry_.FindBwd(full_txt, Byte_ascii.Question, full_txt_len, page_bgn);
 		return ByteAry_.Mid(full_txt, page_bgn, ques_pos == ByteAry_.NotFound ? full_txt_len : ques_pos);
 	}
 	public static Xoa_ttl parse_(Xow_wiki wiki, int ns_id, byte[] ttl) {
-		Xow_ns ns = wiki.Ns_mgr().Get_by_id(ns_id);
+		Xow_ns ns = wiki.Ns_mgr().Ids_get_or_null(ns_id);
 		byte[] raw = ByteAry_.Add(ns.Name_db_w_colon(), ttl);
 		return new_(wiki, wiki.App().Msg_log(), raw, raw, 0, raw.length);
 	}
@@ -121,7 +121,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 		bfr.Clear();
 		if (end - bgn == 0) {msg_log.Add_itm_none(Xop_ttl_log.Len_0, src, bgn, bgn); return false;}
 		this.raw = raw;
-		Xow_ns_mgr nsMgr = wiki.Ns_mgr(); ns = nsMgr.Ns_main();
+		Xow_ns_mgr ns_mgr = wiki.Ns_mgr(); ns = ns_mgr.Ns_main();
 		boolean add_ws = false, ltr_bgn_reset = false;
 		int ltr_bgn = -1, txt_bb_len = 0, colon_count = 0; bfr.Clear();
 		ByteTrieMgr_slim amp_trie = wiki.App().Amp_trie();
@@ -147,7 +147,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 						}
 						boolean part_found = false;
 						if (colon_count == 0) {// 1st colon; 
-							Object o = nsMgr.Trie_match_exact(bfr.Bry(), ltr_bgn, txt_bb_len);
+							Object o = ns_mgr.Names_get_or_null(bfr.Bry(), ltr_bgn, txt_bb_len);
 							if (o == null) {	// not ns; try alias
 								wik_itm = wiki.Xwiki_mgr().Get_by_mid(bfr.Bry(), ltr_bgn, txt_bb_len); // check if wiki; note: wiki is not possible for other colons
 								if (wik_itm != null) {
@@ -342,7 +342,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 //										part_found = true;
 //									}
 //									else {	// not wiki; check if ns; note: if wiki, don't try to extract ns; EX: "fr:Aide:test"
-//										o = nsMgr.Trie_match_exact(bfr.Bfr(), ltr_bgn, txt_bb_len);
+//										o = ns_mgr.Trie_match_exact(bfr.Bfr(), ltr_bgn, txt_bb_len);
 //										if (o != null) {
 //											ns = (Xow_ns)o;
 //											ns_bgn = ltr_bgn;
@@ -426,7 +426,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 //				this.raw = cur_page_ttl == null ? ByteAry_.Empty : ByteAry_.Copy(cur_page_ttl.Page_txt());	// set raw to current page ttl; note that this is needed for lnki_caption to show correctly (otherwise lnki_caption will be blank); this is a quasi-hack as it depends on the ttl of the current page, but passing in another argument feels sloppy
 //				bfr.Add(this.raw);
 //			}
-		if (	ns.Case_match() == Xow_ns_.Case_match_1st
+		if (	ns.Case_match() == Xow_ns_case_.Id_1st
 			&&	wik_bgn == -1 ) {	// do not check case if xwiki; EX: "fr:" would have a wik_bgn of 0 (and a wik_end of 3); "A" (and any non-xwiki ttl) would have a wik_bgn == -1
 			byte char_1st = full_txt[page_bgn];
 			int char_1st_len = gplx.intl.Utf8_.CharLen(char_1st);
@@ -448,7 +448,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 			else
 				full_txt = wiki.Lang().Case_mgr().Case_reuse_upper(full_txt, page_bgn, page_end);
 		}
-		Xow_ns tors_ns = ns.Id_talk() ? nsMgr.Get_by_ord(ns.Ord_subj_id()) : nsMgr.Get_by_ord(ns.Ord_talk_id());
+		Xow_ns tors_ns = ns.Id_talk() ? ns_mgr.Ords_get_at(ns.Ord_subj_id()) : ns_mgr.Ords_get_at(ns.Ord_talk_id());
 		tors_txt = tors_ns.Name_txt_w_colon();
 		return true;
 	}		

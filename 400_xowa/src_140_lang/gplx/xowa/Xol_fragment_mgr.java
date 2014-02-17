@@ -61,7 +61,13 @@ public class Xol_fragment_mgr implements GfoInvkAble {
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_novalue)
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_somevalue)
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_links_wiki)
+			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_links_wiktionary)
+			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_links_wikisource)
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_links_wikivoyage)
+			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_links_wikiquote)
+			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_links_wikibooks)
+			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_links_wikiversity)
+			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_links_wikinews)
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_links_special)
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_plus)
 			, Html_js_wikidata_val(wdata_wiki, Xol_msg_itm_.Id_xowa_wikidata_minus)
@@ -141,7 +147,13 @@ public class Xol_fragment_mgr implements GfoInvkAble {
 		,	"    'novalue'            : '~{novalue}',"
 		,	"    'somevalue'          : '~{somevalue}',"
 		,	"    'links-wiki'         : '~{links_wiki}',"
+		,	"    'links-wiktionary'   : '~{links_wiktionary}',"
+		,	"    'links-wikisource'   : '~{links_wikisource}',"
 		,	"    'links-wikivoyage'   : '~{links_wikivoyage}',"
+		,	"    'links-wikiquote'    : '~{links_wikiquote}',"
+		,	"    'links-wikibooks'    : '~{links_wikibooks}',"
+		,	"    'links-wikiversity'  : '~{links_wikiversity}',"
+		,	"    'links-wikinews'     : '~{links_wikinews}',"
 		,	"    'links-special'      : '~{links_special}',"
 		,	"    'plus'               : '~{plus}',"
 		,	"    'minus'              : '~{minus}',"
@@ -176,7 +188,7 @@ public class Xol_fragment_mgr implements GfoInvkAble {
 		)
 		, "languages", "toc", "labels", "aliasesHead", "descriptions", "links", "claims", "json", "language", "wiki", "label", "aliases", "description", "link", "property", "value", "references", "qualifiers"
 		, "comma_separator", "word_separator", "parentheses", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec", "ago", "novalue", "somevalue"
-		, "links_wiki", "links_wikivoyage", "links_special"
+		, "links_wiki", "links_wiktionary", "links_wikisource", "links_wikivoyage", "links_wikiquote", "links_wikibooks", "links_wikiversity", "links_wikinews", "links_special"
 		, "plus", "minus", "plusminus", "degree", "minute", "second", "north", "south", "west", "east", "meters", "julian"
 		, "decade", "century", "millenium", "years1e4", "years1e5", "years1e6", "years1e7", "years1e8", "years1e9", "bc", "inTime"
 		, "rank", "preferred", "normal", "deprecated"

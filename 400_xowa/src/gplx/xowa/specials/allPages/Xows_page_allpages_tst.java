@@ -145,7 +145,7 @@ class Xows_page_allpages_fxt {
 
 	public static String Xto_str(Xow_wiki wiki, Xodb_page v) {
 		if (v == null) return null;
-		Xow_ns ns = wiki.Ns_mgr().Get_by_id(v.Ns_id());
+		Xow_ns ns = wiki.Ns_mgr().Ids_get_or_null(v.Ns_id());
 		String ns_str = ns == null ? "" : String_.new_ascii_(ns.Name_db_w_colon());
 		return ns_str + String_.new_ascii_(v.Ttl_wo_ns());
 	}

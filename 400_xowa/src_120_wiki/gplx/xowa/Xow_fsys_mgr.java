@@ -72,7 +72,7 @@ public class Xow_fsys_mgr {
 		HashAdp rv = HashAdp_.new_();
 		for (int i = 0; i < len; i++) {
 			int ns_int = Int_.parse_or_(ns_dirs[i].NameOnly(), Int_.MinValue); if (ns_int == Int_.MinValue) continue; 
-			Xow_ns ns = ns_mgr.Get_by_id(ns_int); if (ns == null) continue;
+			Xow_ns ns = ns_mgr.Ids_get_or_null(ns_int); if (ns == null) continue;
 			ns.Exists_(true);
 		}
 		return rv;

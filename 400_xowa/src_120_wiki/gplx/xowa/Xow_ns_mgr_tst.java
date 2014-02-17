@@ -28,10 +28,10 @@ public class Xow_ns_mgr_tst {
 	@Test  public void Ns_alias() {
 		fxt.Ns_mgr().Aliases_clear();
 		fxt.Ns_mgr().Add_new(Xow_ns_.Id_template, "Template");
-		fxt.Ns_mgr().Add_alias(Xow_ns_.Id_template, "Templatex");
-		fxt.Ns_mgr().Ords_sort();
+		fxt.Ns_mgr().Aliases_add(Xow_ns_.Id_template, "Templatex");
+		fxt.Ns_mgr().Init();
 		byte[] name = ByteAry_.new_ascii_("Templatex:Abc");
-		Tfds.Eq(10, fxt.Ns_mgr().Tmpl_trie_match(name, 0, name.length));
+		Tfds.Eq(10, fxt.Ns_mgr().Tmpls_get_w_colon(name, 0, name.length));
 	}
 }
 class Xow_ns_mgr_fxt {
@@ -46,12 +46,12 @@ class Xow_ns_mgr_fxt {
 		}
 		return this;
 	}
-	public Xow_ns_mgr_fxt run_Ords_sort() {ns_mgr.Ords_sort(); return this;}
+	public Xow_ns_mgr_fxt run_Ords_sort() {ns_mgr.Init(); return this;}
 	public Xow_ns_mgr_fxt tst_Ords(int... expd) {
 		int actl_len = ns_mgr.Ords_len();
 		int[] actl = new int[actl_len];
 		for (int i = 0; i < actl_len; i++) {
-			Xow_ns ns_itm = ns_mgr.Ords()[i]; 
+			Xow_ns ns_itm = ns_mgr.Ords_ary()[i]; 
 			actl[i] = ns_itm == null ? -100 : ns_itm.Id();
 		}
 		Tfds.Eq_ary(expd, actl);

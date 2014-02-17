@@ -86,6 +86,9 @@ public class Xop_lnki_wkr_tst {
 	@Test  public void Size_double_px_ws_allowed() {
 		fxt.Test_parse_page_wiki("[[Image:a|40pxpx  ]]"		, fxt.tkn_lnki_().Width_(40).Height_(-1));
 	}
+	@Test  public void Size_large_numbers() {	// PURPOSE: perf code identified large sizes as caption; DATE:2014-02-15
+		fxt.Test_parse_page_wiki("[[Image:a|1234567890x1234567890px]]"		, fxt.tkn_lnki_().Width_(1234567890).Height_(1234567890));
+	}
 	@Test  public void Image_upright() {
 		fxt.Test_parse_page_wiki("[[Image:a|upright=.123]]"	, fxt.tkn_lnki_().Upright_(.123));
 		fxt.Test_parse_page_wiki("[[Image:a|upright]]"		, fxt.tkn_lnki_().Upright_(1));		// no eq tokn
@@ -310,9 +313,9 @@ public class Xop_lnki_wkr_tst {
 //				);
 //		}
 	@Test  public void Subpage_disabled() {	// PURPOSE: slash being interpreted as subpage; EX.WP:[[/dev/null]]
-		fxt.Wiki().Ns_mgr().Get_by_id_or_null(Xow_ns_.Id_main).Subpages_enabled_(false);
+		fxt.Wiki().Ns_mgr().Ids_get_or_null(Xow_ns_.Id_main).Subpages_enabled_(false);
 		fxt.Test_parse_page_all_str("[[/dev/null]]", "<a href=\"/wiki//dev/null\">/dev/null</a>");
-		fxt.Wiki().Ns_mgr().Get_by_id_or_null(Xow_ns_.Id_main).Subpages_enabled_(true);
+		fxt.Wiki().Ns_mgr().Ids_get_or_null(Xow_ns_.Id_main).Subpages_enabled_(true);
 	}
 	@Test  public void Subpage_false_match() {// EX.WP:en.wiktionary.org/wiki/Wiktionary:Requests for cleanup/archive/2006
 		fxt.Test_parse_page_wiki_str
@@ -649,6 +652,11 @@ public class Xop_lnki_wkr_tst {
 	@Test  public void DoubleBracket() {
 		fxt.Test_parse_page_all_str("[[[[Test_1]]]]"		, "[[<a href=\"/wiki/Test_1\">Test_1</a>]]");
 	}
+//		@Test  public void Pre_disabled() {
+//			fxt.Ctx().Para().Enabled_y_();
+//			fxt.Test_parse_page_all_str("\n [[A]]", "[[<a href=\"/wiki/Test_1\">Test_1</a>]]");
+//			fxt.Ctx().Para().Enabled_n_();
+//		}
 
 //		@Test  public void Errs() {// FUTURE: restore; WHEN: lnki redo
 //			fxt.Test_parse_wiki("[[a] [[b]]"	, fxt.tkn_txt_(0, 2), fxt.tkn_txt_(2, 4), fxt.tkn_space_(4, 5), fxt.tkn_lnki_(5, 10));

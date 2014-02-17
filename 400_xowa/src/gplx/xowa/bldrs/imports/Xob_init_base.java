@@ -29,7 +29,7 @@ public abstract class Xob_init_base implements Xob_cmd, GfoInvkAble {
 	}	private byte wdata_enabled = Bool_.__byte;
 	public void Cmd_bgn(Xob_bldr bldr) {}
 	public void Cmd_run() {						// parse site_info
-		gplx.ios.Io_stream_rdr src_rdr = wiki.Bldr_props().Src_rdr();
+		gplx.ios.Io_stream_rdr src_rdr = wiki.Import_cfg().Src_rdr();
 		byte[] siteinfo_xml = Xob_siteinfo_parser.Siteinfo_extract(src_rdr);
 		Xob_siteinfo_parser.Siteinfo_parse(wiki, usr_dlg, String_.new_utf8_(siteinfo_xml));
 		this.Cmd_run_end(wiki);					// save site info
@@ -44,8 +44,8 @@ public abstract class Xob_init_base implements Xob_cmd, GfoInvkAble {
 	}
 	public void Cmd_print() {}
 	@gplx.Virtual public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_src_xml_fil_))				wiki.Bldr_props().Src_fil_xml_(m.ReadIoUrl("v"));
-		else if	(ctx.Match(k, Invk_src_bz2_fil_))				wiki.Bldr_props().Src_fil_bz2_(m.ReadIoUrl("v"));
+		if		(ctx.Match(k, Invk_src_xml_fil_))				wiki.Import_cfg().Src_fil_xml_(m.ReadIoUrl("v"));
+		else if	(ctx.Match(k, Invk_src_bz2_fil_))				wiki.Import_cfg().Src_fil_bz2_(m.ReadIoUrl("v"));
 		else if	(ctx.Match(k, Invk_wdata_enabled_))				wdata_enabled = m.ReadYn("v") ? Bool_.Y_byte : Bool_.N_byte;
 		else if	(ctx.Match(k, Invk_owner))						return bldr.Cmd_mgr();
 		else return GfoInvkAble_.Rv_unhandled;

@@ -75,15 +75,15 @@ public class Xoa_url_parser_tst {
 	}
 	@Test  public void Domain_only() {
 		fxt.App().User().Wiki().Xwiki_mgr().Add_full("fr.wikipedia.org", "fr.wikipedia.org");
-		fxt.Reset().Raw_("fr.wikipedia.org").Wiki_("fr.wikipedia.org").Page_("Main_Page").tst_app();
+		fxt.Reset().Raw_("fr.wikipedia.org").Wiki_("fr.wikipedia.org").Page_("").tst_app();
 	}
 	@Test  public void Domain_and_wiki() {
 		fxt.App().User().Wiki().Xwiki_mgr().Add_full("fr.wikipedia.org", "fr.wikipedia.org");
-		fxt.Reset().Raw_("fr.wikipedia.org/wiki").Wiki_("fr.wikipedia.org").Page_("Main_Page").tst_app();
+		fxt.Reset().Raw_("fr.wikipedia.org/wiki").Wiki_("fr.wikipedia.org").Page_("").tst_app();
 	}
 	@Test  public void Domain_and_wiki_w_http() {
 		fxt.App().User().Wiki().Xwiki_mgr().Add_full("fr.wikipedia.org", "fr.wikipedia.org");
-		fxt.Reset().Raw_("http://fr.wikipedia.org/wiki").Wiki_("fr.wikipedia.org").Page_("Main_Page").tst_app();
+		fxt.Reset().Raw_("http://fr.wikipedia.org/wiki").Wiki_("fr.wikipedia.org").Page_("").tst_app();
 	}		
 	@Test  public void Redirect() {
 		fxt.Reset().Raw_("A?redirect=no").Wiki_("en.wikipedia.org").Page_("A").tst_app();
@@ -97,16 +97,16 @@ public class Xoa_url_parser_tst {
 	@Test  public void Assert_state_cleared() {	// PURPOSE.fix: action_is_edit (et. al.) was not being cleared on parse even though Xoa_url reused; DATE:20121231
 		Xoa_url url = new Xoa_url();
 		byte[] raw = ByteAry_.new_ascii_("A?action=edit");
-		Xoa_url_parser.Parse_url(url, fxt.App(), fxt.Wiki(), raw, 0, raw.length);
+		Xoa_url_parser.Parse_url(url, fxt.App(), fxt.Wiki(), raw, 0, raw.length, false);
 		Tfds.Eq(true, url.Action_is_edit());
 		raw = ByteAry_.new_ascii_("B");
-		Xoa_url_parser.Parse_url(url, fxt.App(), fxt.Wiki(), raw, 0, raw.length);
+		Xoa_url_parser.Parse_url(url, fxt.App(), fxt.Wiki(), raw, 0, raw.length, false);
 		Tfds.Eq(false, url.Action_is_edit());
 	}
 	@Test  public void Query_arg() {	// PURPOSE.fix: query args were not printing out
 		Xoa_url url = new Xoa_url();
 		byte[] raw = ByteAry_.new_ascii_("en.wikipedia.org/wiki/Special:Search/Earth?fulltext=yes");
-		Xoa_url_parser.Parse_url(url, fxt.App(), fxt.Wiki(), raw, 0, raw.length);
+		Xoa_url_parser.Parse_url(url, fxt.App(), fxt.Wiki(), raw, 0, raw.length, false);
 		Xoa_url_parser parser = new Xoa_url_parser();
 		Tfds.Eq("en.wikipedia.org/wiki/Special:Search/Earth?fulltext=yes", parser.Build_str(url));
 	}
@@ -138,6 +138,13 @@ public class Xoa_url_parser_tst {
 	@Test  public void Parse_from_url_bar__home() {
 		fxt.Test_parse_from_url_bar("home"						, "en.wikipedia.org/wiki/home");				// home should go to current wiki's home; DATE:2014-02-09
 		fxt.Test_parse_from_url_bar("home/wiki/Main_Page"		, "home/wiki/Main_Page");						// home Main_Page should go to home; DATE:2014-02-09
+	}
+	@Test  public void Parse_from_url_bar__custom() {
+		fxt.App().User().Wiki().Xwiki_mgr().Add_full("zh.wikipedia.org", "zh.wikipedia.org");
+		gplx.xowa.wikis.Xoa_wiki_regy.Make_wiki_dir(fxt.App(), "zh.wikipedia.org");
+		fxt.App().Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_("zh.wikipedia.org")).Props().Main_page_(ByteAry_.new_ascii_("Custom_Main_Page"));
+		fxt.Test_parse_from_url_bar("zh.w:"						, "zh.wikipedia.org/wiki/Custom_Main_Page");
+		fxt.Test_parse_from_url_bar("zh.w:Main_Page"			, "zh.wikipedia.org/wiki/Main_Page");
 	}
 }
 class Xoa_url_parser_chkr implements Tst_chkr {

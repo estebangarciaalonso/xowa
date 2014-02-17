@@ -53,6 +53,11 @@ public class Wdata_pf_property_tst {
 		fxt.Init_pages_add(fxt.doc_("q1", fxt.prop_geodata_(1, "1.2345", "6.789")));
 		fxt.Test_parse("{{#property:p1}}", "1.2345, 6.789");
 	}
+	@Test   public void Quantity() {
+		fxt.Init_links_add("enwiki", "Test_page", "q1");
+		fxt.Init_pages_add(fxt.doc_("q1", fxt.prop_quantity_(1, "+1,234", "2", "+1,236", "+1232")));
+		fxt.Test_parse("{{#property:p1}}", "1,234±2");
+	}
 	@Test   public void Novalue() {
 		fxt.Init_links_add("enwiki", "Test_page", "q1");
 		fxt.Init_pages_add(fxt.doc_("q1", fxt.prop_novalue_(1)));

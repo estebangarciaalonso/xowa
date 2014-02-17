@@ -118,14 +118,16 @@ class Scrib_lib_language implements Scrib_lib {
 		return Scrib_kv_utl.base1_obj_(lang.Case_mgr().Case_build_1st_lower(bfr, word, 0, word.length));
 	}
 	public KeyVal[] Ucfirst(KeyVal[] values) {
+		Scrib_args args = new Scrib_args(values);
 		Xol_lang lang = lang_(values);
-		byte[] word = Scrib_kv_utl.Val_to_bry(values, 1);
+		byte[] word = args.Get_bry_or_empty(1);
 		ByteAryBfr bfr = engine.Wiki().App().Utl_bry_bfr_mkr().Get_b128().Mkr_rls();
 		return Scrib_kv_utl.base1_obj_(lang.Case_mgr().Case_build_1st_upper(bfr, word, 0, word.length));
 	}
 	public KeyVal[] Lc(KeyVal[] values) {
+		Scrib_args args = new Scrib_args(values);
 		Xol_lang lang = lang_(values);
-		byte[] word = Scrib_kv_utl.Val_to_bry(values, 1);
+		byte[] word = args.Get_bry_or_empty(1);
 		return Scrib_kv_utl.base1_obj_(lang.Case_mgr().Case_build_lower(word, 0, word.length));
 	}
 	public KeyVal[] Uc(KeyVal[] values) {

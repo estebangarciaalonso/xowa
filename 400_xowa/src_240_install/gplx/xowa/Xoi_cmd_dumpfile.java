@@ -52,9 +52,9 @@ class Xoi_cmd_dumpfile {
 			unzip_cmd.Term_cmd_for_src_(Gfo_thread_cmd_unzip.Term_cmd_for_src_noop);	// don't do anything with bz2 after unzip
 		}
 		if (xml_url == null)
-			wiki.Bldr_props().Src_fil_bz2_(bz2_url);
+			wiki.Import_cfg().Src_fil_bz2_(bz2_url);
 		else
-			wiki.Bldr_props().Src_fil_xml_(xml_url);
+			wiki.Import_cfg().Src_fil_xml_(xml_url);
 		return cmd_mgr.Dump_add_many_custom(String_.new_utf8_(domain), "", "", true);
 	}
 }

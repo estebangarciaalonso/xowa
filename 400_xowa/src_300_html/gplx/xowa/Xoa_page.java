@@ -47,7 +47,7 @@ public class Xoa_page {
 	public Xop_hdr_mgr		Hdr_mgr() {return hdr_mgr;} private Xop_hdr_mgr hdr_mgr;
 	public ListAdp			Langs() {return langs;} private ListAdp langs = ListAdp_.new_();
 	public Wdata_external_lang_links_data Wdata_external_lang_links() {return wdata_external_lang_links;} private Wdata_external_lang_links_data wdata_external_lang_links = new Wdata_external_lang_links_data();
-	public ListAdp			Lnki_list() {return lnki_list;} private ListAdp lnki_list = ListAdp_.new_();
+	public ListAdp			Lnki_list() {return lnki_list;} public void Lnki_list_(ListAdp v) {this.lnki_list = v;} private ListAdp lnki_list = ListAdp_.new_();
 	public Xof_xfer_queue	File_queue() {return file_queue;} private Xof_xfer_queue file_queue = new Xof_xfer_queue();
 	public ListAdp			File_math() {return file_math;} private ListAdp file_math = ListAdp_.new_();
 	public Xoh_cmd_mgr		Html_cmd_mgr() {return html_cmd_mgr;} private Xoh_cmd_mgr html_cmd_mgr = new Xoh_cmd_mgr();

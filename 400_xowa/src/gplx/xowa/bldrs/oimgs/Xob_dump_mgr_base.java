@@ -104,7 +104,7 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 	}
 	private void Exec_db_itm(Xob_dump_bmk dump_bmk, int ns_id, int db_id) {
 		ListAdp pages = ListAdp_.new_();
-		Xow_ns ns = wiki.Ns_mgr().Get_by_id(ns_id);
+		Xow_ns ns = wiki.Ns_mgr().Ids_get_or_null(ns_id);
 		int pg_id = pg_bgn;
 		while (true) {
 			page_src.Get_pages(pages, db_id, ns_id, pg_id);
@@ -218,7 +218,6 @@ class Xob_dump_mgr_base_ {
 		ListAdp pages = ListAdp_.new_();
 		Xow_ns ns_tmpl = wiki.Ns_mgr().Ns_template();
 		Xow_defn_cache defn_cache = wiki.Cache_mgr().Defn_cache();
-		boolean case_match = ns_tmpl.Case_match() == Xow_ns_.Case_match_1st;
 		int cur_page_id = -1;
 		int load_count = 0;
 		usr_dlg.Note_many("", "", "tmpl_load init");
@@ -231,7 +230,7 @@ class Xob_dump_mgr_base_ {
 				page = (Xodb_page)pages.FetchAt(i);
 				Xot_defn_tmpl defn = new Xot_defn_tmpl();
 				defn.Init_by_new(ns_tmpl, ns_tmpl.Gen_ttl(page.Ttl_wo_ns()), page.Text(), null, false);	// NOTE: passing null, false; will be overriden later when Parse is called
-				defn_cache.Add(defn, case_match);
+				defn_cache.Add(defn, ns_tmpl.Case_match());
 				++load_count;
 				if ((load_count % 10000) == 0) usr_dlg.Prog_many("", "", "tmpl_loading: ~{0}", load_count);
 			}

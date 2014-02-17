@@ -47,7 +47,7 @@ public class Scrib_lib_site_tst {
 		ns_mgr.Add_new(Xow_ns_.Id_special, "Special");
 		ns_mgr.Add_new(Xow_ns_.Id_main, "");
 		ns_mgr.Add_new(Xow_ns_.Id_talk, "Talk");
-		ns_mgr.Init_done();
+		ns_mgr.Init_w_defaults();
 		Xow_wiki wiki = fxt.Parser_fxt().Wiki();
 		fxt.Parser_fxt().Wiki().Stats().NumPages_(1).NumArticles_(2).NumFiles_(3).NumEdits_(4).NumViews_(5).NumUsers_(6).NumUsersActive_(7).NumAdmins_(8);
 		wiki.Ns_mgr_(ns_mgr);
@@ -58,7 +58,8 @@ public class Scrib_lib_site_tst {
 		,	"      -1;Special;Special;false;false;false;false;true;false;true;false;null;{};-1;"
 		,	"      0;;;false;false;false;true;true;true;true;false;null;{};0;1;1;(Main);"
 		,	"      1;Talk;Talk;false;false;false;false;true;true;false;true;null;{};1;1;0;"
-		,	"      828;Module;Module;false;false;false;false;true;true;true;false;null;{};828;829;829;"
+		,	"      828;Module;Module;false;false;false;false;true;true;true;false;null;"
+		,	"        Module;828;829;829;"
 		,	"      829;Module talk;Module_talk;false;false;false;false;true;true;false;true;null;{};829;829;828;"
 		,	"    1;2;3;4;5;6;7;8"
 		));

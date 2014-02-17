@@ -79,7 +79,7 @@ public class Xtn_syntaxHighlight_nde implements Xox_xnde, Xop_xnde_atr_parser {
 					bfr.Add(Xoh_consts.Style_atr).Add(Style_highlight).Add(Xoh_consts.__end_quote);
 				else
 					bfr.Add(Xoh_consts.__end);
-				Xoh_html_wtr.Bfr_escape(bfr, line, 0, line.length, ctx.App(), true, false);
+				Xox_mgr_base.Xtn_write_escape(app, bfr, line);
 				bfr.Add(Xoh_consts.Span_end);
 				if (enclose_is_none)
 					bfr.Add(Xoh_consts.Br);
@@ -87,12 +87,12 @@ public class Xtn_syntaxHighlight_nde implements Xox_xnde, Xop_xnde_atr_parser {
 			}
 		}
 		else
-			Xoh_html_wtr.Bfr_escape(bfr, src, text_bgn, text_end, ctx.App(), true, false);
+			Xox_mgr_base.Xtn_write_escape(app, bfr, src, text_bgn, text_end);
 		if 		(enclose_is_none)		bfr.Add(Xoh_consts.Span_end);
 		else if (lang_is_text)			bfr.Add(Xoh_consts.Code_end);
 		else							bfr.Add(Xoh_consts.Pre_end);
 	}
 	private static final byte[] Lang_text = ByteAry_.new_ascii_("text"), Style_line = ByteAry_.new_ascii_("-moz-user-select:none;"), Style_highlight = ByteAry_.new_ascii_("background-color: #FFFFCC;"), Enclose_none = ByteAry_.new_ascii_("none");
 	public static final byte Xatr_enclose = 2, Xatr_lang = 3, Xatr_style = 4, Xatr_line = 5, Xatr_start = 6, Xatr_highlight = 7;
-	private static final Hash_adp_bry xatrs_syntaxHighlight = new Hash_adp_bry(false).Add_str_byte("enclose", Xatr_enclose).Add_str_byte("lang", Xatr_lang).Add_str_byte("style", Xatr_style).Add_str_byte("line", Xatr_line).Add_str_byte("start", Xatr_start).Add_str_byte("highlight", Xatr_highlight);
+	private static final Hash_adp_bry xatrs_syntaxHighlight = Hash_adp_bry.ci_().Add_str_byte("enclose", Xatr_enclose).Add_str_byte("lang", Xatr_lang).Add_str_byte("style", Xatr_style).Add_str_byte("line", Xatr_line).Add_str_byte("start", Xatr_start).Add_str_byte("highlight", Xatr_highlight);
 }

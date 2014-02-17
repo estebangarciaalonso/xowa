@@ -42,7 +42,7 @@ class Xowc_xtn_pages_fxt {
 		cfg_pages.Ns_names_(ByteAry_.new_ascii_(page_name), ByteAry_.new_ascii_(page_talk_name), ByteAry_.new_ascii_(index_name), ByteAry_.new_ascii_(index_talk_name));
 	}
 	public void Exec_init() {
-		ns_mgr.Init_done();			// init ns_msg
+		ns_mgr.Init_w_defaults();	// init ns_msg
 		cfg_pages.Init(ns_mgr);		// init cfg
 	}
 	public void Test_ns_ids(int page_id, int page_talk_id, int index_id, int index_talk_id) {
@@ -58,7 +58,7 @@ class Xowc_xtn_pages_fxt {
 		Test_ns_canonical_itm(index_talk_name 	, cfg_pages.Ns_index_talk_id());
 	}
 	private void Test_ns_canonical_itm(String name, int expd_ns_id) {
-		Xow_ns ns = ns_mgr.Get_by_bry_or_null(ByteAry_.new_ascii_(name));
+		Xow_ns ns = ns_mgr.Names_get_or_null(ByteAry_.new_ascii_(name));
 		int actl_ns_id = ns == null ? Int_.MinValue : ns.Id();
 		Tfds.Eq(expd_ns_id, actl_ns_id);
 	}

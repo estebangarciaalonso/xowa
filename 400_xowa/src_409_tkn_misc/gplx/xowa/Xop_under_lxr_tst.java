@@ -26,6 +26,9 @@ public class Xop_under_lxr_tst {
 	@Test   public void Toc_match_failed() {
 		fxt.Test_parse_page_all_str("a__TOCA__b", "a__TOCA__b");
 	}
+	@Test   public void Toc_match_ci() {
+		fxt.Test_parse_page_all_str("a__toc__b", "ab");
+	}
 	@Test   public void Notoc_basic() {
 		fxt.Hctx().Toc_show_(true);	// NOTE: must enable in order for TOC to show (and to make sure NOTOC suppresses) 
 		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
@@ -100,5 +103,8 @@ public class Xop_under_lxr_tst {
 		fxt.Test_parse_page_all_str("__NOCONTENTCONVERT__ __NOTITLECONVERT__", " ");
 		Tfds.Eq(fxt.Page().Lang_convert_content(), false);
 		Tfds.Eq(fxt.Page().Lang_convert_title(), false);
+	}
+	@Test  public void Eos() {	// PURPOSE: check that __ at eos doesn't fail; es.s:Luisa de Bustamante: 3; DATE:2014-02-15
+		fxt.Test_parse_page_all_str("__", "__");
 	}
 }

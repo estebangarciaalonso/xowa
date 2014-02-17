@@ -27,7 +27,7 @@ class Pf_url_ns extends Pf_func_base {	// EX: {{ns:6}} -> File
 		int val_dat_ary_len = val_dat_ary.length;
 		int ns_id = ByteAry_.X_to_int_or(val_dat_ary, 0, val_dat_ary_len, -1);
 		if (ns_id == -1) {
-			Object o = ctx.Wiki().Ns_mgr().Trie_match_exact(val_dat_ary, 0, val_dat_ary_len);
+			Object o = ctx.Wiki().Ns_mgr().Names_get_or_null(val_dat_ary, 0, val_dat_ary_len);
 			if (o == null
 				&& !ByteAry_.Eq(ctx.Lang().Key_bry(), Xol_lang_.Key_en)) // foreign language; english canonical names are still valid; REF.MW: Language.php|getNsIndex
 					o = canonical.Get_by_mid(val_dat_ary, 0, val_dat_ary_len);				
@@ -38,7 +38,7 @@ class Pf_url_ns extends Pf_func_base {	// EX: {{ns:6}} -> File
 			}
 		}
 		else {
-			Xow_ns itm = (Xow_ns)ctx.Wiki().Ns_mgr().Get_by_id(ns_id);
+			Xow_ns itm = (Xow_ns)ctx.Wiki().Ns_mgr().Ids_get_or_null(ns_id);
 			if (itm == null) return;	// occurs when ns_id is not known; EX: {{ns:999}}; SEE: Wiktionary:Grease pit archive/2007/October; "{{ns:114}}"
 			bb.Add(encode ? itm.Name_enc() : itm.Name_txt());
 		}
@@ -46,11 +46,11 @@ class Pf_url_ns extends Pf_func_base {	// EX: {{ns:6}} -> File
 	boolean encode;
 	private static Hash_adp_bry canonical;
 	private static void canonical_add(int ns_id, byte[] ns_name) {
-		Xow_ns ns = new Xow_ns(ns_id, Xow_ns_.Case_match_all, ns_name, false);
+		Xow_ns ns = new Xow_ns(ns_id, Xow_ns_case_.Id_all, ns_name, false);
 		canonical.Add(ns_name, ns);
 	}
 	private static void canonical_() {
-		canonical = new Hash_adp_bry(false);
+		canonical = Hash_adp_bry.ci_();
 		for (Xow_ns ns : Xow_ns_.Canonical)
 			canonical_add(ns.Id(), ns.Name_bry());
 	}

@@ -70,7 +70,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 
 			// ignore "{{Template:"; EX: {{Template:a}} is the same thing as {{a}}
 			boolean template_prefix_found = false;
-			int tmpl_ns_len = wiki.Ns_mgr().Tmpl_trie_match(name_ary, name_bgn, name_ary_len);
+			int tmpl_ns_len = wiki.Ns_mgr().Tmpls_get_w_colon(name_ary, name_bgn, name_ary_len);
 			if (tmpl_ns_len != ByteAry_.NotFound) {
 				name_ary = ByteAry_.Mid(name_ary, name_bgn + tmpl_ns_len, name_ary_len);
 				name_ary_len = name_ary.length;
@@ -84,7 +84,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 				name_bgn = 0;
 			}
 
-			Object ns_eval = wiki.Ns_mgr().Trie_match_colon(name_ary, 0, name_ary_len);	// match {{:Portal or {{:Wikipedia
+			Object ns_eval = wiki.Ns_mgr().Names_get_w_colon(name_ary, 0, name_ary_len);	// match {{:Portal or {{:Wikipedia
 			if (ns_eval != null && !template_prefix_found) {		// do not transclude ns if Template prefix seen earlier; EX: {{Template:Wikipedia:A}} should not transclude "Wikipedia:A"; DATE:2013-04-03
 //					Xow_ns ns_eval_itm = (Xow_ns)ns_eval;				// commented out; was failing for {{WP}}; handled by Trie_match_colon; DATE:2013-02-08
 //					int pre_len = ns_eval_itm.Name_enc().length;		
@@ -125,15 +125,19 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 					}
 					break;
 				case Xot_defn_.Tid_raw:
-					name_ary = ByteAry_.Mid(name_ary, finder.Subst_end() + 1, name_ary_len);		// chop off "raw"; +1 is for ":"
-					name_ary_len = name_ary.length;
+					int raw_colon_pos = ByteAry_.FindFwd(name_ary, Byte_ascii.Colon);
+					if (raw_colon_pos == ByteAry_.NotFound) {}		// colon missing; EX: {{raw}}; noop and assume template name; DATE:2014-02-11
+					else {	// colon present;
+						name_ary = ByteAry_.Mid(name_ary, finder.Subst_end() + 1, name_ary_len);		// chop off "raw"; +1 is for ":"; note that +1 is in bounds b/c raw_colon was found
+						name_ary_len = name_ary.length;
 
-					Object ns_eval2 = wiki.Ns_mgr().Trie_match_colon(name_ary, 0, name_ary_len);	// match {{:Portal or {{:Wikipedia
-					if (ns_eval2 != null) {
-						Xow_ns ns_eval_itm = (Xow_ns)ns_eval2;
-						int pre_len = ns_eval_itm.Name_enc().length;
-						if (pre_len < name_ary_len && name_ary[pre_len] == Byte_ascii.Colon)
-							return SubEval(ctx, wiki, bfr, name_ary, caller, src);
+						Object ns_eval2 = wiki.Ns_mgr().Names_get_w_colon(name_ary, 0, name_ary_len);	// match {{:Portal or {{:Wikipedia
+						if (ns_eval2 != null) {
+							Xow_ns ns_eval_itm = (Xow_ns)ns_eval2;
+							int pre_len = ns_eval_itm.Name_enc().length;
+							if (pre_len < name_ary_len && name_ary[pre_len] == Byte_ascii.Colon)
+								return SubEval(ctx, wiki, bfr, name_ary, caller, src);
+						}
 					}
 					break;
 			}
@@ -180,7 +184,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		switch (defn.Defn_tid()) {
 			case Xot_defn_.Tid_null:	// defn is unknown
 				if (ignore_hash == null) {					// ignore SafeSubst templates
-					ignore_hash = new Hash_adp_bry(false);
+					ignore_hash = Hash_adp_bry.ci_();
 					ignore_hash.Add_str_obj("Citation needed{{subst", String_.Empty);
 					ignore_hash.Add_str_obj("Clarify{{subst", String_.Empty);
 				}
@@ -313,9 +317,10 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		Xot_defn_tmpl rv = null;
 		if (tmpl_page_bry != null) {
 			byte old_parse_tid = ctx.Parse_tid(); // NOTE: reusing templates is a bad idea; will change Parse_tid and cause strange errors; however, keeping for PERF reasons
-			rv = wiki.Parser().Parse_tmpl(ctx, ctx.Tkn_mkr(), wiki.Ns_mgr().Ns_template(), name_ary, tmpl_page_bry);
+			Xow_ns ns_tmpl = wiki.Ns_mgr().Ns_template();
+			rv = wiki.Parser().Parse_tmpl(ctx, ctx.Tkn_mkr(), ns_tmpl, name_ary, tmpl_page_bry);
 			ctx.Parse_tid_(old_parse_tid);
-			wiki.Cache_mgr().Defn_cache().Add(rv, Bool_.Y);
+			wiki.Cache_mgr().Defn_cache().Add(rv, ns_tmpl.Case_match());
 		}
 		return rv;
 	}
@@ -346,7 +351,10 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 				}
 			}
 		}
-		if (transclude_tmpl == null) return false;
+		if (transclude_tmpl == null) {
+			bfr.Add(Xop_tkn_.Lnki_bgn).Add(name_ary).Add(Xop_tkn_.Lnki_end);		// indicate template was not found; DATE:2014-02-12
+			return false;
+		}
 		return Eval_sub(ctx, transclude_tmpl, caller, src_for_tkn, bfr);
 	}
 	public int Args_len() {return args_len;} private int args_len = 0;

@@ -46,7 +46,7 @@ public class Xow_file_mgr implements GfoInvkAble {
 			grp_itm = new Fsdb_cfg_grp(grp);
 			test_grps.Add(grp, grp_itm);
 		}
-		grp_itm.Set(key, val);
+		grp_itm.Upsert(key, val);
 	}	private HashAdp test_grps;
 	public Fsdb_cfg_grp Cfg_get(String grp) {
 		if (test_grps != null) {

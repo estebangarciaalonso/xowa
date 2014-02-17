@@ -202,7 +202,7 @@ public class Xol_mw_lang_parser {
 			ByteAry_.Replace_all_direct(kv_val, Byte_ascii.Underline, Byte_ascii.Space); // NOTE: siteInfo.xml names have " " not "_" (EX: "User talk"). for now, follow that convention
 			int ns_id = Id_by_mw_name(kv_key);
 //				if (ns_id == Xow_ns_.Id_null) throw Err_mgr._.fmt_auto_(GRP_KEY, "namespace_names", String_.new_utf8_(kv_key));
-			rv[i / 2] = new Xow_ns(ns_id, Xow_ns_.Case_match_1st, kv_val, false);	// note that Xow_ns is being used as glorified id-name struct; case_match and alias values do not matter
+			rv[i / 2] = new Xow_ns(ns_id, Xow_ns_case_.Id_1st, kv_val, false);	// note that Xow_ns is being used as glorified id-name struct; case_match and alias values do not matter
 		}
 		return rv;
 	}
@@ -318,7 +318,7 @@ public class Xol_mw_lang_parser {
 	private static final String GRP_KEY = "xowa.lang.parser";
 	private static final byte Tid_messages = 0, Tid_magicwords = 1, Tid_namespaceNames = 2, Tid_namespaceAliases = 3, Tid_specialPageAliases = 4
 		, Tid_linkTrail = 5, Tid_dateFormats = 6, Tid_fallback = 7, Tid_separatorTransformTable = 8, Tid_rtl = 9;
-	private static Hash_adp_bry Tid_hash = new Hash_adp_bry(true)
+	private static Hash_adp_bry Tid_hash = Hash_adp_bry.cs_()
 		.Add_str_byte("namespaceNames", Tid_namespaceNames).Add_str_byte("namespaceAliases", Tid_namespaceAliases).Add_str_byte("messages", Tid_messages)
 		.Add_str_byte("magicWords", Tid_magicwords).Add_str_byte("specialPageAliases", Tid_specialPageAliases)
 		.Add_str_byte("linkTrail", Tid_linkTrail).Add_str_byte("dateFormats", Tid_dateFormats).Add_str_byte("fallback", Tid_fallback)

@@ -70,7 +70,7 @@ public class Xof_ext_ {
 	}
 	private static void id_hash_new_(HashAdp hash, byte[] key, int val) {hash.Add(key, IntVal.new_(val));}
 
-	private static final Hash_adp_bry ext_hash = new Hash_adp_bry(false).Add_bry_bry(Bry_png).Add_bry_bry(Bry_jpg).Add_bry_bry(Bry_jpeg).Add_bry_bry(Bry_gif).Add_bry_bry(Bry_tif).Add_bry_bry(Bry_tiff).Add_bry_bry(Bry_svg).Add_bry_bry(Bry_djvu).Add_bry_bry(Bry_pdf).Add_bry_bry(Bry_mid).Add_bry_bry(Bry_ogg).Add_bry_bry(Bry_oga).Add_bry_bry(Bry_ogv).Add_bry_bry(Bry_webm);
+	private static final Hash_adp_bry ext_hash = Hash_adp_bry.ci_().Add_bry_bry(Bry_png).Add_bry_bry(Bry_jpg).Add_bry_bry(Bry_jpeg).Add_bry_bry(Bry_gif).Add_bry_bry(Bry_tif).Add_bry_bry(Bry_tiff).Add_bry_bry(Bry_svg).Add_bry_bry(Bry_djvu).Add_bry_bry(Bry_pdf).Add_bry_bry(Bry_mid).Add_bry_bry(Bry_ogg).Add_bry_bry(Bry_oga).Add_bry_bry(Bry_ogv).Add_bry_bry(Bry_webm);
 	private static final Xof_ext[] Ary = new Xof_ext[Id__max];
 
 	public static byte[] Get_ext_by_id_(int id) {

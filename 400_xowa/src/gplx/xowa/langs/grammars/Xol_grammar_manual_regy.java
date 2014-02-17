@@ -24,7 +24,7 @@ public class Xol_grammar_manual_regy {
 	public Xol_grammar_manual_regy Itms_add(byte type_tid, String orig, String repl) {
 		Hash_adp_bry hash = ary[type_tid];
 		if (hash == null) {
-			hash = new Hash_adp_bry(false);
+			hash = Hash_adp_bry.ci_();
 			ary[type_tid] = hash;
 		}
 		hash.Add_str_obj(orig, ByteAry_.new_ascii_(repl));

@@ -22,7 +22,7 @@ public class Pp_pages_nde_hdr_tst {
 	@Before public void Init() {
 		Io_mgr._.InitEngine_mem();
 		fxt.Wiki().Db_mgr().Load_mgr().Clear(); // must clear; otherwise fails b/c files get deleted, but wiki.data_mgr caches the Xowd_regy_mgr (the .reg file) in memory;
-		fxt.Wiki().Ns_mgr().Add_new(Xowc_xtn_pages.Ns_page_id_default, "Page").Add_new(Xowc_xtn_pages.Ns_index_id_default, "Index").Ords_sort();
+		fxt.Wiki().Ns_mgr().Add_new(Xowc_xtn_pages.Ns_page_id_default, "Page").Add_new(Xowc_xtn_pages.Ns_index_id_default, "Index").Init();
 		fxt.Init_page_create("MediaWiki:Proofreadpage_header_template", String_.Concat
 		( "{{#if:{{{value|}}}|value={{{value}}};|value=nil;}}"
 		, "{{#if:{{{current|}}}|current={{{current}}};|}}"

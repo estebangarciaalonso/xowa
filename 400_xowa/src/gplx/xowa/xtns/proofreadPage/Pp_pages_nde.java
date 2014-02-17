@@ -53,7 +53,7 @@ public class Pp_pages_nde implements Xox_xnde, Xop_xnde_atr_parser {
 	public void Xtn_parse(Xow_wiki wiki, Xop_ctx ctx, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		if (!Init_vars(wiki, ctx, src, xnde)) return;
 		ByteAryBfr full_bfr = app.Utl_bry_bfr_mkr().Get_m001();
-		Hash_adp_bry lst_page_regy = ctx.Lst_page_regy(); if (lst_page_regy == null) lst_page_regy = new Hash_adp_bry(true);	// SEE:NOTE:page_regy; DATE:2014-01-01
+		Hash_adp_bry lst_page_regy = ctx.Lst_page_regy(); if (lst_page_regy == null) lst_page_regy = Hash_adp_bry.cs_();	// SEE:NOTE:page_regy; DATE:2014-01-01
 		byte[] page_bry = Bld_wikitext(full_bfr, lst_page_regy);
 		if (page_bry != null)
 			xtn_root = Bld_root_nde(full_bfr, lst_page_regy, page_bry);	// NOTE: this effectively reparses page twice; needed b/c of "if {| : ; # *, auto add new_line" which can build different tokens
@@ -61,7 +61,7 @@ public class Pp_pages_nde implements Xox_xnde, Xop_xnde_atr_parser {
 	}
 	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		if (xtn_literal)
-			Xoh_html_wtr.Bfr_escape(bfr, src, xnde.Src_bgn(), xnde.Src_end(), app, true, false);
+			Xox_mgr_base.Xtn_write_escape(app, bfr, src, xnde);
 		else
 			html_wtr.Write_tkn(ctx, opts, bfr, xtn_root.Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, xtn_root);
 	}
@@ -80,7 +80,7 @@ public class Pp_pages_nde implements Xox_xnde, Xop_xnde_atr_parser {
 		ns_index_id = cfg_pages.Ns_index_id(); if (ns_index_id == Int_.MinValue) return Fail_msg("wiki does not have an Index ns");
 		ns_page_id  = cfg_pages.Ns_page_id();  if (ns_page_id  == Int_.MinValue) return Fail_msg("wiki does not have a Page ns");	// occurs when <pages> used in a wiki without a "Page:" ns; EX: de.w:Help:Buchfunktion/Feedback
 		index_ttl = Xoa_ttl.parse_(wiki, ns_index_id, index_ttl_bry); if (index_ttl == null) return Fail_args("index title is not valid: index={0}", String_.new_utf8_(index_ttl_bry));
-		ns_page = wiki.Ns_mgr().Get_by_id(ns_page_id);
+		ns_page = wiki.Ns_mgr().Ids_get_or_null(ns_page_id);
 		if (onlysection != null)
 			bgn_sect_bry = end_sect_bry = null;
 		return true;
@@ -364,7 +364,7 @@ public class Pp_pages_nde implements Xox_xnde, Xop_xnde_atr_parser {
 		tmp_parser.Parse_page_all(rv, tmp_ctx, tmp_ctx.Tkn_mkr(), wikitext, Xop_parser_.Doc_bgn_bos);
 		return rv;
 	}
-	private static Hash_adp_bry xtn_atrs = new Hash_adp_bry(false)	// NOTE: these do not seem to be i18n'd; no ProofreadPage.magic.php; ProofreadPage.i18n.php only has messages; ProofreadPage.body.php refers to names literally
+	private static Hash_adp_bry xtn_atrs = Hash_adp_bry.ci_()	// NOTE: these do not seem to be i18n'd; no ProofreadPage.magic.php; ProofreadPage.i18n.php only has messages; ProofreadPage.body.php refers to names literally
 	.Add_str_obj("index"		, ByteVal.new_(Pp_pages_nde.Xatr_index_ttl))
 	.Add_str_obj("from"			, ByteVal.new_(Pp_pages_nde.Xatr_bgn_page))
 	.Add_str_obj("to"			, ByteVal.new_(Pp_pages_nde.Xatr_end_page))
@@ -416,7 +416,7 @@ public class Pp_pages_nde implements Xox_xnde, Xop_xnde_atr_parser {
 NOTE:page_regy
 . original implmentation was following
 in Xop_ctx
-	public Hash_adp_bry			Lst_page_regy()		{if (lst_page_regy == null) lst_page_regy = new Hash_adp_bry(true); return lst_page_regy;} 
+	public Hash_adp_bry			Lst_page_regy()		{if (lst_page_regy == null) lst_page_regy = Hash_adp_bry.cs_(); return lst_page_regy;} 
 in Pp_pages_nde
 	Hash_adp_bry lst_page_regy = ctx.Lst_page_regy();
 . current implementation is following
@@ -424,7 +424,7 @@ in Xop_ctx
 	public Hash_adp_bry			Lst_page_regy()		{return lst_page_regy;} 
 in Pp_pages_nde
 	Hash_adp_bry lst_page_regy = ctx.Lst_page_regy();
-	if (lst_page_regy == null) lst_page_regy = new Hash_adp_bry(true);
+	if (lst_page_regy == null) lst_page_regy = Hash_adp_bry.cs_();
 . note that this only skips transcluded <pages> within a given <pages> call, not across the entire page
 EX: Page:A/1 has the following text
 <pages index="A" from=1 to=3 />

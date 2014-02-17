@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xop_tblw_lxr_ws {//: Xop_lxr 
-	public static int Make(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte wlxr_type) {
+	public static int Make(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte wlxr_type, boolean called_from_pre) {
 		// NOTE: repeated in tblw_lxr
 		// CASE_1: standalone "!" should be ignored if no tblw present; EX: "a b! c" should not trigger ! for header
 		switch (wlxr_type) {
@@ -44,7 +44,7 @@ public class Xop_tblw_lxr_ws {//: Xop_lxr
 				}
 				else {
 					if (wlxr_type == Xop_tblw_wkr.Tblw_type_th2) {
-						int nl_pos = ByteAry_.FindBwd(src, Byte_ascii.NewLine, cur_pos, 0);	// search for preceding nl
+						int nl_pos = ByteAry_.FindBwd(src, Byte_ascii.NewLine, cur_pos);	// search for preceding nl
 						if (nl_pos != ByteAry_.NotFound) {	
 							if (src[nl_pos + 1] != Byte_ascii.Bang) {
 								return ctx.LxrMake_txt_(cur_pos);
@@ -54,12 +54,6 @@ public class Xop_tblw_lxr_ws {//: Xop_lxr
 				}
 				break;
 		}
-
-//			switch (wlxr_type) {
-//				case Xop_tblw_wkr.Tblw_type_th:	// !
-//					if (ctx.Stack_get_tblw() == null) return ctx.LxrMake_txt_(cur_pos);	// ! but no tbl; interpret as text
-//					break;
-//			}
 
 		// CASE_2: Cur_tkn_tid() is lnki; interpret "|" as separator for lnki and return; EX: UTF-8 [[Plus and minus signs|+]]; |+ is not a tblw sym
 		if (ctx.Cur_tkn_tid() == Xop_tkn_itm_.Tid_lnki) {
@@ -78,41 +72,43 @@ public class Xop_tblw_lxr_ws {//: Xop_lxr
 			}
 		}
 
-		// find first non-ws tkn; check if nl or para
-		int root_subs_len = root.Subs_len();
-		int tkn_idx = root_subs_len - 1;
-		boolean loop = true, nl_found = false;
-		while (loop) {
-			if (tkn_idx < 0) break;
-			Xop_tkn_itm tkn = root.Subs_get(tkn_idx);
-			switch (tkn.Tkn_tid()) {
-				case Xop_tkn_itm_.Tid_space: case Xop_tkn_itm_.Tid_tab:	// ws: keep moving backwards					
-					tkn_idx--;
-					break;
-				case Xop_tkn_itm_.Tid_newLine:
-				case Xop_tkn_itm_.Tid_para:
-					loop = false;
-					nl_found = true;
-					break;
-				default:
-					loop = false;
-					break;
+		if (!called_from_pre) {	// skip if called from pre, else will return text, since pre_lxr has not created \n tkn yet; EX: "\n ! a"; DATE:2014-02-14
+			// find first non-ws tkn; check if nl or para
+			int root_subs_len = root.Subs_len();
+			int tkn_idx = root_subs_len - 1;
+			boolean loop = true, nl_found = false;
+			while (loop) {
+				if (tkn_idx < 0) break;
+				Xop_tkn_itm tkn = root.Subs_get(tkn_idx);
+				switch (tkn.Tkn_tid()) {
+					case Xop_tkn_itm_.Tid_space: case Xop_tkn_itm_.Tid_tab:	// ws: keep moving backwards					
+						tkn_idx--;
+						break;
+					case Xop_tkn_itm_.Tid_newLine:
+					case Xop_tkn_itm_.Tid_para:
+						loop = false;
+						nl_found = true;
+						break;
+					default:
+						loop = false;
+						break;
+				}
 			}
-		}
-		if (tkn_idx == -1) {								// bos reached; all tkns are ws;
-			if (wlxr_type == Xop_tblw_wkr.Tblw_type_tb) {	// wlxr_type is {|;
-				root.Subs_del_after(0);						// trim
-				return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, true, false, -1, -1);	// process {|
+			if (tkn_idx == -1) {								// bos reached; all tkns are ws;
+				if (wlxr_type == Xop_tblw_wkr.Tblw_type_tb) {	// wlxr_type is {|;
+					root.Subs_del_after(0);						// trim
+					return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, false, wlxr_type, false, -1, -1);	// process {|
+				}
+				else											// wlxr_type is something else, but invalid since no containing {|
+					return ctx.LxrMake_txt_(cur_pos);
 			}
-			else											// wlxr_type is something else, but invalid since no containing {|
-				return ctx.LxrMake_txt_(cur_pos);
-		}
 
-		if (!nl_found && wlxr_type == Xop_tblw_wkr.Tblw_type_td)	// | but no nl; return control to pipe_lxr for further processing
-			return Tblw_ws_cell_pipe;
-		if (nl_found)
-			root.Subs_del_after(tkn_idx);
-		return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, wlxr_type, true, false, -1, -1);
+			if (!nl_found && wlxr_type == Xop_tblw_wkr.Tblw_type_td)	// | but no nl; return control to pipe_lxr for further processing
+				return Tblw_ws_cell_pipe;
+			if (nl_found)
+				root.Subs_del_after(tkn_idx);
+		}
+		return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, false, wlxr_type, false, -1, -1);
 	}
 	public static final byte[] Hook_tb = ByteAry_.new_ascii_("{|"), Hook_te = ByteAry_.new_ascii_("|}"), Hook_tr = ByteAry_.new_ascii_("|-")
 		, Hook_th = ByteAry_.new_ascii_("!"), Hook_tc = ByteAry_.new_ascii_("|+");

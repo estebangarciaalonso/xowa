@@ -34,7 +34,7 @@ public class Xof_file_mgr implements GfoInvkAble {
 	public Xoft_rule_mgr Ext_rules() {return ext_rules;} private Xoft_rule_mgr ext_rules = new Xoft_rule_mgr();
 	public Xoaf_download_mgr Download_mgr() {return download_mgr;} private Xoaf_download_mgr download_mgr;
 	public Cache_mgr Cache_mgr() {return cache_mgr;} private Cache_mgr cache_mgr;
-	public void App_init() {
+	public void Init_by_app() {
 		if (!Env_.Mode_testing())
 			cache_mgr.Db_init(app.User().Db_mgr());
 	}

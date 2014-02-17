@@ -55,15 +55,29 @@ public class Xosrv_webserver {
 	public Xosrv_webserver(Xoa_app app) {this.app = app;}
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public int Http_server_port() {return http_server_port;} public Xosrv_webserver Http_server_port_(int v) {http_server_port = v; return this;} private int http_server_port = 8080;
+//		private boolean init_gui_done = false;
+//		private void Init_gui() {
+//			if (init_gui_done) return;
+//			init_gui_done = true;
+//			Gxw_html_server html_box = new Gxw_html_server(this);
+//			Gfo_usr_dlg_ui usr_dlg_ui = app.Usr_dlg().Ui_wkr();
+//			app.Gui_mgr().Kit_(gplx.gfui.Gfui_kit_base._.Tid_(gplx.gfui.Gfui_kit_.TypeId_swt));
+//			app.Usr_dlg().Ui_wkr_(usr_dlg_ui);
+//			app.Gui_mgr().Main_win().Html_box().Under_html_(html_box);
+//		}
 	public String Parse_page_to_html(Xoa_app app, String wiki_domain_str, String page_ttl_str) {		
+//			Init_gui();
 		byte[] wiki_domain = ByteAry_.new_utf8_(wiki_domain_str);
 		byte[] page_ttl = ByteAry_.new_utf8_(page_ttl_str);
-		Xow_wiki wiki = app.Wiki_mgr().Get_by_key_or_make(wiki_domain);
-		Xoa_url page_url = Xoa_url.new_(wiki_domain, page_ttl);
-		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, page_ttl);
-		Xoa_page page = wiki.GetPageByTtl(page_url, ttl);
-		app.Gui_mgr().Main_win().Page_(page); // HACK: init gui_mgr's page for output (which server ordinarily doesn't need)
-		byte[] output_html = wiki.Html_mgr().Output_mgr().Gen(page, Xog_view_mode.Id_read);
+		Xow_wiki wiki = app.Wiki_mgr().Get_by_key_or_make(wiki_domain);							// get the wiki
+		Xoa_url page_url = new Xoa_url(); app.Url_parser().Parse(page_url, page_ttl);			// get the url (needed for query args)
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, page_ttl);											// get the ttl
+		Xoa_page page = wiki.GetPageByTtl(page_url, ttl);										// get page and parse it
+		app.Gui_mgr().Main_win().Page_(page);													// HACK: init gui_mgr's page for output (which server ordinarily doesn't need)
+		wiki.Ctx().Tab().Init(ttl);																// HACK: clear state
+		byte[] output_html = wiki.Html_mgr().Output_mgr().Gen(page, Xog_view_mode.Id_read);		// write html from page data
+//			if (app.Shell().Fetch_page_exec_async())
+//				app.Gui_mgr().Main_win().Exec_reload_imgs();
 		return String_.new_utf8_(output_html);
 	}
 	public void Run_xowa_cmd(Xoa_app app, String url_encoded_str) {

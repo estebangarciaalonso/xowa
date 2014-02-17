@@ -54,7 +54,7 @@ class Scrib_lua_encoder {
 		bfr.Add_byte(Byte_ascii.Brack_end);
 		return true;		
 	}	static final byte[] Prc_bgn = ByteAry_.new_ascii_("chunks[");
-	boolean Encode_ary(ByteAryBfr bfr, KeyVal[] ary) {
+	private boolean Encode_ary(ByteAryBfr bfr, KeyVal[] ary) {
 		int len = ary.length;
 		bfr.Add_byte(Byte_ascii.Curly_bgn);
 		for (int i = 0; i < len; i++) {

@@ -342,7 +342,7 @@ public class Xop_tblw_wkr_tst {
 			));
 	}
 	@Test  public void Ws_leading() {	// EX.WP: AGPLv3
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Ctx().Para().Enabled_y_();	// turn on para, else will hit code which disables for gallery
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"{|"
 			,	" !a"
@@ -355,6 +355,29 @@ public class Xop_tblw_wkr_tst {
 			,	"    <th>a"
 			,	"    </th>"
 			,	"    <th>b"
+			,	"    </th>"
+			,	"  </tr>"
+			,	"</table>"
+			,	""
+			)
+			);
+		fxt.Ctx().Para().Enabled_n_();
+	}
+	@Test  public void Ws_th_2() {
+		fxt.Ctx().Para().Enabled_y_();	// turn on para, else will hit code which disables for gallery
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+			(	"{|"
+			,	"|-"
+			,	"|!style='color:red'|a"
+			,	" !style=\"color:blue\"|b"
+			,	"|}"
+			)
+			, String_.Concat_lines_nl_skipLast
+			(	"<table>"
+			,	"  <tr>"
+			,	"    <td>a"
+			,	"    </td>"
+			,	"    <th style=\"color:blue\">b"
 			,	"    </th>"
 			,	"  </tr>"
 			,	"</table>"
@@ -1003,6 +1026,72 @@ public class Xop_tblw_wkr_tst {
 			,	"  </tr>"
 			,	"</table>"
 			));
+	}
+	@Test  public void Td_at_eos() {// PURPOSE.fix: !! at eos fails; EX:es.s:Si_mis_manos_pudieran_deshojar; DATE:2014-02-11
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		(	"{|"
+		,	"|-"
+		,	"| <poem>!!</poem>"	// note that "!!" is eos inside the <poem> src
+		,	"|}"
+		), String_.Concat_lines_nl
+		(	"<table>"
+		,	"  <tr>"
+		,	"    <td> <div class=\"poem\">"
+		,	"!!"
+		,	"</div>"
+		,	"    </td>"
+		,	"  </tr>"
+		,	"</table>"
+		));
+	}
+	@Test  public void Tr_without_tb_should_start_tb() {// PURPOSE: orphaned tr should automatically start table; EX: pl.w:Portal:Technika; DATE:2014-02-13
+		fxt.Test_parse_page_all_str("<tr><td>a"
+		, String_.Concat_lines_nl
+		(	"<table>"
+		,	"  <tr>"
+		,	"    <td>a"
+		,	"    </td>"
+		,	"  </tr>"
+		,	"</table>"
+		));
+	}
+	@Test  public void Tblx_should_not_close_tblw() {// PURPOSE: </table> should not close {|; EX:fr.w:Exp%C3%A9dition_Endurance; DATE:2014-02-13
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		(	"{|"
+		,	"|-"
+		,	"|"
+		,	"</table>"
+		,	"|}"
+		)		
+		, String_.Concat_lines_nl
+		(	"<table>"
+		,	"  <tr>"
+		,	"    <td>"
+		,	"    </td>"
+		,	"  </tr>"
+		,	"</table>"
+		));
+	}
+	@Test  public void Td_in_list_in_tblw_should_be_ignored() {// PURPOSE: || should be ignored if in list; EX:es.d:casa; DATE:2014-02-15
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		(	"{|"
+		,	"|-"
+		,	"|"
+		,	"* a || b"
+		,	"|}"
+		)		
+		, String_.Concat_lines_nl
+		(	"<table>"
+		,	"  <tr>"
+		,	"    <td>"
+		,	"      <ul>"
+		,	"        <li> a || b"
+		,	"        </li>"
+		,	"      </ul>"
+		,	"    </td>"
+		,	"  </tr>"
+		,	"</table>"
+		));
 	}
 }
 //		@Test  public void Tb_under_tr_is_ignored() {	// PURPOSE: table directly under tr is ignored; EX.WP:Category:Dessert stubs; TODO: complicated, especially to handle 2nd |}

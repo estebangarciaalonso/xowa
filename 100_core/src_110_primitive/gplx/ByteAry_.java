@@ -339,13 +339,43 @@ public class ByteAry_ {
 		}
 		return src.length;
 	}
-	public static int FindFwd(byte[] src, byte[] lkp)								{return Find(src, lkp, 0	  , src.length, true);}
-	public static int FindFwd(byte[] src, byte[] lkp, int src_bgn)					{return Find(src, lkp, src_bgn, src.length, true);}
-	public static int FindFwd(byte[] src, byte[] lkp, int src_bgn, int srcEnd)		{return Find(src, lkp, src_bgn,	   srcEnd, true);}
-	public static int FindBwd_last_ws(byte[] src, int src_bgn)						{
-		if (src_bgn < 0) return ByteAry_.NotFound;
+	public static int FindFwd(byte[] src, byte[] lkp)								{return Find(src, lkp, 0		, src.length, true);}
+	public static int FindFwd(byte[] src, byte[] lkp, int src_bgn)					{return Find(src, lkp, src_bgn	, src.length, true);}
+	public static int FindFwd(byte[] src, byte[] lkp, int src_bgn, int srcEnd)		{return Find(src, lkp, src_bgn	,	  srcEnd, true);}
+	public static int FindBwd(byte[] src, byte lkp)									{return FindBwd(src, lkp, src.length, 0);}
+	public static int FindBwd(byte[] src, byte lkp, int bgn)						{return FindBwd(src, lkp, bgn		, 0);}
+	public static int FindBwd(byte[] src, byte lkp, int bgn, int end) {
+		--bgn;	// always subtract 1 from bgn; allows passing in src_len or cur_pos without forcing caller to subtract - 1; DATE:2014-02-11
+		--end;
+		for (int i = bgn; i > end; i--)
+			if (src[i] == lkp) return i;
+		return ByteAry_.NotFound;
+	}
+	public static int FindBwd(byte[] src, byte[] lkp, int bgn)						{return FindBwd(src, lkp, bgn		, 0);}
+	public static int FindBwd(byte[] src, byte[] lkp, int bgn, int end)	{
+		if (bgn < 1) return ByteAry_.NotFound;
+		--bgn;	// always subtract 1 from bgn; allows passing in src_len or cur_pos without forcing caller to subtract - 1; DATE:2014-02-11
+		--end;
+		int src_len = src.length;
+		int lkp_len = lkp.length;
+		for (int i = bgn; i > end; i--) {
+			if (i + lkp_len > src_len) continue;	// lkp too small for pos; EX: src=abcde; lkp=bcd; pos=4
+			boolean match = true;
+			for (int j = 0; j < lkp_len; j++) {
+				if (lkp[j] != src[i + j]) {
+					match = false;
+					break;
+				} 
+			}
+			if (match) return i;
+		}
+		return ByteAry_.NotFound;
+	}
+	public static int FindBwd_last_ws(byte[] src, int bgn) {
+		if (bgn < 1) return ByteAry_.NotFound;
+		--bgn;
 		int rv = ByteAry_.NotFound;
-		for (int i = src_bgn; i > -1; i--) {
+		for (int i = bgn; i > -1; i--) {
 			byte b = src[i];
 			switch (b) {
 				case Byte_ascii.Space: case Byte_ascii.Tab: case Byte_ascii.NewLine: case Byte_ascii.CarriageReturn:
@@ -375,26 +405,6 @@ public class ByteAry_ {
 		}
 		return rv;
 	}
-	public static int FindBwd(byte[] src, byte[] lkp, int src_bgn)					{return FindBwd(src, lkp, src_bgn,          0);}
-	public static int FindBwd(byte[] src, byte[] lkp, int src_bgn, int src_end)	{
-		if (src_bgn < 0) return ByteAry_.NotFound;
-		int bgn = src_bgn;
-		int end = src_end - 1;
-		int src_len = src.length;
-		int lkp_len = lkp.length;
-		for (int i = bgn; i > end; i--) {
-			if (i + lkp_len > src_len) continue;	// lkp too small for pos; EX: src=abcde; lkp=bcd; pos=4
-			boolean match = true;
-			for (int j = 0; j < lkp_len; j++) {
-				if (lkp[j] != src[i + j]) {
-					match = false;
-					break;
-				} 
-			}
-			if (match) return i;
-		}
-		return ByteAry_.NotFound;
-	}
 	static int Find(byte[] src, byte[] lkp, int src_bgn, int srcEnd, boolean fwd) {
 		if (src_bgn < 0 || src.length == 0) return NotFound;
 		int dif, lkpLen = lkp.length, lkpBgn, lkpEnd, srcEndChk; //int loops = 0;
@@ -422,13 +432,6 @@ public class ByteAry_ {
 	public static int FindFwd(byte[] src, byte lkp, int bgn)	{return FindFwd(src, lkp, bgn, src.length);}
 	public static int FindFwd(byte[] src, byte lkp, int bgn, int len) {
 		for (int i = bgn; i < len; i++)
-			if (src[i] == lkp) return i;
-		return ByteAry_.NotFound;
-	}
-	public static int FindBwd(byte[] src, byte lkp)				{return FindBwd(src, lkp, src.length - 1, 0);}
-	public static int FindBwd(byte[] src, byte lkp, int bgn)	{return FindBwd(src, lkp, bgn, 0);}
-	public static int FindBwd(byte[] src, byte lkp, int bgn, int end) {
-		for (int i = bgn; i >= end; i--)
 			if (src[i] == lkp) return i;
 		return ByteAry_.NotFound;
 	}
@@ -543,10 +546,11 @@ public class ByteAry_ {
 		}
 		return ary;
 	}
-	public static byte X_to_byte_by_int(byte[] ary, int bgn, int end, byte or) {return (byte)X_to_int_or(ary, bgn, end, or);}
-	public static int X_to_int(byte[] ary) {return X_to_int_or(ary, 0, ary.length, -1);}
-	public static int X_to_int_or(byte[] ary, int or) {if (ary == null) return or; return X_to_int_or(ary, 0, ary.length, or);}
-	public static int X_to_int_or(byte[] ary, int bgn, int end, int or) {
+	public static byte X_to_byte_by_int(byte[] ary, int bgn, int end, byte or)	{return (byte)X_to_int_or(ary, bgn, end, or);}
+	public static int X_to_int(byte[] ary)										{return X_to_int_or(ary, null, 0, ary.length, -1);}
+	public static int X_to_int_or(byte[] ary, int or)							{if (ary == null) return or; return X_to_int_or(ary, null, 0, ary.length, or);}
+	public static int X_to_int_or(byte[] ary, int bgn, int end, int or)			{return X_to_int_or(ary, null, bgn, end, or);}
+	public static int X_to_int_or(byte[] ary, byte[] ignore_ary, int bgn, int end, int or) {
 		if (end == bgn) return or;	// null-len
 		int rv = 0, multiple = 1;
 		for (int i = end - 1; i >= bgn; i--) {	// -1 b/c end will always be next char; EX: {{{1}}}; bgn = 3, end = 4
@@ -559,7 +563,21 @@ public class ByteAry_ {
 					break;
 				case Byte_ascii.Dash:
 					return i == bgn ? rv * -1 : or;
-				default: return or;
+				case Byte_ascii.Plus:
+					return i == bgn ? rv : or;
+				default:
+					boolean invalid = true;
+					if (ignore_ary != null) {
+						int ignore_ary_len = ignore_ary.length;
+						for (int j = 0; j < ignore_ary_len; j++) {
+							if (b == ignore_ary[j]) {
+								invalid = false;
+								break;
+							}
+						}
+					}
+					if (invalid) return or;
+					break;
 			}
 		}
 		return rv;

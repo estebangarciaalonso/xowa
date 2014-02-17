@@ -75,13 +75,13 @@ public class Xob_siteinfo_parser {
 			if (sub_nde.Atrs().Count() == 0) continue; // NOTE: JAVA again has unexpected nodes
 			try {
 				int ns_id = Int_.parse_(sub_nde.Atrs().FetchValOr("key", ""));
-				byte case_match = Xow_ns_.Case_match_parse_(sub_nde.Atrs().FetchValOr("case", ""));
+				byte case_match = Xow_ns_case_.parse_(sub_nde.Atrs().FetchValOr("case", ""));
 				String name = sub_nde.Text_inner();
 				ns_mgr.Add_new(ns_id, ByteAry_.new_utf8_(name), case_match, false);
 			}
 			catch (Exception e) {throw Err_mgr._.fmt_(GRP_KEY, "siteinfo.ns", "parse failed: ~{0} ~{1}", sub_nde.Text_inner(), Err_.Message_gplx_brief(e));}
 		}
-		ns_mgr.Init_done();
+		ns_mgr.Init_w_defaults();
 	}
 	private static final byte[] Bry_siteinfo_bgn = ByteAry_.new_ascii_("<siteinfo>"), Bry_siteinfo_end = ByteAry_.new_ascii_("</siteinfo>");
 	static final String GRP_KEY = "xowa.bldr.core.init";

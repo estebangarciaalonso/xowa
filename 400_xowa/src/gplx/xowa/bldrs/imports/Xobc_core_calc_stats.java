@@ -29,7 +29,7 @@ public class Xobc_core_calc_stats extends Xob_itm_basic_base implements Xob_cmd 
 		int ns_len = wiki.Ns_mgr().Ords_len();
 		int total = 0;
 		for (int i = 0; i < ns_len; i++) {
-			Xow_ns ns = wiki.Ns_mgr().Ords()[i];
+			Xow_ns ns = wiki.Ns_mgr().Ords_ary()[i];
 			int ns_count = Calc_counts(ns);
 			ns.Count_(ns_count);
 			total += ns_count;
@@ -42,7 +42,7 @@ public class Xobc_core_calc_stats extends Xob_itm_basic_base implements Xob_cmd 
 		Gen_call(Bool_.N, bfr, Xow_wiki_stats.Invk_number_of_files_, count_file);
 		Gen_call(Bool_.N, bfr, Xow_wiki_stats.Invk_number_of_pages_, total);
 		for (int i = 0; i < ns_len; i++) {
-			Xow_ns ns = wiki.Ns_mgr().Ords()[i];
+			Xow_ns ns = wiki.Ns_mgr().Ords_ary()[i];
 			if (ns.Id() < 0) continue;
 			bfr.Add_byte_nl();
 			Gen_call(Bool_.N, bfr, Xow_wiki_stats.Invk_number_of_articles_in_ns_, ns.Num_str(), Int_.XtoStr_PadBgn(ns.Count(), 10));

@@ -29,6 +29,8 @@ public class Wdata_doc_consts {
 		, Val_time_globe_str = "http:\\/\\/www.wikidata.org\\/entity\\/Q2", Val_time_calendarmodel_str = "http://www.wikidata.org/entity/Q1985727"
 		, Key_geo_latitude_str = "latitude", Key_geo_longitude_str = "longitude", Key_geo_altitude_str = "altitude"
 		, Key_geo_globe_str = "globe", Key_geo_precision_str = "precision"
+		, Key_quantity_amount_str = "amount", Key_quantity_unit_str = "unit"
+		, Key_quantity_ubound_str = "upperBound", Key_quantity_lbound_str = "lowerBound"
 		;
 	public static final byte[] 
 		  Key_atr_entity_bry = bry_(Key_atr_entity_str), Key_atr_label_bry = bry_(Key_atr_label_str), Key_atr_description_bry = bry_(Key_atr_description_str), Key_atr_aliases_bry = bry_(Key_atr_aliases_str)
@@ -44,6 +46,8 @@ public class Wdata_doc_consts {
 		, Val_time_calendarmodel_bry = bry_(Val_time_timezone_str), Val_time_globe_bry = bry_(Val_time_globe_str)
 		, Key_geo_latitude_bry = bry_(Key_geo_latitude_str), Key_geo_longitude_bry = bry_(Key_geo_longitude_str), Key_geo_altitude_bry = bry_(Key_geo_altitude_str)
 		, Key_geo_globe_bry = bry_(Key_geo_globe_str), Key_geo_precision_bry = bry_(Key_geo_precision_str)
+		, Key_quantity_amount_bry = bry_(Key_quantity_amount_str), Key_quantity_unit_bry = bry_(Key_quantity_unit_str)
+		, Key_quantity_ubound_bry = bry_(Key_quantity_ubound_str), Key_quantity_lbound_bry = bry_(Key_quantity_lbound_str)
 		;
 	private static byte[] bry_(String s) {return ByteAry_.new_ascii_(s);}
 }

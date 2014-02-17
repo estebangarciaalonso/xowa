@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.poems; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 public class Poem_xtn_mgr extends Xox_mgr_base {
 	@Override public byte[] Xtn_key() {return XTN_KEY;} public static final byte[] XTN_KEY = ByteAry_.new_ascii_("poem");
+	@Override public Xox_mgr Clone_new() {return new Poem_xtn_mgr();}
 	public Xop_parser Parser() {return parser;} private Xop_parser parser;
 	@Override public void Xtn_init_by_wiki(Xow_wiki wiki) {
 		parser = new Xop_parser(wiki.Parser().Tmpl_lxr_mgr(), Xop_lxr_mgr.Poem_lxr_mgr);

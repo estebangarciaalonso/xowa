@@ -35,7 +35,6 @@ public class Xoh_html_wtr {
 	public void Page_(Xoa_page v) {this.page = v;}
 	public void Write_all(Xop_ctx ctx, Xop_root_tkn root, byte[] src, ByteAryBfr main_bfr) {
 		try {
-			tbl_para = wiki.Html_mgr().Tbl_para();
 			indent_level = 0; this.page = ctx.Page();
 			this.page.Langs().Clear();	// HACK: always clear langs; necessary for reload
 			lnki_wtr.Page_bgn(page);
@@ -43,10 +42,9 @@ public class Xoh_html_wtr {
 		}
 		finally {
 			page.Category_list_(hctx.Lnki_ctg_xto_ary());
-			this.page = null;
 			hctx.Clear();
 		}
-	}	boolean tbl_para = false;
+	}
 	public void Write_tkn_ary(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, int depth, Xop_tkn_itm[] ary) {
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++) {
@@ -531,7 +529,15 @@ public class Xoh_html_wtr {
 			case Xop_xnde_tag_.Tid_syntaxHighlight:
 			case Xop_xnde_tag_.Tid_score:
 			case Xop_xnde_tag_.Tid_poem:
+			case Xop_xnde_tag_.Tid_listing_buy:
+			case Xop_xnde_tag_.Tid_listing_do:
+			case Xop_xnde_tag_.Tid_listing_drink:
+			case Xop_xnde_tag_.Tid_listing_eat:
+			case Xop_xnde_tag_.Tid_listing_listing:
+			case Xop_xnde_tag_.Tid_listing_see:
+			case Xop_xnde_tag_.Tid_listing_sleep:
 			case Xop_xnde_tag_.Tid_xowa_cmd:
+			case Xop_xnde_tag_.Tid_rss:
 				Xox_xnde xtn = xnde.Xnde_xtn();
 				xtn.Xtn_write(app, this, opts, ctx, bfr, src, xnde, depth);
 				break;
@@ -576,7 +582,10 @@ public class Xoh_html_wtr {
 				default:
 					if (tkn_tid == Xop_tkn_itm_.Tid_html_ncr) {					// html_entity &#32; needed for fr.wikipedia.org and many spans with <span>&#32;</span>; DATE:2013-06-18
 						Xop_html_ncr_tkn ncr_tkn = (Xop_html_ncr_tkn)sub;
-						if (ncr_tkn.Html_ncr_val() == Byte_ascii.Space) {
+						if (ncr_tkn.Html_ncr_val() == Byte_ascii.Space
+							|| ncr_tkn.Html_ncr_val() == 160
+							) {
+
 							ws_bfr.Add_mid(src, ncr_tkn.Src_bgn(), ncr_tkn.Src_end());
 							continue;											// just add entity; don't process rest;
 						}

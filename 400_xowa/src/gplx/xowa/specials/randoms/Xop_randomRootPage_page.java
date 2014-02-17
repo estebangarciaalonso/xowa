@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.specials.randoms; import gplx.*; import gplx.xowa.*; import gplx.xowa.specials.*;
 public class Xop_randomRootPage_page implements Xows_page {
 	public void Special_gen(Xoa_url calling_url, Xoa_page page, Xow_wiki wiki, Xoa_ttl ttl) {
-		Xow_ns ns = wiki.Ns_mgr().Get_by_bry_or_main(ttl.Rest_txt());
+		Xow_ns ns = wiki.Ns_mgr().Names_get_or_main(ttl.Rest_txt());
 		byte[] random_ttl_bry = wiki.Db_mgr().Load_mgr().Find_random_ttl(ns);
 		byte[] root_bry = Xoa_ttl.parse_(wiki, random_ttl_bry).Root_txt();
 		wiki.Data_mgr().Redirect(page, ns.Gen_ttl(root_bry));

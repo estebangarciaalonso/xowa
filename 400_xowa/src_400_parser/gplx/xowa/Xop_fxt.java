@@ -92,20 +92,20 @@ public class Xop_fxt {
 	public Xop_xnde_tkn_chkr tkn_xnde_()							{return tkn_xnde_(String_.Neg1_pos, String_.Neg1_pos);}
 	public Xop_xnde_tkn_chkr tkn_xnde_(int bgn, int end)			{return (Xop_xnde_tkn_chkr)new Xop_xnde_tkn_chkr().Src_rng_(bgn, end);}
 	public Xop_tkn_chkr_base tkn_curly_bgn_(int bgn)				{return new Xop_tkn_chkr_base().TypeId_dynamic(Xop_tkn_itm_.Tid_tmpl_curly_bgn).Src_rng_(bgn, bgn + 2);}
-	public Xop_tkn_chkr_base tkn_para_blank_(int pos)				{return tkn_para_(pos, Xop_para_tkn.Para_typeId_none, Xop_para_tkn.Para_typeId_none);}
-	public Xop_tkn_chkr_base tkn_para_bgn_pre_(int pos)				{return tkn_para_(pos, Xop_para_tkn.Para_typeId_none, Xop_para_tkn.Para_typeId_pre);}
-	public Xop_tkn_chkr_base tkn_para_bgn_para_(int pos)			{return tkn_para_(pos, Xop_para_tkn.Para_typeId_none, Xop_para_tkn.Para_typeId_para);}
-	public Xop_tkn_chkr_base tkn_para_mid_para_(int pos)			{return tkn_para_(pos, Xop_para_tkn.Para_typeId_para, Xop_para_tkn.Para_typeId_para);}
-	public Xop_tkn_chkr_base tkn_para_end_para_(int pos)			{return tkn_para_(pos, Xop_para_tkn.Para_typeId_para, Xop_para_tkn.Para_typeId_none);}
-	public Xop_tkn_chkr_base tkn_para_end_pre_bgn_para_(int pos)	{return tkn_para_(pos, Xop_para_tkn.Para_typeId_pre , Xop_para_tkn.Para_typeId_para);}
-	public Xop_tkn_chkr_base tkn_para_end_para_bgn_pre_(int pos)	{return tkn_para_(pos, Xop_para_tkn.Para_typeId_para, Xop_para_tkn.Para_typeId_pre);}
-	public Xop_tkn_chkr_base tkn_para_end_pre_(int pos)				{return tkn_para_(pos, Xop_para_tkn.Para_typeId_pre , Xop_para_tkn.Para_typeId_none);}
-	public Xop_tkn_chkr_base tkn_para_(int pos, byte tid, byte bgn) {return new Xop_para_tkn_chkr().Para_typeId_(tid).Para_bgn_(bgn).Src_rng_(pos, pos);}
+	public Xop_tkn_chkr_base tkn_para_blank_(int pos)				{return tkn_para_(pos, Xop_para_tkn.Tid_none, Xop_para_tkn.Tid_none);}
+	public Xop_tkn_chkr_base tkn_para_bgn_pre_(int pos)				{return tkn_para_(pos, Xop_para_tkn.Tid_none, Xop_para_tkn.Tid_pre);}
+	public Xop_tkn_chkr_base tkn_para_bgn_para_(int pos)			{return tkn_para_(pos, Xop_para_tkn.Tid_none, Xop_para_tkn.Tid_para);}
+	public Xop_tkn_chkr_base tkn_para_mid_para_(int pos)			{return tkn_para_(pos, Xop_para_tkn.Tid_para, Xop_para_tkn.Tid_para);}
+	public Xop_tkn_chkr_base tkn_para_end_para_(int pos)			{return tkn_para_(pos, Xop_para_tkn.Tid_para, Xop_para_tkn.Tid_none);}
+	public Xop_tkn_chkr_base tkn_para_end_pre_bgn_para_(int pos)	{return tkn_para_(pos, Xop_para_tkn.Tid_pre , Xop_para_tkn.Tid_para);}
+	public Xop_tkn_chkr_base tkn_para_end_para_bgn_pre_(int pos)	{return tkn_para_(pos, Xop_para_tkn.Tid_para, Xop_para_tkn.Tid_pre);}
+	public Xop_tkn_chkr_base tkn_para_end_pre_(int pos)				{return tkn_para_(pos, Xop_para_tkn.Tid_pre , Xop_para_tkn.Tid_none);}
+	public Xop_tkn_chkr_base tkn_para_(int pos, byte tid, byte bgn) {return new Xop_para_tkn_chkr().Para_tid_(tid).Para_bgn_(bgn).Src_rng_(pos, pos);}
 	public Xop_tkn_chkr_base tkn_nl_auto_(int pos)					{return tkn_nl_(pos, pos, Xop_nl_tkn.Tid_auto);}
 	public Xop_tkn_chkr_base tkn_nl_char_(int bgn, int end)			{return tkn_nl_(bgn, end, Xop_nl_tkn.Tid_char);}
 	public Xop_tkn_chkr_base tkn_nl_char_len1_(int bgn)				{return tkn_nl_(bgn, bgn + 1, Xop_nl_tkn.Tid_char);}
 	public Xop_tkn_chkr_base tkn_nl_char_len0_(int pos)				{return tkn_nl_(pos, pos, Xop_nl_tkn.Tid_char);}
-	public Xop_tkn_chkr_base tkn_nl_(int bgn, int end, byte tid)	{return new Xop_nl_tkn_chkr().Nl_typeId_(tid).Src_rng_(bgn, end);}
+	public Xop_tkn_chkr_base tkn_nl_(int bgn, int end, byte tid)	{return new Xop_nl_tkn_chkr().Nl_tid_(tid).Src_rng_(bgn, end);}
 	@gplx.Internal protected Xop_list_tkn_chkr tkn_list_bgn_(int bgn, int end, byte listType) {return (Xop_list_tkn_chkr)new Xop_list_tkn_chkr().List_itmTyp_(listType).Src_rng_(bgn, end);}
 	@gplx.Internal protected Xop_list_tkn_chkr tkn_list_end_(int pos)					{return (Xop_list_tkn_chkr)new Xop_list_tkn_chkr().Src_rng_(pos, pos);}
 	@gplx.Internal protected Xop_tkn_chkr_lnke tkn_lnke_(int bgn, int end)			{return new Xop_tkn_chkr_lnke(bgn, end);}
@@ -147,6 +147,8 @@ public class Xop_fxt {
 		rv.Find_tkn_(tkn_arg_itm_(find));
 		return rv;
 	}
+	public Xop_fxt	Init_para_y_() {ctx.Para().Enabled_y_(); return this;}
+	public Xop_fxt	Init_para_n_() {ctx.Para().Enabled_n_(); return this;}
 	public Xop_fxt	Init_log_(Gfo_msg_itm... itms) {for (Gfo_msg_itm itm : itms) log_itms.Add(itm); return this;} ListAdp log_itms = ListAdp_.new_();
 	public void		Init_defn_add(String name, String text) {Init_defn_add(name, text, Xow_ns_case_.Id_all);}
 	public void		Init_defn_add(String name, String text, byte case_match) {

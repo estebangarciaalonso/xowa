@@ -55,7 +55,7 @@ class Gfs_lxr_comment_flat implements Gfs_lxr {
 	public byte Lxr_tid() {return Gfs_lxr_.Tid_comment;}
 	public int Process(Gfs_parser_ctx ctx, int lxr_bgn, int lxr_end) {
 		byte[] src = ctx.Src(); int src_len = ctx.Src_len();
-		int end_pos = ByteAry_.FindFwd(src, end_bry, lxr_end, src_len);
+		int end_pos = Byte_ary_finder.Find_fwd(src, end_bry, lxr_end, src_len);
 		if (end_pos == ByteAry_.NotFound) throw Err_.new_fmt_("comment is not closed: {0}", String_.new_utf8_(end_bry));
 //			ctx.Make_val_by_comment(lxr_bgn + bgn_bry_len, end_pos);
 		return end_pos + end_bry_len;	// position after end_bry
@@ -148,7 +148,7 @@ class Gfs_lxr_quote implements Gfs_lxr {
 	public byte Lxr_tid() {return Gfs_lxr_.Tid_quote;}
 	public int Process(Gfs_parser_ctx ctx, int lxr_bgn, int lxr_end) {
 		byte[] src = ctx.Src(); int src_len = ctx.Src_len();
-		int end_pos = ByteAry_.FindFwd(src, end_bry, lxr_end, src_len);
+		int end_pos = Byte_ary_finder.Find_fwd(src, end_bry, lxr_end, src_len);
 		if (end_pos == ByteAry_.NotFound) throw Err_.new_fmt_("quote is not closed: {0}", String_.new_utf8_(end_bry));
 		ByteAryBfr bfr = ctx.Tmp_bfr().Clear();
 		int prv_pos = lxr_end;
@@ -158,7 +158,7 @@ class Gfs_lxr_quote implements Gfs_lxr {
 				bfr.Add_mid(src, prv_pos, end_pos);		// add everything up to end_bry
 				bfr.Add(end_bry);						// add end_bry
 				prv_pos = nxt_pos + end_bry_len;		// set prv_pos to after doubled end_bry
-				end_pos = ByteAry_.FindFwd(src, end_bry, prv_pos, src_len);
+				end_pos = Byte_ary_finder.Find_fwd(src, end_bry, prv_pos, src_len);
 				if (end_pos == ByteAry_.NotFound) throw Err_.new_fmt_("quote is not closed: {0}", String_.new_utf8_(end_bry));
 				nxt_pos = end_pos + end_bry_len;
 				if (!ByteAry_.Match(src, nxt_pos, nxt_pos + end_bry_len, end_bry)) {

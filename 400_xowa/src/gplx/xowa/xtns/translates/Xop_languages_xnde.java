@@ -27,7 +27,7 @@ public class Xop_languages_xnde implements Xox_xnde {
 	public Xoa_ttl Root_ttl() {return root_ttl;} private Xoa_ttl root_ttl;
 	private Xoa_ttl Root_ttl_of(Xow_wiki wiki, Xoa_ttl ttl) {
 		byte[] page_bry = ttl.Page_db();
-		int slash_pos = ByteAry_.FindBwd(page_bry, Xoa_ttl.Subpage_spr);
+		int slash_pos = Byte_ary_finder.Find_bwd(page_bry, Xoa_ttl.Subpage_spr);
 		if (slash_pos == ByteAry_.NotFound) return ttl;
 		byte[] root_bry = ByteAry_.Mid(page_bry, 0, slash_pos);
 		return Xoa_ttl.parse_(wiki, ttl.Ns().Id(), root_bry);

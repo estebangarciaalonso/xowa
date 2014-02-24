@@ -17,14 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xop_pre_tkn extends Xop_tkn_itm_base {
-	public static final byte Pre_typeId_null = 0, Pre_typeId_bgn = 1, Pre_typeId_end = 2;
-	@Override public byte Tkn_tid() {return Xop_tkn_itm_.Tid_pre;}
-	public byte Pre_typeId() {return pre_typeId;} private byte pre_typeId = Pre_typeId_null;
-	public byte Pre_enable() {return pre_enable;} public Xop_pre_tkn Pre_enable_(byte v) {pre_enable = v; return this;} private byte pre_enable = Bool_.__byte;
-	public Xop_tkn_itm Pre_bgnTkn() {return pre_bgnTkn;} public Xop_tkn_itm Pre_bgnTkn_(Xop_pre_tkn v) {pre_bgnTkn = v; return this;} private Xop_tkn_itm pre_bgnTkn;
-	public Xop_pre_tkn(int bgn, int end, byte pre_typeId, Xop_tkn_itm pre_bgnTkn) {
+	public Xop_pre_tkn(int bgn, int end, byte pre_tid, Xop_tkn_itm pre_bgn_tkn) {
 		this.Tkn_ini_pos(false, bgn, end);
-		this.pre_typeId = pre_typeId;
-		this.pre_bgnTkn = pre_bgnTkn;
+		this.pre_tid = pre_tid;
 	}
+	@Override public byte Tkn_tid() {return Xop_tkn_itm_.Tid_pre;}
+	public byte Pre_tid() {return pre_tid;} private byte pre_tid = Pre_tid_null;
+	public static final byte Pre_tid_null = 0, Pre_tid_bgn = 1, Pre_tid_end = 2;
 }

@@ -73,6 +73,11 @@ public class Xoa_url_parser_tst {
 		xwiki_mgr.Add_full(ByteAry_.new_ascii_("s"), ByteAry_.new_ascii_("en.wikisource.org"));
 		fxt.Reset().Raw_("s:A/b/c").Wiki_("en.wikisource.org").Page_("A/b/c").tst_app();
 	}
+	@Test  public void Xwiki_no_segs() {	// PURPOSE: handle xwiki without full url; EX: "commons:Commons:Media_of_the_day"; DATE:2014-02-19
+		Xow_xwiki_mgr xwiki_mgr = fxt.Wiki().Xwiki_mgr();
+		xwiki_mgr.Add_full(ByteAry_.new_ascii_("s"), ByteAry_.new_ascii_("en.wikisource.org"));
+		fxt.Reset().Raw_("s:Project:A").Wiki_("en.wikisource.org").Page_("Project:A").tst_app();
+	}
 	@Test  public void Domain_only() {
 		fxt.App().User().Wiki().Xwiki_mgr().Add_full("fr.wikipedia.org", "fr.wikipedia.org");
 		fxt.Reset().Raw_("fr.wikipedia.org").Wiki_("fr.wikipedia.org").Page_("").tst_app();
@@ -142,8 +147,8 @@ public class Xoa_url_parser_tst {
 	@Test  public void Parse_from_url_bar__custom() {
 		fxt.App().User().Wiki().Xwiki_mgr().Add_full("zh.wikipedia.org", "zh.wikipedia.org");
 		gplx.xowa.wikis.Xoa_wiki_regy.Make_wiki_dir(fxt.App(), "zh.wikipedia.org");
-		fxt.App().Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_("zh.wikipedia.org")).Props().Main_page_(ByteAry_.new_ascii_("Custom_Main_Page"));
-		fxt.Test_parse_from_url_bar("zh.w:"						, "zh.wikipedia.org/wiki/Custom_Main_Page");
+		fxt.App().Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_("zh.wikipedia.org")).Props().Main_page_(ByteAry_.new_ascii_("Zh_Main_Page"));
+		fxt.Test_parse_from_url_bar("zh.w:"						, "zh.wikipedia.org/wiki/Zh_Main_Page");
 		fxt.Test_parse_from_url_bar("zh.w:Main_Page"			, "zh.wikipedia.org/wiki/Main_Page");
 	}
 }

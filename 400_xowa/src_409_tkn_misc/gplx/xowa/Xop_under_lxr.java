@@ -76,6 +76,23 @@ class Xop_under_lxr implements Xop_lxr {
 		if (o == null) return ctx.LxrMake_txt_(cur_pos);					// kwd not found; EX: "TOCA__"
 		int kwd_id = ((IntVal)(o)).Val();
 		Xop_under_lxr.Make_tkn(ctx, tkn_mkr, root, src, src_len, bgn_pos, rv, kwd_id);
+
+		int skip = 0;
+		for (int i = rv; i < src_len; i++) {// trim all ws from end; EX: "__TOC__ " -> "" (gobble up last ws)
+			switch (src[i]) {
+				case Byte_ascii.Space:
+				case Byte_ascii.Tab:
+					++skip;
+					break;
+				case Byte_ascii.NewLine:
+					rv += skip;
+					i = src_len;
+					break;
+				default:
+					i = src_len;
+					break;
+			}
+		}
 		return rv;
 	}
 	public static void Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, int kwd_id) {

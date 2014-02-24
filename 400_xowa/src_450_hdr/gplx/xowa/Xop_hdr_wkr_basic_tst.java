@@ -17,8 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
-public class Xop_hdr_wkr_tst {
+public class Xop_hdr_wkr_basic_tst {
 	@Before public void init() {fxt.Reset();} private Xop_fxt fxt = new Xop_fxt();
+	@After public void term() {fxt.Init_para_n_();}
 	@Test  public void H2()							{fxt.Test_parse_page_wiki_str("==a=="				, "<h2>a</h2>\n");}
 	@Test  public void H3()							{fxt.Test_parse_page_wiki_str("===a==="				, "<h3>a</h3>\n");}
 	@Test  public void H6_limit()					{fxt.Test_parse_page_wiki_str("=======a======="		, "<h6>=a=</h6>\n");}
@@ -36,7 +37,6 @@ public class Xop_hdr_wkr_tst {
 		,	"b"
 		), String_.Concat_lines_nl_skipLast
 		(	"<h2>a</h2>"
-		,	""	// NOTE: multiple \n above gets combined into 1
 		,	"b"
 		));
 	}

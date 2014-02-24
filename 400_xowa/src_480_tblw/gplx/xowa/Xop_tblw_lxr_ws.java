@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-public class Xop_tblw_lxr_ws {//: Xop_lxr 
+public class Xop_tblw_lxr_ws {
 	public static int Make(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte wlxr_type, boolean called_from_pre) {
 		// NOTE: repeated in tblw_lxr
 		// CASE_1: standalone "!" should be ignored if no tblw present; EX: "a b! c" should not trigger ! for header
@@ -35,21 +35,9 @@ public class Xop_tblw_lxr_ws {//: Xop_lxr
 						ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos + 1 , bgn_pos + 2));
 						return cur_pos;
 					}
-					else {	// \n| or \n! but no tbl
-						if (ctx.Para().Pre_at_line_bgn())	// HACK:pre_section_begun_and_failed_tblw
-							return ctx.Para().Hack_pre_and_false_tblw(ctx, root, src, bgn_pos);
-						else								// interpret as text
-							return ctx.LxrMake_txt_(cur_pos);
-					}
-				}
-				else {
-					if (wlxr_type == Xop_tblw_wkr.Tblw_type_th2) {
-						int nl_pos = ByteAry_.FindBwd(src, Byte_ascii.NewLine, cur_pos);	// search for preceding nl
-						if (nl_pos != ByteAry_.NotFound) {	
-							if (src[nl_pos + 1] != Byte_ascii.Bang) {
-								return ctx.LxrMake_txt_(cur_pos);
-							}
-						}
+					else {	// \n\s| or \n\s! but no tbl
+						ctx.Subs_add(root, tkn_mkr.Txt(bgn_pos + 1, cur_pos));	// +1 to ignore \n; DATE:2014-02-19
+						return cur_pos;
 					}
 				}
 				break;

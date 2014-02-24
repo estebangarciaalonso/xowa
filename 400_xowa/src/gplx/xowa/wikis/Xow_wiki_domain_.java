@@ -32,13 +32,13 @@ public class Xow_wiki_domain_ {
 		~www.~{type}.org		EX: mediawiki; wikidata;
 		*/
 		int raw_len = raw.length;
-		int dot_0 = ByteAry_.FindFwd(raw, Byte_ascii.Dot, 0, raw_len);
+		int dot_0 = Byte_ary_finder.Find_fwd(raw, Byte_ascii.Dot, 0, raw_len);
 		if (dot_0 == ByteAry_.NotFound) {	// 0 dots; check for "home"
 			return ByteAry_.Eq(raw, Key_home_bry)
 				? new Xow_wiki_domain(raw, Tid_home, Xol_lang_itm_.Key__unknown)
 				: Xow_wiki_domain_.new_other_(raw);
 		}
-		int dot_1 = ByteAry_.FindFwd(raw, Byte_ascii.Dot, dot_0 + 1, raw_len);
+		int dot_1 = Byte_ary_finder.Find_fwd(raw, Byte_ascii.Dot, dot_0 + 1, raw_len);
 		if (dot_1 == ByteAry_.NotFound) {	// 1 dot; check for "wikimediafoundation.org"
 			return ByteAry_.Match(raw, 0, dot_0, Key_wikimediafoundation_bry)
 				? new Xow_wiki_domain(raw, Tid_wikimediafoundation, Xol_lang_itm_.Key__unknown)

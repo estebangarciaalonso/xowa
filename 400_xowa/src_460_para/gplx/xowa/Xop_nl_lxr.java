@@ -18,57 +18,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 class Xop_nl_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_nl;}
-	public Xop_nl_lxr Poem_(boolean v) {poem = v; return this;} private boolean poem = false;
 	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Byte_ascii.NewLine, this);}
 	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
 	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
-		Xop_para_wkr para_wkr = ctx.Para();
-		if (bgn_pos == Xop_parser_.Doc_bgn_bos) {return ctx.LxrMake_txt_(cur_pos);} // simulated nl at beginning of every parse
+		if (bgn_pos == Xop_parser_.Doc_bgn_bos) return ctx.LxrMake_txt_(cur_pos); // simulated nl at beginning of every parse
 		ctx.Apos().EndFrame(ctx, root, src, bgn_pos, true);	// NOTE: frame should at end at bgn_pos (before \n) not after; else, will create tkn at (5,5), while tkn_mkr.Space creates one at (4,5); DATE:2013-10-31
-		ctx.Tblw().Cell_pipe_seen_(false);
+		ctx.Tblw().Cell_pipe_seen_(false);	// flip off "|" in tblw seq; EX: "| a\n||" needs to flip off "|" else "||" will be seen as style dlm"; NOTE: not covered by test?
 
-		// if hdr is open, then close it
-		int acs_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_hdr);
-		if (acs_pos != -1) {
-			ctx.Stack_pop_til(root, src, acs_pos, true, bgn_pos, cur_pos);
-			para_wkr.Process_nl_sect_end(ctx, cur_pos);
-		}
-
-		// if list/lnke is open/close it
+		Xop_para_wkr para_wkr = ctx.Para();
 		switch (ctx.Cur_tkn_tid()) {
-			case Xop_tkn_itm_.Tid_lnki: // NOTE: \n in caption or other multipart lnki; don't call para_wkr.Process
-//					para_wkr.Process_nl_sect_end(cur_pos);
-				Xop_tkn_itm nl_tkn = tkn_mkr.Space(root, bgn_pos, cur_pos);	// convert \n to \s. may result in multiple \s, but rely on htmlViewer to suppress; EX.WP: Schwarzschild radius; and the stellar [[Velocity dispersion|velocity\ndispersion]];
+			case Xop_tkn_itm_.Tid_hdr:		// last tkn was hdr; close it; EX: \n==a==\nb; "\n" should close 2nd "=="; DATE:2014-02-17
+				int acs_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_hdr);
+				ctx.Stack_pop_til(root, src, acs_pos, true, bgn_pos, cur_pos);
+				para_wkr.Process_block__bgn_n__end_y(Xop_xnde_tag_.Tag_h2);
+				break;
+			case Xop_tkn_itm_.Tid_list:		// close list
+				Xop_list_wkr_.Close_list_if_present(ctx, root, src, bgn_pos, cur_pos);
+				para_wkr.Process_block__bgn_n__end_y(Xop_xnde_tag_.Tag_li);
+				break;
+			case Xop_tkn_itm_.Tid_lnke:		// close lnke
+				if (ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tmpl_invk) == -1) // only close if no tmpl; MWR: [[SHA-2]]; * {{cite journal|title=Proposed 
+					ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnke), true, bgn_pos, cur_pos);
+				break;
+			case Xop_tkn_itm_.Tid_lnki:		// NOTE: \n in caption or other multipart lnki; don't call para_wkr.Process
+				Xop_tkn_itm nl_tkn = tkn_mkr.Space(root, bgn_pos, cur_pos);	// convert \n to \s. may result in multiple \s, but rely on htmlViewer to suppress; EX: w:Schwarzschild_radius; and the stellar [[Velocity dispersion|velocity\ndispersion]];
 				ctx.Subs_add(root, nl_tkn);
 				return cur_pos;
-			case Xop_tkn_itm_.Tid_list:
-				Xop_list_wkr_.Close_list_if_present(ctx, root, src, bgn_pos, cur_pos);
-				para_wkr.Process_nl_sect_end(ctx, cur_pos);
-				break;
-			case Xop_tkn_itm_.Tid_lnke:
-				if (ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tmpl_invk) == -1) {// only pop if no tmpl; MWR: [[SHA-2]]; * {{cite journal|title=Proposed 
-					ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnke), true, bgn_pos, cur_pos);
-				}
-				break;
-//				case Xop_tkn_itm_.Tid_tblw_tc: case Xop_tkn_itm_.Tid_tblw_td:	// tc/td should not have attributes
+			// case Xop_tkn_itm_.Tid_tblw_tc: case Xop_tkn_itm_.Tid_tblw_td:	// STUB: tc/td should not have attributes
 			case Xop_tkn_itm_.Tid_tblw_tb: case Xop_tkn_itm_.Tid_tblw_tr: case Xop_tkn_itm_.Tid_tblw_th:	// nl should close previous tblw's atrs range; EX {{Infobox planet}} and |-\n<tr>
 				Xop_tblw_wkr.Atrs_close(ctx, src, root);
 				break;
 		}
-		if (para_wkr.Enabled() && ctx.Parse_tid() == Xop_parser_.Parse_tid_page_wiki)
-			para_wkr.Process_nl(ctx, root, src, bgn_pos, cur_pos, true);
-		else {
-			if (poem) {
-				ctx.Subs_add(root, tkn_mkr.Xnde(bgn_pos, cur_pos).Tag_(Xop_xnde_tag_.Tag_br));
-				ctx.Subs_add(root, tkn_mkr.NewLine(cur_pos, cur_pos, Xop_nl_tkn.Tid_char, 1));
-			}
-			else {
-				Xop_nl_tkn nl_tkn = tkn_mkr.NewLine(bgn_pos, cur_pos, Xop_nl_tkn.Tid_char, 1);
-				ctx.Subs_add(root, nl_tkn);
-			}
+		if (	ctx.Parse_tid() == Xop_parser_.Parse_tid_page_wiki			// parse_mode is wiki
+			&&	para_wkr.Enabled()											// check that para is enabled
+			)
+			para_wkr.Process_nl(ctx, root, src, bgn_pos, cur_pos);
+		else {																// parse mode is tmpl, or para is disabled; for latter, adding \n for pretty-print
+			Xop_nl_tkn nl_tkn = tkn_mkr.NewLine(bgn_pos, cur_pos, Xop_nl_tkn.Tid_char, 1);
+			ctx.Subs_add(root, nl_tkn);
 		}
 		return cur_pos;
 	}
-	public static final Xop_nl_lxr Bldr = new Xop_nl_lxr().Poem_(false); Xop_nl_lxr() {}
-	public static final Xop_nl_lxr Poem = new Xop_nl_lxr().Poem_(true);
+	public static final Xop_nl_lxr _ = new Xop_nl_lxr(); Xop_nl_lxr() {}
 }

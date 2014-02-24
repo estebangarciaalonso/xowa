@@ -156,9 +156,9 @@ class Scrib_lib_wikibase_srl {
 	private static KeyVal[] Srl_claims_prop_itm_core_time_value(Wdata_prop_itm_core itm) {
 		KeyVal[] rv = new KeyVal[6];
 		rv[0] = KeyVal_.new_(Wdata_doc_consts.Key_time_time_str				, String_.new_ascii_(itm.Val()));
-		rv[1] = KeyVal_.new_(Wdata_doc_consts.Key_time_precision_str		, Wdata_doc_consts.Val_time_precision_str);
-		rv[2] = KeyVal_.new_(Wdata_doc_consts.Key_time_before_str			, Wdata_doc_consts.Val_time_before_str);
-		rv[3] = KeyVal_.new_(Wdata_doc_consts.Key_time_after_str			, Wdata_doc_consts.Val_time_after_str);
+		rv[1] = KeyVal_.new_(Wdata_doc_consts.Key_time_precision_str		, Wdata_doc_consts.Val_time_precision_int);	// NOTE: must return int, not str; DATE:2014-02-18
+		rv[2] = KeyVal_.new_(Wdata_doc_consts.Key_time_before_str			, Wdata_doc_consts.Val_time_before_int);
+		rv[3] = KeyVal_.new_(Wdata_doc_consts.Key_time_after_str			, Wdata_doc_consts.Val_time_after_int);
 		rv[4] = KeyVal_.new_(Wdata_doc_consts.Key_time_timezone_str			, Wdata_doc_consts.Val_time_timezone_str);
 		rv[5] = KeyVal_.new_(Wdata_doc_consts.Key_time_calendarmodel_str	, Wdata_doc_consts.Val_time_calendarmodel_str);
 		return rv;

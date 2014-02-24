@@ -31,5 +31,11 @@ public class Object_ {
 	public static String XtoStr_OrNull(Object v)		{return v == null ? null			: ToString_lang(v);}
 	public static String XtoStr_OrNullStr(Object v)		{return v == null ? String_.NullStr	: ToString_lang(v);}
 	public static String XtoStr_OrEmpty(Object v)		{return v == null ? String_.Empty	: ToString_lang(v);}
-	static String ToString_lang(Object v) {return ClassAdp_.Eq_typeSafe(v, byte[].class) ? String_.new_utf8_((byte[])v) :  v.toString();} 
+	static String ToString_lang(Object v) {
+		if (v == null) return null;
+		Class<?> c = v.getClass();
+		if		(ClassAdp_.Eq(c, ByteAry_.ClassOf))	return String_.new_utf8_((byte[])v);
+		else if (ClassAdp_.Eq(c, String_.ClassOf))	return (String)v;
+		else										return v.toString();	
+	}
 }

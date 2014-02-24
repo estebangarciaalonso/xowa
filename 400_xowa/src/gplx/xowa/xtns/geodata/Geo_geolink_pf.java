@@ -75,7 +75,7 @@ class Geo_geolink_math {
 	}
 	private void Parse_input_word(double[] rv, byte[] input, int word_idx, int word_bgn, int word_end) {
 		byte unit_dlm = Input_units[word_idx];
-		int pos = ByteAry_.FindFwd(input, unit_dlm, word_bgn, word_end);
+		int pos = Byte_ary_finder.Find_fwd(input, unit_dlm, word_bgn, word_end);
 		if (pos != ByteAry_.NotFound)	// remove dlms from end of bry; EX: "123'"  -> "123"
 			word_end = pos;
 		if (!Parse_input_word_is_compass(input[word_bgn])) {

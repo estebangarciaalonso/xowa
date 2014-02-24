@@ -82,8 +82,8 @@ public class Xol_case_itm_ {
 	private static int parse_mw_grp(OrderedHash hash, byte[] raw, boolean section_is_upper, int find_bgn) {
 		byte[] find = section_is_upper ? parse_mw_upper : parse_mw_lower;
 		int raw_len = raw.length;
-		int pos = ByteAry_.FindFwd(raw, find, find_bgn);					if (pos == ByteAry_.NotFound) throw Err_mgr._.fmt_(GRP_KEY, "section_name_not_found", "could not find section name: ~{0}", String_.new_utf8_(find));
-		pos = ByteAry_.FindFwd(raw, Byte_ascii.Curly_bgn, pos, raw_len);	if (pos == ByteAry_.NotFound) throw Err_mgr._.fmt_(GRP_KEY, "section_bgn_not_found", "could not find '{' after section name: ~{0}", String_.new_utf8_(find));
+		int pos = Byte_ary_finder.Find_fwd(raw, find, find_bgn);					if (pos == ByteAry_.NotFound) throw Err_mgr._.fmt_(GRP_KEY, "section_name_not_found", "could not find section name: ~{0}", String_.new_utf8_(find));
+		pos = Byte_ary_finder.Find_fwd(raw, Byte_ascii.Curly_bgn, pos, raw_len);	if (pos == ByteAry_.NotFound) throw Err_mgr._.fmt_(GRP_KEY, "section_bgn_not_found", "could not find '{' after section name: ~{0}", String_.new_utf8_(find));
 		int itm_bgn = 0;
 		boolean quote_off = true, itm_is_first = true;
 		byte[] cur_lhs = ByteAry_.Empty;

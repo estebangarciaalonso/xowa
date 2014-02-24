@@ -41,7 +41,7 @@ public class Gfo_url_parser {
 			rel = true;
 		}
 		if (!rel) {	// search for ":"; NOTE: only search if not rel; i.e.: "//"
-			int colon_pos = ByteAry_.FindFwd(src, Byte_ascii.Colon, pos, end);	// no colon found; EX: "//a.org/b"; "a.org/b"
+			int colon_pos = Byte_ary_finder.Find_fwd(src, Byte_ascii.Colon, pos, end);	// no colon found; EX: "//a.org/b"; "a.org/b"
 			if (colon_pos != ByteAry_.NotFound)									// colon found; EX: "http://" or "https://"
 				pos = colon_pos + Int_.Const_dlm_len;
 			if (pos < end && src[pos] == Byte_ascii.Slash) {					// skip slash after colon
@@ -50,7 +50,7 @@ public class Gfo_url_parser {
 					pos += 1;
 			}
 		}
-		int slash_pos = ByteAry_.FindFwd(src, Byte_ascii.Slash, pos, end);
+		int slash_pos = Byte_ary_finder.Find_fwd(src, Byte_ascii.Slash, pos, end);
 		if (slash_pos == ByteAry_.NotFound)									// no terminating slash; EX: http://a.org
 			slash_pos = end;
 		slash_pos = ByteAry_.Trim_end_pos(src, slash_pos);
@@ -62,7 +62,7 @@ public class Gfo_url_parser {
 		pass = true;
 		segs.Clear();
 		args.Clear();
-		int colon_pos = ByteAry_.FindFwd(src, Byte_ascii.Colon, bgn, end);
+		int colon_pos = Byte_ary_finder.Find_fwd(src, Byte_ascii.Colon, bgn, end);
 		Object protocol_obj = colon_pos == ByteAry_.NotFound ? null : protocols.Get_by_mid(src, bgn, colon_pos + 1);	// +1 to include colon
 		if (protocol_obj != null) {
 			Bry_val_itm protocol_stub = (Bry_val_itm)protocol_obj;

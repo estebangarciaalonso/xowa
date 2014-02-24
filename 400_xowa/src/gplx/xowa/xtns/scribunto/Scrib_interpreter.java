@@ -50,7 +50,7 @@ class Scrib_interpreter {
 	public Scrib_cbk Cbks_add(GfoInvkAble invk, String name, String func) {
 		Scrib_cbk cbk = new Scrib_cbk(invk, name, func);
 		String key = cbk.Key();
-		cbks.Add(key, cbk);
+		cbks.AddReplace(key, cbk);	// WORKAROUND: some libraries reuse cbk name; EX: getGlobalSiteId is used by mw.wikibase.lua and mw.wikibase.entity.lua
 		return cbk;
 	}
 	public Scrib_cbk Cbks_get_at(int i) {return (Scrib_cbk)cbks.FetchAt(i);}

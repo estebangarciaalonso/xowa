@@ -103,7 +103,7 @@ public class Xol_fragment_mgr implements GfoInvkAble {
 	private byte[] Html_js_wikidata_val(Xow_wiki wdata_wiki, int id) {
 		Xol_msg_itm msg = lang.Msg_mgr().Itm_by_id_or_null(id);
 		byte[] rv = wdata_wiki == null ? msg.Val() : Pf_msg_mgr.Get_msg_by_key(wdata_wiki, lang, msg.Key(), ByteAry_.Ary_empty);
-		if (ByteAry_.FindFwd(rv, Byte_ascii.Apos) != ByteAry_.NotFound)
+		if (Byte_ary_finder.Find_fwd(rv, Byte_ascii.Apos) != ByteAry_.NotFound)
 			rv = ByteAry_.Replace(rv, Bry_find, Bry_repl);
 		return rv;
 	}	private static final byte[] Bry_find = new byte[] {Byte_ascii.Apos}, Bry_repl = new byte[] {Byte_ascii.Backslash, Byte_ascii.Apos};

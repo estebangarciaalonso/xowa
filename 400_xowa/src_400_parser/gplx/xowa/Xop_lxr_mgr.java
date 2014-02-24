@@ -18,9 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public class Xop_lxr_mgr {
 	private Xop_lxr[] ary;
-	public Xop_lxr_mgr(Xop_lxr[] ary) {
-		this.ary = ary;
-	}
+	public Xop_lxr_mgr(Xop_lxr[] ary) {this.ary = ary;}
 	public ByteTrieMgr_fast Trie() {return trie;} private ByteTrieMgr_fast trie = ByteTrieMgr_fast.cs_();
 	public void Init_by_wiki(Xow_wiki wiki) {
 		int ary_len = ary.length;
@@ -38,7 +36,7 @@ public class Xop_lxr_mgr {
 	}
 	public static Xop_lxr_mgr new_tmpl_() {
 		return new Xop_lxr_mgr(new Xop_lxr[] 
-		{ Xop_pipe_lxr._, new Xop_eq_lxr(true), Xop_colon_lxr._, Xop_space_lxr._, Xop_nbsp_lxr._, Xop_tab_lxr._, Xop_nl_lxr.Bldr
+		{ Xop_pipe_lxr._, new Xop_eq_lxr(true), Xop_colon_lxr._, Xop_space_lxr._, Xop_nbsp_lxr._, Xop_tab_lxr._, Xop_nl_lxr._
 		, Xop_curly_bgn_lxr._, Xop_curly_end_lxr._
 		, Xop_brack_bgn_lxr._, Xop_brack_end_lxr._
 		, Xop_comm_lxr._
@@ -49,7 +47,7 @@ public class Xop_lxr_mgr {
 	}
 	public static Xop_lxr_mgr new_wiki_() {
 		return new Xop_lxr_mgr(new Xop_lxr[] 
-		{ Xop_pipe_lxr._, new Xop_eq_lxr(false), Xop_space_lxr._, Xop_nbsp_lxr._, Xop_tab_lxr._, Xop_nl_lxr.Bldr
+		{ Xop_pipe_lxr._, new Xop_eq_lxr(false), Xop_space_lxr._, Xop_nbsp_lxr._, Xop_tab_lxr._, Xop_nl_lxr._
 		, Xop_amp_lxr._, Xop_apos_lxr._, Xop_colon_lxr._
 		, Xop_lnki_lxr_bgn._, Xop_lnki_lxr_end._
 		, Xop_list_lxr._
@@ -57,8 +55,8 @@ public class Xop_lxr_mgr {
 		, Xop_hr_lxr._
 		, Xop_xnde_lxr._
 		, Xop_lnke_lxr._, Xop_lnke_end_lxr._
-		, Xop_tblw_lxr.Bldr //, Xop_tblw_lxr_ws.Bldr
-		, Xop_pre_lxr.Bldr
+		, Xop_tblw_lxr._
+		, Xop_pre_lxr._
 		, Xop_comm_lxr._
 		, Xop_under_lxr._
 		});
@@ -73,8 +71,8 @@ public class Xop_lxr_mgr {
 		, Xop_hr_lxr._
 		, Xop_xnde_lxr._
 		, Xop_lnke_lxr._, Xop_lnke_end_lxr._
-		, Xop_tblw_lxr.Bldr //, Xop_tblw_lxr_ws.Bldr
-		, Xop_nl_lxr.Poem
-		, gplx.xowa.xtns.poems.Poem_lxr._
+		, Xop_tblw_lxr._
+		, gplx.xowa.xtns.poems.Poem_lxr_nl._
+		, gplx.xowa.xtns.poems.Poem_lxr_pre._
 		});
 }

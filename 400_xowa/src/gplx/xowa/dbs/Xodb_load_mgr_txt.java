@@ -107,7 +107,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 	private void Find_ttls__add_itms(ListAdp rv, Xob_xdat_file rdr, Xob_xdat_itm xdat_itm) {
 		byte[] raw = rdr.Src();
 		int itm_bgn = xdat_itm.Itm_bgn(), itm_end = xdat_itm.Itm_end();
-		int pos = ByteAry_.FindFwd(raw, Byte_ascii.Pipe, itm_bgn, raw.length);
+		int pos = Byte_ary_finder.Find_fwd(raw, Byte_ascii.Pipe, itm_bgn, raw.length);
 		if (pos == ByteAry_.NotFound) throw wiki.App().Usr_dlg().Fail_many(GRP_KEY, "invalid_search_file", "search file is invalid");
 		pos += Int_.Const_dlm_len;	// pipe
 		
@@ -311,7 +311,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 	}
 	private static void Load_ctg_v1_parse(ListAdp rv, Gfo_usr_dlg usr_dlg, byte[] ary) {
 		int aryLen = ary.length;
-		int pos = ByteAry_.FindFwd(ary, Byte_ascii.Pipe, 0, aryLen);
+		int pos = Byte_ary_finder.Find_fwd(ary, Byte_ascii.Pipe, 0, aryLen);
 		int rowCount = (aryLen - pos + 1) / (Base85_utl.Len_int + gplx.xowa.apps.Apps_app_mgr.Len_dlm_fld);
 		rv.Clear();
 		boolean garbage = false;
@@ -354,7 +354,7 @@ public class Xodb_load_mgr_txt implements Xodb_load_mgr {
 			page.Modified_on_(Bit_.Xto_date_short(timestamp));
 		}
 		int name_bgn = timestamp_end + 1;
-		int name_end = ByteAry_.FindFwd(src, Xodb_page_.Txt_page_dlm, name_bgn, src_len);			
+		int name_end = Byte_ary_finder.Find_fwd(src, Xodb_page_.Txt_page_dlm, name_bgn, src_len);			
 		page.Text_(ByteAry_.Mid(src, name_end + 1, row_end - 1));	// +1 to skip dlm
 	}
 	Xowd_regy_mgr Get_regy_by_site(byte regy_tid) {

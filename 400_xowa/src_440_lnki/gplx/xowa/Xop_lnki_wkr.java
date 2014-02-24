@@ -51,8 +51,10 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		boolean lnki_is_file = false;
 		switch (lnki.Ns_id()) {
 			case Xow_ns_.Id_file:
-				if (Xop_lnki_type.Id_is_thumbable(lnki.Lnki_type()))
-					ctx.Para().Process_lnki_file_div(ctx, root, lnki.Src_bgn(), cur_pos);
+				if (	Xop_lnki_type.Id_is_thumbable(lnki.Lnki_type())		// thumbs produce <div> cancels pre
+					||	lnki.HAlign() != Xop_lnki_halign.Null				// halign (left, right, none) also produces <div>; DATE:2014-02-17
+					)
+					ctx.Para().Process_block_lnki_div();
 				lnki_is_file = true;
 				break;
 			case Xow_ns_.Id_media:
@@ -60,7 +62,7 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 				break;
 			case Xow_ns_.Id_category:
 				if (!lnki.Ttl().ForceLiteralLink())					// NOTE: do not remove ws if literal; EX:[[Category:A]]\n[[Category:B]] should stay the same; DATE:2013-07-10
-					ctx.Para().Process_lnki_category(ctx, root, cur_pos);	// removes excessive ws between categories; EX: [[Category:A]]\n\s[[Category:B]] -> [[Category:A]][[Category:B]] (note that both categories will not be rendered directly in html, but go to the bottom of the page)
+					ctx.Para().Process_lnki_category(ctx, root, src,cur_pos, src_len);	// removes excessive ws between categories; EX: [[Category:A]]\n\s[[Category:B]] -> [[Category:A]][[Category:B]] (note that both categories will not be rendered directly in html, but go to the bottom of the page)
 				break;
 		}
 		if (lnki_is_file) {
@@ -85,11 +87,11 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		Xop_lnki_tkn lnki = (Xop_lnki_tkn)tkn;
 		try {
 			if (arg_idx == 0) {							// 1st arg; assume trg; process ns;
-				if (arg.Val_tkn().Dat_end() - arg.Val_tkn().Dat_bgn() == 0) {	// blank trg; EX: [[]],[[ ]]
+				Arg_itm_tkn name_tkn = arg.Val_tkn();
+				if (name_tkn.Dat_end() - name_tkn.Dat_bgn() < 1) {	// blank trg; EX: [[]],[[ ]]; [[\n  |\n]]
 					lnki.Tkn_tid_to_txt();
 				}
 				else {
-					Arg_itm_tkn name_tkn = arg.Val_tkn();
 					byte[] name_bry = ByteAry_.Mid(src, name_tkn.Dat_bgn(), name_tkn.Dat_end());
 					name_bry = ctx.App().Url_converter_url_ttl().Decode(name_bry);
 					int name_bry_len = name_bry.length;

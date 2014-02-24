@@ -37,20 +37,11 @@ class Xop_tblw_lxr implements Xop_lxr {
 						return cur_pos;
 					}
 					else {	// \n| or \n! but no tbl
-						if (ctx.Para().Pre_at_line_bgn())	// HACK:pre_section_begun_and_failed_tblw
-							return ctx.Para().Hack_pre_and_false_tblw(ctx, root, src, bgn_pos);
-						else								// interpret as text
+						if (	bgn_pos != Xop_parser_.Doc_bgn_bos		// avoid ! at BOS
+							&&	src[bgn_pos] == Byte_ascii.NewLine)		// handle "!" etc.
+							return Xop_tblw_wkr.Handle_false_tblw_match(ctx, root, src, bgn_pos, cur_pos, tkn_mkr.Txt(bgn_pos + 1, cur_pos));	// +1 to ignore \n of "\n!", "\n!!", "\n|"; DATE:2014-02-19
+						else											// handle "!!" only
 							return ctx.LxrMake_txt_(cur_pos);
-					}
-				}
-				else {
-					if (wlxr_type == Xop_tblw_wkr.Tblw_type_th2) {
-						int nl_pos = ByteAry_.FindBwd(src, Byte_ascii.NewLine, cur_pos);	// search for preceding nl
-						if (nl_pos != ByteAry_.NotFound) {	
-							if (src[nl_pos + 1] != Byte_ascii.Bang) {
-								return ctx.LxrMake_txt_(cur_pos);
-							}
-						}
 					}
 				}
 				break;
@@ -69,14 +60,12 @@ class Xop_tblw_lxr implements Xop_lxr {
 				case Xop_tblw_wkr.Tblw_type_th: // !
 					ctx.Subs_add(root, tkn_mkr.Txt(bgn_pos, cur_pos));	// NOTE: cur_pos should handle ! and !!
 					return cur_pos;
-//					case Xop_tblw_wkr.Tblw_type_tb:	// {| tblw not allowed, even in caption	// REMOVED: 2012-05-12: MW allows entire table to be put inside anchor; see lnki test; EX.WP:William Penn (Royal Navy officer)
-//						return ctx.LxrMake_txt_(cur_pos);
 			}
 		}
 		return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, false, wlxr_type, false, -1, -1);
 	}
 	public Xop_tblw_lxr(byte wlxr_type) {this.wlxr_type = wlxr_type;} private byte wlxr_type;
-	public static final Xop_tblw_lxr Bldr = new Xop_tblw_lxr(); Xop_tblw_lxr() {}
+	public static final Xop_tblw_lxr _ = new Xop_tblw_lxr(); Xop_tblw_lxr() {}
 	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {
 		core_trie.Add(Hook_tb,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_tb));
 		core_trie.Add(Hook_te,	new Xop_tblw_lxr(Xop_tblw_wkr.Tblw_type_te));

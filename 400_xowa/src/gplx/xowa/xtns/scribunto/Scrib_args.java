@@ -19,9 +19,27 @@ package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx
 public class Scrib_args {		
 	private KeyVal[] ary; private int ary_len;
 	public Scrib_args(KeyVal[] v) {Init(v);}
-	public byte[]	Get_bry_or_empty(int i)			{KeyVal rv = Get(i); return rv == null ? ByteAry_.Empty : ByteAry_.new_utf8_(String_.cast_	(rv.Val()));}
-	public String	Get_str_or_null(int i)			{KeyVal rv = Get(i); return rv == null ? null			: String_.cast_	(rv.Val());}
-	public int		Get_int_or(int i, int or)		{KeyVal rv = Get(i); return rv == null ? or				: Int_.coerce_	(rv.Val());}
+	public int Len() {return ary_len;}
+	public String	Pull_str(int i)					{Object rv = Get_or_fail(i); return String_.cast_(rv);}
+	public byte[]	Pull_bry(int i)					{Object rv = Get_or_fail(i); return ByteAry_.new_utf8_(String_.cast_(rv));}
+	public int		Pull_int(int i)					{Object rv = Get_or_fail(i); return Int_.coerce_(rv);}	// coerce to handle "1" and 1; will still fail if "abc" is passed
+	public String	Cast_str_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: String_.cast_		(rv);}
+	public byte[]	Cast_bry_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: ByteAry_.new_utf8_(String_.cast_	(rv));}	// NOTE: cast is deliberate; Scrib call checkType whi
+	public byte[]	Cast_bry_or_empty(int i)		{Object rv = Get_or_null(i); return rv == null ? ByteAry_.Empty : ByteAry_.new_utf8_(String_.cast_	(rv));}
+	public boolean		Cast_bool_or_y(int i)			{Object rv = Get_or_null(i); return rv == null ? Bool_.Y		: Bool_.cast_(rv);}
+	public boolean		Cast_bool_or_n(int i)			{Object rv = Get_or_null(i); return rv == null ? Bool_.N		: Bool_.cast_(rv);}
+	public int		Cast_int_or(int i, int or)		{Object rv = Get_or_null(i); return rv == null ? or				: Int_.coerce_(rv);}	// coerce to handle "1" and 1;
+	public byte[]	Form_bry_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: ByteAry_.new_utf8_(Object_.XtoStr_OrNull(rv));}	// NOTE: cast is deliberate; Scrib call checkType whi
+	public byte[][]	Cast_params_as_bry_ary_or_empty(int params_idx)	{
+		if (params_idx < 0 || params_idx >= ary_len) return ByteAry_.Ary_empty;
+		int rv_len = ary_len - params_idx;
+		byte[][] rv = new byte[rv_len][];
+		for (int i = 0; i < rv_len; i++) {
+			KeyVal kv = ary[i + params_idx];
+			rv[i] = ByteAry_.new_utf8_(String_.cast_(kv.Val()));
+		}
+		return rv;
+	}
 	private void Init(KeyVal[] v) {
 		int v_len = v.length;
 		int v_max = -1;
@@ -43,5 +61,16 @@ public class Scrib_args {
 			}
 		}
 	}
-	private KeyVal Get(int i) {return i > -1 && i < ary_len ? ary[i] : null;}
+	private Object Get_or_null(int i) {
+		if (i < 0 || i >= ary_len) return null;
+		KeyVal kv = ary[i];
+		return kv == null ? null : kv.Val();
+	}
+	private Object Get_or_fail(int i) {
+		if (i < 0 || i >= ary_len) throw Err_.new_fmt_("scrib arg idx out of bounds; idx={0} len={1}", i, ary_len);
+		KeyVal kv = ary[i];
+		Object rv = kv == null ? null : kv.Val();
+		if (rv == null) throw Err_.new_fmt_("scrib arg is null; idx={0} len={1}", i, ary_len);
+		return rv;
+	}
 }

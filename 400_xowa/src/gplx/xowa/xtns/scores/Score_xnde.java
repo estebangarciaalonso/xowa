@@ -176,9 +176,9 @@ public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 	}
 	public static byte[] Get_lilypond_version(String rslt_str) {
 		byte[] rslt = ByteAry_.new_utf8_(rslt_str);	// expect 1st line to be of form "GNU LilyPond 2.16.2"
-		int bgn_pos	= ByteAry_.FindFwd(rslt, Version_find_bgn); if (bgn_pos == ByteAry_.NotFound) return Version_unknown;
+		int bgn_pos	= Byte_ary_finder.Find_fwd(rslt, Version_find_bgn); if (bgn_pos == ByteAry_.NotFound) return Version_unknown;
 		bgn_pos += Version_find_bgn.length + 1;	// +1 for trailing space
-		int end_pos = ByteAry_.FindFwd(rslt, Byte_ascii.NewLine, bgn_pos); if (bgn_pos == ByteAry_.NotFound) return Version_unknown;
+		int end_pos = Byte_ary_finder.Find_fwd(rslt, Byte_ascii.NewLine, bgn_pos); if (bgn_pos == ByteAry_.NotFound) return Version_unknown;
 		if (rslt[end_pos - 1] == Byte_ascii.CarriageReturn) end_pos = end_pos - 1;
 		return ByteAry_.Mid(rslt, bgn_pos, end_pos);
 	}

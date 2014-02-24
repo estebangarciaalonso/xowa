@@ -68,9 +68,9 @@ public class Sql_file_parser {
 				byte b = bfr[cur_pos];
 				switch (mode) {
 					case Mode_sql_bgn:
-						cur_pos = ByteAry_.FindFwd(bfr, Bry_insert_into, cur_pos);
+						cur_pos = Byte_ary_finder.Find_fwd(bfr, Bry_insert_into, cur_pos);
 						if (cur_pos == ByteAry_.NotFound || cur_pos > bfr_len) {reading_file = false; continue;}
-						cur_pos = ByteAry_.FindFwd(bfr, Bry_values, cur_pos);
+						cur_pos = Byte_ary_finder.Find_fwd(bfr, Bry_values, cur_pos);
 						if (cur_pos == ByteAry_.NotFound || cur_pos > bfr_len) throw Err_.new_("VALUES not found");	// something went wrong;
 						mode = Mode_fld;
 						cur_pos += Bry_values.length;

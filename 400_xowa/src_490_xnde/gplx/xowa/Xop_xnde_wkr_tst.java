@@ -19,14 +19,15 @@ package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xop_xnde_wkr_tst {
 	private Xop_fxt fxt = new Xop_fxt();
+	@After public void term() {fxt.Init_para_n_();}
 	@Test  public void Escape_lt() {	// PURPOSE: some templates have unknown tags; EX.WP:PHP
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str("a<code><?</code>b", String_.Concat_lines_nl_skipLast
 			(	"<p>a<code>&lt;?</code>b"
 			,	"</p>"
 			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Inline() {
 		fxt.Test_parse_page_wiki("<ref/>"	, fxt.tkn_xnde_(0, 6).CloseMode_(Xop_xnde_tkn.CloseMode_inline).Name_rng_(1, 4));
@@ -181,7 +182,6 @@ public class Xop_xnde_wkr_tst {
 		,	"  <tr>"
 		,	"    <td>row1"
 		,	"    </td>"
-		,	""
 		,	"  </tr>"
 		,	"  <tr>"
 		,	"    <td>row2"
@@ -243,22 +243,16 @@ public class Xop_xnde_wkr_tst {
 		fxt.Test_parse_page_wiki_str("<sup>a</sub>", "<sup>a</sup>");
 	}
 	@Test  public void Xnde_td_list() {	// PURPOSE: </td> should close list; see Stamp Act 1765
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<table><tr><td>"
 			,	"*abc</td></tr><tr><td>bcd</td></tr>"
 			,	"</table>"
-//				), String_.Concat_lines_nl_skipLast
-//				(	"<table><tr><td>"
-//				,	"<ul>"
-//				,	"  <li>abc"
-//				,	"  </li>"
-//				,	"</ul></td></tr><tr><td>bcd</td></tr></table>"
-//				)
 			), String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"  <tr>"
 			,	"    <td>"
+			,	""
 			,	"      <ul>"
 			,	"        <li>abc"
 			,	"        </li>"
@@ -273,10 +267,10 @@ public class Xop_xnde_wkr_tst {
 			,	""
 			)
 			);
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Xnde_td_small_list() {	// PURPOSE: </td> should close <small> correctly; see Stamp Act 1765
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<table><tr><td>"
 			,	"<small>abc</td></tr><tr><td>bcd</td></tr>"
@@ -284,7 +278,8 @@ public class Xop_xnde_wkr_tst {
 			), String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"  <tr>"
-			,	"    <td><small>abc</small>"
+			,	"    <td>"
+			,	"<small>abc</small>"
 			,	"    </td>"
 			,   "  </tr>"
 			,	"  <tr>"
@@ -295,7 +290,7 @@ public class Xop_xnde_wkr_tst {
 			,	""
 			)
 			);
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void No_wiki() {
 		fxt.Test_parse_page_wiki_str
@@ -304,7 +299,7 @@ public class Xop_xnde_wkr_tst {
 			);
 	}
 	@Test  public void No_wiki2() {
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Init_defn_add("nowiki_test", "<nowiki>#</nowiki>a");
 		fxt.Test_parse_page_all_str
 			(	"{{nowiki_test}}"
@@ -313,7 +308,7 @@ public class Xop_xnde_wkr_tst {
 			,	"</p>"
 			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void No_wiki_h2() {	// EX.WP: HTML
 		fxt.Test_parse_page_all_str
@@ -337,13 +332,13 @@ public class Xop_xnde_wkr_tst {
 			));
 	}
 	@Test  public void Tblw_nl() {
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str
 			(	"<table>\n\n\n\n\n</table>"
 			,	"<table>\n"
 			+	"</table>\n"
 			);
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void MixedCase_xtn() {
 		fxt.Test_parse_page_wiki_str
@@ -377,7 +372,7 @@ public class Xop_xnde_wkr_tst {
 		));
 	}
 	@Test  public void Ws_bgn_tbl() {	// PURPOSE: some templates return leading ws; EX.WP:UK
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"  <table>"
 			,	"    <tr>"
@@ -394,10 +389,10 @@ public class Xop_xnde_wkr_tst {
 			,	"</table>"
 			,   ""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void SyntaxHighlight_endTag_has_ws() {	// PURPOSE: </syntaxhighlight > not being closed correctly; EX.WP:Mergesort
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"a"
 			,	"<syntaxhighlight>"
@@ -419,7 +414,7 @@ public class Xop_xnde_wkr_tst {
 			,   "</p>"
 			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Source_escape() {
 		fxt.Test_parse_page_wiki_str("<source><b></source>", "<pre>&lt;b&gt;</pre>");
@@ -428,7 +423,7 @@ public class Xop_xnde_wkr_tst {
 		fxt.Test_parse_page_wiki_str("a<code>b<code>c", "a<code>b</code>c");
 	}
 	@Test  public void Error_br_removed() {
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"  <tr>"
@@ -445,20 +440,7 @@ public class Xop_xnde_wkr_tst {
 			,	"</table>"
 			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
-	}
-	@Test  public void Pre_disabled_in_blockquote() { // EX.WP: Tenerife airport disaster
-		fxt.Ctx().Para().Enabled_y_();
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
-			(	"<blockquote>"
-			,	" a"
-			,	"</blockquote>"
-			), String_.Concat_lines_nl_skipLast
-			(	"<blockquote>"
-			,	" a"
-			,	"</blockquote>"
-			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Empty_ignored() {
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
@@ -491,7 +473,7 @@ public class Xop_xnde_wkr_tst {
 			));
 	}
 	@Test  public void Div_should_not_pop_past_td() {	// PURPOSE: extra </div> should not close <div> that is outside of <td>; EX.WP:Rome and Ankara
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,		"<tr>"
@@ -525,22 +507,28 @@ public class Xop_xnde_wkr_tst {
 			), String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"  <tr>"
-			,	"    <td><div>"
+			,	"    <td>"
+			,	"<div>"
 			,	"      <table>"
 			,	"        <tr>"
-			,	"          <td><div><div>"
+			,	"          <td>"
+			,	"<div>"
+			,	"<div>"
 			,	""
 			,	"<p>a"
 			,	"</p>"
-			,	"</div></div>"
+			,	"</div>"
+			,	"</div>"
 			,	"          </td>"
-			,	"          <td><div>"
+			,	"          <td>"
+			,	"<div>"
 			,	""
 			,	"<p>b"
 			,	"</p>"
 			,	"</div>"
 			,	"          </td>"
-			,	"          <td><div>"
+			,	"          <td>"
+			,	"<div>"
 			,	""
 			,	"<p>c"
 			,	"</p>"
@@ -554,7 +542,7 @@ public class Xop_xnde_wkr_tst {
 			,	"</table>"
 			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Xnde_pops() {	// PURPOSE: somehow xnde pops upper nde; EX.WP: Greek government debt crisis; "History of government debt"
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
@@ -572,7 +560,6 @@ public class Xop_xnde_wkr_tst {
 			,	"    </td>"
 			,	"  </tr>"
 			,	"</table>"
-			,	""
 			,	"</i>"
 			));
 	}
@@ -595,11 +582,11 @@ public class Xop_xnde_wkr_tst {
 	@Test  public void Pre_and_html_chars() {// PURPOSE: <pre> should handle '"<> according to context
 		fxt.Test_parse_page_all_str("<pre>a&#09;b</pre>"			, "<pre>a&#09;b</pre>");					// known ncr/dec; embed and depend on browser transforming; EX: de.w:Wikipedia:Technik/Skin/Werkstatt
 		fxt.Test_parse_page_all_str("<pre>a&#9999999999;b</pre>"	, "<pre>a&amp;#9999999999;b</pre>");		// unknown ncr/dec; escape & (since browser cannot render);
-		fxt.Test_parse_page_all_str("<pre>a&#af ;b</pre>"		, "<pre>a&amp;#af ;b</pre>");				// unknown ncr/dec 2
+		fxt.Test_parse_page_all_str("<pre>a&#af ;b</pre>"			, "<pre>a&amp;#af ;b</pre>");				// unknown ncr/dec 2
 		fxt.Test_parse_page_all_str("<pre>a&#x9;b</pre>"			, "<pre>a&#x9;b</pre>");					// known ncr/hex
-		fxt.Test_parse_page_all_str("<pre>a&apos;b</pre>"		, "<pre>a&apos;b</pre>");					// known name; embed
-		fxt.Test_parse_page_all_str("<pre>a&apox;b</pre>"		, "<pre>a&amp;apox;b</pre>");				// unknown name; escape
-		fxt.Test_parse_page_all_str("<pre>&\"<></pre>"			, "<pre>&amp;&quot;&lt;&gt;</pre>");		// no ncr or name; escape; needed for <pre><img ...></pre>; EX.WP: Alt attribute
+		fxt.Test_parse_page_all_str("<pre>a&apos;b</pre>"			, "<pre>a&apos;b</pre>");					// known name; embed
+		fxt.Test_parse_page_all_str("<pre>a&apox;b</pre>"			, "<pre>a&amp;apox;b</pre>");				// unknown name; escape
+		fxt.Test_parse_page_all_str("<pre>&\"<></pre>"				, "<pre>&amp;&quot;&lt;&gt;</pre>");		// no ncr or name; escape; needed for <pre><img ...></pre>; EX.WP: Alt attribute
 	}
 	@Test  public void Nowiki_lnke() {	// EX.WP: Doomsday argument; <nowiki>[0,&nbsp;1]</nowiki>
 		fxt.Test_parse_page_wiki_str("a <nowiki>[0,&nbsp;1]</nowiki> b", "a [0,&nbsp;1] b");	// NOTE: not "0" + Byte_.XtoStr(160) + "1"; depend on browser to translate &nbsp;
@@ -684,7 +671,6 @@ public class Xop_xnde_wkr_tst {
 			,	"</p>"
 			,	"</div>"
 			,	"    </td>"
-			,	""
 			,	"  </tr>"
 			,	"</table>"
 			,	""
@@ -720,14 +706,15 @@ public class Xop_xnde_wkr_tst {
 			));
 	}
 	@Test  public void List_always_separated_by_nl() {// PURPOSE: <li> should always be separated by nl, or else items will merge, creating long horizontal scroll bar; EX:w:Music
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str("<ul><li>a</li><li>b</li></ul>"
 			,	String_.Concat_lines_nl_skipLast
 			(	"<ul>"
 			,	"<li>a</li>"
 			,	"<li>b</li></ul>"
+			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Br_backslash() {	// PURPOSE: allow <br\>; EX:w:Mosquito; [[Acalyptratae|A<br\>c<br\>a<br\>l<br\>y<br\>p<br\>t<br\>r<br\>a<br\>t<br\>a<br\>e]]
 		fxt.Test_parse_page_all_str("<br\\>", "<br/>");
@@ -746,8 +733,8 @@ public class Xop_xnde_wkr_tst {
 		fxt.Test_parse_page_wiki_str("<time class=\"dtstart\" datetime=\"2010-10-10\">10 October 2010</time>", "<time class=\"dtstart\" datetime=\"2010-10-10\">10 October 2010</time>");
 	}
 	@Test  public void Pre_nowiki() {	// PURPOSE: nowikis inside pre should be ignored; DATE:2013-03-30
-		fxt.Test_parse_page_all_str("<pre>a<nowiki>&lt;</nowiki>b</pre>"		, "<pre>a&lt;b</pre>");											// basic
-		fxt.Test_parse_page_all_str("<pre>a<nowiki>&lt;<nowiki>b</pre>"		, "<pre>a&lt;nowiki&gt;&lt;&lt;nowiki&gt;b</pre>");				// not closed
+		fxt.Test_parse_page_all_str("<pre>a<nowiki>&lt;</nowiki>b</pre>"				, "<pre>a&lt;b</pre>");								// basic
+		fxt.Test_parse_page_all_str("<pre>a<nowiki>&lt;<nowiki>b</pre>"					, "<pre>a&lt;nowiki&gt;&lt;&lt;nowiki&gt;b</pre>");	// not closed
 		fxt.Test_parse_page_all_str("<pre><nowiki>a<nowiki>b</nowiki>c</nowiki></pre>"	, "<pre>&lt;nowiki&gt;abc&lt;/nowiki&gt;</pre>");	// nested; this is wrong, but leave for now; should be a<nowiki>b</nowiki>c
 	}
 	@Test  public void Id_encode() {
@@ -805,6 +792,32 @@ public class Xop_xnde_wkr_tst {
 	}
 	@Test  public void Broken_tag() { // PURPOSE: handle broken tags; EX: <div a </div> -> &lt;div a; DATE:2014-02-03
 		fxt.Test_parse_page_all_str("<div a </div>", "&lt;div a ");	// note that "<div a " is escaped (not considered xnde; while "</div>" is dropped (dangling end xndes are ignored)
+	}
+	@Test  public void Pre_and_space() {// PURPOSE: make sure pre does not careate <p></p> around it; also, make sure " a" is preserved; DATE:2014-02-20
+		fxt.Init_para_y_();
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+			(	"<pre>"
+			,	" a"
+			,	"</pre>"
+			), String_.Concat_lines_nl_skipLast
+			(	"<pre>"
+			,	" a"
+			,	"</pre>"
+			));
+		fxt.Init_para_n_();
+	}
+	@Test  public void Pre_disabled_in_blockquote() { // EX.WP: Tenerife airport disaster
+		fxt.Init_para_y_();
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+			(	"<blockquote>"
+			,	" a"
+			,	"</blockquote>"
+			), String_.Concat_lines_nl_skipLast
+			(	"<blockquote>"
+			,	" a"
+			,	"</blockquote>"
+			));
+		fxt.Init_para_n_();
 	}
 
 

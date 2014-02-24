@@ -81,6 +81,11 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 		else							return Pages_get(wiki, ttl);
 	}
 	public Wdata_doc Pages_get(Xow_wiki wiki, Xoa_ttl ttl) {byte[] qid_bry = Qids_get(wiki, ttl); return qid_bry == null? null : Pages_get(qid_bry);}
+	public Wdata_doc Pages_get_by_ttl_name(byte[] ttl_bry) {
+		if (Byte_ascii.Lowercase(ttl_bry[0]) == Byte_ascii.Ltr_p)	// if ttl starts with "p", change title to "Property:" ns; DATE:2014-02-18
+			ttl_bry = ByteAry_.Add_w_dlm(Byte_ascii.Colon, Wdata_wiki_mgr.Ns_property_name_bry, ttl_bry);
+		return Pages_get(ttl_bry);
+	}
 	public Wdata_doc Pages_get(byte[] qid_bry) {
 		qid_bry = Get_low_qid(qid_bry);
 		Wdata_doc rv = doc_cache.Get_or_null(qid_bry);
@@ -93,7 +98,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 	}
 	public static byte[] Get_low_qid(byte[] bry) {	// HACK: wdata currently does not differentiate between "Vandalism" and "Wikipedia:Vandalism", combining both into "Vandalism:q4664011|q6160"; get lowest qid
 		int bry_len = bry.length;
-		int pipe_pos = ByteAry_.FindFwd(bry, Byte_ascii.Pipe, 0, bry_len);
+		int pipe_pos = Byte_ary_finder.Find_fwd(bry, Byte_ascii.Pipe, 0, bry_len);
 		if (pipe_pos == ByteAry_.NotFound) return bry;
 		byte[][] qids = ByteAry_.Split(bry, Byte_ascii.Pipe);
 		int qids_len = qids.length;
@@ -187,6 +192,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 	}
 	public static final int Ns_property = 120;
 	public static final String Ns_property_name = "Property";
+	public static final byte[] Ns_property_name_bry = ByteAry_.new_ascii_(Ns_property_name);
 	public static final int Pid_null = -1;
 	public static final byte[] Html_json_id = ByteAry_.new_ascii_("xowa-wikidata-json");
 	public static boolean Wiki_page_is_json(byte wiki_tid, int ns_id) {

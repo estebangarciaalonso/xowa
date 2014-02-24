@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public class Xoi_dump_mgr implements GfoInvkAble {
 	public String[] Server_urls() {return server_urls;} private String[] server_urls = String_.Ary(Xob_dump_file_.Server_your_org, Xob_dump_file_.Server_wmf, Xob_dump_file_.Server_c3sl, Xob_dump_file_.Server_masaryk);
-	public String[] Custom_cmds() {return custom_cmds;} private String[] custom_cmds = String_.Ary(Xoi_cmd_wiki_download.KEY_dump, Xoi_cmd_wiki_unzip.KEY_dump, Xoi_cmd_wiki_import.KEY);
+	public String[] Custom_cmds() {return custom_cmds;} private String[] custom_cmds = String_.Ary(Xoi_cmd_wiki_download.KEY_dump, Xoi_cmd_wiki_import.KEY);
 	public byte Data_storage_format()	{return data_storage_format;} public Xoi_dump_mgr Data_storage_format_(byte v) {data_storage_format = v; return this;} private byte data_storage_format = gplx.ios.Io_stream_.Tid_gzip;
 	public long Db_text_max()			{return db_text_max;}			long db_text_max			= (long)3000 * Io_mgr.Len_mb;
 	public long Db_categorylinks_max()	{return db_categorylinks_max;}	long db_categorylinks_max	= (long)3600 * Io_mgr.Len_mb;
@@ -30,7 +30,7 @@ public class Xoi_dump_mgr implements GfoInvkAble {
 	public boolean Css_commons_download() {return css_commons_download;} private boolean css_commons_download = false;
 	public boolean Delete_xml_file() {return delete_xml_file;} private boolean delete_xml_file = true;
 	public byte Search_version() {return search_version;} private byte search_version = gplx.xowa.specials.search.Xosrh_core.Version_2;
-	public boolean Import_bz2_by_stdout() {return import_bz2_by_stdout;} private boolean import_bz2_by_stdout;
+	public boolean Import_bz2_by_stdout() {return import_bz2_by_stdout;} private boolean import_bz2_by_stdout = true;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_server_urls))						return String_.Concat_with_str(",\n", server_urls);
 		else if	(ctx.Match(k, Invk_server_urls_))						server_urls = m.ReadStrAryIgnore("v", ",", "\n");

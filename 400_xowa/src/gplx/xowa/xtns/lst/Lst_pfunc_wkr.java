@@ -27,10 +27,10 @@ public class Lst_pfunc_wkr {
 	public Lst_pfunc_wkr Init_exclude(byte[] src_ttl_bry, byte[] sect_exclude, byte[] sect_replace) {
 		this.mode_include = Bool_.N; this.src_ttl_bry = src_ttl_bry; this.sect_exclude = sect_exclude; this.sect_replace = sect_replace; return this;
 	}
+	
 	public void Exec(ByteAryBfr bfr, Xop_ctx ctx) {
 		Xow_wiki wiki = ctx.Wiki();
 		Xoa_ttl src_ttl = Xoa_ttl.parse_(wiki, src_ttl_bry); if (src_ttl == null) return;						// {{#lst:<>}} -> ""
-		Xoa_page src_page = wiki.Data_mgr().Get_page(src_ttl, false); if (src_page.Missing()) return;			// {{#lst:missing}} -> ""
 //			byte[] recurse_key = src_ttl.Full_db();
 //			boolean recurse_is_tmpl = src_ttl.Ns().Id_tmpl();
 //			if (recurse_is_tmpl) {
@@ -41,13 +41,30 @@ public class Lst_pfunc_wkr {
 			if (ctx.Wiki().View_data().Pages_recursed()) return;
 			ctx.Wiki().View_data().Pages_recursed_(true);
 //			}
-		Xop_ctx sub_ctx = Xop_ctx.new_sub_(wiki);
-		Xot_defn_tmpl defn_tmpl = wiki.Parser().Parse_tmpl(sub_ctx, sub_ctx.Tkn_mkr(), src_ttl.Ns(), src_ttl_bry, src_page.Data_raw());	// NOTE: parse as tmpl to ignore <noinclude>
-		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
-		defn_tmpl.Tmpl_evaluate(sub_ctx, Xot_invk_temp.PageIsCaller, tmp_bfr);
-		byte[] src = tmp_bfr.Mkr_rls().XtoAryAndClear();
-		Xop_root_tkn root = wiki.Parser().Parse_recurse(sub_ctx, sub_ctx, src, true);	// NOTE: pass sub_ctx as old_ctx b/c entire document will be parsed, and references outside the section should be ignored;
-		src = root.Data_mid();	// NOTE: must set src to root.Data_mid() which is result of parse; else <nowiki> will break text; DATE:2013-07-11
+		Xot_defn_tmpl defn_tmpl = (Xot_defn_tmpl)wiki.Cache_mgr().Defn_cache().Get_by_key(src_ttl_bry);
+		Xop_ctx sub_ctx = null;
+		byte[] src = null;
+		if (defn_tmpl == null) {	// cache transclusions to prevent multiple parsings; DATE:2014-02-22
+			sub_ctx = Xop_ctx.new_sub_(wiki);
+			byte[] src_page_bry = wiki.Cache_mgr().Page_cache().Get_or_load_as_src(src_ttl);
+			if (src_page_bry == null) {
+				ctx.Wiki().View_data().Pages_recursed_(false);
+				return; // {{#lst:missing}} -> ""
+			}
+			defn_tmpl = wiki.Parser().Parse_tmpl(sub_ctx, sub_ctx.Tkn_mkr(), src_ttl.Ns(), src_ttl_bry, src_page_bry);	// NOTE: parse as tmpl to ignore <noinclude>
+			ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
+			defn_tmpl.Tmpl_evaluate(sub_ctx, Xot_invk_temp.PageIsCaller, tmp_bfr);
+			src = tmp_bfr.Mkr_rls().XtoAryAndClear();
+			Xop_root_tkn root = wiki.Parser().Parse_recurse(sub_ctx, sub_ctx, src, true);	// NOTE: pass sub_ctx as old_ctx b/c entire document will be parsed, and references outside the section should be ignored;
+			src = root.Data_mid();	// NOTE: must set src to root.Data_mid() which is result of parse; else <nowiki> will break text; DATE:2013-07-11
+			wiki.Cache_mgr().Defn_cache().Add(defn_tmpl, Xow_ns_case_.Id_all);
+			defn_tmpl.Data_mid_(src);
+			defn_tmpl.Ctx_(sub_ctx);
+		}
+		else {
+			src = defn_tmpl.Data_mid();
+			sub_ctx = defn_tmpl.Ctx();
+		}
 		
 //			if (recurse_is_tmpl)
 //				ctx.Wiki().View_data().Lst_recurse_del(recurse_key);

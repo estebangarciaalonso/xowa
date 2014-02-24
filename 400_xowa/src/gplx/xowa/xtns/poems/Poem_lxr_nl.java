@@ -16,30 +16,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.poems; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-public class Poem_lxr implements Xop_lxr {
-	public byte Lxr_tid() {return Xop_lxr_.Tid_poem;}
-	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Hook_ary, this);}
+public class Poem_lxr_nl implements Xop_lxr {
+	public byte Lxr_tid() {return Xop_lxr_.Tid_nl_poem;}
+	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Byte_ascii.NewLine, this);}
 	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
 	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
-		int space_count = 1;
-		while (cur_pos < src_len) {
-			if (src[cur_pos++] == Byte_ascii.Space) {
-				++space_count;
-			}
-			else {
-				--cur_pos;
-				break;
-			}
-		}
-		if (bgn_pos != Xop_parser_.Doc_bgn_bos) {	// do not add xnde/nl if \n is BOS \n; EX.WP: Teresa of Ávila; "<poem>\n\s\s"
-			ctx.Subs_add(root, tkn_mkr.Xnde(cur_pos, cur_pos).Tag_(Xop_xnde_tag_.Tag_br));
-			ctx.Subs_add(root, tkn_mkr.NewLine(cur_pos, cur_pos, Xop_nl_tkn.Tid_char, 1));
-		}
-		for (int i = 0; i < space_count; i++)
-			ctx.Subs_add(root, tkn_mkr.HtmlNcr(bgn_pos + 1, cur_pos, 160, Nbsp_bry));
+		if (bgn_pos == Xop_parser_.Doc_bgn_bos) return ctx.LxrMake_txt_(cur_pos); // simulated nl at beginning of every parse
+		ctx.Subs_add(root, tkn_mkr.Xnde(bgn_pos, cur_pos).Tag_(Xop_xnde_tag_.Tag_br));	// add <br/>
+		ctx.Subs_add(root, tkn_mkr.NewLine(cur_pos, cur_pos, Xop_nl_tkn.Tid_char, 1));	// add \n; for pretty-printing
 		return cur_pos;
 	}
-	private static final byte[] Nbsp_bry = gplx.intl.Utf8_.EncodeCharAsAry(160);
-	private static final byte[] Hook_ary = new byte[] {Byte_ascii.NewLine, Byte_ascii.Space};
-        public static final Poem_lxr _ = new Poem_lxr(); Poem_lxr() {}
+        public static final Poem_lxr_nl _ = new Poem_lxr_nl(); Poem_lxr_nl() {}
 }

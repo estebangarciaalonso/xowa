@@ -39,8 +39,15 @@ public class Xog_url_wkr_tst {
 		fxt.Init_exec("file:///wiki/Category:A?pagefrom=A#mw-pages").Expd_tid_(Xoh_href.Tid_wiki).Expd_page_("Category:A").Expd_qargs_("?pagefrom=A").Expd_anchor_("mw-pages").Test();
 	}
 	@Test  public void Xwiki() {
-		fxt.App().Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_("en.wiktionary.org")).Ns_mgr().Ns_main().Case_match_(Xow_ns_case_.Id_all);
+		Xow_ns_mgr ns_mgr = fxt.App().Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_("en.wiktionary.org")).Ns_mgr();
+
+		ns_mgr.Ns_main().Case_match_(Xow_ns_case_.Id_all);
 		fxt.Init_exec("file:///site/en.wiktionary.org/wiki/a").Expd_tid_(Xoh_href.Tid_site).Expd_wiki_("en.wiktionary.org").Expd_page_("a").Test();
+
+		ns_mgr.Ns_category().Case_match_(Xow_ns_case_.Id_all);
+		fxt.Init_exec("file:///site/en.wiktionary.org/wiki/Category:a").Expd_tid_(Xoh_href.Tid_site).Expd_wiki_("en.wiktionary.org").Expd_page_("Category:a").Test();
+
+		fxt.Init_exec("file:///site/en.wiktionary.org/wiki/A/B/C").Expd_tid_(Xoh_href.Tid_site).Expd_page_("A/B/C").Test();
 	}
 	@Test  public void Xwiki_site_sidebar() {// PURPOSE: make sure sidebar links don't fail; DATE:2014-01-21
 		fxt.Init_exec("file:///site/en.wikipedia.org/wiki/A").Expd_tid_(Xoh_href.Tid_site).Expd_wiki_("en.wikipedia.org").Expd_page_("A").Test();
@@ -49,6 +56,14 @@ public class Xog_url_wkr_tst {
 		fxt.Init_exec("file:///site/en.wikipedia.org/wiki/").Expd_tid_(Xoh_href.Tid_site).Expd_wiki_("en.wikipedia.org").Expd_page_("Main_Page").Test();
 		fxt.Init_exec("file:///site/en.wikipedia.org/wiki").Expd_tid_(Xoh_href.Tid_site).Expd_wiki_("en.wikipedia.org").Expd_page_("Main_Page").Test();
 		fxt.Init_exec("file:///site/en.wikipedia.org/").Expd_tid_(Xoh_href.Tid_site).Expd_wiki_("en.wikipedia.org").Expd_page_("Main_Page").Test();
+	}
+	@Test  public void Main_page() {// PURPOSE: Main_page does not update to use Main_page of xwiki; DATE:2014-02-23
+		fxt.App().User().Wiki().Xwiki_mgr().Add_full("zh.wikipedia.org", "zh.wikipedia.org");
+		gplx.xowa.wikis.Xoa_wiki_regy.Make_wiki_dir(fxt.App(), "zh.wikipedia.org");
+		fxt.App().Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_("zh.wikipedia.org")).Props().Main_page_(ByteAry_.new_ascii_("Zh_Main_Page"));
+		fxt.App().Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_("en.wikipedia.org")).Props().Main_page_(ByteAry_.new_ascii_("En_Main_Page"));
+		fxt.Init_exec("file:///site/zh.wikipedia.org/").Expd_tid_(Xoh_href.Tid_site).Expd_wiki_("zh.wikipedia.org").Expd_page_("Zh_Main_Page").Test();
+		fxt.Init_exec("file:///site/en.wikipedia.org/").Expd_tid_(Xoh_href.Tid_site).Expd_wiki_("en.wikipedia.org").Expd_page_("En_Main_Page").Test();	// still stuck at Zh
 	}
 }
 class Xog_url_wkr_fxt {

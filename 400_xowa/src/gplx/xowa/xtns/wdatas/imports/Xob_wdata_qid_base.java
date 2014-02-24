@@ -53,7 +53,7 @@ public abstract class Xob_wdata_qid_base extends Xob_itm_dump_base implements Xo
 		}
 
 		// get core_ns; warn if not enwiki
-//			if (!ByteAry_.Eq(data_core.Xwiki_key(), Xwiki_key_en) && ByteAry_.FindFwd(data_core.Ttl(), Byte_ascii.Colon) != ByteAry_.NotFound)
+//			if (!ByteAry_.Eq(data_core.Xwiki_key(), Xwiki_key_en) && Byte_ary_finder.Find_fwd(data_core.Ttl(), Byte_ascii.Colon) != ByteAry_.NotFound)
 //				bldr.App().Usr_dlg().Log_many(GRP_KEY, "enwiki_not_found", "enwiki not found; namespace parsing may be inaccurate; ~{0} ~{1}", String_.new_ascii_(qid), String_.new_ascii_(data_core.Ttl()));
 		Xoa_ttl core_ttl = Xoa_ttl.parse_(wiki, data_core.Ttl());	// parse ttl to get ns; this may still be inaccurate as it is using wikidata's ns, not enwiki's;
 		Xow_ns core_ns = core_ttl.Ns();
@@ -69,7 +69,7 @@ public abstract class Xob_wdata_qid_base extends Xob_itm_dump_base implements Xo
 				actl_ttl = data_ttl.Page_db();
 			}
 			else {	// naive extract ttl based on colon; note that upper casing 1st letter is not needed, b/c ttls should be already cased correctly; EX: Aide:Page_a does not need uppercasing of "P"
-				int colon_pos = ByteAry_.FindFwd(data_ttl_bry, Byte_ascii.Colon);
+				int colon_pos = Byte_ary_finder.Find_fwd(data_ttl_bry, Byte_ascii.Colon);
 				int data_ttl_len = data_ttl_bry.length;
 				if (colon_pos == ByteAry_.NotFound || colon_pos == data_ttl_len - 1) {
 					bldr.App().Usr_dlg().Log_many(GRP_KEY, "ns_not_found", "namespace not found; ~{0} ~{1} ~{2}", String_.new_ascii_(qid), core_ns.Name_str(), String_.new_utf8_(data_ttl_bry));

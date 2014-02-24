@@ -23,8 +23,8 @@ public class Xob_siteinfo_parser {
 		try {
 			rdr = Io_buffer_rdr.new_(src_rdr, Io_mgr.Len_mb);	// ASSUME: siteInfo is fully contained in the 1st MB of the src_xml
 			byte[] src = rdr.Bfr();
-			int bgn = ByteAry_.FindFwd(src, Bry_siteinfo_bgn, 0)  ; if (bgn == ByteAry_.NotFound) return null;
-			int end = ByteAry_.FindFwd(src, Bry_siteinfo_end, bgn); if (end == ByteAry_.NotFound) return null;
+			int bgn = Byte_ary_finder.Find_fwd(src, Bry_siteinfo_bgn, 0)  ; if (bgn == ByteAry_.NotFound) return null;
+			int end = Byte_ary_finder.Find_fwd(src, Bry_siteinfo_end, bgn); if (end == ByteAry_.NotFound) return null;
 			return ByteAry_.Mid(src, bgn, end + Bry_siteinfo_end.length);
 		}
 		catch (Exception e) {Err_.Noop(e); return null;}
@@ -56,9 +56,9 @@ public class Xob_siteinfo_parser {
 	}
 	private static byte[] Siteinfo_parse_mainpage(byte[] url) {			
 		byte[] wiki_bry = Xoa_consts.Url_wiki_intermediary;
-		int bgn_pos	= ByteAry_.FindFwd(url, wiki_bry, 0);
+		int bgn_pos	= Byte_ary_finder.Find_fwd(url, wiki_bry, 0);
 		if (bgn_pos == ByteAry_.NotFound) {							// "/wiki/" not found; EX: http://mywiki/My_main_page
-			bgn_pos	= ByteAry_.FindBwd(url, Byte_ascii.Slash);		// ASSUME last segment is page
+			bgn_pos	= Byte_ary_finder.Find_bwd(url, Byte_ascii.Slash);		// ASSUME last segment is page
 			if (bgn_pos == ByteAry_.NotFound) throw Err_.new_fmt_("could not parse main page url: {0}", String_.new_utf8_(url));
 			++bgn_pos;												// add 1 to position after slash
 		}

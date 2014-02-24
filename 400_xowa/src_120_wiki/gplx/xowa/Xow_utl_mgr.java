@@ -28,7 +28,7 @@ public class Xow_utl_mgr {
 	}	private Xop_parser anchor_encode_parser;
 	private static final Xop_lxr_mgr Anchor_encode_lxr_mgr
 		= new Xop_lxr_mgr(new Xop_lxr[] 
-		{ Xop_pipe_lxr._, new Xop_eq_lxr(false), Xop_space_lxr._, Xop_tab_lxr._, Xop_nl_lxr.Bldr
+		{ Xop_pipe_lxr._, new Xop_eq_lxr(false), Xop_space_lxr._, Xop_tab_lxr._, Xop_nl_lxr._
 		, Xop_curly_bgn_lxr._, Xop_curly_end_lxr._
 		, Xop_amp_lxr._, Xop_colon_lxr._
 		, Xop_apos_lxr._

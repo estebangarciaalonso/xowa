@@ -47,7 +47,7 @@ class Fsdb_cfg_tbl_mem extends Fsdb_cfg_tbl_base implements Fsdb_cfg_tbl {
 	}
 	@Override public int Select_as_int_or(String grp, String key, int or) {
 		Fsdb_cfg_grp grp_itm = Grps_get_or_null(grp);
-		return grp == null ? or : grp_itm.Get_int_or(grp, or);
+		return grp_itm == null ? or : grp_itm.Get_int_or(grp, or);
 	}
 	public String Select_as_str_or(String grp, String key, String or) {
 		Fsdb_cfg_grp grp_itm = Grps_get_or_null(grp);

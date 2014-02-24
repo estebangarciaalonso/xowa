@@ -19,10 +19,10 @@ package gplx.xowa.xtns.proofreadPage; import gplx.*; import gplx.xowa.*; import 
 import gplx.xowa.parsers.logs.*;
 class Pp_index_parser {
 	public static Pp_index_page Parse(Xow_wiki wiki, Xop_ctx ctx, Xoa_ttl index_ttl, int ns_page_id) {
-		Xoa_page index_page = wiki.Data_mgr().Get_page(index_ttl, false);
+		byte[] src = wiki.Cache_mgr().Page_cache().Get_or_load_as_src(index_ttl);
+		if (src == null) return Pp_index_page.Null;
 		if (ctx.Wiki().View_data().Pages_recursed()) return Pp_index_page.Null;
 		ctx.Wiki().View_data().Pages_recursed_(true);
-		byte[] src = index_page.Data_raw();
 		Xop_parser sub_parser = new Xop_parser(wiki.Parser().Tmpl_lxr_mgr(), wiki.Parser().Wiki_lxr_mgr());
 		Xop_ctx sub_ctx = Xop_ctx.new_sub_(wiki);
 		Xop_tkn_mkr tkn_mkr = sub_ctx.Tkn_mkr();

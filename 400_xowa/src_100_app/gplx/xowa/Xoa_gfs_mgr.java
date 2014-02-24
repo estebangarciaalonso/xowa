@@ -83,7 +83,7 @@ public class Xoa_gfs_mgr implements GfoInvkAble, GfoInvkRootWkr {
 	}
 	public static byte[] Cfg_save_escape(String v) {return Cfg_save_escape(ByteAry_.new_ascii_(v));}
 	public static byte[] Cfg_save_escape(byte[] v) {
-		return ByteAry_.FindFwd(v, Byte_ascii.Apos) == ByteAry_.NotFound ? v : ByteAry_.Replace(v, Bry_apos_1, Bry_apos_2);
+		return Byte_ary_finder.Find_fwd(v, Byte_ascii.Apos) == ByteAry_.NotFound ? v : ByteAry_.Replace(v, Bry_apos_1, Bry_apos_2);
 	}	static final byte[] Bry_apos_1 = ByteAry_.new_ascii_("'"), Bry_apos_2 = ByteAry_.new_ascii_("''");
 	public static String Build_code(String... ary) {
 		int len = ary.length;

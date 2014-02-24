@@ -57,7 +57,7 @@ public class Xog_url_wkr {
 	private Xoa_url Exec_url_xcmd(Xog_win win) {		// EX: /xcmd/
 		byte[] xowa_href_bry = href.Page();
 		int xowa_href_bry_len = xowa_href_bry.length;
-		int slash_pos = ByteAry_.FindFwd(xowa_href_bry, Byte_ascii.Slash); if (slash_pos == ByteAry_.NotFound) slash_pos = xowa_href_bry_len;
+		int slash_pos = Byte_ary_finder.Find_fwd(xowa_href_bry, Byte_ascii.Slash); if (slash_pos == ByteAry_.NotFound) slash_pos = xowa_href_bry_len;
 		byte[] xowa_cmd_bry = ByteAry_.Mid(xowa_href_bry, 0, slash_pos);
 		String xowa_cmd_str = String_.new_utf8_(xowa_cmd_bry);
 		GfoMsg m = GfoMsg_.new_cast_(xowa_cmd_str);
@@ -98,6 +98,7 @@ public class Xog_url_wkr {
 		byte[] page_bry = rv.Page_bry();
 		byte[][] segs_ary = rv.Segs_ary();
 		int segs_ary_len = segs_ary.length;
+		boolean use_main_page = false;
 		if (	segs_ary_len > 0						// handle "Special:Search/Earth" which creates segs[1] {"Special:Search"} and page="Earth"
 			||	href.Tid() == Xoh_href.Tid_site) {		// NOTE: if site, must always (a) zap Segs_ary and (b) force correct page; see tests; DATE:2014-01-21
 			int segs_bgn = 0;
@@ -105,6 +106,7 @@ public class Xog_url_wkr {
 			if (href.Tid() == Xoh_href.Tid_site) {		// site, handle multiple segs; EX: "home/wiki/", "home/wiki/Help:Contents"; DATE:2014-01-21
 				if (segs_ary_len < 2) {					// only 0 or 1 seg; usually occurs for logo and other xwiki links to Main_Page; EX: "/site/en.wikipedia.org/wiki/"; "/site/en.wikipedia.org/"
 					page_bry = wiki.Init_assert().Props().Main_page();	// use Main_page; DATE:2014-02-16
+					use_main_page = true;
 					segs_iterate = false;
 				}
 				else 
@@ -126,16 +128,18 @@ public class Xog_url_wkr {
 		if (qargs_len > 0) {	// remove anchors from qargs; EX: "to=B#mw_pages"
 			for (int i = 0; i < qargs_len; i++) {
 				Gfo_url_arg arg = qargs[i];
-				int anchor_pos = ByteAry_.FindBwd(arg.Val_bry(), Byte_ascii.Hash);	// NOTE: must .FindBwd to handle Category args like de.wikipedia.org/wiki/Kategorie:Begriffskl%C3%A4rung?pagefrom=#::12%20PANZERDIVISION#mw-pages; DATE:2013-06-18
+				int anchor_pos = Byte_ary_finder.Find_bwd(arg.Val_bry(), Byte_ascii.Hash);	// NOTE: must .FindBwd to handle Category args like de.wikipedia.org/wiki/Kategorie:Begriffskl%C3%A4rung?pagefrom=#::12%20PANZERDIVISION#mw-pages; DATE:2013-06-18
 				if (anchor_pos != ByteAry_.NotFound)
 					arg.Val_bry_(ByteAry_.Mid(arg.Val_bry(), 0, anchor_pos));
 			}				
 		}
 		if (!ByteAry_.Eq(page.Wiki().Domain_bry(), href.Wiki())) {// xwiki; EX: "file:///site/en.wiktionary.org/wiki/a"; EX: (1) goto w:Anything; (2) click on "anything" in wikt; "anything" will be parsed by en.wiki's rules, not en.wikt; DATE:2013-01-30
-			wiki = app.Wiki_mgr().Get_by_key_or_make(href.Wiki()).Init_assert();
-			Xoh_href alt_href = new Xoh_href();
-			app.Href_parser().Parse(alt_href, href_bry, wiki, page.Ttl().Page_url());
-			page_bry = alt_href.Page();		// needed b/c href_parser will use correct caseMatch in alt_wiki
+			wiki = app.Wiki_mgr().Get_by_key_or_make(href.Wiki()).Init_assert();	// get xwiki and set to wiki
+			if (use_main_page)
+				page_bry = wiki.Props().Main_page();								// get Main_page for new wiki; DATE:2014-02-23
+			Xoa_ttl tmp_ttl = Xoa_ttl.parse_(wiki, page_bry);						// reparse ttl according to xwiki's case_match rules; NOTE: do not use rv.Page_bry() or else will lose sub_pages (A/B/C); DATE:2014-02-21
+			if (tmp_ttl != null)
+				page_bry = tmp_ttl.Full_db();
 		}
 		rv.Wiki_(wiki);
 		rv.Wiki_bry_(wiki.Domain_bry());	// needed b/c url_parser.Parse(href) will result in wiki of "wiki" for "/wiki/Page"

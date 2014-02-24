@@ -24,6 +24,7 @@ public class Xop_tblw_tb_tkn extends Xop_tkn_itm_base implements Xop_tblw_tkn {
 	public void Atrs_rng_set(int bgn, int end) {this.atrs_bgn = bgn; this.atrs_end = end;}
 	public Xop_xatr_itm[] Atrs_ary() {return atrs_ary;} public Xop_tblw_tkn Atrs_ary_as_tblw_(Xop_xatr_itm[] v) {atrs_ary = v; return this;} private Xop_xatr_itm[] atrs_ary;
 	public boolean Tblw_xml() {return tblw_xml;} private boolean tblw_xml;
+	public void Tblw_xml_(boolean v) {tblw_xml = v;}
 	public int Tblw_subs_len() {return tblw_subs_len;} public void Tblw_subs_len_add_() {++tblw_subs_len;} private int tblw_subs_len;
 	public int Caption_count() {return caption_count;} public Xop_tblw_tb_tkn Caption_count_(int v) {caption_count = v; return this;} private int caption_count = 0;
 	public Xop_tblw_tb_tkn Caption_count_add_1() {++caption_count; return this;} 

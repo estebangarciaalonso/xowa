@@ -74,12 +74,12 @@ public class Xol_func_name_regy {
 				case Xot_defn_.Tid_safesubst:
 				case Xot_defn_.Tid_subst:
 					finder.Subst_set_(typeId, txt_bgn, match_pos);
-					if (match_pos < txt_end) txt_bgn = Xop_lxr_.Find_fwd_while_non_ws(src, match_pos, txt_end);
+					if (match_pos < txt_end) txt_bgn = Byte_ary_finder.Find_fwd_while_not_ws(src, match_pos, txt_end);
 					break;
 				case Xot_defn_.Tid_raw:
 					finder.Subst_set_(typeId, txt_bgn, match_pos);
 					if (match_pos + 1 < txt_end)	// +1 to include ":" (keyword id "raw", not "raw:")
-						txt_bgn = Xop_lxr_.Find_fwd_while_non_ws(src, match_pos + 1, txt_end);
+						txt_bgn = Byte_ary_finder.Find_fwd_while_not_ws(src, match_pos + 1, txt_end);
 					break;
 				default: return finder;
 			}

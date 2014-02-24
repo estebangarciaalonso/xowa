@@ -153,11 +153,11 @@ public class Xoa_css_extractor {
 	private String Logo_find_src() {
 		if (mainpage_html == null) return null;
 		int main_page_html_len = mainpage_html.length;
-		int logo_bgn = ByteAry_.FindFwd(mainpage_html, Logo_find_bgn, 0); 									if (logo_bgn == ByteAry_.NotFound) return null;
+		int logo_bgn = Byte_ary_finder.Find_fwd(mainpage_html, Logo_find_bgn, 0); 									if (logo_bgn == ByteAry_.NotFound) return null;
 		logo_bgn += Logo_find_bgn.length;
-		logo_bgn = ByteAry_.FindFwd(mainpage_html, Logo_find_end, logo_bgn);	 							if (logo_bgn == ByteAry_.NotFound) return null;
+		logo_bgn = Byte_ary_finder.Find_fwd(mainpage_html, Logo_find_end, logo_bgn);	 							if (logo_bgn == ByteAry_.NotFound) return null;
 		logo_bgn += Logo_find_end.length;
-		int logo_end = ByteAry_.FindFwd(mainpage_html, Byte_ascii.Paren_end, logo_bgn, main_page_html_len);	if (logo_bgn == ByteAry_.NotFound) return null;
+		int logo_end = Byte_ary_finder.Find_fwd(mainpage_html, Byte_ascii.Paren_end, logo_bgn, main_page_html_len);	if (logo_bgn == ByteAry_.NotFound) return null;
 		byte[] logo_bry = ByteAry_.Mid(mainpage_html, logo_bgn, logo_end);
 		return protocol_prefix + String_.new_utf8_(logo_bry);
 	}
@@ -202,9 +202,9 @@ public class Xoa_css_extractor {
 		int css_find_bgn_len = Css_find_bgn.length;
 		byte[] protocol_prefix_bry = ByteAry_.new_utf8_(protocol_prefix);
 		while (true) {
-			int url_bgn = ByteAry_.FindFwd(raw, Css_find_bgn, prv_pos); 				if (url_bgn == ByteAry_.NotFound) break;	// nothing left; stop
+			int url_bgn = Byte_ary_finder.Find_fwd(raw, Css_find_bgn, prv_pos); 				if (url_bgn == ByteAry_.NotFound) break;	// nothing left; stop
 			url_bgn += css_find_bgn_len;
-			int url_end = ByteAry_.FindFwd(raw, Byte_ascii.Quote, url_bgn, raw_len); 	if (url_end == ByteAry_.NotFound) {usr_dlg.Warn_many("", "main_page.css_parse", "could not find css; pos='~{0}' text='~{1}'", url_bgn, String_.new_utf8_len_safe_(raw, url_bgn, url_bgn + 32)); break;}
+			int url_end = Byte_ary_finder.Find_fwd(raw, Byte_ascii.Quote, url_bgn, raw_len); 	if (url_end == ByteAry_.NotFound) {usr_dlg.Warn_many("", "main_page.css_parse", "could not find css; pos='~{0}' text='~{1}'", url_bgn, String_.new_utf8_len_safe_(raw, url_bgn, url_bgn + 32)); break;}
 			byte[] css_url_bry = ByteAry_.Mid(raw, url_bgn, url_end);
 			css_url_bry = ByteAry_.Replace(css_url_bry, Css_amp_find, Css_amp_repl);	// &amp; -> &
 			css_url_bry = url_encoder.Decode(css_url_bry);								// %2C ->		%7C -> |

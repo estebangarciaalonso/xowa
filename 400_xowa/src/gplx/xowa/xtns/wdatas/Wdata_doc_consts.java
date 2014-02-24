@@ -32,6 +32,8 @@ public class Wdata_doc_consts {
 		, Key_quantity_amount_str = "amount", Key_quantity_unit_str = "unit"
 		, Key_quantity_ubound_str = "upperBound", Key_quantity_lbound_str = "lowerBound"
 		;
+	public static final int 
+		Val_time_precision_int = 11, Val_time_before_int = 0, Val_time_after_int = 0, Val_time_timezone_int = 0;
 	public static final byte[] 
 		  Key_atr_entity_bry = bry_(Key_atr_entity_str), Key_atr_label_bry = bry_(Key_atr_label_str), Key_atr_description_bry = bry_(Key_atr_description_str), Key_atr_aliases_bry = bry_(Key_atr_aliases_str)
 		, Key_atr_links_bry = bry_(Key_atr_links_str), Key_atr_claims_bry = bry_(Key_atr_claims_str)			

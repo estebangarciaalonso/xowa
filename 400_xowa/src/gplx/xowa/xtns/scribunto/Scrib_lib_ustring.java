@@ -79,9 +79,9 @@ class Scrib_lib_ustring implements Scrib_lib {
 	}
 	public KeyVal[] Match(KeyVal[] values) {
 		Scrib_args args = new Scrib_args(values);
-		String text = args.Get_str_or_null(0); if (text == null) return Scrib_kv_utl.base1_list_(ListAdp_.Null); // if no text is passed, do not fail; return empty; EX:d:changed; DATE:2014-02-06 
-		String regx = regx_converter.Parse(args.Get_bry_or_empty(1), false);
-		int bgn = args.Get_int_or(2, 1);
+		String text = args.Cast_str_or_null(0); if (text == null) return Scrib_kv_utl.base1_list_(ListAdp_.Null); // if no text is passed, do not fail; return empty; EX:d:changed; DATE:2014-02-06 
+		String regx = regx_converter.Parse(args.Cast_bry_or_null(1), false);
+		int bgn = args.Cast_int_or(2, 1);
 		bgn = Bgn_adjust(text, bgn);
 		RegxAdp regx_adp = Scrib_lib_ustring.RegxAdp_new_(engine.Ctx(), regx);
 		RegxMatch[] regx_rslts = regx_adp.Match_all(text, bgn);

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
-public class Xot_invk_wkr_tst {
+public class Xot_invk_wkr_basic_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {fxt.Reset();}
 	@Test  public void Basic() {
@@ -153,9 +153,9 @@ public class Xot_invk_wkr_tst {
 		fxt.Test_parse_page_all_str("<nowiki>*a</nowiki>", "*a");
 	}
 	@Test  public void Nowiki_space() {	// PURPOSE: nowiki should noop space (else pre); DATE:2013-09-03
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str("a\n<nowiki> </nowiki>b", "<p>a\n b\n</p>\n");
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void LnkiWithPipe_basic() {	// PURPOSE: pipe in link should not count towards tmpl: WP:{{H:title|dotted=no|pronunciation:|[[File:Loudspeaker.svg|11px|link=|alt=play]]}}
 		fxt.Test_parse_tmpl_str_test("{{{1}}}{{{2}}}"									, "{{test|[[b=c|d]]}}"			, "[[b=c|d]]{{{2}}}");
@@ -303,12 +303,6 @@ public class Xot_invk_wkr_tst {
 			)
 			);
 	}
-	@Test  public void Transclude_template() {	// PURPOSE: {{:Template:Test}} is same as {{Template:Test}}; EX.WIKT:android; japanese and {{:Template:ja/script}}
-		fxt.Init_defn_clear();
-		fxt.Init_defn_add("Test_1", "{{#if:|y|n}}");	// NOTE: must be of form "Test 1"; test_1 will fail
-		fxt.Test_parse_tmpl_str("{{:Template:Test 1}}", "n");
-		fxt.Init_defn_clear();
-	}
 	@Test  public void Raw() { // PURPOSE: {{raw:A}} is same as {{A}}; EX.WIKT:android; {{raw:ja/script}}
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("Test 1", "{{#if:|y|{{{1}}}}}");
@@ -370,12 +364,6 @@ public class Xot_invk_wkr_tst {
 		fxt.Test_parse_tmpl_str("{{WP:tmpl_key}}"		, "tmpl_val");
 		fxt.Init_defn_clear();
 	}
-	@Test  public void Transclude() { // PURPOSE: transclusion test with arguments
-		fxt.Init_defn_clear();
-		fxt.Init_page_create("PageToTransclude", "a{{{key}}}c");
-		fxt.Test_parse_tmpl_str("some text to make this page longer than transclusion {{:PageToTransclude|key=b}}"	, "some text to make this page longer than transclusion abc");
-		fxt.Init_defn_clear();
-	}
 	@Test  public void Template_loop_across_namespaces() {// PURPOSE: {{Institution:Louvre}} results in template loop b/c it calls {{Louvre}}; EX: c:Mona Lisa
 		fxt.Init_page_create("Template:Test", "test");
 		fxt.Init_page_create("Category:Test", "{{Test}}");
@@ -417,11 +405,6 @@ public class Xot_invk_wkr_tst {
 		fxt.Test_parse_tmpl_str("{{Template:Wikipedia:A}}"		, "B");
 		fxt.Init_defn_clear();
 	}
-	@Test  public void Transcluded_redirect() {		// PURPOSE: StackOverflowError when transcluded sub-page redirects back to root_page; DATE:2014-01-07
-		fxt.Init_page_create("Root/Leaf", "#REDIRECT [[Root]]");
-		fxt.Init_page_create("Root", "<gallery>A.png|a{{/Leaf}}b</gallery>");		// NOTE: gallery neeeded for XOWA to fail; MW fails if just {{/Leaf}}
-		fxt.Test_parse_page("Root", "<gallery>A.png|a{{/Leaf}}b</gallery>");
-	}
 	@Test  public void Return_nl() {	// PURPOSE: allow \n to be returned by tmpl; do not trim; EX: zh.wikipedia.org/wiki/北區_(香港); DATE:2014-02-04
 		fxt.Init_defn_add("1x", "{{{1}}}");
 		fxt.Test_parse_tmpl_str("a{{1x|\n}}b", "a\nb");
@@ -445,10 +428,6 @@ public class Xot_invk_wkr_tst {
 		,	"a ="
 		);
 		fxt.Init_defn_clear();
-	}
-	@Test  public void Missing_transcluded() {	// PURPOSE: transclusion of a missing page should create a link, not print an empty String; EX: it.u:Dipartimento:Design; DATE:2014-02-12
-		fxt.Page_ttl_("Test_Page");
-		fxt.Test_parse_tmpl_str("{{/Sub}}", "[[Test_Page/Sub]]");
 	}
 	@Test  public void Tmpl_case_match() {	// PURPOSE: template name should match by case; EX:es.d:eclipse; DATE:2014-02-12
 		fxt.Init_defn_clear();

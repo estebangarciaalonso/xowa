@@ -54,7 +54,7 @@ public class Xowh_sidebar_mgr implements GfoInvkAble {
 			byte tid = line[1] == Byte_ascii.Asterisk ? Xowh_sidebar_itm.Tid_itm : Xowh_sidebar_itm.Tid_grp;
 			byte[] bry = ByteAry_.Trim(line, tid, line_len);	// trim *, **; note that tid indicates # of asterisks
 			if 	(ByteAry_.Match(bry, CONST_itm_search) || ByteAry_.Match(bry, CONST_itm_toolbox) || ByteAry_.Match(bry, CONST_itm_languages)) continue;	// ignore SEARCH, TOOLBOX, LANGUAGES
-			int pipe_pos = ByteAry_.FindFwd(bry, Byte_ascii.Pipe);
+			int pipe_pos = Byte_ary_finder.Find_fwd(bry, Byte_ascii.Pipe);
 			byte[] text_key = tid == Xowh_sidebar_itm.Tid_grp ? bry : ByteAry_.Mid(bry, pipe_pos + 1, bry.length);	// get text_key; note that grp is entire bry, while itm is after |
 			byte[] text_val = Resolve_key(text_key);
 			byte[] id = id_encoder.Encode(tmp_bfr.Add(CONST_id_prefix), text_key).XtoAryAndClear();	// build id; "n-encoded_id"

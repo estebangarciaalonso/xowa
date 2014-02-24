@@ -41,9 +41,9 @@ class Prefs_converter_fxt {
 	}
 	public void Parse(String raw_str) {
 		byte[] raw_bry = ByteAry_.new_utf8_(raw_str);
-		int bgn_pos = ByteAry_.FindFwd(raw_bry, Byte_ascii.Paren_bgn);
+		int bgn_pos = Byte_ary_finder.Find_fwd(raw_bry, Byte_ascii.Paren_bgn);
 		if (bgn_pos == ByteAry_.NotFound) throw Err_.new_fmt_("unable to find paren_bgn: {0}", raw_str);
-		int end_pos = ByteAry_.FindFwd(raw_bry, Byte_ascii.Paren_end, bgn_pos);
+		int end_pos = Byte_ary_finder.Find_fwd(raw_bry, Byte_ascii.Paren_end, bgn_pos);
 		if (end_pos == ByteAry_.NotFound) throw Err_.new_fmt_("unable to find paren_end: {0}", raw_str);
 		raw_bry = ByteAry_.Mid(raw_bry, bgn_pos, end_pos);
 		int len = raw_bry.length;

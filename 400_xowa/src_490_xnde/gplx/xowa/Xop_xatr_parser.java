@@ -31,7 +31,7 @@ public class Xop_xatr_parser {	// REF.MW:Sanitizer.php|decodeTagAttributes;MW_AT
 			++pos;
 			b = src[pos];
 		}
-		int gt_pos = ByteAry_.FindFwd(src, Byte_ascii.Gt, pos, end); if (gt_pos == ByteAry_.NotFound) return String_.NotFound;
+		int gt_pos = Byte_ary_finder.Find_fwd(src, Byte_ascii.Gt, pos, end); if (gt_pos == ByteAry_.NotFound) return String_.NotFound;
 		Object o = xnde_hash.Get_by_mid(src, pos, gt_pos);
 		return o == null ? String_.NotFound : ((byte[])o).length + pos;
 	}

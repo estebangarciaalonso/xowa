@@ -25,7 +25,7 @@ public class Xop_imageMap_xnde_tst {
 	}
 	@Test  public void Caption() {
 		fxt.Test_parse_page_wiki_str("<imagemap>File:A.png|thumb|bcde</imagemap>", String_.Concat_lines_nl_skipLast
-			(	Xop_para_wkr_tst.File_html("File", "A.png", "7/0", "bcde")
+			(	Xop_para_wkr_basic_tst.File_html("File", "A.png", "7/0", "bcde")
 			,	""
 			));
 	}

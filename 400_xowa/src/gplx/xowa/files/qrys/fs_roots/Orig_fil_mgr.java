@@ -22,5 +22,5 @@ class Orig_fil_mgr {
 	public boolean Has(byte[] lnki_ttl) {return hash.Has(key_bld(lnki_ttl));}
 	public Orig_fil_itm Get_by_ttl(byte[] lnki_ttl) {return (Orig_fil_itm)hash.Fetch(key_bld(lnki_ttl));}
 	public void Add(Orig_fil_itm fil) {hash.Add(key_bld(fil.Fil_name()), fil);}
-	private byte[] key_bld(byte[] v) {return case_match ? v : ByteAry_.Lower_ascii(v);}
+	private byte[] key_bld(byte[] v) {return case_match ? v : ByteAry_.Lower_ascii(ByteAry_.Copy(v));}
 }

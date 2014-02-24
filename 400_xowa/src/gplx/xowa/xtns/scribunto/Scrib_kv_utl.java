@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 class Scrib_kv_utl {
+	public static KeyVal[] base1_bool_false()	{return new KeyVal[] {KeyVal_.int_(0 + Scrib_interpreter.Base_1, false)};}
 	public static KeyVal[] base1_obj_null()		{return base1_obj_(null);}
 	public static KeyVal[] base1_obj_(Object v) {return new KeyVal[] {KeyVal_.int_(0 + Scrib_interpreter.Base_1, v)};}
 	public static KeyVal[] base1_many_(Object... vals) {

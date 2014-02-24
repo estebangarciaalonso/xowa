@@ -17,8 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
-public class Xop_list_wkr_tst {		
+public class Xop_list_wkr_basic_tst {
 	private Xop_fxt fxt = new Xop_fxt();
+	@After public void term() {fxt.Init_para_n_();}
 	@Test  public void List_1() {
 		fxt.Test_parse_page_wiki("\n*a"
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_ul).List_path_(0).List_uid_(0)
@@ -249,7 +250,7 @@ public class Xop_list_wkr_tst {
 			,	fxt.tkn_list_bgn_(0, 2, Xop_list_tkn_.List_itmTyp_dd).List_path_(0, 0).List_uid_(0)
 			,	fxt.tkn_tblw_tb_(2, 10).Subs_
 			(		fxt.tkn_tblw_tr_(4, 7).Subs_
-			(			fxt.tkn_tblw_td_(4, 7).Subs_(fxt.tkn_txt_(6, 7), fxt.tkn_para_(8, Xop_para_tkn.Para_typeId_none, Xop_para_tkn.Para_typeId_none)))
+			(			fxt.tkn_tblw_td_(4, 7).Subs_(fxt.tkn_txt_(6, 7), fxt.tkn_para_blank_(8)))
 			
 			)
 			,	fxt.tkn_list_end_(10).List_path_(0, 0)
@@ -384,7 +385,7 @@ public class Xop_list_wkr_tst {
 			));
 	}
 	@Test  public void Empty_li_ignored() {	// PURPOSE: inner template can cause dupe li; EX.WP: any Calendar day and NYT link; EX: 1/1
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"*a"
 			,	"*    "
@@ -399,11 +400,12 @@ public class Xop_list_wkr_tst {
 			,	"  <li>c"
 			,	"  </li>"
 			,	"</ul>"
+			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void List_in_tblw() {	// PURPOSE: list inside table should not be close outer list; EX.WP: Cato the Elder
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"*a"
 			,	"{|"
@@ -418,6 +420,7 @@ public class Xop_list_wkr_tst {
 			,	"<table>"
 			,	"  <tr>"
 			,	"    <td>b"
+			,	""
 			,	"      <dl>"
 			,	"        <dd>"
 			,	"          <dl>"
@@ -431,10 +434,10 @@ public class Xop_list_wkr_tst {
 			,	"</table>"
 			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Dt_dd_colon_at_eol() {		// PURPOSE: dangling ":" should not put next line in <dt>; EX.WP: Stein; b was being wrapped in <dt>b</dt>
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	";a:"
 			,	"*b"
@@ -450,6 +453,7 @@ public class Xop_list_wkr_tst {
 			,	"  <li>b"
 			,	"  </li>"
 			,	"</ul>"
+			,	""
 			,	"<dl>"
 			,	"  <dt>c"
 			,	"  </dt>"
@@ -458,8 +462,9 @@ public class Xop_list_wkr_tst {
 			,	"  <li>d"
 			,	"  </li>"
 			,	"</ul>"
+			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Dd_should_not_print_colon() {// PURPOSE: ;a:\n should show as ";a" not ";a:". colon should still be considered as part of empty list; DATE:2013-11-07
 		fxt.Test_parse_page_all_str(";a:\nb"
@@ -472,7 +477,7 @@ public class Xop_list_wkr_tst {
 		));		
 	}
 	@Test  public void Dt_dd_colon_in_lnki() {	// PURPOSE: "; [[Portal:a]]" should not split lnki; EX.WP: Wikipedia:WikiProject Military history/Operation Majestic Titan; "; [[Wikipedia:WikiProject Military history/Operation Majestic Titan/Phase I|Phase I]]: a b"
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	";[[Portal:a]]"
 			) ,	String_.Concat_lines_nl_skipLast
@@ -480,8 +485,9 @@ public class Xop_list_wkr_tst {
 			,	"  <dt><a href=\"/wiki/Portal:A\">Portal:A</a>"
 			,	"  </dt>"
 			,	"</dl>"
+			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}			
 	@Test  public void Max_list_depth() {	// PURPOSE: 256+ * caused list parser to fail; ignore; EX.WP:Bariatric surgery
 		String multiple = String_.Repeat("*", 300);
@@ -491,7 +497,7 @@ public class Xop_list_wkr_tst {
 				));
 	}
 	@Test  public void Numbered_list_resets_incorrectly() {	// PURPOSE: as description
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
 			(	"#A"
 			,	"#*Aa"
@@ -501,8 +507,10 @@ public class Xop_list_wkr_tst {
 			) ,	String_.Concat_lines_nl_skipLast
 			(	"<ol>"
 			,	"  <li>A"
+			,	""
 			,	"    <ul>"
 			,	"      <li>Aa"
+			,	""
 			,	"        <ul>"
 			,	"          <li>Aaa"
 			,	"          </li>"
@@ -515,8 +523,9 @@ public class Xop_list_wkr_tst {
 			,	"  <li>B"
 			,	"  </li>"
 			,	"</ol>"
+			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}			
 	@Test   public void List_should_not_end_indented_table() {// PURPOSE: :{| was being closed by \n*; EX:w:Maxwell's equations; DATE:20121231
 		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
@@ -541,7 +550,6 @@ public class Xop_list_wkr_tst {
 			,	"        </td>"
 			,	"      </tr>"
 			,	"    </table>"
-			,	""
 			,	"  </dd>"
 			,	"</dl>"
 			));
@@ -559,7 +567,7 @@ public class Xop_list_wkr_tst {
 	}
 	@Test   public void Trim_empty_list_items() {	// PURPOSE: empty list items should be ignored; DATE:2013-07-02
 		fxt.Test_parse_page_all_str("***   \n"
-		,	String_.Concat_lines_nl
+		,	String_.Concat_lines_nl_skipLast
 		(	""
 		));		
 	}
@@ -622,7 +630,6 @@ public class Xop_list_wkr_tst {
 		,	"        </td>"
 		,	"      </tr>"
 		,	"    </table>"
-		,	""
 		,	"  </li>"
 		,	"</ol>"
 		,	"c"

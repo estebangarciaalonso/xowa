@@ -17,306 +17,229 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xop_para_wkr implements Xop_ctx_wkr {
+	private boolean para_enabled;
+	private byte cur_mode;
+	private int para_stack;
+	private boolean in_block, block_is_bgn_xnde, block_is_end_xnde, in_blockquote, block_is_bgn_blockquote, block_is_end_blockquote;
+	private int prv_nl_pos; private Xop_para_tkn prv_para; private int prv_ws_bgn;
 	public boolean Enabled() {return enabled;} public Xop_para_wkr Enabled_(boolean v) {enabled = v; return this;} private boolean enabled = true;
-	public Xop_para_wkr Enabled_y_() {enabled = true; return this;} public Xop_para_wkr Enabled_n_() {enabled = false; return this;}		
+	public Xop_para_wkr Enabled_y_() {enabled = true; return this;} public Xop_para_wkr Enabled_n_() {enabled = false; return this;}				
 	public void Ctor_ctx(Xop_ctx ctx) {}
 	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {
-		para_enabled = enabled && ctx.Parse_tid() == Xop_parser_.Parse_tid_page_wiki;
-		block_mode = Block_mode_none;
-		pre_at_line_bgn = false;
+		this.Clear();
+		para_enabled = enabled && ctx.Parse_tid() == Xop_parser_.Parse_tid_page_wiki;	// only enable for wikitext (not for template)
 		if (para_enabled)
-			Prv_para_new(ctx, root, 0);
-	}	private boolean para_enabled;
-	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_tkn_itm tkn) {
-		if (((Xop_pre_tkn)tkn).Pre_enable() != Bool_.N_byte)
-			ctx.Subs_add(root, tkn_mkr.Para_pre_end(bgn_pos, tkn));
+			Prv_para_new(ctx, root, -1, 0);	// create <para> at bos
 	}
+	private void Clear() {
+		cur_mode = Mode_none;
+		para_stack = Para_stack_none;
+		in_block = block_is_bgn_xnde = block_is_end_xnde = false;
+		in_blockquote = block_is_bgn_blockquote = block_is_end_blockquote = false;
+		prv_nl_pos = -1;
+		prv_para = null;
+		prv_ws_bgn = 0;
+	}
+	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_tkn_itm tkn) {}
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {
-//			if (this.src == null) this.src = src;	// HACK: sometimes needed in home wiki when option page tag is not closed
 		if (para_enabled) {
-			if (block_mode != Block_mode_end)			// ignore Block_end b/c it will insert unneeded para_blank
-				Process_nl(ctx, root, src, src_len, src_len, false);	// eos simulates a nl; needed to evaluate all text on line; EX: "a"
-			this.Cur_mode_end();						// close anything created by Process_nl()
+			Process_nl(ctx, root, src, src_len, src_len);
+			this.Prv_para_end();												// close anything created by Process_nl()
 		}
 		this.Clear();
 	}
-	private void Clear() {
-		cur_mode_(Mode_none);
-		para_stack = ParaStack_none;
-		prv_nl_pos = -1;
-		prv_para = null;
+	public void Process_block__bgn_y__end_n(Xop_xnde_tag tag)		{Process_block(tag, Bool_.Y, Bool_.N);}
+	public void Process_block__bgn_n__end_y(Xop_xnde_tag tag)		{Process_block(tag, Bool_.N, Bool_.Y);}
+	public void Process_block__xnde(Xop_xnde_tag tag, byte mode) {
+		if		(mode == Xop_xnde_tag.Block_bgn)	 Process_block(tag, Bool_.Y, Bool_.N);
+		else if (mode == Xop_xnde_tag.Block_end)	 Process_block(tag, Bool_.N, Bool_.Y);
 	}
-	private int Close_list_if_not_category(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {// SEE:NOTE_4; EX.WP: SHA-2
-		if (ctx.Cur_tkn_tid() != Xop_tkn_itm_.Tid_list) return -1;	
-		int txt_pos = Xop_lxr_.Find_fwd_while_ws(src, src_len, cur_pos);
-		if (ByteAry_.FindFwd(src, Xop_tkn_.Lnki_bgn, txt_pos, src_len) == txt_pos) {
-			txt_pos += Xop_tkn_.Lnki_bgn.length;
-			if (ByteAry_.FindFwd(src, ctx.Wiki().Ns_mgr().Ns_category().Name_db_w_colon(), txt_pos, src_len) == txt_pos)
-				return -1;
+	public void Process_block_lnki_div() {	// bgn_lhs is pos of [[; end_lhs is pos of ]]
+		if (prv_ws_bgn > 0)	 // if pre at start of line; ignore it b/c of div; EX: "\n\s[[File:A.png|thumb]]" should not produce thumb; also [[File:A.png|right]]; DATE:2014-02-17
+			prv_ws_bgn = 0;
+		this.Process_block__bgn_n__end_y(Xop_xnde_tag_.Tag_div);
+	}
+	private void Process_block(Xop_xnde_tag tag, boolean bgn, boolean end)	{
+		if (prv_ws_bgn > 0) {
+			prv_para.Space_bgn_(prv_ws_bgn);
+			prv_ws_bgn = 0;
 		}
-		ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_list), true, bgn_pos, cur_pos);
-		if (txt_pos < src_len && src[txt_pos] == Byte_ascii.NewLine) {	// NOTE: handle \n\s between lists; DATE:2013-07-12
-			Xop_list_wkr_.Close_list_if_present(ctx, root, src, bgn_pos, cur_pos);	// NOTE: above line only closes one list; should probably change to close all lists, but for now, close all lists only if "\n\s", not "\n"; DATE:2013-07-12
-			return txt_pos; 
+		block_is_bgn_xnde = bgn;
+		block_is_end_xnde = end;
+		switch (tag.Id()) {
+			case Xop_xnde_tag_.Tid_blockquote:
+				if (bgn) block_is_bgn_blockquote = true;
+				if (end) block_is_end_blockquote = true;
+				break;
 		}
-		return -1;
-	}	
+	}
+	public void Process_block__bgn__nl_w_symbol(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int bgn_pos, int cur_pos, Xop_xnde_tag tag) {// handle \n== and \n* \n{|; note that nl is at rng of bgn_pos to bgn_pos + 1 (not cur_pos)
+		if (!para_enabled) return;
+		Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1);
+		Process_block__bgn_y__end_n(tag);
+	}
+	public void Process_nl(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int bgn_pos, int cur_pos) {// REF.MW:Parser.php|doBlockLevels
+		Dd_clear(ctx);
+		if (block_is_bgn_xnde || block_is_end_xnde) {
+			para_stack = Para_stack_none;													// MW: $paragraphStack = false;
+			Prv_para_end();																	// MW: $output .= $this->closeParagraph()
+			if (block_is_bgn_blockquote && !block_is_end_blockquote)						// MW: if ( $preOpenMatch and !$preCloseMatch )
+				in_blockquote = true;														// MW: $this->mInPre = true;
+			in_block = !block_is_end_xnde;													// MW: $inBlockElem = !$closematch;
+		}
+		else if (!in_block && !in_blockquote) {												// MW: elseif ( !$inBlockElem && !$this->mInPre ) {
+			boolean line_is_ws = Line_is_ws(src, bgn_pos);
+			if (prv_ws_bgn > 0 && (cur_mode == Mode_pre || !line_is_ws)) {					// MW: if ( ' ' == substr( $t, 0, 1 ) and ( $this->mLastSection === 'pre' || trim( $t ) != '' ) ) {
+				if (cur_mode != Mode_pre) {													// MW: if ( $this->mLastSection !== 'pre' ) {
+					para_stack = Para_stack_none;											// MW: $paragraphStack = false;
+					Prv_para_end(); Prv_para_bgn(Xop_para_tkn.Tid_pre);  				// MW: $output .= $this->closeParagraph() . '<pre>';
+					cur_mode = Mode_pre;													// MW: $this->mLastSection = 'pre';
+				}
+				prv_ws_bgn = 0;																// MW: $t = substr( $t, 1 );
+			}
+			else {
+				if (bgn_pos - prv_nl_pos == 1 || line_is_ws) {				// line is blank ("b" for blank)						MW: if ( trim( $t ) === '' ) {
+					if (para_stack != Para_stack_none) {									// "b1"; stack has "<p>" or "</p><p>"; output "<br/>";	MW: if ( $paragraphStack ) {
+						Para_stack_end(cur_pos); Add_br(ctx, root, bgn_pos);				//														MW: $output .= $paragraphStack . '<br />';
+						para_stack = Para_stack_none;										//														MW: $paragraphStack = false;
+						cur_mode = Mode_para;												//														MW: $this->mLastSection = 'p';
+					}
+					else {																	// stack is empty
+						if (cur_mode != Mode_para) {										// "b2"; cur is '' or <pre>								MW: if ( $this->mLastSection !== 'p' ) {
+							Prv_para_end();													//														MW: $output .= $this->closeParagraph();
+							cur_mode = Mode_none;											//														MW: $this->mLastSection = '';
+							para_stack = Para_stack_bgn;									// put <p> on stack										MW: $paragraphStack = '<p>';
+						}
+						else																// "b3"; cur is p
+							para_stack = Para_stack_mid;									// put </p><p> on stack									MW: $paragraphStack = '</p><p>';
+					}
+				}
+				else {																		// line has text ("t" for text); NOTE: tkn already added before \n, so must change prv_para; EX: "a\n" -> this code is called for "\n" but "a" already processed
+					if (para_stack != Para_stack_none) {									// "t1"													MW: if ( $paragraphStack ) {
+						Para_stack_end(cur_pos);											//														MW: $output .= $paragraphStack;
+						para_stack = Para_stack_none;										//														MW: $paragraphStack = false;
+						cur_mode = Mode_para;												//														MW: $this->mLastSection = 'p';
+					}
+					else if (cur_mode != Mode_para) {										// "t2"; cur is '' or <pre>								MW: elseif ( $this->mLastSection !== 'p' ) {
+						Prv_para_end(); Prv_para_bgn(Xop_para_tkn.Tid_para);			//														MW: $output .= $this->closeParagraph() . '<p>';
+						cur_mode = Mode_para;												//														MW: $this->mLastSection = 'p';
+					}
+					else {}																	// "t3"
+				}
+			}
+		}
+		if (in_blockquote && prv_ws_bgn > 0)	// handle blockquote separate; EX: <blockquote>\n\sa\n</blockquote>; note that "\s" needs to be added literally; MW doesn't have this logic specifically, since it assumes all characters go into $output, whereas XO, sets aside the "\s" in "\n\s" separately
+			prv_para.Space_bgn_(prv_ws_bgn);
+		prv_ws_bgn = 0;							// nl encountered and processed; always prv_ws_bgn set to 0, else ws from one line will carry over to next
+		// in_blockquote = false;
+		block_is_bgn_xnde = block_is_end_xnde = false;
+		// if ( $preCloseMatch && $this->mInPre )
+		//		$this->mInPre = false;
+		// prv_ws_bgn = false; 
+		Prv_para_new(ctx, root, bgn_pos, cur_pos);											// add a prv_para placeholder
+		if (para_stack == Para_stack_none)													// "x1"													MW: if ( $paragraphStack === false ) {
+			if (prv_para != null) prv_para.Nl_bgn_y_();										// add nl; note that "$t" has already been processed;	MW: $output .= $t . "\n";
+	}
 	public int Process_pre(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, int txt_pos) {
 		Dd_clear(ctx);
-		int new_pos = Close_list_if_not_category(ctx, root, src, src_len, bgn_pos, cur_pos);
-		if (new_pos != -1) {
-			Process_nl(ctx, root, src, bgn_pos, new_pos, true, true);	// add blank line for truncated "\n\s"; DATE:2013-07-12
-			return new_pos;								// must exit early; do not process pre
-		}
-		Object o = ctx.App().TblwWsTrie().MatchAtCur(src, txt_pos, src_len);
+		Object o = ctx.App().Utl_trie_tblw_ws().MatchAtCur(src, txt_pos, src_len);
 		if (o != null) {	// tblw_ws found
 			Xop_tblw_ws_itm ws_itm = (Xop_tblw_ws_itm)o;
 			byte tblw_type = ws_itm.Tblw_type();
 			switch (tblw_type) {
 				case Xop_tblw_ws_itm.Type_nl:	// \n\s\n
-					if (cur_mode == Mode_pre)
+					if (cur_mode == Mode_pre) {	// already in pre; just capture "\n\s"
 						ctx.Subs_add(root, tkn_mkr.NewLine(bgn_pos, bgn_pos, Xop_nl_tkn.Tid_char, 1));
-					else {
-						Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1, true);	// +1 = newLineLen
-						ctx.Subs_add(root, tkn_mkr.Space(root, bgn_pos + 1, txt_pos));
-						pre_at_line_bgn = true;		// NOTE: need to set pre_at_line_bgn
+						return txt_pos;
 					}
-					return txt_pos;
+					break;
 				case Xop_tblw_ws_itm.Type_xnde:
-					if (cur_mode != Xop_para_wkr.Mode_none || para_stack != ParaStack_none)	// DUBIOUS: if there is a para, create another para for "\n\s"; handles "\n\s</td>" should be equivalent to "\n</td>"; note that without "if" empty para would be be created for " <table>"
-						ctx.Para().Process_nl(ctx, root, src, bgn_pos, cur_pos, true);
+					if (bgn_pos != Xop_parser_.Doc_bgn_bos)
+						ctx.Para().Process_nl(ctx, root, src, bgn_pos, cur_pos);
 					return ctx.Xnde().Make_tkn(ctx, tkn_mkr, root, src, src_len, txt_pos, txt_pos + 1);
+				default:
+					return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, txt_pos + ws_itm.Hook_len(), false, tblw_type, false, -1, -1);
 			}
-			return ctx.Tblw().Make_tkn_bgn(ctx, tkn_mkr, root, src, src_len, bgn_pos, txt_pos + ws_itm.Hook_len(), false, tblw_type, false, -1, -1);
 		}
-		if (block_mode == Block_mode_bgn) {	// block_mode cancels pre; REF.MW: Parser.php|doBlockLevels|$inBlockElem
-			ctx.Subs_add(root, tkn_mkr.NewLine(bgn_pos, bgn_pos, Xop_nl_tkn.Tid_char, 1));
-			ctx.Subs_add(root, tkn_mkr.Space(root, bgn_pos + 1, cur_pos));
-			return cur_pos; 
-		}
-		int nl_end_pos = bgn_pos + 1;	// capture the pos after the \n
-		switch (cur_mode) {				// NOTE: pre lxr emulates MW for "\n\s" by (1) calling Process nl for "\n"; (2) anticipating next line by setting pre_at_line_bgn
-			case Mode_pre:
-			case Mode_none:
-			case Mode_para:													// EX: "\na\n b\n"; note that "\n " is cur
-				if (bgn_pos != Xop_parser_.Doc_bgn_bos)						// if bos, then don't close 1st para
-					Process_nl(ctx, root, src, bgn_pos, nl_end_pos, true, true);
-				pre_at_line_bgn = true;										// NOTE: anticipates next line as pre
-				break;
-		}
-		if (txt_pos - cur_pos > 0)	// capture ws also
-			ctx.Subs_add(root, tkn_mkr.Space(root, cur_pos, txt_pos));
+		// NOTE: pre lxr emulates MW for "\n\s" by (1) calling Process nl for "\n"; (2) anticipating next line by setting prv_ws_bgn
+		// EX: "\na\n b\n"; note that "\n " is cur
+		if (bgn_pos != Xop_parser_.Doc_bgn_bos)								// if bos, then don't close 1st para
+			Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1);				// note that tkn is \n\s; so, bgn_pos -> bgn_pos + 1 is \n ...
+		if (cur_mode == Mode_pre)											// in pre_mode
+			ctx.Subs_add(root, tkn_mkr.Space(root, cur_pos, txt_pos));		// cur_pos to start after \s; do not capture "\s" in "\n\s"; (not sure why not before \s)
+		prv_ws_bgn = txt_pos - cur_pos + 1;
 		return txt_pos;
 	}
-	public void Process_nl(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int bgn_pos, int cur_pos, boolean nl_char) {
-		Process_nl(ctx, root, src, bgn_pos, cur_pos, nl_char, false);
-	}
-	public void Process_nl(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int bgn_pos, int cur_pos, boolean nl_char, boolean called_from_pre) {	// REF.MW:Parser.php|doBlockLevels
-		Dd_clear(ctx);
-		/*	TODO:
-			$output .= $this->closeLastSection();
-			if ( $preOpenMatch and !$preCloseMatch ) {
-				$this->mInPre = true;
-			}
-		*/
-		switch (block_mode) {
-			case Block_mode_bgn:
-				para_stack = ParaStack_none;	// per MW; DATE:2013-01-20
-				prv_nl_pos = bgn_pos; 
-				if (nl_char) ctx.Subs_add(root, ctx.Tkn_mkr().NewLine(bgn_pos, cur_pos, Xop_nl_tkn.Tid_char, 1));
-				return;
-			case Block_mode_end:
-				para_stack = ParaStack_none;	// per MW; DATE:2013-01-20
-				prv_nl_pos = bgn_pos; 
-				block_mode = Block_mode_none;	// roughly $inBlockElem = !$closematch;
-				Prv_para_new(ctx, root, cur_pos);
-				return;
-		}
-		boolean trim = PseudoTrim(src, bgn_pos);
-		if (pre_at_line_bgn && (cur_mode == Mode_pre || !trim)) {	// per MW; DATE:2013-02-12
-			if (cur_mode != Mode_pre) {								// per MW; DATE:2013-02-12
-				para_stack = ParaStack_none;
-				this.Cur_mode_end_and_bgn(Xop_para_tkn.Para_typeId_pre);
-				cur_mode_(Mode_pre);
-			}
-			pre_at_line_bgn = false;
-		}
-		else {
-			if (bgn_pos - prv_nl_pos == 1 || trim) {		// line is blank ("b" for blank)
-				if (para_stack != ParaStack_none) {			//		"b1"; stack has "<p>" or "</p><p>"; output "<br/>";
-					ParaStack_end(cur_pos); ctx.Subs_add(root, ctx.Tkn_mkr().Xnde(bgn_pos, bgn_pos).Tag_(Xop_xnde_tag_.Tag_br)); 
-					cur_mode_(Mode_para);
-				}
-				else {										//		stack is empty
-					if (cur_mode != Mode_para) {			//			"b2"; cur is '' or <pre>
-						Cur_mode_end_and_bgn(Xop_para_tkn.Para_typeId_none);
-						para_stack = ParaStack_bgn;			//				put <p> on stack 
-					}
-					else									//			"b3"; cur is p
-						para_stack = ParaStack_mid;			//				put </p><p> on stack
-				}
-			}
-			else {											// line has text ("t" for text); NOTE: tkn already added before \n, so must change prv_para; EX: "a\n" -> this code is called for "\n" but "a" already processed
-				if (para_stack != ParaStack_none) {			//		"t1"
-					ParaStack_end(cur_pos);
-					cur_mode_(Mode_para);
-				}
-				else if (cur_mode != Mode_para) {			//		"t2"; cur is '' or <pre>
-					Cur_mode_end_and_bgn(Xop_para_tkn.Para_typeId_para);
-					cur_mode_(Mode_para);
-				}
-				else {}										//		"t3"
-			}
-			pre_at_line_bgn = false; // NOTE: disable pre since line is either text or blank
-		}
-		if (para_stack == ParaStack_none) {					// "x1"
-			ctx.Subs_add(root, ctx.Tkn_mkr().NewLine(bgn_pos, cur_pos, Xop_nl_tkn.Tid_char , 1));
-		}
-		Prv_para_new(ctx, root, cur_pos);
-		prv_nl_pos = bgn_pos;
-	}
-	public void Process_lnki_category(Xop_ctx ctx, Xop_root_tkn root, int pos) {	// REF.MW:Parser.php|replaceInternalLinks2|Strip the whitespace Category links produce; 
+	public void Process_lnki_category(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int pos, int src_len) {	// REF.MW:Parser.php|replaceInternalLinks2|Strip the whitespace Category links produce; 
 		if (!para_enabled) return;
-		boolean para_init = true, nl_init = true;
 		int subs_len = root.Subs_len();
-		for (int i = subs_len - 2; i > -1; i--) {	// -2: -1 for last; -1 to skip current lnki
+		for (int i = subs_len - 2; i > -1; i--) {	// -2: -1 b/c subs_len is invalid; -1 to skip current lnki
 			Xop_tkn_itm sub_tkn = root.Subs_get(i);
 			switch (sub_tkn.Tkn_tid()) {
-				case Xop_tkn_itm_.Tid_para:		// 1st para: remove end </p>; 2nd para; mark current prv_para
-					Xop_para_tkn p = (Xop_para_tkn)sub_tkn;
-					if (para_init) {
-						p.Para_end_(Xop_para_tkn.Para_typeId_none);
-						para_init = false;						
-					}
-					else {
-						prv_para.Para_bgn_(Xop_para_tkn.Para_typeId_none);
-						prv_para = p;
-						Pre_disable();	// disable pre (categories will never be put inside pre)
-						return;
-					}
-					break;
-				case Xop_tkn_itm_.Tid_newLine:	// nl found; ignore
-					sub_tkn.Ignore_y_grp_(ctx, root, i);
-					sub_tkn.Ignore_y_();
-					nl_init = false;
-					break;
-				default:						// exit if nl not found
-					if (nl_init) {				// indicates category is not preceded by \n; EX: "\na[[Category:B]]" (vs. "\n[[Category:B]]");
-						i = -1;
-						if (pre_at_line_bgn) {	// SEE:NOTE_3
-							Pre_disable();
-							prv_para.Para_bgn_(Xop_para_tkn.Para_typeId_none);
-
-							para_stack = ParaStack_none;
-							cur_mode_(Mode_none);
-							prv_nl_pos = pos + 1;	// SEE:NOTE_2
+				case Xop_tkn_itm_.Tid_para:		// nl found; note this means that BOL -> [[Category:]] is all ws;
+					if (prv_ws_bgn > 0) {		// line begins with ws a
+						if (sub_tkn.Src_bgn() != 0)	// do not ignore BOS para; needed b/c it is often <p>; needed for test;
+							sub_tkn.Ignore_y_();	// ignore nl (pretty-printing only)
+						prv_ws_bgn = 0;			// remove ws
+						if (ctx.Stack_has(Xop_tkn_itm_.Tid_list)){	// HACK: if in list, set prv_nl_pos to EOL; only here for one test to pass
+							int nl_at_eol = -1;
+							for (int j = pos; j < src_len; j++) {	// check if rest of line is ws
+								byte b = src[j];
+								switch (b) {
+									case Byte_ascii.Space: case Byte_ascii.Tab: break;	// ignore space / tab
+									case Byte_ascii.NewLine:
+										nl_at_eol = j;
+										j = src_len;
+										break;
+									default:	// something else besides ws; stop
+										j = src_len;
+										break;
+								}
+								if (nl_at_eol != -1)
+									prv_nl_pos = nl_at_eol + 1;	// SEE:NOTE_2
+							}
 						}
-						return;	
 					}
+					return;
+				default:						// exit if anything except para / nl in front of [[Category:]]
+					i = -1;
 					break;
 			}
 		}
+//			if (para_found)	// BOS exit; just remove prv_ws_bgn
+			prv_ws_bgn = 0;
 	}
-	public void Process_lnki_file_div(Xop_ctx ctx, Xop_root_tkn root, int bgn_lhs, int end_lhs) {	// bgn_lhs is pos of [[; end_lhs is pos of ]]
-		if (!para_enabled) return;
-		Dd_clear(ctx);
-		block_mode = Block_mode_bgn;
-		if (cur_mode == Mode_pre) {						// pre is in effect; DUBIOUS: not sure if 2nd else should be handled elsewhere; alternative would be to eval at [[ instead of ]]
-			if (bgn_lhs - 1 == prv_nl_pos)							//   lnki started at bgn of line; EX: \n\sa\n[[File:A.png]]
-				this.Cur_mode_end();					//     close pre
-			else													//   lnki started at pre; EX: \n\s[[File:A.png]]
-				Pre_disable();										//     cancel pre
-		}
-		this.Cur_mode_end();
-		para_stack = ParaStack_none;
-		Prv_para_new(ctx, root, end_lhs);
-		block_mode = Block_mode_end;
-	}
-	public void Process_xml_block(byte mode, int pos) {	// REF.MW:Parser.php|doBlockLevels|if ( $openmatch or $closematch ) {
-		switch (mode) {
-			case Xop_xnde_tag.Block_noop:	return;
-			case Xop_xnde_tag.Block_bgn:
-				block_mode = Block_mode_bgn;
-				if (cur_mode == Mode_para)	// NOTE: this emulates MW and $this->closeLastSection(); however, xowa does pre logic differently, so exclude it
-					Cur_mode_end_and_bgn(Xop_para_tkn.Para_typeId_none);
-				break;
-			case Xop_xnde_tag.Block_end:
-				if (cur_mode == Mode_para)	// NOTE: this emulates MW and $this->closeLastSection(); however, xowa does pre logic differently, so exclude it
-					Cur_mode_end_and_bgn(Xop_para_tkn.Para_typeId_none);
-				block_mode = Block_mode_end;
-				break;
-		}
-		para_stack = ParaStack_none;
-		Pre_disable();
-	}	
-	public void Process_nl_sect_bgn(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int bgn_pos, int cur_pos, int blockType) {
-		if (!para_enabled) return;
-		Dd_clear(ctx);
-		Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1, false);	// NOTE: called by \n== and \n*; nl is at rng of bgn_pos to bgn_pos + 1 (not cur_pos)
-		this.Cur_mode_end();						// MW: NOTE that cur_mode = Mode_none
-		para_stack = ParaStack_none;				// MW: clear stack
-		cur_mode_(Mode_none);
-		prv_nl_pos = bgn_pos;			// update nl_pos
-	}
-	public void Process_nl_sect_end(Xop_ctx ctx, int pos) { // NOTE: hdrs/lists have no <p>s to close
-		if (!para_enabled) return;
-		Dd_clear(ctx);
-		para_stack = ParaStack_none;
-		cur_mode_(Mode_none);
-		prv_nl_pos = pos;
-		Process_xml_block(Xop_xnde_tag.Block_end, pos);
-	}
-	public void Process_hdr_end(Xop_ctx ctx, Xop_root_tkn root, int pos) {
-		if (!para_enabled) return;
-		Dd_clear(ctx);
-		para_stack = ParaStack_none;
-		cur_mode_(Mode_none);
-		prv_nl_pos = pos;
-		Prv_para_new(ctx, root, pos);
-	}
-	public void Prv_para_new(Xop_ctx ctx, Xop_root_tkn root, int pos) {
-		prv_para = ctx.Tkn_mkr().Para(pos, Xop_para_tkn.Para_typeId_none, Xop_para_tkn.Para_typeId_none);
+	private void Prv_para_new(Xop_ctx ctx, Xop_root_tkn root, int prv_nl_pos, int para_pos) {
+		this.prv_nl_pos = prv_nl_pos;
+		prv_para = ctx.Tkn_mkr().Para(para_pos);
 		ctx.Subs_add(root, prv_para);
 	}
-	public void Cur_mode_end() {
+	private void Prv_para_end() {	// MW: closeParagraph();
+		// following switch is equivalent to:
+		// MW: if ( $this->mLastSection != '' )
+		// MW: 		$result = '</' . $this->mLastSection . ">\n";
 		switch (cur_mode) {
 			case Mode_none:	return;
-			case Mode_pre:	prv_para.Para_end_(Xop_para_tkn.Para_typeId_pre); break;
-			case Mode_para: prv_para.Para_end_(Xop_para_tkn.Para_typeId_para); break;
+			case Mode_pre:	prv_para.Para_end_(Xop_para_tkn.Tid_pre); break;
+			case Mode_para: prv_para.Para_end_(Xop_para_tkn.Tid_para); break;
 		}
-		cur_mode_(Mode_none);
+		// in_pre = false;		// MW: $this->mInPre = false;
+		cur_mode = Mode_none;	// MW: $this->mLastSection = '';
 	}
-	public void Cur_mode_end_and_bgn(byte bgn) {
-		Cur_mode_end();
-		if (prv_para != null) prv_para.Para_bgn_(bgn);	// NOTE: need (prv_para != null) check for <BOS>"==a=="
+	private void Prv_para_bgn(byte mode) {
+		if (prv_para != null) prv_para.Para_bgn_(mode);
 	}
-	public static final byte Block_mode_none = 0, Block_mode_bgn = 1, Block_mode_end = 2;
-	public byte Block_mode() {return block_mode;} public Xop_para_wkr Block_mode_(byte v) {block_mode = v; return this;} private byte block_mode = Block_mode_none;
-	public void Prv_para_disable(int pos) {
-		if (prv_para == null) return;
-		prv_para.Ignore_y_();
-		para_stack = ParaStack_none;
-		cur_mode = Mode_none;
-	}
-	public void Prv_para_x_pre(int pos) {
-		if (prv_para == null) return;
-//			para_stack = ParaStack_none;
-//			cur_mode = Mode_para;
-		pre_at_line_bgn = false;
-		block_mode = Block_mode_none;
-		prv_para.Para_bgn_(Xop_para_tkn.Para_typeId_none);
-		prv_para.Para_end_(Xop_para_tkn.Para_typeId_none);
-	}
-	private void ParaStack_end(int cur_pos) {
+	private void Para_stack_end(int cur_pos) {	// MW: $output .= $paragraphStack;
 		switch (para_stack) {
-			case ParaStack_none:	break;
-			case ParaStack_bgn:		prv_para.Para_end_(Xop_para_tkn.Para_typeId_none).Para_bgn_(Xop_para_tkn.Para_typeId_para); break;
-			case ParaStack_mid:		prv_para.Para_end_(Xop_para_tkn.Para_typeId_para).Para_bgn_(Xop_para_tkn.Para_typeId_para); break;
+			case Para_stack_none:	break;
+			case Para_stack_bgn:	prv_para.Para_end_(Xop_para_tkn.Tid_none).Para_bgn_(Xop_para_tkn.Tid_para); break;	// '<p>'
+			case Para_stack_mid:	prv_para.Para_end_(Xop_para_tkn.Tid_para).Para_bgn_(Xop_para_tkn.Tid_para); break;	// '</p><p>'
 		}
-		para_stack = ParaStack_none;
-		cur_mode_(Mode_para);
 	}
-	private boolean PseudoTrim(byte[] src, int pos) {
+	private void Add_br(Xop_ctx ctx, Xop_root_tkn root, int bgn_pos) {
+		ctx.Subs_add(root, ctx.Tkn_mkr().Xnde(bgn_pos, bgn_pos).Tag_(Xop_xnde_tag_.Tag_br)); 
+	}
+	private boolean Line_is_ws(byte[] src, int pos) {
 		if (prv_nl_pos == -1) return false;
 		boolean ws = true;
 		for (int i = prv_nl_pos + 1; i < pos; i++) {
@@ -333,45 +256,17 @@ public class Xop_para_wkr implements Xop_ctx_wkr {
 		}
 		return ws;
 	}
-	public void Pre_disable() {
-		if (cur_mode == Mode_pre || pre_at_line_bgn) {
-			if (prv_para != null) prv_para.Para_bgn_(Xop_para_tkn.Para_typeId_space);	// NOTE:2012-11-27: handles text like <td>a\n\sb</td> where \n\s should not be pre, but \s should not be discarded (else "a" and "b" become one word); EX:w:Vaccuum tube
-			cur_mode_(Mode_none);
-			pre_at_line_bgn = false;
-		}
-	}
-	public void Prv_nl_pos_(int v) {prv_nl_pos = v;}
-	public boolean Pre_at_line_bgn() {return pre_at_line_bgn;} private boolean pre_at_line_bgn = false;
 	private void Dd_clear(Xop_ctx ctx) {ctx.List().Dd_chk_(false);}
-	private int prv_nl_pos = -1;
-	private Xop_para_tkn prv_para = null;
-	public byte Cur_mode() {return cur_mode;}
-	byte cur_mode = Mode_none; int para_stack = ParaStack_none;
-	private void cur_mode_(byte v) {cur_mode = v;}
-	static final int 
-		  ParaStack_none = 0	// false
-		, ParaStack_bgn  = 1	// <p>
-		, ParaStack_mid  = 2	// </p><p>
-		;
-	public static final byte
-		  Mode_none = 0	// ''
-		, Mode_para = 1	// p
-		, Mode_pre  = 2	// pre
-		;
-	public int Hack_pre_and_false_tblw(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int nl_pos) {// DATE:2013-04-08
-		/* HACK: handle the following
-			a
-			 b
-			|
-			c
-		. the "\n" in "\n|" is intercepted by the tblw
-		. the "\n|" is confirmed to be an invalid tblw, but the "\n" needs to be processed correctly
-		*/
-		Process_nl(ctx, root, src, nl_pos, nl_pos, false, false);													// (1) marks prv_para.bgn as <pre> b/c of pre_at_line_bgn; (2) also create a new blank para (which is fortunately after "b")
-		prv_para.Para_end_(Xop_para_tkn.Para_typeId_pre).Para_bgn_(Xop_para_tkn.Para_typeId_para);	// manually set new para to </pre><p>
-		prv_nl_pos = nl_pos;																		// set prv_nl_pos to pos of "\n" (else "this-line-is-blank" code is triggered)
-		return nl_pos + 1;																			// -1 to position before pipe (so that pipe lxr can pick it up)
-	}
+	private static final int 
+	  Para_stack_none = 0	// false
+	, Para_stack_bgn  = 1	// <p>
+	, Para_stack_mid  = 2	// </p><p>
+	;
+	private static final byte
+	  Mode_none = 0			// ''
+	, Mode_para = 1			// p
+	, Mode_pre  = 2			// pre
+	;
 }
 /*
 NOTE_1:
@@ -416,17 +311,4 @@ EX: "a\n [[Category:c]]"
 - [[Category:c]] indicates that \n\s should be trimmed
   so, disable_pre, etc.
 
-NOTE_4: close_list_if_not_category
-PURPOSE: \n should ordinarily close list. However, if \n[[Category:A]], then don't close list since [[Category:A]] will trim preceding \n
-REASON: occurs b/c MW does separate passes for list and Category while XO does one pass.
-
-EX: closes *a list
-*a
-
-*b
-
-EX: does not close
-*a
-[[Category:A]]
-*b
 */

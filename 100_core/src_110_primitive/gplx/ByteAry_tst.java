@@ -19,25 +19,6 @@ package gplx;
 import org.junit.*;
 import gplx.texts.*;
 public class ByteAry_tst {
-	@Test  public void FindFwd() {
-		tst_FindFwd("abcba",  "b", 0, 1);
-		tst_FindFwd("abcba",  "z", 0, -1);
-		tst_FindFwd("abcba",  "b", 1, 1);
-		tst_FindFwd("abcba",  "b", 2, 3);
-		tst_FindFwd("abcba",  "b", 4, -1);
-		tst_FindFwd("abcba", "zb", 4, -1);
-		tst_FindFwd("abcba",  "a", 6, -1);
-	}	void tst_FindFwd(String src, String lkp, int bgn, int expd) {Tfds.Eq(expd, ByteAry_.FindFwd(ByteAry_.new_utf8_(src), ByteAry_.new_utf8_(lkp), bgn));}
-	@Test  public void FindBwd() {
-		tst_FindBwd("abcba",  "b", 4, 3);
-		tst_FindBwd("abcba",  "z", 4, -1);
-		tst_FindBwd("abcba",  "b", 3, 1);
-		tst_FindBwd("abcba",  "b", 2, 1);
-		tst_FindBwd("abcba",  "b", 0, -1);
-		tst_FindBwd("abcba", "zb", 4, -1);
-		tst_FindFwd("abcba",  "a", -1, -1);
-		tst_FindBwd("abcba", "ab", 4, 0);
-	}	void tst_FindBwd(String src, String lkp, int bgn, int expd) {Tfds.Eq(expd, ByteAry_.FindBwd(ByteAry_.new_utf8_(src), ByteAry_.new_utf8_(lkp), bgn));}
 	@Test  public void MidByPos() {
 		tst_MidByPos("abcba", 0, 1, "a");
 		tst_MidByPos("abcba", 0, 2, "ab");
@@ -222,12 +203,6 @@ public class ByteAry_tst {
 		String[] actl = String_.Ary(ByteAry_.Split(ByteAry_.new_ascii_(src), ByteAry_.new_ascii_(dlm)));
 		Tfds.Eq_ary_str(expd, actl);
 	}
-	@Test  public void FindBwd_last_ws() {
-		FindBwd_1st_ws_tst("a b"		, 2, 1);					// basic
-		FindBwd_1st_ws_tst("a   b"		, 3, 1);					// multiple
-		FindBwd_1st_ws_tst("ab"			, 1, ByteAry_.NotFound);	// none
-	}
-	void FindBwd_1st_ws_tst(String src, int pos, int expd) {Tfds.Eq(expd, ByteAry_.FindBwd_last_ws(ByteAry_.new_ascii_(src), pos));}
 	@Test   public void Split_lines() {
 		Tst_split_lines("a\nb"		, "a", "b");					// basic
 		Tst_split_lines("a\nb\n"	, "a", "b");					// do not create empty trailing lines

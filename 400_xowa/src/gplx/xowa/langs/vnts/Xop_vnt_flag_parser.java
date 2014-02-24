@@ -79,7 +79,7 @@ class Xop_vnt_flag_parser {
 			Object vnt_obj = trie.MatchAtCur(bry, vnt_pos, bry_len);
 			if (vnt_obj == null) break;						// no more vnts found; stop
 			vnt_pos = trie.Match_pos();						// update pos to end of vnt
-			int semic_pos = Xop_lxr_.Find_fwd_non_ws(bry, vnt_pos, bry_len);
+			int semic_pos = Byte_ary_finder.Find_fwd_while_not_ws(bry, vnt_pos, bry_len);
 			if (semic_pos == bry_len)						// note that Find_fwd_non_ws will return bry_len if no non-ws found;
 				last = true;
 			else {											// char found; make sure it is semic

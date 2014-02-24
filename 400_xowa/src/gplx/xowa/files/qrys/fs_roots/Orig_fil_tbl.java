@@ -80,7 +80,7 @@ class Orig_fil_tbl_sql implements Orig_fil_tbl {
 	,	", fil_ext_id       integer             NOT NULL"
 	,	", fil_w            integer             NOT NULL"
 	,	", fil_h            integer             NOT NULL"
-	,	", fil_dir_url     varchar(1024)       NOT NULL"	// NOTE: don't put dir in separate table; note that entire root_dir_wkr is not built to scale due to need for recursively loading all files
+	,	", fil_dir_url      varchar(1024)       NOT NULL"	// NOTE: don't put dir in separate table; note that entire root_dir_wkr is not built to scale due to need for recursively loading all files
 	,	");"
 	);
 }

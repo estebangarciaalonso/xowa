@@ -182,12 +182,14 @@ class Scrib_lua_rsp_bldr {
 		if		(Object_.Eq(v_type, Int_.ClassOf))				Bld_int(bfr, Int_.cast_(v));
 		else if	(Object_.Eq(v_type, String_.ClassOf))			Bld_str(bfr, String_.as_or_fail_(v));
 		else if	(Object_.Eq(v_type, Bool_.ClassOf))				Bld_bool(bfr, Bool_.cast_(v));
+		else if	(Object_.Eq(v_type, Double_.ClassOf))			Bld_double(bfr, Double_.cast_(v));
 		else if	(Object_.Eq(v_type, KeyVal[].class))			Bld_kv_ary(bfr, (KeyVal[])v);
 		else if	(Object_.Eq(v_type, Scrib_fnc.class))			Bld_fnc(bfr, (Scrib_fnc)v);
 		else													throw Err_.unhandled(ClassAdp_.NameOf_obj(v));
 	}
 	private void Bld_bool(ByteAryBfr bfr, boolean v)		{bfr.Add_str("b:").Add_int_fixed(v ? 1 : 0, 1).Add_byte(Byte_ascii.Semic);}
 	private void Bld_int(ByteAryBfr bfr, int v)			{bfr.Add_str("i:").Add_int_variable(v).Add_byte(Byte_ascii.Semic);}
+	private void Bld_double(ByteAryBfr bfr, double v)	{bfr.Add_str("d:").Add_double(v).Add_byte(Byte_ascii.Semic);}
 	private void Bld_str(ByteAryBfr bfr, String v)		{bfr.Add_str("s:").Add_int_variable(ByteAry_.new_utf8_(v).length).Add_str(":\"").Add_str(v).Add_str("\";");}	// NOTE: must use ByteAry_.new_utf8_(v).length to calculate full bry len
 	private void Bld_fnc(ByteAryBfr bfr, Scrib_fnc v)	{bfr.Add_str("O:42:\"Scribunto_LuaStandaloneInterpreterFunction\":1:{s:2:\"id\";i:").Add_int_variable(v.Id()).Add_byte(Byte_ascii.Semic).Add_byte(Byte_ascii.Curly_end);}
 	private void Bld_kv_ary(ByteAryBfr bfr, KeyVal[] ary) {

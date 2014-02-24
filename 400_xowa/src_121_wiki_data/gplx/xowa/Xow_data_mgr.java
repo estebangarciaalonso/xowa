@@ -27,13 +27,22 @@ public class Xow_data_mgr implements GfoInvkAble {
 	public Xoa_page Get_page(Xoa_url url, Xoa_ttl ttl, boolean called_from_tmpl) {
 		Xow_ns ns = ttl.Ns();
 		Xoa_page rv = new Xoa_page(wiki, ttl);
-		if (ns.Id() == Xow_ns_.Id_special)
-			wiki.Special_mgr().Special_gen(url, rv, wiki, ttl);
-		else
-			rv = Get_page(rv, url, ns, ttl, called_from_tmpl);
-		return rv;
+		switch (ns.Id()) {
+			case Xow_ns_.Id_special:
+				wiki.Special_mgr().Special_gen(url, rv, wiki, ttl);
+				return rv;
+			case Xow_ns_.Id_mediaWiki:
+				byte[] ttl_leaf = ttl.Leaf_txt();
+				if (ByteAry_.Eq(ttl_leaf, wiki.Lang().Key_bry())) {	// ttl ends in lang of current wiki; EX: MediaWiki:Mainpage/zh; DATE:2014-02-22
+					byte[] old_raw = ttl.Raw();
+					byte[] new_raw = ByteAry_.Mid(old_raw, 0, old_raw.length - ttl_leaf.length - 1);	// - 1 to include "/"
+					ttl = Xoa_ttl.parse_(wiki, new_raw);
+				}
+				break;
+		}
+		return Get_page(rv, url, ns, ttl, called_from_tmpl);
 	}
-	public Xoa_page Get_page(Xoa_page rv, Xoa_url url, Xow_ns ns, Xoa_ttl ttl, boolean called_from_tmpl) {
+	private Xoa_page Get_page(Xoa_page rv, Xoa_url url, Xow_ns ns, Xoa_ttl ttl, boolean called_from_tmpl) {
 		int redirects = 0;
 		Xodb_page db_page = Xodb_page.tmp_();
 		while (true) {

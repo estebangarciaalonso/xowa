@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import org.junit.*;
 import gplx.xowa.langs.casings.*;
-public class Xop_lnki_wkr_tst {
+public class Xop_lnki_wkr_basic_tst {
 	private Xop_fxt fxt = new Xop_fxt();
-	@Before public void init() {fxt.Reset();}
+	@Before public void init() {fxt.Reset(); fxt.Init_para_n_();}
 	@Test  public void Basic() {
 		fxt.Test_parse_page_wiki("[[a]]", fxt.tkn_lnki_().Trg_tkn_(fxt.tkn_arg_val_txt_(2, 3)));
 	}
@@ -177,7 +177,7 @@ public class Xop_lnki_wkr_tst {
 		fxt.Test_parse_page_all_str("''[[\n]]", "<i>[[\n]]</i>");
 	}
 	@Test  public void Exc_nl_multiple_lines() {	// PURPOSE: apos, tblw, lnki, and nl will cause parser to fail; EX:Module:Taxobox; DATE:2013-11-10
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	" [[''"
 		,	" [["
@@ -192,7 +192,7 @@ public class Xop_lnki_wkr_tst {
 		,	"</p>"
 		,	"</i>"
 		));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Exc_pipeOnly() {
 		fxt.Test_parse_page_wiki("[[|]]", fxt.tkn_txt_(0, 5));
@@ -226,7 +226,7 @@ public class Xop_lnki_wkr_tst {
 			));
 	}
 	@Test  public void Caption_nl() {	// PURPOSE: \n in caption should be rendered as space; EX.WP:Schwarzschild radius; and the stellar [[Velocity dispersion|velocity\ndispersion]]
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"a [[b|c"
 			,	""
@@ -237,10 +237,10 @@ public class Xop_lnki_wkr_tst {
 			,	"</p>"
 			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Caption_nl_2() {	// PURPOSE: unclosed lnki breaks paragraph unexpectedly; EX.WP:Oldsmobile;
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"a"
 			,	""
@@ -254,7 +254,7 @@ public class Xop_lnki_wkr_tst {
 			,	"</p>"
 			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Caption_ref() {	// PURPOSE: <ref> not handled in lnki; EX.WP:WWI
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
@@ -277,7 +277,7 @@ public class Xop_lnki_wkr_tst {
 			));
 	}
 	@Test  public void Category_trim() { // PURPOSE: Category should trim preceding nl; EX:w:Mount Kailash
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"a"
 			,	" [[Category:b]]"
@@ -288,10 +288,10 @@ public class Xop_lnki_wkr_tst {
 			,	"</p>"
 			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Category_trim_2() {	// FUTURE: needs more para rework; conflicts with Category() test in para_wkr_tst; WHEN: when issue is found
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"a"
 			,	"x [[Category:b]]"
@@ -303,7 +303,27 @@ public class Xop_lnki_wkr_tst {
 			,	"</p>"
 			,	""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
+	}
+	@Test  public void Category() {	// PURPOSE: Category strips all preceding ws; EX.WP: NYC (in external links)
+		fxt.Init_para_y_();
+		String raw = String_.Concat_lines_nl_skipLast
+			(	"*a"
+			,	"*b"
+			,	" [[Category:c]]"
+			,	"*d"
+			);
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+			( "<ul>"
+			, "  <li>a"
+			, "  </li>"
+			, "  <li>b"
+			, "  </li>"
+			, "  <li>d"
+			, "  </li>"
+			, "</ul>"
+			));
+		fxt.Init_para_n_();
 	}
 //		@Test   public void Subpage_parent() {	// DISABLED: MW does not allow ../ to go past root; DATE:2014-01-02
 //			fxt.Page_ttl_("A");
@@ -528,47 +548,13 @@ public class Xop_lnki_wkr_tst {
 		fxt.Test_parse_page_wiki_str("[[Page1|]]"		, "<a href=\"/wiki/Page1\">Page1</a>");
 		fxt.Test_parse_page_wiki_str("[[Help:Page1|]]"	, "<a href=\"/wiki/Help:Page1\">Page1</a>");
 	}
-	@Test  public void Lnki_should_end_pre() {	// PURPOSE: if pre is already in effect, end it; EX: b:Knowing Knoppix/Other applications
-		fxt.Ctx().Para().Enabled_y_();
-		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
-		(	"a"
-		,	" b"
-		,	"[[File:A.png|thumb]]"
-		,	"c"
-		), String_.Concat_lines_nl_skipLast
-		( 	"<p>a"
-		,	"</p>"
-		,	""
-		,	"<pre>b"
-		,	"</pre>"
-		,	""
-		,	"<div class=\"thumb tright\">"
-		,	"  <div id=\"xowa_file_div_0\" class=\"thumbinner\" style=\"width:220px;\">"
-		,	"    <a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/220px.png\" width=\"0\" height=\"0\" /></a>"
-		, 	"    <div class=\"thumbcaption\">"
-		,	"      <div class=\"magnify\">"
-		,	"        <a href=\"/wiki/File:A.png\" class=\"internal\" title=\"Enlarge\">"
-		,	"          <img src=\"file:///mem/xowa/user/test_user/app/img/file/magnify-clip.png\" width=\"15\" height=\"11\" alt=\"\" />"
-		,	"        </a>"
-		,	"      </div>"
-		,	"      "
-		,	"    </div>"
-		,	"  </div>"
-		,	"</div>"
-		,	""
-		,	"<p>c"
-		,	"</p>"
-		,	""
-		));
-		fxt.Ctx().Para().Enabled_n_();		
-	}
 	private void Reg_xwiki_alias(String alias, String domain) {
 		Xop_fxt.Reg_xwiki_alias(fxt.Wiki(), alias, domain);
 	}
 	@Test  public void Thumb_first_align_trumps_all() {	// PURPOSE: if there are multiple alignment instructions, take the first EX:[[File:A.png|thumb|center|left]] DATE:20121226
 		fxt.Test_parse_page_wiki_str("[[File:A.png|thumb|right|center]]"	// NOTE: right trumps center
 			, String_.Concat_lines_nl_skipLast
-			(	Xop_para_wkr_tst.File_html("File", "A.png", "7/0", "")
+			(	Xop_para_wkr_basic_tst.File_html("File", "A.png", "7/0", "")
 			,	""
 			));
 	}
@@ -618,7 +604,7 @@ public class Xop_lnki_wkr_tst {
 		lnki_trail_mgr.Del(ltr_c_in_french);
 	}
 	@Test   public void Trim_category_normal() {	// PURPOSE: leading spaces / nls should be removed from normal Category, else false pre's or excessive line breaks
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	" [[Category:A]]"	// removes \s
 		,	" [[Category:B]]"	// removes \n\s
@@ -626,10 +612,10 @@ public class Xop_lnki_wkr_tst {
 		(	"<p>"
 		,	"</p>"
 		));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test   public void Trim_category_literal() {	// PURPOSE: do not trim ws if literal Category; EX:fr.wikiquote.org/wiki/Accueil; REF: https://sourceforge.net/p/xowa/tickets/167/; DATE:2013-07-10
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	"[[:Category:A]]"
 		,	"[[:Category:B]]"
@@ -638,7 +624,7 @@ public class Xop_lnki_wkr_tst {
 		,	"<a href=\"/wiki/Category:B\">Category:B</a>"
 		,	"</p>"
 		));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Link_html_ent() {// PURPOSE:html entities should be converted to chars; EX:&nbsp; -> _; DATE:2013-12-16
 		fxt.Test_parse_page_wiki_str
@@ -652,18 +638,5 @@ public class Xop_lnki_wkr_tst {
 	@Test  public void DoubleBracket() {
 		fxt.Test_parse_page_all_str("[[[[Test_1]]]]"		, "[[<a href=\"/wiki/Test_1\">Test_1</a>]]");
 	}
-//		@Test  public void Pre_disabled() {
-//			fxt.Ctx().Para().Enabled_y_();
-//			fxt.Test_parse_page_all_str("\n [[A]]", "[[<a href=\"/wiki/Test_1\">Test_1</a>]]");
-//			fxt.Ctx().Para().Enabled_n_();
-//		}
-
-//		@Test  public void Errs() {// FUTURE: restore; WHEN: lnki redo
-//			fxt.Test_parse_wiki("[[a] [[b]]"	, fxt.tkn_txt_(0, 2), fxt.tkn_txt_(2, 4), fxt.tkn_space_(4, 5), fxt.tkn_lnki_(5, 10));
-//			fxt.Test_parse_wiki("[[a\nb]]"	, fxt.tkn_lnki_(0, 2), fxt.tkn_nl_char_(1), fxt.tkn_txt_(3, 7));
-//			fxt.IgnoreErrs_().Test_parse_wiki("[[a] [[b]]"	, fxt.tkn_txt_(0, 5), fxt.tkn_lnki_(5, 10));
-//			fxt.IgnoreErrs_().Test_parse_wiki("[[a\nb]]"		, fxt.tkn_txt_(0, 3), fxt.tkn_txt_(3, 7));
-//			fxt.IgnoreErrs_().Test_parse_wiki("[[a|b|c]]"	, fxt.tkn_txt_(0, 5), fxt.tkn_txt_(5, 9)).tst_Msg("lnk.many");
-//		}
 }
 

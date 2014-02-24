@@ -81,6 +81,7 @@ public class Xow_file_mgr implements GfoInvkAble {
 		if		(ctx.Match(k, Invk_repos))					return repo_mgr;
 		else if	(ctx.Match(k, Invk_metas))					return meta_mgr;
 		else if	(ctx.Match(k, Invk_cfg_download))			return cfg_download;
+		else if	(ctx.Match(k, Invk_fsdb))					return fsdb_mgr;
 		else	return GfoInvkAble_.Rv_unhandled;
-	}	private static final String Invk_repos = "repos", Invk_metas = "metas", Invk_cfg_download = "cfg_download";
+	}	private static final String Invk_repos = "repos", Invk_metas = "metas", Invk_cfg_download = "cfg_download", Invk_fsdb = "fsdb";
 }

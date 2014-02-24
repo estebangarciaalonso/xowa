@@ -240,7 +240,7 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		// get argx
 		byte[] fnc_name = fnc_name_ref.Val();
 		int fnc_name_len = fnc_name.length;
-		int fnc_name_colon_pos = ByteAry_.FindFwd(fnc_name, Byte_ascii.Colon, 0, fnc_name_len);
+		int fnc_name_colon_pos = Byte_ary_finder.Find_fwd(fnc_name, Byte_ascii.Colon, 0, fnc_name_len);
 		if (fnc_name_colon_pos == ByteAry_.NotFound) {
 			KeyVal arg_argx = (KeyVal)rv.FetchAt(0);
 			argx_ref.Val_(arg_argx.Val_to_bry());

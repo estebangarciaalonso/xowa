@@ -72,21 +72,21 @@ public class Poem_nde_tst {
 	}
 	@Test  public void List() {
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
-				(	"<poem>"
-				,	":a"
-				,	":b"
-				,	"</poem>"
-				), String_.Concat_lines_nl_skipLast
-				(	"<div class=\"poem\">"
-				,	""			// NOTE: this blank line occurs b/c <div>\n and \n<dl>; TODO: remove; WHEN: whitespace
-				,	"<dl>"
-				,	"  <dd>a"
-				,	"  </dd>"
-				,	"  <dd>b"
-				,	"  </dd>"
-				,	"</dl>"
-				,	"</div>"
-				));
+			(	"<poem>"
+			,	":a"
+			,	":b"
+			,	"</poem>"
+			), String_.Concat_lines_nl_skipLast
+			(	"<div class=\"poem\">"
+			,	""
+			,	"<dl>"
+			,	"  <dd>a"
+			,	"  </dd>"
+			,	"  <dd>b"
+			,	"  </dd>"
+			,	"</dl>"
+			,	"</div>"
+			));
 	}
 	@Test  public void Xtn() {
 		fxt.Init_defn_clear();

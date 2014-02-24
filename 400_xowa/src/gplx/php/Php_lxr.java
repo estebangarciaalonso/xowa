@@ -115,7 +115,7 @@ class Php_lxr_comment extends Php_lxr_base {
 	public byte[] Comment_bgn() {return comment_bgn;} private byte[] comment_bgn;
 	public byte[] Comment_end() {return comment_end;} private byte[] comment_end;
 	@Override public int Lxr_make(Php_ctx ctx, int bgn, int cur) {
-		int end = ByteAry_.FindFwd(src, comment_end, bgn);
+		int end = Byte_ary_finder.Find_fwd(src, comment_end, bgn);
 		if (end == ByteAry_.NotFound) {
 			tkn_wkr.Msg_many(src, bgn, cur, Php_lxr_comment.Dangling_comment, comment_tid, comment_end);
 			cur = src_len;	// NOTE: terminating sequence not found; assume rest of src is comment
@@ -196,7 +196,7 @@ class Php_lxr_quote extends Php_lxr_base {
 	@Override public int Lxr_make(Php_ctx ctx, int bgn, int cur) {
 		int end = -1;
 		while (true) {
-			end = ByteAry_.FindFwd(src, quote_bry, cur); 
+			end = Byte_ary_finder.Find_fwd(src, quote_bry, cur); 
 			if (end == ByteAry_.NotFound) {
 				tkn_wkr.Msg_many(src, bgn, cur, Php_lxr_quote.Dangling_quote, quote_tid, quote_bry);
 				cur = src_len;	// NOTE: terminating sequence not found; assume rest of src is comment

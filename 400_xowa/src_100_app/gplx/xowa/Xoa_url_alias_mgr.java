@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //		private Hash_adp_bry hash = Hash_adp_bry.cs_(); private ByteAryFmtr fmtr = ByteAryFmtr.new_("", "");
 //		public Xoa_url_alias_mgr(Xoa_app app) {this.app = app;} private Xoa_app app;
 //		public byte[] Fmt_or_null(byte[] raw) {
-//			int colon_pos = ByteAry_.FindFwd(raw, Byte_ascii.Colon); if (colon_pos == ByteAry_.NotFound) return null;
+//			int colon_pos = Byte_ary_finder.Find_fwd(raw, Byte_ascii.Colon); if (colon_pos == ByteAry_.NotFound) return null;
 //			byte[] fmt = (byte[])hash.Get_by_mid(raw, 0, colon_pos); if (fmt == null) return null;
 //			ByteAryBfr tmp_bfr = app.Utl_bry_bfr_mkr().Get_b512();
 //			fmtr.Fmt_(fmt).Bld_bfr_many(tmp_bfr, ByteAry_.Mid(raw, colon_pos + Int_.Const_dlm_len, raw.length));

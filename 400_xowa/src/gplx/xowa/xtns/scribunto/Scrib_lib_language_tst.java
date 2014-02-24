@@ -51,8 +51,9 @@ public class Scrib_lib_language_tst {
 	@Test  public void FormatNum() {
 		Xol_lang other_lang = fxt.Engine().App().Lang_mgr().Get_by_key_or_new(ByteAry_.new_ascii_("de"));
 		other_lang.Num_fmt_mgr().Grps_add(new gplx.intl.Gfo_num_fmt_grp(new byte[] {Byte_ascii.Dot}, 3, true));
-		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_formatNum, Object_.Ary("en", 1234), "1,234");
-		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_formatNum, Object_.Ary("de", 1234), "1.234");
+		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_formatNum, Object_.Ary("en", 1234), "1,234");		// english spr
+		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_formatNum, Object_.Ary("de", 1234), "1.234");		// german spr
+		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_formatNum, Object_.Ary("en", "1234"), "1,234");		// String passed (not int)
 	}
 	@Test  public void FormatDate() {
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_formatDate, Object_.Ary("en", "Y-m-d", "2013-03-17", false), "2013-03-17");
@@ -66,7 +67,6 @@ public class Scrib_lib_language_tst {
 	}
 	@Test  public void Lc() {
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_lc, Object_.Ary("en", "ABC"), "abc");
-		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_lc, Object_.Ary("en"), "");
 	}
 	@Test  public void Uc() {
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_uc, Object_.Ary("en", "abc"), "ABC");
@@ -78,7 +78,10 @@ public class Scrib_lib_language_tst {
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_uc, Object_.Ary("en", "abc"), "ABC");
 	}
 	@Test  public void ParseFormattedNumber() {
-		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_parseFormattedNumber, Object_.Ary("en", "1,234.56"), "1234.56");
+		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_parseFormattedNumber, Object_.Ary("en", "1,234.56")	, "1234.56");			// formatted String
+		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_parseFormattedNumber, Object_.Ary("en", "1234")		, "1234");				// String
+		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_parseFormattedNumber, Object_.Ary("en", 1234)		, "1234");				// int
+		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_parseFormattedNumber, Object_.Ary("en", 1234.56)		, "1234.56");			// double
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_parseFormattedNumber, Object_.Ary("en"), Scrib_pf_invoke_fxt.Null_rslt);		// PURPOSE: missing arg should not fail; EX: ru.w:Туйон DATE:2014-01-06
 	}
 	@Test  public void ConvertGrammar() {

@@ -59,7 +59,7 @@ public class Wmf_dump_list_parser_tst {
 //				if (ByteAry_.Eq(abrv, ByteAry_.new_ascii_("testwikidatawiki"))) continue;
 //				byte[] domain_bry = Xob_bz2_file.Parse__domain_name(abrv, 0, abrv.length);
 //				if (domain_bry == null) continue;			// not a standard WMF wiki; ignore
-//				if (ByteAry_.FindFwd(domain_bry, ByteAry_.new_ascii_("wikimania")) != ByteAry_.NotFound) continue;
+//				if (Byte_ary_finder.Find_fwd(domain_bry, ByteAry_.new_ascii_("wikimania")) != ByteAry_.NotFound) continue;
 //				if (excluded_domains.Has(domain_bry)) continue;
 //				Xow_wiki_domain domain_itm = Xow_wiki_domain_.parse_by_domain(domain_bry);
 //				byte[] tid_name = X_to_display_name(Xow_wiki_domain_.Key_by_tid(domain_itm.Tid()));

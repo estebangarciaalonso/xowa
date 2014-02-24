@@ -273,7 +273,7 @@ public static final int
 	}	static ByteAryFmtr tmp_fmtr = ByteAryFmtr.tmp_().Fail_when_invalid_escapes_(false);
 	public static void update_val_(Xol_msg_itm itm, byte[] val) {
 		boolean has_fmt_arg = tmp_fmtr.Fmt_(val).Compile().Fmt_args_exist();
-		boolean has_tmpl_txt = ByteAry_.FindFwd(val, Xop_curly_bgn_lxr.Hook, 0) != -1;
+		boolean has_tmpl_txt = Byte_ary_finder.Find_fwd(val, Xop_curly_bgn_lxr.Hook, 0) != -1;
 		itm.Atrs_set(val, has_fmt_arg, has_tmpl_txt);
 	}
 	public static Xol_msg_itm new_(int id) {

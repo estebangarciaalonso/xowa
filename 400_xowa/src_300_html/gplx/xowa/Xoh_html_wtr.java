@@ -192,18 +192,19 @@ public class Xoh_html_wtr {
 		}
 	}
 	private void Lnki(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, int depth) {
-		Xow_xwiki_itm lang = lnki.Ttl().Wik_itm();
-		if (lang != null && lang.Type_is_lang(wiki.Lang().Lang_id()) && !lnki.Ttl().ForceLiteralLink()) {
-			page.Langs().Add(lnki.Ttl());
+		Xoa_ttl ttl = lnki.Ttl();
+		Xow_xwiki_itm lang = ttl == null ? null : ttl.Wik_itm();
+		if (lang != null && lang.Type_is_lang(wiki.Lang().Lang_id()) && !ttl.ForceLiteralLink()) {
+			page.Langs().Add(ttl);
 			return;
 		}
-		boolean literal_link = lnki.Ttl().ForceLiteralLink();	// NOTE: if literal link, then override ns behavior; for File, do not show image; for Ctg, do not display at bottom of page
+		boolean literal_link = ttl.ForceLiteralLink();	// NOTE: if literal link, then override ns behavior; for File, do not show image; for Ctg, do not display at bottom of page
 		redlinks_mgr.Lnki_add(ctx, lnki);
 		boolean stage_is_alt = opts.Lnki_alt();
 		switch (lnki.Ns_id()) {
 			case Xow_ns_.Id_media:		if (!stage_is_alt) lnki_wtr.Write_or_queue(ctx, page, opts, bfr, src, lnki, depth); return; // NOTE: literal ":" has no effect; EX.WP:Beethoven and [[:Media:De-Ludwig_van_Beethoven.ogg|listen]]
 			case Xow_ns_.Id_file:		if (!literal_link && !stage_is_alt) {lnki_wtr.Write_or_queue(ctx, page, opts, bfr, src, lnki, depth); return;} break;
-			case Xow_ns_.Id_category:	if (!literal_link) {hctx.Lnki_ctg_add(lnki); return;} break;
+			case Xow_ns_.Id_category:	if (!literal_link) {hctx.Lnki_ctg_add(lnki.Ttl().Page_txt()); return;} break;
 		}
 		Lnki_generic(ctx, opts, lnki, bfr, src, depth);
 	}
@@ -342,6 +343,7 @@ public class Xoh_html_wtr {
 		if (indent_level > 0) bfr.Add_byte_repeat(Byte_ascii.Space, indent_level * 2);
 		bfr.Add(tag);
 	}
+	
 	@gplx.Virtual public void List_itm_end(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, byte type) {
 		--indent_level;
 		byte[] tag = null;
@@ -352,7 +354,7 @@ public class Xoh_html_wtr {
 			case Xop_list_tkn_.List_itmTyp_dd: tag = Tag_list_itm_dd_end; break;
 			default: throw Err_.unhandled(type);
 		}
-		bfr.Add_byte_nl();
+		bfr.Add_if_not_last(Byte_ascii.NewLine);
 		if (indent_level > 0) bfr.Add_byte_repeat(Byte_ascii.Space, indent_level * 2);
 		bfr.Add(tag);
 	}
@@ -360,11 +362,8 @@ public class Xoh_html_wtr {
 		if (opts.Lnki_alt())
 			bfr.Add_byte_space();
 		else {
-			if (tkn.Nl_typeId() == Xop_nl_tkn.Tid_char) {
-				if (tkn.Nl_ws() == Bool_.Y_byte)
-					bfr.Add_byte(Byte_ascii.Space);
-				else
-					bfr.Add_byte(Byte_ascii.NewLine);
+			if (tkn.Nl_tid() == Xop_nl_tkn.Tid_char) {
+				bfr.Add_if_not_last(Byte_ascii.NewLine);
 			}
 		}
 	}
@@ -372,40 +371,37 @@ public class Xoh_html_wtr {
 		bfr.Add_byte_repeat(Byte_ascii.Space, space.Src_end_grp(grp, sub_idx) - space.Src_bgn_grp(grp, sub_idx));	// NOTE: lnki.caption will convert \n to \s; see Xop_nl_lxr; EX.WP: Schwarzschild radius
 	}
 	@gplx.Virtual public void Para(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_para_tkn para) {
-//			if (opts.Lnki_alt()) {
-//				if (para.Para_bgn() != Xop_para_tkn.Para_typeId_none)	// always add space, uncless tid is none
-//					bfr.Add_byte_space();
-//			}
-//			else {
-			switch (para.Para_end()) {
-				case Xop_para_tkn.Para_typeId_none:		break;
-				case Xop_para_tkn.Para_typeId_para:		bfr.Add(Tag_para_end).Add_byte_nl(); break;
-				case Xop_para_tkn.Para_typeId_pre:		bfr.Add(Tag_pre_end).Add_byte_nl(); break;
-				case Xop_para_tkn.Para_typeId_space:	bfr.Add_byte(Byte_ascii.Space); break;
-				default:								throw Err_.unhandled(para.Para_end());
-			}
-			switch (para.Para_bgn()) {
-				case Xop_para_tkn.Para_typeId_none:		break;
-				case Xop_para_tkn.Para_typeId_para:		Para_assert_tag_starts_on_nl(bfr, para.Src_bgn()); bfr.Add(Tag_para_bgn); break;
-				case Xop_para_tkn.Para_typeId_pre:		Para_assert_tag_starts_on_nl(bfr, para.Src_bgn()); bfr.Add(Tag_pre_bgn); break;
-				case Xop_para_tkn.Para_typeId_space:	bfr.Add_byte(Byte_ascii.Space); break;
-				default:								throw Err_.unhandled(para.Para_bgn());
-			}
-//			}
+		if (para.Nl_bgn() && bfr.Bry_len() > 0) {
+			if (opts.Lnki_alt())
+				bfr.Add_byte_space();
+			else
+				bfr.Add_if_not_last(Byte_ascii.NewLine);
+		}
+		switch (para.Para_end()) {
+			case Xop_para_tkn.Tid_none:		break;
+			case Xop_para_tkn.Tid_para:		bfr.Add(Tag_para_end).Add_byte_nl(); break;
+			case Xop_para_tkn.Tid_pre:			bfr.Add(Tag_pre_end).Add_byte_nl(); break;
+			default:								throw Err_.unhandled(para.Para_end());
+		}
+		switch (para.Para_bgn()) {
+			case Xop_para_tkn.Tid_none:		break;
+			case Xop_para_tkn.Tid_para:		Para_assert_tag_starts_on_nl(bfr, para.Src_bgn()); bfr.Add(Tag_para_bgn); break;
+			case Xop_para_tkn.Tid_pre:			Para_assert_tag_starts_on_nl(bfr, para.Src_bgn()); bfr.Add(Tag_pre_bgn); break;
+			default:								throw Err_.unhandled(para.Para_bgn());
+		}
+		if (para.Space_bgn() > 0)
+			bfr.Add_byte_repeat(Byte_ascii.Space, para.Space_bgn());
 	}
 	private void Para_assert_tag_starts_on_nl(ByteAryBfr bfr, int src_bgn) {
 		if (!bfr.Match_end_byt_nl_or_bos()) bfr.Add_byte_nl();
 		if (src_bgn != 0) bfr.Add_byte_nl();
 	}
 	@gplx.Virtual public void Pre(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_pre_tkn pre) {
-		switch (pre.Pre_typeId()) {
-			case Xop_pre_tkn.Pre_typeId_bgn:
-				if (pre.Pre_enable() == Bool_.N_byte)
-					bfr.Add_byte(Byte_ascii.Space);
-				else
-					bfr.Add(Tag_pre_bgn);
+		switch (pre.Pre_tid()) {
+			case Xop_pre_tkn.Pre_tid_bgn:
+				bfr.Add(Tag_pre_bgn);
 				break;
-			case Xop_pre_tkn.Pre_typeId_end:
+			case Xop_pre_tkn.Pre_tid_end:
 				bfr.Add_byte_nl().Add(Tag_pre_end).Add_byte_nl().Add_byte_nl();
 				break;
 		}
@@ -789,7 +785,7 @@ public class Xoh_html_wtr {
 		if (opts.Lnki_alt())			// add \s for each \n
 			bfr.Add_byte_space();
 		else {
-			if (bfr.Bry_len() != 0 && !bfr.Match_end_byt(Byte_ascii.NewLine)) bfr.Add_byte_nl();
+			bfr.Add_if_not_last(Byte_ascii.NewLine);
 			if (indent_level > 0) bfr.Add_byte_repeat(Byte_ascii.Space, indent_level * 2);
 //			boolean para_mode = tblw_bgn && tbl_para && depth == 1;	// DELETE: old code; adding <p> to handle strange mozilla key down behavior on linux; DATE:2013-03-30
 //			if (para_mode) {bfr.Add(Xoh_consts.P_bgn);}
@@ -809,11 +805,12 @@ public class Xoh_html_wtr {
 		}
 		else {
 			--indent_level;
-			if (bfr.Bry_len() != 0 && !bfr.Match_end_byt(Byte_ascii.NewLine)) bfr.Add_byte_nl();
+			bfr.Add_if_not_last(Byte_ascii.NewLine);
 			if (indent_level > 0) bfr.Add_byte_repeat(Byte_ascii.Space, indent_level * 2);
 			bfr.Add(end);
 //			if (para_mode) {bfr.Add(Xoh_consts.P_end);}				// DELETE: old code; adding <p> to handle strange mozilla key down behavior on linux; DATE:2013-03-30
-			bfr.Add_byte_nl();
+			bfr.Add_if_not_last(Byte_ascii.NewLine);
+//				bfr.Add_byte_nl();
 		}
 	}
 	public static final byte[] Tag__end_quote = ByteAry_.new_ascii_("\">"), Tag__end_bgn = ByteAry_.new_ascii_("</")

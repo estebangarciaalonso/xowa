@@ -21,6 +21,7 @@ public class ByteAry_ {
 	public static final int NotFound = -1;
 	public static final byte[] Empty = new byte[0];
 	public static final byte[][] Ary_empty = new byte[0][];
+	public static final Class<?> ClassOf = byte[].class;
 	public static byte[] bytes_(byte... ary) {return ary;}
 	public static byte[] ints_ (int... ary) {
 		int len = ary.length;
@@ -121,7 +122,7 @@ public class ByteAry_ {
 	}
 	public static byte[] Replace_one(byte[] src, byte[] find, byte[] repl) {
 		int src_len = src.length;
-		int findPos = Find(src, find, 0, src_len, true); if (findPos == ByteAry_.NotFound) return src;
+		int findPos = Byte_ary_finder.Find(src, find, 0, src_len, true); if (findPos == ByteAry_.NotFound) return src;
 		int findLen = find.length, replLen = repl.length;
 		int rvLen = src_len + replLen - findLen;
 		byte[] rv = new byte[rvLen];
@@ -339,102 +340,6 @@ public class ByteAry_ {
 		}
 		return src.length;
 	}
-	public static int FindFwd(byte[] src, byte[] lkp)								{return Find(src, lkp, 0		, src.length, true);}
-	public static int FindFwd(byte[] src, byte[] lkp, int src_bgn)					{return Find(src, lkp, src_bgn	, src.length, true);}
-	public static int FindFwd(byte[] src, byte[] lkp, int src_bgn, int srcEnd)		{return Find(src, lkp, src_bgn	,	  srcEnd, true);}
-	public static int FindBwd(byte[] src, byte lkp)									{return FindBwd(src, lkp, src.length, 0);}
-	public static int FindBwd(byte[] src, byte lkp, int bgn)						{return FindBwd(src, lkp, bgn		, 0);}
-	public static int FindBwd(byte[] src, byte lkp, int bgn, int end) {
-		--bgn;	// always subtract 1 from bgn; allows passing in src_len or cur_pos without forcing caller to subtract - 1; DATE:2014-02-11
-		--end;
-		for (int i = bgn; i > end; i--)
-			if (src[i] == lkp) return i;
-		return ByteAry_.NotFound;
-	}
-	public static int FindBwd(byte[] src, byte[] lkp, int bgn)						{return FindBwd(src, lkp, bgn		, 0);}
-	public static int FindBwd(byte[] src, byte[] lkp, int bgn, int end)	{
-		if (bgn < 1) return ByteAry_.NotFound;
-		--bgn;	// always subtract 1 from bgn; allows passing in src_len or cur_pos without forcing caller to subtract - 1; DATE:2014-02-11
-		--end;
-		int src_len = src.length;
-		int lkp_len = lkp.length;
-		for (int i = bgn; i > end; i--) {
-			if (i + lkp_len > src_len) continue;	// lkp too small for pos; EX: src=abcde; lkp=bcd; pos=4
-			boolean match = true;
-			for (int j = 0; j < lkp_len; j++) {
-				if (lkp[j] != src[i + j]) {
-					match = false;
-					break;
-				} 
-			}
-			if (match) return i;
-		}
-		return ByteAry_.NotFound;
-	}
-	public static int FindBwd_last_ws(byte[] src, int bgn) {
-		if (bgn < 1) return ByteAry_.NotFound;
-		--bgn;
-		int rv = ByteAry_.NotFound;
-		for (int i = bgn; i > -1; i--) {
-			byte b = src[i];
-			switch (b) {
-				case Byte_ascii.Space: case Byte_ascii.Tab: case Byte_ascii.NewLine: case Byte_ascii.CarriageReturn:
-					rv = i;
-					break;
-				default:
-					i = -1;
-					break;
-			}
-		}
-		return rv;
-	}
-	public static int FindFwd_last_ws(byte[] src, int src_bgn)						{
-		int src_len = src.length;
-		if (src_bgn >= src_len) return ByteAry_.NotFound;
-		int rv = ByteAry_.NotFound;
-		for (int i = src_bgn; i < src_len; i++) {
-			byte b = src[i];
-			switch (b) {
-				case Byte_ascii.Space: case Byte_ascii.Tab: case Byte_ascii.NewLine: case Byte_ascii.CarriageReturn:
-					rv = i;
-					break;
-				default:
-					i = -1;
-					break;
-			}
-		}
-		return rv;
-	}
-	static int Find(byte[] src, byte[] lkp, int src_bgn, int srcEnd, boolean fwd) {
-		if (src_bgn < 0 || src.length == 0) return NotFound;
-		int dif, lkpLen = lkp.length, lkpBgn, lkpEnd, srcEndChk; //int loops = 0;
-		if (fwd)	{if (src_bgn > srcEnd) return ByteAry_.NotFound; 
-			dif =  1; lkpBgn = 0;			lkpEnd = lkpLen; srcEndChk = srcEnd - CompareAble_.OffsetCompare;
-		}
-		else		{if (src_bgn < srcEnd) return ByteAry_.NotFound; 
-			dif = -1; lkpBgn = lkpLen - 1;	lkpEnd = -1;     srcEndChk = src.length - CompareAble_.OffsetCompare;}	// srcEndChk needed when going bwd, b/c lkpLen may be > 1
-		while (src_bgn != srcEnd) {										// while src is not done;
-			int lkpPos = lkpBgn;
-			while (lkpPos != lkpEnd) {									// while lkp is not done
-				int pos = src_bgn + lkpPos;
-				if (	pos > srcEndChk									// outside bounds; occurs when lkpLen > 1
-					||	src[pos] != lkp[lkpPos])						// srcByte doesn't match lkpByte 
-					break;
-				else
-					lkpPos += dif;
-			}
-			if (lkpPos == lkpEnd) return src_bgn;						// lkp matches src; exit
-			src_bgn += dif;
-		}
-		return ByteAry_.NotFound;
-	}
-	public static int FindFwd(byte[] src, byte lkp)				{return FindFwd(src, lkp, 0, src.length);}
-	public static int FindFwd(byte[] src, byte lkp, int bgn)	{return FindFwd(src, lkp, bgn, src.length);}
-	public static int FindFwd(byte[] src, byte lkp, int bgn, int len) {
-		for (int i = bgn; i < len; i++)
-			if (src[i] == lkp) return i;
-		return ByteAry_.NotFound;
-	}
 	public static byte[] Resize_manual(byte[] src, int rvLen) {
 		byte[] rv = new byte[rvLen];
 		int src_len = src.length;
@@ -525,7 +430,7 @@ public class ByteAry_ {
 		int digits = val == 0 ? 0 : Math_.Log10(val);
 		digits += 1;						// digits = log + 1; EX: Log(1-9) = 0, Log(10-99) = 1
 		int aryLen = digits + neg, aryBgn = aryPos, pad = 0;
-		if (aryLen < padLen) {			// padding specified
+		if (aryLen < padLen) {				// padding specified
 			pad = padLen - aryLen;
 			aryLen = padLen;
 		}
@@ -703,7 +608,7 @@ public class ByteAry_ {
 	}
 	public static int ReadCsvInt(byte[] ary, IntRef posRef, byte lkp) {
 		int bgn = posRef.Val();
-		int pos = ByteAry_.FindFwd(ary, lkp, bgn, ary.length);
+		int pos = Byte_ary_finder.Find_fwd(ary, lkp, bgn, ary.length);
 		if (pos == ByteAry_.NotFound) throw Err_.new_("lkp failed").Add("lkp", (char)lkp).Add("bgn", bgn);
 		int rv = ByteAry_.X_to_int_or(ary, posRef.Val(), pos, -1);
 		posRef.Val_(pos + 1);	// +1 = lkp.Len
@@ -711,7 +616,7 @@ public class ByteAry_ {
 	}
 	public static double ReadCsvDouble(byte[] ary, IntRef posRef, byte lkp) {
 		int bgn = posRef.Val();
-		int pos = ByteAry_.FindFwd(ary, lkp, bgn, ary.length);
+		int pos = Byte_ary_finder.Find_fwd(ary, lkp, bgn, ary.length);
 		if (pos == ByteAry_.NotFound) throw Err_.new_("lkp failed").Add("lkp", (char)lkp).Add("bgn", bgn);
 		double rv = ByteAry_.XtoDoubleByPos(ary, posRef.Val(), pos);
 		posRef.Val_(pos + 1);	// +1 = lkp.Len
@@ -719,7 +624,7 @@ public class ByteAry_ {
 	}
 	public static void ReadCsvNext(byte[] ary, IntRef posRef, byte lkp) {
 		int bgn = posRef.Val();
-		int pos = ByteAry_.FindFwd(ary, lkp, bgn, ary.length);
+		int pos = Byte_ary_finder.Find_fwd(ary, lkp, bgn, ary.length);
 		posRef.Val_(pos + 1);	// +1 = lkp.Len
 	}
 	public static byte Byte_NegSign = (byte)'-';
@@ -795,14 +700,14 @@ public class ByteAry_ {
 		int pos = 0;
 		while (true) {
 			if (pos >= src_len) break;
-			int bgn_pos = ByteAry_.FindFwd(src, bgn, pos);
+			int bgn_pos = Byte_ary_finder.Find_fwd(src, bgn, pos);
 			if (bgn_pos == ByteAry_.NotFound) {
 				bfr.Add_mid(src, pos, src_len);
 				break;
 			}
 			else {
 				int bgn_rhs = bgn_pos + bgn_len;
-				int end_pos = replace_all ? bgn_rhs : ByteAry_.FindFwd(src, end, bgn_rhs);
+				int end_pos = replace_all ? bgn_rhs : Byte_ary_finder.Find_fwd(src, end, bgn_rhs);
 				if (end_pos == ByteAry_.NotFound) {
 					bfr.Add_mid(src, pos, src_len);
 					break;
@@ -832,7 +737,7 @@ public class ByteAry_ {
 		int cur_pos = 0, src_len = src.length, dlm_len = dlm.length;
 		ListAdp rv = ListAdp_.new_();
 		while (true) {
-			int find_pos = FindFwd(src, dlm, cur_pos);
+			int find_pos = Byte_ary_finder.Find_fwd(src, dlm, cur_pos);
 			if (find_pos == ByteAry_.NotFound) {
 				if (cur_pos == src_len) break;	// dlm is last sequence in src; do not create empty itm
 				find_pos = src_len;			
@@ -896,19 +801,6 @@ public class ByteAry_ {
 				ary[i] = (byte)(b + 32);
 		}
 		return ary;
-	}
-	public static int Find_bwd_non_ws(byte[] src, int bgn, int end) { // get pos of 1st char that is not ws; 
-		if (bgn >= src.length) return ByteAry_.NotFound;
-		for (int i = bgn; i >= end; i--) {
-			byte b = src[i];
-			switch (b) {
-				case Byte_ascii.Space: case Byte_ascii.Tab: case Byte_ascii.NewLine: case Byte_ascii.CarriageReturn:
-					break;
-				default:
-					return i;
-			}
-		}
-		return ByteAry_.NotFound;
 	}
 	public static byte[] Null_if_empty(byte[] v) {return Len_eq_0(v) ? null : v;}
 	public static byte Get_at_end(byte[] v) {

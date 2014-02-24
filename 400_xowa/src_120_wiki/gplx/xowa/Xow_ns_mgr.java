@@ -31,6 +31,7 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 		ns_count = 0;
 		ns_file = null;
 	}
+	public ByteTrieMgr_slim Category_trie() {return category_trie;}		private ByteTrieMgr_slim category_trie;
 	public Xow_ns		Ns_main()				{return ns_main;}		private Xow_ns ns_main;
 	public Xow_ns		Ns_template()			{return ns_template;}	private Xow_ns ns_template;
 	public Xow_ns		Ns_file()				{return ns_file;}		private Xow_ns ns_file;
@@ -59,13 +60,13 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 		return rv == null ? this.Ns_main() : rv;
 	}
 	public Object		Names_get_w_colon(byte[] src, int bgn, int end) {	// NOTE: get ns for a name with a ":"; EX: "Template:A" should return "Template" ns
-		int colon_pos = ByteAry_.FindFwd(src, Byte_ascii.Colon, bgn, end);
+		int colon_pos = Byte_ary_finder.Find_fwd(src, Byte_ascii.Colon, bgn, end);
 		if (colon_pos == ByteAry_.NotFound) return null;	// name does not have ":"; return;
 		Object rv = name_hash.Get_by_mid(src, bgn, colon_pos);
 		return rv == null ? null : ((Xow_ns_mgr_name_itm)rv).Ns();
 	}
 	public int			Tmpls_get_w_colon(byte[] src, int bgn, int end)  {	// NOTE: get length of template name with a ":"; EX: "Template:A" returns 10; PERF
-		int colon_pos = ByteAry_.FindFwd(src, Byte_ascii.Colon, bgn, end); 
+		int colon_pos = Byte_ary_finder.Find_fwd(src, Byte_ascii.Colon, bgn, end); 
 		if (colon_pos == ByteAry_.NotFound) return ByteAry_.NotFound;
 		Object o = tmpl_hash.Get_by_mid(src, bgn, colon_pos + 1);	// +1 to include colon_pos
 		return o == null ? ByteAry_.NotFound : ((byte[])o).length;
@@ -111,7 +112,7 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 	}
 	private void Fix_project_talk(Xow_ns ns) {
 		byte[] ns_name = ns.Name_bry();
-		if (ByteAry_.FindFwd(ns.Name_bry(), Project_talk_fmt_arg)== ByteAry_.NotFound) return; // no $1 found; exit
+		if (Byte_ary_finder.Find_fwd(ns.Name_bry(), Project_talk_fmt_arg)== ByteAry_.NotFound) return; // no $1 found; exit
 		Xow_ns project_ns = ords[ns.Ord_subj_id()];
 		if (project_ns == null) return;	// should warn or throw error; for now just exit
 		ns.Name_bry_(ByteAry_.Replace(ns_name, Project_talk_fmt_arg, project_ns.Name_bry()));
@@ -119,7 +120,7 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 	private void Rebuild_hashes__add(Hash_adp_bry hash, Xow_ns ns, byte[] key) {
 		Xow_ns_mgr_name_itm ns_itm = new Xow_ns_mgr_name_itm(key, ns);
 		hash.AddReplace(key, ns_itm);
-		if (ByteAry_.FindFwd(key, Byte_ascii.Underline) != ByteAry_.NotFound)	// ns has _; add another entry for space; EX: Help_talk -> Help talk
+		if (Byte_ary_finder.Find_fwd(key, Byte_ascii.Underline) != ByteAry_.NotFound)	// ns has _; add another entry for space; EX: Help_talk -> Help talk
 			hash.AddReplace(ByteAry_.Replace(key, Byte_ascii.Underline, Byte_ascii.Space), ns_itm);
 	}
 	public Xow_ns_mgr Add_defaults() { // NOTE: needs to happen after File ns is added; i.e.: cannot be put in Xow_ns_mgr() {} ctor
@@ -136,11 +137,16 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 		switch (ns_id) {
 			case Xow_ns_.Id_main:					ns_main = ns; break;
 			case Xow_ns_.Id_template:				ns_template = ns; break;
-			case Xow_ns_.Id_category:				ns_category = ns; break;
 			case Xow_ns_.Id_portal:					ns_portal = ns; break;
 			case Xow_ns_.Id_project:				ns_project = ns; break;
 			case Xow_ns_.Id_mediaWiki:				ns_mediawiki = ns; break;
 			case Xow_ns_.Id_file:					if (ns_file == null) ns_file = ns; break;	// NOTE: if needed, else Image will become the official ns_file
+			case Xow_ns_.Id_category:
+				ns_category = ns;
+				if (category_trie == null)
+					category_trie = new ByteTrieMgr_slim(ns.Case_match() == Xow_ns_case_.Id_all);
+				category_trie.Add(ns.Name_bry(), this);
+				break;
 		}
 		++ns_count;
 		if (!id_hash.Has(ns_hash_lkp.Val_(ns_id)))		// NOTE: do not add if already exists; avoids alias

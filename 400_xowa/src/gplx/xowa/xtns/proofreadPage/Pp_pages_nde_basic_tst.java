@@ -24,6 +24,9 @@ public class Pp_pages_nde_basic_tst {
 		fxt.Wiki().Db_mgr().Load_mgr().Clear(); // must clear; otherwise fails b/c files get deleted, but wiki.data_mgr caches the Xowd_regy_mgr (the .reg file) in memory;
 		fxt.Wiki().Ns_mgr().Add_new(Xowc_xtn_pages.Ns_page_id_default, "Page").Add_new(Xowc_xtn_pages.Ns_index_id_default, "Index").Init();
 	}
+	@After public void term() {
+		fxt.Wiki().Cache_mgr().Free_mem_all();
+	}
 	@Test  public void Basic() {
 		fxt.Init_page_create("Page:A/1", "abc");
 		fxt.Test_parse_page_wiki_str("<pages index=\"A\" from=1 to=1 />", String_.Concat_lines_nl
@@ -117,11 +120,9 @@ public class Pp_pages_nde_basic_tst {
 		fxt.Test_parse_page_wiki_str(main_txt, String_.Concat_lines_nl
 		(	"<p>abc "
 		,	"</p>"
-		,	""
 		,	"text_0"
 		,	"<p>d "
 		,	"</p>"
-		,	""
 		,	"text_1"
 		,	"<p>d "
 		,	"</p>"
@@ -225,7 +226,8 @@ public class Pp_pages_nde_basic_tst {
 		fxt.Test_parse_page_wiki_str("<pages index=\"A\" from='' to=3 />", "<p> a b c \n</p>\n");					// from is blank
 		fxt.Test_parse_page_wiki_str("<pages index=\"A\" from=3 to=''/>", "<p>c d e \n</p>\n");						// to is blank
 		fxt.Test_parse_page_wiki_str("<pages index=\"A\" from=3 to='4.' />", "<p>c d \n</p>\n");					// allow decimal-like number; EX:en.w:Haworth's/Chapter_XIX; DATE:2014-01-19
-		fxt.Test_parse_page_wiki_str("<pages index=\"A\" from=1 to=5 exclude=''3' />", "<p>a b c d e \n</p>\n");	// exclude is invalid; EX:fr.s:Sanguis_martyrum/Premi�re_partie/I DATE:2014-01-18
+		fxt.Test_parse_page_wiki_str("<pages index=\"A\" from=1 to=5 exclude=''3' />", "<p>a b c d e \n</p>\n");	// exclude is invalid; EX:fr.s:Sanguis_martyrum/Première_partie/I DATE:2014-01-18
+		fxt.Test_parse_page_wiki_str("<pages index=\"A\" exclude from=1 to=5 />", "<p>a b c d e \n</p>\n");			// exclude empty; ru.s:ПБЭ/Гуттен,_Ульрих_фон DATE:2014-02-22
 	}
 	@Test  public void Ref() {	// PURPOSE: ref on page should show; DATE:2014-01-18
 		fxt.Init_page_create("Page:A/1", "a<ref>b</ref>c");
@@ -244,7 +246,7 @@ public class Pp_pages_nde_basic_tst {
 		fxt.Test_parse_page_wiki_str("<pages index=\"A\" from=1 to=3 />", String_.Concat_lines_nl
 		(	"<p>a "
 		,	"</p>"
-		,	""
+			,	""
 		,	"<ul>"
 		,	"  <li> b c "
 		,	"  </li>"
@@ -259,6 +261,7 @@ public class Pp_pages_nde_basic_tst {
 		fxt.Init_page_create("Index:A", "");
 
 		// [[Index:]] has no [[Page:]] links; interpret to=1 as [[Page:A/1]]
+		fxt.Wiki().Cache_mgr().Free_mem_all();
 		fxt.Init_page_update("Index:A" , String_.Concat_lines_nl
 		( "no links"
 		));
@@ -268,6 +271,7 @@ public class Pp_pages_nde_basic_tst {
 		));
 
 		// [[Index:]] has [[Page:]] links; interpret to=1 as 1st [[Page:]] in [[Index:]]'s [[Page:]] links
+		fxt.Wiki().Cache_mgr().Free_mem_all();
 		fxt.Init_page_update("Index:A" , String_.Concat_lines_nl
 		( "[[Page:A/0]]"
 		));
@@ -277,6 +281,7 @@ public class Pp_pages_nde_basic_tst {
 		));
 
 		// [[Index:]] has [[Page:]] links but also <pagelist>; interpret to=1 as [[Page:A/1]]
+		fxt.Wiki().Cache_mgr().Free_mem_all();
 		fxt.Init_page_update("Index:A" , String_.Concat_lines_nl
 		( "[[Page:A/0]]"
 		, "<pagelist/>"

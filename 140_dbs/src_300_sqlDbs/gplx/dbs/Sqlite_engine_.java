@@ -74,7 +74,6 @@ public class Sqlite_engine_ {
 	}
 	public static Db_provider Provider_load_or_make_(Io_url url) {return Provider_load_or_make_(url, BoolRef.n_());}
 	public static Db_provider Provider_load_or_make_(Io_url url, BoolRef created) {
-		if (String_.HasAtBgn(url.Raw(), "mem/")) return null;	// for tests
 		boolean exists = Io_mgr._.ExistsFil(url);
 		created.Val_(!exists);
 		Db_connect connect = exists ? Db_connect_sqlite.load_(url) : Db_connect_sqlite.make_(url); 

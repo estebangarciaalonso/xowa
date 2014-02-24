@@ -57,7 +57,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 			else													// tmpl is static; note that dat_ary is still valid but rest of name may not be; EX: {{subst:name{{{1}}}}}
 				name_ary = ByteAry_.Mid(src, name_key_tkn.Dat_bgn(), name_key_tkn.Dat_end());
 			name_ary_len = name_ary.length;
-			name_bgn = Xop_lxr_.Find_fwd_while_non_ws(name_ary, 0, name_ary_len);
+			name_bgn = Byte_ary_finder.Find_fwd_while_not_ws(name_ary, 0, name_ary_len);
 			if (	name_ary_len == 0			// name is blank; can occur with failed inner tmpl; EX: {{ {{does not exist}} }}
 				||	name_bgn == name_ary_len	// name is ws; EX: {{test| }} -> {{{{{1}}}}}is whitespace String; EX.WIKT: wear one's heart on one's sleeve; {{t+|fr|avoir le c�ur sur la main| }}
 				) {								
@@ -116,7 +116,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 					break;
 				case Xot_defn_.Tid_func:
 					if (defn.Defn_require_colon_arg()) {
-						colon_pos =  ByteAry_.FindFwd(name_ary, Byte_ascii.Colon);
+						colon_pos =  Byte_ary_finder.Find_fwd(name_ary, Byte_ascii.Colon);
 						if (colon_pos == ByteAry_.NotFound)
 							defn = Xot_defn_.Null;
 					}						
@@ -125,7 +125,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 					}
 					break;
 				case Xot_defn_.Tid_raw:
-					int raw_colon_pos = ByteAry_.FindFwd(name_ary, Byte_ascii.Colon);
+					int raw_colon_pos = Byte_ary_finder.Find_fwd(name_ary, Byte_ascii.Colon);
 					if (raw_colon_pos == ByteAry_.NotFound) {}		// colon missing; EX: {{raw}}; noop and assume template name; DATE:2014-02-11
 					else {	// colon present;
 						name_ary = ByteAry_.Mid(name_ary, finder.Subst_end() + 1, name_ary_len);		// chop off "raw"; +1 is for ":"; note that +1 is in bounds b/c raw_colon was found

@@ -82,7 +82,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 	}
 	public byte[] Page_txt_wo_qargs() {	// assume that no Special page has non-ascii characters
 		int full_txt_len = full_txt.length;
-		int ques_pos = ByteAry_.FindBwd(full_txt, Byte_ascii.Question, full_txt_len, page_bgn);
+		int ques_pos = Byte_ary_finder.Find_bwd(full_txt, Byte_ascii.Question, full_txt_len, page_bgn);
 		return ByteAry_.Mid(full_txt, page_bgn, ques_pos == ByteAry_.NotFound ? full_txt_len : ques_pos);
 	}
 	public static Xoa_ttl parse_(Xow_wiki wiki, int ns_id, byte[] ttl) {
@@ -211,7 +211,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 										b_ary = amp_itm.Xml_name_bry();
 										break;
 									case Xop_amp_trie_itm.Char_int_null:	// &#xx;
-										int end_pos = ByteAry_.FindFwd(src, Byte_ascii.Semic, match_pos, end);
+										int end_pos = Byte_ary_finder.Find_fwd(src, Byte_ascii.Semic, match_pos, end);
 										if (end_pos == ByteAry_.NotFound) {} // &# but no terminating ";" noop: defaults to current_byte which will be added below;
 										else {
 											b_ary = amp_itm.Xml_name_bry();									
@@ -243,7 +243,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 							&&	src[cur + 3] == Byte_ascii.Dash
 							) {
 							int cur3 = cur + 3;//cur = ttlTrie.Match_pos();
-							int find = ByteAry_.FindFwd(src, Xop_comm_lxr.End_ary, cur3, end);
+							int find = Byte_ary_finder.Find_fwd(src, Xop_comm_lxr.End_ary, cur3, end);
 							if (find != -1) {
 								cur = find + Xop_comm_lxr.End_ary.length;
 								continue;
@@ -386,7 +386,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 //							break;
 //						case Xoa_ttl_trie.Id_comment_bgn:
 //							cur = ttlTrie.Match_pos();
-//							int find = ByteAry_.FindFwd(src, Xop_comm_lxr.End_ary, cur, end);
+//							int find = Byte_ary_finder.Find_fwd(src, Xop_comm_lxr.End_ary, cur, end);
 //							if (find != -1) {
 //								cur = find + Xop_comm_lxr.End_ary.length;
 //								continue;

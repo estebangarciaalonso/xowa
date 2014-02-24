@@ -35,7 +35,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 		// NOTE: list_tkns can not be explicitly closed, so auto-close will happen for all items
 		MakeTkn_end(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, (Xop_list_tkn)tkn, Bool_.Y_byte);
 		Reset(listId + 1);
-		ctx.Para().Process_nl_sect_end(ctx, cur_pos);
+		ctx.Para().Process_block__bgn_n__end_y(Xop_xnde_tag_.Tag_ul);
 	}
 	public int MakeTkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {// REF.MW: Parser|doBlockLevels
 		if (bgn_pos == Xop_parser_.Doc_bgn_bos) bgn_pos = 0;	// do not allow -1 pos
@@ -59,8 +59,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 			return trim_line_end; 
 		}
 		PrvItm_compare();
-		ctx.Para().Process_nl_sect_bgn(ctx, root, src, bgn_pos, cur_pos - 1, Xop_nl_tkn.Tid_list);	// -1 b/c cur_pos includes sym_byte; EX: \n*
-		ctx.Para().Process_xml_block(Xop_xnde_tag.Block_bgn, cur_pos - 1);
+		ctx.Para().Process_block__bgn__nl_w_symbol(ctx, root, src, bgn_pos, cur_pos - 1, Xop_xnde_tag_.Tag_li);	// -1 b/c cur_pos includes sym_byte; EX: \n*; pass li; should pass correct tag, but for purposes of para_wkr, <li> doesn't matter
 		if	(prvSymMatch) {
 			PopTil(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, Bool_.N_byte);
 			posBldr.MoveNext();
@@ -114,7 +113,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 		Xop_tkn_itm end_tkn = tkn_mkr.List_end(bgn_pos, bgn.List_itmTyp()).List_path_(bgn.List_path()).List_uid_(listId).List_sub_last_(sub_last);
 		ctx.Subs_add(root, end_tkn);
 		if (empty_ignored) ctx.Empty_ignore(root, bgn.Tkn_sub_idx());
-		ctx.Para().Process_nl_sect_end(ctx, cur_pos);
+		ctx.Para().Process_block__bgn_n__end_y(Xop_xnde_tag_.Tag_ul);
 	}
 	int Trim_empty_item(byte[] src, int src_len, int pos) {
 		while (pos < src_len) {

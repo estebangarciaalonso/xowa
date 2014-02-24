@@ -20,7 +20,7 @@ import gplx.php.*;
 public class Pf_msg_mgr {
 	public static byte[] Get_msg_by_key(Xow_wiki wiki, Xol_lang page_lang, byte[] msg_key, byte[][] fmt_args) {
 		// if "a/b" check if b is lang; if it is, then switch to "b"'s lang (rather than using current page's lang)
-		int slash_pos = ByteAry_.FindBwd(msg_key, Byte_ascii.Slash);
+		int slash_pos = Byte_ary_finder.Find_bwd(msg_key, Byte_ascii.Slash);
 		if (slash_pos != ByteAry_.NotFound) {	// key is of format "key/lang"; EX: "January/en"
 			int msg_key_len = msg_key.length;
 			if (slash_pos != msg_key_len) {		// get text after slash; EX: "en"

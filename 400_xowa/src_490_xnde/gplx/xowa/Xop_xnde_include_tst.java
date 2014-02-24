@@ -156,7 +156,6 @@ public class Xop_xnde_include_tst {
 			(	"a"
 			,	""
 			,	"<h2>b</h2>"
-			,	""
 			,	"c"
 			));
 	}

@@ -45,27 +45,27 @@ public class Xoh_dom_ {
 		return null;
 	}
 	public static boolean Select_tag(Xoh_find rv, byte[] src, byte[] nde, byte[] key, int rng_bgn, int rng_end) {
-		int tag_bgn = ByteAry_.FindFwd(src, nde, 		   rng_bgn, rng_end); 					if (tag_bgn == ByteAry_.NotFound) return false;
-		int tag_end = ByteAry_.FindFwd(src, Byte_ascii.Gt, tag_bgn, rng_end); 					if (tag_end == ByteAry_.NotFound) return false;
-		int key_bgn = ByteAry_.FindFwd(src, key, tag_bgn, tag_end);								if (key_bgn == ByteAry_.NotFound) return false;
+		int tag_bgn = Byte_ary_finder.Find_fwd(src, nde, 		   rng_bgn, rng_end); 					if (tag_bgn == ByteAry_.NotFound) return false;
+		int tag_end = Byte_ary_finder.Find_fwd(src, Byte_ascii.Gt, tag_bgn, rng_end); 					if (tag_end == ByteAry_.NotFound) return false;
+		int key_bgn = Byte_ary_finder.Find_fwd(src, key, tag_bgn, tag_end);								if (key_bgn == ByteAry_.NotFound) return false;
 		int key_end = key_bgn + key.length;
-		int val_bgn = ByteAry_.FindFwd(src, Byte_ascii.Quote, key_end, tag_end);				if (val_bgn == ByteAry_.NotFound) return false;
+		int val_bgn = Byte_ary_finder.Find_fwd(src, Byte_ascii.Quote, key_end, tag_end);				if (val_bgn == ByteAry_.NotFound) return false;
 		++val_bgn;
-		int val_end = ByteAry_.FindFwd(src, Byte_ascii.Quote, val_bgn, tag_end);				if (val_end == ByteAry_.NotFound) return false;
+		int val_end = Byte_ary_finder.Find_fwd(src, Byte_ascii.Quote, val_bgn, tag_end);				if (val_end == ByteAry_.NotFound) return false;
 		rv.Set_all(tag_bgn, tag_end, key_bgn, key_end, val_bgn, val_end);
 		return true;
 	}
 	public static boolean Find_atr_val_in_tag(Xoh_find rv, byte[] src, byte[] key, int tag_bgn, int tag_end) {
-		int key_bgn = ByteAry_.FindFwd(src, key, tag_bgn, tag_end);								if (key_bgn == ByteAry_.NotFound) return false;
+		int key_bgn = Byte_ary_finder.Find_fwd(src, key, tag_bgn, tag_end);								if (key_bgn == ByteAry_.NotFound) return false;
 		int key_end = key_bgn + key.length;
-		int val_bgn = ByteAry_.FindFwd(src, Byte_ascii.Quote, key_end, tag_end);				if (val_bgn == ByteAry_.NotFound) return false;
+		int val_bgn = Byte_ary_finder.Find_fwd(src, Byte_ascii.Quote, key_end, tag_end);				if (val_bgn == ByteAry_.NotFound) return false;
 		++val_bgn;
-		int val_end = ByteAry_.FindFwd(src, Byte_ascii.Quote, val_bgn, tag_end);				if (val_end == ByteAry_.NotFound) return false;
+		int val_end = Byte_ary_finder.Find_fwd(src, Byte_ascii.Quote, val_bgn, tag_end);				if (val_end == ByteAry_.NotFound) return false;
 		rv.Set_all(tag_bgn, tag_end, key_bgn, key_end, val_bgn, val_end);
 		return true;
 	}
 	public static String Title_by_href(Url_encoder encoder, ByteAryBfr bfr, byte[] href_dec, byte[] html_src) {
-		int slash_pos = ByteAry_.FindBwd(href_dec, Byte_ascii.Slash);
+		int slash_pos = Byte_ary_finder.Find_bwd(href_dec, Byte_ascii.Slash);
 		encoder.Encode(bfr, href_dec, slash_pos + 1, href_dec.length);
 		byte[] name_enc = bfr.XtoAryAndClear();
 		bfr.Add_mid(href_dec, 0, slash_pos + Int_.Const_dlm_len);	// include trailing slash			

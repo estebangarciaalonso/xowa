@@ -107,7 +107,6 @@ public class Xoa_app implements GfoInvkAble {
 	public Xoh_href_parser		Href_parser() {return href_parser;} private Xoh_href_parser href_parser;
 	public Xop_sanitizer		Sanitizer() {return sanitizer;} private Xop_sanitizer sanitizer;
 	public ByteTrieMgr_slim		Amp_trie() {return amp_trie;} private ByteTrieMgr_slim amp_trie = Xop_amp_trie._;		
-	public ByteTrieMgr_slim		TblwWsTrie() {return tblwWsTrie;} private ByteTrieMgr_slim tblwWsTrie = Xop_tblw_ws_itm.trie_();
 	public Xop_xatr_parser		Xatr_parser() {return xatr_parser;} private Xop_xatr_parser xatr_parser = new Xop_xatr_parser();
 	public Xop_xnde_tag_regy	Xnde_tag_regy() {return xnde_tag_regy;} private Xop_xnde_tag_regy xnde_tag_regy = new Xop_xnde_tag_regy();
 	public Xof_math_subst_regy	Math_subst_regy() {return math_subst_regy;} private Xof_math_subst_regy math_subst_regy = new Xof_math_subst_regy();
@@ -127,6 +126,7 @@ public class Xoa_app implements GfoInvkAble {
 	public Url_encoder			Url_converter_fsys()		{return url_converter_fsys;} Url_encoder url_converter_fsys = Url_encoder.new_fsys_lnx_();
 	public Url_encoder			Url_converter_fsys_safe()	{return url_converter_fsys_safe;} Url_encoder url_converter_fsys_safe = Url_encoder.new_fsys_wnt_();
 	public Xoh_file_main_wkr	File_main_wkr() {return file_main_wkr;} private Xoh_file_main_wkr file_main_wkr = new Xoh_file_main_wkr();		
+	public ByteTrieMgr_slim		Utl_trie_tblw_ws() {return utl_trie_tblw_ws;} private ByteTrieMgr_slim utl_trie_tblw_ws = Xop_tblw_ws_itm.trie_();
 	public Bry_bfr_mkr			Utl_bry_bfr_mkr() {return utl_bry_bfr_mkr;} Bry_bfr_mkr utl_bry_bfr_mkr = new Bry_bfr_mkr();
 	public Gfo_fld_rdr			Utl_fld_rdr() {return utl_fld_rdr;} Gfo_fld_rdr utl_fld_rdr = Gfo_fld_rdr.xowa_();
 	public Gfo_log_bfr			Log_bfr() {return log_bfr;} private Gfo_log_bfr log_bfr = new Gfo_log_bfr();

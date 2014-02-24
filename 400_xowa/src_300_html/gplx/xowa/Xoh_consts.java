@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xoh_consts {
+	public static final String Comm_bgn_str = "<!--";
 	public static final byte[] 
 	  B_bgn = ByteAry_.new_ascii_("<b>"), B_end = ByteAry_.new_ascii_("</b>")
 	, I_bgn = ByteAry_.new_ascii_("<i>"), I_end = ByteAry_.new_ascii_("</i>")
@@ -33,7 +34,7 @@ public class Xoh_consts {
 	, __inline_quote = ByteAry_.new_ascii_("\"/>")
 	, Img_bgn = ByteAry_.new_ascii_("<img src=\"")
 	, Space_2 = ByteAry_.new_ascii_("  ")
-	, Comm_bgn = ByteAry_.new_ascii_("<!--")
+	, Comm_bgn = ByteAry_.new_ascii_(Comm_bgn_str)
 	, Comm_end = ByteAry_.new_ascii_("-->")
 	, Pre_bgn = ByteAry_.new_ascii_("<pre>"), Pre_end = ByteAry_.new_ascii_("</pre>")
 	, Pre_bgn_open = ByteAry_.new_ascii_("<pre")

@@ -208,10 +208,7 @@ public class Pp_pages_nde implements Xox_xnde, Xop_xnde_atr_parser {
 	private ListAdp Get_ttls_from_xnde_args__include(ListAdp list) {
 		if (ByteAry_.Len_eq_0(include)) return list;	// include is blank; exit early;
 		int[] include_pages = Int_ary_.Parse_list_or(include, null);
-		if (include_pages == null) {
-			Fail_args("pages node does not have a valid 'include': include={0}", String_.new_utf8_(include));
-			return null;
-		}
+		if (include_pages == null) return list;	// ignore invalid include; DATE:2014-02-22
 		int include_pages_len = include_pages.length;
 		for (int i = 0; i < include_pages_len; i++)
 			list.Add(IntVal.new_(include_pages[i]));
@@ -246,9 +243,8 @@ public class Pp_pages_nde implements Xox_xnde, Xop_xnde_atr_parser {
 			Fail_args("from must be less than to: from={0} to={0}", bgn_page_int, end_page_int);
 			return null;
 		}
-		int rng_len = end_page_int - bgn_page_int + ListAdp_.Base1;	// EX: from=3 to=4 has len of 2
-		for (int i = 0; i < rng_len; i ++)
-			list.Add(IntVal.new_(i + bgn_page_int));
+		for (int i = bgn_page_int; i <= end_page_int; i++)
+			list.Add(IntVal.new_(i));
 		return list;
 	}
 	private int Get_max_page_idx(Xow_wiki wiki, Xoa_ttl index_ttl) {
@@ -269,10 +265,7 @@ public class Pp_pages_nde implements Xox_xnde, Xop_xnde_atr_parser {
 	private ListAdp Get_ttls_from_xnde_args__exclude(ListAdp list) {
 		if (ByteAry_.Len_eq_0(exclude)) return list;	// exclude is blank; exit early;
 		int[] exclude_pages = Int_ary_.Parse_list_or(exclude, null);
-		if (exclude_pages == null) {
-			Fail_args("pages node does not have a valid 'exclude': exclude={0}", String_.new_utf8_(exclude));
-			return null;
-		}
+		if (exclude_pages == null) return list;	// ignore invalid exclude; DATE:2014-02-22
 		HashAdp exclude_pages_hash = HashAdp_.new_();
 		int exclude_pages_len = exclude_pages.length;
 		for (int i = 0; i < exclude_pages_len; i++) {

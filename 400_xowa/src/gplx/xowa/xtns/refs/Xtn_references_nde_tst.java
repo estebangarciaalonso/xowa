@@ -20,6 +20,7 @@ import org.junit.*;
 public class Xtn_references_nde_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {fxt.Ctx().Page().Ref_mgr().Grps_clear();}
+	@After public void term() {fxt.Init_para_n_();}
 	@Test  public void Basic() {
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<ref>x</ref>"
@@ -103,7 +104,6 @@ public class Xtn_references_nde_tst {
 			,	"<ol class=\"references\">"
 			,	"<li id=\"cite_note-1\"><span class=\"mw-cite-backlink\"><a href=\"#cite_ref-1\">^</a></span> <span class=\"reference-text\">y</span></li>"
 			,	"</ol>"
-			,	""
 			,	"<ol class=\"references\">"
 			,	"<li id=\"cite_note-0\"><span class=\"mw-cite-backlink\"><a href=\"#cite_ref-0\">^</a></span> <span class=\"reference-text\">x</span></li>"
 			,	"<li id=\"cite_note-2\"><span class=\"mw-cite-backlink\"><a href=\"#cite_ref-2\">^</a></span> <span class=\"reference-text\">z</span></li>"
@@ -138,6 +138,22 @@ public class Xtn_references_nde_tst {
 			,	"</ol>"
 			,	""
 			));
+	}
+	@Test  public void Pre_ignored_3() {	// PURPOSE: " <references>" should not create pre; fr.w:Heidi_(roman); DATE:2014-02-17
+		fxt.Init_para_y_();
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+			(	"<ref>x</ref>"
+			,	""
+			,	" <references/>"
+			), String_.Concat_lines_nl_skipLast
+			(	"<p><sup id=\"cite_ref-0\" class=\"reference\"><a href=\"#cite_note-0\">[1]</a></sup>"
+			,	"</p>"
+			,	" <ol class=\"references\">"
+			,	"<li id=\"cite_note-0\"><span class=\"mw-cite-backlink\"><a href=\"#cite_ref-0\">^</a></span> <span class=\"reference-text\">x</span></li>"
+			,	"</ol>"
+			,	""
+			));
+		fxt.Init_para_n_();
 	}
 	@Test  public void List_ignored() {
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
@@ -246,12 +262,10 @@ public class Xtn_references_nde_tst {
 			,	"<ol class=\"references\">"
 			,	"<li id=\"cite_note-0\"><span class=\"mw-cite-backlink\"><a href=\"#cite_ref-0\">^</a></span> <span class=\"reference-text\">a</span></li>"
 			,	"</ol>"
-			,	""
 			,	"<sup id=\"cite_ref-1\" class=\"reference\"><a href=\"#cite_note-1\">[1]</a></sup>"
 			,	"<ol class=\"references\">"
 			,	"<li id=\"cite_note-1\"><span class=\"mw-cite-backlink\"><a href=\"#cite_ref-1\">^</a></span> <span class=\"reference-text\">b</span></li>"
 			,	"</ol>"
-			,	""
 			,	"<sup id=\"cite_ref-2\" class=\"reference\"><a href=\"#cite_note-2\">[1]</a></sup>"
 			,	"<ol class=\"references\">"
 			,	"<li id=\"cite_note-2\"><span class=\"mw-cite-backlink\"><a href=\"#cite_ref-2\">^</a></span> <span class=\"reference-text\">c</span></li>"
@@ -283,7 +297,6 @@ public class Xtn_references_nde_tst {
 			), String_.Concat_lines_nl_skipLast
 			(	"<sup id=\"cite_ref-ref_a_0-0\" class=\"reference\"><a href=\"#cite_note-ref_a-0\">[1]</a></sup>"
 			,	"<sup id=\"cite_ref-1\" class=\"reference\"><a href=\"#cite_note-1\">[2]</a></sup>"
-			,	""
 			,	"<ol class=\"references\">"
 			,	"<li id=\"cite_note-ref_a-0\"><span class=\"mw-cite-backlink\">^ <sup><a href=\"#cite_ref-ref_a_0-0\">a</a></sup></span> <span class=\"reference-text\">x z</span></li>"
 			,	"<li id=\"cite_note-1\"><span class=\"mw-cite-backlink\"><a href=\"#cite_ref-1\">^</a></span> <span class=\"reference-text\">y</span></li>"

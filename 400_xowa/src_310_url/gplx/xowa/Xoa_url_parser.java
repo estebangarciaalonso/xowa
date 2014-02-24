@@ -159,15 +159,19 @@ public class Xoa_url_parser {
 						byte[][] segs_ary = rv.Segs_ary();
 						if (segs_ary.length > 0)
 							page_bry = segs_ary[0];
-						int colon_pos = ByteAry_.FindFwd(page_bry, Byte_ascii.Colon);	// check for alias; EX: w:Earth
+						int colon_pos = Byte_ary_finder.Find_fwd(page_bry, Byte_ascii.Colon);	// check for alias; EX: w:Earth
 						boolean xwiki_set = false;
 						if (colon_pos != ByteAry_.NotFound) {							// alias found
 							Xow_xwiki_itm xwiki = cur_wiki.Xwiki_mgr().Get_by_mid(page_bry, 0, colon_pos);
 							if (xwiki != null) {
 								wiki = app.Wiki_mgr().Get_by_key_or_make(xwiki.Domain());
 								page_bry = ByteAry_.Mid(page_bry, colon_pos + 1, page_bry.length); 
-								rv.Segs_ary()[0] = page_bry;
-								page_bry = Parse_url__combine(bfr_mkr, rv.Wiki_bry(), rv.Segs_ary(), rv.Page_bry());
+								if (rv.Segs_ary().length == 0)		// handle xwiki without segs; EX: commons:Commons:Media_of_the_day; DATE:2014-02-19
+									rv.Segs_ary_(new byte[][] {Bry_wiki_name, page_bry});	// create segs of "/wiki/Page"
+								else {
+									rv.Segs_ary()[0] = page_bry;
+									page_bry = Parse_url__combine(bfr_mkr, rv.Wiki_bry(), rv.Segs_ary(), rv.Page_bry());
+								}
 								xwiki_set = true;
 							}
 						}
@@ -248,7 +252,7 @@ public class Xoa_url_parser {
 		}
 		return rv;
 	}
-//		private static final byte Tid_xowa = (byte)Gfo_url_parser.Protocol_file_tid + 1;
+	// private static final byte Tid_xowa = (byte)Gfo_url_parser.Protocol_file_tid + 1;
 	private static final byte Id_arg_redirect = 0, Id_arg_uselang = 1, Id_arg_title = 2, Id_arg_action = 3, Id_arg_fulltext = 4;
 	private static final byte[] Bry_arg_redirect = ByteAry_.new_ascii_("redirect"), Bry_arg_uselang = ByteAry_.new_ascii_("uselang"), Bry_arg_title = ByteAry_.new_ascii_("title"), Bry_arg_action = ByteAry_.new_ascii_("action"), Bry_arg_fulltext = ByteAry_.new_ascii_("fulltext");
 	private static final byte[] Bry_upload_wikimedia_org = ByteAry_.new_ascii_("upload.wikimedia.org"), Bry_dot_org = ByteAry_.new_ascii_(".org"), Bry_arg_action_edit = ByteAry_.new_ascii_("edit")

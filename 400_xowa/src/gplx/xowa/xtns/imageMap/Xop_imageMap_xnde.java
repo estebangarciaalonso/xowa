@@ -24,7 +24,7 @@ public class Xop_imageMap_xnde implements Xox_xnde {
 	public ListAdp Shape_list() {return shape_list;} ListAdp shape_list = ListAdp_.new_(); 
 	public void Xtn_parse(Xow_wiki wiki, Xop_ctx ctx, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		int content_bgn = xnde.Tag_open_end(), content_end = xnde.Tag_close_bgn();
-		int nl_0_pos = Xop_lxr_.Find_fwd_while_non_ws(src, content_bgn, content_end);
+		int nl_0_pos = Byte_ary_finder.Find_fwd_while_not_ws(src, content_bgn, content_end);
 		int cur_pos = nl_0_pos, nl_1_pos = -1;//, ws_pos_bgn = -1;
 		int src_len = src.length;
 		Xop_ctx imageMap_ctx = Xop_ctx.new_sub_(wiki);

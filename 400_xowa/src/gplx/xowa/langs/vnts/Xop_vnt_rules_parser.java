@@ -141,7 +141,7 @@ class Xop_vnt_rules_parser {
 				switch (itm.Tid()) {
 					case Xop_vnt_rule_trie_itm.Tid_lang:
 						if (mode == Mode_key) {
-							int next_char_pos = Xop_lxr_.Find_fwd_while_ws(src, new_pos, src_end);
+							int next_char_pos = Byte_ary_finder.Find_fwd_while_space_or_tab(src, new_pos, src_end);
 							if (next_char_pos == src_end) {	// eos;	EX: "zh-hant  :a"
 								cur_key_bgn = pos;
 								mode = Mode_lang;

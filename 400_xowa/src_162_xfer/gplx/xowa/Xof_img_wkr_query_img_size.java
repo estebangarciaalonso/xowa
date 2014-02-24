@@ -33,9 +33,3 @@ class Xof_img_wkr_query_img_size_imageMagick implements Xof_img_wkr_query_img_si
 	}
 	static final String Marker_bgn = "<{", Marker_end = "}>"; static final int Marker_bgn_len = String_.Len(Marker_bgn);
 }
-class Xof_img_wkr_query_img_size_test implements Xof_img_wkr_query_img_size {
-	public SizeAdp Exec(Io_url url) {
-		ImageAdp image = ImageAdp_.txt_fil_(url);
-		return image.Size();
-	}
-}

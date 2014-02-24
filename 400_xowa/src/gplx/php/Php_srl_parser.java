@@ -106,7 +106,7 @@ public class Php_srl_parser {
 				break;
 			case Byte_ascii.Ltr_d:		// EX: 'd:1.23;'
 				pos = Chk(raw, pos + 1, Byte_ascii.Colon);
-				int double_end = ByteAry_.FindFwd(raw, Byte_ascii.Semic, pos, raw_len);
+				int double_end = Byte_ary_finder.Find_fwd(raw, Byte_ascii.Semic, pos, raw_len);
 				String double_str = String_.new_ascii_(raw, pos, double_end);
 				double double_val = 0;
 				if		(String_.Eq(double_str, "INF")) double_val = Double_.Inf_pos;

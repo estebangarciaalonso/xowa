@@ -36,7 +36,7 @@ public class Wdata_pf_property extends Pf_func_base {
 		Xoa_ttl ttl = ctx.Page().Ttl();
 
 		Wdata_pf_property_data data = new Wdata_pf_property_data();
-		data.Parse(ctx, src, caller, self, this, id);
+		data.Init_by_parse(ctx, src, caller, self, this, id);
 		Wdata_doc prop_doc = wdata_mgr.Pages_get(wiki, ttl, data); if (prop_doc == null) return; // NOTE: some pages will not exist in qid; EX: {{#property:P345}} for "Unknown_page" will not even had a qid; if no qid, then no pid
 		int pid = data.Id_int();
 		if (pid == Wdata_wiki_mgr.Pid_null)
@@ -69,11 +69,11 @@ class Wdata_pf_property_data {
 	public byte[] Q() {return q;} private byte[] q;
 	public byte[] Id() {return id;} private byte[] id;
 	public int Id_int() {return id_int;} private int id_int;
-	public void Parse(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, Wdata_pf_property pfunc) {
+	public void Init_by_parse(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, Wdata_pf_property pfunc) {
 		byte[] id = pfunc.Eval_argx(ctx, src, caller, self);
-		Parse(ctx, src, caller, self, pfunc, id);
+		Init_by_parse(ctx, src, caller, self, pfunc, id);
 	}
-	public void Parse(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, Wdata_pf_property pfunc, byte[] id) {
+	public void Init_by_parse(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, Wdata_pf_property pfunc, byte[] id) {
 		this.id = id;
 		id_int = Wdata_pf_property.Parse_pid(ctx.App().Utl_num_parser(), id);
 		if (id_int == Wdata_wiki_mgr.Pid_null) {}	// named; TODO: get pid from pid_regy

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xoh_ctx {
+	private OrderedHash ctg_hash = OrderedHash_.new_bry_();
 	public boolean Lnki_title() {return lnki_title;} public Xoh_ctx Lnki_title_(boolean v) {lnki_title = v; return this;} private boolean lnki_title;
 	public boolean Lnki_visited() {return lnki_visited;} public Xoh_ctx Lnki_visited_(boolean v) {lnki_visited = v; return this;} private boolean lnki_visited;
 	public boolean Lnki_id() {return lnki_id;} public Xoh_ctx Lnki_id_(boolean v) {lnki_id = v; return this;} private boolean lnki_id;
@@ -24,15 +25,11 @@ public class Xoh_ctx {
 	public int Lnke_autonumber_next() {return lnke_autonumber++;} private int lnke_autonumber = 1;
 	public void Clear() {
 		lnke_autonumber = 1;
-		ctg_bfr.Clear();
-		ctg_reg.Clear();
+		ctg_hash.Clear();
 	}
-	public void Lnki_ctg_add(Xop_lnki_tkn lnki) {
-		byte[] href = lnki.Ttl().Page_txt();
-		if (ctg_reg.Has(ctg_ref.Val_(href))) return;
-		ctg_reg.Add(ByteAryRef.new_(href), href);
-		ctg_bfr.Add(lnki.Ttl().Page_txt());
+	public void Lnki_ctg_add(byte[] ttl) {
+		if (ctg_hash.Has(ttl)) return;
+		ctg_hash.Add(ttl, ttl);
 	}
-	public byte[][] Lnki_ctg_xto_ary() {return (byte[][])ctg_bfr.XtoAry(byte[].class);}
-	ListAdp ctg_bfr = ListAdp_.new_(); HashAdp ctg_reg = HashAdp_.new_(); ByteAryRef ctg_ref = ByteAryRef.null_(); 
+	public byte[][] Lnki_ctg_xto_ary() {return (byte[][])ctg_hash.XtoAry(byte[].class);}
 }

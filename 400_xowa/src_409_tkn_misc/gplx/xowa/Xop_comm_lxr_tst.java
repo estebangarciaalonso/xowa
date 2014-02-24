@@ -19,15 +19,15 @@ package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xop_comm_lxr_tst {
 	private Xop_fxt fxt = new Xop_fxt();
-//		@Test  public void Basic() {
-//			fxt.Test_parse_page_tmpl("a<!-- b -->c", fxt.tkn_txt_(0, 1), fxt.tkn_comment_(1, 11), fxt.tkn_txt_(11, 12));
-//		}
-//		@Test  public void Err() {
-//			fxt.Init_log_(Xop_comment_log.Eos).Test_parse_page_tmpl("<!-- ", fxt.tkn_comment_(0, 5));
-//		}
-//		@Test  public void Ws_end() {
-//			fxt.Test_parse_page_all_str("a\n<!-- b --> \nc", "a\nc");
-//		}
+	@Test  public void Basic() {
+		fxt.Test_parse_page_all_str("a<!-- b -->c", "ac");
+	}
+	@Test  public void Err() {
+		fxt.Init_log_(Xop_comment_log.Eos).Test_parse_page_all_str("<!-- ", "");
+	}
+	@Test  public void Ws_end() {
+		fxt.Test_parse_page_all_str("a\n<!-- b --> \nc", "a\nc");
+	}
 	@Test  public void Ws_bgn_end() {
 		fxt.Test_parse_page_all_str("a\n <!-- b --> \nc", "a\nc");
 	}
@@ -37,7 +37,37 @@ public class Xop_comm_lxr_tst {
 	@Test  public void Noinclude() {// PURPOSE: templates can construct comments; EX:WBK: {{Subjects/allbooks|subject=Computer programming|origin=Computer programming languages|diagnose=}}
 		fxt.Test_parse_page_all_str("a <!-<noinclude></noinclude>- b -->c", "a c");
 	}
-//		@Test  public void Ws_bgn_needs_nl() {	// PURPOSE: do not strip new line unles *entire* line is comment
-//			fxt.Test_parse_page_all_str("a <!-- b -->\nc", "a \nc");
-//		}
+	@Test  public void Comment_can_cause_pre() {// PURPOSE: assert that comment causes pre; DATE:2014-02-18
+		fxt.Init_para_y_();
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		( "a"
+		, " <!-- b -->c"
+		, "d"
+		), String_.Concat_lines_nl_skipLast
+		( "<p>a"
+		, "</p>"
+		, ""
+		, "<pre>c"
+		, "</pre>"
+		, ""
+		, "<p>d"
+		, "</p>"
+		, ""
+		));
+		fxt.Init_para_n_();
+	}
+	@Test  public void Ws_bgn_needs_nl() {	// PURPOSE: do not strip new line unles *entire* line is comment
+		fxt.Init_para_y_();
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		( "a"
+		, " <!-- b -->"
+		, "c"
+		), String_.Concat_lines_nl_skipLast
+		( "<p>a"
+		, "c"
+		, "</p>"
+		, ""
+		));
+		fxt.Init_para_n_();
+	}
 }

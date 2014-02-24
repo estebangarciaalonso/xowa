@@ -119,8 +119,8 @@ class Scrib_lib_title implements Scrib_lib {
 		byte[] ttl_bry = Scrib_kv_utl.Val_to_bry(values, 0);
 		Xow_wiki wiki = engine.Wiki();
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry); if (ttl == null) return Scrib_kv_utl.base1_obj_(null);
-		Xoa_page page = wiki.Data_mgr().Get_page(ttl, false); if (page.Missing()) return Scrib_kv_utl.base1_obj_(null);
-		return Scrib_kv_utl.base1_obj_(String_.new_utf8_(page.Data_raw()));
+		byte[] rv = wiki.Cache_mgr().Page_cache().Get_or_load_as_src(ttl); if (rv == null) return Scrib_kv_utl.base1_obj_(null);
+		return Scrib_kv_utl.base1_obj_(String_.new_utf8_(rv));
 	}
 	public KeyVal[] GetCurrentTitle(KeyVal[] values) {
 		return Scrib_kv_utl.base1_obj_(Xto_kv_ary(engine.Page().Ttl()));

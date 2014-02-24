@@ -34,7 +34,7 @@ public abstract class Xob_categorylinks_base extends Xob_sql_dump_base implement
 				? 0 : Bit_.Xto_int_date_short(cur_modified_on);
 		}
 		else if (ByteAry_.Eq(fld_key, Fld_cl_sortkey)) {
-			int nl_pos = ByteAry_.FindFwd(src, Byte_ascii.NewLine, fld_bgn, fld_end);
+			int nl_pos = Byte_ary_finder.Find_fwd(src, Byte_ascii.NewLine, fld_bgn, fld_end);
 			if (nl_pos != ByteAry_.NotFound)	// sortkey sometimes has format of "sortkey\ntitle"; EX: "WALES, JIMMY\nJIMMY WALES"; discard 2nd to conserve hard-disk space
 				fld_end = nl_pos;
 			cur_sortkey = ByteAry_.Mid(src, fld_bgn, fld_end);
@@ -75,8 +75,8 @@ class Xoctg_link_sql_sorter implements gplx.lists.ComparerAble {
 		byte[] lhs_bry = lhs.Bfr(); int lhs_bgn = 0, lhs_end = lhs.Row_bgn() - 1;
 		byte[] rhs_bry = rhs.Bfr(); int rhs_bgn = 0, rhs_end = rhs.Row_bgn() - 1;
 		for (int i = 0; i < 3; i++) {
-			lhs_bgn = lhs_end + 1; lhs_end = ByteAry_.FindFwd(lhs_bry, Byte_ascii.Pipe, lhs_bgn);
-			rhs_bgn = rhs_end + 1; rhs_end = ByteAry_.FindFwd(rhs_bry, Byte_ascii.Pipe, rhs_bgn);
+			lhs_bgn = lhs_end + 1; lhs_end = Byte_ary_finder.Find_fwd(lhs_bry, Byte_ascii.Pipe, lhs_bgn);
+			rhs_bgn = rhs_end + 1; rhs_end = Byte_ary_finder.Find_fwd(rhs_bry, Byte_ascii.Pipe, rhs_bgn);
 			int comp = ByteAry_.Compare(lhs_bry, lhs_bgn, lhs_end, rhs_bry, rhs_bgn, rhs_end);
 			if (comp != CompareAble_.Same) return comp;
 		}

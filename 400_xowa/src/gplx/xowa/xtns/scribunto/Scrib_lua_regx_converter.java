@@ -239,7 +239,7 @@ class Scrib_lua_regx_converter {
 		Init_itm(Bool_.Y, "s", "\\s");
 		Init_itm(Bool_.Y, "w", "[\\p{L}\\p{Nd}]");
 		Init_itm(Bool_.Y, "x", "[0-9A-Fa-f0-9A-Fa-f]");
-		Init_itm(Bool_.Y, "z", "\\00");
+		Init_itm(Bool_.Y, "z", "\\x00");
 		Init_itm(Bool_.Y, "D", "\\P{Nd}");
 		Init_itm(Bool_.Y, "L", "\\P{Ll}");
 		Init_itm(Bool_.Y, "U", "\\P{Lu}");
@@ -249,7 +249,7 @@ class Scrib_lua_regx_converter {
 		Init_itm(Bool_.Y, "S", "\\S");						// JAVA: \P{Xps} not valid
 		Init_itm(Bool_.Y, "W", "[\\P{L}\\P{Nd}]");
 		Init_itm(Bool_.Y, "X", "[^0-9A-Fa-f0-9A-Fa-f]");
-		Init_itm(Bool_.Y, "Z", "[^\\0]");
+		Init_itm(Bool_.Y, "Z", "[^\\x00]");
 		Init_itm(Bool_.N, "w", "\\p{L}\\p{Nd}");
 		Init_itm(Bool_.N, "x", "0-9A-Fa-f0-9A-Fa-f");
 		Init_itm(Bool_.N, "W", "\\P{Xan}\\p{Nl}\\p{No}");	// Xan is L plus N, so ^Xan plus Nl plus No is anything that's not L or Nd

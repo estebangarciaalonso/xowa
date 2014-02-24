@@ -25,11 +25,11 @@ class Sql_fld_mgr {
 	}	private OrderedHash hash = OrderedHash_.new_bry_();
 	public Sql_fld_mgr Parse(byte[] raw) {
 		hash.Clear();
-		int bgn = ByteAry_.FindFwd(raw, Tkn_create_table); if (bgn == ByteAry_.NotFound) throw Err_.new_("could not find 'CREATE TABLE'");
-		bgn = ByteAry_.FindFwd(raw, Byte_ascii.NewLine, bgn); if (bgn == ByteAry_.NotFound) throw Err_.new_("could not find new line after 'CREATE TABLE'");
+		int bgn = Byte_ary_finder.Find_fwd(raw, Tkn_create_table); if (bgn == ByteAry_.NotFound) throw Err_.new_("could not find 'CREATE TABLE'");
+		bgn = Byte_ary_finder.Find_fwd(raw, Byte_ascii.NewLine, bgn); if (bgn == ByteAry_.NotFound) throw Err_.new_("could not find new line after 'CREATE TABLE'");
 		bgn += Int_.Const_position_after_char;
-		int end = ByteAry_.FindFwd(raw, Tkn_unique_index); if (end == ByteAry_.NotFound) throw Err_.new_("could not find 'UNIQUE KEY'");
-		end = ByteAry_.FindBwd(raw, Byte_ascii.NewLine, end); if (bgn == ByteAry_.NotFound) throw Err_.new_("could not find new line before 'UNIQUE KEY'");
+		int end = Byte_ary_finder.Find_fwd(raw, Tkn_unique_index); if (end == ByteAry_.NotFound) throw Err_.new_("could not find 'UNIQUE KEY'");
+		end = Byte_ary_finder.Find_bwd(raw, Byte_ascii.NewLine, end); if (bgn == ByteAry_.NotFound) throw Err_.new_("could not find new line before 'UNIQUE KEY'");
 		Parse_lines(ByteAry_.Mid(raw, bgn, end));
 		return this;
 	}
@@ -39,9 +39,9 @@ class Sql_fld_mgr {
 		int fld_idx = 0;
 		for (int i = 0; i < lines_len; i++) {
 			byte[] line = lines[i];
-			int bgn = ByteAry_.FindFwd(line, Byte_ascii.Tick); if (bgn == ByteAry_.NotFound) continue;	// skip blank lines
+			int bgn = Byte_ary_finder.Find_fwd(line, Byte_ascii.Tick); if (bgn == ByteAry_.NotFound) continue;	// skip blank lines
 			bgn += Int_.Const_position_after_char;
-			int end = ByteAry_.FindFwd(line, Byte_ascii.Tick, bgn); if (end == ByteAry_.NotFound) continue;	// skip blank lines
+			int end = Byte_ary_finder.Find_fwd(line, Byte_ascii.Tick, bgn); if (end == ByteAry_.NotFound) continue;	// skip blank lines
 			byte[] key = ByteAry_.Mid(line, bgn, end);
 			Sql_fld_itm fld = new Sql_fld_itm(fld_idx++, key);
 			hash.Add(fld.Key(), fld);

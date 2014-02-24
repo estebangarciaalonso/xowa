@@ -34,7 +34,7 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 		// NOTE: fmt is [xowa-cmd:^"app.setup_mgr.import_wiki('');"^ ]
 		if (lnke_type != Xop_lnke_tkn.Lnke_typ_brack) return ctx.LxrMake_txt_(cur_pos); // NOTE: must check for [ or else C:\xowa\ will cause it to evaluate as lnke
 		int proto_end_pos = cur_pos + 1;	// +1 to skip past :
-		int lhs_dlm_pos = ByteAry_.FindFwd(src, Byte_ascii.Quote, proto_end_pos, src_len); if (lhs_dlm_pos == ByteAry_.NotFound) return ctx.LxrMake_txt_(cur_pos);
+		int lhs_dlm_pos = Byte_ary_finder.Find_fwd(src, Byte_ascii.Quote, proto_end_pos, src_len); if (lhs_dlm_pos == ByteAry_.NotFound) return ctx.LxrMake_txt_(cur_pos);
 		int lnke_bgn_pos = lhs_dlm_pos + 1;
 		byte[] rhs_dlm_bry = Bry_quote;
 		if (lhs_dlm_pos - proto_end_pos > 0) {
@@ -42,9 +42,9 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 			rhs_dlm_bry = bfr.Add(Bry_quote).Add_mid(src, proto_end_pos, lhs_dlm_pos).XtoAryAndClear();
 			bfr.Mkr_rls();
 		}
-		int rhs_dlm_pos = ByteAry_.FindFwd(src, rhs_dlm_bry, lnke_bgn_pos, src_len); if (rhs_dlm_pos == ByteAry_.NotFound) return ctx.LxrMake_txt_(cur_pos);
-		int txt_bgn = Xop_lxr_.Find_fwd_while_ws(src, src_len, rhs_dlm_pos + rhs_dlm_bry.length); if (txt_bgn == ByteAry_.NotFound) return ctx.LxrMake_txt_(cur_pos);
-		int txt_end = ByteAry_.FindFwd(src, Byte_ascii.Brack_end, txt_bgn, src_len); if (txt_end == ByteAry_.NotFound) return ctx.LxrMake_txt_(cur_pos);
+		int rhs_dlm_pos = Byte_ary_finder.Find_fwd(src, rhs_dlm_bry, lnke_bgn_pos, src_len); if (rhs_dlm_pos == ByteAry_.NotFound) return ctx.LxrMake_txt_(cur_pos);
+		int txt_bgn = Byte_ary_finder.Find_fwd_while_space_or_tab(src, rhs_dlm_pos + rhs_dlm_bry.length, src_len); if (txt_bgn == ByteAry_.NotFound) return ctx.LxrMake_txt_(cur_pos);
+		int txt_end = Byte_ary_finder.Find_fwd(src, Byte_ascii.Brack_end, txt_bgn, src_len); if (txt_end == ByteAry_.NotFound) return ctx.LxrMake_txt_(cur_pos);
 
 		int end_pos = txt_end + 1;	// +1 to place after ]
 		Xop_lnke_tkn tkn = tkn_mkr.Lnke(bgn_pos, end_pos, protocol, proto_tid, lnke_type, lnke_bgn_pos, rhs_dlm_pos);	// +1 to ignore [

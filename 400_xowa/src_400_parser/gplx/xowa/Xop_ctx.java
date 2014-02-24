@@ -51,7 +51,7 @@ public class Xop_ctx {
 	public boolean					Ref_nested()		{return ref_nested;} public Xop_ctx Ref_nested_(boolean v) {ref_nested = v; return this;} private boolean ref_nested;
 	public Xot_defn_trace		Defn_trace()		{return defn_trace;} public Xop_ctx Defn_trace_(Xot_defn_trace v) {defn_trace = v; return this;} private Xot_defn_trace defn_trace = Xot_defn_trace_null._;
 	public byte					Parse_tid()			{return parse_tid;} public Xop_ctx Parse_tid_(byte v) {parse_tid = v; return this;} private byte parse_tid = Xop_parser_.Parse_tid_null;
-	public byte					Cur_tkn_tid()		{return cur_tkn_tid;} public Xop_ctx Cur_tkn_tid_(byte v) {cur_tkn_tid = v; return this;} private byte cur_tkn_tid = Xop_tkn_itm_.Tid_null;
+	public byte					Cur_tkn_tid()		{return cur_tkn_tid;} private byte cur_tkn_tid = Xop_tkn_itm_.Tid_null;
 	public boolean					Lxr_make()			{return lxr_make;} public Xop_ctx Lxr_make_(boolean v) {lxr_make = v; return this;} private boolean lxr_make = false;
 	public boolean					Only_include_evaluate() {return only_include_evaluate;} public Xop_ctx Only_include_evaluate_(boolean v) {only_include_evaluate = v; return this;} private boolean only_include_evaluate;
 	public Lst_section_nde_mgr	Lst_section_mgr()	{if (lst_section_mgr == null) lst_section_mgr = new Lst_section_nde_mgr(); return lst_section_mgr;} Lst_section_nde_mgr lst_section_mgr;
@@ -131,6 +131,23 @@ public class Xop_ctx {
 	public int Stack_len() {return stack_len;}
 	public Xop_tkn_itm Stack_get_last()		{return stack_len == 0 ? null : stack[stack_len - 1];}
 	public Xop_tkn_itm Stack_get(int i)		{return i < 0 || i >= stack_len ? null : stack[i];}
+	public Xop_tblw_tkn Stack_get_tbl_tb() {
+		for (int i = stack_len - 1; i > -1	; i--) {
+			Xop_tkn_itm tkn = stack[i];
+			switch (tkn.Tkn_tid()) {
+				case Xop_tkn_itm_.Tid_tblw_tb:
+					return (Xop_tblw_tkn)tkn;
+				case Xop_tkn_itm_.Tid_xnde:
+					Xop_xnde_tkn xnde_tkn = (Xop_xnde_tkn)tkn;
+					switch (xnde_tkn.Tag().Id()) {
+						case Xop_xnde_tag_.Tid_table:
+							return (Xop_tblw_tkn)tkn;
+					}
+					break;
+			}
+		}
+		return null;
+	}
 	public Xop_tblw_tkn Stack_get_tblw() {
 		for (int i = stack_len - 1; i > -1	; i--) {
 			Xop_tkn_itm tkn = stack[i];

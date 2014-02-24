@@ -43,7 +43,7 @@ public class Xosrv_msg_rdr {
 		return Xosrv_msg.new_(cmd_name, msg_id, sender, recipient, msg_date, msg_text);
 	}
 	private static byte[] Read_fld(byte[] bry, int bry_len, IntRef fld_bgn, BoolRef fail_ref, StringRef fld_ref) {
-		int fld_end = ByteAry_.FindFwd(bry, Byte_ascii.Pipe, fld_bgn.Val(), bry_len);
+		int fld_end = Byte_ary_finder.Find_fwd(bry, Byte_ascii.Pipe, fld_bgn.Val(), bry_len);
 		if (fld_end == ByteAry_.NotFound) {fail_ref.Val_y_(); return null;}
 		byte[] rv = ByteAry_.Mid(bry, fld_bgn.Val(), fld_end);
 		fld_bgn.Val_(fld_end + 1);	// +1 to place after pipe

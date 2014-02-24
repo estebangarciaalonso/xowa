@@ -109,7 +109,7 @@ class Db_stmt_sql implements Db_stmt {
 		int pos_prv = 0;
 		tmp_bfr.Clear();
 		while (true) {
-			int pos_cur = ByteAry_.FindFwd(src, Byte_ascii.Question, pos_prv);
+			int pos_cur = Byte_ary_finder.Find_fwd(src, Byte_ascii.Question, pos_prv);
 			if (pos_cur == ByteAry_.NotFound) break;
 			tmp_bfr.Add_mid(src, pos_prv, pos_cur);
 			tmp_bfr.Add_byte(Byte_ascii.Tilde).Add_byte(Byte_ascii.Curly_bgn);

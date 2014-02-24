@@ -32,7 +32,7 @@ public class Xop_redirect_mgr {
 	public static final int Extract_redirect_loop_max = 4;
 	public Xoa_ttl Extract_redirect(byte[] src, int src_len) {
 		if (src_len == 0) return Redirect_null_ttl;
-		int bgn = Xop_lxr_.Find_fwd_while_non_ws(src, 0, src_len);
+		int bgn = Byte_ary_finder.Find_fwd_while_not_ws(src, 0, src_len);
 		if (bgn == src_len) return Redirect_null_ttl; // article is entirely whitespace
 		if (trie == null) trie = Xol_kwd_mgr.trie_(wiki.Lang().Kwd_mgr(), Xol_kwd_grp_.Id_redirect);
 		if (trie.MatchAtCur(src, bgn, src_len) == null) return Redirect_null_ttl; 
@@ -49,10 +49,10 @@ public class Xop_redirect_mgr {
 				log_mgr.Add_itm_none(Xop_redirect_log.False_match, src, 0, cur_pos);
 				return Redirect_null_ttl;
 		}
-		int bgn_pos = ByteAry_.FindFwd(src, Xop_tkn_.Lnki_bgn, cur_pos);
+		int bgn_pos = Byte_ary_finder.Find_fwd(src, Xop_tkn_.Lnki_bgn, cur_pos);
 		if (bgn_pos == ByteAry_.NotFound) {log_mgr.Add_itm_none(Xop_redirect_log.Lnki_not_found, src, 0, cur_pos); return Redirect_null_ttl;}
 		bgn_pos += Xop_tkn_.Lnki_bgn.length;
-		int end_pos = ByteAry_.FindFwd(src, Xop_tkn_.Lnki_end, bgn_pos);
+		int end_pos = Byte_ary_finder.Find_fwd(src, Xop_tkn_.Lnki_end, bgn_pos);
 		if (end_pos == ByteAry_.NotFound) {log_mgr.Add_itm_none(Xop_redirect_log.Lnki_not_found, src, 0, cur_pos); return Redirect_null_ttl;}
 		byte[] redirect_ary = ByteAry_.Mid(src, bgn_pos, end_pos);
 		return Xoa_ttl.parse_(wiki, redirect_ary);

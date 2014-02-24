@@ -69,7 +69,6 @@ class Xop_comm_lxr implements Xop_lxr {
 				Xop_tkn_itm sub_tkn = root.Subs_get(i);
 				sub_tkn.Ignore_y_grp_(ctx, root, i);
 			}
-			ctx.Para().Pre_disable();
 			cur_pos = nl_rhs;
 		}
 

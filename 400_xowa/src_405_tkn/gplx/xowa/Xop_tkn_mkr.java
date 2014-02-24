@@ -55,9 +55,9 @@ public class Xop_tkn_mkr {
 	public Xop_tblw_th_tkn Tblw_th(int bgn, int end, boolean tblw_xml)							{return new Xop_tblw_th_tkn(bgn, end, tblw_xml);}
 	public Xop_tblw_tc_tkn Tblw_tc(int bgn, int end, boolean tblw_xml)							{return new Xop_tblw_tc_tkn(bgn, end, tblw_xml);}
 	public Xot_prm_tkn Tmpl_prm(int bgn, int end)											{return new Xot_prm_tkn(bgn, end);}
-	public Xop_para_tkn Para(int pos, byte para_end, byte para_bgn)							{return new Xop_para_tkn(pos, para_bgn, para_end);}
-	public Xop_pre_tkn Para_pre_bgn(int pos)												{return new Xop_pre_tkn(pos, pos, Xop_pre_tkn.Pre_typeId_bgn, null);}
-	public Xop_pre_tkn Para_pre_end(int pos, Xop_tkn_itm bgn)								{return new Xop_pre_tkn(pos, pos, Xop_pre_tkn.Pre_typeId_end, bgn);}
+	public Xop_para_tkn Para(int pos)														{return new Xop_para_tkn(pos);}
+	public Xop_pre_tkn Para_pre_bgn(int pos)												{return new Xop_pre_tkn(pos, pos, Xop_pre_tkn.Pre_tid_bgn, null);}
+	public Xop_pre_tkn Para_pre_end(int pos, Xop_tkn_itm bgn)								{return new Xop_pre_tkn(pos, pos, Xop_pre_tkn.Pre_tid_end, bgn);}
 	public Xop_ignore_tkn Ignore(int bgn, int end, byte ignore_type)						{return new Xop_ignore_tkn(bgn, end, ignore_type);}
 	public Xop_bry_tkn Bry(int bgn, int end, byte[] bry)									{return new Xop_bry_tkn(bgn, end, bry);}
 	public Xop_under_tkn Under(int bgn, int end, int v)										{return new Xop_under_tkn(bgn, end, v);}

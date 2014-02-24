@@ -29,7 +29,7 @@ class Xop_tab_lxr implements Xop_lxr {
 	}	
 	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
 	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
-		cur_pos = Xop_lxr_.Find_fwd_while(src, src_len, cur_pos, Byte_ascii.Tab);
+		cur_pos = Byte_ary_finder.Find_fwd_while(src, cur_pos, src_len, Byte_ascii.Tab);
 		src[bgn_pos] = Byte_ascii.Tab; // HACK: SEE:NOTE_1:tabs
 		for (int i = bgn_pos + 1; i < cur_pos; i++)	
 			src[i] = Byte_ascii.Space;

@@ -28,7 +28,7 @@ class Xop_eq_lxr implements Xop_lxr {//20111222
 				if (	cur_pos < src_len												// bounds check
 					&&	src[cur_pos] == Byte_ascii.Eq									// next char is =; i.e.: "=="
 					) {
-					int rhs = Xop_lxr_.Find_fwd_while(src, src_len, cur_pos, Byte_ascii.Eq);	// find all consecutive "="
+					int rhs = Byte_ary_finder.Find_fwd_while(src, cur_pos, src_len, Byte_ascii.Eq);	// find all consecutive "="
 					int prv_pos = bgn_pos - 1;
 					boolean hdr_like = false;
 					if (prv_pos > -1 && src[prv_pos] == Byte_ascii.NewLine)				// is prv char \n; EX: "\n==="

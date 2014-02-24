@@ -38,7 +38,7 @@ public class Xosrh_core implements GfoInvkAble, Xows_page {
 		}
 		if (	search_suggest_mgr.Auto_wildcard()
 			&&	wiki.Db_mgr().Tid() == gplx.xowa.dbs.Xodb_mgr_sql.Tid_sql	// only apply to sql
-			&&	ByteAry_.FindFwd(search_bry, Byte_ascii.Asterisk) == -1		// search term does not have asterisk
+			&&	Byte_ary_finder.Find_fwd(search_bry, Byte_ascii.Asterisk) == -1		// search term does not have asterisk
 			)
 			search_bry = ByteAry_.Add_w_dlm(Byte_ascii.Asterisk, search_bry, ByteAry_.Empty);
 		url.Page_bry_(ByteAry_.Add(ByteAry_.new_ascii_("Special:Search/"), search_bry));	// HACK: need to re-set Page b/c href_parser does not eliminate qargs; DATE:2013-02-08

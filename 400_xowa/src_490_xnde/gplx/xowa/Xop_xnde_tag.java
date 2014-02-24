@@ -21,18 +21,18 @@ public class Xop_xnde_tag {
 		this.id = id;
 		this.name_bry = ByteAry_.new_ascii_(name_str);
 		this.name_str = name_str;
-		nameLen = name_bry.length;
-		xtnEndTag = ByteAry_.Add(Xop_xnde_tag_.XtnEndTag_bgn, name_bry);	// always force endtag; needed for <noinclude>
-		xtnEndTag_tmp = new byte[xtnEndTag.length]; Array_.Copy(xtnEndTag, xtnEndTag_tmp);
+		name_len = name_bry.length;
+		xtn_end_tag = ByteAry_.Add(Xop_xnde_tag_.XtnEndTag_bgn, name_bry);	// always force endtag; needed for <noinclude>
+		xtn_end_tag_tmp = new byte[xtn_end_tag.length]; Array_.Copy(xtn_end_tag, xtn_end_tag_tmp);
 	}
 	public int Id() {return id;} public Xop_xnde_tag Id_(int v) {id = v; return this;} private int id;
 	public byte[] Name_bry() {return name_bry;} private byte[] name_bry;
 	public String Name_str() {return name_str;} private String name_str;
-	public int NameLen() {return nameLen;} private int nameLen;
+	public int Name_len() {return name_len;} private int name_len;
 	public boolean Xtn() {return xtn;} public Xop_xnde_tag Xtn_() {xtn = true; return this;} private boolean xtn;
 	public boolean XtnTmpl() {return xtnTmpl;} public Xop_xnde_tag XtnTmpl_() {xtnTmpl = true; return this;} private boolean xtnTmpl;
-	public byte[] XtnEndTag() {return xtnEndTag;} private byte[] xtnEndTag;
-	public byte[] XtnEndTag_tmp() {return xtnEndTag_tmp;} private byte[] xtnEndTag_tmp;
+	public byte[] XtnEndTag() {return xtn_end_tag;} private byte[] xtn_end_tag;
+	public byte[] XtnEndTag_tmp() {return xtn_end_tag_tmp;} private byte[] xtn_end_tag_tmp;
 	public int BgnNdeMode() {return bgnNdeMode;} private int bgnNdeMode = Xop_xnde_tag_.BgnNdeMode_normal;
 	public Xop_xnde_tag BgnNdeMode_inline_() {bgnNdeMode = Xop_xnde_tag_.BgnNdeMode_inline; return this;}
 	public int EndNdeMode() {return endNdeMode;} private int endNdeMode = Xop_xnde_tag_.EndNdeMode_normal;
@@ -50,8 +50,8 @@ public class Xop_xnde_tag {
 	public boolean Empty_ignored() {return empty_ignored;} public Xop_xnde_tag Empty_ignored_() {empty_ignored = true; return this;} private boolean empty_ignored;
 	public boolean Raw() {return raw;} public Xop_xnde_tag Raw_() {raw = true; return this;} private boolean raw;
 	public static final byte Block_noop = 0, Block_bgn = 1, Block_end = 2;
-	public byte Block_open() {return pre_open;} private byte pre_open = Block_noop;
-	public byte Block_close() {return pre_close;} private byte pre_close = Block_noop;
-	public Xop_xnde_tag Block_open_bgn_() {pre_open = Block_bgn; return this;} public Xop_xnde_tag Block_open_end_() {pre_open = Block_end; return this;}
-	public Xop_xnde_tag Block_close_bgn_() {pre_close = Block_bgn; return this;} public Xop_xnde_tag Block_close_end_() {pre_close = Block_end; return this;}
+	public byte Block_open() {return block_open;} private byte block_open = Block_noop;
+	public byte Block_close() {return block_close;} private byte block_close = Block_noop;
+	public Xop_xnde_tag Block_open_bgn_() {block_open = Block_bgn; return this;} public Xop_xnde_tag Block_open_end_() {block_open = Block_end; return this;}
+	public Xop_xnde_tag Block_close_bgn_() {block_close = Block_bgn; return this;} public Xop_xnde_tag Block_close_end_() {block_close = Block_end; return this;}
 }

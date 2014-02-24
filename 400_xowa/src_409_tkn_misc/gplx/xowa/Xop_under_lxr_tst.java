@@ -20,6 +20,7 @@ import org.junit.*;
 public class Xop_under_lxr_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {fxt.Reset();}
+	@After public void term() {fxt.Init_para_n_();}
 	@Test   public void Toc_basic() {
 		fxt.Test_parse_page_all_str("a__TOC__b", "ab");
 	}
@@ -49,18 +50,18 @@ public class Xop_under_lxr_tst {
 		fxt.Hctx().Toc_show_(false);
 	}
 	@Test   public void Ignore_pre() {
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str("a\n   __NOTOC__\n", String_.Concat_lines_nl
 		(	"<p>a"
-		,	"   </p>"
+		,	"</p>"		// NOTE: do not capture "   " in front of __NOTOC__; confirmed against MW; DATE:2014-02-19
 		,	""
 		,	"<p><br/>"
 		,	"</p>"
 		));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test   public void Toc_works() {	// PURPOSE: make sure "suppressed" pre does not somehow suppress TOC
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str("a\n__TOC__\n==b==\n", String_.Concat_lines_nl
 		( "<p>a"
 		, "<div id=\"toc\" class=\"toc\">"
@@ -72,27 +73,26 @@ public class Xop_under_lxr_tst {
 		, "    </li>"
 		, "  </ul>"
 		, "</div>"
-		, ""
 		, "</p>"
 		, ""
 		, "<h2>b</h2>"
 		));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}		
 	@Test  public void Ignore_pre_after() {	// PURPOSE: "__TOC__\s\n" must be trimmed at end, else false pre; assertion only (no code exists to handle this test);  DATE:2013-07-08
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 		(	"a"
 		,	"__NOTOC__ "
 		,	"b"
 		), String_.Concat_lines_nl
 		(	"<p>a"
-		,	" </p>"	// NOTE: space after __NOTOC__ gets put here
+		,	"</p>"		// NOTE: do not capture " "; confirmed against MW; DATE:2014-02-19
 		,	""
 		,	"<p>b"
 		,	"</p>"
 		));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Disambig() {	// PURPOSE: ignore "__DISAMBIG__"; EX:{{disambiguation}} DATE:2013-07-24
 		fxt.Test_parse_page_all_str("__DISAMBIG__", "");

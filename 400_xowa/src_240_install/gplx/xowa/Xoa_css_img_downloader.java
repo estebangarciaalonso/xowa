@@ -38,7 +38,7 @@ public class Xoa_css_img_downloader {
 			ByteAryBfr bfr = new ByteAryBfr(src_len);
 			HashAdp img_hash = HashAdp_.new_bry_();
 			while (true) {
-				int url_pos = ByteAry_.FindFwd(src, Bry_url, prv_pos);
+				int url_pos = Byte_ary_finder.Find_fwd(src, Bry_url, prv_pos);
 				if (url_pos == ByteAry_.NotFound) {bfr.Add_mid(src, prv_pos, src_len); break;}	// no more "url("; exit;
 				int bgn_pos = url_pos + Bry_url_len;	// set bgn_pos after "url("
 				byte bgn_byte = src[bgn_pos];
@@ -54,7 +54,7 @@ public class Xoa_css_img_downloader {
 						quoted = false;
 						break;
 				}
-				int end_pos = ByteAry_.FindFwd(src, end_byte, bgn_pos, src_len);
+				int end_pos = Byte_ary_finder.Find_fwd(src, end_byte, bgn_pos, src_len);
 				if (end_pos == ByteAry_.NotFound) {	// unclosed "url("; exit since nothing else will be found
 					usr_dlg.Warn_many(GRP_KEY, "parse.invalid_url.end_missing", "could not find end_sequence for 'url(': bgn='~{0}' end='~{1}'", prv_pos, String_.new_utf8_len_safe_(src, prv_pos, prv_pos + 25));
 					bfr.Add_mid(src, prv_pos, src_len);
@@ -119,18 +119,18 @@ public class Xoa_css_img_downloader {
 		bfr.Add(Bry_comment_bgn).Add(css_url).Add(Bry_comment_end).Add_byte_nl();
 		bfr.Add(css_trg_bry).Add_byte_nl();
 		bfr.Add_byte_nl();
-		int semic_pos = ByteAry_.FindFwd(src, Byte_ascii.Semic, find_bgn + url_raw.length, src_len);
+		int semic_pos = Byte_ary_finder.Find_fwd(src, Byte_ascii.Semic, find_bgn + url_raw.length, src_len);
 		return semic_pos + Int_.Const_dlm_len;
 	}	
 	public byte[] Clean_img_url(byte[] raw, int raw_len) {
 		int pos_bgn = 0;
 		if (ByteAry_.HasAtBgn(raw, Bry_fwd_slashes, 0, raw_len)) pos_bgn = Bry_fwd_slashes.length;
 		if (ByteAry_.HasAtBgn(raw, Bry_http, 0, raw_len)) pos_bgn = Bry_http.length;
-		int pos_slash = ByteAry_.FindFwd(raw, Byte_ascii.Slash, pos_bgn, raw_len);
+		int pos_slash = Byte_ary_finder.Find_fwd(raw, Byte_ascii.Slash, pos_bgn, raw_len);
 		if (pos_slash == ByteAry_.NotFound) return null; // first segment is site_name; at least one slash must be present for image name; EX: site.org/img_name.jpg
 		if (pos_slash == raw_len - 1) return null; // "site.org/" is invalid
 		int pos_end = raw_len;
-		int pos_question = ByteAry_.FindBwd(raw, Byte_ascii.Question);
+		int pos_question = Byte_ary_finder.Find_bwd(raw, Byte_ascii.Question);
 		if (pos_question != ByteAry_.NotFound)
 			pos_end = pos_question;	// remove query params; EX: img_name?key=val 
 		return ByteAry_.Mid(raw, pos_bgn, pos_end);

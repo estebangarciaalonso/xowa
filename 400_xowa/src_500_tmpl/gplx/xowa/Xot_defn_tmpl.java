@@ -22,6 +22,8 @@ public class Xot_defn_tmpl implements Xot_defn {
 	public int Cache_size() {return data_raw.length;}
 	public byte[] Name() {return name;} private byte[] name;
 	public byte[] Data_raw() {return data_raw;} private byte[] data_raw;
+	public byte[] Data_mid() {return data_mid;} public Xot_defn_tmpl Data_mid_(byte[] v) {data_mid = v; return this;} private byte[] data_mid;
+	public Xop_ctx Ctx() {return ctx;} public Xot_defn_tmpl Ctx_(Xop_ctx v) {ctx = v; return this;} private Xop_ctx ctx;
 	public Xop_root_tkn Root() {return root;} private Xop_root_tkn root;
 	public void Init_by_new(Xow_ns ns, byte[] name, byte[] data_raw, Xop_root_tkn root, boolean onlyInclude) {
 		this.ns = ns; this.name = name; this.data_raw = data_raw; this.root = root; this.onlyInclude_exists = onlyInclude;
@@ -35,12 +37,12 @@ public class Xot_defn_tmpl implements Xot_defn {
 		int pos = 0;
 		int src_len = src.length;
 		while (true) {
-			int find_bgn = ByteAry_.FindFwd(src, Bry_onlyinclude_bgn, pos, src_len);
+			int find_bgn = Byte_ary_finder.Find_fwd(src, Bry_onlyinclude_bgn, pos, src_len);
 			if (find_bgn == ByteAry_.NotFound) {
 				break;
 			}
 			int find_bgn_lhs = find_bgn + Bry_onlyinclude_bgn_len;
-			int find_end = ByteAry_.FindFwd(src, Bry_onlyinclude_end, find_bgn_lhs, src_len);
+			int find_end = Byte_ary_finder.Find_fwd(src, Bry_onlyinclude_end, find_bgn_lhs, src_len);
 			if (find_end == ByteAry_.NotFound) {
 				break;
 			}

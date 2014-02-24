@@ -116,6 +116,20 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_mnt_mgr))	return mnt_mgr;
+		else if	(ctx.Match(k, Invk_get))		return Get_or_new(m.ReadBry("key"));
 		else	return GfoInvkAble_.Rv_unhandled;
-	}	private static final String Invk_mnt_mgr = "mnt_mgr";
+	}	private static final String Invk_mnt_mgr = "mnt_mgr", Invk_get = "get";
+	private OrderedHash wkrs = OrderedHash_.new_bry_();
+	private static final OrderedHash prototypes = OrderedHash_.new_bry_();
+	private Xof_fsdb_wkr Get_or_new(byte[] key) {
+		Xof_fsdb_wkr rv = (Xof_fsdb_wkr)wkrs.Fetch(key);
+		if (rv == null) {
+			Xof_fsdb_wkr prototype = (Xof_fsdb_wkr)prototypes.Fetch(key);
+			rv = prototype.Clone_new(wiki);
+			wkrs.Add(key, rv);
+//				bin_mgr.Add(rv.Bin_wkr());
+//				qry_mgr.Add(rv.Qry_wkr());
+		}
+		return rv;
+	}
 }

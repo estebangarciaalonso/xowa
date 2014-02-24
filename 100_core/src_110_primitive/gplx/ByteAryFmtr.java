@@ -214,9 +214,9 @@ public class ByteAryFmtr {
 		return this;
 	}
 	int Compile_eval_cmd(byte[] fmt, int fmt_len, int eval_lhs_bgn, ListAdp list) {
-		int eval_lhs_end = ByteAry_.FindFwd(fmt, char_eval_end, eval_lhs_bgn + Int_.Const_dlm_len, fmt_len); if (eval_lhs_end == ByteAry_.NotFound) throw Err_mgr._.fmt_(GRP_KEY, "eval_lhs_end_invalid", "could not find eval_lhs_end: ~{0}", String_.new_utf8_(fmt, eval_lhs_bgn, fmt_len));
+		int eval_lhs_end = Byte_ary_finder.Find_fwd(fmt, char_eval_end, eval_lhs_bgn + Int_.Const_dlm_len, fmt_len); if (eval_lhs_end == ByteAry_.NotFound) throw Err_mgr._.fmt_(GRP_KEY, "eval_lhs_end_invalid", "could not find eval_lhs_end: ~{0}", String_.new_utf8_(fmt, eval_lhs_bgn, fmt_len));
 		byte[] eval_dlm = ByteAry_.Mid(fmt, eval_lhs_bgn		, eval_lhs_end + Int_.Const_dlm_len);
-		int eval_rhs_bgn = ByteAry_.FindFwd(fmt, eval_dlm		, eval_lhs_end + Int_.Const_dlm_len, fmt_len); if (eval_rhs_bgn == ByteAry_.NotFound) throw Err_mgr._.fmt_(GRP_KEY, "eval_rhs_bgn_invalid", "could not find eval_rhs_bgn: ~{0}", String_.new_utf8_(fmt, eval_lhs_end, fmt_len));
+		int eval_rhs_bgn = Byte_ary_finder.Find_fwd(fmt, eval_dlm		, eval_lhs_end + Int_.Const_dlm_len, fmt_len); if (eval_rhs_bgn == ByteAry_.NotFound) throw Err_mgr._.fmt_(GRP_KEY, "eval_rhs_bgn_invalid", "could not find eval_rhs_bgn: ~{0}", String_.new_utf8_(fmt, eval_lhs_end, fmt_len));
 		byte[] eval_cmd = ByteAry_.Mid(fmt, eval_lhs_end + Int_.Const_dlm_len, eval_rhs_bgn);
 		byte[] eval_rslt = eval_mgr.Eval(eval_cmd);
 		int eval_rhs_end = eval_rhs_bgn + Int_.Const_dlm_len + eval_dlm.length;

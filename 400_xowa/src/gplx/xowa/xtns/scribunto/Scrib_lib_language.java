@@ -51,24 +51,29 @@ class Scrib_lib_language implements Scrib_lib {
 		else	return GfoInvkAble_.Rv_unhandled;
 	}
 	public static final String 
-		  Invk_getContLangCode = "getContLangCode", Invk_isSupportedLanguage = "isSupportedLanguage", Invk_isKnownLanguageTag = "isKnownLanguageTag"
-		, Invk_isValidCode = "isValidCode", Invk_isValidBuiltInCode = "isValidBuiltInCode", Invk_fetchLanguageName = "fetchLanguageName"
-		, Invk_lcfirst = "lcfirst", Invk_ucfirst = "ucfirst", Invk_lc = "lc", Invk_uc = "uc", Invk_caseFold = "caseFold"
-		, Invk_formatNum = "formatNum", Invk_formatDate = "formatDate", Invk_formatDuration = "formatDuration", Invk_getDurationIntervals = "getDurationIntervals", Invk_parseFormattedNumber = "parseFormattedNumber"
-		, Invk_convertPlural = "convertPlural", Invk_convertGrammar = "convertGrammar", Invk_gender = "gender", Invk_isRTL = "isRTL"
-		;
+	  Invk_getContLangCode = "getContLangCode", Invk_isSupportedLanguage = "isSupportedLanguage", Invk_isKnownLanguageTag = "isKnownLanguageTag"
+	, Invk_isValidCode = "isValidCode", Invk_isValidBuiltInCode = "isValidBuiltInCode", Invk_fetchLanguageName = "fetchLanguageName"
+	, Invk_lcfirst = "lcfirst", Invk_ucfirst = "ucfirst", Invk_lc = "lc", Invk_uc = "uc", Invk_caseFold = "caseFold"
+	, Invk_formatNum = "formatNum", Invk_formatDate = "formatDate", Invk_formatDuration = "formatDuration", Invk_getDurationIntervals = "getDurationIntervals", Invk_parseFormattedNumber = "parseFormattedNumber"
+	, Invk_convertPlural = "convertPlural", Invk_convertGrammar = "convertGrammar", Invk_gender = "gender", Invk_isRTL = "isRTL"
+	;
 	public void Notify_lang_changed() {if (notify_lang_changed_fnc != null) engine.Interpreter().CallFunction(notify_lang_changed_fnc.Id(), KeyVal_.Ary_empty);}
-	public KeyVal[] GetContLangCode(KeyVal[] values) {return Scrib_kv_utl.base1_obj_(engine.Ctx().Lang().Key_str());}
-	public KeyVal[] IsSupportedLanguage(KeyVal[] values) {return IsKnownLanguageTag(values);}	// NOTE: checks if "MessagesXX.php" exists; note that xowa has all "MessagesXX.php"; for now, assume same functionality as IsKnownLanguageTag (worst case is that a small wiki depends on a lang not being there; will need to put in a "wiki.Langs()" then)
+	public KeyVal[] GetContLangCode(KeyVal[] values)		{return Scrib_kv_utl.base1_obj_(engine.Ctx().Lang().Key_str());}
+	public KeyVal[] IsSupportedLanguage(KeyVal[] values)	{return IsKnownLanguageTag(values);}// NOTE: checks if "MessagesXX.php" exists; note that xowa has all "MessagesXX.php"; for now, assume same functionality as IsKnownLanguageTag (worst case is that a small wiki depends on a lang not being there; will need to put in a "wiki.Langs()" then)
 	public KeyVal[] IsKnownLanguageTag(KeyVal[] values) {	// NOTE: checks if in languages/Names.php
-		String lang_code = Scrib_kv_utl.Val_to_str(values, 0);
+		Scrib_args args = new Scrib_args(values);
+		String lang_code = args.Cast_str_or_null(0);
 		boolean exists = false;
-		if (String_.Eq(lang_code, String_.Lower(lang_code)))	// must be lower-case; REF.MW: $code === strtolower( $code )
-			exists = Xol_lang_itm_.Exists(ByteAry_.new_ascii_(lang_code));
+		if (	lang_code != null									// null check; protecting against Module passing in nil from lua
+			&&	String_.Eq(lang_code, String_.Lower(lang_code))		// must be lower-case; REF.MW: $code === strtolower( $code )
+			&&	Xol_lang_itm_.Exists(ByteAry_.new_ascii_(lang_code))
+			)
+			exists = true;
 		return Scrib_kv_utl.base1_obj_(exists);
 	}
 	public KeyVal[] IsValidCode(KeyVal[] values) {	// REF.MW: Language.php!isValidCode
-		byte[] lang_code = Scrib_kv_utl.Val_to_bry(values, 0);
+		Scrib_args args = new Scrib_args(values);
+		byte[] lang_code = args.Pull_bry(0);
 		boolean valid = Xoa_ttl.parse_(engine.Wiki(), lang_code) != null;	// NOTE: MW calls Title::getTitleInvalidRegex()
 		if (valid) {
 			int len = lang_code.length;
@@ -85,7 +90,8 @@ class Scrib_lib_language implements Scrib_lib {
 		return Scrib_kv_utl.base1_obj_(valid);
 	}
 	public KeyVal[] IsValidBuiltInCode(KeyVal[] values) {
-		byte[] lang_code = Scrib_kv_utl.Val_to_bry(values, 0);
+		Scrib_args args = new Scrib_args(values);
+		byte[] lang_code = args.Pull_bry(0);
 		int len = lang_code.length;
 		boolean valid = true;
 		for (int i = 0; i < len; i++) {	// REF.MW: '/^[a-z0-9-]+$/i'
@@ -106,62 +112,44 @@ class Scrib_lib_language implements Scrib_lib {
 		return Scrib_kv_utl.base1_obj_(valid);
 	}
 	public KeyVal[] FetchLanguageName(KeyVal[] values) {	
-		byte[] lang_code = Scrib_kv_utl.Val_to_bry(values, 0);
-		// byte[] trans_code = Scrib_kv_utl.Val_to_bry_or(values, 1, null);	// FUTURE.7: FetchLanguageName("en", "fr") -> Anglais; WHEN: needs global database of languages;
+		Scrib_args args = new Scrib_args(values);
+		byte[] lang_code = args.Pull_bry(0);
+		// byte[] trans_code = args.Get_bry_or_null(1);	// TODO: FetchLanguageName("en", "fr") -> Anglais; WHEN: needs global database of languages;
 		Xol_lang_itm lang_itm = Xol_lang_itm_.Get_by_key(lang_code);
 		return Scrib_kv_utl.base1_obj_(lang_itm == null ? String_.Empty : String_.new_utf8_(lang_itm.Canonical_name()));
 	}
-	public KeyVal[] Lcfirst(KeyVal[] values) {
-		Xol_lang lang = lang_(values);
-		byte[] word = Scrib_kv_utl.Val_to_bry(values, 1);
-		ByteAryBfr bfr = engine.Wiki().App().Utl_bry_bfr_mkr().Get_b128().Mkr_rls();
-		return Scrib_kv_utl.base1_obj_(lang.Case_mgr().Case_build_1st_lower(bfr, word, 0, word.length));
-	}
-	public KeyVal[] Ucfirst(KeyVal[] values) {
+	public KeyVal[] Lcfirst(KeyVal[] values) {return Case_1st(values, Bool_.N);}
+	public KeyVal[] Ucfirst(KeyVal[] values) {return Case_1st(values, Bool_.Y);}
+	private KeyVal[] Case_1st(KeyVal[] values, boolean upper) {
 		Scrib_args args = new Scrib_args(values);
-		Xol_lang lang = lang_(values);
-		byte[] word = args.Get_bry_or_empty(1);
+		Xol_lang lang = lang_(args);
+		byte[] word = args.Pull_bry(1);
 		ByteAryBfr bfr = engine.Wiki().App().Utl_bry_bfr_mkr().Get_b128().Mkr_rls();
-		return Scrib_kv_utl.base1_obj_(lang.Case_mgr().Case_build_1st_upper(bfr, word, 0, word.length));
+		return Scrib_kv_utl.base1_obj_(lang.Case_mgr().Case_build_1st(bfr, upper, word, 0, word.length));
 	}
-	public KeyVal[] Lc(KeyVal[] values) {
+	public KeyVal[] Lc(KeyVal[] values) {return Case_all(values, Bool_.N);}
+	public KeyVal[] Uc(KeyVal[] values) {return Case_all(values, Bool_.Y);}
+	private KeyVal[] Case_all(KeyVal[] values, boolean upper) {
 		Scrib_args args = new Scrib_args(values);
-		Xol_lang lang = lang_(values);
-		byte[] word = args.Get_bry_or_empty(1);
-		return Scrib_kv_utl.base1_obj_(lang.Case_mgr().Case_build_lower(word, 0, word.length));
-	}
-	public KeyVal[] Uc(KeyVal[] values) {
-		Xol_lang lang = lang_(values);
-		byte[] word = Scrib_kv_utl.Val_to_bry(values, 1);
-		return Scrib_kv_utl.base1_obj_(lang.Case_mgr().Case_build_upper(word, 0, word.length));
+		Xol_lang lang = lang_(args);
+		byte[] word = args.Pull_bry(1);
+		return Scrib_kv_utl.base1_obj_(lang.Case_mgr().Case_build(upper, word, 0, word.length));
 	}
 	public KeyVal[] CaseFold(KeyVal[] values) {return Uc(values);}	// REF.MW:Language.php!caseFold; http://www.w3.org/International/wiki/Case_folding
 	public KeyVal[] FormatNum(KeyVal[] values) {
-		Xol_lang lang = lang_(values);
-		Object num_obj = Scrib_kv_utl.Val_to_obj(values, 1);
-		byte[] num_bry = ByteAry_.new_utf8_(Object_.XtoStr_OrEmpty(num_obj));
-		byte[] rv = Pf_str_formatnum.Format_num(lang, num_bry, ByteAry_.Empty);
+		Scrib_args args = new Scrib_args(values);
+		Xol_lang lang = lang_(args);
+		byte[] num = args.Form_bry_or_null(1);
+		// boolean commafy = args.Get_bool_from_tableor_fail(1); // TODO: WHEN: when encountered
+		byte[] rv = Pf_str_formatnum.Format_num(lang, num, ByteAry_.Empty);
 		return Scrib_kv_utl.base1_obj_(rv);
 	}
 	public KeyVal[] FormatDate(KeyVal[] values) {
-		Xol_lang lang = lang_(values);
-		byte[] fmt_bry = null;
-		byte[] date_bry = ByteAry_.Empty;
-		boolean utc = false;
-		int values_len = values.length;
-		for (int i = 1; i < values_len; i++) {
-			KeyVal kv = values[i];
-			int kv_key = Int_.cast_(kv.Key_as_obj());
-			Object kv_val = kv.Val();
-			switch (kv_key) {
-				case 2: fmt_bry = ByteAry_.new_utf8_((String)kv_val); break;
-				case 3: date_bry = ByteAry_.new_utf8_((String)kv_val); break;
-				case 4: utc = Bool_.cast_(kv_val);  break;
-				default: throw Err_.unhandled(kv_key);
-			}
-		}
-//			byte[] date_bry = Scrib_kv_utl.Val_to_bry_or(values, 2, ByteAry_.Empty);	// NOTE: must supply or (date sometimes null); use ByteAry_.Empty b/c this is what Pf_xtn_time.ParseDate takes; DATE:2013-04-05
-//			boolean utc = Scrib_kv_utl.Val_to_bool_or(values, 3, false);
+		Scrib_args args = new Scrib_args(values);
+		Xol_lang lang = lang_(args);
+		byte[] fmt_bry = args.Pull_bry(1);
+		byte[] date_bry = args.Cast_bry_or_empty(2);	// NOTE: optional empty is required b/c date is sometimes null; use ByteAry_.Empty b/c this is what Pf_xtn_time.ParseDate takes; DATE:2013-04-05
+		boolean utc = args.Cast_bool_or_n(3);
 		ByteAryBfr tmp_bfr = engine.App().Utl_bry_bfr_mkr().Get_b512();
 		DateAdpFormatItm[] fmt_ary = Pf_xtn_time.Parse(engine.Wiki().Ctx(), fmt_bry);
 		DateAdp date = Pf_xtn_time.ParseDate(date_bry, utc, tmp_bfr);	// NOTE: MW is actually more strict about date; however, not sure about PHP's date parse, so using more lax version
@@ -171,42 +159,41 @@ class Scrib_lib_language implements Scrib_lib {
 		return Scrib_kv_utl.base1_obj_(rv);
 	}
 	public KeyVal[] ParseFormattedNumber(KeyVal[] values) {
-		Xol_lang lang = lang_(values);
-		int values_len = values.length;
-		if (values_len == 1 || values[1] == null) return Scrib_kv_utl.base1_obj_(null);	// ParseFormattedNumber can sometimes take 1 arg ({'en'}), or null arg ({'en', null}); return null (not ""); DATE:2014-01-07
-		byte[] num = Scrib_kv_utl.Val_to_bry(values, 1);
+		Scrib_args args = new Scrib_args(values);
+		Xol_lang lang = lang_(args);
+		byte[] num = args.Form_bry_or_null(1);
+		if (num == null) return Scrib_kv_utl.base1_obj_null(); // ParseFormattedNumber can sometimes take 1 arg ({'en'}), or null arg ({'en', null}); return null (not ""); DATE:2014-01-07
 		byte[] rv = lang.Num_fmt_mgr().Raw(gplx.intl.Gfo_num_fmt_mgr.Tid_raw, num);
 		return Scrib_kv_utl.base1_obj_(rv);
 	}
 	public KeyVal[] formatDuration(KeyVal[] values) {throw Err_.not_implemented_();}
 	public KeyVal[] getDurationIntervals(KeyVal[] values) {throw Err_.not_implemented_();}
 	public KeyVal[] ConvertPlural(KeyVal[] values) {
-		Xol_lang lang = lang_(values);
-		int count = Scrib_kv_utl.Val_to_int(values, 1);
-		int values_len = values.length;
-		byte[][] words = new byte[values_len - 2][];
-		for (int i = 2; i < values_len; i++) {
-			words[i - 2] = Scrib_kv_utl.Val_to_bry(values, i);
-		}
+		Scrib_args args = new Scrib_args(values);
+		Xol_lang lang = lang_(args);
+		int count = args.Pull_int(1);
+		byte[][] words = args.Cast_params_as_bry_ary_or_empty(2);
 		byte[] rv = lang.Plural().Plural_eval(lang, count, words);
 		return Scrib_kv_utl.base1_obj_(rv);
 	}
 	public KeyVal[] ConvertGrammar(KeyVal[] values) {
-		Xol_lang lang = lang_(values);
-		byte[] word = Scrib_kv_utl.Val_to_bry(values, 1);
-		byte[] type = Scrib_kv_utl.Val_to_bry(values, 2);
+		Scrib_args args = new Scrib_args(values);
+		Xol_lang lang = lang_(args);
+		byte[] word = args.Pull_bry(1);
+		byte[] type = args.Pull_bry(2);
 		ByteAryBfr bfr = engine.Wiki().Utl_bry_bfr_mkr().Get_b512();
 		lang.Grammar().Grammar_eval(bfr, lang, word, type);
 		return Scrib_kv_utl.base1_obj_(bfr.Mkr_rls().XtoStrAndClear());
 	}
 	public KeyVal[] gender(KeyVal[] values) {throw Err_.not_implemented_();}
 	public KeyVal[] IsRTL(KeyVal[] values) {
-		Xol_lang lang = lang_(values);
+		Scrib_args args = new Scrib_args(values);
+		Xol_lang lang = lang_(args);
 		return Scrib_kv_utl.base1_obj_(!lang.Dir_ltr());
 	}
-	private Xol_lang lang_(KeyVal[] values) {
-		byte[] lang_code = Scrib_kv_utl.Val_to_bry(values, 0);
-		Xol_lang lang = engine.App().Lang_mgr().Get_by_key_or_load(lang_code);
+	private Xol_lang lang_(Scrib_args args) {
+		byte[] lang_code = args.Cast_bry_or_null(0);
+		Xol_lang lang = lang_code == null ? null : engine.App().Lang_mgr().Get_by_key_or_load(lang_code);
 		if (lang == null) throw Err_.new_fmt_("lang_code is not valid: {0}", String_.new_utf8_(lang_code));
 		return lang;
 	}

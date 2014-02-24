@@ -20,11 +20,13 @@ import gplx.dbs.*; import gplx.gfui.*; import gplx.fsdb.*;
 import gplx.xowa.files.wiki_orig.*;
 class Fs_root_dir implements GfoInvkAble {
 	private Gfo_usr_dlg usr_dlg; private Xof_img_wkr_query_img_size img_size_wkr;
-	private Io_url url; private boolean recurse; private boolean case_match;
+	private Io_url url; private boolean recurse = true; private boolean case_match;
 	private Orig_fil_mgr cache = new Orig_fil_mgr(), fs_fil_mgr;
+	private Db_provider_mkr provider_mkr;
 	private Db_provider provider; private Fsdb_cfg_tbl cfg_tbl; private Orig_fil_tbl fil_tbl;
 	private int fil_id_next = 0;
-	public void Init(Fsdb_cfg_tbl cfg_tbl, Orig_fil_tbl fil_tbl, Gfo_usr_dlg usr_dlg, Xof_img_wkr_query_img_size img_size_wkr) {
+	public void Init(Io_url url, Db_provider_mkr provider_mkr, Fsdb_cfg_tbl cfg_tbl, Orig_fil_tbl fil_tbl, Gfo_usr_dlg usr_dlg, Xof_img_wkr_query_img_size img_size_wkr) {
+		this.url = url; this.provider_mkr = provider_mkr;
 		this.cfg_tbl = cfg_tbl; this.fil_tbl = fil_tbl; this.usr_dlg = usr_dlg; this.img_size_wkr = img_size_wkr;
 		cache.Case_match_(case_match);
 	}
@@ -64,13 +66,13 @@ class Fs_root_dir implements GfoInvkAble {
 		int fils_len = fils.length;
 		for (int i = 0; i < fils_len; i++) {
 			Io_url fil = fils[i];
-			byte[] fil_name_bry = ByteAry_.new_utf8_(fil.NameOnly());
+			byte[] fil_name_bry = ByteAry_.new_utf8_(fil.NameAndExt());
 			Orig_fil_itm fil_itm = rv.Get_by_ttl(fil_name_bry);
 			if (fil_itm != Orig_fil_itm.Null) {
 				usr_dlg.Warn_many("", "", "file already exists: cur=~{0} new=~{1}", fil_itm.Fil_url().Raw(), fil.Raw());
 				continue;
 			}
-			Xof_ext ext = Xof_ext_.new_by_ext_(ByteAry_.new_utf8_(fil.Ext()));
+			Xof_ext ext = Xof_ext_.new_by_ttl_(fil_name_bry);
 			fil_itm = new Orig_fil_itm().Init_by_make(fil, ext.Id());
 			rv.Add(fil_itm);
 		}
@@ -79,7 +81,7 @@ class Fs_root_dir implements GfoInvkAble {
 	private Db_provider Init_db_fil_mgr() {
 		Io_url db_url = url.GenSubFil("orig_regy.sqlite3");
 		BoolRef created_ref = BoolRef.n_();
-		provider = Sqlite_engine_.Provider_load_or_make_(db_url, created_ref);
+		provider = provider_mkr.Load_or_make_(db_url, created_ref);
 		boolean created = created_ref.Val();
 		cfg_tbl.Ctor(provider, created);
 		fil_tbl.Ctor(provider, created);

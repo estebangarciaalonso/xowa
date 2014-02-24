@@ -30,6 +30,7 @@ public class Scrib_engine {
  		lib_message = new Scrib_lib_message(this);
  		lib_text = new Scrib_lib_text(this);
 		lib_wikibase = new Scrib_lib_wikibase(this);
+		lib_wikibase_entity = new Scrib_lib_wikibase_entity(this);
 	}
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
@@ -46,6 +47,7 @@ public class Scrib_engine {
 	@gplx.Internal protected Scrib_lib_title Lib_title() {return lib_title;} Scrib_lib_title lib_title;
 	@gplx.Internal protected Scrib_lib_message Lib_message() {return lib_message;} Scrib_lib_message lib_message;
 	@gplx.Internal protected Scrib_lib_wikibase Lib_wikibase() {return lib_wikibase;} Scrib_lib_wikibase lib_wikibase;
+	@gplx.Internal protected Scrib_lib_wikibase_entity Lib_wikibase_entity() {return lib_wikibase_entity;} Scrib_lib_wikibase_entity lib_wikibase_entity;
 	@gplx.Internal protected Scrib_lib_text Lib_text() {return lib_text;} Scrib_lib_text lib_text;
 	public Scrib_engine Init() {	// REF:LuaCommon.php!Load
 		Scrib_xtn_mgr opts = (Scrib_xtn_mgr)app.Xtn_mgr().Get_or_fail(Scrib_xtn_mgr.XTN_KEY);
@@ -57,7 +59,7 @@ public class Scrib_engine {
 		,	root_dir.GenSubFil_nest("engines", "LuaStandalone", "mw_main.lua").Raw()
 		,	root_dir.Raw()
 		);
-		Init_register(script_dir, lib_mw, lib_uri, lib_ustring, lib_language, lib_site, lib_title, lib_text, lib_message, lib_wikibase);
+		Init_register(script_dir, lib_mw, lib_uri, lib_ustring, lib_language, lib_site, lib_title, lib_text, lib_message, lib_wikibase, lib_wikibase_entity);
 		return this;
 	}
 	private void Init_register(Io_url script_dir, Scrib_lib... ary) {

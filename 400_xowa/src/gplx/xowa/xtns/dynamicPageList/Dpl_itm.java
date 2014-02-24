@@ -62,7 +62,7 @@ class Dpl_itm {
 					key_id = Dpl_itm_keys.Parse(src, fld_bgn, fld_end, Dpl_itm_keys.Key_null);
 					if (key_id == Dpl_itm_keys.Key_null) {	// unknown key; warn and set pos to end of line; EX: "unknown=";
 						Parse_missing_key(usr_dlg, page_ttl, src, fld_bgn, fld_end);
-						fld_bgn = ByteAry_.FindFwd(src, Byte_ascii.NewLine, pos);
+						fld_bgn = Byte_ary_finder.Find_fwd(src, Byte_ascii.NewLine, pos);
 						if (fld_bgn == ByteAry_.NotFound) loop = false;
 					}
 					else {									// known key; set pos to val_bgn

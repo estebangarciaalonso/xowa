@@ -38,11 +38,11 @@ class Xosrh_scanner {
 				}
 				switch (cur_tid) {
 					case Xosrh_qry_tkn.Tid_space:	// discard spaces
-						pos = Xop_lxr_.Find_fwd_while(src, src_len, pos, Byte_ascii.Space);
+						pos = Byte_ary_finder.Find_fwd_while(src, pos, src_len, Byte_ascii.Space);
 						break;
 					case Xosrh_qry_tkn.Tid_quote:	// find end quote and add as word
 						int quote_bgn = pos + 1;
-						int quote_end = ByteAry_.FindFwd(src, Byte_ascii.Quote, quote_bgn, src_len);
+						int quote_end = Byte_ary_finder.Find_fwd(src, Byte_ascii.Quote, quote_bgn, src_len);
 						if (quote_end == ByteAry_.NotFound) throw Err_.new_fmt_("could not find end quote: {0}", String_.new_utf8_(src));
 						Tkns_add_word(Xosrh_qry_tkn.Tid_word_quoted, quote_bgn, quote_end);
 						pos = quote_end + 1;		// +1 to place after quote
@@ -117,7 +117,7 @@ class Xosrh_scanner {
 			byte[] cur_word = ByteAry_.Mid(src, src_bgn, src_end);
 			byte[][] words = gplx.xowa.bldrs.imports.Xob_search_base.Split(null, tmp_list, tmp_bfr, cur_word);
 			int words_len = words.length;
-			if (words_len == 1 && !ByteAry_.Eq(words[0], cur_word) && ByteAry_.FindFwd(cur_word, Byte_ascii.Asterisk) == -1) {
+			if (words_len == 1 && !ByteAry_.Eq(words[0], cur_word) && Byte_ary_finder.Find_fwd(cur_word, Byte_ascii.Asterisk) == -1) {
 				tkns.Add(Xosrh_qry_tkn.new_bry_(tid, words[0]));
 				return;
 			}

@@ -27,7 +27,7 @@ public class Xof_img_wkr_api_size_base_wmf extends Xof_img_wkr_api_size_base {
 		rv.Clear();
 		int xml_len = xml.length;
 		int pos = 0;
-		pos = ByteAry_.FindFwd(xml, Bry_xml_ii			, pos, xml_len); if (pos == ByteAry_.NotFound) return Parse_xml_failed(gui_wtr, xml);
+		pos = Byte_ary_finder.Find_fwd(xml, Bry_xml_ii			, pos, xml_len); if (pos == ByteAry_.NotFound) return Parse_xml_failed(gui_wtr, xml);
 		pos += Bry_xml_ii.length;
 
 		if (Parse_xml_val(parse_xml_rng, gui_wtr, xml, xml_len, pos, Bry_xml_width))
@@ -41,7 +41,7 @@ public class Xof_img_wkr_api_size_base_wmf extends Xof_img_wkr_api_size_base {
 			url_parser.Parse(url, file_url, 0, file_url.length);
 			rv.Reg_wiki_(url.Site());
 			byte[] page = Xoa_ttl.Replace_spaces(url.Page());
-			int colon_pos = ByteAry_.FindFwd(page, Byte_ascii.Colon, 0, page.length);
+			int colon_pos = Byte_ary_finder.Find_fwd(page, Byte_ascii.Colon, 0, page.length);
 			if (colon_pos != ByteAry_.NotFound)
 				page = ByteAry_.Mid(page, colon_pos + 1, page.length);
 			rv.Reg_page_(page);
@@ -52,9 +52,9 @@ public class Xof_img_wkr_api_size_base_wmf extends Xof_img_wkr_api_size_base {
 	private static Gfo_url_parser url_parser = new Gfo_url_parser(); static Gfo_url url = new Gfo_url();
 	private static boolean Parse_xml_val(Int_2_ref rv, Xog_win_wtr gui_wtr, byte[] xml, int xml_len, int pos, byte[] key) {
 		int bgn = 0, end = 0;
-		bgn = ByteAry_.FindFwd(xml, key					, pos, xml_len); if (bgn == ByteAry_.NotFound) return false;
+		bgn = Byte_ary_finder.Find_fwd(xml, key					, pos, xml_len); if (bgn == ByteAry_.NotFound) return false;
 		bgn += key.length;
-		end = ByteAry_.FindFwd(xml, Byte_ascii.Quote	, bgn, xml_len); if (end == ByteAry_.NotFound) return false;
+		end = Byte_ary_finder.Find_fwd(xml, Byte_ascii.Quote	, bgn, xml_len); if (end == ByteAry_.NotFound) return false;
 		rv.Val_all_(bgn, end);
 		return true;
 	}

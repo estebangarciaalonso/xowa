@@ -27,7 +27,7 @@ public class Xoa_url {
 	public Xow_wiki Wiki() {return wiki;} public Xoa_url Wiki_(Xow_wiki v) {wiki = v; return this;} private Xow_wiki wiki;
 	public byte[] Page_bry() {return page_bry;} public Xoa_url Page_bry_(byte[] v) {page_bry = v; return this;} private byte[] page_bry;
 	int Page_bgn(int raw_len) {
-		int wiki_pos = ByteAry_.FindFwd(raw, Xoh_href_parser.Href_wiki_bry, 0, raw_len);	 // look for /wiki/
+		int wiki_pos = Byte_ary_finder.Find_fwd(raw, Xoh_href_parser.Href_wiki_bry, 0, raw_len);	 // look for /wiki/
 		return wiki_pos == ByteAry_.NotFound ? ByteAry_.NotFound : wiki_pos + Xoh_href_parser.Href_wiki_bry.length;
 	}
 	public byte[] Page_full() {

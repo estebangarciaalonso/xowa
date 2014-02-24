@@ -43,4 +43,14 @@ public class Scrib_lib_wikibase_tst {
 		,	"      en;b"
 		));
 	}
+	@Test  public void GetEntity_property() {	// PURPOSE: getEntity should be able to convert "p2" to "Property:P2"; EX:es.w:Arnold_Gesell; DATE:2014-02-18
+		Wdata_wiki_mgr_fxt wdata_fxt = new Wdata_wiki_mgr_fxt().Init(fxt.Parser_fxt(), false);
+		wdata_fxt.Init_pages_add(wdata_fxt.page_bldr_("Property:p2").Label_add("en", "b").Xto_page_doc());
+		fxt.Test_lib_proc(lib, Scrib_lib_wikibase.Invk_getEntity, Object_.Ary("p2"								), String_.Concat_lines_nl
+		(	""
+		,	"  Property:p2;item;"
+		,	"    "
+		,	"      en;b"
+		));
+	}
 }	

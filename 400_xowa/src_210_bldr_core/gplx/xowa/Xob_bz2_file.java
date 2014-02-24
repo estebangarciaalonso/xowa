@@ -25,8 +25,8 @@ public class Xob_bz2_file {
 	public Xob_bz2_file Parse(String fil_name) {return Parse(ByteAry_.new_ascii_(fil_name));}
 	public Xob_bz2_file Parse(byte[] fil_name) {
 		int fil_name_len = fil_name.length;
-		int dash_0 = ByteAry_.FindFwd(fil_name, Byte_ascii.Dash, 0			, fil_name_len); if (dash_0 == ByteAry_.NotFound) throw Err_mgr._.parse_obj_(this, fil_name);
-		int dash_1 = ByteAry_.FindFwd(fil_name, Byte_ascii.Dash, dash_0 + 1	, fil_name_len); if (dash_1 == ByteAry_.NotFound) throw Err_mgr._.parse_obj_(this, fil_name);
+		int dash_0 = Byte_ary_finder.Find_fwd(fil_name, Byte_ascii.Dash, 0			, fil_name_len); if (dash_0 == ByteAry_.NotFound) throw Err_mgr._.parse_obj_(this, fil_name);
+		int dash_1 = Byte_ary_finder.Find_fwd(fil_name, Byte_ascii.Dash, dash_0 + 1	, fil_name_len); if (dash_1 == ByteAry_.NotFound) throw Err_mgr._.parse_obj_(this, fil_name);
 		domain = Parse__domain_name(fil_name, 0, dash_0);
 		date = String_.new_ascii_(fil_name, dash_0 + 1, dash_1);
 		tid = Parse__tid(fil_name, dash_1 + 1, fil_name_len);

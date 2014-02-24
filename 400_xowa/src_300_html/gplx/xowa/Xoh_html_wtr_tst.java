@@ -19,6 +19,7 @@ package gplx.xowa; import gplx.*;
 import org.junit.*;
 public class Xoh_html_wtr_tst {
 	private Xop_fxt fxt = new Xop_fxt();
+	@After public void term() {fxt.Init_para_n_();}
 	@Test  public void Hr_basic()					{fxt.Test_parse_page_wiki_str("----"				, "<hr/>");}
 	@Test  public void Hr_extended()				{fxt.Test_parse_page_wiki_str("--------"			, "<hr/>");}
 	@Test  public void Lnki_basic()					{fxt.Test_parse_page_wiki_str("[[a]]"				, "<a href=\"/wiki/A\">a</a>");}
@@ -207,7 +208,7 @@ public class Xoh_html_wtr_tst {
 			));
 	}
 	@Test  public void Para_hdr_list() {
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			( "==a=="
 			, ""
@@ -223,10 +224,10 @@ public class Xoh_html_wtr_tst {
 			, "  </li>"
 			, "</ul>"
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Para_nl_is_space() {
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			( "a"
 			, "b"
@@ -236,10 +237,10 @@ public class Xoh_html_wtr_tst {
 			, "</p>"
 			, ""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Para_nl_2_2() {
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			( "a"
 			, ""
@@ -257,18 +258,19 @@ public class Xoh_html_wtr_tst {
 			, "</p>"
 			, ""
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Div_2() {	// WP:[[Air]]#Density of air
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<div>a</div>"
 			,	""
 			,	"<div>b</div>"
 			), String_.Concat_lines_nl_skipLast
-			(	"<div>a</div><div>b</div>"	// FUTURE: should be \n between divs; WHEN: rework para_parser
+			(	"<div>a</div>"
+			,	"<div>b</div>"
 			));
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Tblw() {
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl
@@ -354,9 +356,9 @@ public class Xoh_html_wtr_tst {
 			));
 	}
 	@Test  public void Bang_doesnt_force_tbl() {
-		fxt.Ctx().Para().Enabled_y_();
+		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str("a! b! c", "<p>a! b! c\n</p>\n");
-		fxt.Ctx().Para().Enabled_n_();
+		fxt.Init_para_n_();
 	}
 	@Test  public void Err_nlOnly() {
 		fxt.Test_parse_page_wiki_str("{{\n}}", "{{\n}}");	// NOTE: was  {{}}

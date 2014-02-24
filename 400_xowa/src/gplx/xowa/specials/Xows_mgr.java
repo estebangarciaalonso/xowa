@@ -55,7 +55,7 @@ public class Xows_mgr {
 		hash.Add_str_obj("statistics"				, page_statistics);
 	}
 	public void Special_gen(Xoa_url calling_url, Xoa_page page, Xow_wiki wiki, Xoa_ttl ttl) {
-		int slash_pos = ByteAry_.FindFwd(ttl.Page_txt_wo_qargs(), Xoa_ttl.Subpage_spr);	// check for slash
+		int slash_pos = Byte_ary_finder.Find_fwd(ttl.Page_txt_wo_qargs(), Xoa_ttl.Subpage_spr);	// check for slash
 		byte[] special_name = slash_pos == ByteAry_.NotFound
 				? ttl.Base_txt_wo_qarg()												// no slash found; use base_txt; ignore qry args and just get page_names; EX: Search/Earth?fulltext=y; Allpages?from=Earth...
 				: ByteAry_.Mid(ttl.Page_txt_wo_qargs(), 0, slash_pos);					// slash found; use root page; EX: Special:ItemByTitle/enwiki/Earth

@@ -136,7 +136,7 @@ class Wdata_pf_property_data_fxt {
 		Xop_root_tkn root = tkn_mkr.Root(raw_bry);
 		wiki.Parser().Parse_page_tmpl(root, ctx, tkn_mkr, raw_bry);
 		Xot_invk tkn = (Xot_invk)root.Subs_get(0);
-		actl.Parse(ctx, raw_bry, Xot_invk_mock.Null, tkn, pfunc);
+		actl.Init_by_parse(ctx, raw_bry, Xot_invk_mock.Null, tkn, pfunc);
 		
 		if (expd_id_int != -1) Tfds.Eq(expd_id_int, actl.Id_int());
 		if (expd_q != null) Tfds.Eq_bry(expd_q, actl.Q());

@@ -58,7 +58,7 @@ public class Xoa_app implements GfoInvkAble {
 		log_wtr.Init();
 		gui_mgr.Init();
 		fsys_mgr.Init();
-		user.App_init();
+		user.Init_by_app();
 		file_mgr.Init_by_app();
 		wiki_mgr.Init_by_app();
 		gplx.xowa.utls.upgrades.Xoa_upgrade_mgr.Check(this);

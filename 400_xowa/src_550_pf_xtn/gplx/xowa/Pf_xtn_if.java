@@ -28,9 +28,9 @@ class Pf_xtn_if extends Pf_func_base {
 			}
 		}
 		if (val_is_empty)
-			bfr.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self.Args_len(), 1));
+			bfr.Add(Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self.Args_len(), 1));
 		else
-			bfr.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self.Args_len(), 0));
+			bfr.Add(Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self.Args_len(), 0));
 	}
 	@Override public int Id() {return Xol_kwd_grp_.Id_xtn_if;}
 	@Override public Pf_func New(int id, byte[] name) {return new Pf_xtn_if().Name_(name);}

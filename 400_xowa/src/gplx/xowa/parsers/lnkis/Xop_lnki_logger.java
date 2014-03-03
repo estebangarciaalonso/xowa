@@ -17,5 +17,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.parsers.lnkis; import gplx.*; import gplx.xowa.*; import gplx.xowa.parsers.*;
 public interface Xop_lnki_logger {
-	void Wkr_exec(Xop_ctx ctx, byte[] src, Xop_lnki_tkn lnki);
+	void Wkr_exec(Xop_ctx ctx, byte[] src, Xop_lnki_tkn lnki, byte lnki_src_tid);
 }

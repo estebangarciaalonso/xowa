@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.files.qrys.fs_roots; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.qrys.*;
+package gplx.xowa.files.fsdb.fs_roots; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
 import gplx.dbs.*;
 interface Orig_fil_tbl extends RlsAble {
 	void Ctor(Db_provider provider, boolean created);
@@ -37,7 +37,7 @@ class Orig_fil_tbl_sql implements Orig_fil_tbl {
 		if (created) Create_table(provider);
 	}
 	public Orig_fil_itm Select_itm(byte[] ttl) {
-		if (stmt_select == null) stmt_select = provider.Prepare(Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(Db_crt_.eq_("")));
+		if (stmt_select == null) stmt_select = provider.Prepare(Db_qry_.select_().From_(Tbl_name).Cols_all_().Where_(Db_crt_.eq_(Fld_fil_name, "")));
 		Orig_fil_itm rv = Orig_fil_itm.Null;
 		DataRdr rdr = stmt_select.Clear().Val_bry_(ttl).Exec_select();
 		if (rdr.MoveNextPeer())

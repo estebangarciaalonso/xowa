@@ -453,10 +453,25 @@ public class ByteAry_ {
 	}
 	public static byte X_to_byte_by_int(byte[] ary, int bgn, int end, byte or)	{return (byte)X_to_int_or(ary, bgn, end, or);}
 	public static int X_to_int(byte[] ary)										{return X_to_int_or(ary, null, 0, ary.length, -1);}
-	public static int X_to_int_or(byte[] ary, int or)							{if (ary == null) return or; return X_to_int_or(ary, null, 0, ary.length, or);}
+	public static int X_to_int_or_fail(byte[] ary)								{
+		int rv = X_to_int_or(ary, null, 0, ary.length, Int_.MinValue);
+		if (rv == Int_.MinValue) throw Err_.new_fmt_("could not parse to int; val={0}", String_.new_utf8_(ary));
+		return rv;
+	}
+	public static boolean X_to_bool_by_int_or_fail(byte[] ary) {
+		int rv = X_to_int_or(ary, null, 0, ary.length, Int_.MinValue);
+		switch (rv) {
+			case 0: return false;
+			case 1: return true;
+			default: throw Err_.new_fmt_("could not parse to boolean int; val={0}", String_.new_utf8_(ary));
+		}
+	}
+	public static int X_to_int_or(byte[] ary, int or)							{return X_to_int_or(ary, null, 0, ary.length, or);}
 	public static int X_to_int_or(byte[] ary, int bgn, int end, int or)			{return X_to_int_or(ary, null, bgn, end, or);}
 	public static int X_to_int_or(byte[] ary, byte[] ignore_ary, int bgn, int end, int or) {
-		if (end == bgn) return or;	// null-len
+		if (	ary == null
+			||	end == bgn				// null-len
+			)	return or;
 		int rv = 0, multiple = 1;
 		for (int i = end - 1; i >= bgn; i--) {	// -1 b/c end will always be next char; EX: {{{1}}}; bgn = 3, end = 4
 			byte b = ary[i];
@@ -782,6 +797,15 @@ public class ByteAry_ {
 			ary[i] = end_val_new;
 			if (end_val_new > (end_val_old & 0xff)) break;	// PATCH.JAVA:need to convert to unsigned byte
 		}
+		return ary;
+	}
+	public static byte[] Upper_1st(byte[] ary) {
+		if (ary == null) return null;
+		int len = ary.length;
+		if (len == 0) return ary;
+		byte b = ary[0];
+		if (b > 96 && b < 123)
+			ary[0] = (byte)(b - 32);
 		return ary;
 	}
 	public static byte[] Upper_ascii(byte[] ary) {

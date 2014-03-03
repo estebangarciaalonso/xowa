@@ -92,9 +92,11 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 		if (!tbl_is_xml) {
 			switch (wlxr_type) {
 				case Tblw_type_td:
-					Xop_tblw_tkn tb = ctx.Stack_get_tbl_tb();	// get enclosing tb
-					if (tb.Tblw_xml())							// enclosed by <table> but "\n|"; treat "\n|" as text, not as td; EX:ru.w:Сочи; DATE:2014-02-22
+					Xop_tblw_tkn tb = ctx.Stack_get_tbl_tb();		// get enclosing tb
+					if (tb.Tblw_xml()) {							// enclosed by <table> but "\n|"; treat "\n|" as text, not as td; EX:ru.w:Сочи; DATE:2014-02-22
+						// ctx.Para().Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1);
 						return ctx.LxrMake_txt_(cur_pos);
+					}
 					break;
 			}
 		}
@@ -155,7 +157,9 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 					case Xop_tkn_itm_.Tid_tblw_th:			// fix;  <th><tr>           -> <th></th></tr><tr>
 						if (!tbl_is_xml)
 							ctx.Para().Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1);	// simulate "\n"; 2012-12-08
-						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), true, bgn_pos, bgn_pos);
+						int stack_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr);
+						if (stack_pos != Xop_ctx.Stack_not_found)							// don't pop <tr> if none found; EX:en.w:Turks_in_Denmark DATE:2014-03-02
+							ctx.Stack_pop_til(root, src, stack_pos, true, bgn_pos, bgn_pos);
 						break;
 					case Xop_tkn_itm_.Tid_tblw_tr:			// fix;  <tr><tr>           -> <tr>							
 						if (prv_tkn.Tblw_subs_len() == 0) {	// NOTE: set prv_row to ignore, but do not pop; see Tr_dupe_xnde and [[Jupiter]]; only invoke if same type; EX: <tr><tr> but not |-<tr>; DATE:2013-12-09

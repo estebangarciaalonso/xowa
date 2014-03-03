@@ -25,7 +25,7 @@ public class Scrib_pf_invoke extends Pf_func_base {
 		byte[] mod_name = Eval_argx(ctx, src, caller, self);
 		if (ByteAry_.Len_eq_0(mod_name)) {Error(bfr, wiki.Msg_mgr(), Err_mod_missing); return;}		// EX: "{{#invoke:}}"
 		int args_len = self.Args_len();
-		byte[] fnc_name = Pf_func_.EvalArgOr(ctx, src, caller, self, args_len, 0, null);
+		byte[] fnc_name = Pf_func_.Eval_arg_or(ctx, src, caller, self, args_len, 0, null);
 		Xop_log_invoke_wkr invoke_wkr = ctx.Xtn__scribunto__invoke_wkr();
 		long log_time_bgn = 0;
 		if (invoke_wkr != null) {

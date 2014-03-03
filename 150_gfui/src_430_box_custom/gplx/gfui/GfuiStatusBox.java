@@ -33,11 +33,11 @@ public class GfuiStatusBox extends GfuiTextBox implements UsrMsgWkr { 	public Gf
 		Invoke(GfoInvkAbleCmd.arg_(this, Invk_WriteText, text));
 	}
 	public void WriteText(String text) {
-		this.Text_(text);
 		if (!this.Visible()) {
 			this.Visible_set(true);
 			this.Zorder_front();
 		}
+		this.Text_(text);
 		timer.Enabled_off().Enabled_on();	// Enabled_off().Enabled_on() resets timer; timer can be at second 1 of 3, and this will reset back to timer 0
 		GfuiEnv_.DoEvents();				// WORKAROUND.WINFORMS: needed, else text will not refresh (ex: splash screen); NOTE!!: will cause other timers to fire! (ex: mediaPlaylistMgr)
 	}

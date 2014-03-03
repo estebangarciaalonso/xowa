@@ -249,22 +249,8 @@ public static final int
 , Id_xowa_wikidata_normal = 228
 , Id_xowa_wikidata_preferred = 229
 , Id_xowa_wikidata_links_special = 230
-, Id_listings_desc = 231
-, Id_listings_unknown = 232
-, Id_listings_phone = 233
-, Id_listings_phone_symbol = 234
-, Id_listings_fax = 235
-, Id_listings_fax_symbol = 236
-, Id_listings_email = 237
-, Id_listings_email_symbol = 238
-, Id_listings_tollfree = 239
-, Id_listings_tollfree_symbol = 240
-, Id_listings_checkin = 241
-, Id_listings_checkout = 242
-, Id_listings_position = 243
-, Id_listings_position_template = 244
 ;
-	public static final int Id__max = 245;
+	public static final int Id__max = 231;
 	public static Xol_msg_itm new_(int id, String key, String val) {return new_(id, ByteAry_.new_utf8_(key), ByteAry_.new_utf8_(val));}
 	public static Xol_msg_itm new_(int id, byte[] key, byte[] val) {
 		Xol_msg_itm rv = new Xol_msg_itm(id, key);
@@ -509,24 +495,10 @@ case Xol_msg_itm_.Id_xowa_wikidata_deprecated: return new_(Xol_msg_itm_.Id_xowa_
 case Xol_msg_itm_.Id_xowa_wikidata_normal: return new_(Xol_msg_itm_.Id_xowa_wikidata_normal, "xowa-wikidata-normal", "normal");
 case Xol_msg_itm_.Id_xowa_wikidata_preferred: return new_(Xol_msg_itm_.Id_xowa_wikidata_preferred, "xowa-wikidata-preferred", "preferred");
 case Xol_msg_itm_.Id_xowa_wikidata_links_special: return new_(Xol_msg_itm_.Id_xowa_wikidata_links_special, "xowa-wikidata-links-special", "Links (special wikis)");
-case Xol_msg_itm_.Id_listings_desc: return new_(Xol_msg_itm_.Id_listings_desc, "listings-desc", "Add tags for listing locations");
-case Xol_msg_itm_.Id_listings_unknown: return new_(Xol_msg_itm_.Id_listings_unknown, "listings-unknown", "Unknown destination");
-case Xol_msg_itm_.Id_listings_phone: return new_(Xol_msg_itm_.Id_listings_phone, "listings-phone", "phone");
-case Xol_msg_itm_.Id_listings_phone_symbol: return new_(Xol_msg_itm_.Id_listings_phone_symbol, "listings-phone-symbol", "☎");
-case Xol_msg_itm_.Id_listings_fax: return new_(Xol_msg_itm_.Id_listings_fax, "listings-fax", "fax");
-case Xol_msg_itm_.Id_listings_fax_symbol: return new_(Xol_msg_itm_.Id_listings_fax_symbol, "listings-fax-symbol", "");
-case Xol_msg_itm_.Id_listings_email: return new_(Xol_msg_itm_.Id_listings_email, "listings-email", "email");
-case Xol_msg_itm_.Id_listings_email_symbol: return new_(Xol_msg_itm_.Id_listings_email_symbol, "listings-email-symbol", "");
-case Xol_msg_itm_.Id_listings_tollfree: return new_(Xol_msg_itm_.Id_listings_tollfree, "listings-tollfree", "toll-free");
-case Xol_msg_itm_.Id_listings_tollfree_symbol: return new_(Xol_msg_itm_.Id_listings_tollfree_symbol, "listings-tollfree-symbol", "");
-case Xol_msg_itm_.Id_listings_checkin: return new_(Xol_msg_itm_.Id_listings_checkin, "listings-checkin", "Check-in: $1");
-case Xol_msg_itm_.Id_listings_checkout: return new_(Xol_msg_itm_.Id_listings_checkout, "listings-checkout", "check-out: $1");
-case Xol_msg_itm_.Id_listings_position: return new_(Xol_msg_itm_.Id_listings_position, "listings-position", "position: $1");
-case Xol_msg_itm_.Id_listings_position_template: return new_(Xol_msg_itm_.Id_listings_position_template, "listings-position-template", "");
 			default: throw Err_.unhandled(id);
 		}
 	}
-	public static Xol_msg_itm find_or_new_(ByteAryBfr tmp_bfr, Xow_wiki wiki, Xol_lang lang, Xol_msg_mgr msg_mgr, byte[] msg_key) {
+	public static Xol_msg_itm find_or_(ByteAryBfr tmp_bfr, Xow_wiki wiki, Xol_lang lang, Xol_msg_mgr msg_mgr, byte[] msg_key, boolean return_null) {
 		// bld title
 		Xow_ns ns = wiki.Ns_mgr().Ns_mediawiki();
 		tmp_bfr	.Add(ns.Name_db_w_colon())												// "MediaWiki:"
@@ -541,17 +513,22 @@ case Xol_msg_itm_.Id_listings_position_template: return new_(Xol_msg_itm_.Id_lis
 		// search for itm
 		byte[] msg_val = ByteAry_.Empty;
 		Xoa_page msg_page = ttl == null ? Xoa_page.Null : wiki.Data_mgr().Get_page(ttl, false);	// find page with ttl of "MediaWiki:message_name/lang_code"
-		if (msg_page.Missing()) {															// page not found; check lang
+		if (msg_page.Missing()) {														// page not found; check lang
 			Xol_msg_itm msg_itm_in_lang = lang.Msg_mgr().Itm_by_key_or_null(msg_key);
 			if (msg_itm_in_lang != null) return msg_itm_in_lang;						// msg found; return it;
 			msg_itm_in_lang = wiki.App().Lang_mgr().Lang_en().Msg_mgr().Itm_by_key_or_null(msg_key);
 			if (msg_itm_in_lang != null) return msg_itm_in_lang;
+			if (return_null) return null;
 		}
-		else {																			// page found; dump entire contents; also translate php to gfs (for $1 -> ~{0})
+		else																			// page found; dump entire contents; also translate php to gfs (for $1 -> ~{0})
 			msg_val = Pf_msg_mgr.Convert_php_to_gfs(msg_page.Data_raw(), tmp_bfr);
-		}
-		Xol_msg_itm msg_itm = wiki.Msg_mgr().Itm_by_key_or_new(msg_key);
+		Xol_msg_itm msg_itm = wiki.Msg_mgr().Get_or_make(msg_key);
 		update_val_(msg_itm, msg_val);
 		return msg_itm;
+	}
+	public static byte[] eval_(ByteAryBfr bfr, Xol_msg_itm tmp_msg_itm, byte[] val, Object... args) {
+		val = Pf_msg_mgr.Convert_php_to_gfs(val, bfr);
+		update_val_(tmp_msg_itm, val);
+		return tmp_fmtr.Bld_bry_many(bfr, args);
 	}
 }

@@ -17,11 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xow_msg_mgr implements GfoInvkAble {
+	private Xow_wiki wiki; Xol_lang lang; private Xol_msg_mgr msg_mgr;
 	public Xow_msg_mgr(Xow_wiki wiki, Xol_lang lang) {
 		this.wiki = wiki;
 		this.lang = lang;
 		this.msg_mgr = new Xol_msg_mgr(wiki, false);
-	}	private Xow_wiki wiki; Xol_lang lang; private Xol_msg_mgr msg_mgr;
+	}
 	public void Clear() {msg_mgr.Clear();}
 	public byte[] Val_by_id_args(int id, Object... args) {return Val_by_id_priv(id, args);}
 	public byte[] Val_by_id(int id) {return Val_by_id_priv(id, null);}
@@ -34,14 +35,24 @@ public class Xow_msg_mgr implements GfoInvkAble {
 		tmp_bfr.Mkr_rls();
 		return rv;
 	}
-	public Xol_msg_itm Itm_by_key_or_new(byte[] key) {return msg_mgr.Itm_by_key_or_new(key);}
+	public Xol_msg_itm Get_or_make(byte[] key) {return msg_mgr.Itm_by_key_or_new(key);}
+	public Xol_msg_itm Find_or_null(byte[] key) {
+		Xol_msg_itm itm = msg_mgr.Itm_by_key_or_null(key);
+		if (itm == null) {
+			ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
+			itm = Xol_msg_itm_.find_or_(tmp_bfr, wiki, lang, msg_mgr, key, true);
+			tmp_bfr.Mkr_rls();
+		}
+		return itm;
+	}
 	public byte[] Val_by_key_args(byte[] key, Object... args) {return Val_by_key(key, args);}
+	public byte[] Val_by_key_obj(String key) {return Val_by_key(ByteAry_.new_utf8_(key), null);}
 	public byte[] Val_by_key_obj(byte[] key) {return Val_by_key(key, null);}
 	private byte[] Val_by_key(byte[] key, Object[] args) {
 		Xol_msg_itm itm = msg_mgr.Itm_by_key_or_null(key);
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
 		if (itm == null)
-			itm = Xol_msg_itm_.find_or_new_(tmp_bfr, wiki, lang, msg_mgr, key);
+			itm = Xol_msg_itm_.find_or_(tmp_bfr, wiki, lang, msg_mgr, key, false);
 		byte[] rv = Val_by_itm(tmp_bfr, itm, args);
 		tmp_bfr.Mkr_rls();
 		return rv;

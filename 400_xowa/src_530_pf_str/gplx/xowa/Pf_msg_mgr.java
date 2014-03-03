@@ -35,7 +35,7 @@ public class Pf_msg_mgr {
 		boolean src_is_lang = true;
 		Xol_msg_itm msg_itm = page_lang.Msg_mgr().Itm_by_key_or_null(msg_key);		// search for itm in lang
 		if (msg_itm == null) {														// none found in lang
-			msg_itm = wiki.Msg_mgr().Itm_by_key_or_new(msg_key);					// create itm in wiki; do not create in lang, else diff wikis will share same items from [[MediaWiki:]]; DATE:2014-01-05
+			msg_itm = wiki.Msg_mgr().Get_or_make(msg_key);							// create itm in wiki; do not create in lang, else diff wikis will share same items from [[MediaWiki:]]; DATE:2014-01-05
 			src_is_lang = false;
 		}
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
@@ -99,7 +99,7 @@ public class Pf_msg_mgr {
 			found = true;
 		}
 		if (src_is_lang && found)	// src is lang, but data coming from wiki; create msg_itm from wiki (not lang), else dif wikis will share same item via lang; DATE:2014-01-05
-			msg_itm = wiki.Msg_mgr().Itm_by_key_or_new(msg_key);
+			msg_itm = wiki.Msg_mgr().Get_or_make(msg_key);
 		Xol_msg_itm_.update_val_(msg_itm, msg_val);
 		msg_itm.Search_mediawiki_(false);
 		return msg_itm;

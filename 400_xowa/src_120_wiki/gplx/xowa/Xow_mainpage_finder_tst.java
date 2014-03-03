@@ -54,10 +54,7 @@ public class Xow_mainpage_finder_tst {
 }
 class Xow_mainpage_finder_fxt {
 	public void Clear() {
-		Io_mgr._.InitEngine_mem();				// need to clear out mediawiki
-		fxt.Wiki().Lang().Msg_mgr().Clear();	// need to clear out lang
-		fxt.Wiki().Msg_mgr().Clear();			// need to clear out wiki.Msgs
-		fxt.Reset();
+		fxt.Reset_for_msgs();
 	}	private Xop_fxt fxt = new Xop_fxt();
 	public void Init_siteinfo(String mainpage_val) {
 		fxt.Wiki().Props().Main_page_(ByteAry_.new_ascii_(mainpage_val));

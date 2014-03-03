@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.files.qrys.fs_roots; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.qrys.*;
+package gplx.xowa.files.fsdb.fs_roots; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
 public class Orig_fil_itm {
 	public int Fil_uid() {return fil_uid;} private int fil_uid;
 	public byte[] Fil_name() {return fil_name;} private byte[] fil_name;
@@ -30,9 +30,9 @@ public class Orig_fil_itm {
 		}
 		return fil_url;
 	}	private Io_url fil_url;
-	public Orig_fil_itm Init_by_make(Io_url url, int ext_id) {
+	public Orig_fil_itm Init_by_make(Io_url url, byte[] name_bry, int ext_id) {
 		this.fil_url = url;
-		this.fil_name = ByteAry_.new_utf8_(url.NameAndExt());
+		this.fil_name = name_bry;
 		this.fil_dir_url = ByteAry_.new_utf8_(url.OwnerDir().Raw());
 		this.fil_ext_id = ext_id;
 		return this;

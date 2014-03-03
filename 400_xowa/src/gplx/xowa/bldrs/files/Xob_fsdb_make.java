@@ -32,14 +32,15 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 	private long time_bgn;
 	private Xodb_xowa_cfg_tbl tbl_cfg; private Db_provider provider; private Db_stmt db_select_stmt;
 	private Xof_bin_mgr src_mgr;
-	private Xof_fsdb_mgr_sql trg_fsdb_mgr = new Xof_fsdb_mgr_sql(); private Fsdb_mnt_mgr trg_mnt_mgr;
+	private Xof_fsdb_mgr_sql trg_fsdb_mgr; private Fsdb_mnt_mgr trg_mnt_mgr;
 	private ListAdp temp_files = ListAdp_.new_();
 	private Fsdb_xtn_img_itm tmp_img_itm = new Fsdb_xtn_img_itm(); private Fsdb_xtn_thm_itm tmp_thm_itm = Fsdb_xtn_thm_itm.new_(); private Fsdb_fil_itm tmp_fil_itm = new Fsdb_fil_itm();
 	private boolean app_restart_enabled = false;
 	public Xob_fsdb_make(Xob_bldr bldr, Xow_wiki wiki) {
 		this.Cmd_ctor(bldr, wiki);
+		trg_fsdb_mgr = new Xof_fsdb_mgr_sql(wiki);
 		trg_fsdb_mgr.Init_by_wiki(wiki);
-		Xof_fsdb_mgr_sql src_fsdb_mgr = new Xof_fsdb_mgr_sql();
+		Xof_fsdb_mgr_sql src_fsdb_mgr = new Xof_fsdb_mgr_sql(wiki);
 		src_fsdb_mgr.Init_by_wiki(wiki);
 		src_mgr = src_fsdb_mgr.Bin_mgr();			
 		trg_mnt_mgr = trg_fsdb_mgr.Mnt_mgr();

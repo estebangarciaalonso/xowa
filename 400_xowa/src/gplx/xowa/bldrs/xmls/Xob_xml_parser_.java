@@ -40,7 +40,7 @@ public class Xob_xml_parser_ {
 		, Bry_minor_bgn = ByteAry_.new_ascii_("<minor>"), Bry_minor_bgn_frag = ByteAry_.new_ascii_("<minor"), Bry_minor_end = ByteAry_.new_ascii_("</minor>")
 		, Bry_comment_bgn = ByteAry_.new_ascii_("<comment>"), Bry_comment_bgn_frag = ByteAry_.new_ascii_("<comment"), Bry_comment_end = ByteAry_.new_ascii_("</comment>")
 		, Bry_text_bgn = ByteAry_.new_ascii_("<text>"), Bry_text_bgn_frag = ByteAry_.new_ascii_("<text"), Bry_text_end = ByteAry_.new_ascii_("</text>")
-		, Bry_amp = ByteAry_.new_ascii_("&amp;"), Bry_quot = ByteAry_.new_ascii_("&quot;") , Bry_gt = ByteAry_.new_ascii_("&gt;"), Bry_lt = ByteAry_.new_ascii_("&lt;")
+		, Bry_amp = ByteAry_.new_ascii_("&amp;"), Bry_quot = ByteAry_.new_ascii_("&quot;"), Bry_gt = ByteAry_.new_ascii_("&gt;"), Bry_lt = ByteAry_.new_ascii_("&lt;")
 		, Bry_tab_ent = ByteAry_.new_ascii_("&#09;"), Bry_tab = ByteAry_.new_ascii_("\t"), Bry_cr_nl = ByteAry_.new_ascii_("\r\n"), Bry_cr = ByteAry_.new_ascii_("\r")			
 		;
 	public static final byte

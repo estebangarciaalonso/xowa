@@ -90,4 +90,20 @@ public class Xop_para_wkr_para_tst {
 		)
 		);
 	}
+	@Test  public void Ignore_cr() {	// PURPOSE: handle "\r\n"; EX: Special:MovePage; DATE:2014-03-02
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
+		(	"a\r"
+		,	"\r"
+		,	"b\r"
+		)
+		,	String_.Concat_lines_nl_skipLast
+		(	"<p>a"
+		,	"</p>"
+		,	""
+		,	"<p>b"
+		,	"</p>"
+		,	""
+		)
+		);
+	}
 }

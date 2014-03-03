@@ -18,9 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files.qrys; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.xowa.files.fsdb.*;
 public class Xof_qry_mgr {
-	private Xof_qry_wkr[] wkrs = null; private int wkrs_len;
+	private Xof_qry_wkr[] wkrs; private int wkrs_len;
 	private Xof_img_size img_size = new Xof_img_size();
-	public void Wkrs_(Xof_qry_wkr... wkrs) {this.wkrs = wkrs; wkrs_len = wkrs.length;}
+	public Xof_qry_mgr() {this.Clear();}
+	public void Clear() {wkrs = Xof_qry_wkr_.Ary_empty; wkrs_len = 0;}
+	public void Add(Xof_qry_wkr wkr) {Add_many(wkr);}
+	public void Add_many(Xof_qry_wkr... v) {
+		wkrs = (Xof_qry_wkr[])Array_.Resize_add(wkrs, v);
+		wkrs_len += v.length;
+	}
 	public boolean Find(byte exec_tid, Xof_fsdb_itm itm) {
 		boolean rv = false;
 		for (int i = 0; i < wkrs_len; i++) {

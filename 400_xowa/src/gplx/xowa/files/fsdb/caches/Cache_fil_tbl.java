@@ -39,7 +39,7 @@ class Cache_fil_tbl {
 			}
 			itm.Cmd_mode_(Db_cmd_mode.Ignore);
 		} catch (Exception e) {
-			Gfo_usr_dlg_._.Warn_many("", "", "failed to save itm: name=~{0} err=~{1}", String_.new_utf8_(itm.Fil_name()), Err_.Message_gplx_brief(e));
+			Gfo_usr_dlg_._.Warn_many("", "", "failed to save itm: name=~{0} id=~{1} err=~{2}", String_.new_utf8_(itm.Fil_name()), itm.Uid(), Err_.Message_gplx_brief(e));
 			stmt_bldr = null;	// null out bldr, else bad stmt will lead to other failures
 		}
 	}

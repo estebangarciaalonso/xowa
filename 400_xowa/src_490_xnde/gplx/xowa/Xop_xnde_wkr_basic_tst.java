@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
-public class Xop_xnde_wkr_tst {
+public class Xop_xnde_wkr_basic_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@After public void term() {fxt.Init_para_n_();}
 	@Test  public void Escape_lt() {	// PURPOSE: some templates have unknown tags; EX.WP:PHP

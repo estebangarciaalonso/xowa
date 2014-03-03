@@ -234,5 +234,9 @@ kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_page_id										, "pageid");
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_disambig                                       , "__DISAMBIG__");
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_nocommafysuffix								, "NOSEP");
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_xowa											, "#xowa");
+kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_mapSources_deg2dd                              , "#deg2dd");
+kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_mapSources_dd2dms                              , "#dd2dms");
+kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_mapSources_geoLink                             , "#geolink");
+kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_geoCrumbs_isin                                 , "#isin");
 	}
 }

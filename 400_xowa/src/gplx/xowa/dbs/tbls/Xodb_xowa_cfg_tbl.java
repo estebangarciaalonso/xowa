@@ -61,6 +61,7 @@ public class Xodb_xowa_cfg_tbl {
 		}	finally {stmt.Rls();}		
 	}
 	public void Insert_byte(String grp, String key, byte val)			{Insert_str(grp, key, Byte_.XtoStr(val));}
+	public void Insert_int(String grp, String key, int val)				{Insert_str(grp, key, Int_.XtoStr(val));}
 	public void Insert_str_by_bry(String grp, String key, byte[] val)	{Insert_str(grp, key, String_.new_utf8_(val));}
 	public void Insert_str(String grp, String key, String val)			{Insert_str(provider, grp, key, val);}
 	public static void Insert_str(Db_provider p, String grp, String key, String val) {

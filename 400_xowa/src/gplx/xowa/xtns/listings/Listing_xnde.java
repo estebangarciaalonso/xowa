@@ -18,32 +18,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.listings; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.html.*;
 public class Listing_xnde implements Xox_xnde, Xop_xnde_atr_parser {
-	public Listing_xnde(int tag_id) {this.tag_id = tag_id;} private int tag_id;
+	public Listing_xnde(int tag_id) {}
 	private byte[] xatr_name, xatr_alt, xatr_address, xatr_directions, xatr_phone, xatr_tollfree, xatr_email, xatr_fax, xatr_url, xatr_hours, xatr_price, xatr_checkin, xatr_checkout;
 	private int xatr_lat = Xatr_meridian_null, xatr_long = Xatr_meridian_null;
 	public void Xatr_parse(Xow_wiki wiki, byte[] src, Xop_xatr_itm xatr, Object xatr_obj) {
 		if (xatr_obj == null) return;
 		byte xatr_tid = ((ByteVal)xatr_obj).Val();
 		switch (xatr_tid) {
-			case Listing_xatrs.Tid_name:		xatr_name = xatr.Val_as_bry(src); break;
-			case Listing_xatrs.Tid_alt:			xatr_alt = xatr.Val_as_bry(src); break;
-			case Listing_xatrs.Tid_address:		xatr_address = xatr.Val_as_bry(src); break;
-			case Listing_xatrs.Tid_directions:	xatr_directions = xatr.Val_as_bry(src); break;
-			case Listing_xatrs.Tid_phone:		xatr_phone = xatr.Val_as_bry(src); break;
-			case Listing_xatrs.Tid_tollfree:	xatr_tollfree = xatr.Val_as_bry(src); break;
-			case Listing_xatrs.Tid_email:		xatr_email = xatr.Val_as_bry(src); break;
-			case Listing_xatrs.Tid_fax:			xatr_fax = xatr.Val_as_bry(src); break;
-			case Listing_xatrs.Tid_url:			xatr_url = xatr.Val_as_bry(src); break;
-			case Listing_xatrs.Tid_hours:		xatr_hours = xatr.Val_as_bry(src); break;
-			case Listing_xatrs.Tid_price:		xatr_price = xatr.Val_as_bry(src); break;
-			case Listing_xatrs.Tid_checkin:		xatr_checkin = xatr.Val_as_bry(src); break;
-			case Listing_xatrs.Tid_checkout:	xatr_checkout = xatr.Val_as_bry(src); break;
+			case Listing_xatrs.Tid_name:		xatr_name = xatr.Val_as_bry__blank_to_null(src); break;
+			case Listing_xatrs.Tid_alt:			xatr_alt = xatr.Val_as_bry__blank_to_null(src); break;
+			case Listing_xatrs.Tid_address:		xatr_address = xatr.Val_as_bry__blank_to_null(src); break;
+			case Listing_xatrs.Tid_directions:	xatr_directions = xatr.Val_as_bry__blank_to_null(src); break;
+			case Listing_xatrs.Tid_phone:		xatr_phone = xatr.Val_as_bry__blank_to_null(src); break;
+			case Listing_xatrs.Tid_tollfree:	xatr_tollfree = xatr.Val_as_bry__blank_to_null(src); break;
+			case Listing_xatrs.Tid_email:		xatr_email = xatr.Val_as_bry__blank_to_null(src); break;
+			case Listing_xatrs.Tid_fax:			xatr_fax = xatr.Val_as_bry__blank_to_null(src); break;
+			case Listing_xatrs.Tid_url:			xatr_url = xatr.Val_as_bry__blank_to_null(src); break;
+			case Listing_xatrs.Tid_hours:		xatr_hours = xatr.Val_as_bry__blank_to_null(src); break;
+			case Listing_xatrs.Tid_price:		xatr_price = xatr.Val_as_bry__blank_to_null(src); break;
+			case Listing_xatrs.Tid_checkin:		xatr_checkin = xatr.Val_as_bry__blank_to_null(src); break;
+			case Listing_xatrs.Tid_checkout:	xatr_checkout = xatr.Val_as_bry__blank_to_null(src); break;
 			case Listing_xatrs.Tid_lat:			xatr_lat = xatr.Val_as_int_or(src, Xatr_meridian_null); break;
 			case Listing_xatrs.Tid_long:		xatr_long = xatr.Val_as_int_or(src, Xatr_meridian_null); break;
 		}
 	}
 	private void Init_args() {
-		if (xatr_name == null) xatr_name = msg_mgr.Val_by_id(Xol_msg_itm_.Id_listings_unknown);
+		if (xatr_name == null) {
+			xatr_name = msg_mgr.Itm_by_key_or_new(ByteAry_.new_ascii_("listings-unknown")).Val();
+		}
 		xatr_alt = Parse_wikitext(xatr_alt);
 		xatr_address = Parse_wikitext(xatr_address);
 		xatr_directions = Parse_wikitext(xatr_directions);
@@ -64,38 +66,45 @@ public class Listing_xnde implements Xox_xnde, Xop_xnde_atr_parser {
 		xtn_mgr = (Listing_xtn_mgr)wiki.Xtn_mgr().Get_or_fail(Listing_xtn_mgr.Xtn_key_static);
 		if (xtn_mgr == null || !xtn_mgr.Enabled()) return;
 		Xoa_app app = wiki.App();
-		Xop_xatr_itm.Xatr_parse(app, this, Listing_xatrs.Key_hash, wiki, src, xnde);
+		Xop_xatr_itm[] atrs = Xop_xatr_itm.Xatr_parse(app, this, Listing_xatrs.Key_hash, wiki, src, xnde);
 		Init_args();
 		Html_wtr hwtr = xtn_mgr.Hwtr();
-		if (!Bld_by_template())
+		if (!Bld_by_template(xnde, atrs, src)) {
 			Bld_by_args(xtn_mgr, hwtr, xnde, src);
-		html_output = hwtr.X_to_bry_and_clear();
+			html_output = hwtr.X_to_bry_and_clear();
+		}
 	}
 	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
-		bfr.Add(html_output);
+		if (xtn_mgr == null || !xtn_mgr.Enabled()) 
+			Xox_mgr_base.Xtn_write_escape(app, bfr, src, xnde);
+		else
+			bfr.Add(html_output);
 	}
-	private boolean Bld_by_template() {
-//		$ltemplate = '';
-//		if ( !wfMessage( 'listings-template' )->inContentLanguage()->isDisabled() ) {
-//			$ltemplate = wfMessage( 'listings-template' )->inContentLanguage()->text();
-//		}
-//		if ( $ltemplate != '' ) {
-//			$inputtext = '{{' . $ltemplate . '|type=' . $aType;
-//			foreach ( $args as $key => $value ) {
-//				$inputtext .= '|' . $key . '=' . $value;
-//			}
-//			$inputtext .= '|' . $input . '}}';
-//			$out = $parser->internalParse( $inputtext );
-//			return $out;
-//		}
-		return false;
+	private boolean Bld_by_template(Xop_xnde_tkn xnde, Xop_xatr_itm[] atrs, byte[] src) {
+		byte[] listings_template = xtn_mgr.Listings_template();
+		if (listings_template == null) return false;
+		ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
+		bfr.Add(Xoa_consts.Invk_bgn);			// "{{"
+		bfr.Add(listings_template);				// name
+		int atrs_len = atrs.length;
+		for (int i = 0; i < atrs_len; i++) {
+			Xop_xatr_itm atr = atrs[i];
+			bfr.Add_byte_pipe();				// "|"
+			bfr.Add(atr.Key_bry());				// key
+			bfr.Add_byte(Byte_ascii.Eq);		// "="
+			bfr.Add(atr.Val_bry());				// val
+		}
+		if (xnde.CloseMode() == Xop_xnde_tkn.CloseMode_pair) {
+			bfr.Add_byte_pipe();				// "|"
+			bfr.Add_mid(src, xnde.Tag_open_end(), xnde.Tag_close_bgn());
+		}
+		bfr.Add(Xoa_consts.Invk_end);			// "}}"
+		Xop_ctx sub_ctx = Xop_ctx.new_sub_(wiki);
+		html_output = wiki.Parser().Parse_fragment_to_html(sub_ctx, bfr.Mkr_rls().XtoAryAndClear());			
+		return true;
 	}
 	private void Bld_by_args(Listing_xtn_mgr xtn_mgr, Html_wtr wtr, Xop_xnde_tkn xnde, byte[] src) {
-		byte[] position = null;
-		if (xatr_lat < Xatr_meridian_null && xatr_long < Xatr_meridian_null) {
-			position = xtn_mgr.Position_template_1();
-		}
-		wtr.Nde_full(Tag_strong, Listing_xatrs.Tag_by_tid(tag_id).Name_bry());		// <strong>sleep</strong>
+		wtr.Nde_full(Tag_strong, xatr_name);							// <strong>name</strong>
 		if (xatr_url != null)
 			wtr.Nde_full_atrs(Tag_a, wtr.X_to_bry_and_clear(), false
 			, Atr_a_href		, xatr_url
@@ -103,17 +112,23 @@ public class Listing_xnde implements Xox_xnde, Xop_xnde_atr_parser {
 			, Atr_a_rel			, Atr_a_rel_nofollow
 			, Atr_a_title		, xatr_name
 			);
-		if (xatr_alt != null)
-			wtr.Nde_full_atrs(Tag_em, xatr_alt, false);
+		if (xatr_alt != null) {
+			wtr.Txt(Txt_space_paren);									// " ("
+			wtr.Nde_full_atrs(Tag_em, xatr_alt, false);					// alt
+			wtr.Txt_byte(Byte_ascii.Paren_end);							// ")"
+		}
+		byte[] position = Bld_position();
 		if (xatr_address != null || xatr_directions != null || position != null) {
 			if (xatr_address != null)
 				wtr.Txt(Txt_comma_space).Txt(xatr_address);				// , address
 			if (xatr_directions != null || position != null) {
+				wtr.Txt(Txt_space_paren);								// " ("
 				wtr.Nde_bgn_hdr(Tag_em).Txt(xatr_directions);			// <em>directions
 				if (xatr_directions != null &&  position != null)
 					wtr.Txt(Txt_comma_space);							// ,
 				wtr.Txt(position);										// position
 				wtr.Nde_end();											// </em>
+				wtr.Txt_byte(Byte_ascii.Paren_end);						// ")"
 			}
 		}
 		
@@ -149,26 +164,45 @@ public class Listing_xnde implements Xox_xnde, Xop_xnde_atr_parser {
 			, Atr_a_href	, ByteAry_.Add(Txt_mailto, xatr_email)
 			);
 		}
-//			wtr.Txt(Txt_dot_space);
+		wtr.Txt(Txt_dot_space);
 		if (xatr_hours != null)
 			wtr.Txt(xatr_hours).Txt(Txt_dot_space);
 
 		if (xatr_checkin != null || xatr_checkout != null) {
+			ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
 			if (xatr_checkin != null) {
-				wtr.Txt_raw(xtn_mgr.Checkin_text());
+				byte[] checkin_val = xtn_mgr.Checkin_msg().Fmt(tmp_bfr, xatr_checkin);
+				wtr.Txt_raw(checkin_val);
 				if (xatr_checkout != null)
 					wtr.Txt(Txt_comma_space);
 				
 			}
-			if (xatr_checkout != null)
-				wtr.Txt_raw(xtn_mgr.Checkout_text());
+			if (xatr_checkout != null) {
+				byte[] checkout_val = xtn_mgr.Checkout_msg().Fmt(tmp_bfr, xatr_checkout);
+				wtr.Txt_raw(checkout_val);
+			}
 			wtr.Txt(Txt_dot_space);
 		}
 		if (xatr_price != null)
 			wtr.Txt(xatr_price).Txt(Txt_dot_space);
 
 		if (xnde.CloseMode() == Xop_xnde_tkn.CloseMode_pair)
-			wtr.Txt_mid(src, xnde.Tag_open_end(), xnde.Tag_close_bgn());
+			wtr.Txt(ByteAry_.Trim(ByteAry_.Mid(src, xnde.Tag_open_end(), xnde.Tag_close_bgn())));
+	}
+	private byte[] Bld_position() {
+		if (xatr_lat >= Xatr_meridian_null || xatr_long >= Xatr_meridian_null) return null;		// check that lat and long are valid
+		Xol_msg_itm position_template = xtn_mgr.Position_template();
+		if (position_template == null) return null;
+		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b128().Mkr_rls();
+		byte[] rv = position_template.Fmt(tmp_bfr, xatr_lat, xatr_long);
+		tmp_bfr.Add(Xoa_consts.Invk_bgn);			// "{{"
+		tmp_bfr.Add(rv);							// rv is not message, but actually template precursor
+		tmp_bfr.Add(Xoa_consts.Invk_end);			// "}}"
+		Xop_ctx sub_ctx = Xop_ctx.new_sub_(wiki);
+		rv = wiki.Parser().Parse_fragment_to_html(sub_ctx, tmp_bfr.XtoAryAndClear());
+		Xol_msg_itm position_text = xtn_mgr.Position_text();
+		if (ByteAry_.Len_eq_0(position_text.Val())) return rv;
+		return position_text.Fmt(tmp_bfr, rv);
 	}
 	private static final int Xatr_meridian_null = 361;
 	public static final byte[]

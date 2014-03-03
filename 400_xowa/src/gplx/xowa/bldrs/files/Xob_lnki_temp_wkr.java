@@ -88,7 +88,7 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		wiki.App().Log_mgr().Txn_end();
 		provider.Txn_mgr().Txn_end();
 	}
-	public void Wkr_exec(Xop_ctx ctx, byte[] src, Xop_lnki_tkn lnki) {
+	public void Wkr_exec(Xop_ctx ctx, byte[] src, Xop_lnki_tkn lnki, byte lnki_src_tid) {
 		if (lnki.Ttl().ForceLiteralLink()) return; // ignore literal links which creat a link to file, but do not show the image; EX: [[:File:A.png|thumb|120px]] creates a link to File:A.png, regardless of other display-oriented args
 		byte[] ttl = lnki.Ttl().Page_db();
 		Xof_ext ext = Xof_ext_.new_by_ttl_(ttl);
@@ -98,7 +98,9 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 		if (	Xof_doc_page.Null_n(lnki_page) 					// page set
 			&&	Xof_doc_thumb.Null_n(lnki_thumbtime))			// thumbtime set
 				usr_dlg.Warn_many("", "", "page and thumbtime both set; this may be an issue with fsdb: page=~{0} ttl=~{1}", ctx.Page().Ttl().Page_db_as_str(), String_.new_utf8_(ttl));
-		Xob_lnki_temp_tbl.Insert(stmt, ctx.Page().Id(), ttl, ttl_commons, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki.Width(), lnki.Height(), lnki.Upright(), lnki_thumbtime, lnki_page);
+		if (lnki.Ns_id() == Xow_ns_.Id_media)
+			lnki_src_tid = Xob_lnki_src_tid.Tid_media;
+		Xob_lnki_temp_tbl.Insert(stmt, ctx.Page().Id(), ttl, ttl_commons, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki_src_tid, lnki.Width(), lnki.Height(), lnki.Upright(), lnki_thumbtime, lnki_page);
 	}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_wdata_enabled_))				wdata_enabled = m.ReadYn("v");

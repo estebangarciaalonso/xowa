@@ -22,7 +22,7 @@ public class Pf_str_formatdate extends Pf_func_base {
 		int self_args_len = self.Args_len();
 		byte[] date_ary = Eval_argx(ctx, src, caller, self);
 		DateAdp date = Pf_xtn_time.ParseDate(date_ary, false, ctx.App().Utl_bry_bfr_mkr().Get_b512().Mkr_rls());
-		byte[] fmt_ary = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 0);
+		byte[] fmt_ary = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 0);
 		if (fmt_ary == ByteAry_.Empty) {bfr.Add(date_ary); return;}	// no format given; add self;				
 		int fmt_ary_len = fmt_ary.length;
 		Object o = byteTrie.MatchAtCur(fmt_ary, 0, fmt_ary_len);

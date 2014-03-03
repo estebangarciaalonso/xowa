@@ -18,15 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.xowa.files.fsdb.*; import gplx.xowa.files.cnvs.*; import gplx.ios.*;
 public class Xof_bin_mgr implements GfoInvkAble {
-	private Xof_bin_wkr[] wkrs = Xof_bin_wkr_.Ary_empty; private int wkrs_len;
+	private Xof_bin_wkr[] wkrs; private int wkrs_len;
 	private Xof_url_bldr url_bldr = Xof_url_bldr.new_v2_();
 	private Xof_fsdb_mgr_sql fsdb_mgr;
 	private Xow_wiki wiki;
 	private StringRef resize_warning = StringRef.null_(); private Xof_img_size tmp_size = new Xof_img_size();
-	public Xof_bin_mgr(Xow_wiki wiki, Xof_fsdb_mgr_sql fsdb_mgr, Xow_repo_mgr repo_mgr) {this.wiki = wiki; this.fsdb_mgr = fsdb_mgr; this.repo_mgr = repo_mgr;}
+	public Xof_bin_mgr(Xow_wiki wiki, Xof_fsdb_mgr_sql fsdb_mgr, Xow_repo_mgr repo_mgr) {this.Clear(); this.wiki = wiki; this.fsdb_mgr = fsdb_mgr; this.repo_mgr = repo_mgr;}
 	public Xow_repo_mgr Repo_mgr() {return repo_mgr;} private Xow_repo_mgr repo_mgr;
 	public void Resizer_(Xof_img_wkr_resize_img v) {resizer = v;} private Xof_img_wkr_resize_img resizer;
-	public void Wkrs_(Xof_bin_wkr... wkrs) {this.wkrs = wkrs; wkrs_len = wkrs.length;}
+	void Wkrs_(Xof_bin_wkr... wkrs) {this.wkrs = wkrs; wkrs_len = wkrs.length;}
 	public boolean Find_to_url_as_bool(ListAdp temp_files, byte exec_tid, Xof_fsdb_itm itm) {
 		return Find_to_url(temp_files, exec_tid, itm) != Io_url_.Null;
 	}
@@ -96,10 +96,10 @@ public class Xof_bin_mgr implements GfoInvkAble {
 			;
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_add))		return Add(m.ReadStr("type"), m.ReadStrOr("key", null));
+		if		(ctx.Match(k, Invk_add))		return Get_or_new(m.ReadStr("type"), m.ReadStrOr("key", null));
 		else	return GfoInvkAble_.Rv_unhandled;
 	}	private static final String Invk_add = "add";
-	public Xof_bin_wkr Add(String type, String key) {
+	public Xof_bin_wkr Get_or_new(String type, String key) {
 		if (key == null) key = type;	// default empty key to type; EX: add('xowa.http.wmf') -> add('xowa.http.wmf', 'xowa.http.wmf')
 		Xof_bin_wkr rv = Get_or_null(key);
 		if (rv == null) {
@@ -109,6 +109,12 @@ public class Xof_bin_mgr implements GfoInvkAble {
 		}
 		return rv;
 	}
+	public void Add(Xof_bin_wkr v) {Add_many(v);}
+	public void Add_many(Xof_bin_wkr... v) {
+		wkrs = (Xof_bin_wkr[])Array_.Resize_add(wkrs, v);
+		wkrs_len += v.length;
+	}
+	public void Clear() {wkrs = Xof_bin_wkr_.Ary_empty; wkrs_len = 0;}
 	private Xof_bin_wkr Get_or_null(String key) {
 		int wkrs_len = wkrs.length;
 		byte tid = Xof_bin_wkr_.X_key_to_tid(key);

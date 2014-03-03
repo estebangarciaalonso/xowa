@@ -105,7 +105,7 @@ public class Xop_imageMap_xnde implements Xox_xnde {
 				}
 				else {
 					orig_ctx.Page().Lnki_list().Add(lnki_tkn);
-					if (file_wkr != null) file_wkr.Wkr_exec(orig_ctx, src, lnki_tkn);
+					if (file_wkr != null) file_wkr.Wkr_exec(orig_ctx, src, lnki_tkn, gplx.xowa.bldrs.files.Xob_lnki_src_tid.Tid_imageMap);
 				}
 			}
 			first = false;

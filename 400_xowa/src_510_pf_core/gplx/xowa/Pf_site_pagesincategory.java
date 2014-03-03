@@ -29,7 +29,7 @@ public class Pf_site_pagesincategory extends Pf_func_base {
 		int self_args_len = self.Args_len();
 		boolean fmt_num = true;
 		if (self_args_len == 1) {
-			byte[] arg1 = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 0);
+			byte[] arg1 = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 0);
 			if (arg1 != ByteAry_.Empty && trie.MatchAtCurExact(arg1, 0, arg1.length) != null)
 				fmt_num = false;
 		}

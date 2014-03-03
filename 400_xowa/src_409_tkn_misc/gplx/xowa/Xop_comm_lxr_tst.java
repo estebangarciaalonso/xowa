@@ -26,12 +26,26 @@ public class Xop_comm_lxr_tst {
 		fxt.Init_log_(Xop_comment_log.Eos).Test_parse_page_all_str("<!-- ", "");
 	}
 	@Test  public void Ws_end() {
-		fxt.Test_parse_page_all_str("a\n<!-- b --> \nc", "a\nc");
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		( "a"
+		, "<!-- b --> "
+		, "c"
+		), String_.Concat_lines_nl_skipLast
+		( "a"
+		, "c"
+		));
 	}
 	@Test  public void Ws_bgn_end() {
-		fxt.Test_parse_page_all_str("a\n <!-- b --> \nc", "a\nc");
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		( "a"
+		, " <!-- b --> "
+		, "c"
+		), String_.Concat_lines_nl_skipLast
+		( "a"
+		, "c"
+		));
 	}
-	@Test  public void Ws_noop() {	// PURPOSE: assert that comments are not stripped
+	@Test  public void Ws_noop() {	// PURPOSE: assert that comments do not strip ws
 		fxt.Test_parse_page_all_str("a <!-- b -->c", "a c");
 	}
 	@Test  public void Noinclude() {// PURPOSE: templates can construct comments; EX:WBK: {{Subjects/allbooks|subject=Computer programming|origin=Computer programming languages|diagnose=}}
@@ -65,6 +79,21 @@ public class Xop_comm_lxr_tst {
 		), String_.Concat_lines_nl_skipLast
 		( "<p>a"
 		, "c"
+		, "</p>"
+		, ""
+		));
+		fxt.Init_para_n_();
+	}
+	@Test  public void Ws_strip_nl() {	// PURPOSE: handle multiple "<!-- -->\n"; was only trimming 1st; DATE:2014-02-24
+		fxt.Init_para_y_();
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		( "a"
+		, "<!-- -->"
+		, "<!-- -->"
+		, "b"
+		), String_.Concat_lines_nl_skipLast
+		( "<p>a"
+		, "b"
 		, "</p>"
 		, ""
 		));

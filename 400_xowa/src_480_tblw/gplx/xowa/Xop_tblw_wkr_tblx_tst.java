@@ -20,7 +20,7 @@ import org.junit.*;
 public class Xop_tblw_wkr_tblx_tst {
 	@Before public void init() {fxt.Reset(); fxt.Init_para_y_();} private Xop_fxt fxt = new Xop_fxt();
 	@After public void term() {fxt.Init_para_n_();}
-	@Test  public void Ignore_pipe() {	// PURPOSE: do not parse pipe as td if in <table>; EX:ru.w:Сочи; DATE:2014-02-22
+	@Test  public void Ignore_td() {	// PURPOSE: do not parse pipe as td if in <table>; EX:ru.w:Сочи; DATE:2014-02-22
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 			(	"<table>"
 			,	"  <tr>"
@@ -41,4 +41,27 @@ public class Xop_tblw_wkr_tblx_tst {
 			)
 			);
 	}
+//		@Test  public void Ignore_tr() {	// PURPOSE: do not parse |- as tr if in <table>; EX:sim.w:Uranus; DATE:2014-02-22
+//			fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+//				(	"<table>"
+//				,	"  <tr>"
+//				,	"    <td>a"
+//				,	"|-"
+//				,	"| b"
+//				,	"    </td>"
+//				,	"  </tr>"
+//				,	"</table>"
+//				) ,	String_.Concat_lines_nl_skipLast
+//				(	"<table>"
+//				,	"  <tr>"
+//				,	"    <td>a"
+//				,	"|-"
+//				,	"| b"
+//				,	"    </td>"
+//				,	"  </tr>"
+//				,	"</table>"
+//				,	""
+//				)
+//				);
+//		}
 }

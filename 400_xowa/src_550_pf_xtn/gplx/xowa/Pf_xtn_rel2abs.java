@@ -29,7 +29,7 @@ class Pf_xtn_rel2abs extends Pf_func_base {
 	}	static ByteTrieMgr_fast qry_bgns_with;
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bb) {// REF.MW:ParserFunctions_body.php
 		byte[] qry = Eval_argx(ctx, src, caller, self);
-		byte[] orig = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self.Args_len(), 0);
+		byte[] orig = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self.Args_len(), 0);
 		if (orig.length == 0) orig = ctx.Page().Ttl().Full_txt();
 		bb.Add(Rel2abs(ctx.App().Utl_bry_bfr_mkr().Get_b512().Mkr_rls(), qry, orig));
 	}

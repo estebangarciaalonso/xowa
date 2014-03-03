@@ -72,6 +72,10 @@ public class Xog_url_macro_mgr {
 		custom_mgr.Set("wd.p"	, "www.wikidata.org/wiki/Property:P~{0}");
 		custom_mgr.Set("sp"		, "wikispecies.wikimedia.org/wiki/~{0}");
 		custom_mgr.Set("meta"	, "meta.wikimedia.org/wiki/~{0}");
+		custom_mgr.Set("s.w"	, "simple.wikipedia.org/wiki/~{0}");
+		custom_mgr.Set("s.d"	, "simple.wiktionary.org/wiki/~{0}");
+		custom_mgr.Set("s.b"	, "simple.wikibooks.org/wiki/~{0}");
+		custom_mgr.Set("s.q"	, "simple.wikiquote.org/wiki/~{0}");
 		custom_mgr.Set("?"		, "Special:Search/~{0}?fulltext=y");
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {

@@ -1212,7 +1212,7 @@ new Xol_case_itm[]
 , Xol_case_itm_.new_(Xol_case_itm_.Tid_both, ByteAry_.ints_(240,144,145,143), ByteAry_.ints_(240,144,144,167)) // 𐑏 -> 𐐧 -- DESERET CAPITAL LETTER EW
 , Xol_case_itm_.new_(Xol_case_itm_.Tid_upper, ByteAry_.ints_(196,177), ByteAry_.ints_(73)) // ı -> I -- LATIN SMALL LETTER DOTLESS I
 , Xol_case_itm_.new_(Xol_case_itm_.Tid_upper, ByteAry_.ints_(197,191), ByteAry_.ints_(83)) // ſ -> S -- LATIN SMALL LETTER LONG S
-, Xol_case_itm_.new_(Xol_case_itm_.Tid_upper, ByteAry_.ints_(206,153), ByteAry_.ints_(205,133)) // Ι -> ͅ -- GREEK NON-SPACING IOTA BELOW
+, Xol_case_itm_.new_(Xol_case_itm_.Tid_upper, ByteAry_.ints_(205,133), ByteAry_.ints_(206,153)) //  ͅ  -> Ι -- GREEK NON-SPACING IOTA BELOW
 , Xol_case_itm_.new_(Xol_case_itm_.Tid_upper, ByteAry_.ints_(206,185), ByteAry_.ints_(206,153)) // ι -> Ι -- GREEK SMALL LETTER IOTA
 , Xol_case_itm_.new_(Xol_case_itm_.Tid_upper, ByteAry_.ints_(207,130), ByteAry_.ints_(206,163)) // ς -> Σ -- GREEK SMALL LETTER FINAL SIGMA
 , Xol_case_itm_.new_(Xol_case_itm_.Tid_upper, ByteAry_.ints_(207,144), ByteAry_.ints_(206,146)) // ϐ -> Β -- GREEK SMALL LETTER CURLED BETA

@@ -15,10 +15,21 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.xtns.geodata; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+package gplx.xowa.xtns.geoCrumbs; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
-public class Pf_xtn_geodata_coordinates_tst {
+public class Geoc_isin_func_tst {
+	@Before public void init()				{fxt.Reset();} private Geoc_isin_func_fxt fxt = new Geoc_isin_func_fxt();
+	@Test  public void Basic() {
+		fxt.Test_parse("{{#isin:A}}", "<a href=\"/wiki/A\">A</a>");
+	}
+}
+class Geoc_isin_func_fxt {
 	private Xop_fxt fxt = new Xop_fxt();
-	@Before public void init()				{fxt.Reset();}
-	@Test  public void Basic()				{fxt.Test_parse_tmpl_str_test("{{#coordinates:1|2}}"									, "{{test}}"	, "");}
+	public void Reset() {
+		fxt.Reset();
+	}
+	public void Test_parse(String raw, String expd) {
+		fxt.Test_parse_tmpl_str_test(raw, "{{test}}"	, "");
+		Tfds.Eq(expd, String_.new_utf8_(fxt.Page().Html_content_sub()));
+	}
 }

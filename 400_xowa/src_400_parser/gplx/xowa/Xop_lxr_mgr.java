@@ -43,6 +43,7 @@ public class Xop_lxr_mgr {
 		, Xop_xnde_lxr._	// needed for xtn, noinclude, etc.
 		, Xop_under_lxr._
 		, gplx.xowa.xtns.translates.Xop_tvar_lxr._
+		, Xop_cr_lxr._		// always ignore \r; DATE:2014-03-02
 		});
 	}
 	public static Xop_lxr_mgr new_wiki_() {

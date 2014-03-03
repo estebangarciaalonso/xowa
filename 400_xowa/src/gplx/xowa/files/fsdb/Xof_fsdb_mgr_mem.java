@@ -32,6 +32,10 @@ public class Xof_fsdb_mgr_mem implements Xof_fsdb_mgr, Xof_bin_wkr {
 	private Xof_url_bldr url_bldr = new Xof_url_bldr();
 	public Cache_mgr Cache_mgr() {return cache_mgr;} private Cache_mgr cache_mgr = new Cache_mgr(null);
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
+	public Fsdb_mnt_mgr Mnt_mgr() {throw Err_.not_implemented_();}
+	public boolean Init_by_wiki(Xow_wiki wiki) {throw Err_.not_implemented_();}
+	public boolean Init_by_wiki__add_bin_wkrs(Xow_wiki wiki) {throw Err_.not_implemented_();}
+	public void Reg_select_only(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms, OrderedHash hash) {throw Err_.not_implemented_();}
 	public void Init_by_wiki(Xow_wiki wiki, Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr) {
 		this.fs_dir = fs_dir;
 		this.wiki = wiki;

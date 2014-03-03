@@ -48,8 +48,8 @@ public class Xoh_wiki_article implements GfoInvkAble {
 	public ByteAryFmtr Page_read_fmtr() {return page_read_fmtr;}
 	public byte[] Css_common_bry() {return css_common_bry;} public Xoh_wiki_article Css_common_bry_(Io_url v) {css_common_bry = app.Url_converter_fsys().Encode_http(v); return this;} private byte[] css_common_bry;
 	public byte[] Css_wiki_bry() {return css_wiki_bry;} public Xoh_wiki_article Css_wiki_bry_(Io_url v) {css_wiki_bry = app.Url_converter_fsys().Encode_http(v); return this;} private byte[] css_wiki_bry;
-	ByteAryFmtr page_read_fmtr = ByteAryFmtr.new_(""
-		, "page_id", "page_name", "page_title", "page_redirect_msg", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
+	private ByteAryFmtr page_read_fmtr = ByteAryFmtr.new_(""
+		, "page_id", "page_name", "page_title", "page_content_sub", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
 		, "html_css_common_path", "html_css_wiki_path", "css_xtn", "html_content_editable"
 		, "portal_div_personal", "portal_div_ns", "portal_div_view"
 		, "portal_div_logo", "portal_div_home", "portal_div_wikis", "portal_sidebar"
@@ -57,7 +57,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 		, "app_version", "app_build_date", "app_root_dir", "js_mathjax_script", "js_article_view_vars", "js_wikidata", "js_edit_toolbar", "xowa_mode_is_server"
 		);
 	public ByteAryFmtr Page_edit_fmtr() {return page_edit_fmtr;} ByteAryFmtr page_edit_fmtr = ByteAryFmtr.new_(""
-		, "page_id", "page_name", "page_title", "page_redirect_msg", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
+		, "page_id", "page_name", "page_title", "page_content_sub", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
 		, "html_css_common_path", "html_css_wiki_path", "css_xtn", "html_content_editable"
 		, "portal_div_personal", "portal_div_ns", "portal_div_view"
 		, "portal_div_logo", "portal_div_home", "portal_div_wikis", "portal_sidebar"
@@ -66,19 +66,25 @@ public class Xoh_wiki_article implements GfoInvkAble {
 		);
 	public ByteAryFmtr Page_html_fmtr() {return page_html_fmtr;} 
 		ByteAryFmtr page_html_fmtr = ByteAryFmtr.new_(""
-		, "page_id", "page_name", "page_title", "page_redirect_msg", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
+		, "page_id", "page_name", "page_title", "page_content_sub", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
 		, "html_css_common_path", "html_css_wiki_path", "css_xtn", "html_content_editable"
 		, "portal_div_personal", "portal_div_ns", "portal_div_view"
 		, "portal_div_logo", "portal_div_home", "portal_div_wikis", "portal_sidebar"
 	    , "edit_div_rename", "edit_div_preview"
 		, "app_version", "app_build_date", "app_root_dir", "js_mathjax_script", "js_article_view_vars", "js_wikidata", "js_edit_toolbar", "xowa_mode_is_server"
-		);		
-	public byte[] Edit_rename_div_bry() {return div_edit_rename_bry;} private byte[] div_edit_rename_bry = ByteAry_.new_utf8_(String_.Concat_lines_nl
-	(	"  <input id='xowa_edit_rename_box' width='120' height='20'></input>\r\n" 
-	,	"  <a href='xowa-cmd:app.gui.main_win.page_edit_rename;' class='xowa_anchor_button' style='width:100px;max-width:1024px;'>\r\n" 
-	,	"    Rename page\r\n" 
+		);
+	private ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	public byte[] Edit_rename_div_bry(Xoa_ttl ttl) {			
+		return div_edit_rename_fmtr.Bld_bry_many(tmp_bfr, ttl.Full_db());
+	}	private ByteAryFmtr div_edit_rename_fmtr = ByteAryFmtr.new_(String_.Concat_lines_nl
+	(	"  <input id='xowa_edit_rename_box' width='120' height='20'></input>" 
+	,	"  <a href='xowa-cmd:app.gui.main_win.page_edit_rename;' class='xowa_anchor_button' style='width:100px;max-width:1024px;'>" 
+	,	"    Rename page" 
 	,	"  </a>"
-	));
+	,	"  <a href='/wiki/Special:MovePage?wpOldTitle=~{src_full_db}' class='xowa_anchor_button' style='width:100px;max-width:1024px;'>"
+	,	"    Special:MovePage" 
+	,	"  </a>"
+	),	"src_full_db");
 	public void Init_(boolean v) {init = v;}
 	boolean init = true;
 	public byte[] Gen(Xoa_page page, byte output_tid) {
@@ -107,7 +113,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 		if		(ctx.Match(k, Invk_page_read_))						page_read_fmtr.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_page_edit_))						page_edit_fmtr.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_page_html_))						page_html_fmtr.Fmt_(m.ReadBry("v"));
-		else if	(ctx.Match(k, Invk_xowa_div_edit_rename_))			div_edit_rename_bry = m.ReadBry("v");
+		else if	(ctx.Match(k, Invk_xowa_div_edit_rename_))			div_edit_rename_fmtr.Fmt_(m.ReadBry("v"));
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}

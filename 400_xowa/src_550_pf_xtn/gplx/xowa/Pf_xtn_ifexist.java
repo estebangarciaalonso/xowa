@@ -22,9 +22,9 @@ class Pf_xtn_ifexist extends Pf_func_base {
 		int self_args_len = self.Args_len();
 		byte[] val_dat_ary = Eval_argx(ctx, src, caller, self);
 		if (Exists(tmp_db_page, ctx, val_dat_ary))
-			bb.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 0));
+			bb.Add(Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 0));
 		else
-			bb.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 1));
+			bb.Add(Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 1));
 	}	private static final Xodb_page tmp_db_page = Xodb_page.tmp_();
 	public static int Count = 0;
 	public static boolean Exists(Xodb_page rv, Xop_ctx ctx, byte[] val_dat_ary) {

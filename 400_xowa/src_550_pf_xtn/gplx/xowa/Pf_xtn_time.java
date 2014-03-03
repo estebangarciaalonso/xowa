@@ -21,8 +21,8 @@ public class Pf_xtn_time extends Pf_func_base {
 		int self_args_len = self.Args_len();
 		byte[] arg_fmt = Eval_argx(ctx, src, caller, self);
 		DateAdpFormatItm[] fmt_ary = Parse(ctx, arg_fmt);
-		byte[] arg_date = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 0);
-		byte[] arg_lang = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 1);
+		byte[] arg_date = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 0);
+		byte[] arg_lang = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 1);
 		ByteAryBfr error_bfr = ByteAryBfr.new_();
 		DateAdp date = ParseDate(arg_date, utc, error_bfr);
 		if (error_bfr.Bry_len() > 0)

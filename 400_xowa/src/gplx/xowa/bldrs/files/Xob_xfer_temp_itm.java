@@ -28,6 +28,7 @@ class Xob_xfer_temp_itm {
 	public String Join_ttl() {return join_ttl;} private String join_ttl;
 	public String Redirect_src() {return redirect_src;} private String redirect_src;
 	public byte Lnki_type() {return lnki_type;} private byte lnki_type;
+	public byte Lnki_src_tid() {return lnki_src_tid;} private byte lnki_src_tid;
 	public int Lnki_w() {return lnki_w;} private int lnki_w;
 	public int Lnki_h() {return lnki_h;} private int lnki_h;
 	public int Lnki_count() {return lnki_count;} private int lnki_count;
@@ -39,7 +40,7 @@ class Xob_xfer_temp_itm {
 	public double Lnki_thumbtime() {return lnki_thumbtime;} private double lnki_thumbtime;
 	public int Lnki_page() {return lnki_page;} private int lnki_page;
 	public void Clear() {		
-		lnki_ext = lnki_type 
+		lnki_ext = lnki_type = lnki_src_tid
 				= orig_repo = orig_media_type_tid = Byte_.MaxValue_127;
 		chk_tid = Chk_tid_none;
 		lnki_id = lnki_w = lnki_h = lnki_count =  lnki_page_id
@@ -54,6 +55,7 @@ class Xob_xfer_temp_itm {
 		lnki_page_id	= rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_page_id);
 		lnki_ext		= rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_ext);
 		lnki_type		= rdr.ReadByte(Xob_lnki_regy_tbl.Fld_lnki_type);
+		lnki_src_tid	= rdr.ReadByte(Xob_lnki_regy_tbl.Fld_lnki_src_tid);
 		lnki_w			= rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_w);
 		lnki_h			= rdr.ReadInt(Xob_lnki_regy_tbl.Fld_lnki_h);
 		lnki_upright	= rdr.ReadDouble(Xob_lnki_regy_tbl.Fld_lnki_upright);
@@ -74,6 +76,7 @@ class Xob_xfer_temp_itm {
 		  Chk_tid_none = 0
 		, Chk_tid_orig_page_id_is_null = 1
 		, Chk_tid_orig_media_type_is_audio = 2
+		, Chk_tid_ns_is_media = 3
 	;
 	public byte Chk_tid() {return chk_tid;} private byte chk_tid;
 	public boolean Chk(Xof_img_size img_size) {
@@ -102,6 +105,10 @@ class Xob_xfer_temp_itm {
 		}
 		if (lnki_ext == Xof_ext_.Id_mid) {	// NOTE: .mid does not have orig_media_type of "AUDIO"
 			chk_tid = Chk_tid_orig_media_type_is_audio;
+			return false;
+		}
+		if (lnki_src_tid == Xob_lnki_src_tid.Tid_media) {
+			chk_tid = Chk_tid_ns_is_media;
 			return false;
 		}
 		img_size.Html_size_calc(Xof_exec_tid.Tid_wiki_page, lnki_w, lnki_h, lnki_type, lnki_upright, lnki_ext, orig_w, orig_h, Xof_img_size.Thumb_width_img);

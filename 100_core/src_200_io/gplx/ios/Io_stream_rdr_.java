@@ -165,7 +165,9 @@ abstract class Io_stream_rdr_base implements Io_stream_rdr {
 	}
 	public void Rls() {
 		try {stream.close();}
-		catch (Exception e) {throw Err_.new_fmt_("close failed: url={0}", url.Xto_api());}
+		catch (Exception e) {
+			throw Err_.new_fmt_("close failed: url={0}", url.Xto_api());
+			}
 	}
 	public abstract java.io.InputStream Wrap_stream(java.io.InputStream stream);
 }
@@ -222,7 +224,9 @@ class Io_stream_rdr_zip implements Io_stream_rdr {
 	}
 	public void Rls() {
 		try {zip_stream.close();}
-		catch (Exception e) {throw Err_.new_fmt_("close failed: url={0}", url.Xto_api());}
+		catch (Exception e) {
+			throw Err_.new_fmt_("close failed: url={0}", url.Xto_api());
+			}
 	}
 }
 class Io_stream_rdr_gzip extends Io_stream_rdr_base {

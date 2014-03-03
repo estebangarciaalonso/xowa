@@ -21,11 +21,11 @@ class Pf_xtn_ifeq extends Pf_func_base {
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {
 		int self_args_len = self.Args_len(); if (self_args_len < 2) return; // no equal/not_equal clauses defined; return; EX: {{#if:a}} {{#if:a|b}}
 		byte[] lhs = Eval_argx(ctx, src, caller, self);
-		byte[] rhs = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 0);
+		byte[] rhs = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 0);
 		if (Pf_func_.Eq_(lhs, rhs))
-			bfr.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 1));
+			bfr.Add(Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 1));
 		else
-			bfr.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 2));
+			bfr.Add(Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 2));
 	}
 	@Override public int Id() {return Xol_kwd_grp_.Id_xtn_ifeq;}
 	@Override public Pf_func New(int id, byte[] name) {return new Pf_xtn_ifeq().Name_(name);}

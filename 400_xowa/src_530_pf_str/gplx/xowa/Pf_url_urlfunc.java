@@ -20,7 +20,7 @@ public class Pf_url_urlfunc extends Pf_func_base {	// EX: {{lc:A}} -> a
 	@Override public boolean Func_require_colon_arg() {return true;}
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bb) {
 		byte[] val_dat_ary = Eval_argx(ctx, src, caller, self); if (val_dat_ary.length == 0) return;
-		byte[] qry_arg = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self.Args_len(), 0);
+		byte[] qry_arg = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self.Args_len(), 0);
 		UrlString(ctx, tid, encode, val_dat_ary, bb, qry_arg);
 	}
 	public static void UrlString(Xop_ctx ctx, byte tid, boolean encode, byte[] src, ByteAryBfr trg, byte[] qry_arg) {

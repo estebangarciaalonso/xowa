@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Pf_func_ {
-	public static byte[] EvalArgOrEmptyAry(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, int self_args_len, int i) {return EvalArgOr(ctx, src, caller, self, self_args_len, i, ByteAry_.Empty);}
+	public static byte[] Eval_arg_or_empty(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, int self_args_len, int i) {return Eval_arg_or(ctx, src, caller, self, self_args_len, i, ByteAry_.Empty);}
 	public static final byte Name_dlm = Byte_ascii.Colon;
-	public static byte[] EvalArgOr(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, int self_args_len, int i, byte[] or) {
+	public static byte[] Eval_arg_or(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, int self_args_len, int i, byte[] or) {
 		if (i >= self_args_len) return or;
 		ByteAryBfr bfr = ByteAryBfr.new_();
 		Arg_nde_tkn nde = self.Args_get_by_idx(i);
@@ -27,6 +27,17 @@ public class Pf_func_ {
 		if (nde.KeyTkn_exists()) bfr.Add_byte(Byte_ascii.Eq);
 		nde.Val_tkn().Tmpl_evaluate(ctx, src, caller, bfr);
 		return bfr.XtoAryAndClearAndTrim();
+	}
+	public static byte[] Eval_val_or(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, int self_args_len, int i, byte[] or) {
+		if (i >= self_args_len) return or;
+		ByteAryBfr bfr = ByteAryBfr.new_();
+		Arg_nde_tkn nde = self.Args_get_by_idx(i);
+		nde.Val_tkn().Tmpl_evaluate(ctx, src, caller, bfr);
+		return bfr.XtoAryAndClearAndTrim();
+	}
+	public static byte[] Eval_tkn(ByteAryBfr bfr, Xop_ctx ctx, byte[] src, Xot_invk caller, Xop_tkn_itm tkn) {
+		tkn.Tmpl_evaluate(ctx, src, caller, bfr);
+		return bfr.XtoAryAndClear();
 	}
 	private static final NumberParser lhs_parser = new NumberParser().Hex_enabled_(true), rhs_parser = new NumberParser().Hex_enabled_(true);
 	public static boolean Eq_(byte[] lhs, byte[] rhs) {	// PATCH.PHP: php allows "003" == "3.0"; ASSUME: numbers are either int or int-like decimal; long, float, decimal not supported
@@ -183,6 +194,10 @@ public class Pf_func_ {
 	,	Xol_kwd_grp_.Id_ns_num
 	,	Xol_kwd_grp_.Id_page_id
 	,	Xol_kwd_grp_.Id_xowa
+	,	Xol_kwd_grp_.Id_mapSources_deg2dd
+	,	Xol_kwd_grp_.Id_mapSources_dd2dms
+	,	Xol_kwd_grp_.Id_mapSources_geoLink
+	,	Xol_kwd_grp_.Id_geoCrumbs_isin
 	};
 	public static Xot_defn Get_prototype(int id) {
 		switch (id) {
@@ -316,12 +331,18 @@ public class Pf_func_ {
 
 			case Xol_kwd_grp_.Id_xowa_dbg:						return new Pf_xtn_xowa_dbg();
 			case Xol_kwd_grp_.Id_xowa:							return new gplx.xowa.xtns.xowa_cmds.Xop_xowa_func();
-			case Xol_kwd_grp_.Id_xtn_geodata_coordinates:		return gplx.xowa.xtns.geodata.Pf_xtn_geodata_coordinates._;
+			case Xol_kwd_grp_.Id_xtn_geodata_coordinates:		return gplx.xowa.xtns.geodata.Geo_coordinates_func._;
 			case Xol_kwd_grp_.Id_lst:							return gplx.xowa.xtns.lst.Lst_pfunc_lst._;
 			case Xol_kwd_grp_.Id_lstx:							return gplx.xowa.xtns.lst.Lst_pfunc_lstx._;
 			case Xol_kwd_grp_.Id_invoke:						return new gplx.xowa.xtns.scribunto.Scrib_pf_invoke();
 			case Xol_kwd_grp_.Id_property:						return new gplx.xowa.xtns.wdatas.Wdata_pf_property();
 			case Xol_kwd_grp_.Id_noexternallanglinks:			return new gplx.xowa.xtns.wdatas.Wdata_pf_noExternalLangLinks();
+
+			case Xol_kwd_grp_.Id_mapSources_deg2dd:				return gplx.xowa.xtns.mapSources.Map_deg2dd_func._;
+			case Xol_kwd_grp_.Id_mapSources_dd2dms:				return gplx.xowa.xtns.mapSources.Map_dd2dms_func._;
+			case Xol_kwd_grp_.Id_mapSources_geoLink:			return gplx.xowa.xtns.mapSources.Map_geolink_func._;
+
+			case Xol_kwd_grp_.Id_geoCrumbs_isin:				return gplx.xowa.xtns.geoCrumbs.Geoc_isin_func._;
 
 			default:											throw Err_mgr._.unhandled_(id);
 		}

@@ -69,6 +69,7 @@ public class Xop_tkn_itm_ {
 , Tid_vnt = 47
 , Tid_vnt_rule = 48
 , Tid_vnt_eqgt = 49
+, Tid_cr = 50
 ;
 public static final String[] Tid__names
 = new String[]
@@ -122,5 +123,6 @@ public static final String[] Tid__names
 , "vnt"
 , "vnt_rule"
 , "vnt_eqgt"
+, "cr"
 };
 }

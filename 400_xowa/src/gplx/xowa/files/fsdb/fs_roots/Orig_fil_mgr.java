@@ -15,12 +15,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.files.qrys.fs_roots; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.qrys.*;
+package gplx.xowa.files.fsdb.fs_roots; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
 class Orig_fil_mgr {
 	private OrderedHash hash = OrderedHash_.new_bry_();
-	public boolean Case_match() {return case_match;} public Orig_fil_mgr Case_match_(boolean v) {case_match = v; return this;} private boolean case_match;
-	public boolean Has(byte[] lnki_ttl) {return hash.Has(key_bld(lnki_ttl));}
-	public Orig_fil_itm Get_by_ttl(byte[] lnki_ttl) {return (Orig_fil_itm)hash.Fetch(key_bld(lnki_ttl));}
-	public void Add(Orig_fil_itm fil) {hash.Add(key_bld(fil.Fil_name()), fil);}
-	private byte[] key_bld(byte[] v) {return case_match ? v : ByteAry_.Lower_ascii(ByteAry_.Copy(v));}
+	public boolean Has(byte[] lnki_ttl) {return hash.Has(lnki_ttl);}
+	public Orig_fil_itm Get_by_ttl(byte[] lnki_ttl) {return (Orig_fil_itm)hash.Fetch(lnki_ttl);}
+	public void Add(Orig_fil_itm fil) {hash.Add(fil.Fil_name(), fil);}
 }

@@ -22,12 +22,12 @@ class Pf_str_pad extends Pf_func_base {
 		byte[] val = Eval_argx(ctx, src, caller, self);
 		int val_len = val.length;
 		
-		byte[] pad_len = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 0);
+		byte[] pad_len = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 0);
 		int pad_len_int = ByteAry_.X_to_int_or(pad_len, 0, pad_len.length, -1);
 		if (pad_len_int == -1) {bfr.Add(val); return;}// NOTE: if pad_len is non-int, add val and exit silently; EX: {{padleft: a|bad|0}}
 		if (pad_len_int > 500) pad_len_int = 500;	// MW: force to be <= 500
 		
-		byte[] pad_str = Pf_func_.EvalArgOr(ctx, src, caller, self, self_args_len, 1, Ary_pad_dflt);
+		byte[] pad_str = Pf_func_.Eval_arg_or(ctx, src, caller, self, self_args_len, 1, Ary_pad_dflt);
 		int pad_str_len = pad_str.length;
 		if (pad_str_len == 0) {bfr.Add(val); return;}// NOTE: pad_str is entirely empty or whitespace; add val and return; SEE:NOTE_1
 

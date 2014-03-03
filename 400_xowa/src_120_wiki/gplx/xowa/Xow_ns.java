@@ -44,6 +44,7 @@ public class Xow_ns implements GfoInvkAble {
 	public byte[]	Name_enc()				{return name_enc;} private byte[] name_enc;
 	public byte[]	Name_db_w_colon()		{return name_db_w_colon;} private byte[] name_db_w_colon;
 	public byte[]	Name_txt_w_colon()		{return name_txt_w_colon;} private byte[] name_txt_w_colon;		// PERF: for Xoa_ttl
+	public byte[]	Name_ui()				{return id == Xow_ns_.Id_main ? Xow_ns_.Name_ui_main : name_txt;}
 	public String	Num_str()				{return num_str;} private String num_str;
 	public byte[]	Num_bry()				{return num_bry;} private byte[] num_bry;
 	public int		Id()					{return id;} private int id;
@@ -97,5 +98,4 @@ public class Xow_ns implements GfoInvkAble {
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}	private static final String Invk_subpages_enabled_ = "subpages_enabled_", Invk_id = "id", Invk_name_txt = "name_txt", Invk_name_ui = "name_ui";
-	private String Name_ui() {return id == Xow_ns_.Id_main ? "(Main)" : name_str;}
 }

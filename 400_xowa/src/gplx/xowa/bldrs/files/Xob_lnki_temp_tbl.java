@@ -19,14 +19,15 @@ package gplx.xowa.bldrs.files; import gplx.*; import gplx.xowa.*; import gplx.xo
 import gplx.dbs.*;
 class Xob_lnki_temp_tbl {
 	public static void Create_table(Db_provider p) {Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
-	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_lnki_page_id, Fld_lnki_ttl, Fld_lnki_commons_ttl, Fld_lnki_ext, Fld_lnki_type, Fld_lnki_w, Fld_lnki_h, Fld_lnki_upright, Fld_lnki_time, Fld_lnki_page);}
-	public static void Insert(Db_stmt stmt, int page_id, byte[] ttl, byte[] ttl_commons, byte ext_id, byte img_type, int w, int h, double upright, double thumbtime, int page) {
+	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_lnki_page_id, Fld_lnki_ttl, Fld_lnki_commons_ttl, Fld_lnki_ext, Fld_lnki_type, Fld_lnki_src_tid, Fld_lnki_w, Fld_lnki_h, Fld_lnki_upright, Fld_lnki_time, Fld_lnki_page);}
+	public static void Insert(Db_stmt stmt, int page_id, byte[] ttl, byte[] ttl_commons, byte ext_id, byte img_type, byte lnki_src_tid, int w, int h, double upright, double thumbtime, int page) {
 		stmt.Clear()
 		.Val_int_(page_id)
 		.Val_str_by_bry_(ttl)
 		.Val_str_by_bry_(ttl_commons)
 		.Val_byte_(ext_id)
 		.Val_byte_(img_type)
+		.Val_int_(lnki_src_tid)
 		.Val_int_(w)
 		.Val_int_(h)
 		.Val_double_(upright)
@@ -37,7 +38,7 @@ class Xob_lnki_temp_tbl {
 	public static final String Tbl_name = "lnki_temp"
 	, Fld_lnki_id = "lnki_id"
 	, Fld_lnki_page_id = "lnki_page_id", Fld_lnki_ttl = "lnki_ttl", Fld_lnki_commons_ttl = "lnki_commons_ttl"
-	, Fld_lnki_ext = "lnki_ext", Fld_lnki_type = "lnki_type"
+	, Fld_lnki_ext = "lnki_ext", Fld_lnki_type = "lnki_type", Fld_lnki_src_tid = "lnki_src_tid"
 	, Fld_lnki_w = "lnki_w", Fld_lnki_h = "lnki_h", Fld_lnki_upright = "lnki_upright"
 	, Fld_lnki_time = "lnki_time", Fld_lnki_page = "lnki_page"
 	;
@@ -49,6 +50,7 @@ class Xob_lnki_temp_tbl {
 	, ", lnki_commons_ttl       varchar(255)        NULL"
 	, ", lnki_ext               integer             NOT NULL"
 	, ", lnki_type              integer             NOT NULL"
+	, ", lnki_src_tid           integer             NOT NULL"
 	, ", lnki_w                 integer             NOT NULL"
 	, ", lnki_h                 integer             NOT NULL"
 	, ", lnki_upright           double              NOT NULL"

@@ -21,19 +21,23 @@ import gplx.xowa.files.fsdb.caches.*;
 import gplx.xowa.files.gui.*;
 public interface Xof_fsdb_mgr extends RlsAble {
 	boolean Tid_is_mem();
+	Xow_wiki Wiki();
 	Xof_qry_mgr Qry_mgr();
 	Xof_bin_mgr Bin_mgr();
 	Xof_bin_wkr Bin_wkr_fsdb();
+	Gfo_usr_dlg Usr_dlg();
+	Fsdb_mnt_mgr Mnt_mgr();
 	Cache_mgr Cache_mgr();
-	Xow_wiki Wiki();
 	void Db_bin_max_(long v);
 	void Init_by_wiki(Xow_wiki wiki, Io_url db_dir, Io_url fs_dir, Xow_repo_mgr repo_mgr);
+	boolean Init_by_wiki(Xow_wiki wiki);
+	boolean Init_by_wiki__add_bin_wkrs(Xow_wiki wiki);
 	void Img_insert(Fsdb_xtn_img_itm rv, byte[] dir, byte[] fil, int ext_id, int img_w, int img_h, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr);
 	void Thm_insert(Fsdb_xtn_thm_itm rv, byte[] dir, byte[] fil, int ext_id, int thm_w, int thm_h, double thumbtime, int page, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr);
 	void Fil_insert(Fsdb_fil_itm rv    , byte[] dir, byte[] fil, int ext_id, DateAdp modified, String hash, long bin_len, gplx.ios.Io_stream_rdr bin_rdr);
 	void Reg_insert(Xof_fsdb_itm itm, byte repo_id, byte status);
 	void Reg_select(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms);
-	Gfo_usr_dlg Usr_dlg();
+	void Reg_select_only(Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms, OrderedHash hash);
 }
 class Xof_fsdb_mgr_utl {
 	public void Fsdb_search(Xof_fsdb_mgr fsdb_mgr, Io_url file_dir, Xog_win_wtr win_wtr, byte exec_tid, ListAdp itms, Xow_repo_mgr repo_mgr, Xof_url_bldr url_bldr) {

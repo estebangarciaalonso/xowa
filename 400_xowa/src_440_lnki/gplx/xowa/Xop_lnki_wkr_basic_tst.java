@@ -86,6 +86,9 @@ public class Xop_lnki_wkr_basic_tst {
 	@Test  public void Size_double_px_ws_allowed() {
 		fxt.Test_parse_page_wiki("[[Image:a|40pxpx  ]]"		, fxt.tkn_lnki_().Width_(40).Height_(-1));
 	}
+	@Test  public void Size_double_px_ws_allowed_2() {	// PURPOSE: handle ws between px's; EX:sv.w:Drottningholms_slott; DATE:2014-03-01
+		fxt.Test_parse_page_wiki("[[Image:a|40px px]]"		, fxt.tkn_lnki_().Width_(40).Height_(-1));
+	}
 	@Test  public void Size_large_numbers() {	// PURPOSE: perf code identified large sizes as caption; DATE:2014-02-15
 		fxt.Test_parse_page_wiki("[[Image:a|1234567890x1234567890px]]"		, fxt.tkn_lnki_().Width_(1234567890).Height_(1234567890));
 	}
@@ -637,6 +640,16 @@ public class Xop_lnki_wkr_basic_tst {
 	}
 	@Test  public void DoubleBracket() {
 		fxt.Test_parse_page_all_str("[[[[Test_1]]]]"		, "[[<a href=\"/wiki/Test_1\">Test_1</a>]]");
+	}
+	@Test  public void Visited() { // PURPOSE: show redirected titles as visited; EX:fr.w:Alpes_Pennines; DATE:2014-02-28
+		Xow_wiki wiki = fxt.Wiki();
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_ascii_("Src"));		// simulate requrest for "Src" page
+		Xoa_page previous_page = Xoa_page.blank_page_(wiki, ttl);
+		previous_page.Redirect_list().Add(ByteAry_.new_ascii_("Src"));		// simulate redirect from "Src"
+		fxt.App().User().History_mgr().Add(previous_page);					// simulate "Src" already being clicked once; this is the key call
+		fxt.Hctx().Lnki_visited_(true);
+		fxt.Test_parse_page_all_str("[[Src]]"		, "<a href=\"/wiki/Src\" class=\"xowa-visited\">Src</a>");	// show [[Src]] as visited since it exists in history
+		fxt.Test_parse_page_all_str("[[Other]]"		, "<a href=\"/wiki/Other\">Other</a>");						// show other pages as not visited
 	}
 }
 

@@ -144,7 +144,7 @@ class Xow_data_mgr_fxt {
 	public Xow_data_mgr_fxt Rename(String old_ttl, String new_ttl) {
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(old_ttl));
 		Xoa_page page = new Xoa_page(wiki, ttl);
-		wiki.Db_mgr().Save_mgr().Data_rename(page, ByteAry_.new_utf8_(new_ttl));
+		wiki.Db_mgr().Save_mgr().Data_rename(page, ttl.Ns().Id(), ByteAry_.new_utf8_(new_ttl));
 		return this;
 	}
 	public Xow_data_mgr_fxt Tst_regy_title(String expd) {return Tst_regy(Xow_dir_info_.Name_title, expd);}

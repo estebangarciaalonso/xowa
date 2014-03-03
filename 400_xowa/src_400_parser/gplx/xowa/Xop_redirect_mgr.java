@@ -60,4 +60,13 @@ public class Xop_redirect_mgr {
 	public static final Xoa_ttl	Redirect_null_ttl = null;
 	public static final byte[]	Redirect_null_bry = ByteAry_.Empty;
 	public static final int Redirect_max_allowed = 4;
+	private static final byte[] Redirect_bry = ByteAry_.new_ascii_("#REDIRECT ");
+	public static byte[] Make_redirect_text(byte[] redirect_to_ttl) {
+		return ByteAry_.Add
+			(	Redirect_bry				// "#REDIRECT "
+			,	Xop_tkn_.Lnki_bgn			// "[["
+			,	redirect_to_ttl				// "Page"
+			,	Xop_tkn_.Lnki_end			// "]]"
+			);
+	}
 }

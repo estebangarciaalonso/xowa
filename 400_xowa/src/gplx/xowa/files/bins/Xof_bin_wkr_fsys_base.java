@@ -33,8 +33,8 @@ public abstract class Xof_bin_wkr_fsys_base implements Xof_bin_wkr, GfoInvkAble 
 		byte[] bin = Io_mgr._.LoadFilBry(src_url);
 		return bin != Io_mgr.LoadFilBry_fail;
 	}
-	protected abstract void Url_(Io_url v);
 	protected abstract Io_url Get_src_url(byte mode, String wiki, byte[] ttl_wo_ns, byte[] md5, Xof_ext ext, int w, double thumbtime);
+	public abstract void Url_(Io_url v);
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_url_))		this.Url_(m.ReadIoUrl("v"));
 		else	return GfoInvkAble_.Rv_unhandled;
@@ -44,7 +44,7 @@ public abstract class Xof_bin_wkr_fsys_base implements Xof_bin_wkr, GfoInvkAble 
 abstract class Xof_bin_wkr_fsys_wmf_base extends Xof_bin_wkr_fsys_base {
 	public Xof_url_bldr Url_bldr() {return url_bldr;} private Xof_url_bldr url_bldr = new Xof_url_bldr();
 	public abstract void Init_by_root();
-	@Override protected void Url_(Io_url v) {url_bldr.Root_(ByteAry_.new_utf8_(v.Raw()));}
+	@Override public void Url_(Io_url v) {url_bldr.Root_(ByteAry_.new_utf8_(v.Raw()));}
 	@Override protected Io_url Get_src_url(byte mode, String wiki, byte[] ttl_wo_ns, byte[] md5, Xof_ext ext, int w, double thumbtime) {
 		return this.Url_bldr().Init_by_itm(mode, ttl_wo_ns, md5, ext, w, thumbtime).Xto_url();
 	}
@@ -59,13 +59,5 @@ class Xof_bin_wkr_fsys_xowa extends Xof_bin_wkr_fsys_wmf_base {
 	@Override public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsys_xowa;}
 	@Override public void Init_by_root() {
 		this.Url_bldr().Init_by_root(ByteAry_.Empty, Op_sys.Cur().Fsys_dir_spr_byte(), Bool_.N, Bool_.N, Xof_repo_itm.Dir_depth_xowa);
-	}
-}
-class Xof_bin_wkr_fsys_dir extends Xof_bin_wkr_fsys_base {
-	private Io_url dir;
-	@Override public byte Bin_wkr_tid() {return Xof_bin_wkr_.Tid_fsys_dir;}
-	@Override protected void Url_(Io_url v) {this.dir = v;}
-	@Override protected Io_url Get_src_url(byte mode, String wiki, byte[] ttl_wo_ns, byte[] md5, Xof_ext ext, int w, double thumbtime) {
-		return mode == Xof_repo_itm.Mode_thumb ? Io_url_.Null : dir.GenSubFil(String_.new_utf8_(ttl_wo_ns));
 	}
 }

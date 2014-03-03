@@ -60,6 +60,13 @@ public class Xop_fxt {
 		ctx.Wiki().View_data().Clear();	// needed for {{#lst}} tests
 		return this;
 	}
+	public Xop_fxt Reset_for_msgs() {
+		Io_mgr._.InitEngine_mem();
+		wiki.Lang().Msg_mgr().Clear();	// need to clear out lang
+		wiki.Msg_mgr().Clear();			// need to clear out wiki.Msgs
+		this.Reset();
+		return this;
+	}
 	public Xoa_ttl Page_ttl_(String txt) {
 		Xoa_ttl rv = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(txt));
 		ctx.Page().Ttl_(rv);
@@ -101,7 +108,6 @@ public class Xop_fxt {
 	public Xop_tkn_chkr_base tkn_para_end_para_bgn_pre_(int pos)	{return tkn_para_(pos, Xop_para_tkn.Tid_para, Xop_para_tkn.Tid_pre);}
 	public Xop_tkn_chkr_base tkn_para_end_pre_(int pos)				{return tkn_para_(pos, Xop_para_tkn.Tid_pre , Xop_para_tkn.Tid_none);}
 	public Xop_tkn_chkr_base tkn_para_(int pos, byte tid, byte bgn) {return new Xop_para_tkn_chkr().Para_tid_(tid).Para_bgn_(bgn).Src_rng_(pos, pos);}
-	public Xop_tkn_chkr_base tkn_nl_auto_(int pos)					{return tkn_nl_(pos, pos, Xop_nl_tkn.Tid_auto);}
 	public Xop_tkn_chkr_base tkn_nl_char_(int bgn, int end)			{return tkn_nl_(bgn, end, Xop_nl_tkn.Tid_char);}
 	public Xop_tkn_chkr_base tkn_nl_char_len1_(int bgn)				{return tkn_nl_(bgn, bgn + 1, Xop_nl_tkn.Tid_char);}
 	public Xop_tkn_chkr_base tkn_nl_char_len0_(int pos)				{return tkn_nl_(pos, pos, Xop_nl_tkn.Tid_char);}

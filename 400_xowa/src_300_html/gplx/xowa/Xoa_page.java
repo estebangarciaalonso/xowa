@@ -44,6 +44,7 @@ public class Xoa_page {
 	public byte[]			Data_preview() {return data_preview;} public Xoa_page Data_preview_(byte[] v) {data_preview = v; return this;} private byte[] data_preview = ByteAry_.Empty;
 	public String			Html_bmk_pos() {return html_bmk_pos;} public Xoa_page Html_bmk_pos_(String v) {html_bmk_pos = v; return this;} private String html_bmk_pos;
 	public boolean				Html_restricted() {return html_restricted;} public void Html_restricted_n_() {html_restricted = false;} private boolean html_restricted = true;
+	public byte[]			Html_content_sub() {return html_content_sub;} public Xoa_page Html_content_sub_(byte[] v) {html_content_sub = v; return this;} private byte[] html_content_sub;
 	public Xop_hdr_mgr		Hdr_mgr() {return hdr_mgr;} private Xop_hdr_mgr hdr_mgr;
 	public ListAdp			Langs() {return langs;} private ListAdp langs = ListAdp_.new_();
 	public Wdata_external_lang_links_data Wdata_external_lang_links() {return wdata_external_lang_links;} private Wdata_external_lang_links_data wdata_external_lang_links = new Wdata_external_lang_links_data();
@@ -66,6 +67,7 @@ public class Xoa_page {
 		wdata_external_lang_links.Reset();
 		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_page_changed(this);
 		lang_convert_content = lang_convert_title = true;
+		html_content_sub = ByteAry_.Empty;
 	}
 	public static Xoa_page blank_page_(Xow_wiki wiki, Xoa_ttl ttl) {
 		Xoa_page rv = new Xoa_page(wiki, ttl);

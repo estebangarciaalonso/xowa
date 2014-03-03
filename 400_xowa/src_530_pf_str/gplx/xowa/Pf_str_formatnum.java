@@ -25,7 +25,7 @@ public class Pf_str_formatnum extends Pf_func_base {
 		Xol_lang lang = ctx.Wiki().Lang();
 		int self_args_len = self.Args_len();
 		byte[] val_dat_ary = Eval_argx(ctx, src, caller, self);
-		byte[] arg1 = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 0);
+		byte[] arg1 = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 0);
 		bfr.Add(Format_num(lang, val_dat_ary, arg1));
 	}
 	public static byte[] Format_num(Xol_lang lang, byte[] num, byte[] arg1) {

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.dbs.*; import gplx.fsdb.*; import gplx.xowa.files.wiki_orig.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.fsdb.caches.*;
+import gplx.xowa.files.fsdb.fs_roots.*;
 public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	private Db_provider img_regy_provider = null;		
 	private Io_url app_file_dir;
@@ -31,14 +32,15 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	public Gfo_usr_dlg Usr_dlg() {return usr_dlg;} Gfo_usr_dlg usr_dlg = Gfo_usr_dlg_.Null;
 	public Cache_mgr Cache_mgr() {return cache_mgr;} private Cache_mgr cache_mgr;
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
+	public Xof_fsdb_mgr_sql(Xow_wiki wiki) {this.wiki = wiki;}
 	public boolean Init_by_wiki__add_bin_wkrs(Xow_wiki wiki) { // helper method to init and add bin wkrs
-		Xof_fsdb_mgr_sql fsdb_mgr = wiki.File_mgr().Fsdb_mgr();
+		Xof_fsdb_mgr_sql fsdb_mgr = (Xof_fsdb_mgr_sql)wiki.File_mgr().Fsdb_mgr();
 		boolean init = fsdb_mgr.Init_by_wiki(wiki);
 		if (init) {
 			Xof_bin_mgr bin_mgr = fsdb_mgr.Bin_mgr();
-			Xof_bin_wkr_fsdb_sql fsdb_wkr = (Xof_bin_wkr_fsdb_sql)bin_mgr.Add(Xof_bin_wkr_.Key_fsdb_wiki, "xowa.fsdb.main");
+			Xof_bin_wkr_fsdb_sql fsdb_wkr = (Xof_bin_wkr_fsdb_sql)bin_mgr.Get_or_new(Xof_bin_wkr_.Key_fsdb_wiki, "xowa.fsdb.main");
 			fsdb_wkr.Fsdb_mgr().Db_dir_(wiki.App().Fsys_mgr().File_dir().GenSubDir(wiki.Domain_str()));
-			bin_mgr.Add(Xof_bin_wkr_.Key_http_wmf, "xowa.http.wmf");
+			bin_mgr.Get_or_new(Xof_bin_wkr_.Key_http_wmf, "xowa.http.wmf");
 		}
 		return init;
 	}
@@ -53,7 +55,7 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 		Xof_qry_wkr_xowa_reg qry_xowa = new Xof_qry_wkr_xowa_reg(img_regy_provider);
 //			Xof_qry_wkr_xowa qry_xowa = new Xof_qry_wkr_xowa(new Xof_wiki_finder(wiki.App().Wiki_mgr().Get_by_key_or_make(Xow_wiki_.Domain_commons_bry), wiki), new gplx.xowa.files.qrys.Xof_img_meta_wkr_xowa());
 		Xof_qry_wkr_wmf_api qry_wmf_api = new Xof_qry_wkr_wmf_api(wiki, new Xof_img_wkr_api_size_base_wmf());
-		qry_mgr.Wkrs_(qry_xowa, qry_wmf_api);
+		qry_mgr.Add_many(qry_xowa, qry_wmf_api);
 		wiki.Rls_list().Add(this);
 		bin_mgr.Resizer_(wiki.App().File_mgr().Img_mgr().Wkr_resize_img());
 		return true;
@@ -116,20 +118,6 @@ public class Xof_fsdb_mgr_sql implements Xof_fsdb_mgr, GfoInvkAble {
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_mnt_mgr))	return mnt_mgr;
-		else if	(ctx.Match(k, Invk_get))		return Get_or_new(m.ReadBry("key"));
 		else	return GfoInvkAble_.Rv_unhandled;
-	}	private static final String Invk_mnt_mgr = "mnt_mgr", Invk_get = "get";
-	private OrderedHash wkrs = OrderedHash_.new_bry_();
-	private static final OrderedHash prototypes = OrderedHash_.new_bry_();
-	private Xof_fsdb_wkr Get_or_new(byte[] key) {
-		Xof_fsdb_wkr rv = (Xof_fsdb_wkr)wkrs.Fetch(key);
-		if (rv == null) {
-			Xof_fsdb_wkr prototype = (Xof_fsdb_wkr)prototypes.Fetch(key);
-			rv = prototype.Clone_new(wiki);
-			wkrs.Add(key, rv);
-//				bin_mgr.Add(rv.Bin_wkr());
-//				qry_mgr.Add(rv.Qry_wkr());
-		}
-		return rv;
-	}
+	}	private static final String Invk_mnt_mgr = "mnt_mgr";
 }

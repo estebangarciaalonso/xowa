@@ -335,11 +335,12 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		if (ByteAry_.Len_eq_0(new_text)) return;
 		new_text = Xoa_ttl.Replace_spaces(new_text);	// ttls cannot have spaces; only underscores
 		Xoa_ttl new_ttl = Xoa_ttl.parse_(page.Wiki(), new_text);
-		if (new_ttl.Ns().Id() != Xow_ns_.Id_main) {
+		int new_ns_id = new_ttl.Ns().Id();
+		if (new_ns_id != Xow_ns_.Id_main) {
 			gui_wtr.Warn_many(GRP_KEY, "edit.rename.invalid_for_ns", "The new page name must remain in the same namespace");
 			return;
 		}
-		page.Wiki().Db_mgr().Save_mgr().Data_rename(page, new_text);
+		page.Wiki().Db_mgr().Save_mgr().Data_rename(page, new_ns_id, new_text);
 		page.Ttl_(Xoa_ttl.parse_(page.Wiki(), ByteAry_.Add(page.Ttl().Ns().Name_db_w_colon(), new_text)));
 		Exec_page_view(Xog_view_mode.Id_read);
 		gui_wtr.Prog_one(GRP_KEY, "edit.rename.done", "renamed page to {0}", String_.new_utf8_(page.Ttl().Full_txt_raw()));

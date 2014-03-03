@@ -63,7 +63,7 @@ public class Xodb_search_title_word_tbl {
 	,	", stw_word            varchar(255)        NOT NULL"
 	,	");"
 	);
-	public static final Db_idx_itm
+	private static final Db_idx_itm
 	Indexes_main						= Db_idx_itm.sql_("CREATE UNIQUE INDEX IF NOT EXISTS search_title_word__main       ON search_title_word (stw_word, stw_word_id);");
 }
 class Xodb_in_wkr_search_title_id extends Xodb_in_wkr_base {

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.dbs.tbls; import gplx.*; import gplx.xowa.*; import gplx.xowa.dbs.*;
 import gplx.dbs.*; import gplx.criterias.*; 
 public class Xodb_page_tbl {
-	public void Provider_(Db_provider provider) {this.provider = provider;} Db_provider provider;
+	public Db_provider Provider() {return provider;} public void Provider_(Db_provider provider) {this.provider = provider;} private Db_provider provider;
 	public void Delete_all() {provider.Exec_qry(Db_qry_.delete_tbl_(Tbl_name));}
 	public Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_page_id, Fld_page_ns, Fld_page_title, Fld_page_is_redirect, Fld_page_touched, Fld_page_len, Fld_page_random_int, Fld_page_file_idx);}
 	public void Insert(Db_stmt stmt, int page_id, int ns_id, byte[] ttl_wo_ns, boolean redirect, DateAdp modified_on, int page_len, int random_int, int file_idx) {

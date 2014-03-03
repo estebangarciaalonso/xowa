@@ -69,7 +69,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		DateAdp page_modified_on_dte = page.Modified_on();
 		byte[] page_modified_on_msg = page.Lang().Msg_mgr().Val_by_id_args(Xol_msg_itm_.Id_portal_lastmodified, tmp_bfr, page_modified_on_dte.XtoStr_fmt_yyyy_MM_dd(), page_modified_on_dte.XtoStr_fmt_HHmm());
 		byte[] html_content_editable = wiki.Gui_mgr().Cfg_browser().Content_editable() ? Content_editable_bry : ByteAry_.Empty;
-		byte[] page_redirected = Build_redirect_msg(app, wiki, page);
+		byte[] page_content_sub = Bld_page_content_sub(app, wiki, page);
 		if (Bry_xowa_root_dir == null)
 			Bry_xowa_root_dir = wiki.App().Url_converter_fsys().Encode_http(app.Fsys_mgr().Root_dir());
 		byte[] js_mathjax_script = ByteAry_.Empty;
@@ -91,15 +91,20 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		fmtr.Bld_bfr_many(bfr, page.Id()
 		, Page_name(tmp_bfr, page.Ttl(), null)								// NOTE: page_name does not show display_title (<i>). always pass in null
 		, Page_name(tmp_bfr, page.Ttl(), wiki.Ctx().Tab().Display_ttl())
-		, page_redirected, page_data, wtr_page_lang, page_modified_on_msg, lang.Dir_bry(), log_wtr.Html()
+		, page_content_sub, page_data, wtr_page_lang, page_modified_on_msg, lang.Dir_bry(), log_wtr.Html()
 		, mgr.Css_common_bry(), mgr.Css_wiki_bry(), css_xtn, html_content_editable
 		, portal_mgr.Div_personal_bry(), portal_mgr.Div_ns_bry(app.Utl_bry_bfr_mkr(), page.Ttl(), wiki.Ns_mgr()), portal_mgr.Div_view_bry(app.Utl_bry_bfr_mkr(), view_tid, page.Search_text())
 		, portal_mgr.Div_logo_bry(), portal_mgr.Div_home_bry(), portal_mgr.Div_wikis_bry(app.Utl_bry_bfr_mkr()), portal_mgr.Sidebar_mgr().Html_bry()
-		, mgr.Edit_rename_div_bry(), page.Data_preview()
+		, mgr.Edit_rename_div_bry(page.Ttl()), page.Data_preview()
 		, Xoa_app_.Version, Xoa_app_.Build_date, Bry_xowa_root_dir, js_mathjax_script, wiki.Fragment_mgr().Html_js_table(), js_wikidata_bry, js_edit_toolbar_bry, app.Server().Running_str()
 		);
 	}
-	private byte[] Build_redirect_msg(Xoa_app app, Xow_wiki wiki, Xoa_page page) {
+	private byte[] Bld_page_content_sub(Xoa_app app, Xow_wiki wiki, Xoa_page page) {
+		byte[] page_content_sub = page.Html_content_sub();		// contentSub exists; SEE: {{#isin}}
+		byte[] redirect_msg = Bld_redirect_msg(app, wiki, page);			
+		return tmp_bfr.Concat_skip_empty(Xoh_consts.Br, page_content_sub, redirect_msg).XtoAryAndClear();
+	}
+	private byte[] Bld_redirect_msg(Xoa_app app, Xow_wiki wiki, Xoa_page page) {
 		ListAdp list = page.Redirect_list();
 		int list_len = list.Count();
 		if (list_len == 0) return ByteAry_.Empty;

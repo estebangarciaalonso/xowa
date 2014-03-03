@@ -24,7 +24,7 @@ public abstract class Xox_mgr_base implements Xox_mgr {
 	public abstract Xox_mgr Clone_new();
 	public boolean Enabled() {return enabled;} private boolean enabled;
 	@gplx.Virtual public boolean Enabled_default() {return true;}
-	public void Enabled_y_() {enabled = true;}	// TEST:
+	public void Enabled_y_() {enabled = true;} public void Enabled_n_() {enabled = false;}	// TEST:
 	@gplx.Virtual public void Xtn_ctor_by_app(Xoa_app app) {}
 	@gplx.Virtual public void Xtn_ctor_by_wiki(Xow_wiki wiki) {}
 	@gplx.Virtual public void Xtn_init_by_wiki(Xow_wiki wiki) {}

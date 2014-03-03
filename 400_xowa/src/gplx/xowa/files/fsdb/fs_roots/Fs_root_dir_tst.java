@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa.files.qrys.fs_roots; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.qrys.*;
+package gplx.xowa.files.fsdb.fs_roots; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
 import org.junit.*;
 import gplx.dbs.*;
 import gplx.fsdb.*;
@@ -29,6 +29,11 @@ public class Fs_root_dir_tst {
 	@Test   public void Recurse() {
 		fxt.Init_fs("mem/dir/sub1/A1.png", 200, 100);
 		fxt.Test_get("A1.png", fxt.itm_().Url_("mem/dir/sub1/A1.png").Size_(200, 100));
+	}
+	@Test  public void Xto_fil_bry() {
+		fxt.Test_xto_fil_bry("/dir/A.png"		, "A.png");		// basic
+		fxt.Test_xto_fil_bry("/dir/A b.png"		, "A_b.png");	// lower
+		fxt.Test_xto_fil_bry("/dir/a.png"		, "A.png");		// title
 	}
 }
 class Fs_root_dir_fxt {
@@ -57,6 +62,10 @@ class Fs_root_dir_fxt {
 	public static void Save_img(String url, int w, int h) {
 		gplx.gfui.SizeAdp img_size = gplx.gfui.SizeAdp_.new_(w, h);
 		Io_mgr._.SaveFilStr(url, img_size.XtoStr());
+	}
+	public void Test_xto_fil_bry(String url_str, String expd) {
+		Io_url url = Io_url_.new_fil_(url_str);
+		Tfds.Eq(expd, String_.new_utf8_(Fs_root_dir.Xto_fil_bry(url)));
 	}
 }
 class Orig_fil_mok {

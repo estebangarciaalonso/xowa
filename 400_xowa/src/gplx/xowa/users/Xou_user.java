@@ -44,7 +44,7 @@ public class Xou_user implements GfoInvkAble {
 		if (msg_mgr == null)
 			msg_mgr = new Xow_msg_mgr(this.Wiki(), this.Lang());	// NOTE: must call this.Lang() not this.lang, else nullRef exception when using "app.shell.fetch_page"; DATE:2013-04-12
 		return msg_mgr;} private Xow_msg_mgr msg_mgr;
-	public void App_init() {
+	public void Init_by_app() {
 		Io_url user_system_cfg = fsys_mgr.App_data_cfg_dir().GenSubFil(Xou_fsys_mgr.Name_user_system_cfg);
 		if (!Io_mgr._.ExistsFil(user_system_cfg)) Xou_user_.User_system_cfg_make(app.Usr_dlg(), user_system_cfg);
 		if (!Env_.Mode_testing())

@@ -108,13 +108,19 @@ public class Pfunc_expr_shunter {
 							if (nxt_pos > cur_pos)
 								return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unrecognised_word, ByteAry_.Mid(src, bgn_pos, nxt_pos));
 						}
+						if (cur_prc.Func_is_const()) {		// func is "pi" or "e"; DATE:2014-03-01
+							if (mode_expr) {				// number expected; just call Calc (which will place value on stack)
+								cur_prc.Calc(ctx, this, val_stack);
+								break;
+							}
+							else							// operator expected; fail b/c pi / e is not an operator;
+								return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unexpected_number);
+						}
 						if (mode_expr) {	// NOTE: all the GetAlts have higher precedence; "break;" need to skip evaluation below else will fail for --1
 							Func_tkn alt_prc = cur_prc.GetAlt();
-//								if (alt_prc == cur_prc && cur_prc.ArgCount() > 1) return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_err__unexpected_operator);
 							prc_stack.Push(alt_prc);
 							break;
 						}
-						if (cur_prc.ArgCount() == 0) return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unexpected_number);	// NOTE: mode_expr is false, so expecting operator but got pi/e instead 
 						prv_prc = prc_stack.GetLast();
 						while (prv_prc != null && (cur_prc.Precedence() <= prv_prc.Precedence())) {
 							if (!prv_prc.Calc(ctx, this, val_stack)) return Null_rslt;

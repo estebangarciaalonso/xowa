@@ -37,6 +37,12 @@ public class Xol_msg_mgr implements GfoInvkAble {
 		Itms_reg(rv);
 		return rv;
 	}
+	public Xol_msg_itm Itm_by_key_or_new(String key, String val) {return Itm_by_key_or_new(key, val, false);}
+	public Xol_msg_itm Itm_by_key_or_new(String key, String val, boolean has_fmt_arg) {	// TEST:
+		Xol_msg_itm rv = Itm_by_key_or_new(ByteAry_.new_utf8_(key));
+		rv.Atrs_set(ByteAry_.new_utf8_(val), has_fmt_arg, false);
+		return rv;
+	}
 	public Xol_msg_itm Itm_by_key_or_new(byte[] key) {
 		Object o = hash.Fetch(key);
 		Xol_msg_itm rv = null;

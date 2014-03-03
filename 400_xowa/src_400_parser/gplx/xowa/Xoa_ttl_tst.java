@@ -145,9 +145,10 @@ public class Xoa_ttl_tst {
 	}
 	@Test  public void First_char_is_multi_byte() {	// PURPOSE: if multi-byte, uppercasing is complicated; EX: µ -> Μ; DATE:2013-11-27
 		fxt.Wiki().Lang().Case_mgr().Add_bulk(Xol_case_itm_.Universal);
-		ttl_("µ").Full_txt_("Μ").Run();					// NOTE: this is not an ASCII "Μ"
-		ttl_("µab").Full_txt_("Μab").Run();				// check that rest of title works fine
+		ttl_("µ").Full_txt_("Μ").Run();						// NOTE: this is not an ASCII "Μ"
+		ttl_("µab").Full_txt_("Μab").Run();					// check that rest of title works fine
 		ttl_("Help:µab").Full_txt_("Help:Μab").Run();		// check ns
+		ttl_("Ι").Full_txt_("Ι").Run();						// check that Ι is not upper-cased to COMBINING GREEK YPOGEGRAMMENI; DATE:2014-02-24
 	}
 	@Test  public void First_char_is_multi_byte_assymetrical() { // PURPOSE: test multi-byte asymmetry (lc is 3 bytes; uc is 2 bytes)
 		fxt.Wiki().Lang().Case_mgr().Add_bulk(Xol_case_itm_.Universal);

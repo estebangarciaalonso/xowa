@@ -46,6 +46,7 @@ public class Xow_ns_ {
 		, Key_module			= "Module"			, Key_module_talk		= "Module talk"
 	    , Key_null				= "null"
 		;
+	public static final byte[] Name_ui_main = ByteAry_.new_ascii_(Key_main);
 	public static int Canonical_id(byte[] canonical_name) {
 		if (canonical_hash == null) {
 			Xow_ns[] ary = Canonical;

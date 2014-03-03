@@ -19,7 +19,8 @@ package gplx.xowa.dbs.tbls; import gplx.*; import gplx.xowa.*; import gplx.xowa.
 import gplx.dbs.*;
 public class Xodb_search_title_page_tbl {
 	public static void Create_table(Db_provider p)						{Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
-	public static void Create_index(Gfo_usr_dlg usr_dlg, Db_provider p)	{Sqlite_engine_.Idx_create(usr_dlg, p, "search", Indexes_main);}
+	public static void Create_index_unique(Gfo_usr_dlg usr_dlg, Db_provider p)	{Sqlite_engine_.Idx_create(usr_dlg, p, "search", Indexes_main_unique);}
+	public static void Create_index_non_unique(Gfo_usr_dlg usr_dlg, Db_provider p)	{Sqlite_engine_.Idx_create(usr_dlg, p, "search", Indexes_main_non_unique);}
 	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_stp_word_id, Fld_stp_page_id);}
 	public static void Insert(Db_stmt stmt, int word_id, int page_id) {
 		stmt.Clear()
@@ -34,6 +35,8 @@ public class Xodb_search_title_page_tbl {
 	,	", stp_page_id         integer             NOT NULL"
 	,	");"
 	);
-	public static final Db_idx_itm
-	Indexes_main						= Db_idx_itm.sql_("CREATE UNIQUE INDEX IF NOT EXISTS search_title_page__main       ON search_title_page (stp_word_id, stp_page_id);"); 
+	private static final Db_idx_itm
+	  Indexes_main_unique					= Db_idx_itm.sql_("CREATE UNIQUE INDEX IF NOT EXISTS search_title_page__main       ON search_title_page (stp_word_id, stp_page_id);")
+	, Indexes_main_non_unique				= Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS search_title_page__main       ON search_title_page (stp_word_id, stp_page_id);")
+	; 
 }

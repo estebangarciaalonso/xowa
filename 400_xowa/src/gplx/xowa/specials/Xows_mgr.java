@@ -25,6 +25,7 @@ import gplx.xowa.specials.randoms.*;
 import gplx.xowa.specials.statistics.*;
 import gplx.xowa.xtns.translates.*;
 import gplx.xowa.xtns.wdatas.*;
+import gplx.xowa.specials.movePage.*;
 public class Xows_mgr {
 	public Xows_mgr(Xow_wiki wiki) {
 		page_allpages = new Xows_page_allpages(wiki);
@@ -41,6 +42,7 @@ public class Xows_mgr {
 	public Xop_mylanguage_page			Page_mylanguage() {return page_mylanguage;} private Xop_mylanguage_page page_mylanguage = new Xop_mylanguage_page();
 	public Wdata_itemByTitle_page		Page_itemByTitle() {return page_itemByTitle;} Wdata_itemByTitle_page page_itemByTitle = new Wdata_itemByTitle_page();
 	public Xop_statistics_page			Page_statistics() {return page_statistics;} private Xop_statistics_page page_statistics = new Xop_statistics_page();
+	public Move_page					Page_movePage() {return page_movePage;} private Move_page page_movePage = new Move_page();
 	public void Evt_lang_changed(Xol_lang lang) {
 		hash.Clear();
 		hash.Add_str_obj("search"					, page_search);
@@ -53,6 +55,7 @@ public class Xows_mgr {
 		hash.Add_str_obj("mylanguage"				, page_mylanguage);
 		hash.Add_str_obj("itembytitle"				, page_itemByTitle);
 		hash.Add_str_obj("statistics"				, page_statistics);
+		hash.Add_str_obj("movePage"					, page_movePage);
 	}
 	public void Special_gen(Xoa_url calling_url, Xoa_page page, Xow_wiki wiki, Xoa_ttl ttl) {
 		int slash_pos = Byte_ary_finder.Find_fwd(ttl.Page_txt_wo_qargs(), Xoa_ttl.Subpage_spr);	// check for slash

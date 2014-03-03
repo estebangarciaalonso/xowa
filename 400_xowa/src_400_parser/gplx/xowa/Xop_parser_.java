@@ -25,4 +25,13 @@ public class Xop_parser_ {
 		Xop_root_tkn sub_root = sub_ctx.Tkn_mkr().Root(bry);
 		return wiki.Parser().Parse_page_tmpl(sub_root, sub_ctx, sub_ctx.Tkn_mkr(), bry);
 	}
+	public static void Parse_to_html(ByteAryBfr trg, Xow_wiki wiki, boolean para_enabled, byte[] bry) {
+		Xop_ctx ctx = Xop_ctx.new_sub_(wiki);
+		Xop_root_tkn root = new Xop_root_tkn();
+		byte[] mid = wiki.Parser().Parse_page_tmpl(root, ctx, ctx.Tkn_mkr(), bry);
+		root.Reset();
+		ctx.Para().Enabled_(para_enabled);
+		wiki.Parser().Parse_page_wiki(root, ctx, ctx.Tkn_mkr(), mid, Xop_parser_.Doc_bgn_bos);
+		wiki.Html_wtr().Write_all(ctx, root, mid, trg);
+	}
 }

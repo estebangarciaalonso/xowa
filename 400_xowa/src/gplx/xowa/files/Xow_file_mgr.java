@@ -18,11 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files; import gplx.*; import gplx.xowa.*;
 import gplx.fsdb.*; import gplx.xowa.files.fsdb.*;
 public class Xow_file_mgr implements GfoInvkAble {
+	private Xof_wkr_mgr wkr_mgr;
 	public Xow_file_mgr(Xow_wiki wiki) {
 		this.wiki = wiki;
 		repo_mgr = new Xow_repo_mgr(wiki);
 		meta_mgr = new Xof_meta_mgr(wiki);
-	}	private Xow_wiki wiki;
+		fsdb_mgr = new Xof_fsdb_mgr_sql(wiki);
+		wkr_mgr = new Xof_wkr_mgr(this);
+	}
+	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	public byte Version() {
 		if (version == Bool_.__byte) {
 			Io_url file_dir = wiki.Fsys_mgr().File_dir();
@@ -35,6 +39,10 @@ public class Xow_file_mgr implements GfoInvkAble {
 		return version;
 	}	private byte version = Version_null;
 	public boolean Version_1_y() {return this.Version() == Version_1;}
+	public void Fsdb_mgr_(Xof_fsdb_mgr fsdb_mgr) {
+		this.fsdb_mgr = fsdb_mgr;
+		version = Version_2;
+	}
 	public static final byte Version_null = Byte_.MaxValue_127, Version_1 = 1, Version_2 = 2;
 	public Xow_repo_mgr Repo_mgr() {return repo_mgr;} private Xow_repo_mgr repo_mgr;
 	public Xof_meta_mgr  Meta_mgr() {return meta_mgr;} private Xof_meta_mgr meta_mgr;
@@ -57,7 +65,7 @@ public class Xow_file_mgr implements GfoInvkAble {
 		fsdb_mgr.Init_by_wiki__add_bin_wkrs(wiki);	// make sure fsdb is init'd
 		return fsdb_mgr.Mnt_mgr().Abc_mgr_at(0).Cfg_mgr().Grps_get_or_load(grp);
 	}
-	public Xof_fsdb_mgr_sql Fsdb_mgr() {return fsdb_mgr;} private Xof_fsdb_mgr_sql fsdb_mgr = new Xof_fsdb_mgr_sql();
+	public Xof_fsdb_mgr Fsdb_mgr() {return fsdb_mgr;} private Xof_fsdb_mgr fsdb_mgr;
 	public boolean Find_meta(Xof_xfer_itm xfer_itm) {
 		xfer_itm.Trg_repo_idx_(Xof_meta_itm.Repo_unknown);
 		byte[] xfer_itm_ttl = xfer_itm.Lnki_ttl();
@@ -82,6 +90,8 @@ public class Xow_file_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_metas))					return meta_mgr;
 		else if	(ctx.Match(k, Invk_cfg_download))			return cfg_download;
 		else if	(ctx.Match(k, Invk_fsdb))					return fsdb_mgr;
+		else if	(ctx.Match(k, Invk_wkrs))					return wkr_mgr;
 		else	return GfoInvkAble_.Rv_unhandled;
-	}	private static final String Invk_repos = "repos", Invk_metas = "metas", Invk_cfg_download = "cfg_download", Invk_fsdb = "fsdb";
+//			return this;
+	}	private static final String Invk_repos = "repos", Invk_metas = "metas", Invk_cfg_download = "cfg_download", Invk_fsdb = "fsdb", Invk_wkrs = "wkrs";
 }

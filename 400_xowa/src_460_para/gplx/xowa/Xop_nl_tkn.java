@@ -23,5 +23,5 @@ public class Xop_nl_tkn extends Xop_tkn_itm_base {
 	}
 	@Override public byte Tkn_tid() {return Xop_tkn_itm_.Tid_newLine;}		
 	public byte Nl_tid() {return nl_tid;} private byte nl_tid = Xop_nl_tkn.Tid_unknown; 		
-	public static final byte Tid_unknown = 0, Tid_char = 1, Tid_auto = 2, Tid_hdr = 3, Tid_hr = 4, Tid_list = 5, Tid_tblw = 6, Tid_file = 7;
+	public static final byte Tid_unknown = 0, Tid_char = 1, Tid_hdr = 2, Tid_hr = 3, Tid_list = 4, Tid_tblw = 5, Tid_file = 6;
 }

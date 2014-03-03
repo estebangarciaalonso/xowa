@@ -35,10 +35,16 @@ public class Xou_history_mgr implements GfoInvkAble {// app.user.history
 	}
 	public void Add(Xoa_page page) {
 		Xoa_url url = page.Url();
-//			byte[] anchor = url.Anchor_bry() == null ? ByteAry_.Empty : ByteAry_.Add(new byte[] {Byte_ascii.Hash}, url.Anchor_bry());
-		byte[] page_ttl = ByteAry_.Add(page.Ttl().Ns().Name_db_w_colon(), page.Ttl().Page_txt());  // use ttl.Page_txt() b/c it normalizes space/casing (url.Page_txt does not)
-		if (url.Args().length > 0)
-			page_ttl = ByteAry_.Add(page_ttl, url.Args_all_as_bry());
+		Xoa_ttl ttl = page.Ttl();
+		byte[] page_ttl = null;
+		ListAdp redirect_list = page.Redirect_list();
+		if (redirect_list.Count() > 0)		// page was redirected; add src ttl to history, not trg; EX: UK -> United Kingdom; add "UK"; DATE:2014-02-28
+			page_ttl = (byte[])page.Redirect_list().FetchAt(0);
+		else {
+			page_ttl = ByteAry_.Add(ttl.Ns().Name_db_w_colon(), ttl.Page_txt());  // use ttl.Page_txt() b/c it normalizes space/casing (url.Page_txt does not)
+			if (url.Args().length > 0)
+				page_ttl = ByteAry_.Add(page_ttl, url.Args_all_as_bry());
+		}
 		Add(url, page_ttl);
 	}
 	public void Add(Xoa_url url, byte[] page_ttl) {

@@ -38,7 +38,7 @@ public class Xop_lnki_logger_redlinks_mgr {
 		if (ttl == null) return; // occurs for invalid links
 		Xow_ns ns = ttl.Ns();
 		if (	ns.Id_file_or_media()							// ignore files which will usually not be in local wiki (most are in commons), and whose html is built up separately
-			||	ns.Id_ctg()										// ignore ctgs which have their own html builder
+			||	(ns.Id_ctg() && !ttl.ForceLiteralLink())		// ignore ctgs which have their own html builder, unless it is literal; EX: [[:Category:A]]; DATE:2014-02-24
 			||	ns.Id_special()									// ignore special, especially Search; EX: Special:Search/Earth
 			||	ttl.Anch_bgn() == Xoa_ttl.Anch_bgn_anchor_only	// anchor only link; EX: [[#anchor]]
 			||	ttl.Wik_itm() != null							// xwiki lnki; EX: simplewiki links in homewiki; [[simplewiki:Earth]]

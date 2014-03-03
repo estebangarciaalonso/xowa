@@ -21,7 +21,7 @@ class Pf_intl_grammar extends Pf_func_base {
 	@Override public Pf_func New(int id, byte[] name) {return new Pf_intl_grammar().Name_(name);}
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {
 		byte[] argx = Eval_argx(ctx, src, caller, self);
-		byte[] word = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self.Args_len(), 0);
+		byte[] word = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self.Args_len(), 0);
 		Xol_lang lang = ctx.Page().Lang();
 		boolean pass = false;
 		try {pass = lang.Grammar().Grammar_eval(bfr, lang, word, argx);}

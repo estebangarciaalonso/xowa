@@ -68,7 +68,7 @@ public class Xop_lnki_arg_parser {
 			int_bfr.Clear();
 			int match_len = end -1 - bwd_trie.Match_pos();
 			boolean mode_width = true;
-			int itm_end = bgn + (len - match_len);				// remove trailing px
+			int itm_end = bgn + (len - match_len);							// remove trailing px
 			for (int i = bgn; i < itm_end; i++) {
 				byte b = src[i];
 				Object o = size_trie.Match(b, src, i, itm_end);
@@ -77,9 +77,13 @@ public class Xop_lnki_arg_parser {
 				switch (v.Val()) {
 					case Key_dim_num:	int_bfr.Add_byte(b); break;
 					case Key_space:		break;	// ignore space; EX: "100 px"
-					case Key_dim_px:	{
-						if (i == itm_end - match_len) i = itm_end; // allow trailing px at end; EX: "20pxpx"; not allowed: "20px20px"; "20pxpxpx"
-						else return Tid_caption;
+					case Key_dim_px:	{		// 2nd px found; EX: "40pxpx"; "40px px"
+						int tmp_pos = size_trie.Match_pos();
+						tmp_pos = Byte_ary_finder.Find_fwd_while_space_or_tab(src, tmp_pos, itm_end);	// look for next ws pos; 
+						if (tmp_pos == itm_end)	// no non-ws found; tmp_pos == itm_end; allow itm; EX: "40pxpx"; "40px px"; DATE:2014-03-01
+							i = itm_end;
+						else					// non-ws found; consider as caption; EX: "20px20px"; "20pxpxpx"
+							return Tid_caption;
 						break;
 					}
 					case Key_dim_x:		{

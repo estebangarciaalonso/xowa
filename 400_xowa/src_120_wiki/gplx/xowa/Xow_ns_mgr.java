@@ -225,10 +225,9 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 		else if	(ctx.Match(k, Invk_clear))				this.Clear();
 		else if	(ctx.Match(k, Invk_add_alias_bulk))		Exec_add_alias_bulk(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_get_by_id_or_new))	return this.Ids_get_or_empty(m.ReadInt("v"));	// NOTE: called by #cfg files for setting Subpages_enabled; if ns doesn't exist, returning empty is fine; DATE:2014-02-15
-		else if	(ctx.Match(k, Invk_filter_active))		return this.Filter_active();					// NOTE: used by rename (to get list of active ns for dropdown)
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
-	}	private static final String Invk_add_alias_bulk = "add_alias_bulk", Invk_get_by_id_or_new = "get_by_id_or_new", Invk_filter_active = "filter_active";
+	}	private static final String Invk_add_alias_bulk = "add_alias_bulk", Invk_get_by_id_or_new = "get_by_id_or_new";
 	public static final String Invk_load = "load", Invk_clear = "clear";
 	private void Exec_add_alias_bulk(byte[] raw) {
 		byte[][] lines = ByteAry_.Split(raw, Byte_ascii.NewLine);
@@ -241,15 +240,5 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 			this.Aliases_add(cur_id, String_.new_utf8_(flds[1]));
 		}
 		Ords_sort();
-	}
-	private ListAdp Filter_active() {
-		ListAdp rv = ListAdp_.new_();
-		int len = id_hash.Count();
-		for (int i = 0; i < len; i++) {
-			Xow_ns ns = (Xow_ns)id_hash.FetchAt(i);
-			if (ns.Id() >= Xow_ns_.Id_main)		// ignore Special, Media
-				rv.Add(ns);
-		}
-		return rv;
 	}
 }

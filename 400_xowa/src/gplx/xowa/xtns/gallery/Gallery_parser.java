@@ -67,7 +67,7 @@ public class Gallery_parser {
 		}
 		Xop_lnki_logger file_wkr = ctx.Lnki().File_wkr();	// NOTE: do not set file_wkr ref early (as member var); parse_all sets late
 		ctx.Page().Lnki_list().Add(lnki_tkn);
-		if (file_wkr != null) file_wkr.Wkr_exec(ctx, src, lnki_tkn);
+		if (file_wkr != null) file_wkr.Wkr_exec(ctx, src, lnki_tkn, gplx.xowa.bldrs.files.Xob_lnki_src_tid.Tid_gallery);
 	}
 	public byte Parse_itm() {
 		int fld_count = 0;

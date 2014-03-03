@@ -22,8 +22,8 @@ public class Lst_pfunc_lst extends Pf_func_base {
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {
 		byte[] src_ttl_bry = Eval_argx(ctx, src, caller, self); if (ByteAry_.Len_eq_0(src_ttl_bry)) return;		// {{#lst:}} -> ""
 		int args_len = self.Args_len();
-		byte[] sect_bgn = Pf_func_.EvalArgOr(ctx, src, caller, self, args_len, 0, Lst_pfunc_wkr.Null_arg);
-		byte[] sect_end = Pf_func_.EvalArgOr(ctx, src, caller, self, args_len, 1, Lst_pfunc_wkr.Null_arg);
+		byte[] sect_bgn = Pf_func_.Eval_arg_or(ctx, src, caller, self, args_len, 0, Lst_pfunc_wkr.Null_arg);
+		byte[] sect_end = Pf_func_.Eval_arg_or(ctx, src, caller, self, args_len, 1, Lst_pfunc_wkr.Null_arg);
 		new Lst_pfunc_wkr().Init_include(src_ttl_bry, sect_bgn, sect_end).Exec(bfr, ctx);
 	}
 	public static final Lst_pfunc_lst _ = new Lst_pfunc_lst(); Lst_pfunc_lst() {}

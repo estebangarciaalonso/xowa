@@ -18,32 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
 import gplx.xowa.files.qrys.*;
 import gplx.xowa.files.bins.*;
-import gplx.xowa.files.qrys.fs_roots.*;
+import gplx.xowa.files.fsdb.fs_roots.*;
 public interface Xof_fsdb_wkr extends GfoInvkAble {
 	Xof_fsdb_wkr Clone_new(Xow_wiki wiki);
 	Xof_qry_wkr Qry_wkr();
 	Xof_bin_wkr Bin_wkr();
 }
-class Xof_fsdb_wkr__root_dir implements Xof_fsdb_wkr {
-	public Xof_fsdb_wkr Clone_new(Xow_wiki wiki) {
-		Xof_fsdb_wkr__root_dir rv = new Xof_fsdb_wkr__root_dir();
-		rv.Ctor_by_wiki(wiki);
-		return rv;
-	}
-	private void Ctor_by_wiki(Xow_wiki wiki) {
-		qry_wkr = new Fs_root_wkr(wiki);
-	}
-	public Xof_qry_wkr Qry_wkr() {return qry_wkr;} private Fs_root_wkr qry_wkr;
-	public Xof_bin_wkr Bin_wkr() {return null;}
-
-	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_get)) {}
-		else	return GfoInvkAble_.Rv_unhandled;
-		return this;
-	}	private static final String Invk_get = "get";
-}
-/*
-wiki.files.fsdb.get('root_dir').get('main') {
-	url = '~{xowa_root}/a/b';
-}
-*/

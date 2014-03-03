@@ -19,11 +19,9 @@ package gplx.xowa.users; import gplx.*; import gplx.xowa.*;
 public class Xous_window_mgr implements GfoInvkAble {
 	public Xous_window_mgr(Xou_user user) {
 		this.user = user;
-		gplx.gfui.SizeAdp size = Xouc_window_mgr.Screen_maximized_calc();
-		rect = new Rect_ref(0, 0, size.Width(), size.Height());
 	}
 	public Xou_user User() {return user;} private Xou_user user;
-	public Rect_ref Rect() {return rect;} Rect_ref rect;
+	public Rect_ref Rect() {if (rect == null) rect = Rect_new(); return rect;} Rect_ref rect;
 	public boolean Maximized() {return maximized;} private boolean maximized = false;
 	public void Save_window(gplx.gfui.GfuiWin win) {
 		gplx.xowa.cfgs.Xoa_cfg_mgr cfg_mgr = user.App().Cfg_mgr();
@@ -41,4 +39,8 @@ public class Xous_window_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_maximized_))				maximized = m.ReadYn("v");
 		return this;
 	}	public static final String Invk_rect = "rect", Invk_rect_ = "rect_", Invk_maximized = "maximized", Invk_maximized_ = "maximized_";
+	private static Rect_ref Rect_new() {	// NOTE: lazy initialization, else will fail for non-X11 environments; DATE:2014-03-02
+		gplx.gfui.SizeAdp size = Xouc_window_mgr.Screen_maximized_calc();
+		return new Rect_ref(0, 0, size.Width(), size.Height());
+	}
 }

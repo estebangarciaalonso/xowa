@@ -22,6 +22,6 @@ public interface Xodb_save_mgr {
 	int Page_id_next(); void Page_id_next_(int v);
 	void Data_create(Xoa_ttl ttl, byte[] text);
 	void Data_update(Xoa_page page, byte[] text);
-	void Data_rename(Xoa_page page, byte[] new_ttl);
+	void Data_rename(Xoa_page page, int trg_ns, byte[] trg_ttl);
 	void Clear();
 }

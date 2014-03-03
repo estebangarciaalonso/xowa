@@ -81,6 +81,13 @@ public class Xob_xfer_temp_itm_tst {
 		);
 		fxt.Test_lnki_page(3);
 	}
+	@Test   public void Media_should_be_ignored() {// ignore [[Media:]] for xfer_thumb (needed for xfer_orig)
+		fxt.Test_bgn
+		(	KeyVal_.new_(Xob_orig_regy_tbl.Fld_lnki_ttl			, "A.png")
+		,	KeyVal_.new_(Xob_lnki_regy_tbl.Fld_lnki_src_tid		, Xob_lnki_src_tid.Tid_media)
+		);
+		fxt.Test_itm_chk_fail_id(Xob_xfer_temp_itm.Chk_tid_ns_is_media);
+	}
 }
 class Xob_xfer_temp_itm_fxt {
 	private Xob_xfer_temp_itm itm = new Xob_xfer_temp_itm();
@@ -95,6 +102,7 @@ class Xob_xfer_temp_itm_fxt {
 	, Xob_orig_regy_tbl.Fld_orig_file_ext
 	, Xob_orig_regy_tbl.Fld_lnki_ttl
 	, Xob_lnki_regy_tbl.Fld_lnki_type
+	, Xob_lnki_regy_tbl.Fld_lnki_src_tid
 	, Xob_lnki_regy_tbl.Fld_lnki_w
 	, Xob_lnki_regy_tbl.Fld_lnki_h
 	, Xob_lnki_regy_tbl.Fld_lnki_count
@@ -118,7 +126,8 @@ class Xob_xfer_temp_itm_fxt {
 		GfoFldList flds = GfoFldList_.str_(Flds);
 		nde = GfoNde_.vals_(flds, Object_.Ary
 		( Xof_ext_.Id_png, 1, Xof_repo_itm.Repo_remote
-		, "A.png", Xof_ext_.Id_png, "A.png", Xop_lnki_type.Id_thumb, 220, 200, 1, 2, 440, 400, 3
+		, "A.png", Xof_ext_.Id_png, "A.png", Xop_lnki_type.Id_thumb, Xob_lnki_src_tid.Tid_file
+		, 220, 200, 1, 2, 440, 400, 3
 		, Xop_lnki_tkn.Upright_null, Xof_doc_thumb.Null, Xof_doc_page.Null
 		, Xof_media_type.Name_bitmap, "png"
 		));

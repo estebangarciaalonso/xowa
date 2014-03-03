@@ -75,8 +75,17 @@ class Xodb_tbl_search_title_temp {
 	}
 	public static void Cleanup(Gfo_usr_dlg usr_dlg, Db_provider p) {
 		p.Exec_sql("DROP TABLE IF EXISTS search_title_temp;");
-		Xodb_search_title_word_tbl.Create_index(usr_dlg, p);
-		Xodb_search_title_page_tbl.Create_index(usr_dlg, p);
+		try {
+			Xodb_search_title_word_tbl.Create_index(usr_dlg, p);
+		} catch (Exception e) {
+			usr_dlg.Warn_many("", "", "failed to create unique index for search title word: err=~{0}", Err_.Message_gplx_brief(e));
+		}
+		try {
+			Xodb_search_title_page_tbl.Create_index_unique(usr_dlg, p);
+		} catch (Exception e) {
+			usr_dlg.Warn_many("", "", "failed to create unique index: err=~{0}", Err_.Message_gplx_brief(e));
+			Xodb_search_title_page_tbl.Create_index_non_unique(usr_dlg, p);
+		}
 	}
 	public Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_stt_page_id, Fld_stt_word);}
 	public void Insert(Db_stmt stmt, int page_id, byte[] word) {

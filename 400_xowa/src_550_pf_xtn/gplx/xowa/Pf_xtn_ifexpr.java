@@ -31,9 +31,9 @@ class Pf_xtn_ifexpr extends Pf_func_base {
 		}
 		else {
 			if (is_nan || result.XtoInt() == 0)
-				bb.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 1));
+				bb.Add(Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 1));
 			else
-				bb.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 0));
+				bb.Add(Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 0));
 		}
 	}
 	Pfunc_expr_shunter shunter = Pfunc_expr_shunter._;

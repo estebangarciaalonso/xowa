@@ -25,6 +25,7 @@ class Expr_tkn_ {
 	public static final int Tid_operator = 1, Tid_paren_lhs = 5, Tid_paren_rhs = 6, Tid_space = 7, Tid_number = 8;
 }
 interface Func_tkn extends Expr_tkn {
+	boolean Func_is_const();
 	int ArgCount();
 	int Precedence();
 	Func_tkn GetAlt();
@@ -38,6 +39,7 @@ class Ws_tkn implements Expr_tkn {
 }
 class Paren_bgn_tkn implements Expr_tkn, Func_tkn {
 	public int Tid() {return Expr_tkn_.Tid_paren_lhs;}
+	public boolean Func_is_const() {return false;}
 	public byte[] Val_ary() {return val_ary;} private byte[] val_ary = ByteAry_.new_utf8_(val_str);
 	public String Val_str() {return val_str;} static final String val_str = "(";
 	public int ArgCount() {return 0;}
@@ -112,6 +114,7 @@ abstract class Func_tkn_base implements Func_tkn {
 	public int Tid() {return Expr_tkn_.Tid_operator;}
 	public abstract int Precedence();
 	public abstract int ArgCount();
+	@gplx.Virtual public boolean Func_is_const() {return false;}
 	public void Ctor(String v) {val_ary = ByteAry_.new_utf8_(v);}
 	public byte[] Val_ary()	{return val_ary;} private byte[] val_ary;
 	public String Val_str()	{return String_.new_utf8_(Val_ary());}
@@ -349,6 +352,7 @@ class Func_tkn_e_const extends Func_tkn_base {
 	public Func_tkn_e_const(String v) {this.Ctor(v);}
 	@Override public int ArgCount()		{return 0;}
 	@Override public int Precedence()	{return 0;}
+	@Override public boolean Func_is_const() {return true;}
 	@Override public boolean Calc_hook(Xop_ctx ctx, Pfunc_expr_shunter shunter, Val_stack val_stack) {
 		val_stack.Push(DecimalAdp_.Const_e);
 		return true;
@@ -359,6 +363,7 @@ class Func_tkn_pi extends Func_tkn_base {
 	public Func_tkn_pi(String v) {this.Ctor(v);}
 	@Override public int ArgCount()		{return 0;}
 	@Override public int Precedence()	{return 0;}
+	@Override public boolean Func_is_const() {return true;}
 	@Override public boolean Calc_hook(Xop_ctx ctx, Pfunc_expr_shunter shunter, Val_stack val_stack) {
 		val_stack.Push(DecimalAdp_.Const_pi);
 		return true;

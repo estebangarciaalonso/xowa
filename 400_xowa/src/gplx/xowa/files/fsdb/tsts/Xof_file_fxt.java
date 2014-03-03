@@ -26,22 +26,22 @@ class Xof_file_fxt {
 		Xoa_app app = Xoa_app_fxt.app_();
 		Xow_wiki wiki = Xoa_app_fxt.wiki_tst_(app);
 		Xof_repo_fxt.Repos_init(app.File_mgr(), true, wiki);
-		fsdb_mgr = fsdb_mgr_new_(mem_tid);
+		fsdb_mgr = fsdb_mgr_new_(mem_tid, wiki);
 		qry_wkr_mock.Clear();
 		fsdb_mgr.Init_by_wiki(wiki, Xoa_test_.Url_file_enwiki(), Io_url_.mem_dir_("mem/root/"), wiki.File_mgr().Repo_mgr());
-		fsdb_mgr.Qry_mgr().Wkrs_(qry_wkr_mock);
-		fsdb_mgr.Bin_mgr().Wkrs_(fsdb_mgr.Bin_wkr_fsdb());
+		fsdb_mgr.Qry_mgr().Add(qry_wkr_mock);
+		fsdb_mgr.Bin_mgr().Add(fsdb_mgr.Bin_wkr_fsdb());
 		fsdb_mgr.Bin_mgr().Resizer_(Xof_img_wkr_resize_img_mok._);
 		fsdb_mgr.Bin_wkr_fsdb().Bin_wkr_resize_(true);
 	}
-	private static Xof_fsdb_mgr fsdb_mgr_new_(byte mem_tid) {
+	private static Xof_fsdb_mgr fsdb_mgr_new_(byte mem_tid, Xow_wiki wiki) {
 		boolean mem = false;
 		switch (mem_tid) {
 			case Bool_.Y_byte: mem = true; break;
 			case Bool_.N_byte: mem = false; break;
 			case Bool_.__byte: mem = Xoa_test_.Fsdb_is_mem; break;
 		}
-		Xof_fsdb_mgr rv = mem ? (Xof_fsdb_mgr)new Xof_fsdb_mgr_mem() : (Xof_fsdb_mgr)new Xof_fsdb_mgr_sql();
+		Xof_fsdb_mgr rv = mem ? (Xof_fsdb_mgr)new Xof_fsdb_mgr_mem() : (Xof_fsdb_mgr)new Xof_fsdb_mgr_sql(wiki);
 		if (!mem) Io_mgr._.DeleteDirDeep(Xoa_test_.Url_file_enwiki());
 		return rv;
 	}

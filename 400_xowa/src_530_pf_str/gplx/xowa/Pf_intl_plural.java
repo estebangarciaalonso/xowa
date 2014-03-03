@@ -23,7 +23,7 @@ class Pf_intl_plural extends Pf_func_base {
 		int self_args_len = self.Args_len();
 		int arg_idx = Pf_func_.Eq_(number, Ary_Num_1) ? 0 : 1;
 		if (arg_idx == 1 && self_args_len == 1) arg_idx = 0;	// number is plural, but plural_arg not present; use singular; see test
-		byte[] word = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, arg_idx);
+		byte[] word = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, arg_idx);
 		bfr.Add(word);
 	}	static final byte[] Ary_Num_1 = new byte[] {Byte_ascii.Num_1};
 	@Override public int Id() {return Xol_kwd_grp_.Id_i18n_plural;}

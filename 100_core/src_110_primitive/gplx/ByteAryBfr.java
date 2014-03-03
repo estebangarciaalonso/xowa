@@ -338,6 +338,21 @@ public class ByteAryBfr {
 		if (new_len > -1) bry_len = new_len;
 		return this;
 	}
+	public ByteAryBfr Concat_skip_empty(byte[] dlm, byte[]... ary) {
+		int ary_len = ary.length;
+		for (int i = 0; i < ary_len; i++) {
+			byte[] itm = ary[i];
+			boolean itm_has_bytes = ByteAry_.Len_gt_0(itm);
+			if (	i != 0
+				&&	itm_has_bytes
+				&&	bry_len > 0
+				)
+				this.Add(dlm);
+			if (itm_has_bytes)
+				this.Add(itm);
+		}
+		return this;
+	}
 	public byte[] XtoAry() {return bry_len == 0 ? ByteAry_.Empty : ByteAry_.Mid(bry, 0, bry_len);}
 	public byte[] XtoAryAndReset(int v) {
 		byte[] rv = XtoAry();

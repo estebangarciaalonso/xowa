@@ -28,7 +28,7 @@ class Pf_intl_int extends Pf_func_base {
 		if (args_len > 0) {
 			args_ary = new byte[args_len][];
 			for (int i = 0; i < args_len; i++)
-				args_ary[i] = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self.Args_len(), i);
+				args_ary[i] = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self.Args_len(), i);
 		}
 		byte[] msg_val = Pf_msg_mgr.Get_msg_by_key(wiki, page_lang, msg_key, args_ary);
 		bfr.Add(msg_val);

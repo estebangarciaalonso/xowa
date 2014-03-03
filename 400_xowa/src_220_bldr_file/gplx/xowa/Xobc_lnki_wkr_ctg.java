@@ -30,7 +30,7 @@ class Xobc_lnki_wkr_ctg extends Xob_itm_dump_base implements Xop_lnki_logger {
 		make_url_gen = Io_url_gen_.dir_(temp_dir.GenSubDir("make"));
 		fld_wtr.Bfr_(dump_bfr);
 	}	Io_url sort_dir; Gfo_fld_wtr lnki_wtr; private Gfo_fld_wtr fld_wtr = Gfo_fld_wtr.xowa_();
-	public void Wkr_exec(Xop_ctx ctx, byte[] src, Xop_lnki_tkn lnki) {
+	public void Wkr_exec(Xop_ctx ctx, byte[] src, Xop_lnki_tkn lnki, byte lnki_src_tid) {
 		gplx.xowa.bldrs.imports.ctgs.Xob_ctg_v1_base.Process_ctg_row(fld_wtr, dump_fil_len, dump_url_gen, ctx.Page().Id(), src, src.length, lnki.Src_bgn(), lnki.Src_end());
 	}
 	public void Wkr_end() {

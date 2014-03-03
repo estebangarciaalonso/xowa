@@ -23,12 +23,12 @@ class Pf_xtn_iferror extends Pf_func_base {
 		byte[] val_dat_ary = Eval_argx(ctx, src, caller, self);
 		if (val_dat_ary == null) return;
 		if (Error_exists(val_dat_ary))
-			bb.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 0));
+			bb.Add(Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 0));
 		else {
 			if (self_args_len < 2)		// pass clause absent; add original
 				bb.Add(val_dat_ary);
 			else
-				bb.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, self_args_len, 1));
+				bb.Add(Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 1));
 		}
 	}
 	@Override public int Id() {return Xol_kwd_grp_.Id_xtn_iferror;}

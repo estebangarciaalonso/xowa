@@ -31,7 +31,7 @@ class Pf_tag extends Pf_func_base {
 			tmp.Add_byte(Byte_ascii.Lt).Add(tag_name);	// DEFER: tag_name should be lowered; ISSUE: adds more complication (language-specific/performance); EXCUSE: xml node names are case-insensitive
 			if (args_len > 1) {
 				for (int i = 1; i < args_len; i++) {
-					byte[] arg = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, args_len, i);
+					byte[] arg = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, args_len, i);
 					if (arg.length == 0) continue;	// if atr is empty, skip; see test
 					tmp.Add_byte(Byte_ascii.Space);
 					if (!AddHtmlArg(arg, tmp)) {
@@ -43,7 +43,7 @@ class Pf_tag extends Pf_func_base {
 			}
 			tmp.Add_byte(Byte_ascii.Gt);
 			if (args_len > 0) {	// FUTURE: trim should not be called on content; WHEN: adding src[] back to tmpl_eval  
-				tmp.Add(Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, args_len, 0));
+				tmp.Add(Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, args_len, 0));
 			}
 			tmp.Add_byte(Byte_ascii.Lt).Add_byte(Byte_ascii.Slash).Add(tag_name).Add_byte(Byte_ascii.Gt);
 			tmp.Add(Bry_tag_hdr_rhs).Add_int_variable(tag_idx).Add_byte(Byte_ascii.Gt);
@@ -59,7 +59,7 @@ class Pf_tag extends Pf_func_base {
 			tmp.Add_byte(Byte_ascii.Lt).Add(tag_name);	// DEFER: tag_name should be lowered; ISSUE: adds more complication (language-specific/performance); EXCUSE: xml node names are case-insensitive
 			if (args_len > 1) {
 				for (int i = 1; i < args_len; i++) {
-					byte[] arg = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, args_len, i);
+					byte[] arg = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, args_len, i);
 					if (arg.length == 0) continue;	// if atr is empty, skip; see test
 					tmp.Add_byte(Byte_ascii.Space);
 					if (!AddHtmlArg(arg, tmp)) {
@@ -70,7 +70,7 @@ class Pf_tag extends Pf_func_base {
 			}
 			tmp.Add_byte(Byte_ascii.Gt);
 			if (args_len > 0) {
-				byte[] content = Pf_func_.EvalArgOrEmptyAry(ctx, src, caller, self, args_len, 0);
+				byte[] content = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, args_len, 0);
 				Xop_ctx sub_ctx = Xop_ctx.new_sub_(ctx.Wiki()); Xop_tkn_mkr sub_tkn_mkr = sub_ctx.Tkn_mkr();
 				content = ctx.Wiki().Parser().Parse_page_tmpl(sub_tkn_mkr.Root(content), sub_ctx, sub_tkn_mkr, content);	// NOTE: force reparse; needed for {{#tag:ref|{{A{{!}}B}}}}; EX: de.wikipedia.org/wiki/Freiburg_im_Breisgau; DATE:2013-12-18
 				tmp.Add(content);

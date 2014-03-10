@@ -53,7 +53,7 @@ public class Json_itm_nde extends Json_itm_base implements Json_grp {
 		subs_len = new_len;
 	}
 	@Override public void Print_as_json(ByteAryBfr bfr, int depth) {
-		if (bfr.Bry_len() != 0)
+		if (bfr.Len() != 0)
 			bfr.Add_byte_nl();
 		Json_grp_.Print_indent(bfr, depth);
 		bfr.Add_byte(Byte_ascii.Curly_bgn).Add_byte(Byte_ascii.Space);

@@ -58,6 +58,16 @@ public class Xoa_url {
 		redirect_force = false;
 		action_is_edit = false;
 	}
+	public boolean Args_exists(byte[] key, byte[] val) {
+		int args_len = args.length;
+		for (int i = 0; i < args_len; i++) {
+			Gfo_url_arg arg = args[i];
+			if (	ByteAry_.Eq(arg.Key_bry(), key)
+				&&	ByteAry_.Eq(arg.Val_bry(), val))
+				return true;
+		}
+		return false;
+	}
 	public void Args_fill(OrderedHash trg_args) {
 		int trg_len = trg_args.Count();
 		for (int i = 0; i < trg_len; i++) {

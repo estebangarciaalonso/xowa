@@ -20,7 +20,8 @@ public class ConsoleAdp implements GfoInvkAble, ConsoleDlg {
 	public boolean Enabled() {return true;}
 	public boolean Canceled() {return canceled;} public void Canceled_set(boolean v) {canceled = v;} private boolean canceled = false;
 	public boolean CanceledChk() {if (canceled) throw Err_.op_canceled_usr_(); return canceled;}
-	public int CharsPerLineMax() {return charsPerLineMax;} public void CharsPerLineMax_set(int v) {charsPerLineMax = v;} int charsPerLineMax = 80;
+	public int CharsPerLineMax() {return chars_per_line_max;} public void CharsPerLineMax_set(int v) {chars_per_line_max = v;} int chars_per_line_max = 80;
+	public boolean Backspace_by_bytes() {return backspace_by_bytes;} public ConsoleAdp Backspace_by_bytes_(boolean v) {backspace_by_bytes = v; return this;} private boolean backspace_by_bytes;
 	public void WriteText(String s)										{ClearTempText(); WriteText_lang(s);}
 	public void WriteLine(String s)										{ClearTempText(); WriteLine_lang(s);}
 	public void WriteLineOnly()											{ClearTempText(); WriteLine("");}
@@ -31,7 +32,7 @@ public class ConsoleAdp implements GfoInvkAble, ConsoleDlg {
 		ClearTempText();
 		if (String_.Has(s, "\r")) s = String_.Replace(s, "\r", " ");
 		if (String_.Has(s, "\n")) s = String_.Replace(s, "\n", " ");
-		if (String_.Len(s) >= charsPerLineMax) s = String_.Mid(s, 0, charsPerLineMax - String_.Len("...") - 1) + "...";	// NOTE: >= and -1 needed b/c line needs to be 1 less than max; ex: default cmd is 80 width, but writing 80 chars will automatically create lineBreak
+		if (String_.Len(s) >= chars_per_line_max) s = String_.Mid(s, 0, chars_per_line_max - String_.Len("...") - 1) + "...";	// NOTE: >= and -1 needed b/c line needs to be 1 less than max; ex: default cmd is 80 width, but writing 80 chars will automatically create lineBreak
 		tempText = s;
 		WriteText_lang(s);
 	}	String tempText;
@@ -39,7 +40,7 @@ public class ConsoleAdp implements GfoInvkAble, ConsoleDlg {
 	void ClearTempText() {
 		if (tempText == null) return;
 		if (Env_.Mode_debug()) {WriteText_lang(String_.CrLf); return;}
-		int count = String_.Len(tempText);
+		int count = backspace_by_bytes ? ByteAry_.new_utf8_(tempText).length : String_.Len(tempText);
 		String moveBack = String_.Repeat("\b", count);
 		this.WriteText_lang(moveBack);						// move cursor back to beginning of line
 		this.WriteText_lang(String_.Repeat(" ", count));	// overwrite tempText with space
@@ -59,5 +60,9 @@ public class ConsoleAdp implements GfoInvkAble, ConsoleDlg {
 		catch (java.io.UnsupportedEncodingException e) {throw Err_.new_("unsupported exception");}
 	    ps.println(s);
 			}
-        public static final ConsoleAdp _ = new ConsoleAdp(); public ConsoleAdp() {}
+        public static final ConsoleAdp _ = new ConsoleAdp();
+	public ConsoleAdp() {
+		if (Op_sys.Cur().Tid_is_lnx())
+			backspace_by_bytes = true;	// bash shows UTF8 by default; backspace in bytes, else multi-byte characters don't show; DATE:2014-03-04
+	}
 }

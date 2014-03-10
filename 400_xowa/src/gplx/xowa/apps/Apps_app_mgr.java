@@ -26,7 +26,6 @@ public class Apps_app_mgr implements GfoInvkAble {
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_convert_tex_to_dvi		, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  2 * 60, "~{<>bin_plat_dir<>}miktex\\miktex\\bin\\latex", "-quiet -output-directory=~{temp_dir} -job-name=xowa_temp ~{tex_file}", "tex_file", "temp_dir");
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_convert_dvi_to_png		, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  2 * 60, "~{<>bin_plat_dir<>}miktex\\miktex\\bin\\dvipng", "~{dvi_file} -o ~{png_file} -q* -T tight -bg Transparent", "dvi_file", "png_file", "temp_dir");
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_convert_djvu_to_tiff	, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  1 * 60, "~{<>bin_plat_dir<>}djvulibre\\ddjvu", "-format=tiff -page=1 \"~{source}\" \"~{target}\"", "source", "target");
-		ProcessAdp.ini_(this, app.Gui_wtr(), app_tidy_html				, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  1 * 60, "~{<>bin_plat_dir<>}tidy\\tidy", ProcessAdp_tidy_html.Args_fmt, "source", "target");
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_decompress_bz2			, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  0	 , "~{<>bin_plat_dir<>}7-zip\\7za", "x -y \"~{src}\" -o\"~{trg_dir}\"", "src", "trg", "trg_dir");	// x=extract; -y=yes on all queries; -o=output_dir
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_decompress_bz2_by_stdout, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  0	 , "~{<>bin_plat_dir<>}7-zip\\7za", "x -so \"~{src}\"", "src");	// x=extract; -so=stdout
 		ProcessAdp.ini_(this, app.Gui_wtr(), app_decompress_zip			, cmd_eval, ProcessAdp.Run_mode_sync_timeout	,  0	 , "~{<>bin_plat_dir<>}7-zip\\7za", "x -y \"~{src}\" -o\"~{trg_dir}\"", "src", "trg", "trg_dir");	// x=extract; -y=yes on all queries; -o=output_dir
@@ -50,7 +49,6 @@ public class Apps_app_mgr implements GfoInvkAble {
 	public ProcessAdp App_convert_tex_to_dvi()			{return app_convert_tex_to_dvi;}		private ProcessAdp app_convert_tex_to_dvi = new ProcessAdp();
 	public ProcessAdp App_convert_dvi_to_png()			{return app_convert_dvi_to_png;}		private ProcessAdp app_convert_dvi_to_png = new ProcessAdp();
 	public ProcessAdp App_convert_djvu_to_tiff()		{return app_convert_djvu_to_tiff;}		private ProcessAdp app_convert_djvu_to_tiff = new ProcessAdp();
-	public ProcessAdp_tidy_html App_tidy_html()			{return app_tidy_html;}					private ProcessAdp_tidy_html app_tidy_html = new ProcessAdp_tidy_html();
 	public ProcessAdp App_view_web()					{return app_view_web;}					private ProcessAdp app_view_web = new ProcessAdp();
 	public ProcessAdp App_decompress_bz2()				{return app_decompress_bz2;}			private ProcessAdp app_decompress_bz2 = new ProcessAdp();
 	public ProcessAdp App_decompress_zip()				{return app_decompress_zip;}			private ProcessAdp app_decompress_zip = new ProcessAdp();
@@ -69,7 +67,6 @@ public class Apps_app_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_convert_tex_to_dvi))			return app_convert_tex_to_dvi;
 		else if	(ctx.Match(k, Invk_convert_dvi_to_png))			return app_convert_dvi_to_png;
 		else if	(ctx.Match(k, Invk_convert_djvu_to_tiff))		return app_convert_djvu_to_tiff;
-		else if	(ctx.Match(k, Invk_tidy_html))					return app_tidy_html;
 		else if	(ctx.Match(k, Invk_view_web))					return app_view_web;
 		else if	(ctx.Match(k, Invk_decompress_bz2))				return app_decompress_bz2;
 		else if	(ctx.Match(k, Invk_decompress_zip))				return app_decompress_zip;
@@ -109,7 +106,7 @@ public class Apps_app_mgr implements GfoInvkAble {
 		return rv;
 	}
 	private static final String Invk_query_img_size = "query_img_size", Invk_resize_img = "resize_img", Invk_convert_svg_to_png = "convert_svg_to_png", Invk_convert_tex_to_dvi = "convert_tex_to_dvi", Invk_convert_dvi_to_png = "convert_dvi_to_png"
-		, Invk_convert_djvu_to_tiff = "convert_djvu_to_tiff", Invk_tidy_html = "tidy_html", Invk_view_web = "view_web"
+		, Invk_convert_djvu_to_tiff = "convert_djvu_to_tiff", Invk_view_web = "view_web"
 		, Invk_decompress_bz2 = "decompress_bz2", Invk_decompress_zip = "decompress_zip", Invk_decompress_gz = "decompress_gz", Invk_decompress_bz2_by_stdout = "decompress_bz2_by_stdout"
 		, Invk_view_by_ext = "view_by_ext"
 		, Invk_lua = "lua", Invk_lilypond = "lilypond", Invk_abc2ly = "abc2ly", Invk_trim_img = "trim_img", Invk_convert_midi_to_ogg = "convert_midi_to_ogg"

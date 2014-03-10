@@ -29,7 +29,7 @@ class Io_sort_cmd_img implements Io_sort_cmd {
 		if (line_dlm == Byte_ascii.Nil) line_dlm = rdr.Line_dlm();
 		int rdr_key_bgn = rdr.Key_pos_bgn(), rdr_key_end = rdr.Key_pos_end();
 		if (prv_itm_end == 0 || !ByteAry_.Match(rdr.Bfr(), rdr_key_bgn, rdr_key_end, fil_bfr.Bry(), prv_itm_bgn, prv_itm_end)) {
-			int fil_bfr_len = fil_bfr.Bry_len();
+			int fil_bfr_len = fil_bfr.Len();
 			int rdr_key_len = rdr_key_end - rdr_key_bgn;
 			if (fil_bfr_len + rdr_key_len > make_fil_max) Flush();
 			prv_itm_bgn = fil_bfr_len;
@@ -42,7 +42,7 @@ class Io_sort_cmd_img implements Io_sort_cmd {
 		//fil_wtr.Rls(); itm_bfr.Rls(); fil_wtr.Rls(); reg_bfr.Rls(); key_bfr_0.Rls(); key_bfr_n.Rls();
 	}
 	private void Flush() {
-		Io_mgr._.SaveFilBry(make_url_gen.Nxt_url(), fil_bfr.Bry(), fil_bfr.Bry_len());
+		Io_mgr._.SaveFilBry(make_url_gen.Nxt_url(), fil_bfr.Bry(), fil_bfr.Len());
 		fil_bfr.Clear();
 	}
 }

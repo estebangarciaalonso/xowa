@@ -26,7 +26,8 @@ class Xop_under_lxr implements Xop_lxr {
 		Xop_under_lxr lxr = new Xop_under_lxr();
 		lxr.under_words_cs = ByteTrieMgr_slim.cs_();
 		lxr.under_words_ci = ByteTrieMgr_slim.ci_();
-		core_trie.Add(Hook, lxr);
+		core_trie.Add(Xop_under_hook.Key_std, lxr);
+		boolean hook_alt_null = true;
 		for (int i = 0; i < under_kwds_len; i++) {
 			int kwd_id = under_kwds[i];
 			Xol_kwd_grp kwd_grp = kwd_mgr.Get_or_new(kwd_id);
@@ -36,16 +37,23 @@ class Xop_under_lxr implements Xop_lxr {
 			for (int j = 0; j < kwd_itms_len; j++) {
 				Xol_kwd_itm kwd_itm = kwd_itms[j];
 				byte[] kwd_bry = kwd_itm.Bry();
-				if (ByteAry_.HasAtBgn(kwd_bry, Hook)) {	// kwd starts with __; EX: __NOTOC__
-					ByteTrieMgr_slim under_words = kwd_case_match ? lxr.under_words_cs : lxr.under_words_ci;						
-					under_words.Add(ByteAry_.Mid(kwd_bry, Hook_len, kwd_bry.length), IntVal.new_(kwd_id));
+				int kwd_len = kwd_bry.length;
+				Object hook_obj = Hook_trie.MatchAtCur(kwd_bry, 0, kwd_len);
+				if (hook_obj != null) {
+					Xop_under_hook hook = (Xop_under_hook)hook_obj;
+					ByteTrieMgr_slim under_words = kwd_case_match ? lxr.under_words_cs : lxr.under_words_ci;
+					under_words.Add(ByteAry_.Mid(kwd_bry, hook.Key_len(), kwd_bry.length), IntVal.new_(kwd_id));
+					if (hook_alt_null && hook.Tid() == Xop_under_hook.Tid_alt) {
+						core_trie.Add(Xop_under_hook.Key_alt, lxr);
+						hook_alt_null = false;
+					}
 				}
 				else {									// kwd doesn't start with __; no known examples, but just in case; EX: "NOTOC"; DATE:2014-02-14
 					Xop_word_lxr word_lxr = new Xop_word_lxr(kwd_id);
 					if (kwd_case_match)					// cs; add word directly to trie
 						core_trie.Add(kwd_bry, word_lxr);
 					else {								// NOTE: next part is imprecise; XOWA parser is cs, but kwd is ci; for now, just add all upper and all lower
-						lang.App().Usr_dlg().Warn_many("", "", "under keyword does not start with __; id=~{0} word=~{1}", kwd_id, String_.new_utf8_(kwd_bry));
+						lang.App().Usr_dlg().Warn_many("", "", "under keyword does not start with __; id=~{0} key=~{1} word=~{2}", kwd_id, String_.new_utf8_(kwd_grp.Key()), String_.new_utf8_(kwd_bry));
 						core_trie.Add(lang.Case_mgr().Case_build_lower(kwd_bry), word_lxr);
 						core_trie.Add(lang.Case_mgr().Case_build_upper(kwd_bry), word_lxr);	
 					}
@@ -60,8 +68,10 @@ class Xop_under_lxr implements Xop_lxr {
 	, Xol_kwd_grp_.Id_hiddencat, Xol_kwd_grp_.Id_index, Xol_kwd_grp_.Id_noindex, Xol_kwd_grp_.Id_staticredirect
 	, Xol_kwd_grp_.Id_disambig
 	};
-	private static final byte[] Hook = new byte[] {Byte_ascii.Underline, Byte_ascii.Underline};
-	private static final int Hook_len = Hook.length;
+	private static final ByteTrieMgr_fast Hook_trie = ByteTrieMgr_fast.cs_()
+		.Add(Xop_under_hook.Key_std, Xop_under_hook.Itm_std)
+		.Add(Xop_under_hook.Key_alt, Xop_under_hook.Itm_alt)
+		;
 	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		if (cur_pos == src_len) return ctx.LxrMake_txt_(cur_pos);			// eos
 		int rv = cur_pos;
@@ -120,4 +130,16 @@ class Xop_word_lxr implements Xop_lxr {
 		Xop_under_lxr.Make_tkn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, kwd_id);	// for now, all word_lxrs only call the under_lxr; DATE:2014-02-14
 		return cur_pos;
 	}
+}
+class Xop_under_hook {
+	Xop_under_hook(byte tid, byte[] key) {this.tid = tid; this.key = key; this.key_len = key.length;}
+	public byte Tid() {return tid;} private byte tid;
+	public byte[] Key() {return key;} private byte[] key;
+	public int Key_len() {return key_len;} private int key_len;
+	public static final byte Tid_std = 1, Tid_alt = 2;
+	public static final byte[] Key_std = new byte[] {Byte_ascii.Underline, Byte_ascii.Underline}, Key_alt = ByteAry_.new_utf8_("＿＿");	// ja wikis
+	public static final Xop_under_hook
+	  Itm_std = new Xop_under_hook(Tid_std, Key_std)
+	, Itm_alt = new Xop_under_hook(Tid_alt, Key_alt)
+	;
 }

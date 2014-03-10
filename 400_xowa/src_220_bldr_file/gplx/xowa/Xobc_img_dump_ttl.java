@@ -35,7 +35,7 @@ public class Xobc_img_dump_ttl extends Xob_itm_dump_base implements Xobd_wkr, Gf
 		byte[] src = page.Text();
 		Xoa_ttl redirect_ttl = redirect_mgr.Extract_redirect(src, src.length);
 		byte[] redirect_bry = redirect_ttl == null ? ByteAry_.Empty : redirect_ttl.Page_db();
-		if (dump_bfr.Bry_len() + ttl_bry.length + redirect_bry.length + Fixed_row_len > dump_fil_len) super.Flush_dump();
+		if (dump_bfr.Len() + ttl_bry.length + redirect_bry.length + Fixed_row_len > dump_fil_len) super.Flush_dump();
 		fld_wtr	.Write_bry_escape_fld(ttl_bry)
 				.Write_bry_escape_row(redirect_bry);
 	}	private static final int Fixed_row_len = 3;	// 2=| 1=\n

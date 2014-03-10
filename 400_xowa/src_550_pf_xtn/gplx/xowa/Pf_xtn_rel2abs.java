@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-class Pf_xtn_rel2abs extends Pf_func_base {
+public class Pf_xtn_rel2abs extends Pf_func_base {
 	@Override public boolean Func_require_colon_arg() {return true;}
 	private static final byte[] Ary_dot_slash = ByteAry_.new_ascii_("./"), Ary_dot_dot = ByteAry_.new_ascii_(".."), Ary_dot_dot_slash = ByteAry_.new_ascii_("../");
 	private static void qry_bgns_with_init() {

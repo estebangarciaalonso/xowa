@@ -26,7 +26,7 @@ class Cache_fil_tbl {
 		Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);
 		Sqlite_engine_.Idx_create(p, Idx_ttl);
 	}
-	public void Db_save(Cache_fil_itm itm) {
+	public String Db_save(Cache_fil_itm itm) {
 		try {
 			if (stmt_bldr == null) stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_uid), Fld_dir_id, Fld_fil_name, Fld_fil_is_orig, Fld_fil_w, Fld_fil_h, Fld_fil_thumbtime, Fld_fil_ext, Fld_fil_size, Fld_cache_time).Init(provider);
 			Db_stmt stmt = stmt_bldr.Get(itm.Cmd_mode());
@@ -38,9 +38,10 @@ class Cache_fil_tbl {
 				default:					throw Err_.unhandled(itm.Cmd_mode());
 			}
 			itm.Cmd_mode_(Db_cmd_mode.Ignore);
+			return null;
 		} catch (Exception e) {
-			Gfo_usr_dlg_._.Warn_many("", "", "failed to save itm: name=~{0} id=~{1} err=~{2}", String_.new_utf8_(itm.Fil_name()), itm.Uid(), Err_.Message_gplx_brief(e));
 			stmt_bldr = null;	// null out bldr, else bad stmt will lead to other failures
+			return Err_.Message_gplx_brief(e);
 		}
 	}
 	private void Db_save_modify(Db_stmt stmt, Cache_fil_itm itm) {
@@ -59,6 +60,7 @@ class Cache_fil_tbl {
 		if (select_itm_stmt != null) select_itm_stmt.Rls();
 		if (stmt_bldr != null) stmt_bldr.Rls();
 	}
+	public int Select_max_uid() {return Db_provider_.Select_fld0_as_int_or(provider, "SELECT Max(uid) AS MaxId FROM cache_fil;", -1);}
 	public Cache_fil_itm Select(int dir_id, byte[] fil_name, boolean fil_is_orig, int fil_w, int fil_h, double fil_thumbtime) {
 		if (select_itm_stmt == null) select_itm_stmt = Db_stmt_.new_select_(provider, Tbl_name, String_.Ary(Fld_dir_id, Fld_fil_name, Fld_fil_is_orig, Fld_fil_w, Fld_fil_h, Fld_fil_thumbtime));
 		DataRdr rdr = DataRdr_.Null;

@@ -103,26 +103,10 @@ class Fsdb_db_abc_mgr_ {
 		int last_id = -1;
 		if (atr_mgr.Len() > 0) {
 			Fsdb_db_atr_fil atr_fil = atr_mgr.Get_at(0);
-			int max_fil_id = Select_fld0_as_int_or(atr_fil.Provider(), "SELECT Max(fil_id) AS MaxId FROM fsdb_fil;", -1);
-			int max_thm_id = Select_fld0_as_int_or(atr_fil.Provider(), "SELECT Max(thm_id) AS MaxId FROM fsdb_xtn_thm;", -1);
+			int max_fil_id = Db_provider_.Select_fld0_as_int_or(atr_fil.Provider(), "SELECT Max(fil_id) AS MaxId FROM fsdb_fil;", -1);
+			int max_thm_id = Db_provider_.Select_fld0_as_int_or(atr_fil.Provider(), "SELECT Max(thm_id) AS MaxId FROM fsdb_xtn_thm;", -1);
 			last_id = max_fil_id > max_thm_id ? max_fil_id : max_thm_id;
 		}
 		cfg_mgr.Patch_next_id_exec(last_id);
-	}
-	private static int Select_fld0_as_int_or(Db_provider p, String sql, int or) {
-		DataRdr rdr = DataRdr_.Null;
-		try {
-			rdr = p.Exec_qry_as_rdr(Db_qry_sql.rdr_(sql));
-			int rv = or;
-			if (rdr.MoveNextPeer()) {
-				Object rv_obj = rdr.ReadAt(0);
-				if (rv_obj != null)		// Max(fil_id) will be NULL if tbl is empty
-					rv = Int_.cast_or_(rv_obj, or);
-			}
-			return rv;
-		}
-		finally {
-			rdr.Rls();
-		}
 	}
 }

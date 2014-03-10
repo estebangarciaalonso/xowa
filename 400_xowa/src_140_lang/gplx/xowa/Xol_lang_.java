@@ -47,10 +47,10 @@ public class Xol_lang_ {
 	public static void Lang_init(Xol_lang lang) {
 		lang.Num_fmt_mgr().Dec_dlm_(ByteAry_.new_ascii_(".")).Grps_add(new Gfo_num_fmt_grp(ByteAry_.new_utf8_(","), 3, true));
 		lang.Lnki_trail_mgr().Add_range(Byte_ascii.Ltr_a, Byte_ascii.Ltr_z);// REF.MW:MessagesEn.php|$linkTrail = '/^([a-z]+)(.*)$/sD';
-		lang.Xatrs_ref().Add_str_obj("name", ByteVal.new_(Xtn_ref_nde.Xatr_id_name));
-		lang.Xatrs_ref().Add_str_obj("group", ByteVal.new_(Xtn_ref_nde.Xatr_id_group));
-		lang.Xatrs_ref().Add_str_obj("follow", ByteVal.new_(Xtn_ref_nde.Xatr_id_follow));
-		lang.Xatrs_references().Add_str_obj("group", ByteVal.new_(Xtn_references_nde.Xatr_id_group));
+		lang.Xatrs_ref().Add_str_obj("name", ByteVal.new_(Ref_nde.Xatr_id_name));
+		lang.Xatrs_ref().Add_str_obj("group", ByteVal.new_(Ref_nde.Xatr_id_group));
+		lang.Xatrs_ref().Add_str_obj("follow", ByteVal.new_(Ref_nde.Xatr_id_follow));
+		lang.Xatrs_references().Add_str_obj("group", ByteVal.new_(References_nde.Xatr_id_group));
 		lang.Xatrs_gallery().Add_str_obj("perrow", ByteVal.new_(Gallery_nde.Xatr_id_perrow));
 		lang.Xatrs_gallery().Add_str_obj("widths", ByteVal.new_(Gallery_nde.Xatr_id_widths));
 		lang.Xatrs_gallery().Add_str_obj("heights", ByteVal.new_(Gallery_nde.Xatr_id_heights));
@@ -238,5 +238,7 @@ kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_mapSources_deg2dd                          
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_mapSources_dd2dms                              , "#dd2dms");
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_mapSources_geoLink                             , "#geolink");
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_geoCrumbs_isin                                 , "#isin");
+kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_relatedArticles                                , "#related");
+kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_relatedSites                                   , "#relatedSites");
 	}
 }

@@ -283,7 +283,7 @@ public class Xop_ctx {
 			||	tmpl_prepend_nl_trie.MatchAtCur(bry, 0, bry_len) == null		// bry does not start with {| : ; # *; REF.MW:Parser.php|braceSubstitution
 			) return;												
 		ByteAryBfr prv_bfr														// note that cur_bfr should be checked first before tmpl_output
-			= cur.Bry_len() == 0 //&& tmpl_output != null
+			= cur.Len() == 0 //&& tmpl_output != null
 			? tmpl_output
 			: cur
 			;

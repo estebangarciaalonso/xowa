@@ -35,7 +35,7 @@ public class Xob_xdat_file_wtr {
 	@gplx.Internal protected int[] Idx() {return idx;} private int[] idx;
 	public int Idx_pos() {return idx_pos;} private int idx_pos;
 	public ByteAryBfr Bfr() {return bfr;} ByteAryBfr bfr;
-	public Xob_xdat_file_wtr Add_idx(byte data_dlm) {return Add_idx_direct(bfr.Bry_len(), data_dlm);}
+	public Xob_xdat_file_wtr Add_idx(byte data_dlm) {return Add_idx_direct(bfr.Len(), data_dlm);}
 	public Xob_xdat_file_wtr Add_idx_direct(int itm_len, byte data_dlm) {
 		if (data_dlm != Byte_ascii.Nil) {	// write closing dlm for data_eny, unless Byte_.Null passed in
 			bfr.Add_byte(data_dlm);
@@ -45,17 +45,17 @@ public class Xob_xdat_file_wtr {
 		idx[idx_pos++] = itm_len;
 		return this;
 	}
-	public int Fil_len()					{return ((idx_pos    ) * Len_idx_itm) + bfr.Bry_len();}
-	public boolean FlushNeeded(int writeLen)	{return ((idx_pos + 1) * Len_idx_itm) + bfr.Bry_len() + writeLen > fil_max;}	// +1: pending entry will create new idx_itm
+	public int Fil_len()					{return ((idx_pos    ) * Len_idx_itm) + bfr.Len();}
+	public boolean FlushNeeded(int writeLen)	{return ((idx_pos + 1) * Len_idx_itm) + bfr.Len() + writeLen > fil_max;}	// +1: pending entry will create new idx_itm
 	public void Flush(Gfo_usr_dlg usr_dlg) {
-		if (bfr.Bry_len() == 0) return;		// nothing to flush
+		if (bfr.Len() == 0) return;		// nothing to flush
 		if (this.Fil_len() > fil_max)		// NOTE: data can exceed proscribed len; EX: wikt:Category for Italian nouns is 1 MB+
 			usr_dlg.Log_many(GRP_KEY, "flush_err", "--ctg exceeds len: expd_len=~{0} actl_len=~{1} url=~{2}", this.Fil_len(), fil_max, fil_url.Xto_api());
 		try {
 			wtr.Url_(fil_url).Open();
 			if (idx_pos > 0)				// write idx; NOTE: if idx written, then .xdat; else .csv
 				FlushIdx(wtr);
-			wtr.Write(bfr.Bry(), 0, bfr.Bry_len());	// write data;
+			wtr.Write(bfr.Bry(), 0, bfr.Len());	// write data;
 			wtr.Flush();
 		}
 		finally {wtr.Rls();}
@@ -77,7 +77,7 @@ public class Xob_xdat_file_wtr {
 		wtr.Write(idx_bry, 0, idx_bry_len);
 	}
 //		public void Flush(Gfo_usr_dlg usr_dlg) {
-//			if (bfr.Bry_len() == 0) return;		// nothing to flush
+//			if (bfr.Len() == 0) return;		// nothing to flush
 //			if (this.Fil_len() > fil_max)		// NOTE: data can exceed proscribed len; EX: wikt:Category for Italian nouns is 1 MB+
 //				usr_dlg.Log_many(GRP_KEY, "flush_err", "--ctg exceeds len: expd_len=~{0} actl_len=~{1} url=~{2}", this.Fil_len(), fil_max, fil_url.Xto_api());
 //			IoStream stream = IoStream_.Null;
@@ -85,7 +85,7 @@ public class Xob_xdat_file_wtr {
 //				stream = Io_mgr._.OpenStreamWrite(fil_url);
 //				if (idx_pos > 0)				// write idx; NOTE: if idx written, then .xdat; else .csv
 //					FlushIdx(stream);
-//				stream.Write(bfr.Bry(), 0, bfr.Bry_len());	// write data;
+//				stream.Write(bfr.Bry(), 0, bfr.Len());	// write data;
 //			}
 //			finally {stream.Rls();}
 //			Clear();

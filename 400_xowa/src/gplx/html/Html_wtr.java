@@ -47,7 +47,7 @@ public class Html_wtr {
 	public Html_wtr Txt_raw(byte[] v) {bfr.Add(v); return this;}
 	public Html_wtr Txt(byte[] v) {
 		if (v != null) {
-			bfr.Add(Html_util.Escape_html_as_bry(v));
+			bfr.Add(Html_utl.Escape_html_as_bry(v));
 		}
 		return this;
 	}
@@ -67,7 +67,7 @@ public class Html_wtr {
 		bfr.Add(key);
 		bfr.Add_byte(Byte_ascii.Eq);
 		bfr.Add_byte(atr_quote);
-		Html_util.Escape_html_to_bfr(bfr, val, 0, val.length, false, false, false, true);
+		Html_utl.Escape_html_to_bfr(bfr, val, 0, val.length, false, false, false, true);
 		bfr.Add_byte(atr_quote);
 		return this;
 	}

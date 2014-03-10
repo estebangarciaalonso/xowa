@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns; import gplx.*; import gplx.xowa.*;
+import gplx.xowa.html.*;
 public abstract class Xox_mgr_base implements Xox_mgr {
 	public Xox_mgr_base() {
 		this.enabled = Enabled_default();

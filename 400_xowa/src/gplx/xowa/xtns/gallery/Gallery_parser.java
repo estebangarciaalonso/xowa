@@ -47,7 +47,7 @@ public class Gallery_parser {
 			caption_bfr.Clear();
 			byte cur_mode = Parse_itm();
 			if (cur_itm.Ttl() != null) {
-				if (caption_bfr.Bry_len() > 0)
+				if (caption_bfr.Len() > 0)
 					cur_itm.Caption_bry_(caption_bfr.XtoAryAndClearAndTrim());
 				Make_lnki_tkn(src);
 				rv.Add(cur_itm);
@@ -116,7 +116,7 @@ public class Gallery_parser {
 		}
 		else {
 			cur_fld = Fld_caption;
-			caption_bgn = caption_bfr.Bry_len() == 0 ? cur_pos : bgn_pos;	// if 1st caption, trim bgn; otherwise, enclose rest; EX: "File:A.png| a| b" -> "a| b"
+			caption_bgn = caption_bfr.Len() == 0 ? cur_pos : bgn_pos;	// if 1st caption, trim bgn; otherwise, enclose rest; EX: "File:A.png| a| b" -> "a| b"
 		}
 		return Mode_text;
 	}
@@ -160,7 +160,7 @@ public class Gallery_parser {
 				}
 				break;
 			case Fld_caption:
-				if (caption_bfr.Bry_len() != 0) caption_bfr.Add_byte_pipe();	// prepend | to all other captions; EX: File:A.png|a|b -> "a|b" (pipe not added to 1st, but added to 2nd)
+				if (caption_bfr.Len() != 0) caption_bfr.Add_byte_pipe();	// prepend | to all other captions; EX: File:A.png|a|b -> "a|b" (pipe not added to 1st, but added to 2nd)
 				caption_bfr.Add_mid(src, caption_bgn, fld_end);
 				break;
 			case Fld_alt: 		cur_itm.Alt_end_(fld_end); break;

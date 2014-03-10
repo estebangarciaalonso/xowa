@@ -35,13 +35,19 @@ public class Xop_curly_wkr implements Xop_ctx_wkr {
 		while (end_tkn_len > 0) {
 			int acs_pos = -1, acs_len = ctx.Stack_len();
 			for (int i = acs_len - 1; i > -1; i--) {		// find auto-close pos
-				switch (ctx.Stack_get(i).Tkn_tid()) {
+				Xop_tkn_itm stack_tkn = ctx.Stack_get(i);
+				switch (stack_tkn.Tkn_tid()) {
 					case Xop_tkn_itm_.Tid_tmpl_curly_bgn:	// found curly_bgn; mark and exit
 						acs_pos = i;
 						i = -1;
 						break;
 					case Xop_tkn_itm_.Tid_brack_bgn:		// found no curly_bgn, but found brack_bgn; note that extra }} should not close any frames beyond lnki; EX:w:Template:Cite wikisource; w:John Fletcher (playwright)
 						i = -1;
+						break;
+					case Xop_tkn_itm_.Tid_xnde:				// found xnde; ignore; handle {{template|<poem>}}</poem>}} DATE:2014-03-03
+						Xop_xnde_tkn stack_xnde = (Xop_xnde_tkn)stack_tkn;
+						if (stack_xnde.Tag().Xtn())
+							i = -1;
 						break;
 				}
 			}

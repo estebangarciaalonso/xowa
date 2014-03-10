@@ -105,7 +105,7 @@ public class Xob_xdat_file {
 		Io_stream_wtr wtr = Io_stream_wtr_.new_by_url_(url);
 		try {
 			wtr.Open();
-			wtr.Write(bfr.Bry(), 0, bfr.Bry_len());
+			wtr.Write(bfr.Bry(), 0, bfr.Len());
 			wtr.Flush();
 		}
 		catch (Exception e) {throw Err_.err_(e, "failed to save file: {0}", url.Xto_api());}

@@ -36,15 +36,15 @@ public class Xob_make_cmd_site implements Io_make_cmd {
 		if (ByteAry_.Match(cur_bfr.Bry(), 0, itm_key_end, rdr.Bfr(), rdr_key_bgn, rdr_key_end))	// key is same; add rest of line as val
 			cur_bfr.Add_mid(rdr.Bfr(), rdr_val_bgn, rdr_val_end);
 		else {
-			if (fil_wtr.FlushNeeded(cur_bfr.Bry_len() + rdr_key_len)) Flush();
+			if (fil_wtr.FlushNeeded(cur_bfr.Len() + rdr_key_len)) Flush();
 			byte[] bfr = rdr.Bfr();
-			if (reg_key_0.Bry_len() == 0) {
-				if (cur_bfr.Bry_len() == 0)
+			if (reg_key_0.Len() == 0) {
+				if (cur_bfr.Len() == 0)
 					reg_key_0.Add_mid(bfr, rdr_key_bgn, rdr_key_end);
 				else
 					reg_key_0.Add_mid(cur_bfr.Bry(), 0, itm_key_end);
 			}
-			if (cur_bfr.Bry_len() > 0) {
+			if (cur_bfr.Len() > 0) {
 				reg_key_n.Clear().Add_mid(cur_bfr.Bry(), 0, itm_key_end);
 				fil_wtr.Bfr().Add_bfr_and_clear(cur_bfr);
 				fil_wtr.Add_idx(line_dlm);
@@ -60,13 +60,13 @@ public class Xob_make_cmd_site implements Io_make_cmd {
 			cur_bfr.Add_mid(bry, val_bgn, val_end);
 		else {																		// key changed;
 			int itm_len = itm_end - itm_bgn;
-			if (cur_bfr.Bry_len() > 0) {											// pending itm
+			if (cur_bfr.Len() > 0) {											// pending itm
 				fil_wtr.Bfr().Add_bfr_and_clear(cur_bfr);							// add cur_bfr to fil_bfr
 				fil_wtr.Add_idx(line_dlm);											// add cur_itm to hdr
-				if (fil_wtr.FlushNeeded(cur_bfr.Bry_len() + itm_len))
+				if (fil_wtr.FlushNeeded(cur_bfr.Len() + itm_len))
 					Flush();
 			}
-			if (reg_key_0.Bry_len() == 0)											// regy.key_0 bfr is empty
+			if (reg_key_0.Len() == 0)											// regy.key_0 bfr is empty
 				reg_key_0.Add_mid(bry, key_bgn, key_end);							// update reg_0key_0
 			reg_key_n.Clear().Add_mid(bry, key_bgn, key_end);						// always update reg_key_n
 			if (itm_len > 100 * Io_mgr.Len_mb)

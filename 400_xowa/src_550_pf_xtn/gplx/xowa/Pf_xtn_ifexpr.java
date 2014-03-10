@@ -25,7 +25,7 @@ class Pf_xtn_ifexpr extends Pf_func_base {
 		if (val_dat_ary == null) return;
 		DecimalAdp result = shunter.Evaluate(ctx, val_dat_ary);
 		boolean is_nan = result == Pfunc_expr_shunter.Null_rslt;
-		if (is_nan && shunter.Err().Bry_len() > 0) {
+		if (is_nan && shunter.Err().Len() > 0) {
 			bb.Add_bfr(shunter.Err());
 			shunter.Err().Clear();
 		}

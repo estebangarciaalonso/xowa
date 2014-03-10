@@ -48,7 +48,7 @@ public class Gfo_fld_wtr extends Gfo_fld_base {
 
 	public Io_url_gen Fil_gen() {return fil_gen;} public Gfo_fld_wtr Fil_gen_(Io_url_gen v) {fil_gen = v; return this;} Io_url_gen fil_gen;
 	public int Bfr_max() {return bfr_max;} public Gfo_fld_wtr Bfr_max_(int v) {bfr_max = v; return this;} private int bfr_max = Io_mgr.Len_mb;
-	public boolean Flush_needed(int v) {return bfr.Bry_len() + v > bfr_max;}
+	public boolean Flush_needed(int v) {return bfr.Len() + v > bfr_max;}
 	public void Flush() {
 		if (Fil_gen().Cur_url() == null) fil_gen.Nxt_url();
 		Io_mgr._.AppendFilBfr(fil_gen.Cur_url(), bfr);

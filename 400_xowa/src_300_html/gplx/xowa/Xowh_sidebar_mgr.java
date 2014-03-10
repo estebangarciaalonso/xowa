@@ -23,13 +23,20 @@ public class Xowh_sidebar_mgr implements GfoInvkAble {
 	public byte[] Html_bry() {return html_bry;} private byte[] html_bry;
 	public void Init() {
 		try {
-			ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
+			ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
+			ByteAryBfr comment_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
 			Xoa_ttl ttl = Xoa_ttl.parse_(wiki, CONST_sidebar_ttl);
 			Xoa_page sidebar_page = wiki.Data_mgr().Get_page(ttl, false);
-			if (sidebar_page.Missing()) {html_bry = ByteAry_.Empty; return;}
-			Parse(tmp_bfr, sidebar_page.Data_raw());
-			Bld_html(tmp_bfr);
-			html_bry = tmp_bfr.Mkr_rls().XtoAryAndClear();
+			if (sidebar_page.Missing()) {
+				html_bry = ByteAry_.Empty;
+				bfr.Mkr_rls();
+				comment_bfr.Mkr_rls();
+				return;
+			}
+			Parse(bfr, comment_bfr, sidebar_page.Data_raw());
+			Bld_html(bfr);
+			html_bry = bfr.Mkr_rls().XtoAryAndClear();
+			comment_bfr = comment_bfr.Mkr_rls().Clear();
 		} catch (Exception e) {
 			wiki.App().Usr_dlg().Warn_many(GRP_KEY, "sidebar.init", "sidebar init failed: ~{0} ~{1}", wiki.Domain_str(), Err_.Message_gplx_brief(e));
 			html_bry = ByteAry_.Empty;
@@ -41,7 +48,7 @@ public class Xowh_sidebar_mgr implements GfoInvkAble {
 			&&	ByteAry_.Eq(item, Ignore_item_ess_random)
 			);
 	}	private static byte[] Ignore_wiki_ess = ByteAry_.new_ascii_("es.wikisource.org"), Ignore_item_ess_random = ByteAry_.new_utf8_("special:Random/Página djvu");
-	public void Parse(ByteAryBfr tmp_bfr, byte[] src) {
+	public void Parse(ByteAryBfr bfr, ByteAryBfr comment_bfr, byte[] src) {
 		byte[][] lines = ByteAry_.Split(src, Byte_ascii.NewLine);
 		int lines_len = lines.length;
 		Xoa_app app = wiki.App(); Url_encoder id_encoder = app.Url_converter_id();
@@ -53,13 +60,14 @@ public class Xowh_sidebar_mgr implements GfoInvkAble {
 			if	(line[0] != Byte_ascii.Asterisk) continue;	// skip non-list items; must begin with "*"
 			byte tid = line[1] == Byte_ascii.Asterisk ? Xowh_sidebar_itm.Tid_itm : Xowh_sidebar_itm.Tid_grp;
 			byte[] bry = ByteAry_.Trim(line, tid, line_len);	// trim *, **; note that tid indicates # of asterisks
+			bry = gplx.html.Html_utl.Del_comments(comment_bfr, bry);	// strip comments; DATE:2014-03-08
 			if 	(ByteAry_.Match(bry, CONST_itm_search) || ByteAry_.Match(bry, CONST_itm_toolbox) || ByteAry_.Match(bry, CONST_itm_languages)) continue;	// ignore SEARCH, TOOLBOX, LANGUAGES
 			int pipe_pos = Byte_ary_finder.Find_fwd(bry, Byte_ascii.Pipe);
 			byte[] text_key = tid == Xowh_sidebar_itm.Tid_grp ? bry : ByteAry_.Mid(bry, pipe_pos + 1, bry.length);	// get text_key; note that grp is entire bry, while itm is after |
 			byte[] text_val = Resolve_key(text_key);
-			byte[] id = id_encoder.Encode(tmp_bfr.Add(CONST_id_prefix), text_key).XtoAryAndClear();	// build id; "n-encoded_id"
+			byte[] id = id_encoder.Encode(bfr.Add(CONST_id_prefix), text_key).XtoAryAndClear();	// build id; "n-encoded_id"
 			Xowh_sidebar_itm cur_itm = new Xowh_sidebar_itm(tid).Id_(id).Text_(text_val);
-			wiki.Msg_mgr().Val_html_accesskey_and_title(id, tmp_bfr, cur_itm);
+			wiki.Msg_mgr().Val_html_accesskey_and_title(id, bfr, cur_itm);
 			if (tid == Xowh_sidebar_itm.Tid_grp) {
 				cur_grp = cur_itm;
 				grps.Add(cur_grp);
@@ -72,7 +80,7 @@ public class Xowh_sidebar_mgr implements GfoInvkAble {
 				}
 				byte[] href_key = ByteAry_.Mid(bry, 0, pipe_pos);
 				byte[] href_val = Resolve_key(href_key);
-				href_val = link_parser.Parse(tmp_bfr, tmp_url, wiki, href_val, ByteAry_.Empty);
+				href_val = link_parser.Parse(bfr, tmp_url, wiki, href_val, ByteAry_.Empty);
 				cur_itm.Href_(href_val);
 				if (cur_grp == null)	// handle null_ref; should only occur for tests
 					grps.Add(cur_itm);
@@ -80,7 +88,7 @@ public class Xowh_sidebar_mgr implements GfoInvkAble {
 					cur_grp.Itms_add(cur_itm);
 			}
 		}
-	}	static final byte[][] Segs_bry = new byte[][] {ByteAry_.new_ascii_("wiki")}; Xoh_href tmp_href = new Xoh_href(); Xoa_url tmp_url = new Xoa_url();
+	}	private Xoa_url tmp_url = new Xoa_url();
 	public void Bld_html(ByteAryBfr bfr) {
 		int len = grps.Count();
 		for (int i = 0; i < len; i++) {
@@ -89,7 +97,7 @@ public class Xowh_sidebar_mgr implements GfoInvkAble {
 			html_grp_fmtr.Bld_bfr_many(bfr, grp.Id(), grp.Text(), html_grp_fmtr_arg);
 		}
 	}	private Xowh_sidebar_grp_fmtr_arg html_grp_fmtr_arg = new Xowh_sidebar_grp_fmtr_arg();
-	ByteAryFmtr html_grp_fmtr = ByteAryFmtr.new_(String_.Concat_lines_nl
+	private ByteAryFmtr html_grp_fmtr = ByteAryFmtr.new_(String_.Concat_lines_nl
 	(	"<div class=\"portal\" id='~{grp_id}'>"
 	,	"  <h3>~{grp_text}</h3>"
 	,	"  <div class=\"body\">"

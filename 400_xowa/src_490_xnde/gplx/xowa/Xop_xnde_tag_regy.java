@@ -34,7 +34,7 @@ public class Xop_xnde_tag_regy {
 	Xop_xnde_tag[] FilterXtns(Xop_xnde_tag[] ary, Xop_xnde_tag... more) {
 		ListAdp rv = ListAdp_.new_();
 		for (Xop_xnde_tag itm : ary)
-			if (itm.Xtn() || (itm.XtnTmpl())) rv.Add(itm);
+			if (itm.Xtn()) rv.Add(itm);
 		for (Xop_xnde_tag itm : more)
 			rv.Add(itm);
 		return (Xop_xnde_tag[])rv.XtoAry(Xop_xnde_tag.class);

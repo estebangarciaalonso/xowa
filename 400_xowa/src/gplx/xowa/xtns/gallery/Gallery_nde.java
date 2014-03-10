@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.xowa.parsers.logs.*;
+import gplx.xowa.html.*;
 public class Gallery_nde implements Xox_xnde, Xop_xnde_atr_parser {
 	public int Itm_w()				{return itm_w;} private int itm_w = Null;
 	public int Itm_h()				{return itm_h;} private int itm_h = Null;

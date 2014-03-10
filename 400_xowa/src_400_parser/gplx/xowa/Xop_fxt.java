@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.html.*;
 public class Xop_fxt {
 	public Xop_fxt() {
 		Xoa_app app = Xoa_app_fxt.app_();
@@ -148,7 +149,7 @@ public class Xop_fxt {
 		rv.Name_tkn_(tkn_arg_key_txt_(name_bgn, name_end));
 		return rv;
 	}
-	@gplx.Internal protected Xot_prm_chkr tkn_tmpl_prm_find_(Xop_tkn_chkr_base find) {
+	public Xot_prm_chkr tkn_tmpl_prm_find_(Xop_tkn_chkr_base find) {
 		Xot_prm_chkr rv = new Xot_prm_chkr();
 		rv.Find_tkn_(tkn_arg_itm_(find));
 		return rv;

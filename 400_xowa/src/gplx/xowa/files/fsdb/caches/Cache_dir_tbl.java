@@ -22,21 +22,22 @@ class Cache_dir_tbl {
 	private Db_stmt select_stmt;
 	private Db_stmt_bldr stmt_bldr;
 	public void Db_init(Db_provider provider) {this.provider = provider;}
-	public void Db_save(Cache_dir_itm itm) {
+	public String Db_save(Cache_dir_itm itm) {
 		try {
 			if (stmt_bldr == null) stmt_bldr = new Db_stmt_bldr(Tbl_name, String_.Ary(Fld_dir_id), Fld_dir_name).Init(provider);
 			Db_stmt stmt = stmt_bldr.Get(itm.Cmd_mode());
 			switch (itm.Cmd_mode()) {
-				case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Id())	.Val_str_by_bry_(itm.Dir_bry()).Exec_insert(); break;
-				case Db_cmd_mode.Update:	stmt.Clear()					.Val_str_by_bry_(itm.Dir_bry()).Val_int_(itm.Id()).Exec_update(); break;
-				case Db_cmd_mode.Delete:	stmt.Clear().Val_int_(itm.Id()).Exec_delete();	break;
+				case Db_cmd_mode.Create:	stmt.Clear().Val_int_(itm.Uid()).Val_str_by_bry_(itm.Dir_bry()).Exec_insert(); break;
+				case Db_cmd_mode.Update:	stmt.Clear()					.Val_str_by_bry_(itm.Dir_bry()).Val_int_(itm.Uid()).Exec_update(); break;
+				case Db_cmd_mode.Delete:	stmt.Clear().Val_int_(itm.Uid()).Exec_delete();	break;
 				case Db_cmd_mode.Ignore:	break;
 				default:					throw Err_.unhandled(itm.Cmd_mode());
 			}
 			itm.Cmd_mode_(Db_cmd_mode.Ignore);
+			return null;
 		} catch (Exception e) {
-			Gfo_usr_dlg_._.Warn_many("", "", "failed to save itm: name=~{0} err=~{1}", String_.new_utf8_(itm.Dir_bry()), Err_.Message_gplx_brief(e));
 			stmt_bldr = null;	// null out bldr, else bad stmt will lead to other failures
+			return Err_.Message_gplx_brief(e);
 		}
 	}
 	public void Db_term() {
@@ -47,6 +48,7 @@ class Cache_dir_tbl {
 		Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);
 		Sqlite_engine_.Idx_create(p, Idx_name);
 	}
+	public int Select_max_uid() {return Db_provider_.Select_fld0_as_int_or(provider, "SELECT Max(uid) AS MaxId FROM cache_dir;", -1);}
 	public Cache_dir_itm Select(byte[] name) {
 		if (select_stmt == null) select_stmt = Db_stmt_.new_select_(provider, Tbl_name, String_.Ary(Fld_dir_name));
 		DataRdr rdr = DataRdr_.Null;

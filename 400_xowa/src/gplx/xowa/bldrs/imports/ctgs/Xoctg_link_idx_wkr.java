@@ -102,7 +102,7 @@ class Xoctg_make_link_mgr {
 		Write_grp(make_fil_bfr, subc_grp); Write_grp(make_fil_bfr, file_grp); Write_grp(make_fil_bfr, page_grp);
 		make_fil_bfr.Add_byte_nl();
 		byte[] bry = make_fld_wtr.Bfr().Bry();
-		make_cmd.Do_bry(bry, 0, cur_name.length, 0, make_fld_wtr.Bfr().Bry_len());
+		make_cmd.Do_bry(bry, 0, cur_name.length, 0, make_fld_wtr.Bfr().Len());
 		make_fil_bfr.Clear();
 		this.Grps_reset();
 	}
@@ -127,7 +127,7 @@ class Xoctg_make_link_mgr {
 class Xoctg_make_link_grp {
 	public Xoctg_make_link_grp(byte tid, int bfr_max) {this.tid = tid; bfr = ByteAryBfr.reset_(bfr_max);} Gfo_fld_wtr fld_wtr = Gfo_fld_wtr.xowa_();
 	public byte Tid() {return tid;} private byte tid;
-	public int Bfr_len() {return bfr.Bry_len();}
+	public int Bfr_len() {return bfr.Len();}
 	public ByteAryBfr Bfr() {return bfr;} ByteAryBfr bfr;
 	public int Count() {return count;} private int count;
 	public void Reset() {count = 0;}
@@ -172,7 +172,7 @@ class Xoctg_make_main_mgr {
 		make_fld_wtr.Write_int_base85_len5_fld(count_subc).Write_int_base85_len5_fld(count_file).Write_int_base85_len5_fld(count_page);
 		make_fil_bfr.Add_byte_nl();
 		byte[] bry = make_fld_wtr.Bfr().Bry();
-		make_cmd.Do_bry(bry, 0, cur_name.length, 0, make_fld_wtr.Bfr().Bry_len());
+		make_cmd.Do_bry(bry, 0, cur_name.length, 0, make_fld_wtr.Bfr().Len());
 		make_fil_bfr.Clear();
 	}
 	public void Write_bgn() {

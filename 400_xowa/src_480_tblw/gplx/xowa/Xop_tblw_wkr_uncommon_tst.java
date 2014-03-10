@@ -30,14 +30,17 @@ public class Xop_tblw_wkr_uncommon_tst {
 		,	"|}"
 		)		
 		, String_.Concat_lines_nl
-		(	"<table><caption>a"
-		,	"  <td>b"
-		,	"    <tr>"
-		,	"      <td>c"
-		,	"      </td>"
-		,	"    </tr>"
-		,	"  </td>"
-		,	"</caption>"
+		(	"<table>"
+		,	"  <caption>a"
+		,	"  </caption>"
+		,	"  <tr>"
+		,	"    <td>b"
+		,	"    </td>"
+		,	"  </tr>"
+		,	"  <tr>"
+		,	"    <td>c"
+		,	"    </td>"
+		,	"  </tr>"
 		,	"</table>"
 		));
 	}

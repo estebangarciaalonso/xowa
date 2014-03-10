@@ -31,7 +31,7 @@ public class Cache_mgr implements Xou_db_wkr, GfoInvkAble {
 	}
 	public String Xtn_key() {return "xowa.file.cache_mgr";}
 	public String Xtn_version() {return "0.1.0.0";}
-	public int Next_id() {return cfg_mgr.Next_id();}
+	public int Next_id() {return cfg_mgr.Next_id();} public void Next_id_(int v) {cfg_mgr.Next_id_(v);}
 	public void Db_init(Xou_db_mgr data_mgr) {
 		try {
 		Db_provider provider = data_mgr.Provider();
@@ -46,12 +46,13 @@ public class Cache_mgr implements Xou_db_wkr, GfoInvkAble {
 		cfg_mgr.Db_when_new(provider);
 		dir_mgr.Db_when_new(provider);
 		fil_mgr.Db_when_new(provider);
+		this.Db_save(data_mgr);
 	}
 	public void Db_save(Xou_db_mgr data_mgr) {
 		try {
-		cfg_mgr.Db_save();
 		dir_mgr.Db_save();
 		fil_mgr.Db_save();
+		cfg_mgr.Db_save();	// always save cfg_mgr last; fil_mgr / dir_mgr may change next_id during failed saves; DATE:2014-03-07
 		} catch (Exception e) {app.Usr_dlg().Warn_many("", "", "cache_mgr.save:fatal error: err=~{0}", Err_.Message_gplx_brief(e));}
 	}
 	public void Db_term(Xou_db_mgr data_mgr) {
@@ -63,7 +64,7 @@ public class Cache_mgr implements Xou_db_wkr, GfoInvkAble {
 	}
 	public Cache_fil_itm Reg(Xow_wiki wiki, Xof_fsdb_itm itm, long bin_len) {return this.Reg(wiki, itm.Orig_wiki(), itm.Lnki_ttl(), itm.File_is_orig(), itm.File_w(), itm.File_w(), itm.Lnki_thumbtime(), itm.Lnki_ext(), bin_len, DateAdp_.MaxValue, "");}
 	public Cache_fil_itm Reg(Xow_wiki wiki, byte[] repo, byte[] ttl, boolean fil_is_orig, int fil_w, int fil_h, double fil_thumbtime, Xof_ext ext, long bin_len, DateAdp modified, String hash) {
-		int dir_id = dir_mgr.Get_itm_by_name(repo).Id();
+		int dir_id = dir_mgr.Get_itm_by_name(repo).Uid();
 		Cache_fil_itm fil_itm = fil_mgr.Get_or_new(dir_id, ttl, fil_is_orig, fil_w, fil_h, fil_thumbtime, ext, bin_len, created.Val_n_());
 		fil_itm.Cache_time_now_();
 		if (created.Val())	// increase cache_size if item is new; (don't increase if update); NOTE: not same as Db_cmd_mode.Created, b/c itm could be created, but not saved to db yet; EX: Page_1 has A.png; A.png marked Created; Page_2 has A.png; A.png still Created, but should increase cache_size

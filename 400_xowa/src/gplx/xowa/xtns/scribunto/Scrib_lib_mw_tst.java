@@ -54,6 +54,13 @@ public class Scrib_lib_mw_tst {
 		fxt.Init_page("{{test| a }}");
 		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getAllExpandedArguments, Object_.Ary("current"),  "\n   a ");				// " a " -> " a "
 	}
+	@Test  public void GetAllExpandedArguments__ignore_empty_key() {// PURPOSE: ignore arguents that have an empty key (|=8|); EX:w:Fool's_mate; DATE:2014-03-05
+		fxt.Init_tmpl("{{#invoke:Mod_0|Prc_0}}");
+		fxt.Init_page("{{test|a1||a2|=a3|a4}}");
+		fxt.Init_server_print_key_y_();
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getAllExpandedArguments, Object_.Ary("parent"), "\n  1:a1;2:;3:a2;4:a4");	// NOTE: || is not ignored but |=a3| is
+		fxt.Init_server_print_key_n_();
+	}
 	@Test  public void GetExpandedArgument() {
 		fxt.Init_page("{{#invoke:Mod_0|Prc_0|val_1|key_2=val_2|val_3}}");
 		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getExpandedArgument, Object_.Ary("current", "1")		, "val_1");			// get 1st by idx

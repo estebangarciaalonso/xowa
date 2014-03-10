@@ -57,13 +57,13 @@ public class Xoad_wtr_dump {
 class Xoad_dump_itm {
 	ByteAryBfr bfr = new ByteAryBfr(4096);
 	int pageIdx_last;
-	public int BfrLen() {return bfr.Bry_len();}
+	public int BfrLen() {return bfr.Len();}
 	public Xoad_dump_itm(byte[] ownerKey, byte[] itmKey) {
 		fil_name = String_.new_utf8_(ownerKey) + "__" + String_.new_utf8_(itmKey);
 	}	String fil_name;
 	public void Flush(Io_url log_dir) {
 		Io_url fil_url = log_dir.GenSubFil_ary(fil_name, ".txt");
-		Io_mgr._.AppendFilByt(fil_url, bfr.Bry(), bfr.Bry_len());
+		Io_mgr._.AppendFilByt(fil_url, bfr.Bry(), bfr.Len());
 		bfr.Reset_if_gt(Io_mgr.Len_kb);
 	}
 	public void Rls() {
@@ -71,7 +71,7 @@ class Xoad_dump_itm {
 		bfr = null;
 	}
 	public int Write(byte[] ttl, int page_idx, Gfo_msg_data eny) {
-		int old = bfr.Bry_len();
+		int old = bfr.Len();
 		if (page_idx != pageIdx_last) {pageIdx_last = page_idx; bfr.Add(ttl).Add_byte_nl();}
 		bfr.Add_byte_repeat(Byte_ascii.Space, 4);
 		byte[] src = eny.Src_bry();
@@ -86,7 +86,7 @@ class Xoad_dump_itm {
 			Write_mid(src, mid_end, all_end);
 			bfr.Add_byte_nl();
 		}
-		return bfr.Bry_len() - old;
+		return bfr.Len() - old;
 	}
 	private void Write_mid(byte[] src, int bgn, int end) {
 		if (end - bgn == 0) return;

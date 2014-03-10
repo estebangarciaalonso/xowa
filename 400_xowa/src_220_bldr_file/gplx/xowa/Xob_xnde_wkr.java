@@ -35,7 +35,7 @@ class Xobc_xnde_math_dump extends Xob_itm_dump_base implements Xob_xnde_wkr {	//
 		byte[] math = ByteAry_.Mid(root.Root_src(), xnde.Src_bgn() + 6, xnde.Src_end() - 7); // 6=<math>; 7=</math>
 		byte[] ttl = ctx.Page().Ttl().Full_txt();
 		int entry_len = ttl.length + math.length + 3; // 3=| + | + \n  
-		if (dump_bfr.Bry_len() + entry_len > dump_fil_len) Flush();
+		if (dump_bfr.Len() + entry_len > dump_fil_len) Flush();
 		fld_wtr.Write_bry_escape_fld(math);
 		fld_wtr.Write_bry_escape_row(ttl);
 	}

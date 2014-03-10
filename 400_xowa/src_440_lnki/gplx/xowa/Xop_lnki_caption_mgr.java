@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-class Xop_lnki_caption_mgr {
+public class Xop_lnki_caption_mgr {
 	public void Clear() {caption_regy.Clear(); caption_trg_regy.Clear();}
 	public String GetTrgByCaption(String caption) {
 		ByteAryRef caption_ary = ByteAryRef.new_(ByteAry_.new_utf8_(caption));

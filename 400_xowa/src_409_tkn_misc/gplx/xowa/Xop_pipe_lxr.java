@@ -25,8 +25,8 @@ class Xop_pipe_lxr implements Xop_lxr {
 	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Byte_ascii.Pipe, this);}
 	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
 	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
-		int cur_typeId = ctx.Cur_tkn_tid(), rv = -1;
-		switch (cur_typeId) {
+		int cur_stack_tid = ctx.Cur_tkn_tid(), rv = -1;
+		switch (cur_stack_tid) {
 			case Xop_tkn_itm_.Tid_brack_bgn:
 				switch (ctx.Parse_tid()) {
 					case Xop_parser_.Parse_tid_tmpl:
@@ -59,7 +59,7 @@ class Xop_pipe_lxr implements Xop_lxr {
 					return cur_pos;
 				}
 				else {
-					Xop_tblw_tkn cur_tkn = (Xop_tblw_tkn)ctx.Stack_get_typ(cur_typeId);
+					Xop_tblw_tkn cur_tkn = (Xop_tblw_tkn)ctx.Stack_get_typ(cur_stack_tid);
 					Xop_tblw_wkr.Atrs_make(ctx, src, root, ctx.Tblw(), cur_tkn);
 					return cur_pos;
 				}

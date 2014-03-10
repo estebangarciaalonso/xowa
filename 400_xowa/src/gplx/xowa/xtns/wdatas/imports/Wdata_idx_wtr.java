@@ -25,7 +25,7 @@ class Wdata_idx_wtr {
 		this.make_dir = make_dir;
 	}	private ByteAryBfr dump_bfr = ByteAryBfr.reset_(2 * Io_mgr.Len_kb); int dump_fil_max; Io_url dump_dir, make_dir; Io_url_gen dump_url_gen;
 	public void Write(byte[] ttl, byte[] qid) {
-		if (dump_bfr.Bry_len() + ttl.length + qid.length + 2 > dump_fil_max) Flush();	// 2 = "|" + "\n"; NOTE: all items have format of "data|qid\n"
+		if (dump_bfr.Len() + ttl.length + qid.length + 2 > dump_fil_max) Flush();	// 2 = "|" + "\n"; NOTE: all items have format of "data|qid\n"
 		dump_bfr.Add(ttl).Add_byte_pipe().Add(qid).Add_byte_nl();
 	}
 	public void Flush() {

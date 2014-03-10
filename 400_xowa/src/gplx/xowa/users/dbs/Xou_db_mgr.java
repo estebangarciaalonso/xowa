@@ -38,7 +38,6 @@ public class Xou_db_mgr {
 	}
 	public void App_save() {
 		try {
-			xtn_mgr.Db_save();			// NOTE: xowa_xtn sometimes empty; save first before any of its xtns; DATE:2013-12-29
 			int wkr_len = wkr_list.Count();
 			for (int i = 0; i < wkr_len; i++) {
 				Xou_db_wkr wkr = (Xou_db_wkr)wkr_list.FetchAt(i);
@@ -71,6 +70,8 @@ public class Xou_db_mgr {
 		if (!xtn_mgr.Xtn_exists(wkr.Xtn_key()))  {
 			xtn_mgr.Xtn_add(wkr.Xtn_key(), wkr.Xtn_version());		// NOTE: xowa_xtn sometimes empty; add xtn before loading; if error below then xtn still added; DATE:2013-12-29
 			wkr.Db_when_new(this);
+			xtn_mgr.Db_save();										// always save...
+			provider.Txn_mgr().Txn_end_all_bgn_if_none();			// ... and commit, b/c HTTP_Server never formally exits; DATE:2014-03-06
 		}
 	}
 }

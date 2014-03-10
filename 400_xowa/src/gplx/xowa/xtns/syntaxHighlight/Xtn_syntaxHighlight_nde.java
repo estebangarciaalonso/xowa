@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.syntaxHighlight; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.xowa.html.*;
 public class Xtn_syntaxHighlight_nde implements Xox_xnde, Xop_xnde_atr_parser {
 	private byte[] lang = ByteAry_.Empty; private byte[] style = null; private byte[] enclose = ByteAry_.Empty;
 	private boolean line_enabled = false; private int start = 1; private Int_rng_mgr highlight_idxs = Int_rng_mgr_null._;

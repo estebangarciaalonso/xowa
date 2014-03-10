@@ -41,27 +41,29 @@ public class Xop_tblw_wkr_tblx_tst {
 			)
 			);
 	}
-//		@Test  public void Ignore_tr() {	// PURPOSE: do not parse |- as tr if in <table>; EX:sim.w:Uranus; DATE:2014-02-22
-//			fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
-//				(	"<table>"
-//				,	"  <tr>"
-//				,	"    <td>a"
-//				,	"|-"
-//				,	"| b"
-//				,	"    </td>"
-//				,	"  </tr>"
-//				,	"</table>"
-//				) ,	String_.Concat_lines_nl_skipLast
-//				(	"<table>"
-//				,	"  <tr>"
-//				,	"    <td>a"
-//				,	"|-"
-//				,	"| b"
-//				,	"    </td>"
-//				,	"  </tr>"
-//				,	"</table>"
-//				,	""
-//				)
-//				);
-//		}
+	@Test  public void Ignore_tr() {	// PURPOSE: do not parse "\n|-", "\n!" if in <table>; EX:sim.w:Uranus; DATE:2014-03-05
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		(	"<table>"
+		,	"  <tr>"
+		,	"    <td>a"
+		,	"|-"
+		,	"! b"
+		,	"| c"
+		,	"    </td>"
+		,	"  </tr>"
+		,	"</table>"
+		) ,	String_.Concat_lines_nl_skipLast
+		(	"<table>"
+		,	"  <tr>"
+		,	"    <td>a"
+		,	"|-"
+		,	"! b"
+		,	"| c"
+		,	"    </td>"
+		,	"  </tr>"
+		,	"</table>"
+		,	""
+		)
+		);
+	}
 }

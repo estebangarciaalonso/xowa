@@ -22,10 +22,11 @@ class Cache_cfg_mgr {
 	private Db_stmt update_stmt;
 	public Cache_cfg_mgr(Cache_mgr cache_mgr) {}
 	public int Next_id() {return next_id++;} private int next_id;
+	public void Next_id_(int v) {next_id = v;}
 	public long Cache_len() {return cache_len;} public Cache_cfg_mgr Cache_len_(long v) {cache_len = v; return this;} private long cache_len = 0;
 	public void Cache_len_add(long v) {cache_len += v;}
-	public long Cache_min() {return cache_min;} public Cache_cfg_mgr Cache_min_(long v) {cache_min = v; return this;} private long cache_min = Io_mgr.Len_mb * 10;
-	public long Cache_max() {return cache_max;} public Cache_cfg_mgr Cache_max_(long v) {cache_max = v; return this;} private long cache_max = Io_mgr.Len_mb * 25;
+	public long Cache_min() {return cache_min;} public Cache_cfg_mgr Cache_min_(long v) {cache_min = v; return this;} private long cache_min = Io_mgr.Len_mb * 75;
+	public long Cache_max() {return cache_max;} public Cache_cfg_mgr Cache_max_(long v) {cache_max = v; return this;} private long cache_max = Io_mgr.Len_mb * 100;
 	public void Db_init(Db_provider provider) {
 		cfg_tbl.Provider_(provider);
 		next_id = cfg_tbl.Select_val_as_int(Cfg_grp, Cfg_key__next_id);

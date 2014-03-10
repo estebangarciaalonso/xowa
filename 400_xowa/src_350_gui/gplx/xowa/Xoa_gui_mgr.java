@@ -92,7 +92,6 @@ public class Xoa_gui_mgr implements GfoInvkAble {
 			Xog_win_.Init_desktop(main_win); log_bfr.Add("app.gui_mgr.init_desktop");
 			main_win.Launch(); log_bfr.Add("app.gui_mgr.launch");
 			app.User().Prefs_mgr().Launch(); log_bfr.Add("app.gui_mgr.prefs");
-			app.User().Cfg_mgr().Setup_mgr().Setup_run_check(app); log_bfr.Add("app.gui_mgr.setup_");
 			app.Log_wtr().Log_msg_to_session_direct(log_bfr.Xto_str());
 			kit.Kit_run();	// NOTE: enters thread-loop
 		} catch (Exception e) {

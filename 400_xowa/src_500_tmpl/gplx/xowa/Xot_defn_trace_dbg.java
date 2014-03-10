@@ -118,13 +118,13 @@ class Xot_defn_trace_dbg implements Xot_defn_trace {
 	public void Trace_end(int trg_bgn, ByteAryBfr trg) {
 		indent -= 2;
 		bfr	.Add_byte_repeat(Byte_ascii.Space, indent).Add(Ary_result_lbl);
-		if (trg_bgn < trg.Bry_len())
-			bfr	.Add_byte_repeat(Byte_ascii.Space, indent).Add_mid(trg.Bry(), trg_bgn, trg.Bry_len())
+		if (trg_bgn < trg.Len())
+			bfr	.Add_byte_repeat(Byte_ascii.Space, indent).Add_mid(trg.Bry(), trg_bgn, trg.Len())
 				.Add_byte_nl();
 	}
 	public void Print(byte[] src, ByteAryBfr bb) {
-		if (bfr.Bry_len() == 0) return;
-		if (bb.Bry_len() != 0) bb.Add_byte_nl();	// only add newLine if something in bb; needed for tests
+		if (bfr.Len() == 0) return;
+		if (bb.Len() != 0) bb.Add_byte_nl();	// only add newLine if something in bb; needed for tests
 		bb	.Add(Ary_source_lbl)
 			.Add(src).Add_byte_nl();
 		bb.Add_bfr(bfr);

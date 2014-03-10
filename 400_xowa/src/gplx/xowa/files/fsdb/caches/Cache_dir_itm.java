@@ -18,18 +18,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files.fsdb.caches; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
 import gplx.dbs.*;
 class Cache_dir_itm {
-	public int Id() {return id;} private int id;
+	public int Uid() {return uid;} public void Uid_(int v) {uid = v;} private int uid;
 	public byte[] Dir_bry() {return dir_bry;} private byte[] dir_bry;
 	public byte Cmd_mode() {return cmd_mode;} public Cache_dir_itm Cmd_mode_(byte v) {cmd_mode = v; return this;} private byte cmd_mode;
 	public Cache_dir_itm Init_by_load(DataRdr rdr) {
 		cmd_mode = Db_cmd_mode.Ignore;
-		id = rdr.ReadInt(Cache_dir_tbl.Fld_dir_id);
+		uid = rdr.ReadInt(Cache_dir_tbl.Fld_dir_id);
 		dir_bry = rdr.ReadBryByStr(Cache_dir_tbl.Fld_dir_name);
 		return this;
 	}
-	public Cache_dir_itm Init_by_make(int id, byte[] dir_bry) {
+	public Cache_dir_itm Init_by_make(int uid, byte[] dir_bry) {
 		cmd_mode = Db_cmd_mode.Create;
-		this.id = id;
+		this.uid = uid;
 		this.dir_bry = dir_bry;
 		return this;
 	}

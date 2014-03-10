@@ -26,6 +26,22 @@ public class Db_provider_ {
 //			Env_.Dispose_reg(rv);	// NOTE: need to dispose or else mysql error: Unable to release semaphore
 		return rv;
 	}
+	public static int Select_fld0_as_int_or(Db_provider p, String sql, int or) {
+		DataRdr rdr = DataRdr_.Null;
+		try {
+			rdr = p.Exec_qry_as_rdr(Db_qry_sql.rdr_(sql));
+			int rv = or;
+			if (rdr.MoveNextPeer()) {
+				Object rv_obj = rdr.ReadAt(0);
+				if (rv_obj != null)		// Max(fil_id) will be NULL if tbl is empty
+					rv = Int_.cast_or_(rv_obj, or);
+			}
+			return rv;
+		}
+		finally {
+			rdr.Rls();
+		}
+	}
 }
 class Db_engineRegy {
 	public Db_engine Get(String key) {return (Db_engine)hash.FetchOrFail(key);}

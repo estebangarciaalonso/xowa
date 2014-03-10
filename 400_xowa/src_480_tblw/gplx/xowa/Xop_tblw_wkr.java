@@ -91,9 +91,11 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 		}
 		if (!tbl_is_xml) {
 			switch (wlxr_type) {
-				case Tblw_type_td:
+				case Tblw_type_tr:	// "\n|-"
+				case Tblw_type_th:	// "\n!"
+				case Tblw_type_td:	// "\n|"
 					Xop_tblw_tkn tb = ctx.Stack_get_tbl_tb();		// get enclosing tb
-					if (tb.Tblw_xml()) {							// enclosed by <table> but "\n|"; treat "\n|" as text, not as td; EX:ru.w:Сочи; DATE:2014-02-22
+					if (tb.Tblw_xml()) {							// enclosed by <table> but "\n|"; treat "\n|" as text, not as td; EX:ru.w:Сочи; DATE:2014-02-22; also "\n|-" and "\n!"; EX:s.w:Uranus; DATE:2014-03-05
 						// ctx.Para().Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1);
 						return ctx.LxrMake_txt_(cur_pos);
 					}
@@ -206,6 +208,8 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 						prv_tid = new_tkn.Tkn_tid();
 						break;
 				}
+//					if (prv_tid == Xop_tkn_itm_.Tid_xnde)
+//						ctx.Stack_autoClose(root, src, prv_tkn, prv_tkn.Src_bgn(), prv_tkn.Src_end());
 				if (create_th)	new_tkn = tkn_mkr.Tblw_th(bgn_pos, cur_pos, tbl_is_xml);
 				else			new_tkn = tkn_mkr.Tblw_td(bgn_pos, cur_pos, tbl_is_xml);
 				cell_pipe_seen = false;

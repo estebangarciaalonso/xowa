@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.proofreadPage; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.xowa.html.*;
 import gplx.xowa.xtns.lst.*;
 public class Pp_pages_nde implements Xox_xnde, Xop_xnde_atr_parser {
 	private boolean xtn_literal = false;
@@ -339,9 +340,9 @@ public class Pp_pages_nde implements Xox_xnde, Xop_xnde_atr_parser {
 					cur_sect_end = end_sect_bry;
 			}
 			lst_pfunc_wkr.Init_include(ttl.Full_db(), cur_sect_bgn, cur_sect_end).Exec(page_bfr, ctx);
-			ctx.Tmpl_prepend_nl(full_bfr, page_bfr.Bry(), page_bfr.Bry_len());
+			ctx.Tmpl_prepend_nl(full_bfr, page_bfr.Bry(), page_bfr.Len());
 			full_bfr.Add_bfr_and_clear(page_bfr);
-			full_bfr.Add(gplx.html.Html_entities.Space_bry);
+			full_bfr.Add(gplx.html.Html_consts.Space_bry);
 		}			
 		page_bfr.Mkr_rls();
 		ctx.Tmpl_output_(null);

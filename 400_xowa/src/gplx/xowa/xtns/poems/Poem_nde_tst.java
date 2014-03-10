@@ -88,7 +88,7 @@ public class Poem_nde_tst {
 			,	"</div>"
 			));
 	}
-	@Test  public void Xtn() {
+	@Test  public void Xtn() {	// NOTE: behavior as per MW: DATE:2014-03-03
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("test_print", "{{{1}}}");
 		fxt.Init_defn_add("test_outer", String_.Concat_lines_nl_skipLast
@@ -132,12 +132,28 @@ public class Poem_nde_tst {
 			,	""
 			));
 	}
-//		@Test  public void Template() {	// PURPOSE: <poem> inside template was not evaluating args; DATE:2014-01-23
-//			fxt.Init_page_create("Template:A", "<poem>{{{1}}}</poem>");
-//			fxt.Test_parse_page_all_str("{{A|b}}", String_.Concat_lines_nl_skipLast
-//			(	"<div class=\"poem\">"
-//			,	"b"
-//			,	"</div>"
-//			));
-//		}
+	@Test  public void Template_tkn() {	// PURPOSE: make sure {{{1}}} is interpreted as invk_prm, not as text; DATE:2014-03-03
+		fxt.Test_parse_tmpl("<poem>{{{1}}}</poem>"
+			, fxt.tkn_xnde_(0, 20).Subs_
+			(	fxt.tkn_tmpl_prm_find_(fxt.tkn_txt_(9, 10))
+			)
+			);
+	}
+	@Test  public void Template_parse() {	// PURPOSE: <poem> inside template was not evaluating args; EX:en.s:The_Canterville_Ghost; DATE:2014-03-03
+		fxt.Init_page_create("Template:A", "<poem>{{{1}}}</poem>");
+		fxt.Test_parse_page_all_str("{{A|b}}", String_.Concat_lines_nl_skipLast
+		(	"<div class=\"poem\">"
+		,	"b"	// was {{{1}}}
+		,	"</div>"
+		));
+	}
+	@Test  public void Nested() {	// PURPOSE: handled nested poems; EX:en.s:The_Canterville_Ghost; DATE:2014-03-03
+		fxt.Test_parse_page_all_str("a<poem>b<poem>c</poem>d</poem>e", String_.Concat_lines_nl_skipLast
+		(	"a<div class=\"poem\">"
+		,	"b<div class=\"poem\">"
+		,	"c"
+		,	"</div>"
+		,	"</div>de"
+		));
+	}
 }

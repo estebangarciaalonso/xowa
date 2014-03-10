@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files.fsdb.caches; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
 import gplx.dbs.*;
 public class Cache_fil_itm implements CompareAble {
-	public int Uid() {return uid;} private int uid;
+	public int Uid() {return uid;} public void Uid_(int v) {uid = v;} private int uid;
 	public int Dir_id() {return dir_id;} private int dir_id;
 	public byte[] Fil_name() {return fil_name;} private byte[] fil_name;
 	public boolean Fil_is_orig() {return fil_is_orig;} private boolean fil_is_orig;

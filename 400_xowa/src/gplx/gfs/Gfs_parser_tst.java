@@ -166,18 +166,18 @@ class Gfs_parser_fxt {
 		int atrs_len = nde.Atrs_len();
 		for (int i = 0; i < atrs_len; i++) {
 			Gfs_nde atr = nde.Atrs_get_at(i);
-			int path_len_old = path.Bry_len();
+			int path_len_old = path.Len();
 			path.Add_byte(Byte_ascii.Dot).Add_byte((byte)(Byte_ascii.Ltr_a + i));
-			int path_len_new = path.Bry_len();
+			int path_len_new = path.Len();
 			To_str(bfr, path, src, atr);
 			path.Del_by(path_len_new - path_len_old);
 		}
 		int subs_len = nde.Subs_len();
 		for (int i = 0; i < subs_len; i++) {
 			Gfs_nde sub = nde.Subs_get_at(i);
-			int path_len_old = path.Bry_len();
+			int path_len_old = path.Len();
 			path.Add_byte(Byte_ascii.Dot).Add_int_variable(i);
-			int path_len_new = path.Bry_len();
+			int path_len_new = path.Len();
 			To_str(bfr, path, src, sub);
 			path.Del_by(path_len_new - path_len_old);
 		}

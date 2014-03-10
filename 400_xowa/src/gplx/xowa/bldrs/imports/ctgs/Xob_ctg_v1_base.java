@@ -83,7 +83,7 @@ public abstract class Xob_ctg_v1_base extends Xob_itm_dump_base implements Xobd_
 	public static void Process_ctg_row(Gfo_fld_wtr fld_wtr, int dump_fil_len, Io_url_gen dump_url_gen, int page_id, byte[] src, int src_len, int bgn, int end) {
 		int len = end - bgn;
 		ByteAryBfr dump_bfr = fld_wtr.Bfr();
-		if (dump_bfr.Bry_len() + row_fixed_len + len > dump_fil_len) Io_mgr._.AppendFilBfr(dump_url_gen.Nxt_url(), dump_bfr);
+		if (dump_bfr.Len() + row_fixed_len + len > dump_fil_len) Io_mgr._.AppendFilBfr(dump_url_gen.Nxt_url(), dump_bfr);
 		byte[] ttl = ByteAry_.Mid(src, bgn, end);
 		ByteAry_.Replace_reuse(ttl, Byte_ascii.Space, Byte_ascii.Underline);
 		fld_wtr.Write_bry_escape_fld(ttl).Write_int_base85_len5_row(page_id);

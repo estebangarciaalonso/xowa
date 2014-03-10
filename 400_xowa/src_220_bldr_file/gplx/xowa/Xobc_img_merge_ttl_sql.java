@@ -80,7 +80,7 @@ public class Xobc_img_merge_ttl_sql extends Xob_itm_dump_base implements Xob_cmd
 			Write(standard_dump_bfr, standard_url_gen, itm, true);	// reverse name/redirect from pass_0
 	}
 	private void Write(ByteAryBfr bfr, Io_url_gen url_gen, Xofo_file itm, boolean reverse) {
-		if (bfr.Bry_len() > dump_fil_len) Flush(bfr, url_gen);
+		if (bfr.Len() > dump_fil_len) Flush(bfr, url_gen);
 		fld_wtr.Bfr_(bfr);
 		itm.Write(reverse, fld_wtr);
 	}

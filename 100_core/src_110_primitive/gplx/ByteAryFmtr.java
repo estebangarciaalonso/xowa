@@ -138,7 +138,7 @@ public class ByteAryFmtr {
 						byte[] key_fmt = lkp_bfr.XtoAry();
 						Object idx_ref = keys.Fetch(ByteAryRef.new_(key_fmt));
 						if (idx_ref == null) {
-							int lkp_bfr_len = lkp_bfr.Bry_len();
+							int lkp_bfr_len = lkp_bfr.Len();
 							byte[] lkp_bry = lkp_bfr.Bry();
 							trg_bry[trg_pos++] = char_escape;
 							trg_bry[trg_pos++] = char_arg_bgn;

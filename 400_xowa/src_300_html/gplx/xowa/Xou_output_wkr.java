@@ -45,6 +45,8 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 					break;
 			}
 			Fmt(app, wiki, mgr, page, view_tid, bfr, fmtr, this);
+			if (app.Html_mgr().Tidy_mgr().Enabled())
+				Tidy(wiki, bfr);
 			if (output_tid == Xog_view_mode.Id_html)
 				Fmt(app, wiki, mgr, page, output_tid, bfr, mgr.Page_html_fmtr(), String_.Replace(String_.Replace(String_.Replace(bfr.XtoStrAndClear(), "&", "&amp;"), "\"", "&quot;"), "<", "&lt;"));
 			wtr_page_lang.Page_(null);
@@ -88,15 +90,16 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		if (app.Html_mgr().Page_mgr().Font_enabled())
 			css_xtn = ByteAry_.Add(css_xtn, app.Html_mgr().Page_mgr().Font_css_bry());
 		css_xtn = ByteAry_.Add(css_xtn, app.Gui_mgr().Html_mgr().Css_xtn());
+		page.Xtn_mgr().Exec();
 		fmtr.Bld_bfr_many(bfr, page.Id()
 		, Page_name(tmp_bfr, page.Ttl(), null)								// NOTE: page_name does not show display_title (<i>). always pass in null
 		, Page_name(tmp_bfr, page.Ttl(), wiki.Ctx().Tab().Display_ttl())
 		, page_content_sub, page_data, wtr_page_lang, page_modified_on_msg, lang.Dir_bry(), log_wtr.Html()
 		, mgr.Css_common_bry(), mgr.Css_wiki_bry(), css_xtn, html_content_editable
 		, portal_mgr.Div_personal_bry(), portal_mgr.Div_ns_bry(app.Utl_bry_bfr_mkr(), page.Ttl(), wiki.Ns_mgr()), portal_mgr.Div_view_bry(app.Utl_bry_bfr_mkr(), view_tid, page.Search_text())
-		, portal_mgr.Div_logo_bry(), portal_mgr.Div_home_bry(), portal_mgr.Div_wikis_bry(app.Utl_bry_bfr_mkr()), portal_mgr.Sidebar_mgr().Html_bry()
+		, portal_mgr.Div_logo_bry(), portal_mgr.Div_home_bry(), page.Portal_div_xtn(), portal_mgr.Div_wikis_bry(app.Utl_bry_bfr_mkr()), portal_mgr.Sidebar_mgr().Html_bry()
 		, mgr.Edit_rename_div_bry(page.Ttl()), page.Data_preview()
-		, Xoa_app_.Version, Xoa_app_.Build_date, Bry_xowa_root_dir, js_mathjax_script, wiki.Fragment_mgr().Html_js_table(), js_wikidata_bry, js_edit_toolbar_bry, app.Server().Running_str()
+		, Xoa_app_.Version, Xoa_app_.Build_date, Bry_xowa_root_dir, js_mathjax_script, wiki.Fragment_mgr().Html_js_table(), js_wikidata_bry, js_edit_toolbar_bry, app.Tcp_server().Running_str()
 		);
 	}
 	private byte[] Bld_page_content_sub(Xoa_app app, Xow_wiki wiki, Xoa_page page) {
@@ -112,7 +115,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		for (int i = 0; i < list_len; i++) {
 			if (i != 0) redirect_bfr.Add(Bry_redirect_dlm);
 			byte[] redirect_ttl = (byte[])list.FetchAt(i);
-			redirect_bfr.Add(Xoh_consts.A_bgn)		// '<a href="'
+			redirect_bfr.Add(Xoh_consts.A_bgn)			// '<a href="'
 				.Add(Xoh_href_parser.Href_wiki_bry)		// '/wiki/'
 				.Add(redirect_ttl)						// 'PageA'
 				.Add(Bry_redirect_arg)					// ?redirect=no
@@ -120,7 +123,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 				.Add(redirect_ttl)						// 'PageA'
 				.Add(Xoh_consts.__end_quote)			// '">'
 				.Add(redirect_ttl)						// 'PageA'
-				.Add(Xoh_consts.A_end)				// </a>
+				.Add(Xoh_consts.A_end)					// </a>
 				;
 		}
 		Xol_msg_itm msg_itm = wiki.Lang().Msg_mgr().Itm_by_id_or_null(Xol_msg_itm_.Id_redirectedfrom);
@@ -141,7 +144,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		Xow_wiki wiki = page.Wiki();
 		Xoa_app app = wiki.App();
 		int ns_id = page.Ttl().Ns().Id();
-		int bfr_page_bgn = bfr.Bry_len();
+		int bfr_page_bgn = bfr.Len();
 		byte page_tid = Xow_page_tid.Identify(wiki.Domain_tid(), ns_id, page.Ttl().Page_db());
 		boolean page_tid_uses_pre = false;
 		switch (page_tid) {
@@ -159,10 +162,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 			case Xow_page_tid.Tid_wikitext:
 				if	(ns_id == Xow_ns_.Id_file)		// if File ns, add boilerplate header
 					app.File_main_wkr().Bld_html(wiki, ctx, bfr, page.Ttl(), wiki.Cfg_file_page(), page.File_queue());
-				if (wiki.Html_mgr().Tidy_enabled())
-					Tidy(wiki, bfr);
-				else
-					wiki.Html_wtr().Write_all(page.Wiki().Ctx(), page.Root(), page.Root().Data_mid(), bfr);
+				wiki.Html_wtr().Write_all(page.Wiki().Ctx(), page.Root(), page.Root().Data_mid(), bfr);
 				if (ns_id == Xow_ns_.Id_category)	// if Category, render rest of html (Subcategories; Pages; Files); note that a category may have other html which requires wikitext processing
 					wiki.Html_mgr().Ns_ctg().Bld_html(page, bfr);
 				int ctgs_len = page.Category_list().length;	// add Categories
@@ -177,7 +177,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		}
 		if (	wiki.Domain_tid() != Xow_wiki_domain_.Tid_home	// allow home wiki to use javascript
 			&&  !page_tid_uses_pre) {						// if .js, .css or .lua, skip test; may have js fragments, but entire text is escaped and put in pre; don't show spurious warning; DATE:2013-11-21
-			int bfr_page_end = bfr.Bry_len();
+			int bfr_page_end = bfr.Len();
 			byte[] cleaned = app.Utl_js_cleaner().Clean(wiki, bfr.Bry(), bfr_page_bgn, bfr_page_end);
 			if (cleaned != null) {
 				bfr.Del_by(bfr_page_end - bfr_page_bgn);
@@ -187,12 +187,12 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		}
 	}
 	private void Tidy(Xow_wiki wiki, ByteAryBfr bfr) {
-		Bry_bfr_mkr bfr_mkr = page.Wiki().App().Utl_bry_bfr_mkr();
-		ByteAryBfr tmp_src_bfr = bfr_mkr.Get_m001();
-		ByteAryBfr tmp_trg_bfr = bfr_mkr.Get_m001();
-		wiki.Html_wtr().Write_all(page.Wiki().Ctx(), page.Root(), page.Root().Data_mid(), tmp_src_bfr);
-		wiki.App().Fsys_mgr().App_mgr().App_tidy_html().Run_tidy_html(tmp_src_bfr, tmp_trg_bfr);
-		bfr.Add_bfr_and_clear(tmp_trg_bfr);
-		tmp_src_bfr.Mkr_rls(); tmp_trg_bfr.Mkr_rls();		
+//			Bry_bfr_mkr bfr_mkr = page.Wiki().App().Utl_bry_bfr_mkr();
+//			ByteAryBfr tmp_tidy_bfr = bfr_mkr.Get_m001();
+//			tmp_tidy_bfr.Add_bfr_and_clear(bfr);
+//			wiki.App().Html_mgr().Tidy_mgr().Lib().Run_tidy_html(tmp_tidy_bfr);
+//			bfr.Add_bfr_and_clear(tmp_tidy_bfr);
+//			tmp_tidy_bfr.Mkr_rls();		
+		wiki.App().Html_mgr().Tidy_mgr().Lib().Run_tidy_html(bfr);
 	} 
 }

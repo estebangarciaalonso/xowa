@@ -202,8 +202,10 @@ public static final int
 , Id_mapSources_dd2dms = 181
 , Id_mapSources_geoLink = 182
 , Id_geoCrumbs_isin = 183
+, Id_relatedArticles = 184
+, Id_relatedSites = 185
 ;
-public static final int Id__max = 184;
+public static final int Id__max = 186;
 
 	private static byte[] ary_itm_(int id) {
 		switch (id) {
@@ -391,6 +393,8 @@ case Xol_kwd_grp_.Id_mapSources_deg2dd: return ByteAry_.new_utf8_("deg2dd");
 case Xol_kwd_grp_.Id_mapSources_dd2dms: return ByteAry_.new_utf8_("dd2dms");
 case Xol_kwd_grp_.Id_mapSources_geoLink: return ByteAry_.new_utf8_("geolink");
 case Xol_kwd_grp_.Id_geoCrumbs_isin: return ByteAry_.new_utf8_("isin");
+case Xol_kwd_grp_.Id_relatedArticles: return ByteAry_.new_utf8_("relatedArticles");
+case Xol_kwd_grp_.Id_relatedSites: return ByteAry_.new_utf8_("relatedSites");
 default: throw Err_mgr._.unhandled_(id);
 		}
 	}

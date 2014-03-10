@@ -21,7 +21,8 @@ import gplx.xowa.apps.*; import gplx.xowa.apps.caches.*; import gplx.xowa.specia
 import gplx.xowa.wikis.*; import gplx.xowa.users.*; import gplx.xowa.cfgs.*; import gplx.xowa.ctgs.*; import gplx.xowa.html.tocs.*; import gplx.xowa.fmtrs.*; 
 import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.math.*;	
 import gplx.xowa.parsers.logs.*;
-import gplx.xowa.servers.*;
+import gplx.xowa.servers.tcp.*;
+import gplx.xowa.servers.http.*;
 public class Xoa_app implements GfoInvkAble {
 	public Xoa_app(Gfo_usr_dlg_xowa usr_dlg, Io_url root_dir, Io_url user_dir, String bin_dir_name) {
 		this.usr_dlg = usr_dlg;
@@ -48,16 +49,18 @@ public class Xoa_app implements GfoInvkAble {
 		xtn_mgr = new Xow_xtn_mgr().Ctor_by_app(this);
 		hive_mgr = new Xoa_hive_mgr(this);
 		Io_url.Http_file_str_encoder = url_converter_fsys;
-		server.App_ctor(this);
+		tcp_server.App_ctor(this);
 		fmtr_mgr = new Xoa_fmtr_mgr(this);
 		log_mgr = new Xop_log_mgr(this);
-		webserver = new Xosrv_webserver(this);
+		http_server = new Http_server_mgr(this);
+		html_mgr = new gplx.xowa.html.Xoh_html_mgr(this);
 	}
 	public NumberParser Utl_num_parser() {return utl_num_parser;} private NumberParser utl_num_parser = new NumberParser();
 	public void Init() {
 		log_wtr.Init();
 		gui_mgr.Init();
 		fsys_mgr.Init();
+		html_mgr.Tidy_mgr().Init_by_app();
 		user.Init_by_app();
 		file_mgr.Init_by_app();
 		wiki_mgr.Init_by_app();
@@ -69,6 +72,7 @@ public class Xoa_app implements GfoInvkAble {
 	public boolean Launch_done() {return stage == Xoa_stage_.Tid_launch_done;}
 	public void Launch() {
 		if (Launch_done()) return;
+		user.Cfg_mgr().Setup_mgr().Setup_run_check(this); log_bfr.Add("app.setup_mgr");
 		gplx.xowa.users.prefs.Prefs_converter._.Check(this);
 		stage = Xoa_stage_.Tid_launch_done;
 	}
@@ -141,11 +145,11 @@ public class Xoa_app implements GfoInvkAble {
 	public Xoa_cur Cur_redirect() {return cur_redirect;} private Xoa_cur cur_redirect;
 	public Xoa_cfg_mgr			Cfg_mgr() {return cfg_mgr;} private Xoa_cfg_mgr cfg_mgr;
 	public Io_stream_zip_mgr	Zip_mgr() {return zip_mgr;} Io_stream_zip_mgr zip_mgr = new Io_stream_zip_mgr();
-	public gplx.xowa.html.Xoh_html_mgr Html_mgr() {return html_mgr;} private gplx.xowa.html.Xoh_html_mgr html_mgr = new gplx.xowa.html.Xoh_html_mgr();
+	public gplx.xowa.html.Xoh_html_mgr Html_mgr() {return html_mgr;} private gplx.xowa.html.Xoh_html_mgr html_mgr;
 	public Xoa_cache_mgr Cache_mgr() {return cache_mgr;} private Xoa_cache_mgr cache_mgr = new Xoa_cache_mgr();
 
-	public Xosrv_server			Server() {return server;} private Xosrv_server server = new Xosrv_server();
-	public Xosrv_webserver		Webserver() {return webserver;} private Xosrv_webserver webserver;
+	public Xosrv_server			Tcp_server() {return tcp_server;} private Xosrv_server tcp_server = new Xosrv_server();
+	public Http_server_mgr		Http_server() {return http_server;} private Http_server_mgr http_server;
 
 	private Xoa_fmtr_mgr fmtr_mgr;
 	public void Reset_all() {
@@ -181,7 +185,8 @@ public class Xoa_app implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_cfgs))					return cfg_mgr;
 		else if	(ctx.Match(k, Invk_usr_dlg))				return usr_dlg;
 		else if	(ctx.Match(k, Invk_specials))				return special_mgr;
-		else if	(ctx.Match(k, Invk_server))					return server;
+		else if	(ctx.Match(k, Invk_server))					return tcp_server;
+		else if	(ctx.Match(k, Invk_http_server))			return http_server;
 		else if	(ctx.Match(k, Invk_app))					return this;  
 		else if	(ctx.Match(k, Invk_fmtrs))					return fmtr_mgr;  
 		else return GfoInvkAble_.Rv_unhandled;
@@ -190,7 +195,7 @@ public class Xoa_app implements GfoInvkAble {
 	, Invk_sys_cfg = "sys_cfg", Invk_fsys = "fsys", Invk_cur = "cur", Invk_shell = "shell", Invk_log = "log"
 	, Invk_setup = "setup", Invk_scripts = "scripts", Invk_user = "user", Invk_xtns = "xtns", Invk_ctg_mgr = "ctg_mgr"
 	, Invk_cfgs = "cfgs", Invk_app = "app", Invk_usr_dlg = "usr_dlg", Invk_specials = "specials", Invk_html = "html"
-	, Invk_server = "server"
+	, Invk_server = "tcp_server", Invk_http_server = "http_server"
 	, Invk_fmtrs = "fmtrs"
 	;
 	public static final String Invk_term_cbk = "term_cbk";

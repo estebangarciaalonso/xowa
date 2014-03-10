@@ -53,7 +53,9 @@ public class Xoa_page {
 	public ListAdp			File_math() {return file_math;} private ListAdp file_math = ListAdp_.new_();
 	public Xoh_cmd_mgr		Html_cmd_mgr() {return html_cmd_mgr;} private Xoh_cmd_mgr html_cmd_mgr = new Xoh_cmd_mgr();
 	public byte[][]			Category_list() {return category_list;} public Xoa_page Category_list_(byte[][] v) {category_list = v; return this;} private byte[][] category_list = new byte[0][];
-	public Xtn_ref_mgr		Ref_mgr() {return ref_mgr;} public void Ref_mgr_(Xtn_ref_mgr v) {ref_mgr = v;} private Xtn_ref_mgr ref_mgr = new Xtn_ref_mgr();
+	public Ref_itm_mgr		Ref_mgr() {return ref_mgr;} public void Ref_mgr_(Ref_itm_mgr v) {ref_mgr = v;} private Ref_itm_mgr ref_mgr = new Ref_itm_mgr();
+	public Xoh_xtn_mgr		Xtn_mgr() {return xtn_mgr;} private Xoh_xtn_mgr xtn_mgr = new Xoh_xtn_mgr();
+	public ByteAryBfr		Portal_div_xtn() {return portal_div_xtn;} private ByteAryBfr portal_div_xtn = ByteAryBfr.reset_(255);
 	public void Clear() { // NOTE: this is called post-fetch but pre-parse; do not clear items set by post-fetch, such as id, ttl, redirect_list, data_raw
 		html_restricted = true;
 		search_text = ByteAry_.Empty;
@@ -68,6 +70,7 @@ public class Xoa_page {
 		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_page_changed(this);
 		lang_convert_content = lang_convert_title = true;
 		html_content_sub = ByteAry_.Empty;
+		xtn_mgr.Clear();
 	}
 	public static Xoa_page blank_page_(Xow_wiki wiki, Xoa_ttl ttl) {
 		Xoa_page rv = new Xoa_page(wiki, ttl);

@@ -45,7 +45,7 @@ public class Xobc_img_prep_xfer extends Xob_itm_basic_base implements Xob_cmd, G
 	}
 	private void Write(Xofo_file xfer, ListAdp link_list) {
 		xfer.Links_(link_list);
-		if (dump_bfr.Bry_len() > dump_fil_len) {Io_mgr._.AppendFilByt(dump_url_gen.Nxt_url(), dump_bfr.Bry(), dump_bfr.Bry_len()); dump_bfr.Clear();}
+		if (dump_bfr.Len() > dump_fil_len) {Io_mgr._.AppendFilByt(dump_url_gen.Nxt_url(), dump_bfr.Bry(), dump_bfr.Len()); dump_bfr.Clear();}
 		xfer.Write_bldr(fld_wtr);
 	}	private Xofo_lnki_parser lnki_parser = new Xofo_lnki_parser();
 	public void Cmd_end() {}
@@ -80,7 +80,7 @@ public class Xobc_img_prep_xfer extends Xob_itm_basic_base implements Xob_cmd, G
 			total_size += xfer.Orig_size();
 		}
 		Write(xfer, link_list);
-		Io_mgr._.AppendFilByt(dump_url_gen.Nxt_url(), dump_bfr.Bry(), dump_bfr.Bry_len()); dump_bfr.Clear();
+		Io_mgr._.AppendFilByt(dump_url_gen.Nxt_url(), dump_bfr.Bry(), dump_bfr.Len()); dump_bfr.Clear();
 	}
 	public int Total_count() {return total_count;} private int total_count;
 	public long Total_size() {return total_size;} long total_size;
@@ -109,7 +109,7 @@ class Xobc_lnki_wkr_file extends Xob_itm_dump_base implements Xop_lnki_logger {
 		byte[] ttl = lnki.Ttl().Page_db();
 		ttl = encoder.Decode_lax(lnki.Ttl().Page_db());
 		Xofo_lnki.Write(lnki_wtr, ttl, lnki);
-		if (dump_bfr.Bry_len() > dump_fil_len) Flush(); // NOTE: doing this after; in order to do before, need to precalc len of width/height which is simply not worth it
+		if (dump_bfr.Len() > dump_fil_len) Flush(); // NOTE: doing this after; in order to do before, need to precalc len of width/height which is simply not worth it
 	}	Url_encoder encoder = Url_encoder.new_file_();
 	public void Wkr_end() {
 		Flush();

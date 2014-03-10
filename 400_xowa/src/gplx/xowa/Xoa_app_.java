@@ -23,7 +23,7 @@ public class Xoa_app_ {
 		boot_mgr.Run(args);
 	}
 	public static final String Name = "xowa";
-	public static final String Version = "1.3.1.1";
+	public static final String Version = "1.3.2.1";
 	public static String Build_date = "2012-12-30 00:00:00";
 	public static String Op_sys;
 	public static String User_agent = "";
@@ -124,8 +124,8 @@ class Xoa_app_boot_mgr {
 			try {
 				app.Sys_cfg().Lang_(System_lang()); chkpoint = "lang";
 				app.Sys_cfg().Launch_url_(launch_url); chkpoint = "url";
-				app.Server().Rdr_port_(server_port_recv).Wtr_port_(server_port_send);
-				app.Webserver().Http_server_port_(http_server_port);
+				app.Tcp_server().Rdr_port_(server_port_recv).Wtr_port_(server_port_send);
+				app.Http_server().Port_(http_server_port);
 				app.Init(); chkpoint = "init_gfs";
 			}
 			catch (Exception e) {usr_dlg.Warn_many("", "", "app init failed: ~{0} ~{1}", chkpoint, Err_.Message_gplx(e));}
@@ -142,9 +142,9 @@ class Xoa_app_boot_mgr {
 			// launch
 			app.Launch(); chkpoint = "launch";
 			if		(String_.Eq(app_mode, "server"))
-				app.Server().Run();
+				app.Tcp_server().Run();
 			else if	(String_.Eq(app_mode, "http_server"))
-				app.Webserver().Run();
+				app.Http_server().Run();
 			else {
 				if (cmd_text != null)
 					ConsoleAdp._.WriteLine_utf8(Object_.XtoStr_OrEmpty(app.Gfs_mgr().Run_str(cmd_text)));

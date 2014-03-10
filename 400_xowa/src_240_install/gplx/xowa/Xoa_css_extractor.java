@@ -125,7 +125,7 @@ public class Xoa_css_extractor {
 	private boolean Css_wiki_generate_section(ByteAryBfr bfr, byte[] ttl) {
 		byte[] page = page_fetcher.Fetch(Xow_ns_.Id_mediaWiki, ttl);
 		if (page == null) return false;
-		if (bfr.Bry_len() != 0) bfr.Add_byte_nl().Add_byte_nl();	// add "\n\n" between sections; !=0 checks against first
+		if (bfr.Len() != 0) bfr.Add_byte_nl().Add_byte_nl();	// add "\n\n" between sections; !=0 checks against first
 		Css_wiki_section_hdr.Bld_bfr_many(bfr, ttl);		// add "/*XOWA:MediaWiki:Common.css*/\n"
 		bfr.Add(page);												// add page
 		return true;

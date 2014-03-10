@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.ctgs; import gplx.*; import gplx.xowa.*;
+import gplx.xowa.html.*;
 import gplx.xowa.users.history.*;
 public class Xoctg_pagelist_itms implements ByteAryFmtrArg {
 	public void Init_app(Xoa_app app, ByteAryFmtr fmtr_itm) {

@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.ctgs; import gplx.*; import gplx.xowa.*;
+import gplx.xowa.html.*;
 import gplx.xowa.users.history.*;
 abstract class Xoctg_fmtr_itm_base implements Xoctg_fmtr_itm {
 	public void Init_from_all(Xow_wiki wiki, Xol_lang lang, Xoctg_view_ctg ctg, Xoctg_fmtr_all mgr, Xoctg_view_grp itms_list, int itms_list_len) {
@@ -113,7 +114,7 @@ class Xoctg_fmtr_itm_subc extends Xoctg_fmtr_itm_base {
 	}
 	private void Bld_contains_text_itm(ByteAryBfr bfr, int msg_id, int val) {
 		if (val == 0) return;
-		if (bfr.Bry_len() > 1) bfr.Add(Bld_contains_text_itm_dlm);	// NOTE: 1 b/c Paren_bgn is always added
+		if (bfr.Len() > 1) bfr.Add(Bld_contains_text_itm_dlm);	// NOTE: 1 b/c Paren_bgn is always added
 		bfr.Add(msg_mgr.Val_by_id_args(msg_id, val));
 	}	static final byte[] Bld_contains_text_itm_dlm = ByteAry_.new_ascii_(", "); 
 	public static final Xoctg_fmtr_itm_subc _ = new Xoctg_fmtr_itm_subc(); Xoctg_fmtr_itm_subc() {}

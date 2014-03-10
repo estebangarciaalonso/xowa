@@ -72,7 +72,7 @@ public abstract class Xob_search_base extends Xob_itm_dump_base implements Xobd_
 		int i = 0; boolean word_done = false;
 		while (true) {
 			if (word_done || i == ttl_len) {
-				if (bfr.Bry_len() > 0) {
+				if (bfr.Len() > 0) {
 					byte[] word = bfr.XtoAry();
 					word_ref.Val_(word);
 					if (!list.Has(word_ref)) list.Add(word_ref, word);

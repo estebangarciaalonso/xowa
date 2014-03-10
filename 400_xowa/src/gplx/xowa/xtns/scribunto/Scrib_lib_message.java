@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.xowa.html.*;
 class Scrib_lib_message implements Scrib_lib {
 	public Scrib_lib_message(Scrib_engine engine) {this.engine = engine;} Scrib_engine engine;
 	public Scrib_mod Mod() {return mod;} Scrib_mod mod;
@@ -125,7 +126,7 @@ class Scrib_lib_message_data {
 		byte[] msg_val = Fetch_msg(cur_lang, wiki, ctx, exec_params);
 		if (ByteAry_.Len_eq_0(msg_val)) {
 			ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
-			bfr.Add(gplx.html.Html_entities.Lt).Add(msg_key).Add(gplx.html.Html_entities.Gt);	// NOTE: Message.php has logic that says: if plain, "< >", else "&lt; &gt;"; for now, always use escaped
+			bfr.Add(gplx.html.Html_consts.Lt).Add(msg_key).Add(gplx.html.Html_consts.Gt);	// NOTE: Message.php has logic that says: if plain, "< >", else "&lt; &gt;"; for now, always use escaped
 			return bfr.Mkr_rls().XtoAryAndClear();
 		}
 		switch (fmt_tid) {
@@ -137,7 +138,7 @@ class Scrib_lib_message_data {
 				msg_val = bfr.Add(Xoh_consts.P_bgn).Add(msg_val).Add(Xoh_consts.P_end).Mkr_rls().XtoAryAndClear();
 				break;
 			case Fmt_tid_escaped:
-				msg_val = gplx.html.Html_util.Escape_html_as_bry(msg_val);
+				msg_val = gplx.html.Html_utl.Escape_html_as_bry(msg_val);
 				break;
 		}
 		return msg_val;

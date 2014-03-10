@@ -61,7 +61,7 @@ class Json_itm_str extends Json_itm_base {
 	@Override public byte Tid() {return Json_itm_.Tid_string;}
 	@Override public void Print_as_json(ByteAryBfr bfr, int depth) {
 		bfr.Add_byte(Byte_ascii.Quote);
-		gplx.html.Html_util.Escape_html_to_bfr(bfr, doc.Src(), this.Src_bgn(), this.Src_end(), true, true, true, true);
+		gplx.html.Html_utl.Escape_html_to_bfr(bfr, doc.Src(), this.Src_bgn(), this.Src_end(), true, true, true, true);
 		bfr.Add_byte(Byte_ascii.Quote);
 	}
 	@Override public Object Data() {

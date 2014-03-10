@@ -65,8 +65,14 @@ public class Xop_xnde_tkn extends Xop_tkn_itm_base implements Xop_tblw_tkn {
 				prep_data.OnlyInclude_exists = true;
 				break;
 			}
-			default:
+			default: {
+				int subs_len = this.Subs_len();
+				for (int i = 0; i < subs_len; i++) {
+					Xop_tkn_itm sub = this.Subs_get(i);
+					sub.Tmpl_compile(ctx, src, prep_data);
+				}
 				break;	// can happen in compile b/c invks are now being compiled
+			}
 		}
 	}
 	@Override public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr) {
@@ -94,11 +100,12 @@ public class Xop_xnde_tkn extends Xop_tkn_itm_base implements Xop_tblw_tkn {
 //					ctx.Onlyinclude_enabled = prv_val;
 				break;
 			default:								// ignore tags except for xtn; NOTE: Xtn tags are part of tagRegy_wiki_tmpl stage
-//					if (!ctx.Onlyinclude_enabled) {
-					if (tag.Xtn() || tag.XtnTmpl()) {
-						bfr.Add_mid(src, this.Src_bgn(), this.Src_end());
-					}
-//					}
+				if (tag.Xtn()) {
+					bfr.Add_mid(src, tag_open_bgn, tag_open_end);	// write tag_bgn
+					for (int i = 0; i < subs_len; i++)				// always evaluate subs; handle <poem>{{{1}}}</poem>; DATE:2014-03-03
+						this.Subs_get(i).Tmpl_evaluate(ctx, src, caller, bfr);
+					bfr.Add_mid(src, tag_close_bgn, tag_close_end);	// write tag_end
+				}
 				break;
 		}
 		return true;

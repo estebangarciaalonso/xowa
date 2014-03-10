@@ -47,7 +47,7 @@ public class Xot_prm_tkn extends Xop_tkn_itm_base {
 			ByteAryBfr find_bfr = ByteAryBfr.new_();
 			for (int i = 0; i < subs_len; i++)
 				find_tkn.Subs_get(i).Tmpl_evaluate(ctx, src, caller, find_bfr);
-			prm_idx = ByteAry_.X_to_int_or_trim(find_bfr.Bry(), 0, find_bfr.Bry_len(), -1);	// parse as number first; NOTE: trim needed to transform "{{{ 1 }}}" to "1"; it.w:Portale:Giochi_da_tavolo; DATE:2014-02-09
+			prm_idx = ByteAry_.X_to_int_or_trim(find_bfr.Bry(), 0, find_bfr.Len(), -1);	// parse as number first; NOTE: trim needed to transform "{{{ 1 }}}" to "1"; it.w:Portale:Giochi_da_tavolo; DATE:2014-02-09
 			if (prm_idx == -1)
 				prm_key = find_bfr.XtoAryAndClearAndTrim();									// not a number; parse as key; NOTE: must trim; EX.WP: William Shakespeare; {{Relatebardtree}}
 		}

@@ -28,7 +28,7 @@ public class Xobc_parse_dump_templates extends Xob_itm_dump_base implements Xobd
 	public void Wkr_run(Xodb_page page) {
 		if (page.Ns_id() != Xow_ns_.Id_template) return;
 		int id = page.Id(); byte[] title = page.Ttl_wo_ns(), text = page.Text(); int title_len = title.length, text_len = text.length;
-		if (FixedLen_page + title_len + text_len + dump_bfr.Bry_len() > dump_fil_len) super.Flush_dump();
+		if (FixedLen_page + title_len + text_len + dump_bfr.Len() > dump_fil_len) super.Flush_dump();
 		Xodb_page_.Txt_page_save(dump_bfr, id, page.Modified_on(), title, text, true);
 	}
 	public void Wkr_end() {super.Flush_dump();}

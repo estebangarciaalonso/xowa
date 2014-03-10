@@ -41,21 +41,25 @@ class Scrib_lib_ustring implements Scrib_lib {
 	}
 	public static final String Invk_find = "find", Invk_match = "match", Invk_gmatch_init = "gmatch_init", Invk_gmatch_callback = "gmatch_callback", Invk_gsub = "gsub";
 	public KeyVal[] Find(KeyVal[] values) {
-		String text = Scrib_kv_utl.Val_to_str(values, 0);
-		String regx = Scrib_kv_utl.Val_to_str(values, 1);
-		int bgn = Scrib_kv_utl.Val_to_int_or(values, 2, 1);
+		Scrib_args args = new Scrib_args(values);
+		String text = args.Pull_str(0);
+		String regx = args.Pull_str(1);
+		int bgn = args.Cast_int_or(2, 1);
+		boolean plain = args.Cast_bool_or_n(3);
 		bgn = Bgn_adjust(text, bgn);
-		boolean plain = Scrib_kv_utl.Val_to_bool_or(values, 3, false);
+		if (String_.Len_eq_0(regx))	// regx of "" should return (bgn, bgn - 1) regardless of plain = t / f
+			return Scrib_kv_utl.base1_many_(bgn + Scrib_lib_ustring.Base1, bgn + Scrib_lib_ustring.Base1 - 1);
 		if (plain) {
 			int pos = String_.FindFwd(text, regx, bgn);
 			boolean found = pos != ByteAry_.NotFound;
-			if (!found) return KeyVal_.Ary_empty;
-			return Scrib_kv_utl.base1_many_(pos + Scrib_lib_ustring.Base1, pos + Scrib_lib_ustring.Base1 + String_.Len(regx) - Scrib_lib_ustring.End_adj);
+			return found 
+				? Scrib_kv_utl.base1_many_(pos + Scrib_lib_ustring.Base1, pos + Scrib_lib_ustring.Base1 + String_.Len(regx) - Scrib_lib_ustring.End_adj)
+				: KeyVal_.Ary_empty
+				;
 		}
-		else
-			regx = regx_converter.Parse(ByteAry_.new_utf8_(regx), false);
+		regx = regx_converter.Parse(ByteAry_.new_utf8_(regx), false);
 		RegxAdp regx_adp = Scrib_lib_ustring.RegxAdp_new_(engine.Ctx(), regx);
-		RegxMatch[] regx_rslts = regx_adp.Match_all(text, bgn);
+		RegxMatch[] regx_rslts = regx_adp.Match_all(text, bgn);	// NOTE: MW calculates an offset to handle mb strings. however, java's regex always takes offset in chars (not bytes like PHP preg_match); DATE:2014-03-04
 		int len = regx_rslts.length;
 		if (len == 0) return KeyVal_.Ary_empty;
 		ListAdp tmp_list = ListAdp_.new_();
@@ -67,7 +71,7 @@ class Scrib_lib_ustring implements Scrib_lib {
 		}
 		return Scrib_kv_utl.base1_list_(tmp_list);
 	}
-	private int Bgn_adjust(String text, int bgn) {
+	private int Bgn_adjust(String text, int bgn) {	// adjust to handle bgn < 0 or bgn > len (which PHP allows)
 //			if (bgn == 0) return 0;
 		if (bgn > 0) bgn -= Scrib_lib_ustring.Base1;
 		int text_len = String_.Len(text);

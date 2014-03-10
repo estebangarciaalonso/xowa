@@ -160,7 +160,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 								ns = (Xow_ns)o;
 								byte[] ns_name = ns.Name_txt();
 								int ns_name_len = ns_name.length;
-								int tmp_bfr_end = bfr.Bry_len();
+								int tmp_bfr_end = bfr.Len();
 								if (!ByteAry_.Eq(ns_name, bfr.Bry(), ltr_bgn, tmp_bfr_end) && ns_name_len == tmp_bfr_end - ltr_bgn) {	// if (a) ns_name != bfr_txt (b) both are same length; note that (b) should not happen, but want to safeguard against mismatched arrays
 									ByteAry_.Set(bfr.Bry(), ltr_bgn, tmp_bfr_end, ns_name);
 								}

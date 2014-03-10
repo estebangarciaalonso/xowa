@@ -34,16 +34,6 @@ class Xop_lnki_lxr_end implements Xop_lxr {
 	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {return ctx.Lnki().Make_tkn(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos);}
 	public static final Xop_lnki_lxr_end _ = new Xop_lnki_lxr_end();
 }
-class Xop_lnki_halign {
-	public static final byte Null = 0, None = 1, Left = 2, Center = 3, Right = 4;
-	public static final byte[][] Html_names = new byte[][]
-		{	ByteAry_.new_ascii_("null")
-		,	ByteAry_.new_ascii_("none")
-		,	ByteAry_.new_ascii_("left")
-		,	ByteAry_.new_ascii_("center")
-		,	ByteAry_.new_ascii_("right")
-		};
-}
 class Xop_lnki_valign	{public static final byte None = 0, Top		= 1, Middle		= 2, Bottom		 = 4, Super		= 8, Sub        = 16, TextTop = 32, TextBottom = 64, Baseline = 127;}
 class Xop_lnki_size	{public static final int  None = 0, Width		= 1, Height		= 2, WidthHeight = 4, Upright	= 8;}
 /*

@@ -394,6 +394,7 @@ public class ByteAry_ {
 		}
 		return Int_.Compare(lhs_len, rhs_len);	// lhs and rhs share same beginning bytes; return len comparisons
 	}
+	public static int Len(byte[] v) {return v == null ? 0 : v.length;}
 	public static boolean Len_gt_0(byte[] v) {return v != null && v.length > 0;}
 	public static boolean Len_eq_0(byte[] v) {return v == null || v.length == 0;}
 	public static void Set(byte[] src, int bgn, int end, byte[] repl) {

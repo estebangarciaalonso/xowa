@@ -19,12 +19,12 @@ package gplx.xowa.users; import gplx.*; import gplx.xowa.*;
 public class Xouc_setup_mgr implements GfoInvkAble {
 	public Xouc_setup_mgr(Xou_user user) {this.user = user;}
 	public Xou_user User() {return user;} private Xou_user user;
-	public String Setup_completed() {return setup_completed;} private String setup_completed = "";
+	private String setup_completed = "";
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {			
 		if		(ctx.Match(k, Invk_setup_completed))			return setup_completed;
 		else if	(ctx.Match(k, Invk_setup_completed_))			setup_completed = m.ReadStr("v");
 		return this;
-	}	public static final String Invk_setup_completed = "setup_completed", Invk_setup_completed_ = "setup_completed_";
+	}	private static final String Invk_setup_completed = "setup_completed", Invk_setup_completed_ = "setup_completed_";
 	public void Setup_run_check(Xoa_app app) {
 		byte op_sys_tid = Op_sys.Cur().Tid();
 		switch (op_sys_tid) {

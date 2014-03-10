@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.imageMap; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.xowa.html.*;
 import gplx.xowa.parsers.lnkis.*; import gplx.xowa.parsers.logs.*;
 public class Xop_imageMap_xnde implements Xox_xnde {
 	private boolean first = true;

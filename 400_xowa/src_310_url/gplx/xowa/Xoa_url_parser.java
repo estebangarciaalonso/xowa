@@ -229,12 +229,12 @@ public class Xoa_url_parser {
 			for (int i = 0; i < segs_len; i++) {
 				byte[] seg = segs[i];
 				if (i == 0 && ByteAry_.Eq(seg, Xoa_url_parser.Bry_wiki_name)) continue; 
-				if (bfr.Bry_len() > 0) bfr.Add_byte(Byte_ascii.Slash);
+				if (bfr.Len() > 0) bfr.Add_byte(Byte_ascii.Slash);
 				bfr.Add(seg);
 			}
 		}
 		if (page != null) {
-			if (bfr.Bry_len() > 0) bfr.Add_byte(Byte_ascii.Slash);
+			if (bfr.Len() > 0) bfr.Add_byte(Byte_ascii.Slash);
 			bfr.Add(page);
 		}
 		return bfr.Mkr_rls().XtoAryAndClear();
@@ -254,12 +254,15 @@ public class Xoa_url_parser {
 	}
 	// private static final byte Tid_xowa = (byte)Gfo_url_parser.Protocol_file_tid + 1;
 	private static final byte Id_arg_redirect = 0, Id_arg_uselang = 1, Id_arg_title = 2, Id_arg_action = 3, Id_arg_fulltext = 4;
-	private static final byte[] Bry_arg_redirect = ByteAry_.new_ascii_("redirect"), Bry_arg_uselang = ByteAry_.new_ascii_("uselang"), Bry_arg_title = ByteAry_.new_ascii_("title"), Bry_arg_action = ByteAry_.new_ascii_("action"), Bry_arg_fulltext = ByteAry_.new_ascii_("fulltext");
-	private static final byte[] Bry_upload_wikimedia_org = ByteAry_.new_ascii_("upload.wikimedia.org"), Bry_dot_org = ByteAry_.new_ascii_(".org"), Bry_arg_action_edit = ByteAry_.new_ascii_("edit")
+	private static final byte[] Bry_arg_redirect = ByteAry_.new_ascii_("redirect"), Bry_arg_uselang = ByteAry_.new_ascii_("uselang"), Bry_arg_title = ByteAry_.new_ascii_("title"), Bry_arg_fulltext = ByteAry_.new_ascii_("fulltext");
+	private static final byte[] Bry_upload_wikimedia_org = ByteAry_.new_ascii_("upload.wikimedia.org"), Bry_dot_org = ByteAry_.new_ascii_(".org")
 		, Bry_file = ByteAry_.new_ascii_("File:");	// NOTE: File does not need i18n; is a canonical namespace 
-	private static final Hash_adp_bry qry_args_hash = Hash_adp_bry.ci_().Add_bry_byte(Bry_arg_redirect, Id_arg_redirect).Add_bry_byte(Bry_arg_uselang, Id_arg_uselang).Add_bry_byte(Bry_arg_title, Id_arg_title).Add_bry_byte(Bry_arg_action, Id_arg_action).Add_bry_byte(Bry_arg_fulltext, Id_arg_fulltext);
-	private static final Hash_adp_bry upload_segs_hash = Hash_adp_bry.ci_().Add_bry_bry(Xow_wiki_domain_.Key_commons_bry);//.Add_bry_bry(Xow_wiki_domain_.Key_species_bry).Add_bry_bry(Xow_wiki_domain_.Key_meta_bry);
 	public static final byte[] Bry_wiki_name = ByteAry_.new_ascii_("wiki");
 	private static final byte[][] Bry_wiki_name_bry = new byte[][] {Bry_wiki_name};
-	public static final byte[] Bry_arg_action_eq_edit = ByteAry_.new_ascii_("action=edit");
+	public static final byte[] Bry_arg_action_eq_edit = ByteAry_.new_ascii_("action=edit")
+	, Bry_arg_action = ByteAry_.new_ascii_("action")
+	, Bry_arg_action_edit = ByteAry_.new_ascii_("edit")
+	;
+	private static final Hash_adp_bry qry_args_hash = Hash_adp_bry.ci_().Add_bry_byte(Bry_arg_redirect, Id_arg_redirect).Add_bry_byte(Bry_arg_uselang, Id_arg_uselang).Add_bry_byte(Bry_arg_title, Id_arg_title).Add_bry_byte(Bry_arg_action, Id_arg_action).Add_bry_byte(Bry_arg_fulltext, Id_arg_fulltext);
+	private static final Hash_adp_bry upload_segs_hash = Hash_adp_bry.ci_().Add_bry_bry(Xow_wiki_domain_.Key_commons_bry);//.Add_bry_bry(Xow_wiki_domain_.Key_species_bry).Add_bry_bry(Xow_wiki_domain_.Key_meta_bry);
 }

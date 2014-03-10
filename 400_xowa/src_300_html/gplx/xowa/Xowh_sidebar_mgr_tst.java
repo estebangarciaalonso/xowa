@@ -94,6 +94,14 @@ public class Xowh_sidebar_mgr_tst {
 		,	"** LANGUAGES"
 		));
 	}
+	@Test  public void Itm_comment() { // PURPOSE: ignore comment; EX:de.v:MediaWiki:Sidebar; DATE:2014-03-08
+		fxt
+		.Init_msg_itm("href_key", "main_key", "text", "title", "accesskey", "href")
+		.Test_parse
+		(	"** href_key<!--a-->|main_key<!--b-->"
+		,	fxt.nav_itm_("text", "title", "accesskey", "/wiki/Href"))
+		;
+	}
 	@Test   public void Smoke() {
 		fxt
 		.Init_msg_grp("navigation", "Grp_0_text", "Grp_0_title")
@@ -155,15 +163,17 @@ public class Xowh_sidebar_mgr_tst {
 	}
 }
 class Xowh_sidebar_mgr_fxt {
+	private Xoa_app app; private Xow_wiki wiki; private Xowh_sidebar_mgr sidebar_mgr; private ByteAryBfr bfr, comment_bfr;
 	public Xowh_sidebar_mgr_fxt Clear() {
 //			if (app == null) {
 			app = Xoa_app_fxt.app_();
 			wiki = Xoa_app_fxt.wiki_tst_(app);
 			sidebar_mgr = wiki.Html_mgr().Portal_mgr().Sidebar_mgr();
 			bfr = ByteAryBfr.reset_(Io_mgr.Len_kb);
+			comment_bfr = ByteAryBfr.reset_(Io_mgr.Len_kb);
 //			}
 		return this;
-	}	private Xoa_app app; Xow_wiki wiki; Xowh_sidebar_mgr sidebar_mgr; ByteAryBfr bfr;
+	}
 	public Xow_wiki Wiki() {return wiki;}
 	public Xowh_sidebar_itm nav_grp_(String text, String title, Xowh_sidebar_itm... itms) {return new Xowh_sidebar_itm(Xowh_sidebar_itm.Tid_grp).Text_(ByteAry_.new_ascii_(text)).Title_(ByteAry_.new_ascii_(title));}
 	public Xowh_sidebar_itm nav_itm_(String text, String title, String accesskey, String href) {return new Xowh_sidebar_itm(Xowh_sidebar_itm.Tid_itm).Text_(ByteAry_.new_ascii_(text)).Title_(ByteAry_.new_ascii_(title)).Accesskey_(ByteAry_.new_ascii_(accesskey)).Href_(ByteAry_.new_ascii_(href));}
@@ -186,7 +196,7 @@ class Xowh_sidebar_mgr_fxt {
 		return this;
 	}
 	public void Test_parse(String raw, Xowh_sidebar_itm... expd) {
-		sidebar_mgr.Parse(bfr, ByteAry_.new_ascii_(raw));
+		sidebar_mgr.Parse(bfr, comment_bfr, ByteAry_.new_ascii_(raw));
 		Tfds.Eq_str_lines(Xto_str(expd), Xto_str_grps(sidebar_mgr));
 	}
 	public void Test_html(String expd) {

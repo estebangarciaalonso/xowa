@@ -28,18 +28,37 @@ class Cache_fil_mgr {
 	public void Db_when_new(Db_provider p) {fil_tbl.Db_when_new(p);}
 	public void Db_save() {
 		int len = fil_hash.Count();
+		boolean err_seen = false;
 		for (int i = 0; i < len; i++) {
 			Cache_fil_itm fil_itm = (Cache_fil_itm)fil_hash.FetchAt(i);
+			if (err_seen)
+				fil_itm.Uid_(cache_mgr.Next_id());
 			if (fil_itm.Cmd_mode() == Db_cmd_mode.Create) {		// create; check if in db;
 				Cache_fil_itm tbl_itm = fil_tbl.Select(fil_itm.Dir_id(), fil_itm.Fil_name(), fil_itm.Fil_is_orig(), fil_itm.Fil_w(), fil_itm.Fil_h(), fil_itm.Fil_thumbtime());
 				if (tbl_itm != Cache_fil_itm.Null)				// tbl_itm found
 					fil_itm.Cmd_mode_(Db_cmd_mode.Update);		// change fil_itm to update
 			}
-			fil_tbl.Db_save(fil_itm);
+			String err_msg = fil_tbl.Db_save(fil_itm);
+			if (err_msg != null) {
+				Db_recalc_next_id(fil_itm, err_msg);
+				err_seen = true;
+			}
 		}
 	}
 	public void Db_term() {
 		fil_tbl.Db_term();
+	}
+	private void Db_recalc_next_id(Cache_fil_itm fil_itm, String err_msg) {
+		if (String_.Has(err_msg, "PRIMARY KEY must be unique")) { // primary key exception in strange situations (multiple xowas at same time)
+			int next_id = fil_tbl.Select_max_uid() + 1;				
+			Gfo_usr_dlg_._.Warn_many("", "", "uid out of sync; incrementing; uid=~{0} name=~{1} err=~{2}", fil_itm.Uid(), String_.new_utf8_(fil_itm.Fil_name()), err_msg);
+			fil_itm.Uid_(next_id);
+			cache_mgr.Next_id_(next_id + 1);
+			err_msg = fil_tbl.Db_save(fil_itm);
+			if (err_msg == null)
+				return;
+		}
+		Gfo_usr_dlg_._.Warn_many("", "", "failed to save uid; uid=~{0} name=~{1} err=~{2}", fil_itm.Uid(), String_.new_utf8_(fil_itm.Fil_name()), err_msg);
 	}
 	public Cache_fil_itm Get_or_new(int dir_id, byte[] fil_name, boolean fil_is_orig, int fil_w, int fil_h, double fil_thumbtime, Xof_ext fil_ext, long fil_size, BoolRef created) {
 		byte[] fil_key = Cache_fil_itm.Gen_hash_key(fil_key_bldr, dir_id, fil_name, fil_is_orig, fil_w, fil_h, fil_thumbtime);
@@ -81,7 +100,9 @@ class Cache_fil_mgr {
 				else
 					actl_size += itm_size;
 				cur_size = new_size;
-				fil_tbl.Db_save(itm);	// save to db now, b/c fils will be deleted and want to keep db and fsys in sync
+				String err_msg = fil_tbl.Db_save(itm);	// save to db now, b/c fils will be deleted and want to keep db and fsys in sync
+				if (err_msg != null)
+					Db_recalc_next_id(itm, err_msg);
 			}
 			len = deleted.Count();
 			for (int i = 0; i < len; i++) {

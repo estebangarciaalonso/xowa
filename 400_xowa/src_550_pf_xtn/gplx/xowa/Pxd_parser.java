@@ -127,7 +127,7 @@ class Pxd_parser {
 		MakeDataAry();
 		for (int i = 0; i < tkns_len; i++) {
 			eval_ary[i].Eval(this);
-			if (errorBfr.Bry_len() != 0) {
+			if (errorBfr.Len() != 0) {
 				error.Add_bfr_and_clear(errorBfr);
 				return DateAdp_.MinValue;			
 			}

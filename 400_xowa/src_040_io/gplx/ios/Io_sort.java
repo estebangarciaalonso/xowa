@@ -70,7 +70,7 @@ public class Io_sort {
 		for (int i = 0; i < len; i++) {
 			Io_sort_split_itm itm = (Io_sort_split_itm)list.FetchAt(i);
 			int add_len = itm.Row_end() - itm.Row_bgn();
-			if ((tmp.Bry_len() + add_len) > Const_bfr_max) Io_mgr._.AppendFilBfr(url, tmp);
+			if ((tmp.Len() + add_len) > Const_bfr_max) Io_mgr._.AppendFilBfr(url, tmp);
 			tmp.Add_mid(itm.Bfr(), itm.Row_bgn(), itm.Row_end());
 			itm.Rls();
 		}

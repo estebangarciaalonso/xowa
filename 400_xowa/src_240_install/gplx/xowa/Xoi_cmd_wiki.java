@@ -18,8 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.gfui.*;
 import gplx.thread_cmds.*;
-class Xoi_cmd_wiki_download extends Gfo_thread_cmd_download implements Gfo_thread_cmd {	public static final String KEY_dump = "wiki.download";
-	private Xoi_setup_mgr install_mgr; private String wiki_key, dump_date, dump_type;
+class Xoi_cmd_wiki_download extends Gfo_thread_cmd_download implements Gfo_thread_cmd {	private Xoi_setup_mgr install_mgr; private String wiki_key, dump_date, dump_type;
 	public Xoi_cmd_wiki_download Ctor_download_(Xoi_setup_mgr install_mgr, String wiki_key, String dump_date, String dump_type) {
 		this.install_mgr = install_mgr;
 		this.wiki_key = wiki_key;
@@ -29,7 +28,7 @@ class Xoi_cmd_wiki_download extends Gfo_thread_cmd_download implements Gfo_threa
 		return this;
 	}
 	@gplx.Virtual public String Download_file_ext() {return ".xml.bz2";}	// wiki.download is primarily used for dump files; default to .xml.bz2; NOTE: changed from ".xml"; DATE:2013-11-07
-	@Override public String Async_key() {return KEY_dump;}
+	@Override public String Async_key() {return Key_wiki_download;}  public static final String Key_wiki_download = "wiki.download";
 	@Override public byte Async_init() {
 		Xoa_app app = install_mgr.App();
 		Xob_dump_file dump_file = Xob_dump_file.new_(wiki_key, dump_date, dump_type);
@@ -48,10 +47,8 @@ class Xoi_cmd_wiki_download extends Gfo_thread_cmd_download implements Gfo_threa
 		Io_url trg = trg_fil_ary.length == 0 ? root_dir.GenSubFil(dump_file.File_name()) : trg_fil_ary[0];
 		this.Ctor(app.Usr_dlg(), app.Gui_mgr().Kit());
 		this.Init("download", dump_file.File_url(), trg);
-		byte rslt = super.Async_init();
-		return rslt;
+		return super.Async_init();
 	}
-	static final String GRP_KEY = "xowa.setup.dump.download";
 	private static boolean Dump_servers_offline_msg_shown = false;
 }
 class Xoi_cmd_wiki_unzip extends Gfo_thread_cmd_unzip implements Gfo_thread_cmd {	public static final String KEY_dump = "wiki.unzip";

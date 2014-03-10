@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.html.*;
-class Xop_link_parser {
+public class Xop_link_parser {
 	public byte[] Html_xowa_ttl()	{return html_xowa_ttl;} private byte[] html_xowa_ttl;
 	public byte[] Html_anchor_cls()	{return html_anchor_cls;} private byte[] html_anchor_cls;
 	public byte[] Html_anchor_rel()	{return html_anchor_rel;} private byte[] html_anchor_rel;

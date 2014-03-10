@@ -52,7 +52,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 		, "page_id", "page_name", "page_title", "page_content_sub", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
 		, "html_css_common_path", "html_css_wiki_path", "css_xtn", "html_content_editable"
 		, "portal_div_personal", "portal_div_ns", "portal_div_view"
-		, "portal_div_logo", "portal_div_home", "portal_div_wikis", "portal_sidebar"
+		, "portal_div_logo", "portal_div_home", "portal_div_xtn", "portal_div_wikis", "portal_sidebar"
 	    , "edit_div_rename", "edit_div_preview"
 		, "app_version", "app_build_date", "app_root_dir", "js_mathjax_script", "js_article_view_vars", "js_wikidata", "js_edit_toolbar", "xowa_mode_is_server"
 		);
@@ -60,7 +60,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 		, "page_id", "page_name", "page_title", "page_content_sub", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
 		, "html_css_common_path", "html_css_wiki_path", "css_xtn", "html_content_editable"
 		, "portal_div_personal", "portal_div_ns", "portal_div_view"
-		, "portal_div_logo", "portal_div_home", "portal_div_wikis", "portal_sidebar"
+		, "portal_div_logo", "portal_div_home", "portal_div_xtn", "portal_div_wikis", "portal_sidebar"
 	    , "edit_div_rename", "edit_div_preview"
 		, "app_version", "app_build_date", "app_root_dir", "js_mathjax_script", "js_article_view_vars", "js_wikidata", "js_edit_toolbar", "xowa_mode_is_server"
 		);
@@ -69,7 +69,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 		, "page_id", "page_name", "page_title", "page_content_sub", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
 		, "html_css_common_path", "html_css_wiki_path", "css_xtn", "html_content_editable"
 		, "portal_div_personal", "portal_div_ns", "portal_div_view"
-		, "portal_div_logo", "portal_div_home", "portal_div_wikis", "portal_sidebar"
+		, "portal_div_logo", "portal_div_home", "portal_div_xtn", "portal_div_wikis", "portal_sidebar"
 	    , "edit_div_rename", "edit_div_preview"
 		, "app_version", "app_build_date", "app_root_dir", "js_mathjax_script", "js_article_view_vars", "js_wikidata", "js_edit_toolbar", "xowa_mode_is_server"
 		);

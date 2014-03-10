@@ -30,7 +30,6 @@ public class Xop_xnde_tag {
 	public String Name_str() {return name_str;} private String name_str;
 	public int Name_len() {return name_len;} private int name_len;
 	public boolean Xtn() {return xtn;} public Xop_xnde_tag Xtn_() {xtn = true; return this;} private boolean xtn;
-	public boolean XtnTmpl() {return xtnTmpl;} public Xop_xnde_tag XtnTmpl_() {xtnTmpl = true; return this;} private boolean xtnTmpl;
 	public byte[] XtnEndTag() {return xtn_end_tag;} private byte[] xtn_end_tag;
 	public byte[] XtnEndTag_tmp() {return xtn_end_tag_tmp;} private byte[] xtn_end_tag_tmp;
 	public int BgnNdeMode() {return bgnNdeMode;} private int bgnNdeMode = Xop_xnde_tag_.BgnNdeMode_normal;
@@ -54,4 +53,5 @@ public class Xop_xnde_tag {
 	public byte Block_close() {return block_close;} private byte block_close = Block_noop;
 	public Xop_xnde_tag Block_open_bgn_() {block_open = Block_bgn; return this;} public Xop_xnde_tag Block_open_end_() {block_open = Block_end; return this;}
 	public Xop_xnde_tag Block_close_bgn_() {block_close = Block_bgn; return this;} public Xop_xnde_tag Block_close_end_() {block_close = Block_end; return this;}
+	public boolean Xtn_auto_close() {return xtn_auto_close;} public Xop_xnde_tag Xtn_auto_close_() {xtn_auto_close = true; return this;} private boolean xtn_auto_close;
 }

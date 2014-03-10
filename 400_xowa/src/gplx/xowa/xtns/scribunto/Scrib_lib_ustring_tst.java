@@ -25,12 +25,14 @@ public class Scrib_lib_ustring_tst {
 	}	Scrib_pf_invoke_fxt fxt = new Scrib_pf_invoke_fxt(); Scrib_lib lib;
 	@Test  public void Find() {			
 		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_ustring(), Scrib_lib_ustring.Invk_find);
-		Exec_find("abcd"	, "b"				, 1, false, "2;2");					// basic
-		Exec_find("abac"	, "a"				, 2, false, "3;3");					// bgn
-		Exec_find("()()"	, "("				, 2, true , "3;3");					// plain; note that ( would "break" regx
-		Exec_find("a bcd e"	, "(b(c)d)"			, 2, false, "3;5;bcd;c");			// groups
-		Exec_find("a bcd e"	, "()(b)"			, 2, false, "3;3;3;b");				// groups; empty capture
-		Exec_find("abcd"	, "x"				, 1, false, "");					// empty
+		Exec_find("abcd"	, "b"				, 1, Bool_.N, "2;2");				// basic
+		Exec_find("abac"	, "a"				, 2, Bool_.N, "3;3");				// bgn
+		Exec_find("()()"	, "("				, 2, Bool_.Y, "3;3");				// plain; note that ( would "break" regx
+		Exec_find("a bcd e"	, "(b(c)d)"			, 2, Bool_.N, "3;5;bcd;c");			// groups
+		Exec_find("a bcd e"	, "()(b)"			, 2, Bool_.N, "3;3;3;b");			// groups; empty capture
+		Exec_find("abcd"	, "x"				, 1, Bool_.N, "");					// empty
+		Exec_find("abcd"	, ""				, 2, Bool_.Y, "2;1");				// empty regx should return values; plain; EX:w:Fool's_mate; DATE:2014-03-04
+		Exec_find("abcd"	, ""				, 2, Bool_.N, "2;1");				// empty regx should return values; regx; EX:w:Fool's_mate; DATE:2014-03-04
 	}
 	@Test  public void Match() {
 		fxt.Init_cbk(Scrib_engine.Key_mw_interface, fxt.Engine().Lib_ustring(), Scrib_lib_ustring.Invk_match);

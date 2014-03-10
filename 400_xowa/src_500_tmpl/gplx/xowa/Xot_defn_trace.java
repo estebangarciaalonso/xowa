@@ -47,7 +47,7 @@ class Xot_defn_trace_brief implements Xot_defn_trace {
 	public void Trace_end(int trg_bgn, ByteAryBfr trg) {}
 	public void Print(byte[] src, ByteAryBfr bb) {
 		int count = hash.Count(); if (count == 0) return;
-		if (bb.Bry_len() != 0) bb.Add_byte_nl();	// only add newLine if something in bb; needed for tests
+		if (bb.Len() != 0) bb.Add_byte_nl();	// only add newLine if something in bb; needed for tests
 		for (int i = 0; i < count; i++) {
 			Xot_defn_trace_itm_brief itm = (Xot_defn_trace_itm_brief)hash.FetchAt(i);
 			bb.Add_int_fixed(itm.Count(), 4).Add_byte(Byte_ascii.Space);

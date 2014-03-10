@@ -107,4 +107,11 @@ public class Xop_under_lxr_tst {
 	@Test  public void Eos() {	// PURPOSE: check that __ at eos doesn't fail; es.s:Luisa de Bustamante: 3; DATE:2014-02-15
 		fxt.Test_parse_page_all_str("__", "__");
 	}
+	@Test  public void Hook_alt() {	// PURPOSE: ja wikis use alternate __; DATE:2014-03-04
+		Xow_wiki wiki = fxt.Wiki(); Xol_lang lang = wiki.Lang();
+		Xol_kwd_grp kwd_grp = lang.Kwd_mgr().Get_or_new(Xol_kwd_grp_.Id_toc);
+		kwd_grp.Srl_load(true, new byte[][] {ByteAry_.new_utf8_("＿＿TOC＿＿")});
+		wiki.Parser().Init_by_lang(lang);
+		fxt.Test_parse_page_all_str("a＿＿TOC＿＿b", "ab");
+	}
 }

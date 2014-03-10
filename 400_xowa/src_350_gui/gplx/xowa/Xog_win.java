@@ -242,7 +242,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 	private void Exec_search() {
 		Exec_url_exec(app.Gui_mgr().Win_opts().Search_box_fmtr().Bld_str_many(search_box.Text()));
 	}
-	private void Exec_page_reload_imgs() {
+	public void Exec_page_reload_imgs() {
 		if (page.Url().Anchor_str() != null) GfoInvkAble_.InvkCmd_val(async_cmd, Invk_html_box_select_by_id, page.Url().Anchor_str());
 		if (gui_wtr.Canceled()) {gui_wtr.Prog_none(GRP_KEY, "imgs.done", ""); app.Log_wtr().Queue_enabled_(false); return;}
 		Xow_wiki wiki = page.Wiki();
@@ -495,6 +495,8 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			// NOTE: if moving from "Edit" to "Read", reload page (else Preview changes will still show); NOTE: do not call Exec_page_reload / Exec_page_refresh, which will fire redlinks code
 			page = history_mgr.Cur_page(page.Wiki());	// NOTE: must be to CurPage() else changes will be lost when going Bwd,Fwd
 			page.Wiki().ParsePage_root(page, true);		// NOTE: must reparse page if (a) Edit -> Read; or (b) "Options" save
+			if (page.Url().Args_exists(Xoa_url_parser.Bry_arg_action, Xoa_url_parser.Bry_arg_action_edit))	// url has ?action=edit
+				app.Url_parser().Parse(page.Url(), page.Url().X_to_full());									// remove all query args; handle (1) s.w:Earth?action=edit; (2) click on Read; DATE:2014-03-06
 		}
 		tab_box_mgr.View_mode_(new_view_tid);
 		if (page.Missing()) return;

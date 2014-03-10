@@ -99,7 +99,7 @@ public class Xobc_img_run_xfer extends Xob_itm_basic_base implements Xob_cmd, Gf
 					bldr.Usr_dlg().Prog_many(GRP_KEY, "xfer_passed", "pass|~{0}|~{1}", Int_.XtoStr_PadBgn_space(count++, 7), String_.new_utf8_(row.Name()));
 				else {
 					bldr.Usr_dlg().Note_many(GRP_KEY, "xfer_failed", "fail|~{0}|~{1}|~{2}|~{3}", Int_.XtoStr_PadBgn_space(count++, 7), xfer.Rslt().Err_msg(), String_.new_utf8_(xfer_itm.Lnki_md5(), 0, 2) , String_.new_utf8_(row.Name()));
-					if (dump_bfr.Bry_len() > dump_fil_len) Io_mgr._.AppendFilBfr(dump_url_gen.Nxt_url(), dump_bfr);
+					if (dump_bfr.Len() > dump_fil_len) Io_mgr._.AppendFilBfr(dump_url_gen.Nxt_url(), dump_bfr);
 //						if		(orig_pass == Bool_.Y_byte && thumb_pass)	mode = Xof_meta_itm.Mode_both_exists;
 //						else if (orig_pass == Bool_.Y_byte)					mode = Xof_meta_itm.Mode_orig_exists;
 //						else if (thumb_pass)								mode = Xof_meta_itm.Mode_thumb_exists;
@@ -114,7 +114,7 @@ public class Xobc_img_run_xfer extends Xob_itm_basic_base implements Xob_cmd, Gf
 			}
 			catch (Exception exc) {
 				bldr.Usr_dlg().Note_many(GRP_KEY, "xfer_error", "fail|~{0}|~{1}|~{2}", Int_.XtoStr_PadBgn_space(count++, 7), String_.new_utf8_(xfer_itm.Lnki_md5(), 0, 2) + "|" + String_.new_utf8_(row.Name()), Err_.Message_lang(exc));
-				if (dump_bfr.Bry_len() > dump_fil_len) Io_mgr._.AppendFilBfr(dump_url_gen.Nxt_url(), dump_bfr);
+				if (dump_bfr.Len() > dump_fil_len) Io_mgr._.AppendFilBfr(dump_url_gen.Nxt_url(), dump_bfr);
 				row.Write_bldr(fld_wtr);							
 				fail_count++;
 			}

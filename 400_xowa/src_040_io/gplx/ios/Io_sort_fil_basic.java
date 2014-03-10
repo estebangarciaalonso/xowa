@@ -21,7 +21,7 @@ public class Io_sort_fil_basic implements Io_sort_cmd { // 123|bgn|end|1
 	public void Sort_bgn() {}
 	public void Sort_do(Io_line_rdr rdr) {
 		int bgn = rdr.Itm_pos_bgn(), end = rdr.Itm_pos_end();
-		if (bfr.Bry_len() + (end - bgn) > flush_len) Flush();
+		if (bfr.Len() + (end - bgn) > flush_len) Flush();
 		bfr.Add_mid(rdr.Bfr(), bgn, end);
 	}
 	public void Sort_end() {
@@ -31,7 +31,7 @@ public class Io_sort_fil_basic implements Io_sort_cmd { // 123|bgn|end|1
 	private void Flush() {
 		Io_url url = url_gen.Nxt_url();
 		usr_dlg.Prog_one(GRP_KEY, "make", "making: ~{0}", url.NameAndExt());
-		Io_mgr._.SaveFilBry(url, bfr.Bry(), bfr.Bry_len());
+		Io_mgr._.SaveFilBry(url, bfr.Bry(), bfr.Len());
 		bfr.Clear();
 	}
 	static final String GRP_KEY = "xowa.bldr.io_sort";

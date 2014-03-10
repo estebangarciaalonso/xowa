@@ -198,6 +198,8 @@ public class Pf_func_ {
 	,	Xol_kwd_grp_.Id_mapSources_dd2dms
 	,	Xol_kwd_grp_.Id_mapSources_geoLink
 	,	Xol_kwd_grp_.Id_geoCrumbs_isin
+	,	Xol_kwd_grp_.Id_relatedArticles
+	,	Xol_kwd_grp_.Id_relatedSites
 	};
 	public static Xot_defn Get_prototype(int id) {
 		switch (id) {
@@ -343,6 +345,9 @@ public class Pf_func_ {
 			case Xol_kwd_grp_.Id_mapSources_geoLink:			return gplx.xowa.xtns.mapSources.Map_geolink_func._;
 
 			case Xol_kwd_grp_.Id_geoCrumbs_isin:				return gplx.xowa.xtns.geoCrumbs.Geoc_isin_func._;
+
+			case Xol_kwd_grp_.Id_relatedArticles:				return gplx.xowa.xtns.relatedArticles.Articles_func._;
+			case Xol_kwd_grp_.Id_relatedSites:					return gplx.xowa.xtns.relatedSites.Sites_func._;
 
 			default:											throw Err_mgr._.unhandled_(id);
 		}

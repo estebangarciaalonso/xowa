@@ -63,11 +63,11 @@ public class Xop_tkn_mkr {
 	public Xop_under_tkn Under(int bgn, int end, int v)										{return new Xop_under_tkn(bgn, end, v);}
 	public gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd Xnde_xowa_cmd()							{return new gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd();}
 	public gplx.xowa.xtns.poems.Poem_nde Xnde_poem()										{return new gplx.xowa.xtns.poems.Poem_nde();}
-	public Xtn_ref_nde Xnde_ref()															{return new Xtn_ref_nde();}
-	public Xtn_references_nde Xnde_references()												{return new Xtn_references_nde();}
+	public Ref_nde Xnde_ref()															{return new Ref_nde();}
+	public References_nde Xnde_references()												{return new References_nde();}
 	public gplx.xowa.xtns.gallery.Gallery_nde Xnde_gallery()								{return new gplx.xowa.xtns.gallery.Gallery_nde();}
 	public gplx.xowa.xtns.imageMap.Xop_imageMap_xnde Xnde_imageMap()						{return new gplx.xowa.xtns.imageMap.Xop_imageMap_xnde();}
-	public gplx.xowa.xtns.hiero.Xtn_hiero_nde Xnde_hiero()									{return new gplx.xowa.xtns.hiero.Xtn_hiero_nde();}
+	public gplx.xowa.xtns.hiero.Hiero_nde Xnde_hiero()									{return new gplx.xowa.xtns.hiero.Hiero_nde();}
 	public gplx.xowa.xtns.proofreadPage.Pp_pages_nde Xnde_pages()							{return new gplx.xowa.xtns.proofreadPage.Pp_pages_nde();}
 	public gplx.xowa.xtns.proofreadPage.Pp_pagelist_nde Xnde_pagelist()						{return new gplx.xowa.xtns.proofreadPage.Pp_pagelist_nde();}
 	public gplx.xowa.xtns.proofreadPage.Pp_pagequality_nde Xnde_pagequality()				{return new gplx.xowa.xtns.proofreadPage.Pp_pagequality_nde();}

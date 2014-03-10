@@ -16,6 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.dynamicPageList; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.html.*;
+import gplx.xowa.html.*;
 class Dpl_itm {
 	public ListAdp Ctg_includes() {return ctg_includes;} private ListAdp ctg_includes;
 	public ListAdp Ctg_excludes() {return ctg_excludes;} private ListAdp ctg_excludes;
@@ -138,7 +140,7 @@ class Dpl_itm {
 		byte[] key_bry = ByteAry_.Mid(src, fld_bgn, fld_end);
 		boolean log = 
 			(	Known_invalid_keys.Get_by_mid(src, fld_bgn, fld_end) != null
-			||	ByteAry_.HasAtBgn(key_bry, Xoh_consts.Comm_bgn)			// ignore comment-like keys; EX: <!--category=Ctg_0--> will have key of "<!--category="
+			||	ByteAry_.HasAtBgn(key_bry, Html_consts.Comm_bgn)			// ignore comment-like keys; EX: <!--category=Ctg_0--> will have key of "<!--category="
 			);
 		String err_msg = String_.Format("unknown_key: page={0} key={1}", String_.new_utf8_(page_ttl), String_.new_utf8_(key_bry));
 		if (log)

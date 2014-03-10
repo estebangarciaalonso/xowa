@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.servers; import gplx.*; import gplx.xowa.*;
 import gplx.gfui.*;
+import gplx.xowa.servers.tcp.*;
+import gplx.xowa.servers.http.*;
 public class Gxw_html_server implements Gxw_html {
 	private Xosrv_socket_wtr wtr; private Gfo_usr_dlg usr_dlg;
 	private Gfui_html_cfg cfg;
@@ -24,8 +26,8 @@ public class Gxw_html_server implements Gxw_html {
 		this.wtr = srv.Wtr(); usr_dlg = srv.App().Usr_dlg();
 		cfg = Swt_kit._.Html_cfg();
 	} 
-	public Gxw_html_server(Xosrv_webserver srv) {
-		usr_dlg = srv.App().Usr_dlg();
+	public Gxw_html_server(Http_server_mgr server_mgr) {
+		usr_dlg = server_mgr.App().Usr_dlg();
 		cfg = Swt_kit._.Html_cfg();
 	} 
 	public String		Html_doc_html() {return Exec(cfg.Doc_html());}

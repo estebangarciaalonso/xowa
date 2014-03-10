@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xog_view_data {
+	private byte[][] tmpl_stack_ary = ByteAry_.Ary_empty; private int tmpl_stack_ary_len = 0, tmpl_stack_ary_max = 0;
 	public void Clear() {
 		tmpl_stack_ary = ByteAry_.Ary_empty;
 		tmpl_stack_ary_len = tmpl_stack_ary_max = 0;
@@ -41,5 +42,5 @@ public class Xog_view_data {
 		tmpl_stack_ary[tmpl_stack_ary_len] = key;
 		tmpl_stack_ary_len = new_len;
 		return true;
-	}	byte[][] tmpl_stack_ary = ByteAry_.Ary_empty; int tmpl_stack_ary_len = 0, tmpl_stack_ary_max = 0;
+	}
 }

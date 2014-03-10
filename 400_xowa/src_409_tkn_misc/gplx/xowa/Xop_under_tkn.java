@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xop_under_tkn extends Xop_tkn_itm_base {
-	public Xop_under_tkn(int bgn, int end, int under_typeId) {this.under_typeId = under_typeId; this.Tkn_ini_pos(false, bgn, end);}
+	public Xop_under_tkn(int bgn, int end, int under_tid) {this.under_tid = under_tid; this.Tkn_ini_pos(false, bgn, end);}
 	@Override public byte Tkn_tid() {return Xop_tkn_itm_.Tid_under;}
-	public int Under_typeId() {return under_typeId;} private int under_typeId;
+	public int Under_tid() {return under_tid;} private int under_tid;
 }

@@ -27,13 +27,13 @@ public class Xob_tmp_wtr {
 	public ByteAryBfr Bfr() {return bfr;} ByteAryBfr bfr;
 	public Io_url_gen Url_gen() {return url_gen;} Io_url_gen url_gen;
 	public void Clear() {bfr.ClearAndReset();}
-	public boolean FlushNeeded(int writeLen) {return bfr.Bry_len() + writeLen > fil_max;} //int bfr_len;
+	public boolean FlushNeeded(int writeLen) {return bfr.Len() + writeLen > fil_max;} //int bfr_len;
 	public Xow_ns Ns_itm() {return ns_itm;} private Xow_ns ns_itm;
 	public void Flush(Gfo_usr_dlg usr_dlg) {
-		if (bfr.Bry_len() == 0) return;		// nothing to flush
+		if (bfr.Len() == 0) return;		// nothing to flush
 		Io_url url = url_gen.Nxt_url();
-		if (bfr.Bry_len() > fil_max)	// NOTE: data can exceed proscribed len; EX: wikt:Category for Italian nouns is 1 MB+
-			usr_dlg.Log_many("xowa.tmp_wtr", "flush", "--fil exceeds len: ~{0} ~{1} ~{2}", bfr.Bry_len(), fil_max, url.Xto_api());
+		if (bfr.Len() > fil_max)	// NOTE: data can exceed proscribed len; EX: wikt:Category for Italian nouns is 1 MB+
+			usr_dlg.Log_many("xowa.tmp_wtr", "flush", "--fil exceeds len: ~{0} ~{1} ~{2}", bfr.Len(), fil_max, url.Xto_api());
 		Io_mgr._.AppendFilBfr(url, bfr);
 	}
 	public void Rls() {bfr.Rls();}

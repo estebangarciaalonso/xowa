@@ -77,7 +77,7 @@ public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 		html_id_img = hcmd_id + "_img";
 		html_id_a	= hcmd_id + "_a";
 		html_a_href = ""; html_img_src = "";
-		html_img_alt = String_.new_utf8_(ByteAry_.Replace(code, Xoa_consts.Nl_bry, gplx.html.Html_entities.Nl_bry));
+		html_img_alt = String_.new_utf8_(ByteAry_.Replace(code, Xoa_consts.Nl_bry, gplx.html.Html_consts.Nl_bry));
 		String html_img_alt_tmp = "", html_img_src_tmp = "", html_a_href_tmp = "";
 		html_img_src = png_file.To_http_file_str();			
 		html_a_href = aud_file.To_http_file_str();
@@ -96,7 +96,7 @@ public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 		}
 		else {
 			html_img_alt_tmp = html_img_src_tmp = html_a_href_tmp = "";
-			score_xtn.Html_txt().Bld_bfr_many(bfr, html_id_pre, lang_is_abc ? "xowa-score-abc" : "xowa-score-lilypond", gplx.html.Html_util.Escape_html_as_bry(code));
+			score_xtn.Html_txt().Bld_bfr_many(bfr, html_id_pre, lang_is_abc ? "xowa-score-abc" : "xowa-score-lilypond", gplx.html.Html_utl.Escape_html_as_bry(code));
 			page.Html_cmd_mgr().Add(this);
 		}
 		score_xtn.Html_img().Bld_bfr_many(bfr, html_id_a, html_a_href_tmp, html_a_xowa_ttl, html_id_img, html_img_src_tmp, html_img_alt_tmp);

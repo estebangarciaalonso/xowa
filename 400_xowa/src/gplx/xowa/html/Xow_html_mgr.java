@@ -32,7 +32,6 @@ public class Xow_html_mgr implements GfoInvkAble {
 	}
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	public Xowh_portal_mgr Portal_mgr() {return portal_mgr;} private Xowh_portal_mgr portal_mgr;
-	public boolean Tidy_enabled() {return tidy_enabled;} public Xow_html_mgr Tidy_enabled_(boolean v) {tidy_enabled = v; return this;} private boolean tidy_enabled;
 	public Xoh_wiki_article Output_mgr() {return output_mgr;} private Xoh_wiki_article output_mgr;
 	public boolean Tbl_para() {return tbl_para;} public Xow_html_mgr Tbl_para_y_() {tbl_para = true; return this;} public Xow_html_mgr Tbl_para_n_() {tbl_para = false; return this;} private boolean tbl_para = true;
 	public int Img_thumb_width() {return img_thumb_width;} private int img_thumb_width = 220;
@@ -140,8 +139,6 @@ public class Xow_html_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_lnki_thumb_part_play_btn_))			lnki_thumb_part_play_btn.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_lnki_thumb_part_info_btn_))			lnki_thumb_part_info_btn.Fmt_(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_article))							return output_mgr;
-		else if	(ctx.Match(k, Invk_tidy_enabled))						return tidy_enabled;
-		else if	(ctx.Match(k, Invk_tidy_enabled_))						tidy_enabled = m.ReadYn_toggle("v", tidy_enabled);
 		else if	(ctx.Match(k, Invk_portal))								return portal_mgr;
 		else if	(ctx.Match(k, Invk_imgs))								return imgs_mgr;
 		else if	(ctx.Match(k, Invk_ns_ctg))								return ns_ctg;
@@ -154,7 +151,6 @@ public class Xow_html_mgr implements GfoInvkAble {
 	, Invk_lnki_thumb_part_image_ = "lnki_thumb_part_image_", Invk_lnki_thumb_part_caption_ = "lnki_thumb_part_caption_", Invk_lnki_thumb_part_alt_ = "lnki_thumb_part_alt_"
 	, Invk_lnki_thumb_part_magnify_btn_ = "lnki_thumb_part_magnify_btn_", Invk_lnki_thumb_part_play_btn_ = "lnki_thumb_part_play_btn_", Invk_lnki_thumb_part_info_btn_ = "lnki_thumb_part_info_btn_"
 	, Invk_article = "article"
-	, Invk_tidy_enabled = "tidy_enabled", Invk_tidy_enabled_ = "tidy_enabled_"
 	, Invk_portal = "portal", Invk_imgs = "imgs", Invk_ns_ctg = "ns_ctg"
 	;
 	public static final String Str_img_class_thumbimage = "thumbimage";

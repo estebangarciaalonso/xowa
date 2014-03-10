@@ -34,7 +34,7 @@ public class Io_sort_cmd_ns implements Io_make_cmd {
 		int itm_len = itm_end - itm_bgn;
 		if (fil_wtr.FlushNeeded(itm_len)) Flush();
 		byte[] bfr = rdr.Bfr();
-		if (key_bfr_0.Bry_len() == 0) {key_bfr_0.Add_mid(bfr, key_bgn, key_end);}
+		if (key_bfr_0.Len() == 0) {key_bfr_0.Add_mid(bfr, key_bgn, key_end);}
 		key_bfr_n.Clear().Add_mid(bfr, key_bgn, key_end);
 		fil_wtr.Bfr().Add_mid(rdr.Bfr(), itm_bgn, itm_end);
 		fil_wtr.Add_idx(Byte_ascii.Nil);

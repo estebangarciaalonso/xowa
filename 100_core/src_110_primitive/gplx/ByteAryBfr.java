@@ -18,8 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx;
 public class ByteAryBfr {
 	public byte[] Bry() {return bry;} private byte[] bry;
-	public int Bry_len() {return bry_len;} private int bry_len;
-	public void Bry_init(byte[] bry, int bry_len) {this.bry = bry; this.bry_len = bry_len;}
+	public int Len() {return bry_len;} private int bry_len;
+	public boolean Len_eq_0() {return bry_len == 0;}
+	public boolean Len_gt_0() {return bry_len > 0;}
+	public void Bry_init(byte[] bry, int bry_len) {
+		this.bry = bry;
+		this.bry_len = bry_len;
+		this.bry_max = bry.length;		// NOTE: must sync bry_max, else will fail later during add; bfr will think bry has .length of bry_max, when it actually has .length of bry_len; DATE:2014-03-09
+	}
 	@gplx.Internal protected int Mkr_itm() {return mkr_itm;} private int mkr_itm = -1;
 	@gplx.Internal protected Bry_bfr_mkr_mgr Mkr_mgr() {return mkr_mgr;} Bry_bfr_mkr_mgr mkr_mgr;
 	@gplx.Internal protected ByteAryBfr Mkr_(Bry_bfr_mkr_mgr mkr_mgr, int itm) {this.mkr_mgr = mkr_mgr; this.mkr_itm = itm; return this;} 
@@ -353,6 +359,7 @@ public class ByteAryBfr {
 		}
 		return this;
 	}
+	public boolean Eq(byte b) {return bry_len == 1 && bry[0] == b;}
 	public byte[] XtoAry() {return bry_len == 0 ? ByteAry_.Empty : ByteAry_.Mid(bry, 0, bry_len);}
 	public byte[] XtoAryAndReset(int v) {
 		byte[] rv = XtoAry();

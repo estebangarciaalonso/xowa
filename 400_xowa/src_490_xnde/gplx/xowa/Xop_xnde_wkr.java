@@ -158,6 +158,10 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 					case Xop_xnde_tag_.Tid_nowiki:
 						force_xtn_for_nowiki = true;
 						break;
+					case Xop_xnde_tag_.Tid_onlyinclude:
+						break;
+					default:
+						break;
 				}
 				break;
 			case Xop_parser_.Parse_tid_page_tmpl:		// NOTE: added late; SEE:comment test for "a <!-<noinclude></noinclude>- b -->c"
@@ -187,7 +191,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		else															bry = ByteAry_.Add(Bry_escape_lt, ByteAry_.Mid(src, bgn_pos + 1, cur_pos));	// +1 to skip <
 		return tkn_mkr.Bry(bgn_pos, cur_pos, bry);
 	}
-	int Make_noinclude(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int gtPos, Xop_xnde_tag tag, int tag_end_pos, byte tag_end_byte) {
+	private int Make_noinclude(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int gtPos, Xop_xnde_tag tag, int tag_end_pos, byte tag_end_byte) {
 		if (tag_end_byte == Byte_ascii.Slash) {	// inline
 			boolean valid = true;
 			for (int i = tag_end_pos; i < gtPos; i++) {
@@ -252,8 +256,9 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		if (ctx.Parse_tid() == Xop_parser_.Parse_tid_page_wiki) {
 			atrs = ctx.App().Xatr_parser().Parse(ctx.Msg_log(), src, atrs_bgn, atrs_end);
 		}
-		if (tag.Xtn() || (tag.XtnTmpl() )		// tag is xtnTmpl and parse type is template (not wiki)
-			|| (force_xtn_for_nowiki && !inline))	 {
+		if (	(tag.Xtn() && ctx.Parse_tid() != Xop_parser_.Parse_tid_tmpl)	// do not gobble up rest if in tmpl; handle <poem>{{{1}}}</poem>; DATE:2014-03-03
+			||	(force_xtn_for_nowiki && !inline)				
+			)	{
 			return Make_xnde_xtn(ctx, tkn_mkr, root, src, src_len, tag, bgn_pos, gtPos + 1, atrs_bgn, atrs_end, atrs, inline);	// find end tag and do not parse anything inbetween
 		}
 		if (tag.Restricted()) {
@@ -261,7 +266,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			if (	page.Html_restricted() 
 				&&	page.Wiki().Domain_tid() != Xow_wiki_domain_.Tid_home) {
 				int end_pos = gtPos + 1;
-				ctx.Subs_add(root, tkn_mkr.Bry(bgn_pos, end_pos, ByteAry_.Add(gplx.html.Html_entities.Lt, ByteAry_.Mid(src, bgn_pos + 1, end_pos)))); // +1 to skip <
+				ctx.Subs_add(root, tkn_mkr.Bry(bgn_pos, end_pos, ByteAry_.Add(gplx.html.Html_consts.Lt, ByteAry_.Mid(src, bgn_pos + 1, end_pos)))); // +1 to skip <
 				return end_pos;
 			}
 		}
@@ -461,7 +466,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			}
 		}
 		if (end_tag.Restricted())	// restricted tags (like <script>) are not placed on stack; for now, just write it out
-			ctx.Subs_add(root, tkn_mkr.Bry(bgn_pos, cur_pos, ByteAry_.Add(gplx.html.Html_entities.Lt, ByteAry_.Mid(src, bgn_pos + 1, cur_pos)))); // +1 to skip <
+			ctx.Subs_add(root, tkn_mkr.Bry(bgn_pos, cur_pos, ByteAry_.Add(gplx.html.Html_consts.Lt, ByteAry_.Mid(src, bgn_pos + 1, cur_pos)))); // +1 to skip <
 		else
 			ctx.Subs_add(root, tkn_mkr.Ignore(bgn_pos, cur_pos, Xop_ignore_tkn.Ignore_tid_xnde_dangling));
 		ctx.Para().Process_block__xnde(end_tag, end_tag.Block_close());
@@ -541,11 +546,22 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 					break;
 				}
 			}
-			if (close_bgn == ByteAry_.NotFound)
-				return ctx.LxrMake_log_(Xop_xnde_log.Xtn_end_not_found, src, open_bgn, open_end);
-			int close_end = Find_end_tag_pos(src, src_len, close_bgn + close_ary.length);
-			if (close_end == ByteAry_.NotFound) return ctx.LxrMake_log_(Xop_xnde_log.Xtn_end_not_found, src, open_bgn, open_end);
-			xnde_end = close_end;
+			boolean auto_close = false;
+			if (close_bgn == ByteAry_.NotFound) {
+				if (tag.Xtn_auto_close())
+					auto_close = true;
+				else
+					return ctx.LxrMake_log_(Xop_xnde_log.Xtn_end_not_found, src, open_bgn, open_end);
+			}
+			int close_end = -1;
+			if (auto_close) {
+				xnde_end = close_bgn = close_end = src_len;
+			}
+			else {
+				close_end = Find_end_tag_pos(src, src_len, close_bgn + close_ary.length);
+				if (close_end == ByteAry_.NotFound) return ctx.LxrMake_log_(Xop_xnde_log.Xtn_end_not_found, src, open_bgn, open_end);
+				xnde_end = close_end;
+			}
 
 			xnde = New_xnde_pair(ctx, root, tkn_mkr, tag, open_bgn, open_end, close_bgn, close_end);
 			xnde.Atrs_rng_(atrs_bgn, atrs_end);
@@ -571,8 +587,8 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 				switch (tag_id) {
 					case Xop_xnde_tag_.Tid_xowa_cmd:				xnde_xtn = tkn_mkr.Xnde_xowa_cmd(); break;
 					case Xop_xnde_tag_.Tid_poem:					xnde_xtn = tkn_mkr.Xnde_poem(); break;
-					case Xop_xnde_tag_.Tid_ref:						xnde_xtn = gplx.xowa.xtns.refs.Xtn_references_nde.Enabled ? tkn_mkr.Xnde_ref() : null; break;
-					case Xop_xnde_tag_.Tid_references:				xnde_xtn = gplx.xowa.xtns.refs.Xtn_references_nde.Enabled ? tkn_mkr.Xnde_references() : null; break;
+					case Xop_xnde_tag_.Tid_ref:						xnde_xtn = gplx.xowa.xtns.refs.References_nde.Enabled ? tkn_mkr.Xnde_ref() : null; break;
+					case Xop_xnde_tag_.Tid_references:				xnde_xtn = gplx.xowa.xtns.refs.References_nde.Enabled ? tkn_mkr.Xnde_references() : null; break;
 					case Xop_xnde_tag_.Tid_gallery:					xnde_xtn = tkn_mkr.Xnde_gallery(); break;
 					case Xop_xnde_tag_.Tid_imageMap:				xnde_xtn = tkn_mkr.Xnde_imageMap(); break;
 					case Xop_xnde_tag_.Tid_hiero:					xnde_xtn = tkn_mkr.Xnde_hiero(); break;

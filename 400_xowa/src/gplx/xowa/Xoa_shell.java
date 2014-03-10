@@ -21,8 +21,8 @@ public class Xoa_shell implements GfoInvkAble {
 	public boolean Fetch_page_exec_async() {return fetch_page_exec_async;} private boolean fetch_page_exec_async = true;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_fetch_page))				return Fetch_page(m);
-		else if	(ctx.Match(k, Invk_chars_per_line_max_))	Chars_per_line_max_(m.ReadInt("v"));
-		else if	(ctx.Match(k, Invk_fetch_page_exec_async_))	fetch_page_exec_async = m.ReadYn("v");
+		else if	(ctx.Match(k, Invk_chars_per_line_max_))	ConsoleAdp._.CharsPerLineMax_set(m.ReadInt("v"));
+		else if	(ctx.Match(k, Invk_backspace_by_bytes_))	ConsoleAdp._.Backspace_by_bytes_(m.ReadYn("v"));
 		else return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}
@@ -30,8 +30,8 @@ public class Xoa_shell implements GfoInvkAble {
 		String rv = String_.new_utf8_(app.Gui_mgr().Main_win().Exec_app_retrieve_by_url(m.ReadStr("url"), m.ReadStrOr("output_type", "html")));
 		return rv;
 	}
-	private void Chars_per_line_max_(int v) {
-		ConsoleAdp._.CharsPerLineMax_set(v);
-	}
-	private static final String Invk_fetch_page = "fetch_page", Invk_chars_per_line_max_ = "chars_per_line_max_", Invk_fetch_page_exec_async_ = "fetch_page_exec_async_";
+	private static final String Invk_fetch_page = "fetch_page"
+	, Invk_chars_per_line_max_ = "chars_per_line_max_"
+	, Invk_backspace_by_bytes_ = "backspace_by_bytes_"
+	;
 }

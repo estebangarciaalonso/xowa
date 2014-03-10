@@ -34,9 +34,9 @@ class Scrib_lib_text implements Scrib_lib {
 	}
 	public KeyVal[] Unstrip(KeyVal[] values) {return Scrib_kv_utl.base1_obj_(Scrib_kv_utl.Val_to_str(values, 0));}
 	public KeyVal[] GetEntityTable(KeyVal[] values) {
-		if (Html_entities == null) Html_entities = Scrib_lib_text_html_entities.new_();
-		return Scrib_kv_utl.base1_obj_(Html_entities);
-	}	static KeyVal[] Html_entities;
+		if (Html_consts == null) Html_consts = Scrib_lib_text_html_entities.new_();
+		return Scrib_kv_utl.base1_obj_(Html_consts);
+	}	static KeyVal[] Html_consts;
 	public void Notify_wiki_changed() {if (notify_wiki_changed_fnc != null) engine.Interpreter().CallFunction(notify_wiki_changed_fnc.Id(), KeyVal_.Ary_empty);}
 	public KeyVal[] Init_text_for_wiki() {
 		Xow_msg_mgr msg_mgr = engine.Wiki().Msg_mgr();

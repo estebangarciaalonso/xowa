@@ -180,7 +180,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 				if (defn == null) defn = Xot_defn_.Null;
 			}
 		}
-		Xot_defn_trace trace = ctx.Defn_trace(); int trg_bgn = bfr.Bry_len();
+		Xot_defn_trace trace = ctx.Defn_trace(); int trg_bgn = bfr.Len();
 		switch (defn.Defn_tid()) {
 			case Xot_defn_.Tid_null:	// defn is unknown
 				if (ignore_hash == null) {					// ignore SafeSubst templates
@@ -222,7 +222,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 
 //					ByteAryBfr bfr_tmpl = ByteAryBfr.new_();
 //					rv = defn_tmpl.Tmpl_evaluate(ctx, invk_tmpl, bfr_tmpl);
-//					ctx.App().Tmpl_prepend_nl(bfr, bfr_tmpl.Bry(), bfr_tmpl.Bry_len());
+//					ctx.App().Tmpl_prepend_nl(bfr, bfr_tmpl.Bry(), bfr_tmpl.Len());
 //					bfr.Add_bfr_and_clear(bfr_tmpl);
 
 				ByteAryBfr bfr_tmpl = ByteAryBfr.new_();
@@ -236,7 +236,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 				}
 				else {
 					rv = defn_tmpl.Tmpl_evaluate(ctx, invk_tmpl, bfr_tmpl);
-					ctx.Tmpl_prepend_nl(bfr, bfr_tmpl.Bry(), bfr_tmpl.Bry_len());
+					ctx.Tmpl_prepend_nl(bfr, bfr_tmpl.Bry(), bfr_tmpl.Len());
 					if (Cache_enabled) {
 						byte[] rslt_val = bfr_tmpl.XtoAryAndClear();
 						bfr.Add(rslt_val);
@@ -259,7 +259,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		defn_func.Eval_argx(ctx, src, caller, invk);
 		ByteAryBfr bfr_func = ByteAryBfr.new_();
 		defn_func.Func_evaluate(ctx, src, caller, invk, bfr_func);
-		ctx.Tmpl_prepend_nl(bfr, bfr_func.Bry(), bfr_func.Bry_len());
+		ctx.Tmpl_prepend_nl(bfr, bfr_func.Bry(), bfr_func.Len());
 		bfr.Add_bfr_and_clear(bfr_func);
 	}
 	private static Hash_adp_bry ignore_hash;
@@ -308,7 +308,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		Xot_invk tmp_tmpl = Xot_defn_tmpl_.CopyNew(ctx, transclude_tmpl, this, caller, src);
 		ByteAryBfr tmp_bfr = ByteAryBfr.new_();
 		rv = transclude_tmpl.Tmpl_evaluate(ctx, tmp_tmpl, tmp_bfr);
-		ctx.Tmpl_prepend_nl(doc, tmp_bfr.Bry(), tmp_bfr.Bry_len());
+		ctx.Tmpl_prepend_nl(doc, tmp_bfr.Bry(), tmp_bfr.Len());
 		doc.Add_bfr_and_clear(tmp_bfr);
 		return rv;
 	}

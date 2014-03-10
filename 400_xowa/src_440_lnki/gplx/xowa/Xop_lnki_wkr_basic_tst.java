@@ -40,6 +40,7 @@ public class Xop_lnki_wkr_basic_tst {
 	@Test  public void Caption_equal() {	// should ignore = if only caption arg (2 args)
 		fxt.Test_parse_page_wiki("[[a|=]]", fxt.tkn_lnki_().Trg_tkn_(fxt.tkn_arg_val_txt_(2, 3)).Caption_tkn_(fxt.tkn_arg_val_(fxt.tkn_eq_(4))));
 	}
+	@Test  public void Caption_ampersand() {fxt.Test_parse_page_wiki_str("[[A|a & b]]", "<a href=\"/wiki/A\">a &amp; b</a>");}
 	@Test  public void Tail() {
 		fxt.Test_parse_page_wiki("[[a|b]]c" , fxt.tkn_lnki_(0, 8).Tail_bgn_(7).Tail_end_(8));
 		fxt.Test_parse_page_wiki("[[a|b]] c", fxt.tkn_lnki_(0, 7).Tail_bgn_(-1), fxt.tkn_space_(7, 8), fxt.tkn_txt_(8, 9));
@@ -174,31 +175,7 @@ public class Xop_lnki_wkr_basic_tst {
 	}
 	@Test  public void Exc_empty() {
 		fxt.Test_parse_page_wiki("[[]]", fxt.tkn_txt_(0, 2), fxt.tkn_txt_(2, 4));
-		fxt.Test_parse_page_wiki("[[ ]]", fxt.tkn_txt_(0, 5));
-	}
-	@Test  public void Exc_nl_with_apos() {			// PURPOSE: apos, lnki and nl will cause parser to fail; DATE:2013-10-31
-		fxt.Test_parse_page_all_str("''[[\n]]", "<i>[[\n]]</i>");
-	}
-	@Test  public void Exc_nl_multiple_lines() {	// PURPOSE: apos, tblw, lnki, and nl will cause parser to fail; EX:Module:Taxobox; DATE:2013-11-10
-		fxt.Init_para_y_();
-		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
-		(	" [[''"
-		,	" [["
-		,	"  |"
-		,	"]]"
-		)
-		,	String_.Concat_lines_nl_skipLast
-		(	"<pre>[[<i>"
-		,	"[["
-		,	"  |"
-		,	"]] "
-		,	"</p>"
-		,	"</i>"
-		));
-		fxt.Init_para_n_();
-	}
-	@Test  public void Exc_pipeOnly() {
-		fxt.Test_parse_page_wiki("[[|]]", fxt.tkn_txt_(0, 5));
+		fxt.Test_parse_page_wiki("[[ ]]", fxt.tkn_txt_(0, 2), fxt.tkn_space_(2, 3), fxt.tkn_txt_(3, 5));
 	}
 	@Test  public void Exc_invalid_utf8() {	// PURPOSE: "%DO" is an invalid UTF-8 sequence (requires 2 bytes, not just %D0); DATE:2013-11-11
 		fxt.Ctx().Lang().Case_mgr().Add_bulk(Xol_case_itm_.Universal);	// NOTE: only occurs during Universal
@@ -637,9 +614,6 @@ public class Xop_lnki_wkr_basic_tst {
 	}
 	@Test  public void Page() {
 		fxt.Test_parse_page_wiki("[[File:A.pdf|page=12]]"		, fxt.tkn_lnki_().Page_(12));
-	}
-	@Test  public void DoubleBracket() {
-		fxt.Test_parse_page_all_str("[[[[Test_1]]]]"		, "[[<a href=\"/wiki/Test_1\">Test_1</a>]]");
 	}
 	@Test  public void Visited() { // PURPOSE: show redirected titles as visited; EX:fr.w:Alpes_Pennines; DATE:2014-02-28
 		Xow_wiki wiki = fxt.Wiki();

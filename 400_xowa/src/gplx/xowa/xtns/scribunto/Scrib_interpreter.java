@@ -98,7 +98,7 @@ class Scrib_interpreter {
 				args_srl.Encode_obj(bfr, itm);
 		}
 		bfr.Add_byte(Byte_ascii.Curly_end);
-		int msg_len = bfr.Bry_len() - 16;	// 16 for Dispatch_hdr_len
+		int msg_len = bfr.Len() - 16;	// 16 for Dispatch_hdr_len
 		int chk_len = (msg_len * 2) -1;		// defined by Scribunto
 		HexDecUtl.Write(bfr.Bry(), 0,  8, msg_len);
 		HexDecUtl.Write(bfr.Bry(), 9, 16, chk_len);

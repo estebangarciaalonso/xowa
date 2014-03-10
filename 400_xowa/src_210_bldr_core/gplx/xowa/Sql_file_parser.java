@@ -134,7 +134,7 @@ public class Sql_file_parser {
 	}
 	private void Commit_row(Gfo_usr_dlg usr_dlg, ByteAryBfr fil_bfr) {
 		fil_bfr.Add_byte(Byte_ascii.NewLine);
-		if (fil_bfr.Bry_len() > trg_len) {
+		if (fil_bfr.Len() > trg_len) {
 			Io_url trg_fil = trg_fil_gen.Nxt_url();				
 			usr_dlg.Prog_one(GRP_KEY, "make", "making ~{0}", trg_fil.NameAndExt());
 			Io_mgr._.AppendFilByt(trg_fil, fil_bfr.XtoAryAndClear());
@@ -146,10 +146,10 @@ public class Sql_file_parser {
 			data.Cancel_row_n_();
 			if (fld_cmd == null) {	// no custom cmd; assume append;
 				fld_wtr.Bfr_(fil_bfr);
-				fld_wtr.Write_bry_escape_fld(val_bfr.Bry(), 0, val_bfr.Bry_len());
+				fld_wtr.Write_bry_escape_fld(val_bfr.Bry(), 0, val_bfr.Len());
 			}
 			else
-				fld_cmd.Exec(val_bfr.Bry(), fld.Key(), fld_idx, 0, val_bfr.Bry_len(), fil_bfr, data);
+				fld_cmd.Exec(val_bfr.Bry(), fld.Key(), fld_idx, 0, val_bfr.Len(), fil_bfr, data);
 		}
 		val_bfr.Clear();
 	}

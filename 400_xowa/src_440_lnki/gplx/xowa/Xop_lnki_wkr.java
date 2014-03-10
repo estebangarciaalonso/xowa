@@ -45,6 +45,10 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 			lnki.Tkn_tid_to_txt();				// convert initial "[[" to text; note that text token can have subs; EX: [[[[A]]]]; 1st txt_tkn of "[[" will have lnki_sub of "[[A]]"
 			return ctx.LxrMake_txt_(cur_pos);	// return "]]" as text; note that anything in between is left as is; DATE:2014-02-04
 		}
+		if (lnki.Trg_tkn() == Xop_tkn_null.Null_tkn) {	// ttl is invalid; treat "[[" as text; DATE:2014-03-04
+			root.Subs_del_after(lnki.Tkn_sub_idx() + 1);// remove all tkns after [[ from root
+			return lnki.Src_end();						// NOTE: reparse all text from "[["; needed to handle [[|<i>a</i>]] where "<i>a</i>" cannot be returned as text; DATE:2014-03-04
+		}
 		cur_pos = Xop_lnki_wkr_.Chk_for_tail(ctx.Lang(), src, cur_pos, src_len, lnki);
 		lnki.Src_end_(cur_pos);	// NOTE: must happen after Chk_for_tail; redundant with above, but above needed b/c of returns
 		root.Subs_del_after(lnki.Tkn_sub_idx() + 1);	// all tkns should now be converted to args in owner; delete everything in root

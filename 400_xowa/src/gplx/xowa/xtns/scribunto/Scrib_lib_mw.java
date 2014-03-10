@@ -104,39 +104,40 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		int cur = ListAdp_.Base1, len = invk.Args_len() - frame_arg_adj; 
 		for (int i = 0; i < len; i++) {	// iterate over list to find nth *non-keyd* arg; SEE:NOTE_1
 			Arg_nde_tkn nde = (Arg_nde_tkn)invk.Args_get_by_idx(i + frame_arg_adj);
-			if (nde.KeyTkn_exists()) {
-				int key_int = ByteAry_.NotFound;
-				byte[] key_dat_ary = nde.Key_tkn().Dat_ary();
-				if (Env_.Mode_testing() && src == null)	// some tests will always pass a null src;
-					key_int = ByteAry_.X_to_int_or(key_dat_ary, 0, key_dat_ary.length, ByteAry_.NotFound);
-				else {
-					if (ByteAry_.Len_eq_0(key_dat_ary))	// should be called by current context;
-						key_int = ByteAry_.X_to_int_or(src, nde.Key_tkn().Src_bgn(), nde.Key_tkn().Src_end(), ByteAry_.NotFound);
-					else								// will be called by parent context; note that this calls Xot_defn_tmpl_.Make_itm which sets a key_dat_ary; DATE:2013-09-23
-						key_int = ByteAry_.X_to_int_or(key_dat_ary, 0, key_dat_ary.length, ByteAry_.NotFound);
-				}
-				if (key_int == ByteAry_.NotFound)
+			if (nde.KeyTkn_exists()) {	// BLOCK:ignore_args_with_empty_keys;
+				if (Verify_arg_key(src, idx, nde))
+					return nde;
+				else
 					continue;
-				else {	// key is numeric
-					if (idx == key_int) {
-						return nde;						
-					}
-					else {
-						continue;
-					}
-				}
 			}
 			if (idx == cur) return nde;
 			else ++cur;
 		}
 		return invk.Args_get_by_key(src, ByteAry_.XtoStrBytesByInt(idx + 1, 1));
 	}
+	private static boolean Verify_arg_key(byte[] src, int idx, Arg_nde_tkn nde) {
+		int key_int = ByteAry_.NotFound;
+		byte[] key_dat_ary = nde.Key_tkn().Dat_ary();
+		if (Env_.Mode_testing() && src == null)	// some tests will always pass a null src;
+			key_int = ByteAry_.X_to_int_or(key_dat_ary, 0, key_dat_ary.length, ByteAry_.NotFound);
+		else {
+			if (ByteAry_.Len_eq_0(key_dat_ary))	// should be called by current context;
+				key_int = ByteAry_.X_to_int_or(src, nde.Key_tkn().Src_bgn(), nde.Key_tkn().Src_end(), ByteAry_.NotFound);
+			else								// will be called by parent context; note that this calls Xot_defn_tmpl_.Make_itm which sets a key_dat_ary; DATE:2013-09-23
+				key_int = ByteAry_.X_to_int_or(key_dat_ary, 0, key_dat_ary.length, ByteAry_.NotFound);
+		}
+		if (key_int == ByteAry_.NotFound)	// key is not-numeric
+			return false;
+		else								// key is numeric
+			return idx == key_int;
+	}
 	public KeyVal[] GetAllExpandedArguments(KeyVal[] values) {
 		String frame_id = Scrib_kv_utl.Val_to_str(values, 0);
 		Xot_invk frame = null; Xot_invk owner_frame = null;
-		int frame_arg_adj = 1;			
+		int frame_arg_adj = -1;			
 		if (String_.Eq(frame_id, "current")) {
 			frame = engine.Cur_frame_invoke();
+			frame_arg_adj = 1;						// current Module frame has extra arg for proc_name; skip it; EX: {{#invoke:Module|Proc}}
 			owner_frame = engine.Cur_frame_owner();
 		}
 		else {
@@ -146,19 +147,30 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		}
 		int args_len = frame.Args_len() - frame_arg_adj;
 		if (args_len < 1) return Scrib_kv_utl.base1_obj_(KeyVal_.Ary_empty);	// occurs when "frame:getParent().args" but no parent frame
-		KeyVal[] rv = new KeyVal[args_len];
-		ByteAryBfr tmp_bfr = ByteAryBfr.new_();	// NOTE: do not make modular level variable, else random failures; DATE:2013-10-14
+		ByteAryBfr tmp_bfr = ctx.Wiki().Utl_bry_bfr_mkr().Get_b128();			// NOTE: do not make modular level variable, else random failures; DATE:2013-10-14
+		ListAdp rv = ListAdp_.new_();
 		int arg_idx = 0;
 		for (int i = 0; i < args_len; i++) {
 			Arg_nde_tkn nde = frame.Args_get_by_idx(i + frame_arg_adj);
+			if (nde.KeyTkn_exists()) {	// BLOCK:ignore_args_with_empty_keys;
+				byte[] key_dat_ary = nde.Key_tkn().Dat_ary();
+				int key_dat_len = ByteAry_.Len(key_dat_ary);
+				if (Env_.Mode_testing() && src == null)	 {
+					if (key_dat_len == 0) continue;
+				}
+				else {
+					if (key_dat_len == 0)	// should be called by current context;
+						if (nde.Key_tkn().Src_end() - nde.Key_tkn().Src_bgn() == 0) continue;
+				}
+			}
 			nde.Key_tkn().Tmpl_evaluate(ctx, src, owner_frame, tmp_bfr);
-			int key_len = tmp_bfr.Bry_len();
+			int key_len = tmp_bfr.Len();
 			boolean key_missing = key_len == 0;
 			Object key = null;
 			if (key_missing)	// key missing; EX: {{a|val}}
 				key = ++arg_idx;// NOTE: MW requires a key; if none, then default to int index; NOTE: must be int, not String; NOTE: must be indexed to keyless args; EX: in "key1=val1,val2", "val2" must be "1" (1st keyless arg) not "2" (2nd arg); DATE:2013-11-09
 			else {				// key exists; EX:{{a|key=val}}
-				int key_int = ByteAry_.X_to_int_or(tmp_bfr.Bry(), 0, tmp_bfr.Bry_len(), Int_.MinValue);
+				int key_int = ByteAry_.X_to_int_or(tmp_bfr.Bry(), 0, tmp_bfr.Len(), Int_.MinValue);
 				if (key_int == Int_.MinValue)			// key is not int; create str
 					key = tmp_bfr.XtoStrAndClear();
 				else {									// key is int; must return int for key b/c lua treats table[1] different than table["1"]; DATE:2014-02-13
@@ -168,9 +180,10 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 			}
 			nde.Val_tkn().Tmpl_evaluate(ctx, src, owner_frame, tmp_bfr);
 			String val = key_missing ? tmp_bfr.XtoStrAndClear() : tmp_bfr.XtoStrAndClearAndTrim(); // NOTE: must trim if key_exists; DUPE:TRIM_IF_KEY
-			rv[i] = KeyVal_.obj_(key, val);
+			rv.Add(KeyVal_.obj_(key, val));
 		}
-		return Scrib_kv_utl.base1_obj_(rv);
+		tmp_bfr.Mkr_rls();
+		return Scrib_kv_utl.base1_obj_((KeyVal[])rv.XtoAry(KeyVal.class));
 	}
 	public KeyVal[] FrameExists(KeyVal[] values) {return Scrib_kv_utl.base1_obj_(values_get_frame(values, 0) != null);}
 	public KeyVal[] ParentFrameExists(KeyVal[] values) {return Scrib_kv_utl.base1_obj_(!engine.Cur_frame_owner().Root_frame());}
@@ -222,7 +235,6 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 		ListAdp rv = ListAdp_.new_();
 		// flatten args
 		int args_len = args.length;
-		IntRef key_int = IntRef.new_(0);
 		for (int i = 2; i < args_len; i++) {
 			KeyVal arg = args[i];
 			if (Scrib_kv_utl.Val_is_KeyVal_ary(arg)) {
@@ -230,11 +242,11 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 				int arg_kv_ary_len = arg_kv_ary.length;
 				for (int j = 0; j < arg_kv_ary_len; j++) {
 					KeyVal sub_arg = arg_kv_ary[j];
-					rv.Add(Convert_key_to_int(num_parser, key_int, sub_arg));
+					rv.Add(sub_arg);
 				}
 			}
 			else
-				rv.Add(Convert_key_to_int(num_parser, key_int, arg));
+				rv.Add(arg);
 		}
 		rv.SortBy(Scrib_lib_mw_callParserFunction_sorter._);
 		// get argx
@@ -252,13 +264,6 @@ class Scrib_lib_mw implements GfoInvkAble, Scrib_lib {
 			fnc_name_ref.Val_(fnc_name);
 		}
 		return (KeyVal[])rv.XtoAry(KeyVal.class);
-	}
-	public static KeyVal Convert_key_to_int(NumberParser num_parser, IntRef key_int, KeyVal kv) {
-//			byte[] key_bry = ByteAry_.new_utf8_(kv.Key());
-//			int key_len = key_bry.length;
-//			num_parser.Parse(key_bry, 0, key_len);
-//			return num_parser.HasErr() || num_parser.HasFrac() ? kv : kv.Key_(key_int.Val_add_post());
-		return kv;
 	}
 //		private KeyVal[] ExpandTemplate_args(KeyVal[] values) {
 //			KeyVal[] rv = Scrib_kv_utl.Val_to_KeyVal_ary(values, 2);

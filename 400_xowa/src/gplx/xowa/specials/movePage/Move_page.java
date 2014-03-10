@@ -65,7 +65,7 @@ public class Move_page implements Xows_page {
 		fmtr_all.Bld_bfr_many(tmp_bfr
 		, msg_mgr.Val_by_key_obj("move-page-legend")
 		, ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, src_ttl.Full_db())
-		, gplx.html.Html_util.Escape_html_as_bry(src_ttl.Full_txt())
+		, gplx.html.Html_utl.Escape_html_as_bry(src_ttl.Full_txt())
 		, src_ttl.Full_txt()
 		, msg_mgr.Val_by_key_obj("newtitle")
 		, ns_list_fmtr

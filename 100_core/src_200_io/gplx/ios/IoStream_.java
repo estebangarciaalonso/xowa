@@ -127,7 +127,7 @@ class IoStream_base implements IoStream {
 //			else				under.seek(0);
 		}
 		catch 	(IOException e) {throw Err_.err_key_(e, IoEngineArgs._.Err_IoException, "seek failed").Add("url", url);}
-		try {under.write(bfr.Bry(), 0, bfr.Bry_len());}
+		try {under.write(bfr.Bry(), 0, bfr.Len());}
 		catch 	(IOException e) {throw Err_.err_key_(e, IoEngineArgs._.Err_IoException, "write failed").Add("url", url);}
 		bfr.Clear();
 	}

@@ -39,7 +39,7 @@ public class Xob_xdat_file_wtr_tst {
 	}
 	private void tst_Write(Xob_xdat_file_wtr wtr, String val, String expd) {
 		wtr.Bfr().Add(ByteAry_.new_utf8_(val));
-		Tfds.Eq(expd, String_.new_utf8_len_(wtr.Bfr().Bry(), 0, wtr.Bfr().Bry_len()));
+		Tfds.Eq(expd, String_.new_utf8_len_(wtr.Bfr().Bry(), 0, wtr.Bfr().Len()));
 	}
 	private void tst_Add_idx(Xob_xdat_file_wtr wtr, int expd) {
 		wtr.Add_idx(Byte_ascii.NewLine);

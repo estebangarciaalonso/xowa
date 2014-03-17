@@ -16,6 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-interface Scrib_lib extends GfoInvkAble {
-	Scrib_mod Register(Scrib_engine engine, Io_url script_dir);
+public interface Scrib_lib {
+	Scrib_proc_mgr	Procs();
+	Scrib_lib		Init();
+	Scrib_lua_mod	Register(Scrib_core core, Io_url script_dir);
+	boolean			Procs_exec(int key, Scrib_proc_args args, Scrib_proc_rslt rslt);
 }

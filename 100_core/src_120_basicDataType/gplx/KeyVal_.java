@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
 public class KeyVal_ {
-	public static KeyVal as_(Object obj) {return obj instanceof KeyVal ? (KeyVal)obj : null;}
 	public static final KeyVal[] Ary_empty = new KeyVal[0];
 	public static KeyVal[] Ary(KeyVal... ary) {return ary;}
 	public static KeyVal[] Ary_cast_(Object o) {
@@ -40,11 +39,7 @@ public class KeyVal_ {
 			rv[i] = vals[i - vals_bgn];
 		return rv;
 	}
-	public static KeyVal new_(String key) {return new KeyVal(key, key);}
-	public static KeyVal new_(String key, Object val) {return new KeyVal(key, val);}
-	public static KeyVal int_(int key, Object val) {return new KeyVal(key, val);}
-	public static KeyVal obj_(Object key, Object val) {return new KeyVal(key, val);}
-	public static String Xto_str(KeyVal... ary) {
+	public static String Ary_x_to_str(KeyVal... ary) {
 		String_bldr sb = String_bldr_.new_();
 		int len = ary.length;
 		for (int i = 0; i < len; i++) {
@@ -52,11 +47,17 @@ public class KeyVal_ {
 			sb.Add(itm.Key()).Add("=");
 			Object itm_val = itm.Val();
 			if (ClassAdp_.Eq_typeSafe(itm_val, KeyVal[].class))
-				sb.Add(Xto_str((KeyVal[])itm_val));
+				sb.Add(Ary_x_to_str((KeyVal[])itm_val));
 			else
 				sb.Add(Object_.XtoStr_OrNullStr(itm_val));
 			sb.Add_char_nl();
 		}
 		return sb.XtoStr();
 	}
+	public static KeyVal as_(Object obj) {return obj instanceof KeyVal ? (KeyVal)obj : null;}
+	public static KeyVal new_(String key)				{return new KeyVal(KeyVal_.Key_tid_str, key, key);}
+	public static KeyVal new_(String key, Object val)	{return new KeyVal(KeyVal_.Key_tid_str, key, val);}
+	public static KeyVal int_(int key, Object val)		{return new KeyVal(KeyVal_.Key_tid_int, key, val);}
+	public static KeyVal obj_(Object key, Object val)	{return new KeyVal(KeyVal_.Key_tid_obj, key, val);}
+	public static final byte Key_tid_obj = 0, Key_tid_str = 1, Key_tid_int = 2;
 }

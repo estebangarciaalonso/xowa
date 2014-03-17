@@ -20,7 +20,7 @@ import org.junit.*;
 public class Xow_wiki_tst {
 	@Before public void init() {fxt.Clear();} private Xow_wiki_fxt fxt = new Xow_wiki_fxt();
 	@Test   public void GetPageByTtl() {	// PURPOSE.fix: unknown page causes null reference error in scribunto; DATE:2013-08-27
-		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_new_(fxt.Fxt().App(), fxt.Fxt().Ctx());
+		gplx.xowa.xtns.scribunto.Scrib_core.Core_new_(fxt.Fxt().App(), fxt.Fxt().Ctx());
 		fxt.Test_getPageByTtl("Does_not_exist", null);
 	}
 }

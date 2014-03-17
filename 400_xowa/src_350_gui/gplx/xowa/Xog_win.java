@@ -619,7 +619,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			Xoa_url url = new Xoa_url();
 			byte[] url_bry = ByteAry_.new_utf8_(url_str);
 			Xow_wiki home_wiki = app.User().Wiki();
-			Xoa_ttl ttl = Xoa_ttl.parse_(home_wiki, Xoa_page_.Main_page_bry_empty);
+			Xoa_ttl ttl = Xoa_ttl.parse_(home_wiki, Xoa_page_.Main_page_bry);	// NOTE: must be Main_Page, not "" else Firefox Addon will fail; DATE:2014-03-13
 			page = Xoa_page.blank_page_(home_wiki, ttl);
 			Xoa_url_parser.Parse_url(url, app, page.Wiki(), url_bry, 0, url_bry.length, true);
 			return Exec_app_retrieve_core(url, output_html);

@@ -60,7 +60,7 @@ public class Xow_ns implements GfoInvkAble {
 	public boolean		Id_main()				{return id == Xow_ns_.Id_main;}
 	public boolean		Id_media()				{return id == Xow_ns_.Id_media;}
 	public boolean		Id_special()			{return id == Xow_ns_.Id_special;}
-	public boolean		Id_module()				{return id == gplx.xowa.xtns.scribunto.Scrib_core_.Ns_id_module;}
+	public boolean		Id_module()				{return id == gplx.xowa.xtns.scribunto.Scrib_xtn_mgr.Ns_id_module;}
 	public int		Ord()					{return ord;} public void Ord_(int v) {this.ord = v;} private int ord;
 	public int		Ord_subj_id()			{if (id < 0) return ord; return Id_talk() ? ord - 1 : ord;}  // id< 0: special/media returns self
 	public int		Ord_talk_id()			{if (id < 0) return ord; return Id_talk() ? ord : ord + 1;}

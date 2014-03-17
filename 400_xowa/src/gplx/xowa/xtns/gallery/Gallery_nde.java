@@ -38,6 +38,7 @@ public class Gallery_nde implements Xox_xnde, Xop_xnde_atr_parser {
 		}
 	}
 	public void Xtn_parse(Xow_wiki wiki, Xop_ctx ctx, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
+		ctx.Para().Process_block__xnde(xnde.Tag(), Xop_xnde_tag.Block_bgn);	// cancel pre for <gallery>; DATE:2014-03-11
 		Xop_xatr_itm.Xatr_parse(wiki.App(), this, wiki.Lang().Xatrs_gallery(), wiki, src, xnde);
 		if (wiki.File_mgr().Cfg_get(Fsdb_cfg_grp).Get_yn_or_n(Fsdb_cfg_key_gallery_fix_defaults)) {	// v2
 			if (itm_w == Gallery_nde.Null && itm_h == Gallery_nde.Null) {			// if no w/h specified, set both to default (just like v1)
@@ -52,6 +53,7 @@ public class Gallery_nde implements Xox_xnde, Xop_xnde_atr_parser {
 		Gallery_xtn_mgr xtn_mgr = (Gallery_xtn_mgr)wiki.Xtn_mgr().Get_or_fail(Gallery_xtn_mgr.XTN_KEY);
 		xtn_mgr.Parser().Parse_all(itms, src, xnde.Tag_open_end(), xnde.Tag_close_bgn(), itm_w, itm_h);
 		boolean log_wkr_enabled = Log_wkr != Xop_log_basic_wkr.Null; if (log_wkr_enabled) Log_wkr.Log_end_xnde(ctx.Page(), Xop_log_basic_wkr.Tid_gallery, src, xnde);
+		ctx.Para().Process_block__xnde(xnde.Tag(), Xop_xnde_tag.Block_end); // cancel pre for <gallery>; DATE:2014-03-11
 	}	public static Xop_log_basic_wkr Log_wkr = Xop_log_basic_wkr.Null;
 	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		Xow_wiki wiki = ctx.Wiki();

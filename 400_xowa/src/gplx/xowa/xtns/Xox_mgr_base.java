@@ -38,7 +38,7 @@ public abstract class Xox_mgr_base implements Xox_mgr {
 	private static final String Invk_enabled = "enabled", Invk_enabled_ = "enabled_";
 	public static void Xtn_write_escape(Xoa_app app, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {Xtn_write_escape(app, bfr, src, xnde.Src_bgn(), xnde.Src_end());}
 	public static void Xtn_write_escape(Xoa_app app, ByteAryBfr bfr, byte[] src)					{Xtn_write_escape(app, bfr, src, 0, src.length);}
-	public static void Xtn_write_escape(Xoa_app app, ByteAryBfr bfr, byte[] src, int bgn, int end)	{Xoh_html_wtr.Bfr_escape(bfr, src, bgn, end, app, true, false);}
+	public static void Xtn_write_escape(Xoa_app app, ByteAryBfr bfr, byte[] src, int bgn, int end)	{Xoh_html_wtr_escaper.Escape(app, bfr, src, bgn, end, true, false);}
 	public static void Xtn_write_unsupported(Xoa_app app, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, boolean parse_content) {
 		bfr.Add(Xowa_not_implemented);
 		Xox_mgr_base.Xtn_write_escape(app, bfr, src, xnde.Tag_open_bgn(), xnde.Tag_open_end());

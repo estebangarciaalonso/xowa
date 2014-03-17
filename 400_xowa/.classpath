@@ -40,5 +40,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/150_gfui"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/140_dbs"/>
+	<classpathentry kind="lib" path="lib/luaj-jse-2.0.3_xowa.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

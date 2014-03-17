@@ -42,14 +42,14 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 	public int Thread_interval() {return thread_interval;} public ProcessAdp Thread_interval_(int v) {thread_interval = v; return this;} int thread_interval = 20;
 	public String Thread_kill_name() {return thread_kill_name;} public ProcessAdp Thread_kill_name_(String v) {thread_kill_name = v; return this;} private String thread_kill_name = "";
 	public Io_url Tmp_dir() {return tmp_dir;} @gplx.Virtual public ProcessAdp Tmp_dir_(Io_url v) {tmp_dir = v; return this;} Io_url tmp_dir;
-	ProcessAdp WhenBgn_run() {return Invk_cmds(whenBgnList);} ListAdp whenBgnList = ListAdp_.new_();
+	private ProcessAdp WhenBgn_run() {return Invk_cmds(whenBgnList);} ListAdp whenBgnList = ListAdp_.new_();
 	public ProcessAdp WhenEnd_add(GfoInvkAbleCmd cmd) {whenEndList.Add(cmd); return this;}
 	public ProcessAdp WhenEnd_del(GfoInvkAbleCmd cmd) {whenEndList.Del(cmd); return this;}
 	public Gfo_usr_dlg Prog_dlg() {return prog_dlg;} public ProcessAdp Prog_dlg_(Gfo_usr_dlg v) {prog_dlg = v; return this;} Gfo_usr_dlg prog_dlg;
 	public String Prog_fmt() {return prog_fmt;} public ProcessAdp Prog_fmt_(String v) {prog_fmt = v; return this;} private String prog_fmt = "";	// NOTE: set to "", else cmds that do not set prog_fmt will fail on fmtr.Fmt(null)
-	GfoInvkAble owner;
-	ProcessAdp WhenEnd_run() {return Invk_cmds(whenEndList);} ListAdp whenEndList = ListAdp_.new_();
-	ProcessAdp Invk_cmds(ListAdp list) {
+	private GfoInvkAble owner;
+	private ProcessAdp WhenEnd_run() {return Invk_cmds(whenEndList);} ListAdp whenEndList = ListAdp_.new_();
+	private ProcessAdp Invk_cmds(ListAdp list) {
 		for (Object o : list)
 			((GfoInvkAbleCmd)o).Invk();
 		return this;
@@ -243,7 +243,7 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 		return;
 	}
 		public static final ListAdp Test_runs = ListAdp_.new_();
-	ProcessAdp Test_runs_add() {Test_runs.Add(exe_url.Raw() + " " + args_str); exit_code = Exit_pass; return this;}
+	private ProcessAdp Test_runs_add() {Test_runs.Add(exe_url.Raw() + " " + args_str); exit_code = Exit_pass; return this;}
 	public static int run_wait_arg_(Io_url url, String arg) {
 		ProcessAdp process = new ProcessAdp();
 		process.Exe_url_(url).Args_str_(arg).Run_wait();

@@ -23,7 +23,7 @@ public class Xoa_app_ {
 		boot_mgr.Run(args);
 	}
 	public static final String Name = "xowa";
-	public static final String Version = "1.3.2.1";
+	public static final String Version = "1.3.3.1";
 	public static String Build_date = "2012-12-30 00:00:00";
 	public static String Op_sys;
 	public static String User_agent = "";
@@ -152,7 +152,7 @@ class Xoa_app_boot_mgr {
 					app.Gui_mgr().Run(); chkpoint = "run";
 				}
 				else	// teardown app, else lua will keep process running
-					if (gplx.xowa.xtns.scribunto.Scrib_engine.Engine() != null) gplx.xowa.xtns.scribunto.Scrib_engine.Engine().Term();
+					if (gplx.xowa.xtns.scribunto.Scrib_core.Core() != null) gplx.xowa.xtns.scribunto.Scrib_core.Core().Term();
 			}
 		}
 		catch (Exception e) {usr_dlg.Warn_many("", "", "app launch failed: ~{0} ~{1}", chkpoint, Err_.Message_gplx(e));}

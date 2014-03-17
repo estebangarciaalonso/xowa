@@ -17,14 +17,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
 public class KeyVal implements XtoStrAble {
+	@gplx.Internal protected KeyVal(byte key_tid, Object k, Object v) {this.key_tid = key_tid; key = k; val = v;}
 	public String Key() {return Object_.XtoStr_OrNull(key);}
-	public Object Key_as_obj() {return key;} Object key;
+	public byte Key_tid() {return key_tid;} private byte key_tid;
+	public Object Key_as_obj() {return key;} private Object key;
 	public KeyVal Key_(Object v) {this.key = v; return this;}
-	public Object Val() {return val;} public KeyVal Val_(Object v) {val = v; return this;} Object val;
+	public Object Val() {return val;} public KeyVal Val_(Object v) {val = v; return this;} private Object val;
 	public String Val_to_str_or_empty() {return Object_.XtoStr_OrEmpty(val);}
 	public String Val_to_str_or_null() {return Object_.XtoStr_OrNull(val);}
 	public byte[] Val_to_bry() {return ByteAry_.new_utf8_(Object_.XtoStr_OrNull(val));}
 	@Override public String toString() {return XtoStr();}
 	public String XtoStr() {return Key() + "=" + Object_.XtoStr_OrNullStr(val);}
-	@gplx.Internal protected KeyVal(Object k, Object v) {key = k; val = v;}
 }

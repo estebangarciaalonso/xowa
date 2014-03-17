@@ -85,7 +85,7 @@ public class Xoa_app implements GfoInvkAble {
 		user.App_term();
 		log_wtr.Term();
 		log_mgr.Rls();
-		if (Scrib_engine.Engine() != null) Scrib_engine.Engine().Term();
+		if (Scrib_core.Core() != null) Scrib_core.Core().Term();
 		wiki_mgr.Rls();
 		return true;
 	}
@@ -154,7 +154,7 @@ public class Xoa_app implements GfoInvkAble {
 	private Xoa_fmtr_mgr fmtr_mgr;
 	public void Reset_all() {
 		this.Free_mem(true);
-		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_invalidate();
+		gplx.xowa.xtns.scribunto.Scrib_core.Core_invalidate();
 		Env_.GarbageCollect();
 	}
 	public void Free_mem(boolean clear_ctx) {

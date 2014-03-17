@@ -111,4 +111,29 @@ public class Xtn_syntaxHighlight_nde_tst {
 		,	"</pre>"
 		));
 	}
+	@Test  public void EndTag_has_ws() {	// PURPOSE: </syntaxhighlight > not being closed correctly; EX.WP:Mergesort
+		fxt.Init_para_y_();
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+			(	"a"
+			,	"<syntaxhighlight>"
+			,	"b"
+			,	"</syntaxhighlight >"
+			,	"c"
+			,	"<syntaxhighlight>"
+			,	"d"
+			,	"</syntaxhighlight>"
+			), String_.Concat_lines_nl_skipLast
+			(	"<p>a"
+			,	"<pre style=\"overflow:auto;\">"
+			,	"b"
+			,	"</pre>"
+			,	"c"
+			,	"<pre style=\"overflow:auto;\">"
+			,	"d"
+			,	"</pre>"
+			,   "</p>"
+			,	""
+			));
+		fxt.Init_para_n_();
+	}
 }

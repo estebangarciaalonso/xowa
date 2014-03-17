@@ -67,7 +67,7 @@ public class Xoa_page {
 		html_cmd_mgr.Clear();
 		langs.Clear();
 		wdata_external_lang_links.Reset();
-		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_page_changed(this);
+		gplx.xowa.xtns.scribunto.Scrib_core.Core_page_changed(this);
 		lang_convert_content = lang_convert_title = true;
 		html_content_sub = ByteAry_.Empty;
 		xtn_mgr.Clear();

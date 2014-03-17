@@ -160,10 +160,10 @@ public class Xop_xnde_tag_ {
 , Tag_tt = new_(Tid_tt, "tt").NoInline_().Repeat_ends_()
 , Tag_kbd = new_(Tid_kbd, "kbd").NoInline_()
 , Tag_samp = new_(Tid_samp, "samp").NoInline_()
-, Tag_blockquote = new_(Tid_blockquote, "blockquote").NoInline_().Nest_().Section_().Block_open_bgn_().Block_close_end_()
-, Tag_pre = new_(Tid_pre, "pre").NoInline_().Section_().Xtn_().Raw_().Block_open_bgn_().Block_close_end_()
+, Tag_blockquote = new_(Tid_blockquote, "blockquote").NoInline_().Nest_().Section_().Block_open_bgn_().Block_close_end_()	// NOTE: should be open_end_, but leaving for now; DATE:2014-03-11
+, Tag_pre = new_(Tid_pre, "pre").NoInline_().Section_().Xtn_().Raw_().Block_open_bgn_().Block_close_end_().Ignore_empty_()
 , Tag_font = new_(Tid_font, "font").NoInline_().Nest_()
-, Tag_center = new_(Tid_center, "center").NoInline_().Nest_().Block_close_end_() // DATE:2012-12-12: removed .Repeat_ends_(); added Nest_(); EX: w:Burr Truss
+, Tag_center = new_(Tid_center, "center").NoInline_().Nest_().Block_open_end_().Block_close_end_() // removed .Repeat_ends_(); added Nest_(); EX: w:Burr Truss; DATE:2012-12-12
 , Tag_p = new_(Tid_p, "p").NoInline_().Section_().Block_open_bgn_().Block_close_end_()
 , Tag_span = new_(Tid_span, "span").Nest_().Section_()
 , Tag_div = new_(Tid_div, "div").Nest_().Section_().Block_open_end_().Block_close_end_()

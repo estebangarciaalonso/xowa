@@ -36,6 +36,7 @@ package gplx.xowa.servers.http; import gplx.*; import gplx.xowa.*; import gplx.x
 import gplx.ios.*; import gplx.json.*;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -261,7 +262,7 @@ class HttpRequest implements Runnable{
 				if(req_split.length >= 1){
 					wiki_domain = req_split[1];
 				}
-				if(req_split.length >= 3){
+				if(req_split.length >= 4){
 					page_name = req_split[3];
 					for(int i = 4; i <= req_split.length-1; i++){
 						page_name += "/"+req_split[i];
@@ -291,6 +292,10 @@ class HttpRequest implements Runnable{
 				}
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			System.out.println("error retrieving page. Please make sure your url is of the form: http://localhost:8080/home/wiki/Main_Page");
 			e.printStackTrace();
 		}
 	}

@@ -94,7 +94,7 @@ public class Xobc_parse_run extends Xob_itm_basic_base implements Xob_cmd, GfoIn
 	}	private Xodb_page_raw_parser raw_parser = new Xodb_page_raw_parser(); Xodb_page raw_page = new Xodb_page();
 	private void Free() {
 		ctx.App().Free_mem(true);
-		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_invalidate();
+		gplx.xowa.xtns.scribunto.Scrib_core.Core_invalidate();
 		Env_.GarbageCollect();
 //            Tfds.Write(ctx.App().Tmpl_result_cache().Count());
 	}

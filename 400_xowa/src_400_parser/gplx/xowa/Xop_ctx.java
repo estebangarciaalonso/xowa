@@ -132,7 +132,7 @@ public class Xop_ctx {
 	public Xop_tkn_itm Stack_get_last()		{return stack_len == 0 ? null : stack[stack_len - 1];}
 	public Xop_tkn_itm Stack_get(int i)		{return i < 0 || i >= stack_len ? null : stack[i];}
 	public Xop_tblw_tkn Stack_get_tbl_tb() {
-		for (int i = stack_len - 1; i > -1	; i--) {
+		for (int i = stack_len - 1; i > -1; i--) {
 			Xop_tkn_itm tkn = stack[i];
 			switch (tkn.Tkn_tid()) {
 				case Xop_tkn_itm_.Tid_tblw_tb:
@@ -149,7 +149,7 @@ public class Xop_ctx {
 		return null;
 	}
 	public Xop_tblw_tkn Stack_get_tblw() {
-		for (int i = stack_len - 1; i > -1	; i--) {
+		for (int i = stack_len - 1; i > -1; i--) {
 			Xop_tkn_itm tkn = stack[i];
 			switch (tkn.Tkn_tid()) {
 				case Xop_tkn_itm_.Tid_tblw_tb:

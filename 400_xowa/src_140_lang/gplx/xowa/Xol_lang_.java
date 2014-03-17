@@ -240,5 +240,6 @@ kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_mapSources_geoLink                         
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_geoCrumbs_isin                                 , "#isin");
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_relatedArticles                                , "#related");
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_relatedSites                                   , "#relatedSites");
+kwd_mgr.New(Bool_.Y, Xol_kwd_grp_.Id_massMessage_target                             , "#target");
 	}
 }

@@ -175,7 +175,7 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 	}
 	private void Free() {
 		ctx.App().Free_mem(true);
-		gplx.xowa.xtns.scribunto.Scrib_engine.Engine_invalidate();
+		gplx.xowa.xtns.scribunto.Scrib_core.Core_invalidate();
 		wiki.Cache_mgr().Defn_cache().Free_mem_all();
 	}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {

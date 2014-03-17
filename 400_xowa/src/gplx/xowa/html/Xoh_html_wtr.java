@@ -86,7 +86,7 @@ public class Xoh_html_wtr {
 			case Xop_tkn_itm_.Tid_vnt:				Vnt(ctx, opts, bfr, src, depth, (Xop_vnt_tkn)tkn); break;
 //				case Xop_tkn_itm_.Tid_tab:				bfr.Add_byte_repeat(Byte_ascii.Tab, tkn.Src_end() - tkn.Src_bgn()); break;
 			default:
-				Bfr_escape(bfr, src, tkn.Src_bgn(), tkn.Src_end(), app, true, false);	// NOTE: always escape text including (a) lnki_alt text; and (b) any other text, especially failed xndes; DATE:2013-06-18
+				Xoh_html_wtr_escaper.Escape(app, bfr, src, tkn.Src_bgn(), tkn.Src_end(), true, false);	// NOTE: always escape text including (a) lnki_alt text; and (b) any other text, especially failed xndes; DATE:2013-06-18
 				break;
 		}
 	}
@@ -426,7 +426,7 @@ public class Xoh_html_wtr {
 	@gplx.Virtual public void Xnde(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		if (opts.Lnki_alt()) {
 			if (xnde.Tag_close_bgn() > 0) // NOTE: some tags are not closed; WP.EX: France; <p>
-				Bfr_escape(bfr, src, xnde.Tag_open_end(), xnde.Tag_close_bgn(), app, true, false);
+				Xoh_html_wtr_escaper.Escape(app, bfr, src, xnde.Tag_open_end(), xnde.Tag_close_bgn(), true, false);
 			else
 				Xnde_subs(ctx, opts, bfr, src, xnde, depth + 1);
 			return;
@@ -472,20 +472,21 @@ public class Xoh_html_wtr {
 				break;
 			}
 			case Xop_xnde_tag_.Tid_pre: {
+				if (xnde.Tag_open_end() == xnde.Tag_close_bgn()) return; // ignore empty tags, else blank pre line will be printed; DATE:2014-03-12
 				byte[] name = tag.Name_bry();
 				bfr.Add_byte(Tag__bgn).Add(name);
 				if (xnde.Atrs_bgn() > Xop_tblw_wkr.Atrs_ignore_check) Xnde_atrs(tag_id, opts, src, xnde.Atrs_bgn(), xnde.Atrs_end(), xnde.Atrs_ary(), bfr);
 				bfr.Add_byte(Tag__end);
-				Xnde_subs_escape(ctx, opts, bfr, src, xnde, depth, false, true);	// NOTE: this is the only difference from above block
+				Xnde_subs_escape(ctx, opts, bfr, src, xnde, depth, false, true);
 				bfr.Add(Tag__end_bgn).Add(name).Add_byte(Tag__end);
 				break;
 			}
-			case Xop_xnde_tag_.Tid_source: {							// convert <source> and <syntaxhighlight> to <pre>;
+			case Xop_xnde_tag_.Tid_source: {							// convert <source> to <pre>;
 				byte[] name = Xop_xnde_tag_.Tag_pre.Name_bry();
 				bfr.Add_byte(Tag__bgn).Add(name);
 				if (xnde.Atrs_bgn() > Xop_tblw_wkr.Atrs_ignore_check) Xnde_atrs(tag_id, opts, src, xnde.Atrs_bgn(), xnde.Atrs_end(), xnde.Atrs_ary(), bfr);
 				bfr.Add_byte(Tag__end);
-				Xnde_subs_escape(ctx, opts, bfr, src, xnde, depth, false, false);
+				Xoh_html_wtr_escaper.Escape(app, bfr, src, xnde.Tag_open_end(), xnde.Tag_close_bgn(), false, false);	// <source> is a .Xtn(); render literally everything between > and <; DATE:2014-03-11
 				bfr.Add(Tag__end_bgn).Add(name).Add_byte(Tag__end);
 				break;
 			}
@@ -538,18 +539,15 @@ public class Xoh_html_wtr {
 				Xox_xnde xtn = xnde.Xnde_xtn();
 				xtn.Xtn_write(app, this, opts, ctx, bfr, src, xnde, depth);
 				break;
-			default:
+			default:	// unknown tag
 				if (tag.Restricted()) {	// a; img; script; etc..
 					if (	!page.Html_restricted()										// page is not marked restricted (only [[Special:]])
 						||	page.Wiki().Domain_tid() == Xow_wiki_domain_.Tid_home) {	// page is in home wiki
 						bfr.Add_mid(src, xnde.Src_bgn(), xnde.Src_end());
 						return;
 					}
-//							else {
-//								Bfr_escape(bfr, src, xnde.Src_bgn(), xnde.Src_end(), app, true, true);
-//							}
 				}
-				bfr.Add(Ary_escape_bgn).Add(tag.Name_bry());
+				bfr.Add(Ary_escape_bgn).Add(tag.Name_bry());	// escape bgn
 				if (xnde.Atrs_bgn() > Xop_tblw_wkr.Atrs_ignore_check) Xnde_atrs(tag_id, opts, src, xnde.Atrs_bgn(), xnde.Atrs_end(), xnde.Atrs_ary(), bfr);
 				switch (xnde.CloseMode()) {
 					case Xop_xnde_tkn.CloseMode_inline:
@@ -645,104 +643,6 @@ public class Xoh_html_wtr {
 	private void Xnde_atr_write_id(ByteAryBfr bfr, byte[] bry, int bgn, int end) {
 		app.Url_converter_id().Encode(bfr, bry, bgn, end);
 	}
-	private static IntRef bfr_escape_ncr = IntRef.zero_(); static BoolRef bfr_escape_fail = BoolRef.n_();
-	private static int Bfr_escape_nowiki_skip(Xoa_app app, ByteAryBfr bfr, byte[] src, int bgn, int end, byte[] nowiki_name, int nowiki_name_len) {
-		try {
-			boolean tag_is_bgn = true;
-			int bgn_gt = -1, end_lt = -1, end_gt = -1;
-			for (int i = bgn + nowiki_name_len; i < end; i++) {
-				byte b = src[i];
-				switch (b) {
-					case Byte_ascii.Gt:
-						if	(tag_is_bgn)	{bgn_gt = i; tag_is_bgn = false;}
-						else				return ByteAry_.NotFound;								// <nowiki>> found
-						break;
-					case Byte_ascii.Lt:
-						if (	tag_is_bgn															// <nowiki < found
-							||	(i + nowiki_name_len + 2 > end) 									// not enough chars for "/nowiki>"
-							||	src[i + 1] != Byte_ascii.Slash 										// / 
-							||	!ByteAry_.Eq(nowiki_name, src, i + 2, i + 2 + nowiki_name_len)		//  nowiki
-							||	src[i + 2 + nowiki_name_len] != Byte_ascii.Gt						//        >
-							)	return ByteAry_.NotFound;
-						end_lt = i;
-						end_gt = i + 2 + nowiki_name_len;
-						i = end;
-						break;
-				}
-			}
-			if (end_gt == -1) return ByteAry_.NotFound;	// ">" of </nowiki> not found
-			bfr.Add_mid(src, bgn_gt + 1, end_lt);
-			return end_gt;
-		}
-		catch (Exception e) {
-			app.Usr_dlg().Warn_many(GRP_KEY, "escape.nowiki.fail", "unknown error in escape.nowiki: ~{0} ~{1}", Err_.Message_gplx_brief(e), String_.new_utf8_(src, bgn, end));
-			return ByteAry_.NotFound;
-		}
-	}	private static final String GRP_KEY = "xowa.wiki.html_wtr";
-	public static byte[] Bfr_escape(Xoa_app app, ByteAryBfr tmp_bfr, byte[] src) {
-		Bfr_escape(tmp_bfr, src, 0, src.length, app, true, false);
-		return tmp_bfr.XtoAryAndClear();
-	}
-	public static void Bfr_escape(ByteAryBfr bfr, byte[] src, int bgn, int end, Xoa_app app, boolean interpret_amp, boolean nowiki_skip) {
-		ByteTrieMgr_slim amp_trie = app.Amp_trie();
-		bfr_escape_fail.Val_n_();
-		for (int i = bgn; i < end; i++) {
-			byte b = src[i];
-			switch (b) {
-				case Byte_ascii.Lt:
-					if (nowiki_skip) {
-						byte[] nowiki_name = Xop_xnde_tag_.Tag_nowiki.Name_bry();
-						int nowiki_name_len = nowiki_name.length;
-						if (ByteAry_.Eq(nowiki_name, src, i + 1, i + 1 + nowiki_name_len)) {	// <nowiki found;
-							int end_gt = Bfr_escape_nowiki_skip(app, bfr, src, i, end, nowiki_name, nowiki_name_len);
-							if (end_gt != ByteAry_.NotFound) {
-								i = end_gt;
-								continue;
-							}
-						}
-					}
-					bfr.Add(Xop_xnde_wkr.Bry_escape_lt);
-					break;
-				case Byte_ascii.Gt:
-					bfr.Add(Xop_xnde_wkr.Bry_escape_gt);
-					break;
-				case Byte_ascii.Amp:
-					if (interpret_amp) {
-						int text_bgn = i + 1;	// i is &; i + 1 is first char after amp
-						Object o = (text_bgn < end) ? amp_trie.MatchAtCur(src, text_bgn, end) : null;	// check if this is a valid &; note must check that text_bgn < end or else arrayIndex error; occurs when src is just "&"; DATE:2013-12-19
-						if (o == null)										// nope; invalid; EX: "a&b"; "&bad;"; "&#letters;"; 
-							bfr.Add(Xop_xnde_wkr.Bry_escape_amp);			// escape & and continue
-						else {												// is either (1) a name or (2) an ncr (hex/dec)
-							Xop_amp_trie_itm itm = (Xop_amp_trie_itm)o;
-							int match_pos = amp_trie.Match_pos();
-							int itm_tid = itm.Tid();
-							if (itm_tid == Xop_amp_trie_itm.Tid_name) {		// name
-								bfr.Add_mid(src, i, match_pos);				// embed entire name
-								i = match_pos - 1;
-							}
-							else {											// ncr: dec/hex
-								int end_pos = Xop_amp_wkr.CalcNcr(app.Msg_log(), itm_tid == Xop_amp_trie_itm.Tid_num_hex, src, end, bgn, match_pos, bfr_escape_ncr, bfr_escape_fail); // parse hex/dec
-								if (bfr_escape_fail.Val())					// parse failed; escape and continue
-									bfr.Add(Xop_xnde_wkr.Bry_escape_amp);
-								else {										// parse worked; embed entire ncr
-									bfr.Add_mid(src, i, end_pos);
-									i = end_pos - 1;
-								}
-							}
-						}
-					}
-					else
-						bfr.Add(Xop_xnde_wkr.Bry_escape_amp);
-					break;
-				case Byte_ascii.Quote:
-					bfr.Add(Xop_xnde_wkr.Bry_escape_quote);
-					break;
-				default:
-					bfr.Add_byte(b);
-					break;
-			}
-		}
-	}
 	private void Xnde_subs(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
 		int subs_len = xnde.Subs_len();
 		for (int i = 0; i < subs_len; i++)
@@ -773,7 +673,7 @@ public class Xoh_html_wtr {
 					if (amp_enable)
 						bfr.Add_mid(src, sub.Src_bgn(), sub.Src_end());
 					else
-						Bfr_escape(bfr, src, sub.Src_bgn(), sub.Src_end(), app, true, nowiki);
+						Xoh_html_wtr_escaper.Escape(app, bfr, src, sub.Src_bgn(), sub.Src_end(), true, nowiki);
 					break;
 				default:
 					Write_tkn(ctx, opts, bfr, src, depth + 1, xnde, i, sub);
@@ -853,7 +753,6 @@ class Xoh_html_wtr_env {
 	public boolean CommentVisible() {return commentVisible;} public Xoh_html_wtr_env CommentVisible_(boolean v) {commentVisible = v; return this;} private boolean commentVisible = true;
 	public byte[] NewLine() {return newLine;} public Xoh_html_wtr_env NewLine_(byte[] v) {newLine = v; return this;} private byte[] newLine;
 }
-
 /*
 NOTE_1:inline always written as <tag></tag>, not <tag/>
 see WP:Permian�Triassic extinction event

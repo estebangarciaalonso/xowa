@@ -19,10 +19,10 @@ package gplx.xowa.html; import gplx.*; import gplx.xowa.*;
 import gplx.xowa.html.tidy.*;
 public class Xoh_html_mgr implements GfoInvkAble {
 	public Xoh_html_mgr(Xoa_app app) {
-		tidy_mgr = new Xoh_tidy_mgr(app);
+		tidy_mgr = new Tidy_lib_mgr(app);
 	}
 	public Xoh_page_mgr Page_mgr() {return page_mgr;} private Xoh_page_mgr page_mgr = new Xoh_page_mgr();
-	public Xoh_tidy_mgr Tidy_mgr() {return tidy_mgr;} private Xoh_tidy_mgr tidy_mgr;
+	public Tidy_lib_mgr Tidy_mgr() {return tidy_mgr;} private Tidy_lib_mgr tidy_mgr;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_page))	return page_mgr;
 		else if	(ctx.Match(k, Invk_tidy))	return tidy_mgr;

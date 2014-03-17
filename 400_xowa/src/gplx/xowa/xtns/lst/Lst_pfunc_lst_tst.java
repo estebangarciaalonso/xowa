@@ -77,6 +77,12 @@ public class Lst_pfunc_lst_tst {
 		fxt.Fxt().Init_page_create("Sub_0", "<section begin=key_0 />a{{Sub_1}}<section end=key_0 />");
 		fxt.Fxt().Test_parse_page_all_str("{{#lst:Sub_0|key_0}}", "ab");
 	}
+	@Test  public void Nested_recursion() {	// PURPOSE: allow nested calls; it.s:Main_Page; DATE:2014-02-09
+		fxt.Fxt().Init_page_create("Sub_1", "<section begin=key_0 />b<section end=key_0 />");
+		fxt.Fxt().Init_page_create("Template:Sub_1", "{{#section:Sub_1|key_0}}");
+		fxt.Fxt().Init_page_create("Sub_0", "<section begin=key_0 />a{{Sub_1}}<section end=key_0 />");
+		fxt.Fxt().Test_parse_page_all_str("{{#section:Sub_0|key_0}}", "ab");
+	}
 }
 class Lst_pfunc_lst_fxt {
 	public Lst_pfunc_lst_fxt Clear() {

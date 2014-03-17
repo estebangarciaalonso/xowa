@@ -116,13 +116,13 @@ class GfoMsg_base implements GfoMsg {
 				return this;
 			}
 		}
-		args.Add(new KeyVal(k, v));
+		args.Add(new KeyVal(KeyVal_.Key_tid_str, k, v));
 		return this;
 	}
 	public GfoMsg Parse_(boolean v) {parse = v; return this;}
 	public GfoMsg	Add(String k, Object v) {
 		if (args == null) args = ListAdp_.new_();
-		args.Add(new KeyVal(k, v));
+		args.Add(new KeyVal(KeyVal_.Key_tid_str, k, v));
 		return this;
 	}
 	public boolean		ReadBool(String k)						{Object rv = ReadOr(k,false); if (rv == Nil) ThrowNotFound(k); return parse ? Yn.parse_or_((String)rv, false) : Bool_.cast_(rv);}

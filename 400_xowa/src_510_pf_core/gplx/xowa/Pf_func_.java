@@ -200,6 +200,7 @@ public class Pf_func_ {
 	,	Xol_kwd_grp_.Id_geoCrumbs_isin
 	,	Xol_kwd_grp_.Id_relatedArticles
 	,	Xol_kwd_grp_.Id_relatedSites
+	,	Xol_kwd_grp_.Id_massMessage_target
 	};
 	public static Xot_defn Get_prototype(int id) {
 		switch (id) {
@@ -336,7 +337,7 @@ public class Pf_func_ {
 			case Xol_kwd_grp_.Id_xtn_geodata_coordinates:		return gplx.xowa.xtns.geodata.Geo_coordinates_func._;
 			case Xol_kwd_grp_.Id_lst:							return gplx.xowa.xtns.lst.Lst_pfunc_lst._;
 			case Xol_kwd_grp_.Id_lstx:							return gplx.xowa.xtns.lst.Lst_pfunc_lstx._;
-			case Xol_kwd_grp_.Id_invoke:						return new gplx.xowa.xtns.scribunto.Scrib_pf_invoke();
+			case Xol_kwd_grp_.Id_invoke:						return new gplx.xowa.xtns.scribunto.Scrib_invoke_func();
 			case Xol_kwd_grp_.Id_property:						return new gplx.xowa.xtns.wdatas.Wdata_pf_property();
 			case Xol_kwd_grp_.Id_noexternallanglinks:			return new gplx.xowa.xtns.wdatas.Wdata_pf_noExternalLangLinks();
 
@@ -348,6 +349,8 @@ public class Pf_func_ {
 
 			case Xol_kwd_grp_.Id_relatedArticles:				return gplx.xowa.xtns.relatedArticles.Articles_func._;
 			case Xol_kwd_grp_.Id_relatedSites:					return gplx.xowa.xtns.relatedSites.Sites_func._;
+
+			case Xol_kwd_grp_.Id_massMessage_target:			return gplx.xowa.xtns.massMessage.Message_target_func._;
 
 			default:											throw Err_mgr._.unhandled_(id);
 		}

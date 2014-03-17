@@ -25,23 +25,9 @@ public class Hiero_nde implements Xox_xnde, Xop_xnde_atr_parser {
 	}	public static Xop_log_basic_wkr Log_wkr = Xop_log_basic_wkr.Null;
 	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {}
 }
-class Hiero_prefab_mgr {
-//		private Hash_adp_bry hash = Hash_adp_bry.ci_();
-	public void Init_by_load(byte[] bry) {
-	}
-}
-class Hiero_prefab_itm {
-	public Hiero_prefab_itm(byte[] key) {this.key = key;}
-	public byte[] Key() {return key;} private byte[] key;
-}
 class Hiero_file_itm {
 	public Hiero_file_itm(byte[] key, int file_w, int file_h) {this.key = key; this.file_w = file_w; this.file_h = file_h;}
 	public byte[] Key() {return key;} private byte[] key;
 	public int File_w() {return file_w;} private int file_w;
 	public int File_h() {return file_h;} private int file_h;
-}
-class Hiero_phenome_itm {
-	public Hiero_phenome_itm(byte[] key, byte[] gardiner_code) {this.key = key; this.gardiner_code = gardiner_code;}
-	public byte[] Key() {return key;} private byte[] key;
-	public byte[] Gardiner_code() {return gardiner_code;} private byte[] gardiner_code;
 }

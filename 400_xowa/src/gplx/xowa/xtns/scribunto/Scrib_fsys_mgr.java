@@ -16,16 +16,18 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-class Scrib_fsys_mgr {
-	public Io_url Root_dir() {return root_dir;} Io_url root_dir;
-	public Io_url Script_dir() {return script_dir;} Io_url script_dir;
+public class Scrib_fsys_mgr {
+	private OrderedHash libs;
+	private Io_url[] lib_dirs = new Io_url[lib_dirs_len]; static final int lib_dirs_len = 3;
+	public Io_url Root_dir() {return root_dir;} private Io_url root_dir;
+	public Io_url Script_dir() {return script_dir;} private Io_url script_dir;
 	public void Root_dir_(Io_url v) {
 		root_dir = v;
 		script_dir = root_dir.GenSubDir_nest("engines", "LuaCommon", "lualib");
 		lib_dirs[0] = script_dir;
 		lib_dirs[1] = script_dir.GenSubDir("luabit");
 		lib_dirs[2] = script_dir.GenSubDir("ustring");
-	}	Io_url[] lib_dirs = new Io_url[lib_dirs_len]; static final int lib_dirs_len = 3;
+	}
 	public String Get_or_null(String name) {
 		if (libs == null) libs_init();
 		Object lib_fil_obj = libs.Fetch(name); if (lib_fil_obj == null) return null;
@@ -56,5 +58,4 @@ class Scrib_fsys_mgr {
 			fil.Url_(null).Data_(null);
 		}
 	}
-	OrderedHash libs;
 }

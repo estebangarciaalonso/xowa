@@ -85,7 +85,7 @@ public class Gallery_html {
 					lnki_link_ttl = Xoa_ttl.parse_(wiki, ByteAry_.Mid(src, itm.Link_bgn(), itm.Link_end()));
 				byte[] lnki_href = app.Href_parser().Build_to_bry(lnki_link_ttl, wiki);
 				byte[] lnki_alt = itm.Alt_bgn() == ByteAry_.NotFound ? lnki_ttl 
-						: Xoh_html_wtr.Bfr_escape(app, tmp_bfr, ByteAry_.Mid(src, itm.Alt_bgn(), itm.Alt_end())); 
+						: Xoh_html_wtr_escaper.Escape(app, tmp_bfr, ByteAry_.Mid(src, itm.Alt_bgn(), itm.Alt_end())); 
 				html_gallery_itm_img.Bld_bfr_many(itm_bfr
 					, itm_box_w, itm_div_w
 					, v_pad

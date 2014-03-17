@@ -56,4 +56,49 @@ public class Xop_para_wkr_pre_tst {
 		,	""
 		));
 	}
+	@Test  public void Ignore_pre_in_gallery() {// PURPOSE: pre in gallery should be ignored; EX:uk.w:EP2; DATE:2014-03-11
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		( "a"
+		, ""
+		, " <gallery>"
+		, " File:A.png"
+		, " </gallery>"
+		),	String_.Concat_lines_nl_skipLast
+		( "<p>a"
+		, "</p>"
+		, " <ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
+		, "  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
+		, "    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
+		, "      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
+		, "        <div id=\"xowa_gallery_div3_0\" style=\"margin:15px auto;\">"
+		, "          <a href=\"/wiki/File:A.png\" class=\"image\">"
+		, "            <img id=\"xowa_file_img_0\" alt=\"A.png\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"120\" />"
+		, "          </a>"
+		, "        </div>"
+		, "      </div>"
+		, "      <div class=\"gallerytext\">"
+		, "      </div>"
+		, "    </div>"
+		, "  </li>"
+		, "</ul>"
+		,""
+		));
+	}
+	@Test  public void Ignore_pre_in_center() {// PURPOSE: pre in gallery should be ignored; EX:uk.w:EP2; DATE:2014-03-11
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		( "a"
+		, " <center>b"
+		, " </center>"
+		, "d"
+		),	String_.Concat_lines_nl_skipLast
+		( "<p>a"
+		, "</p>"
+		, " <center>b"
+		, " </center>"
+		, ""
+		, "<p>d"
+		, "</p>"
+		)
+		);
+	}
 }

@@ -136,7 +136,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		byte[] data_raw = page.Data_raw();
 		if (wiki_text) {
 			if (mgr.Html_capable())
-				Xoh_html_wtr.Bfr_escape(bfr, data_raw, 0, data_raw.length, this.page.Wiki().App(), false, false);	// NOTE: must escape; assume that browser will automatically escape (&lt;) (which Mozilla does)
+				Xoh_html_wtr_escaper.Escape(page.Wiki().App(), bfr, data_raw, 0, data_raw.length, false, false);	// NOTE: must escape; assume that browser will automatically escape (&lt;) (which Mozilla does)
 			else
 				bfr.Add(data_raw);
 			return;
@@ -151,7 +151,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 			case Xow_page_tid.Tid_js:
 			case Xow_page_tid.Tid_css:
 			case Xow_page_tid.Tid_lua:
-				Xoh_html_wtr.Bfr_escape(tmp_bfr, data_raw, 0, data_raw.length, page.Wiki().App(), false, false);
+				Xoh_html_wtr_escaper.Escape(page.Wiki().App(), tmp_bfr, data_raw, 0, data_raw.length, false, false);
 				app.Html_mgr().Page_mgr().Content_code_fmtr().Bld_bfr_many(bfr, tmp_bfr);
 				tmp_bfr.Clear();
 				page_tid_uses_pre = true;

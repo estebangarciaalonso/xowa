@@ -129,7 +129,7 @@ public class Xow_wiki implements GfoInvkAble {
 		if (init_needed) Init_wiki(app.User());
 		Xoa_page page = data_mgr.Get_page(url, ttl, false);						// get page from data_mgr
 		if (!page.Missing())
-			gplx.xowa.xtns.scribunto.Scrib_engine.Engine_page_changed(page);	// notify scribunto about page changed
+			gplx.xowa.xtns.scribunto.Scrib_core.Core_page_changed(page);	// notify scribunto about page changed
 		ctx.Tab().Clear();				// NOTE: must clear tab here, else italicized display_ttl will persist; DATE:2013-11-16
 		if (page.Missing()) {													// page doesn't exist
 			if (ttl.Ns().Id_file()) {

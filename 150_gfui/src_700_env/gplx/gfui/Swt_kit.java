@@ -111,7 +111,7 @@ public class Swt_kit implements Gfui_kit {
 		return dlg.Ask_rslt;
 	}
 	public void Ask_ok(String grp_key, String msg_key, String fmt, Object... args) 				{
-		Swt_dlg_msg dlg = (Swt_dlg_msg)New_dlg_msg(ask_fmtr.Bld_str_many(ask_bfr, fmt, args)).Init_btns_(Gfui_dlg_msg_.Btn_yes).Init_ico_(Gfui_dlg_msg_.Ico_information);
+		Swt_dlg_msg dlg = (Swt_dlg_msg)New_dlg_msg(ask_fmtr.Bld_str_many(ask_bfr, fmt, args)).Init_btns_(Gfui_dlg_msg_.Btn_ok).Init_ico_(Gfui_dlg_msg_.Ico_information);
 		display.syncExec(dlg);
 	}
 	public GfuiInvkCmd New_cmd_sync(GfoInvkAble invk) {return new Swt_GfuiInvkCmd_sync(display, invk);}

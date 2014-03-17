@@ -44,4 +44,49 @@ public class Xop_tblw_wkr_uncommon_tst {
 		,	"</table>"
 		));
 	}
+	@Test   public void Atrs_defect() {	// PURPOSE: < in atrs was causing premature termination; EX:en.w:Wikipedia:List of hoaxes on Wikipedia
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+			(	"{|id=\"a<b\""
+			,	"|a"
+			,	"|}"), String_.Concat_lines_nl_skipLast
+			( "<table id=\"a.3Cb\">"
+			, "  <tr>"
+			, "    <td>a"
+			, "    </td>"
+			, "  </tr>"
+			, "</table>"
+			, ""
+			));
+	}
+	@Test   public void Broken_lnki() {	// PURPOSE: broken lnki was not closing table properly; EX:en.w:Wikipedia:Changing_attribution_for_an_edit; DATE:2014-03-16
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+			( "{|"
+			, "|-"
+			, "|a"
+			, "|[[b|c"
+			, "|}"
+			, "d"
+			), String_.Concat_lines_nl_skipLast
+			( "<table>"
+			, "  <tr>"
+			, "    <td>a"
+			, "    </td>"
+			, "    <td>[[b|c"
+			, "    </td>"
+			, "  </tr>"
+			, "</table>"
+			, ""
+			, "<p>d"
+			, "</p>"
+			));
+	}
 }
+
+/*
+{|
+|-
+|a
+|[[b/c|d
+|}
+== f ==
+*/

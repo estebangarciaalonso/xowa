@@ -25,7 +25,7 @@ public class Xow_page_tid {
 				if		(ByteAry_.HasAtEnd(ttl, Ext_css))	return Tid_css;
 				else if (ByteAry_.HasAtEnd(ttl, Ext_js))	return Tid_js;
 				else										return Tid_wikitext;
-			case gplx.xowa.xtns.scribunto.Scrib_core_.Ns_id_module:
+			case gplx.xowa.xtns.scribunto.Scrib_xtn_mgr.Ns_id_module:
 				return	(ByteAry_.HasAtEnd(ttl, Ext_doc))
 					? Tid_wikitext : Tid_lua;
 			default:

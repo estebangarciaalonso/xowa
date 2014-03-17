@@ -22,12 +22,7 @@ public class Xog_view_data {
 		tmpl_stack_ary = ByteAry_.Ary_empty;
 		tmpl_stack_ary_len = tmpl_stack_ary_max = 0;
 		pages_recursed = false;
-//			lst_recurse_stack.Clear();
 	}
-//		private Hash_adp_bry lst_recurse_stack = Hash_adp_bry.cs_();
-//		public boolean Lst_recurse_has(byte[] page_bry) {return lst_recurse_stack.Has(page_bry);}
-//		public void Lst_recurse_add(byte[] page_bry) {lst_recurse_stack.AddKeyVal(page_bry);}
-//		public void Lst_recurse_del(byte[] page_bry) {lst_recurse_stack.Del(page_bry);}
 	public boolean Pages_recursed() {return pages_recursed;} public Xog_view_data Pages_recursed_(boolean v) {pages_recursed = v; return this;} private boolean pages_recursed;
 	public void Tmpl_stack_del() {--tmpl_stack_ary_len;}
 	public boolean Tmpl_stack_add(byte[] key) {

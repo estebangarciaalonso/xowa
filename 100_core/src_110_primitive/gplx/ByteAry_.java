@@ -221,7 +221,8 @@ public class ByteAry_ {
 	}
 	public static byte[] Mid(byte[] src, int bgn, int end) {
 		try {
-			byte[] rv = new byte[end - bgn];
+			int len = end - bgn; if (len == 0) return ByteAry_.Empty;
+			byte[] rv = new byte[len];
 			for (int i = bgn; i < end; i++)
 				rv[i - bgn] = src[i];
 			return rv;

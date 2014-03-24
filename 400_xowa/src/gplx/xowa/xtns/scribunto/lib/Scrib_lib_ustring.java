@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.scribunto.lib; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*;
 import gplx.texts.*;
 public class Scrib_lib_ustring implements Scrib_lib {
-	public Scrib_lib_ustring(Scrib_core core) {this.core = core; gsub_mgr = new Scrib_lib_ustring_gsub_mgr(core, regx_converter);} Scrib_core core; Scrib_lib_ustring_gsub_mgr gsub_mgr;
-	public Scrib_lua_mod Mod() {return mod;} Scrib_lua_mod mod;
+	public Scrib_lib_ustring(Scrib_core core) {this.core = core; gsub_mgr = new Scrib_lib_ustring_gsub_mgr(core, regx_converter);} private Scrib_core core; Scrib_lib_ustring_gsub_mgr gsub_mgr;
+	public Scrib_lua_mod Mod() {return mod;} private Scrib_lua_mod mod;
 	public int String_len_max() {return string_len_max;} public Scrib_lib_ustring String_len_max_(int v) {string_len_max = v; return this;} private int string_len_max = Xoa_page_.Page_len_max;
 	public int Pattern_len_max() {return pattern_len_max;} public Scrib_lib_ustring Pattern_len_max_(int v) {pattern_len_max = v; return this;} private int pattern_len_max = 10000;
 	private Scrib_regx_converter regx_converter = new Scrib_regx_converter();
@@ -148,7 +148,7 @@ public class Scrib_lib_ustring implements Scrib_lib {
 	static final int Base1 = 1, End_adj = 1;
 }
 class Scrib_lib_ustring_gsub_mgr {
-	public Scrib_lib_ustring_gsub_mgr(Scrib_core core, Scrib_regx_converter regx_converter) {this.core = core; this.regx_converter = regx_converter;} Scrib_core core; Scrib_regx_converter regx_converter;
+	public Scrib_lib_ustring_gsub_mgr(Scrib_core core, Scrib_regx_converter regx_converter) {this.core = core; this.regx_converter = regx_converter;} private Scrib_core core; Scrib_regx_converter regx_converter;
 	private byte tmp_repl_tid = Repl_tid_null; private byte[] tmp_repl_bry = null;
 	private HashAdp repl_hash = null; private Scrib_lua_proc repl_func = null; private ByteAryBfr tmp_bfr;
 	int repl_count = 0;

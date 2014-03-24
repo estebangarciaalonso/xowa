@@ -36,7 +36,7 @@ public class Xosrv_server implements GfoInvkAble {
 
 		html_box = new Gxw_html_server(this);
 		Gfo_usr_dlg_ui usr_dlg_ui = app.Usr_dlg().Ui_wkr();
-		app.Gui_mgr().Kit_(gplx.gfui.Gfui_kit_base._.Tid_(gplx.gfui.Gfui_kit_.TypeId_swt));
+		app.Gui_mgr().Kit_(gplx.gfui.Gfui_kit_.Mem());
 		app.Usr_dlg().Ui_wkr_(usr_dlg_ui);
 		app.Gui_mgr().Main_win().Html_box().Under_html_(html_box);
 

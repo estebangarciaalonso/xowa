@@ -169,44 +169,6 @@ public class Xoh_html_wtr_tst {
 			,	"</table>"
 			));
 	}
-	@Test  public void Tblw_exc_tb_tr_tb() {	// PURPOSE: if <tr><table>, ignore <table>; DATE:2014-02-02
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
-			( "{|"
-			, "|-"
-			, "{|"
-			, "|}"
-			, "|}"), String_.Concat_lines_nl_skipLast
-			( "<table>"
-			, "  <tr>"
-			, "  </tr>"
-			, "</table>"
-			, ""
-			));
-	}
-	@Test  public void Tblw_exc_tb_tc_tb() {
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
-			( "{|"
-			, 	"|+"
-			, 	"{|"
-			,	"|}"
-			, "|}"), String_.Concat_lines_nl_skipLast
-			( "<table>"
-			, "  <caption>"
-			, "  </caption>"
-			, "  <tr>"
-			, "    <td>"
-			, "      <table>"
-			, "        <tr>"
-			, "          <td>"
-			, "          </td>"
-			, "        </tr>"
-			, "      </table>"
-			, "    </td>"
-			, "  </tr>"
-			, "</table>"
-			, ""
-			));
-	}
 	@Test  public void Para_hdr_list() {
 		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast

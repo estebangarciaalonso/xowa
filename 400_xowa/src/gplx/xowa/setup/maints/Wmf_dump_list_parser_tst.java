@@ -23,22 +23,22 @@ public class Wmf_dump_list_parser_tst {
 	@Test  public void Parse() {
 		fxt.Test_parse
 		(	"<li>2013-07-17 00:32:33 <a href=\"http://dumps.wikimedia.org/enwiki/20130708\">enwiki</a>: <span class=\"done\">Dump complete</span></li>"
-		,	fxt.itm("enwiki", "20130708", "y", "Dump complete", "2013-07-17 00:32:33")
+		,	fxt.itm("enwiki", "20130708", Wmf_dump_itm.Status_tid_complete, "Dump complete", "2013-07-17 00:32:33")
 		);
 		fxt.Test_parse(String_.Concat_lines_nl
 		(	"<li>2013-07-24 02:02:13 <a href=\"http://dumps.wikimedia.org/kawiki/20130724\">kawiki</a>: <span class=\"in-progress\">Dump in progress</span></li>"
 		,	"<ul><li class=\"in-progress\"><span class=\"updates\">2013-07-24 00:54:55</span> <span class=\"status\">in-progress</span> <span class=\"title\">All pages with complete page edit history (.bz2)</span><div class=\"progress\">2013-07-24 02:02:13: kawiki (ID 18587) 22046 pages (5.5|11140.9/sec all|curr), 869000 revs (215.2|505.3/sec all|curr), 99.9%|99.9% prefetched (all|curr), ETA 2013-07-24 04:09:41 [max 2514872]</div>"
 		,	"<ul><li class=\"file\">kawiki-20130724-pages-meta-history.xml.bz2 245.2 MB (written) </li></ul></li></ul>"
 		)
-		,	fxt.itm("kawiki", "20130724", "n", "Dump in progress", "2013-07-24 02:02:13")
+		,	fxt.itm("kawiki", "20130724", Wmf_dump_itm.Status_tid_working, "Dump in progress", "2013-07-24 02:02:13")
 		);
 		fxt.Test_parse
 		(	"<li>2013-07-17 00:32:33 <a href=\"http://dumps.wikimedia.org/enwiki/20130708\">enwiki</a>: <span class=\"done\">Error</span></li>"
-		,	fxt.itm("enwiki", "20130708", "n", "Error", "2013-07-17 00:32:33")
+		,	fxt.itm("enwiki", "20130708", Wmf_dump_itm.Status_tid_error, "Error", "2013-07-17 00:32:33")
 		);
 		fxt.Test_parse
 		(	"<li>2013-11-28 06:08:56 <a href=\"zh_classicalwiki/20131128\">zh_classicalwiki</a>: <span class='done'>Dump complete</span></li>"
-		,	fxt.itm("zh-classicalwiki", "20131128", "y", "Dump complete", "2013-11-28 06:08:56")
+		,	fxt.itm("zh-classicalwiki", "20131128", Wmf_dump_itm.Status_tid_complete, "Dump complete", "2013-11-28 06:08:56")
 		);
 	}
 //		@Test  public void Update() {
@@ -98,15 +98,15 @@ public class Wmf_dump_list_parser_tst {
 //			if		(ByteAry_.Eq(v, Xow_wiki_domain_.Key_wikimediafoundation_bry))	return ByteAry_.new_ascii_("Wikimedia Foundation");
 //			else if	(ByteAry_.Eq(v, Xow_wiki_domain_.Key_species_bry))				return ByteAry_.new_ascii_("Wikispecies");
 //			else if	(ByteAry_.Eq(v, Xow_wiki_domain_.Key_mediawiki_bry))			return ByteAry_.new_ascii_("MediaWiki");
-//			else																	return ByteAry_.Add(Byte_ascii.Uppercase(v[0]), ByteAry_.Mid(v, 1, v.length));
+//			else																	return ByteAry_.Add(Byte_ascii.Case_upper(v[0]), ByteAry_.Mid(v, 1, v.length));
 //		}
 }
 class Wmf_dump_list_parser_fxt {
 	public void Clear() {}
 	private Wmf_dump_list_parser parser = new Wmf_dump_list_parser();
-	public String itm(String wiki_abrv, String dump_date, String status_done, String status_msg, String status_time) {
+	public String itm(String wiki_abrv, String dump_date, byte status_done, String status_msg, String status_time) {
 		return String_.Concat_with_str("\n", wiki_abrv, dump_date
-		, status_done
+		, Byte_.XtoStr(status_done)
 		, status_msg
 		, status_time
 		);
@@ -126,7 +126,7 @@ class Wmf_dump_list_parser_fxt {
 		DateAdp status_time = itm.Status_time();
 		String status_time_str = status_time == null ? "" : status_time.XtoStr_fmt(DateAdp_.Fmt_iso8561_date_time); 
 		return String_.Concat_with_str("\n", String_.new_ascii_(itm.Wiki_abrv()), itm.Dump_date().XtoStr_fmt("yyyyMMdd")
-			, Yn.X_to_str(itm.Status_completed())
+			, Byte_.XtoStr(itm.Status_tid())
 			, String_.new_ascii_(itm.Status_msg())
 			, status_time_str
 			);

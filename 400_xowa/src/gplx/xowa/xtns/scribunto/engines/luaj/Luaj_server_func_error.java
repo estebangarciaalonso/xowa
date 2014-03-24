@@ -16,17 +16,21 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto.engines.luaj; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.scribunto.engines.*;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
-public class Luaj_recv_mgr extends OneArgFunction {
-	private Luaj_engine engine;
-	public void Engine_(Luaj_engine v) {this.engine = v;}
-	public LuaValue call(LuaValue tbl_val) {
-		LuaTable tbl = (LuaTable)tbl_val;
-		String op = Luaj_value_.Get_val_as_str(tbl, "op");
-		if (!String_.Eq(op, "call")) throw Err_.new_("luaj_recvr only processes op calls");
-		return engine.Server_recv_call(tbl);
+import org.luaj.vm2.*; import org.luaj.vm2.lib.*;
+public class Luaj_server_func_error extends TwoArgFunction {
+	private Scrib_core core;
+	private boolean debug_enabled;
+	private LuaClosure attach_trace_func;
+	public void Debug_enabled_(boolean v) {this.debug_enabled = v;}
+	public void Init(Scrib_core core, LuaTable server) {	// NOTE: can't hook into '(String_.Eq(op, "error"))' b/c luaj always returns "error in error handling"; instead hook into attachTrace
+		this.core = core;
+		LuaValue mt = server.getmetatable();
+		attach_trace_func = (LuaClosure)server.get("attachTrace");
+		mt.set("attachTrace", this);
 	}
-	public static Luaj_recv_mgr _ = new Luaj_recv_mgr();
+	public LuaValue call(LuaValue server, LuaValue error) {
+		String traceback = debug_enabled ? DebugLib.traceback(0) : "<luaj_debug_not_enabled>";
+		core.Handle_error(error.tojstring(), traceback);
+		return attach_trace_func.call(server, error);
+	}
 }

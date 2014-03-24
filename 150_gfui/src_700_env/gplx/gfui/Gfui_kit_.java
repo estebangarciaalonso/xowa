@@ -17,13 +17,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
 public class Gfui_kit_ {
-	public static final byte TypeId_default = 1, TypeId_swt = 2, TypeId_drd = 3;
-	static Gfui_kit swt, basic;
-	public static final String Cfg_HtmlBox = "HtmlBox";
-	public static final String Key_basic = "default";
-	public static Gfui_kit key_(String key) {
-		if		(String_.Eq(key, "swt"))		{if (swt == null) {swt = Swt_kit._;} return swt;}	
-		else if	(String_.Eq(key, Key_basic))	{if (basic == null) {basic = Gfui_kit_base._;} return basic;}
-		else throw Err_.unhandled(key);
+	public static final byte Mem_tid = 0, Swing_tid = 1, Swt_tid = 2, Android_tid = 3;
+	public static Gfui_kit Mem()	{return mem_kit;} private static final Gfui_kit mem_kit = Mem_kit._;
+	public static Gfui_kit Swt()	{if (swt_kit == null) swt_kit = Swt_kit._;	return swt_kit;} private static Gfui_kit swt_kit; // NOTE: late-binding else swing apps will fail (since swt jar is not deployed)
+	public static Gfui_kit Swing()	{if (swing_kit == null) swing_kit = Swing_kit._; return swing_kit;} private static Gfui_kit swing_kit;
+	public static Gfui_kit Get_by_key(String key) {
+		if		(String_.Eq(key, Mem().Key()))			return Mem();
+		else if	(String_.Eq(key, Swt().Key()))			return Swt();
+		else if	(String_.Eq(key, Swing().Key()))		return Swing();
+		else											throw Err_.unhandled(key);
 	}
+	public static final String Cfg_HtmlBox = "HtmlBox";
 }

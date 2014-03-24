@@ -19,13 +19,14 @@ package gplx.xowa.xtns.scribunto.engines.luaj; import gplx.*; import gplx.xowa.*
 import org.luaj.vm2.*; import org.luaj.vm2.lib.*; import org.luaj.vm2.lib.jse.*;
 import gplx.xowa.xtns.scribunto.engines.process.*;
 public class Luaj_engine implements Scrib_engine {
-	private Luaj_server server = new Luaj_server();
+	private Luaj_server server;
 	private Scrib_proc_mgr proc_mgr;
 	private Scrib_core core;
-	public Luaj_engine(Scrib_core core) {
+	public Luaj_engine(Xoa_app app, Scrib_core core, boolean debug_enabled) {
 		this.core = core;
+		server = new Luaj_server(core, debug_enabled);
 		proc_mgr = core.Proc_mgr();
-		Luaj_recv_mgr._.Engine_(this);
+		Luaj_server_func_recv._.Engine_(this);
 	}
 	public Scrib_server Server() {return server;} public void Server_(Scrib_server v) {server = (Luaj_server)v;} 
 	public boolean Dbg_print() {return dbg_print;} public void Dbg_print_(boolean v) {dbg_print = v;} private boolean dbg_print;

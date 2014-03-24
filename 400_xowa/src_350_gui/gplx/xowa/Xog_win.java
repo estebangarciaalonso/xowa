@@ -243,6 +243,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		Exec_url_exec(app.Gui_mgr().Win_opts().Search_box_fmtr().Bld_str_many(search_box.Text()));
 	}
 	public void Exec_page_reload_imgs() {
+		if (page == null) return;	// TEST: occurs during Xog_win_mgr_tst
 		if (page.Url().Anchor_str() != null) GfoInvkAble_.InvkCmd_val(async_cmd, Invk_html_box_select_by_id, page.Url().Anchor_str());
 		if (gui_wtr.Canceled()) {gui_wtr.Prog_none(GRP_KEY, "imgs.done", ""); app.Log_wtr().Queue_enabled_(false); return;}
 		Xow_wiki wiki = page.Wiki();
@@ -301,8 +302,16 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			page.Wiki().Db_mgr().Save_mgr().Data_create(page.Ttl(), new_text);
 			page.Edit_mode_update_();	// set to update so that next save does not try to create
 		}
-		else
+		else {
 			page.Wiki().Db_mgr().Save_mgr().Data_update(page, new_text);
+			int ns_id = page.Ttl().Ns().Id();
+			switch (ns_id) {
+				case Xow_ns_.Id_template: case Xow_ns_.Id_mediaWiki: case gplx.xowa.xtns.scribunto.Scrib_xtn_mgr.Ns_id_module:	// invalidate caches if "code" is updated
+					gplx.xowa.xtns.scribunto.Scrib_core.Core_invalidate();
+					page.Wiki().Cache_mgr().Free_mem_all();
+					break;
+			}
+		}
 		page.Data_raw_(new_text);
 		page.Wiki().ParsePage_root(page, true);			// refresh html
 		if (page.Ttl().Ns().Id_tmpl()) {	// clear cache (if template)
@@ -563,7 +572,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		url_exec_btn		= new_btn(kit, win, img_dir, "url_exec_btn", "url_exec.png", Xol_msg_itm_.Id_xowa_window_url_btn_tooltip);
 		search_box			= new_txt(kit, win, ui_font, "search_box", Xol_msg_itm_.Id_xowa_window_search_box_tooltip, true);
 		search_exec_btn		= new_btn(kit, win, img_dir, "search_exec_btn", "search_exec.png", Xol_msg_itm_.Id_xowa_window_search_btn_tooltip);
-		html_box			= kit.New_html_box("html_box", win);
+		html_box			= kit.New_html("html_box", win);
 		find_close_btn		= new_btn(kit, win, img_dir, "find_close_btn", "find_close.png", Xol_msg_itm_.Id_xowa_window_find_close_btn_tooltip);
 		find_box			= new_txt(kit, win, ui_font, "find_box", Xol_msg_itm_.Id_xowa_window_find_box_tooltip, true);
 		find_fwd_btn		= new_btn(kit, win, img_dir, "find_fwd_btn", "find_fwd.png", Xol_msg_itm_.Id_xowa_window_find_fwd_btn_tooltip);

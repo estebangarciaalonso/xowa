@@ -23,7 +23,7 @@ public class Scrib_core {
 	public Scrib_core(Xoa_app app, Xop_ctx ctx) {// NOTE: ctx needed for language reg
 		this.app = app; this.ctx = ctx;
 		this.wiki = ctx.Wiki(); this.page = ctx.Page();	// NOTE: wiki / page needed for title reg; DATE:2014-02-05
-		this.Engine_(Scrib_engine_type.Type_lua);	// TEST: default to lua
+		this.Engine_(Scrib_engine_type.Type_lua, false);	// TEST: default to lua
 		fsys_mgr.Root_dir_(app.Fsys_mgr().Root_dir().GenSubDir_nest("bin", "any", "lua", "mediawiki", "extensions", "Scribunto"));
 		lib_mw = new Scrib_lib_mw(this);
 		lib_uri = new Scrib_lib_uri(this); 
@@ -33,6 +33,7 @@ public class Scrib_core {
  		lib_title = new Scrib_lib_title(this);
  		lib_message = new Scrib_lib_message(this);
  		lib_text = new Scrib_lib_text(this);
+		lib_html = new Scrib_lib_html(this);
 		lib_wikibase = new Scrib_lib_wikibase(this);
 		lib_wikibase_entity = new Scrib_lib_wikibase_entity(this);
 	}
@@ -41,11 +42,11 @@ public class Scrib_core {
 	@gplx.Internal protected void Wiki_(Xow_wiki v) {this.wiki = v;} // TEST:
 	public Xoa_page Page() {return page;} private Xoa_page page;
 	public boolean Enabled() {return enabled;} private boolean enabled = true;
-	private void Engine_(byte cmd) {
-		if		(cmd == Scrib_engine_type.Type_lua)
+	private void Engine_(byte type, boolean luaj_debug_enabled) {
+		if		(type == Scrib_engine_type.Type_lua)
 			engine = new gplx.xowa.xtns.scribunto.engines.process.Process_engine(app, this);
-		else if (cmd == Scrib_engine_type.Type_luaj)
-			engine = new gplx.xowa.xtns.scribunto.engines.luaj.Luaj_engine(this);
+		else if (type == Scrib_engine_type.Type_luaj)
+			engine = new gplx.xowa.xtns.scribunto.engines.luaj.Luaj_engine(app, this, luaj_debug_enabled);
 	}
 	public Scrib_fsys_mgr Fsys_mgr() {return fsys_mgr;} private Scrib_fsys_mgr fsys_mgr = new Scrib_fsys_mgr();
 	public Scrib_proc_mgr Proc_mgr() {return proc_mgr;} private Scrib_proc_mgr proc_mgr = new Scrib_proc_mgr();
@@ -58,11 +59,12 @@ public class Scrib_core {
 	public Scrib_lib_title Lib_title() {return lib_title;} private Scrib_lib_title lib_title;
 	public Scrib_lib_message Lib_message() {return lib_message;} private Scrib_lib_message lib_message;
 	public Scrib_lib_text Lib_text() {return lib_text;} private Scrib_lib_text lib_text;
+	public Scrib_lib_html Lib_html() {return lib_html;} private Scrib_lib_html lib_html;
 	public Scrib_lib_wikibase Lib_wikibase() {return lib_wikibase;} private Scrib_lib_wikibase lib_wikibase;
 	public Scrib_lib_wikibase_entity Lib_wikibase_entity() {return lib_wikibase_entity;} private Scrib_lib_wikibase_entity lib_wikibase_entity;
 	public Scrib_core Init() {	// REF:LuaCommon.php!Load
 		Scrib_xtn_mgr opts = (Scrib_xtn_mgr)app.Xtn_mgr().Get_or_fail(Scrib_xtn_mgr.XTN_KEY);
-		Engine_(opts.Lua_engine_type());
+		Engine_(opts.Engine_type(), opts.Luaj_debug_enabled());
 		engine.Server().Server_timeout_(opts.Lua_timeout()).Server_timeout_polling_(opts.Lua_timeout_polling()).Server_timeout_busy_wait_(opts.Lua_timeout_busy_wait());
 		enabled = opts.Enabled();
 		Io_url root_dir = fsys_mgr.Root_dir(), script_dir = fsys_mgr.Script_dir();
@@ -71,7 +73,7 @@ public class Scrib_core {
 		,	root_dir.GenSubFil_nest("engines", "LuaStandalone", "mw_main.lua").Raw()
 		,	root_dir.Raw()
 		);
-		Init_register(script_dir, lib_mw, lib_uri, lib_ustring, lib_language, lib_site, lib_title, lib_text, lib_message, lib_wikibase, lib_wikibase_entity);
+		Init_register(script_dir, lib_mw, lib_uri, lib_ustring, lib_language, lib_site, lib_title, lib_text, lib_html, lib_message, lib_wikibase, lib_wikibase_entity);
 		return this;
 	}
 	private void Init_register(Io_url script_dir, Scrib_lib... ary) {
@@ -79,7 +81,7 @@ public class Scrib_core {
 		for (int i = 0; i < len; i++)
 			ary[i].Register(this, script_dir);
 	}
-	public void Term() {engine.Server().Term();}
+	public void Term() {engine.Server().Term(); mods.Clear();}
 	public void When_page_changed(Xoa_page page) {
 		mods.Clear();	// clear any loaded modules
 		Xow_wiki wiki = page.Wiki();
@@ -98,7 +100,8 @@ public class Scrib_core {
 		}
 		lib_uri.Notify_page_changed();
 		lib_title.Notify_page_changed();
-	}	byte[] cur_wiki = ByteAry_.Empty; 
+	}	
+	public byte[] Cur_wiki() {return cur_wiki;} private byte[] cur_wiki = ByteAry_.Empty; 
 	public byte[] Cur_lang() {return cur_lang;} private byte[] cur_lang = ByteAry_.Empty;
 	public Scrib_lua_mod RegisterInterface(Scrib_lib lib, Io_url url, KeyVal... args) {
 		this.RegisterLibrary(lib.Procs());
@@ -144,8 +147,9 @@ public class Scrib_core {
 		cur_frame_invoke = old_frame_invoke;
 		return rv;
 	}
+	public byte[] Cur_src() {return cur_src;} private byte[] cur_src; // only used for error reporting
 	public void Invoke(Xow_wiki wiki, Xop_ctx ctx, byte[] src, Xot_invk owner_frame, Xot_invk invoke_frame, ByteAryBfr bfr, byte[] mod_name, byte[] mod_text, byte[] fnc_name) {
-		cur_frame_owner = owner_frame; this.wiki = wiki; this.ctx = ctx;
+		cur_frame_owner = owner_frame; this.wiki = wiki; this.ctx = ctx; this.cur_src = src;
 		lib_mw.Invoke_bgn(wiki, ctx, src);
 		try {
 			Scrib_lua_mod mod = Mods_get_or_new(mod_name, mod_text);
@@ -167,9 +171,26 @@ public class Scrib_core {
 		return rv;
 	}
 	public static Scrib_core Core() {return core;} public static Scrib_core Core_new_(Xoa_app app, Xop_ctx ctx) {core = new Scrib_core(app, ctx); return core;} private static Scrib_core core;
+	public void Handle_error(String err, String traceback) {
+		byte[] excerpt = ByteAry_.Empty;
+		try {
+			Xot_invk src_frame = cur_frame_invoke;
+			excerpt = ByteAry_.Mid_by_len_safe(cur_src, src_frame.Src_bgn(), src_frame.Src_end());
+		} catch (Exception e) {Err_.Noop(e);}
+		app.Usr_dlg().Warn_many("", "", "lua error; page=~{0} excerpt=~{1} err=~{2} ~{3}"
+		, page.Ttl().Page_db_as_str()
+		, String_.new_utf8_(excerpt)
+		, err
+		, traceback
+		);
+	}
 	public static void Core_page_changed(Xoa_page page) {
-		if (core != null)
-			core.When_page_changed(page);
+		if (core != null) {
+			if (ByteAry_.Eq(page.Wiki().Domain_bry(), core.Cur_wiki()))	// current page is in same wiki as last page
+				core.When_page_changed(page);
+			else														// current page is in different wiki
+				Core_invalidate();										// invalidate scrib engine; note that lua will cache chunks by Module name and two modules in two different wikis can have the same name, but different data: EX:Module:Citation/CS1/Configuration and enwiki / zhwiki; DATE:2014-03-21
+		}
 	}
 	public static void Core_invalidate() {if (core != null) core.Term(); core = null;}
 	public static final String Frame_key_current = "current", Frame_key_parent = "parent";

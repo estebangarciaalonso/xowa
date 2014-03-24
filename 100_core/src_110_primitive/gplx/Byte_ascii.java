@@ -54,13 +54,13 @@ public class Byte_ascii {
 		}
 	}
 	public static int X_to_digit(byte b) {return b - Byte_ascii.Num_0;}
-	public static byte Uppercase(byte b) {
+	public static byte Case_upper(byte b) {
 		return b > 96 && b < 123
 			? (byte)(b - 32)
 			: b
 		  ;
 	}
-	public static byte Lowercase(byte b) {
+	public static byte Case_lower(byte b) {
 		return b > 64 && b < 91
 			? (byte)(b + 32)
 			: b

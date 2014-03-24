@@ -27,6 +27,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 	public int Tmpl_subst_end() {return tmpl_subst_end;} private int tmpl_subst_end;
 	public Xot_invk_tkn Tmpl_subst_props_(byte type, int bgn, int end) {defn_tid = type; tmpl_subst_bgn = bgn; tmpl_subst_end = end; return this;}
 	public Xot_defn Tmpl_defn() {return tmpl_defn;} public Xot_invk_tkn Tmpl_defn_(Xot_defn v) {tmpl_defn = v; return this;} private Xot_defn tmpl_defn = Xot_defn_.Null;
+	public byte[] Frame_ttl() {return frame_ttl;} public void Frame_ttl_(byte[] v) {frame_ttl = v;} private byte[] frame_ttl;
 	@Override public void Tmpl_fmt(Xop_ctx ctx, byte[] src, Xot_fmtr fmtr) {fmtr.Reg_tmpl(ctx, src, name_tkn, args_len, args);}
 	@Override public void Tmpl_compile(Xop_ctx ctx, byte[] src, Xot_compile_data prep_data) {
 		name_tkn.Tmpl_compile(ctx, src, prep_data);
@@ -217,7 +218,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 			default:
 				Xot_defn_tmpl defn_tmpl = (Xot_defn_tmpl)defn;
 				if (defn_tmpl.Root() == null) defn_tmpl.Parse_tmpl(ctx);	// NOTE: defn_tmpl.Root can be null after clearing out cache; must be non-null else will fail in trace; DATE:2013-02-01
-				Xot_invk invk_tmpl = Xot_defn_tmpl_.CopyNew(ctx, defn_tmpl, this, caller, src);
+				Xot_invk invk_tmpl = Xot_defn_tmpl_.CopyNew(ctx, defn_tmpl, this, caller, src, name_ary);
 				trace.Trace_bgn(ctx, src, name_ary, caller, invk_tmpl, defn);
 
 //					ByteAryBfr bfr_tmpl = ByteAryBfr.new_();
@@ -254,9 +255,12 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 	}	private static final byte[] Ary_unknown_bgn = ByteAry_.new_ascii_("(? [["), Ary_unknown_end = ByteAry_.new_ascii_("]] ?)"), Ary_dynamic_is_blank = ByteAry_.new_ascii_("dynamic is blank");
 	public static void Eval_func(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk invk, ByteAryBfr bfr, Xot_defn defn, byte[] argx_ary) {
 		Pf_func_base defn_func = (Pf_func_base)defn;
-		defn_func = (Pf_func_base)defn_func.New(defn_func.Id(), defn_func.Name());	// NOTE: always make copy b/c argx_ary may be dynamic
+		int defn_func_id = defn_func.Id();
+		defn_func = (Pf_func_base)defn_func.New(defn_func_id, defn_func.Name());	// NOTE: always make copy b/c argx_ary may be dynamic
 		if (argx_ary != ByteAry_.Empty) defn_func.Argx_dat_(argx_ary);
 		defn_func.Eval_argx(ctx, src, caller, invk);
+		if (defn_func_id == Xol_kwd_grp_.Id_invoke)	// NOTE: if #invoke, set frame_ttl to argx, not name; EX:{{#invoke:A}}
+			invk.Frame_ttl_(defn_func.Argx_dat());
 		ByteAryBfr bfr_func = ByteAryBfr.new_();
 		defn_func.Func_evaluate(ctx, src, caller, invk, bfr_func);
 		ctx.Tmpl_prepend_nl(bfr, bfr_func.Bry(), bfr_func.Len());
@@ -305,7 +309,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 	}
 	private boolean Eval_sub(Xop_ctx ctx, Xot_defn_tmpl transclude_tmpl, Xot_invk caller, byte[] src, ByteAryBfr doc) {
 		boolean rv = false;
-		Xot_invk tmp_tmpl = Xot_defn_tmpl_.CopyNew(ctx, transclude_tmpl, this, caller, src);
+		Xot_invk tmp_tmpl = Xot_defn_tmpl_.CopyNew(ctx, transclude_tmpl, this, caller, src, transclude_tmpl.Name());
 		ByteAryBfr tmp_bfr = ByteAryBfr.new_();
 		rv = transclude_tmpl.Tmpl_evaluate(ctx, tmp_tmpl, tmp_bfr);
 		ctx.Tmpl_prepend_nl(doc, tmp_bfr.Bry(), tmp_bfr.Len());

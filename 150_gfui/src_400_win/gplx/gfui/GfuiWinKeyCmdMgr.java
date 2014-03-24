@@ -18,7 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.gfui; import gplx.*;
 import gplx.lists.*; /*HashAdp_list*/
 class GfuiWinKeyCmdMgr implements GfuiWinOpenAble, GfoInvkAble, GfoEvObj {
-	public GfoEvMgr EvMgr() {if (evMgr == null) evMgr = GfoEvMgr.new_(this); return evMgr;} GfoEvMgr evMgr;
+	private HashAdp_list listHash = HashAdp_list.new_();
+	public GfoEvMgr EvMgr() {if (evMgr == null) evMgr = GfoEvMgr.new_(this); return evMgr;} private GfoEvMgr evMgr;
 	public void Open_exec(GfuiWin form, GfuiElemBase owner, GfuiElemBase sub) {
 		int keyVal = sub.Click_key().Val(); if (sub.Click_key().Eq(IptKey_.None)) return;
 		listHash.AddInList(keyVal, sub);
@@ -45,7 +46,6 @@ class GfuiWinKeyCmdMgr implements GfuiWinOpenAble, GfoInvkAble, GfoEvObj {
 		//boolean handled = CheckForHotKey(IptEventData.cast_(msg.Val())); msg.Fwd_set(!handled); // TOMBSTONE: somehow cause alt-F4 to continue processing and dispose form
 		return this;
 	}	@gplx.Internal protected static final String CheckForHotKey_cmd = "CheckForHotKey_cmd";
-	HashAdp_list listHash = HashAdp_list.new_();
 
 	public static GfuiWinKeyCmdMgr new_() {return new GfuiWinKeyCmdMgr();} GfuiWinKeyCmdMgr() {}
 	public static int ExtractPosFromText(String raw) {

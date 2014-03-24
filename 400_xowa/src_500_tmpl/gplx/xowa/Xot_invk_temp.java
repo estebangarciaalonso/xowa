@@ -26,6 +26,7 @@ public class Xot_invk_temp implements Xot_invk {
 	public Xot_invk_temp(boolean root_frame) {this.root_frame = root_frame;}
 	public boolean Root_frame() {return root_frame;} private boolean root_frame;
 	public Arg_nde_tkn Name_tkn() {return name_tkn;} Arg_nde_tkn name_tkn;
+	public byte[] Frame_ttl() {return frame_ttl;} public void Frame_ttl_(byte[] v) {frame_ttl = v;} private byte[] frame_ttl;
 	public int Src_bgn() {return src_bgn;} private int src_bgn;
 	public int Src_end() {return src_end;} private int src_end;
 	public int Args_len() {return list.Count();}

@@ -137,7 +137,6 @@ public class Xop_apos_wkr_tst {
 		fxt.Test_parse_page_all_str("L''''A'''",	"L'<b>A</b>");
 		fxt.Test_parse_page_all_str("L'''A''",	"L'<i>A</i>");
 	}
-
 //	@Test  public void Mix_lnke() {	// FUTURE: requires rewrite of apos
 //		fxt.Test_parse_page_wiki("''a[irc://b c''d''e]f''"
 //			, fxt.tkn_apos_(0, 2, Xop_apos_tkn_.Cmd_i_bgn)

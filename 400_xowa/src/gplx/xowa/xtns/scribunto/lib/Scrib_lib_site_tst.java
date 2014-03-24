@@ -58,8 +58,7 @@ public class Scrib_lib_site_tst {
 		,	"      -1;Special;Special;false;false;false;false;true;false;true;false;null;{};-1;"
 		,	"      0;;;false;false;false;true;true;true;true;false;null;{};0;1;1;(Main);"
 		,	"      1;Talk;Talk;false;false;false;false;true;true;false;true;null;{};1;1;0;"
-		,	"      828;Module;Module;false;false;false;false;true;true;true;false;null;"
-		,	"        Module;828;829;829;"
+		,	"      828;Module;Module;false;false;false;false;true;true;true;false;null;{};828;829;829;"
 		,	"      829;Module talk;Module_talk;false;false;false;false;true;true;false;true;null;{};829;829;828;"
 		,	"    1;2;3;4;5;6;7;8"
 		));

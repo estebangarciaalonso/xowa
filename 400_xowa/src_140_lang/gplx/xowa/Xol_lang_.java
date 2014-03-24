@@ -51,11 +51,6 @@ public class Xol_lang_ {
 		lang.Xatrs_ref().Add_str_obj("group", ByteVal.new_(Ref_nde.Xatr_id_group));
 		lang.Xatrs_ref().Add_str_obj("follow", ByteVal.new_(Ref_nde.Xatr_id_follow));
 		lang.Xatrs_references().Add_str_obj("group", ByteVal.new_(References_nde.Xatr_id_group));
-		lang.Xatrs_gallery().Add_str_obj("perrow", ByteVal.new_(Gallery_nde.Xatr_id_perrow));
-		lang.Xatrs_gallery().Add_str_obj("widths", ByteVal.new_(Gallery_nde.Xatr_id_widths));
-		lang.Xatrs_gallery().Add_str_obj("heights", ByteVal.new_(Gallery_nde.Xatr_id_heights));
-		lang.Xatrs_gallery().Add_str_obj("mode", ByteVal.new_(Gallery_nde.Xatr_id_mode));
-
 Xol_kwd_mgr kwd_mgr = lang.Kwd_mgr();
 kwd_mgr.New(Bool_.Y, Xol_kwd_grp_.Id_utc_year										, "CURRENTYEAR");
 kwd_mgr.New(Bool_.Y, Xol_kwd_grp_.Id_utc_month_int_len2								, "CURRENTMONTH", "CURRENTMONTH2");

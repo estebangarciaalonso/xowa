@@ -109,6 +109,11 @@ class Usr_log_fil {
 	public void Add(String text) {sb.Add(text);} String_bldr sb = String_bldr_.new_();
 	public void Flush() {
 		if (sb.Count() == 0) return;
-		Io_mgr._.AppendFilStr(url, sb.XtoStrAndClear());
+		try {
+			Io_mgr._.AppendFilStr(url, sb.XtoStrAndClear());
+		}
+		catch (Exception e) {
+			ConsoleAdp._.WriteLine(Err_.Message_gplx_brief(e));
+		}
 	}
 }

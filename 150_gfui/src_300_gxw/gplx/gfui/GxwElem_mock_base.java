@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
-class GxwElem_mock_base implements GxwElem {
+public class GxwElem_mock_base implements GxwElem {
 	public GxwCore_base Core() {return ctrlMgr;} final GxwCore_mock ctrlMgr = new GxwCore_mock();
 	public GxwCbkHost Host() {return host;} public void Host_set(GxwCbkHost host) {this.host = host;} GxwCbkHost host = GxwCbkHost_.Null;
 	public String TextVal() {return text;} public void TextVal_set(String v) {text = v;} private String text = "";
@@ -29,18 +29,6 @@ class GxwElem_mock_base implements GxwElem {
 
 	ListAdp list = ListAdp_.new_();
 	public static GxwElem_mock_base new_() {return new GxwElem_mock_base();} protected GxwElem_mock_base() {}
-}
-class MockForm extends GxwElem_mock_base implements GxwWin {
-	public IconAdp IconWin() {return null;} public void IconWin_set(IconAdp v) {}
-	public void ShowWin() {}
-	public void CloseWin() {}
-	public void HideWin() {}
-	public boolean Maximized() {return false;} public void Maximized_(boolean v) {}
-	public boolean Minimized() {return false;} public void Minimized_(boolean v) {}
-	public boolean Pin() {return pin;} public void Pin_set(boolean val) {pin = val;} private boolean pin;
-	public void OpenedCmd_set(GfoInvkAbleCmd v) {}
-	public void TaskbarVisible_set(boolean val) {}
-	public void TaskbarParkingWindowFix(GxwElem form) {}
 }
 class MockTextBox extends GxwElem_mock_base implements GxwTextFld {
 	public boolean Border_on() {return borderOn;} public void Border_on_(boolean v) {borderOn = v;} private boolean borderOn = true;

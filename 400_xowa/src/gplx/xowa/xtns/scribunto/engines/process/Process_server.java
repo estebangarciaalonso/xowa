@@ -86,7 +86,8 @@ class Process_server_gobbler_error extends Thread {
         try {
         	while (true) {	// loop b/c one gobbler is reused for multiple calls
         		stream.read(bfr);
-        		ThreadAdp_.Sleep(100);
+        		if (terminating) break;
+        		// ThreadAdp_.Sleep(100); commented out; DATE:2014-03-20
         	}
         }
         catch (Exception e) {
@@ -121,5 +122,4 @@ class Process_server_gobbler_recv extends Thread {
     public void Term() {
     	this.interrupt();
     }
-    static final String GRP_KEY = "gplx.process.server.gobbler";
 }

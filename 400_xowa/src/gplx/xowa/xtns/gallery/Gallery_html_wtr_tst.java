@@ -17,122 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
-public class Gallery_nde_tst {
-	private Xop_fxt fxt = new Xop_fxt(); String raw_src;
+public class Gallery_html_wtr_tst {
+	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {fxt.Reset(); fxt.Wiki().Xtn_mgr().Init_by_wiki(fxt.Wiki());}
-	@Test   public void Lnki_no_caption() {
-		fxt.Test_parse_page_wiki("<gallery>File:A.png</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
-		(	new_chkr_gallery_mgr().Expd_subs_
-			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png")
-			)
-		));
-	}
-	@Test   public void Lnki_1() {
-		fxt.Test_parse_page_wiki("<gallery>File:A.png|b</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
-		(	new_chkr_gallery_mgr().Expd_subs_
-			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png")
-			)
-		));
-	}
-	@Test   public void Lnki_3() {
-		fxt.Test_parse_page_wiki("<gallery>File:A.png|a\nFile:B.png|b\nFile:C.png|c</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
-		(	new_chkr_gallery_mgr().Expd_subs_
-			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png")
-			,	new_chkr_gallery_itm().Expd_lnki_("File:B.png")
-			,	new_chkr_gallery_itm().Expd_lnki_("File:C.png")
-			)
-		));
-	}
-	@Test   public void Ignore_newLines() {
-		fxt.Test_parse_page_wiki("<gallery>\n\n\nFile:A.png|a\n\n\nFile:B.png|b\n\n\n</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
-		(	new_chkr_gallery_mgr().Expd_subs_
-			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png")
-			,	new_chkr_gallery_itm().Expd_lnki_("File:B.png")
-			)
-		));
-	}
-	@Test   public void Only_first_pipe() {
-		fxt.Test_parse_page_wiki("<gallery>File:A.png|File:B.png|cc</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
-		(	new_chkr_gallery_mgr().Expd_subs_
-			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png")
-			)
-		));
-	}
-	@Test   public void Invalid_lnki() {
-		fxt.Test_parse_page_wiki("<gallery>A.png|cc</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
-		(	new_chkr_gallery_mgr().Expd_subs_
-			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png")	// NOTE: MW converts "A.png" to "File:A.png"
-			)
-		));
-	}
-	@Test   public void File_only_trailing_nl() {
-		fxt.Test_parse_page_wiki("<gallery>File:A.png\n</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
-		(	new_chkr_gallery_mgr().Expd_subs_
-			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png").Expd_caption_(null)
-			)
-		));
-	}
-	@Test   public void Invalid_curly() {
-		raw_src = "a\n";			
-		fxt.Init_log_(Xop_ttl_log.Invalid_char).Test_parse_page_wiki("<gallery>File:A.png|" + raw_src + "}}</gallery>"	// NOTE: }} is ignored since it is not a valid title
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
-		(	new_chkr_gallery_mgr().Expd_subs_
-			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png").Expd_caption_("a")
-			)
-		));
-	}
-	@Test   public void Caption() {
-		raw_src = "a<br/>c";
-		fxt.Test_parse_page_wiki("<gallery>File:A.png|" + raw_src + "</gallery>"
-		,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
-		(	new_chkr_gallery_mgr().Expd_subs_
-			(	new_chkr_gallery_itm().Expd_lnki_("File:A.png").Expd_caption_(raw_src)
-			)
-		));
-	}
-	@Test   public void Xnde_atr() {
-		raw_src = "<center>a<br/>b</center>";
-		fxt.Test_parse_page_wiki(String_.Concat_lines_nl_skipLast
-		(	"<gallery perrow=3>"
-		,	"File:A.jpg|" + raw_src
-		,	"</gallery>"
-		) ,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
-			(	new_chkr_gallery_mgr().Expd_subs_
-				(	new_chkr_gallery_itm().Expd_lnki_("File:A.jpg").Expd_caption_(raw_src)
-				)
-			));
-	}
-	@Test   public void Err_pre() {	// PURPOSE: leading ws was failing; EX.WP: Vlaardingen; "\nA.jpg| <center>Visbank</center>\n"
-		raw_src = " <center>a</center>";
-		fxt.Test_parse_page_wiki(String_.Concat_lines_nl_skipLast
-		(	"<gallery>"
-		,	"File:A.jpg|" + raw_src
-		,	"</gallery>"
-		) ,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
-			(	new_chkr_gallery_mgr().Expd_subs_
-				(	new_chkr_gallery_itm().Expd_lnki_("File:A.jpg").Expd_caption_("<center>a</center>")
-				)
-			));
-	}
-	@Test   public void Err_comment() {	// PURPOSE: comment was being rendered; EX.WP: Perpetual motion; <!-- removed A.jpg|bcde -->
-		raw_src = "b";
-		fxt.Init_log_(Xop_ttl_log.Comment_eos).Test_parse_page_wiki(String_.Concat_lines_nl_skipLast
-		(	"<gallery>"
-		,	"<!-- deleted A.jpg|" + raw_src
-		,	"</gallery>"
-		) ,	fxt.tkn_xnde_().Xnde_tagId_(Xop_xnde_tag_.Tid_gallery).Xnde_xtn_
-			(	new_chkr_gallery_mgr().Expd_subs_()
-			)
-		);
-	}
-	@Test   public void Html() {
+	@Test   public void Basic() {
 		Init_html();
 		fxt.Test_parse_page_wiki_str("<gallery perrow=2 widths=200px heights=300px>File:A.png|a<br/>c</gallery>", String_.Concat_lines_nl_skipLast
 		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:486px; _width:486px;\">"
@@ -196,7 +84,7 @@ public class Gallery_nde_tst {
 		));
 	}
 	@Test   public void Height_fix() {
-		fxt.Wiki().File_mgr().Cfg_set(Gallery_nde.Fsdb_cfg_grp, Gallery_nde.Fsdb_cfg_key_gallery_fix_defaults, "y");
+		fxt.Wiki().File_mgr().Cfg_set(Gallery_xnde.Fsdb_cfg_grp, Gallery_xnde.Fsdb_cfg_key_gallery_fix_defaults, "y");
 		try {
 		Init_html();
 		fxt.Test_parse_page_wiki_str("<gallery heights=250>File:A.png|a<br/>c</gallery>", String_.Concat_lines_nl_skipLast
@@ -218,7 +106,7 @@ public class Gallery_nde_tst {
 		));
 		}
 		finally {
-			fxt.Wiki().File_mgr().Cfg_set(Gallery_nde.Fsdb_cfg_grp, Gallery_nde.Fsdb_cfg_key_gallery_fix_defaults, "n");
+			fxt.Wiki().File_mgr().Cfg_set(Gallery_xnde.Fsdb_cfg_grp, Gallery_xnde.Fsdb_cfg_key_gallery_fix_defaults, "n");
 		}
 	}
 	@Test   public void Alt() {
@@ -359,48 +247,30 @@ public class Gallery_nde_tst {
 		,	"</ol>"
 		));
 	}
+	@Test   public void Packed() {
+		Init_html();
+		fxt.Test_parse_page_wiki_str("<gallery mode=packed heights=300px>File:A.png|a<br/>c</gallery>", String_.Concat_lines_nl_skipLast
+		(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery mw-gallery-packed\" style=\"max-width:1304px; _width:1304px;\">"
+		,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
+		,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
+		,	"      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
+		,	"        <div id=\"xowa_gallery_div3_0\" style=\"margin:15px auto;\">"
+		,	"          <a href=\"/wiki/File:A.png\" class=\"image\">"
+		,	"            <img id=\"xowa_file_img_0\" alt=\"A.png\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"300\" />"
+		,	"          </a>"
+		,	"        </div>"
+		,	"      </div>"
+		,	"      <div class=\"gallerytext\">a<br/>c"
+		,	"      </div>"
+		,	"    </div>"
+		,	"  </li>"
+		,	"</ul>"
+		));
+	}
 
 	private void Init_html() {
 		Io_mgr._.InitEngine_mem();	// clear out mem files
 		Io_url rootDir = Io_url_.mem_dir_("mem").GenSubDir_nest(Xoa_app_.Name);
 		fxt.App().Fsys_mgr().Temp_dir_(rootDir.OwnerDir().GenSubDir("tmp"));
-	}
-	private Gallery_mgr_data_chkr new_chkr_gallery_mgr()	{return new Gallery_mgr_data_chkr();}
-	private Gallery_itm_chkr new_chkr_gallery_itm()	{return new Gallery_itm_chkr();}
-}
-class Gallery_mgr_data_chkr implements Tst_chkr {
-	public Class<?> TypeOf() {return Gallery_nde.class;}
-	public Gallery_itm_chkr[] Expd_subs() {return expd_subs;} public Gallery_mgr_data_chkr Expd_subs_(Gallery_itm_chkr... v) {expd_subs = v; return this;} Gallery_itm_chkr[] expd_subs = null;
-	public int Chk(Tst_mgr mgr, String path, Object actl_obj) {
-		Gallery_nde actl = (Gallery_nde)actl_obj;
-		int rv = 0;
-		rv += Chk_basic(mgr, path, actl, rv);
-		rv += Chk_subs(mgr, path, actl, rv);
-		return rv;
-	}
-	public int Chk_basic(Tst_mgr mgr, String path, Gallery_nde actl, int err) {
-		return err;
-	}
-	public int Chk_subs(Tst_mgr mgr, String path, Gallery_nde actl, int err) {
-		if (expd_subs != null) {
-			int actl_subs_len = actl.Itms_len();
-			Gallery_itm[] actl_subs = new Gallery_itm[actl_subs_len];  
-			for (int i = 0; i < actl_subs_len; i++)
-				actl_subs[i] = actl.Itms_get(i);
-			return mgr.Tst_sub_ary(expd_subs, actl_subs, path, err);
-		}
-		return err;
-	}
-}
-class Gallery_itm_chkr implements Tst_chkr {
-	public Class<?> TypeOf() {return Gallery_itm.class;}
-	public Gallery_itm_chkr Expd_lnki_(String v)	{expd_lnki = Xoa_ttl_chkr.new_(v); return this;} private Xoa_ttl_chkr expd_lnki;
-	public Gallery_itm_chkr Expd_caption_(String v) {expd_caption = v; return this;} private String expd_caption;
-	public int Chk(Tst_mgr mgr, String path, Object actl_obj) {
-		Gallery_itm actl = (Gallery_itm)actl_obj;
-		int err = 0;
-		err += mgr.Tst_sub_obj(expd_lnki, actl.Ttl(), path, err);
-		err += mgr.Tst_val(expd_caption == null, "", "caption", expd_caption, String_.new_utf8_(actl.Caption_bry()));
-		return err;
 	}
 }

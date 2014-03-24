@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.setup.maints; import gplx.*; import gplx.xowa.*; import gplx.xowa.setup.*;
-class Wmf_dump_list_parser {
+public class Wmf_dump_list_parser {
 	public Wmf_dump_itm[] Parse(byte[] src) {
 		OrderedHash itms = OrderedHash_.new_bry_();
 		int pos = 0;
@@ -24,12 +24,12 @@ class Wmf_dump_list_parser {
 			int a_pos = Byte_ary_finder.Find_fwd(src, Find_anchor, pos); if (a_pos == ByteAry_.NotFound) break;	// no more anchors found
 			pos = a_pos + Find_anchor.length;
 			try {
-			Wmf_dump_itm itm = new Wmf_dump_itm();
-			if (!Parse_href(itm, src, a_pos)) continue; 
-			if (itms.Has(itm.Wiki_abrv())) continue;	// ignore dupes
-			itms.Add(itm.Wiki_abrv(), itm);
-			itm.Status_time_(Parse_status_time(src, a_pos));
-			itm.Status_msg_(Parse_status_msg(src, a_pos));
+				Wmf_dump_itm itm = new Wmf_dump_itm();
+				if (!Parse_href(itm, src, a_pos)) continue;			// anchor not parseable; not a link to a wmf dump
+				if (itms.Has(itm.Wiki_abrv())) continue;			// ignore dupes
+				itms.Add(itm.Wiki_abrv(), itm);
+				itm.Status_time_(Parse_status_time(src, a_pos));	
+				itm.Status_msg_(Parse_status_msg(src, a_pos));
 			} catch (Exception e) {Err_.Noop(e);}
 		}
 		return (Wmf_dump_itm[])itms.XtoAry(Wmf_dump_itm.class);
@@ -69,22 +69,4 @@ class Wmf_dump_list_parser {
 	, 	Find_span_bgn = ByteAry_.new_ascii_("<span")
 	, 	Find_span_end = ByteAry_.new_ascii_("</span>")
 	;
-}
-class Wmf_dump_itm implements gplx.CompareAble {
-	public byte[] Wiki_abrv() {return wiki_abrv;} public void Wiki_abrv_(byte[] v) {this.wiki_abrv = v;} private byte[] wiki_abrv;
-	public DateAdp Dump_date() {return dump_date;} public void Dump_date_(DateAdp v) {this.dump_date = v;} private DateAdp dump_date;
-	public byte[] Status_msg() {return status_msg;}
-	public void Status_msg_(byte[] v) {
-		this.status_msg = v;
-		if 		(ByteAry_.Eq(status_msg, Status_msg_dump_complete))
-			status_completed = true;
-		else if (ByteAry_.Eq(status_msg, Status_msg_dump_in_progress))
-			status_completed = false;
-		else
-			status_completed = false;	// assume anything else is false; EX: Error
-	} 	private byte[] status_msg;
-	public DateAdp Status_time() {return status_time;} public void Status_time_(DateAdp v) {this.status_time = v;} private DateAdp status_time;
-	public boolean Status_completed() {return status_completed;} private boolean status_completed;
-	public int compareTo(Object obj) {Wmf_dump_itm comp = (Wmf_dump_itm)obj; return ByteAry_.Compare(wiki_abrv, comp.wiki_abrv);}
-	private static byte[] Status_msg_dump_complete = ByteAry_.new_ascii_("Dump complete"), Status_msg_dump_in_progress = ByteAry_.new_ascii_("Dump in progress");
 }

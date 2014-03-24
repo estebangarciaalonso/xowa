@@ -47,7 +47,6 @@ public class Xoa_page {
 	public byte[]			Html_content_sub() {return html_content_sub;} public Xoa_page Html_content_sub_(byte[] v) {html_content_sub = v; return this;} private byte[] html_content_sub;
 	public Xop_hdr_mgr		Hdr_mgr() {return hdr_mgr;} private Xop_hdr_mgr hdr_mgr;
 	public ListAdp			Langs() {return langs;} private ListAdp langs = ListAdp_.new_();
-	public Wdata_external_lang_links_data Wdata_external_lang_links() {return wdata_external_lang_links;} private Wdata_external_lang_links_data wdata_external_lang_links = new Wdata_external_lang_links_data();
 	public ListAdp			Lnki_list() {return lnki_list;} public void Lnki_list_(ListAdp v) {this.lnki_list = v;} private ListAdp lnki_list = ListAdp_.new_();
 	public Xof_xfer_queue	File_queue() {return file_queue;} private Xof_xfer_queue file_queue = new Xof_xfer_queue();
 	public ListAdp			File_math() {return file_math;} private ListAdp file_math = ListAdp_.new_();
@@ -56,6 +55,7 @@ public class Xoa_page {
 	public Ref_itm_mgr		Ref_mgr() {return ref_mgr;} public void Ref_mgr_(Ref_itm_mgr v) {ref_mgr = v;} private Ref_itm_mgr ref_mgr = new Ref_itm_mgr();
 	public Xoh_xtn_mgr		Xtn_mgr() {return xtn_mgr;} private Xoh_xtn_mgr xtn_mgr = new Xoh_xtn_mgr();
 	public ByteAryBfr		Portal_div_xtn() {return portal_div_xtn;} private ByteAryBfr portal_div_xtn = ByteAryBfr.reset_(255);
+	public Wdata_external_lang_links_data Wdata_external_lang_links() {return wdata_external_lang_links;} private Wdata_external_lang_links_data wdata_external_lang_links = new Wdata_external_lang_links_data();
 	public void Clear() { // NOTE: this is called post-fetch but pre-parse; do not clear items set by post-fetch, such as id, ttl, redirect_list, data_raw
 		html_restricted = true;
 		search_text = ByteAry_.Empty;

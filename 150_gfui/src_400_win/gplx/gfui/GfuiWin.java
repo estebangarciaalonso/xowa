@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.gfui; import gplx.*;
 import java.awt.Window;
 public class GfuiWin extends GfuiElemBase {
+	private GxwWin win; private ListAdp loadList = ListAdp_.new_(); 
 	public void Show()					{win.ShowWin();}
 	public void Hide()					{win.HideWin();}
 	public void Close()					{win.CloseWin();}
@@ -27,17 +28,17 @@ public class GfuiWin extends GfuiElemBase {
 	@gplx.Virtual public void Quit()			{GfuiQuitMode.Exec(this, quitMode);}
 	public boolean Maximized() {return win.Maximized();} public void Maximized_(boolean v) {win.Maximized_(v);}
 	public boolean Minimized() {return win.Minimized();} public void Minimized_(boolean v) {win.Minimized_(v);}
-	public GfuiQuitMode QuitMode()		{return quitMode;} public GfuiWin QuitMode_(GfuiQuitMode val) {quitMode = val; return this;} GfuiQuitMode quitMode = GfuiQuitMode.ExitApp; // easier to debug
+	public GfuiQuitMode QuitMode()		{return quitMode;} public GfuiWin QuitMode_(GfuiQuitMode val) {quitMode = val; return this;} private GfuiQuitMode quitMode = GfuiQuitMode.ExitApp; // easier to debug
 	@Override public boolean Opened_done()	{return opened;} private boolean opened;
 	@Override public GfuiWin OwnerWin()	{return this;}  // TODO: null
-	@gplx.Internal protected GfuiWinKeyCmdMgr KeyCmdMgr() {return keyCmdMgr;} GfuiWinKeyCmdMgr keyCmdMgr = GfuiWinKeyCmdMgr.new_(); 
-	@gplx.Internal protected GfuiWinFocusMgr FocusMgr() {return focusMgr;} GfuiWinFocusMgr focusMgr;
+	@gplx.Internal protected GfuiWinKeyCmdMgr KeyCmdMgr() {return keyCmdMgr;} private GfuiWinKeyCmdMgr keyCmdMgr = GfuiWinKeyCmdMgr.new_(); 
+	@gplx.Internal protected GfuiWinFocusMgr FocusMgr() {return focusMgr;} private GfuiWinFocusMgr focusMgr;
 	@gplx.New public GfuiWin Size_(SizeAdp size) {
 		super.Size_(size);
 		if (!opened && (size.Width() < 112 || size.Height() < 27)) // WORKAROUND/WINFORMS: Form.Size must be > 112,27 if Form is not Visible
 			smallOpenSize = size;				
 		return this;
-	}	SizeAdp smallOpenSize = SizeAdp_.Null;
+	}	private SizeAdp smallOpenSize = SizeAdp_.Null;
 	@Override public void ctor_kit_GfuiElemBase(Gfui_kit kit, String key, GxwElem underElem, KeyValHash ctorArgs) {
 		super.ctor_kit_GfuiElemBase(kit, key, underElem, ctorArgs);
 		win = (GxwWin)underElem;
@@ -73,7 +74,7 @@ public class GfuiWin extends GfuiElemBase {
 		GfuiWinUtl.Open_exec(this, loadList, this);
 		GfuiFocusOrderer.OrderByX(this);
 		focusMgr.Init(this);
-				if (this.Kit().Tid() != Gfui_kit_.TypeId_swt)
+				if (this.Kit().Tid() == Gfui_kit_.Swing_tid)
 			((Window)win).setFocusTraversalPolicy(new FocusTraversalPolicy_cls_base(focusMgr));
 				this.Focus();
 		super.Opened_cbk();
@@ -119,5 +120,4 @@ public class GfuiWin extends GfuiElemBase {
 			, Invk_Pin_toggle = "Pin_toggle", Invk_Zorder_front = "Zorder_front", Invk_ShowFocusOwner = "ShowFocusOwner"
 			, Evt_VisibleChanged = "VisibleChanged", Evt_Opened = "Opened_evt", Evt_Quited = "Quited_evt"
 			, StopAppByAltF4_evt = "StopAppByAltF4_evt";
-	GxwWin win; ListAdp loadList = ListAdp_.new_(); 
 }

@@ -45,7 +45,8 @@ public class Swt_kit implements Gfui_kit {
 	private String xulRunnerPath = null;
 	private KeyValHash ctor_args = KeyValHash.new_(); private HashAdp kit_args = HashAdp_.new_();
 	private KeyValHash nullArgs = KeyValHash.new_();
-	public byte Tid() {return Gfui_kit_.TypeId_swt;}	
+	public byte Tid() {return Gfui_kit_.Swt_tid;}
+	public String Key() {return "swt";}
 	public Gfui_clipboard Clipboard() {return clipboard;} private Swt_clipboard clipboard;
 	public Display Swt_display() {return display;} private Display display;
 	public Gfui_html_cfg Html_cfg() {return html_cfg;} private Gfui_html_cfg html_cfg = new Gfui_html_cfg();
@@ -105,8 +106,7 @@ public class Swt_kit implements Gfui_kit {
 		return dlg.Ask_rslt == Gfui_dlg_msg_.Btn_ok;
 	}	ByteAryFmtr ask_fmtr = ByteAryFmtr.new_().Fail_when_invalid_escapes_(false); ByteAryBfr ask_bfr = ByteAryBfr.new_();
 	public int Ask_yes_no_cancel(String grp_key, String msg_key, String fmt, Object... args) 	{
-		Swt_dlg_msg dlg = (Swt_dlg_msg)New_dlg_msg(ask_fmtr.Bld_str_many(ask_bfr, fmt, args)).Init_btns_(Gfui_dlg_msg_.Btn_yes, Gfui_dlg_msg_.Btn_no, Gfui_dlg_msg_.Btn_cancel).Init_ico_(Gfui_dlg_msg_.Ico_question);
-		
+		Swt_dlg_msg dlg = (Swt_dlg_msg)New_dlg_msg(ask_fmtr.Bld_str_many(ask_bfr, fmt, args)).Init_btns_(Gfui_dlg_msg_.Btn_yes, Gfui_dlg_msg_.Btn_no, Gfui_dlg_msg_.Btn_cancel).Init_ico_(Gfui_dlg_msg_.Ico_question);		
 		display.syncExec(dlg);
 		return dlg.Ask_rslt;
 	}
@@ -130,7 +130,7 @@ public class Swt_kit implements Gfui_kit {
 		owner.SubElems().Add(rv);
 		return rv;
 	}
-	public Gfui_html New_html_box(String key, GfuiElem owner, KeyVal... args) {
+	public Gfui_html New_html(String key, GfuiElem owner, KeyVal... args) {
 		ctor_args.Clear();
 		Object htmlBox_args_obj = kit_args.Fetch(Gfui_kit_.Cfg_HtmlBox);
 		if (htmlBox_args_obj != null) {

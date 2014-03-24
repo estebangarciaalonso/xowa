@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xoh_wiki_article implements GfoInvkAble {
+	private Xou_output_wkr wiki_wkr, hsrc_wkr, html_wkr; private Xoa_app app;
 	public Xoh_wiki_article(Xoa_app app, boolean html_capable) {
 		this.app = app;
 		page_edit_fmtr.Fmt_(String_.Concat_lines_nl_skipLast
@@ -42,8 +43,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 		wiki_wkr = new Xou_output_wkr(Xog_view_mode.Id_edit, Bool_.Y, Bool_.Y);
 		hsrc_wkr = new Xou_output_wkr(Xog_view_mode.Id_html, Bool_.Y, Bool_.N);
 		html_wkr = new Xou_output_wkr(Xog_view_mode.Id_read, Bool_.N, Bool_.N);
-	}	private Xoa_app app;
-	Xou_output_wkr wiki_wkr, hsrc_wkr, html_wkr;
+	}
 	public boolean Html_capable() {return html_capable;} public Xoh_wiki_article Html_capable_(boolean v) {html_capable = v; return this;} private boolean html_capable;
 	public ByteAryFmtr Page_read_fmtr() {return page_read_fmtr;}
 	public byte[] Css_common_bry() {return css_common_bry;} public Xoh_wiki_article Css_common_bry_(Io_url v) {css_common_bry = app.Url_converter_fsys().Encode_http(v); return this;} private byte[] css_common_bry;
@@ -56,7 +56,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 	    , "edit_div_rename", "edit_div_preview"
 		, "app_version", "app_build_date", "app_root_dir", "js_mathjax_script", "js_article_view_vars", "js_wikidata", "js_edit_toolbar", "xowa_mode_is_server"
 		);
-	public ByteAryFmtr Page_edit_fmtr() {return page_edit_fmtr;} ByteAryFmtr page_edit_fmtr = ByteAryFmtr.new_(""
+	public ByteAryFmtr Page_edit_fmtr() {return page_edit_fmtr;} private ByteAryFmtr page_edit_fmtr = ByteAryFmtr.new_(""
 		, "page_id", "page_name", "page_title", "page_content_sub", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
 		, "html_css_common_path", "html_css_wiki_path", "css_xtn", "html_content_editable"
 		, "portal_div_personal", "portal_div_ns", "portal_div_view"
@@ -64,8 +64,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 	    , "edit_div_rename", "edit_div_preview"
 		, "app_version", "app_build_date", "app_root_dir", "js_mathjax_script", "js_article_view_vars", "js_wikidata", "js_edit_toolbar", "xowa_mode_is_server"
 		);
-	public ByteAryFmtr Page_html_fmtr() {return page_html_fmtr;} 
-		ByteAryFmtr page_html_fmtr = ByteAryFmtr.new_(""
+	public ByteAryFmtr Page_html_fmtr() {return page_html_fmtr;} private ByteAryFmtr page_html_fmtr = ByteAryFmtr.new_(""
 		, "page_id", "page_name", "page_title", "page_content_sub", "page_data", "page_langs", "page_modified_on_msg", "page_lang_ltr", "page_log_data"
 		, "html_css_common_path", "html_css_wiki_path", "css_xtn", "html_content_editable"
 		, "portal_div_personal", "portal_div_ns", "portal_div_view"
@@ -85,8 +84,7 @@ public class Xoh_wiki_article implements GfoInvkAble {
 	,	"    Special:MovePage" 
 	,	"  </a>"
 	),	"src_full_db");
-	public void Init_(boolean v) {init = v;}
-	boolean init = true;
+	public void Init_(boolean v) {init = v;} private boolean init = true;
 	public byte[] Gen(Xoa_page page, byte output_tid) {
 		Xou_output_wkr wkr = Wkr(output_tid);
 		Xow_wiki wiki = page.Wiki();

@@ -49,8 +49,8 @@ public class Xop_tkn_mkr {
 	public Xop_lnke_tkn Lnke(int bgn, int end, byte[] protocol, byte proto_tid, byte lnke_typ, int lnk_bgn, int lnk_end) {
 		return new Xop_lnke_tkn(bgn, end, protocol, proto_tid, lnke_typ, lnk_bgn, lnk_end);
 	}
-	public Xop_tblw_tb_tkn Tblw_tb(int bgn, int end, boolean tblw_xml)							{return new Xop_tblw_tb_tkn(bgn, end, tblw_xml);}
-	public Xop_tblw_tr_tkn Tblw_tr(int bgn, int end, boolean tblw_xml)							{return new Xop_tblw_tr_tkn(bgn, end, tblw_xml);}
+	public Xop_tblw_tb_tkn Tblw_tb(int bgn, int end, boolean tblw_xml, boolean auto_created)		{return new Xop_tblw_tb_tkn(bgn, end, tblw_xml, auto_created);}
+	public Xop_tblw_tr_tkn Tblw_tr(int bgn, int end, boolean tblw_xml, boolean auto_created)		{return new Xop_tblw_tr_tkn(bgn, end, tblw_xml, auto_created);}
 	public Xop_tblw_td_tkn Tblw_td(int bgn, int end, boolean tblw_xml)							{return new Xop_tblw_td_tkn(bgn, end, tblw_xml);}
 	public Xop_tblw_th_tkn Tblw_th(int bgn, int end, boolean tblw_xml)							{return new Xop_tblw_th_tkn(bgn, end, tblw_xml);}
 	public Xop_tblw_tc_tkn Tblw_tc(int bgn, int end, boolean tblw_xml)							{return new Xop_tblw_tc_tkn(bgn, end, tblw_xml);}
@@ -60,12 +60,13 @@ public class Xop_tkn_mkr {
 	public Xop_pre_tkn Para_pre_end(int pos, Xop_tkn_itm bgn)								{return new Xop_pre_tkn(pos, pos, Xop_pre_tkn.Pre_tid_end, bgn);}
 	public Xop_ignore_tkn Ignore(int bgn, int end, byte ignore_type)						{return new Xop_ignore_tkn(bgn, end, ignore_type);}
 	public Xop_bry_tkn Bry(int bgn, int end, byte[] bry)									{return new Xop_bry_tkn(bgn, end, bry);}
+	public Xop_bry_tkn Bry(byte[] src, int bgn, int end)									{return new Xop_bry_tkn(bgn, end, ByteAry_.Mid(src, bgn, end));}
 	public Xop_under_tkn Under(int bgn, int end, int v)										{return new Xop_under_tkn(bgn, end, v);}
 	public gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd Xnde_xowa_cmd()							{return new gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd();}
 	public gplx.xowa.xtns.poems.Poem_nde Xnde_poem()										{return new gplx.xowa.xtns.poems.Poem_nde();}
 	public Ref_nde Xnde_ref()															{return new Ref_nde();}
 	public References_nde Xnde_references()												{return new References_nde();}
-	public gplx.xowa.xtns.gallery.Gallery_nde Xnde_gallery()								{return new gplx.xowa.xtns.gallery.Gallery_nde();}
+	public gplx.xowa.xtns.gallery.Gallery_xnde Xnde_gallery()								{return new gplx.xowa.xtns.gallery.Gallery_xnde();}
 	public gplx.xowa.xtns.imageMap.Xop_imageMap_xnde Xnde_imageMap()						{return new gplx.xowa.xtns.imageMap.Xop_imageMap_xnde();}
 	public gplx.xowa.xtns.hiero.Hiero_nde Xnde_hiero()									{return new gplx.xowa.xtns.hiero.Hiero_nde();}
 	public gplx.xowa.xtns.proofreadPage.Pp_pages_nde Xnde_pages()							{return new gplx.xowa.xtns.proofreadPage.Pp_pages_nde();}

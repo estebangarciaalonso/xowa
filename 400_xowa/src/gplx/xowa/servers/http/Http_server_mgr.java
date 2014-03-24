@@ -68,9 +68,7 @@ public class Http_server_mgr implements GfoInvkAble {
 		if (init_gui_done) return;
 		init_gui_done = true;
 		Gxw_html_server html_box = new Gxw_html_server(this);
-		Gfo_usr_dlg_ui usr_dlg_ui = app.Usr_dlg().Ui_wkr();
-		app.Gui_mgr().Kit_(gplx.gfui.Gfui_kit_base._.Tid_(gplx.gfui.Gfui_kit_.TypeId_swt));
-		app.Usr_dlg().Ui_wkr_(usr_dlg_ui);
+		app.Gui_mgr().Kit_(gplx.gfui.Gfui_kit_.Mem());
 		app.Gui_mgr().Main_win().Html_box().Under_html_(html_box);
 	}
 	public String Parse_page_to_html(Xoa_app app, String wiki_domain_str, String page_ttl_str) {

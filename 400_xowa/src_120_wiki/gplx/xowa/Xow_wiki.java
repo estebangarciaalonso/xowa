@@ -113,7 +113,6 @@ public class Xow_wiki implements GfoInvkAble {
 	public Xou_history_cfg Cfg_history() {return cfg_history;} private Xou_history_cfg cfg_history = new Xou_history_cfg();
 	public Xoh_cfg_gallery Cfg_gallery() {return cfg_gallery;} private Xoh_cfg_gallery cfg_gallery = new Xoh_cfg_gallery();
 	public Xoh_file_page Cfg_file_page() {return cfg_file_page;} private Xoh_file_page cfg_file_page = new Xoh_file_page();
-	public Xow_cfg_lnke Cfg_lnke() {return cfg_lnke;} private Xow_cfg_lnke cfg_lnke = new Xow_cfg_lnke();
 	public Xow_sys_cfg Sys_cfg() {return sys_cfg;} private Xow_sys_cfg sys_cfg;
 	public Xowc_parser Cfg_parser() {return cfg_parser;} private Xowc_parser cfg_parser;
 	public boolean Cfg_parser_lnki_xwiki_repos_enabled() {return cfg_parser_lnki_xwiki_repos_enabled;} public Xow_wiki Cfg_parser_lnki_xwiki_repos_enabled_(boolean v) {cfg_parser_lnki_xwiki_repos_enabled = v; return this;} private boolean cfg_parser_lnki_xwiki_repos_enabled;
@@ -230,6 +229,7 @@ public class Xow_wiki implements GfoInvkAble {
 		Xow_ns_mgr_.rebuild_(lang, ns_mgr);	// always rebuild; may be changed by user_wiki.gfs; different lang will change namespaces; EX: de.wikisource.org will have Seite for File and none of {{#lst}} will work
 		fragment_mgr.Evt_lang_changed(lang);
 		parser.Init_by_lang(lang);
+		html_mgr.Init_by_lang(lang);
 		lang.Vnt_mgr().Init_by_wiki(this);
 		ByteAryFmtr.Null.Eval_mgr().Enabled_(false);
 		app.Wiki_mgr().Scripts().Exec(this);

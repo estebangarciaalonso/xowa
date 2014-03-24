@@ -36,6 +36,7 @@ public class Xop_xatr_itm {
 	public byte[] Val_as_bry__blank_to_null(byte[] src) {byte[] rv = Val_as_bry(src); return ByteAry_.Len_eq_0(rv) ? null : rv;}
 	public int Val_as_int_or(byte[] src, int or) {return val_bry == null ? ByteAry_.X_to_int_or_lax(src, val_bgn, val_end, or) : ByteAry_.X_to_int_or(val_bry, or);}
 	public boolean Val_as_bool_by_int(byte[] src) {return Val_as_int_or(src, 0) == 1;}
+	public boolean Val_as_bool(byte[] src) {return ByteAry_.Eq(ByteAry_.Lower_ascii(Val_as_bry(src)), Bool_.True_bry);}
 	public static Xop_xatr_itm[] Xatr_parse(Xoa_app app, Xop_xnde_atr_parser parser, Hash_adp_bry hash, Xow_wiki wiki, byte[] src, Xop_xnde_tkn xnde) {
 		Xop_xatr_itm[] xatr_ary = app.Xatr_parser().Parse(app.Msg_log(), src, xnde.Atrs_bgn(), xnde.Atrs_end());
 		for (int i = 0; i < xatr_ary.length; i++) {

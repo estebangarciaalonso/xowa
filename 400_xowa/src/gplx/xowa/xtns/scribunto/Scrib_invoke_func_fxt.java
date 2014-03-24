@@ -35,7 +35,7 @@ public class Scrib_invoke_func_fxt {
 		fxt.Wiki().Ctx().Tab().Clear_mgrs();	// NOTE: must clear page_regy else module is missing
 		core.When_page_changed(fxt.Wiki().Ctx().Page());
 		init_tmpl = init_page = null;
-		fxt.Init_page_create("Module:" + "Mod_0", "");
+		fxt.Init_page_create("Module:Mod_0");
 		this.Init_lua_rcvd_loadModule(); 
 	}	private Xop_fxt fxt; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); Scrib_core core; Process_server_mock server; Scrib_lua_rsp_bldr rsp_bldr = new Scrib_lua_rsp_bldr();
 	public Xop_fxt Parser_fxt() {return fxt;}
@@ -143,7 +143,7 @@ class Scrib_lua_rsp_bldr {
 		else if	(Object_.Eq(v_type, Bool_.ClassOf))				Bld_bool(bfr, Bool_.cast_(v));
 		else if	(Object_.Eq(v_type, Double_.ClassOf))			Bld_double(bfr, Double_.cast_(v));
 		else if	(Object_.Eq(v_type, KeyVal[].class))			Bld_kv_ary(bfr, (KeyVal[])v);
-		else if	(Object_.Eq(v_type, Scrib_lua_proc.class))			Bld_fnc(bfr, (Scrib_lua_proc)v);
+		else if	(Object_.Eq(v_type, Scrib_lua_proc.class))	Bld_fnc(bfr, (Scrib_lua_proc)v);
 		else													throw Err_.unhandled(ClassAdp_.NameOf_obj(v));
 	}
 	private void Bld_bool(ByteAryBfr bfr, boolean v)		{bfr.Add_str("b:").Add_int_fixed(v ? 1 : 0, 1).Add_byte(Byte_ascii.Semic);}

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.xowa.parsers.lnkis.*;
 import gplx.xowa.files.*;
-public class Gallery_parser {		
+public class Gallery_itm_parser {		
 	private Xow_wiki wiki; private ByteTrieMgr_slim trie = new ByteTrieMgr_slim(false);
 	private Gallery_itm cur_itm;
 	private byte[] src; private int end_pos;
@@ -28,13 +28,14 @@ public class Gallery_parser {
 	private ByteAryBfr caption_bfr = ByteAryBfr.reset_(255); private int caption_bgn;
 	private int gallery_itm_w, gallery_itm_h;
 	private Xop_ctx ctx;
-	public Gallery_parser Init_by_wiki(Xow_wiki wiki) {
+	public Gallery_itm_parser Init_by_wiki(Xow_wiki wiki) {
 		this.wiki = wiki; Xol_lang lang = wiki.Lang();
 		this.ctx = wiki.Ctx();
 		trie.Clear();
 		ByteRef tmp_bref = ByteRef.zero_();
-		Init_keyword(tmp_bref, lang, Xol_kwd_grp_.Id_img_alt, Fld_alt);
-		Init_keyword(tmp_bref, lang, Xol_kwd_grp_.Id_img_link, Fld_link);
+		Init_keyword(tmp_bref, lang, Xol_kwd_grp_.Id_img_alt, Fld_alt);		// NOTE: MW uses "gallery-@gplx.Internal protected-alt" which just maps to "img-alt"
+		Init_keyword(tmp_bref, lang, Xol_kwd_grp_.Id_img_link, Fld_link);	// NOTE: MW uses "gallery-@gplx.Internal protected-link" which just maps to "img-link"
+		Init_keyword(tmp_bref, lang, Xol_kwd_grp_.Id_img_page, Fld_page);
 		return this;
 	}
 	public void Parse_all(ListAdp rv, byte[] src, int content_bgn, int content_end, int gallery_itm_w, int gallery_itm_h) {
@@ -69,7 +70,7 @@ public class Gallery_parser {
 		ctx.Page().Lnki_list().Add(lnki_tkn);
 		if (file_wkr != null) file_wkr.Wkr_exec(ctx, src, lnki_tkn, gplx.xowa.bldrs.files.Xob_lnki_src_tid.Tid_gallery);
 	}
-	public byte Parse_itm() {
+	private byte Parse_itm() {
 		int fld_count = 0;
 		itm_bgn = cur_pos;
 		while (cur_pos < end_pos) {
@@ -78,7 +79,7 @@ public class Gallery_parser {
 			mode = Skip_to_fld_end();
 			Fld_end();
 			if (mode != Mode_pipe) return mode;
-			++cur_pos; // position after pipe
+			++cur_pos;	// position after pipe
 			++fld_count;
 		}
 		return Mode_eos;
@@ -102,10 +103,19 @@ public class Gallery_parser {
 				Skip_ws();
 				cur_fld = ((ByteVal)o).Val();
 				switch (cur_fld) {
-					case Fld_alt:	cur_itm.Alt_bgn_(cur_pos); break;
-					case Fld_link:	cur_itm.Link_bgn_(cur_pos); break;
-				}
-				return Mode_text;
+					case Fld_alt:	cur_itm.Alt_bgn_(cur_pos);  return Mode_text;
+					case Fld_link:	cur_itm.Link_bgn_(cur_pos); return Mode_text;
+					case Fld_page:
+						if (cur_itm.Ext() != null && cur_itm.Ext().Id_supports_page()) {	// NOTE: ext can be null with long multi-line captions; EX:<ref\n|page=1 />; DATE:2014-03-21
+							cur_itm.Page_bgn_(cur_pos);
+							return Mode_text;
+						}
+						else {	// not a pdf / djvu; treat "page=" as caption
+							cur_fld = Fld_caption;
+							cur_pos = old_pos;
+							break;	// NOTE: do not return Mode_text, so it reaches caption code below
+						}
+				}					
 			}
 			else
 				cur_pos = old_pos;
@@ -124,8 +134,8 @@ public class Gallery_parser {
 		while (cur_pos < end_pos) {
 			cur_byte = src[cur_pos];
 			switch (cur_byte) {
-				case Byte_ascii.Pipe:		return Mode_pipe;
-				case Byte_ascii.NewLine:	return Mode_nl;
+				case Byte_ascii.Pipe:			return Mode_pipe;
+				case Byte_ascii.NewLine:		return Mode_nl;
 				case Byte_ascii.CarriageReturn:
 				case Byte_ascii.Space:
 				case Byte_ascii.Tab:
@@ -151,12 +161,15 @@ public class Gallery_parser {
 				byte[] ttl_bry = ByteAry_.Mid(src, cur_itm.Ttl_bgn(), fld_end);
 				ttl_bry = ctx.App().Url_converter_url_ttl().Decode(ttl_bry);	// NOTE: must decode url-encoded entries; EX: "A%28b%29.png" -> "A(b).png"; DATE:2014-01-01
 				Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
-				if (ttl == null)
+				if (	ttl == null				// invalid ttl; EX:	"<invalid>"
+					||	ttl.Anch_bgn() == 1		// anchor-only ttl; EX: "#invalid"; DATE:2014-03-18
+					)
 					cur_itm.Reset();
 				else {
 					if (!ttl.Ns().Id_file_or_media())	// ttl does not have "File:"; MW allows non-ns names; EX: "A.png" instead of "File:A.png"; DATE:2013-11-18 
 						ttl = Xoa_ttl.parse_(wiki, Xow_ns_.Id_file, ttl_bry);
-					cur_itm.Lnki_(ttl);
+					cur_itm.Ttl_(ttl);
+					cur_itm.Ext_(Xof_ext_.new_by_ttl_(ttl_bry));
 				}
 				break;
 			case Fld_caption:
@@ -165,6 +178,7 @@ public class Gallery_parser {
 				break;
 			case Fld_alt: 		cur_itm.Alt_end_(fld_end); break;
 			case Fld_link: 		cur_itm.Link_end_(fld_end); break;
+			case Fld_page: 		cur_itm.Page_end_(fld_end); break;
 			default:			throw Err_.unhandled(fld_end);
 		}
 	}
@@ -172,17 +186,17 @@ public class Gallery_parser {
 		while (cur_pos < end_pos) {
 			cur_byte = src[cur_pos];
 			switch (cur_byte) {
-				case Byte_ascii.Pipe:		return Mode_pipe;
-				case Byte_ascii.NewLine:	return Mode_nl;
 				case Byte_ascii.CarriageReturn:
 				case Byte_ascii.Space:
-				case Byte_ascii.Tab:		++cur_pos; continue; // ignore
-				default:					return Mode_text;
+				case Byte_ascii.Tab:			++cur_pos; continue; // ignore
+				case Byte_ascii.Pipe:			return Mode_pipe;
+				case Byte_ascii.NewLine:		return Mode_nl;
+				default:						return Mode_text;
 			}
 		}
 		return Mode_eos;
 	}
-	private static final byte Fld_null = 0, Fld_ttl = 1, Fld_caption = 2, Fld_alt = 3, Fld_link = 4;
+	private static final byte Fld_null = 0, Fld_ttl = 1, Fld_caption = 2, Fld_alt = 3, Fld_link = 4, Fld_page = 5;
 	private static final byte Mode_eos = 1, Mode_nl = 2, Mode_pipe = 3, Mode_text = 4;
 	private void Init_keyword(ByteRef tmp_bref, Xol_lang lang, int kwd_id, byte trie_key) {
 		Xol_kwd_grp grp = lang.Kwd_mgr().Get_at(kwd_id);

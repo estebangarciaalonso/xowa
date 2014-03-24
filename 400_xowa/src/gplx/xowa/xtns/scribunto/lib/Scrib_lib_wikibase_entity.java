@@ -19,8 +19,8 @@ package gplx.xowa.xtns.scribunto.lib; import gplx.*; import gplx.xowa.*; import 
 import gplx.xowa.xtns.wdatas.*;
 import gplx.json.*;
 public class Scrib_lib_wikibase_entity implements Scrib_lib {
-	public Scrib_lib_wikibase_entity(Scrib_core core) {this.core = core;} Scrib_core core;
-	public Scrib_lua_mod Mod() {return mod;} Scrib_lua_mod mod;
+	public Scrib_lib_wikibase_entity(Scrib_core core) {this.core = core;} private Scrib_core core;
+	public Scrib_lua_mod Mod() {return mod;} private Scrib_lua_mod mod;
 	public Scrib_lib Init() {procs.Init_by_lib(this, Proc_names); return this;}
 	public Scrib_lua_mod Register(Scrib_core core, Io_url script_dir) {
 		Init();

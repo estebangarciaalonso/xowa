@@ -131,7 +131,7 @@ public class Xop_list_wkr implements Xop_ctx_wkr {
 		return ByteAry_.NotFound;
 	}
 	Xop_list_tkn PopTil(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte subLast) {
-		int acs_pos = ctx.Stack_idx_typ_tblw(Xop_tkn_itm_.Tid_list);
+		int acs_pos = ctx.Stack_idx_find_but_stop_at_tbl(Xop_tkn_itm_.Tid_list);
 		if (acs_pos == -1) return null;
 		Xop_list_tkn rv = (Xop_list_tkn)ctx.Stack_pop_til(root, src, acs_pos, false, bgn_pos, cur_pos);
 		MakeTkn_end(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, rv, subLast);

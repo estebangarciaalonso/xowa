@@ -100,7 +100,7 @@ public class Xow_ns_mgr implements GfoInvkAble, gplx.lists.ComparerAble {
 			KeyVal kv = (KeyVal)aliases.FetchAt(i);
 			int ns_id = ((IntVal)kv.Val()).Val();
 			Xow_ns ns = Ids_get_or_null(ns_id); if (ns == null) continue; // happens when alias exists, but not ns; EX: test has Image alias, but not File alias; should not happen "live" but don't want to fail
-			ns.Aliases().Add_if_new(kv.Key(), kv.Key());	// register alias with official ns; EX: "Image" will be placed in "File"'s .Aliases
+			ns.Aliases_add(kv.Key());	// register alias with official ns; EX: "Image" will be placed in "File"'s .Aliases
 			byte[] alias_bry = ByteAry_.new_utf8_(kv.Key());
 			Rebuild_hashes__add(name_hash, ns, alias_bry);
 			if (ns.Id_tmpl()) {

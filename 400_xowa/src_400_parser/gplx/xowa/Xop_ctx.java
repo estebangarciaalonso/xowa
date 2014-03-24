@@ -131,6 +131,16 @@ public class Xop_ctx {
 	public int Stack_len() {return stack_len;}
 	public Xop_tkn_itm Stack_get_last()		{return stack_len == 0 ? null : stack[stack_len - 1];}
 	public Xop_tkn_itm Stack_get(int i)		{return i < 0 || i >= stack_len ? null : stack[i];}
+	public Xop_tblw_tkn Stack_get_tblw_tb() {// find any {| (exclude <table)
+		for (int i = stack_len - 1; i > -1; i--) {
+			Xop_tkn_itm tkn = stack[i];
+			if (tkn.Tkn_tid() == Xop_tkn_itm_.Tid_tblw_tb) {
+				Xop_tblw_tkn tkn_as_tbl = (Xop_tblw_tkn)tkn;
+				if (!tkn_as_tbl.Tblw_xml()) return tkn_as_tbl;
+			}
+		}
+		return null;
+	}
 	public Xop_tblw_tkn Stack_get_tbl_tb() {
 		for (int i = stack_len - 1; i > -1; i--) {
 			Xop_tkn_itm tkn = stack[i];
@@ -148,7 +158,7 @@ public class Xop_ctx {
 		}
 		return null;
 	}
-	public Xop_tblw_tkn Stack_get_tblw() {
+	public Xop_tblw_tkn Stack_get_tbl() {
 		for (int i = stack_len - 1; i > -1; i--) {
 			Xop_tkn_itm tkn = stack[i];
 			switch (tkn.Tkn_tid()) {
@@ -181,16 +191,17 @@ public class Xop_ctx {
 				return i; 
 		return Stack_not_found;
 	}
-	public int Stack_idx_typ_tblw(int typeId) { // NOTE: separate proc for xnde which may try to pop past a td/th/tc (and thus break a table unnecessarily)
+	public int Stack_idx_find_but_stop_at_tbl(int tid) { // NOTE: separate proc for xnde which may try to pop past a td/th/tc (and thus break a table unnecessarily)
 		for (int i = stack_len - 1; i > -1	; i--) {
-			int itm_typeId = stack[i].Tkn_tid();				
-			switch (itm_typeId) {
+			Xop_tkn_itm tkn_itm = stack[i];
+			int tkn_itm_tid = tkn_itm.Tkn_tid();
+			switch (tkn_itm_tid) {
 				case Xop_tkn_itm_.Tid_tblw_td:
 				case Xop_tkn_itm_.Tid_tblw_th:
 				case Xop_tkn_itm_.Tid_tblw_tc:
 					return -1;
 			}
-			if (itm_typeId == typeId)
+			if (tkn_itm_tid == tid)
 				return i;
 		}
 		return -1;

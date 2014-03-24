@@ -21,6 +21,7 @@ public interface Xot_invk {
 	boolean Root_frame();
 	int Src_bgn();
 	int Src_end();
+	byte[] Frame_ttl(); void Frame_ttl_(byte[] v);
 	int Args_len();
 	Arg_nde_tkn Name_tkn();
 	Arg_nde_tkn Args_get_by_idx(int i);

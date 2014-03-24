@@ -27,7 +27,7 @@ public class Html_parser {
 	int cur_atrs_idx = 0; int[] cur_atrs = new int[250];// define max of 50 atrs;	
 	public Html_nde[] Parse_as_ary(byte[] src) {return Parse_as_ary(src, 0, src.length, Wildcard, Wildcard);}
 	public Html_nde[] Parse_as_ary(byte[] src, int bgn, int end) {return Parse_as_ary(src, bgn, end, Wildcard, Wildcard);}
-	public Html_nde[] Parse_as_ary(byte[] src, int bgn, int end, byte[] find_key, byte[] find_val) {
+	public Html_nde[] Parse_as_ary(byte[] src, int bgn, int end, byte[] find_key, byte[] find_val) {	// flattens html into a list of hndes; only used for Options
 		this.src = src; pos = bgn; this.end = end;
 		ListAdp rv = ListAdp_.new_();
 		while (pos < end) {
@@ -56,7 +56,7 @@ public class Html_parser {
 		return (Html_nde[])rv.XtoAry(Html_nde.class);
 	}
 	int cur_lhs_bgn, cur_lhs_end, cur_name_bgn, cur_name_end, cur_rhs_bgn; boolean xnde_init = true, tag_tid_is_inline = false;
-	boolean Parse_xnde_rhs() {
+	private boolean Parse_xnde_rhs() {
 		cur_rhs_bgn = pos - 1;	// -1 b/c "<" is already read
 		byte b = src[pos];
 		if (b != Byte_ascii.Slash) return false;
@@ -69,7 +69,7 @@ public class Html_parser {
 		++pos;
 		return true;
 	}
-	boolean Parse_xnde_lhs() {
+	private boolean Parse_xnde_lhs() {
 		cur_atrs_idx = 0;	
 		cur_lhs_bgn = pos - 1;
 		cur_name_bgn = pos;

@@ -23,18 +23,18 @@ public class Scrib_lib_message_tst {
 		fxt.Init_page("{{#invoke:Mod_0|Func_0}}");
 		lib = fxt.Core().Lib_message().Init();
 	}	Scrib_invoke_func_fxt fxt = new Scrib_invoke_func_fxt(); Scrib_lib lib;
-	@Test   public void ToStr() {
-		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_toString, Object_.Ary("parse"				, keys_ary("sun"))							, "Sun");
-		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_toString, Object_.Ary("parse"				, keys_ary("sunx"))							, "&lt;sunx&gt;");
-		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_toString, Object_.Ary("parseAsBlock"		, keys_ary("sun"))							, "<p>Sun</p>");
-		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_toString, Object_.Ary("escaped"			, keys_ary("pfunc_expr_invalid_argument"))	, "Invalid argument for ~{0}: &lt; -1 or &gt; 1");
-		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_toString, Object_.Ary("parse"				, keys_ary_arg("redirectedfrom", "A"))		, "(Redirected from A)");
+	@Test   public void Plain() {
+		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_plain, Object_.Ary((Object)keys_ary("sun"))							, "Sun");
+		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_plain, Object_.Ary((Object)keys_ary("sunx"))							, "&lt;sunx&gt;");
+		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_plain, Object_.Ary((Object)keys_ary_arg("redirectedfrom", "A"))		, "(Redirected from A)");
+	}
+	@Test  public void Plain_lang() {
 		Xol_lang lang = fxt.Parser_fxt().Wiki().App().Lang_mgr().Get_by_key_or_new(ByteAry_.new_ascii_("fr"));
 		Init_msg(lang, "sun", "dim");
-		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_toString, Object_.Ary("parse"				, keys_ary_lang("sun", "fr"))				, "dim");
+		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_plain, Object_.Ary((Object)keys_ary_lang("sun", "fr"))		, "dim");
 	}
-	@Test  public void ToStr_rawMessage() {
-		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_toString, Object_.Ary("parse"				, Scrib_kv_utl_.flat_many_("rawMessage", "$1", "params", KeyVal_.Ary(KeyVal_.int_(1, "abc")))), "abc");
+	@Test  public void Plain_rawMessage() {
+		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_plain, Object_.Ary((Object)Scrib_kv_utl_.flat_many_("rawMessage", "$1", "params", KeyVal_.Ary(KeyVal_.int_(1, "abc")))), "abc");
 	}
 	@Test   public void Check() {
 		fxt.Test_lib_proc(lib, Scrib_lib_message.Invk_check, Object_.Ary("exists"				, keys_ary("sun"))							, "true");

@@ -43,8 +43,9 @@ public class Scrib_lua_mod {
 	public void Execute() {
 		hash.Clear();	// NOTE: questionable. should probably be removed, as it forces all modules to be "loadString"'d again; DATE:2013-10-16
 		this.LoadString(name);	// assert lua_id;
-		KeyVal[] prcs_ary = core.Interpreter().ExecuteModule(lua_id);
-		prcs_ary = (KeyVal[])prcs_ary[0].Val();
+		KeyVal[] rslt = core.Interpreter().ExecuteModule(lua_id);
+		if (rslt.length == 0) throw Err_.new_fmt_("module missing: name={0} lua_id={1}", name, lua_id);
+		KeyVal[] prcs_ary = (KeyVal[])rslt[0].Val();
 		int prcs_len = prcs_ary.length;
 		for (int i = 0; i < prcs_len; i++) {
 			KeyVal prc_kv = prcs_ary[i];

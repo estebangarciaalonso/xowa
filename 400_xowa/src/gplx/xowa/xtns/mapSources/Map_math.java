@@ -251,7 +251,7 @@ class Map_math {// REF.MW:MapSources_math.php
 					case Input_tid_dash:			bfr.Add_byte(Byte_ascii.Dash); break;
 					case Input_tid_space:			bfr.Add_byte_space(); break;
 					case Input_tid_degree:			bfr.Add_byte(Byte_ascii.Slash); bfr.Add_byte_space(); break;		// EX: "°" -> "° "
-					case Input_tid_compass:			bfr.Add_byte_space(); bfr.Add_byte(Byte_ascii.Uppercase(b)); break;	// NOTE: always single-char ASCII; EX: N,E,S,W,n,e,s,w
+					case Input_tid_compass:			bfr.Add_byte_space(); bfr.Add_byte(Byte_ascii.Case_upper(b)); break;	// NOTE: always single-char ASCII; EX: N,E,S,W,n,e,s,w
 				}
 				i = Input_trie.Match_pos();
 			}

@@ -143,4 +143,15 @@ public class Scrib_lib_mw_tst {
 		fxt.Parser_fxt().Data_create("A", "b{{{key1}}}c");
 		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_expandTemplate, Object_.Ary("current", ":A", Scrib_kv_utl_.flat_many_("key1", "val1"))				, "bval1c");	// list: args is ary
 	}
+	@Test  public void GetFrameTitle_current() {
+		fxt.Parser_fxt().Wiki().Cache_mgr().Free_mem_all();
+		fxt.Init_page("{{#invoke:Mod_0|Prc_0}}");		// current
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getFrameTitle, Object_.Ary("current")	, "Mod_0");
+	}
+	@Test  public void GetFrameTitle_owner() {
+		fxt.Parser_fxt().Wiki().Cache_mgr().Free_mem_all();
+		fxt.Init_tmpl("{{#invoke:Mod_0|Prc_0}}");		// current
+		fxt.Init_page("{{test}}");						// parent
+		fxt.Test_lib_proc(lib, Scrib_lib_mw.Invk_getFrameTitle, Object_.Ary("parent")	, "test");
+	}
 }

@@ -19,9 +19,10 @@ package gplx.xowa; import gplx.*;
 import org.junit.*;
 import gplx.gfui.*;
 public class Xog_win_mgr_tst {
-	Xog_win_fxt fxt = new Xog_win_fxt();
+	private Xog_win_fxt fxt = new Xog_win_fxt();
 	@Before public void init() {
 		fxt.Clear();
+		fxt.Fxt().App().User().Wiki().Html_mgr().Output_mgr().Html_capable_(false);
 		fxt.Fxt().Init_page_create(fxt.Fxt().App().User().Wiki(), "Main Page", "''a''");
 	}
 	@Test  public void Launch() {

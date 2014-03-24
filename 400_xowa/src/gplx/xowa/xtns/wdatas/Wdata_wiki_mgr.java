@@ -83,7 +83,7 @@ public class Wdata_wiki_mgr implements GfoInvkAble {
 	}
 	public Wdata_doc Pages_get(Xow_wiki wiki, Xoa_ttl ttl) {byte[] qid_bry = Qids_get(wiki, ttl); return qid_bry == null? null : Pages_get(qid_bry);}
 	public Wdata_doc Pages_get_by_ttl_name(byte[] ttl_bry) {
-		if (Byte_ascii.Lowercase(ttl_bry[0]) == Byte_ascii.Ltr_p)	// if ttl starts with "p", change title to "Property:" ns; DATE:2014-02-18
+		if (Byte_ascii.Case_lower(ttl_bry[0]) == Byte_ascii.Ltr_p)	// if ttl starts with "p", change title to "Property:" ns; DATE:2014-02-18
 			ttl_bry = ByteAry_.Add_w_dlm(Byte_ascii.Colon, Wdata_wiki_mgr.Ns_property_name_bry, ttl_bry);
 		return Pages_get(ttl_bry);
 	}

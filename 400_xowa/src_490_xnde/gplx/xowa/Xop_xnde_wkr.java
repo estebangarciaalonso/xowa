@@ -270,7 +270,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 				return end_pos;
 			}
 		}
-		int prv_acs = ctx.Stack_idx_typ_tblw(Xop_tkn_itm_.Tid_xnde);
+		int prv_acs = ctx.Stack_idx_find_but_stop_at_tbl(Xop_tkn_itm_.Tid_xnde);
 		Xop_xnde_tkn prv_xnde = prv_acs == -1 ? null : (Xop_xnde_tkn)ctx.Stack_get(prv_acs); //(Xop_xnde_tkn)ctx.Stack_get_typ(Xop_tkn_itm_.Tid_xnde);
 		int prv_xnde_tagId = prv_xnde == null ? Xop_tkn_itm_.Tid_null : prv_xnde.Tag().Id();
 
@@ -397,41 +397,41 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			case Xop_xnde_tag_.Tid_th:		typeId = Xop_tkn_itm_.Tid_tblw_th; wlxr_type = Xop_tblw_wkr.Tblw_type_th; break;
 			case Xop_xnde_tag_.Tid_caption:	typeId = Xop_tkn_itm_.Tid_tblw_tc; wlxr_type = Xop_tblw_wkr.Tblw_type_tc; break;
 		}
-		Xop_tblw_tkn prv_tkn = ctx.Stack_get_tblw();
+		Xop_tblw_tkn prv_tkn = ctx.Stack_get_tbl();
 		int prv_tkn_typeId = prv_tkn == null ? -1 : prv_tkn.Tkn_tid();
 		ctx.Tblw().Make_tkn_end(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, typeId, wlxr_type, prv_tkn, prv_tkn_typeId, true);
 //			ctx.Para().Process_block__bgn_n__end_y(ctx, root, src, bgn_pos, cur_pos);
 	}		
 	private int Make_xtag_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, Xop_xnde_tag end_tag) {
-		int end_tagId = end_tag.Id();
+		int end_tag_id = end_tag.Id();
 		cur_pos = Byte_ary_finder.Find_fwd_while_not_ws(src, cur_pos, src_len) + 1;
-		int acs_pos = ctx.Stack_idx_typ_tblw(Xop_tkn_itm_.Tid_xnde);
-		Xop_xnde_tkn bgnNde = (Xop_xnde_tkn)ctx.Stack_get(acs_pos);
-		int bgnTagId = bgnNde == null ? -1 : bgnNde.Tag().Id();
+		int acs_pos = ctx.Stack_idx_find_but_stop_at_tbl(Xop_tkn_itm_.Tid_xnde);
+		Xop_xnde_tkn bgn_nde = (Xop_xnde_tkn)ctx.Stack_get(acs_pos);
+		int bgn_tag_id = bgn_nde == null ? -1 : bgn_nde.Tag().Id();
 
-		int endNdeMode = end_tag.EndNdeMode();
-		switch (bgnTagId) {
+		int end_nde_mode = end_tag.EndNdeMode();
+		switch (bgn_tag_id) {
 			case Xop_xnde_tag_.Tid_sub:
-				if (end_tagId == Xop_xnde_tag_.Tid_sup) {end_tagId = Xop_xnde_tag_.Tid_sub; ctx.Msg_log().Add_itm_none(Xop_xnde_log.Sub_sup_swapped, src, bgn_pos, cur_pos);}
+				if (end_tag_id == Xop_xnde_tag_.Tid_sup) {end_tag_id = Xop_xnde_tag_.Tid_sub; ctx.Msg_log().Add_itm_none(Xop_xnde_log.Sub_sup_swapped, src, bgn_pos, cur_pos);}
 				break;
 			case Xop_xnde_tag_.Tid_sup:
-				if (end_tagId == Xop_xnde_tag_.Tid_sub) {end_tagId = Xop_xnde_tag_.Tid_sup; ctx.Msg_log().Add_itm_none(Xop_xnde_log.Sub_sup_swapped, src, bgn_pos, cur_pos);}
+				if (end_tag_id == Xop_xnde_tag_.Tid_sub) {end_tag_id = Xop_xnde_tag_.Tid_sup; ctx.Msg_log().Add_itm_none(Xop_xnde_log.Sub_sup_swapped, src, bgn_pos, cur_pos);}
 				break;
 			case Xop_xnde_tag_.Tid_mark:
-				if (end_tagId == Xop_xnde_tag_.Tid_span) {end_tagId = Xop_xnde_tag_.Tid_mark; ctx.Msg_log().Add_itm_none(Xop_xnde_log.Sub_sup_swapped, src, bgn_pos, cur_pos);}
+				if (end_tag_id == Xop_xnde_tag_.Tid_span) {end_tag_id = Xop_xnde_tag_.Tid_mark; ctx.Msg_log().Add_itm_none(Xop_xnde_log.Sub_sup_swapped, src, bgn_pos, cur_pos);}
 				break;
 		}
-		if (end_tagId == Xop_xnde_tag_.Tid_table || end_tag.TblSub()) {
-			Tblw_end(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, end_tagId);
+		if (end_tag_id == Xop_xnde_tag_.Tid_table || end_tag.TblSub()) {
+			Tblw_end(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, end_tag_id);
 			return cur_pos;
 		}
 		if (end_tag.Empty_ignored() && ctx.Empty_ignored()		// emulate TidyHtml logic for pruning empty tags; EX: "<li> </li>" -> "")
-			&& bgnNde != null) {								// bgnNde will be null if only endNde; EX:WP:Sukhoi Su-47; "* </li>" 
-			ctx.Empty_ignore(root, bgnNde.Tkn_sub_idx());
-			End_tag(ctx, root, bgnNde, src, src_len, bgn_pos, cur_pos, end_tagId, true, end_tag);
+			&& bgn_nde != null) {								// bgn_nde will be null if only endNde; EX:WP:Sukhoi Su-47; "* </li>" 
+			ctx.Empty_ignore(root, bgn_nde.Tkn_sub_idx());
+			End_tag(ctx, root, bgn_nde, src, src_len, bgn_pos, cur_pos, end_tag_id, true, end_tag);
 			return cur_pos;
 		}
-		switch (endNdeMode) {
+		switch (end_nde_mode) {
 			case Xop_xnde_tag_.EndNdeMode_inline:	// PATCH.WP: allows </br>, </br/> and many other variants
 				Xnde_bgn(ctx, tkn_mkr, root, end_tag, Xop_xnde_tkn.CloseMode_inline, src, bgn_pos, cur_pos, Int_.MinValue, Int_.MinValue, null);	// NOTE: atrs is null b/c </br> will never have atrs
 				return cur_pos;
@@ -441,24 +441,24 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 				return cur_pos;
 		}
 		if (acs_pos != -1) {	// something found
-			if		(bgnTagId == end_tagId) { 						// endNde matches bgnNde; normal
-				End_tag(ctx, root, bgnNde, src, src_len, bgn_pos, cur_pos, end_tagId, true, end_tag);
+			if		(bgn_tag_id == end_tag_id) { // endNde matches bgn_nde; normal
+				End_tag(ctx, root, bgn_nde, src, src_len, bgn_pos, cur_pos, end_tag_id, true, end_tag);
 				return cur_pos;
 			}
-			if (TagStack_has(ctx, end_tagId)) {	// end_tag has bgnTag somewhere in stack;					
+			if (TagStack_has(ctx, end_tag_id)) {	// end_tag has bgnTag somewhere in stack;					
 				int end = ctx.Stack_len() - 1;
-				for (int i = end; i > -1; i--) {	// iterate stack and close all nodes until bgnNde that matches endNde
+				for (int i = end; i > -1; i--) {	// iterate stack and close all nodes until bgn_nde that matches endNde
 					Xop_tkn_itm tkn = ctx.Stack_get(i);
 					if (tkn.Tkn_tid() == Xop_tkn_itm_.Tid_xnde) {
 						Xop_xnde_tkn xnde_tkn = (Xop_xnde_tkn)tkn;
 						End_tag(ctx, root, xnde_tkn, src, src_len, bgn_pos, bgn_pos, xnde_tkn.Tag().Id(), false, end_tag);
 						ctx.Stack_pop_idx(i);
-						if (xnde_tkn.Tag().Id() == end_tagId) {
+						if (xnde_tkn.Tag().Id() == end_tag_id) {
 							xnde_tkn.Src_end_(cur_pos);
 							return cur_pos;
 						}
 						else
-							ctx.Msg_log().Add_itm_none(Xop_xnde_log.Auto_closing_section, src, bgnNde.Src_bgn(), bgnNde.Name_end());
+							ctx.Msg_log().Add_itm_none(Xop_xnde_log.Auto_closing_section, src, bgn_nde.Src_bgn(), bgn_nde.Name_end());
 					}
 					else
 						ctx.Stack_autoClose(root, src, tkn, bgn_pos, cur_pos);

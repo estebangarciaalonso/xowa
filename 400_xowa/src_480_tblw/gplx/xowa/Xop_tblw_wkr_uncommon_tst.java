@@ -81,12 +81,3 @@ public class Xop_tblw_wkr_uncommon_tst {
 			));
 	}
 }
-
-/*
-{|
-|-
-|a
-|[[b/c|d
-|}
-== f ==
-*/

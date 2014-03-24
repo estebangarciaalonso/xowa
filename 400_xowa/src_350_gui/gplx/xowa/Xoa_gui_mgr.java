@@ -30,7 +30,7 @@ public class Xoa_gui_mgr implements GfoInvkAble {
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public Xog_win Main_win() {return main_win;} private Xog_win main_win;
 	public IptCfgRegy Ipt_cfgs() {return ipt_cfgs;} IptCfgRegy ipt_cfgs = new IptCfgRegy();
-	public Gfui_kit Kit() {return kit;} Gfui_kit kit = Gfui_kit_.key_(Gfui_kit_.Key_basic);
+	public Gfui_kit Kit() {return kit;} private Gfui_kit kit = Gfui_kit_.Mem();	// default to swing for test
 	public Xog_cmd_mgr Cmd_mgr() {return cmd_mgr;} private Xog_cmd_mgr cmd_mgr = new Xog_cmd_mgr();
 	public Xoa_ui_opts Win_opts() {return win_opts;} private Xoa_ui_opts win_opts;
 	public Xog_layout Layout() {return layout;} private Xog_layout layout = new Xog_layout();
@@ -64,7 +64,7 @@ public class Xoa_gui_mgr implements GfoInvkAble {
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_kit))				return kit;
-		else if	(ctx.Match(k, Invk_kit_))				this.kit = Gfui_kit_.key_(m.ReadStrOr("v", "default"));
+		else if	(ctx.Match(k, Invk_kit_))				this.kit = Gfui_kit_.Get_by_key(m.ReadStrOr("v", Gfui_kit_.Swt().Key()));
 		else if	(ctx.Match(k, Invk_run))				Run();
 		else if	(ctx.Match(k, Invk_browser_type))		kit.Cfg_set("HtmlBox", "BrowserType", gplx.gfui.Swt_kit.Cfg_Html_BrowserType_parse(m.ReadStr("v")));
 		else if	(ctx.Match(k, Invk_xul_runner_path_))	kit.Cfg_set("HtmlBox", "XulRunnerPath", ByteAryFmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("v")).Xto_api());

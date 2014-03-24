@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
-abstract class GxwElemFactory_base {
+public abstract class GxwElemFactory_base {
 	@gplx.Internal protected abstract GxwElem control_();
 	@gplx.Internal protected abstract GxwWin win_app_();
 	@gplx.Internal protected abstract GxwWin win_tool_(KeyValHash ctorArgs);
@@ -51,23 +51,19 @@ class GxwElemFactory_cls_lang extends GxwElemFactory_base {
 //		return GxwWin_lang.new_();
 			}
 	@gplx.Internal @Override protected GxwWin win_app_()			{return GxwWin_lang.new_();}
-	@gplx.Internal @Override protected GxwElem lbl_() {return new GxwElem_lang();}
-	@gplx.Internal @Override protected GxwTextFld text_fld_() {return GxwTextBox_lang_.fld_();}
-	@gplx.Internal @Override protected GxwTextFld text_memo_() {return GxwTextBox_lang_.memo_();}
-	@gplx.Internal @Override protected GxwTextHtml text_html_() {return new GxwTextHtml_lang().ctor();}
+	@gplx.Internal @Override protected GxwElem lbl_()			{return new GxwElem_lang();}
+	@gplx.Internal @Override protected GxwTextFld text_fld_()	{return GxwTextBox_lang_.fld_();}
+	@gplx.Internal @Override protected GxwTextFld text_memo_()	{return GxwTextBox_lang_.memo_();}
+	@gplx.Internal @Override protected GxwTextHtml text_html_()	{return new GxwTextHtml_lang().ctor();}
 	@gplx.Internal @Override protected GxwCheckListBox checkListBox_(KeyValHash ctorArgs) {return new GxwCheckListBox_lang();}
-	@gplx.Internal @Override protected GxwComboBox comboBox_() {return GxwComboBox_lang.new_();}
-	@gplx.Internal @Override protected GxwListBox listBox_() {return GxwListBox_lang.new_();}
+	@gplx.Internal @Override protected GxwComboBox comboBox_()	{return GxwComboBox_lang.new_();}
+	@gplx.Internal @Override protected GxwListBox listBox_()		{return GxwListBox_lang.new_();}
 }
 class GxwElemFactory_cls_mock extends GxwElemFactory_base {
 	@gplx.Internal @Override protected GxwElem control_() {return GxwElem_mock_base.new_();}
-	@gplx.Internal @Override protected GxwWin win_app_() {return new MockForm();}
-	@gplx.Internal @Override protected GxwWin win_tool_(KeyValHash ctorArgs)	{
-		return new MockForm();
-	}
-	@gplx.Internal @Override protected GxwWin win_toaster_(KeyValHash ctorArgs)	{
-		return new MockForm();
-	}
+	@gplx.Internal @Override protected GxwWin win_app_() {return MockForm._;}
+	@gplx.Internal @Override protected GxwWin win_tool_(KeyValHash ctorArgs)	{return MockForm._;}
+	@gplx.Internal @Override protected GxwWin win_toaster_(KeyValHash ctorArgs)	{return MockForm._;}
 	@gplx.Internal @Override protected GxwElem lbl_() {return GxwElem_mock_base.new_();}
 	@gplx.Internal @Override protected GxwTextFld text_fld_() {return new MockTextBox();}
 	@gplx.Internal @Override protected GxwTextFld text_memo_() {return new MockTextBoxMulti();}

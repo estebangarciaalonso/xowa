@@ -35,6 +35,7 @@ public class Xof_ext {
 	public boolean Id_is_audio_strict()	{return Xof_ext_.Id_is_audio_strict(id);}
 	public boolean Id_is_video()			{return Xof_ext_.Id_is_video(id);}
 	public boolean Id_is_thumbable_img()	{return Xof_ext_.Id_is_thumbable_img(id);}
+	public boolean Id_supports_page()		{return Xof_ext_.Id_supports_page(id);}
 	public boolean Id_needs_convert()		{return Xof_ext_.Id_needs_convert(id);}
 	public int Id_view()				{return Xof_ext_.Id_view(id);}
 }

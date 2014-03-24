@@ -32,7 +32,7 @@ public interface ImageAdp extends RlsAble {
 	ImageAdp Extract_image(int src_x, int src_y, int src_w, int src_h, int trg_w, int trg_h);
 }
 class ImageAdp_txt implements ImageAdp {
-	public Gfui_kit Kit() {return Gfui_kit_base._;}
+	public Gfui_kit Kit() {return Swing_kit._;}
 	public SizeAdp Size() {return size;} SizeAdp size;
 	public int Width() {return size.Width();}
 	public int Height() {return size.Height();}

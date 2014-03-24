@@ -28,9 +28,10 @@ public class Html_consts {
 	, Eq = ByteAry_.new_ascii_("&#61;")
 	, Nl_bry = ByteAry_.new_ascii_(Nl_str), Space_bry = ByteAry_.new_ascii_("&#32;")
 	, Comm_bgn = ByteAry_.new_ascii_(Comm_bgn_str), Comm_end = ByteAry_.new_ascii_(Comm_end_str)
-	, Hr_bry		= ByteAry_.new_utf8_("<hr/>")
-	, Td_bgn_bry	= ByteAry_.new_utf8_("<td>")
-	, Td_end_bry	= ByteAry_.new_utf8_("</td>")
+	, Hr_bry		= ByteAry_.new_ascii_("<hr/>")
+	, Td_bgn_bry	= ByteAry_.new_ascii_("<td>")
+	, Td_end_bry	= ByteAry_.new_ascii_("</td>")
+	, Ul_tag_bry	= ByteAry_.new_ascii_("ul")
 	;
 	public static final int
 	  Comm_bgn_len = Comm_bgn.length

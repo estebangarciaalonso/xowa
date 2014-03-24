@@ -46,11 +46,11 @@ public class Xop_xnde_wkr__err_misc_tst {
 			(	"<table>"
 			,		"<tr>"
 			,			"<td>"
-			,				"<div>"
+			,				"<div>"									// this is <div> #1
 			,					"<table>"
 			,						"<tr>"
 			,							"<td>"
-			,								"<div>"
+			,								"<div>"					// this is <div> #2
 			,									"<div>"
 			,										"a"
 			,									"</div>"
@@ -59,7 +59,7 @@ public class Xop_xnde_wkr__err_misc_tst {
 			,									"<div>"
 			,										"b"
 			,									"</div>"
-			,								"</div>"
+			,								"</div>"				// this </div> was supposed to pop <div> #2, but can't (b/c of HTML rules); however, do not try to pop <div> #1;
 			,							"</td>"
 			,							"<td>"
 			,								"<div>"

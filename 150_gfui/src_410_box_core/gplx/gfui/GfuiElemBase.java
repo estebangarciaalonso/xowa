@@ -258,7 +258,7 @@ public class GfuiElemBase implements GfuiElem {
 		public void Invoke(GfoInvkAbleCmd cmd) {
 		cmd.Invk();
 	}
-		public Gfui_kit Kit() {return kit;} Gfui_kit kit = Gfui_kit_.key_(Gfui_kit_.Key_basic);
+		public Gfui_kit Kit() {return kit;} private Gfui_kit kit = Gfui_kit_.Swing();
 
 	@gplx.Virtual public void ctor_GfuiBox_base(KeyValHash ctorArgs) {
 		underElem = UnderElem_make(ctorArgs);

@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.html; import gplx.*; import gplx.xowa.*;
 import gplx.xowa.files.*;
 import gplx.xowa.parsers.lnkis.*;
-public class Xoh_lnki_wtr {
-	public Xoh_lnki_wtr(Xow_wiki wiki, Xoh_html_wtr html_wtr) {
+public class Xoh_lnki_file_wtr {
+	public Xoh_lnki_file_wtr(Xow_wiki wiki, Xoh_html_wtr html_wtr) {
 		this.wiki = wiki; this.html_wtr = html_wtr; bfr_mkr = wiki.Utl_bry_bfr_mkr();
 		this.cfg = wiki.Html_mgr();
 	}	private Xow_html_mgr cfg; private boolean lnki_title_enabled;
@@ -224,7 +224,7 @@ public class Xoh_lnki_wtr {
 		if (!wiki.Html_mgr().Imgs_mgr().Alt_in_caption().Val()) lnki_alt_html = ByteAry_.Empty;
 		cfg.Lnki_thumb_file_image().Bld_bfr_many(tmp_bfr, thumb, Caption_div(src, lnki, depth, html_orig_src, lnki_href), lnki_alt_html);
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();
-	}	static final byte[] Anchor_title = ByteAry_.new_utf8_(" title=\"");
+	}	private static final byte[] Anchor_title = ByteAry_.new_utf8_(" title=\"");
 	private byte[] Audio(byte[] src, Xoh_opts opts, Xop_lnki_tkn lnki, int depth, int elem_id, byte[] lnki_href, byte[] html_orig_src, byte[] lnki_alt_text) {
 		byte[] info_btn = ByteAry_.Empty;
 		ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();

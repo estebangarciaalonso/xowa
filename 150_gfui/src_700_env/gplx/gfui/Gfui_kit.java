@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.gfui; import gplx.*;
 public interface Gfui_kit extends GfoInvkAble {
 	byte			Tid();
+	String			Key();
 	void			Cfg_set(String type, String key, Object val);
 	boolean			Kit_init_done();
 	void			Kit_init(Gfo_usr_dlg gui_wtr);
@@ -33,7 +34,7 @@ public interface Gfui_kit extends GfoInvkAble {
 	GfuiInvkCmd		New_cmd_async(GfoInvkAble invk);
 	GfuiWin			New_win_app(String key, KeyVal... args);
 	GfuiWin			New_win_utl(String key, GfuiWin owner, KeyVal... args);
-	Gfui_html	New_html_box(String key, GfuiElem owner, KeyVal... args);
+	Gfui_html	New_html(String key, GfuiElem owner, KeyVal... args);
 	GfuiTextBox		New_text_box(String key, GfuiElem owner, KeyVal... args);
 	GfuiBtn			New_btn(String key, GfuiElem owner, KeyVal... args);
 	Gfui_dlg_file	New_dlg_file(String msg);

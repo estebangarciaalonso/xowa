@@ -303,11 +303,11 @@ public class Xop_para_wkr_basic_tst {
 			,	"</gallery>"
 			);
 		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
-			(	" " + Gallery_html()
+			(	" " + Gallery_html_wtr()
 			,	""
 			));
 	}
-	String Gallery_html() {
+	String Gallery_html_wtr() {
 		return String_.Concat_lines_nl_skipLast
 			(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
 			,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"

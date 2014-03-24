@@ -41,7 +41,11 @@ public class Xol_lang implements GfoInvkAble {
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public byte[] Key_bry() {return key_bry;} private byte[] key_bry; public String Key_str() {return key_str;} private String key_str;
 	public int Lang_id() {return lang_id;} private int lang_id;
-	public boolean Dir_ltr() {return dir_ltr;} public void Dir_ltr_(boolean v) {dir_ltr = v;} private boolean dir_ltr = true;
+	public boolean Dir_ltr() {return dir_ltr;} 
+	public void Dir_ltr_(boolean v) {
+		dir_ltr = v;
+		img_thumb_halign_default = dir_ltr ? Xop_lnki_halign.Right : Xop_lnki_halign.Left;
+	}	private boolean dir_ltr = true;
 	public byte[] Dir_bry() {return dir_ltr ? Dir_bry_ltr : Dir_bry_rtl;}
 	public Xol_ns_grp Ns_names() {return ns_names;} private Xol_ns_grp ns_names;
 	public Xol_ns_grp Ns_aliases() {return ns_aliases;} private Xol_ns_grp ns_aliases;
@@ -62,11 +66,10 @@ public class Xol_lang implements GfoInvkAble {
 	public Xol_func_name_regy Func_regy() {return func_regy;} private Xol_func_name_regy func_regy;
 
 	public Gfo_num_fmt_mgr Num_fmt_mgr() {return num_fmt_mgr;} Gfo_num_fmt_mgr num_fmt_mgr = new Gfo_num_fmt_mgr();
-	public byte Img_thumb_halign_default() {return Xop_lnki_halign.Right;}	// change for rtl languages
+	public byte Img_thumb_halign_default() {return img_thumb_halign_default;} private byte img_thumb_halign_default = Xop_lnki_halign.Right;
 
 	public Hash_adp_bry Xatrs_ref() {return xatrs_ref;} private Hash_adp_bry xatrs_ref = Hash_adp_bry.ci_();
 	public Hash_adp_bry Xatrs_references() {return xatrs_references;} private Hash_adp_bry xatrs_references = Hash_adp_bry.ci_();
-	public Hash_adp_bry Xatrs_gallery() {return xatrs_gallery;} private Hash_adp_bry xatrs_gallery = Hash_adp_bry.ci_();
 	public Hash_adp_bry Xatrs_pages() {return xatrs_pages;} private Hash_adp_bry xatrs_pages = Hash_adp_bry.ci_();
 	public Hash_adp_bry Xatrs_section() {if (xatrs_section == null) xatrs_section = Lst_pfunc_lst.new_xatrs_(this); return xatrs_section;} private Hash_adp_bry xatrs_section;
 	public void Evt_lang_changed() {
@@ -82,7 +85,7 @@ public class Xol_lang implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_casings))				return case_mgr;
 		else if	(ctx.Match(k, Invk_converts))				return cnv_mgr;
 		else if	(ctx.Match(k, Invk_variants))				return vnt_mgr;
-		else if	(ctx.Match(k, Invk_dir_rtl_))				dir_ltr = !m.ReadYn("v");
+		else if	(ctx.Match(k, Invk_dir_rtl_))				Dir_ltr_(!m.ReadYn("v"));
 		else if	(ctx.Match(k, Invk_dir_str))				return Dir_bry();
 		else if	(ctx.Match(k, Invk_gui_font_))				gui_font.Name_(m.ReadStr("name")).Size_(m.ReadFloatOr("size", 8));
 		else if	(ctx.Match(k, Invk_fallback_load))			Exec_fallback_load(m.ReadBry("v"));

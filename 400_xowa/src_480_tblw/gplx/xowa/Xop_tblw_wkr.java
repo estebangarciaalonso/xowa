@@ -31,7 +31,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 			bgn_pos = 0;	// do not allow -1 pos
 		}
 
-		Xop_tblw_tkn prv_tkn = ctx.Stack_get_tblw();
+		Xop_tblw_tkn prv_tkn = ctx.Stack_get_tbl();
 		if (	ctx.Cur_tkn_tid() == Xop_tkn_itm_.Tid_list		// list is in effect
 			&& !tbl_is_xml										// tbl is wiki-syntax; ie: auto-close if "{|" but do not close if "<table>"; DATE:2014-02-05
 			&& !called_from_list								// do not close if called from list; EX: consider "{|"; "* a {|" is called from list_wkr, and should not close; "* a\n{|" is called from tblw_lxr and should close; DATE:2014-02-14
@@ -51,9 +51,9 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 					break;										//		noop; by definition "{|" does not need to have a previous "{|"
 				case Tblw_type_td:								// "|"
 				case Tblw_type_td2:								// "||"
-					if (tbl_is_xml) {								// <td> should automatically add <table><tr>
-						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tb(bgn_pos, bgn_pos, tbl_is_xml));
-						prv_tkn = tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tbl_is_xml);
+					if (tbl_is_xml) {							// <td> should automatically add <table><tr>
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tb(bgn_pos, bgn_pos, tbl_is_xml, true));
+						prv_tkn = tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tbl_is_xml, true);
 						ctx.Subs_add_and_stack_tblw(root, prv_tkn, prv_tkn);
 						break;
 					}					
@@ -64,7 +64,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 				case Tblw_type_tc:								// "|+"
 				case Tblw_type_tr:								// "|-"
 					if (tbl_is_xml) {							// <tr> should automatically add <table>; DATE:2014-02-13
-						prv_tkn = tkn_mkr.Tblw_tb(bgn_pos, bgn_pos, tbl_is_xml);
+						prv_tkn = tkn_mkr.Tblw_tb(bgn_pos, bgn_pos, tbl_is_xml, true);
 						ctx.Subs_add_and_stack_tblw(root, prv_tkn, prv_tkn);
 						break;
 					}
@@ -94,10 +94,10 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 				case Tblw_type_tr:	// "\n|-"
 				case Tblw_type_th:	// "\n!"
 				case Tblw_type_td:	// "\n|"
-					Xop_tblw_tkn tb = ctx.Stack_get_tbl_tb();		// get enclosing tb
-					if (tb.Tblw_xml()) {							// enclosed by <table> but "\n|"; treat "\n|" as text, not as td; EX:ru.w:Сочи; DATE:2014-02-22; also "\n|-" and "\n!"; EX:s.w:Uranus; DATE:2014-03-05
-						// ctx.Para().Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1);
-						return ctx.LxrMake_txt_(cur_pos);
+					Xop_tblw_tkn tb = ctx.Stack_get_tblw_tb();	// get any {| in stack, not next one; EX:w:Paris#Demographics; DATE:2014-03-18
+					if (tb == null) { 							// enclosed by <table> but "\n|"; treat "\n|" as text, not as td; EX:ru.w:Сочи; DATE:2014-02-22; also "\n|-" and "\n!"; EX:s.w:Uranus; DATE:2014-03-05
+						// ctx.Para().Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1);	// should probably call this
+						return ctx.LxrMake_txt_(cur_pos);		// NOTE: should break up into "\n" + "|" + "other_chars"
 					}
 					break;
 			}
@@ -128,8 +128,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 						else								// fix:  <table><table>			-> <table><tr><td><table>; earlier tbl is tblw; auto-create; EX:it.w:Main_Page; DATE:2014-02-08
 							auto_create = true;
 						break;
-					case Xop_tkn_itm_.Tid_tblw_tr:			// fix:  <table><tr><table>     -> <table><tr>; ignore current table; DATE:2014-02-02
-						ignore_prv = true;
+					case Xop_tkn_itm_.Tid_tblw_tr:			// noop: <table><tr><table>     -> <table><tr><td><table>; should probably auto-create td, but MW does not; DATE:2014-03-18
 						break;
 					case Xop_tkn_itm_.Tid_tblw_tc:			// fix;  <caption><table>   -> <caption></caption><tr><td><table>
 						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
@@ -143,10 +142,10 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 					return cur_pos;
 				}
 				if (auto_create) {
-					ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tbl_is_xml));
+					ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tbl_is_xml, true));
 					ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_td(bgn_pos, bgn_pos, tbl_is_xml));
 				}
-				Xop_tblw_tb_tkn tb_tkn = tkn_mkr.Tblw_tb(bgn_pos, cur_pos, tbl_is_xml);
+				Xop_tblw_tb_tkn tb_tkn = tkn_mkr.Tblw_tb(bgn_pos, cur_pos, tbl_is_xml, false);
 				new_tkn = tb_tkn;
 				break;
 			case Tblw_type_tr:								// <tr>
@@ -172,7 +171,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 							ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tr), true, bgn_pos, bgn_pos);						
 						break;
 				}					
-				Xop_tblw_tr_tkn tr_tkn = tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tbl_is_xml);
+				Xop_tblw_tr_tkn tr_tkn = tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tbl_is_xml, false);
 				new_tkn = tr_tkn;
 				break;
 			case Tblw_type_td:								// <td>
@@ -196,14 +195,15 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 							return cur_pos;
 						}
 						else {
-							new_tkn = tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tbl_is_xml);
+							new_tkn = tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tbl_is_xml, true);
+							new_tkn.Atrs_rng_set(bgn_pos, bgn_pos);
 							ctx.Subs_add_and_stack_tblw(root, prv_tkn, new_tkn);
 							prv_tid = new_tkn.Tkn_tid();
 						}
 						break;
 					case Xop_tkn_itm_.Tid_tblw_tc:			// fix;  <caption><td>      -> <caption></caption><tr><td>
 						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
-						new_tkn = tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tbl_is_xml);
+						new_tkn = tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tbl_is_xml, true);
 						ctx.Subs_add_and_stack_tblw(root, prv_tkn, new_tkn);
 						prv_tid = new_tkn.Tkn_tid();
 						break;
@@ -237,11 +237,11 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 						}
 						break;
 					case Xop_tkn_itm_.Tid_tblw_tb:			// fix;  <table><th>        -> <table><tr><th>
-						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tbl_is_xml));
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tbl_is_xml, true));
 						break;
 					case Xop_tkn_itm_.Tid_tblw_tc:			// fix;  <caption><th>      -> <caption></caption><tr><th>
 						ctx.Stack_pop_til(root, src, ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_tblw_tc), true, bgn_pos, bgn_pos);
-						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tbl_is_xml));
+						ctx.Subs_add_and_stack_tblw(root, prv_tkn, tkn_mkr.Tblw_tr(bgn_pos, cur_pos, tbl_is_xml, true));
 						break;
 				}
 				new_tkn = tkn_mkr.Tblw_th(bgn_pos, cur_pos, tbl_is_xml);
@@ -292,9 +292,9 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 	public int Make_tkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, int typeId, byte wlxr_type, Xop_tblw_tkn prv_tkn, int prv_tid, boolean tbl_is_xml) {
 		if (!tbl_is_xml)													// only for "\n|}" not </table>
 			ctx.Para().Process_nl(ctx, root, src, bgn_pos, bgn_pos + 1);	// simulate "\n"; process para (which will create paras for cells) 2012-12-08
-		if (tbl_is_xml										// tblx: </table>
-			&& prv_tkn != null && !prv_tkn.Tblw_xml()) {	// tblw is prv_tkn
-			++tblw_te_ignore_count;							// suppress subsequent occurrences of "|}"; EX:ru.q:Авель; DATE:2014-02-22
+		if (tbl_is_xml && typeId == Xop_tkn_itm_.Tid_tblw_tb	// tblx: </table>
+			&& prv_tkn != null && !prv_tkn.Tblw_xml()) {		// tblw is prv_tkn
+			++tblw_te_ignore_count;								// suppress subsequent occurrences of "|}"; EX:ru.q:Авель; DATE:2014-02-22
 		}
 		Ignore_ws(ctx, root);
 		if (wlxr_type == Tblw_type_te) {
@@ -338,7 +338,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 						}
 					}
 					if (!has_subs) {
-						Xop_tkn_itm new_tkn = tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tbl_is_xml);
+						Xop_tkn_itm new_tkn = tkn_mkr.Tblw_tr(bgn_pos, bgn_pos, tbl_is_xml, true);
 						ctx.Subs_add_and_stack_tblw(root, prv_tkn, new_tkn);
 						new_tkn = tkn_mkr.Tblw_td(bgn_pos, bgn_pos, tbl_is_xml);
 						ctx.Subs_add_and_stack_tblw(root, prv_tkn, new_tkn);
@@ -400,7 +400,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 		return cur_pos;
 	}
 	public static void Atrs_close(Xop_ctx ctx, byte[] src, Xop_root_tkn root) {
-		Xop_tblw_tkn prv_tkn = ctx.Stack_get_tblw();
+		Xop_tblw_tkn prv_tkn = ctx.Stack_get_tbl();
 		if (prv_tkn == null || prv_tkn.Tblw_xml()) return;			// no tblw or tblw_xnde (which does not have tblw atrs)
 		switch (prv_tkn.Tkn_tid()) {
 			case Xop_tkn_itm_.Tid_tblw_tb: case Xop_tkn_itm_.Tid_tblw_tr:	// only tb and tr have tblw atrs (EX: "{|id=1\n"); td/th use pipes for atrs (EX: "|id=1|a"); tc has no atrs; te is never on stack
@@ -414,7 +414,7 @@ public class Xop_tblw_wkr implements Xop_ctx_wkr {
 		int subs_pos = subs_bgn;
 		Xop_tkn_itm last_atr_tkn = null;
 		boolean loop = true;
-		while (loop) {											// loop over tkns after prv_tkn to find last_atr_tkn
+		while (loop) {													// loop over tkns after prv_tkn to find last_atr_tkn
 			if (subs_pos > subs_end) break;
 			Xop_tkn_itm tmp_tkn = root.Subs_get(subs_pos);
 			switch (tmp_tkn.Tkn_tid()) {

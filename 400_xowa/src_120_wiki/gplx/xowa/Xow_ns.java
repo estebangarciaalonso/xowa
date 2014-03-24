@@ -76,7 +76,11 @@ public class Xow_ns implements GfoInvkAble {
 	public boolean		Is_alias()				{return is_alias;} private boolean is_alias;
 	public int		Count()					{return count;} public Xow_ns Count_(int v) {count = v; return this;} private int count;
 	public byte[]	Gen_ttl(byte[] page)	{return id == Xow_ns_.Id_main ? page : ByteAry_.Add(name_db_w_colon, page);}
-	public OrderedHash Aliases()			{if (aliases == null) aliases = OrderedHash_.new_(); return aliases;} private OrderedHash aliases;
+	public void		Aliases_add(String alias) {
+		if (String_.Eq(alias, name_str)) return;
+		if (aliases == null) aliases = OrderedHash_.new_();
+		aliases.Add_if_new(alias, alias);
+	}	private OrderedHash aliases;
 	public KeyVal[] Aliases_as_scrib_ary() {	// NOTE: intended for Scrib_lib_site; DATE:2014-02-15
 		if (aliases == null) return KeyVal_.Ary_empty;
 		int len = aliases.Count();

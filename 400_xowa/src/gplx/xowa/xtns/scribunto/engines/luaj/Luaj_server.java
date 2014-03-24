@@ -19,17 +19,27 @@ package gplx.xowa.xtns.scribunto.engines.luaj; import gplx.*; import gplx.xowa.*
 import org.luaj.vm2.*; import org.luaj.vm2.lib.*; import org.luaj.vm2.lib.jse.*;
 import gplx.xowa.xtns.scribunto.engines.process.*;
 class Luaj_server implements Scrib_server {
+	private Scrib_core core;
 	private LuaTable env;	
 	private LuaTable server;
-	public void Init(String... process_args) {
+	private Luaj_server_func_error error_func; boolean debug_enabled;
+	public Luaj_server(Scrib_core core, boolean debug_enabled) {
+		this.core = core;
+		error_func = new Luaj_server_func_error();		
+		this.debug_enabled = debug_enabled;
+	}
+	public void Init(String... init_args) {
+		DebugLib.DEBUG_ENABLED = debug_enabled;
 		this.env = JsePlatform.standardGlobals();
-		LuaValue main_fil_val = LuaValue.valueOf(process_args[2] + "engines/Luaj/mw_main.lua");
-		String root_str = process_args[2];
+		LuaValue main_fil_val = LuaValue.valueOf(init_args[2] + "engines/Luaj/mw_main.lua");
+		String root_str = init_args[2];
 		if (Op_sys.Cur().Tid_is_wnt())
 			root_str = String_.Replace(root_str, Op_sys.Wnt.Fsys_dir_spr_str(), Op_sys.Lnx.Fsys_dir_spr_str());
 		LuaValue package_val = env.get("package");
 		package_val.rawset("path", LuaValue.valueOf(root_str + "engines/Luaj/?.lua;" + root_str + "engines/LuaCommon/lualib/?.lua"));
 		server = (LuaTable)env.get("dofile").call(main_fil_val);
+		error_func.Init(core, server);		
+		error_func.Debug_enabled_(debug_enabled);
 	}
 	public LuaTable Dispatch(LuaTable msg) {
 		return (LuaTable)server.method(Val_server_recv, msg);
@@ -38,9 +48,8 @@ class Luaj_server implements Scrib_server {
 		LuaValue xchunks = server.get(Val_xchunks);
 		LuaValue closure_id = xchunks.get(closure);
 		int rv = -1;
-		if (closure_id == LuaValue.NIL) {
+		if (closure_id == LuaValue.NIL)		// new closure; add it to chunks table via addChunk (which will return new id)
 			rv = ((LuaInteger)server.method("addChunk", closure)).v;
-		}
 		else
 			rv = ((LuaInteger)closure_id).v;
 		return rv;		

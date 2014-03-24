@@ -56,6 +56,10 @@ public class Process_engine implements Scrib_engine {
 				bfr.Mkr_rls();
 				return rsp.Values();
 			}
+			else if	(String_.Eq(op, "error")) {
+				core.Handle_error(rsp.Rslt_ary()[0].Val_to_str_or_empty(), "");
+				return KeyVal_.Ary_empty;
+			}
 			else if (String_.Eq(op, "call")) {
 				String id = rsp.Call_id();
 				KeyVal[] args = rsp.Call_args();

@@ -17,11 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.html; import gplx.*; import gplx.xowa.*;
 import gplx.xowa.ctgs.*; import gplx.xowa.xtns.gallery.*;
+import gplx.xowa.html.portal.*; import gplx.xowa.html.modules.*;
 public class Xow_html_mgr implements GfoInvkAble {
 	public Xow_html_mgr(Xow_wiki wiki) {
 		this.wiki = wiki;
 		Xoa_app app = wiki.App();
-		output_mgr = new Xoh_wiki_article(app,  app.Gui_mgr().Kit().Tid() != gplx.gfui.Gfui_kit_.TypeId_default);	// NOTE: reverse logic to handle kit_drd
+		output_mgr = new Xoh_wiki_article(app, app.Gui_mgr().Kit().Tid() != gplx.gfui.Gfui_kit_.Swing_tid);	// reverse logic to handle swt,drd but not mem
 		Io_url file_dir = app.User().Fsys_mgr().App_img_dir().GenSubDir_nest("file");
 		img_media_play_btn = app.Url_converter_fsys().Encode_http(file_dir.GenSubFil("play.png"));
 		img_media_info_btn = app.Url_converter_fsys().Encode_http(file_dir.GenSubFil("info.png"));
@@ -29,10 +30,15 @@ public class Xow_html_mgr implements GfoInvkAble {
 		img_xowa_protocol = app.Url_converter_fsys().Encode_http(app.User().Fsys_mgr().App_img_dir().GenSubFil_nest("xowa", "protocol.png"));
 		portal_mgr = new Xowh_portal_mgr(wiki);
 		imgs_mgr = new Xoh_imgs_mgr(this);
+		module_regy = new Xoh_module_regy(wiki);
+	}
+	public void Init_by_lang(Xol_lang lang) {
+		portal_mgr.Init_by_lang(lang);
 	}
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	public Xowh_portal_mgr Portal_mgr() {return portal_mgr;} private Xowh_portal_mgr portal_mgr;
 	public Xoh_wiki_article Output_mgr() {return output_mgr;} private Xoh_wiki_article output_mgr;
+	public Xoh_module_regy Module_regy() {return module_regy;} private Xoh_module_regy module_regy;
 	public boolean Tbl_para() {return tbl_para;} public Xow_html_mgr Tbl_para_y_() {tbl_para = true; return this;} public Xow_html_mgr Tbl_para_n_() {tbl_para = false; return this;} private boolean tbl_para = true;
 	public int Img_thumb_width() {return img_thumb_width;} private int img_thumb_width = 220;
 	public byte[] Img_media_play_btn() {return img_media_play_btn;} private byte[] img_media_play_btn;
@@ -42,7 +48,6 @@ public class Xow_html_mgr implements GfoInvkAble {
 	public boolean Img_suppress_missing_src() {return img_suppress_missing_src;} public Xow_html_mgr Img_suppress_missing_src_(boolean v) {img_suppress_missing_src = v; return this;} private boolean img_suppress_missing_src = true;
 	public Xohp_ctg_grp_mgr Ctg_mgr() {return ctg_mgr;} private Xohp_ctg_grp_mgr ctg_mgr = new Xohp_ctg_grp_mgr();
 	public Xoctg_html_mgr Ns_ctg() {return ns_ctg;} private Xoctg_html_mgr ns_ctg = new Xoctg_html_mgr();
-	public Gallery_html Gallery_xtn_mgr() {return gallery_mgr;} private Gallery_html gallery_mgr = new Gallery_html();
 	public Xoh_imgs_mgr Imgs_mgr() {return imgs_mgr;} private Xoh_imgs_mgr imgs_mgr;
 	public ByteAryFmtr Lnki_full_image() {return lnki_full_image;} ByteAryFmtr lnki_full_image = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
 		(	"<a href=\"~{href}\"~{anchor_class}~{anchor_rel}~{anchor_title} xowa_title=\"~{lnki_title}\"><img id=\"xowa_file_img_~{elem_id}\" alt=\"~{alt}\" src=\"~{src}\" width=\"~{width}\" height=\"~{height}\"~{img_class} /></a>"

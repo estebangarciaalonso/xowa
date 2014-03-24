@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.wikis.*; import gplx.xowa.html.*; import gplx.xowa.xtns.wdatas.*;
+import gplx.xowa.html.portal.*;
 public class Xou_output_wkr implements ByteAryFmtrArg {		
 	public Xou_output_wkr(byte output_tid, boolean raw_text, boolean wiki_text) {this.output_tid = output_tid; this.raw_text = raw_text; this.wiki_text = wiki_text;} private byte output_tid; boolean wiki_text;
 	public boolean Raw_text() {return raw_text;} private boolean raw_text;

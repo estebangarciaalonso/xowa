@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.apps.*;
+import gplx.xowa.apps.*; import gplx.xowa.net.*;
 public class Xop_lnke_wkr implements Xop_ctx_wkr {
 	public void Ctor_ctx(Xop_ctx ctx) {url_parser = ctx.App().Url_parser().Url_parser();} Gfo_url_parser url_parser; Gfo_url_site_data site_data = new Gfo_url_site_data(); Xoa_url_parser xo_url_parser = new Xoa_url_parser(); Xoa_url xo_url_parser_url = new Xoa_url();
 	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {}
@@ -30,7 +30,7 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 		ctx.Msg_log().Add_itm_none(Xop_lnke_log.Dangling, src, tkn.Src_bgn(), cur_pos);
 	}
 	public static final byte[] Bry_xowa_protocol = ByteAry_.new_ascii_("xowa-cmd:");
-	int Make_tkn_xowa(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte[] protocol, byte proto_tid, byte lnke_type) {
+	private int Make_tkn_xowa(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte[] protocol, byte proto_tid, byte lnke_type) {
 		// NOTE: fmt is [xowa-cmd:^"app.setup_mgr.import_wiki('');"^ ]
 		if (lnke_type != Xop_lnke_tkn.Lnke_typ_brack) return ctx.LxrMake_txt_(cur_pos); // NOTE: must check for [ or else C:\xowa\ will cause it to evaluate as lnke
 		int proto_end_pos = cur_pos + 1;	// +1 to skip past :
@@ -53,7 +53,7 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 		return end_pos;
 	}	private static final byte[] Bry_quote = new byte[] {Byte_ascii.Quote};
 	public int MakeTkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos, byte[] protocol, byte proto_tid, byte lnke_type) {
-		if (proto_tid == Xow_cfg_lnke.Tid_xowa) return Make_tkn_xowa(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, protocol, proto_tid, lnke_type);
+		if (proto_tid == Xoo_protocol_itm.Tid_xowa) return Make_tkn_xowa(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, protocol, proto_tid, lnke_type);
 		boolean lnke_type_brack = (lnke_type == Xop_lnke_tkn.Lnke_typ_brack);
 		if (ctx.Stack_get_typ(Xop_tkn_itm_.Tid_lnke) != null) return ctx.LxrMake_txt_(cur_pos); // no nested lnke; return cur lnke as text; EX: "[irc://a irc://b]" -> "<a href='irc:a'>irc:b</a>"
 
@@ -138,7 +138,7 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 					lnke_type = Xop_lnke_tkn.Lnke_typ_brack_dangling;
 					return ctx.LxrMake_txt_(lnke_end);	// textify lnk; EX: [irc://a\n] textifies "[irc://a"
 				default:
-					lnke_bgn += proto_tid == Xow_cfg_lnke.Tid_relative_2 ? 2 : 1;	// if Tid_relative_2, then starts with [[; adjust by 2; EX:"[[//en" should have lnke_bgn at "//en", not "[//en"
+					lnke_bgn += proto_tid == Xoo_protocol_itm.Tid_relative_2 ? 2 : 1;	// if Tid_relative_2, then starts with [[; adjust by 2; EX:"[[//en" should have lnke_bgn at "//en", not "[//en"
 					lnke_type = Xop_lnke_tkn.Lnke_typ_brack;
 					break;
 			}
@@ -157,7 +157,7 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 				}
 			}
 		}
-		if (proto_tid == Xow_cfg_lnke.Tid_relative_2)	// for "[[//", add "["; rest of code handles "[//" normally, but still want to include literal "["; DATE:2013-02-02
+		if (proto_tid == Xoo_protocol_itm.Tid_relative_2)	// for "[[//", add "["; rest of code handles "[//" normally, but still want to include literal "["; DATE:2013-02-02
 			ctx.Subs_add(root, tkn_mkr.Txt(lnke_bgn - 1, lnke_bgn));
 		Xop_lnke_tkn tkn = tkn_mkr.Lnke(bgn_pos, brack_end_pos, protocol, proto_tid, lnke_type, lnke_bgn, lnke_end);
 		url_parser.Parse_site_fast(site_data, src, lnke_bgn, lnke_end);

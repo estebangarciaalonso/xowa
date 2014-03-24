@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.html.sidebar.*;
 public class Xow_msg_mgr implements GfoInvkAble {
 	private Xow_wiki wiki; Xol_lang lang; private Xol_msg_mgr msg_mgr;
 	public Xow_msg_mgr(Xow_wiki wiki, Xol_lang lang) {

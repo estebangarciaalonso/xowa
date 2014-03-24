@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.html; import gplx.*; import gplx.xowa.*;
 import org.junit.*;
-public class Xoh_lnki_wtr_tst {
+public class Xoh_lnki_file_wtr_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {fxt.Reset();}
 	@Test  public void Img_full() {	// PURPOSE: full with title was outputting invalid html; DATE:2013-12-31
@@ -43,8 +43,26 @@ public class Xoh_lnki_wtr_tst {
 	@Test  public void Img_thumb_none() {
 		fxt.Test_parse_page_wiki_str
 		(	"[[File:A.png|thumb|none|b]]"
-		,	String_.Concat_lines_nl_skipLast
-		(	"<div class=\"thumb tnone\">"
+		,	Img_thumb_str("none")
+		);
+	}
+	@Test  public void Img_thumb_ltr() {
+		fxt.Test_parse_page_wiki_str
+		(	"[[File:A.png|thumb|b]]"
+		,	Img_thumb_str("right")
+		);
+	}
+	@Test  public void Img_thumb_rtl() {
+		fxt.Wiki().Lang().Dir_ltr_(false);
+		fxt.Test_parse_page_wiki_str
+		(	"[[File:A.png|thumb|b]]"
+		,	Img_thumb_str("left")
+		);
+		fxt.Wiki().Lang().Dir_ltr_(true);
+	}
+	private String Img_thumb_str(String align) {
+		return	String_.Concat_lines_nl_skipLast
+		(	"<div class=\"thumb t" + align + "\">"
 		,	"  <div id=\"xowa_file_div_0\" class=\"thumbinner\" style=\"width:220px;\">"
 		,	"    <a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_0\" alt=\"\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/220px.png\" width=\"0\" height=\"0\" /></a>"
 		,	"    <div class=\"thumbcaption\">"
@@ -58,7 +76,7 @@ public class Xoh_lnki_wtr_tst {
 		,	"  </div>"
 		,	"</div>"
 		,	""
-		));
+		);
 	}
 	@Test  public void Img_frame() {	// PURPOSE: lnki with "frame" is same as thumb; DATE:2013-12-23
 		fxt.Test_parse_page_wiki_str

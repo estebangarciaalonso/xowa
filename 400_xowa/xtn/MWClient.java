@@ -18,8 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.OneArgFunction;
+import org.luaj.vm2.lib.jse.JsePlatform;
 
-import gplx.xowa.xtns.scribunto.engines.luaj.Luaj_recv_mgr;
+import gplx.xowa.xtns.scribunto.engines.luaj.Luaj_server_func_recv;
 public class MWClient extends OneArgFunction {
 	/** The implementation of the ZeroArgFunction interface.
 	 * This will be called once when the library is loaded via require().
@@ -29,7 +30,8 @@ public class MWClient extends OneArgFunction {
 	 */
 	public LuaValue call(LuaValue libname) {
 		LuaValue library = tableOf();
-		library.set("client_recv", Luaj_recv_mgr._);
+		library.set("client_recv", Luaj_server_func_recv._);
+//		LuaValue env = JsePlatform.standardGlobals();
 		env.set( "MWClient", library );
 		return library;
 	}

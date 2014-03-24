@@ -18,31 +18,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.scribunto.lib; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*;
 import gplx.xowa.html.*;
 public class Scrib_lib_message implements Scrib_lib {
-	public Scrib_lib_message(Scrib_core core) {this.core = core;} Scrib_core core;
-	public Scrib_lua_mod Mod() {return mod;} Scrib_lua_mod mod;
+	public Scrib_lib_message(Scrib_core core) {this.core = core;} private Scrib_core core;
+	public Scrib_lua_mod Mod() {return mod;} private Scrib_lua_mod mod;
 	public Scrib_lib Init() {procs.Init_by_lib(this, Proc_names); return this;}
 	public Scrib_lua_mod Register(Scrib_core core, Io_url script_dir) {
 		Init();
 		mod = core.RegisterInterface(this, script_dir.GenSubFil("mw.message.lua"));// NOTE: "lang" not passed in
 		notify_lang_changed_fnc = mod.Fncs_get_by_key("notify_lang_changed");
 		return mod;
-	}	Scrib_lua_proc notify_lang_changed_fnc;
+	}	private Scrib_lua_proc notify_lang_changed_fnc;
 	public Scrib_proc_mgr Procs() {return procs;} private Scrib_proc_mgr procs = new Scrib_proc_mgr();
 	public boolean Procs_exec(int key, Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		switch (key) {
-			case Proc_toString:									return ToStr(args, rslt);
+			case Proc_plain:									return Plain(args, rslt);
 			case Proc_check:									return Check(args, rslt);
 			case Proc_init_message_for_lang:					return Init_message_for_lang(args, rslt);
 			default: throw Err_.unhandled(key);
 		}
 	}
-	private static final int Proc_toString = 0, Proc_check = 1, Proc_init_message_for_lang = 2;
-	public static final String Invk_toString = "toString", Invk_check = "check", Invk_init_message_for_lang = "init_message_for_lang";
-	private static final String[] Proc_names = String_.Ary(Invk_toString, Invk_check, Invk_init_message_for_lang);
+	private static final int Proc_plain = 0, Proc_check = 1, Proc_init_message_for_lang = 2;
+	public static final String Invk_plain = "plain", Invk_check = "check", Invk_init_message_for_lang = "init_message_for_lang";
+	private static final String[] Proc_names = String_.Ary(Invk_plain, Invk_check, Invk_init_message_for_lang);
 	public void Notify_lang_changed() {if (notify_lang_changed_fnc != null) core.Interpreter().CallFunction(notify_lang_changed_fnc.Id(), KeyVal_.Ary_empty);}
-	public boolean ToStr(Scrib_proc_args args, Scrib_proc_rslt rslt) {
-		byte fmt_tid = Scrib_lib_message_data.parse_fmt_(args.Pull_bry(0));
-		KeyVal[] data_kvary = args.Pull_kv_ary(1);
+	public boolean Plain(Scrib_proc_args args, Scrib_proc_rslt rslt) {
+		byte fmt_tid = Scrib_lib_message_data.Fmt_tid_plain;
+		KeyVal[] data_kvary = args.Pull_kv_ary(0);
 		Scrib_lib_message_data msg_data = new Scrib_lib_message_data().Parse(data_kvary); 
 		return rslt.Init_obj(String_.new_utf8_(msg_data.Make_msg(core.Cur_lang(), core.Wiki(), core.Ctx(), true, fmt_tid)));
 	}

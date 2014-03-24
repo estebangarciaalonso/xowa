@@ -16,19 +16,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.html; import gplx.*; import gplx.xowa.*;
-import gplx.xowa.html.*;
+import gplx.xowa.html.*; import gplx.xowa.net.*;
 import gplx.xowa.wikis.*; import gplx.xowa.users.history.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.dynamicPageList.*; import gplx.xowa.xtns.math.*;
-import gplx.xowa.parsers.lnkis.*;
-import gplx.xowa.langs.vnts.*;
-import gplx.xowa.xtns.refs.*;
+import gplx.xowa.parsers.lnkis.*; import gplx.xowa.langs.vnts.*; import gplx.xowa.xtns.refs.*;
 public class Xoh_html_wtr {
 	private Xow_wiki wiki; private Xoa_app app; private Xoa_page page;
 	private Xop_lnki_logger_redlinks_mgr redlinks_mgr;
-	public Xoh_lnki_wtr Lnki_wtr() {return lnki_wtr;} private Xoh_lnki_wtr lnki_wtr;
+	public Xoh_lnki_file_wtr Lnki_wtr() {return lnki_wtr;} private Xoh_lnki_file_wtr lnki_wtr;
 	public Ref_html_wtr Ref_wtr() {return ref_wtr;} private Ref_html_wtr ref_wtr = new Ref_html_wtr(); 
 	public Xoh_html_wtr(Xow_wiki wiki) {
 		this.wiki = wiki; app = wiki.App(); this.wiki_key = wiki.Domain_bry();
-		lnki_wtr = new Xoh_lnki_wtr(wiki, this);
+		lnki_wtr = new Xoh_lnki_file_wtr(wiki, this);
 		history_mgr = app.User().History_mgr();
 		redlinks_mgr = wiki.Ctx().Tab().Lnki_redlinks_mgr();
 	}	private byte[] wiki_key; Xou_history_mgr history_mgr;
@@ -153,7 +151,7 @@ public class Xoh_html_wtr {
 	private void Lnke(Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_lnke_tkn lnke, int depth) {
 		int lnke_bgn = lnke.Lnke_bgn(), lnke_end = lnke.Lnke_end();
 		byte[] lnke_xwiki_wiki = lnke.Lnke_xwiki_wiki();
-		boolean proto_is_xowa = lnke.Proto_tid() == Xow_cfg_lnke.Tid_xowa;
+		boolean proto_is_xowa = lnke.Proto_tid() == Xoo_protocol_itm.Tid_xowa;
 		if (!opts.Lnki_alt()) {
 			if (lnke_xwiki_wiki == null) {
 				if (lnke.Lnke_relative())		// relative; EX: //a.org
@@ -176,7 +174,7 @@ public class Xoh_html_wtr {
 			}
 		}
 		int subs_len = lnke.Subs_len();
-		if (subs_len == 0) {																				// no text; auto-number; EX: "[1]"
+		if (subs_len == 0) {																			// no text; auto-number; EX: "[1]"
 			if (lnke.Lnke_typ() == Xop_lnke_tkn.Lnke_typ_text)
 				bfr.Add_mid(src, lnke.Lnke_bgn(), lnke.Lnke_end());
 			else

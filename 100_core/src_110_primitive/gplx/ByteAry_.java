@@ -192,6 +192,11 @@ public class ByteAry_ {
 		return rv;
 	}
 	public static int LastIdx(byte[] src) {return src.length - 1;}
+	public static byte[] Limit(byte[] src, int len) {
+		if (src == null) return null;
+		int src_len = src.length;
+		return len < src_len ? ByteAry_.Mid(src, 0, len) : src;
+	}
 	public static byte[] Mid_by_nearby(byte[] src, int pos, int around) {
 		int bgn = pos - around; if (bgn <  0) bgn = 0;
 		int src_len = src.length;

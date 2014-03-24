@@ -54,26 +54,33 @@ public class Scrib_lib_mw implements Scrib_lib {
 			case Proc_incrementExpensiveFunctionCount:		return IncrementExpensiveFunctionCount(args, rslt);
 			case Proc_isSubsting:							return IsSubsting(args, rslt);
 			case Proc_newChildFrame:						return NewChildFrame(args, rslt);
+			case Proc_getFrameTitle:						return GetFrameTitle(args, rslt);
 			default: throw Err_.unhandled(key);
 		}
 	}
 	public static final int
 	  Proc_loadPackage = 0
-	, Proc_frameExists = 1, Proc_parentFrameExists = 2, Proc_getExpandedArgument = 3, Proc_getAllExpandedArguments = 4
+	, Proc_frameExists = 1, Proc_parentFrameExists = 2
+	, Proc_getExpandedArgument = 3, Proc_getAllExpandedArguments = 4
 	, Proc_expandTemplate = 5, Proc_preprocess = 6, Proc_callParserFunction = 7
-	, Proc_incrementExpensiveFunctionCount = 8, Proc_isSubsting = 9, Proc_newChildFrame = 10
+	, Proc_incrementExpensiveFunctionCount = 8, Proc_isSubsting = 9
+	, Proc_newChildFrame = 10, Proc_getFrameTitle = 11
 	;
 	public static final String 
 	  Invk_loadPackage = "loadPackage"
-	, Invk_frameExists = "frameExists", Invk_parentFrameExists = "parentFrameExists", Invk_getExpandedArgument = "getExpandedArgument", Invk_getAllExpandedArguments = "getAllExpandedArguments"
+	, Invk_frameExists = "frameExists", Invk_parentFrameExists = "parentFrameExists"
+	, Invk_getExpandedArgument = "getExpandedArgument", Invk_getAllExpandedArguments = "getAllExpandedArguments"
 	, Invk_expandTemplate = "expandTemplate", Invk_preprocess = "preprocess", Invk_callParserFunction = "callParserFunction"
-	, Invk_incrementExpensiveFunctionCount = "incrementExpensiveFunctionCount", Invk_isSubsting = "isSubsting", Invk_newChildFrame = "newChildFrame"
+	, Invk_incrementExpensiveFunctionCount = "incrementExpensiveFunctionCount", Invk_isSubsting = "isSubsting"
+	, Invk_newChildFrame = "newChildFrame", Invk_getFrameTitle = "getFrameTitle"
 	;
 	private static final String[] Proc_names = String_.Ary
 	( Invk_loadPackage
-	, Invk_frameExists, Invk_parentFrameExists, Invk_getExpandedArgument, Invk_getAllExpandedArguments
+	, Invk_frameExists, Invk_parentFrameExists
+	, Invk_getExpandedArgument, Invk_getAllExpandedArguments
 	, Invk_expandTemplate, Invk_preprocess, Invk_callParserFunction
-	, Invk_incrementExpensiveFunctionCount, Invk_isSubsting, Invk_newChildFrame
+	, Invk_incrementExpensiveFunctionCount, Invk_isSubsting
+	, Invk_newChildFrame, Invk_getFrameTitle
 	);
 	public boolean LoadPackage(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		String mod_name = args.Pull_str(0);
@@ -345,6 +352,11 @@ public class Scrib_lib_mw implements Scrib_lib {
 	}
 	public boolean NewChildFrame(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		return rslt.Init_obj(args.Pull_str(1));	// HACK: return back name of frame; DATE:2014-01-25
+	}
+	public boolean GetFrameTitle(Scrib_proc_args args, Scrib_proc_rslt rslt) {
+		String frame_id = args.Pull_str(0);
+		Xot_invk frame = String_.Eq(frame_id, "current") ? core.Cur_frame_invoke() : core.Cur_frame_owner();
+		return rslt.Init_obj(frame.Frame_ttl());
 	}
 	private Xot_invk Get_frame(Scrib_proc_args args, int idx) {
 		String frame_id = args.Pull_str(idx);

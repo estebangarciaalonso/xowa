@@ -28,8 +28,9 @@ public class Gallery_html_wtr {
 	public byte[] Mgr_box_cls() {return mgr_box_cls;} private byte[] mgr_box_cls;
 	public ByteAryFmtr Mgr_box_style() {return mgr_box_style;} private ByteAryFmtr mgr_box_style;
 	public int Gallery_multiplier() {return gallery_multiplier;} private int gallery_multiplier;
-	public void Write_html(Xoa_app app, Xow_wiki wiki, Xop_ctx ctx, Xoa_page page, Xoh_html_wtr wtr, Xoh_opts opts, ByteAryBfr bfr, byte[] src, int depth, Gallery_xnde mgr) {
+	public void Write_html(Xoa_app app, Xow_wiki wiki, Xop_ctx ctx, Xoa_page page, Xoh_html_wtr wtr, Xoh_html_wtr_ctx hctx, ByteAryBfr bfr, byte[] src, Gallery_xnde mgr) {
 		itms_per_row = mgr.Itms_per_row();
+		if (itms_per_row == Gallery_xnde.Null) itms_per_row = wiki.Cfg_gallery().Imgs_per_row();
 		itms_len = mgr.Itms_len();
 		itm_div_w = Gallery_html_wtr_utl.Calc_itm_div_len(mgr.Itm_w_or_default());
 		itm_div_h = Gallery_html_wtr_utl.Calc_itm_div_len(mgr.Itm_h_or_default());
@@ -59,13 +60,13 @@ public class Gallery_html_wtr {
 		int mgr_elem_id = -1;
 		for (int i = 0; i < itms_len; i++) {
 			Gallery_itm itm = mgr.Itms_get_at(i);
-			byte[] itm_caption = Bld_caption(wiki, ctx, wtr, opts, depth, itm);
+			byte[] itm_caption = Bld_caption(wiki, wtr, ctx, hctx, itm);
 			Xoa_ttl itm_ttl = itm.Ttl();
 			if (	itm_ttl != null				// ttl does not have invalid characters
 				&&	itm_ttl.Ns().Id_file()		// ttl is in file ns;
 				) {
 				Xop_lnki_tkn lnki = ctx.Tkn_mkr().Lnki(itm.Ttl_bgn(), itm.Ttl_end()).Ttl_(itm_ttl).Width_(mgr.Itm_w()).Height_(mgr.Itm_h());
-				Xof_xfer_itm xfer_itm = wtr.Lnki_wtr().Lnki_eval(ctx, page, lnki, wtr.Queue_add_ref())
+				Xof_xfer_itm xfer_itm = wtr.Lnki_wtr().File_wtr().Lnki_eval(ctx, page, lnki, wtr.Queue_add_ref())
 					.Gallery_mgr_h_(mgr.Itm_h_or_default())
 					.Html_elem_tid_(Xof_html_elem.Tid_gallery)
 					;
@@ -123,12 +124,12 @@ public class Gallery_html_wtr {
 		int mgr_box_width_max = mgr_box_width_all < mgr_box_width_row ? mgr_box_width_row : mgr_box_width_all;
 		fmtr_mgr_box.Bld_bfr_many(bfr, mgr_elem_id, mgr_box_cls, ByteAryFmtrArg_.fmtr_(mgr_box_style, ByteAryFmtrArg_.int_(mgr_box_width_max)), itm_bfr);
 	}
-	private static byte[] Bld_caption(Xow_wiki wiki, Xop_ctx ctx, Xoh_html_wtr wtr, Xoh_opts opts, int depth, Gallery_itm itm) {
+	private static byte[] Bld_caption(Xow_wiki wiki, Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_html_wtr_ctx hctx, Gallery_itm itm) {
 		byte[] rv = itm.Caption_bry();
 		if (ByteAry_.Len_gt_0(rv)) {
 			ByteAryBfr caption_bfr = wiki.Utl_bry_bfr_mkr().Get_k004();
 			Xop_root_tkn caption_root = itm.Caption_tkn();
-			wtr.Write_tkn(ctx, opts, caption_bfr, caption_root.Root_src(), depth + 1, caption_root, Xoh_html_wtr.Sub_idx_null, caption_root);
+			wtr.Write_tkn(caption_bfr, ctx, hctx, caption_root.Root_src(), caption_root, Xoh_html_wtr.Sub_idx_null, caption_root);
 			rv = caption_bfr.Mkr_rls().XtoAryAndClear();
 		}
 		return rv;

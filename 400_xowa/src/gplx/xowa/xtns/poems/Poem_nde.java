@@ -29,10 +29,10 @@ public class Poem_nde implements Xox_xnde {
 		Poem_xtn_mgr xtn_mgr = (Poem_xtn_mgr)wiki.Xtn_mgr().Get_or_fail(Poem_xtn_mgr.XTN_KEY);
 		xtn_root = xtn_mgr.Parser().Parse_recurse(ctx, ByteAry_.Mid(src, itm_bgn, itm_end), true); // NOTE: ignoring paragraph mode; technically MW enables para mode, but by replacing "\n" with "<br/>\n" all the logic with para/pre mode is skipped
 	}
-	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_html_wtr_ctx opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
 		if (xtn_root == null) return;	// inline poem; write nothing; EX: <poem/>
 		bfr.Add(Bry_poem_bgn);
-		html_wtr.Write_tkn(ctx, opts, bfr, xtn_root.Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, xtn_root);
+		html_wtr.Write_tkn(bfr, ctx, opts, xtn_root.Root_src(), xnde, Xoh_html_wtr.Sub_idx_null, xtn_root);
 		bfr.Add(Bry_poem_end);			
 	}	private static byte[] Bry_poem_bgn = ByteAry_.new_ascii_("<div class=\"poem\">\n"), Bry_poem_end = ByteAry_.new_ascii_("\n</div>"); 
 }

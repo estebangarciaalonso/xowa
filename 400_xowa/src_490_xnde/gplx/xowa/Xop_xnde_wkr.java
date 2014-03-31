@@ -38,6 +38,17 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 			bgn_pos = 0;	// do not allow -1 pos
 		}
 		if (cur_pos == src_len) return ctx.LxrMake_txt_(src_len);					// "<" is last char in page; strange, but don't raise error;
+		Xop_tkn_itm last_tkn = ctx.Stack_get_last();		// BLOCK:invalid_ttl_check
+		if (	last_tkn != null
+			&&	last_tkn.Tkn_tid() == Xop_tkn_itm_.Tid_lnki) {
+			Xop_lnki_tkn lnki = (Xop_lnki_tkn)last_tkn;
+			if (	lnki.Pipe_count_is_zero()
+				// &&	!Xop_lnki_wkr_.Parse_ttl(ctx, src, lnki, bgn_pos)	// NOTE: no ttl parse check; <xnde> in ttl is automatically invalid; EX: [[a<b>c</b>|d]]; "a" is valid ttl, but "a<b>c</b>" is not
+				) {
+				ctx.Stack_pop_last();
+				return Xop_lnki_wkr_.Invalidate_lnki(ctx, src, root, lnki, bgn_pos);
+			}
+		}
 
 		// find >
 		byte cur_byt = src[cur_pos];
@@ -263,7 +274,7 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		}
 		if (tag.Restricted()) {
 			Xoa_page page = ctx.Page();
-			if (	page.Html_restricted() 
+			if (	page.Html_data().Restricted() 
 				&&	page.Wiki().Domain_tid() != Xow_wiki_domain_.Tid_home) {
 				int end_pos = gtPos + 1;
 				ctx.Subs_add(root, tkn_mkr.Bry(bgn_pos, end_pos, ByteAry_.Add(gplx.html.Html_consts.Lt, ByteAry_.Mid(src, bgn_pos + 1, end_pos)))); // +1 to skip <

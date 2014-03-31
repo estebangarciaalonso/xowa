@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xop_lnki_arg_parser {
-	private static final byte Key_dim_num = 0, Key_dim_x = 1, Key_dim_px = 2, Key_space = 3;
+	private int lnki_w, lnki_h;
 	private ByteTrieMgr_fast key_trie = ByteTrieMgr_fast.cs_();
 	private ByteAryBfr int_bfr = ByteAryBfr.reset_(16);
 	public void Evt_lang_changed(Xol_lang lang) {
@@ -49,7 +49,6 @@ public class Xop_lnki_arg_parser {
 			list = lang.App().Lang_mgr().Lang_en().Kwd_mgr().Get_at(Xol_kwd_grp_.Id_img_width);
 		Init_size_trie(tmp_bfr, list);
 	}
-	private int lnki_w, lnki_h;
 	public byte Identify_tid(byte[] src, int bgn, int end, Xop_lnki_tkn lnki) {
 		lnki_w = Xop_lnki_tkn.Width_null;
 		lnki_h = Xop_lnki_tkn.Height_null;
@@ -123,7 +122,6 @@ public class Xop_lnki_arg_parser {
 			bwd_trie.Add(word_bry, ByteVal.new_(Tid_dim));
 		}
 	}	
-	private static final byte[] X_bry = ByteAry_.new_utf8_("x");
 	public static final byte[] Bry_upright = ByteAry_.new_utf8_("upright"), Bry_thumbtime = ByteAry_.new_utf8_("thumbtime");
 	public static final byte
 		Tid_unknown = 0, Tid_thumb = 1, Tid_left = 2, Tid_right = 3, Tid_none = 4, Tid_center = 5, Tid_frame = 6, Tid_frameless = 7, Tid_upright = 8, Tid_border = 9
@@ -133,6 +131,8 @@ public class Xop_lnki_arg_parser {
 	,	Tid_page = 23
 	,	Tid_noplayer = 24, Tid_noicon = 25, Tid_thumbtime = 26
 	;
+	private static final byte[] X_bry = ByteAry_.new_utf8_("x");
+	private static final byte Key_dim_num = 0, Key_dim_x = 1, Key_dim_px = 2, Key_space = 3;
 	private static final int[][] Keys_ids = new int[][] 
 	{	new int[] {Xol_kwd_grp_.Id_img_thumbnail	, Tid_thumb}
 	,	new int[] {Xol_kwd_grp_.Id_img_manualthumb	, Tid_thumb}	// RESEARCH: what is manualthumb? 'thumb=$1' vs 'thumb'

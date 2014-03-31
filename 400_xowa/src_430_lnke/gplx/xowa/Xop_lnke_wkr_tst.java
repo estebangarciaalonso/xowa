@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
-public class Xop_lnke_wkr_tst {
-	private Xop_fxt fxt = new Xop_fxt();
+public class Xop_lnke_wkr_tst {		
+	@Before public void init() {fxt.Reset();} private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Raw() {
 		fxt.Test_parse_page_wiki("irc://a", fxt.tkn_lnke_(0, 7).Lnke_typ_(Xop_lnke_tkn.Lnke_typ_text).Lnke_rng_(0, 7));
 	}

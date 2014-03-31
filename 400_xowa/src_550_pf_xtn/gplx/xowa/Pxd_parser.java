@@ -42,10 +42,10 @@ class Pxd_parser {
 		fmtr.Bld_bfr(errorBfr, args);
 	}	private ByteAryBfr errorBfr = new ByteAryBfr(32);
 	public DateAdp Parse(byte[] src, ByteAryBfr errorBfr) {
-		Tokenize(src);
-		return Evaluate(errorBfr);
+		Tokenize(src);	// NOTE: should check if Tokenize failed, but want to be liberal as date parser is not fully implemented; this will always default to 1st day of year; DATE:2014-03-27
+		return Evaluate(src, errorBfr);
 	}
-	private void Tokenize(byte[] src) { 
+	private boolean Tokenize(byte[] src) { 
 		this.src = src; src_len = src.length;
 		tkns = new Pxd_itm[src_len]; tkns_len = 0;		
 		tkn_type = Pxd_itm_.TypeId_null; tkn_bgn_pos = -1;
@@ -76,7 +76,7 @@ class Pxd_parser {
 				case Byte_ascii.Ltr_u: case Byte_ascii.Ltr_v: case Byte_ascii.Ltr_w: case Byte_ascii.Ltr_x: case Byte_ascii.Ltr_y: case Byte_ascii.Ltr_z:
 					MakePrvTkn(cur_pos, Pxd_itm_.TypeId_null);			// first, make prv tkn
 					Object o = trie.Match(b, src, cur_pos, src_len);	// now match String against tkn
-					if (o == null) {return;} // FUTURE: warn
+					if (o == null) return false;	// unknown letter / word; exit now;
 					tkns[tkns_len] = ((Pxd_itm_prototype)o).MakeNew(tkns_len); 
 					++tkns_len;
 					cur_pos = trie.Match_pos() - 1; // -1 b/c trie matches to next char, and ++ below
@@ -90,6 +90,7 @@ class Pxd_parser {
 			++cur_pos;
 		}
 		MakePrvTkn(cur_pos, Pxd_itm_.TypeId_null);
+		return true;
 	}
 	private void MakePrvTkn(int cur_pos, int nxt_type) {
 		Pxd_itm itm = null;
@@ -122,7 +123,11 @@ class Pxd_parser {
 		tkn_type = nxt_type;
 		tkn_bgn_pos = cur_pos;
 	}
-	DateAdp Evaluate(ByteAryBfr error) {
+	DateAdp Evaluate(byte[] src, ByteAryBfr error) {
+		if (tkns_len == 0) {
+			Err_set(Pf_xtn_time_log.Invalid_day, ByteAryFmtrArg_.bry_(src));
+			return null;
+		}
 		Pxd_itm[] eval_ary = Pxd_itm_sorter.XtoAryAndSort(tkns, tkns_len);
 		MakeDataAry();
 		for (int i = 0; i < tkns_len; i++) {
@@ -165,8 +170,8 @@ class Pxd_parser_ {
 	private static final    String[] Names_month_full		= {"january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"};
 	private static final    String[] Names_month_abrv		= {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"};
 	private static final    String[] Names_month_roman		= {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"};
+	private static final    String[] Names_day_suffix		= {"st", "nd", "rd", "th"};
 	//TODO:
-	//private static final    String[] Names_day_suffix		= {"st", "nd", "rd", "th"};
 	//private static final    String[] Names_day_full			= {"sunday", "monday", "tuesday", "wednesday" , "thursday", "friday", "saturday"};
 	//private static final    String[] Names_day_abrv			= {"sun", "mon", "tue", "wed" , "thu", "fri", "sat"};
 	//private static final    String[] Names_day_text			= {"weekday", "weekdays"};
@@ -181,6 +186,11 @@ class Pxd_parser_ {
 			trie.Add(name_bry, new Pxd_itm_unit(-1, name_bry, seg_idx, seg_val));
 		}
 	}
+	public static final byte[] 
+	  Unit_name_month		= ByteAry_.new_ascii_("month")
+	, Unit_name_day			= ByteAry_.new_ascii_("day")
+	, Unit_name_hour		= ByteAry_.new_ascii_("hour")
+	;
 	private static void Init() {
 		Init_reg(Names_month_full , DateAdp_.SegIdx_month);
 		Init_reg(Names_month_abrv , DateAdp_.SegIdx_month);
@@ -195,6 +205,7 @@ class Pxd_parser_ {
 		Init_unit(DateAdp_.SegIdx_year  	, "year", "years");
 		Init_unit(DateAdp_.SegIdx_day,  7	, "week", "weeks");
 		trie.Add(Pxd_itm_ago.Name_ago, new Pxd_itm_ago(-1, -1));
+		Init_suffix(Names_day_suffix);
 	}
 	private static void Init_reg(String[] names, int seg_idx) {
 		for (int i = 0; i < names.length; i++)
@@ -203,6 +214,13 @@ class Pxd_parser_ {
 	private static void Init_reg(String name_str, int seg_idx, int seg_val) {
 		byte[] name_ary = ByteAry_.new_utf8_(name_str);
 		trie.Add(name_ary, new Pxd_itm_month_name(-1, name_ary, seg_idx, seg_val));
+	}
+	private static void Init_suffix(String[] suffix_ary) {
+		int len = suffix_ary.length;
+		for (int i = 0; i < len; i++) {
+			String suffix = suffix_ary[i];
+			trie.Add(suffix, Pxd_itm_day_suffix._);
+		}
 	}
 }
 /*

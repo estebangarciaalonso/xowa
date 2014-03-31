@@ -87,9 +87,6 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 
 			Object ns_eval = wiki.Ns_mgr().Names_get_w_colon(name_ary, 0, name_ary_len);	// match {{:Portal or {{:Wikipedia
 			if (ns_eval != null && !template_prefix_found) {		// do not transclude ns if Template prefix seen earlier; EX: {{Template:Wikipedia:A}} should not transclude "Wikipedia:A"; DATE:2013-04-03
-//					Xow_ns ns_eval_itm = (Xow_ns)ns_eval;				// commented out; was failing for {{WP}}; handled by Trie_match_colon; DATE:2013-02-08
-//					int pre_len = ns_eval_itm.Name_enc().length;		
-//					if (pre_len < name_ary_len && name_ary[pre_len] == Byte_ascii.Colon)
 				return SubEval(ctx, wiki, bfr, name_ary, caller, src);
 			}
 			Xol_func_name_itm finder = lang.Func_regy().Find_defn(name_ary, name_bgn, name_ary_len);
@@ -141,6 +138,14 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 						}
 					}
 					break;
+			}
+			if (subst_found) {// subst found; remove Template: if it exists; EX: {{safesubst:Template:A}} -> {{A}} not {{Template:A}}; EX:en.d:Kazakhstan; DATE:2014-03-25
+				ns_template_prefix = wiki.Ns_mgr().Ns_template().Name_db_w_colon(); ns_template_prefix_len = ns_template_prefix.length;
+				if (name_ary_len > ns_template_prefix_len && ByteAry_.Match(name_ary, name_bgn, name_bgn + ns_template_prefix_len, ns_template_prefix)) {
+					name_ary = ByteAry_.Mid(name_ary, name_bgn + ns_template_prefix_len, name_ary_len);
+					name_ary_len = name_ary.length;
+					name_bgn = 0;
+				}
 			}
 			if (colon_pos != -1) {	// func; separate name_ary into name_ary and arg_x
 				argx_ary = ByteAry_.Trim(name_ary, colon_pos + 1, name_ary_len);	// trim bgn ws; needed for "{{formatnum:\n{{#expr:2}}\n}}"
@@ -198,7 +203,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 					}
 					if (subst_found)
 						return Transclude(ctx, wiki, bfr, name_ary, caller, src);
-					Print_not_found(name_ary, bfr);
+					Print_not_found(bfr, name_ary);
 					return false;
 				}
 				break;
@@ -303,7 +308,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 			return Eval_sub(ctx, transclude_tmpl, caller, src, bfr);
 		}
 		else {				
-			Print_not_found(name_ary, bfr);
+			Print_not_found(bfr, page_ttl.Full_txt());
 			return false;
 		}
 	}
@@ -328,8 +333,8 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		}
 		return rv;
 	}
-	public static void Print_not_found(byte[] name_ary, ByteAryBfr bfr) {	// print as {{:page_not_found}}; should change to &#123;&#123;page_not_found}}; need to consider
-		bfr.Add(Xop_curly_bgn_lxr.Hook).Add_byte(Byte_ascii.Colon).Add(name_ary).Add(Xop_curly_end_lxr.Hook);
+	public static void Print_not_found(ByteAryBfr bfr, byte[] name_ary) {	// print missing as [[:Template:Missing]]; REF:MW: Parser.php|braceSubstitution|$text = "[[:$titleText]]"; EX:en.d:Kazakhstan; DATE:2014-03-25
+		bfr.Add(Xop_tkn_.Lnki_bgn).Add_byte(Byte_ascii.Colon).Add(Xow_ns_.Bry_template).Add_byte(Byte_ascii.Colon).Add(name_ary).Add(Xop_tkn_.Lnki_end);
 	}
 	private boolean SubEval(Xop_ctx ctx, Xow_wiki wiki, ByteAryBfr bfr, byte[] name_ary, Xot_invk caller, byte[] src_for_tkn) {
 		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, name_ary); if (page_ttl == null) return false;	// ttl not valid; EX: {{:[[abc]]}}

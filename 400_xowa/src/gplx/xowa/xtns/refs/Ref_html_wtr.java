@@ -19,7 +19,7 @@ package gplx.xowa.xtns.refs; import gplx.*; import gplx.xowa.*; import gplx.xowa
 import gplx.xowa.html.*;
 public class Ref_html_wtr {
 	Xoo_ref opt = Xoo_ref.new_();
-	public void Xnde_ref(Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xnde_ref(Xoh_html_wtr_ctx opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
 		Ref_nde itm = (Ref_nde)xnde.Xnde_xtn();
 		if (itm == null) return;	// FUTURE: See Battle of Midway
 		if (itm.Follow_y()) return;	// NOTE: "follow" is always appended to preceding ref; will never generate its own ^ a  
@@ -55,7 +55,7 @@ public class Ref_html_wtr {
 		}
 		return rv;
 	}
-	public void Xnde_references(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+	public void Xnde_references(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_html_wtr_ctx opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
 		References_nde references = (References_nde)xnde.Xnde_xtn();
 		Ref_itm_lst lst = ctx.Page().Ref_mgr().Lst_get(references.Group(), references.List_idx());	// get group; EX: <references group="note"/>
 		if (lst == null) return;	// NOTE: possible to have a grouped references without references; EX: Infobox planet; <references group=note> in sidebar, but no refs 
@@ -70,7 +70,7 @@ public class Ref_html_wtr {
 			grp_list_fmtr.Init(opt, head_itm);
 			Ref_nde text_itm = grp_list_fmtr.IdentifyTxt();	// find the item that has the text (there should only be 0 or 1)
 			if (text_itm.Body() != null)
-				wtr.Write_tkn(ctx, opts, tmp, text_itm.Body().Root_src(), depth + 1, null, Xoh_html_wtr.Sub_idx_null, text_itm.Body());
+				wtr.Write_tkn(tmp, ctx, opts, text_itm.Body().Root_src(), null, Xoh_html_wtr.Sub_idx_null, text_itm.Body());
 
 			// add follows
 			int related_len = head_itm.Related_len();
@@ -78,7 +78,7 @@ public class Ref_html_wtr {
 				Ref_nde related_itm = head_itm.Related_get(k);
 				if (related_itm.Follow_y()) {	// NOTE: both follow and related are in the related list; only add follow
 					tmp.Add_byte_space();	// always add space; REF.MW:Cite_body.php;$this->mRefs[$group][$follow]['text'] = $this->mRefs[$group][$follow]['text'] . ' ' . $str;
-					wtr.Write_tkn(ctx, opts, tmp, related_itm.Body().Root_src(), depth + 1, null, Xoh_html_wtr.Sub_idx_null, related_itm.Body());
+					wtr.Write_tkn(tmp, ctx, opts, related_itm.Body().Root_src(), null, Xoh_html_wtr.Sub_idx_null, related_itm.Body());
 				}
 			}
 

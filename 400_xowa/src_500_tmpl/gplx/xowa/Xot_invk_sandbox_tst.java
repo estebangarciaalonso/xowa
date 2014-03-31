@@ -43,8 +43,6 @@ public class Xot_invk_sandbox_tst {
 	}
 	@Test  public void Recurse()		{fxt.Test_parse_tmpl_str_test("<{{concat|{{{1}}}|{{{2}}}}}>"	, "{{test|a|b}}", "<ab>");}
 	@Test  public void Recurse_mix()	{fxt.Test_parse_tmpl_str_test("{{concat|.{{{1}}}.|{{{2}}}}}"	, "{{test|a|b}}", ".a.b");}
-	@Test  public void Recurse_err()	{fxt.Test_parse_tmpl_str_test("{{concat|{{{1}}}|{{{2}}}}}"	, "{{test1|a|b}}", "{{:test1}}");} // NOTE: make sure test1 does not match test
+	@Test  public void Recurse_err()	{fxt.Test_parse_tmpl_str_test("{{concat|{{{1}}}|{{{2}}}}}"	, "{{test1|a|b}}", "[[:Template:test1]]");} // NOTE: make sure test1 does not match test
 	@Test  public void KeyNewLine()		{fxt.Test_parse_tmpl_str_test("{{\n  concat|a|b}}"			, "{{\n  test}}", "ab");}
 }
-/*
-*/

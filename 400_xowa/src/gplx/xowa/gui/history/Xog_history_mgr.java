@@ -38,7 +38,7 @@ public class Xog_history_mgr {
 		Xoa_page rv = Get_or_fetch(wiki, itm);
 		byte[] anch_key = itm.Anch_key();
 		rv.Url().Anchor_bry_(anch_key); // must override anchor as it may be different for cached page
-		rv.Html_bmk_pos_(itm.Html_doc_pos());
+		rv.Html_data().Bmk_pos_(itm.Html_doc_pos());
 		wiki.Ctx().Tab().Display_ttl_(itm.Display_ttl());
 		return rv;
 	}

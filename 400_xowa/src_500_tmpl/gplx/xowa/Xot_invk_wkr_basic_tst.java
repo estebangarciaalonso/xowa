@@ -167,7 +167,7 @@ public class Xot_invk_wkr_basic_tst {
 		fxt.Test_parse_tmpl_str_test("{{{1}}}{{{2}}}"									, "{{test|[[b=c|d}}"			, "{{test|[[b=c|d}}");
 	}
 	@Test  public void Err_tmp_empty() {	// PURPOSE: {{{{R from misspelling}} }}
-		fxt.Init_log_(Xop_ttl_log.Invalid_char).Test_parse_tmpl_str_test("{{{1}}}"										, "{{ {{a}} }}"					, "{{{{:a}}}}");
+		fxt.Init_log_(Xop_ttl_log.Invalid_char).Test_parse_tmpl_str_test("{{{1}}}"										, "{{ {{a}} }}"					, "{{[[:Template:a]]}}");
 	}
 	@Test  public void Prepend_nl() {	// PURPOSE: if {| : ; # *, auto add new_line REF.MW:Parser.php|braceSubstitution
 		fxt.Init_defn_clear();
@@ -310,7 +310,7 @@ public class Xot_invk_wkr_basic_tst {
 		fxt.Init_defn_clear();
 	}
 	@Test  public void Raw_spanish() { // PURPOSE.fix: {{raw}} should not fail; EX:es.s:Carta_a_Silvia; DATE:2014-02-11
-		fxt.Test_parse_tmpl_str("{{raw}}", "{{:raw}}");	// used to fail; now tries to get Template:Raw which doesn't exist
+		fxt.Test_parse_tmpl_str("{{raw}}", "[[:Template:raw]]");	// used to fail; now tries to get Template:Raw which doesn't exist
 	}
 	@Test  public void Special() { // PURPOSE: {{Special:Whatlinkshere}} is same as [[:Special:Whatlinkshere]]; EX.WIKT:android; isValidPageName
 		fxt.Test_parse_page_tmpl_str("{{Special:Whatlinkshere}}", "[[:Special:Whatlinkshere]]");
@@ -432,7 +432,7 @@ public class Xot_invk_wkr_basic_tst {
 	@Test  public void Tmpl_case_match() {	// PURPOSE: template name should match by case; EX:es.d:eclipse; DATE:2014-02-12
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("CASE_MATCH", "found", Xow_ns_case_.Id_all);
-		fxt.Test_parse_tmpl_str("{{case_match}}",	"{{:case_match}}");		// Xot_invk_tkn will do 2 searches: "test" and "Test"
+		fxt.Test_parse_tmpl_str("{{case_match}}",	"[[:Template:case_match]]");		// Xot_invk_tkn will do 2 searches: "test" and "Test"
 		fxt.Test_parse_tmpl_str("{{cASE_MATCH}}",	"found");				// Xot_invk_tkn will do 2 searches: "tEST" and "TEST"
 		fxt.Init_defn_clear();
 	}

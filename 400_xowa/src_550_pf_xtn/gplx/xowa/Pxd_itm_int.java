@@ -178,7 +178,15 @@ class Pxd_itm_int extends Pxd_itm_base {
 		if (state.Data_ary_len() < 3) return;
 		Pxd_itm_int itm_2 = Pxd_itm_int_.CastOrNull(data_ary[2]);
 		if (itm_2 != null) {
-			if (Pxd_itm_int_.Day_err(state, itm_2)) return;		
+			if (Pxd_itm_int_.Day_err(state, itm_2)) return;
+		}
+		if (state.Data_ary_len() == 4) {	// handle strange constructions like 2014-03-24-25;
+			Pxd_itm_int itm_3 = Pxd_itm_int_.CastOrNull(data_ary[3]);
+			if (itm_3 != null) {			// treat 4th number as hour adjustment; EX: 2014-03-24-72 -> 2014-03-26; DATE:2014-03-24
+				int itm_3_val = itm_3.Val();
+				if (itm_3_val > 99) itm_3_val = 0;	// only adjust if number is between 0 and 99;
+				Pxd_itm_int_.Convert_to_rel(state, itm_3, Pxd_parser_.Unit_name_hour, DateAdp_.SegIdx_hour, itm_3_val);
+			}
 		}
 	}
 	private void Eval_year_at_pos_2(Pxd_parser state) {
@@ -213,6 +221,10 @@ class Pxd_itm_int extends Pxd_itm_base {
 	}
 }
 class Pxd_itm_int_ {
+	public static void Convert_to_rel(Pxd_parser state, Pxd_itm_int itm, byte[] unit_name, int seg_idx, int rel_val) {
+		int tkn_idx = itm.Ary_idx();
+		state.Tkns()[tkn_idx] = new Pxd_itm_unit(tkn_idx, unit_name, seg_idx, rel_val);
+	}
 	public static Pxd_itm_int CastOrNull(Pxd_itm itm) {return itm.Tkn_tid() == Pxd_itm_.TypeId_int ? (Pxd_itm_int)itm : null; }
 	public static Pxd_itm_int GetNearest(Pxd_itm[] tkns, int tkn_idx, boolean fwd) {
 		int adj = 1, end = tkns.length;
@@ -250,8 +262,12 @@ class Pxd_itm_int_ {
 		switch (itm.Digits()) {
 			case 1:
 			case 2:
-				if (val > 0 && val < 13) {
+				if		(val > 0 && val < 13) {
 					state.Seg_idxs_(itm, DateAdp_.SegIdx_month);
+					return false;
+				}
+				else if (val == 0) {// 0 day means subtract 1; EX:w:Mariyinsky_Palace; DATE:2014-03-25
+					Pxd_itm_int_.Convert_to_rel(state, itm, Pxd_parser_.Unit_name_month, DateAdp_.SegIdx_month, -1);
 					return false;
 				}
 				break;
@@ -264,8 +280,12 @@ class Pxd_itm_int_ {
 		switch (itm.Digits()) {
 			case 1:
 			case 2:
-				if (val > -1 && val < 32) { 
+				if (val > 0 && val < 32) { 
 					state.Seg_idxs_(itm, DateAdp_.SegIdx_day);
+					return false;
+				}
+				else if (val == 0) {	// 0 day means subtract 1; EX:w:Mariyinsky_Palace; DATE:2014-03-25
+					Pxd_itm_int_.Convert_to_rel(state, itm, Pxd_parser_.Unit_name_day, DateAdp_.SegIdx_day, -1);
 					return false;
 				}
 				break;

@@ -104,7 +104,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		);
 	}
 	private byte[] Bld_page_content_sub(Xoa_app app, Xow_wiki wiki, Xoa_page page) {
-		byte[] page_content_sub = page.Html_content_sub();		// contentSub exists; SEE: {{#isin}}
+		byte[] page_content_sub = page.Html_data().Content_sub();		// contentSub exists; SEE: {{#isin}}
 		byte[] redirect_msg = Bld_redirect_msg(app, wiki, page);			
 		return tmp_bfr.Concat_skip_empty(Xoh_consts.Br, page_content_sub, redirect_msg).XtoAryAndClear();
 	}
@@ -163,7 +163,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 			case Xow_page_tid.Tid_wikitext:
 				if	(ns_id == Xow_ns_.Id_file)		// if File ns, add boilerplate header
 					app.File_main_wkr().Bld_html(wiki, ctx, bfr, page.Ttl(), wiki.Cfg_file_page(), page.File_queue());
-				wiki.Html_wtr().Write_all(page.Wiki().Ctx(), page.Root(), page.Root().Data_mid(), bfr);
+				wiki.Html_wtr().Write_all(bfr, page.Wiki().Ctx(), page.Root().Data_mid(), page.Root());
 				if (ns_id == Xow_ns_.Id_category)	// if Category, render rest of html (Subcategories; Pages; Files); note that a category may have other html which requires wikitext processing
 					wiki.Html_mgr().Ns_ctg().Bld_html(page, bfr);
 				int ctgs_len = page.Category_list().length;	// add Categories

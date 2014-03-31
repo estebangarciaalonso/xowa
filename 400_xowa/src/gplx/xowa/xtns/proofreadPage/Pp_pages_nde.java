@@ -60,11 +60,11 @@ public class Pp_pages_nde implements Xox_xnde, Xop_xnde_atr_parser {
 			xtn_root = Bld_root_nde(full_bfr, lst_page_regy, page_bry);	// NOTE: this effectively reparses page twice; needed b/c of "if {| : ; # *, auto add new_line" which can build different tokens
 		full_bfr.Mkr_rls();
 	}
-	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_html_wtr_ctx opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
 		if (xtn_literal)
 			Xox_mgr_base.Xtn_write_escape(app, bfr, src, xnde);
 		else
-			html_wtr.Write_tkn(ctx, opts, bfr, xtn_root.Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, xtn_root);
+			html_wtr.Write_tkn(bfr, ctx, opts, xtn_root.Root_src(), xnde, Xoh_html_wtr.Sub_idx_null, xtn_root);
 	}
 	private boolean Init_vars(Xow_wiki wiki, Xop_ctx ctx, byte[] src, Xop_xnde_tkn xnde) {
 		this.wiki = wiki; this.ctx = ctx; app = wiki.App(); usr_dlg = app.Usr_dlg();
@@ -126,7 +126,7 @@ public class Pp_pages_nde implements Xox_xnde, Xop_xnde_atr_parser {
 	private byte[] Get_caption(ByteAryBfr full_bfr, byte[] index_page_src, Xop_lnki_tkn lnki) {
 		byte[] rv = ByteAry_.Empty;
 		try {
-			wiki.Html_wtr().Write_tkn(ctx, Xoh_opts.root_(), full_bfr, index_page_src, 0, null, -1, lnki.Caption_tkn());
+			wiki.Html_wtr().Write_tkn(full_bfr, ctx, Xoh_html_wtr_ctx.Basic, index_page_src, null, -1, lnki.Caption_tkn());
 			rv = full_bfr.XtoAryAndClear();
 		}
 		catch (Exception e) {

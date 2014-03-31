@@ -22,18 +22,18 @@ public class Xop_subst_tst {
 	@Before public void init() {
 		fxt.Reset();
 		fxt.Init_defn_clear();
-		fxt.Init_defn_add("mwo_print", "{{{1}}}");
+		fxt.Init_defn_add("xo_print", "{{{1}}}");
 		fxt.Init_defn_add("!", "|");
 	}
 	@Test  public void Wiki_txt_subst()				{fxt.Test_parse_tmpl_str_test("{{{1}}}"								, "{{subst:test|a}}"			, "a");}
 	@Test  public void Wiki_txt_subst_ws()			{fxt.Test_parse_tmpl_str_test("{{{1}}}"								, "{{ subst:test|a}}"			, "a");}
 	@Test  public void Wiki_txt_safesubst()			{fxt.Test_parse_tmpl_str_test("{{{1}}}"								, "{{safesubst:test|a}}"		, "a");}
 	@Test  public void Tmpl_txt_subst_empty()		{fxt.Test_parse_tmpl_str_test("{{subst:}}"							, "{{test}}"					, "{{subst:}}");}
-	@Test  public void Tmpl_txt_safesubst()			{fxt.Test_parse_tmpl_str_test("{{safesubst:mwo_print|a}}"			, "{{test}}"					, "a");}
-	@Test  public void Tmpl_prm_subst()				{fxt.Test_parse_tmpl_str_test("{{{{{1|subst:}}}mwo_print|a}}"		, "{{test}}"					, "{{subst:mwo_print|a}}");}
-	@Test  public void Tmpl_prm_subst_ws()			{fxt.Test_parse_tmpl_str_test("{{{{{1| subst:}}}mwo_print|a}}"		, "{{test}}"					, "{{ subst:mwo_print|a}}");}
-	@Test  public void Tmpl_prm_safesubst()			{fxt.Test_parse_tmpl_str_test("{{{{{1|safesubst:}}}mwo_print|a}}"	, "{{test}}"					, "a");}
-	@Test  public void Tmpl_prm_safesubst_empty()	{fxt.Test_parse_tmpl_str_test("{{{{{|safesubst:}}}mwo_print|a}}"		, "{{test}}"					, "a");}
+	@Test  public void Tmpl_txt_safesubst()			{fxt.Test_parse_tmpl_str_test("{{safesubst:xo_print|a}}"			, "{{test}}"					, "a");}
+	@Test  public void Tmpl_prm_subst()				{fxt.Test_parse_tmpl_str_test("{{{{{1|subst:}}}xo_print|a}}"		, "{{test}}"					, "{{subst:xo_print|a}}");}
+	@Test  public void Tmpl_prm_subst_ws()			{fxt.Test_parse_tmpl_str_test("{{{{{1| subst:}}}xo_print|a}}"		, "{{test}}"					, "{{ subst:xo_print|a}}");}
+	@Test  public void Tmpl_prm_safesubst()			{fxt.Test_parse_tmpl_str_test("{{{{{1|safesubst:}}}xo_print|a}}"	, "{{test}}"					, "a");}
+	@Test  public void Tmpl_prm_safesubst_empty()	{fxt.Test_parse_tmpl_str_test("{{{{{|safesubst:}}}xo_print|a}}"		, "{{test}}"					, "a");}
 	@Test  public void Tmpl_txt_subst_pf()			{fxt.Test_parse_tmpl_str_test("{{subst:#expr:0}}"					, "{{test}}"					, "0");}
 	@Test  public void Tmpl_txt_safesubst_prm()		{fxt.Test_parse_tmpl_str_test("{{{{{|safesubst:}}}#if:{{{1|}}}{{{{{|safesubst:}}}!}}c1|c2}}"	, "{{test}}"					, "c2");}
 	@Test  public void Exc_tmpl_prm_safesubst_ns()	{fxt.Test_parse_tmpl_str_test("{{{{{|safesubst}}}:NAMESPACE}}"		, "{{test}}"					, "");}
@@ -48,11 +48,16 @@ public class Xop_subst_tst {
 			));
 		fxt.Test_parse_tmpl_str_test("{{ {{{|safesubst:}}}ifsubst |yes|<includeonly>{{subst:substcheck}}</includeonly>}}", "{{test}}", "{{subst:substcheck}}");
 	}
+	@Test  public void Urlencode_subst() {	// PURPOSE: smoke test to handle en.d and {{does-template-exist}}; EX: en.d:Kazakhstan; DATE:2014-03-25
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("test", "{{safesubst:urlencode:{{safesubst:Template:{{{1}}}}}}}");
+		fxt.Test_parse_page_tmpl_str("{{test|abc}}", "%5B%5B%3ATemplate%3AAbc%5D%5D");	// note that this is url-encoded version of [[:Template:Abc]]
+	}
 
 	// NOTE: these are actually not good tests; MW does subst just before save; it doesn't do subst on load; in this case, the tests are testing load (which will noop); they need to test save (which xowa doesn't do)
-//		@Test  public void Tmpl_txt_subst()				{fxt.Test_parse_tmpl_str_test("{{subst:mwo_print|a}}"				, "{{test}}"					, "a");}
-//		@Test  public void Tmpl_txt_subst_prm()			{fxt.Test_parse_tmpl_str_test("{{subst:mwo_print|{{{1}}}}}"			, "{{test|a}}"					, "a");}
+//		@Test  public void Tmpl_txt_subst()				{fxt.Test_parse_tmpl_str_test("{{subst:xo_print|a}}"				, "{{test}}"					, "a");}
+//		@Test  public void Tmpl_txt_subst_prm()			{fxt.Test_parse_tmpl_str_test("{{subst:xo_print|{{{1}}}}}"			, "{{test|a}}"					, "a");}
 
 	//@Test  public void Tmpl_txt_safesubst_prm()		{fxt.Test_parse_tmpl_str_test("{{{{{|safesubst:}}}ns:Category}}"	, "{{test}}"					, "Category");}
-	//@Test  public void Tmpl_txt_subst_immed()		{fxt.Test_parse_tmpl_str_test("{{mwo_print{{subst:!}}a}}"			, "{{test}}"					, "a");}
+	//@Test  public void Tmpl_txt_subst_immed()		{fxt.Test_parse_tmpl_str_test("{{xo_print{{subst:!}}a}}"			, "{{test}}"					, "a");}
 }

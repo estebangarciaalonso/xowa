@@ -174,7 +174,9 @@ public class Xop_lnki_wkr_basic_tst {
 		fxt.Test_parse_page_wiki("[[a|]]", fxt.tkn_lnki_().Trg_tkn_(fxt.tkn_arg_val_txt_(2, 3)));
 	}
 	@Test  public void Exc_empty() {
+		fxt.Init_log_(Xop_ttl_log.Len_0);
 		fxt.Test_parse_page_wiki("[[]]", fxt.tkn_txt_(0, 2), fxt.tkn_txt_(2, 4));
+		fxt.Init_log_(Xop_ttl_log.Len_0);
 		fxt.Test_parse_page_wiki("[[ ]]", fxt.tkn_txt_(0, 2), fxt.tkn_space_(2, 3), fxt.tkn_txt_(3, 5));
 	}
 	@Test  public void Exc_invalid_utf8() {	// PURPOSE: "%DO" is an invalid UTF-8 sequence (requires 2 bytes, not just %D0); DATE:2013-11-11
@@ -621,7 +623,7 @@ public class Xop_lnki_wkr_basic_tst {
 		Xoa_page previous_page = Xoa_page.blank_page_(wiki, ttl);
 		previous_page.Redirect_list().Add(ByteAry_.new_ascii_("Src"));		// simulate redirect from "Src"
 		fxt.App().User().History_mgr().Add(previous_page);					// simulate "Src" already being clicked once; this is the key call
-		fxt.Hctx().Lnki_visited_(true);
+		fxt.Wtr_cfg().Lnki_visited_(true);
 		fxt.Test_parse_page_all_str("[[Src]]"		, "<a href=\"/wiki/Src\" class=\"xowa-visited\">Src</a>");	// show [[Src]] as visited since it exists in history
 		fxt.Test_parse_page_all_str("[[Other]]"		, "<a href=\"/wiki/Other\">Other</a>");						// show other pages as not visited
 	}

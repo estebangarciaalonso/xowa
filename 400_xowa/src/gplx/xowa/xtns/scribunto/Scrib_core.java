@@ -175,7 +175,8 @@ public class Scrib_core {
 		byte[] excerpt = ByteAry_.Empty;
 		try {
 			Xot_invk src_frame = cur_frame_invoke;
-			excerpt = ByteAry_.Mid_by_len_safe(cur_src, src_frame.Src_bgn(), src_frame.Src_end());
+			if (src_frame != null)
+				excerpt = ByteAry_.Mid(cur_src, src_frame.Src_bgn(), src_frame.Src_end());
 		} catch (Exception e) {Err_.Noop(e);}
 		app.Usr_dlg().Warn_many("", "", "lua error; page=~{0} excerpt=~{1} err=~{2} ~{3}"
 		, page.Ttl().Page_db_as_str()

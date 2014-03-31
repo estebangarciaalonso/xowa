@@ -47,13 +47,20 @@ public class Xol_lang implements GfoInvkAble {
 		img_thumb_halign_default = dir_ltr ? Xop_lnki_halign.Right : Xop_lnki_halign.Left;
 	}	private boolean dir_ltr = true;
 	public byte[] Dir_bry() {return dir_ltr ? Dir_bry_ltr : Dir_bry_rtl;}
+	public byte[] X_axis_end() {return dir_ltr ? X_axis_end_right : X_axis_end_left;}
 	public Xol_ns_grp Ns_names() {return ns_names;} private Xol_ns_grp ns_names;
 	public Xol_ns_grp Ns_aliases() {return ns_aliases;} private Xol_ns_grp ns_aliases;
 	public Xol_kwd_mgr Kwd_mgr() {return keyword_mgr;} private Xol_kwd_mgr keyword_mgr;
 	public Xol_msg_mgr Msg_mgr() {return message_mgr;} private Xol_msg_mgr message_mgr;
 	public Xol_case_mgr Case_mgr() {return case_mgr;} private Xol_case_mgr case_mgr = new Xol_case_mgr();
 	public Xol_font_info Gui_font() {return gui_font;} private Xol_font_info gui_font = new Xol_font_info(null, 0, gplx.gfui.FontStyleAdp_.Plain);
-	public byte[] Fallback_bry() {return fallback_bry;} public Xol_lang Fallback_bry_(byte[] v) {fallback_bry = v; return this;} private byte[] fallback_bry;
+	public byte[] Fallback_bry() {return fallback_bry;}
+	public Xol_lang Fallback_bry_(byte[] v) {
+		fallback_bry = v;
+		fallback_bry_ary = Fallbacy_bry_ary__bld(v);
+		return this;
+	}	private byte[] fallback_bry;
+	public byte[][] Fallback_bry_ary() {return fallback_bry_ary;} private byte[][] fallback_bry_ary = ByteAry_.Ary_empty;
 	public Xol_vnt_mgr Vnt_mgr() {return vnt_mgr;} private Xol_vnt_mgr vnt_mgr;
 	public Xol_cnv_mgr Cnv_mgr() {return cnv_mgr;} private Xol_cnv_mgr cnv_mgr;
 	public Xol_fragment_mgr Fragment_mgr() {return fragment_mgr;} private Xol_fragment_mgr fragment_mgr;
@@ -91,6 +98,7 @@ public class Xol_lang implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_fallback_load))			Exec_fallback_load(m.ReadBry("v"));
 		else if	(ctx.Match(k, Invk_num_fmt))				return num_fmt_mgr;
 		else if	(ctx.Match(k, Invk_link_trail))				return lnki_trail_mgr;
+		else if	(ctx.Match(k, Invk_x_axis_end))				return String_.new_utf8_(X_axis_end());
 		else if	(ctx.Match(k, Invk_this))					return this;
 		else if	(ctx.Match(k, Xoa_gfs_mgr.Invk_app))		return app;
 		else												return GfoInvkAble_.Rv_unhandled;
@@ -99,7 +107,9 @@ public class Xol_lang implements GfoInvkAble {
 	public static final String Invk_ns_names = "ns_names", Invk_ns_aliases = "ns_aliases"
 	, Invk_keywords = "keywords", Invk_messages = "messages", Invk_specials = "specials", Invk_casings = "casings", Invk_converts = "converts", Invk_variants = "variants"
 	, Invk_dir_rtl_ = "dir_rtl_", Invk_gui_font_ = "gui_font_"
-	, Invk_fallback_load = "fallback_load", Invk_this = "this", Invk_num_fmt = "num_fmt", Invk_dir_str = "dir_str", Invk_link_trail = "link_trail";
+	, Invk_fallback_load = "fallback_load", Invk_this = "this", Invk_num_fmt = "num_fmt", Invk_dir_str = "dir_str", Invk_link_trail = "link_trail"
+	, Invk_x_axis_end = "x_axis_end"
+	;
 	public Xol_lang Init_by_load_assert() {if (!loaded) Init_by_load(); return this;}
 	public boolean Init_by_load() {
 		if (this.loaded) return false;
@@ -115,10 +125,10 @@ public class Xol_lang implements GfoInvkAble {
 		return true;
 	}
 	private void Exec_fallback_load(byte[] fallback_lang) {
+		Fallback_bry_(fallback_lang);
 		if (app.Lang_mgr().Fallback_regy().Has(fallback_lang)) return;			// fallback_lang loaded; avoid recursive loop; EX: zh with fallback of zh-hans which has fallback of zh
 		if (ByteAry_.Eq(fallback_lang, Xoa_lang_mgr.Fallback_false)) return;	// fallback_lang is "none" exit
 		app.Lang_mgr().Fallback_regy().Add(fallback_lang, fallback_lang);
-		fallback_bry = fallback_lang;
 		Load_lang(fallback_lang);
 		app.Lang_mgr().Fallback_regy().Del(fallback_lang);
 	}
@@ -126,6 +136,30 @@ public class Xol_lang implements GfoInvkAble {
 		app.Gfs_mgr().Run_url_for(this, Xol_lang_.xo_lang_fil_(app, String_.new_ascii_(v)));
 		app.Gfs_mgr().Run_url_for(app, Xol_cnv_mgr.Bld_url(app, key_str));
 	}
-	private static final byte[] Dir_bry_ltr = ByteAry_.new_ascii_("ltr"), Dir_bry_rtl = ByteAry_.new_ascii_("rtl");
+	private static final byte[] 
+	  Dir_bry_ltr = ByteAry_.new_ascii_("ltr"), Dir_bry_rtl = ByteAry_.new_ascii_("rtl")
+	, X_axis_end_right = ByteAry_.new_ascii_("right"), X_axis_end_left = ByteAry_.new_ascii_("left")
+	;
 	public static final int Tid_lower = 1, Tid_upper = 2;
+	private static byte[][] Fallbacy_bry_ary__bld(byte[] v) {
+		byte[][] rv = ByteAry_.Split(v, Byte_ascii.Comma, true); // gan -> 'gan-hant, zh-hant, zh-hans'
+		boolean en_needed = true;
+		int rv_len = rv.length;
+		for (int i = 0; i < rv_len; i++) {
+			byte[] itm = rv[i];
+			if (ByteAry_.Eq(itm, Xol_lang_.Key_en)) {
+				en_needed = false;
+				break;
+			}
+		}
+		if (en_needed) {
+			int new_len = rv_len + 1;
+			byte[][] new_ary  = new byte[new_len][];
+			for (int i = 0; i < rv_len; i++)
+				new_ary[i] = rv[i];
+			new_ary[rv_len] = Xol_lang_.Key_en;
+			rv = new_ary;
+		}
+		return rv;
+	}
 }

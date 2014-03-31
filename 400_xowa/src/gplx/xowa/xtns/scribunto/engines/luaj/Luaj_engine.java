@@ -63,16 +63,17 @@ public class Luaj_engine implements Scrib_engine {
 		while (true) {
 			LuaTable rsp = server.Dispatch(msg);
 			String op = Luaj_value_.Get_val_as_str(rsp, "op");
-			if		(String_.Eq(op, "return")) {
+			if		(String_.Eq(op, "return"))
 				return Luaj_value_.Get_val_as_kv_ary(server, rsp, "values");
-			}
-			else if (String_.Eq(op, "call")) {
+			else if (String_.Eq(op, "call"))
 				msg = Server_recv_call(rsp);
-			}
-			else {
-				// app.Usr_dlg().Warn_many("", "", "invalid dispatch: op=~{0} page=~{1}", op, String_.new_utf8_(core.Ctx().Page().Page_ttl().Page_db()));
+			else if (String_.Eq(op, "error")) {
+				String err = Luaj_value_.Get_val_as_str(rsp, "value");
+				core.Handle_error(err, "");
 				return KeyVal_.Ary_empty;
 			}
+			else
+				return KeyVal_.Ary_empty;
 		}		
 	}
 	public LuaTable Server_recv_call(LuaTable rsp) {
@@ -82,8 +83,14 @@ public class Luaj_engine implements Scrib_engine {
 		Scrib_proc_args proc_args = new Scrib_proc_args(args);
 		Scrib_proc_rslt proc_rslt = new Scrib_proc_rslt();
 		proc.Proc_exec(proc_args, proc_rslt);
-		KeyVal[] cbk_rslts = proc_rslt.Ary();
-		return ReturnMessage(cbk_rslts);
+		String fail_msg = proc_rslt.Fail_msg();
+		if (fail_msg == null) { 
+			KeyVal[] cbk_rslts = proc_rslt.Ary();
+			return ReturnMessage(cbk_rslts);
+		}
+		else {
+			return ReturnFail(fail_msg);			
+		}
 	}
 	private LuaTable ReturnMessage(KeyVal[] values) {
 		LuaTable msg = LuaValue.tableOf();
@@ -92,10 +99,17 @@ public class Luaj_engine implements Scrib_engine {
 		msg.set("values", Luaj_value_.X_obj_to_val(server, values));
 		return msg;
 	}
+	private LuaTable ReturnFail(String fail_msg) {
+		LuaTable msg = LuaValue.tableOf();
+		msg.set("op", Val_error);
+		msg.set("value", LuaValue.valueOf(fail_msg));
+		return msg;
+	}
 	private static final LuaValue 
 	  Val_loadString 		= LuaValue.valueOf("loadString")
 	, Val_registerLibrary 	= LuaValue.valueOf("registerLibrary")
 	, Val_callFunction 		= LuaValue.valueOf("call")
 	, Val_returnMessage 	= LuaValue.valueOf("return")
+	, Val_error 			= LuaValue.valueOf("error")
 	;
 }

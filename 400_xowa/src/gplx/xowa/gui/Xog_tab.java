@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.gui; import gplx.*; import gplx.xowa.*;
-import gplx.xowa.parsers.lnkis.*;
+import gplx.xowa.parsers.lnkis.redlinks.*;
 import gplx.xowa.files.*;
 public class Xog_tab {
 	public byte[] Display_ttl() {return display_ttl;} public Xog_tab Display_ttl_(byte[] v) {display_ttl = v; return this;} private byte[] display_ttl = null;

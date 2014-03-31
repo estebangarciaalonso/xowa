@@ -105,12 +105,12 @@ public class Xop_toc_mgr implements ByteAryFmtrArg {
 		Xow_wiki wiki = page.Wiki();
 		ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
 		Xoh_html_wtr html_wtr = wiki.Html_wtr(); html_wtr.Page_(wiki.Ctx().Page());
-		Xoh_opts html_wtr_opts = Xoh_opts.root_();
+		Xoh_html_wtr_ctx html_wtr_opts = Xoh_html_wtr_ctx.Basic;
 		Toc_text_recurse(ctx, page, bfr, src, html_wtr, html_wtr_opts, hdr, 0);
 		bfr.Mkr_rls();
 		return bfr.XtoAryAndClear();
 	}
-	private static void Toc_text_recurse(Xop_ctx ctx, Xoa_page page, ByteAryBfr bfr, byte[] src, Xoh_html_wtr html_wtr, Xoh_opts html_wtr_opts, Xop_tkn_itm tkn, int depth) {
+	private static void Toc_text_recurse(Xop_ctx ctx, Xoa_page page, ByteAryBfr bfr, byte[] src, Xoh_html_wtr html_wtr, Xoh_html_wtr_ctx html_wtr_opts, Xop_tkn_itm tkn, int depth) {
 		int subs_len = tkn.Subs_len();
 		boolean txt_seen = false; int ws_pending = 0;
 		for (int i = 0; i < subs_len; i++) {
@@ -151,11 +151,11 @@ public class Xop_toc_mgr implements ByteAryFmtrArg {
 							break;
 						case Xop_xnde_tag_.Tid_b:
 						case Xop_xnde_tag_.Tid_i:
-							html_wtr.Write_tkn(ctx, html_wtr_opts, bfr, src, 0, tkn, Xoh_html_wtr.Sub_idx_null, sub);
+							html_wtr.Write_tkn(bfr, ctx, html_wtr_opts, src, tkn, Xoh_html_wtr.Sub_idx_null, sub);
 							break;
 						case Xop_xnde_tag_.Tid_translate:
 							gplx.xowa.xtns.translates.Xop_translate_xnde translate_xnde = (gplx.xowa.xtns.translates.Xop_translate_xnde)xnde.Xnde_xtn();
-							html_wtr.Write_tkn(ctx, html_wtr_opts, bfr, translate_xnde.Xtn_root().Data_mid(), 0, tkn, Xoh_html_wtr.Sub_idx_null, translate_xnde.Xtn_root());
+							html_wtr.Write_tkn(bfr, ctx, html_wtr_opts, translate_xnde.Xtn_root().Data_mid(), tkn, Xoh_html_wtr.Sub_idx_null, translate_xnde.Xtn_root());
 							break;
 						default:
 							if (depth > 0 && (xnde.CloseMode() == Xop_xnde_tkn.CloseMode_pair || xnde.CloseMode() == Xop_xnde_tkn.CloseMode_inline))	// do not render dangling xndes; EX: Casualties_of_the_Iraq_War; ===<small>Iraqi Health Ministry<small>===
@@ -167,7 +167,7 @@ public class Xop_toc_mgr implements ByteAryFmtrArg {
 					}
 					break;
 				default:
-					html_wtr.Write_tkn(ctx, html_wtr_opts, bfr, src, 0, tkn, Xoh_html_wtr.Sub_idx_null, sub);
+					html_wtr.Write_tkn(bfr, ctx, html_wtr_opts, src, tkn, Xoh_html_wtr.Sub_idx_null, sub);
 					break;
 			}
 		}

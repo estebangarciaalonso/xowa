@@ -38,7 +38,7 @@ public class Xog_history_stack {
 			&&	ByteAry_.Eq(redirect_force, cur_itm.Redirect_force())
 			)
 			return Xog_history_itm.Null;
-		Xog_history_itm itm = new Xog_history_itm(key, wiki_key, page_key, anch_key, qarg_key, redirect_force, page.Html_bmk_pos());
+		Xog_history_itm itm = new Xog_history_itm(key, wiki_key, page_key, anch_key, qarg_key, redirect_force, page.Html_data().Bmk_pos());
 		itm.Display_ttl_(page.Wiki().Ctx().Tab().Display_ttl());
 		Del_all_from(list_pos + 1);
 		list.Add(itm);
@@ -47,7 +47,7 @@ public class Xog_history_stack {
 	}
 	public void Update_html_doc_pos(Xoa_page page, byte nav_type) {
 		Xog_history_itm itm = Get_recent(page, nav_type);
-		if (itm != null) itm.Html_doc_pos_(page.Html_bmk_pos());
+		if (itm != null) itm.Html_doc_pos_(page.Html_data().Bmk_pos());
 	}
 	private Xog_history_itm Get_recent(Xoa_page page, byte nav_type) {
 		int pos = -1;

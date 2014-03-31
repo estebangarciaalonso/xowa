@@ -26,7 +26,7 @@ public class Geoc_isin_func extends Pf_func_base {
 		byte[] lnki_ttl = ByteAry_.Add(Xop_tkn_.Lnki_bgn, ttl_bry, Xop_tkn_.Lnki_end);		// make "[[ttl]]"
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
 		Xop_parser_.Parse_to_html(tmp_bfr, wiki, false, lnki_ttl);
-		ctx.Page().Html_content_sub_(tmp_bfr.Mkr_rls().XtoAryAndClear());
+		ctx.Page().Html_data().Content_sub_(tmp_bfr.Mkr_rls().XtoAryAndClear());
 	}
         public static final Geoc_isin_func _ = new Geoc_isin_func();
 }

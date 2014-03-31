@@ -18,28 +18,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.scribunto.engines.luaj; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.scribunto.engines.*;
 import org.luaj.vm2.*; import org.luaj.vm2.lib.*; import org.luaj.vm2.lib.jse.*;
 import gplx.xowa.xtns.scribunto.engines.process.*;
-class Luaj_server implements Scrib_server {
-	private Scrib_core core;
-	private LuaTable env;	
+public class Luaj_server implements Scrib_server {
 	private LuaTable server;
-	private Luaj_server_func_error error_func; boolean debug_enabled;
 	public Luaj_server(Scrib_core core, boolean debug_enabled) {
-		this.core = core;
-		error_func = new Luaj_server_func_error();		
-		this.debug_enabled = debug_enabled;
 	}
+	public static Globals Globals_singleton;
 	public void Init(String... init_args) {
-		DebugLib.DEBUG_ENABLED = debug_enabled;
-		this.env = JsePlatform.standardGlobals();
-		LuaValue main_fil_val = LuaValue.valueOf(init_args[2] + "engines/Luaj/mw_main.lua");
+		Globals_singleton = JsePlatform.standardGlobals();
+		Globals_singleton.load(new DebugLib());
+		Globals_singleton.load(new MWClient());
+
 		String root_str = init_args[2];
 		if (Op_sys.Cur().Tid_is_wnt())
 			root_str = String_.Replace(root_str, Op_sys.Wnt.Fsys_dir_spr_str(), Op_sys.Lnx.Fsys_dir_spr_str());
-		LuaValue package_val = env.get("package");
+		LuaValue main_fil_val = LuaValue.valueOf(root_str + "engines/Luaj/mw_main.lua");
+		LuaValue package_val = Globals_singleton.get("package");
 		package_val.rawset("path", LuaValue.valueOf(root_str + "engines/Luaj/?.lua;" + root_str + "engines/LuaCommon/lualib/?.lua"));
-		server = (LuaTable)env.get("dofile").call(main_fil_val);
-		error_func.Init(core, server);		
-		error_func.Debug_enabled_(debug_enabled);
+		server = (LuaTable)Globals_singleton.get("dofile").call(main_fil_val);
 	}
 	public LuaTable Dispatch(LuaTable msg) {
 		return (LuaTable)server.method(Val_server_recv, msg);
@@ -70,4 +65,19 @@ class Luaj_server implements Scrib_server {
 	, Val_xchunks			= LuaValue.valueOf("xchunks")
 	, Val_chunks			= LuaValue.valueOf("chunks")
 	;
+	class MWClient extends OneArgFunction {
+		/** The implementation of the ZeroArgFunction interface.
+		 * This will be called once when the library is loaded via require().
+		 * @param arg LuaString containing the name used in the call to require().
+		 * @return Value that will be returned in the require() call.  In this case, 
+		 * it is the library itself.
+		 */
+		public LuaValue call(LuaValue libname) {
+			LuaValue library = tableOf();
+			library.set("client_recv", Luaj_server_func_recv._);
+			LuaValue env = gplx.xowa.xtns.scribunto.engines.luaj.Luaj_server.Globals_singleton; 
+			env.set( "MWClient", library );
+			return library;
+		}
+	}
 }

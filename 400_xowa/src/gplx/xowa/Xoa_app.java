@@ -121,14 +121,14 @@ public class Xoa_app implements GfoInvkAble {
 	public Gfo_msg_log			Msg_log() {return msg_log;} private Gfo_msg_log msg_log = new Gfo_msg_log(Xoa_app_.Name);
 	public Gfo_msg_log			Msg_log_null() {return msg_log_null;} private Gfo_msg_log msg_log_null = new Gfo_msg_log("null_log");
 
-	public Url_encoder			Url_converter_id()			{return url_converter_id;} Url_encoder url_converter_id = Url_encoder.new_html_id_();
-	public Url_encoder			Url_converter_url()			{return url_converter_url;} Url_encoder url_converter_url = Url_encoder.new_http_url_();
-	public Url_encoder			Url_converter_url_ttl()		{return url_converter_url_ttl;} Url_encoder url_converter_url_ttl = Url_encoder.new_http_url_ttl_();
-	public Url_encoder			Url_converter_href()		{return url_converter_href;} Url_encoder url_converter_href = Url_encoder.new_html_href_mw_();
-	public Url_encoder			Url_converter_comma()		{return url_converter_comma;} Url_encoder url_converter_comma = Url_encoder.url_comma();
-	public Url_encoder			Url_converter_gfs()			{return url_converter_gfs;} Url_encoder url_converter_gfs = Url_encoder.new_gfs_();
-	public Url_encoder			Url_converter_fsys()		{return url_converter_fsys;} Url_encoder url_converter_fsys = Url_encoder.new_fsys_lnx_();
-	public Url_encoder			Url_converter_fsys_safe()	{return url_converter_fsys_safe;} Url_encoder url_converter_fsys_safe = Url_encoder.new_fsys_wnt_();
+	public Url_encoder			Url_converter_id()			{return url_converter_id;} private Url_encoder url_converter_id = Url_encoder.new_html_id_();
+	public Url_encoder			Url_converter_url()			{return url_converter_url;} private Url_encoder url_converter_url = Url_encoder.new_http_url_();
+	public Url_encoder			Url_converter_url_ttl()		{return url_converter_url_ttl;} private Url_encoder url_converter_url_ttl = Url_encoder.new_http_url_ttl_();
+	public Url_encoder			Url_converter_href()		{return url_converter_href;} private Url_encoder url_converter_href = Url_encoder.new_html_href_mw_();
+	public Url_encoder			Url_converter_comma()		{return url_converter_comma;} private Url_encoder url_converter_comma = Url_encoder.url_comma();
+	public Url_encoder			Url_converter_gfs()			{return url_converter_gfs;} private Url_encoder url_converter_gfs = Url_encoder.new_gfs_();
+	public Url_encoder			Url_converter_fsys()		{return url_converter_fsys;} private Url_encoder url_converter_fsys = Url_encoder.new_fsys_lnx_();
+	public Url_encoder			Url_converter_fsys_safe()	{return url_converter_fsys_safe;} private Url_encoder url_converter_fsys_safe = Url_encoder.new_fsys_wnt_();
 	public Xoh_file_main_wkr	File_main_wkr() {return file_main_wkr;} private Xoh_file_main_wkr file_main_wkr = new Xoh_file_main_wkr();		
 	public ByteTrieMgr_slim		Utl_trie_tblw_ws() {return utl_trie_tblw_ws;} private ByteTrieMgr_slim utl_trie_tblw_ws = Xop_tblw_ws_itm.trie_();
 	public Bry_bfr_mkr			Utl_bry_bfr_mkr() {return utl_bry_bfr_mkr;} Bry_bfr_mkr utl_bry_bfr_mkr = new Bry_bfr_mkr();

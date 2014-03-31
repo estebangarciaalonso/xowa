@@ -48,6 +48,15 @@ public class Scrib_lib_language_tst {
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_fetchLanguageName, Object_.Ary("fr"), "Français");
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_fetchLanguageName, Object_.Ary("enx"), "");
 	}
+	@Test  public void FetchLanguageNames() {
+		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_fetchLanguageNames, Object_.Ary("", "inMw"), "English");
+	}
+	@Test  public void GetFallbacksFor() {
+		Xol_lang other_lang = fxt.Core().App().Lang_mgr().Get_by_key_or_new(ByteAry_.new_ascii_("zh"));
+		other_lang.Fallback_bry_(ByteAry_.new_ascii_("gan-hant, zh-hant, zh-hans"));
+		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_getFallbacksFor, Object_.Ary("zh"), "gan-hant;zh-hant;zh-hans;en");	// auto-add en
+		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_getFallbacksFor, Object_.Ary("unknown"), "");
+	}
 	@Test  public void FormatNum() {
 		Xol_lang other_lang = fxt.Core().App().Lang_mgr().Get_by_key_or_new(ByteAry_.new_ascii_("de"));
 		other_lang.Num_fmt_mgr().Grps_add(new gplx.intl.Gfo_num_fmt_grp(new byte[] {Byte_ascii.Dot}, 3, true));

@@ -22,6 +22,8 @@ class Xop_nl_lxr implements Xop_lxr {
 	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
 	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		if (bgn_pos == Xop_parser_.Doc_bgn_bos) return ctx.LxrMake_txt_(cur_pos); // simulated nl at beginning of every parse
+		int trim_category_pos = Trim_category(ctx, src, cur_pos, src_len);
+		if (trim_category_pos != -1) return trim_category_pos;
 		ctx.Apos().EndFrame(ctx, root, src, bgn_pos, true);	// NOTE: frame should at end at bgn_pos (before \n) not after; else, will create tkn at (5,5), while tkn_mkr.Space creates one at (4,5); DATE:2013-10-31
 		ctx.Tblw().Cell_pipe_seen_(false);	// flip off "|" in tblw seq; EX: "| a\n||" needs to flip off "|" else "||" will be seen as style dlm"; NOTE: not covered by test?
 
@@ -58,6 +60,31 @@ class Xop_nl_lxr implements Xop_lxr {
 			ctx.Subs_add(root, nl_tkn);
 		}
 		return cur_pos;
+	}
+	private static int Trim_category(Xop_ctx ctx, byte[] src, int cur_pos, int src_len) {
+		for (int i = cur_pos; i < src_len; i++) {
+			byte b = src[i];
+			switch (b) {
+				case Byte_ascii.Space: case Byte_ascii.Tab: case Byte_ascii.NewLine: case Byte_ascii.CarriageReturn:	// ignore ws
+					break;
+				case Byte_ascii.Brack_bgn: // [
+					if (	ByteAry_.Eq_itm(src, src_len, i + 1, Byte_ascii.Brack_bgn)	// [[
+						&&	i + 2 < src_len) {	
+						int ttl_bgn = Byte_ary_finder.Find_fwd_while(src, i + 2, src_len, Byte_ascii.Space);
+						ByteTrieMgr_slim ctg_trie = ctx.Wiki().Ns_mgr().Category_trie();
+						Object ctg_ns = ctg_trie.MatchAtCur(src, ttl_bgn, src_len);
+						if (ctg_ns != null	// "[[Category" found
+							&& ByteAry_.Eq_itm(src, src_len, ctg_trie.Match_pos(), Byte_ascii.Colon)) {	// check that next char is :
+							return i;// return pos of 1st [
+						}
+						return -1;
+					}
+					break;
+				default:	// non-ws; return not found
+					return -1;
+			}
+		}
+		return -1;
 	}
 	public static final Xop_nl_lxr _ = new Xop_nl_lxr(); Xop_nl_lxr() {}
 }

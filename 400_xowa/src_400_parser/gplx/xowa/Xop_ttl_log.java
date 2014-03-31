@@ -19,14 +19,14 @@ package gplx.xowa; import gplx.*;
 public class Xop_ttl_log {
 	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "ttl");
 	public static final Gfo_msg_itm
-		  Len_0								= Gfo_msg_itm_.new_warn_(owner, "Len_0")
-		, Len_max							= Gfo_msg_itm_.new_warn_(owner, "Len_max")
-		, Ttl_has_ns_but_no_page			= Gfo_msg_itm_.new_warn_(owner, "Ttl_has_ns_but_no_page")			
-		, Ttl_is_ns_only					= Gfo_msg_itm_.new_warn_(owner, "Ttl_is_ns_only")
-		, Amp_unknown						= Gfo_msg_itm_.new_warn_(owner, "Amp_unknown")
-		, Comment_eos						= Gfo_msg_itm_.new_warn_(owner, "Comment_eos")
-		, Invalid_char						= Gfo_msg_itm_.new_warn_(owner, "Invalid_char")
-		;
+		Len_0								= Gfo_msg_itm_.new_warn_(owner, "Len_0")
+	, Len_max							= Gfo_msg_itm_.new_warn_(owner, "Len_max")
+	, Ttl_has_ns_but_no_page			= Gfo_msg_itm_.new_warn_(owner, "Ttl_has_ns_but_no_page")			
+	, Ttl_is_ns_only					= Gfo_msg_itm_.new_warn_(owner, "Ttl_is_ns_only")
+	, Amp_unknown						= Gfo_msg_itm_.new_warn_(owner, "Amp_unknown")
+	, Comment_eos						= Gfo_msg_itm_.new_warn_(owner, "Comment_eos")
+	, Invalid_char						= Gfo_msg_itm_.new_warn_(owner, "Invalid_char")
+	;
 }
 class Xop_lnke_log {
 	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "lnke");
@@ -178,6 +178,7 @@ class Pf_xtn_time_log {
 		, Invalid_hour					= Gfo_msg_itm_.new_warn_(owner, "Invalid hour: ~{0}")
 		, Invalid_minute				= Gfo_msg_itm_.new_warn_(owner, "Invalid minute: ~{0}")
 		, Invalid_second				= Gfo_msg_itm_.new_warn_(owner, "Invalid second: ~{0}")
+		, Invalid_date					= Gfo_msg_itm_.new_warn_(owner, "Invalid date: ~{0}")
 		;
 }
 //	class Pf_func_lang_log {

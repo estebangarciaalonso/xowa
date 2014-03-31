@@ -63,12 +63,7 @@ public class Html_wtr {
 		return this;
 	}
 	public Html_wtr Atr(byte[] key, byte[] val) {
-		bfr.Add_byte_space();
-		bfr.Add(key);
-		bfr.Add_byte(Byte_ascii.Eq);
-		bfr.Add_byte(atr_quote);
-		Html_utl.Escape_html_to_bfr(bfr, val, 0, val.length, false, false, false, true);
-		bfr.Add_byte(atr_quote);
+		Write_atr(bfr, atr_quote, key, val);
 		return this;
 	}
 	public Html_wtr Nde_end_inline() {
@@ -90,4 +85,14 @@ public class Html_wtr {
 	public byte[] X_to_bry_and_clear() {return bfr.XtoAryAndClear();}
 	public byte[] X_to_bry() {return bfr.XtoAry();}
 	public String X_to_str() {return bfr.XtoStr();}
+	public static void Write_atr(ByteAryBfr bfr, byte[] key, byte[] val) {Write_atr(bfr, Byte_ascii.Quote, key, val);}
+	public static void Write_atr(ByteAryBfr bfr, byte atr_quote, byte[] key, byte[] val) {
+		if (ByteAry_.Len_eq_0(val)) return;	// don't write empty
+		bfr.Add_byte_space();
+		bfr.Add(key);
+		bfr.Add_byte(Byte_ascii.Eq);
+		bfr.Add_byte(atr_quote);
+		Html_utl.Escape_html_to_bfr(bfr, val, 0, val.length, false, false, false, true);
+		bfr.Add_byte(atr_quote);
+	}
 }

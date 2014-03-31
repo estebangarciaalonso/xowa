@@ -26,7 +26,7 @@ public class Xoh_file_main_wkr implements ByteAryFmtrArg {
 		Int_2_ref size_main = opt.Size_main();
 		int main_w = size_main.Val_0();
 		int main_h = size_main.Val_1();
-		this.xfer_itm = wiki.Html_wtr().Lnki_wtr().Lnki_eval(ctx, queue, ttl.Page_txt(), Xop_lnki_type.Id_thumb, main_w, main_h, Xop_lnki_tkn.Upright_null, Xof_doc_thumb.Null, Xof_doc_page.Null, false, queue_add_ref);
+		this.xfer_itm = wiki.Html_wtr().Lnki_wtr().File_wtr().Lnki_eval(ctx, queue, ttl.Page_txt(), Xop_lnki_type.Id_thumb, main_w, main_h, Xop_lnki_tkn.Upright_null, Xof_doc_thumb.Null, Xof_doc_page.Null, false, queue_add_ref);
 		Xof_meta_itm meta_itm = wiki.File_mgr().Meta_mgr().Get_itm_or_new(ttl.Page_db(), Xof_xfer_itm.Md5_(ttl.Page_db()));	// NOTE: can't use Md5 of xfer_itm, b/c xfer_itm.Ttl() b/c may be redirected; EX:w:[[Image:Alcott-L.jpg]]
 		Xof_repo_itm trg_repo = null;
 		trg_repo = meta_itm.Repo_itm(wiki);

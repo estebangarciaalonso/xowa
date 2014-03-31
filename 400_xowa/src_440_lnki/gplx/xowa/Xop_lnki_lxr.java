@@ -21,6 +21,15 @@ class Xop_lnki_lxr_bgn implements Xop_lxr {
 	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Xop_tkn_.Lnki_bgn, this);}
 	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
 	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+		Xop_tkn_itm prv_tkn = ctx.Stack_get_last();
+		if (prv_tkn != null
+			&& prv_tkn.Tkn_tid() == Xop_tkn_itm_.Tid_lnki) {
+			Xop_lnki_tkn prv_lnki = (Xop_lnki_tkn)prv_tkn;
+			if (prv_lnki.Pipe_count() == 0) {
+				ctx.Stack_pop_last();
+				return Xop_lnki_wkr_.Invalidate_lnki(ctx, src, root, prv_lnki, bgn_pos);
+			}
+		}
 		Xop_lnki_tkn lnki = tkn_mkr.Lnki(bgn_pos, cur_pos);
 		ctx.Subs_add_and_stack(root, lnki); 
 		return cur_pos;

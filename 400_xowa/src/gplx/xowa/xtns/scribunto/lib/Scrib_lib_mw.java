@@ -84,13 +84,13 @@ public class Scrib_lib_mw implements Scrib_lib {
 	);
 	public boolean LoadPackage(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		String mod_name = args.Pull_str(0);
-		String mod_code = fsys_mgr.Get_or_null(mod_name);	// check if mod_name is a Scribunto .lua file (in /lualib/)
+		String mod_code = fsys_mgr.Get_or_null(mod_name);	// check if mod_name a file in /lualib/ directoryScribunto .lua file (in /lualib/)
 		if (mod_code != null)
 			return rslt.Init_obj(core.Interpreter().LoadString(mod_name, mod_code));
 		Xoa_ttl ttl = Xoa_ttl.parse_(cur_wiki, ByteAry_.new_utf8_(mod_name));// NOTE: should have Module: prefix
-		if (ttl == null) return rslt.Init_fail();
+		if (ttl == null) return rslt.Init_empty();
 		Xoa_page page = cur_wiki.Data_mgr().Get_page(ttl, false);
-		if (page.Missing()) return rslt.Init_fail();
+		if (page.Missing()) return rslt.Init_empty();
 		Scrib_lua_mod mod = new Scrib_lua_mod(core, mod_name);
 		return rslt.Init_obj(mod.LoadString(String_.new_utf8_(page.Data_raw())));
 	}
@@ -110,13 +110,13 @@ public class Scrib_lib_mw implements Scrib_lib {
 		if (idx_int != Int_.MinValue) {	// idx is integer
 			Arg_nde_tkn nde = Get_arg(frame, idx_int, frame_arg_adj);
 			//frame.Args_eval_by_idx(core.Ctx().Src(), idx_int); // NOTE: arg[0] is always MW function name; EX: {{#invoke:Mod_0|Func_0|Arg_1}}; arg_x = "Mod_0"; args[0] = "Func_0"; args[1] = "Arg_1"
-			if (nde == null) return rslt.Init_fail();
+			if (nde == null) return rslt.Init_empty();
 			nde.Val_tkn().Tmpl_evaluate(ctx, src, core.Cur_frame_owner(), tmp_bfr);
 			return rslt.Init_obj(tmp_bfr.XtoStrAndClear());
 		}
 		else {
 			Arg_nde_tkn nde = frame.Args_get_by_key(src, ByteAry_.new_utf8_(idx_str));
-			if (nde == null) return rslt.Init_fail();	// idx_str does not exist;
+			if (nde == null) return rslt.Init_empty();	// idx_str does not exist;
 			nde.Val_tkn().Tmpl_evaluate(ctx, src, core.Cur_frame_owner(), tmp_bfr);
 			return rslt.Init_obj(tmp_bfr.XtoStrAndClearAndTrim());	// NOTE: must trim if key_exists; DUPE:TRIM_IF_KEY
 		}
@@ -311,7 +311,7 @@ public class Scrib_lib_mw implements Scrib_lib {
 		KeyVal[] args_ary = args.Pull_kv_ary(2);
 		byte[] ttl_bry = ByteAry_.new_utf8_(ttl_str);
 		Xoa_ttl ttl = Xoa_ttl.parse_(cur_wiki, ttl_bry);	// parse directly; handles titles where template is already part of title; EX: "Template:A"
-		if (ttl == null) return rslt.Init_fail();	// invalid ttl;
+		if (ttl == null) return rslt.Init_empty();	// invalid ttl;
 		if (!ttl.ForceLiteralLink() && ttl.Ns().Id_main())	// title is not literal and is not prefixed with Template; parse again as template; EX: ":A" and "Template:A" are fine; "A" is parsed again as "Template:A"
 			ttl = Xoa_ttl.parse_(cur_wiki, ByteAry_.Add(cur_wiki.Ns_mgr().Ns_template().Name_db_w_colon(), ttl_bry));	// parse again, but add "Template:"
 		// BLOCK.bgn:Xot_invk_tkn.Transclude; cannot reuse b/c Transclude needs invk_tkn, and invk_tkn is manufactured late; DATE:2014-01-02

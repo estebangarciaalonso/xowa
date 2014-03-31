@@ -53,20 +53,20 @@ public class Scrib_lib_ustring implements Scrib_lib {
 		boolean plain = args.Cast_bool_or_n(3);
 		bgn = Bgn_adjust(text, bgn);
 		if (String_.Len_eq_0(regx))	// regx of "" should return (bgn, bgn - 1) regardless of plain = t / f
-			return rslt.Init_many(bgn + Scrib_lib_ustring.Base1, bgn + Scrib_lib_ustring.Base1 - 1);
+			return rslt.Init_many_objs(bgn + Scrib_lib_ustring.Base1, bgn + Scrib_lib_ustring.Base1 - 1);
 		if (plain) {
 			int pos = String_.FindFwd(text, regx, bgn);
 			boolean found = pos != ByteAry_.NotFound;
 			return found 
-				? rslt.Init_many(pos + Scrib_lib_ustring.Base1, pos + Scrib_lib_ustring.Base1 + String_.Len(regx) - Scrib_lib_ustring.End_adj)
-				: rslt.Init_fail()
+				? rslt.Init_many_objs(pos + Scrib_lib_ustring.Base1, pos + Scrib_lib_ustring.Base1 + String_.Len(regx) - Scrib_lib_ustring.End_adj)
+				: rslt.Init_empty()
 				;
 		}
 		regx = regx_converter.Parse(ByteAry_.new_utf8_(regx), false);
 		RegxAdp regx_adp = Scrib_lib_ustring.RegxAdp_new_(core.Ctx(), regx);
 		RegxMatch[] regx_rslts = regx_adp.Match_all(text, bgn);	// NOTE: MW calculates an offset to handle mb strings. however, java's regex always takes offset in chars (not bytes like PHP preg_match); DATE:2014-03-04
 		int len = regx_rslts.length;
-		if (len == 0) return rslt.Init_fail();
+		if (len == 0) return rslt.Init_empty();
 		ListAdp tmp_list = ListAdp_.new_();
 		for (int i = 0; i < len; i++) {
 			RegxMatch match = regx_rslts[i];
@@ -74,7 +74,7 @@ public class Scrib_lib_ustring implements Scrib_lib {
 			tmp_list.Add(match.Find_end() + Scrib_lib_ustring.Base1 - Scrib_lib_ustring.End_adj);
 			AddCapturesFromMatch(tmp_list, match, text, false);
 		}
-		return rslt.Init_list(tmp_list);
+		return rslt.Init_many_list(tmp_list);
 	}
 	private int Bgn_adjust(String text, int bgn) {	// adjust to handle bgn < 0 or bgn > len (which PHP allows)
 //			if (bgn == 0) return 0;
@@ -87,7 +87,7 @@ public class Scrib_lib_ustring implements Scrib_lib {
 		return bgn;
 	}
 	public boolean Match(Scrib_proc_args args, Scrib_proc_rslt rslt) {
-		String text = args.Cast_str_or_null(0); if (text == null) return rslt.Init_list(ListAdp_.Null); // if no text is passed, do not fail; return empty; EX:d:changed; DATE:2014-02-06 
+		String text = args.Cast_str_or_null(0); if (text == null) return rslt.Init_many_list(ListAdp_.Null); // if no text is passed, do not fail; return empty; EX:d:changed; DATE:2014-02-06 
 		String regx = regx_converter.Parse(args.Cast_bry_or_null(1), false);
 		int bgn = args.Cast_int_or(2, 1);
 		bgn = Bgn_adjust(text, bgn);
@@ -99,7 +99,7 @@ public class Scrib_lib_ustring implements Scrib_lib {
 			RegxMatch match = regx_rslts[i];
 			AddCapturesFromMatch(tmp_list, match, text, true);
 		}
-		return rslt.Init_list(tmp_list);
+		return rslt.Init_many_list(tmp_list);
 	}
 	public boolean Gsub(Scrib_proc_args args, Scrib_proc_rslt rslt) {return gsub_mgr.Exec(args, rslt);}
 	public boolean Gmatch_init(Scrib_proc_args args, Scrib_proc_rslt rslt) {
@@ -107,7 +107,7 @@ public class Scrib_lib_ustring implements Scrib_lib {
 		byte[] regx = args.Pull_bry(1);
 		String pcre = regx_converter.Parse(regx, true);
 		ListAdp captures = regx_converter.Grps();
-		return rslt.Init_many(pcre, Scrib_kv_utl_.base1_list_(captures));
+		return rslt.Init_many_objs(pcre, Scrib_kv_utl_.base1_list_(captures));
 	}
 	public boolean Gmatch_callback(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		String text = args.Form_str_or_null(0); // NOTE: UstringLibrary.php!ustringGmatchCallback calls preg_match directly; $s can be any type, and php casts automatically; 
@@ -117,11 +117,11 @@ public class Scrib_lib_ustring implements Scrib_lib {
 		RegxAdp regx_adp = Scrib_lib_ustring.RegxAdp_new_(core.Ctx(), regx);
 		RegxMatch[] regx_rslts = regx_adp.Match_all(text, pos);
 		int len = regx_rslts.length;
-		if (len == 0) return rslt.Init_many(pos, KeyVal_.Ary_empty);
+		if (len == 0) return rslt.Init_many_objs(pos, KeyVal_.Ary_empty);
 		RegxMatch match = regx_rslts[0];	// NOTE: take only 1st result
 		ListAdp tmp_list = ListAdp_.new_();
 		AddCapturesFromMatch(tmp_list, match, text, false);
-		return rslt.Init_many(match.Find_end(), Scrib_kv_utl_.base1_list_(tmp_list));
+		return rslt.Init_many_objs(match.Find_end(), Scrib_kv_utl_.base1_list_(tmp_list));
 	}
 	private void AddCapturesFromMatch(ListAdp tmp_list, RegxMatch rslt, String text, boolean op_is_match) {// NOTE: this matches behavior in UstringLibrary.php!addCapturesFromMatch
 		RegxGroup[] grps = rslt.Groups();
@@ -148,10 +148,11 @@ public class Scrib_lib_ustring implements Scrib_lib {
 	static final int Base1 = 1, End_adj = 1;
 }
 class Scrib_lib_ustring_gsub_mgr {
-	public Scrib_lib_ustring_gsub_mgr(Scrib_core core, Scrib_regx_converter regx_converter) {this.core = core; this.regx_converter = regx_converter;} private Scrib_core core; Scrib_regx_converter regx_converter;
+	private Scrib_regx_converter regx_converter;
+	public Scrib_lib_ustring_gsub_mgr(Scrib_core core, Scrib_regx_converter regx_converter) {this.core = core; this.regx_converter = regx_converter;} private Scrib_core core; 
 	private byte tmp_repl_tid = Repl_tid_null; private byte[] tmp_repl_bry = null;
-	private HashAdp repl_hash = null; private Scrib_lua_proc repl_func = null; private ByteAryBfr tmp_bfr;
-	int repl_count = 0;
+	private HashAdp repl_hash = null; private Scrib_lua_proc repl_func = null;
+	private int repl_count = 0;
 	public boolean Exec(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		Object text_obj = args.Cast_obj_or_null(0);
 		String text = String_.as_(text_obj);
@@ -164,7 +165,7 @@ class Scrib_lib_ustring_gsub_mgr {
 		repl_count = 0;
 		Identify_repl(repl_obj);
 		String repl = Exec_repl(tmp_repl_tid, tmp_repl_bry, text, regx, limit);
-		return rslt.Init_many(repl, repl_count);
+		return rslt.Init_many_objs(repl, repl_count);
 	}
 	private void Identify_repl(Object repl_obj) {
 		Class<?> repl_type = repl_obj.getClass();
@@ -175,7 +176,10 @@ class Scrib_lib_ustring_gsub_mgr {
 		else if	(Object_.Eq(repl_type, KeyVal[].class)) {
 			tmp_repl_tid = Repl_tid_table;
 			KeyVal[] repl_tbl = (KeyVal[])repl_obj;
-			if (repl_hash == null) repl_hash = HashAdp_.new_();
+			if (repl_hash == null) 
+				repl_hash = HashAdp_.new_();
+			else
+				repl_hash.Clear();
 			int repl_tbl_len = repl_tbl.length;
 			for (int i = 0; i < repl_tbl_len; i++) {
 				KeyVal repl_itm = repl_tbl[i];
@@ -193,14 +197,14 @@ class Scrib_lib_ustring_gsub_mgr {
 		RegxAdp regx_mgr = Scrib_lib_ustring.RegxAdp_new_(core.Ctx(), regx);
 		RegxMatch[] rslts = regx_mgr.Match_all(text, 0);
 		if (rslts.length == 0) return text;	// PHP: If matches are found, the new subject will be returned, otherwise subject will be returned unchanged.; http://php.net/manual/en/function.preg-replace-callback.php
-		if (tmp_bfr == null) tmp_bfr = ByteAryBfr.new_();
+		ByteAryBfr tmp_bfr = ByteAryBfr.new_();
 		int len = rslts.length;
 		int pos = 0;
 		for (int i = 0; i < len; i++) {
 			if (limit > -1 && repl_count == limit) break;
 			RegxMatch rslt = rslts[i];
 			tmp_bfr.Add_str(String_.Mid(text, pos, rslt.Find_bgn()));	// NOTE: regx returns char pos (not bry); must add as String, not bry; DATE:2013-07-17
-			Exec_repl_itm(repl_tid, repl_bry, text, rslt);
+			Exec_repl_itm(tmp_bfr, repl_tid, repl_bry, text, rslt);
 			pos = rslt.Find_end();
 			++repl_count;
 		}
@@ -209,7 +213,7 @@ class Scrib_lib_ustring_gsub_mgr {
 			tmp_bfr.Add_str(String_.Mid(text, pos, text_len));			// NOTE: regx returns char pos (not bry); must add as String, not bry; DATE:2013-07-17
 		return tmp_bfr.XtoStrAndClear();
 	}
-	private void Exec_repl_itm(byte repl_tid, byte[] repl_bry, String text, RegxMatch match) {
+	private void Exec_repl_itm(ByteAryBfr tmp_bfr, byte repl_tid, byte[] repl_bry, String text, RegxMatch match) {
 		switch (repl_tid) {
 			case Repl_tid_string:
 				int len = repl_bry.length;

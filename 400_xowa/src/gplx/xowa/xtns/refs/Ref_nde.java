@@ -48,7 +48,7 @@ public class Ref_nde implements Xox_xnde, Xop_xnde_atr_parser {
 		nested = ctx.Ref_nested();
 		this.xnde = xnde;
 	}
-	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_html_wtr_ctx opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
 		html_wtr.Ref_wtr().Xnde_ref(opts, bfr, src, xnde);
 	}
 	private static final Ref_nde[] Ary_empty = new Ref_nde[0];

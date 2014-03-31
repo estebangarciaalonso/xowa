@@ -235,7 +235,7 @@ public class Xow_wiki implements GfoInvkAble {
 		app.Wiki_mgr().Scripts().Exec(this);
 		ByteAryFmtr.Null.Eval_mgr().Enabled_(true);
 		app.Wiki_mgr().Css_installer().Install_assert(this, user.Fsys_mgr().Wiki_html_dir(domain_str)); log_bfr.Add("wiki.init.css");
-		html_wtr.Hctx().Toc_show_(true).Lnki_title_(true).Lnki_visited_(true).Lnki_id_(true);
+		html_wtr.Cfg().Toc_show_(true).Lnki_title_(true).Lnki_visited_(true).Lnki_id_(true);
 		this.Copy_cfg(app.User().Wiki());
 		File_repos_assert(app, this);
 		xtn_mgr.Init_by_wiki(this);

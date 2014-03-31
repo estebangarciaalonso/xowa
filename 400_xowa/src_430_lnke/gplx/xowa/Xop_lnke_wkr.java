@@ -151,7 +151,7 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 				if (prv_tkn.Tkn_tid() == Xop_tkn_itm_.Tid_lnki) {		// is tkn lnki?
 					root.Subs_del_after(prv_tkn.Tkn_sub_idx());				// delete [[ tkn and replace with [ tkn
 					root.Subs_add(tkn_mkr.Txt(prv_tkn.Src_bgn(), prv_tkn.Src_bgn() + 1));
-					ctx.Stack_pop_lnki();							// don't forget to remove from stack
+					ctx.Stack_pop_last();							// don't forget to remove from stack
 					lnke_type = Xop_lnke_tkn.Lnke_typ_brack;		// change lnke_typee to brack
 					--bgn_pos;
 				}

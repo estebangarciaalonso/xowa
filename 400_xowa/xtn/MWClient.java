@@ -31,7 +31,7 @@ public class MWClient extends OneArgFunction {
 	public LuaValue call(LuaValue libname) {
 		LuaValue library = tableOf();
 		library.set("client_recv", Luaj_server_func_recv._);
-//		LuaValue env = JsePlatform.standardGlobals();
+		LuaValue env = gplx.xowa.xtns.scribunto.engines.luaj.Luaj_server.Globals_singleton; 
 		env.set( "MWClient", library );
 		return library;
 	}

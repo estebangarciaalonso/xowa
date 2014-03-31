@@ -27,9 +27,9 @@ public class Wdata_doc_consts {
 		, Key_time_time_str = "time", Key_time_precision_str = "precision", Key_time_before_str = "before", Key_time_after_str = "after", Key_time_timezone_str = "timezone", Key_time_calendarmodel_str = "calendarmodel"
 		, Val_time_precision_str = "11", Val_time_before_str = "0", Val_time_after_str = "0", Val_time_timezone_str = "0"
 		, Val_time_globe_str = "http:\\/\\/www.wikidata.org\\/entity\\/Q2", Val_time_calendarmodel_str = "http://www.wikidata.org/entity/Q1985727"
-		, Key_geo_latitude_str = "latitude", Key_geo_longitude_str = "longitude", Key_geo_altitude_str = "altitude"
+		, Key_geo_type_str = "geocoordinate", Key_geo_latitude_str = "latitude", Key_geo_longitude_str = "longitude", Key_geo_altitude_str = "altitude"
 		, Key_geo_globe_str = "globe", Key_geo_precision_str = "precision"
-		, Key_quantity_amount_str = "amount", Key_quantity_unit_str = "unit"
+		, Key_quantity_type_str = "quantity", Key_quantity_amount_str = "amount", Key_quantity_unit_str = "unit"
 		, Key_quantity_ubound_str = "upperBound", Key_quantity_lbound_str = "lowerBound"
 		;
 	public static final int 

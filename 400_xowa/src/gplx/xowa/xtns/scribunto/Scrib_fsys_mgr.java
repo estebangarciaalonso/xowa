@@ -29,7 +29,7 @@ public class Scrib_fsys_mgr {
 		lib_dirs[2] = script_dir.GenSubDir("ustring");
 	}
 	public String Get_or_null(String name) {
-		if (libs == null) libs_init();
+		if (libs == null) libs = libs_init(script_dir);
 		Object lib_fil_obj = libs.Fetch(name); if (lib_fil_obj == null) return null;
 		gplx.ios.Io_fil lib_fil = (gplx.ios.Io_fil)lib_fil_obj;
 		String lib_data = lib_fil.Data();
@@ -39,17 +39,18 @@ public class Scrib_fsys_mgr {
 		}
 		return lib_data;
 	}
-	private void libs_init() {
-		libs = OrderedHash_.new_();
-		Io_url[] fils = Io_mgr._.QueryDir_args(lib_dirs[0]).Recur_().ExecAsUrlAry();
+	private static OrderedHash libs_init(Io_url script_dir) {
+		OrderedHash rv = OrderedHash_.new_();
+		Io_url[] fils = Io_mgr._.QueryDir_args(script_dir).Recur_().ExecAsUrlAry();
 		int fils_len = fils.length;
 		for (int i = 0; i < fils_len; i++) {
 			Io_url fil = fils[i];
 			if (!String_.Eq(fil.Ext(), ".lua")) continue;	// ignore readme.txt, readme
-			String fil_name = fil.NameOnly();
-			if (libs.Has(fil_name)) continue;	// shouldn't happen, but don't allow same name; NOTE: Scribunto implicitly requires that all files are unique
-			libs.Add(fil_name, new gplx.ios.Io_fil(fil, null));
+			gplx.ios.Io_fil fil_itm = new gplx.ios.Io_fil(fil, null);
+			rv.Add_if_new(fil.NameOnly(), fil_itm);
+			rv.Add_if_new(String_.Replace(String_.DelEndIf(fil.GenRelUrl_orEmpty(script_dir), ".lua"), "\\", "/"), fil_itm);
 		}
+		return rv;
 	}
 	public void Shrink() {
 		int len = libs.Count();

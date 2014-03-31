@@ -39,7 +39,7 @@ public class Xtn_syntaxHighlight_nde implements Xox_xnde, Xop_xnde_atr_parser {
 		this.xtn_root = xtn_root;
 		xtn_root.Atrs_ary_(atrs);
 	}
-	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_html_wtr_ctx opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
 		boolean lang_is_text = ByteAry_.Eq(lang, Lang_text);
 		boolean enclose_is_none = ByteAry_.Eq(enclose, Enclose_none);
 		if 		(enclose_is_none) {

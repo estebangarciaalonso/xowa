@@ -25,7 +25,7 @@ public class Scrib_invoke_func_fxt {
 			core_fxt = new Scrib_core_fxt();
 			core_fxt.Clear();
 			core_fxt.Init_lib_mw();
-			core = core_fxt.Engine();
+			core = core_fxt.Core();
 			server = core_fxt.Server();
 			core.Interpreter().Server_(server);
 		}

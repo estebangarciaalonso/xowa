@@ -408,6 +408,10 @@ public class ByteAry_ {
 		for (int i = 0; i < repl_len; i++)
 			src[i + bgn] = repl[i];
 	}
+	public static boolean Eq_itm(byte[] src, int src_len, int pos, byte chk) {
+		return	pos < src_len
+			&&	src[pos] == chk;
+	}
 	public static boolean Eq(byte[] lhs, byte[] rhs) {
 		if		(lhs == null && rhs == null) return true;
 		else if (lhs == null || rhs == null) return false;
@@ -681,7 +685,8 @@ public class ByteAry_ {
 			default: throw Err_.new_("unknown digit").Add("digit", digit);
 		}
 	}
-	public static byte[][] Split(byte[] src, byte dlm) {
+	public static byte[][] Split(byte[] src, byte dlm) {return Split(src, dlm, false);}
+	public static byte[][] Split(byte[] src, byte dlm, boolean trim) {
 		if (ByteAry_.Len_eq_0(src)) return ByteAry_.Ary_empty;
 		int src_len = src.length, src_pos = 0, fld_bgn = 0;
 		ListAdp rv = ListAdp_.new_();
@@ -690,8 +695,11 @@ public class ByteAry_ {
 			byte b = last ? dlm : src[src_pos];
 			if (b == dlm) {
 				if (last && (src_pos - fld_bgn == 0)) {}
-				else
-					rv.Add(ByteAry_.Mid(src, fld_bgn, src_pos));
+				else {
+					byte[] itm = ByteAry_.Mid(src, fld_bgn, src_pos);
+					if (trim) itm = ByteAry_.Trim(itm);						
+					rv.Add(itm);
+				}
 				fld_bgn = src_pos + 1;
 			}
 			if (last) break;

@@ -130,6 +130,14 @@ public class Byte_ary_finder {
 		}
 		return Byte_ary_finder.Not_found;
 	}
+	public static int Find_bwd_while(byte[] src, int cur, int end, byte while_byte) {
+		--cur;
+		while (true) {
+			if (	cur < end
+				||	src[cur] != while_byte) return cur;
+			--cur;
+		}
+	}
 	public static int Find_fwd_while(byte[] src, int cur, int end, byte while_byte) {
 		while (true) {
 			if (	cur == end

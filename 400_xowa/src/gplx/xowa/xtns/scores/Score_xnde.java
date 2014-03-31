@@ -54,7 +54,7 @@ public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 		Xox_mgr_base.Xtn_write_escape(app, bfr, code);
 		bfr.Add(Xoh_consts.Pre_end);
 	}
-	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_html_wtr_ctx opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
 		Xow_wiki wiki = ctx.Wiki(); Xoa_page page = ctx.Page();
 		Score_xtn_mgr score_xtn = (Score_xtn_mgr)wiki.Xtn_mgr().Get_or_fail(Score_xtn_mgr.XTN_KEY);
 		if (!score_xtn.Enabled()) {Html_write_code_as_pre(bfr, app); return;}
@@ -102,7 +102,7 @@ public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 		score_xtn.Html_img().Bld_bfr_many(bfr, html_id_a, html_a_href_tmp, html_a_xowa_ttl, html_id_img, html_img_src_tmp, html_img_alt_tmp);
 	}	private byte[] sha1; private String sha1_prefix; private Io_url output_dir, png_file, aud_file; private String html_id_pre, html_id_img, html_id_a, html_a_href, html_img_src, html_img_alt;
 	private String Fill_xfer(Xow_wiki wiki, Xop_ctx ctx, Xoa_page page, byte[] ttl) {
-		Xof_xfer_itm xfer_itm = wiki.Html_wtr().Lnki_wtr().Lnki_eval(ctx, page.File_queue(), ttl, Xop_lnki_type.Id_none, -1, -1, -1, Xof_doc_thumb.Null, Xof_doc_page.Null, false, Fill_xfer_ref);
+		Xof_xfer_itm xfer_itm = wiki.Html_wtr().Lnki_wtr().File_wtr().Lnki_eval(ctx, page.File_queue(), ttl, Xop_lnki_type.Id_none, -1, -1, -1, Xof_doc_thumb.Null, Xof_doc_page.Null, false, Fill_xfer_ref);
 		return String_.new_utf8_(xfer_itm.Html_orig_src());
 	}	private BoolRef Fill_xfer_ref = BoolRef.n_();
 	public void Hcmd_exec(Xoa_app app, Xog_win_wtr gui_wtr, Xoa_page page) {

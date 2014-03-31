@@ -33,7 +33,7 @@ public class Xop_xowa_cmd implements Xox_xnde {
 		Xop_ctx sub_ctx = Xop_ctx.new_sub_(wiki);
 		xtn_root = wiki.Parser().Parse_recurse(sub_ctx, xtn_src, true);
 	}
-	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
-		html_wtr.Write_tkn(ctx, opts, bfr, xtn_root.Root_src(), depth + 1, xnde, Xoh_html_wtr.Sub_idx_null, xtn_root);
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_html_wtr_ctx opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
+		html_wtr.Write_tkn(bfr, ctx, opts, xtn_root.Root_src(), xnde, Xoh_html_wtr.Sub_idx_null, xtn_root);
 	}
 }

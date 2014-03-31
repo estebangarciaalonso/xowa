@@ -33,7 +33,7 @@ public class Scrib_core_fxt {
 		expd_server_rcvd_list.Clear();
 		return this;
 	}	private Xoa_app app; Xow_wiki wiki; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
-	public Scrib_core Engine() {return core;} private Scrib_core core;
+	public Scrib_core Core() {return core;} private Scrib_core core;
 	public Process_server_mock Server() {return server;} Process_server_mock server;
 	public KeyVal kv_(Object key, Object val) {return KeyVal_.obj_(key, val);}
 	public KeyVal[] kv_ary_(KeyVal... v) {return v;}

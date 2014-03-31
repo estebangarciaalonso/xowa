@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.gfui.*; import gplx.xowa.gui.*; import gplx.xowa.gui.history.*; import gplx.xowa.xtns.math.*; import gplx.xowa.files.*;
-import gplx.xowa.parsers.lnkis.*;
+import gplx.xowa.parsers.lnkis.redlinks.*;
 import gplx.xowa.gui.wins.*;
 import gplx.xowa.gui.views.*;
 public class Xog_win implements GfoInvkAble, GfoEvObj {
@@ -159,7 +159,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		byte[] anchor_bry = ByteAry_.new_utf8_(anchor_str);
 		if (anchor_str != null) {									// link has anchor
 			url_box.Text_(url + "#" + anchor_str);					// update url box
-			page.Html_bmk_pos_(Xog_history_itm.Html_doc_pos_toc);	// HACK: anchor clicked; set docPos of curentPage to TOC (so back will go back to TOC)
+			page.Html_data().Bmk_pos_(Xog_history_itm.Html_doc_pos_toc);	// HACK: anchor clicked; set docPos of curentPage to TOC (so back will go back to TOC)
 			history_mgr.Update_html_doc_pos(page
 				, Xog_history_stack.Nav_by_anchor);					// HACK: update history_mgr; note that this must occur before setting Anchor (since Anchor will generate a new history itm)
 			page.Url().Anchor_bry_(anchor_bry);						// update url
@@ -216,7 +216,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		tmp.Mkr_rls();
 	}
 	private void Exec_html_box_focus_previous_or_firstHeading() {
-		String html_doc_pos = page.Html_bmk_pos();
+		String html_doc_pos = page.Html_data().Bmk_pos();
 		if (html_doc_pos == null) {
 			String auto_focus_id = app.Gui_mgr().Html_mgr().Auto_focus_id();
 			if (String_.Len_eq_0(auto_focus_id)) return;		// don't focus anything
@@ -231,7 +231,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 			html_box.Html_window_vpos_(html_doc_pos);
 	}
 	public void Exec_page_refresh() {
-		page.Html_bmk_pos_(html_box.Html_window_vpos());
+		page.Html_data().Bmk_pos_(html_box.Html_window_vpos());
 		tab_box_mgr.Html_box_mgr().Show(page);
 		if (page.Url().Anchor_str() == null)
 			GfoInvkAble_.InvkCmd(async_cmd, Invk_html_box_focus_previous_or_firstHeading);
@@ -524,7 +524,7 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		if (reset_to_read) tab_box_mgr.View_mode_(Xog_view_mode.Id_read);
 		if (new_page.Url().Action_is_edit()) tab_box_mgr.View_mode_(Xog_view_mode.Id_edit);
 		if (page != null && !new_page_is_same) {	// if new_page_is_same, don't update DocPos; will "lose" current position
-			page.Html_bmk_pos_(html_box.Html_window_vpos());
+			page.Html_data().Bmk_pos_(html_box.Html_window_vpos());
 			history_mgr.Update_html_doc_pos(page, nav_type);	// HACK: old_page is already in stack, but need to update its hdoc_pos
 		}
 		gui_wtr.Prog_none(GRP_KEY, "show.locate", "locating images");

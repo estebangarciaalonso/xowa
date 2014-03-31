@@ -19,7 +19,7 @@ package gplx.xowa.html; import gplx.*; import gplx.xowa.*;
 import org.junit.*;
 public class Xoh_html_wtr_tst {
 	private Xop_fxt fxt = new Xop_fxt();
-	@After public void term() {fxt.Init_para_n_();}
+	@After public void term() {fxt.Init_para_n_(); fxt.Reset();}
 	@Test  public void Hr_basic()					{fxt.Test_parse_page_wiki_str("----"				, "<hr/>");}
 	@Test  public void Hr_extended()				{fxt.Test_parse_page_wiki_str("--------"			, "<hr/>");}
 	@Test  public void Lnki_basic()					{fxt.Test_parse_page_wiki_str("[[a]]"				, "<a href=\"/wiki/A\">a</a>");}
@@ -28,14 +28,14 @@ public class Xoh_html_wtr_tst {
 	@Test  public void Lnki_tail_trg()				{fxt.Test_parse_page_wiki_str("[[a]]b"				, "<a href=\"/wiki/A\">ab</a>");}
 	@Test  public void Lnki_tail_caption()			{fxt.Test_parse_page_wiki_str("[[a|b]]c"			, "<a href=\"/wiki/A\">bc</a>");}
 	@Test   public void Lnki_title() {
-		fxt.Hctx().Lnki_title_(true);
+		fxt.Wtr_cfg().Lnki_title_(true);
 		fxt.Test_parse_page_wiki_str("[[a|b]]", "<a href=\"/wiki/A\" title=\"A\">b</a>");
-		fxt.Hctx().Lnki_title_(false);
+		fxt.Wtr_cfg().Lnki_title_(false);
 	}
 	@Test   public void Lnki_title_page_text() {
-		fxt.Hctx().Lnki_title_(true);
+		fxt.Wtr_cfg().Lnki_title_(true);
 		fxt.Test_parse_page_wiki_str("[[a_b]]", "<a href=\"/wiki/A_b\" title=\"A b\">a_b</a>");
-		fxt.Hctx().Lnki_title_(false);
+		fxt.Wtr_cfg().Lnki_title_(false);
 	}
 	@Test  public void Lnki_category()				{fxt.Test_parse_page_wiki_str("[[Category:A]]"		, "");}	// NOTE: Category does not get written in main page bfr
 	@Test  public void Lnki_category_force()		{fxt.Test_parse_page_wiki_str("[[:Category:A]]"		, "<a href=\"/wiki/Category:A\">Category:A</a>");}

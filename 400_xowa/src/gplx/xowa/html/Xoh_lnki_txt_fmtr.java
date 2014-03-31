@@ -16,12 +16,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.html; import gplx.*; import gplx.xowa.*;
-public class ByteAryFmtrArg_html_fmtr implements ByteAryFmtrArg {
-	private ByteAryFmtr fmtr; private Xoh_html_wtr wtr; private Xop_ctx ctx; private Xoh_opts opts; private byte[] src; private Xop_tkn_itm tkn; private int depth;
-	public ByteAryFmtrArg_html_fmtr Set(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_opts opts, byte[] src, Xop_tkn_itm tkn, int depth, ByteAryFmtr fmtr) {this.wtr = wtr; this.ctx = ctx; this.opts = opts; this.src = src; this.tkn = tkn; this.depth = depth; this.fmtr = fmtr; return this;}
+public class Xoh_lnki_txt_fmtr implements ByteAryFmtrArg {	// formats alt or caption
+	private ByteAryFmtr fmtr; private Xoh_html_wtr wtr; private Xop_ctx ctx; private Xoh_html_wtr_ctx hctx; private byte[] src; private Xop_tkn_itm tkn;
+	public Xoh_lnki_txt_fmtr Set(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_html_wtr_ctx hctx, byte[] src, Xop_tkn_itm tkn, ByteAryFmtr fmtr) {
+		this.wtr = wtr; this.ctx = ctx; this.hctx = hctx; this.src = src; this.tkn = tkn; this.fmtr = fmtr; 
+		return this;
+	}
 	public void XferAry(ByteAryBfr trg, int idx) {
 		ByteAryBfr tmp_bfr = ByteAryBfr.new_();
-		wtr.Write_tkn(ctx, opts, tmp_bfr, src, depth + 1, null, Xoh_html_wtr.Sub_idx_null, tkn);
+		wtr.Write_tkn(tmp_bfr, ctx, hctx, src, null, Xoh_html_wtr.Sub_idx_null, tkn);
 		byte[] bry = tmp_bfr.XtoAryAndClear();
 		if (bry.length == 0) return;
 		fmtr.Bld_bfr_many(trg, bry);

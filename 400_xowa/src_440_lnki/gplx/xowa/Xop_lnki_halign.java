@@ -19,10 +19,10 @@ package gplx.xowa; import gplx.*;
 public class Xop_lnki_halign {
 	public static final byte Null = 0, None = 1, Left = 2, Center = 3, Right = 4;
 	public static final byte[][] Html_names = new byte[][]
-		{	ByteAry_.new_ascii_("null")
-		,	ByteAry_.new_ascii_("none")
-		,	ByteAry_.new_ascii_("left")
-		,	ByteAry_.new_ascii_("center")
-		,	ByteAry_.new_ascii_("right")
-		};
+	{ ByteAry_.new_ascii_("null")
+	, ByteAry_.new_ascii_("none")
+	, ByteAry_.new_ascii_("left")
+	, ByteAry_.new_ascii_("center")
+	, ByteAry_.new_ascii_("right")
+	};
 }

@@ -27,7 +27,7 @@ public class Xof_xfer_queue_html_fxt extends Xof_xfer_queue_base_fxt {
 	public Xof_xfer_queue_html_fxt Lnki_thumb_(String lnki_ttl, int lnki_w, int lnki_h) {return Lnki_(lnki_ttl, Bool_.Y, lnki_w, lnki_h, Xop_lnki_tkn.Upright_null, Xof_doc_thumb.Null_as_int);}
 	public Xof_xfer_queue_html_fxt Lnki_(String lnki_ttl, boolean thumb, int lnki_w, int lnki_h, double upright, int seek_time) { // NOTE: only one xfer_itm; supports one Lnki_ per test only
 		Xow_wiki wiki = this.En_wiki();
-		xfer_itm = wiki.Html_wtr().Lnki_wtr().Lnki_eval(wiki.Ctx(), queue, ByteAry_.new_utf8_(lnki_ttl), thumb ? Xop_lnki_type.Id_thumb : Xop_lnki_type.Id_null, lnki_w, lnki_h, upright, Xof_doc_thumb.X_int(seek_time), Xof_doc_page.Null, false, queue_add_ref);
+		xfer_itm = wiki.Html_wtr().Lnki_wtr().File_wtr().Lnki_eval(wiki.Ctx(), queue, ByteAry_.new_utf8_(lnki_ttl), thumb ? Xop_lnki_type.Id_thumb : Xop_lnki_type.Id_null, lnki_w, lnki_h, upright, Xof_doc_thumb.X_int(seek_time), Xof_doc_page.Null, false, queue_add_ref);
 		return this;
 	}	private Xof_xfer_itm xfer_itm = new Xof_xfer_itm(); BoolRef queue_add_ref = BoolRef.n_();
 	Xof_xfer_queue queue = new Xof_xfer_queue();

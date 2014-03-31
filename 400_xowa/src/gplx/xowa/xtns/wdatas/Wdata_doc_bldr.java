@@ -181,7 +181,7 @@ public class Wdata_doc_bldr {
 			wtr.Ary_end();
 			wtr.Kv_ary_empty(Bool_.Y, Wdata_doc_consts.Key_claims_q_bry);
 			wtr.Kv(Bool_.Y, Wdata_doc_consts.Key_claims_g_bry, qid);
-			wtr.Kv(Bool_.Y, Wdata_doc_consts.Key_claims_rank_bry, 1);
+			wtr.Kv(Bool_.Y, Wdata_doc_consts.Key_claims_rank_bry, Wdata_prop_itm_base_.Rank_normal);
 			wtr.Kv_ary_empty(Bool_.Y, Wdata_doc_consts.Key_claims_refs_bry);
 			wtr.Nde_end();
 		}

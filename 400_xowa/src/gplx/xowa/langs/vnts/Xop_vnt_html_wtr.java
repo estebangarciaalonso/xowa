@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.langs.vnts; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
 import gplx.xowa.html.*;
 public class Xop_vnt_html_wtr {
-	public static void Write(Xoh_html_wtr html_wtr, Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, int depth, Xop_vnt_tkn vnt) {
+	public static void Write(Xoh_html_wtr html_wtr, Xop_ctx ctx, Xoh_html_wtr_ctx opts, ByteAryBfr bfr, byte[] src, Xop_vnt_tkn vnt) {
 		byte[] cur_lang_vnt = ctx.Wiki().Lang().Vnt_mgr().Cur_vnt();
 		Xop_vnt_rule[] rules = vnt.Vnt_rules(); if (rules == null) return;	// shouldn't happen, but guard anyway
 		int rules_len = rules.length;
@@ -29,14 +29,14 @@ public class Xop_vnt_html_wtr {
 				break;
 			case Xop_vnt_html_wtr.Cmd_literal: {		// val only; "A"
 				Xop_vnt_rule rule_0 = rules[0];		// Cmd_calc guarantees there will always be 1 item
-				html_wtr.Write_tkn_ary(ctx, opts, bfr, src, depth + 1, rule_0.Rule_subs());
+				html_wtr.Write_tkn_ary(bfr, ctx, opts, src, rule_0.Rule_subs());
 				break;
 			}
 			case Xop_vnt_html_wtr.Cmd_bidi:			// matching rule: "A" if zh-hans; -{zh-hans:A}-
 				for (int i = 0; i < rules_len; i++) {
 					Xop_vnt_rule rule = rules[i];
 					if (ByteAry_.Eq(rule.Rule_lang(), cur_lang_vnt)) {
-						html_wtr.Write_tkn_ary(ctx, opts, bfr, src, depth + 1, rule.Rule_subs());
+						html_wtr.Write_tkn_ary(bfr, ctx, opts, src, rule.Rule_subs());
 						break;
 					}
 				}
@@ -49,7 +49,7 @@ public class Xop_vnt_html_wtr {
 				for (int i = 0; i < flags_len; i++) {
 					byte[] lang = langs[i];
 					if (ByteAry_.Eq(lang, cur_lang_vnt)) {
-						html_wtr.Write_tkn_ary(ctx, opts, bfr, src, depth + 1, rule_0.Rule_subs());
+						html_wtr.Write_tkn_ary(bfr, ctx, opts, src, rule_0.Rule_subs());
 						break;
 					}
 				}

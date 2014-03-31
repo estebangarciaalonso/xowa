@@ -62,7 +62,7 @@ public class Xoa_xowa_exec implements GfoInvkAble {
 			wiki.Ctx().Para().Enabled_(para_enabled);
 			wiki.Parser().Parse_page_all(root, wiki.Ctx(), wiki.Ctx().Tkn_mkr(), raw, 0);
 			byte[] data = root.Data_mid();
-			wiki.Html_wtr().Write_all(wiki.Ctx(), root, data, bfr);
+			wiki.Html_wtr().Write_all(bfr, wiki.Ctx(), data, root);
 			return bfr.XtoStrAndClear();
 		}
 		finally {

@@ -1087,6 +1087,19 @@ public class Xop_para_wkr_basic_tst {
 			,	""
 			));
 	}
+	@Test   public void Category_trim() {	// PURPOSE: trim ws preceding [[Category:; de.d:plant; DATE:2014-03-27
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+			( "*a"
+			, ""
+			, " [[Category:B]] c" 
+			), String_.Concat_lines_nl_skipLast
+			( "<ul>"
+			, "  <li>a c"
+			, "  </li>"
+			, "</ul>"
+			, ""
+			));
+	}
 
 	private String File_html() {return File_html("Image", "Test.png", "d/9", "caption");}
 	public static String File_html(String ns, String ttl, String md5, String caption) {

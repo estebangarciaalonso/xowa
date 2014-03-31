@@ -58,6 +58,11 @@ public class Scrib_lib_ustring_tst {
 		Exec_gsub_regx("àbc", "^%s*(.-)%s*$", 1, "%1", "àbc;1");	// utf8; regx is for trim line
 		Exec_gsub_regx("a"	, "[^]"			, 1, "b", "a;0");		// invalid regx should not fail; should return self; DATE:2013-10-20
 	}
+	@Test  public void Gsub_capture() {
+		fxt.Init_cbk(Scrib_core.Key_mw_interface, fxt.Core().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);
+		Exec_gsub_regx("aa", "(a)%1"		, 1, "%1z", "az;1");	// capture
+		Exec_gsub_regx("a\"b'c\"d", "([\"'])(.-)%1"		, 1, "%1z", "a\"zd;1");	// capture; http://www.lua.org/pil/20.3.html; {{#invoke:test|gsub_string|a"b'c"d|(["'])(.-)%1|%1z}}
+	}
 	@Test  public void Gsub_proc() {
 		fxt.Init_cbk(Scrib_core.Key_mw_interface, fxt.Core().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);
 		Exec_gsub_regx_func_0("abcd", "([a])", "Abcd;1");

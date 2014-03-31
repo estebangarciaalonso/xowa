@@ -27,6 +27,7 @@ public class Scrib_proc_args {
 	public String	Cast_str_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: String_.cast_		(rv);}
 	public byte[]	Cast_bry_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: ByteAry_.new_utf8_(String_.cast_	(rv));}	// NOTE: cast is deliberate; Scrib call checkType whi
 	public byte[]	Cast_bry_or_empty(int i)		{Object rv = Get_or_null(i); return rv == null ? ByteAry_.Empty : ByteAry_.new_utf8_(String_.cast_	(rv));}
+	public byte[]	Cast_bry_or(int i, byte[] or)	{Object rv = Get_or_null(i); return rv == null ? or				: ByteAry_.new_utf8_(String_.cast_	(rv));}
 	public Object	Cast_obj_or_null(int i)			{return Get_or_null(i);}
 	public boolean		Cast_bool_or_y(int i)			{Object rv = Get_or_null(i); return rv == null ? Bool_.Y		: Bool_.cast_(rv);}
 	public boolean		Cast_bool_or_n(int i)			{Object rv = Get_or_null(i); return rv == null ? Bool_.N		: Bool_.cast_(rv);}
@@ -103,7 +104,7 @@ public class Scrib_proc_args {
 		return kv == null ? null : kv.Val();
 	}
 	private Object Get_or_fail(int i) {
-		if (i < 0 || i >= ary_len) throw Err_.new_fmt_("scrib arg idx out of bounds; idx={0} len={1}", i, ary_len);
+		if (i < 0 || i >= ary_len) throw Err_.new_fmt_("bad argument: nil; idx={0} len={1}", i, ary_len);
 		KeyVal kv = ary[i];
 		Object rv = kv == null ? null : kv.Val();
 		if (rv == null) throw Err_.new_fmt_("scrib arg is null; idx={0} len={1}", i, ary_len);

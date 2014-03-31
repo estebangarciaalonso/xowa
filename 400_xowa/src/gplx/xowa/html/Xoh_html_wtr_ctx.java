@@ -15,10 +15,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.xowa; import gplx.*;
-public class Xoh_opts {
-	Xoh_opts(boolean lnki_alt) {this.lnki_alt = lnki_alt;}	Xoh_opts() {}
-	public boolean Lnki_alt() {return lnki_alt;} private boolean lnki_alt;
-	public static Xoh_opts root_()		{return new Xoh_opts(false);}
-	public static Xoh_opts lnki_alt_()	{return new Xoh_opts(true);}
+package gplx.xowa.html; import gplx.*; import gplx.xowa.*;
+public class Xoh_html_wtr_ctx {
+	Xoh_html_wtr_ctx(boolean mode_is_alt) {this.mode_is_alt = mode_is_alt;}
+	public boolean Mode_is_alt() {return mode_is_alt;} private boolean mode_is_alt;
+        public static final Xoh_html_wtr_ctx Basic	= new Xoh_html_wtr_ctx(false);
+        public static final Xoh_html_wtr_ctx Alt		= new Xoh_html_wtr_ctx(true);
 }

@@ -35,6 +35,8 @@ public class Scrib_lib_language implements Scrib_lib {
 			case Proc_isValidCode:									return IsValidCode(args, rslt);
 			case Proc_isValidBuiltInCode:							return IsValidBuiltInCode(args, rslt);
 			case Proc_fetchLanguageName:							return FetchLanguageName(args, rslt);
+			case Proc_fetchLanguageNames:							return FetchLanguageNames(args, rslt);
+			case Proc_getFallbacksFor:								return GetFallbacksFor(args, rslt);
 			case Proc_lcfirst:										return Lcfirst(args, rslt);
 			case Proc_ucfirst:										return Ucfirst(args, rslt);
 			case Proc_lc:											return Lc(args, rslt);
@@ -54,21 +56,22 @@ public class Scrib_lib_language implements Scrib_lib {
 	}
 	private static final int
 	  Proc_getContLangCode = 0, Proc_isSupportedLanguage = 1, Proc_isKnownLanguageTag = 2
-	, Proc_isValidCode = 3, Proc_isValidBuiltInCode = 4, Proc_fetchLanguageName = 5
-	, Proc_lcfirst = 6, Proc_ucfirst = 7, Proc_lc = 8, Proc_uc = 9, Proc_caseFold = 10
-	, Proc_formatNum = 11, Proc_formatDate = 12, Proc_formatDuration = 13, Proc_getDurationIntervals = 14, Proc_parseFormattedNumber = 15
-	, Proc_convertPlural = 16, Proc_convertGrammar = 17, Proc_gender = 18, Proc_isRTL = 19
+	, Proc_isValidCode = 3, Proc_isValidBuiltInCode = 4, Proc_fetchLanguageName = 5, Proc_fetchLanguageNames = 6, Proc_getFallbacksFor = 7
+	, Proc_lcfirst = 8, Proc_ucfirst = 9, Proc_lc = 10, Proc_uc = 11, Proc_caseFold = 12
+	, Proc_formatNum = 13, Proc_formatDate = 14, Proc_formatDuration = 15, Proc_getDurationIntervals = 16, Proc_parseFormattedNumber = 17
+	, Proc_convertPlural = 18, Proc_convertGrammar = 19, Proc_gender = 20, Proc_isRTL = 21
 	;
 	public static final String 
 	  Invk_getContLangCode = "getContLangCode", Invk_isSupportedLanguage = "isSupportedLanguage", Invk_isKnownLanguageTag = "isKnownLanguageTag"
-	, Invk_isValidCode = "isValidCode", Invk_isValidBuiltInCode = "isValidBuiltInCode", Invk_fetchLanguageName = "fetchLanguageName"
+	, Invk_isValidCode = "isValidCode", Invk_isValidBuiltInCode = "isValidBuiltInCode"
+	, Invk_fetchLanguageName = "fetchLanguageName", Invk_fetchLanguageNames = "fetchLanguageNames", Invk_getFallbacksFor = "getFallbacksFor"
 	, Invk_lcfirst = "lcfirst", Invk_ucfirst = "ucfirst", Invk_lc = "lc", Invk_uc = "uc", Invk_caseFold = "caseFold"
 	, Invk_formatNum = "formatNum", Invk_formatDate = "formatDate", Invk_formatDuration = "formatDuration", Invk_getDurationIntervals = "getDurationIntervals", Invk_parseFormattedNumber = "parseFormattedNumber"
 	, Invk_convertPlural = "convertPlural", Invk_convertGrammar = "convertGrammar", Invk_gender = "gender", Invk_isRTL = "isRTL"
 	;
 	private static final String[] Proc_names = String_.Ary
 	( Invk_getContLangCode, Invk_isSupportedLanguage, Invk_isKnownLanguageTag
-	, Invk_isValidCode, Invk_isValidBuiltInCode, Invk_fetchLanguageName
+	, Invk_isValidCode, Invk_isValidBuiltInCode, Invk_fetchLanguageName, Invk_fetchLanguageNames, Invk_getFallbacksFor
 	, Invk_lcfirst, Invk_ucfirst, Invk_lc, Invk_uc, Invk_caseFold
 	, Invk_formatNum, Invk_formatDate, Invk_formatDuration, Invk_getDurationIntervals, Invk_parseFormattedNumber
 	, Invk_convertPlural, Invk_convertGrammar, Invk_gender, Invk_isRTL
@@ -130,6 +133,19 @@ public class Scrib_lib_language implements Scrib_lib {
 		Xol_lang_itm lang_itm = Xol_lang_itm_.Get_by_key(lang_code);
 		return rslt.Init_obj(lang_itm == null ? String_.Empty : String_.new_utf8_(lang_itm.Canonical_name()));
 	}
+	public boolean FetchLanguageNames(Scrib_proc_args args, Scrib_proc_rslt rslt) {	
+		// byte[] lang_code = args.Cast_bry_or_null(0);
+		// byte[] include = args.Form_bry_or(1, FetchLanguageNames_mw);
+		Xol_lang cur_lang = core.Wiki().Lang();
+		Xol_lang_itm cur_itm = Xol_lang_itm_.Get_by_key(cur_lang.Key_bry());
+		KeyVal kv = KeyVal_.new_(cur_lang.Key_str(), cur_itm.Local_name());
+		return rslt.Init_many_kvs(kv); // NOTE: return current language only; MW iterates over langs in wiki; XO is more complicated as technically all langs are available; need to map subset of langs per wiki, which is not trivial
+	}	// private static final byte[] FetchLanguageNames_mw = ByteAry_.new_ascii_("mw");
+	public boolean GetFallbacksFor(Scrib_proc_args args, Scrib_proc_rslt rslt) {	
+		byte[] lang_code = args.Pull_bry(0);
+		Xol_lang lang = core.App().Lang_mgr().Get_by_key(lang_code); if (lang == null) return rslt.Init_many_empty();	// lang is not valid; return empty array per MW;
+		return rslt.Init_bry_ary(lang.Fallback_bry_ary());
+	}
 	public boolean Lcfirst(Scrib_proc_args args, Scrib_proc_rslt rslt) {return Case_1st(args, rslt, Bool_.N);}
 	public boolean Ucfirst(Scrib_proc_args args, Scrib_proc_rslt rslt) {return Case_1st(args, rslt, Bool_.Y);}
 	private boolean Case_1st(Scrib_proc_args args, Scrib_proc_rslt rslt, boolean upper) {
@@ -161,7 +177,7 @@ public class Scrib_lib_language implements Scrib_lib {
 		ByteAryBfr tmp_bfr = core.App().Utl_bry_bfr_mkr().Get_b512();
 		DateAdpFormatItm[] fmt_ary = Pf_xtn_time.Parse(core.Wiki().Ctx(), fmt_bry);
 		DateAdp date = Pf_xtn_time.ParseDate(date_bry, utc, tmp_bfr);	// NOTE: MW is actually more strict about date; however, not sure about PHP's date parse, so using more lax version
-		if (date == null) {tmp_bfr.Mkr_rls(); return rslt.Init_obj(date_bry);}		// date parse failed; return raw_date
+		if (date == null || tmp_bfr.Len() > 0) {tmp_bfr.Mkr_rls(); return rslt.Init_fail("bad argument #2 to 'formatDate' (not a valid timestamp)");}
 		Pf_str_formatdate.Date_bldr().Format(core.Wiki(), lang, fmt_ary, date, tmp_bfr);
 		byte[] rv = tmp_bfr.Mkr_rls().XtoAryAndClear();
 		return rslt.Init_obj(rv);

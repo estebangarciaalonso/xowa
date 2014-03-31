@@ -51,7 +51,7 @@ public class Xop_fxt {
 	public Xop_parser Parser() {return parser;} private Xop_parser parser; 
 	public Xoa_page Page() {return ctx.Page();}
 	public void Lang_by_id_(int id) {ctx.Page().Lang_(wiki.App().Lang_mgr().Get_by_key_or_new(Xol_lang_itm_.Get_by_id(id).Key()));}
-	public Xoh_ctx Hctx() {return html_wtr.Hctx();} private Xoh_html_wtr html_wtr;
+	public Xoh_html_wtr_cfg Wtr_cfg() {return html_wtr.Cfg();} private Xoh_html_wtr html_wtr;
 	public Xop_fxt Reset() {
 		ctx.Clear();
 		ctx.App().Free_mem(false);
@@ -257,7 +257,7 @@ public class Xop_fxt {
 	public String Exec_parse_page_all_as_str(String raw) {
 		Xop_root_tkn root = Exec_parse_page_all_as_root(ByteAry_.new_utf8_(raw));
 		ByteAryBfr actl_bfr = ByteAryBfr.new_();
-		html_wtr.Write_all(ctx, root, root.Root_src(), actl_bfr);
+		html_wtr.Write_all(actl_bfr, ctx, root.Root_src(), root);
 		return actl_bfr.XtoStrAndClear();
 	}
 	private void Parse_chk(byte[] raw_bry, Xop_root_tkn root, Tst_chkr[] expd_ary) {
@@ -274,7 +274,7 @@ public class Xop_fxt {
 		Xop_root_tkn root = tkn_mkr.Root(raw_bry);
 		parser.Parse_page_wiki(root, ctx, tkn_mkr, raw_bry, Xop_parser_.Doc_bgn_bos);
 		ByteAryBfr actl_bfr = ByteAryBfr.new_();
-		html_wtr.Write_all(ctx, root, raw_bry, actl_bfr);
+		html_wtr.Write_all(actl_bfr, ctx, raw_bry, root);
 		return actl_bfr.XtoStrAndClear();
 	}
 	public Xop_fxt Test_parse_page_wiki_str(String raw, String expd) {

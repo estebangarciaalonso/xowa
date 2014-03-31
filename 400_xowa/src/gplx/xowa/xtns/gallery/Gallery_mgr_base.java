@@ -22,8 +22,8 @@ abstract class Gallery_mgr_base {
 	public abstract byte Tid();
 	public abstract byte[] Tid_bry();
 	@gplx.Virtual public boolean Tid_is_packed() {return false;}
-	public int Itm_default_h() {return itm_default_h;} protected int itm_default_h;
 	public int Itm_default_w() {return itm_default_w;} protected int itm_default_w;
+	public int Itm_default_h() {return itm_default_h;} protected int itm_default_h;
 	public int Itms_per_row() {return itms_per_row;} @gplx.Virtual public void Itms_per_row_(int v) {this.itms_per_row = v;} protected int itms_per_row;		
 	@gplx.Virtual public int Get_thumb_padding() {return 30;}	// REF.MW: getThumbPadding; How much padding such the thumb have between image and inner div that that contains the border. This is both for verical and horizontal padding. (However, it is cut in half in the vertical direction).
 	@gplx.Virtual public int Get_gb_padding() {return 5;}	// REF.MW: getGBPadding; GB stands for gallerybox (as in the <li class="gallerybox"> element)
@@ -51,7 +51,7 @@ abstract class Gallery_mgr_base {
 			;
 	}
 	private static final byte[] 
-	  Wrap_gallery_text_bgn = ByteAry_.new_ascii_("\n      <div class=\"gallerytext\">\n") // NOTE: The newline after <div class="gallerytext"> is needed to accommodate htmltidy
+	  Wrap_gallery_text_bgn = ByteAry_.new_ascii_("\n      <div class=\"gallerytext\">") // NOTE: The newline after <div class="gallerytext"> is needed to accommodate htmltidy
 	, Wrap_gallery_text_end = ByteAry_.new_ascii_("\n      </div>")
 	;
 	@gplx.Virtual public void Get_thumb_size(IntRef thm_w, IntRef thm_h, Xof_ext ext) { // REF.MW: getThumbParams; Get the transform parameters for a thumbnail.
@@ -62,53 +62,58 @@ abstract class Gallery_mgr_base {
 	}
 	private static final ByteAryFmtr
 	  fmtr_gb_style_max_width		= ByteAryFmtr.new_(	"max-width:~{max_width}px;_width:~{max_width}px;", "max_width")
-	, fmtr_gb_cls					= ByteAryFmtr.new_(	"gallery mw-gallery-~{mode} ~{style}", "mode", "style")
+	, fmtr_gb_cls					= ByteAryFmtr.new_(	"gallery mw-gallery-~{mode}", "mode")
 	, fmtr_gb_caption				= ByteAryFmtr.new_(	"\n  <li class='gallerycaption'>~{caption}</li>", "caption")
-	, fmtr_ib_caption				= ByteAryFmtr.new_(	"\n      <div class=\"thumb\" style=\"height: ~{height}px;\">~{ttl_text}</div>", "caption", "ttl_text")
-	, fmtr_ib_html					= ByteAryFmtr.new_(	"\n    <li class=\"gallerybox\" style=\"width: ~{width}px\">"
-													  + "\n      <div style=\"width: ~{width}px>", "width")
+	, fmtr_ib_caption				= ByteAryFmtr.new_(	"\n        <div class=\"thumb\" style=\"height: ~{height}px;\">~{ttl_text}</div>", "caption", "ttl_text")
+	, fmtr_ib_html					= ByteAryFmtr.new_(	"\n  <li class=\"gallerybox\" style=\"width: ~{width}px\">"
+													  + "\n    <div style=\"width: ~{width}px\">", "width")
+	, fmtr_img_div0_html			= ByteAryFmtr.new_(	"\n      <div class=\"thumb\" style=\"width: ~{width}px;\">", "width")
+	, fmtr_img_div1_html			= ByteAryFmtr.new_(	"\n        <div style=\"margin:~{vpad}px auto;\">\n          ", "vpad")
 	;
+
 	private static final byte[] 
-	  bry_ib_html_end = ByteAry_.new_ascii_			  ( "\n      </div>"
-													  + "\n    </li>")
+	  bry_ib_html_end = ByteAry_.new_ascii_			  ( "\n    </div>"
+													  + "\n  </li>")
 	, bry_gb_html_end = ByteAry_.new_ascii_			  ( "\n</ul>")
-	, bry_show_filenames_end = ByteAry_.new_ascii_	  ( "<br />\n")
+//		, bry_show_filenames_end = ByteAry_.new_ascii_	  ( "<br />\n")
+	, bry_img_div_end = ByteAry_.new_ascii_			  ( "\n        </div>\n      </div>")
 	;
-	private static final byte[][]
-	  bry_show_filenames_options = ByteAry_.Ary("known", "noclasses")
-	;
-	private static void Write_tag_bgn(ByteAryBfr bfr, byte[] tag_name, byte[] style, byte[] cls, ListAdp bry_list) {
+	private static byte[] Fmt_w_trailer(ByteAryBfr tmp_bfr, ByteAryFmtr fmtr, byte[] trailer, Object... fmtr_args) {
+		fmtr.Bld_bfr_many(tmp_bfr, fmtr_args);
+		if (ByteAry_.Len_gt_0(trailer)) {
+			tmp_bfr.Add_byte_space();
+			tmp_bfr.Add(trailer);
+		}
+		return tmp_bfr.XtoAryAndClear();
+	}
+	private static void Write_ul_tag_bgn(ByteAryBfr bfr, byte[] tag_name, byte[] cls, byte[] style, ListAdp bry_list) {
 		bfr.Add_byte(Byte_ascii.Lt).Add(tag_name);			// <tag_name
+		Html_wtr.Write_atr(bfr, Html_atrs.Cls_bry, cls);
+		Html_wtr.Write_atr(bfr, Html_atrs.Cls_bry, style);
 		if (bry_list != null) {
 			int bry_list_len = bry_list.Count();
 			for (int i = 0; i < bry_list_len; i += 2) {
 				byte[] key = (byte[])bry_list.FetchAt(i);
 				byte[] val = (byte[])bry_list.FetchAt(i + 1);
-				bfr	.Add_byte_space()	.Add(key)
-					.Add_byte_eq()		.Add(val);
+				Html_wtr.Write_atr(bfr, key, val);
 			}
 		}
 		bfr.Add_byte(Byte_ascii.Gt);
 	}
-	/*
-	"<gallery id=a>File:A.png</gallery>"
-	"<gallery style=b>File:A.png</gallery>"
-	"<gallery caption=c>File:A.png</gallery>"
-	"<gallery>Category:A</gallery>"	-> A
-	*/
 	private IntRef thm_w_tmp = IntRef.neg1_(), thm_h_tmp = IntRef.neg1_();
-	public void Write_html(ByteAryBfr bfr, Xow_wiki wiki, Xoh_html_wtr wtr, Xoa_page page, Xop_ctx ctx, byte[] src, Gallery_xnde xnde) {
+	public void Write_html(ByteAryBfr bfr, Xow_wiki wiki, Xoa_page page, Xop_ctx ctx, byte[] src, Gallery_xnde xnde) {
+		Xoh_html_wtr wtr = wiki.Html_wtr();
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
-		byte[] gb_style = ByteAry_.Empty;
+		byte[] gb_style = xnde.Atr_style();
 		if (itms_per_row > 0) {
 			int max_width = itms_per_row * (itm_default_w + this.Get_all_padding());
-			gb_style = fmtr_gb_style_max_width.Bld_bry_many(tmp_bfr, max_width, xnde.Style());
+			gb_style = Fmt_w_trailer(tmp_bfr, fmtr_gb_style_max_width, gb_style, max_width);
 		}
-		byte[] gb_cls = fmtr_gb_cls.Bld_bry_many(bfr, this.Tid_bry());
-		// page.Modules().Add(this.Get_modules()); xtn_mgr
+		byte[] gb_cls = Fmt_w_trailer(tmp_bfr, fmtr_gb_cls, xnde.Atr_style(), this.Tid_bry());
+		// page.Html_data().Modules().Add(this.Get_modules()); xtn_mgr
 
-		Write_tag_bgn(bfr, Html_consts.Ul_tag_bry, gb_style, gb_cls, xnde.Misc_atrs());
-		byte[] gb_caption = xnde.Caption();
+		Write_ul_tag_bgn(bfr, Html_consts.Ul_tag_bry, gb_cls, gb_style, xnde.Atrs_other());
+		byte[] gb_caption = xnde.Atr_caption();
 		if (gb_caption != Gallery_xnde.Null_bry)
 			fmtr_gb_caption.Bld_bfr_many(bfr, gb_caption);
 
@@ -118,13 +123,13 @@ abstract class Gallery_mgr_base {
 		for (int i = 0; i < itm_len; i++) {
 			Gallery_itm itm = (Gallery_itm)xnde.Itms_get_at(i);
 			Xoa_ttl ttl = itm.Ttl();
-			byte[] caption = itm.Caption_bry();
+			byte[] caption = itm.Caption_bry(); if (caption == null) caption = ByteAry_.Empty;
 
 			Xop_lnki_tkn lnki = ctx.Tkn_mkr().Lnki(itm.Ttl_bgn(), itm.Ttl_end()).Ttl_(ttl);
 			Xof_ext ext = itm.Ext();
 			this.Get_thumb_size(thm_w, thm_h, ext);
 			lnki.Width_(thm_w.Val()).Height_(thm_h.Val());
-			Xof_xfer_itm xfer_itm = wtr.Lnki_wtr().Lnki_eval(ctx, page, lnki, wtr.Queue_add_ref())
+			Xof_xfer_itm xfer_itm = wtr.Lnki_wtr().File_wtr().Lnki_eval(ctx, page, lnki, wtr.Queue_add_ref())
 				.Gallery_mgr_h_(xnde.Itm_h_or_default())
 				.Html_elem_tid_(Xof_html_elem.Tid_gallery)
 				;
@@ -142,38 +147,32 @@ abstract class Gallery_mgr_base {
 				: Xoa_ttl.parse_(wiki, ByteAry_.Mid(src, itm.Alt_bgn(), itm.Alt_end()))
 				;
 			if (href_ttl == null) href_ttl = ttl;	// occurs when link is invalid; EX: A.png|link=<invalid>
-			byte[] href_bry = app.Href_parser().Build_to_bry(href_ttl, wiki);
 			this.Adjust_image_parameters(xfer_itm, thm_w, thm_h);
 
-			// call lnki_wtr
-			byte[] itm_html = ByteAry_.Empty;
-			Tfds.Write(href_bry, alt, vpad);
-//				# Set both fixed width and min-height.
-//				$thumbhtml = "\n\t\t\t" .
-//					'<div class="thumb" style="width: ' . $this->getThumbDivWidth( $thumb->getWidth() ) . 'px;">'
-//					# Auto-margin centering for block-level elements. Needed now that we have video
-//					# handlers since they may emit block-level elements as opposed to simple <img> tags.
-//					# ref http://css-discuss.incutio.com/?page=CenteringBlockElement
-//					. '<div style="margin:' . $vpad . 'px auto;">'
-//					. $thumb->toHtml( $imageParameters ) . '</div></div>';
-//
+			fmtr_img_div0_html.Bld_bfr_many(tmp_bfr, this.Get_thumb_div_width(thm_w.Val()));
+			fmtr_img_div1_html.Bld_bfr_many(tmp_bfr, vpad);				// <div style="margin:~{vpad}px auto;">
+			wiki.Html_wtr().Lnki_wtr().Write_file(tmp_bfr, page, ctx, Xoh_html_wtr_ctx.Basic, src, lnki, alt);
+			tmp_bfr.Add(bry_img_div_end);
+			byte[] itm_html = tmp_bfr.XtoAryAndClear();
+
 			byte[] show_filenames_link = ByteAry_.Empty;
 			if (xnde.Show_filename()) {
-				show_filenames_link = Xoh_lnki_basic_wtr.Write_as_bry(tmp_bfr
-				, ttl
-				, ByteAry_.Limit(ttl.Page_txt(), 25)	// 25 is defined by captionLength in DefaultSettings.php
-				, bry_show_filenames_options
-				);
-				bfr.Add(bry_show_filenames_end);
+				wiki.Html_wtr().Lnki_wtr().Write_plain_by_bry
+				( tmp_bfr, src, lnki
+				, ByteAry_.Limit(ttl.Page_txt(), 25) // 25 is defined by captionLength in DefaultSettings.php					
+				);	// MW:passes know,noclasses which isn't relevant to XO
 			}
 			int gb_width = this.Get_gb_width(thm_w.Val(), thm_h.Val());
 			fmtr_ib_html.Bld_bfr_many(bfr, gb_width);
 			bfr.Add(itm_html);
 			byte[] gb_text = tmp_bfr.Add(show_filenames_link).Add(caption).XtoAryAndClear();
+			Xop_parser_.Parse_to_html(tmp_bfr, wiki, true, gb_text);
+			gb_text = tmp_bfr.XtoAryAndClear();
 			Wrap_gallery_text(bfr, gb_text, thm_w.Val(), thm_h.Val());
 			bfr.Add(bry_ib_html_end);
 		}
 		bfr.Add(bry_gb_html_end);
+		tmp_bfr.Mkr_rls();
 	}
 }
 class Xoh_lnki_basic_wtr {

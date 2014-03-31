@@ -34,6 +34,7 @@ class Pxd_itm_ {
 		, TypeId_month_name = 4
 		, TypeId_unit		= 5
 		, TypeId_ago 		= 6
+		, TypeId_day_suffix = 7
 		, TypeId_dash 		= Byte_ascii.Dash
 		, TypeId_dot 		= Byte_ascii.Dot
 		, TypeId_slash 		= Byte_ascii.Slash

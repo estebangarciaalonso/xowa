@@ -55,7 +55,7 @@ public class Xow_lang_mgr_fxt {
 		ByteAryBfr bfr = ByteAryBfr.new_();
 		Xop_root_tkn root = ctx.Tkn_mkr().Root(raw_bry);
 		wiki.Parser().Parse_page_all_clear(root, ctx, ctx.Tkn_mkr(), raw_bry);
-		wiki.Html_wtr().Write_all(ctx, root, raw_bry, bfr);
+		wiki.Html_wtr().Write_all(bfr, ctx, raw_bry, root);
 
 		ByteAryBfr html_bfr = ByteAryBfr.new_();
 		wiki.Xwiki_mgr().Lang_mgr().Html_bld(html_bfr, wiki, ctx.Page().Langs(), gplx.xowa.xtns.wdatas.Wdata_xwiki_link_wtr.Qid_null);

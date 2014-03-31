@@ -487,9 +487,9 @@ class Xop_toc_mgr_fxt {
 		Tfds.Eq_ary(String_.SplitLines_nl(expd), String_.SplitLines_nl(tmp.XtoStrAndClear()), raw);
 	}
 	public void Test_html_all(String raw, String expd) {
-		fxt.Hctx().Toc_show_(true);
+		fxt.Wtr_cfg().Toc_show_(true);
 		toc_mgr.Clear();
 		fxt.Test_parse_page_all_str(raw, expd);
-		fxt.Hctx().Toc_show_(false);
+		fxt.Wtr_cfg().Toc_show_(false);
 	}
 }

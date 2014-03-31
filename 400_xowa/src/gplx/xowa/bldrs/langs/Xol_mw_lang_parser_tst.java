@@ -79,7 +79,7 @@ public class Xol_mw_lang_parser_tst {
 			;
 	}
 	@Test  public void Xtn_keywords_fr() {fxt.Parse_xtn("$magicWords['fr'] = array('if' => array(0, 'si' ));").Tst_parse("{{si:|y|n}}", "n");}
-	@Test  public void Xtn_keywords_de() {fxt.Parse_xtn("$magicWords['de'] = array('if' => array(0, 'si' ));").Tst_parse("{{si:|y|n}}", "{{:si:}}");}
+	@Test  public void Xtn_keywords_de() {fxt.Parse_xtn("$magicWords['de'] = array('if' => array(0, 'si' ));").Tst_parse("{{si:|y|n}}", "<a href=\"/wiki/Template:si:\">Template:si:</a>");}
 	@Test  public void Core_messages() {
 		fxt.Parse_core("$messages = array('sunday' => 'dimanche');")
 			.Tst_message("sunday", 0, "dimanche", false)

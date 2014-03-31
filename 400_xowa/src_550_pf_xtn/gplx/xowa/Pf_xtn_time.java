@@ -25,7 +25,7 @@ public class Pf_xtn_time extends Pf_func_base {
 		byte[] arg_lang = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 1);
 		ByteAryBfr error_bfr = ByteAryBfr.new_();
 		DateAdp date = ParseDate(arg_date, utc, error_bfr);
-		if (error_bfr.Len() > 0)
+		if (date == null || error_bfr.Len() > 0)
 			bb.Add_str("<strong class=\"error\">").Add_bfr_and_clear(error_bfr).Add_str("</strong>");
 		else {
 			Xol_lang lang = ctx.Lang();

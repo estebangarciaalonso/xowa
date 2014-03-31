@@ -21,7 +21,7 @@ public class Xof_math_html_wtr {
 	private Xof_math_itm tmp_math_itm = new Xof_math_itm();
 	private ByteAryFmtr math_fmtr_latex		= ByteAryFmtr.new_("<img id='xowa_math_img_~{math_idx}' src='' width='' height=''/><span id='xowa_math_txt_~{math_idx}'>~{math_text}</span>", "math_idx", "math_text");
 	private ByteAryFmtr math_fmtr_mathjax	= ByteAryFmtr.new_("<span id='xowa_math_txt_~{math_idx}'>~{math_text}</span>", "math_idx", "math_text");
-	public void Write(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_opts opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+	public void Write(Xoh_html_wtr wtr, Xop_ctx ctx, Xoh_html_wtr_ctx opts, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
 		Xoa_app app = ctx.App(); Xow_wiki wiki = ctx.Wiki(); Xoa_page page = ctx.Page();
 		byte[] math_bry = ByteAry_.Mid(src, xnde.Tag_open_end(), xnde.Tag_close_bgn());
 		byte[] math_bry_clean = app.Utl_js_cleaner().Clean(wiki, math_bry, 0, math_bry.length);	// check for js; 

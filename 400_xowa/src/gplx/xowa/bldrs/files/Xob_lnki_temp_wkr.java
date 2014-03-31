@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.files; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.dbs.tbls.*;
 import gplx.xowa.wikis.*;
-import gplx.xowa.parsers.lnkis.*; import gplx.xowa.parsers.logs.*;
+import gplx.xowa.parsers.lnkis.redlinks.*; import gplx.xowa.parsers.logs.*;
 import gplx.xowa.bldrs.oimgs.*;
 import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.wdatas.*;
 import gplx.xowa.files.*;

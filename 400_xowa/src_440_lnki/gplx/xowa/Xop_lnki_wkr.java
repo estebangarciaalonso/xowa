@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.wikis.*;
-import gplx.xowa.parsers.lnkis.*;
+import gplx.xowa.parsers.lnkis.redlinks.*;
 public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
-	private NumberParser number_parser = new NumberParser();
 	private Arg_bldr arg_bldr = Arg_bldr._;
+	private NumberParser number_parser = new NumberParser();
 	public void Ctor_ctx(Xop_ctx ctx) {}
 	public void Page_bgn(Xop_ctx ctx, Xop_root_tkn root) {}
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {}
@@ -36,18 +36,11 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 			ctx.Lnke().MakeTkn_end(ctx, tkn_mkr, root, src, src_len, bgn_pos, lnke_end_pos);
 			return lnke_end_pos;
 		}
-		int stack_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnki);
-		if (stack_pos == -1) return ctx.LxrMake_txt_(cur_pos);	// "]]" found but no "[[" in stack;
-		Xop_lnki_tkn lnki = (Xop_lnki_tkn)ctx.Stack_pop_til(root, src, stack_pos, false, bgn_pos, cur_pos);
-		int loop_bgn = lnki.Tkn_sub_idx() + 1, loop_end = root.Subs_len();
-		if (	loop_bgn == loop_end	// handle empty template; EX: [[]]; DATE:2014-02-07
-			||	!arg_bldr.Bld(ctx, tkn_mkr, this, Xop_arg_wkr_.Typ_lnki, root, lnki, bgn_pos, cur_pos, loop_bgn, loop_end, src)) { // handle blank template; EX: [[ ]]
-			lnki.Tkn_tid_to_txt();				// convert initial "[[" to text; note that text token can have subs; EX: [[[[A]]]]; 1st txt_tkn of "[[" will have lnki_sub of "[[A]]"
-			return ctx.LxrMake_txt_(cur_pos);	// return "]]" as text; note that anything in between is left as is; DATE:2014-02-04
-		}
-		if (lnki.Trg_tkn() == Xop_tkn_null.Null_tkn) {	// ttl is invalid; treat "[[" as text; DATE:2014-03-04
-			root.Subs_del_after(lnki.Tkn_sub_idx() + 1);// remove all tkns after [[ from root
-			return lnki.Src_end();						// NOTE: reparse all text from "[["; needed to handle [[|<i>a</i>]] where "<i>a</i>" cannot be returned as text; DATE:2014-03-04
+		int lvl_pos = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnki);
+		if (lvl_pos == Xop_ctx.Stack_not_found) return ctx.LxrMake_txt_(cur_pos);	// "]]" found but no "[[" in stack; interpet "]]" literally
+		Xop_lnki_tkn lnki = (Xop_lnki_tkn)ctx.Stack_pop_til(root, src, lvl_pos, false, bgn_pos, cur_pos);
+		if (!arg_bldr.Bld(ctx, tkn_mkr, this, Xop_arg_wkr_.Typ_lnki, root, lnki, bgn_pos, cur_pos, lnki.Tkn_sub_idx() + 1, root.Subs_len(), src)) {
+			return Xop_lnki_wkr_.Invalidate_lnki(ctx, src, root, lnki, bgn_pos);
 		}
 		cur_pos = Xop_lnki_wkr_.Chk_for_tail(ctx.Lang(), src, cur_pos, src_len, lnki);
 		lnki.Src_end_(cur_pos);	// NOTE: must happen after Chk_for_tail; redundant with above, but above needed b/c of returns
@@ -75,50 +68,16 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 		}
 		return cur_pos;
 	}
-	private static Xoa_ttl Adj_ttl_for_file(Xow_wiki wiki, Xop_ctx ctx, Xoa_ttl ttl, byte[] ttl_bry) {	// NOTE: this slices off the xwiki part; EX: [[en:File:A.png]] -> [[File:A.png]]
-		byte[] xwiki_bry = ttl.Wik_txt(); if (xwiki_bry == null) return ttl; // should not happen, but just in case
-		int xwiki_bry_len = xwiki_bry.length;
-		int ttl_bry_len = ttl_bry.length;
-		if (xwiki_bry_len + 1 >= ttl_bry_len) return ttl;	// invalid ttl; EX: [[en:]]
-		byte[] ttl_in_xwiki_bry = ByteAry_.Mid(ttl_bry, xwiki_bry_len + 1, ttl_bry_len); // +1 to position after xwiki :; EX: [[en:File:A.png]]; +1 to put after ":" at "F"
-		if (!wiki.Cfg_parser().Lnki_cfg().Xwiki_repo_mgr().Has(xwiki_bry)) return ttl;	// alias not in xwikis; EX: [[en_bad:File:A.png]]
-		Xoa_ttl ttl_in_xwiki = Xoa_ttl.parse_(wiki, ttl_in_xwiki_bry);
-		if (ttl_in_xwiki == null) return ttl; // occurs if ttl is bad in xwiki; EX: [[en:<bad>]]
-		return ttl_in_xwiki.Ns().Id_file() ? ttl_in_xwiki : ttl;
-	}
-	private IntRef rel2abs_tid = IntRef.zero_();
 	public boolean Args_add(Xop_ctx ctx, byte[] src, Xop_tkn_itm tkn, Arg_nde_tkn arg, int arg_idx) {
 		Xop_lnki_tkn lnki = (Xop_lnki_tkn)tkn;
 		try {
-			if (arg_idx == 0) {							// 1st arg; assume trg; process ns;
-				Arg_itm_tkn name_tkn = arg.Val_tkn();
-				if (name_tkn.Dat_end() - name_tkn.Dat_bgn() < 1) {	// blank trg; EX: [[]],[[ ]]; [[\n  |\n]]
-					lnki.Tkn_tid_to_txt();
+			if (arg_idx == 0) {				// 1st arg; assume trg; process ns;
+				if (lnki.Ttl() == null) {	// ttl usually set by 1st pipe, but some lnkis have no pipe; EX: [[A]]
+					Arg_itm_tkn ttl_tkn = arg.Val_tkn();
+					if (!Xop_lnki_wkr_.Parse_ttl(ctx, src, lnki, ttl_tkn.Dat_bgn(), ttl_tkn.Dat_end()))
+						return false;
 				}
-				else {
-					byte[] name_bry = ByteAry_.Mid(src, name_tkn.Dat_bgn(), name_tkn.Dat_end());
-					name_bry = ctx.App().Url_converter_url_ttl().Decode(name_bry);
-					int name_bry_len = name_bry.length;
-					if (ctx.Page().Ttl().Ns().Subpages_enabled()
-						&& Pf_xtn_rel2abs.Rel2abs_ttl(name_bry, 0, name_bry_len)) { // Linker.php|normalizeSubpageLink
-						ByteAryBfr tmp_bfr = ctx.App().Utl_bry_bfr_mkr().Get_b512();
-						byte[] new_bry = Pf_xtn_rel2abs.Rel2abs(tmp_bfr, name_bry, ctx.Page().Ttl().Raw(), rel2abs_tid.Val_zero_());
-						lnki.Subpage_tid_(rel2abs_tid.Val());
-						lnki.Subpage_slash_at_end_(ByteAry_.Get_at_end(name_bry) == Byte_ascii.Slash);
-						name_bry = new_bry;
-						tmp_bfr.Mkr_rls();
-					}
-					Xow_wiki wiki = ctx.Wiki();
-					Xoa_ttl ttl = Xoa_ttl.parse_(wiki, name_bry);
-					if (ttl == null) {lnki.Tkn_tid_to_txt(); return false;}
-					if	(	wiki.Cfg_parser_lnki_xwiki_repos_enabled()			// wiki has lnki.xwiki_repos
-						&&	ttl.Wik_bgn() != Xoa_ttl.Null_wik_bgn				// xwiki available; EX: [[en:]]
-						)	
-						ttl = Adj_ttl_for_file(wiki, ctx, ttl, name_bry);
-					lnki.Ttl_(ttl);
-					lnki.Ns_id_(lnki.Ttl().Ns().Id());
-					lnki.Trg_tkn_(arg);
-				}
+				lnki.Trg_tkn_(arg);
 			}
 			else {									// nth arg; guess arg type
 				int arg_tid = -1;
@@ -189,6 +148,60 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 	}
 }
 class Xop_lnki_wkr_ {
+	private static final IntRef rel2abs_tid = IntRef.zero_();
+	public static int Invalidate_lnki(Xop_ctx ctx, byte[] src, Xop_root_tkn root, Xop_lnki_tkn lnki, int cur_pos) {
+		lnki.Tkn_tid_to_txt();						// convert initial "[[" to text; note that this lnki has no pipes as pipe_lxr does similar check; EX: [[<invalid>]]; DATE:2014-03-26
+		root.Subs_del_after(lnki.Tkn_sub_idx() + 1);// remove all tkns after [[ from root
+		int reparse_bgn = lnki.Src_end();			// NOTE: reparse all text from "[["; needed to handle [[|<i>a</i>]] where "<i>a</i>" cannot be returned as text; DATE:2014-03-04
+		int reparse_len = cur_pos - reparse_bgn;
+		if (reparse_len > 512)
+			ctx.App().Usr_dlg().Warn_many("", "", "lnki.reparsing large block; page=~{0} len=~{1} src=~{2}", Xop_ctx_.Page_as_str(ctx), reparse_len, Xop_ctx_.Src_limit_and_escape_nl(src, reparse_bgn, 128));
+		return reparse_bgn;
+	}
+	public static boolean Parse_ttl(Xop_ctx ctx, byte[] src, Xop_lnki_tkn lnki, int pipe_pos) {
+		int ttl_bgn = lnki.Src_bgn() + Xop_tkn_.Lnki_bgn_len;
+		ttl_bgn = Byte_ary_finder.Find_fwd_while(src, ttl_bgn, pipe_pos, Byte_ascii.Space);		// remove \s from bgn
+		int ttl_end = Byte_ary_finder.Find_bwd_while(src, pipe_pos, ttl_bgn, Byte_ascii.Space);	// remove \s from end
+		++ttl_end; // +1 to place after non-ws; EX: [[ a ]]; ttl_end should go from 3 -> 4
+		return Parse_ttl(ctx, src, lnki, ttl_bgn, ttl_end);
+	}
+	public static boolean Parse_ttl(Xop_ctx ctx, byte[] src, Xop_lnki_tkn lnki, int ttl_bgn, int ttl_end) {
+		Xoa_app app = ctx.App();
+		byte[] ttl_bry = ByteAry_.Mid(src, ttl_bgn, ttl_end);
+		ttl_bry = app.Url_converter_url_ttl().Decode(ttl_bry);
+		int ttl_bry_len = ttl_bry.length;
+		Xoa_ttl page_ttl = ctx.Page().Ttl();
+		if (page_ttl.Ns().Subpages_enabled()
+			&& Pf_xtn_rel2abs.Rel2abs_ttl(ttl_bry, 0, ttl_bry_len)) { // Linker.php|normalizeSubpageLink
+			ByteAryBfr tmp_bfr = app.Utl_bry_bfr_mkr().Get_b512();
+			byte[] new_bry = Pf_xtn_rel2abs.Rel2abs(tmp_bfr, ttl_bry, page_ttl.Raw(), rel2abs_tid.Val_zero_());
+			lnki.Subpage_tid_(rel2abs_tid.Val());
+			lnki.Subpage_slash_at_end_(ByteAry_.Get_at_end(ttl_bry) == Byte_ascii.Slash);
+			ttl_bry = new_bry;
+			tmp_bfr.Mkr_rls();
+		}
+		Xow_wiki wiki = ctx.Wiki();
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);		
+		if (ttl == null) return false;
+		if	(	wiki.Cfg_parser_lnki_xwiki_repos_enabled()			// wiki has lnki.xwiki_repos
+			&&	ttl.Wik_bgn() != Xoa_ttl.Null_wik_bgn				// xwiki available; EX: [[en:]]
+			)	
+			ttl = Adj_ttl_for_file(wiki, ctx, ttl, ttl_bry);
+		lnki.Ttl_(ttl);
+		lnki.Ns_id_(ttl.Ns().Id());
+		return true;
+	}
+	private static Xoa_ttl Adj_ttl_for_file(Xow_wiki wiki, Xop_ctx ctx, Xoa_ttl ttl, byte[] ttl_bry) {	// NOTE: remove the xwiki part; EX: [[en:File:A.png]] -> [[File:A.png]]
+		byte[] xwiki_bry = ttl.Wik_txt(); if (xwiki_bry == null) return ttl; // should not happen, but just in case
+		int xwiki_bry_len = xwiki_bry.length;
+		int ttl_bry_len = ttl_bry.length;
+		if (xwiki_bry_len + 1 >= ttl_bry_len) return ttl;	// invalid ttl; EX: [[en:]]
+		byte[] ttl_in_xwiki_bry = ByteAry_.Mid(ttl_bry, xwiki_bry_len + 1, ttl_bry_len); // +1 to position after xwiki :; EX: [[en:File:A.png]]; +1 to put after ":" at "F"
+		if (!wiki.Cfg_parser().Lnki_cfg().Xwiki_repo_mgr().Has(xwiki_bry)) return ttl;	// alias not in xwikis; EX: [[en_bad:File:A.png]]
+		Xoa_ttl ttl_in_xwiki = Xoa_ttl.parse_(wiki, ttl_in_xwiki_bry);
+		if (ttl_in_xwiki == null) return ttl; // occurs if ttl is bad in xwiki; EX: [[en:<bad>]]
+		return ttl_in_xwiki.Ns().Id_file() ? ttl_in_xwiki : ttl;
+	}
 	public static int Chk_for_tail(Xol_lang lang, byte[] src, int cur_pos, int src_len, Xop_lnki_tkn lnki) {
 		int bgn_pos = cur_pos;
 		ByteTrieMgr_slim lnki_trail = lang.Lnki_trail_mgr().Trie();

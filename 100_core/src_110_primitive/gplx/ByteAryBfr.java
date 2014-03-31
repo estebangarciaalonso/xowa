@@ -114,6 +114,7 @@ public class ByteAryBfr {
 	}
 	public ByteAryBfr Add_byte_eq() {return Add_byte(Byte_ascii.Eq);}
 	public ByteAryBfr Add_byte_pipe() {return Add_byte(Byte_ascii.Pipe);}
+	public ByteAryBfr Add_byte_quote() {return Add_byte(Byte_ascii.Quote);}
 	public ByteAryBfr Add_byte(byte val) {
 		int newPos = bry_len + 1;
 		if (newPos > bry_max) Resize(bry_len * 2);

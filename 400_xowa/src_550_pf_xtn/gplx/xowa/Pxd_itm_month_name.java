@@ -221,3 +221,19 @@ class Pxd_itm_ago extends Pxd_itm_base implements Pxd_itm_prototype {
 	@Override public void Time_ini(DateAdpBldr bldr) {
 	}
 }
+class Pxd_itm_day_suffix extends Pxd_itm_base implements Pxd_itm_prototype {
+	public Pxd_itm_day_suffix(int ary_idx) {Ctor(ary_idx);}
+	@Override public byte Tkn_tid() {return Pxd_itm_.TypeId_day_suffix;}
+	@Override public int Eval_idx() {return 99;}	// set to low priority  so it can evaluate after day
+	public Pxd_itm MakeNew(int ary_idx) {return new Pxd_itm_day_suffix(ary_idx);}
+	@Override public void Eval(Pxd_parser state) {
+		Pxd_itm[] tkn_ary = state.Tkns();
+		int tkn_idx = this.Ary_idx();
+		if (tkn_idx == 0) state.Err_set(Pf_xtn_time_log.Invalid_day, ByteAryFmtrArg_.int_(Int_.MinValue));
+		Pxd_itm day_itm = tkn_ary[tkn_idx - 1];
+		if (day_itm.Seg_idx() != DateAdp_.SegIdx_day) {
+			state.Err_set(Pf_xtn_time_log.Invalid_day, ByteAryFmtrArg_.int_(Int_.MinValue));
+		}
+	}
+        public static final Pxd_itm_day_suffix _ = new Pxd_itm_day_suffix(); Pxd_itm_day_suffix() {}
+}

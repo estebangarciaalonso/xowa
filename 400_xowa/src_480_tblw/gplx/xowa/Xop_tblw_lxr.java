@@ -19,6 +19,18 @@ package gplx.xowa; import gplx.*;
 class Xop_tblw_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_tblw;}
 	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+		if (wlxr_type == Xop_tblw_wkr.Tblw_type_td2) {	// "||" found; check if in lnki and validate ttl; DATE:2014-03-29
+			Xop_tkn_itm last_tkn = ctx.Stack_get_last();	// BLOCK:invalid_ttl_check
+			if (	last_tkn != null
+				&&	last_tkn.Tkn_tid() == Xop_tkn_itm_.Tid_lnki) {
+				Xop_lnki_tkn lnki = (Xop_lnki_tkn)last_tkn;
+				if (	lnki.Pipe_count_is_zero()
+					&&	!Xop_lnki_wkr_.Parse_ttl(ctx, src, lnki, bgn_pos)) {
+					ctx.Stack_pop_last();
+					return Xop_lnki_wkr_.Invalidate_lnki(ctx, src, root, lnki, bgn_pos);
+				}
+			}
+		}
 		// NOTE: repeated in tblw_lxr_ws
 		// CASE_1: standalone "!" should be ignored if no tblw present; EX: "a b! c" should not trigger ! for header
 		switch (wlxr_type) {

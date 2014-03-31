@@ -67,8 +67,14 @@ public class Process_engine implements Scrib_engine {
 				Scrib_proc_args proc_args = new Scrib_proc_args(args);
 				Scrib_proc_rslt proc_rslt = new Scrib_proc_rslt();
 				proc.Proc_exec(proc_args, proc_rslt);
-				KeyVal[] cbk_rslts = proc_rslt.Ary();
-				ary = Object_.Ary("op", "return", "nvalues", cbk_rslts.length, "values", cbk_rslts);
+				String fail_msg = proc_rslt.Fail_msg();
+				if (fail_msg == null) {
+					KeyVal[] cbk_rslts = proc_rslt.Ary();
+					ary = Object_.Ary("op", "return", "nvalues", cbk_rslts.length, "values", cbk_rslts);
+				}
+				else {
+					ary = Object_.Ary("op", "error", "value", fail_msg);
+				}
 			}
 			else {
 				bfr.Mkr_rls();

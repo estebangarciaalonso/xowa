@@ -27,13 +27,13 @@ class Xop_pipe_lxr implements Xop_lxr {
 	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
 		int cur_stack_tid = ctx.Cur_tkn_tid(), rv = -1;
 		switch (cur_stack_tid) {
-			case Xop_tkn_itm_.Tid_brack_bgn:
+			case Xop_tkn_itm_.Tid_brack_bgn:					// used for tmpl mode where full lnki_wkr is too heavyweight; matches "[ |"
 				switch (ctx.Parse_tid()) {
 					case Xop_parser_.Parse_tid_tmpl:
 					case Xop_parser_.Parse_tid_page_tmpl:
 						ctx.Subs_add(root, tkn_mkr.Txt(bgn_pos, cur_pos));
 						break;
-					case Xop_parser_.Parse_tid_page_wiki:
+					case Xop_parser_.Parse_tid_page_wiki:		// should never happen?
 						ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, cur_pos));
 						break;
 					default: throw Err_.unhandled(ctx.Parse_tid());
@@ -66,6 +66,15 @@ class Xop_pipe_lxr implements Xop_lxr {
 			case Xop_tkn_itm_.Tid_vnt:
 				gplx.xowa.langs.vnts.Xop_vnt_tkn vnt_tkn = (gplx.xowa.langs.vnts.Xop_vnt_tkn)ctx.Stack_get_typ(Xop_tkn_itm_.Tid_vnt);
 				vnt_tkn.Vnt_pipe_tkn_count_add_();
+				ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, cur_pos));
+				return cur_pos;
+			case Xop_tkn_itm_.Tid_lnki:
+				Xop_lnki_tkn lnki = (Xop_lnki_tkn)ctx.Stack_get_last();	// BLOCK:invalid_ttl_check
+				if (	lnki.Pipe_count_is_zero()
+					&&	!Xop_lnki_wkr_.Parse_ttl(ctx, src, lnki, bgn_pos)) {
+					ctx.Stack_pop_last();
+					return Xop_lnki_wkr_.Invalidate_lnki(ctx, src, root, lnki, bgn_pos);
+				}
 				ctx.Subs_add(root, tkn_mkr.Pipe(bgn_pos, cur_pos));
 				return cur_pos;
 			default:

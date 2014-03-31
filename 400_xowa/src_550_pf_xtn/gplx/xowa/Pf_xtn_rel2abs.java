@@ -166,7 +166,7 @@ public class Pf_xtn_rel2abs extends Pf_func_base {
 	private static int[] seg_ary = new int[Xoa_ttl.Max_len];
 	@Override public int Id() {return Xol_kwd_grp_.Id_xtn_rel2abs;}
 	@Override public Pf_func New(int id, byte[] name) {return new Pf_xtn_rel2abs().Name_(name);}
-	public static final int Id_slash = 1, Id_dot = 2, Id_dot_slash = 3, Id_dot_dot = 4, Id_dot_dot_slash = 5;
+	public static final int Id_null = 0, Id_slash = 1, Id_dot = 2, Id_dot_slash = 3, Id_dot_dot = 4, Id_dot_dot_slash = 5;
 }
 /*
 NOTE_1:approach (easiest explained with an example)

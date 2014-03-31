@@ -182,6 +182,51 @@ public class Scrib_lib_wikibase_srl_tst {
 		,	""
 		);
 	}
+	@Test   public void Claims_geocoordinate() {
+		fxt.Init_prop(fxt.Wdata_fxt().prop_geodata_(2, "1.2345", "6.789"));
+		fxt.Test
+		(	"claims:"
+		,	"  p2:"
+		,	"    0:"
+		,	"      id:null"
+		,	"      mainsnak:"
+		,	"        datavalue:"
+		,	"          type:'geocoordinate'"
+		,	"          value:"
+		,	"            latitude:'1.2345'"
+		,	"            longitude:'6.789'"
+		,	"            altitude:null"
+		,	"            globe:'http:\\/\\/www.wikidata.org\\/entity\\/Q2'"
+		,	"            precision:'1.0E-5'"	
+		,	"        property:'p2'"
+		,	"        snaktype:'value'"
+		,	"      rank:'normal'"
+		,	"      type:'statement'"
+		,	""
+		);
+	}
+	@Test   public void Claims_quantity() {
+		fxt.Init_prop(fxt.Wdata_fxt().prop_quantity_(2, "+1,234", "2", "+1,236", "+1232"));
+		fxt.Test
+		(	"claims:"
+		,	"  p2:"
+		,	"    0:"
+		,	"      id:null"
+		,	"      mainsnak:"
+		,	"        datavalue:"
+		,	"          type:'quantity'"
+		,	"          value:"
+		,	"            amount:'+1,234'"
+		,	"            unit:'2'"
+		,	"            upperBound:'+1,236'"
+		,	"            lowerBound:'+1232'"
+		,	"        property:'p2'"
+		,	"        snaktype:'value'"
+		,	"      rank:'normal'"
+		,	"      type:'statement'"        
+		,	""
+		);
+	}
 }	
 class Scrib_lib_wikibase_srl_fxt {
 	public void Clear() {
@@ -246,41 +291,3 @@ class Scrib_lib_wikibase_srl_fxt {
 		else bfr.Add_byte(Byte_ascii.Apos).Add_str(Object_.XtoStr_OrEmpty(kv_val)).Add_byte(Byte_ascii.Apos).Add_byte_nl();
 	}
 }
-	/*
-p107:
-	1:
-		id: q7259$FEE5069C-DF8E-4355-A973-2B0B8BC339A8
-		mainsnak:
-			datavalue:
-			type: wikibase-entityid
-			value:
-				entity-type: item
-				numeric-id: 215627
-			property: p107
-			snaktype: value
-		references:
-			0:
-			hash: 827686a10b6e2126886dbc6755a3027fb443996
-			snaks:
-				p143:
-					0:
-						snaktype: value
-						property: p143
-						datavalue:
-						type: wikibase-entityid
-						value:
-							numeric-id: 48952
-							entity-type: item
-		qualifiers:
-			p459:
-			0:
-				snaktype: value
-				property: p459
-				datavalue:
-					type: wikibase-entityid
-					value:
-						numeric-id: 670933
-						entity-type: item
-		rank: normal
-		type: statement
-*/

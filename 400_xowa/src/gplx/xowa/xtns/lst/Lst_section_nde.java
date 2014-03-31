@@ -36,6 +36,6 @@ public class Lst_section_nde implements Xox_xnde, Xop_xnde_atr_parser {
 		xnde.Atrs_ary_(atrs);
 		ctx.Lst_section_mgr().Add(this);
 	}
-	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {}	// NOTE: write nothing; <section> is just a bookmark
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_html_wtr_ctx opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {}	// NOTE: write nothing; <section> is just a bookmark
 	public static final byte Xatr_name = 0, Xatr_bgn = 1, Xatr_end = 2;
 }

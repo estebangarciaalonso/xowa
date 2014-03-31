@@ -117,16 +117,18 @@ public class Url_encoder implements Url_encoder_interface {
 			}
 		}
 	}
-	private static void mediawiki_base(Url_encoder rv) {
+	private static void mediawiki_base(Url_encoder rv, boolean encode_colon) {
 		rv.Itms_raw_same_rng(Byte_ascii.Num_0, Byte_ascii.Num_9);
 		rv.Itms_raw_same_rng(Byte_ascii.Ltr_A, Byte_ascii.Ltr_Z);
 		rv.Itms_raw_same_rng(Byte_ascii.Ltr_a, Byte_ascii.Ltr_z);
-		rv.Itms_raw_same_many(Byte_ascii.Dash, Byte_ascii.Dot, Byte_ascii.Colon, Byte_ascii.Underline);
+		rv.Itms_raw_same_many(Byte_ascii.Dash, Byte_ascii.Dot, Byte_ascii.Underline);
+		if (encode_colon)
+			rv.Itms_raw_same_many(Byte_ascii.Colon);
 	}
 	public static Url_encoder new_html_id_() {
 		Url_encoder rv = new Url_encoder();
 		rv.Itms_ini(Byte_ascii.Dot);
-		mediawiki_base(rv);
+		mediawiki_base(rv, true);
 		rv.Itms_decode_marker(Byte_ascii.Dot);
 		rv.Itms_raw_diff(Byte_ascii.Space, Byte_ascii.Underline);
 		rv.Itms_raw_html_ent(Byte_ascii.Amp, gplx.xowa.Xop_amp_trie._);
@@ -135,26 +137,26 @@ public class Url_encoder implements Url_encoder_interface {
 	public static Url_encoder new_http_url_() {
 		Url_encoder rv = new Url_encoder();
 		rv.Itms_ini(Byte_ascii.Percent);
-		mediawiki_base(rv);
+		mediawiki_base(rv, false);
 		rv.Itms_raw_diff(Byte_ascii.Space, Byte_ascii.Plus);
 		return rv;
 	}
 	public static Url_encoder new_http_url_ttl_() {
 		Url_encoder rv = new Url_encoder();
 		rv.Itms_ini(Byte_ascii.Percent);
-		mediawiki_base(rv);
+		mediawiki_base(rv, true);
 		return rv;
 	}
 	public static Url_encoder new_http_url_space_is_space() {
 		Url_encoder rv = new Url_encoder();
 		rv.Itms_ini(Byte_ascii.Percent);
-		mediawiki_base(rv);
+		mediawiki_base(rv, true);
 		return rv;
 	}
 	public static Url_encoder new_fsys_lnx_() {
 		Url_encoder rv = new Url_encoder();
 		rv.Itms_ini(Byte_ascii.Percent);
-		mediawiki_base(rv);
+		mediawiki_base(rv, true);
 		rv.Itms_raw_same_many(Byte_ascii.Slash);
 		rv.Itms_raw_diff(Byte_ascii.Backslash, Byte_ascii.Slash);
 		return rv;
@@ -175,20 +177,20 @@ public class Url_encoder implements Url_encoder_interface {
 	public static Url_encoder new_file_() {
 		Url_encoder rv = new Url_encoder();
 		rv.Itms_ini(Byte_ascii.Percent);
-		mediawiki_base(rv);
+		mediawiki_base(rv, true);
 		return rv;
 	}
 	public static Url_encoder new_gfs_() {
 		Url_encoder rv = new Url_encoder();
 		rv.Itms_ini(Byte_ascii.Percent);
 		rv.Itms_raw_same_many(Byte_ascii.Paren_bgn, Byte_ascii.Paren_end, Byte_ascii.Apos, Byte_ascii.Semic);
-		mediawiki_base(rv);
+		mediawiki_base(rv, true);
 		return rv;
 	}
 	public static Url_encoder new_html_href_mw_() {
 		Url_encoder rv = new Url_encoder();
 		rv.Itms_ini(Byte_ascii.Percent);
-		mediawiki_base(rv);
+		mediawiki_base(rv, true);
 		rv.Itms_raw_diff(Byte_ascii.Space, Byte_ascii.Underline);
 //			rv.Itms_decode_diff(Byte_ascii.Underline, Byte_ascii.Underline);
 		rv.Itms_raw_same_many(Byte_ascii.Semic, Byte_ascii.At, Byte_ascii.Dollar, Byte_ascii.Bang, Byte_ascii.Asterisk
@@ -201,7 +203,7 @@ public class Url_encoder implements Url_encoder_interface {
 	public static Url_encoder url_comma() {
 		Url_encoder rv = new Url_encoder();
 		rv.Itms_ini(Byte_ascii.Percent);
-		mediawiki_base(rv);
+		mediawiki_base(rv, true);
 		rv.Itms_raw_same_many(Byte_ascii.Comma);
 		return rv;
 	}

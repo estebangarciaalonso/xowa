@@ -271,7 +271,7 @@ public class Xop_ctx {
 		stack_len = tilIdx < 0 ? 0 : tilIdx;
 		cur_tkn_tid = stack_len == 0 ? Xop_tkn_itm_.Tid_null : stack[stack_len - 1].Tkn_tid();
 	}
-	public void Stack_pop_lnki() {	// used primarily by lnke to remove lnke from stack
+	public void Stack_pop_last() {	// used primarily by lnke to remove lnke from stack
 		--stack_len;
 		cur_tkn_tid = stack_len == 0 ? Xop_tkn_itm_.Tid_null : stack[stack_len - 1].Tkn_tid();
 	}

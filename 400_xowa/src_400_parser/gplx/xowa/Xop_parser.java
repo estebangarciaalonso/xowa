@@ -46,7 +46,7 @@ public class Xop_parser {	// NOTE: parsers are reused; do not keep any read-writ
 		Xow_wiki wiki = ctx.Wiki();
 		Xop_root_tkn fragment_root = Parse_recurse(ctx, fragment, true);
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
-		wiki.Html_wtr().Write_all(ctx, fragment_root, fragment_root.Data_mid(), tmp_bfr);	// NOTE: must pass fragment_root.Data_mid() (not fragment); DATE:2013-07-21
+		wiki.Html_wtr().Write_all(tmp_bfr, ctx, fragment_root.Data_mid(), fragment_root);	// NOTE: must pass fragment_root.Data_mid() (not fragment); DATE:2013-07-21
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();
 	}
 	public Xot_defn_tmpl Parse_tmpl(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xow_ns ns, byte[] name, byte[] src) {

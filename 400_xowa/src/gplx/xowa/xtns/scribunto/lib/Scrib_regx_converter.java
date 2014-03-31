@@ -20,7 +20,7 @@ public class Scrib_regx_converter {
 	public Scrib_regx_converter() {Init();}
 	public String Regx() {return regx;} private String regx;
 	public boolean Anypos() {return anypos;} private boolean anypos;
-	public ListAdp Grps() {return grps;} ListAdp grps = ListAdp_.new_(), grps_parens = ListAdp_.new_(); ListAdp grps_open = ListAdp_.new_();
+	public ListAdp Grps() {return grps;} private ListAdp grps = ListAdp_.new_(), grps_parens = ListAdp_.new_(); private ListAdp grps_open = ListAdp_.new_();
 	public String Parse(byte[] src, boolean no_anchor) {
 		int len = src.length;
 		boolean q_flag = false;
@@ -104,7 +104,7 @@ public class Scrib_regx_converter {
 								grps_len = nxt - Byte_ascii.Num_0;
 								if (grps_len == 0 || grps_len > grps.Count() || grps_open_Has(grps_open, grps_len))
 									throw Err_.new_("invalid capture index %" + grps_len + " at pattern character " + Int_.XtoStr(i));
-								bfr.Add(Bry_bf2_seg_0).Add_int_variable(grps_len).Add(Bry_bf2_seg_1);	// $bfr .= "\\g{m$grps_len}";
+								bfr.Add(Bry_bf2_seg_0).Add_int_variable(grps_len);//.Add(Bry_bf2_seg_1);	// $bfr .= "\\g{m$grps_len}";
 								break;
 							default:
 								Regx_quote(bfr, nxt);
@@ -224,7 +224,7 @@ public class Scrib_regx_converter {
 	, Bry_bf1_seg_0 = ByteAry_.new_ascii_("(?<b"), Bry_bf1_seg_1 = ByteAry_.new_ascii_(">")
 	, Bry_bf1_seg_2 = ByteAry_.new_ascii_("(?:(?>[^"), Bry_bf1_seg_3 = ByteAry_.new_ascii_("]+)|(?>b")	// NOTE: PHP uses "]+)|(?P>b", but Java does not support P (named pattern); DATE:2013-12-20
 	, Bry_bf1_seg_4 = ByteAry_.new_ascii_("))*"), Bry_bf1_seg_5 = ByteAry_.new_ascii_(")")
-	, Bry_bf2_seg_0 = ByteAry_.new_ascii_("\\g{m"), Bry_bf2_seg_1 = ByteAry_.new_ascii_("}")
+	, Bry_bf2_seg_0 = ByteAry_.new_ascii_("\\")//, Bry_bf2_seg_1 = ByteAry_.new_ascii_("")
 	, Bry_regx_dash = ByteAry_.new_ascii_("*?")	// was *?
 	//, Bry_grp_bgn = ByteAry_.new_ascii_("(?<m")
 	//, Bry_regx_end = ByteAry_.new_ascii_("/us")

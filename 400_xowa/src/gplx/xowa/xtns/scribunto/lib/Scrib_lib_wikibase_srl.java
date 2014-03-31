@@ -102,7 +102,7 @@ class Scrib_lib_wikibase_srl {
 		KeyVal[] rv = new KeyVal[len];
 		for (int i = 0; i < len; i++) {
 			Wdata_prop_itm_core itm = grp.Itms_get_at(i);
-			rv[i] = KeyVal_.int_(i, Srl_claims_prop_itm(pid, itm));	// NOTE: super 0
+			rv[i] = KeyVal_.int_(i, Srl_claims_prop_itm(pid, itm));	// NOTE: Base_0
 		}
 		return rv;
 	}
@@ -123,9 +123,11 @@ class Scrib_lib_wikibase_srl {
 	}
 	private static KeyVal[] Srl_claims_prop_itm_core_val(Wdata_prop_itm_core itm) {
 		switch (itm.Val_tid_byte()) {
-			case Wdata_prop_itm_base_.Val_tid_string	: return Srl_claims_prop_itm_core_str(itm);
-			case Wdata_prop_itm_base_.Val_tid_entity	: return Srl_claims_prop_itm_core_entity(itm);
-			case Wdata_prop_itm_base_.Val_tid_time		: return Srl_claims_prop_itm_core_time(itm);
+			case Wdata_prop_itm_base_.Val_tid_string			: return Srl_claims_prop_itm_core_str(itm);
+			case Wdata_prop_itm_base_.Val_tid_entity			: return Srl_claims_prop_itm_core_entity(itm);
+			case Wdata_prop_itm_base_.Val_tid_time				: return Srl_claims_prop_itm_core_time(itm);
+			case Wdata_prop_itm_base_.Val_tid_globecoordinate	: return Srl_claims_prop_itm_core_globecoordinate(itm);
+			case Wdata_prop_itm_base_.Val_tid_quantity			: return Srl_claims_prop_itm_core_quantity(itm);
 			default: return KeyVal_.Ary_empty;
 		}
 	}
@@ -163,5 +165,36 @@ class Scrib_lib_wikibase_srl {
 		rv[5] = KeyVal_.new_(Wdata_doc_consts.Key_time_calendarmodel_str	, Wdata_doc_consts.Val_time_calendarmodel_str);
 		return rv;
 	}
-	static final String Key_type = "type", Key_value = "value";
+	private static KeyVal[] Srl_claims_prop_itm_core_globecoordinate(Wdata_prop_itm_core itm) {
+		KeyVal[] rv = new KeyVal[2];
+		rv[0] = KeyVal_.new_(Key_type, Wdata_doc_consts.Key_geo_type_str);
+		rv[1] = KeyVal_.new_(Key_value, Srl_claims_prop_itm_core_globecoordinate_value(itm));
+		return rv;
+	}
+	private static KeyVal[] Srl_claims_prop_itm_core_globecoordinate_value(Wdata_prop_itm_core itm) {
+		byte[][] flds = ByteAry_.Split(itm.Val(), Byte_ascii.Pipe);
+		KeyVal[] rv = new KeyVal[5];
+		rv[0] = KeyVal_.new_(Wdata_doc_consts.Key_geo_latitude_str			, Double_.parse_(String_.new_ascii_(flds[0])));
+		rv[1] = KeyVal_.new_(Wdata_doc_consts.Key_geo_longitude_str			, Double_.parse_(String_.new_ascii_(flds[1])));
+		rv[2] = KeyVal_.new_(Wdata_doc_consts.Key_geo_altitude_str			, null);
+		rv[3] = KeyVal_.new_(Wdata_doc_consts.Key_geo_globe_str				, Wdata_doc_consts.Val_time_globe_bry);
+		rv[4] = KeyVal_.new_(Wdata_doc_consts.Key_geo_precision_str			, .00001d);
+		return rv;
+	}
+	private static KeyVal[] Srl_claims_prop_itm_core_quantity(Wdata_prop_itm_core itm) {
+		KeyVal[] rv = new KeyVal[2];
+		rv[0] = KeyVal_.new_(Key_type, Wdata_doc_consts.Key_quantity_type_str);
+		rv[1] = KeyVal_.new_(Key_value, Srl_claims_prop_itm_core_quantity_value(itm));
+		return rv;
+	}
+	private static KeyVal[] Srl_claims_prop_itm_core_quantity_value(Wdata_prop_itm_core itm) {
+		byte[][] flds = ByteAry_.Split(itm.Val(), Byte_ascii.Pipe);
+		KeyVal[] rv = new KeyVal[4];
+		rv[0] = KeyVal_.new_(Wdata_doc_consts.Key_quantity_amount_str		, String_.new_utf8_(flds[0]));
+		rv[1] = KeyVal_.new_(Wdata_doc_consts.Key_quantity_unit_str			, String_.new_utf8_(flds[1]));
+		rv[2] = KeyVal_.new_(Wdata_doc_consts.Key_quantity_ubound_str		, String_.new_utf8_(flds[2]));
+		rv[3] = KeyVal_.new_(Wdata_doc_consts.Key_quantity_lbound_str		, String_.new_utf8_(flds[3]));
+		return rv;
+	}
+	private static final String Key_type = "type", Key_value = "value";
 }

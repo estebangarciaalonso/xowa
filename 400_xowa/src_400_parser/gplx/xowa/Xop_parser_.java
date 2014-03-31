@@ -32,6 +32,6 @@ public class Xop_parser_ {
 		root.Reset();
 		ctx.Para().Enabled_(para_enabled);
 		wiki.Parser().Parse_page_wiki(root, ctx, ctx.Tkn_mkr(), mid, Xop_parser_.Doc_bgn_bos);
-		wiki.Html_wtr().Write_all(ctx, root, mid, trg);
+		wiki.Html_wtr().Write_all(trg, ctx, mid, root);
 	}
 }

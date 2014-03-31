@@ -20,7 +20,8 @@ public class Wdata_prop_itm_core extends Wdata_prop_itm_base {
 	public Wdata_prop_itm_core(byte snak_tid, int pid, byte val_tid_byte, byte[] val) {this.Ctor(snak_tid, pid, val_tid_byte, val);}
 	public byte[] Wguid() {return wguid;} public void Wguid_(byte[] v) {this.wguid = v;} private byte[] wguid;
 	public String Prop_type() {return Wdata_prop_itm_base_.Prop_type_statement;}
-	public byte Rank_tid() {return rank_tid;} public void Rank_tid_(byte v) {this.rank_tid = v;} private byte rank_tid;
+	public byte Rank_tid() {return rank_tid;}
+	public void Rank_tid_(byte v) {this.rank_tid = v;} private byte rank_tid;
 	public String Rank_str() {return Wdata_prop_itm_base_.Rank_string(rank_tid);}
 	public Wdata_prop_itm_base[] Qual_ary() {return qual_ary;} public void Qual_ary_(Wdata_prop_itm_base[] v) {this.qual_ary = v;} Wdata_prop_itm_base[] qual_ary;
 	public Wdata_prop_itm_base[] Ref_ary() {return ref_ary;} public void Ref_ary_(Wdata_prop_itm_base[] v) {this.ref_ary = v;} Wdata_prop_itm_base[] ref_ary;

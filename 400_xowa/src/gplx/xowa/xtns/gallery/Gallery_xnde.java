@@ -25,9 +25,10 @@ public class Gallery_xnde implements Xox_xnde, Xop_xnde_atr_parser {
 	public int Itm_h()						{return itm_h;} private int itm_h = Null;
 	public int Itms_per_row()				{return itms_per_row;} private int itms_per_row = Null;
 	public boolean Show_filename()				{return show_filename;} private boolean show_filename = false;
-	public byte[] Caption()					{return caption;} private byte[] caption = Null_bry;
-	public byte[] Style()					{return style;} private byte[] style = ByteAry_.Empty;
-	public ListAdp Misc_atrs()				{return misc_atrs;} private ListAdp misc_atrs;
+	public byte[] Atr_caption()				{return atr_caption;} private byte[] atr_caption = Null_bry;
+	public byte[] Atr_style()				{return atr_style;} private byte[] atr_style = ByteAry_.Empty;
+	public byte[] Atr_cls()					{return atr_cls;} private byte[] atr_cls = ByteAry_.Empty;
+	public ListAdp Atrs_other()				{return atrs_other;} private ListAdp atrs_other;
 	public int Itm_w_or_default()			{return itm_w == Null ? Default : itm_w;}
 	public int Itm_h_or_default()			{return itm_h == Null ? Default : itm_h;}
 	public int Itms_len()					{return itms.Count();} private ListAdp itms = ListAdp_.new_();
@@ -40,15 +41,16 @@ public class Gallery_xnde implements Xox_xnde, Xop_xnde_atr_parser {
 				case Gallery_xnde_atrs.Perrow_tid:			itms_per_row = xatr.Val_as_int_or(src, Null); break;
 				case Gallery_xnde_atrs.Widths_tid:			itm_w = xatr.Val_as_int_or(src, Null); break;
 				case Gallery_xnde_atrs.Heights_tid:			itm_h = xatr.Val_as_int_or(src, Null); break;
-				case Gallery_xnde_atrs.Caption_tid:			caption = xatr.Val_as_bry(src); break;
 				case Gallery_xnde_atrs.Showfilename_tid:	show_filename = xatr.Val_as_bool(src); break;
-				case Gallery_xnde_atrs.Style_tid:			style = xatr.Val_as_bry(src); break;
+				case Gallery_xnde_atrs.Caption_tid:			atr_caption = xatr.Val_as_bry(src); break;
+				case Gallery_xnde_atrs.Style_tid:			atr_style = xatr.Val_as_bry(src); break;
+				case Gallery_xnde_atrs.Class_tid:			atr_cls = xatr.Val_as_bry(src); break;
 			}
 		}
 		else {
-			if (misc_atrs == null) misc_atrs = ListAdp_.new_();
-			misc_atrs.Add(xatr.Key_bry());
-			misc_atrs.Add(xatr.Val_as_bry(src));
+			if (atrs_other == null) atrs_other = ListAdp_.new_();
+			atrs_other.Add(xatr.Key_bry());
+			atrs_other.Add(xatr.Val_as_bry(src));
 		}
 	}
 	public void Xtn_parse(Xow_wiki wiki, Xop_ctx ctx, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
@@ -60,12 +62,11 @@ public class Gallery_xnde implements Xox_xnde, Xop_xnde_atr_parser {
 		boolean log_wkr_enabled = Log_wkr != Xop_log_basic_wkr.Null; if (log_wkr_enabled) Log_wkr.Log_end_xnde(ctx.Page(), Xop_log_basic_wkr.Tid_gallery, src, xnde);
 		ctx.Para().Process_block__xnde(xnde.Tag(), Xop_xnde_tag.Block_end);			// cancel pre for <gallery>; DATE:2014-03-11
 	}	public static Xop_log_basic_wkr Log_wkr = Xop_log_basic_wkr.Null;
-	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_opts opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde, int depth) {
+	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_html_wtr_ctx opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
 		Xow_wiki wiki = ctx.Wiki();
-		xtn_mgr.Html_wtr().Write_html(app, wiki, ctx, ctx.Page(), html_wtr, opts, bfr, src, depth, this); 
+		xtn_mgr.Html_wtr().Write_html(app, wiki, ctx, ctx.Page(), html_wtr, opts, bfr, src, this); 
 	}
 	private void Init_atrs(Xow_wiki wiki) {
-		if (itms_per_row == Gallery_xnde.Null) itms_per_row = wiki.Cfg_gallery().Imgs_per_row();
 		if (wiki.File_mgr().Cfg_get(Fsdb_cfg_grp).Get_yn_or_n(Fsdb_cfg_key_gallery_fix_defaults)) {	// v2
 			if (itm_w == Gallery_xnde.Null && itm_h == Gallery_xnde.Null)			// if no w/h specified, set both to default (just like v1)
 				itm_w = itm_h = Gallery_xnde.Default;
@@ -88,6 +89,7 @@ class Gallery_xnde_atrs {
 	, Caption_tid		= 4
 	, Showfilename_tid	= 5
 	, Style_tid			= 6
+	, Class_tid			= 7
 	;
 	public static Hash_adp_bry Key_hash = Hash_adp_bry.ci_()
 	.Add_str_byte("mode"			, Mode_tid)
@@ -97,5 +99,6 @@ class Gallery_xnde_atrs {
 	.Add_str_byte("caption"			, Caption_tid)
 	.Add_str_byte("showfilename"	, Showfilename_tid)
 	.Add_str_byte("style"			, Style_tid)
+	.Add_str_byte("class"			, Class_tid)
 	;
 }

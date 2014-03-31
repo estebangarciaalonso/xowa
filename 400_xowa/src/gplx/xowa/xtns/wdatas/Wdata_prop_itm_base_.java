@@ -83,11 +83,13 @@ public class Wdata_prop_itm_base_ {
 			default: 				return null;
 		}
 	}
-	public static final byte Rank_normal = 1;
+	public static final byte Rank_preferred = 2, Rank_normal = 1, Rank_deprecated = 0;
 	public static String Rank_string(byte v) {
 		switch (v) {
-			case Rank_normal: 	return "normal";
-			default: 			return "unknown"; 
+			case Rank_preferred: 	return "preferred";
+			case Rank_normal: 		return "normal";
+			case Rank_deprecated: 	return "deprecated";
+			default: 				throw Err_.unhandled(v);
 		}
 	}
 	public static final String Prop_type_statement = "statement";

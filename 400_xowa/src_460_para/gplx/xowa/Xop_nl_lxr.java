@@ -24,6 +24,17 @@ class Xop_nl_lxr implements Xop_lxr {
 		if (bgn_pos == Xop_parser_.Doc_bgn_bos) return ctx.LxrMake_txt_(cur_pos); // simulated nl at beginning of every parse
 		int trim_category_pos = Trim_category(ctx, src, cur_pos, src_len);
 		if (trim_category_pos != -1) return trim_category_pos;
+		Xop_tkn_itm last_tkn = ctx.Stack_get_last();		// BLOCK:invalid_ttl_check
+		if (	!ctx.Tid_is_image_map()
+			&&	last_tkn != null
+			&&	last_tkn.Tkn_tid() == Xop_tkn_itm_.Tid_lnki) {
+			Xop_lnki_tkn lnki = (Xop_lnki_tkn)last_tkn;
+			if (	lnki.Pipe_count_is_zero()) {	// always invalid
+				ctx.Stack_pop_last();
+				return Xop_lnki_wkr_.Invalidate_lnki(ctx, src, root, lnki, bgn_pos);
+			}
+		}
+
 		ctx.Apos().EndFrame(ctx, root, src, bgn_pos, true);	// NOTE: frame should at end at bgn_pos (before \n) not after; else, will create tkn at (5,5), while tkn_mkr.Space creates one at (4,5); DATE:2013-10-31
 		ctx.Tblw().Cell_pipe_seen_(false);	// flip off "|" in tblw seq; EX: "| a\n||" needs to flip off "|" else "||" will be seen as style dlm"; NOTE: not covered by test?
 

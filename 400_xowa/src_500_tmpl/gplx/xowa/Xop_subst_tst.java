@@ -48,10 +48,22 @@ public class Xop_subst_tst {
 			));
 		fxt.Test_parse_tmpl_str_test("{{ {{{|safesubst:}}}ifsubst |yes|<includeonly>{{subst:substcheck}}</includeonly>}}", "{{test}}", "{{subst:substcheck}}");
 	}
-	@Test  public void Urlencode_subst() {	// PURPOSE: smoke test to handle en.d and {{does-template-exist}}; EX: en.d:Kazakhstan; DATE:2014-03-25
+	@Test  public void Urlencode_missing_ttl() {	// PURPOSE: handle missing ttl inside {{does-template-exist}}; EX: en.d:Kazakhstan; DATE:2014-03-25
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("test", "{{safesubst:urlencode:{{safesubst:Template:{{{1}}}}}}}");
-		fxt.Test_parse_page_tmpl_str("{{test|abc}}", "%5B%5B%3ATemplate%3AAbc%5D%5D");	// note that this is url-encoded version of [[:Template:Abc]]
+		fxt.Test_parse_page_tmpl_str("{{test|xyz}}", "%5B%5B%3ATemplate%3AXyz%5D%5D");	// url-encoded version of [[:Template:xyz]]
+	}
+	@Test  public void Urlencode_invalid_ttl() {	// PURPOSE: handle invalid ttl inside does-template-exist; EX: en.d:peace; DATE:2014-03-31
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("test", "{{safesubst:urlencode:{{safesubst:Template:{{{1}}}}}}}");
+		fxt.Init_log_(Xop_ttl_log.Invalid_char);
+		fxt.Test_parse_page_tmpl_str("{{test|[xyz]}}", "%7B%7Bsafesubst%3ATemplate%3A%5Bxyz%5D%7D%7D");	// url-encoded version of {{safesubst:Template:xyz}}
+	}
+	@Test  public void Urlencode_template_ttl() {	// PURPOSE: handle template ttl inside does-template-exist; based on above; DATE:2014-03-31
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("test", "{{safesubst:urlencode:{{Template:{{{1}}}}}}}");
+		fxt.Init_log_(Xop_ttl_log.Invalid_char);
+		fxt.Test_parse_page_tmpl_str("{{test|Template:[xyz]}}", "%7B%7BTemplate%3ATemplate%3A%5Bxyz%5D%7D%7D");	// url-encoded version of {{safesubst:Template:xyz}}
 	}
 
 	// NOTE: these are actually not good tests; MW does subst just before save; it doesn't do subst on load; in this case, the tests are testing load (which will noop); they need to test save (which xowa doesn't do)

@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.xtns.pfuncs.times.*;
 public class Pf_func_ {
 	public static byte[] Eval_arg_or_empty(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, int self_args_len, int i) {return Eval_arg_or(ctx, src, caller, self, self_args_len, i, ByteAry_.Empty);}
 	public static final byte Name_dlm = Byte_ascii.Colon;
@@ -213,11 +214,11 @@ public class Pf_func_ {
 			case Xol_kwd_grp_.Id_utc_time:
 			case Xol_kwd_grp_.Id_utc_timestamp:
 			case Xol_kwd_grp_.Id_utc_week:
-			case Xol_kwd_grp_.Id_utc_dow:						return Pf_date_int._UTC;
-			case Xol_kwd_grp_.Id_utc_month_abrv:				return new Pf_date_name(-1, Pf_date_int.DateType_utc, DateAdp_.SegIdx_month, Xol_msg_itm_.Id_dte_month_abrv_jan - Int_.Base1);
-			case Xol_kwd_grp_.Id_utc_month_name:				return new Pf_date_name(-1, Pf_date_int.DateType_utc, DateAdp_.SegIdx_month, Xol_msg_itm_.Id_dte_month_name_january - Int_.Base1);
-			case Xol_kwd_grp_.Id_utc_month_gen:					return new Pf_date_name(-1, Pf_date_int.DateType_utc, DateAdp_.SegIdx_month, Xol_msg_itm_.Id_dte_month_gen_january - Int_.Base1);
-			case Xol_kwd_grp_.Id_utc_day_name:					return new Pf_date_name(-1, Pf_date_int.DateType_utc, DateAdp_.SegIdx_dayOfWeek, Xol_msg_itm_.Id_dte_dow_name_sunday);
+			case Xol_kwd_grp_.Id_utc_dow:						return Pft_func_date_int.Utc;
+			case Xol_kwd_grp_.Id_utc_month_abrv:				return new Pft_func_date_name(-1, Pft_func_date_int.Date_tid_utc, DateAdp_.SegIdx_month, Xol_msg_itm_.Id_dte_month_abrv_jan - Int_.Base1);
+			case Xol_kwd_grp_.Id_utc_month_name:				return new Pft_func_date_name(-1, Pft_func_date_int.Date_tid_utc, DateAdp_.SegIdx_month, Xol_msg_itm_.Id_dte_month_name_january - Int_.Base1);
+			case Xol_kwd_grp_.Id_utc_month_gen:					return new Pft_func_date_name(-1, Pft_func_date_int.Date_tid_utc, DateAdp_.SegIdx_month, Xol_msg_itm_.Id_dte_month_gen_january - Int_.Base1);
+			case Xol_kwd_grp_.Id_utc_day_name:					return new Pft_func_date_name(-1, Pft_func_date_int.Date_tid_utc, DateAdp_.SegIdx_dayOfWeek, Xol_msg_itm_.Id_dte_dow_name_sunday);
 
 			case Xol_kwd_grp_.Id_lcl_year:
 			case Xol_kwd_grp_.Id_lcl_month_int_len2:
@@ -228,18 +229,18 @@ public class Pf_func_ {
 			case Xol_kwd_grp_.Id_lcl_time:
 			case Xol_kwd_grp_.Id_lcl_timestamp:
 			case Xol_kwd_grp_.Id_lcl_week:
-			case Xol_kwd_grp_.Id_lcl_dow:						return Pf_date_int._LCL;
-			case Xol_kwd_grp_.Id_lcl_month_abrv:				return new Pf_date_name(-1, Pf_date_int.DateType_lcl, DateAdp_.SegIdx_month, Xol_msg_itm_.Id_dte_month_abrv_jan - Int_.Base1);
-			case Xol_kwd_grp_.Id_lcl_month_name:				return new Pf_date_name(-1, Pf_date_int.DateType_lcl, DateAdp_.SegIdx_month, Xol_msg_itm_.Id_dte_month_name_january - Int_.Base1);
-			case Xol_kwd_grp_.Id_lcl_month_gen:					return new Pf_date_name(-1, Pf_date_int.DateType_lcl, DateAdp_.SegIdx_month, Xol_msg_itm_.Id_dte_month_gen_january - Int_.Base1);
-			case Xol_kwd_grp_.Id_lcl_day_name:					return new Pf_date_name(-1, Pf_date_int.DateType_lcl, DateAdp_.SegIdx_dayOfWeek, Xol_msg_itm_.Id_dte_dow_name_sunday);
+			case Xol_kwd_grp_.Id_lcl_dow:						return Pft_func_date_int.Lcl;
+			case Xol_kwd_grp_.Id_lcl_month_abrv:				return new Pft_func_date_name(-1, Pft_func_date_int.Date_tid_lcl, DateAdp_.SegIdx_month, Xol_msg_itm_.Id_dte_month_abrv_jan - Int_.Base1);
+			case Xol_kwd_grp_.Id_lcl_month_name:				return new Pft_func_date_name(-1, Pft_func_date_int.Date_tid_lcl, DateAdp_.SegIdx_month, Xol_msg_itm_.Id_dte_month_name_january - Int_.Base1);
+			case Xol_kwd_grp_.Id_lcl_month_gen:					return new Pft_func_date_name(-1, Pft_func_date_int.Date_tid_lcl, DateAdp_.SegIdx_month, Xol_msg_itm_.Id_dte_month_gen_january - Int_.Base1);
+			case Xol_kwd_grp_.Id_lcl_day_name:					return new Pft_func_date_name(-1, Pft_func_date_int.Date_tid_lcl, DateAdp_.SegIdx_dayOfWeek, Xol_msg_itm_.Id_dte_dow_name_sunday);
 
 			case Xol_kwd_grp_.Id_rev_year:
 			case Xol_kwd_grp_.Id_rev_month_int_len2:
 			case Xol_kwd_grp_.Id_rev_month_int:
 			case Xol_kwd_grp_.Id_rev_day_int_len2:
 			case Xol_kwd_grp_.Id_rev_day_int:
-			case Xol_kwd_grp_.Id_rev_timestamp:					return Pf_date_int._REV;
+			case Xol_kwd_grp_.Id_rev_timestamp:					return Pft_func_date_int.Rev;
 
 			case Xol_kwd_grp_.Id_ns_num:
 			case Xol_kwd_grp_.Id_ns_txt:
@@ -300,7 +301,7 @@ public class Pf_func_ {
 			case Xol_kwd_grp_.Id_str_padleft:					return new Pf_str_pad(Xol_kwd_grp_.Id_str_padleft, false);
 			case Xol_kwd_grp_.Id_str_padright:					return new Pf_str_pad(Xol_kwd_grp_.Id_str_padright, true);
 			case Xol_kwd_grp_.Id_str_formatnum:					return new Pf_str_formatnum();
-			case Xol_kwd_grp_.Id_str_formatdate:				return new Pf_str_formatdate();
+			case Xol_kwd_grp_.Id_str_formatdate:				return new Pft_func_formatdate();
 			case Xol_kwd_grp_.Id_url_localurl:					return new Pf_url_urlfunc(Xol_kwd_grp_.Id_url_localurl, Pf_url_urlfunc.Tid_local, false);
 			case Xol_kwd_grp_.Id_url_localurle:					return new Pf_url_urlfunc(Xol_kwd_grp_.Id_url_localurle, Pf_url_urlfunc.Tid_local, true);
 			case Xol_kwd_grp_.Id_url_fullurl:					return new Pf_url_urlfunc(Xol_kwd_grp_.Id_url_fullurl, Pf_url_urlfunc.Tid_full, false);
@@ -324,8 +325,8 @@ public class Pf_func_ {
 			case Xol_kwd_grp_.Id_xtn_ifexist:					return new Pf_xtn_ifexist();
 			case Xol_kwd_grp_.Id_xtn_rel2abs:					return new Pf_xtn_rel2abs();
 			case Xol_kwd_grp_.Id_xtn_switch:					return new Pf_xtn_switch();
-			case Xol_kwd_grp_.Id_xtn_time:						return Pf_xtn_time._Utc;
-			case Xol_kwd_grp_.Id_xtn_timel:						return Pf_xtn_time._Lcl;
+			case Xol_kwd_grp_.Id_xtn_time:						return Pft_func_time._Utc;
+			case Xol_kwd_grp_.Id_xtn_timel:						return Pft_func_time._Lcl;
 			case Xol_kwd_grp_.Id_xtn_titleparts:				return new Pf_xtn_titleparts();
 
 			case Xol_kwd_grp_.Id_subst:

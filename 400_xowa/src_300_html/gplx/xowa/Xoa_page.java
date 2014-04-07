@@ -31,7 +31,7 @@ public class Xoa_page {
 	public boolean				Lang_convert_content() {return lang_convert_content;} public Xoa_page Lang_convert_content_(boolean v) {lang_convert_content = v; return this;} private boolean lang_convert_content = true;
 	public boolean				Lang_convert_title() {return lang_convert_title;} public Xoa_page Lang_convert_title_(boolean v) {lang_convert_title = v; return this;} private boolean lang_convert_title = true;
 	public int				Id() {return id;} public Xoa_page Id_(int v) {id = v; return this;} private int id;
-	public DateAdp			Modified_on() {return modified_on;} public Xoa_page Modified_on_(DateAdp v) {modified_on = v; return this;} DateAdp modified_on = DateAdp_.MinValue;
+	public DateAdp			Modified_on() {return modified_on;} public Xoa_page Modified_on_(DateAdp v) {modified_on = v; return this;} DateAdp modified_on = DateAdp_.Now();
 	public boolean				Missing() {return missing;} public Xoa_page Missing_() {missing = true; return this;} private boolean missing;
 	public Xoa_ttl			Ttl() {return ttl;} public Xoa_page Ttl_(Xoa_ttl v) {ttl = v; url.Wiki_bry_(wiki.Domain_bry()).Page_bry_(v.Full_url()); return this;} private Xoa_ttl ttl;
 	public Xoa_url			Url() {return url;} public Xoa_page Url_(Xoa_url v) {url = v; return this;} private Xoa_url url = new Xoa_url();

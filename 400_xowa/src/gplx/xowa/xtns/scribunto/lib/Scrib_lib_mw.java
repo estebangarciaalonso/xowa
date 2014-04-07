@@ -86,7 +86,7 @@ public class Scrib_lib_mw implements Scrib_lib {
 		String mod_name = args.Pull_str(0);
 		String mod_code = fsys_mgr.Get_or_null(mod_name);	// check if mod_name a file in /lualib/ directoryScribunto .lua file (in /lualib/)
 		if (mod_code != null)
-			return rslt.Init_obj(core.Interpreter().LoadString(mod_name, mod_code));
+			return rslt.Init_obj(core.Interpreter().LoadString("@" + mod_name + ".lua", mod_code));
 		Xoa_ttl ttl = Xoa_ttl.parse_(cur_wiki, ByteAry_.new_utf8_(mod_name));// NOTE: should have Module: prefix
 		if (ttl == null) return rslt.Init_empty();
 		Xoa_page page = cur_wiki.Data_mgr().Get_page(ttl, false);

@@ -18,17 +18,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.users.history; import gplx.*; import gplx.xowa.*; import gplx.xowa.users.*;
 import org.junit.*;
 public class Xou_history_mgr_tst {
-	Xou_history_mgr_fxt fxt = new Xou_history_mgr_fxt();
+	private Xou_history_mgr_fxt fxt = new Xou_history_mgr_fxt();
 	@Before public void init() {fxt.Clear();}
 	@Test  public void Archive() {
-		Tfds.Now_enabled_y_();
+		Tfds.Now_enabled_y_();	// NOTE: each DateTime_.Now() advances clock by 1 min; adding a new DateAdp_.Now() anywhere will throw off times on this test; DATE:2014-04-01
 		fxt.Invk(Xou_history_mgr.Invk_current_itms_max_, 4).Invk(Xou_history_mgr.Invk_current_itms_reset_, 2);
-		fxt.Add_many("A", "B", "C", "D", "E").Save();
+		fxt.Add_many("A", "B", "C", "D", "E");
+		fxt.Save();
 		fxt.List_tst("E", "D");
-		fxt.Fil_tst("mem/xowa/user/test_user/app/data/history/20010101_000500.000.csv", String_.Concat_lines_nl
-			(	"20010101 000200.000|20010101 000200.000|1|en.wikipedia.org|C"
-			,	"20010101 000100.000|20010101 000100.000|1|en.wikipedia.org|B"
-			,	"20010101 000000.000|20010101 000000.000|1|en.wikipedia.org|A"
+		fxt.Fil_tst("mem/xowa/user/test_user/app/data/history/20010101_001000.000.csv", String_.Concat_lines_nl
+			(	"20010101 000500.000|20010101 000500.000|1|en.wikipedia.org|C"
+			,	"20010101 000300.000|20010101 000300.000|1|en.wikipedia.org|B"
+			,	"20010101 000100.000|20010101 000100.000|1|en.wikipedia.org|A"
 			));
 	}
 	@Test   public void Normalize() {

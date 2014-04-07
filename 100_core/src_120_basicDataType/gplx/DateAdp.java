@@ -69,6 +69,7 @@ public class DateAdp implements CompareAble, GfoInvkAble {
 	public String XtoStr_fmt_yyyy_MM_dd_HH_mm()		{return XtoStr_fmt("yyyy-MM-dd HH:mm");}
 	public String XtoStr_fmt_yyyy_MM_dd_HH_mm_ss()	{return XtoStr_fmt("yyyy-MM-dd HH:mm:ss");}
 	public String XtoStr_fmt_iso_8561()				{return XtoStr_fmt("yyyy-MM-dd HH:mm:ss");}
+	public static int Timezone_offset_test = Int_.MinValue;
 		public Calendar UnderDateTime() 		{return under;} Calendar under;
 	public int Year() {return under.get(Calendar.YEAR);}
 	public int Month() {return under.get(Calendar.MONTH) + Month_base0adj;}
@@ -78,6 +79,13 @@ public class DateAdp implements CompareAble, GfoInvkAble {
 	public int Second() {return under.get(Calendar.SECOND);}
 	public int DayOfWeek() {return under.get(Calendar.DAY_OF_WEEK) - 1;}	// -1 : Base0; NOTE: dotnet/php is also Sunday=0
 	public int DayOfYear() {return under.get(Calendar.DAY_OF_YEAR);}
+	public int Timezone_offset() {
+		return Timezone_offset_test == Int_.MinValue							// Timezone_offset_test not over-ridden
+				? 0
+		//		? under.getTimeZone().getOffset(this.Timestamp_unix()) / 1000	// divide by 1000 to convert from ms to seconds
+				: Timezone_offset_test
+				;
+	}
 	public DateAdp XtoUtc() {
 		java.util.Date date = under.getTime();
 		java.util.TimeZone tz = under.getTimeZone();

@@ -104,6 +104,13 @@ public class Scrib_invoke_func_fxt {
 		byte[] expd_err = tmp_bfr.XtoAryAndClear();
 		fxt.Test_parse_page_tmpl_str(raw, String_.new_utf8_(expd_err));
 	}
+	public Object Test_lib_proc_direct(Scrib_lib lib, String proc_key, Object[] args_ary) {
+		int proc_id = lib.Procs().Get_by_key(proc_key).Proc_id();
+		Scrib_proc_args args = new Scrib_proc_args(Scrib_kv_utl_.base1_many_(args_ary));
+		Scrib_proc_rslt rslt = new Scrib_proc_rslt();
+		lib.Procs_exec(proc_id, args, rslt);
+		return rslt.Ary()[0].Val();
+	}
 	public void Test_lib_proc(Scrib_lib lib, String func_name, Object[] args, String expd) {Test_lib_proc_kv(lib, func_name, Scrib_kv_utl_.base1_many_(args), expd);}
 	public void Test_lib_proc_kv(Scrib_lib lib, String func_name, KeyVal[] args, String expd) {
 		Test_lib_proc_internal(lib, func_name, args);

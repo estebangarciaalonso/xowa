@@ -36,7 +36,7 @@ public class Scrib_lua_mod {
 		if (lua_id != -1) return load_string_fnc;
 		text = String_.Replace(text, "&#09;", "\t");	// NOTE: this should only get called once per module
 		text_bry = ByteAry_.new_utf8_(text);
-		load_string_fnc = core.Interpreter().LoadString("=" + name, text);	// MW: Scribunto: Prepending an "=" to the chunk name avoids truncation or a "[string" prefix
+		load_string_fnc = core.Interpreter().LoadString("=" + name, text);	// MW: Scribunto: Prepending an "=" to the chunk name avoids truncation or a "[string" prefix;
 		lua_id = load_string_fnc.Id();
 		return load_string_fnc;
 	}

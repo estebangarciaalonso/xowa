@@ -28,6 +28,7 @@ public class Xop_ctx {
 		wkrs = wkrs_(para, apos, xnde, list, lnki, hdr, amp, lnke, tblw, invk);
 		for (Xop_ctx_wkr wkr : wkrs) wkr.Ctor_ctx(this);
 	}
+	public boolean Tid_is_image_map() {return tid_is_image_map;} public Xop_ctx Tid_is_image_map_(boolean v) {tid_is_image_map = v; return this;} private boolean tid_is_image_map;
 	public Xoa_app				App()				{return app;} private Xoa_app app;
 	public Xow_wiki				Wiki()				{return wiki;} private Xow_wiki wiki;
 	public Xog_tab				Tab()				{return tab;} private Xog_tab tab;

@@ -27,18 +27,41 @@ public class Xop_lnki_wkr_invalid_tst {
 		fxt.Test_parse_page_all_str("[[''[a]'']]"		, "[[<i>[a]</i>]]");
 	}
 	@Test  public void Pipe_only() {
-		fxt.Init_log_(Xop_ttl_log.Len_0);
+		fxt.Init_log_(Xop_ttl_log.Len_0, Xop_lnki_log.Invalid_ttl);
 		fxt.Test_parse_page_wiki("[[|]]", fxt.tkn_txt_(0, 2), fxt.tkn_pipe_(2), fxt.tkn_txt_(3, 5));
 	}
-	@Test  public void Double_pipe_should_still_work() {	// PURPOSE: lnki ttl checker was not stopping at ||; EX:w:United_States_presidential_election,_1992; DATE:2014-03-29
+	@Test  public void Xnde_should_force_ttl_parse() {	// PURPOSE: reparse should be forced at xnde not at pipe; EX: [[a<b>c</b>|d]] reparse should start at <b>; DATE:2014-03-30
+		fxt.Test_parse_page_all_str_and_chk("[[a<b>c</b>|d]]"	, "[[a<b>c</b>|d]]", Xop_lnki_log.Invalid_ttl);
+	}
+	@Test  public void Tblw_tb() {	// PURPOSE: reparse should be forced at tblw.tb; DATE:2014-04-03
+		fxt.Test_parse_page_all_str_and_chk("[[a\n{||b]]", String_.Concat_lines_nl_skipLast
+		( "[[a"
+		, "<table>|b]]"
+		, "</table>"
+		, ""
+		), Xop_lnki_log.Invalid_ttl);
+	}
+	@Test  public void Tblw_tr() {	// PURPOSE: reparse should be forced at tblw.tr; DATE:2014-04-03
+		fxt.Test_parse_page_all_str_and_chk("[[a\n|-b]]", String_.Concat_lines_nl_skipLast
+		( "[[a"
+		, "|-b]]"
+		), Xop_lnki_log.Invalid_ttl);
+	}
+	@Test  public void Tblw_tr_like() {	// PURPOSE: do not invalidate if pseudo-tr; DATE:2014-04-03
+		fxt.Test_parse_page_all_str_and_chk("[[a|-b]]", "<a href=\"/wiki/A\">-b</a>");
+	}
+	@Test  public void Tblw_td() {	// PURPOSE: lnki ttl checker was not stopping at ||; EX:w:United_States_presidential_election,_1992; DATE:2014-03-29
 		fxt.Test_parse_page_all_str("[[A||b|c]]"		, "<a href=\"/wiki/A\">c</a>");
 	}
-	@Test  public void Xnde_should_force_ttl_parse() {	// PURPOSE: reparse should be forced at xnde not at pipe (smoke test); EX: [[a<b>c</b>|d]] reparse should start at <b>; DATE:2014-03-30
-		fxt.Test_parse_page_all_str("[[a<b>c</b>|d]]"	, "[[a<b>c</b>|d]]");
+	@Test  public void Nl() {	// PURPOSE: invalidate if nl; DATE:2014-04-03
+		fxt.Test_parse_page_all_str_and_chk("''[[\n]]", "<i>[[</i>\n]]", Xop_lnki_log.Invalid_ttl);
 	}
 	@Test  public void Nl_with_apos_shouldnt_fail() {	// PURPOSE: apos, lnki and nl will cause parser to fail; DATE:2013-10-31
 		fxt.Test_parse_page_all_str("''[[\n]]", "<i>[[</i>\n]]");
 	}
+//		@Test  public void Brack_end_invalid() {	// PURPOSE: invalidate if ]; DATE:2014-04-03; // TODO: backout apos changes
+//			fxt.Test_parse_page_all_str_and_chk("[[A] ]", "[[A] ]", Xop_lnki_log.Invalid_ttl);
+//		}
 	@Test  public void Module() {	// PURPOSE: handle lnki_wkr parsing Module text (shouldn't happen); apos, tblw, lnki, and nl will cause parser to fail; also handles scan-bwd; EX:Module:Taxobox; DATE:2013-11-10
 		fxt.Init_para_y_();
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl

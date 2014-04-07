@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto.lib; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*;
+import gplx.xowa.xtns.pfuncs.times.*;
 public class Scrib_lib_language implements Scrib_lib {
 	public Scrib_lib_language(Scrib_core core) {this.core = core;} private Scrib_core core;
 	public Scrib_lua_mod Mod() {return mod;} private Scrib_lua_mod mod;
@@ -136,11 +137,8 @@ public class Scrib_lib_language implements Scrib_lib {
 	public boolean FetchLanguageNames(Scrib_proc_args args, Scrib_proc_rslt rslt) {	
 		// byte[] lang_code = args.Cast_bry_or_null(0);
 		// byte[] include = args.Form_bry_or(1, FetchLanguageNames_mw);
-		Xol_lang cur_lang = core.Wiki().Lang();
-		Xol_lang_itm cur_itm = Xol_lang_itm_.Get_by_key(cur_lang.Key_bry());
-		KeyVal kv = KeyVal_.new_(cur_lang.Key_str(), cur_itm.Local_name());
-		return rslt.Init_many_kvs(kv); // NOTE: return current language only; MW iterates over langs in wiki; XO is more complicated as technically all langs are available; need to map subset of langs per wiki, which is not trivial
-	}	// private static final byte[] FetchLanguageNames_mw = ByteAry_.new_ascii_("mw");
+		return rslt.Init_obj(core.Wiki().Cache_mgr().Scrib_lang_names()); // NOTE: return current language only; MW iterates over langs in wiki; XO is more complicated as technically all langs are available; need to map subset of langs per wiki, which is not trivial
+	}
 	public boolean GetFallbacksFor(Scrib_proc_args args, Scrib_proc_rslt rslt) {	
 		byte[] lang_code = args.Pull_bry(0);
 		Xol_lang lang = core.App().Lang_mgr().Get_by_key(lang_code); if (lang == null) return rslt.Init_many_empty();	// lang is not valid; return empty array per MW;
@@ -172,13 +170,17 @@ public class Scrib_lib_language implements Scrib_lib {
 	public boolean FormatDate(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		Xol_lang lang = lang_(args);
 		byte[] fmt_bry = args.Pull_bry(1);
-		byte[] date_bry = args.Cast_bry_or_empty(2);	// NOTE: optional empty is required b/c date is sometimes null; use ByteAry_.Empty b/c this is what Pf_xtn_time.ParseDate takes; DATE:2013-04-05
+		byte[] date_bry = args.Cast_bry_or_empty(2);	// NOTE: optional empty is required b/c date is sometimes null; use ByteAry_.Empty b/c this is what Pft_func_time.ParseDate takes; DATE:2013-04-05
 		boolean utc = args.Cast_bool_or_n(3);
 		ByteAryBfr tmp_bfr = core.App().Utl_bry_bfr_mkr().Get_b512();
-		DateAdpFormatItm[] fmt_ary = Pf_xtn_time.Parse(core.Wiki().Ctx(), fmt_bry);
-		DateAdp date = Pf_xtn_time.ParseDate(date_bry, utc, tmp_bfr);	// NOTE: MW is actually more strict about date; however, not sure about PHP's date parse, so using more lax version
+		Pft_fmt_itm[] fmt_ary = Pft_fmt_itm_.Parse(core.Wiki().Ctx(), fmt_bry);
+		DateAdp date 
+			= ByteAry_.Len_eq_0(date_bry)
+			? DateAdp_.Now()
+			: Pft_func_time.ParseDate(date_bry, utc, tmp_bfr)
+			;	// NOTE: MW is actually more strict about date; however, not sure about PHP's date parse, so using more lax version
 		if (date == null || tmp_bfr.Len() > 0) {tmp_bfr.Mkr_rls(); return rslt.Init_fail("bad argument #2 to 'formatDate' (not a valid timestamp)");}
-		Pf_str_formatdate.Date_bldr().Format(core.Wiki(), lang, fmt_ary, date, tmp_bfr);
+		Pft_func_formatdate.Date_bldr().Format(tmp_bfr, core.Wiki(), lang, date, fmt_ary);
 		byte[] rv = tmp_bfr.Mkr_rls().XtoAryAndClear();
 		return rslt.Init_obj(rv);
 	}

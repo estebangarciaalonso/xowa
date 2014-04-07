@@ -66,6 +66,7 @@ public class Swt_kit implements Gfui_kit {
 	}
 	public boolean Kit_init_done() {return kit_init_done;} private boolean kit_init_done;  
 	public void Kit_init(Gfo_usr_dlg gui_wtr) {
+		this.gui_wtr = gui_wtr;
 		usrMsgWkr_Stop = new Swt_UsrMsgWkr_Stop(this, gui_wtr);
 		gui_wtr.Log_many("", "", "swt.kit_init.display");
 		display = new Display();
@@ -76,7 +77,7 @@ public class Swt_kit implements Gfui_kit {
 		if (xulRunnerPath != null) System.setProperty("org.eclipse.swt.browser.XULRunnerPath", xulRunnerPath);
 		kit_init_done = true; 
 		gui_wtr.Log_many("", "", "swt.kit_init.done");
-	}
+	}	private Gfo_usr_dlg gui_wtr;
 	public void	Kit_term_cbk_(GfoInvkAbleCmd v) {this.term_cbk = v;} GfoInvkAbleCmd term_cbk = GfoInvkAbleCmd.Null;
 	public void Kit_run() {
 	    shell.addListener(SWT.Close, new Swt_lnr_shell_close(this));
@@ -94,7 +95,7 @@ public class Swt_kit implements Gfui_kit {
 		usrMsgWkr_Stop.Rls();
 		clipboard.Rls();
 		display.dispose();
-	}	Swt_UsrMsgWkr_Stop usrMsgWkr_Stop;
+	}	private Swt_UsrMsgWkr_Stop usrMsgWkr_Stop;
 	public boolean Ask_yes_no(String grp_key, String msg_key, String fmt, Object... args) 		{
 		Swt_dlg_msg dlg = (Swt_dlg_msg)New_dlg_msg(ask_fmtr.Bld_str_many(ask_bfr, fmt, args)).Init_btns_(Gfui_dlg_msg_.Btn_yes, Gfui_dlg_msg_.Btn_no).Init_ico_(Gfui_dlg_msg_.Ico_question);
 		display.syncExec(dlg);
@@ -114,8 +115,8 @@ public class Swt_kit implements Gfui_kit {
 		Swt_dlg_msg dlg = (Swt_dlg_msg)New_dlg_msg(ask_fmtr.Bld_str_many(ask_bfr, fmt, args)).Init_btns_(Gfui_dlg_msg_.Btn_ok).Init_ico_(Gfui_dlg_msg_.Ico_information);
 		display.syncExec(dlg);
 	}
-	public GfuiInvkCmd New_cmd_sync(GfoInvkAble invk) {return new Swt_GfuiInvkCmd_sync(display, invk);}
-	public GfuiInvkCmd New_cmd_async(GfoInvkAble invk) {return new Swt_GfuiInvkCmd_async(display, invk);}
+	public GfuiInvkCmd New_cmd_sync(GfoInvkAble invk) 	{return new Swt_gui_cmd(gui_wtr, display, invk, Bool_.N);}
+	public GfuiInvkCmd New_cmd_async(GfoInvkAble invk) 	{return new Swt_gui_cmd(gui_wtr, display, invk, Bool_.Y);}
 	public GfuiWin New_win_utl(String key, GfuiWin owner, KeyVal... args) {return GfuiWin_.kit_(this, key, new Swt_win(shell), nullArgs);	}
 	public GfuiWin New_win_app(String key, KeyVal... args) {
 		Swt_win win = new Swt_win(display);
@@ -234,34 +235,30 @@ class Swt_UsrMsgWkr_Stop implements UsrMsgWkr, RlsAble {
 		gui_wtr.Log_many("", "", msg);
 	}
 }
-class Swt_GfuiInvkCmd_sync implements GfuiInvkCmd, Runnable {
-	GfsCtx run_ctx; int run_ikey; String run_key; GfoMsg run_msg; 
-	public Swt_GfuiInvkCmd_sync(Display display, GfoInvkAble target) {this.display = display; this.target = target;} GfoInvkAble target; String targetCmd; Display display;
-	public void Rls() {target = null; run_key = null; run_msg = null;}
+class Swt_gui_cmd implements GfuiInvkCmd, Runnable {
+	private Gfo_usr_dlg usr_dlg; private GfoInvkAble target; private Display display; private boolean async;	
+	private GfsCtx invk_ctx; private int invk_ikey; private String invk_key; private GfoMsg invk_msg;	
+	public Swt_gui_cmd(Gfo_usr_dlg usr_dlg, Display display, GfoInvkAble target, boolean async) {
+		this.usr_dlg = usr_dlg; this.display = display; this.target = target; this.async = async;
+	}
+	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
+		this.invk_ctx = ctx; this.invk_ikey = ikey ; this.invk_key = k; this.invk_msg = m;
+		if (async)
+			display.asyncExec(this);
+		else
+			display.syncExec(this);
+		return this;
+	}	
 	@Override public void run() {
 		try {
-			target.Invk(run_ctx, run_ikey, run_key, run_msg);
+			target.Invk(invk_ctx, invk_ikey, invk_key, invk_msg);
 		}
 		catch (Exception e) {
-			Err_.Noop(e);
+			usr_dlg.Warn_many("", "", "fatal error while running; key=~{0} err=~{1}", invk_key, Err_.Message_gplx_brief(e));
 		}
 	} 
-	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		this.run_ctx = ctx; this.run_ikey = ikey ; this.run_key = k; this.run_msg = m;
-		display.syncExec(this);
-		return this;
+	public void Rls() {
+		usr_dlg = null; target = null; display = null;
+		invk_ctx = null; invk_key = null; invk_msg = null;
 	}
-}
-class Swt_GfuiInvkCmd_async implements GfuiInvkCmd, Runnable {
-	public void Rls() {target = null; run_key = null; run_msg = null;}
-	@Override public void run() {
-		target.Invk(run_ctx, run_ikey, run_key, run_msg);
-	} 
-	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		this.run_ctx = ctx; this.run_ikey = ikey ; this.run_key = k; this.run_msg = m;
-		display.asyncExec(this);
-		return this;
-	}
-	public Swt_GfuiInvkCmd_async(Display display, GfoInvkAble target) {this.display = display; this.target = target;} GfoInvkAble target; Display display;
-	GfsCtx run_ctx; int run_ikey; String run_key; GfoMsg run_msg; 
 }

@@ -203,6 +203,15 @@ public class Xop_lnke_wkr implements Xop_ctx_wkr {
 	private static final byte Lnki_linkMode_init = 0, Lnki_linkMode_eq = 1, Lnki_linkMode_text = 2;
 	private static final byte EndType_null = 0, EndType_eos = 1, EndType_brack = 2, EndType_space = 3, EndType_nl = 4, EndType_invalid = 5;
 	public int MakeTkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
+//			Xop_tkn_itm last_tkn = ctx.Stack_get_last();		// BLOCK:invalid_ttl_check; // TODO: backout apos changes
+//			if (	last_tkn != null
+//				&&	last_tkn.Tkn_tid() == Xop_tkn_itm_.Tid_lnki) {
+//				Xop_lnki_tkn lnki = (Xop_lnki_tkn)last_tkn;
+//				if (	lnki.Pipe_count_is_zero()) {	// always invalid
+//					ctx.Stack_pop_last();
+//					return Xop_lnki_wkr_.Invalidate_lnki(ctx, src, root, lnki, bgn_pos);
+//				}
+//			}
 		int lnke_bgn_idx = ctx.Stack_idx_typ(Xop_tkn_itm_.Tid_lnke);
 		if (lnke_bgn_idx == -1) return ctx.LxrMake_txt_(cur_pos);	// no lnke_bgn tkn; occurs when just ]; EX: "a]b"
 		Xop_lnke_tkn bgnTkn = (Xop_lnke_tkn)ctx.Stack_pop_til(root, src, lnke_bgn_idx, false, bgn_pos, cur_pos);

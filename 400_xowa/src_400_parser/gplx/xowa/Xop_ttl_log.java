@@ -62,11 +62,12 @@ class Xop_hdr_log {
 class Xop_lnki_log {		
 	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "lnki");
 	public static final Gfo_msg_itm
-		  Upright_val_is_invalid			= Gfo_msg_itm_.new_warn_(owner, "upright_val_is_invalid")
-		, Escaped_lnki						= Gfo_msg_itm_.new_warn_(owner, "escaped_lnki")
-		, Key_is_empty						= Gfo_msg_itm_.new_warn_(owner, "key_is_empty")
-		, Ext_is_missing					= Gfo_msg_itm_.new_warn_(owner, "ext_is_missing")
-		;
+	  Upright_val_is_invalid			= Gfo_msg_itm_.new_warn_(owner, "upright_val_is_invalid")
+	, Escaped_lnki						= Gfo_msg_itm_.new_warn_(owner, "escaped_lnki")
+	, Key_is_empty						= Gfo_msg_itm_.new_warn_(owner, "key_is_empty")
+	, Ext_is_missing					= Gfo_msg_itm_.new_warn_(owner, "ext_is_missing")
+	, Invalid_ttl						= Gfo_msg_itm_.new_warn_(owner, "invalid_ttl")
+	;
 }
 class Xop_xnde_log {
 	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "xnde");
@@ -166,19 +167,6 @@ class Pf_xtn_titleparts_log {
 	public static final Gfo_msg_itm
 		  Len_is_invalid					= Gfo_msg_itm_.new_warn_(owner, "Len_is_invalid")
 		, Bgn_is_invalid					= Gfo_msg_itm_.new_warn_(owner, "Bgn_is_invalid")
-		;
-}
-class Pf_xtn_time_log {
-	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "time_parser");
-	public static final Gfo_msg_itm
-		  Invalid_day					= Gfo_msg_itm_.new_warn_(owner, "Invalid day: ~{0}")
-		, Invalid_month					= Gfo_msg_itm_.new_warn_(owner, "Invalid month: ~{0}")
-		, Invalid_year					= Gfo_msg_itm_.new_warn_(owner, "Invalid year: ~{0}")
-		, Invalid_year_mid				= Gfo_msg_itm_.new_warn_(owner, "Invalid date: 4 digit year must be either yyyy-##-## or ##-##-yyyy")
-		, Invalid_hour					= Gfo_msg_itm_.new_warn_(owner, "Invalid hour: ~{0}")
-		, Invalid_minute				= Gfo_msg_itm_.new_warn_(owner, "Invalid minute: ~{0}")
-		, Invalid_second				= Gfo_msg_itm_.new_warn_(owner, "Invalid second: ~{0}")
-		, Invalid_date					= Gfo_msg_itm_.new_warn_(owner, "Invalid date: ~{0}")
 		;
 }
 //	class Pf_func_lang_log {

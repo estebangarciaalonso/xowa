@@ -93,6 +93,15 @@ public class Xop_lnki_wkr_basic_tst {
 	@Test  public void Size_large_numbers() {	// PURPOSE: perf code identified large sizes as caption; DATE:2014-02-15
 		fxt.Test_parse_page_wiki("[[Image:a|1234567890x1234567890px]]"		, fxt.tkn_lnki_().Width_(1234567890).Height_(1234567890));
 	}
+	@Test   public void Size_ws_para() {	// PURPOSE: <p> in arg_bldr causes parse to fail; EX: w:Supreme_Court_of_the_United_States; DATE:2014-04-05
+		fxt.Init_para_y_();
+		fxt.Test_parse_page_all("[[File:A.png| \n 40px]]"
+		, fxt.tkn_para_bgn_para_(0)
+		, fxt.tkn_lnki_().Width_(40).Height_(-1)
+		, fxt.tkn_para_end_pre_(22));	// NOTE: this is wrong, but can be ignored b/c </pre> is not processed inside lnki
+		fxt.Init_para_n_();
+	}
+
 	@Test  public void Image_upright() {
 		fxt.Test_parse_page_wiki("[[Image:a|upright=.123]]"	, fxt.tkn_lnki_().Upright_(.123));
 		fxt.Test_parse_page_wiki("[[Image:a|upright]]"		, fxt.tkn_lnki_().Upright_(1));		// no eq tokn
@@ -174,9 +183,9 @@ public class Xop_lnki_wkr_basic_tst {
 		fxt.Test_parse_page_wiki("[[a|]]", fxt.tkn_lnki_().Trg_tkn_(fxt.tkn_arg_val_txt_(2, 3)));
 	}
 	@Test  public void Exc_empty() {
-		fxt.Init_log_(Xop_ttl_log.Len_0);
+		fxt.Init_log_(Xop_ttl_log.Len_0, Xop_lnki_log.Invalid_ttl);
 		fxt.Test_parse_page_wiki("[[]]", fxt.tkn_txt_(0, 2), fxt.tkn_txt_(2, 4));
-		fxt.Init_log_(Xop_ttl_log.Len_0);
+		fxt.Init_log_(Xop_ttl_log.Len_0, Xop_lnki_log.Invalid_ttl);
 		fxt.Test_parse_page_wiki("[[ ]]", fxt.tkn_txt_(0, 2), fxt.tkn_space_(2, 3), fxt.tkn_txt_(3, 5));
 	}
 	@Test  public void Exc_invalid_utf8() {	// PURPOSE: "%DO" is an invalid UTF-8 sequence (requires 2 bytes, not just %D0); DATE:2013-11-11
@@ -232,7 +241,7 @@ public class Xop_lnki_wkr_basic_tst {
 			(	"<p>a"
 			,	"</p>"
 			,	""
-			,	"<p>b [[c "	// NOTE: \n is converted to \s b/c caption does not allow \n
+			,	"<p>b [[c"	// NOTE: \n is converted to \s b/c caption does not allow \n; NOTE: removed \s after "c" due to new lnki invalidation;DATE:2014-04-03
 			,	"</p>"
 			,	""
 			));

@@ -39,11 +39,18 @@ public class Xop_xatr_whitelist_mgr {
 		boolean rv	=	itm.Tags()[tag_id] == 1									// is atr allowed for tag
 				&& (itm.Exact() ? key_trie.Match_pos() == chk_end : true)	// if exact, check for exact; else always true
 			;
-		if (itm_key_tid == Xop_xatr_itm.Key_tid_style && !Scrub_style(xatr, src)) return false;
+		switch (itm_key_tid) {
+			case Xop_xatr_itm.Key_tid_style:
+				if (!Scrub_style(xatr, src)) return false;
+				break;
+			case Xop_xatr_itm.Key_tid_role:
+				if (!ByteAry_.Eq(Val_role_presentation, xatr.Val_as_bry(src))) return false; // MW: For now we only support role="presentation"; DATE:2014-04-05
+				break;
+		}
 		return rv;
 	}
 	public Xop_xatr_whitelist_mgr Ini() {	// REF.MW:Sanitizer.php|setupAttributeWhitelist
-		Ini_grp("common"		, null		, "id", "class", "lang", "dir", "title", "style");
+		Ini_grp("common"		, null		, "id", "class", "lang", "dir", "title", "style", "role");
 		Ini_grp("block" 		, "common"	, "align");
 		Ini_grp("tablealign"	, null		, "align", "char", "charoff", "valign");
 		Ini_grp("tablecell"		, null		, "abbr", "axis", "headers", "scope", "rowspan", "colspan", "nowrap", "width", "height", "bgcolor");		
@@ -114,7 +121,7 @@ public class Xop_xatr_whitelist_mgr {
 		Ini_all_loose("data");
 		return this;
 	}
-	Hash_adp_bry grp_hash = Hash_adp_bry.cs_();
+	private Hash_adp_bry grp_hash = Hash_adp_bry.cs_();
 	private void Ini_grp(String key_str, String base_grp, String... cur_itms) {
 		byte[][] itms = ByteAry_.Ary(cur_itms);
 		if (base_grp != null)
@@ -164,7 +171,11 @@ public class Xop_xatr_whitelist_mgr {
 		key_trie.Add(key, rv);
 		return rv;
 	}
-	Hash_adp_bry tid_hash = Hash_adp_bry.ci_().Add_str_byte("id", Xop_xatr_itm.Key_tid_id).Add_str_byte("style", Xop_xatr_itm.Key_tid_style);
+	private Hash_adp_bry tid_hash = Hash_adp_bry.ci_()
+	.Add_str_byte("id", Xop_xatr_itm.Key_tid_id)
+	.Add_str_byte("style", Xop_xatr_itm.Key_tid_style)
+	.Add_str_byte("role", Xop_xatr_itm.Key_tid_role)
+	;
 	ByteTrieMgr_slim key_trie = new ByteTrieMgr_slim(false);
 	public boolean Scrub_style(Xop_xatr_itm xatr, byte[] raw) { // REF:Sanitizer.php|checkCss; '! expression | filter\s*: | accelerator\s*: | url\s*\( !ix'; NOTE: this seems to affect MS IE only; DATE:2013-04-01
 		byte[] val_bry = xatr.Val_bry();
@@ -230,15 +241,16 @@ public class Xop_xatr_whitelist_mgr {
 	}
 	static final byte Style_expression = 0, Style_filter = 1, Style_accelerator = 2, Style_url = 3, Style_urls = 4, Style_comment = 5, Style_image = 6, Style_image_set = 7;
 	private static ByteTrieMgr_slim style_trie = ByteTrieMgr_slim.ci_()
-			.Add_str_byte("expression"	, Style_expression)
-			.Add_str_byte("filter"		, Style_filter)
-			.Add_str_byte("accelerator"	, Style_accelerator)
-			.Add_str_byte("url"			, Style_url)
-			.Add_str_byte("urls"			, Style_urls)
-			.Add_str_byte("image"		, Style_image)
-			.Add_str_byte("image-set"	, Style_image_set)
-			.Add_str_byte("/*"			, Style_comment)
-			;
+	.Add_str_byte("expression"	, Style_expression)
+	.Add_str_byte("filter"		, Style_filter)
+	.Add_str_byte("accelerator"	, Style_accelerator)
+	.Add_str_byte("url"			, Style_url)
+	.Add_str_byte("urls"		, Style_urls)
+	.Add_str_byte("image"		, Style_image)
+	.Add_str_byte("image-set"	, Style_image_set)
+	.Add_str_byte("/*"			, Style_comment)
+	;
+	private static final byte[] Val_role_presentation = ByteAry_.new_ascii_("presentation");
 }
 class Xop_xatr_whitelist_itm {
 	public Xop_xatr_whitelist_itm(byte[] key, byte key_tid, boolean exact) {this.key = key; this.key_tid = key_tid; this.exact = exact;}

@@ -22,7 +22,7 @@ public class Xop_ctx_ {
 		int end = bgn + limit;
 		int src_len = src.length;
 		if (end > src_len) end = src_len;
-		byte[] rv = ByteAry_.Mid(src, bgn, limit);
+		byte[] rv = ByteAry_.Mid(src, bgn, end);
 		rv = ByteAry_.Replace(rv, Byte_ascii.NewLine, Byte_ascii.Tab); // change nl to tab so text editor will show one warning per line
 		return String_.new_utf8_(rv);
 	}

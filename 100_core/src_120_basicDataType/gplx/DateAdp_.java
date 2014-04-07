@@ -29,8 +29,8 @@ public class DateAdp_ implements GfoInvkAble {
 		if		(ctx.Match(k, Invk_Now))		return Now();
 		else									return GfoInvkAble_.Rv_unhandled;			
 	}	public static final String Invk_Now = "Now";
-	public static final DateAdp MinValue = new DateAdp(   1,  1,  1,  0,  0,  0,   0); 
-	public static final DateAdp MaxValue = new DateAdp(9999, 12, 31, 23, 59, 59, 999); 
+	public static final DateAdp MinValue		= new DateAdp(   1,  1,  1,  0,  0,  0,   0); 
+	public static final DateAdp MaxValue		= new DateAdp(9999, 12, 31, 23, 59, 59, 999); 
 	public static DateAdp Now() {return Tfds.Now_enabled() ? Tfds.Now() : new DateAdp(new GregorianCalendar());}
 	public static DateAdp new_(int year, int month, int day, int hour, int minute, int second, int frac) {return new DateAdp(year, month, day, hour, minute, second, frac);}
 	public static DateAdp seg_(int[] ary) {

@@ -40,39 +40,44 @@ public class Srl_wkr_tst {
 		, fxt.itm_("b", "B")
 		);
 	}
-//		@Test  public void Incomplete_row() {
-//			fxt	.Test_load(String_.Concat_lines_nl_skipLast
-//			( "a"
-//			, "b"
-//			, ""
-//			)
-//			, fxt.itm_("a", "")
-//			, fxt.itm_("b", "")
-//			);
-//		}
-	@Test  public void Escape() {
+	@Test  public void Incomplete_row() {
 		fxt	.Test_load(String_.Concat_lines_nl_skipLast
-		( "a\\|\\nb|c"
+		( "a"
+		, "b"
+		, ""
 		)
-		, fxt.itm_("a|\nb", "c")
+		, fxt.itm_("a")
+		, fxt.itm_("b")
 		);
 	}
+//		@Test  public void Escape() {
+//			fxt	.Test_load(String_.Concat_lines_nl_skipLast
+//			( "a\\|\\nb|c"
+//			)
+//			, fxt.itm_("a|\nb", "c")
+//			);
+//		}
 }
 class Srl_wkr_fxt {
 	private Srl_mok_mgr mgr = new Srl_mok_mgr();
-	private Srl_wkr wkr = new Srl_wkr();
+	private Srl_tbl_parser tbl_parser = new Srl_tbl_parser();
 	public Srl_wkr_fxt() {
-		wkr.Mgr_(mgr);
-		wkr.Flds_len_(2);
+		tbl_parser.Init(mgr, Srl_fld_parser_bry._, Srl_fld_parser_bry._);
 	}
 	public void Reset() {
-		wkr.Clear();
+		tbl_parser.Clear();
 		mgr.Clear();
 	}
 	public Srl_mok_itm itm_(String... flds) {return new Srl_mok_itm(flds);}
-	public Srl_wkr_fxt Init_flds_len_(int v) {wkr.Flds_len_(v); return this;}
+	public Srl_wkr_fxt Init_flds_len_(int len) {
+		Srl_fld_parser[] ary = new Srl_fld_parser[len];
+		for (int i = 0; i < len; i++) 
+			ary[i] = Srl_fld_parser_bry._;
+		tbl_parser.Init(mgr, ary);
+		return this;
+	}
 	public void Test_load(String src, Srl_mok_itm... expd) {
-		wkr.Load_by_str(src);
+		tbl_parser.Parse(ByteAry_.new_utf8_(src));
 		Tfds.Eq_ary_str(expd, mgr.Itms());
 	}
 }
@@ -81,14 +86,21 @@ class Srl_mok_itm implements XtoStrAble {
 	public Srl_mok_itm(String[] flds) {this.flds = flds;}
 	public String XtoStr() {return String_.Concat_with_str("|", flds);}
 }
-class Srl_mok_mgr implements Srl_mgr {
-	private ListAdp list = ListAdp_.new_();
-	public void Clear() {list.Clear();}
-	public Srl_mok_itm[] Itms() {return (Srl_mok_itm[])list.XtoAry(Srl_mok_itm.class);}
-	public void Srl_add(int flds_len, byte[][] flds) {
-		String[] flds_new = new String[flds.length];	// create flds with same len as flds
-		for (int i = 0; i < flds_len; i++)				// only fill # of flds found; needed for incomplete row
-			flds_new[i] = String_.new_ascii_(flds[i]);
-		list.Add(new Srl_mok_itm(String_.Ary(flds_new)));
+class Srl_mok_mgr extends Srl_mgr_base {		
+	public void Clear() {itms.Clear();}
+	public Srl_mok_itm[] Itms() {return (Srl_mok_itm[])itms.XtoAry(Srl_mok_itm.class);} private ListAdp itms = ListAdp_.new_();
+	private ListAdp flds = ListAdp_.new_();
+	@Override public void Write_bry(Srl_tbl_parser ctx, int fld_idx, byte[] src, int bgn, int end) {
+		flds.Add(String_.new_utf8_(src, bgn, end));
 	}
+	@Override public void Commit_itm() {
+		Srl_mok_itm itm = new Srl_mok_itm((String[])flds.XtoAryAndClear(String.class));
+		itms.Add(itm);
+	}
+//		public void Srl_add(int flds_len, byte[][] flds) {
+//			String[] flds_new = new String[flds.length];	// create flds with same len as flds
+//			for (int i = 0; i < flds_len; i++)				// only fill # of flds found; needed for incomplete row
+//				flds_new[i] = String_.new_ascii_(flds[i]);
+//			itms.Add(new Srl_mok_itm(String_.Ary(flds_new)));
+//		}
 }

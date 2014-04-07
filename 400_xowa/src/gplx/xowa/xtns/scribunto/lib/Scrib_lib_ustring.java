@@ -94,6 +94,7 @@ public class Scrib_lib_ustring implements Scrib_lib {
 		RegxAdp regx_adp = Scrib_lib_ustring.RegxAdp_new_(core.Ctx(), regx);
 		RegxMatch[] regx_rslts = regx_adp.Match_all(text, bgn);
 		int len = regx_rslts.length;
+		if (len == 0) return rslt.Init_null();	// return null if no matches found; EX:w:Mount_Gambier_(volcano); DATE:2014-04-02
 		ListAdp tmp_list = ListAdp_.new_();
 		for (int i = 0; i < len; i++) {
 			RegxMatch match = regx_rslts[i];
@@ -135,7 +136,8 @@ public class Scrib_lib_ustring implements Scrib_lib {
 					tmp_list.Add(grp.Val());
 			}
 		}
-		else if (op_is_match)	// if op_is_match, and no captures, extract find_txt; note that UstringLibrary.php says "$arr[] = $m[0][0];" which means get the 1st match; EX: "aaaa", "a" will have four matches; get 1st
+		else if (	op_is_match				// if op_is_match, and no captures, extract find_txt; note that UstringLibrary.php says "$arr[] = $m[0][0];" which means get the 1st match;
+				&&	tmp_list.Count() == 0)	// only add match once; EX: "aaaa", "a" will have four matches; get 1st; DATE:2014-04-02
 			tmp_list.Add(String_.Mid(text, rslt.Find_bgn(), rslt.Find_end()));
 	}
 	public static RegxAdp RegxAdp_new_(Xop_ctx ctx, String regx) {
@@ -259,8 +261,10 @@ class Scrib_lib_ustring_gsub_mgr {
 			case Repl_tid_table: {
 				String find_str = String_.Mid(text, match.Find_bgn(), match.Find_end());	// NOTE: rslt.Bgn() / .End() is for String pos (bry pos will fail for utf8 strings)
 				Object actl_repl_obj = repl_hash.Fetch(find_str);
-				if (actl_repl_obj != null)
-					tmp_bfr.Add((byte[])actl_repl_obj);
+				if (actl_repl_obj == null)			// match found, but no replacement specified; EX:"abc", "[ab]", "a:A"; "b" in regex but not in tbl; EX:d:DVD; DATE:2014-03-31
+					tmp_bfr.Add_str(find_str);
+				else
+					tmp_bfr.Add((byte[])actl_repl_obj);					
 				break;
 			}
 			case Repl_tid_luacbk: {

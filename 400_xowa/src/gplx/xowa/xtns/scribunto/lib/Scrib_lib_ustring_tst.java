@@ -37,12 +37,15 @@ public class Scrib_lib_ustring_tst {
 	@Test  public void Match() {
 		fxt.Init_cbk(Scrib_core.Key_mw_interface, fxt.Core().Lib_ustring(), Scrib_lib_ustring.Invk_match);
 		Exec_match("abcd"	, "bc"				, 1, "bc");							// basic
-		Exec_match("abcd"	, "x"				, 1, "");							// empty
-		Exec_match("abcd"	, "a"				, 2, "");							// bgn
+		Exec_match("abcd"	, "x"				, 1, "null");						// empty
+		Exec_match("abcd"	, "a"				, 2, "null");						// bgn
 		Exec_match("abcd"	, "b(c)"			, 1, "c");							// group
 		Exec_match(" a b "	, "^%s*(.-)%s*$"	, 1, "a b");						// trim
 		Exec_match("abcd"	, "a"				, 0, "a");							// handle 0; note that php/lua is super-1, but some modules pass in 0; ru.w:Module:Infocards; DATE:2013-11-08
 		Exec_match("abcd"	, "."				, -1, "d");							// -1
+		Exec_match("aaa"	, "a"				, 1, "a");							// should return 1st match not many
+		Exec_match("aaa"	, "(a)"				, 1, "a;a;a");						// should return all matches
+		Exec_match("a b"	, "%S"				, 1, "a");							// %S was returning every match instead of 1st; EX:en.w:Bertrand_Russell; DATE:2014-04-02
 	}
 	@Test  public void Match_args_out_of_order() {
 		fxt.Init_cbk(Scrib_core.Key_mw_interface, fxt.Core().Lib_ustring(), Scrib_lib_ustring.Invk_match);
@@ -51,12 +54,16 @@ public class Scrib_lib_ustring_tst {
 	@Test  public void Gsub() {
 		fxt.Init_cbk(Scrib_core.Key_mw_interface, fxt.Core().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);
 		Exec_gsub_regx("abcd", "[a]"		, -1, "A", "Abcd;1");
-		Exec_gsub_regx("abcd", "[ac]"		, -1, Scrib_kv_utl_.flat_many_("a", "A", "c", "C"), "AbCd;2");
 		Exec_gsub_regx("aaaa", "[a]"		, 2, "A", "AAaa;2");
 		Exec_gsub_regx("a"	, "(a)"			, 1, "%%%1", "%a;1");
 		Exec_gsub_regx("à{b}c", "{b}"		, 1, "b", "àbc;1");		// utf8
 		Exec_gsub_regx("àbc", "^%s*(.-)%s*$", 1, "%1", "àbc;1");	// utf8; regx is for trim line
 		Exec_gsub_regx("a"	, "[^]"			, 1, "b", "a;0");		// invalid regx should not fail; should return self; DATE:2013-10-20
+	}
+	@Test  public void Gsub_table() {
+		fxt.Init_cbk(Scrib_core.Key_mw_interface, fxt.Core().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);
+		Exec_gsub_regx("abcd", "[ac]"		, -1, Scrib_kv_utl_.flat_many_("a", "A", "c", "C")	, "AbCd;2");
+		Exec_gsub_regx("abc" , "[ab]"		, -1, Scrib_kv_utl_.flat_many_("a", "A")			, "Abc;2");	// PURPOSE: match not in regex should still print itself; in this case [c] is not in tbl regex; DATE:2014-03-31
 	}
 	@Test  public void Gsub_capture() {
 		fxt.Init_cbk(Scrib_core.Key_mw_interface, fxt.Core().Lib_ustring(), Scrib_lib_ustring.Invk_gsub);

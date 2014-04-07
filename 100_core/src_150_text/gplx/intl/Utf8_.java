@@ -161,7 +161,6 @@ public class Utf8_ {
 		return rv;
 	}
 	public static int EncodeChar(int charAsInt, byte[] src, int pos) {
-//			Tfds.Write(charAsInt, 1 << 11, 1 << 16);
 		if (charAsInt < 0x80) {
 			src[pos] 	= (byte)charAsInt;
 			return 1;

@@ -57,5 +57,5 @@ public class Xop_xatr_itm {
 		this.tid = Tid_keyVal; this.quote_byte = quote_byte; this.atr_bgn = atr_bgn; this.atr_end = atr_end; this.key_bgn = key_bgn; this.key_end = key_end; this.val_bgn = val_bgn; this.val_end = val_end; this.eq_pos = eq_pos;
 	}
 	public static final Xop_xatr_itm[] Ary_empty = new Xop_xatr_itm[0];
-	public static final byte Key_tid_generic = 0, Key_tid_id = 1, Key_tid_style = 2;
+	public static final byte Key_tid_generic = 0, Key_tid_id = 1, Key_tid_style = 2, Key_tid_role = 3;
 }

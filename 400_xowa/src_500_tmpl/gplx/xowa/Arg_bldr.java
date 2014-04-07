@@ -40,6 +40,7 @@ class Arg_bldr {
 							break;
 					}
 					break; 
+				case Xop_tkn_itm_.Tid_para:	// NOTE: para can appear in following: [[File:A.png| \n 40px]]; EX: w:Supreme_Court_of_the_United_States; DATE:2014-04-05
 				case Xop_tkn_itm_.Tid_newLine: case Xop_tkn_itm_.Tid_space: case Xop_tkn_itm_.Tid_tab:	// whitespace
 					if	(ws_bgn_chk) ws_bgn_idx = cur_itm_subs_len;							// definite ws at bgn; set ws_bgn_idx, and keep setting until text tkn reached; handles mixed sequence of \s\n\t where last tkn should be ws_bgn_idx
 					else			{if (ws_end_idx == -1) ws_end_idx = cur_itm_subs_len;};	// possible ws at end; may be overriden later; see AdjustWsForTxtTkn

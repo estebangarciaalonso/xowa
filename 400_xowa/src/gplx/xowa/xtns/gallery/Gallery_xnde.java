@@ -64,7 +64,10 @@ public class Gallery_xnde implements Xox_xnde, Xop_xnde_atr_parser {
 	}	public static Xop_log_basic_wkr Log_wkr = Xop_log_basic_wkr.Null;
 	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_html_wtr_ctx opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
 		Xow_wiki wiki = ctx.Wiki();
-		xtn_mgr.Html_wtr().Write_html(app, wiki, ctx, ctx.Page(), html_wtr, opts, bfr, src, this); 
+		xtn_mgr.Html_wtr().Write_html(app, wiki, ctx, ctx.Page(), html_wtr, opts, bfr, src, this);
+//			Gallery_mgr_base gallery_mgr = Gallery_mgr_traditional._;
+//			gallery_mgr.Init(itms_per_row, itm_w, itm_h);
+//			gallery_mgr.Write_html(bfr, wiki, ctx.Page(), ctx, src, this);
 	}
 	private void Init_atrs(Xow_wiki wiki) {
 		if (wiki.File_mgr().Cfg_get(Fsdb_cfg_grp).Get_yn_or_n(Fsdb_cfg_key_gallery_fix_defaults)) {	// v2

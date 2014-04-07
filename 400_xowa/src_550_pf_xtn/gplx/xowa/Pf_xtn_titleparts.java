@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.core.ints.*; import gplx.xowa.xtns.pfuncs.times.*;
 class Pf_xtn_titleparts extends Pf_func_base {
 	@Override public boolean Func_require_colon_arg() {return true;}
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bb) {// REF.MW:ParserFunctions_body.php
@@ -73,7 +74,7 @@ class Pf_xtn_titleparts extends Pf_func_base {
 		int end_pos = end_idx > dlms_ary_len ? dlms_ary[dlms_ary_len] : dlms_ary[end_idx];
 		if (end_pos < bgn_pos) return ByteAry_.Empty;
 		return ByteAry_.Mid(src, bgn_pos, end_pos);	
-	}	static int[] dlms_ary = new IntAryBldr(255).Set(0, -1).XtoIntAry();	// set pos0 to -1; makes +1 logic easier
+	}	static int[] dlms_ary = new Int_ary_bldr(255).Set(0, -1).Xto_int_ary();	// set pos0 to -1; makes +1 logic easier
 	@Override public int Id() {return Xol_kwd_grp_.Id_xtn_titleparts;}
 	@Override public Pf_func New(int id, byte[] name) {return new Pf_xtn_titleparts().Name_(name);}
 }

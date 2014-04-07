@@ -22,7 +22,7 @@ public class Scrib_xtn_mgr extends Xox_mgr_base {
 	@Override public byte[] Xtn_key() {return XTN_KEY;} public static final byte[] XTN_KEY = ByteAry_.new_ascii_("scribunto");
 	@Override public void Xtn_ctor_by_app(Xoa_app app) {this.app = app;} private Xoa_app app;
 	@Override public Xox_mgr Clone_new() {return new Scrib_xtn_mgr();}
-	public byte Engine_type() {return engine_type;} private byte engine_type;
+	public byte Engine_type() {return engine_type;} private byte engine_type = Scrib_engine_type.Type_lua;
 	public void Engine_type_(byte cmd) {
 		engine_type = cmd;
 		Scrib_core.Core_invalidate();

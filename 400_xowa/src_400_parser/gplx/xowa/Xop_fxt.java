@@ -108,7 +108,7 @@ public class Xop_fxt {
 	public Xop_tkn_chkr_base tkn_para_end_pre_bgn_para_(int pos)	{return tkn_para_(pos, Xop_para_tkn.Tid_pre , Xop_para_tkn.Tid_para);}
 	public Xop_tkn_chkr_base tkn_para_end_para_bgn_pre_(int pos)	{return tkn_para_(pos, Xop_para_tkn.Tid_para, Xop_para_tkn.Tid_pre);}
 	public Xop_tkn_chkr_base tkn_para_end_pre_(int pos)				{return tkn_para_(pos, Xop_para_tkn.Tid_pre , Xop_para_tkn.Tid_none);}
-	public Xop_tkn_chkr_base tkn_para_(int pos, byte tid, byte bgn) {return new Xop_para_tkn_chkr().Para_tid_(tid).Para_bgn_(bgn).Src_rng_(pos, pos);}
+	public Xop_tkn_chkr_base tkn_para_(int pos, byte end, byte bgn) {return new Xop_para_tkn_chkr().Para_end_(end).Para_bgn_(bgn).Src_rng_(pos, pos);}
 	public Xop_tkn_chkr_base tkn_nl_char_(int bgn, int end)			{return tkn_nl_(bgn, end, Xop_nl_tkn.Tid_char);}
 	public Xop_tkn_chkr_base tkn_nl_char_len1_(int bgn)				{return tkn_nl_(bgn, bgn + 1, Xop_nl_tkn.Tid_char);}
 	public Xop_tkn_chkr_base tkn_nl_char_len0_(int pos)				{return tkn_nl_(pos, pos, Xop_nl_tkn.Tid_char);}
@@ -248,6 +248,11 @@ public class Xop_fxt {
 	public void Test_parse_page_all_str(String raw, String expd) {
 		String actl = Exec_parse_page_all_as_str(raw);
 		Tfds.Eq_ary_str(String_.SplitLines_nl(expd), String_.SplitLines_nl(actl), raw);
+	}
+	public void Test_parse_page_all_str_and_chk(String raw, String expd, Gfo_msg_itm... ary) {
+		this.Init_log_(ary);
+		Test_parse_page_all_str(raw, expd);
+		this.tst_Log_check();
 	}
 	public Xop_root_tkn Exec_parse_page_all_as_root(byte[] raw_bry) {
 		Xop_root_tkn root = tkn_mkr.Root(raw_bry);

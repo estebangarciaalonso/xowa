@@ -149,13 +149,15 @@ public class Xop_lnki_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 }
 class Xop_lnki_wkr_ {
 	private static final IntRef rel2abs_tid = IntRef.zero_();
+	public static final int Invalidate_lnki_len = 128;
 	public static int Invalidate_lnki(Xop_ctx ctx, byte[] src, Xop_root_tkn root, Xop_lnki_tkn lnki, int cur_pos) {
 		lnki.Tkn_tid_to_txt();						// convert initial "[[" to text; note that this lnki has no pipes as pipe_lxr does similar check; EX: [[<invalid>]]; DATE:2014-03-26
 		root.Subs_del_after(lnki.Tkn_sub_idx() + 1);// remove all tkns after [[ from root
 		int reparse_bgn = lnki.Src_end();			// NOTE: reparse all text from "[["; needed to handle [[|<i>a</i>]] where "<i>a</i>" cannot be returned as text; DATE:2014-03-04
 		int reparse_len = cur_pos - reparse_bgn;
+		ctx.App().Msg_log().Add_itm_none(Xop_lnki_log.Invalid_ttl, src, reparse_bgn, reparse_bgn + 128);
 		if (reparse_len > 512)
-			ctx.App().Usr_dlg().Warn_many("", "", "lnki.reparsing large block; page=~{0} len=~{1} src=~{2}", Xop_ctx_.Page_as_str(ctx), reparse_len, Xop_ctx_.Src_limit_and_escape_nl(src, reparse_bgn, 128));
+			ctx.App().Usr_dlg().Warn_many("", "", "lnki.reparsing large block; page=~{0} len=~{1} src=~{2}", Xop_ctx_.Page_as_str(ctx), reparse_len, Xop_ctx_.Src_limit_and_escape_nl(src, reparse_bgn, Invalidate_lnki_len));
 		return reparse_bgn;
 	}
 	public static boolean Parse_ttl(Xop_ctx ctx, byte[] src, Xop_lnki_tkn lnki, int pipe_pos) {

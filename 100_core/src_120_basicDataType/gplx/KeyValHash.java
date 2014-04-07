@@ -35,6 +35,13 @@ public class KeyValHash {
 		return rv;
 	}
 	public static KeyValHash new_() {return new KeyValHash();} protected KeyValHash() {}
+	public static KeyValHash new_by_ary(KeyVal[] ary) {
+		int ary_len = ary.length;
+		KeyValHash rv = new KeyValHash();
+		for (int i = 0; i < ary_len; i++)
+			rv.Add(ary[i]);
+		return rv;
+	}
 	public KeyVal FetchOrNull(String key) {return KeyVal_.as_(hash.Fetch(key));}
 	OrderedHash hash = OrderedHash_.new_();
 	public static KeyValHash strAry_(String[] ary) {// needed for consoleLine

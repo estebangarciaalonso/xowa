@@ -46,6 +46,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		boolean rv = false;
 		Xot_defn defn = tmpl_defn; Xow_wiki wiki = ctx.Wiki(); Xol_lang lang = wiki.Lang();
 		byte[] name_ary = defn.Name(), argx_ary = ByteAry_.Empty; Arg_itm_tkn name_key_tkn = name_tkn.Key_tkn();
+		byte[] name_ary_orig = ByteAry_.Empty;
 		int name_bgn = 0, name_ary_len = 0; 
 		boolean subst_found = false;
 		if (defn == Xot_defn_.Null) {								// tmpl_name is not exact match; may be dynamic, subst, transclusion, etc..
@@ -57,6 +58,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 			}
 			else													// tmpl is static; note that dat_ary is still valid but rest of name may not be; EX: {{subst:name{{{1}}}}}
 				name_ary = ByteAry_.Mid(src, name_key_tkn.Dat_bgn(), name_key_tkn.Dat_end());
+			name_ary_orig = name_ary;	// cache name_ary_orig
 			name_ary_len = name_ary.length;
 			name_bgn = Byte_ary_finder.Find_fwd_while_not_ws(name_ary, 0, name_ary_len);
 			if (	name_ary_len == 0			// name is blank; can occur with failed inner tmpl; EX: {{ {{does not exist}} }}
@@ -145,6 +147,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 					name_ary = ByteAry_.Mid(name_ary, name_bgn + ns_template_prefix_len, name_ary_len);
 					name_ary_len = name_ary.length;
 					name_bgn = 0;
+					template_prefix_found = true;
 				}
 			}
 			if (colon_pos != -1) {	// func; separate name_ary into name_ary and arg_x
@@ -157,7 +160,12 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 					if (name_ary_len != 0 ) {	// name_ary_len != 0 for direct template inclusions; EX.WP:Human evolution and {{:Human evolution/Species chart}}; && ctx.Tmpl_whitelist().Has(name_ary)
 						Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.Add(wiki.Ns_mgr().Ns_template().Name_db_w_colon(), name_ary));
 						if (ttl == null) { // ttl is not valid; just output orig; REF.MW:Parser.php|braceSubstitution|if ( !$found ) $text = $frame->virtualBracketedImplode( '{{', '|', '}}', $titleWithSpaces, $args );
-							bfr.Add(Xop_curly_bgn_lxr.Hook).Add(name_ary).Add(Xop_curly_end_lxr.Hook);
+							byte[] missing_ttl 
+								= subst_found || template_prefix_found // if "subst:" or "Template:" found, use orig name; DATE:2014-03-31
+								? name_ary_orig 
+								: name_ary
+								;
+							bfr.Add(Xop_curly_bgn_lxr.Hook).Add(missing_ttl).Add(Xop_curly_end_lxr.Hook);
 							return false;
 						}
 						else {	// some templates produce null ttls; EX: "Citation needed{{subst"

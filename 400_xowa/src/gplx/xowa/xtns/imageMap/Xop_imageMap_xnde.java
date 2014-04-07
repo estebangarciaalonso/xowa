@@ -28,7 +28,7 @@ public class Xop_imageMap_xnde implements Xox_xnde {
 		int nl_0_pos = Byte_ary_finder.Find_fwd_while_not_ws(src, content_bgn, content_end);
 		int cur_pos = nl_0_pos, nl_1_pos = -1;//, ws_pos_bgn = -1;
 		int src_len = src.length;
-		Xop_ctx imageMap_ctx = Xop_ctx.new_sub_(wiki);
+		Xop_ctx imageMap_ctx = Xop_ctx.new_sub_(wiki).Tid_is_image_map_(true);
 		imageMap_ctx.Para().Enabled_n_();
 		Xop_tkn_mkr tkn_mkr = ctx.Tkn_mkr();
 		while (true) {

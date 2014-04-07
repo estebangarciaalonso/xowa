@@ -89,7 +89,7 @@ abstract class Gallery_mgr_base {
 	private static void Write_ul_tag_bgn(ByteAryBfr bfr, byte[] tag_name, byte[] cls, byte[] style, ListAdp bry_list) {
 		bfr.Add_byte(Byte_ascii.Lt).Add(tag_name);			// <tag_name
 		Html_wtr.Write_atr(bfr, Html_atrs.Cls_bry, cls);
-		Html_wtr.Write_atr(bfr, Html_atrs.Cls_bry, style);
+		Html_wtr.Write_atr(bfr, Html_atrs.Style_bry, style);
 		if (bry_list != null) {
 			int bry_list_len = bry_list.Count();
 			for (int i = 0; i < bry_list_len; i += 2) {
@@ -109,7 +109,7 @@ abstract class Gallery_mgr_base {
 			int max_width = itms_per_row * (itm_default_w + this.Get_all_padding());
 			gb_style = Fmt_w_trailer(tmp_bfr, fmtr_gb_style_max_width, gb_style, max_width);
 		}
-		byte[] gb_cls = Fmt_w_trailer(tmp_bfr, fmtr_gb_cls, xnde.Atr_style(), this.Tid_bry());
+		byte[] gb_cls = Fmt_w_trailer(tmp_bfr, fmtr_gb_cls, xnde.Atr_cls(), this.Tid_bry());
 		// page.Html_data().Modules().Add(this.Get_modules()); xtn_mgr
 
 		Write_ul_tag_bgn(bfr, Html_consts.Ul_tag_bry, gb_cls, gb_style, xnde.Atrs_other());
@@ -144,7 +144,7 @@ abstract class Gallery_mgr_base {
 				;
 			Xoa_ttl href_ttl = itm.Link_bgn() == ByteAry_.NotFound
 				? ttl
-				: Xoa_ttl.parse_(wiki, ByteAry_.Mid(src, itm.Alt_bgn(), itm.Alt_end()))
+				: Xoa_ttl.parse_(wiki, ByteAry_.Mid(src, itm.Link_bgn(), itm.Link_end()))
 				;
 			if (href_ttl == null) href_ttl = ttl;	// occurs when link is invalid; EX: A.png|link=<invalid>
 			this.Adjust_image_parameters(xfer_itm, thm_w, thm_h);
@@ -165,9 +165,10 @@ abstract class Gallery_mgr_base {
 			int gb_width = this.Get_gb_width(thm_w.Val(), thm_h.Val());
 			fmtr_ib_html.Bld_bfr_many(bfr, gb_width);
 			bfr.Add(itm_html);
-			byte[] gb_text = tmp_bfr.Add(show_filenames_link).Add(caption).XtoAryAndClear();
+			byte[] gb_text = caption;
 			Xop_parser_.Parse_to_html(tmp_bfr, wiki, true, gb_text);
 			gb_text = tmp_bfr.XtoAryAndClear();
+			gb_text = tmp_bfr.Add(show_filenames_link).Add(gb_text).XtoAryAndClear();
 			Wrap_gallery_text(bfr, gb_text, thm_w.Val(), thm_h.Val());
 			bfr.Add(bry_ib_html_end);
 		}

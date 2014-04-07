@@ -155,8 +155,8 @@ public class Tfds {		// URL:doc/gplx.tfds/Tfds.txt
 		nowTime = rv.Add_minute(1);
 		return rv;
 	}
-	static final DateAdp time0 = DateAdp_.parse_gplx("2001-01-01 00:00:00.000");
-	static DateAdp nowTime; // NOTE: cannot set to time0 due to static initialization;
+	private static final DateAdp time0 = DateAdp_.parse_gplx("2001-01-01 00:00:00.000");
+	private static DateAdp nowTime; // NOTE: cannot set to time0 due to static initialization;
 	public static void WriteText(String text) {ConsoleAdp._.WriteText(text);}
 	public static void Write_bry(byte[] ary) {Write(String_.new_utf8_(ary));}
 	public static void Write() {Write("tmp");}

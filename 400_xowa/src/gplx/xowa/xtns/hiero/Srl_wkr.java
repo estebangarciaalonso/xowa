@@ -16,122 +16,127 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.hiero; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-/*
-.srl.load_by_str();
-.srl.init('String', 'escaped', 'number')
-Srl_fld_parser custom = custom_ary[fld_idx];
-if (custom != null) {
-	pos = custom.Parse(itm, src, pos, len);
-}
-else {
-	standard.Parse(itm);
-	itm.Fld();
-}
-if (state.Row_end)
-	mgr.Create(i);
-else if (state.End())
-	break;
-
-void Parse(itm, src, pos, len) {
-}
-*/
-interface Srl_itm {
-	void Write_bry(Srl_tbl_parser ctx, int fld_idx, byte[] src, int bgn, int end);
-}
-class Srl_itm_basic {
-	
-}
-//	class Hiero_phenome_srl {
-//		private byte[] key;
-//		private byte[] val;
-//		public void Init() {
-//			// this.Set_flds(bry, bry);
-//		}
-//		public void Write_bry(Srl_tbl_parser ctx, int fld_idx, byte[] src, int bgn, int end, byte[] fld_bry) {
-//			this.key = null;
-//			this.val = null;
-//		}
-//		public void Add() {
-////			Hiero_phenome_itm itm = new Hiero_phenome_itm(key, val);
-////			mgr.Add(key, itm);
-//		}
-//	}
 class Srl_tbl_parser {
+	private Srl_mgr_base mgr;
+	private Srl_fld_parser[] fld_parsers = new Srl_fld_parser[2];
 	public int Fld_bgn() {return fld_bgn;} private int fld_bgn = 0;
 	public int Fld_idx() {return fld_idx;} private int fld_idx = 0;
+	public int Row_bgn() {return row_bgn;} private int row_bgn = 0;
 	public int Row_idx() {return row_idx;} private int row_idx = 0;
-	public void Init(Srl_fld_parser... fld_parsers) {
+	public boolean Skip_blank_lines() {return skip_blank_lines;} public Srl_tbl_parser Skip_blank_lines_(boolean v) {skip_blank_lines = v; return this;} private boolean skip_blank_lines = true;
+	public byte Fld_dlm() {return fld_dlm;} public Srl_tbl_parser Fld_dlm_(byte v) {fld_dlm = v; return this;} private byte fld_dlm = Byte_ascii.Pipe;
+	public byte Row_dlm() {return row_dlm;} public Srl_tbl_parser Row_dlm_(byte v) {row_dlm = v; return this;} private byte row_dlm = Byte_ascii.NewLine;
+	public void Init(Srl_mgr_base mgr, Srl_fld_parser... fld_parsers) {
+		this.mgr = mgr;
+		this.fld_parsers = fld_parsers;
+		int fld_parsers_len = fld_parsers.length;
+		for (int i = 0; i < fld_parsers_len; i++)
+			fld_parsers[i].Init(fld_dlm, row_dlm);
 	}
 	public void Clear() {
-		fld_bgn = fld_idx = row_idx = 0;
+		fld_bgn = fld_idx = row_bgn = row_idx = 0;
 	}
 	public void Update_by_fld(int pos) {
+		fld_bgn = pos;
 		++fld_idx;
 	}
 	public void Update_by_row(int pos) {
+		row_bgn = fld_bgn = pos;
 		++row_idx;
 		fld_idx = 0;
 	}
-	private Srl_fld_parser[] parser_ary = new Srl_fld_parser[2];
-	public void Parse(Srl_itm itm, byte[] src) {
+	public void Parse(byte[] src) {
 		int src_len = src.length;			
 		int pos = 0;
-		while (true) {
-			Srl_fld_parser parser = parser_ary[fld_idx];
-			pos = parser.Parse(itm, this, src, pos, src_len, fld_idx, fld_bgn);
+		while (pos < src_len) {
+			if (fld_idx == 0 && skip_blank_lines) {	// row committed; skip blank lines]?
+				while (pos < src_len) {
+					if (src[pos] == row_dlm) {
+						++pos;
+						row_bgn = fld_bgn = pos;
+					}
+					else
+						break;
+				}
+			}
+			Srl_fld_parser fld_parser = fld_parsers[fld_idx];
+			pos = fld_parser.Parse(this, mgr, src, pos, src_len, fld_idx, fld_bgn);
 		}
 	}
 }
 interface Srl_fld_parser {
-	int Parse(Srl_itm itm, Srl_tbl_parser ctx, byte[] src, int pos, int src_len, int fld_idx, int fld_bgn);
+	void Init(byte fld_dlm, byte row_dlm);
+	int Parse(Srl_tbl_parser tbl_parser, Srl_mgr_base mgr, byte[] src, int pos, int src_len, int fld_idx, int fld_bgn);
 }
-class Srl_fld_parser_bry {
+class Srl_fld_parser_bry implements Srl_fld_parser {
 	private byte fld_dlm = Byte_ascii.Pipe, row_dlm = Byte_ascii.NewLine;
-	public Srl_fld_parser_bry(byte fld_dlm, byte row_dlm) {
-		this.fld_dlm = fld_dlm;
-		this.row_dlm = row_dlm;
+	public void Init(byte fld_dlm, byte row_dlm) {
+		this.fld_dlm = fld_dlm; this.row_dlm = row_dlm;
 	}
-	public int Parse(Srl_itm itm, Srl_tbl_parser ctx, byte[] src, int pos, int src_len, int fld_idx, int fld_bgn) {
+	public int Parse(Srl_tbl_parser ctx, Srl_mgr_base mgr, byte[] src, int pos, int src_len, int fld_idx, int fld_bgn) {
 		while (true) {
 			boolean pos_is_last = pos == src_len;				
 			byte b = pos_is_last ? row_dlm : src[pos];
 			if		(b == fld_dlm) {
-				itm.Write_bry(ctx, fld_idx, src, fld_bgn, pos);
-				ctx.Update_by_fld(pos);
-				return pos + 1;	// fld_dlm is always 1 byte
+				mgr.Write_bry(ctx, fld_idx, src, fld_bgn, pos);
+				int rv = pos + 1; // fld_dlm is always 1 byte
+				ctx.Update_by_fld(rv);
+				return rv;
 			}
 			else if (b == row_dlm) {
-				itm.Write_bry(ctx, fld_idx, src, fld_bgn, pos);
-				ctx.Update_by_row(pos);
-				return pos + 1; // row_dlm is always 1 byte
+				mgr.Write_bry(ctx, fld_idx, src, fld_bgn, pos);
+				mgr.Commit_itm();
+				int rv = pos + 1; // row_dlm is always 1 byte
+				ctx.Update_by_row(rv);
+				return rv; 
 			}
 			else
 				++pos;
 		}
 	}
+        public static final Srl_fld_parser_bry _ = new Srl_fld_parser_bry(); Srl_fld_parser_bry() {}
 }
-class Srl_parser {
-	public void Parse() {
-//			byte[] src = ByteAry_.new_utf8_(src_str);
-//			int src_len = src.length;			
-//			while (true) {
-// break;				
-//			int row_bgn = 0, fld_bgn = 0, fld_idx = 0;
-//			boolean fld_bfr_dirty = false;
-//			int src_pos = 0;
-//			}
+
+abstract class Srl_itm {
+	public int Fld_bgn() {return fld_bgn;} public Srl_itm Fld_bgn_(int v) {fld_bgn = v; return this;} private int fld_bgn;
+	public int Fld_end() {return fld_end;} public Srl_itm Fld_end_(int v) {fld_end = v; return this;} private int fld_end;
+	public byte[] Fld_bry() {return fld_bry;} public Srl_itm Fld_bry_(byte[] v) {fld_bry = v; return this;} private byte[] fld_bry;
+	public void Clear() {
+		fld_bgn = fld_end = -1;
+		fld_bry = null;
+	}
+}	
+abstract class Srl_mgr_base {
+	@gplx.Virtual public void Write_bry(Srl_tbl_parser ctx, int fld_idx, byte[] src, int bgn, int end) {
+		throw Err_.not_implemented_();
+	}
+	@gplx.Virtual public void Write_int(Srl_tbl_parser ctx, int fld_idx, byte[] src, int bgn, int end, int val_int) {
+		throw Err_.not_implemented_();
+	}
+	@gplx.Virtual public void Commit_itm() {}
+}
+class Hiero_phenome_srl extends Srl_mgr_base {
+	private Hash_adp_bry hash;
+	private byte[] key;
+	private byte[] val;
+	public Hiero_phenome_srl(Hash_adp_bry hash) {
+		this.hash = hash;
+	}
+	public void Init() {
+		key = val = null;
+	}
+	@Override public void Write_bry(Srl_tbl_parser ctx, int fld_idx, byte[] src, int bgn, int end) {
+		switch (fld_idx) {
+			case 0: key = ByteAry_.Mid(src, bgn, end); break;
+			case 1: val = ByteAry_.Mid(src, bgn, end); break;
+			default: throw Err_.unhandled(fld_idx);
+		}
+	}
+	public void Add() {
+		Hiero_phenome_itm itm = new Hiero_phenome_itm(key, val);
+		hash.Add(key, itm);
 	}
 }
-//	class Srl_itm {
-//		// 
-//		public int Fld_bgn() {return fld_bgn;} public Srl_itm Fld_bgn_(int v) {fld_bgn = v; return this;} private int fld_bgn;
-//		public int Fld_end() {return fld_end;} public Srl_itm Fld_end_(int v) {fld_end = v; return this;} private int fld_end;
-//		public byte[] Fld_bry() {return fld_bry;} public Srl_itm Fld_bry_(byte[] v) {fld_bry = v; return this;} private byte[] fld_bry;
-//		public void Clear() {
-//			fld_bgn = fld_end = -1;
-//			fld_bry = null;
-//		}
-//	}
 class Srl_wkr implements GfoInvkAble {
 	private Srl_mgr mgr;
 	private byte[][] temp_bry;
@@ -200,3 +205,22 @@ class Srl_wkr implements GfoInvkAble {
 		return this;
 	}	private static final String Invk_load_by_str = "load_by_str";
 }
+/*
+.srl.load_by_str();
+.srl.init('String', 'escaped', 'number')
+Srl_fld_parser custom = custom_ary[fld_idx];
+if (custom != null) {
+	pos = custom.Parse(itm, src, pos, len);
+}
+else {
+	standard.Parse(itm);
+	itm.Fld();
+}
+if (state.Row_end)
+	mgr.Create(i);
+else if (state.End())
+	break;
+
+void Parse(itm, src, pos, len) {
+}
+*/

@@ -163,7 +163,7 @@ public class Scrib_core {
 	private Scrib_lua_mod Mods_get_or_new(byte[] mod_name, byte[] mod_text) {
 		Scrib_lua_mod rv = (Scrib_lua_mod)mods.Fetch(mod_name);
 		if (rv == null) {
-			rv = new Scrib_lua_mod(this, String_.new_utf8_(mod_name));
+			rv = new Scrib_lua_mod(this, "Module:" + String_.new_utf8_(mod_name));
 			rv.LoadString(String_.new_utf8_(mod_text));
 			mods.Add(mod_name, rv);
 		}

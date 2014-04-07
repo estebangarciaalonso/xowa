@@ -31,6 +31,10 @@ public class Xop_xatr_whitelist_mgr_tst {
 		fxt.Whitelist(Xop_xnde_tag_.Tid_data	, "value"			, true);
 		fxt.Whitelist(Xop_xnde_tag_.Tid_data	, "valuex"			, false);
 	}
+	@Test  public void Role() {
+		fxt.Whitelist(Xop_xnde_tag_.Tid_div		, "role"			, "presentation", true);
+		fxt.Whitelist(Xop_xnde_tag_.Tid_div		, "role"			, "other", false);
+	}
 	@Test  public void Scrub() {
 		fxt.Scrub_style_fail("expression");
 		fxt.Scrub_style_fail("filter:a");
@@ -50,6 +54,12 @@ class Xop_xatr_whitelist_fxt {
 		atr_itm.Key_rng_(0, key_bry.length);
 		Tfds.Eq(expd, whitelist_mgr.Chk(tag_id, key_bry, atr_itm), key_str);
 	}	private Xop_xatr_itm atr_itm = new Xop_xatr_itm(0, 0);
+	public void Whitelist(byte tag_id, String key_str, String val_str, boolean expd) {
+		byte[] key_bry = ByteAry_.new_ascii_(key_str);
+		atr_itm.Key_rng_(0, key_bry.length);
+		atr_itm.Val_bry_(ByteAry_.new_ascii_(val_str));
+		Tfds.Eq(expd, whitelist_mgr.Chk(tag_id, key_bry, atr_itm), key_str);
+	}
 	public void Scrub_style_pass(String style_val_str) {Scrub_style(style_val_str, style_val_str);}
 	public void Scrub_style_fail(String val_str) {Scrub_style(val_str, "");}
 	public void Scrub_style(String val_str, String expd) {

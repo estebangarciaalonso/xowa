@@ -64,7 +64,7 @@ public class Scrib_core_tst {
 		fxt	.Init_lib_fil("package.lua", "package_text")
 			.Expd_server_rcvd_add("000000470000008D{[\"op\"]=\"call\",[\"id\"]=2,[\"nargs\"]=1,[\"args\"]={[1]={[\"key_0\"]=\"val_0\"}}}")
 			.Init_server_prep_add("a:4:{s:2:\"id\";s:24:\"mw_interface-loadPackage\";s:2:\"op\";s:4:\"call\";s:5:\"nargs\";i:1;s:4:\"args\";a:1:{i:1;s:7:\"package\";}}")
-			.Expd_server_rcvd_add("0000004500000089{[\"op\"]=\"loadString\",[\"text\"]=\"package_text\",[\"chunkName\"]=\"package\"}")
+			.Expd_server_rcvd_add("0000004A00000093{[\"op\"]=\"loadString\",[\"text\"]=\"package_text\",[\"chunkName\"]=\"@package.lua\"}")
 			.Init_server_prep_add("a:3:{s:2:\"op\";s:6:\"return\";s:7:\"nvalues\";i:1;s:6:\"values\";a:1:{i:1;i:14;}}")
 			.Expd_server_rcvd_add("0000003B00000075{[\"op\"]=\"return\",[\"nvalues\"]=1,[\"values\"]={[1]=chunks[14]}}")				                       
 			.Init_server_prep_add("a:3:{s:2:\"op\";s:6:\"return\";s:7:\"nvalues\";i:0;s:6:\"values\";a:0:{}}")
@@ -103,7 +103,7 @@ public class Scrib_core_tst {
 			.Init_server_prep_add("a:4:{s:2:\"id\";s:32:\"mw_interface-getExpandedArgument\";s:2:\"op\";s:4:\"call\";s:5:\"nargs\";i:2;s:4:\"args\";a:2:{i:1;s:7:\"current\";i:2;s:1:\"2\";}}")
 			.Expd_server_rcvd_add("000000380000006F{[\"op\"]=\"return\",[\"nvalues\"]=1,[\"values\"]={[1]=\"arg_1\"}}")
 			.Init_server_prep_add("a:3:{s:2:\"op\";s:6:\"return\";s:7:\"nvalues\";i:1;s:6:\"values\";a:1:{i:1;s:11:\"arg_0,arg_1\";}}")
-			.Test_Invoke("Module:Mod_0", "Mod_0_code", "Prc_0", Scrib_kv_utl_.base1_many_("arg_0", "arg_1"))
+			.Test_Invoke("Mod_0", "Mod_0_code", "Prc_0", Scrib_kv_utl_.base1_many_("arg_0", "arg_1"))
 			;
 	}
 	String Mod_basic() {

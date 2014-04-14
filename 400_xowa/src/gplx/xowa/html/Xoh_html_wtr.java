@@ -20,9 +20,9 @@ import gplx.xowa.html.*; import gplx.xowa.net.*;
 import gplx.xowa.wikis.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.dynamicPageList.*; import gplx.xowa.xtns.math.*;
 import gplx.xowa.langs.vnts.*; import gplx.xowa.xtns.refs.*;
 public class Xoh_html_wtr {
-	private Xow_wiki wiki; private Xoa_app app; private Xoa_page page;
+	private Xow_wiki wiki; private Xoa_app app; private Xoa_page page; private Xop_xatr_whitelist_mgr whitelist_mgr;
 	public Xoh_html_wtr(Xow_wiki wiki) {
-		this.wiki = wiki; app = wiki.App();
+		this.wiki = wiki; this.app = wiki.App(); this.whitelist_mgr = app.Html_mgr().Whitelist_mgr();
 		lnki_wtr = new Xoh_lnki_wtr(this, wiki, cfg);
 	}
 	public Xoh_html_wtr_cfg Cfg() {return cfg;} private Xoh_html_wtr_cfg cfg = new Xoh_html_wtr_cfg();
@@ -509,8 +509,7 @@ public class Xoh_html_wtr {
 		bfr.Add(Tag__end_bgn).Add(name).Add_byte(Tag__end);						// NOTE: inline is never written as <b/>; will be written as <b></b>; SEE: NOTE_1
 		if (ws_bfr.Len() > 0) bfr.Add_bfr_and_clear(ws_bfr);				// dump any leftover ws to bfr; handles "<b>c </b>" -> "<b>c</b> "
 		ws_bfr.Mkr_rls();
-	}
-	private static Xop_xatr_whitelist_mgr whitelist_mgr = new Xop_xatr_whitelist_mgr().Ini();
+	}		
 	public void Xnde_atrs(int tag_id, Xoh_html_wtr_ctx hctx, byte[] src, int bgn, int end, Xop_xatr_itm[] ary, ByteAryBfr bfr) {
 		if (ary == null) return;	// NOTE: some nodes will have null xatrs b/c of whitelist; EX: <pre style="overflow:auto">a</pre>; style is not on whitelist so not xatr generated, but xatr_bgn will != -1
 		int ary_len = ary.length;

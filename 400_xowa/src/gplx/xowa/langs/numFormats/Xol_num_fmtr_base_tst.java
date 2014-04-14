@@ -15,10 +15,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.intl; import gplx.*;
+package gplx.xowa.langs.numFormats; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
 import org.junit.*;
-public class Gfo_num_fmt_mgr_tst {
-	Gfo_num_fmt_mgr mgr = new Gfo_num_fmt_mgr();
+public class Xol_num_fmtr_base_tst {
+	Xol_num_fmtr_base mgr = new Xol_num_fmtr_base();
 	@Before public void init() {mgr.Clear();}
 	@Test  public void Outliers() {
 		ini_(".", dat_(",", 3));
@@ -92,11 +92,11 @@ public class Gfo_num_fmt_mgr_tst {
 		tst_Fmt("1234·5678"							, "1·234·5·678");// NOTE: middle-dot is repeated. see dewiki and {{formatnum:1234,5678}}
 		tst_Raw("1234·5678"							, "1234.5678");
 	}
-	Gfo_num_fmt_grp dat_(String dlm, int digits)				{return new Gfo_num_fmt_grp(ByteAry_.new_utf8_(dlm), digits, true);}
-	Gfo_num_fmt_grp dat_(String dlm, int digits, boolean repeat)	{return new Gfo_num_fmt_grp(ByteAry_.new_utf8_(dlm), digits, repeat);}
+	Xol_num_grp dat_(String dlm, int digits)				{return new Xol_num_grp(ByteAry_.new_utf8_(dlm), digits, true);}
+	Xol_num_grp dat_(String dlm, int digits, boolean repeat)	{return new Xol_num_grp(ByteAry_.new_utf8_(dlm), digits, repeat);}
 	private void tst_Fmt(String val, String expd) {Tfds.Eq(expd, String_.new_utf8_(mgr.Fmt(ByteAry_.new_utf8_(val))));}
-	private void tst_Raw(String val, String expd) {Tfds.Eq(expd, String_.new_utf8_(mgr.Raw(Gfo_num_fmt_mgr.Tid_raw, ByteAry_.new_utf8_(val))));}
-	private void ini_(String dec_dlm, Gfo_num_fmt_grp... ary) {
+	private void tst_Raw(String val, String expd) {Tfds.Eq(expd, String_.new_utf8_(mgr.Raw(Xol_num_fmtr_base.Tid_raw, ByteAry_.new_utf8_(val))));}
+	private void ini_(String dec_dlm, Xol_num_grp... ary) {
 		mgr.Dec_dlm_(ByteAry_.new_utf8_(dec_dlm));
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++)

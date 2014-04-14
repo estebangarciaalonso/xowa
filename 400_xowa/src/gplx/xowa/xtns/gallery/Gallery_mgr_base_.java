@@ -21,9 +21,15 @@ class Gallery_mgr_base_ {
 		ByteVal rv = (ByteVal)Hash.Fetch(bry);
 		return rv == null ? Traditional_tid : rv.Val();
 	}
-	public static Gallery_mgr_base Get_by_key(byte[] key) {
-		Object rv = Mgrs.Get_by_bry(key);
-		return rv == null ? Gallery_mgr_traditional._ : (Gallery_mgr_base)rv;
+	public static Gallery_mgr_base New_by_mode(byte mode) {
+		switch (mode) {
+			default:
+			case Traditional_tid:		return new Gallery_mgr_traditional();
+			case Nolines_tid:			return new Gallery_mgr_nolines();
+			case Packed_tid:			return new Gallery_mgr_packed_base();
+			case Packed_hover_tid:		return new Gallery_mgr_packed_hover();
+			case Packed_overlay_tid:	return new Gallery_mgr_packed_overlay();
+		}
 	}
 	public static boolean Mode_is_packed(byte v) {
 		switch (v) {
@@ -53,12 +59,5 @@ class Gallery_mgr_base_ {
 	.Add_bry_byte(Packed_bry			, Packed_tid)
 	.Add_bry_byte(Packed_hover_bry		, Packed_hover_tid)
 	.Add_bry_byte(Packed_overlay_bry	, Packed_overlay_tid)
-	;
-	private static final Hash_adp_bry Mgrs = Hash_adp_bry.ci_()
-	.Add_bry_obj(Traditional_bry		, Gallery_mgr_traditional._)
-	.Add_bry_obj(Nolines_bry			, Gallery_mgr_nolines._)
-	.Add_bry_obj(Packed_bry				, Gallery_mgr_packed_base._Basic)
-	.Add_bry_obj(Packed_hover_bry		, Gallery_mgr_packed_hover._Hover)
-	.Add_bry_obj(Packed_overlay_bry		, Gallery_mgr_packed_overlay._Overlay)
 	;
 }

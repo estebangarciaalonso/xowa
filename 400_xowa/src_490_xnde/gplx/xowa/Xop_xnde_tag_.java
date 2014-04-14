@@ -161,7 +161,7 @@ public class Xop_xnde_tag_ {
 , Tag_kbd = new_(Tid_kbd, "kbd").NoInline_()
 , Tag_samp = new_(Tid_samp, "samp").NoInline_()
 , Tag_blockquote = new_(Tid_blockquote, "blockquote").NoInline_().Nest_().Section_().Block_open_bgn_().Block_close_end_()	// NOTE: should be open_end_, but leaving for now; DATE:2014-03-11
-, Tag_pre = new_(Tid_pre, "pre").NoInline_().Section_().Xtn_().Raw_().Block_open_bgn_().Block_close_end_().Ignore_empty_()
+, Tag_pre = new_(Tid_pre, "pre").NoInline_().Section_().Xtn_().Raw_().Block_open_bgn_().Block_close_end_().Ignore_empty_().Xtn_skips_template_args_()
 , Tag_font = new_(Tid_font, "font").NoInline_().Nest_()
 , Tag_center = new_(Tid_center, "center").NoInline_().Nest_().Block_open_end_().Block_close_end_() // removed .Repeat_ends_(); added Nest_(); EX: w:Burr Truss; DATE:2012-12-12
 , Tag_p = new_(Tid_p, "p").NoInline_().Section_().Block_open_bgn_().Block_close_end_()

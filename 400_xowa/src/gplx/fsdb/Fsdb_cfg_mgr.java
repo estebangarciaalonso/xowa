@@ -33,12 +33,13 @@ public class Fsdb_cfg_mgr {
 	}
 	public void Rls() {cfg_tbl.Rls();}
 	private void Update_next_id()	{cfg_tbl.Update("core", "next_id", Int_.XtoStr(next_id));}
-	public void Update(String grp, String key, String new_val) {
+	public Fsdb_cfg_mgr Update(String grp, String key, String new_val) {
 		String cur_val = cfg_tbl.Select_as_str_or(grp, key, null);
 		if (cur_val == null)
 			cfg_tbl.Insert(grp, key, new_val);
 		else
 			cfg_tbl.Update(grp, key, new_val);
+		return this;
 	}
 	public Fsdb_cfg_grp Grps_get_or_load(String grp_key) {
 		Fsdb_cfg_grp grp = (Fsdb_cfg_grp)grps.Fetch(grp_key);

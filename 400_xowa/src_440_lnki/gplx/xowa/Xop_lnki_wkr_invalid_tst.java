@@ -20,6 +20,9 @@ import org.junit.*;
 import gplx.xowa.langs.casings.*;
 public class Xop_lnki_wkr_invalid_tst {		
 	@Before public void init() {fxt.Reset(); fxt.Init_para_n_();} private Xop_fxt fxt = new Xop_fxt();
+	@Test  public void Ignore_invalid_url_encodings() { // PURPOSE: if url encoding is invalid, still render lnki as <a>; EX: fr.w:Bordetella; 
+		fxt.Test_parse_page_all_str("[[%GC]]", "<a href=\"/wiki/%25GC\">%GC</a>");
+	}
 	@Test  public void Caption_still_parsed() {	// PURPOSE: failed lnki should still parse xml in caption; EX:ar.w:الصومال; DATE:2014-03-04
 		fxt.Test_parse_page_all_str("[[|''a'']]"		, "[[|<i>a</i>]]");
 	}

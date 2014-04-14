@@ -26,16 +26,14 @@ public class Xowa_main {
 		gplx.xowa.Xoa_app_.Run(args);
 //		String s = gplx.String_.Concat_lines_nl_skipLast
 ////		( "function A()"
-////		, "    return '𐑓'"
+////		, "    return string.len('𐇡')"
 ////		, "end" 
 ////		, "print(A())"
 ////		);
-//		("print('𐑓')");
+//		("print(string.len('𐑓'))");
 //		org.luaj.vm2.Globals globals = org.luaj.vm2.lib.jse.JsePlatform.standardGlobals();
 //		org.luaj.vm2.LuaValue chunk = globals.load(s);
 //		chunk.call();
-//		String d = "𐑓";
-//		byte[] b = ByteAry_.new_utf8_(d);
 //		System.out.println(d);
 	}
 }

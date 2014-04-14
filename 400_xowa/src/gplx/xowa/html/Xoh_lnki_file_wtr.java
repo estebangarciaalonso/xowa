@@ -38,7 +38,7 @@ public class Xoh_lnki_file_wtr {
 		cfg_alt_defaults_to_caption = page.Wiki().App().User().Wiki().Html_mgr().Imgs_mgr().Alt_defaults_to_caption().Val();
 	}	private boolean cfg_alt_defaults_to_caption = true;
 	private Xop_ctx ctx;
-	public Xof_xfer_itm Lnki_eval(Xop_ctx ctx, Xoa_page page, Xop_lnki_tkn lnki, BoolRef queue_add_ref) {return Lnki_eval(ctx, page.File_queue(), lnki.Ttl().Page_url(), lnki.Lnki_type(), lnki.Width(), lnki.Height(), lnki.Upright(), lnki.Thumbtime(), lnki.Page(), lnki.Ns_id() == Xow_ns_.Id_media, queue_add_ref);}
+	public Xof_xfer_itm Lnki_eval(Xop_ctx ctx, Xoa_page page, Xop_lnki_tkn lnki, BoolRef queue_add_ref) {return Lnki_eval(ctx, page.File_queue(), lnki.Ttl().Page_url(), lnki.Lnki_type(), lnki.Lnki_w(), lnki.Lnki_h(), lnki.Upright(), lnki.Thumbtime(), lnki.Page(), lnki.Ns_id() == Xow_ns_.Id_media, queue_add_ref);}
 	public Xof_xfer_itm Lnki_eval(Xop_ctx ctx, Xof_xfer_queue queue, byte[] lnki_ttl, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, double lnki_thumbtime, int lnki_page, boolean lnki_is_media_ns, BoolRef queue_add_ref) {
 		this.ctx = ctx;
 		queue_add_ref.Val_n_();
@@ -50,6 +50,7 @@ public class Xoh_lnki_file_wtr {
 			queue_add_ref.Val_y_();
 			return Queue_add_manual(queue, tmp_xfer_itm);
 		}
+		rv.File_found_(found);
 		return rv;
 	}	private Xof_xfer_itm tmp_xfer_itm = new Xof_xfer_itm();
 	private boolean Find_file(Xop_ctx ctx, Xof_xfer_itm xfer_itm) {
@@ -86,15 +87,15 @@ public class Xoh_lnki_file_wtr {
 	}
 	private Xop_link_parser tmp_link_parser = new Xop_link_parser();
 	private Xohp_title_wkr anchor_title_wkr = new Xohp_title_wkr();
-	private void Write_media(ByteAryBfr bfr, Xoh_html_wtr_ctx hctx, byte[] src, Xop_lnki_tkn lnki, Xof_xfer_itm xfer_itm, byte[] lnki_alt_text) {
+	public void Write_media(ByteAryBfr bfr, Xoh_html_wtr_ctx hctx, byte[] src, Xop_lnki_tkn lnki, Xof_xfer_itm xfer_itm, byte[] lnki_alt_text) {
 		try {
 		lnki_title_enabled = html_wtr.Cfg().Lnki_title();
 		int elem_id = xfer_itm.Html_uid();
 		int div_width = xfer_itm.Html_w();
 		if (div_width < 1) div_width = wiki.Html_mgr().Img_thumb_width();
-		int lnki_halign = lnki.HAlign();
-		if (lnki_halign == Xop_lnki_halign.Null) lnki_halign = wiki.Lang().Img_thumb_halign_default();	// if halign is not supplied, then default to align for language
-		byte[] lnki_halign_bry = Xop_lnki_halign.Html_names[lnki_halign];
+		int lnki_halign = lnki.Align_h();
+		if (lnki_halign == Xop_lnki_align_h.Null) lnki_halign = wiki.Lang().Img_thumb_halign_default();	// if halign is not supplied, then default to align for language
+		byte[] lnki_halign_bry = Xop_lnki_align_h.Html_names[lnki_halign];
 		byte[] lnki_href = wiki.App().Href_parser().Build_to_bry(lnki.Ttl(), wiki);
 		byte[] html_orig_src = xfer_itm.Html_orig_src();
 		byte[] html_view_src = xfer_itm.Html_view_src();
@@ -144,7 +145,7 @@ public class Xoh_lnki_file_wtr {
 			cfg.Lnki_thumb_core().Bld_bfr_many(bfr, div_width, lnki_halign_bry, content, elem_id);
 		}
 		else {	// image
-			if (lnki_halign == Xop_lnki_halign.Center) bfr.Add(Bry_div_bgn_center);
+			if (lnki_halign == Xop_lnki_align_h.Center) bfr.Add(Bry_div_bgn_center);
 			ByteAryBfr tmp_bfr = bfr_mkr.Get_k004();
 			byte[] anchor_title = lnki_title_enabled 
 				? Make_anchor_title(tmp_bfr, src, lnki, lnki_ttl, anchor_title_wkr)	// NOTE: Make_anchor_title should only be called if there is no caption, else refs may not show; DATE:2014-03-05
@@ -162,10 +163,10 @@ public class Xoh_lnki_file_wtr {
 					lnki_alt_text = tmp_bfr.XtoAryAndClear();
 				}
 //					if (lnki_img_type == Xop_lnki_type.Id_none) bfr.Add(Bry_div_float_none).Add_byte_nl();
-				switch (lnki.HAlign()) {
-					case Xop_lnki_halign.Left:		bfr.Add(Bry_div_float_left).Add_byte_nl();	break;
-					case Xop_lnki_halign.Right:		bfr.Add(Bry_div_float_right).Add_byte_nl();	break;
-					case Xop_lnki_halign.None:		bfr.Add(Bry_div_float_none).Add_byte_nl();	break;
+				switch (lnki.Align_h()) {
+					case Xop_lnki_align_h.Left:		bfr.Add(Bry_div_float_left).Add_byte_nl();	break;
+					case Xop_lnki_align_h.Right:		bfr.Add(Bry_div_float_right).Add_byte_nl();	break;
+					case Xop_lnki_align_h.None:		bfr.Add(Bry_div_float_none).Add_byte_nl();	break;
 				}
 				Arg_nde_tkn lnki_link_tkn = lnki.Link_tkn();
 				if (lnki_link_tkn == Arg_nde_tkn.Null)						
@@ -178,13 +179,13 @@ public class Xoh_lnki_file_wtr {
 					lnki_ttl = ByteAry_.Coalesce(lnki_ttl, tmp_link_parser.Html_xowa_ttl());
 					cfg.Lnki_full_image().Bld_bfr_many(bfr, elem_id, link_ref, html_view_src, xfer_itm.Html_w(), xfer_itm.Html_h(), lnki_alt_text, lnki_ttl, tmp_link_parser.Html_anchor_cls(), tmp_link_parser.Html_anchor_rel(), anchor_title, Img_cls(lnki));
 				}
-				switch (lnki.HAlign()) {
-					case Xop_lnki_halign.Left:
-					case Xop_lnki_halign.Right:
-					case Xop_lnki_halign.None:	bfr.Add(Bry_div_end); break;
+				switch (lnki.Align_h()) {
+					case Xop_lnki_align_h.Left:
+					case Xop_lnki_align_h.Right:
+					case Xop_lnki_align_h.None:	bfr.Add(Bry_div_end); break;
 				}
 			}
-			if (lnki_halign == Xop_lnki_halign.Center) bfr.Add(Bry_div_end);
+			if (lnki_halign == Xop_lnki_align_h.Center) bfr.Add(Bry_div_end);
 			tmp_bfr.Mkr_rls();
 		}
 		} catch (Exception e) {
@@ -235,7 +236,7 @@ public class Xoh_lnki_file_wtr {
 			cfg.Lnki_thumb_part_info_btn().Bld_bfr_many(tmp_bfr, wiki.Html_mgr().Img_media_info_btn(), lnki_href);
 			info_btn = tmp_bfr.XtoAryAndClear();
 		}
-		int play_btn_width = lnki.Width(); if (play_btn_width < 1) play_btn_width = wiki.Html_mgr().Img_thumb_width();	// if no width set width to default img width
+		int play_btn_width = lnki.Lnki_w(); if (play_btn_width < 1) play_btn_width = wiki.Html_mgr().Img_thumb_width();	// if no width set width to default img width
 		cfg.Lnki_thumb_file_audio().Bld_bfr_many(tmp_bfr, Play_btn(elem_id, play_btn_width, Play_btn_max_width, html_orig_src, lnki.Ttl().Page_txt()), info_btn, Caption_div(src, lnki, html_orig_src, lnki_href), Alt_html(src, lnki));
 		return tmp_bfr.Mkr_rls().XtoAryAndClear();
 	}

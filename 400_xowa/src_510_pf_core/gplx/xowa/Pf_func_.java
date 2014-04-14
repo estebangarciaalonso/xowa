@@ -202,6 +202,8 @@ public class Pf_func_ {
 	,	Xol_kwd_grp_.Id_relatedArticles
 	,	Xol_kwd_grp_.Id_relatedSites
 	,	Xol_kwd_grp_.Id_massMessage_target
+	,	Xol_kwd_grp_.Id_cascadingSources
+	,	Xol_kwd_grp_.Id_pendingChangesLevel
 	};
 	public static Xot_defn Get_prototype(int id) {
 		switch (id) {
@@ -353,7 +355,16 @@ public class Pf_func_ {
 
 			case Xol_kwd_grp_.Id_massMessage_target:			return gplx.xowa.xtns.massMessage.Message_target_func._;
 
+			case Xol_kwd_grp_.Id_cascadingSources:
+			case Xol_kwd_grp_.Id_pendingChangesLevel:
+																return new Pf_func_noop(id);
 			default:											throw Err_mgr._.unhandled_(id);
 		}
 	}
+}
+class Pf_func_noop extends Pf_func_base {
+	public Pf_func_noop(int id) {this.id = id;} private int id;
+	@Override public int Id() {return id;}
+	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {}
+	@Override public Pf_func New(int id, byte[] name) {return new Pf_func_noop(id).Name_(name);}
 }

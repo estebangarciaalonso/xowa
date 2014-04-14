@@ -61,8 +61,8 @@ public class Xol_csv_parser {
 								utf_bytes[utf_idx++] = (byte)utf_int;
 								utf_pos += 6;
 							}
-							int utf_int_decoded = gplx.intl.Utf8_.DecodeChar(utf_bytes, 0);
-							bfr.Add(gplx.intl.Utf8_.EncodeCharAsAry(utf_int_decoded));
+							int utf_int_decoded = gplx.intl.Utf16_.Decode_to_int(utf_bytes, 0);
+							bfr.Add(gplx.intl.Utf16_.Encode_int_to_bry(utf_int_decoded));
 							nxt_pos = i + (utf_len * 6) - 1;	// -1 b/c "for" will ++
 							break;
 						default:

@@ -330,9 +330,9 @@ public class Scrib_lib_mw implements Scrib_lib {
 			return rslt.Init_obj(sub_bfr.Mkr_rls().XtoStrAndClear());
 		}
 		else {
-			String err_msg = "expand_template failed; ttl=" + ttl_str;
-			cur_wiki.App().Usr_dlg().Warn_many("", "", err_msg);
-			return rslt.Init_obj(err_msg);
+//				String err_msg = "expand_template failed; ttl=" + ttl_str;
+//				cur_wiki.App().Usr_dlg().Warn_many("", "", err_msg);
+			return rslt.Init_empty();
 		}
 		// BLOCK.end:Xot_invk_tkn.Transclude
 	}

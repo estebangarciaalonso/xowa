@@ -295,37 +295,6 @@ public class Xop_para_wkr_basic_tst {
 			,	"</p>"
 			));
 	}
-	@Test  public void Pre_xnde_gallery() {	// PURPOSE: <gallery> should invalidate pre; EX: en.w:Mary, Queen of Scots
-		fxt.Wiki().Xtn_mgr().Init_by_wiki(fxt.Wiki());
-		raw = String_.Concat_lines_nl_skipLast
-			(	" <gallery>"
-			,	"File:A.png|b"
-			,	"</gallery>"
-			);
-		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
-			(	" " + Gallery_html_wtr()
-			,	""
-			));
-	}
-	String Gallery_html_wtr() {
-		return String_.Concat_lines_nl_skipLast
-			(	"<ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
-			,	"  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
-			,	"    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
-			,	"      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
-			,	"        <div id=\"xowa_gallery_div3_0\" style=\"margin:15px auto;\">"
-			,	"          <a href=\"/wiki/File:A.png\" class=\"image\">"
-			,	"            <img id=\"xowa_file_img_0\" alt=\"A.png\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"120\" />"
-			,	"          </a>"
-			,	"        </div>"
-			,	"      </div>"
-			,	"      <div class=\"gallerytext\">b"
-			,	"      </div>"
-			,	"    </div>"
-			,	"  </li>"
-			,	"</ul>"
-			);
-	}
 	@Test  public void Pre_lnki_in_td() {	// PURPOSE: ]] in td causes strange parsing; SEE: any {{Commons category}} article
 		raw = String_.Concat_lines_nl_skipLast
 			(	"<table>"

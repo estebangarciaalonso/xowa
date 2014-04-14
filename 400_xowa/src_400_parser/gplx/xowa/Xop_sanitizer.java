@@ -82,7 +82,7 @@ public class Xop_sanitizer {
 									if (fail.Val())
 										bfr.Add_byte(Byte_ascii.Amp);
 									else
-										bfr.Add(gplx.intl.Utf8_.EncodeCharAsAry(ncr_val.Val()));
+										bfr.Add(gplx.intl.Utf16_.Encode_int_to_bry(ncr_val.Val()));
 									pos = pos_new;
 									break;
 							}

@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.intl.*; import gplx.xowa.xtns.refs.*; import gplx.xowa.xtns.gallery.*; import gplx.xowa.bldrs.langs.*;
+import gplx.intl.*; import gplx.xowa.xtns.refs.*; import gplx.xowa.xtns.gallery.*; import gplx.xowa.bldrs.langs.*; import gplx.xowa.langs.numFormats.*;
 public class Xol_lang_ {
 	public static Io_url xo_lang_fil_(Xoa_app app, String lang_key) {return app.User().Fsys_mgr().Root_dir().GenSubFil_nest("lang", Xol_mw_lang_parser.Dir_name_xowa, lang_key + ".gfs");}
 	public static final byte Char_tid_ltr_l = 0, Char_tid_ltr_u = 1, Char_tid_num = 2, Char_tid_ws = 3, Char_tid_sym = 4, Char_tid_misc = 5;
@@ -45,7 +45,7 @@ public class Xol_lang_ {
 	}
 	public static final byte[] Key_en = ByteAry_.new_ascii_("en");
 	public static void Lang_init(Xol_lang lang) {
-		lang.Num_fmt_mgr().Dec_dlm_(ByteAry_.new_ascii_(".")).Grps_add(new Gfo_num_fmt_grp(ByteAry_.new_utf8_(","), 3, true));
+		lang.Num_fmt_mgr().Dec_dlm_(ByteAry_.new_ascii_(".")).Grps_add(new Xol_num_grp(ByteAry_.new_utf8_(","), 3, true));
 		lang.Lnki_trail_mgr().Add_range(Byte_ascii.Ltr_a, Byte_ascii.Ltr_z);// REF.MW:MessagesEn.php|$linkTrail = '/^([a-z]+)(.*)$/sD';
 		lang.Xatrs_ref().Add_str_obj("name", ByteVal.new_(Ref_nde.Xatr_id_name));
 		lang.Xatrs_ref().Add_str_obj("group", ByteVal.new_(Ref_nde.Xatr_id_group));
@@ -235,6 +235,8 @@ kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_mapSources_geoLink                         
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_geoCrumbs_isin                                 , "#isin");
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_relatedArticles                                , "#related");
 kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_relatedSites                                   , "#relatedSites");
-kwd_mgr.New(Bool_.Y, Xol_kwd_grp_.Id_massMessage_target                             , "#target");
+kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_massMessage_target                             , "#target");
+kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_cascadingSources                               , "CASCADINGSOURCES");
+kwd_mgr.New(Bool_.N, Xol_kwd_grp_.Id_pendingChangesLevel                            , "PENDINGCHANGESLEVEL");
 	}
 }

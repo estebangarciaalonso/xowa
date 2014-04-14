@@ -15,12 +15,17 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.intl; import gplx.*;
-public class Gfo_num_fmt_grp {
-	public Gfo_num_fmt_grp(byte[] dlm, int digits, boolean repeat) {this.dlm = dlm; this.digits = digits; this.repeat = repeat;}
-	public byte[] Dlm() {return dlm;} private byte[] dlm;
-	public int Digits() {return digits;} private int digits;
-	public boolean Repeat() {return repeat;} private boolean repeat;
-	public static final Gfo_num_fmt_grp[] Ary_empty = new Gfo_num_fmt_grp[0];
-	public static final Gfo_num_fmt_grp Default = new Gfo_num_fmt_grp(new byte[] {Byte_ascii.Comma}, 3, true);
+package gplx.xowa; import gplx.*;
+public class Xop_lnki_align_h {
+	public static final byte Null = 0, None = 1, Left = 2, Center = 3, Right = 4;
+	public static final byte[][] Html_names = new byte[][]
+	{ ByteAry_.new_ascii_("null")
+	, ByteAry_.new_ascii_("none")
+	, ByteAry_.new_ascii_("left")
+	, ByteAry_.new_ascii_("center")
+	, ByteAry_.new_ascii_("right")
+	};
+}
+class Xop_lnki_align_v {
+	public static final byte None = 0, Top		= 1, Middle		= 2, Bottom		 = 4, Super		= 8, Sub        = 16, TextTop = 32, TextBottom = 64, Baseline = 127;
 }

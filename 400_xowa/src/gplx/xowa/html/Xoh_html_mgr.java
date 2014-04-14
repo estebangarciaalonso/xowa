@@ -21,6 +21,7 @@ public class Xoh_html_mgr implements GfoInvkAble {
 	public Xoh_html_mgr(Xoa_app app) {
 		tidy_mgr = new Tidy_lib_mgr(app);
 	}
+	public Xop_xatr_whitelist_mgr Whitelist_mgr() {return whitelist_mgr;} private Xop_xatr_whitelist_mgr whitelist_mgr = new Xop_xatr_whitelist_mgr().Ini();
 	public Xoh_page_mgr Page_mgr() {return page_mgr;} private Xoh_page_mgr page_mgr = new Xoh_page_mgr();
 	public Tidy_lib_mgr Tidy_mgr() {return tidy_mgr;} private Tidy_lib_mgr tidy_mgr;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {

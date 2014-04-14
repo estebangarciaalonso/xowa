@@ -43,6 +43,8 @@ class Xog_win_wtr_null implements Xog_win_wtr {
 	public void Html_atr_set(String elem_id, String atr_key, String atr_val) {}
 	public void Html_elem_atr_set_append(String elem_id, String atr_key, String atr_val) {}
 	public void Html_elem_delete(String elem_id) {}
+	public void Html_elem_replace_html(String id, String html) {}
+	public void Html_gallery_packed_exec() {}
 	public static final Xog_win_wtr_null _ = new Xog_win_wtr_null(); Xog_win_wtr_null() {}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {return this;}
 }

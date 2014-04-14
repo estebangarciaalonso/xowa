@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto.lib; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*;
-import gplx.xowa.xtns.pfuncs.times.*;
+import gplx.xowa.xtns.pfuncs.times.*; import gplx.xowa.langs.numFormats.*;
 public class Scrib_lib_language implements Scrib_lib {
 	public Scrib_lib_language(Scrib_core core) {this.core = core;} private Scrib_core core;
 	public Scrib_lua_mod Mod() {return mod;} private Scrib_lua_mod mod;
@@ -188,7 +188,7 @@ public class Scrib_lib_language implements Scrib_lib {
 		Xol_lang lang = lang_(args);
 		byte[] num = args.Form_bry_or_null(1);
 		if (num == null) return rslt.Init_null(); // ParseFormattedNumber can sometimes take 1 arg ({'en'}), or null arg ({'en', null}); return null (not ""); DATE:2014-01-07
-		byte[] rv = lang.Num_fmt_mgr().Raw(gplx.intl.Gfo_num_fmt_mgr.Tid_raw, num);
+		byte[] rv = lang.Num_fmt_mgr().Raw(Xol_num_fmtr_base.Tid_raw, num);
 		return rslt.Init_obj(rv);
 	}
 	public boolean formatDuration(Scrib_proc_args args, Scrib_proc_rslt rslt) {throw Err_.not_implemented_();}

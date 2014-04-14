@@ -259,3 +259,25 @@ class Pxd_itm_day_relative extends Pxd_itm_base implements Pxd_itm_prototype {
 	;
         Pxd_itm_day_relative(int adj) {this.adj = adj;} private int adj;
 }
+class Pxd_itm_time_relative extends Pxd_itm_base implements Pxd_itm_prototype {
+	public Pxd_itm_time_relative(int ary_idx) {Ctor(ary_idx);}
+	@Override public byte Tkn_tid() {return Pxd_itm_.TypeId_time_relative;}
+	@Override public int Eval_idx() {return 5;}	
+	public Pxd_itm MakeNew(int ary_idx) {return new Pxd_itm_time_relative(ary_idx);}
+	@Override public void Eval(Pxd_parser state) {
+	}
+	@Override public void Time_ini(DateAdpBldr bldr) {
+		DateAdp date = DateAdp_.Now();
+		bldr.Seg_set(DateAdp_.SegIdx_year		, date.Year());
+		bldr.Seg_set(DateAdp_.SegIdx_month		, date.Month());
+		bldr.Seg_set(DateAdp_.SegIdx_day		, date.Day());
+		bldr.Seg_set(DateAdp_.SegIdx_hour		, date.Hour());
+		bldr.Seg_set(DateAdp_.SegIdx_minute		, date.Minute());
+		bldr.Seg_set(DateAdp_.SegIdx_second		, date.Second());
+		bldr.Seg_set(DateAdp_.SegIdx_frac		, date.Frac());
+	}
+	public static final Pxd_itm_time_relative
+	  Now		= new Pxd_itm_time_relative()
+	;
+	Pxd_itm_time_relative() {}		
+}

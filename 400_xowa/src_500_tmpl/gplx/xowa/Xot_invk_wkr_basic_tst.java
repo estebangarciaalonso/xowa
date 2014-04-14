@@ -219,11 +219,18 @@ public class Xot_invk_wkr_basic_tst {
 		fxt.Init_defn_add("temp_2", "{{{key1}}}");
 		fxt.Test_parse_tmpl_str("{{temp_1}}", "val1");
 	}
-	@Test  public void NotFound() {
+	@Test  public void Missing() {
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("test_template", "{{[[Template:{{{1}}}|{{{1}}}]]}}");
 		fxt.Init_log_(Xop_ttl_log.Invalid_char).Test_parse_tmpl_str("{{test_template|a}}", "{{[[Template:a|a]]}}");
 		fxt.Init_defn_clear();
+	}
+	@Test  public void Missing_foreign() {
+		Xow_ns ns = fxt.Wiki().Ns_mgr().Ns_template();
+		byte[] old_ns = ns.Name_bry();
+		ns.Name_bry_(ByteAry_.new_ascii_("Template_foreign"));
+		fxt.Test_parse_tmpl_str("{{Missing}}", "[[:Template_foreign:Missing]]");
+		ns.Name_bry_(old_ns);
 	}
 	@Test  public void Xnde_xtn_preserved() {	// PURPOSE: tmpl was dropping .Xtn ndes; EX: below was just ab
 		fxt.Init_defn_clear();

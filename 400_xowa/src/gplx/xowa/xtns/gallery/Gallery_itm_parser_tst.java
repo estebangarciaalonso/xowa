@@ -58,6 +58,12 @@ public class Gallery_itm_parser_tst {
 		fxt.Init_kwd_set(Xol_kwd_grp_.Id_img_alt, "alt=$1");
 		fxt.Test_parse("File:A.png|alt=a|b", fxt.Expd("File:A.png", "b", "a"));
 	}
+	@Test   public void Link_null() {	// PURPOSE: null link causes page to fail; EX: ru.w:Гянджа; <gallery>Datei:A.png|link= |</gallery>; DATE:2014-04-11
+		fxt.Test_parse("File:A.png|link = |b", fxt.Expd("File:A.png", "b", null, null));
+	}
+	@Test   public void Caption_empty() {	// PURPOSE: check that empty ws doesn't break caption (based on Link_null); DATE:2014-04-11
+		fxt.Test_parse("File:A.png|  |  | ", fxt.Expd("File:A.png", null, null, null));
+	}
 }
 class Gallery_itm_parser_fxt {
 	private Xoa_app app; private Xow_wiki wiki;
@@ -81,7 +87,7 @@ class Gallery_itm_parser_fxt {
 	public void Test_parse(String raw, String[]... expd) {
 		ListAdp actl = ListAdp_.new_();
 		byte[] src = ByteAry_.new_ascii_(raw);
-		parser.Parse_all(actl, src, 0, src.length, Gallery_xnde.Default, Gallery_xnde.Default);
+		parser.Parse_all(actl, Gallery_mgr_base_.New_by_mode(Gallery_mgr_base_.Traditional_tid), new Gallery_xnde(), src, 0, src.length);
 		Tfds.Eq_ary(Ary_flatten(expd), Ary_flatten(X_to_str_ary(src, actl)));
 	}
 	private String[] Ary_flatten(String[][] src_ary) {

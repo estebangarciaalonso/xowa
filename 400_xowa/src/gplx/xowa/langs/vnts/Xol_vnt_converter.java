@@ -31,7 +31,7 @@ public class Xol_vnt_converter {
 			byte b = src[pos];
 			Object o = trie.Match(b, src, pos, end);
 			if (o == null) {						// no match; skip to next char
-				int char_len = Utf8_.CharLen(b);	// NOTE: must increment by char_len, not +1
+				int char_len = Utf8_.Len_of_char_by_1st_byte(b);	// NOTE: must increment by char_len, not +1
 				if (matched) {
 					if (char_len == 1)
 						bfr.Add_byte(b);

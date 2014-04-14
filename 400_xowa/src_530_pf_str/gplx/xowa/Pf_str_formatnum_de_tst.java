@@ -17,15 +17,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
-import gplx.intl.*;
+import gplx.intl.*; import gplx.xowa.langs.numFormats.*;
 public class Pf_str_formatnum_de_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init() {
 		fxt.Reset();
-		fxt.Wiki().Lang().Num_fmt_mgr().Clear().Dec_dlm_(new byte[] {Byte_ascii.Comma}).Grps_add(new Gfo_num_fmt_grp(new byte[] {Byte_ascii.Dot}, 3, true));
+		fxt.Wiki().Lang().Num_fmt_mgr().Clear().Dec_dlm_(new byte[] {Byte_ascii.Comma}).Grps_add(new Xol_num_grp(new byte[] {Byte_ascii.Dot}, 3, true));
 	}
 	@After public void term() {
-		fxt.Wiki().Lang().Num_fmt_mgr().Clear().Dec_dlm_(new byte[] {Byte_ascii.Dot}).Grps_add(new Gfo_num_fmt_grp(new byte[] {Byte_ascii.Comma}, 3, true));
+		fxt.Wiki().Lang().Num_fmt_mgr().Clear().Dec_dlm_(new byte[] {Byte_ascii.Dot}).Grps_add(new Xol_num_grp(new byte[] {Byte_ascii.Comma}, 3, true));
 	}
 	@Test  public void Fmt__plain()			{fxt.Test_parse_tmpl_str_test("{{formatnum:1234,56}}"					, "{{test}}"	, "1.234.56");}	// NOTE: double "." looks strange, but matches MW; DATE:2013-10-24
 	@Test  public void Fmt__grp_dlm()		{fxt.Test_parse_tmpl_str_test("{{formatnum:1.234,56}}"					, "{{test}}"	, "1,234.56");}

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.langs.*; import gplx.intl.*; import gplx.xowa.xtns.lst.*; import gplx.xowa.wikis.caches.*;
-import gplx.xowa.langs.casings.*; import gplx.xowa.langs.cnvs.*; import gplx.xowa.langs.grammars.*; import gplx.xowa.langs.plurals.*; import gplx.xowa.langs.vnts.*; 
+import gplx.xowa.langs.casings.*; import gplx.xowa.langs.cnvs.*; import gplx.xowa.langs.grammars.*; import gplx.xowa.langs.plurals.*; import gplx.xowa.langs.vnts.*; import gplx.xowa.langs.numFormats.*;
 import gplx.xowa.parsers.lnkis.*;
 public class Xol_lang implements GfoInvkAble {
 	public Xol_lang(Xoa_app app, byte[] key_bry) {
@@ -44,7 +44,7 @@ public class Xol_lang implements GfoInvkAble {
 	public boolean Dir_ltr() {return dir_ltr;} 
 	public void Dir_ltr_(boolean v) {
 		dir_ltr = v;
-		img_thumb_halign_default = dir_ltr ? Xop_lnki_halign.Right : Xop_lnki_halign.Left;
+		img_thumb_halign_default = dir_ltr ? Xop_lnki_align_h.Right : Xop_lnki_align_h.Left;
 	}	private boolean dir_ltr = true;
 	public byte[] Dir_bry() {return dir_ltr ? Dir_bry_ltr : Dir_bry_rtl;}
 	public byte[] X_axis_end() {return dir_ltr ? X_axis_end_right : X_axis_end_left;}
@@ -72,8 +72,8 @@ public class Xol_lang implements GfoInvkAble {
 	public Xop_lnki_arg_parser Lnki_arg_parser() {return lnki_arg_parser;} private Xop_lnki_arg_parser lnki_arg_parser = new Xop_lnki_arg_parser(); 
 	public Xol_func_name_regy Func_regy() {return func_regy;} private Xol_func_name_regy func_regy;
 
-	public Gfo_num_fmt_mgr Num_fmt_mgr() {return num_fmt_mgr;} Gfo_num_fmt_mgr num_fmt_mgr = new Gfo_num_fmt_mgr();
-	public byte Img_thumb_halign_default() {return img_thumb_halign_default;} private byte img_thumb_halign_default = Xop_lnki_halign.Right;
+	public Xol_num_fmtr_base Num_fmt_mgr() {return num_fmt_mgr;} public Xol_lang Num_fmt_mgr_(Xol_num_fmtr_base v) {num_fmt_mgr = v; return this;} private Xol_num_fmtr_base num_fmt_mgr = new Xol_num_fmtr_base();
+	public byte Img_thumb_halign_default() {return img_thumb_halign_default;} private byte img_thumb_halign_default = Xop_lnki_align_h.Right;
 
 	public Hash_adp_bry Xatrs_ref() {return xatrs_ref;} private Hash_adp_bry xatrs_ref = Hash_adp_bry.ci_();
 	public Hash_adp_bry Xatrs_references() {return xatrs_references;} private Hash_adp_bry xatrs_references = Hash_adp_bry.ci_();

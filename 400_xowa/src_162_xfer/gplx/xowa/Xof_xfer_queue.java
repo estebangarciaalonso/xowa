@@ -52,6 +52,7 @@ public class Xof_xfer_queue {
 			wiki.File_mgr().Repo_mgr().Xfer_by_meta(xfer_itm, this);
 			xfer_itm.Atrs_by_meta(xfer_itm.Meta_itm(), xfer_itm.Meta_itm().Repo_itm(wiki), wiki.Html_mgr().Img_thumb_width());
 			xfer_itm.Atrs_calc_for_html();
+			if (!xfer_itm.Html_pass()) continue;	// file not found; don't call Update_img, else invalid src will be passed and caption box will be incorrectly resized; EX:ar.d:جَبَّارَة; DATE:2014-04-13
 			if (ByteAry_.Len_gt_0(xfer_itm.Html_view_src())				// only update images that have been found; otherwise "Undefined" shows up in image box
 				&& xfer_itm.Html_elem_tid() != Xof_html_elem.Tid_none) {	// skip updates when downloading orig on File page (there won't be any frame to update)
 				Js_img_mgr.Update_img(wtr, xfer_itm);
@@ -77,6 +78,7 @@ public class Xof_xfer_queue {
 			fsdb_itm.Html_uid_(xfer_itm.Html_uid());
 			fsdb_itm.Html_elem_tid_(xfer_itm.Html_elem_tid());
 			fsdb_itm.Gallery_mgr_h_(xfer_itm.Gallery_mgr_h());
+			fsdb_itm.Html_img_wkr_(xfer_itm.Html_img_wkr());
 			rv.Add(fsdb_itm);
 		}
 		return rv;

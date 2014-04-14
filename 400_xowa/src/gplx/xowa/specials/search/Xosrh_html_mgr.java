@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.specials.search; import gplx.*; import gplx.xowa.*; import gplx.xowa.specials.*;
+import gplx.xowa.langs.numFormats.*;
 class Xosrh_html_mgr implements GfoInvkAble {
 	public ByteAryFmtr Html_all_bgn()	{return html_all_bgn;} ByteAryFmtr html_all_bgn = ByteAryFmtr.new_(String_.Concat_lines_nl
 	(	"~{search_results_header}<br/>"
@@ -45,7 +46,7 @@ class Xosrh_html_mgr implements GfoInvkAble {
 		int xowa_idx_bwd = (page_idx == 0) 			? 0 			: page_idx - 1;
 		int xowa_idx_fwd = (page_idx >= pages_len) 	? pages_len - 1 : page_idx + 1;
 		Xow_wiki wiki = core.Wiki();
-		gplx.intl.Gfo_num_fmt_mgr num_fmt_mgr = wiki.Lang().Num_fmt_mgr();
+		Xol_num_fmtr_base num_fmt_mgr = wiki.Lang().Num_fmt_mgr();
 		int itms_bgn = core.Page_mgr().Itms_bgn() + 1;
 		if (itms_len == 0) itms_bgn = 0;
 		byte[] search_results_header = wiki.Msg_mgr().Val_by_id_args(Xol_msg_itm_.Id_search_results_header, num_fmt_mgr.Fmt(itms_bgn), num_fmt_mgr.Fmt(core.Page_mgr().Itms_end()), num_fmt_mgr.Fmt(grp.Itms_total()), search_bry, pages_len);

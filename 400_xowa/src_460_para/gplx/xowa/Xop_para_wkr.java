@@ -92,7 +92,7 @@ public class Xop_para_wkr implements Xop_ctx_wkr {
 			if (prv_ws_bgn > 0 && (cur_mode == Mode_pre || !line_is_ws)) {					// MW: if ( ' ' == substr( $t, 0, 1 ) and ( $this->mLastSection === 'pre' || trim( $t ) != '' ) ) {
 				if (cur_mode != Mode_pre) {													// MW: if ( $this->mLastSection !== 'pre' ) {
 					para_stack = Para_stack_none;											// MW: $paragraphStack = false;
-					Prv_para_end(); Prv_para_bgn(Xop_para_tkn.Tid_pre);  				// MW: $output .= $this->closeParagraph() . '<pre>';
+					Prv_para_end(); Prv_para_bgn(Xop_para_tkn.Tid_pre);  					// MW: $output .= $this->closeParagraph() . '<pre>';
 					cur_mode = Mode_pre;													// MW: $this->mLastSection = 'pre';
 				}
 				prv_ws_bgn = 0;																// MW: $t = substr( $t, 1 );

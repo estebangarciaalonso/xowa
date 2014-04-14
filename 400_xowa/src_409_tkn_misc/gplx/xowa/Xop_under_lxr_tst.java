@@ -64,6 +64,7 @@ public class Xop_under_lxr_tst {
 		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str("a\n__TOC__\n==b==\n", String_.Concat_lines_nl
 		( "<p>a"
+		, "</p>"
 		, "<div id=\"toc\" class=\"toc\">"
 		, "  <div id=\"toctitle\">"
 		, "    <h2>Contents</h2>"
@@ -73,7 +74,6 @@ public class Xop_under_lxr_tst {
 		, "    </li>"
 		, "  </ul>"
 		, "</div>"
-		, "</p>"
 		, ""
 		, "<h2>b</h2>"
 		));
@@ -106,6 +106,22 @@ public class Xop_under_lxr_tst {
 	}
 	@Test  public void Eos() {	// PURPOSE: check that __ at eos doesn't fail; es.s:Luisa de Bustamante: 3; DATE:2014-02-15
 		fxt.Test_parse_page_all_str("__", "__");
+	}
+	@Test  public void Ws_preserve() {	// preserve ws; DATE:2014-04-07
+		fxt.Init_para_y_();
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
+		(	"a"
+		,	" __TOC__ "
+		,	"b"
+		), String_.Concat_lines_nl
+		(	"<p>a"
+		,	"</p>"
+		,	" "
+		,	""
+		,	"<p>b"
+		,	"</p>"
+		));
+		fxt.Init_para_n_();
 	}
 	@Test  public void Hook_alt() {	// PURPOSE: ja wikis use alternate __; DATE:2014-03-04
 		Xow_wiki wiki = fxt.Wiki(); Xol_lang lang = wiki.Lang();

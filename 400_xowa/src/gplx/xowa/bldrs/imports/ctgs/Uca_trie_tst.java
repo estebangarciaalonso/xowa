@@ -37,7 +37,7 @@ class Uca_trie_fxt {
 		}
 		trie.Clear();
 	}	Uca_trie trie; ByteAryBfr bfr;
-	public void Init_trie_itm(String charAsStr, byte[] uca) {trie.Init_itm(gplx.intl.Utf8_.DecodeChar(ByteAry_.new_utf8_(charAsStr), 0), uca);}
+	public void Init_trie_itm(String charAsStr, byte[] uca) {trie.Init_itm(gplx.intl.Utf16_.Decode_to_int(ByteAry_.new_utf8_(charAsStr), 0), uca);}
 	public void Test_decode(byte[] bry, String expd) {
 		trie.Decode(bfr, bry, 0, bry.length);
 		Tfds.Eq(expd, bfr.XtoStrAndClear());

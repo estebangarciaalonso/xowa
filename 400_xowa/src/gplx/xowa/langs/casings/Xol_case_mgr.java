@@ -49,7 +49,7 @@ public class Xol_case_mgr implements GfoInvkAble {
 		while (true) {
 			if (pos >= end) break;
 			byte b = src[pos];
-			int b_len = gplx.intl.Utf8_.CharLen(b);
+			int b_len = gplx.intl.Utf8_.Len_of_char_by_1st_byte(b);
 			Object o = trie.Match(b, src, pos, end);	// NOTE: used to be (b, src, bgn, end) which would never case correctly; DATE:2013-12-25
 			if (o != null && pos < end) {	// pos < end used for casing 1st letter only; upper_1st will pass end of 1
 				Xol_case_itm itm = (Xol_case_itm)o;
@@ -74,7 +74,7 @@ public class Xol_case_mgr implements GfoInvkAble {
 		while (true) {
 			if (pos >= end) break;
 			byte b = src[pos];
-			int b_len = gplx.intl.Utf8_.CharLen(b);
+			int b_len = gplx.intl.Utf8_.Len_of_char_by_1st_byte(b);
 			Object o = trie.Match(b, src, pos, end);	// NOTE: used to be (b, src, bgn, end) which would never case correctly; DATE:2013-12-25
 			if (o != null && pos < end) {	// pos < end used for casing 1st letter only; upper_1st will pass end of 1
 				Xol_case_itm itm = (Xol_case_itm)o;
@@ -94,7 +94,7 @@ public class Xol_case_mgr implements GfoInvkAble {
 	public byte[] Case_build_1st_lower(ByteAryBfr bfr, byte[] src, int bgn, int end) {return Case_build_1st(bfr, Bool_.N, src, bgn, end);}
 	public byte[] Case_build_1st(ByteAryBfr bfr, boolean upper, byte[] src, int bgn, int end) {
 		if (bgn == end) return ByteAry_.Empty;	// upper "" -> ""
-		int b_len = gplx.intl.Utf8_.CharLen(src[bgn]);
+		int b_len = gplx.intl.Utf8_.Len_of_char_by_1st_byte(src[bgn]);
 		bfr.Add(Case_build(upper, src, bgn			, bgn + b_len));
 		bfr.Add_mid(src, bgn + b_len	, end);
 		return bfr.XtoAryAndClear();

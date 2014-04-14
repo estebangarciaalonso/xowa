@@ -227,6 +227,7 @@ class Pxd_parser_ {
 		trie.Add(ByteAry_.new_ascii_("today"), Pxd_itm_day_relative.Today);
 		trie.Add(ByteAry_.new_ascii_("tomorrow"), Pxd_itm_day_relative.Tomorrow);
 		trie.Add(ByteAry_.new_ascii_("yesterday"), Pxd_itm_day_relative.Yesterday);
+		trie.Add(ByteAry_.new_ascii_("now"), Pxd_itm_time_relative.Now);
 	}
 }
 /*

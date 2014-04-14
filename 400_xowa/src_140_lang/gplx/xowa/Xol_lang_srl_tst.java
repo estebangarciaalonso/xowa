@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
-import gplx.intl.*;
+import gplx.intl.*; import gplx.xowa.langs.numFormats.*;
 public class Xol_lang_srl_tst {
 	Xol_lang_srl_fxt fxt = new Xol_lang_srl_fxt();
 	@Before public void init() {fxt.Clear();}
@@ -179,7 +179,7 @@ public class Xol_lang_srl_tst {
 		fxt.Run_save_num_fmt(fxt.Lang().Num_fmt_mgr(), Xol_lang.Invk_keywords, raw);
 	}
 	@Test  public void Num_fmt_apos() {	// PURPOSE:de.ch has apos which breaks gfs
-		fxt.Lang().Num_fmt_mgr().Clear().Dec_dlm_(ByteAry_.new_ascii_("'")).Grps_add(new Gfo_num_fmt_grp(ByteAry_.new_utf8_(","), 3, true));
+		fxt.Lang().Num_fmt_mgr().Clear().Dec_dlm_(ByteAry_.new_ascii_("'")).Grps_add(new Xol_num_grp(ByteAry_.new_utf8_(","), 3, true));
 		fxt.Run_save_num_fmt(fxt.Lang().Num_fmt_mgr(), Xol_lang.Invk_keywords, String_.Concat_lines_nl
 		(	"num_fmt.clear"
 		,	".dec_dlm_('''')"
@@ -226,7 +226,7 @@ class Xol_lang_srl_fxt {
 		Xol_lang_srl.Save_messages(bldr, msg_mgr, true);
 		Tfds.Eq_str_lines("." + raw, bldr.Bfr().XtoStrAndClear());
 	}
-	public void Run_save_num_fmt(Gfo_num_fmt_mgr num_fmt, String invk, String raw) {
+	public void Run_save_num_fmt(Xol_num_fmtr_base num_fmt, String invk, String raw) {
 		Xol_lang_srl.Save_num_fmt(bldr, num_fmt);
 		Tfds.Eq_str_lines(raw, bldr.Bfr().XtoStrAndClear());
 	}

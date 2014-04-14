@@ -304,13 +304,9 @@ public class Xog_win implements GfoInvkAble, GfoEvObj {
 		}
 		else {
 			page.Wiki().Db_mgr().Save_mgr().Data_update(page, new_text);
-			int ns_id = page.Ttl().Ns().Id();
-			switch (ns_id) {
-				case Xow_ns_.Id_template: case Xow_ns_.Id_mediaWiki: case gplx.xowa.xtns.scribunto.Scrib_xtn_mgr.Ns_id_module:	// invalidate caches if "code" is updated
-					gplx.xowa.xtns.scribunto.Scrib_core.Core_invalidate();
-					page.Wiki().Cache_mgr().Free_mem_all();
-					break;
-			}
+			// invalidate everything if "code" is updated; especially needed for page transclusion; {{/my_subpage}} DATE:2014-04-10
+			gplx.xowa.xtns.scribunto.Scrib_core.Core_invalidate();
+			page.Wiki().Cache_mgr().Free_mem_all();
 		}
 		page.Data_raw_(new_text);
 		page.Wiki().ParsePage_root(page, true);			// refresh html

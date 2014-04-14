@@ -18,7 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.html; import gplx.*;
 public class Html_atrs {
 	public static final byte[] 
-	  Cls_bry		= ByteAry_.new_ascii_("class")
+	  Id_bry		= ByteAry_.new_ascii_("id")
+	, Cls_bry		= ByteAry_.new_ascii_("class")
 	, Style_bry		= ByteAry_.new_ascii_("style")
 	;
 }

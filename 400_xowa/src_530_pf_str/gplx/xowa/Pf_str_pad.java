@@ -35,7 +35,7 @@ class Pf_str_pad extends Pf_func_base {
 		if (pad_dir_right) bfr.Add(val);
 		for (int val_idx = val_len; val_idx < pad_len_int; val_idx++) {
 			byte b = pad_str[pad_idx];
-			int b_len = gplx.intl.Utf8_.CharLen(b);
+			int b_len = gplx.intl.Utf8_.Len_of_char_by_1st_byte(b);
 			if (b_len == 1)
 				bfr.Add_byte(b);
 			else

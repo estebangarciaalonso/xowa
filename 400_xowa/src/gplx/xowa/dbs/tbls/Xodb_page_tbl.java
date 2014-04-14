@@ -135,7 +135,7 @@ public class Xodb_page_tbl {
 	}
 	public void Load_ttls_for_search_suggest(Cancelable cancelable, ListAdp rslt_list, Xow_ns ns, byte[] key, int max_results, int min_page_len, int browse_len, boolean include_redirects, boolean fetch_prv_item) {
 		String search_bgn = String_.new_utf8_(key);
-		String search_end = String_.new_utf8_(gplx.intl.Utf8_.Increment_char_last(key));
+		String search_end = String_.new_utf8_(gplx.intl.Utf8_.Increment_char_at_last_pos(key));
 		Db_qry qry = Db_qry_sql.rdr_("SELECT page_id, page_namespace, page_title, page_len FROM page INDEXED BY page__title WHERE page_namespace = " + Int_.XtoStr(ns.Id()) + " AND page_title BETWEEN '" + search_bgn + "' AND '" + search_end + "' ORDER BY page_len DESC LIMIT " + Int_.XtoStr(max_results) + ";");
 		DataRdr rdr = DataRdr_.Null;
 		try {

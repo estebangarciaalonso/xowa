@@ -205,8 +205,10 @@ public static final int
 , Id_relatedArticles = 184
 , Id_relatedSites = 185
 , Id_massMessage_target = 186
+, Id_cascadingSources = 187
+, Id_pendingChangesLevel = 188
 ;
-public static final int Id__max = 187;
+public static final int Id__max = 189;
 
 	private static byte[] ary_itm_(int id) {
 		switch (id) {
@@ -397,6 +399,8 @@ case Xol_kwd_grp_.Id_geoCrumbs_isin: return ByteAry_.new_utf8_("isin");
 case Xol_kwd_grp_.Id_relatedArticles: return ByteAry_.new_utf8_("relatedArticles");
 case Xol_kwd_grp_.Id_relatedSites: return ByteAry_.new_utf8_("relatedSites");
 case Xol_kwd_grp_.Id_massMessage_target: return ByteAry_.new_utf8_("target");
+case Xol_kwd_grp_.Id_cascadingSources: return ByteAry_.new_utf8_("cascadingSources");
+case Xol_kwd_grp_.Id_pendingChangesLevel: return ByteAry_.new_utf8_("pendingChangesLevel");
 default: throw Err_mgr._.unhandled_(id);
 		}
 	}

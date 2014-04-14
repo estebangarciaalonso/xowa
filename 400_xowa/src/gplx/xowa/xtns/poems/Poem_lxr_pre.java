@@ -39,7 +39,7 @@ public class Poem_lxr_pre implements Xop_lxr {
 			ctx.Subs_add(root, tkn_mkr.HtmlNcr(bgn_pos + 1, cur_pos, 160, Nbsp_bry));
 		return cur_pos;
 	}
-	private static final byte[] Nbsp_bry = gplx.intl.Utf8_.EncodeCharAsAry(160);
+	private static final byte[] Nbsp_bry = gplx.intl.Utf16_.Encode_int_to_bry(160);
 	private static final byte[] Hook_ary = new byte[] {Byte_ascii.NewLine, Byte_ascii.Space};
         public static final Poem_lxr_pre _ = new Poem_lxr_pre(); Poem_lxr_pre() {}
 }

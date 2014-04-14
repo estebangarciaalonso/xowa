@@ -122,14 +122,20 @@ class Scrib_lib_wikibase_srl {
 		return rv;
 	}
 	private static KeyVal[] Srl_claims_prop_itm_core_val(Wdata_prop_itm_core itm) {
-		switch (itm.Val_tid_byte()) {
-			case Wdata_prop_itm_base_.Val_tid_string			: return Srl_claims_prop_itm_core_str(itm);
-			case Wdata_prop_itm_base_.Val_tid_entity			: return Srl_claims_prop_itm_core_entity(itm);
-			case Wdata_prop_itm_base_.Val_tid_time				: return Srl_claims_prop_itm_core_time(itm);
-			case Wdata_prop_itm_base_.Val_tid_globecoordinate	: return Srl_claims_prop_itm_core_globecoordinate(itm);
-			case Wdata_prop_itm_base_.Val_tid_quantity			: return Srl_claims_prop_itm_core_quantity(itm);
-			default: return KeyVal_.Ary_empty;
-		}
+		switch (itm.Snak_tid()) {
+			case Wdata_prop_itm_base_.Snak_tid_somevalue:
+			case Wdata_prop_itm_base_.Snak_tid_novalue:	// NOTE: not sure about this logic, but can't find somevalue snaktid formattercode in wikibase; DATE:2014-04-07
+				return DataValue_nil;
+			default:
+				switch (itm.Val_tid_byte()) {
+					case Wdata_prop_itm_base_.Val_tid_string			: return Srl_claims_prop_itm_core_str(itm);
+					case Wdata_prop_itm_base_.Val_tid_entity			: return Srl_claims_prop_itm_core_entity(itm);
+					case Wdata_prop_itm_base_.Val_tid_time				: return Srl_claims_prop_itm_core_time(itm);
+					case Wdata_prop_itm_base_.Val_tid_globecoordinate	: return Srl_claims_prop_itm_core_globecoordinate(itm);
+					case Wdata_prop_itm_base_.Val_tid_quantity			: return Srl_claims_prop_itm_core_quantity(itm);
+					default: return KeyVal_.Ary_empty;
+				}
+			}
 	}
 	private static KeyVal[] Srl_claims_prop_itm_core_str(Wdata_prop_itm_core itm) {
 		KeyVal[] rv = new KeyVal[2];
@@ -197,4 +203,5 @@ class Scrib_lib_wikibase_srl {
 		return rv;
 	}
 	private static final String Key_type = "type", Key_value = "value";
+	private static final KeyVal[] DataValue_nil = new KeyVal[] {KeyVal_.new_(Key_type, ""), KeyVal_.new_(Key_value, "")};	// NOTE: must return ""; null fails; EX:w:Joseph-Fran�ois_Malgaigne; DATE:2014-04-07
 }

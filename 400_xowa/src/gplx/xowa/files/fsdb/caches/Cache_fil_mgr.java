@@ -125,7 +125,7 @@ class Cache_fil_mgr {
 		wiki.Init_assert();
 		Xof_repo_itm trg_repo = repo_mgr.Get_primary(wiki_domain);
 		byte[] ttl = itm.Fil_name();			
-		byte[] md5 = Xof_xfer_itm.Md5_(ttl);
+		byte[] md5 = Xof_xfer_itm_.Md5_(ttl);
 		int itm_ext_id = itm.Fil_ext().Id();
 		Io_url fil_url = url_bldr.Set_trg_file_(mode_id, trg_repo, ttl, md5, itm.Fil_ext(), itm.Fil_w()
 			, Xof_doc_thumb.Convert_to_xowa_thumbtime	(itm_ext_id, itm.Fil_thumbtime())

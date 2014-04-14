@@ -41,7 +41,7 @@ public class Xol_lnki_trail_mgr implements GfoInvkAble {
 	public void Add_bulk(byte[] src) {
 		int pos = 0, src_len = src.length;
 		while (true) {
-			byte[] itm = gplx.intl.Utf8_.Mid(src, pos);
+			byte[] itm = gplx.intl.Utf8_.Get_char_at_pos_as_bry(src, pos);
 			Add(itm);
 			pos += itm.length;
 			if (pos >= src_len) break;

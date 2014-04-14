@@ -154,4 +154,11 @@ public class Xop_xnde_wkr__basic_tst {
 	@Test  public void Html5_bdo() {// PURPOSE: HTML5; should output self (i.e.: must be whitelisted); DATE:2014-01-03
 		fxt.Test_parse_page_wiki_str("<bdo>a</bdo>", "<bdo>a</bdo>");
 	}
+	@Test  public void Pre_always_parsed() {	// PURPOSE: pre should not interpret templates; DATE:2014-04-10
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("a", "a");
+		fxt.Init_defn_add("test", "<pre>{{a}}</pre>");
+		fxt.Test_parse_page_all_str("{{test}}", "<pre>{{a}}</pre>");
+		fxt.Init_defn_clear();
+	}
 }

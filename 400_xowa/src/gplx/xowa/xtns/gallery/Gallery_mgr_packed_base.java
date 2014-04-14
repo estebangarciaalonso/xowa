@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-import gplx.xowa.files.*;
+import gplx.xowa.files.*; import gplx.xowa.html.modules.*;
 class Gallery_mgr_packed_base extends Gallery_mgr_base {
 	@Override public byte Tid() {return Gallery_mgr_base_.Packed_tid;}
 	@Override public byte[] Tid_bry() {return Gallery_mgr_base_.Packed_bry;}
@@ -26,7 +26,7 @@ class Gallery_mgr_packed_base extends Gallery_mgr_base {
 		this.itm_default_h = itm_default_h;
 	}
 	@Override public void Itms_per_row_(int v) {}
-	@Override public String[] Get_modules() {return Modules_packed;} private static final String[] Modules_packed = new String[] {"mediawiki.page.gallery"};
+	@Override public void Get_modules(Xoh_module_list modules) {modules.Add(Module_packed);}
 	@Override public int Get_thumb_padding()				{return 0;}
 	@Override public int Get_gb_padding()				{return 2;}
 	@Override public int Get_vpad(int itm_h, int thm_h)	{
@@ -41,22 +41,26 @@ class Gallery_mgr_packed_base extends Gallery_mgr_base {
 		int val = thm_w == -1 ? (int)(itm_default_w * Scale_factor) : thm_w;
 		return Get_thumb_div_width(val) + this.Get_gb_padding();
 	}
-	@Override public void Get_thumb_size(IntRef thm_w, IntRef thm_h, Xof_ext ext) {
+	@Override public void Get_thumb_size(Xop_lnki_tkn lnki, Xof_ext ext) {
+		Get_thumb_size_static(lnki, ext, itm_default_w, itm_default_h);
+	}
+	@Override public void Adjust_image_parameters(Xof_xfer_itm xfer_itm) {
+		int w = (int)(xfer_itm.Html_w() / Scale_factor);
+		int h = (int)(xfer_itm.Html_h() / Scale_factor);
+		xfer_itm.Init_xfer_html_size(w, h);
+	}
+	public static final double Scale_factor = 1.5d;	// We artificially have 1.5 the resolution neccessary so that we can scale it up by that much on the client side, without worrying about requesting a new image.
+	private static final int Scale_factor_x_60 = (int)(Scale_factor * 60);
+	public static void Get_thumb_size_static(Xop_lnki_tkn lnki, Xof_ext ext, int itm_default_w, int itm_default_h) {
 		int w;
 		if (ext.Id_is_audio())
-			w = this.itm_default_w;
+			w = itm_default_w;
 		else
-			w = (this.itm_default_h) * 10 + 100;	// We want the width not to be the constraining factor, so use random big number.
-		thm_w.Val_((int)(Scale_factor * w));
-		thm_h.Val_((int)(Scale_factor * this.itm_default_h));
+			w = (itm_default_h) * 10 + 100;	// We want the width not to be the constraining factor, so use random big number.
+		lnki.Lnki_w_((int)(Scale_factor * w));
+		lnki.Lnki_h_((int)(Scale_factor * itm_default_h));
 	}
-	@Override public void Adjust_image_parameters(Xof_xfer_itm xfer_itm, IntRef rslt_w, IntRef rslt_h) {
-		rslt_w.Val_((int)(xfer_itm.Lnki_w() / Scale_factor));
-		rslt_h.Val_((int)(xfer_itm.Lnki_h() / Scale_factor));
-	}
-	private static final double Scale_factor = 1.5d;	// We artificially have 1.5 the resolution neccessary so that we can scale it up by that much on the client side, without worrying about requesting a new image.
-	private static final int Scale_factor_x_60 = (int)(Scale_factor * 60);
-        public static final Gallery_mgr_packed_base _Basic = new Gallery_mgr_packed_base();
+	public static final Xoh_module_itm Module_packed = new Xoh_module_itm("mediawiki.page.gallery").Scripts_init("\n  xowa_gallery_packed = true;");
 }
 class Gallery_mgr_packed_overlay extends Gallery_mgr_packed_base {
 	@Override public byte[] Tid_bry() {return Gallery_mgr_base_.Packed_overlay_bry;}
@@ -74,8 +78,6 @@ class Gallery_mgr_packed_overlay extends Gallery_mgr_packed_base {
 	, Wrap_gallery_text_1 = ByteAry_.new_ascii_("px\"><div class=\"gallerytext\">\n") // NOTE: The newline after <div class="gallerytext"> is needed to accommodate htmltidy
 	, Wrap_gallery_text_2 = ByteAry_.new_ascii_("\n      </div></div>")	// NOTE: 2nd </div> is not part of MW, but needed to close div
 	;
-        public static final Gallery_mgr_packed_overlay _Overlay = new Gallery_mgr_packed_overlay();
 }
 class Gallery_mgr_packed_hover extends Gallery_mgr_packed_overlay {		@Override public byte[] Tid_bry() {return Gallery_mgr_base_.Packed_hover_bry;}
-        public static final Gallery_mgr_packed_hover _Hover = new Gallery_mgr_packed_hover(); Gallery_mgr_packed_hover() {}
 }

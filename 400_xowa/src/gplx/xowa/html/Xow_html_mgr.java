@@ -30,7 +30,7 @@ public class Xow_html_mgr implements GfoInvkAble {
 		img_xowa_protocol = app.Url_converter_fsys().Encode_http(app.User().Fsys_mgr().App_img_dir().GenSubFil_nest("xowa", "protocol.png"));
 		portal_mgr = new Xowh_portal_mgr(wiki);
 		imgs_mgr = new Xoh_imgs_mgr(this);
-		module_regy = new Xoh_module_regy(wiki);
+//			module_regy = new Xoh_module_regy(wiki);
 	}
 	public void Init_by_lang(Xol_lang lang) {
 		portal_mgr.Init_by_lang(lang);
@@ -38,7 +38,7 @@ public class Xow_html_mgr implements GfoInvkAble {
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
 	public Xowh_portal_mgr Portal_mgr() {return portal_mgr;} private Xowh_portal_mgr portal_mgr;
 	public Xoh_wiki_article Output_mgr() {return output_mgr;} private Xoh_wiki_article output_mgr;
-	public Xoh_module_regy Module_regy() {return module_regy;} private Xoh_module_regy module_regy;
+//		public Xoh_module_regy Module_regy() {return module_regy;} private Xoh_module_regy module_regy;
 	public boolean Tbl_para() {return tbl_para;} public Xow_html_mgr Tbl_para_y_() {tbl_para = true; return this;} public Xow_html_mgr Tbl_para_n_() {tbl_para = false; return this;} private boolean tbl_para = true;
 	public int Img_thumb_width() {return img_thumb_width;} private int img_thumb_width = 220;
 	public byte[] Img_media_play_btn() {return img_media_play_btn;} private byte[] img_media_play_btn;

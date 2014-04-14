@@ -65,7 +65,7 @@ public class Gallery_html_wtr {
 			if (	itm_ttl != null				// ttl does not have invalid characters
 				&&	itm_ttl.Ns().Id_file()		// ttl is in file ns;
 				) {
-				Xop_lnki_tkn lnki = ctx.Tkn_mkr().Lnki(itm.Ttl_bgn(), itm.Ttl_end()).Ttl_(itm_ttl).Width_(mgr.Itm_w()).Height_(mgr.Itm_h());
+				Xop_lnki_tkn lnki = ctx.Tkn_mkr().Lnki(itm.Ttl_bgn(), itm.Ttl_end()).Ttl_(itm_ttl).Lnki_w_(mgr.Itm_w()).Lnki_h_(mgr.Itm_h());
 				Xof_xfer_itm xfer_itm = wtr.Lnki_wtr().File_wtr().Lnki_eval(ctx, page, lnki, wtr.Queue_add_ref())
 					.Gallery_mgr_h_(mgr.Itm_h_or_default())
 					.Html_elem_tid_(Xof_html_elem.Tid_gallery)

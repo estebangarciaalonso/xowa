@@ -20,7 +20,7 @@ public class Xop_amp_trie_itm {
 	public Xop_amp_trie_itm(byte tid, int char_int, byte[] xml_name_bry) {
 		this.tid = tid;
 		this.char_int = char_int;
-		this.utf8_bry = gplx.intl.Utf8_.EncodeCharAsAry(char_int);
+		this.utf8_bry = gplx.intl.Utf16_.Encode_int_to_bry(char_int);
 		this.xml_name_bry = xml_name_bry; 
 		this.key_name_len = xml_name_bry.length - 2;	// 2 for & and ;
 	}

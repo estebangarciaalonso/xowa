@@ -24,4 +24,6 @@ public interface Xog_win_wtr extends Gfo_usr_dlg {
 	void Html_atr_set(String elem_id, String atr_key, String atr_val);
 	void Html_elem_atr_set_append(String elem_id, String atr_key, String atr_val);
 	void Html_elem_delete(String elem_id);
+	void Html_elem_replace_html(String id, String html);
+	void Html_gallery_packed_exec();
 }

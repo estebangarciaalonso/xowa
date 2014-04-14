@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.langs.numFormats.*;
 public class Pf_site_pagesincategory extends Pf_func_base {
 	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bb) {
 		byte[] val_dat_ary = Eval_argx(ctx, src, caller, self); if (ByteAry_.Len_eq_0(val_dat_ary)) {bb.Add_int_fixed(0, 1); return;}
@@ -35,7 +36,7 @@ public class Pf_site_pagesincategory extends Pf_func_base {
 		}
 		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b128().Mkr_rls();
 		byte[] ctg_len_bry = tmp_bfr.Add_int_variable(ctg_len).XtoAryAndClear();			
-		byte[] rslt = fmt_num ? lang.Num_fmt_mgr().Fmt(ctg_len_bry) : lang.Num_fmt_mgr().Raw(gplx.intl.Gfo_num_fmt_mgr.Tid_raw, ctg_len_bry);
+		byte[] rslt = fmt_num ? lang.Num_fmt_mgr().Fmt(ctg_len_bry) : lang.Num_fmt_mgr().Raw(Xol_num_fmtr_base.Tid_raw, ctg_len_bry);
 		bb.Add(rslt);
 	}	private ByteTrieMgr_slim trie;
 	@Override public int Id() {return Xol_kwd_grp_.Id_site_pagesincategory;}

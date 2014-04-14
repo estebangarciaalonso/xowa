@@ -78,6 +78,7 @@ public class Xow_wiki_domain_ {
 	private static final Hash_adp_bry lang_map_hash = Hash_adp_bry.ci_()
 	.Add_str_obj("simple"		, ByteAry_.new_ascii_("en"))
 	.Add_str_obj("zh-classical"	, ByteAry_.new_ascii_("lzh"))
+	.Add_str_obj("no"			, ByteAry_.new_ascii_("nb"))
 	;
 	public static final byte 
 		  Tid_other		=  0, Tid_home       =  1

@@ -26,7 +26,6 @@ public class Gallery_itm_parser {
 	private byte cur_fld;
 	private int itm_bgn;
 	private ByteAryBfr caption_bfr = ByteAryBfr.reset_(255); private int caption_bgn;
-	private int gallery_itm_w, gallery_itm_h;
 	private Xop_ctx ctx;
 	public Gallery_itm_parser Init_by_wiki(Xow_wiki wiki) {
 		this.wiki = wiki; Xol_lang lang = wiki.Lang();
@@ -38,10 +37,9 @@ public class Gallery_itm_parser {
 		Init_keyword(tmp_bref, lang, Xol_kwd_grp_.Id_img_page, Fld_page);
 		return this;
 	}
-	public void Parse_all(ListAdp rv, byte[] src, int content_bgn, int content_end, int gallery_itm_w, int gallery_itm_h) {
+	public void Parse_all(ListAdp rv, Gallery_mgr_base mgr, Gallery_xnde xnde, byte[] src, int content_bgn, int content_end) {
 		this.src = src;
 		this.cur_pos = content_bgn; this.end_pos = content_end;
-		this.gallery_itm_w = gallery_itm_w; this.gallery_itm_h = gallery_itm_h;
 		cur_itm = new Gallery_itm();
 		while (cur_pos < end_pos) {
 			cur_itm.Reset();
@@ -50,7 +48,7 @@ public class Gallery_itm_parser {
 			if (cur_itm.Ttl() != null) {
 				if (caption_bfr.Len() > 0)
 					cur_itm.Caption_bry_(caption_bfr.XtoAryAndClearAndTrim());
-				Make_lnki_tkn(src);
+				Make_lnki_tkn(mgr, xnde, src);
 				rv.Add(cur_itm);
 				cur_itm = new Gallery_itm();
 			}
@@ -58,8 +56,10 @@ public class Gallery_itm_parser {
 				++cur_pos;
 		}
 	}
-	private void Make_lnki_tkn(byte[] src) {
-		Xop_lnki_tkn lnki_tkn = ctx.Tkn_mkr().Lnki(cur_itm.Ttl_bgn(), cur_itm.Ttl_end()).Ttl_(cur_itm.Ttl()).Width_(gallery_itm_w).Height_(gallery_itm_h);
+	private void Make_lnki_tkn(Gallery_mgr_base mgr, Gallery_xnde xnde, byte[] src) {
+		Xop_lnki_tkn lnki_tkn = ctx.Tkn_mkr().Lnki(cur_itm.Ttl_bgn(), cur_itm.Ttl_end()).Ttl_(cur_itm.Ttl());
+		if (cur_itm.Link_bgn() != -1)
+			lnki_tkn.Link_tkn_(new Arg_nde_tkn_mock("link", String_.new_utf8_(src, cur_itm.Link_bgn(), cur_itm.Link_end())));	// NOTE: hackish, but add the link as arg_nde, since gallery link is not parsed like a regular lnki
 		cur_itm.Lnki_tkn_(lnki_tkn);
 		byte[] lnki_caption = cur_itm.Caption_bry();
 		if (ByteAry_.Len_gt_0(lnki_caption)) {
@@ -68,7 +68,9 @@ public class Gallery_itm_parser {
 		}
 		Xop_lnki_logger file_wkr = ctx.Lnki().File_wkr();	// NOTE: do not set file_wkr ref early (as member var); parse_all sets late
 		ctx.Page().Lnki_list().Add(lnki_tkn);
+		mgr.Get_thumb_size(lnki_tkn, cur_itm.Ext());		// NOTE: set thumb size, so that lnki.temp parse picks it up
 		if (file_wkr != null) file_wkr.Wkr_exec(ctx, src, lnki_tkn, gplx.xowa.bldrs.files.Xob_lnki_src_tid.Tid_gallery);
+		lnki_tkn.Lnki_w_(-1).Lnki_h_(-1);					// NOTE: reset lnki back to defaults, else itm will show as large missing caption
 	}
 	private byte Parse_itm() {
 		int fld_count = 0;
@@ -176,9 +178,24 @@ public class Gallery_itm_parser {
 				if (caption_bfr.Len() != 0) caption_bfr.Add_byte_pipe();	// prepend | to all other captions; EX: File:A.png|a|b -> "a|b" (pipe not added to 1st, but added to 2nd)
 				caption_bfr.Add_mid(src, caption_bgn, fld_end);
 				break;
-			case Fld_alt: 		cur_itm.Alt_end_(fld_end); break;
-			case Fld_link: 		cur_itm.Link_end_(fld_end); break;
-			case Fld_page: 		cur_itm.Page_end_(fld_end); break;
+			case Fld_alt: 
+				if (fld_end < cur_itm.Alt_bgn()) 
+					cur_itm.Alt_bgn_(-1);
+				else
+					cur_itm.Alt_end_(fld_end); 
+				break;
+			case Fld_link:
+				if (fld_end < cur_itm.Link_bgn()) 
+					cur_itm.Link_bgn_(-1);
+				else
+					cur_itm.Link_end_(fld_end);
+				break;
+			case Fld_page:
+				if (fld_end < cur_itm.Page_bgn()) 
+					cur_itm.Page_bgn_(-1);
+				else
+					cur_itm.Page_end_(fld_end);
+				break;
 			default:			throw Err_.unhandled(fld_end);
 		}
 	}

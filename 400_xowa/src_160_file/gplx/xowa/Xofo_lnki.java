@@ -48,8 +48,8 @@ class Xofo_lnki {
 		wtr.Write_bry_escape_fld(ttl);
 		wtr.Bfr()
 			.Add_int_variable(lnki.Lnki_type()).Add_byte(Byte_ascii.Comma)
-			.Add_int_variable(lnki.Width()).Add_byte(Byte_ascii.Comma)
-			.Add_int_variable(lnki.Height())
+			.Add_int_variable(lnki.Lnki_w()).Add_byte(Byte_ascii.Comma)
+			.Add_int_variable(lnki.Lnki_h())
 			;
 		boolean upright_exists = lnki.Upright() != Xop_lnki_tkn.Upright_null;
 		if (upright_exists) {

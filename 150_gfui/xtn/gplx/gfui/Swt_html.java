@@ -56,6 +56,8 @@ class Swt_html implements Gxw_html, Swt_control, FocusListener {
 	public boolean 		Html_elem_atr_set_append(String elem_id, String atr_key, String atr_val)
 																						{return Eval_script_as_exec(kit.Html_cfg().Elem_atr_set_append(elem_id, atr_key, Escape_quotes(atr_val)));}
 	public boolean 		Html_elem_delete(String elem_id) 								{return Eval_script_as_exec(kit.Html_cfg().Elem_delete(elem_id));}
+	public boolean 		Html_elem_replace_html(String id, String html) 					{return Eval_script_as_exec(kit.Html_cfg().Elem_replace_html(id, html));}
+	public boolean 		Html_gallery_packed_exec() 										{return Eval_script_as_exec(kit.Html_cfg().Gallery_packed_exec());}
 	public boolean 		Html_elem_focus(String elem_id) 								{return Eval_script_as_exec(kit.Html_cfg().Elem_focus(elem_id));}
 	public boolean 		Html_elem_scroll_into_view(String id) 							{return Eval_script_as_bool(kit.Html_cfg().Elem_scroll_into_view(Escape_quotes(id)));}
 	public String 		Html_window_vpos() 												{return Eval_script_as_str(kit.Html_cfg().Window_vpos());}
@@ -111,7 +113,10 @@ class Swt_html implements Gxw_html, Swt_control, FocusListener {
 	private String Eval_script_as_str(String script) 	{return (String)Eval_script(script);}
 	public Object Eval_script(String script) {
 		eval_rslt.Clear();
-		try 				{eval_rslt.Result_set(browser.evaluate(script)); 	return eval_rslt.Result();}
+		try 				{
+			eval_rslt.Result_set(browser.evaluate(script));
+			return eval_rslt.Result();
+		}
 		catch (Exception e) {eval_rslt.Error_set(e.getMessage()); 				return eval_rslt.Error();}
 	}	private Swt_html_eval_rslt eval_rslt = new Swt_html_eval_rslt();
 	@Override public void focusGained(FocusEvent arg0) {

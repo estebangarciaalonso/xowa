@@ -44,7 +44,8 @@ public class Scrib_lib_wikibase implements Scrib_lib {
 		if (ByteAry_.Len_eq_0(ttl_bry)) return rslt.Init_empty();	// NOTE: some Modules do not pass in an argument; return early, else spurious warning "invalid qid for ttl" (since ttl is blank); EX:w:Module:Authority_control; DATE:2013-10-27
 		Xow_wiki wiki = core.Wiki();
 		Wdata_wiki_mgr wdata_mgr = wiki.App().Wiki_mgr().Wdata_mgr();
-		Wdata_doc page_doc = wdata_mgr.Pages_get_by_ttl_name(ttl_bry); if (page_doc == null) return rslt.Init_empty();
+		Wdata_doc page_doc = wdata_mgr.Pages_get_by_ttl_name(ttl_bry); 
+		if (page_doc == null) {Wdata_wiki_mgr.Log_missing_qid(core.Ctx(), ttl_bry); return rslt.Init_empty();}
 		if (parser == null) parser = new Wdata_doc_parser(wiki.App().Usr_dlg());
 		return rslt.Init_obj(Scrib_lib_wikibase_srl.Srl(parser, page_doc, true));
 	}	private Wdata_doc_parser parser;

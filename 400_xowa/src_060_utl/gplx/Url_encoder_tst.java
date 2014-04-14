@@ -47,6 +47,9 @@ public class Url_encoder_tst {
 	@Test  public void Fsys_wnt() 		{
 		fxt.Encoder_fsys_safe().Test_encode("Help:Options/HTML", "Help%3AOptions%2FHTML");
 	}
+	@Test  public void Invalid_url_decode() { // PURPOSE: check that invalid url decodings are rendered literally; DATE:2014-04-10
+		fxt.Encoder_href().Test_encode("%GC", "%25GC");
+	}
 }
 class Url_encoder_fxt {
 	public Url_encoder Encoder() {return encoder;} Url_encoder encoder;

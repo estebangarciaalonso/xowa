@@ -29,7 +29,7 @@ class Xoctg_fmtr_grp implements ByteAryFmtrArg {
 			while (cur_idx < len) {
 				Xoctg_view_itm itm = itms_list.Itms()[cur_idx];
 				byte[] itm_sortkey = itm.Sortkey();
-				byte[] ttl_char_0_new = gplx.intl.Utf8_.Mid(itm_sortkey, 0);
+				byte[] ttl_char_0_new = gplx.intl.Utf8_.Get_char_at_pos_as_bry(itm_sortkey, 0);
 				byte[] grp_name = ttl_char_0_new;
 				if (ByteAry_.Eq(ttl_char_0, ttl_char_0_new)) {
 					grp_name = ByteAry_.Add(ttl_char_0, Bry_space, wiki.Msg_mgr().Val_by_id(Xol_msg_itm_.Id_list_continues));

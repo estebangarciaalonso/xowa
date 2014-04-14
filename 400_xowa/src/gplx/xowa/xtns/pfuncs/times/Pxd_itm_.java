@@ -27,21 +27,22 @@ interface Pxd_itm {
 }
 class Pxd_itm_ {
 	public static final int
-		  TypeId_null		= 0
-		, TypeId_int		= 1
-		, TypeId_int_dmy_14 = 2
-		, TypeId_int_hms_6	= 3
-		, TypeId_month_name = 4
-		, TypeId_unit		= 5
-		, TypeId_ago 		= 6
-		, TypeId_day_suffix = 7		// 1st, 2nd
-		, TypeId_day_relative = 8	// today, tomorrow, yesterday
-		, TypeId_dash 		= Byte_ascii.Dash
-		, TypeId_dot 		= Byte_ascii.Dot
-		, TypeId_slash 		= Byte_ascii.Slash
-		, TypeId_colon 		= Byte_ascii.Colon
-		, TypeId_ws			= 98
-		, TypeId_sym		= 99
+	  TypeId_null				= 0
+	, TypeId_int				= 1
+	, TypeId_int_dmy_14			= 2
+	, TypeId_int_hms_6			= 3
+	, TypeId_month_name			= 4
+	, TypeId_unit				= 5
+	, TypeId_ago 				= 6
+	, TypeId_day_suffix			= 7	// 1st, 2nd
+	, TypeId_day_relative		= 8	// today, tomorrow, yesterday
+	, TypeId_time_relative		= 9 // now
+	, TypeId_dash 				= Byte_ascii.Dash
+	, TypeId_dot 				= Byte_ascii.Dot
+	, TypeId_slash 				= Byte_ascii.Slash
+	, TypeId_colon 				= Byte_ascii.Colon
+	, TypeId_ws					= 98
+	, TypeId_sym				= 99
 	;	
 }
 abstract class Pxd_itm_base implements Pxd_itm {

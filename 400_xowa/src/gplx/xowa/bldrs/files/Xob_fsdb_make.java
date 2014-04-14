@@ -45,7 +45,11 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		src_mgr = src_fsdb_mgr.Bin_mgr();			
 		trg_mnt_mgr = trg_fsdb_mgr.Mnt_mgr();
 		trg_mnt_mgr.Insert_to_mnt_(Fsdb_mnt_mgr.Mnt_idx_main);
-//			trg_mnt_mgr.Abc_mgr_at(Fsdb_mnt_mgr.Mnt_idx_main).Cfg_mgr().Update(gplx.xowa.xtns.gallery.Gallery_xnde.Fsdb_cfg_grp, gplx.xowa.xtns.gallery.Gallery_xnde.Fsdb_cfg_key_gallery_fix_defaults, "y"); HACK: temporarily disable for ar.w; DATE:2014-03-23
+		trg_mnt_mgr.Abc_mgr_at(Fsdb_mnt_mgr.Mnt_idx_main).Cfg_mgr()
+			.Update(gplx.xowa.xtns.gallery.Gallery_xnde.Fsdb_cfg_grp, gplx.xowa.xtns.gallery.Gallery_xnde.Fsdb_cfg_key_gallery_fix_defaults, "y")
+			.Update(gplx.xowa.xtns.gallery.Gallery_xnde.Fsdb_cfg_grp, gplx.xowa.xtns.gallery.Gallery_xnde.Fsdb_cfg_key_gallery_packed, "y")
+			;
+		// HACK: temporarily disable for ar.w; DATE:2014-03-23
 		poll_mgr = new Xobu_poll_mgr(bldr.App());
 	}
 	public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "file.fsdb_make";

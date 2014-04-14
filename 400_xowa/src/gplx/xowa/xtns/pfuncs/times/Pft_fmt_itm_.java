@@ -155,7 +155,7 @@ public class Pft_fmt_itm_ {
 						break;
 					default:
 						if (raw_bgn == String_.Neg1_pos) {raw_bgn = i; raw_byt = b;}
-						i += gplx.intl.Utf8_.CharLen(b);
+						i += gplx.intl.Utf8_.Len_of_char_by_1st_byte(b);
 						break;
 				}
 			}

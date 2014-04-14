@@ -211,7 +211,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 					}
 					if (subst_found)
 						return Transclude(ctx, wiki, bfr, name_ary, caller, src);
-					Print_not_found(bfr, name_ary);
+					Print_not_found(bfr, wiki.Ns_mgr(), name_ary);
 					return false;
 				}
 				break;
@@ -316,7 +316,7 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 			return Eval_sub(ctx, transclude_tmpl, caller, src, bfr);
 		}
 		else {				
-			Print_not_found(bfr, page_ttl.Full_txt());
+			Print_not_found(bfr, wiki.Ns_mgr(), page_ttl.Full_txt());
 			return false;
 		}
 	}
@@ -341,8 +341,9 @@ public class Xot_invk_tkn extends Xop_tkn_itm_base implements Xot_invk {
 		}
 		return rv;
 	}
-	public static void Print_not_found(ByteAryBfr bfr, byte[] name_ary) {	// print missing as [[:Template:Missing]]; REF:MW: Parser.php|braceSubstitution|$text = "[[:$titleText]]"; EX:en.d:Kazakhstan; DATE:2014-03-25
-		bfr.Add(Xop_tkn_.Lnki_bgn).Add_byte(Byte_ascii.Colon).Add(Xow_ns_.Bry_template).Add_byte(Byte_ascii.Colon).Add(name_ary).Add(Xop_tkn_.Lnki_end);
+	public static void Print_not_found(ByteAryBfr bfr, Xow_ns_mgr ns_mgr, byte[] name_ary) {	// print missing as [[:Template:Missing]]; REF:MW: Parser.php|braceSubstitution|$text = "[[:$titleText]]"; EX:en.d:Kazakhstan; DATE:2014-03-25
+		byte[] template_ns_name = ns_mgr.Ns_template().Name_bry();
+		bfr.Add(Xop_tkn_.Lnki_bgn).Add_byte(Byte_ascii.Colon).Add(template_ns_name).Add_byte(Byte_ascii.Colon).Add(name_ary).Add(Xop_tkn_.Lnki_end);
 	}
 	private boolean SubEval(Xop_ctx ctx, Xow_wiki wiki, ByteAryBfr bfr, byte[] name_ary, Xot_invk caller, byte[] src_for_tkn) {
 		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, name_ary); if (page_ttl == null) return false;	// ttl not valid; EX: {{:[[abc]]}}

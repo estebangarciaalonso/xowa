@@ -21,10 +21,10 @@ import gplx.xowa.xtns.scribunto.*;
 import gplx.xowa.xtns.wdatas.*;
 import gplx.xowa.parsers.logs.*;
 public class Xop_ctx {
-	Xop_ctx(Xow_wiki wiki) {
+	Xop_ctx(Xow_wiki wiki, Xoa_page page) {
 		this.app = wiki.App(); this.msg_log = app.Msg_log();
 		this.wiki = wiki;
-		page = new Xoa_page(wiki, Xoa_ttl.parse_(wiki, Xoa_page_.Main_page_bry));	// HACK: use "Main_Page" to put in valid page title
+		this.page = page;
 		wkrs = wkrs_(para, apos, xnde, list, lnki, hdr, amp, lnke, tblw, invk);
 		for (Xop_ctx_wkr wkr : wkrs) wkr.Ctor_ctx(this);
 	}
@@ -304,22 +304,26 @@ public class Xop_ctx {
 			cur.Add_byte(Byte_ascii.NewLine);
 	}
 	public static Xop_ctx new_(Xow_wiki wiki) {
-		Xop_ctx rv = new Xop_ctx(wiki);
+		Xop_ctx rv = new Xop_ctx(wiki, new_page_(wiki));
 		rv.tab = new Xog_tab();
 		return rv;
 	}
-	public static Xop_ctx new_sub_(Xow_wiki wiki) {
-		Xop_ctx rv = new Xop_ctx(wiki);
+	public static Xop_ctx new_sub_(Xow_wiki wiki) {return new_sub_(wiki, new_page_(wiki));}
+	public static Xop_ctx new_sub_(Xow_wiki wiki, Xoa_page page) {	// TODO: new_sub_ should reuse ctx's page; callers who want new_page should call new_sub_page_; DATE:2014-04-10
 		Xop_ctx ctx = wiki.Ctx();
+		Xop_ctx rv = new Xop_ctx(wiki, page);
 		new_copy(ctx, rv);
 		return rv;
 	}
 	public static Xop_ctx new_sub_page_(Xow_wiki wiki, Xop_ctx ctx, Hash_adp_bry lst_page_regy) {
-		Xop_ctx rv = new_sub_(wiki);
+		Xop_ctx rv = new Xop_ctx(wiki, new_page_(wiki));
 		new_copy(ctx, rv);
 		rv.lst_page_regy = lst_page_regy;			// NOTE: must share ref for lst only (do not share for sub_(), else stack overflow)
 		rv.Page().Ref_mgr_(ctx.Page().Ref_mgr());	// NOTE: must share ref_mgr, else references in sub_ctx will not be picked up in root_ctx; EX: en.wikisource.org/wiki/Flatland_(first_edition)/This_World; DATE:2014-01-18
 		return rv;
+	}
+	private static Xoa_page new_page_(Xow_wiki wiki) {
+		return new Xoa_page(wiki, Xoa_ttl.parse_(wiki, Xoa_page_.Main_page_bry));	// HACK: use "Main_Page" to put in valid page title
 	}
 	private static void new_copy(Xop_ctx src, Xop_ctx trg) {
 		trg.Lnki().File_wkr_(src.Lnki().File_wkr());

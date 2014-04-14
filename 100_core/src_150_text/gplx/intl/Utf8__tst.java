@@ -18,34 +18,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.intl; import gplx.*;
 import org.junit.*;
 public class Utf8__tst {
-	@Test  public void EncodeDecode() {
-		Tst_EncodeDecode(162, 194, 162);				// cent
-		Tst_EncodeDecode(8364, 226, 130, 172);			// euro
-		Tst_EncodeDecode(150370, 240, 164, 173, 162);	// example from [[UTF-8]]
+	private Utf8__fxt fxt = new Utf8__fxt();
+	@Test  public void Get_pos0_of_char_bwd() {
+		fxt.Test_Get_pos0_of_char_bwd("abcd", 3);		// len=1; (note that bry.len = 4)
+		fxt.Test_Get_pos0_of_char_bwd("a", 0);			// len=1; short-String
+		fxt.Test_Get_pos0_of_char_bwd("abc¢", 3);		// len=2; (note that bry.len = 5)
+		fxt.Test_Get_pos0_of_char_bwd("abc€", 3);		// len=3; (note that bry.len = 6)
+		fxt.Test_Get_pos0_of_char_bwd("abc" + String_.new_utf8_(Byte_.Ary_by_ints(240, 164, 173, 162)), 3);		// len=4; (note that bry.len = 7)
 	}
-	@Test  public void Char_bgn() {
-		Tst_Char_bgn("abcd", 3);		// len=1; (note that bry.len = 4)
-		Tst_Char_bgn("a", 0);			// len=1; short-String
-		Tst_Char_bgn("abc¢", 3);		// len=2; (note that bry.len = 5)
-		Tst_Char_bgn("abc€", 3);		// len=3; (note that bry.len = 6)
-		Tst_Char_bgn("abc" + String_.new_utf8_(Byte_.Ary_by_ints(240, 164, 173, 162)), 3);		// len=4; (note that bry.len = 7)
+	@Test  public void Increment_char_at_last_pos() {
+		fxt.Test_Increment_char_at_last_pos("a", "b");
+		fxt.Test_Increment_char_at_last_pos("abc", "abd");
+		fxt.Test_Increment_char_at_last_pos("É", "Ê");	// len=2
+		fxt.Test_Increment_char_at_last_pos("€", "₭");	// len=3
 	}
-	@Test  public void Increment_char_last() {
-		Tst_Increment_char_last("a", "b");
-		Tst_Increment_char_last("abc", "abd");
-		Tst_Increment_char_last("É", "Ê");	// len=2
-		Tst_Increment_char_last("€", "₭");	// len=3
-	}
-//		@Test  public void Increment_char_last_check() {
+//		@Test  public void Increment_char_at_last_pos_exhaustive_check() {	// check all values; commented for perf
 //			ByteAryBfr bfr = ByteAryBfr.new_();
 //			int bgn = 32;
 //			while (true) {
-//				byte[] bgn_bry = Utf8_.EncodeCharAsAry(bgn);
-//				int end = Utf8_.Codepoint_next(bgn);
+//				byte[] bgn_bry = Utf16_.Encode_int_to_bry(bgn);
+//				int end = Utf8_.Increment_char(bgn);
 //				if (end == Utf8_.Codepoint_max) break;
 ////				if (bgn > 1024 * 1024) break;
-//				byte[] end_by_codepoint_next = Utf8_.EncodeCharAsAry(end);
-//				byte[] end_by_increment_char = Utf8_.Increment_char_last(bgn_bry);
+//				byte[] end_by_codepoint_next = Utf16_.Encode_int_to_bry(end);
+//				byte[] end_by_increment_char = Utf8_.Increment_char_at_last_pos(bgn_bry);
 //				if (!ByteAry_.Eq(end_by_codepoint_next, end_by_increment_char)) {
 //					Tfds.Write(bgn);
 //				}				
@@ -58,33 +54,16 @@ public class Utf8__tst {
 //				bgn = end;
 //				bgn_bry = end_by_codepoint_next;
 //			}
-////			Tfds.WriteText(bfr.XtoStrAndClear());
+//			Tfds.WriteText(bfr.XtoStrAndClear());
 //		}
-	@Test  public void Encode_as_bry_by_hex() {
-		tst_Encode_as_bry_by_hex("00", 0);
-		tst_Encode_as_bry_by_hex("41", 65);
-		tst_Encode_as_bry_by_hex("0041", 65);
-		tst_Encode_as_bry_by_hex("00C0", 195, 128);
-	}
-	private void tst_Encode_as_bry_by_hex(String raw, int... expd) {
-		byte[] actl = Utf8_.Encode_as_bry_by_hex(raw);
-		Tfds.Eq_ary(Byte_.Ary_by_ints(expd), actl);
-	}
-	private void Tst_EncodeDecode(int expd_c_int, int... expd_int) {
-		byte[] expd = ByteAry_.ints_(expd_int);
-		byte[] bfr = new byte[10];
-		int bfr_len = Utf8_.EncodeChar(expd_c_int, bfr, 0);
-		byte[] actl = ByteAry_.Mid_by_len(bfr, 0, bfr_len);
-		Tfds.Eq_ary(expd, actl);
-		int actl_c_int = Utf8_.DecodeChar(bfr, 0);
-		Tfds.Eq(expd_c_int, actl_c_int);
-	}
-	private void Tst_Char_bgn(String str, int expd) {
+}
+class Utf8__fxt {
+	public void Test_Get_pos0_of_char_bwd(String str, int expd) {
 		byte[] bry = ByteAry_.new_utf8_(str);
 		int pos = bry.length - 1;	// always start from last char
-		Tfds.Eq(expd, Utf8_.Char_bgn(bry, pos));
+		Tfds.Eq(expd, Utf8_.Get_pos0_of_char_bwd(bry, pos));
 	}
-	private void Tst_Increment_char_last(String str, String expd) {
-		Tfds.Eq(expd, String_.new_utf8_(Utf8_.Increment_char_last(ByteAry_.new_utf8_(str))));
+	public void Test_Increment_char_at_last_pos(String str, String expd) {
+		Tfds.Eq(expd, String_.new_utf8_(Utf8_.Increment_char_at_last_pos(ByteAry_.new_utf8_(str))));
 	}
 }

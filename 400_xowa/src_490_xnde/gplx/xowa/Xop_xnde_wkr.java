@@ -267,7 +267,11 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		if (ctx.Parse_tid() == Xop_parser_.Parse_tid_page_wiki) {
 			atrs = ctx.App().Xatr_parser().Parse(ctx.Msg_log(), src, atrs_bgn, atrs_end);
 		}
-		if (	(tag.Xtn() && ctx.Parse_tid() != Xop_parser_.Parse_tid_tmpl)	// do not gobble up rest if in tmpl; handle <poem>{{{1}}}</poem>; DATE:2014-03-03
+		if (	(	tag.Xtn() 
+				&&	(	ctx.Parse_tid() != Xop_parser_.Parse_tid_tmpl	// do not gobble up rest if in tmpl; handle <poem>{{{1}}}</poem>; DATE:2014-03-03
+					||	tag.Xtn_skips_template_args()					// ignore above if tag specifically skips template args; EX: <pre>; DATE:2014-04-10
+					)
+				)
 			||	(force_xtn_for_nowiki && !inline)				
 			)	{
 			return Make_xnde_xtn(ctx, tkn_mkr, root, src, src_len, tag, bgn_pos, gtPos + 1, atrs_bgn, atrs_end, atrs, inline);	// find end tag and do not parse anything inbetween
@@ -421,16 +425,24 @@ public class Xop_xnde_wkr implements Xop_ctx_wkr {
 		int bgn_tag_id = bgn_nde == null ? -1 : bgn_nde.Tag().Id();
 
 		int end_nde_mode = end_tag.EndNdeMode();
+		boolean force_end_tag_to_match_bgn_tag = false;
 		switch (bgn_tag_id) {
 			case Xop_xnde_tag_.Tid_sub:
-				if (end_tag_id == Xop_xnde_tag_.Tid_sup) {end_tag_id = Xop_xnde_tag_.Tid_sub; ctx.Msg_log().Add_itm_none(Xop_xnde_log.Sub_sup_swapped, src, bgn_pos, cur_pos);}
+				if (end_tag_id == Xop_xnde_tag_.Tid_sup) force_end_tag_to_match_bgn_tag = true;
 				break;
 			case Xop_xnde_tag_.Tid_sup:
-				if (end_tag_id == Xop_xnde_tag_.Tid_sub) {end_tag_id = Xop_xnde_tag_.Tid_sup; ctx.Msg_log().Add_itm_none(Xop_xnde_log.Sub_sup_swapped, src, bgn_pos, cur_pos);}
+				if (end_tag_id == Xop_xnde_tag_.Tid_sub) force_end_tag_to_match_bgn_tag = true;
 				break;
 			case Xop_xnde_tag_.Tid_mark:
-				if (end_tag_id == Xop_xnde_tag_.Tid_span) {end_tag_id = Xop_xnde_tag_.Tid_mark; ctx.Msg_log().Add_itm_none(Xop_xnde_log.Sub_sup_swapped, src, bgn_pos, cur_pos);}
+				if (end_tag_id == Xop_xnde_tag_.Tid_span) force_end_tag_to_match_bgn_tag = true;
 				break;
+			case Xop_xnde_tag_.Tid_span:
+				if (end_tag_id == Xop_xnde_tag_.Tid_font) force_end_tag_to_match_bgn_tag = true;
+				break;
+		}
+		if (force_end_tag_to_match_bgn_tag) {
+			end_tag_id = bgn_tag_id;
+			ctx.Msg_log().Add_itm_none(Xop_xnde_log.Sub_sup_swapped, src, bgn_pos, cur_pos);
 		}
 		if (end_tag_id == Xop_xnde_tag_.Tid_table || end_tag.TblSub()) {
 			Tblw_end(ctx, tkn_mkr, root, src, src_len, bgn_pos, cur_pos, end_tag_id);

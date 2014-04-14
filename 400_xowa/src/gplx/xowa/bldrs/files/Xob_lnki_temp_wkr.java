@@ -100,7 +100,7 @@ public class Xob_lnki_temp_wkr extends Xob_dump_mgr_base implements Xop_lnki_log
 				usr_dlg.Warn_many("", "", "page and thumbtime both set; this may be an issue with fsdb: page=~{0} ttl=~{1}", ctx.Page().Ttl().Page_db_as_str(), String_.new_utf8_(ttl));
 		if (lnki.Ns_id() == Xow_ns_.Id_media)
 			lnki_src_tid = Xob_lnki_src_tid.Tid_media;
-		Xob_lnki_temp_tbl.Insert(stmt, ctx.Page().Id(), ttl, ttl_commons, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki_src_tid, lnki.Width(), lnki.Height(), lnki.Upright(), lnki_thumbtime, lnki_page);
+		Xob_lnki_temp_tbl.Insert(stmt, ctx.Page().Id(), ttl, ttl_commons, Byte_.int_(ext.Id()), lnki.Lnki_type(), lnki_src_tid, lnki.Lnki_w(), lnki.Lnki_h(), lnki.Upright(), lnki_thumbtime, lnki_page);
 	}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_wdata_enabled_))				wdata_enabled = m.ReadYn("v");

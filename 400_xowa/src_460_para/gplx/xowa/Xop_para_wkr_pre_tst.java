@@ -57,6 +57,7 @@ public class Xop_para_wkr_pre_tst {
 		));
 	}
 	@Test  public void Ignore_pre_in_gallery() {// PURPOSE: pre in gallery should be ignored; EX:uk.w:EP2; DATE:2014-03-11
+		gplx.xowa.xtns.gallery.Gallery_mgr_base.File_found_mode = Bool_.Y_byte;
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
 		( "a"
 		, ""
@@ -66,14 +67,12 @@ public class Xop_para_wkr_pre_tst {
 		),	String_.Concat_lines_nl_skipLast
 		( "<p>a"
 		, "</p>"
-		, " <ul id=\"xowa_gallery_ul_0\" class=\"gallery\" style=\"max-width:1304px; _width:1304px;\">"
-		, "  <li id=\"xowa_gallery_li_0\" class=\"gallerybox\" style=\"width:155px;\">"
-		, "    <div id=\"xowa_gallery_div1_0\" style=\"width:155px;\">"
-		, "      <div id=\"xowa_gallery_div2_0\" class=\"thumb\" style=\"width:150px;\">"
-		, "        <div id=\"xowa_gallery_div3_0\" style=\"margin:15px auto;\">"
-		, "          <a href=\"/wiki/File:A.png\" class=\"image\">"
-		, "            <img id=\"xowa_file_img_0\" alt=\"A.png\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"120\" />"
-		, "          </a>"
+		, " <ul id=\"xowa_gallery_ul_0\" class=\"gallery mw-gallery-traditional\">"
+		, "  <li id=\"xowa_gallery_li_1\" class=\"gallerybox\" style=\"width: 155px\">"
+		, "    <div style=\"width: 155px\">"
+		, "      <div class=\"thumb\" style=\"width: 150px;\">"
+		, "        <div style=\"margin:15px auto;\">"
+		, "          <a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_1\" alt=\"A.png\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"120\" /></a>"
 		, "        </div>"
 		, "      </div>"
 		, "      <div class=\"gallerytext\">"
@@ -83,6 +82,34 @@ public class Xop_para_wkr_pre_tst {
 		, "</ul>"
 		,""
 		));
+		gplx.xowa.xtns.gallery.Gallery_mgr_base.File_found_mode = Bool_.N_byte;
+	}
+	@Test  public void Pre_xnde_gallery() {	// PURPOSE: <gallery> should invalidate pre; EX: en.w:Mary, Queen of Scots
+		gplx.xowa.xtns.gallery.Gallery_mgr_base.File_found_mode = Bool_.Y_byte;
+		fxt.Wiki().Xtn_mgr().Init_by_wiki(fxt.Wiki());
+		String raw = String_.Concat_lines_nl_skipLast
+			( " <gallery>"
+			, "File:A.png|b"
+			, "</gallery>"
+			);
+		fxt.Test_parse_page_wiki_str(raw, String_.Concat_lines_nl_skipLast
+			( " <ul id=\"xowa_gallery_ul_0\" class=\"gallery mw-gallery-traditional\">"
+			, "  <li id=\"xowa_gallery_li_1\" class=\"gallerybox\" style=\"width: 155px\">"
+			, "    <div style=\"width: 155px\">"
+			, "      <div class=\"thumb\" style=\"width: 150px;\">"
+			, "        <div style=\"margin:15px auto;\">"
+			, "          <a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_1\" alt=\"\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"120\" /></a>"
+			, "        </div>"
+			, "      </div>"
+			, "      <div class=\"gallerytext\"><p>b"
+			, "</p>"
+			, ""
+			, "      </div>"
+			, "    </div>"
+			, "  </li>"
+			, "</ul>"
+			));
+		gplx.xowa.xtns.gallery.Gallery_mgr_base.File_found_mode = Bool_.N_byte;
 	}
 	@Test  public void Ignore_pre_in_center() {// PURPOSE: pre in gallery should be ignored; EX:uk.w:EP2; DATE:2014-03-11
 		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast

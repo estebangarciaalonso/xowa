@@ -17,12 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.intl; import gplx.*;
 public class Utf8_ {
-	public static byte[] Mid(byte[] src, int bgn) {
-		int len = CharLen(src[bgn]);
-		return ByteAry_.Mid(src, bgn, bgn + len);
-	}
-	public static int CharLen(byte b) {	// NOTE: changed charLen to match w:UTF-8; DATE:2013-11-27
-		int i = b & 0xff;
+	public static int Len_of_char_by_1st_byte(byte b) {// SEE:w:UTF-8
+		int i = b & 0xff;	// PATCH.JAVA:need to convert to unsigned byte
 		switch (i) {
 			case   0: case   1: case   2: case   3: case   4: case   5: case   6: case   7: case   8: case   9: case  10: case  11: case  12: case  13: case  14: case  15: 
 			case  16: case  17: case  18: case  19: case  20: case  21: case  22: case  23: case  24: case  25: case  26: case  27: case  28: case  29: case  30: case  31: 
@@ -44,57 +40,60 @@ public class Utf8_ {
 				return 3;
 			case 240: case 241: case 242: case 243: case 244: case 245: case 246: case 247:
 				return 4;
-			case 248: case 249: case 250: case 251:
-				return 5;
-			case 252: case 253:
-				return 6;
-			case 254: case 255:
-			default:
-				return 6;
+			default: throw Err_.new_fmt_("invalid initial utf8 byte; byte={0}", b);
 		}
 	}
-	public static byte[] Increment_char_last(byte[] bry) {
+	public static byte[] Get_char_at_pos_as_bry(byte[] bry, int pos) {
+		int len = Len_of_char_by_1st_byte(bry[pos]);
+		return ByteAry_.Mid(bry, pos, pos + len);
+	}
+	public static byte[] Increment_char_at_last_pos(byte[] bry) {	// EX: abc -> abd; complexity is for multi-byte chars
 		int bry_len = bry.length; if (bry_len == 0) return bry;
-		int cur_pos = bry_len - 1;
-		while (true) {
-			int new_pos = Char_bgn(bry, cur_pos);
-			int b_len = (cur_pos - new_pos) + 1;
-			int nxt_codepoint = Codepoint_max;
-			if (b_len == 1) {	// ASCII char; just increment by 1
-				nxt_codepoint = Codepoint_next(bry[new_pos]);
-				if (nxt_codepoint < 128) {
-					bry = ByteAry_.Copy(bry);
-					bry[new_pos] = (byte)nxt_codepoint;
+		int pos = bry_len - 1;
+		while (true) {												// loop bwds
+			int cur_char_pos0 = Get_pos0_of_char_bwd(bry, pos);		// get byte0 of char
+			int cur_char_len = (pos - cur_char_pos0) + 1;			// calc len of char
+			int nxt_char = Codepoint_max;
+			if (cur_char_len == 1) {								// len=1; just change 1 byte
+				nxt_char = Increment_char(bry[cur_char_pos0]);		// get next char
+				if (nxt_char < 128) {								// single-byte char; just change pos
+					bry = ByteAry_.Copy(bry);						// always return new bry; never reuse existing
+					bry[cur_char_pos0] = (byte)nxt_char;
 					return bry;
 				}
 			}
-			int cur_codepoint = DecodeChar(bry, new_pos);
-			nxt_codepoint = Codepoint_next(cur_codepoint);
-			if (nxt_codepoint != Codepoint_max) {
-				byte[] nxt_codepoint_bry = EncodeCharAsAry(nxt_codepoint);
-				bry = ByteAry_.Add(ByteAry_.Mid(bry, 0, new_pos), nxt_codepoint_bry);
+			int cur_char = Utf16_.Decode_to_int(bry, cur_char_pos0);
+			nxt_char = Increment_char(cur_char);
+			if (nxt_char != Int_.MinValue) {
+				byte[] nxt_char_as_bry = Utf16_.Encode_int_to_bry(nxt_char);
+				bry = ByteAry_.Add(ByteAry_.Mid(bry, 0, cur_char_pos0), nxt_char_as_bry);
 				return bry;
 			}
-			cur_pos = new_pos - 1;
-			if (cur_pos < 0) return null;
+			pos = cur_char_pos0 - 1;
+			if (pos < 0) return null;
 		}
 	}
-	public static int Char_bgn(byte[] bry, int pos) {
-		int end = pos - 4; if (end < 0) end = 0;
-		for (int i = pos; i >= end; i--) {
+	@gplx.Internal protected static int Get_pos0_of_char_bwd(byte[] bry, int pos) {	// find pos0 of char while moving bwd through bry; see test
+		int stop = pos - 4;						// UTF8 char has max of 4 bytes
+		if (stop < 0) stop = 0;					// if at pos 0 - 3, stop at 0
+		for (int i = pos - 1; i >= stop; i--) {	// start at pos - 1, and move bwd; NOTE: pos - 1 to skip pos, b/c pos will never definitively yield any char_len info
 			byte b = bry[i];
-			int b_len = CharLen(b);
-			if (b_len > 1) return i;	// multi-byte char; return pos of first char
+			int char_len = Len_of_char_by_1st_byte(b);
+			switch (char_len) {	// if char_len is multi-byte and pos is at correct multi-byte pos (pos - i = # of bytes - 1), then pos0 found; EX: � = {226,130,172}; 172 is skipped; 130 has len of 1 -> continue; 226 has len of 3 and is found at correct pos for 3 byte char -> return
+				case 2: if (pos - i == 1) return i; break;
+				case 3: if (pos - i == 2) return i; break;
+				case 4: if (pos - i == 3) return i; break;
+			}
 		}
 		return pos;	// no mult-byte char found; return pos
 	}
-	public static int Codepoint_next(int cur) {
+	@gplx.Internal protected static int Increment_char(int cur) {
 		while (cur++ < Codepoint_max) {
-			if (cur == Codepoint_surrogate_bgn) cur = Codepoint_surrogate_end + 1;
+			if (cur == Codepoint_surrogate_bgn) cur = Codepoint_surrogate_end + 1;	// skip over surrogate range
 			if (!Codepoint_valid(cur)) continue;
 			return cur;
 		}
-		return Codepoint_max;
+		return Int_.MinValue;
 	}
 	private static boolean Codepoint_valid(int v) {
 				return Character.isDefined(v);
@@ -104,117 +103,4 @@ public class Utf8_ {
 	, Codepoint_surrogate_bgn = 0xD800
 	, Codepoint_surrogate_end = 0xDFFF
 	;
-	public static int DecodeChar(byte[] ary, int pos) {
-		byte b0 = ary[pos];
-		if 		((b0 & 0x80) == 0) {
-			return  b0;			
-		}
-		else if ((b0 & 0xE0) == 0xC0) {
-			return  ( b0           & 0x1f) <<  6
-				| 	( ary[pos + 1] & 0x3f)
-				;			
-		}
-		else if ((b0 & 0xF0) == 0xE0) {
-			return  ( b0           & 0x0f) << 12
-				| 	((ary[pos + 1] & 0x3f) <<  6)
-				| 	( ary[pos + 2] & 0x3f)
-				;			
-		}
-		else if ((b0 & 0xF8) == 0xF0) {
-			return  ( b0           & 0x07) << 18
-				| 	((ary[pos + 1] & 0x3f) << 12)
-				| 	((ary[pos + 2] & 0x3f) <<  6)
-				| 	( ary[pos + 3] & 0x3f)
-				;			
-		}
-		else if ((b0 & 0xFC) == 0xF8) {
-			return  ( b0           & 0x03) << 24
-				| 	((ary[pos + 1] & 0x3f) << 18)
-				| 	((ary[pos + 2] & 0x3f) << 12)
-				| 	((ary[pos + 3] & 0x3f) <<  6)
-				| 	( ary[pos + 4] & 0x3f)
-				;			
-		}
-		else if ((b0 & 0xFC) == 0xFC) {
-			return  ( b0           & 0x03) << 30
-				| 	((ary[pos + 1] & 0x3f) << 24)
-				| 	((ary[pos + 2] & 0x3f) << 18)
-				| 	((ary[pos + 3] & 0x3f) << 12)
-				| 	((ary[pos + 4] & 0x3f) <<  6)
-				| 	( ary[pos + 5] & 0x3f)
-			;			
-		}
-		else {
-			return b0 & 0xFF;
-		}
-	}
-	public static byte[] Encode_as_bry_by_hex(String raw) {return Encode_as_bry_by_hex(ByteAry_.new_ascii_(raw));}
-	public static byte[] Encode_as_bry_by_hex(byte[] raw) {
-		if (raw == null) return null;
-		int int_val = gplx.texts.HexDecUtl.parse_or_(raw, Int_.MinValue);
-		return int_val == Int_.MinValue ? null : EncodeCharAsAry(int_val);
-	}
-	public static byte[] EncodeCharAsAry(int charAsInt) {
-		int rv_len = Len(charAsInt);
-		byte[] rv = new byte[rv_len];
-		EncodeChar(charAsInt, rv, 0);
-		return rv;
-	}
-	public static int EncodeChar(int charAsInt, byte[] src, int pos) {
-		if (charAsInt < 0x80) {
-			src[pos] 	= (byte)charAsInt;
-			return 1;
-		}
-		else if (charAsInt < (1 << 11)) {
-			src[pos] 	= (byte)(0xC0 | (charAsInt >> 6));
-			src[++pos] 	= (byte)(0x80 | (charAsInt & 0x3F));
-			return 2;
-		}	
-		else if (charAsInt < (1 << 16)) {
-			src[pos] 	= (byte)(0xE0 | (charAsInt >> 12));
-			src[++pos] 	= (byte)(0x80 | (charAsInt >>  6) & 0x3F);
-			src[++pos] 	= (byte)(0x80 | (charAsInt        & 0x3F));
-			return 3;
-		}	
-		else if (charAsInt < (1 << 21)) {
-			src[pos] 	= (byte)(0xF0 | (charAsInt >> 18));
-			src[++pos] 	= (byte)(0x80 | (charAsInt >> 12) & 0x3F);
-			src[++pos] 	= (byte)(0x80 | (charAsInt >>  6) & 0x3F);
-			src[++pos] 	= (byte)(0x80 | (charAsInt        & 0x3F));
-			return 4;
-		}
-		else if (charAsInt < (1 << 26)) {
-			src[pos] 	= (byte)(0xF8 | (charAsInt >> 24));
-			src[++pos] 	= (byte)(0x80 | (charAsInt >> 18) & 0x3F);
-			src[++pos] 	= (byte)(0x80 | (charAsInt >> 12) & 0x3F);
-			src[++pos] 	= (byte)(0x80 | (charAsInt >>  6) & 0x3F);
-			src[++pos] 	= (byte)(0x80 | (charAsInt        & 0x3F));
-			return 5;
-		}	
-		else if (charAsInt < (1 << 31)) {
-			src[pos] 	= (byte)(0xFC | (charAsInt >> 30));
-			src[++pos] 	= (byte)(0x80 | (charAsInt >> 24) & 0x3F);
-			src[++pos] 	= (byte)(0x80 | (charAsInt >> 18) & 0x3F);
-			src[++pos] 	= (byte)(0x80 | (charAsInt >> 12) & 0x3F);
-			src[++pos] 	= (byte)(0x80 | (charAsInt >>  6) & 0x3F);
-			src[++pos] 	= (byte)(0x80 | (charAsInt        & 0x3F));
-			return 6;
-		}	
-		else if (charAsInt == 0) {
-			src[pos] 	= (byte)0xC0;
-			src[++pos] 	= (byte)0x80;
-			return -1;
-		}
-		return -1;
-	}
-	static int Len(int charAsInt) {
-		if		(charAsInt < 0x80)				return 1;
-		else if (charAsInt < (1 << 11))			return 2;
-		else if (charAsInt < (1 << 16))			return 3;
-		else if (charAsInt < (1 << 21))			return 4;
-		else if (charAsInt < (1 << 26))			return 5;
-		else if (charAsInt < (Int_.MaxValue))	return 6;
-		else if (charAsInt == 0)				return -1;
-		return -1;
-	}
 }

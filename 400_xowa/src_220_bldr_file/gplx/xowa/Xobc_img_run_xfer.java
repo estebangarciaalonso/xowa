@@ -77,7 +77,7 @@ public class Xobc_img_run_xfer extends Xob_itm_basic_base implements Xob_cmd, Gf
 				xfer_itm.Meta_itm().Load_orig_(xfer_itm.Orig_w(), xfer_itm.Orig_h());
 				if (row.Redirect_exists()) {	// write redirect row; note that rdr has name/redirect reversed
 					byte[] redirect_ttl = row.Name();
-					Xof_meta_itm redirect_itm = trg_meta_mgr.Get_itm_or_new(redirect_ttl, Xof_xfer_itm.Md5_(redirect_ttl));
+					Xof_meta_itm redirect_itm = trg_meta_mgr.Get_itm_or_new(redirect_ttl, Xof_xfer_itm_.Md5_(redirect_ttl));
 					redirect_itm.Ptr_ttl_(row.Redirect()).Vrtl_repo_(row.Repo_id());
 				}
 

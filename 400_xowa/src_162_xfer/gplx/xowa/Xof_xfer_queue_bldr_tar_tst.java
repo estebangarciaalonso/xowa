@@ -135,7 +135,7 @@ public class Xof_xfer_queue_bldr_tar_tst {
 		.tst();
 	}
 }
-// Tfds.Write(gplx.xowa.files.Xof_xfer_itm.Md5_(ByteAry_.new_utf8_("A,b.png")));
+// Tfds.Write(gplx.xowa.files.Xof_xfer_itm_.Md5_(ByteAry_.new_utf8_("A,b.png")));
 
 /*
 NOTE_1:String_.Repeat("A", (200 + 4) - (24 + 20 + 32 + 1 + 4)) 

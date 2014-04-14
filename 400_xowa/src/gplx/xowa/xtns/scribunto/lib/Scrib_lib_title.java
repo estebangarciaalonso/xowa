@@ -38,12 +38,17 @@ public class Scrib_lib_title implements Scrib_lib {
 			case Proc_getContent:						return GetContent(args, rslt);
 			case Proc_fileExists:						return FileExists(args, rslt);
 			case Proc_getCurrentTitle:					return GetCurrentTitle(args, rslt);
+			case Proc_protectionLevels:					return ProtectionLevels(args, rslt);
 			default: throw Err_.unhandled(key);
 		}
 	}
-	private static final int Proc_newTitle = 0, Proc_makeTitle = 1, Proc_getUrl = 2, Proc_getContent = 3, Proc_fileExists = 4, Proc_getCurrentTitle = 5;
-	public static final String Invk_newTitle = "newTitle", Invk_makeTitle = "makeTitle", Invk_getUrl = "getUrl", Invk_getContent = "getContent", Invk_fileExists = "fileExists", Invk_getCurrentTitle = "getCurrentTitle";
-	private static final String[] Proc_names = String_.Ary(Invk_newTitle, Invk_makeTitle, Invk_getUrl, Invk_getContent, Invk_fileExists, Invk_getCurrentTitle);
+	private static final int Proc_newTitle = 0, Proc_makeTitle = 1, Proc_getUrl = 2, Proc_getContent = 3, Proc_fileExists = 4, Proc_getCurrentTitle = 5, Proc_protectionLevels = 6;
+	public static final String 
+	  Invk_newTitle = "newTitle", Invk_makeTitle = "makeTitle"
+	, Invk_getUrl = "getUrl", Invk_getContent = "getContent", Invk_fileExists = "fileExists", Invk_getCurrentTitle = "getCurrentTitle"
+	, Invk_protectionLevels = "protectionLevels"
+	;
+	private static final String[] Proc_names = String_.Ary(Invk_newTitle, Invk_makeTitle, Invk_getUrl, Invk_getContent, Invk_fileExists, Invk_getCurrentTitle, Invk_protectionLevels);
 	public boolean NewTitle(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		byte[] ttl_bry = args.Pull_bry(0);
 		Object ns_obj = args.Cast_obj_or_null(1);
@@ -130,6 +135,12 @@ public class Scrib_lib_title implements Scrib_lib {
 	}
 	public boolean GetCurrentTitle(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		return rslt.Init_obj(Xto_kv_ary(core.Page().Ttl()));
+	}
+	public boolean ProtectionLevels(Scrib_proc_args args, Scrib_proc_rslt rslt) {
+		// byte[] ttl_bry = args.Pull_bry(0);
+		// Xow_wiki wiki = core.Wiki();
+		// Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry); if (ttl == null) return rslt.Init_obj(null);
+		return rslt.Init_many_objs("");	// NOTE: always return no protection; protectionLevels are stored in different table which is currently not mirrored; DATE:2014-04-09
 	}
 	private KeyVal[] Xto_kv_ary(Xoa_ttl ttl) {
 		Xow_ns ns = ttl.Ns();

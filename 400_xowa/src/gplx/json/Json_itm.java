@@ -78,7 +78,7 @@ class Json_itm_str extends Json_itm_base {
 		if (data_bry == null) data_bry = Data_make_bry();
 		return ByteAry_.Match(data_bry, comp);
 	}	byte[] data_bry = null;
-	byte[] Data_make_bry() {
+	private byte[] Data_make_bry() {
 		byte[] src = doc.Src(); int bgn = this.Src_bgn(), end = this.Src_end();
 		if (exact) return ByteAry_.Mid(src, bgn, end);
 		ByteAryBfr bfr = doc.Bfr();
@@ -93,7 +93,7 @@ class Json_itm_str extends Json_itm_base {
 							bfr.Add_byte(b);	break;	// \?		" \ / b f n r t
 						case Byte_ascii.Ltr_u:
 							int utf8_val = gplx.texts.HexDecUtl.parse_or_(src, i + 1, i + 5, -1);
-							int len = gplx.intl.Utf8_.EncodeChar(utf8_val, utf8_bry, 0);
+							int len = gplx.intl.Utf16_.Encode_int(utf8_val, utf8_bry, 0);
 							bfr.Add_mid(utf8_bry, 0, len);
 							i += 4;
 							break;	// \uFFFF	4 hex-dec

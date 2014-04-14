@@ -48,7 +48,7 @@ class Prefs_converter_fxt {
 		raw_bry = ByteAry_.Mid(raw_bry, bgn_pos, end_pos);
 		int len = raw_bry.length;
 		for (int i = 0; i < len; i++) {
-			byte[] c = gplx.intl.Utf8_.Mid(raw_bry, i);
+			byte[] c = gplx.intl.Utf8_.Get_char_at_pos_as_bry(raw_bry, i);
 			if (c.length == 1) {
 				switch (c[0]) {
 					case Byte_ascii.Dash:

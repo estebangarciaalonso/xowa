@@ -51,8 +51,8 @@ class Xop_vnt_flag_parser {
 				case Xop_tkn_itm_.Tid_newLine:	// skip ws
 					break;
 				default:
-					wiki.App().Usr_dlg().Warn_many("", "", "unknown tkn in vnt flag; tid=~{0} txt=~{1}", sub.Tkn_tid(), String_.new_utf8_(src, sub.Src_bgn(), sub.Src_end()));
-					loop = false;
+					wiki.App().Usr_dlg().Log_many("", "", "unknown tkn in vnt flag; tid=~{0} txt=~{1}", sub.Tkn_tid(), String_.new_utf8_(src, sub.Src_bgn(), sub.Src_end()));
+					flag_bfr.Add_mid(src, sub.Src_bgn(), sub.Src_end());
 					break;
 			}
 			++rslt_tkn_pos;

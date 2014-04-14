@@ -28,6 +28,8 @@ public class Gfui_html extends GfuiElemBase {
 	public boolean		Html_elem_atr_set(String elem_id, String atr_key, String v) {return under.Html_elem_atr_set(elem_id, atr_key, v);}
 	public boolean		Html_elem_atr_set_append(String elem_id, String atr_key, String append) {return under.Html_elem_atr_set_append(elem_id, atr_key, append);}
 	public boolean		Html_elem_delete(String elem_id) {return under.Html_elem_delete(elem_id);}
+	public boolean		Html_elem_replace_html(String id, String html) {return under.Html_elem_replace_html(id, html);}
+	public boolean		Html_gallery_packed_exec() {return under.Html_gallery_packed_exec();}
 	public void			Html_elem_focus(String elem_id) {under.Html_elem_focus(elem_id);}
 	public boolean		Html_elem_scroll_into_view(String elem_id) {return under.Html_elem_scroll_into_view(elem_id);}
 	public boolean		Html_elem_img_update(String elem_id, String elem_src, int elem_width, int elem_height) {return under.Html_elem_img_update(elem_id, elem_src, elem_width, elem_height);}

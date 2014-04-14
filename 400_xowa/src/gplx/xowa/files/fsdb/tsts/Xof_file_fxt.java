@@ -94,7 +94,7 @@ class Xof_file_fxt {
 	public void Test_regy_missing_bin(String key)		{Tfds.Eq(Xof_wiki_orig_wkr_.Tid_missing_bin, Exec_reg_select_itm(key).Rslt_reg());}
 	private Xof_fsdb_itm itm_(String ttl_str, byte type, int w, int h, double upright, int thumbtime) {
 		byte[] ttl_bry = ByteAry_.new_ascii_(ttl_str);
-		byte[] md5 = Xof_xfer_itm.Md5_(ttl_bry);
+		byte[] md5 = Xof_xfer_itm_.Md5_(ttl_bry);
 		Xof_ext ext = Xof_ext_.new_by_ttl_(ttl_bry);
 		return new Xof_fsdb_itm().Init_by_lnki(ttl_bry, ext, md5, type, w, h, upright, thumbtime, Xof_doc_page.Null);
 	}

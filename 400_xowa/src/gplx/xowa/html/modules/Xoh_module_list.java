@@ -16,14 +16,27 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.html.modules; import gplx.*; import gplx.xowa.*; import gplx.xowa.html.*;
-public class Xoh_module_list {
-	private Xoh_module_itm[] ary; private int ary_max;
-	private Xoh_module_list(int ary_max) {this.ary_max = ary_max; ary = new Xoh_module_itm[ary_max];}
+import gplx.html.*;
+public class Xoh_module_list implements ByteAryFmtrArg {
+	private OrderedHash itms;
 	public void Add(Xoh_module_itm itm) {
-		ary[itm.Id()] = itm;
+		if (itms == null) itms = OrderedHash_.new_();
+		if (itms.Has(itm.Key())) return;
+		itms.Add(itm.Key(), itm);
 	}
 	public void Clear() {
-		for (int i = 0; i < ary_max; i++)
-			ary[i] = null;
+		if (itms == null) return;
+		itms.Clear();
+		itms = null;
+	}
+	public void XferAry(ByteAryBfr bfr, int idx) {
+		if (itms == null) return;
+		int len = itms.Count();			
+		bfr.Add_byte_nl().Add(Html_consts.Script_bgn_bry);
+		for (int i = 0; i < len; i++) {
+			Xoh_module_itm itm = (Xoh_module_itm)itms.FetchAt(i);
+			itm.Bld_js(bfr);
+		}
+		bfr.Add_byte_nl().Add(Html_consts.Script_end_bry);
 	}
 }

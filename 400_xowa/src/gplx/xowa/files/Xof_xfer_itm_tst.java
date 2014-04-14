@@ -34,7 +34,7 @@ public class Xof_xfer_itm_tst {
 		Int_2_val lnki = Int_2_val.parse_(lnki_str);
 		Int_2_val file = Int_2_val.parse_(file_str);
 		Int_2_val expd = Int_2_val.parse_(expd_str);
-		Xof_xfer_itm_.Calc_view(rv, lnki.Val_0(), lnki.Val_1(), file.Val_0(), file.Val_1(), true);
+		Xof_xfer_itm_.Calc_view(rv, Xop_lnki_type.Id_thumb, lnki.Val_0(), lnki.Val_1(), file.Val_0(), file.Val_1(), true);
 		Tfds.Eq(expd.Val_0(), rv.Val_0());
 		Tfds.Eq(expd.Val_1(), rv.Val_1());
 	}
@@ -57,9 +57,9 @@ class Xof_xfer_itm_fxt {
 	public Xof_xfer_itm_fxt File_(int w, int h) {file_w = w; file_h = h; return this;} private int file_w, file_h;
 	public Xof_xfer_itm_fxt Lnki_(int w, int h) {lnki_w = w; lnki_h = h; return this;} private int lnki_w, lnki_h;
 	public Xof_xfer_itm_fxt tst(int expd_w, int expd_h) {
-		boolean wmf_thumbable = Xof_xfer_itm.Lnki_thumbable_calc(lnki_img_type, lnki_w, lnki_h);
+		boolean wmf_thumbable = Xof_xfer_itm_.Lnki_thumbable_calc(lnki_img_type, lnki_w, lnki_h);
 		Int_2_ref calc_size = new Int_2_ref();
-		Xof_xfer_itm_.Calc_xfer_size(calc_size, Xof_img_size.Thumb_width_img, file_w, file_h, lnki_w, lnki_h, wmf_thumbable, lnki_upright);
+		Xof_xfer_itm_.Calc_xfer_size(calc_size, Xop_lnki_type.Id_thumb, Xof_img_size.Thumb_width_img, file_w, file_h, lnki_w, lnki_h, wmf_thumbable, lnki_upright);
 		Tfds.Eq(expd_w, calc_size.Val_0());
 		Tfds.Eq(expd_h, calc_size.Val_1());
 		return this;

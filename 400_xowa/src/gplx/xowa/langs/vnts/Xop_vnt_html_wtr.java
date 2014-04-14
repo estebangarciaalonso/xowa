@@ -32,7 +32,7 @@ public class Xop_vnt_html_wtr {
 				html_wtr.Write_tkn_ary(bfr, ctx, opts, src, rule_0.Rule_subs());
 				break;
 			}
-			case Xop_vnt_html_wtr.Cmd_bidi:			// matching rule: "A" if zh-hans; -{zh-hans:A}-
+			case Xop_vnt_html_wtr.Cmd_bidi:				// matching rule: "A" if zh-hans; -{zh-hans:A}-
 				for (int i = 0; i < rules_len; i++) {
 					Xop_vnt_rule rule = rules[i];
 					if (ByteAry_.Eq(rule.Rule_lang(), cur_lang_vnt)) {

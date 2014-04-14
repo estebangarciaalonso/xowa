@@ -29,18 +29,21 @@ public class NumberParser {
 		int_val = 0; dec_val = null; boolean comma_nil = true;
 		long frc_int = 0;
 		hasErr = false; hasFrac = false; boolean has_exp = false, has_neg = false, exp_neg = false, has_plus = false, has_num = false;
-		if (hex_enabled
-			&& loop_end + 2 < end) {		// ArrayOutOfBounds check
-			byte b_2 = ary[loop_end + 2];
-			switch (b_2) {
-				case Byte_ascii.Ltr_x:
-				case Byte_ascii.Ltr_X:								// is 2nd char x?
-					if (ary[loop_end + 1] == Byte_ascii.Num_0) {	// is 1st char 0?
-						factor = 16;
-					}
-					break;
-				default:
-					break;
+		boolean input_is_hex = false;
+		if (hex_enabled) {
+			if (loop_end + 2 < end) {		// ArrayOutOfBounds check
+				byte b_2 = ary[loop_end + 2];
+				switch (b_2) {
+					case Byte_ascii.Ltr_x:
+					case Byte_ascii.Ltr_X:								// is 2nd char x?
+						if (ary[loop_end + 1] == Byte_ascii.Num_0) {	// is 1st char 0?
+							factor = 16;
+							input_is_hex = true;
+						}
+						break;
+					default:
+						break;
+				}
 			}
 		}
 		for (int i = loop_bgn; i > loop_end; i--) {
@@ -89,7 +92,7 @@ public class NumberParser {
 					break;
 				case Byte_ascii.Ltr_e:
 				case Byte_ascii.Ltr_E:
-					if (hex_enabled && factor == 16) {	// NOTE: check that (a) hex is enabled and (b) 0x is start; note that this allows same NumberParser to be used for "0xF" and "1E2" 
+					if (input_is_hex) {
 						int_val += 14 * multiplier;	// NOTE: 14=value of e/E
 						multiplier *= factor;
 						has_num = true;						
@@ -110,7 +113,7 @@ public class NumberParser {
 				case Byte_ascii.Ltr_C:
 				case Byte_ascii.Ltr_D:
 				case Byte_ascii.Ltr_F:
-					if (hex_enabled) {
+					if (input_is_hex) {
 						int_val += (cur - Byte_ascii.Ltr_A + 10) * multiplier;
 						multiplier *= factor;
 						has_num = true;
@@ -123,7 +126,7 @@ public class NumberParser {
 				case Byte_ascii.Ltr_c:
 				case Byte_ascii.Ltr_d:
 				case Byte_ascii.Ltr_f:
-					if (hex_enabled) {
+					if (input_is_hex) {
 						int_val += (cur - Byte_ascii.Ltr_a + 10) * multiplier;
 						multiplier *= factor;
 						has_num = true;
@@ -133,7 +136,7 @@ public class NumberParser {
 					break;
 				case Byte_ascii.Ltr_x:
 				case Byte_ascii.Ltr_X:
-					if (hex_enabled)
+					if (input_is_hex)
 						return (factor == 16) ? this : IsErr_();	// check for '0x'
 					else
 						return IsErr_();

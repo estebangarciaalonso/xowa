@@ -15,16 +15,17 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package gplx.intl; import gplx.*;
-public class Gfo_num_fmt_mgr implements GfoInvkAble {
+package gplx.xowa.langs.numFormats; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
+public class Xol_num_fmtr_base implements GfoInvkAble {
 	private ByteTrieMgr_fast dlm_trie = ByteTrieMgr_fast.cs_(); 
-	private Gfo_num_fmt_grp[] grp_ary = Gfo_num_fmt_grp.Ary_empty; int grp_ary_len;
+	private Xol_num_grp[] grp_ary = Xol_num_grp.Ary_empty; int grp_ary_len;
 	private Gfo_num_fmt_wkr[] cache; int cache_len = 16;
 	private ByteAryBfr tmp = ByteAryBfr.new_();
-	public Gfo_num_fmt_mgr() {this.Clear();}
+	public Xol_num_fmtr_base() {this.Clear();}
 	public boolean Standard() {return standard;} private boolean standard = true;
-	public byte[] Dec_dlm() {return dec_dlm;} public Gfo_num_fmt_mgr Dec_dlm_(byte[] v) {this.dec_dlm = v; dlm_trie.Add_bry_bval(v, Raw_tid_dec); return this;} private byte[] dec_dlm = Dec_dlm_default;
+	public byte[] Dec_dlm() {return dec_dlm;} public Xol_num_fmtr_base Dec_dlm_(byte[] v) {this.dec_dlm = v; dlm_trie.Add_bry_bval(v, Raw_tid_dec); return this;} private byte[] dec_dlm = Dec_dlm_default;
 	private byte[] grp_dlm;
+	// public byte[] Commafy() {}
 	public byte[] Raw(byte tid, byte[] src) {
 		int src_len = src.length;
 		for (int i = 0; i < src_len; i++) {
@@ -97,7 +98,7 @@ public class Gfo_num_fmt_mgr implements GfoInvkAble {
 		}
 		return tmp.XtoAryAndClear();
 	}
-	Gfo_num_fmt_wkr Get_or_new(int src_len) {
+	private Gfo_num_fmt_wkr Get_or_new(int src_len) {
 		Gfo_num_fmt_wkr rv = null;
 		if (src_len < cache_len) {
 			rv = cache[src_len];
@@ -107,16 +108,16 @@ public class Gfo_num_fmt_mgr implements GfoInvkAble {
 		if (src_len < cache_len) cache[src_len] = rv;
 		return rv;
 	}
-	public Gfo_num_fmt_grp Grps_get_last() {return grp_ary[grp_ary_len - 1];}
-	public Gfo_num_fmt_grp Grps_get(int i) {return grp_ary[i];}
+	public Xol_num_grp Grps_get_last() {return grp_ary[grp_ary_len - 1];}
+	public Xol_num_grp Grps_get(int i) {return grp_ary[i];}
 	public int Grps_len() {return grp_ary_len;}
-	public void Grps_add(Gfo_num_fmt_grp dat_itm) {
+	public void Grps_add(Xol_num_grp dat_itm) {
 		standard = false;
-		this.grp_ary = (Gfo_num_fmt_grp[])Array_.Resize(grp_ary, grp_ary_len + 1);
+		this.grp_ary = (Xol_num_grp[])Array_.Resize(grp_ary, grp_ary_len + 1);
 		grp_ary[grp_ary_len] = dat_itm;
 		grp_ary_len = grp_ary.length;
 		for (int i = 0; i < grp_ary_len; i++) {
-			Gfo_num_fmt_grp itm = grp_ary[i];
+			Xol_num_grp itm = grp_ary[i];
 			byte[] itm_dlm = itm.Dlm();
 			Object o = dlm_trie.MatchAtCurExact(itm_dlm, 0, itm_dlm.length);	// check for existing Object
 			if (o == null) {
@@ -125,8 +126,8 @@ public class Gfo_num_fmt_mgr implements GfoInvkAble {
 			}
 		}
 	}
-	public Gfo_num_fmt_mgr Clear() {
-		this.grp_ary = Gfo_num_fmt_grp.Ary_empty;
+	public Xol_num_fmtr_base Clear() {
+		this.grp_ary = Xol_num_grp.Ary_empty;
 		grp_ary_len = 0;
 		cache = new Gfo_num_fmt_wkr[cache_len];
 		dlm_trie.Clear();
@@ -135,7 +136,7 @@ public class Gfo_num_fmt_mgr implements GfoInvkAble {
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_dec_dlm_))		this.Dec_dlm_(m.ReadBry("v"));	// NOTE: must call mutator
 		else if	(ctx.Match(k, Invk_clear))			this.Clear();
-		else if	(ctx.Match(k, Invk_grps_add))		this.Grps_add(new Gfo_num_fmt_grp(m.ReadBry("dlm"), m.ReadInt("digits"), m.ReadYn("repeat")));
+		else if	(ctx.Match(k, Invk_grps_add))		this.Grps_add(new Xol_num_grp(m.ReadBry("dlm"), m.ReadInt("digits"), m.ReadYn("repeat")));
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}
@@ -160,12 +161,12 @@ class Gfo_num_fmt_wkr {
 			bb.Add_byte(src[i]);
 		}
 	}
-	public Gfo_num_fmt_wkr(Gfo_num_fmt_grp[] grp_ary, int grp_ary_len, int src_len) {
+	public Gfo_num_fmt_wkr(Xol_num_grp[] grp_ary, int grp_ary_len, int src_len) {
 		itm_ary = new Gfo_num_fmt_bldr[src_len];					// default to src_len; will resize below;
 		int src_pos = src_len, dat_idx = 0, dat_repeat = -1;
 		while (true) {
 			if (dat_idx == grp_ary_len) dat_idx = dat_repeat;	// no more itms left; return to repeat
-			Gfo_num_fmt_grp dat = grp_ary[dat_idx];
+			Xol_num_grp dat = grp_ary[dat_idx];
 			src_pos -= dat.Digits();
 			if (src_pos < 1) break;								// no more digits needed; stop
 			byte[] dat_dlm = dat.Dlm();
@@ -175,7 +176,7 @@ class Gfo_num_fmt_wkr {
 		}
 		itm_ary = (Gfo_num_fmt_bldr[])Array_.Resize(itm_ary, itm_max);
 	}
-	Gfo_num_fmt_bldr[] itm_ary; int itm_max;
+	private Gfo_num_fmt_bldr[] itm_ary; private int itm_max;
 }
 interface Gfo_num_fmt_bldr {
 	int Pos();

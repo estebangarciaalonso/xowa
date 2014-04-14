@@ -28,11 +28,11 @@ public class Gallery_mgr_base_basic_tst {
 		, "B.png|''b1''"
 		, "</gallery>"
 		), String_.Concat_lines_nl_skipLast
-		( "<ul class=\"gallery mw-gallery-traditional\">"
-		, "  <li class=\"gallerybox\" style=\"width: 235px\">"
+		( "<ul id=\"xowa_gallery_ul_0\" class=\"gallery mw-gallery-traditional\">"
+		, "  <li id=\"xowa_gallery_li_1\" class=\"gallerybox\" style=\"width: 235px\">"
 		, "    <div style=\"width: 235px\">"
 		, "      <div class=\"thumb\" style=\"width: 230px;\">"
-		, "        <div style=\"margin:65px auto;\">"
+		, "        <div style=\"margin:15px auto;\">"
 		, "          <a href=\"/wiki/File:A.png\" class=\"image\" xowa_title=\"A.png\"><img id=\"xowa_file_img_1\" alt=\"\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/200px.png\" width=\"200\" height=\"300\" /></a>"
 		, "        </div>"
 		, "      </div>"
@@ -42,11 +42,11 @@ public class Gallery_mgr_base_basic_tst {
 		, "      </div>"
 		, "    </div>"
 		, "  </li>"
-		, "  <li class=\"gallerybox\" style=\"width: 235px\">"
+		, "  <li id=\"xowa_gallery_li_2\" class=\"gallerybox\" style=\"width: 235px\">"
 		, "    <div style=\"width: 235px\">"
 		, "      <div class=\"thumb\" style=\"width: 230px;\">"
-		, "        <div style=\"margin:65px auto;\">"
-		, "          <a href=\"/wiki/File:B.png\" class=\"image\" xowa_title=\"B.png\"><img id=\"xowa_file_img_3\" alt=\"\" src=\"file:///mem/wiki/repo/trg/thumb/5/7/B.png/200px.png\" width=\"200\" height=\"300\" /></a>"
+		, "        <div style=\"margin:15px auto;\">"
+		, "          <a href=\"/wiki/File:B.png\" class=\"image\" xowa_title=\"B.png\"><img id=\"xowa_file_img_2\" alt=\"\" src=\"file:///mem/wiki/repo/trg/thumb/5/7/B.png/200px.png\" width=\"200\" height=\"300\" /></a>"
 		, "        </div>"
 		, "      </div>"
 		, "      <div class=\"gallerytext\"><p><i>b1</i>"
@@ -57,6 +57,7 @@ public class Gallery_mgr_base_basic_tst {
 		, "  </li>"
 		, "</ul>"
 		));
+		fxt.Test_modules_js("");
 	}
 	@Test  public void Tmpl() {
 		fxt.Fxt().Init_defn_add("test_tmpl", "b");
@@ -65,15 +66,20 @@ public class Gallery_mgr_base_basic_tst {
 	@Test  public void Itm_defaults_to_120() {
 		fxt.Test_html_frag("<gallery>File:A.png|a</gallery>", "<img id=\"xowa_file_img_1\" alt=\"\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"120\" />");
 	}
+	@Test   public void Height_fix() {
+		fxt.Fxt().Wiki().File_mgr().Cfg_set(Gallery_xnde.Fsdb_cfg_grp, Gallery_xnde.Fsdb_cfg_key_gallery_fix_defaults, "y");
+		fxt.Test_html_frag("<gallery heights=250>File:A.png|a<br/>c</gallery>", " width=\"120\" height=\"250\"");
+		fxt.Fxt().Wiki().File_mgr().Cfg_set(Gallery_xnde.Fsdb_cfg_grp, Gallery_xnde.Fsdb_cfg_key_gallery_fix_defaults, "n");
+	}
 	@Test   public void Alt() {
 		fxt.Test_html_frag("<gallery>File:A.png|b|alt=c</gallery>"
 		, "<img id=\"xowa_file_img_1\" alt=\"c\" src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"120\" />"
 		, "<div class=\"gallerytext\"><p>b\n</p>"
 		);
 	}
-//		@Test   public void Link() {
-//			fxt.Test_html_frag("<gallery>File:A.png|b|link=c</gallery>", "<a href=\"/wiki/C\" class=\"image\">");
-//		}
+	@Test   public void Link() {
+		fxt.Test_html_frag("<gallery>File:A.png|b|link=c</gallery>", "<a href=\"/wiki/C\" class=\"image\"");
+	}
 	@Test   public void Alt_caption_multiple() {
 		fxt.Test_html_frag("<gallery>File:A.png|alt=b|c[[d|e]]f</gallery>", "<div class=\"gallerytext\"><p>c<a href=\"/wiki/D\">ef</a>\n</p>");
 	}
@@ -89,33 +95,48 @@ public class Gallery_mgr_base_basic_tst {
 	@Test   public void Ref() {	// PURPOSE: <ref> inside <gallery> was not showing up in <references>; DATE:2013-10-09
 		fxt.Test_html_frag("<gallery>File:A.png|<ref name='a'>b</ref></gallery><references/>"
 		, "<div class=\"gallerytext\"><p><sup id=\"cite_ref-a_0-0\" class=\"reference\"><a href=\"#cite_note-a-0\">[1]</a></sup>\n</p>"
-//			, String_.Concat_lines_nl
-//			( "</ul><ol class=\"references\">"
-//			, "<li id=\"cite_note-a-0\"><span class=\"mw-cite-backlink\"><a href=\"#cite_ref-a_0-0\">^</a></span> <span class=\"reference-text\">b</span></li>"
-//			, "</ol>"
-//			)
+		, String_.Concat_lines_nl
+		( "</ul><ol class=\"references\">"
+		, "<li id=\"cite_note-a-0\"><span class=\"mw-cite-backlink\"><a href=\"#cite_ref-a_0-0\">^</a></span> <span class=\"reference-text\">b</span></li>"
+		, "</ol>"
+		)
 		);
 	}
-
-
-
+	@Test   public void Packed() {
+		fxt.Test_html_frag("<gallery mode=packed heights=300px>File:A.png|a</gallery>", "<ul id=\"xowa_gallery_ul_0\" class=\"gallery mw-gallery-packed\">");
+		fxt.Test_modules_js(String_.Concat_lines_nl_skipLast
+		( ""
+		, "<script>"
+		, "  xowa_gallery_packed = true;"
+		, "</script>"
+		));
+	}
+	@Test   public void Missing() {
+		fxt.Init_files_missing_y_();
+		fxt.Test_html_frag("<gallery>File:A.png|b</gallery>", "<div class=\"thumb\" style=\"height: 150px;\">A.png</div>");
+	}
+	@Test   public void Multiple() {	// PURPOSE.bug: multiple galleries should not use same gallery super; DATE:2014-04-13
+		fxt.Test_html_frag("<gallery>File:A.png|a</gallery><gallery widths=180px>File:B.png|b</gallery>"
+		, "src=\"file:///mem/wiki/repo/trg/thumb/7/0/A.png/120px.png\" width=\"120\" height=\"120\" />"	// should not be 180px from gallery #2
+		);
+	}
 //		@Test  public void Ttl_caption() {	// PURPOSE: category entries get rendered with name only (no ns)
 //			fxt.Test_html_frag
 //			( "<gallery>Category:A</gallery>"
 //			, "<li class='gallerycaption'>B</li>"
 //			);
 //		}
-	/*
-	whitelist atrs
-	*/
 }
 class Gallery_mgr_base_fxt {
-	private ByteAryBfr bfr = ByteAryBfr.new_();
 	public void Reset() {
 		fxt.Wiki().Xtn_mgr().Init_by_wiki(fxt.Wiki());
 		fxt.Wiki().Html_wtr().Lnki_wtr().Init_by_ctx(fxt.Ctx());
+		Gallery_mgr_base.File_found_mode = Bool_.Y_byte;
 	}
 	public Xop_fxt Fxt() {return fxt;} private Xop_fxt fxt = new Xop_fxt();
+	public void Init_files_missing_y_() {
+		Gallery_mgr_base.File_found_mode = Bool_.N_byte;
+	}
 	public void Test_html_all(String raw, String expd) {
 		Tfds.Eq_str_lines(expd, Parse_html(raw), raw);
 	}
@@ -129,14 +150,12 @@ class Gallery_mgr_base_fxt {
 				Tfds.Eq_true(false, expd_frag + "\n" + actl);
 		}
 	}
+	public void Test_modules_js(String expd) {
+		ByteAryBfr bfr = ByteAryBfr.new_();
+		fxt.Page().Html_data().Modules().XferAry(bfr, 0);
+		Tfds.Eq(bfr.XtoStrAndClear(), expd);
+	}
 	private String Parse_html(String raw) {
-		byte[] raw_bry = ByteAry_.new_utf8_(raw);
-		Xop_root_tkn root = fxt.Exec_parse_page_all_as_root(raw_bry);
-		Xop_xnde_tkn xnde = (Xop_xnde_tkn)root.Subs_get(0);
-		Gallery_xnde gallery_xnde = (Gallery_xnde)xnde.Xnde_xtn();
-		Gallery_mgr_base gallery_mgr = Gallery_mgr_traditional._;
-		gallery_mgr.Init(gallery_xnde.Itms_per_row(), gallery_xnde.Itm_w(), gallery_xnde.Itm_h());
-		gallery_mgr.Write_html(bfr, fxt.Wiki(), fxt.Page(), fxt.Ctx(), raw_bry, gallery_xnde);
-		return bfr.XtoStrAndClear();
+		return fxt.Exec_parse_page_all_as_str(raw);
 	}
 }

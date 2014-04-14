@@ -28,7 +28,7 @@ public class Xop_tkn_mkr {
 		, int aposLen, int typ, int cmd, int lit_apos, byte cur_tkn_tid)					{return new Xop_apos_tkn(bgn, end, aposLen, typ, cmd, lit_apos, cur_tkn_tid);}
 	public Xop_tkn_itm HtmlRef(int bgn, int end, Xop_amp_trie_itm itm)						{return new Xop_html_ref_tkn(bgn, end, itm);}
 	public Xop_tkn_itm HtmlNcr(int bgn, int end, int val_int, byte[] val_bry)				{return new Xop_html_ncr_tkn(bgn, end, val_int, val_bry);}
-	public Xop_tkn_itm HtmlNcr(int bgn, int end, int val_int)								{return new Xop_html_ncr_tkn(bgn, end, val_int, gplx.intl.Utf8_.EncodeCharAsAry(val_int));}
+	public Xop_tkn_itm HtmlNcr(int bgn, int end, int val_int)								{return new Xop_html_ncr_tkn(bgn, end, val_int, gplx.intl.Utf16_.Encode_int_to_bry(val_int));}
 	public Xop_nl_tkn NewLine(int bgn, int end, byte nl_typ, int nl_len)					{return new Xop_nl_tkn(bgn, end, nl_typ, nl_len);}
 	public Xop_lnki_tkn Lnki(int bgn, int end)												{return (Xop_lnki_tkn)new Xop_lnki_tkn().Tkn_ini_pos(false, bgn, end);}
 	public Xop_list_tkn List_bgn(int bgn, int end, byte listType, int symLen)				{return Xop_list_tkn.bgn_(bgn, end, listType, symLen);}

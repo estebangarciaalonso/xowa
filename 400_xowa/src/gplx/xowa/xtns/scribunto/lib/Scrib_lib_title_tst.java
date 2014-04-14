@@ -69,6 +69,9 @@ public class Scrib_lib_title_tst {
 		fxt.Parser_fxt().Init_page_create("A", "test");
 		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_getContent, Object_.Ary("A")											, "test");
 	}
+	@Test   public void ProtectionLevels() {
+		fxt.Test_lib_proc(lib, Scrib_lib_title.Invk_protectionLevels, Object_.Ary("A")										, "");
+	}
 	private static String ttl_data_(String ns_id, String ns_str, String ttl) {return ttl_data_(ns_id, ns_str, ttl, "", "");}
 	private static String ttl_data_(String ns_id, String ns_str, String ttl, String anchor) {return ttl_data_(ns_id, ns_str, ttl, anchor, "");}
 	private static String ttl_data_(String ns_id, String ns_str, String ttl, String anchor, String xwiki) {

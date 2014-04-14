@@ -229,7 +229,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 								int rv = Xop_amp_wkr.CalcNcr(wiki.Ctx().Msg_log(), ncr_is_hex, src, end, cur2, match_pos, ncr_val, fail);
 								if (fail.Val()) {}
 								else {
-									b_ary = gplx.intl.Utf8_.EncodeCharAsAry(ncr_val.Val());
+									b_ary = gplx.intl.Utf16_.Encode_int_to_bry(ncr_val.Val());
 									match_pos = rv;
 								}
 							}
@@ -429,7 +429,7 @@ public class Xoa_ttl {	// EX.WP: http://en.wikipedia.org/wiki/Help:Link; REF.MW:
 		if (	ns.Case_match() == Xow_ns_case_.Id_1st
 			&&	wik_bgn == -1 ) {	// do not check case if xwiki; EX: "fr:" would have a wik_bgn of 0 (and a wik_end of 3); "A" (and any non-xwiki ttl) would have a wik_bgn == -1
 			byte char_1st = full_txt[page_bgn];
-			int char_1st_len = gplx.intl.Utf8_.CharLen(char_1st);
+			int char_1st_len = gplx.intl.Utf8_.Len_of_char_by_1st_byte(char_1st);
 			int page_end = page_bgn + char_1st_len;
 			if (	char_1st_len > 1) {			// 1st char is multi-byte char
 				int full_txt_len = full_txt.length;

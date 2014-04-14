@@ -227,10 +227,10 @@ class Xop_lnki_tkn_chkr extends Xop_tkn_chkr_base {
 		Xop_lnki_tkn actl = (Xop_lnki_tkn)actl_obj;
 		err += mgr.Tst_val(nsId == Int_.MinValue, path, "nsId", nsId, actl.Ns_id());
 		err += mgr.Tst_val(imgType == Byte_.MaxValue_127, path, "imgType", imgType, actl.Lnki_type());
-		err += mgr.Tst_val(width == Int_.MinValue, path, "width", width, actl.Width());
-		err += mgr.Tst_val(height == Int_.MinValue, path, "height", height, actl.Height());
-		err += mgr.Tst_val(hAlign == Byte_.MaxValue_127, path, "halign", hAlign, actl.HAlign());
-		err += mgr.Tst_val(vAlign == Byte_.MaxValue_127, path, "valign", vAlign, actl.VAlign());
+		err += mgr.Tst_val(width == Int_.MinValue, path, "width", width, actl.Lnki_w());
+		err += mgr.Tst_val(height == Int_.MinValue, path, "height", height, actl.Lnki_h());
+		err += mgr.Tst_val(hAlign == Byte_.MaxValue_127, path, "halign", hAlign, actl.Align_h());
+		err += mgr.Tst_val(vAlign == Byte_.MaxValue_127, path, "valign", vAlign, actl.Align_v());
 		err += mgr.Tst_val(border == Bool_.__byte, path, "border", border, actl.Border());
 		err += mgr.Tst_val(tail_bgn == String_.Neg1_pos, path, "tail_bgn", tail_bgn, actl.Tail_bgn());
 		err += mgr.Tst_val(tail_end == String_.Neg1_pos, path, "tail_end", tail_end, actl.Tail_end());

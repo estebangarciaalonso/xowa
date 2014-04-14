@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto.lib; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*;
 import org.junit.*;
+import gplx.xowa.langs.numFormats.*;
 public class Scrib_lib_language_tst {
 	@Before public void init() {
 		fxt.Clear();
@@ -56,7 +57,7 @@ public class Scrib_lib_language_tst {
 	}
 	@Test  public void FormatNum() {
 		Xol_lang other_lang = fxt.Core().App().Lang_mgr().Get_by_key_or_new(ByteAry_.new_ascii_("de"));
-		other_lang.Num_fmt_mgr().Grps_add(new gplx.intl.Gfo_num_fmt_grp(new byte[] {Byte_ascii.Dot}, 3, true));
+		other_lang.Num_fmt_mgr().Grps_add(new Xol_num_grp(new byte[] {Byte_ascii.Dot}, 3, true));
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_formatNum, Object_.Ary("en", 1234), "1,234");		// english spr
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_formatNum, Object_.Ary("de", 1234), "1.234");		// german spr
 		fxt.Test_lib_proc(lib, Scrib_lib_language.Invk_formatNum, Object_.Ary("en", "1234"), "1,234");		// String passed (not int)

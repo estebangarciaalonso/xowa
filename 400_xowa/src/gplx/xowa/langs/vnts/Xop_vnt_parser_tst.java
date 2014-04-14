@@ -48,6 +48,9 @@ public class Xop_vnt_parser_tst {	// uses zh-hant as cur_vnt
 		fxt.Parser_fxt().Init_page_create("Template:A", "{{#expr: 0-{{{1|2}}}}}");
 		fxt.Test_parse("{{A}}", "-2");
 	}
+	@Test  public void Invalid() {	// PURPOSE: invalid flags should cause vnt to render text only; DATE:2014-04-10
+		fxt.Test_parse("-{:a|b}-", "b");
+	}
 }
 class Xop_vnt_parser_fxt {		
 	public Xop_fxt Parser_fxt() {return fxt;} private Xop_fxt fxt;

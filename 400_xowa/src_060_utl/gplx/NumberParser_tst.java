@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx;
 import org.junit.*;
 public class NumberParser_tst {
-	NumberParser parser = new NumberParser();
+	private NumberParser parser = new NumberParser();
 	@Test  public void Integer() {
 		tst_Int("1", 1);
 		tst_Int("1234", 1234);
@@ -56,6 +56,7 @@ public class NumberParser_tst {
 		Hex_tst("0xF"	, 15);
 		Hex_tst("0x20"	, 32);
 		Hex_tst("x20"	, 0, false);
+		Hex_tst("d"		, 0, false);	// PURPOSE: d was being converted to 13; no.w:Hovedbanen; DATE:2014-04-13
 	}
 	private void tst_Int(String raw, int expd) {
 		byte[] raw_bry = ByteAry_.new_ascii_(raw);

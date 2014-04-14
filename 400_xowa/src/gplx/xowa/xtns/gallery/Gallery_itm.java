@@ -16,7 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-public class Gallery_itm {
+import gplx.xowa.files.*; import gplx.xowa.files.gui.*;
+public class Gallery_itm implements Js_img_wkr {
 	public Xoa_ttl Ttl() {return ttl;} public Gallery_itm Ttl_(Xoa_ttl v) {ttl = v; return this;} private Xoa_ttl ttl;
 	public int Ttl_bgn() {return ttl_bgn;} public Gallery_itm Ttl_bgn_(int v) {ttl_bgn = v; return this;} private int ttl_bgn;
 	public int Ttl_end() {return ttl_end;} public Gallery_itm Ttl_end_(int v) {ttl_end = v; return this;} private int ttl_end;
@@ -37,5 +38,24 @@ public class Gallery_itm {
 		caption_tkn = null;
 		ext = null;
 		return this;
+	}
+	public void Html_prepare(Xow_wiki wiki, Xop_ctx ctx, byte[] src, Gallery_xnde xnde, Xof_xfer_itm xfer_itm, byte[] gallery_li_id_bry, int gallery_itm_idx) {
+		this.xnde = xnde; this.xfer_itm = xfer_itm;;
+		this.wiki = wiki; this.ctx = ctx; this.src = src; this.gallery_li_id_bry = gallery_li_id_bry; this.gallery_itm_idx = gallery_itm_idx;
+	}	private Gallery_xnde xnde; private Xof_xfer_itm xfer_itm; private Xow_wiki wiki; private Xop_ctx ctx; private byte[] src; private byte[] gallery_li_id_bry; private int gallery_itm_idx;
+	public void Html_update(Xog_win_wtr win_wtr, int w, int h, String view_src, String orig_src) {
+		Gallery_mgr_base gallery_mgr = xnde.Gallery_mgr();
+		ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_k004(), tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_k004();
+		try {
+			xfer_itm.Init_xfer_by_gallery_update(w, h, view_src, orig_src);
+			gallery_mgr.Write_html_itm(bfr, tmp_bfr, wiki.App(), wiki, ctx.Page(), ctx, wiki.Html_wtr(), src, xnde, ByteAry_.Empty, gallery_itm_idx, xfer_itm);
+			String itm_html = bfr.XtoStrAndClear();
+			win_wtr.Html_elem_replace_html(String_.new_utf8_(gallery_li_id_bry), itm_html);
+			if (gallery_itm_idx == xnde.Itms_len() - 1 && Gallery_mgr_base_.Mode_is_packed(xnde.Mode()))
+				win_wtr.Html_gallery_packed_exec();
+		}
+		finally {
+			bfr.Mkr_rls(); tmp_bfr.Mkr_rls();
+		}
 	}
 }

@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.intl.*;
+import gplx.intl.*; import gplx.xowa.langs.numFormats.*;
 public class Pf_str_formatnum extends Pf_func_base {
 	@Override public int Id() {return Xol_kwd_grp_.Id_str_formatnum;}
 	@Override public Pf_func New(int id, byte[] name) {return new Pf_str_formatnum().Name_(name);}
@@ -34,9 +34,9 @@ public class Pf_str_formatnum extends Pf_func_base {
 		int arg1_len = arg1.length;
 		if (ByteAry_.Len_gt_0(arg1)) {		// argument specified
 			if		(trie_raw	.MatchAtCurExact(arg1, 0, arg1_len) != null)
-				return lang.Num_fmt_mgr().Raw(Gfo_num_fmt_mgr.Tid_raw, num);
+				return lang.Num_fmt_mgr().Raw(Xol_num_fmtr_base.Tid_raw, num);
 			else if (trie_nosep	.MatchAtCurExact(arg1, 0, arg1_len) != null)
-				return lang.Num_fmt_mgr().Raw(Gfo_num_fmt_mgr.Tid_nosep, num);
+				return lang.Num_fmt_mgr().Raw(Xol_num_fmtr_base.Tid_nosep, num);
 		}
 		return lang.Num_fmt_mgr().Fmt(num);
 	}

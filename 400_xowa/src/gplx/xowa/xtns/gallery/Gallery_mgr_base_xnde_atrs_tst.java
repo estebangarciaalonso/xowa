@@ -24,13 +24,13 @@ public class Gallery_mgr_base_xnde_atrs_tst {
 	@Test  public void Atr_misc() {// PURPOSE: add other atrs to end of ul
 		fxt.Test_html_frag
 		( "<gallery id=a>File:A.png</gallery>"
-		, "<ul class=\"gallery mw-gallery-traditional\" id=\"a\">"
+		, "<ul id=\"xowa_gallery_ul_0\" class=\"gallery mw-gallery-traditional\" id=\"a\">"
 		);
 	}
 	@Test  public void Atr_style() {	// PURPOSE: combine style with itms_per_row
 		fxt.Test_html_frag
 		( "<gallery perrow=2 style='color:blue;'>File:A.png</gallery>"
-		, "<ul class=\"gallery mw-gallery-traditional\" style=\"max-width:326px;_width:326px; color:blue;\">"
+		, "<ul id=\"xowa_gallery_ul_0\" class=\"gallery mw-gallery-traditional\" style=\"max-width:326px;_width:326px; color:blue;\">"
 		);
 	}
 	@Test  public void Atr_caption() {	// PURPOSE: caption atr adds new element
@@ -43,6 +43,12 @@ public class Gallery_mgr_base_xnde_atrs_tst {
 		fxt.Test_html_frag
 		( "<gallery showfilename=true>A.png</gallery>"
 		, "<div class=\"gallerytext\"><a href=\"/wiki/File:A.png\">File:A.png</a>"
+		);
+	}
+	@Test  public void Atr_whitelist() {	// PURPOSE: ignore atrs not in whitelist
+		fxt.Test_html_frag
+		( "<gallery onmouseover='alert();'>A.png</gallery>"
+		, "<ul id=\"xowa_gallery_ul_0\" class=\"gallery mw-gallery-traditional\">"
 		);
 	}
 //		@Test  public void Ttl_caption() {	// PURPOSE: category entries get rendered with name only (no ns)

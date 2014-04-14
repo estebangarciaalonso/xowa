@@ -71,6 +71,7 @@ public class Xop_amp_wkr implements Xop_ctx_wkr {
 				if (cur < 0 || cur > 10)		{return Fail(fail, msg_log, src, int_bgn, i, Xop_amp_log.Invalid_dec, bgn);}
 			}
 			val += cur * factor;
+			if (val > gplx.intl.Utf8_.Codepoint_max)  {fail.Val_y_(); return bgn + 1;}	// fail if value > largest_unicode_codepoint
 			factor *= multiple;
 		}
 		ncr_val.Val_(val);

@@ -16,8 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.html; import gplx.*; import gplx.xowa.*;
-import gplx.xowa.parsers.lnkis.redlinks.*;
-import gplx.xowa.users.history.*;
+import gplx.xowa.files.*; import gplx.xowa.parsers.lnkis.redlinks.*; import gplx.xowa.users.history.*;
 public class Xoh_lnki_wtr {
 	private Xoa_app app; private Xow_wiki wiki; private Xoa_page page; private Xop_ctx ctx;
 	private Xoh_html_wtr_cfg cfg;
@@ -62,6 +61,9 @@ public class Xoh_lnki_wtr {
 	}
 	public void Write_file(ByteAryBfr bfr, Xoa_page page, Xop_ctx ctx, Xoh_html_wtr_ctx hctx, byte[] src, Xop_lnki_tkn lnki, byte[] alt) {
 		file_wtr.Write_or_queue(bfr, page, ctx, hctx, src, lnki, alt);
+	}
+	public void Write_file(ByteAryBfr bfr, Xop_ctx ctx, Xoh_html_wtr_ctx hctx, byte[] src, Xop_lnki_tkn lnki, Xof_xfer_itm xfer, byte[] alt) {
+		file_wtr.Write_media(bfr, hctx, src, lnki, xfer, alt);
 	}
 	public void Write_plain_by_bry(ByteAryBfr bfr, byte[] src, Xop_lnki_tkn lnki, byte[] caption) {
 		Write_plain(bfr, Xoh_html_wtr_ctx.Basic, src, lnki, lnki.Ttl(), caption_bry_wtr.Caption_bry_(caption));

@@ -23,7 +23,13 @@ public class Scrib_proc_args {
 	public KeyVal[] Ary() {return ary;}
 	public String	Pull_str(int i)					{Object rv = Get_or_fail(i); return String_.cast_(rv);}
 	public byte[]	Pull_bry(int i)					{Object rv = Get_or_fail(i); return ByteAry_.new_utf8_(String_.cast_(rv));}
-	public int		Pull_int(int i)					{Object rv = Get_or_fail(i); return Int_.coerce_(rv);}	// coerce to handle "1" and 1; will still fail if "abc" is passed
+	public int		Pull_int(int i)					{Object rv = Get_or_fail(i);
+		try {return Int_.coerce_(rv);} // coerce to handle "1" and 1; will still fail if "abc" is passed
+		catch (Exception e) {
+			Err_.Noop(e);
+			throw Err_.new_fmt_("bad argument; int expected; idx={0} len={1}", i, ary_len);
+		}
+	}	
 	public String	Cast_str_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: String_.cast_		(rv);}
 	public byte[]	Cast_bry_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: ByteAry_.new_utf8_(String_.cast_	(rv));}	// NOTE: cast is deliberate; Scrib call checkType whi
 	public byte[]	Cast_bry_or_empty(int i)		{Object rv = Get_or_null(i); return rv == null ? ByteAry_.Empty : ByteAry_.new_utf8_(String_.cast_	(rv));}

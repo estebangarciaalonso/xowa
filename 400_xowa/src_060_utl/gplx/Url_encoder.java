@@ -239,7 +239,12 @@ class Url_encoder_itm_hex implements Url_encoder_itm {
 				return 0;
 			}
 		}
-		int v_0 = Int_.Xto_int_hex(src[idx + 1]) * 16;
+		int hex_val = Int_.Xto_int_hex(src[idx + 1]);
+		if (hex_val == -1) {	// invalid hex byte; EX: %GC; DATE:2014-04-10
+			bfr.Add_byte(b);
+			return 0;
+		}
+		int v_0 = hex_val * 16;
 		if (v_0 != -1) {
 			int v_1 = Int_.Xto_int_hex(src[idx + 2]);
 			if (v_1 != -1) {

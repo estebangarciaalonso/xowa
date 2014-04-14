@@ -1068,6 +1068,6 @@ Init_itm(1024, ByteAry_.ints_(92,52,1,134,143,1,143,5));
 		if (uca_last == 0) return;
 		uca = ByteAry_.Mid(uca, 0, uca_last);
 		if (trie.MatchAtCur(uca, 0, uca.length) == null)
-			trie.Add(uca, gplx.intl.Utf8_.EncodeCharAsAry(charAsInt));
+			trie.Add(uca, gplx.intl.Utf16_.Encode_int_to_bry(charAsInt));
 	}
 }

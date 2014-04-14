@@ -61,6 +61,7 @@ public class Pft_func_time_basic_tst {
 	@Test   public void Day_rel_today()			{fxt.Test_parse_tmpl_str_test("{{#time:Y-m-d|today}}"						, "{{test}}"			, "2012-01-02");}
 	@Test   public void Day_rel_tomorrow()		{fxt.Test_parse_tmpl_str_test("{{#time:Y-m-d|tomorrow}}"					, "{{test}}"			, "2012-01-03");}
 	@Test   public void Day_rel_yesterday()		{fxt.Test_parse_tmpl_str_test("{{#time:Y-m-d|yesterday}}"					, "{{test}}"			, "2012-01-01");}
+	@Test   public void Time_rel_now()			{fxt.Test_parse_tmpl_str_test("{{#time:Y-m-d h:i:s A|now}}"					, "{{test}}"			, "2012-01-02 03:05:05 AM");}	// NOTE: minute is 5, not 4, b/c each call to DateAdp_.Now() automatically increments by 1 minute; DATE:2014-04-13
 	@Test   public void Empty_is_today()		{fxt.Test_parse_tmpl_str_test("{{#time:Y-m-d|}}"							, "{{test}}"			, "2012-01-02");}	// tested on MW
 	@Test   public void Timezone_offset()		{
 		DateAdp.Timezone_offset_test = -18000;

@@ -47,7 +47,7 @@ public class Scrib_lib_wikibase_entity implements Scrib_lib {
 		Xoa_app app = core.App(); Xow_wiki wiki = core.Wiki();
 		Wdata_wiki_mgr wdata_mgr = app.Wiki_mgr().Wdata_mgr();
 		byte[] lang = wiki.Wdata_wiki_lang();
-		Wdata_doc wdoc = wdata_mgr.Pages_get(qid); if (wdoc == null) return rslt.Init_null();
+		Wdata_doc wdoc = wdata_mgr.Pages_get(qid); if (wdoc == null) {Wdata_wiki_mgr.Log_missing_qid(core.Ctx(), qid); return rslt.Init_null();}
 		int pid_int = wdata_mgr.Pids_get(lang, pid); if (pid_int == Wdata_wiki_mgr.Pid_null) return rslt.Init_null();
 		Wdata_prop_grp prop_grp = wdoc.Claim_list_get(pid_int); if (prop_grp == null) return rslt.Init_null();
 		ByteAryBfr bfr = app.Utl_bry_bfr_mkr().Get_b512();

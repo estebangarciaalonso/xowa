@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.intl.*;
+import gplx.intl.*; import gplx.xowa.langs.numFormats.*;
 public class Xol_lang_srl {
 	public static Xow_ns[] Load_ns_grps(byte[] src) {
 		int src_len = src.length, pos = 0, fld_bgn = 0;
@@ -146,12 +146,12 @@ public class Xol_lang_srl {
 			++pos;
 		}
 	}
-	public static void Save_num_fmt(Gfs_bldr bldr, Gfo_num_fmt_mgr num_fmt_mgr) {
+	public static void Save_num_fmt(Gfs_bldr bldr, Xol_num_fmtr_base num_fmt_mgr) {
 		if (num_fmt_mgr.Standard()) return;
-		bldr.Add_proc_init_many(Xol_lang.Invk_num_fmt, Gfo_num_fmt_mgr.Invk_clear).Add_nl();
-		bldr.Add_proc_cont_one(Gfo_num_fmt_mgr.Invk_dec_dlm_).Add_parens_str(num_fmt_mgr.Dec_dlm()).Add_nl();
-		Gfo_num_fmt_grp itm = num_fmt_mgr.Grps_len() == 0 ? Gfo_num_fmt_grp.Default : num_fmt_mgr.Grps_get(0);
-		bldr.Add_proc_cont_one(Gfo_num_fmt_mgr.Invk_grps_add).Add_paren_bgn()
+		bldr.Add_proc_init_many(Xol_lang.Invk_num_fmt, Xol_num_fmtr_base.Invk_clear).Add_nl();
+		bldr.Add_proc_cont_one(Xol_num_fmtr_base.Invk_dec_dlm_).Add_parens_str(num_fmt_mgr.Dec_dlm()).Add_nl();
+		Xol_num_grp itm = num_fmt_mgr.Grps_len() == 0 ? Xol_num_grp.Default : num_fmt_mgr.Grps_get(0);
+		bldr.Add_proc_cont_one(Xol_num_fmtr_base.Invk_grps_add).Add_paren_bgn()
 			.Add_arg_str(itm.Dlm()).Add_comma().Add_arg_int(itm.Digits()).Add_comma().Add_arg_yn(true)
 			.Add_paren_end().Add_nl();
 		bldr.Add_term_nl();

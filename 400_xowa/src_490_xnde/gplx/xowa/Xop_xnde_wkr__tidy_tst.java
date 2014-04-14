@@ -21,8 +21,11 @@ public class Xop_xnde_wkr__tidy_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@After public void term() {fxt.Init_para_n_();}
 	@Test  public void Sub_sup_autocorrect() {
-		fxt.Test_parse_page_wiki_str("<sub>a</sup>", "<sub>a</sub>");
-		fxt.Test_parse_page_wiki_str("<sup>a</sub>", "<sup>a</sup>");
+		fxt.Test_parse_page_wiki_str("<sub>a</sup>b", "<sub>a</sub>b");
+		fxt.Test_parse_page_wiki_str("<sup>a</sub>b", "<sup>a</sup>b");
+	}
+	@Test  public void Span_font_autocorrect() {	// PURPOSE: force </font> to close <span>; EX:w:Rupee; DATE:2014-04-07
+		fxt.Test_parse_page_wiki_str("<span>a</font>b", "<span>a</span>b");
 	}
 	@Test  public void Move_ws_char() {
 		fxt.Test_parse_page_all_str("a<i> b </i>c", "a <i>b</i> c");

@@ -20,12 +20,12 @@ import org.junit.*;
 public class Xop_amp_wkr_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Named() {
-		fxt.Test_parse_page_wiki("&amp;"				, fxt.tkn_html_ref_("&amp;"));								// basic
+		fxt.Test_parse_page_wiki("&amp;"			, fxt.tkn_html_ref_("&amp;"));								// basic
 		fxt.Test_parse_page_wiki("a&amp;"			, fxt.tkn_txt_(0, 1), fxt.tkn_html_ref_("&amp;"));			// basic_bgn
 		fxt.Test_parse_page_wiki("&amp;nbsp;"		, fxt.tkn_html_ref_("&amp;"), fxt.tkn_txt_(5, 10));			// basic_end
-		fxt.Test_parse_page_wiki("&nil;"				, fxt.tkn_txt_(0, 5));										// unknown
+		fxt.Test_parse_page_wiki("&nil;"			, fxt.tkn_txt_(0, 5));										// unknown
 		fxt.Test_parse_page_wiki("a&nil;"			, fxt.tkn_txt_(0, 6));										// unknown_bgn
-		fxt.Test_parse_page_wiki_str("&amp;"			, "&amp;");
+		fxt.Test_parse_page_wiki_str("&amp;"		, "&amp;");
 		fxt.Test_parse_page_wiki_str("&aacute;"		, "&#225;");
 	}
 	@Test  public void Numeric() {// Σ: http://en.wikipedia.org/wiki/Numeric_character_reference
@@ -35,7 +35,7 @@ public class Xop_amp_wkr_tst {
 		fxt.Test_parse_page_wiki("&#X3A3;"			, fxt.tkn_html_ncr_(931));
 		fxt.Test_parse_page_wiki("&#931;"			, fxt.tkn_html_ncr_(931));
 		fxt.Test_parse_page_wiki("&#0931;"			, fxt.tkn_html_ncr_(931));
-		fxt.Test_parse_page_wiki("&#538189831;"		, fxt.tkn_html_ncr_(538189831));
+		fxt.Test_parse_page_wiki("&#538189831;"		, fxt.tkn_txt_());
 	}
 	@Test  public void Outliers() {
 		fxt.Test_parse_page_wiki("&#xx26D0;"		, fxt.tkn_html_ncr_(9936));	// NOTE: 2nd x is ignored

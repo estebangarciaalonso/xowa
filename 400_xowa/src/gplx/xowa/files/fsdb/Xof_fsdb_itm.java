@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
+import gplx.xowa.files.gui.*;
 public class Xof_fsdb_itm {
 	public byte[]		Lnki_ttl() {return lnki_ttl;} private byte[] lnki_ttl;
 	public byte[]		Lnki_md5() {return lnki_md5;} private byte[] lnki_md5;
@@ -47,14 +48,14 @@ public class Xof_fsdb_itm {
 	public Xof_fsdb_itm	Lnki_ttl_(byte[] v) {
 		lnki_ttl = v;
 		lnki_ext = Xof_ext_.new_by_ttl_(v);
-		lnki_md5 = Xof_xfer_itm.Md5_calc(v);
+		lnki_md5 = Xof_xfer_itm_.Md5_calc(v);
 		return this;
 	}
 	public Xof_fsdb_itm	Init_by_redirect(byte[] redirect_ttl) {
 		orig_redirect = redirect_ttl;
 		lnki_ttl = redirect_ttl;
 		lnki_ext = Xof_ext_.new_by_ttl_(lnki_ttl);
-		lnki_md5 = Xof_xfer_itm.Md5_calc(lnki_ttl);
+		lnki_md5 = Xof_xfer_itm_.Md5_calc(lnki_ttl);
 		return this;
 	}
 	public int			Orig_w() {return orig_w;} private int orig_w = Xop_lnki_tkn.Width_null;
@@ -72,6 +73,7 @@ public class Xof_fsdb_itm {
 	public int			Html_w() {return html_w;} private int html_w;
 	public int			Html_h() {return html_h;} private int html_h;
 	public Xof_fsdb_itm Html_size_(int w, int h) {html_w = w; html_h = h; return this;} 
+	public Js_img_wkr	Html_img_wkr() {return html_img_wkr;} public void Html_img_wkr_(Js_img_wkr v) {html_img_wkr = v;} private Js_img_wkr html_img_wkr;
 	public void			Html_size_calc(Xof_img_size img_size, byte exec_tid) {
 		if (!lnki_ext.Id_is_audio_strict()) {	// audio does not have html size calculated; everything else does
 			img_size.Html_size_calc(exec_tid, lnki_w, lnki_h, lnki_type, lnki_upright, lnki_ext.Id(), orig_w, orig_h, Xof_img_size.Thumb_width_img);

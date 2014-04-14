@@ -97,6 +97,7 @@ public class Xou_output_wkr implements ByteAryFmtrArg {
 		, Page_name(tmp_bfr, page.Ttl(), wiki.Ctx().Tab().Display_ttl())
 		, page_content_sub, page_data, wtr_page_lang, page_modified_on_msg, lang.Dir_bry(), log_wtr.Html()
 		, mgr.Css_common_bry(), mgr.Css_wiki_bry(), css_xtn, html_content_editable
+		, page.Html_data().Modules()
 		, portal_mgr.Div_personal_bry(), portal_mgr.Div_ns_bry(app.Utl_bry_bfr_mkr(), page.Ttl(), wiki.Ns_mgr()), portal_mgr.Div_view_bry(app.Utl_bry_bfr_mkr(), view_tid, page.Search_text())
 		, portal_mgr.Div_logo_bry(), portal_mgr.Div_home_bry(), page.Portal_div_xtn(), portal_mgr.Div_wikis_bry(app.Utl_bry_bfr_mkr()), portal_mgr.Sidebar_mgr().Html_bry()
 		, mgr.Edit_rename_div_bry(page.Ttl()), page.Data_preview()

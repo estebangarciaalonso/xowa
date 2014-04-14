@@ -16,13 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-public class Xop_lnki_halign {
-	public static final byte Null = 0, None = 1, Left = 2, Center = 3, Right = 4;
-	public static final byte[][] Html_names = new byte[][]
-	{ ByteAry_.new_ascii_("null")
-	, ByteAry_.new_ascii_("none")
-	, ByteAry_.new_ascii_("left")
-	, ByteAry_.new_ascii_("center")
-	, ByteAry_.new_ascii_("right")
-	};
+import org.junit.*;
+public class Pf_func_misc_tst {
+	private Xop_fxt fxt = new Xop_fxt();
+	@Before public void init()					{fxt.Reset();}
+	@Test  public void CascadingSources()		{fxt.Test_parse_page_all_str("{{CASCADINGSOURCES}}", "");} // PURPOSE: noop; DATE:2014-04-09
+	@Test  public void PendingChangesLevel()	{fxt.Test_parse_page_all_str("{{PENDINGCHANGESLEVEL}}", "");} // PURPOSE: noop; DATE:2014-04-09
 }

@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.langs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import gplx.intl.*; import gplx.php.*;
+import gplx.intl.*; import gplx.php.*; import gplx.xowa.langs.numFormats.*;
 public class Xol_mw_lang_parser {
 	private Php_parser parser = new Php_parser(); private Php_evaluator evaluator;
 	public Xol_mw_lang_parser(Gfo_msg_log msg_log) {evaluator = new Php_evaluator(msg_log);}
@@ -296,7 +296,7 @@ public class Xol_mw_lang_parser {
 				return itm.Val_obj_bry();
 		}
 	}
-	private void Parse_separatorTransformTable(Php_line_assign line, Gfo_num_fmt_mgr num_fmt_mgr) {
+	private void Parse_separatorTransformTable(Php_line_assign line, Xol_num_fmtr_base num_fmt_mgr) {
 		if (line.Val().Itm_tid() == Php_itm_.Tid_null) return;// en is null; $separatorTransformTable = null;
 		Php_itm_ary ary = (Php_itm_ary)line.Val();
 		int subs_len = ary.Subs_len();
@@ -313,7 +313,7 @@ public class Xol_mw_lang_parser {
 			else if (ByteAry_.Eq(key_bry, Bry_separatorTransformTable_comma)) 	grp_dlm = val_bry;
 			else throw Err_mgr._.unhandled_(String_.new_utf8_(key_bry));
 		}
-		num_fmt_mgr.Clear().Dec_dlm_(dec_dlm).Grps_add(new Gfo_num_fmt_grp(grp_dlm, 3, true));
+		num_fmt_mgr.Clear().Dec_dlm_(dec_dlm).Grps_add(new Xol_num_grp(grp_dlm, 3, true));
 	}	private static final byte[] Bry_separatorTransformTable_comma = new byte[] {Byte_ascii.Comma}, Bry_separatorTransformTable_dot = new byte[] {Byte_ascii.Dot};
 	private static final String GRP_KEY = "xowa.lang.parser";
 	private static final byte Tid_messages = 0, Tid_magicwords = 1, Tid_namespaceNames = 2, Tid_namespaceAliases = 3, Tid_specialPageAliases = 4

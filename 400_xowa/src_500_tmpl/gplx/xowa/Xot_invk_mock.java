@@ -91,29 +91,6 @@ public class Xot_invk_mock implements Xot_invk {
 	}
 	public static final Xot_invk_mock Null = new Xot_invk_mock(Xot_defn_.Tid_null, 1);
 }
-class Arg_nde_tkn_mock extends Arg_nde_tkn {	public Arg_nde_tkn_mock(boolean arg_key_is_int, String k, String v) {
-		this.key_exists = !arg_key_is_int;
-		if (key_exists)
-			this.Key_tkn_(new Arg_itm_tkn_mock(k));
-		this.Val_tkn_(new Arg_itm_tkn_mock(v));
-	}
-	public Arg_nde_tkn_mock(String k, String v) {
-		key_exists = k != null;
-		if (key_exists)
-			this.Key_tkn_(new Arg_itm_tkn_mock(k));
-		this.Val_tkn_(new Arg_itm_tkn_mock(v));
-	}
-	@Override public boolean KeyTkn_exists() {return key_exists;} private boolean key_exists;
-}
-class Arg_itm_tkn_mock extends Arg_itm_tkn_base {
-	public Arg_itm_tkn_mock(String v) {
-		byte[] dat_ary = ByteAry_.new_utf8_(v);
-		this.Subs_add(new Xop_bry_tkn(-1, -1, dat_ary));
-		this.Dat_ary_(dat_ary);
-		this.val = v;
-	}	String val;
-	@Override public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr) {bfr.Add_str(val); return true;}
-}
 /*
 NOTE_1: Xot_invk_mock is being used as a container for two functions
 (1) As a substitute for an Invk_tkn; EX: {{#invoke:Mod|Func|arg_1|arg_2}}

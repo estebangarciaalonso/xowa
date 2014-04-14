@@ -131,7 +131,7 @@ public class ByteAryBfr {
 	}
 	public ByteAryBfr Add_utf8_int(int val) {
 		if (bry_len + 4 > bry_max) Resize((bry_max + 4) * 2);
-		int utf8_len = gplx.intl.Utf8_.EncodeChar(val, bry, bry_len);
+		int utf8_len = gplx.intl.Utf16_.Encode_int(val, bry, bry_len);
 		bry_len += utf8_len;
 		return this;
 	}

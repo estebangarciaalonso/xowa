@@ -227,7 +227,7 @@ public class Xof_xfer_queue_bldr_wmf_tst {
 		.tst();
 	}
 	@Test  public void Url_encoding_invalid() {	// PURPOSE: for invalid url encoding (%); note that A%b should not become A%25b on file_system
-//			Tfds.Write_bry(Xof_xfer_itm.Md5_calc(ByteAry_.new_ascii_("A%b.png")));
+//			Tfds.Write_bry(Xof_xfer_itm_.Md5_calc(ByteAry_.new_ascii_("A%b.png")));
 		fxt.Rdr("A%b.png|||10000|90|80|8|0||0,-1,-1")
 		.Src(	fxt.img_("mem/src/commons.wikimedia.org/9/98/A%25b.png", 90, 80))
 		.Trg(	fxt.img_("mem/trg/commons.wikimedia.org/raw/9/8/A%b.png", 90, 80)

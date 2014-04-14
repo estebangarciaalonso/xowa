@@ -88,8 +88,8 @@ public class Xof_lnki_file_mgr {
 	private void Init_fsdb_by_lnki(Xof_fsdb_itm fsdb_itm, Xop_lnki_tkn lnki_tkn) {
 		byte[] lnki_ttl = lnki_tkn.Ttl().Page_db();
 		Xof_ext lnki_ext = Xof_ext_.new_by_ttl_(lnki_ttl);
-		byte[] lnki_md5 = Xof_xfer_itm.Md5_(lnki_ttl);
-		fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, lnki_tkn.Lnki_type(), lnki_tkn.Width(), lnki_tkn.Height(), lnki_tkn.Upright(), lnki_tkn.Thumbtime(), lnki_tkn.Page());
+		byte[] lnki_md5 = Xof_xfer_itm_.Md5_(lnki_ttl);
+		fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, lnki_tkn.Lnki_type(), lnki_tkn.Lnki_w(), lnki_tkn.Lnki_h(), lnki_tkn.Upright(), lnki_tkn.Thumbtime(), lnki_tkn.Page());
 	}
 	private void Init_fsdb_by_xfer(Xof_fsdb_itm fsdb_itm, Xof_xfer_itm xfer_itm) {	// DELETE: DATE:2014-02-04
 		fsdb_itm.Lnki_size_(xfer_itm.Lnki_w(), xfer_itm.Lnki_h());	// NOTE: must overwrite fsdb_itm.size with xfer_itm.size when the same image shows up in multiple sizes on a page; (only one item in wiki_orig); EX: w:Portal:Canada; [[File:Flag of Canada.svg|300x150px]]; [[File:Flag of Canada.svg|23px]]; DATE:2014-02-14
@@ -98,9 +98,7 @@ public class Xof_lnki_file_mgr {
 		fsdb_itm.Lnki_thumbtime_(xfer_itm.Lnki_thumbtime());
 //			byte[] lnki_ttl = xfer_itm.Lnki_ttl();
 //			Xof_ext lnki_ext = xfer_itm.Lnki_ext();
-//			byte[] lnki_md5 = Xof_xfer_itm.Md5_(lnki_ttl);
+//			byte[] lnki_md5 = Xof_xfer_itm_.Md5_(lnki_ttl);
 //			fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, xfer_itm.Lnki_type(), xfer_itm.Lnki_w(), xfer_itm.Lnki_h(), xfer_itm.Lnki_upright(), xfer_itm.Lnki_thumbtime(), xfer_itm.Lnki_page());
 	}
-}
-interface Xof_lnki_file_mgr_wkr {
 }

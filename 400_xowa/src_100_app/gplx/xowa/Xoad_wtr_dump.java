@@ -149,19 +149,22 @@ class App_log_wtr_html implements ByteAryFmtrArg {
 		msg_log.Clear();
 		this.page = null; this.msg_log = null;
 	}	private Xoa_page page; Gfo_msg_log msg_log;
-	byte[] BuildExcerpt(Gfo_msg_data eny) {
+	private byte[] BuildExcerpt(Gfo_msg_data eny) {
 		if (eny.Src_bgn() == -1) return ByteAry_.Empty; // added via String message; no src excerpt available;
 		byte[] src = eny.Src_bry();
+		int src_len = src.length;
 		int mid_bgn = eny.Src_bgn(), mid_end = eny.Src_end();
 		int all_bgn = mid_bgn - excerpt_pad; if (all_bgn < 0)			all_bgn = 0;
-		int all_end = mid_end + excerpt_pad; if (all_end > src.length)	all_end = src.length;
+		int all_end = mid_end + excerpt_pad; if (all_end > src_len)		all_end = src.length;
+		if (mid_bgn >= src_len) mid_bgn = src_len;
+		if (mid_end >= src_len) mid_end = src_len;
 		byte[] bry_bgn = BuildBry(excerpt_bfr, src, all_bgn, mid_bgn);
 		byte[] bry_mid = BuildBry(excerpt_bfr, src, mid_bgn, mid_end);
 		byte[] bry_end = BuildBry(excerpt_bfr, src, mid_end, all_end);
 		excerpt_fmtr.Bld_bfr(excerpt_bfr, bry_bgn, bry_mid, bry_end);
 		return excerpt_bfr.XtoAryAndClear();
 	}
-	byte[] BuildBry(ByteAryBfr bfr, byte[] src, int bgn, int end) {
+	private byte[] BuildBry(ByteAryBfr bfr, byte[] src, int bgn, int end) {
 		if (end - bgn == 0) return ByteAry_.Empty;
 		for (int i = bgn; i < end; i++) {
 			byte b = src[i];

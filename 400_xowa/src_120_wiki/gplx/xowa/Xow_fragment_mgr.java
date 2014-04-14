@@ -16,12 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.xowa.langs.numFormats.*;
 public class Xow_fragment_mgr implements GfoInvkAble {
 	private static final byte[] Date_format_default = ByteAry_.new_ascii_("dmy");
 	private static final byte[] Num_format_digits	 = ByteAry_.new_ascii_("['', '']");
 	public byte[] Html_js_table() {return html_js_table;} private byte[] html_js_table;
 	public Xow_fragment_mgr(Xow_wiki wiki) {this.wiki = wiki;} private Xow_wiki wiki;
-	ByteAryFmtr html_js_table_fmtr = ByteAryFmtr.new_(String_.Concat_lines_nl
+	private ByteAryFmtr html_js_table_fmtr = ByteAryFmtr.new_(String_.Concat_lines_nl
 		(	"  var xowa_global_values = {"
 		,	"    'collapsible-collapse'         : '~{collapsible-collapse}',"
 		,	"    'collapsible-expand'           : '~{collapsible-expand}',"
@@ -36,7 +37,7 @@ public class Xow_fragment_mgr implements GfoInvkAble {
 		,	"  };"
 		),	"collapsible-collapse", "collapsible-expand", "sort-descending", "sort-ascending", "wgContentLanguage", "wgSeparatorTransformTable", "wgDigitTransformTable", "wgDefaultDateFormat", "wgMonthNames", "wgMonthNamesShort");
 	public byte[] Html_js_edit_toolbar() {return html_js_edit_toolbar;} private byte[] html_js_edit_toolbar;
-	ByteAryFmtr html_js_edit_toolbar_fmtr = ByteAryFmtr.new_(String_.Concat_lines_nl
+	private ByteAryFmtr html_js_edit_toolbar_fmtr = ByteAryFmtr.new_(String_.Concat_lines_nl
 		(	"  var xowa_edit_i18n = {"
 		,	"    'bold_tip'             : '~{bold_tip}',"
 		,	"    'bold_sample'          : '~{bold_sample}',"
@@ -107,8 +108,8 @@ public class Xow_fragment_mgr implements GfoInvkAble {
 		bfr.Add_byte(Byte_ascii.Brack_end);
 		return bfr.XtoAryAndClear();
 	}
-	byte[] Html_js_table_num_format_separators(ByteAryBfr bfr, gplx.intl.Gfo_num_fmt_mgr num_fmt_mgr) {
-		byte[] grp_dlm = num_fmt_mgr.Standard() ? gplx.intl.Gfo_num_fmt_mgr.Grp_dlm_default : num_fmt_mgr.Grps_get_last().Dlm();
+	byte[] Html_js_table_num_format_separators(ByteAryBfr bfr, Xol_num_fmtr_base num_fmt_mgr) {
+		byte[] grp_dlm = num_fmt_mgr.Standard() ? Xol_num_fmtr_base.Grp_dlm_default : num_fmt_mgr.Grps_get_last().Dlm();
 		bfr.Add_byte(Byte_ascii.Brack_bgn)							.Add_byte(Byte_ascii.Apos).Add(num_fmt_mgr.Dec_dlm()).Add_byte(Byte_ascii.Tab).Add_byte(Byte_ascii.Dot).Add_byte(Byte_ascii.Apos);
 		bfr.Add_byte(Byte_ascii.Comma).Add_byte(Byte_ascii.Space)	.Add_byte(Byte_ascii.Apos).Add(grp_dlm).Add_byte(Byte_ascii.Tab).Add_byte(Byte_ascii.Comma).Add_byte(Byte_ascii.Apos);
 		bfr.Add_byte(Byte_ascii.Brack_end);

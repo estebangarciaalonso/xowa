@@ -26,6 +26,6 @@ class Pf_intl_grammar extends Pf_func_base {
 		boolean pass = false;
 		try {pass = lang.Grammar().Grammar_eval(bfr, lang, word, argx);}
 		catch (Exception e) {Err_.Noop(e);}
-		if (!pass) Xot_invk_tkn.Print_not_found(bfr, this.Name());
+		if (!pass) Xot_invk_tkn.Print_not_found(bfr, ctx.Wiki().Ns_mgr(), this.Name());
 	}
 }	

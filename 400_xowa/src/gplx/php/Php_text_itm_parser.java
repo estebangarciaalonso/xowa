@@ -106,7 +106,7 @@ public class Php_text_itm_parser {
 		int end = bgn + 4;
 		if (end >= src_len) throw Err_mgr._.fmt_auto_(GRP_KEY, "utf16_parse", String_.new_utf8_(src));
 		int v = Int_.Xto_int_hex(src, bgn, end);	// +2; skip "\" + "u"
-		byte[] literal = gplx.intl.Utf8_.EncodeCharAsAry(v);
+		byte[] literal = gplx.intl.Utf16_.Encode_int_to_bry(v);
 		rv.Add(new Php_text_itm_utf16(bgn, end, literal));
 	}
 	static final String GRP_KEY = "xowa.php.quote_text_parser";

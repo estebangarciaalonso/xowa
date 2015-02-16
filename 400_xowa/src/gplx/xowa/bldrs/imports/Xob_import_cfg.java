@@ -40,8 +40,8 @@ public class Xob_import_cfg {
 			Chk_file_ext(wiki.App(), src_fil_bz2, ".bz2", "xml");
 			Xoa_app app = wiki.App();
 			if (app.Setup_mgr().Dump_mgr().Import_bz2_by_stdout()) {
-				ProcessAdp process = app.Fsys_mgr().App_mgr().App_decompress_bz2_by_stdout();
-				return Io_stream_rdr_process.new_(process.Exe_url(), src_fil_bz2, process.X_to_process_bldr_args(src_fil_bz2.Raw()));
+				ProcessAdp process = app.Launcher().App_decompress_bz2_by_stdout();
+				return Io_stream_rdr_process.new_(process.Exe_url(), src_fil_bz2, process.Xto_process_bldr_args(src_fil_bz2.Raw()));
 			}
 			else
 				return gplx.ios.Io_stream_rdr_.bzip2_(src_fil_bz2);

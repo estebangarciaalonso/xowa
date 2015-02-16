@@ -16,8 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scores; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.core.primitives.*;
 import gplx.xowa.html.*; import gplx.xowa.files.*;
-import gplx.xowa.parsers.logs.*;
+import gplx.xowa.parsers.logs.*; import gplx.xowa.gui.views.*;
 public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 	public boolean Lang_is_abc() {return lang_is_abc;} private boolean lang_is_abc;
 	public boolean Code_is_raw() {return code_is_raw;} private boolean code_is_raw;
@@ -29,9 +30,9 @@ public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 	public Xop_xnde_tkn Xnde() {return xnde;} private Xop_xnde_tkn xnde = null;
 	public void Xatr_parse(Xow_wiki wiki, byte[] src, Xop_xatr_itm xatr, Object xatr_key_obj) {
 		if (xatr_key_obj == null) return;
-		ByteVal xatr_key = (ByteVal)xatr_key_obj;
+		Byte_obj_val xatr_key = (Byte_obj_val)xatr_key_obj;
 		switch (xatr_key.Val()) {
-			case Xatr_id_lang_is_abc:	lang_is_abc = ByteAry_.Eq(ByteAry_.Upper_ascii(xatr.Val_as_bry(src)), Lang_abc); break;
+			case Xatr_id_lang_is_abc:	lang_is_abc = Bry_.Eq(Bry_.Upper_ascii(xatr.Val_as_bry(src)), Lang_abc); break;
 			case Xatr_id_code_is_raw:	code_is_raw = xatr.Val_as_bool_by_int(src); break;
 			case Xatr_id_output_midi:	output_midi = xatr.Val_as_bool_by_int(src); break;
 			case Xatr_id_output_ogg:	output_ogg  = xatr.Val_as_bool_by_int(src); break;
@@ -43,41 +44,41 @@ public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 	public void Xtn_parse(Xow_wiki wiki, Xop_ctx ctx, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
 		Xop_xatr_itm.Xatr_parse(wiki.App(), this, atr_hash, wiki, src, xnde);
 		this.xnde = xnde;
-		code = ByteAry_.Mid(src, xnde.Tag_open_end(), xnde.Tag_close_bgn());
-		code = ByteAry_.Replace(code, gplx.xowa.bldrs.xmls.Xob_xml_parser_.Bry_tab_ent, gplx.xowa.bldrs.xmls.Xob_xml_parser_.Bry_tab);
-		boolean log_wkr_enabled = Log_wkr != Xop_log_basic_wkr.Null; if (log_wkr_enabled) Log_wkr.Log_end_xnde(ctx.Page(), Xop_log_basic_wkr.Tid_score, src, xnde);
+		code = Bry_.Mid(src, xnde.Tag_open_end(), xnde.Tag_close_bgn());
+		code = Bry_.Replace(code, gplx.xowa.bldrs.xmls.Xob_xml_parser_.Bry_tab_ent, gplx.xowa.bldrs.xmls.Xob_xml_parser_.Bry_tab);
+		boolean log_wkr_enabled = Log_wkr != Xop_log_basic_wkr.Null; if (log_wkr_enabled) Log_wkr.Log_end_xnde(ctx.Cur_page(), Xop_log_basic_wkr.Tid_score, src, xnde);
 	}	public static Xop_log_basic_wkr Log_wkr = Xop_log_basic_wkr.Null;
 	private byte[] code;
 	public String Hcmd_id() {return hcmd_id;} private String hcmd_id;
-	private void Html_write_code_as_pre(ByteAryBfr bfr, Xoa_app app) {
+	private void Html_write_code_as_pre(Bry_bfr bfr, Xoa_app app) {
 		bfr.Add(Xoh_consts.Pre_bgn_overflow);
 		Xox_mgr_base.Xtn_write_escape(app, bfr, code);
 		bfr.Add(Xoh_consts.Pre_end);
 	}
-	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_html_wtr_ctx opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
-		Xow_wiki wiki = ctx.Wiki(); Xoa_page page = ctx.Page();
+	public void Xtn_write(Bry_bfr bfr, Xoa_app app, Xop_ctx ctx, Xoh_html_wtr html_wtr, Xoh_wtr_ctx hctx, Xop_xnde_tkn xnde, byte[] src) {
+		Xow_wiki wiki = ctx.Wiki(); Xoa_page page = ctx.Cur_page();
 		Score_xtn_mgr score_xtn = (Score_xtn_mgr)wiki.Xtn_mgr().Get_or_fail(Score_xtn_mgr.XTN_KEY);
 		if (!score_xtn.Enabled()) {Html_write_code_as_pre(bfr, app); return;}
-		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
-		ProcessAdp ly_process = app.Fsys_mgr().App_mgr().App_lilypond();
+		ProcessAdp ly_process = app.Launcher().App_lilypond();
 		if (ly_process.Exe_exists() == Bool_.__byte && ly_process.Exe_url() != null) {	// TEST: ly_process.Exe_url() is null
 			boolean exists = Io_mgr._.ExistsFil(ly_process.Exe_url());
 			ly_process.Exe_exists_(exists ? Bool_.Y_byte : Bool_.N_byte);
 		}
 		if (ly_process.Exe_exists() == Bool_.N_byte) {Html_write_code_as_pre(bfr, app); return;}
+		Bry_bfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
 		tmp_bfr.Add(code).Add_byte_pipe().Add_int_bool(lang_is_abc).Add_byte_pipe().Add_int_bool(code_is_raw);
-		sha1 = gplx.security.HashAlgo_.Sha1.Calc_hash_bry(tmp_bfr.Mkr_rls().XtoAryAndClear()); // NOTE: MW transforms to base32; for now, keep sha1 as raw
+		sha1 = gplx.security.HashAlgo_.Sha1.Calc_hash_bry(tmp_bfr.Mkr_rls().Xto_bry_and_clear()); // NOTE: MW transforms to base32; for now, keep sha1 as raw
 		sha1_prefix = String_.new_ascii_(sha1, 0, 8);
 		output_dir = app.Fsys_mgr().File_dir().GenSubDir_nest(wiki.Domain_str(), "lilypond", Char_.XtoStr(sha1[0]), Char_.XtoStr(sha1[1]), String_.new_ascii_(sha1));	// NOTE: MW also adds an extra level for 8-len; EX: /.../sha1_32_len/sha1_8_len/
 		png_file = output_dir.GenSubFil(sha1_prefix + ".png");
 		aud_file = output_dir.GenSubFil(sha1_prefix + ".midi");
-		hcmd_id = "xowa_score_" + Int_.XtoStr(page.Html_cmd_mgr().Count());
+		hcmd_id = "xowa_score_" + Int_.Xto_str(page.Html_cmd_mgr().Count());
 
 		html_id_pre = hcmd_id + "_pre";
 		html_id_img = hcmd_id + "_img";
 		html_id_a	= hcmd_id + "_a";
 		html_a_href = ""; html_img_src = "";
-		html_img_alt = String_.new_utf8_(ByteAry_.Replace(code, Xoa_consts.Nl_bry, gplx.html.Html_consts.Nl_bry));
+		html_img_alt = String_.new_utf8_(Bry_.Replace(code, Xoa_consts.Nl_bry, gplx.html.Html_entity_.Nl_bry));
 		String html_img_alt_tmp = "", html_img_src_tmp = "", html_a_href_tmp = "";
 		html_img_src = png_file.To_http_file_str();			
 		html_a_href = aud_file.To_http_file_str();
@@ -102,35 +103,36 @@ public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 		score_xtn.Html_img().Bld_bfr_many(bfr, html_id_a, html_a_href_tmp, html_a_xowa_ttl, html_id_img, html_img_src_tmp, html_img_alt_tmp);
 	}	private byte[] sha1; private String sha1_prefix; private Io_url output_dir, png_file, aud_file; private String html_id_pre, html_id_img, html_id_a, html_a_href, html_img_src, html_img_alt;
 	private String Fill_xfer(Xow_wiki wiki, Xop_ctx ctx, Xoa_page page, byte[] ttl) {
-		Xof_xfer_itm xfer_itm = wiki.Html_wtr().Lnki_wtr().File_wtr().Lnki_eval(ctx, page.File_queue(), ttl, Xop_lnki_type.Id_none, -1, -1, -1, Xof_doc_thumb.Null, Xof_doc_page.Null, false, Fill_xfer_ref);
+		Xof_xfer_itm xfer_itm = wiki.Html_mgr().Html_wtr().Lnki_wtr().File_wtr().Lnki_eval(ctx, page.File_queue(), ttl, Xop_lnki_type.Id_none, -1, -1, -1, Xof_doc_thumb.Null, Xof_doc_page.Null, false, Fill_xfer_ref);
 		return String_.new_utf8_(xfer_itm.Html_orig_src());
-	}	private BoolRef Fill_xfer_ref = BoolRef.n_();
-	public void Hcmd_exec(Xoa_app app, Xog_win_wtr gui_wtr, Xoa_page page) {
+	}	private Bool_obj_ref Fill_xfer_ref = Bool_obj_ref.n_();
+	public void Hcmd_exec(Xoa_app app, Gfo_usr_dlg usr_dlg, Xoa_page page) {
 		fail_msg = "unknown failure";
-		gui_wtr.Prog_many(GRP_KEY, "exec.msg", "generating lilypond: ~{0}", String_.new_utf8_(code));
-		gui_wtr.Prog_many(GRP_KEY, "exec.msg", "generating lilypond: ~{0}", String_.new_utf8_(code));
+		usr_dlg.Prog_many(GRP_KEY, "exec.msg", "generating lilypond: ~{0}", String_.new_utf8_(code));
+		usr_dlg.Prog_many(GRP_KEY, "exec.msg", "generating lilypond: ~{0}", String_.new_utf8_(code));
 		Xow_wiki wiki = page.Wiki();
 		Score_xtn_mgr score_xtn = (Score_xtn_mgr)wiki.Xtn_mgr().Get_or_fail(Score_xtn_mgr.XTN_KEY);
 		Io_url ly_file = output_dir.GenSubFil(sha1_prefix + ".ly");
 		byte[] ly_text = null;
-		ProcessAdp ly_process = app.Fsys_mgr().App_mgr().App_lilypond();
+		ProcessAdp ly_process = app.Launcher().App_lilypond();
 		if (Score_xtn_mgr.Lilypond_version == null) Score_xtn_mgr.Lilypond_version = Get_lilypond_version(ly_process);
-		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
 		if	(lang_is_abc) {
 			Io_url abc_file = output_dir.GenSubFil(sha1_prefix + ".abc");
 			Io_mgr._.SaveFilBry(abc_file, code);
-			ProcessAdp abc2ly_process = app.Fsys_mgr().App_mgr().App_abc2ly();
+			ProcessAdp abc2ly_process = app.Launcher().App_abc2ly();
 			if (!abc2ly_process.Run(abc_file, ly_file).Exit_code_pass()) {
 				fail_msg = abc2ly_process.Rslt_out();
 				app.Usr_dlg().Warn_many("", "", "abc2ly failed: ~{0}", fail_msg);
 				return;
 			}
 			ly_text = Io_mgr._.LoadFilBry(ly_file);
-			ly_text = ByteAry_.Replace_between(ly_text, Abc_tagline_bgn, Abc_tagline_end, Abc_tagline_repl);	// remove "tagline = Generated By AbcToLy" at bottom of image
+			ly_text = Bry_.Replace_between(ly_text, Abc_tagline_bgn, Abc_tagline_end, Abc_tagline_repl);	// remove "tagline = Generated By AbcToLy" at bottom of image
 			Io_mgr._.SaveFilBry(ly_file, ly_text);
 		}	
 		else {
+			Bry_bfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
 			ly_text = code_is_raw ? code : score_xtn.Lilypond_fmtr().Bld_bry_many(tmp_bfr, Score_xtn_mgr.Lilypond_version, code);
+			tmp_bfr.Mkr_rls();
 			Io_mgr._.SaveFilBry(ly_file, ly_text);
 		}
 		ly_process.Working_dir_(ly_file.OwnerDir());	// NOTE: must change working_dir, else file will be dumped into same dir as lilypond.exe
@@ -140,7 +142,7 @@ public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 			return;
 		}
 		if (output_ogg) {
-			ProcessAdp timidity_process = app.Fsys_mgr().App_mgr().App_convert_midi_to_ogg();
+			ProcessAdp timidity_process = app.Launcher().App_convert_midi_to_ogg();
 			Io_url ogg_file = ly_file.GenNewExt(".ogg");
 			if (!timidity_process.Run(ly_file.GenNewExt(".midi"), ogg_file).Exit_code_pass()) {	// NOTE: do not exit; timidity currently not working for windows
 				fail_msg = timidity_process.Rslt_out();
@@ -151,19 +153,20 @@ public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 		Io_mgr._.DeleteFil(ly_file);
 		Io_url png_file_untrimmed = png_file.GenNewNameOnly("untrimmed");
 		Io_mgr._.MoveFil(png_file, png_file_untrimmed);
-		app.Fsys_mgr().App_mgr().App_trim_img().Run(png_file_untrimmed, png_file);
+		app.Launcher().App_trim_img().Run(png_file_untrimmed, png_file);
 		Io_mgr._.DeleteFil(png_file_untrimmed);
 		fail_msg = null;		
 	}	private String fail_msg = null;
-	public void Hcmd_write(Xoa_app app, Xog_win_wtr gui_wtr, Xoa_page page) {
+	public void Hcmd_write(Xoa_app app, Gfo_usr_dlg usr_dlg, Xoa_page page) {
+		Xog_html_itm html_itm = page.Tab().Html_itm();
 		if (fail_msg == null) {	// fill in png/midi;			
-			gui_wtr.Html_atr_set(html_id_a, "href", html_a_href);
-			gui_wtr.Html_atr_set(html_id_img, "src", html_img_src);
-			gui_wtr.Html_atr_set(html_id_img, "alt", html_img_alt);
-			gui_wtr.Html_elem_delete(html_id_pre);
+			html_itm.Html_atr_set(html_id_a, "href", html_a_href);
+			html_itm.Html_atr_set(html_id_img, "src", html_img_src);
+			html_itm.Html_atr_set(html_id_img, "alt", html_img_alt);
+			html_itm.Html_elem_delete(html_id_pre);
 		}
 		else {	// write failure message				
-			gui_wtr.Html_atr_set(html_id_pre, "textContent", fail_msg);
+			html_itm.Html_atr_set(html_id_pre, "textContent", fail_msg);
 		}
 	}
 	byte[] Get_lilypond_version(ProcessAdp lilypond_process) {
@@ -175,19 +178,26 @@ public class Score_xnde implements Xox_xnde, Xop_xnde_atr_parser, Xoh_cmd_itm {
 		catch (Exception e) {Err_.Noop(e); return Version_unknown;}
 	}
 	public static byte[] Get_lilypond_version(String rslt_str) {
-		byte[] rslt = ByteAry_.new_utf8_(rslt_str);	// expect 1st line to be of form "GNU LilyPond 2.16.2"
-		int bgn_pos	= Byte_ary_finder.Find_fwd(rslt, Version_find_bgn); if (bgn_pos == ByteAry_.NotFound) return Version_unknown;
+		byte[] rslt = Bry_.new_utf8_(rslt_str);	// expect 1st line to be of form "GNU LilyPond 2.16.2"
+		int bgn_pos	= Bry_finder.Find_fwd(rslt, Version_find_bgn); if (bgn_pos == Bry_.NotFound) return Version_unknown;
 		bgn_pos += Version_find_bgn.length + 1;	// +1 for trailing space
-		int end_pos = Byte_ary_finder.Find_fwd(rslt, Byte_ascii.NewLine, bgn_pos); if (bgn_pos == ByteAry_.NotFound) return Version_unknown;
+		int end_pos = Bry_finder.Find_fwd(rslt, Byte_ascii.NewLine, bgn_pos); if (bgn_pos == Bry_.NotFound) return Version_unknown;
 		if (rslt[end_pos - 1] == Byte_ascii.CarriageReturn) end_pos = end_pos - 1;
-		return ByteAry_.Mid(rslt, bgn_pos, end_pos);
+		return Bry_.Mid(rslt, bgn_pos, end_pos);
 	}
 	public static final byte Xatr_id_lang_is_abc = 0, Xatr_id_code_is_raw = 1, Xatr_id_output_midi = 2, Xatr_id_output_ogg = 3, Xatr_id_file_midi = 4, Xatr_id_file_ogg = 5;
-	private static final Hash_adp_bry atr_hash = Hash_adp_bry.ci_().Add_str_byte("lang", Xatr_id_lang_is_abc).Add_str_byte("raw", Xatr_id_code_is_raw).Add_str_byte("midi", Xatr_id_output_midi).Add_str_byte("vorbis", Xatr_id_output_ogg).Add_str_byte("over"+"ride_midi", Xatr_id_file_midi).Add_str_byte("over"+"ride_ogg", Xatr_id_file_ogg);
+	private static final Hash_adp_bry atr_hash = Hash_adp_bry.ci_ascii_()
+	.Add_str_byte("lang", Xatr_id_lang_is_abc)
+	.Add_str_byte("raw", Xatr_id_code_is_raw)
+	.Add_str_byte("midi", Xatr_id_output_midi)
+	.Add_str_byte("vorbis", Xatr_id_output_ogg)
+	.Add_str_byte("over"+"ride_midi", Xatr_id_file_midi)
+	.Add_str_byte("over"+"ride_ogg", Xatr_id_file_ogg)
+	;
 	private static final byte[] 
-		  Lang_abc = ByteAry_.new_ascii_("ABC")
-		, Abc_tagline_bgn = ByteAry_.new_ascii_("tagline ="), Abc_tagline_end = new byte[] {Byte_ascii.NewLine}, Abc_tagline_repl = ByteAry_.new_ascii_("tagline = \"\"\n")
-		, Version_unknown = ByteAry_.new_ascii_("unknown"), Version_find_bgn = ByteAry_.new_ascii_("GNU LilyPond")
-		;
+	  Lang_abc = Bry_.new_ascii_("ABC")
+	, Abc_tagline_bgn = Bry_.new_ascii_("tagline ="), Abc_tagline_end = new byte[] {Byte_ascii.NewLine}, Abc_tagline_repl = Bry_.new_ascii_("tagline = \"\"\n")
+	, Version_unknown = Bry_.new_ascii_("unknown"), Version_find_bgn = Bry_.new_ascii_("GNU LilyPond")
+	;
 	static final String GRP_KEY = "xowa.xtns.scores.itm";
 }

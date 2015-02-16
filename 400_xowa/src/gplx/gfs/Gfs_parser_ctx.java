@@ -16,8 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfs; import gplx.*;
+import gplx.core.btries.*;
 class Gfs_parser_ctx {
-	public ByteTrieMgr_fast Trie() {return trie;} ByteTrieMgr_fast trie;
+	public Btrie_fast_mgr Trie() {return trie;} Btrie_fast_mgr trie;
 	public Gfs_nde Root() {return root;} Gfs_nde root = new Gfs_nde();
 	public byte[] Src() {return src;} private byte[] src;
 	public int Src_len() {return src_len;} private int src_len;
@@ -25,11 +26,11 @@ class Gfs_parser_ctx {
 	public Gfs_nde Cur_nde() {return cur_nde;} Gfs_nde cur_nde;
 	public int Nxt_pos() {return nxt_pos;} private int nxt_pos;
 	public Gfs_lxr Nxt_lxr() {return nxt_lxr;} Gfs_lxr nxt_lxr;
-	public ByteAryBfr Tmp_bfr() {return tmp_bfr;} private ByteAryBfr tmp_bfr = ByteAryBfr.new_();
+	public Bry_bfr Tmp_bfr() {return tmp_bfr;} private Bry_bfr tmp_bfr = Bry_bfr.new_();
 	public void Process_eos() {}
 	public void Process_lxr(int nxt_pos, Gfs_lxr nxt_lxr)	{this.nxt_pos = nxt_pos; this.nxt_lxr = nxt_lxr;}
 	public void Process_null(int cur_pos)					{this.nxt_pos = cur_pos; this.nxt_lxr = null;}
-	public void Init(ByteTrieMgr_fast trie, byte[] src, int src_len) {
+	public void Init(Btrie_fast_mgr trie, byte[] src, int src_len) {
 		this.trie = trie; this.src = src; this.src_len = src_len;
 		cur_nde = root;
 		Stack_add();
@@ -96,22 +97,22 @@ class Gfs_err_mgr {
 			tmp_fail_bfr.Add_byte(Byte_ascii.Eq).Add_byte(Byte_ascii.Apos);
 			tmp_fail_bfr.Add_str(kv.Val_to_str_or_empty()).Add_byte(Byte_ascii.Apos);
 		}
-		return tmp_fail_bfr.XtoStrAndClear();
+		return tmp_fail_bfr.Xto_str_and_clear();
 	}
-	ByteAryBfr tmp_fail_bfr = ByteAryBfr.reset_(255);
+	Bry_bfr tmp_fail_bfr = Bry_bfr.reset_(255);
 	KeyValList tmp_fail_args = new KeyValList();
 	private static int excerpt_len = 50;
 	String Fail_excerpt_bgn(byte[] src, int src_len, int pos) {
 		int bgn = pos - excerpt_len; if (bgn < 0) bgn = 0;
 		Fail_excerpt_rng(tmp_fail_bfr, src, bgn, pos);
-		return tmp_fail_bfr.XtoStrAndClear();
+		return tmp_fail_bfr.Xto_str_and_clear();
 	}
 	String Fail_excerpt_end(byte[] src, int src_len, int pos) {
 		int end = pos + excerpt_len; if (end > src_len) end = src_len;
 		Fail_excerpt_rng(tmp_fail_bfr, src, pos, end);
-		return tmp_fail_bfr.XtoStrAndClear();
+		return tmp_fail_bfr.Xto_str_and_clear();
 	}
-	private static void Fail_excerpt_rng(ByteAryBfr bfr, byte[] src, int bgn, int end) {
+	private static void Fail_excerpt_rng(Bry_bfr bfr, byte[] src, int bgn, int end) {
 		for (int i = bgn; i < end; i++) {
 			byte b = src[i];
 			switch (b) {
@@ -121,5 +122,5 @@ class Gfs_err_mgr {
 				default:						bfr.Add_byte(b); break;
 			}
 		}
-	}	static final byte[] Esc_nl = ByteAry_.new_ascii_("\\n"), Esc_cr = ByteAry_.new_ascii_("\\r"), Esc_tab = ByteAry_.new_ascii_("\\t");
+	}	static final byte[] Esc_nl = Bry_.new_ascii_("\\n"), Esc_cr = Bry_.new_ascii_("\\r"), Esc_tab = Bry_.new_ascii_("\\t");
 }

@@ -32,26 +32,26 @@ public class Gfo_msg_itm implements Gfo_msg_obj {
 	public Gfo_msg_obj Subs_get_by_key(String sub_key) {return null;}
 	public byte Cmd() {return cmd;} private byte cmd;
 	public byte[] Fmt() {return fmt;} private byte[] fmt;
-	public ByteAryFmtr Fmtr() {if (fmtr == null) fmtr = ByteAryFmtr.new_bry_(fmt).Compile(); return fmtr;} ByteAryFmtr fmtr; 
+	public Bry_fmtr Fmtr() {if (fmtr == null) fmtr = Bry_fmtr.new_bry_(fmt).Compile(); return fmtr;} Bry_fmtr fmtr; 
 	public String Gen_str_many(Object... vals) {return Gen_str_ary(vals);}
 	public String Gen_str_ary(Object[] vals) {
-		if (fmtr == null) fmtr = ByteAryFmtr.new_bry_(fmt).Compile(); 
+		if (fmtr == null) fmtr = Bry_fmtr.new_bry_(fmt).Compile(); 
 		if (fmtr.Fmt_args_exist()) {
 			fmtr.Bld_bfr_many(tmp_bfr, vals);
-			return tmp_bfr.XtoStrAndClear();
+			return tmp_bfr.Xto_str_and_clear();
 		}
 		else
 			return String_.new_utf8_(fmt);
 	}
 	public String Gen_str_one(Object val) {
-		if (fmtr == null) fmtr = ByteAryFmtr.new_bry_(fmt).Compile(); 
+		if (fmtr == null) fmtr = Bry_fmtr.new_bry_(fmt).Compile(); 
 		if (fmtr.Fmt_args_exist()) {
 			fmtr.Bld_bfr_one(tmp_bfr, val);
-			return tmp_bfr.XtoStrAndClear();
+			return tmp_bfr.Xto_str_and_clear();
 		}
 		else
 			return String_.new_utf8_(fmt);
 	}
 	public String Gen_str_none() {return key_str;}
-	static ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	static Bry_bfr tmp_bfr = Bry_bfr.reset_(255);
 }

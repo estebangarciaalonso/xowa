@@ -40,7 +40,7 @@ public class Io_stream_rdr_ {
 	}
 	public static byte[] Load_all(Io_url url) {
 		Io_stream_rdr rdr = new_by_url_(url);
-		ByteAryBfr rv = ByteAryBfr.new_();
+		Bry_bfr rv = Bry_bfr.new_();
 		try {
 			rdr.Open();
 			return Load_all_as_bry(rv, rdr);
@@ -48,12 +48,12 @@ public class Io_stream_rdr_ {
 		finally {rdr.Rls();}
 	}
 	public static String Load_all_as_str(Io_stream_rdr rdr) {return String_.new_utf8_(Load_all_as_bry(rdr));}
-	public static byte[] Load_all_as_bry(Io_stream_rdr rdr) {return Load_all_as_bry(ByteAryBfr.new_(), rdr);}
-	public static byte[] Load_all_as_bry(ByteAryBfr rv, Io_stream_rdr rdr) {
+	public static byte[] Load_all_as_bry(Io_stream_rdr rdr) {return Load_all_as_bry(Bry_bfr.new_(), rdr);}
+	public static byte[] Load_all_as_bry(Bry_bfr rv, Io_stream_rdr rdr) {
 		Load_all_to_bfr(rv, rdr);
-		return rv.XtoAryAndClear();
+		return rv.Xto_bry_and_clear();
 	}
-	public static void Load_all_to_bfr(ByteAryBfr rv, Io_stream_rdr rdr) {
+	public static void Load_all_to_bfr(Bry_bfr rv, Io_stream_rdr rdr) {
 		try {
 			byte[] bry = new byte[4096];
 			while (true) {
@@ -64,7 +64,7 @@ public class Io_stream_rdr_ {
 		} finally {rdr.Rls();}
 	}
 	public static final Io_stream_rdr Null = new Io_stream_rdr_null();
-	public static Io_stream_rdr mem_(String v) {return mem_(ByteAry_.new_utf8_(v));}
+	public static Io_stream_rdr mem_(String v) {return mem_(Bry_.new_utf8_(v));}
 	public static Io_stream_rdr mem_(byte[] v) {
 		Io_stream_rdr rv = new Io_stream_rdr_adp(Stream_new_mem(v));
 		rv.Len_(v.length);
@@ -176,7 +176,7 @@ class Io_stream_rdr_file extends Io_stream_rdr_base {
 	public Io_stream_rdr Open() {
 		try {
 			if (!Io_mgr._.Exists(url))
-				stream = Wrap_stream(new java.io.ByteArrayInputStream(ByteAry_.Empty));
+				stream = Wrap_stream(new java.io.ByteArrayInputStream(Bry_.Empty));
 			else {
 				if (url.Info().EngineKey() == gplx.ios.IoEngine_.MemKey)
 					stream = Wrap_stream(new java.io.ByteArrayInputStream(Io_mgr._.LoadFilBry(url.Xto_api())));
@@ -194,7 +194,7 @@ class Io_stream_rdr_zip implements Io_stream_rdr {
 	public Io_url Url() {return url;} public Io_stream_rdr Url_(Io_url v) {this.url = v; return this;} Io_url url;
 	public long Len() {return len;} public Io_stream_rdr Len_(long v) {len = v; return this;} private long len = Io_mgr.Len_null;
 	public Object Under() {return zip_stream;} private java.util.zip.ZipInputStream zip_stream;
-	public void Src_bfr_(ByteAryBfr v) {this.src_bfr = v;} ByteAryBfr src_bfr;
+	public void Src_bfr_(Bry_bfr v) {this.src_bfr = v;} Bry_bfr src_bfr;
 	public void Open_mem(byte[] v) {
 		Wrap_stream(new java.io.ByteArrayInputStream(v));
 	}

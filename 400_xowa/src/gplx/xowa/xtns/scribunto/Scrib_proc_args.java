@@ -21,8 +21,9 @@ public class Scrib_proc_args {
 	public Scrib_proc_args(KeyVal[] v) {Init(v);}
 	public int Len() {return ary_len;}
 	public KeyVal[] Ary() {return ary;}
+	public boolean		Pull_bool(int i)				{Object rv = Get_or_fail(i); return Bool_.cast_(rv);}
 	public String	Pull_str(int i)					{Object rv = Get_or_fail(i); return String_.cast_(rv);}
-	public byte[]	Pull_bry(int i)					{Object rv = Get_or_fail(i); return ByteAry_.new_utf8_(String_.cast_(rv));}
+	public byte[]	Pull_bry(int i)					{Object rv = Get_or_fail(i); return Bry_.new_utf8_(String_.cast_(rv));}
 	public int		Pull_int(int i)					{Object rv = Get_or_fail(i);
 		try {return Int_.coerce_(rv);} // coerce to handle "1" and 1; will still fail if "abc" is passed
 		catch (Exception e) {
@@ -30,38 +31,64 @@ public class Scrib_proc_args {
 			throw Err_.new_fmt_("bad argument; int expected; idx={0} len={1}", i, ary_len);
 		}
 	}	
+	public long		Pull_long(int i)				{return (long)Pull_double(i);}
+	public double	Pull_double(int i)				{Object rv = Get_or_fail(i);
+		try {return Int_.coerce_(rv);} // coerce to handle "1" and 1; will still fail if "abc" is passed
+		catch (Exception e) {
+			Err_.Noop(e);
+			try {return Double_.coerce_(rv);} // coerce to handle "1" and 1; will still fail if "abc" is passed
+			catch (Exception e2) {
+				Err_.Noop(e2);
+				throw Err_.new_fmt_("bad argument; int expected; idx={0} len={1}", i, ary_len);				
+			}
+		}
+	}	
 	public String	Cast_str_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: String_.cast_		(rv);}
-	public byte[]	Cast_bry_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: ByteAry_.new_utf8_(String_.cast_	(rv));}	// NOTE: cast is deliberate; Scrib call checkType whi
-	public byte[]	Cast_bry_or_empty(int i)		{Object rv = Get_or_null(i); return rv == null ? ByteAry_.Empty : ByteAry_.new_utf8_(String_.cast_	(rv));}
-	public byte[]	Cast_bry_or(int i, byte[] or)	{Object rv = Get_or_null(i); return rv == null ? or				: ByteAry_.new_utf8_(String_.cast_	(rv));}
+	public byte[]	Cast_bry_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: Bry_.new_utf8_(String_.cast_	(rv));}	// NOTE: cast is deliberate; Scrib call checkType whi
+	public byte[]	Cast_bry_or_empty(int i)		{Object rv = Get_or_null(i); return rv == null ? Bry_.Empty : Bry_.new_utf8_(String_.cast_	(rv));}
+	public byte[]	Cast_bry_or(int i, byte[] or)	{Object rv = Get_or_null(i); return rv == null ? or				: Bry_.new_utf8_(String_.cast_	(rv));}
 	public Object	Cast_obj_or_null(int i)			{return Get_or_null(i);}
 	public boolean		Cast_bool_or_y(int i)			{Object rv = Get_or_null(i); return rv == null ? Bool_.Y		: Bool_.cast_(rv);}
 	public boolean		Cast_bool_or_n(int i)			{Object rv = Get_or_null(i); return rv == null ? Bool_.N		: Bool_.cast_(rv);}
 	public int		Cast_int_or(int i, int or)		{Object rv = Get_or_null(i); return rv == null ? or				: Int_.coerce_(rv);}	// coerce to handle "1" and 1;
-	public String	Form_str_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: Object_.XtoStr_OrNull(rv);}	// NOTE: Modules can throw exceptions in which return value is nothing; do not fail; return ""; EX: -logy; DATE:2013-10-14
-	public byte[]	Form_bry_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: ByteAry_.new_utf8_(Object_.XtoStr_OrNull(rv));}
+	public String	Xstr_str_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: Object_.Xto_str_loose_or(rv, null);}	// NOTE: Modules can throw exceptions in which return value is nothing; do not fail; return ""; EX: -logy; DATE:2013-10-14
+	public byte[]	Xstr_bry_or_null(int i)			{Object rv = Get_or_null(i); return rv == null ? null			: Bry_.new_utf8_(Object_.Xto_str_loose_or(rv, null));}
+	public KeyVal[] Cast_kv_ary_or_null(int i)		{Object rv = Get_or_null(i); return rv == null ? null			: (KeyVal[])rv;}
 	public KeyVal[] Pull_kv_ary(int i) {
 		Object rv = Get_or_fail(i);
 		return (KeyVal[])rv;
 	}
-	public byte[][]	Cast_params_as_bry_ary_or_empty(int params_idx)	{
-		if (params_idx < 0 || params_idx >= ary_len) return ByteAry_.Ary_empty;
-		int rv_len = ary_len - params_idx;
-		byte[][] rv = new byte[rv_len][];
-		for (int i = 0; i < rv_len; i++) {
-			KeyVal kv = ary[i + params_idx];
-			rv[i] = ByteAry_.new_utf8_(String_.cast_(kv.Val()));
+	public byte[][]	Cast_params_as_bry_ary_or_rest_of_ary(int params_idx)	{	// PAGE:ru.w:Ленин,_Владимир_Ильич; DATE:2014-07-01 MW:LanguageLibrary.php|ConvertPlural: if (is_array($args[0])) $args = $args[0];  $forms = array_values(array_map('strval', $args));
+		if (params_idx < 0 || params_idx >= ary_len) return Bry_.Ary_empty;
+		Object o = ary[params_idx].Val();
+		if (ClassAdp_.Eq_typeSafe(o, KeyVal[].class)) {
+			KeyVal[] tbl = (KeyVal[])o;
+			int rv_len = tbl.length;
+			byte[][] rv = new byte[rv_len][];
+			for (int i = 0; i < rv_len; i++) {
+				KeyVal itm = tbl[i];
+				rv[i] = Bry_.new_utf8_(String_.cast_(itm.Val()));
+			}
+			return rv;
 		}
-		return rv;
+		else {
+			int rv_len = ary_len - params_idx;
+			byte[][] rv = new byte[rv_len][];			
+			for (int i = 0; i < rv_len; i++) {
+				KeyVal itm = ary[i + params_idx];
+				rv[i] = Bry_.new_utf8_(String_.cast_(itm.Val()));
+			}
+			return rv;
+		}
 	}
 	public byte[] Extract_qry_args(Xow_wiki wiki, int idx) {
 		Object qry_args_obj = Cast_obj_or_null(idx);
-		if (qry_args_obj == null) return ByteAry_.Empty;
+		if (qry_args_obj == null) return Bry_.Empty;
 		Class<?> qry_args_cls = ClassAdp_.ClassOf_obj(qry_args_obj);
 		if		(qry_args_cls == String.class)
-			return ByteAry_.new_utf8_((String)qry_args_obj);
+			return Bry_.new_utf8_((String)qry_args_obj);
 		else if (qry_args_cls == KeyVal[].class) {
-			ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
+			Bry_bfr bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
 			KeyVal[] kvs = (KeyVal[])qry_args_obj;
 			int len = kvs.length;
 			for (int i = 0; i < len; i++) {
@@ -71,11 +98,11 @@ public class Scrib_proc_args {
 				bfr.Add_byte(Byte_ascii.Eq);
 				bfr.Add_str(kv.Val_to_str_or_empty());
 			}
-			return bfr.Mkr_rls().XtoAryAndClear();
+			return bfr.Mkr_rls().Xto_bry_and_clear();
 		}
 		else {
 			wiki.App().Gui_wtr().Warn_many("", "", "unknown type for GetUrl query args: ~{0}", ClassAdp_.NameOf_type(qry_args_cls));
-			return ByteAry_.Empty;
+			return Bry_.Empty;
 		}
 	}
 	private void Init(KeyVal[] v) {

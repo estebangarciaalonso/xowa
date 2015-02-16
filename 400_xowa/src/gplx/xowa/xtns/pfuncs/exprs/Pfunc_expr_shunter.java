@@ -16,20 +16,21 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.pfuncs.exprs; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.pfuncs.*;
+import gplx.core.btries.*;
 public class Pfunc_expr_shunter {
-	ByteTrieMgr_fast trie = expression_();
+	Btrie_fast_mgr trie = expression_();
 	Val_stack val_stack = new Val_stack();
 	Func_tkn_stack prc_stack = new Func_tkn_stack();
 	public static final DecimalAdp Null_rslt = null;
-	public ByteAryBfr Err() {return err_bfr;} ByteAryBfr err_bfr = ByteAryBfr.new_();
-	public DecimalAdp Err_set(Xop_ctx ctx, int msgId) {return Err_set(ctx, msgId, ByteAry_.Empty);}
+	public Bry_bfr Err() {return err_bfr;} Bry_bfr err_bfr = Bry_bfr.new_();
+	public DecimalAdp Err_set(Xop_ctx ctx, int msgId) {return Err_set(ctx, msgId, Bry_.Empty);}
 	public DecimalAdp Err_set(Xop_ctx ctx, int msg_id, byte[] arg) {
 		byte[] msg_val = ctx.Wiki().Msg_mgr().Val_by_id(msg_id);
 		err_bfr.Clear().Add(Err_bgn_ary);
 		tmp_fmtr.Fmt_(msg_val).Bld_bfr_one(err_bfr, arg);
 		err_bfr.Add(Err_end_ary);
 		return Null_rslt;
-	}	static final byte[] Err_bgn_ary = ByteAry_.new_ascii_("<strong class=\"error\">"), Err_end_ary = ByteAry_.new_ascii_("</strong>"); ByteAryFmtr tmp_fmtr = ByteAryFmtr.tmp_();
+	}	static final byte[] Err_bgn_ary = Bry_.new_ascii_("<strong class=\"error\">"), Err_end_ary = Bry_.new_ascii_("</strong>"); Bry_fmtr tmp_fmtr = Bry_fmtr.tmp_();
 	public void Rslt_set(byte[] bry) {
 		err_bfr.Add(bry);
 	}
@@ -41,7 +42,7 @@ public class Pfunc_expr_shunter {
 		while (true) {
 			// can't think of a way for this to happen; note that operators will automatically push values/operators off stack that are lower; can't get up to 100 
 			// if (val_stack.Len() > 100 || prc_stack.Len() > 100) return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_err__stack_exhausted);
-			Object o = trie.Match(cur_byt, src, cur_pos, src_len);
+			Object o = trie.Match_bgn_w_byte(cur_byt, src, cur_pos, src_len);
 			int bgn_pos = cur_pos;
 			if (o == null) {	// letter or unknown symbol
 				while (cur_pos < src_len) {
@@ -51,7 +52,7 @@ public class Pfunc_expr_shunter {
 					else
 						break;
 				}
-				return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unrecognised_word, ByteAry_.Mid(src, bgn_pos, cur_pos));
+				return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unrecognised_word, Bry_.Mid(src, bgn_pos, cur_pos));
 			}
 			else {
 				Expr_tkn t = (Expr_tkn)o;
@@ -74,7 +75,7 @@ public class Pfunc_expr_shunter {
 							}
 						}
 						DecimalAdp num = Null_rslt;
-						try {num = ByteAry_.XtoDecimalByPos(src, numBgn, cur_pos);}
+						try {num = Bry_.XtoDecimalByPos(src, numBgn, cur_pos);}
 						catch (Exception exc) {
 							// NOTE: PATCH.PHP: 65.5.5 can evaluate to 65.5; EX "{{Geological eras|-600|height=2|border=none}}" eventually does "|10-to={{#ifexpr:{{{1|-4567}}}<-65.5|-65.5|{{{1}}}}}.5" which is 65.5.5
 							Err_.Noop(exc); 
@@ -85,7 +86,7 @@ public class Pfunc_expr_shunter {
 										case 0: dot_count = 1; break;
 										case 1: 
 											try {
-												num = ByteAry_.XtoDecimalByPos(src, numBgn, i);
+												num = Bry_.XtoDecimalByPos(src, numBgn, i);
 											}
 											catch (Exception exc_inner) {Err_.Noop(exc_inner);}
 											break;
@@ -98,15 +99,15 @@ public class Pfunc_expr_shunter {
 						mode_expr = false;
 						break;
 					case Expr_tkn_.Tid_paren_lhs:
-						if (!mode_expr) return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unexpected_operator, ByteAry_.new_ascii_("("));
+						if (!mode_expr) return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unexpected_operator, Bry_.new_ascii_("("));
 						prc_stack.Push((Func_tkn)t);
 						break;
 					case Expr_tkn_.Tid_operator:
 						Func_tkn cur_prc = (Func_tkn)t;
 						if (Byte_ascii.Is_ltr(cur_byt)) {
-							int nxt_pos = Byte_ary_finder.Find_fwd_while_letter(src, cur_pos, src_len);
+							int nxt_pos = Bry_finder.Find_fwd_while_letter(src, cur_pos, src_len);
 							if (nxt_pos > cur_pos)
-								return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unrecognised_word, ByteAry_.Mid(src, bgn_pos, nxt_pos));
+								return Err_set(ctx, Xol_msg_itm_.Id_pfunc_expr_unrecognised_word, Bry_.Mid(src, bgn_pos, nxt_pos));
 						}
 						if (cur_prc.Func_is_const()) {		// func is "pi" or "e"; DATE:2014-03-01
 							if (mode_expr) {				// number expected; just call Calc (which will place value on stack)
@@ -156,8 +157,8 @@ public class Pfunc_expr_shunter {
 		}
 		return val_stack.Len() == 0 ? Null_rslt : val_stack.Pop();	// HACK: for [[List of Premiers of South Australia by time in office]] and {{#expr:\n{{age in days
 	}
-	private static ByteTrieMgr_fast expression_() {
-		ByteTrieMgr_fast rv = ByteTrieMgr_fast.ci_();
+	private static Btrie_fast_mgr expression_() {
+		Btrie_fast_mgr rv = Btrie_fast_mgr.ci_ascii_();	// NOTE:ci.ascii:MW_const.en; math and expressions
 		Trie_add(rv, new Ws_tkn(Byte_ascii.Space));
 		Trie_add(rv, new Ws_tkn(Byte_ascii.Tab));
 		Trie_add(rv, new Ws_tkn(Byte_ascii.NewLine));
@@ -214,6 +215,6 @@ public class Pfunc_expr_shunter {
 		Trie_add(rv, new Func_tkn_minus("&minus;"));
 		return rv;
 	}
-	private static void Trie_add(ByteTrieMgr_fast trie, Expr_tkn tkn) {trie.Add(tkn.Val_ary(), tkn);}
+	private static void Trie_add(Btrie_fast_mgr trie, Expr_tkn tkn) {trie.Add(tkn.Val_ary(), tkn);}
 	public static final Pfunc_expr_shunter _ = new Pfunc_expr_shunter(); Pfunc_expr_shunter() {}
 }

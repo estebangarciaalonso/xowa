@@ -31,7 +31,7 @@ public class Xow_repo_mgr implements GfoInvkAble {
 		int len = repos.Count();
 		for (int i = 0; i < len; i++) {
 			Xof_repo_pair pair = (Xof_repo_pair)repos.FetchAt(i);
-			if (ByteAry_.Eq(wiki, pair.Wiki_key()))
+			if (Bry_.Eq(wiki, pair.Wiki_key()))
 				return pair;
 		}
 		return null;
@@ -65,7 +65,7 @@ public class Xow_repo_mgr implements GfoInvkAble {
 			xfer_itm.Trg_repo_idx_(meta_itm.Vrtl_repo());	// NOTE: set trg_repo_idx b/c xfer_mgr will always set meta_itm.Vrtl_repo() with trg_repo_idx
 		}
 		if (meta_itm.Ptr_ttl_exists())
-			xfer_itm.Atrs_by_ttl(meta_itm.Ttl(), meta_itm.Ptr_ttl());
+			xfer_itm.Set__ttl(meta_itm.Ttl(), meta_itm.Ptr_ttl());
 		boolean main_exists_unknown = src_wiki_key == null;		// WORKAROUND/HACK: SEE:NOTE_1:reset_main_exists
 		boolean rv = Xfer_by_meta__exec(chk_all, xfer_itm, meta_itm, src_wiki_key, queue, false);
 		if (!rv && (!chk_all && !main_exists_unknown)) {	// xfer failed even with page found in wiki; try again, but chk all
@@ -81,7 +81,7 @@ public class Xow_repo_mgr implements GfoInvkAble {
 			if (!found) return null;
 			Xow_wiki trg_wiki = wiki;
 			int repo_idx = tmp_rslt.Repo_idx();
-			byte[] trg_wiki_key = ByteAry_.Empty;
+			byte[] trg_wiki_key = Bry_.Empty;
 			if (repo_idx != Xof_meta_itm.Repo_unknown) {
 				trg_wiki_key = wiki.File_mgr().Repo_mgr().Repos_get_at(repo_idx).Wiki_key();
 				trg_wiki = wiki.App().Wiki_mgr().Get_by_key_or_make(trg_wiki_key);
@@ -94,7 +94,7 @@ public class Xow_repo_mgr implements GfoInvkAble {
 						xfer_itm.Trg_repo_idx_(Xof_meta_itm.Repo_same);
 					}
 					else {
-						if (!ByteAry_.Eq(trg_wiki_key, wiki.Domain_bry())) {
+						if (!Bry_.Eq(trg_wiki_key, wiki.Domain_bry())) {
 //								meta_itm.Vrtl_repo_(tmp_rslt.Repo_idx());
 							xfer_itm.Trg_repo_idx_(tmp_rslt.Repo_idx());
 						}
@@ -122,7 +122,7 @@ public class Xow_repo_mgr implements GfoInvkAble {
 		for (int i = 0; i < repos_len; i++) {								// iterate over all repo pairs
 			Xof_repo_pair pair = (Xof_repo_pair)repos.FetchAt(i);
 			Xof_repo_itm pair_src = pair.Src();
-			boolean main_wiki_key_is_pair_src = ByteAry_.Eq(main_wiki_key, pair_src.Wiki_key());
+			boolean main_wiki_key_is_pair_src = Bry_.Eq(main_wiki_key, pair_src.Wiki_key());
 			if (	(chk_all && !main_wiki_key_is_pair_src)					// only do chk_all if main_wiki is not pair_src; note that chk_all will only be called in two ways (1) with main_wiki_key as null; (2) with main_key_as val
 				||	(!chk_all && main_wiki_key_is_pair_src)) {				// pair.Src.Wiki == main.Wiki; note that there can be multiple pairs with same src; EX: have 2 pairs for commons: one for file and another for http					
 				xfer_mgr.Atrs_by_itm(xfer_itm, pair_src, pair.Trg());
@@ -139,10 +139,10 @@ public class Xow_repo_mgr implements GfoInvkAble {
 	}
 	public Xofw_file_finder_rslt Page_finder_locate(byte[] ttl_bry) {page_finder.Locate(tmp_rslt, repos, ttl_bry); return tmp_rslt;}
 	byte Xfer_by_meta__find_file(byte[] ttl_bry, Xof_meta_itm meta_itm, byte[] cur_wiki_key) {
-		byte new_tid = Byte_.MaxValue_127;
+		byte new_tid = Byte_.Max_value_127;
 		boolean found = page_finder.Locate(tmp_rslt, repos, ttl_bry);
 		if (found) {
-			if (ByteAry_.Eq(cur_wiki_key, tmp_rslt.Repo_wiki_key())) {	// itm is in same repo as cur wiki
+			if (Bry_.Eq(cur_wiki_key, tmp_rslt.Repo_wiki_key())) {	// itm is in same repo as cur wiki
 				new_tid = Xof_meta_itm.Tid_main;					
 				byte[] redirect = tmp_rslt.Redirect();
 				if (redirect != Xop_redirect_mgr.Redirect_null_bry) {	// redirect found
@@ -172,7 +172,7 @@ public class Xow_repo_mgr implements GfoInvkAble {
 		Xoa_repo_mgr repo_mgr = wiki.App().File_mgr().Repo_mgr();
 		Xof_repo_itm src_repo = repo_mgr.Get_by(src_repo_key), trg_repo = repo_mgr.Get_by(trg_repo_key);
 		byte[] src_wiki_key = src_repo.Wiki_key(), trg_wiki_key = trg_repo.Wiki_key();
-		if (!ByteAry_.Eq(src_wiki_key, trg_wiki_key) && !ByteAry_.Eq(src_wiki_key, Xow_wiki_domain_.Key_home_bry)) throw Err_mgr._.fmt_(GRP_KEY, "add_repo", "wiki keys do not match: ~{0} ~{1}", String_.new_utf8_(src_wiki_key), String_.new_utf8_(trg_wiki_key));
+		if (!Bry_.Eq(src_wiki_key, trg_wiki_key) && !Bry_.Eq(src_wiki_key, Xow_wiki_domain_.Key_home_bry)) throw Err_mgr._.fmt_(GRP_KEY, "add_repo", "wiki keys do not match: ~{0} ~{1}", String_.new_utf8_(src_wiki_key), String_.new_utf8_(trg_wiki_key));
 		Xof_repo_pair pair = new Xof_repo_pair(repos.Count(), src_repo, trg_repo, trg_meta, src_wiki_key);
 		repos.Add(pair);
 		return pair;

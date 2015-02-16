@@ -16,8 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.strings.*;
 public class Err_ {	//_20110415
 	public static Err as_(Object obj) {return obj instanceof Err ? (Err)obj : null;}
+	public static Err new_(String fmt, Object... args)	{return Err.hdr_(String_.Format(fmt, args));}
 	public static Err new_fmt_(String fmt, Object... args){return Err.hdr_(String_.Format(fmt, args));}
 	public static Err new_(String hdr)							{return Err.hdr_(hdr);}
 	public static Err new_key_(String key, String hdr)			{return Err.hdr_(hdr).Key_(key);}
@@ -26,7 +28,7 @@ public class Err_ {	//_20110415
 	public static Err err_(Exception e, String fmt, Object... args) {return Err.exc_(e, String_.Format(fmt, args));}
 	public static Err cast_(Exception ignore, Class<?> t, Object o) {
 		String o_str = "";
-		try {o_str = Object_.XtoStr_OrNullStr(o);}
+		try {o_str = Object_.Xto_str_strict_or_null_mark(o);}
 		catch (Exception e) {Err_.Noop(e); o_str = "<ERROR>";}
 		return cast_manual_msg_(ignore, t, o_str);
 	}
@@ -34,7 +36,7 @@ public class Err_ {	//_20110415
 		String msg = String_.Format("cast failed; type={0} obj={1}", ClassAdp_.NameOf_type(t), s);
 		return new_(msg);
 	}
-	public static void FailIfNotFound(int v, String m)			{if (v == String_.NotFound) throw find_failed_(m);}
+	public static void FailIfNotFound(int v, String m)			{if (v == String_.Find_none) throw find_failed_(m);}
 	public static Err find_failed_(String find)					{return Err.hdr_("find failed").Add("find", find);}
 
 	public static Err null_(String obj)							{return Err.hdr_("null obj").Add("obj", obj);}
@@ -45,7 +47,7 @@ public class Err_ {	//_20110415
 		return Err.hdr_("type mismatch")
 			.Add("expdType", ClassAdp_.FullNameOf_type(t))
 			.Add("actlType", ClassAdp_.NameOf_obj(o))
-			.Add("actlObj", Object_.XtoStr_OrNullStr(o))
+			.Add("actlObj", Object_.Xto_str_strict_or_null_mark(o))
 			;
 	}
 	public static Err missing_idx_(int idx, int len)				{return Err.hdr_("index is out of bounds").Add("idx", idx).Add("len", len);}
@@ -65,6 +67,12 @@ public class Err_ {	//_20110415
 	public static String Message_lang(Exception e)			{return e.getClass() + " " + e.getMessage();} 
 	public static String Message_gplx(Exception e)			{return ErrMsgWtr._.Message_gplx(e);}
 	public static String Message_gplx_brief(Exception e)		{return ErrMsgWtr._.Message_gplx_brief(e);}
+	public static String Message_hdr_or_message(Exception e) {
+		if (e == null) return "exception is null";
+		return ClassAdp_.Eq(e.getClass(), Err.class)
+			? ((Err)e).Hdr()
+			: Message_lang(e);
+	}
 	@gplx.Internal protected static String StackTrace_lang(Exception e) {
 				String_bldr sb = String_bldr_.new_();
 		StackTraceElement[] stackTraceAry = e.getStackTrace();

@@ -22,14 +22,14 @@ public class Xop_curly_wkr implements Xop_ctx_wkr {
 	public void Page_end(Xop_ctx ctx, Xop_root_tkn root, byte[] src, int src_len) {}
 	public void AutoClose(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int lxr_bgn_pos, int lxr_cur_pos, Xop_tkn_itm tkn) {}
 	public int MakeTkn_bgn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int lxr_bgn_pos, int lxr_cur_pos) {
-		int lxr_end_pos = Byte_ary_finder.Find_fwd_while(src, lxr_cur_pos, src_len, Byte_ascii.Curly_bgn);	// NOTE: can be many consecutive {; EX: {{{{{1}}}|a}}
+		int lxr_end_pos = Bry_finder.Find_fwd_while(src, lxr_cur_pos, src_len, Byte_ascii.Curly_bgn);	// NOTE: can be many consecutive {; EX: {{{{{1}}}|a}}
 		ctx.Subs_add_and_stack(root, tkn_mkr.Tmpl_curly_bgn(lxr_bgn_pos, lxr_end_pos));
 		return lxr_end_pos;
 	}		
 	public int MakeTkn_end(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int lxr_bgn_pos, int lxr_cur_pos) {
 		if (ctx.Cur_tkn_tid() == Xop_tkn_itm_.Tid_brack_bgn)	// WORKAROUND: ignore }} if inside lnki; EX.CM:Template:Protected; {{#switch:a|b=[[a|ja=}}]]}}
-			return ctx.LxrMake_txt_(lxr_cur_pos);
-		int lxr_end_pos = Byte_ary_finder.Find_fwd_while(src, lxr_cur_pos, src_len, Byte_ascii.Curly_end);	// NOTE: can be many consecutive }; EX: {{a|{{{1}}}}}
+			return ctx.Lxr_make_txt_(lxr_cur_pos);
+		int lxr_end_pos = Bry_finder.Find_fwd_while(src, lxr_cur_pos, src_len, Byte_ascii.Curly_end);	// NOTE: can be many consecutive }; EX: {{a|{{{1}}}}}
 		int end_tkn_len = lxr_end_pos - lxr_bgn_pos;
 		boolean vnt_enabled = ctx.Wiki().Lang().Vnt_mgr().Enabled();
 		while (end_tkn_len > 0) {
@@ -57,21 +57,28 @@ public class Xop_curly_wkr implements Xop_ctx_wkr {
 				return lxr_end_pos;
 			}
 
-			Xop_curly_bgn_tkn bgn_tkn = (Xop_curly_bgn_tkn)ctx.Stack_pop_til(root, src, acs_pos, true, lxr_bgn_pos, lxr_end_pos);	// NOTE: in theory, an unclosed [[ can be on stack; for now, ignore
+			Xop_curly_bgn_tkn bgn_tkn = (Xop_curly_bgn_tkn)ctx.Stack_pop_til(root, src, acs_pos, true, lxr_bgn_pos, lxr_end_pos, Xop_tkn_itm_.Tid_tmpl_curly_bgn);	// NOTE: in theory, an unclosed [[ can be on stack; for now, ignore
 			int bgn_tkn_len = bgn_tkn.Src_end() - bgn_tkn.Src_bgn();
 			int bgn_tkn_pos_bgn = bgn_tkn.Src_bgn();// save original pos_bgn
 			boolean vnt_dash_adjust = false;
-			if (vnt_enabled) {
+			if (vnt_enabled ) {
 				int curly_bgn_dash = bgn_tkn.Src_bgn() - 1;
-				if (curly_bgn_dash > -1 && src[curly_bgn_dash] == Byte_ascii.Dash) {			// "-" before curlies; EX: "-{{"
+				if (curly_bgn_dash > -1 && src[curly_bgn_dash] == Byte_ascii.Dash) {			// "-" exists before curlies; EX: "-{{"
 					int curly_end_dash = lxr_end_pos;
-					if (curly_end_dash < src_len && src[curly_end_dash] == Byte_ascii.Dash) {	// "-" after curlies;  EX: "}}-"
+					if (curly_end_dash < src_len && src[curly_end_dash] == Byte_ascii.Dash) {	// "-" exists after curlies;  EX: "}}-"
 						if (bgn_tkn_len > 2 && end_tkn_len > 2) {	// more than 3 curlies at bgn / end with flanking dashes; EX: "-{{{ }}}-"; NOTE: 3 is needed b/c 2 will never be reduced; EX: "-{{" will always be "-" and "{{", not "-{" and "{"
-							--bgn_tkn_len;		// reduce bgn curlies by 1; EX: "{{{" -> "{{"
-							++bgn_tkn_pos_bgn;	// add one to bgn tkn_pos;
-							--end_tkn_len;		// reduce end curlies by 1; EX: "}}}" -> "}}"
-							--lxr_end_pos;		// reduce end by 1; this will "reprocess" the final "}" as a text tkn; EX: "}}}-" -> "}}" and position before "}-"
-							vnt_dash_adjust = true;
+							int numeric_val = Bry_.Xto_int_or(src, bgn_tkn.Src_end(), lxr_bgn_pos, -1);
+							if (	numeric_val != -1						// do not apply if numeric val; EX:"-{{{0}}}-" vs "-{{{#expr:0}}}-" sr.w:Template:Link_FA
+								&&	bgn_tkn_len == 3 && end_tkn_len == 3	// exactly 3 tokens; assume param token; "-{{{" -> "-" + "{{{" x> -> "-{" + "{{"; if unbalanced (3,4 or 4,3) fall into code below
+								) {
+							}												// noop; PAGE:sr.w:ДНК; EX:<span id="interwiki-{{{1}}}-fa"></span> DATE:2014-07-03
+							else {
+								--bgn_tkn_len;		// reduce bgn curlies by 1; EX: "{{{" -> "{{"
+								++bgn_tkn_pos_bgn;	// add one to bgn tkn_pos;
+								--end_tkn_len;		// reduce end curlies by 1; EX: "}}}" -> "}}"
+								--lxr_end_pos;		// reduce end by 1; this will "reprocess" the final "}" as a text tkn; EX: "}}}-" -> "}}" and position before "}-"
+								vnt_dash_adjust = true;
+							}
 						}
 					}
 				}

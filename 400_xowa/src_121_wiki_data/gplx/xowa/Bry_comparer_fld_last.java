@@ -19,9 +19,9 @@ package gplx.xowa; import gplx.*;
 public class Bry_comparer_fld_last implements gplx.lists.ComparerAble {
 	public int compare(Object lhsObj, Object rhsObj) {
 		byte[] lhs = (byte[])lhsObj, rhs = (byte[])rhsObj;
-		int lhs_bgn = Byte_ary_finder.Find_bwd(lhs, Byte_ascii.Pipe); if (lhs_bgn == ByteAry_.NotFound) lhs_bgn = -1;
-		int rhs_bgn = Byte_ary_finder.Find_bwd(rhs, Byte_ascii.Pipe); if (rhs_bgn == ByteAry_.NotFound) rhs_bgn = -1;
-		return ByteAry_.Compare(lhs, lhs_bgn + 1, lhs.length, rhs, rhs_bgn + 1, rhs.length);
+		int lhs_bgn = Bry_finder.Find_bwd(lhs, Byte_ascii.Pipe); if (lhs_bgn == Bry_.NotFound) lhs_bgn = -1;
+		int rhs_bgn = Bry_finder.Find_bwd(rhs, Byte_ascii.Pipe); if (rhs_bgn == Bry_.NotFound) rhs_bgn = -1;
+		return Bry_.Compare(lhs, lhs_bgn + 1, lhs.length, rhs, rhs_bgn + 1, rhs.length);
 	}
 	public static final Bry_comparer_fld_last _ = new Bry_comparer_fld_last(); 
 }

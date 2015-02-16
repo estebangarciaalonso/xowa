@@ -131,20 +131,20 @@ class Xow_data_mgr_fxt {
 		wiki.Db_mgr().Save_mgr().Page_id_next_(0);
 	}
 	public Xow_data_mgr_fxt Create(String ttl_str, String data) {
-		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(ttl_str));
-		wiki.Db_mgr().Save_mgr().Data_create(ttl, ByteAry_.new_utf8_(data));
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, Bry_.new_utf8_(ttl_str));
+		wiki.Db_mgr().Save_mgr().Data_create(ttl, Bry_.new_utf8_(data));
 		return this;
 	}
 	public Xow_data_mgr_fxt Update(String ttl_str, String data) {
-		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(ttl_str));
-		Xoa_page page = new Xoa_page(wiki, ttl);
-		wiki.Db_mgr().Save_mgr().Data_update(page, ByteAry_.new_utf8_(data));
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, Bry_.new_utf8_(ttl_str));
+		Xoa_page page = Xoa_page.test_(wiki, ttl);
+		wiki.Db_mgr().Save_mgr().Data_update(page, Bry_.new_utf8_(data));
 		return this;
 	}
 	public Xow_data_mgr_fxt Rename(String old_ttl, String new_ttl) {
-		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(old_ttl));
-		Xoa_page page = new Xoa_page(wiki, ttl);
-		wiki.Db_mgr().Save_mgr().Data_rename(page, ttl.Ns().Id(), ByteAry_.new_utf8_(new_ttl));
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, Bry_.new_utf8_(old_ttl));
+		Xoa_page page = Xoa_page.test_(wiki, ttl);
+		wiki.Db_mgr().Save_mgr().Data_rename(page, ttl.Ns().Id(), Bry_.new_utf8_(new_ttl));
 		return this;
 	}
 	public Xow_data_mgr_fxt Tst_regy_title(String expd) {return Tst_regy(Xow_dir_info_.Name_title, expd);}

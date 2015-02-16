@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.servers.tcp; import gplx.*; import gplx.xowa.*; import gplx.xowa.servers.*;
 public class Xosrv_cmd_types {
 	public static final byte[]
-		Cmd_exec 		= ByteAry_.new_ascii_("xowa.cmd.exec")	, Cmd_pass	 	= ByteAry_.new_ascii_("xowa.cmd.result")	, Cmd_fail		= ByteAry_.new_ascii_("xowa.cmd.error")
-	,	Js_exec 		= ByteAry_.new_ascii_("xowa.js.exec")	, Js_pass		= ByteAry_.new_ascii_("xowa.js.result")		, Js_fail		= ByteAry_.new_ascii_("xowa.js.error")
-	,	Browser_exec 	= ByteAry_.new_ascii_("browser.js.exec"), Browser_pass 	= ByteAry_.new_ascii_("browser.js.result")	, Browser_fail 	= ByteAry_.new_ascii_("browser.js.error")
+		Cmd_exec 		= Bry_.new_ascii_("xowa.cmd.exec")	, Cmd_pass	 	= Bry_.new_ascii_("xowa.cmd.result")	, Cmd_fail		= Bry_.new_ascii_("xowa.cmd.error")
+	,	Js_exec 		= Bry_.new_ascii_("xowa.js.exec")	, Js_pass		= Bry_.new_ascii_("xowa.js.result")		, Js_fail		= Bry_.new_ascii_("xowa.js.error")
+	,	Browser_exec 	= Bry_.new_ascii_("browser.js.exec"), Browser_pass 	= Bry_.new_ascii_("browser.js.result")	, Browser_fail 	= Bry_.new_ascii_("browser.js.error")
 	;
 }

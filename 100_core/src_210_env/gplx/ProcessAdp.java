@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.threads.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -23,12 +24,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.management.RuntimeErrorException;
+import gplx.core.strings.*;
 public class ProcessAdp implements GfoInvkAble, RlsAble {
 	public boolean Enabled() {return enabled;} public ProcessAdp Enabled_(boolean v) {enabled = v; return this;} private boolean enabled = true;
 	public byte Exe_exists() {return exe_exists;} public ProcessAdp Exe_exists_(byte v) {exe_exists = v; return this;} private byte exe_exists = Bool_.__byte;
 	public Io_url Exe_url() {return exe_url;} public ProcessAdp Exe_url_(Io_url val) {exe_url = val; exe_exists = Bool_.__byte; return this;} Io_url exe_url;
 	public String Args_str() {return args_str;} public ProcessAdp Args_str_(String val) {args_str = val; return this;} private String args_str = "";
-	public ByteAryFmtr Args_fmtr() {return args_fmtr;} ByteAryFmtr args_fmtr = ByteAryFmtr.new_("");
+	public Bry_fmtr Args_fmtr() {return args_fmtr;} Bry_fmtr args_fmtr = Bry_fmtr.new_("");
 	public byte Run_mode() {return run_mode;} public ProcessAdp Run_mode_(byte v) {run_mode = v; return this;} private byte run_mode = Run_mode_sync_block;
 	public static final byte Run_mode_async = 0, Run_mode_sync_block = 1, Run_mode_sync_timeout = 2;
 	public int Exit_code() {return exit_code;} int exit_code;
@@ -57,9 +59,9 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 	public ProcessAdp Run(Object... args) {
 		if (String_.Len_eq_0(exe_url.Raw())) return this;	// noop if exe_url is "";
 		if (!args_fmtr.Fmt_null()) {
-			ByteAryBfr tmp_bfr = ByteAryBfr.new_();
+			Bry_bfr tmp_bfr = Bry_bfr.new_();
 			args_fmtr.Bld_bfr_many(tmp_bfr, args);
-			args_str = tmp_bfr.XtoStrAndClear();
+			args_str = tmp_bfr.Xto_str_and_clear();
 		}
 		prog_dlg.Log_many(GRP_KEY, "run", "running process: ~{0} ~{1}", exe_url.Raw(), args_str);
 		exit_code = Exit_init;
@@ -70,18 +72,18 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 			default:					throw Err_mgr._.unhandled_(run_mode);
 		}
 	}
-	public String[] X_to_process_bldr_args(String... args) {
+	public String[] Xto_process_bldr_args(String... args) {
 		String args_str = args_fmtr.Bld_str_many(args);
-		return X_to_process_bldr_args_utl(exe_url, args_str);
+		return Xto_process_bldr_args_utl(exe_url, args_str);
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_enabled))					return enabled;
 		else if	(ctx.Match(k, Invk_enabled_))					enabled = m.ReadBool("v");
 		else if	(ctx.Match(k, Invk_cmd))						return exe_url.Raw();
-		else if	(ctx.Match(k, Invk_cmd_))						this.Exe_url_(ByteAryFmtr_eval_mgr_.Eval_url(cmd_url_eval, m.ReadBry("cmd")));
+		else if	(ctx.Match(k, Invk_cmd_))						this.Exe_url_(Bry_fmtr_eval_mgr_.Eval_url(cmd_url_eval, m.ReadBry("cmd")));
 		else if	(ctx.Match(k, Invk_args))						return String_.new_utf8_(args_fmtr.Fmt());
 		else if	(ctx.Match(k, Invk_args_))						args_fmtr.Fmt_(m.ReadBry("v"));
-		else if	(ctx.Match(k, Invk_cmd_args_))					{this.Exe_url_(ByteAryFmtr_eval_mgr_.Eval_url(cmd_url_eval, m.ReadBry("cmd"))); args_fmtr.Fmt_(m.ReadBry("args"));}
+		else if	(ctx.Match(k, Invk_cmd_args_))					{this.Exe_url_(Bry_fmtr_eval_mgr_.Eval_url(cmd_url_eval, m.ReadBry("cmd"))); args_fmtr.Fmt_(m.ReadBry("args"));}
 		else if	(ctx.Match(k, Invk_mode_))						run_mode = m.ReadByte("v");
 		else if	(ctx.Match(k, Invk_timeout_))					thread_timeout = m.ReadInt("v");
 		else if	(ctx.Match(k, Invk_tmp_dir_))					tmp_dir = m.ReadIoUrl("v");
@@ -90,18 +92,25 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 		return this;
 	}
 	static final String Invk_cmd = "cmd", Invk_cmd_ = "cmd_", Invk_args = "args", Invk_args_ = "args_", Invk_cmd_args_ = "cmd_args_", Invk_enabled = "enabled", Invk_enabled_ = "enabled_", Invk_mode_ = "mode_", Invk_timeout_ = "timeout_", Invk_tmp_dir_ = "tmp_dir_", Invk_owner = "owner";
-	ByteAryFmtr_eval_mgr cmd_url_eval;
-	public static ProcessAdp ini_(GfoInvkAble owner, Gfo_usr_dlg gui_wtr, ProcessAdp process, ByteAryFmtr_eval_mgr cmd_url_eval, byte run_mode, int timeout, String cmd_url_fmt, String args_fmt, String... args_keys) {
+	Bry_fmtr_eval_mgr cmd_url_eval;
+	public static ProcessAdp ini_(GfoInvkAble owner, Gfo_usr_dlg gui_wtr, ProcessAdp process, Bry_fmtr_eval_mgr cmd_url_eval, byte run_mode, int timeout, String cmd_url_fmt, String args_fmt, String... args_keys) {
 		process.Run_mode_(run_mode).Thread_timeout_seconds_(timeout);
 		process.cmd_url_eval = cmd_url_eval;
-		Io_url cmd_url = ByteAryFmtr_eval_mgr_.Eval_url(cmd_url_eval, ByteAry_.new_utf8_(cmd_url_fmt));
+		Io_url cmd_url = Bry_fmtr_eval_mgr_.Eval_url(cmd_url_eval, Bry_.new_utf8_(cmd_url_fmt));
 		process.Exe_url_(cmd_url).Tmp_dir_(cmd_url.OwnerDir());
 		process.Args_fmtr().Fmt_(args_fmt).Keys_(args_keys);
 		process.owner = owner;
 		process.Prog_dlg_(gui_wtr);
 		return process;	// return process for chaining
 	}
-		ByteAryFmtr notify_fmtr = ByteAryFmtr.new_("", "process_exe_name", "process_exe_args", "process_seconds"); ByteAryBfr notify_bfr = ByteAryBfr.reset_(255);
+	public static String Escape_ampersands_if_process_is_cmd(boolean os_is_wnt, String exe_url, String exe_args) {
+		return (	os_is_wnt
+				&&	String_.Eq(exe_url, "cmd"))
+			? String_.Replace(exe_args, "&", "^&")	// escape ampersands
+			: exe_args
+			;
+	}
+		private Bry_fmtr notify_fmtr = Bry_fmtr.new_("", "process_exe_name", "process_exe_args", "process_seconds"); Bry_bfr notify_bfr = Bry_bfr.reset_(255);
 	public Process UnderProcess() {return process;} Process process;
 	public void Rls() {if (process != null) process.destroy();}
 	public ProcessAdp Run_wait_sync() {
@@ -149,7 +158,7 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 	        			elapsed = notify_checkpoint;
 	        			notify_checkpoint += notify_interval;
 	        			notify_fmtr.Bld_bfr_many(notify_bfr, exe_url.NameAndExt(), args_str, elapsed / 1000);
-	        			prog_dlg.Prog_none(GRP_KEY, "notify.prog", notify_bfr.XtoStrAndClear());
+	        			prog_dlg.Prog_none(GRP_KEY, "notify.prog", notify_bfr.Xto_str_and_clear());
 	        		}
 	        	}
 	        	if (thread_timeout == 0) break;
@@ -170,7 +179,7 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 		}
 		if (elapsed != notify_checkpoint) {
 			notify_fmtr.Bld_bfr_many(notify_bfr, exe_url.NameAndExt(), args_str, elapsed / 1000);
-			if (prog_dlg != null) prog_dlg.Prog_none(GRP_KEY, "notify.prog", notify_bfr.XtoStrAndClear());
+			if (prog_dlg != null) prog_dlg.Prog_none(GRP_KEY, "notify.prog", notify_bfr.Xto_str_and_clear());
 		}
         return this;
     }
@@ -201,7 +210,7 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 		exit_code = Exit_init;
 		rslt_out = "";
 		WhenBgn_run();
-		pb = new ProcessBuilder(X_to_process_bldr_args_utl(exe_url, args_str));
+		pb = new ProcessBuilder(Xto_process_bldr_args_utl(exe_url, args_str));
 		pb.redirectErrorStream(true);								// NOTE: need to redirectErrorStream or rdr.readLine() will hang; see inkscape and Ostfriesland Verkehr-de.svg
 		if (working_dir != null)
 			pb.directory(new File(working_dir.Xto_api()));
@@ -227,7 +236,7 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
         exit_code = process.exitValue();
         WhenEnd_run();
         process.destroy();
-    	rslt_out = sb.XtoStrAndClear();    	
+    	rslt_out = sb.Xto_str_and_clear();    	
 	}
 	public void Process_term() {
 		try {
@@ -251,7 +260,7 @@ public class ProcessAdp implements GfoInvkAble, RlsAble {
 	}
 	private static final String GRP_KEY = "gplx.process";
 	public static final int Exit_pass = 0, Exit_init = -1;
-	public static String[] X_to_process_bldr_args_utl(Io_url exe_url, String args_str) {		
+	public static String[] Xto_process_bldr_args_utl(Io_url exe_url, String args_str) {		
 		ListAdp list = ListAdp_.new_();
 		list.Add(exe_url.Xto_api());
 		String_bldr sb = String_bldr_.new_();
@@ -329,7 +338,7 @@ class StreamGobbler extends Thread {
 				sb.Add(s);
 			}
 			stream.close();
-			rslt = sb.XtoStrAndClear();
+			rslt = sb.Xto_str_and_clear();
 		}
 		catch (Exception ex) {throw Err_.new_fmt_("failed reading stream; name={0} ex={1}", name, Err_.Message_lang(ex));}
 	}

@@ -26,21 +26,21 @@ public class Xop_comm_lxr_tst {
 		fxt.Init_log_(Xop_comment_log.Eos).Test_parse_page_all_str("<!-- ", "");
 	}
 	@Test  public void Ws_end() {
-		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skip_last
 		( "a"
 		, "<!-- b --> "
 		, "c"
-		), String_.Concat_lines_nl_skipLast
+		), String_.Concat_lines_nl_skip_last
 		( "a"
 		, "c"
 		));
 	}
 	@Test  public void Ws_bgn_end() {
-		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skip_last
 		( "a"
 		, " <!-- b --> "
 		, "c"
-		), String_.Concat_lines_nl_skipLast
+		), String_.Concat_lines_nl_skip_last
 		( "a"
 		, "c"
 		));
@@ -53,11 +53,11 @@ public class Xop_comm_lxr_tst {
 	}
 	@Test  public void Comment_can_cause_pre() {// PURPOSE: assert that comment causes pre; DATE:2014-02-18
 		fxt.Init_para_y_();
-		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skip_last
 		( "a"
 		, " <!-- b -->c"
 		, "d"
-		), String_.Concat_lines_nl_skipLast
+		), String_.Concat_lines_nl_skip_last
 		( "<p>a"
 		, "</p>"
 		, ""
@@ -72,11 +72,11 @@ public class Xop_comm_lxr_tst {
 	}
 	@Test  public void Ws_bgn_needs_nl() {	// PURPOSE: do not strip new line unles *entire* line is comment
 		fxt.Init_para_y_();
-		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skip_last
 		( "a"
 		, " <!-- b -->"
 		, "c"
-		), String_.Concat_lines_nl_skipLast
+		), String_.Concat_lines_nl_skip_last
 		( "<p>a"
 		, "c"
 		, "</p>"
@@ -86,12 +86,12 @@ public class Xop_comm_lxr_tst {
 	}
 	@Test  public void Ws_strip_nl() {	// PURPOSE: handle multiple "<!-- -->\n"; was only trimming 1st; DATE:2014-02-24
 		fxt.Init_para_y_();
-		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skip_last
 		( "a"
 		, "<!-- -->"
 		, "<!-- -->"
 		, "b"
-		), String_.Concat_lines_nl_skipLast
+		), String_.Concat_lines_nl_skip_last
 		( "<p>a"
 		, "b"
 		, "</p>"

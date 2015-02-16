@@ -17,8 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.ios.*; import gplx.xowa.files.cnvs.*;
+import gplx.xowa.wmf.apis.*;
 public class Xof_xfer_queue_base_fxt {
-	public Xof_img_wkr_api_size_base_mok Api_size() {return api_size;} private Xof_img_wkr_api_size_base_mok api_size = Xof_img_wkr_api_size_base_mok._;
+	public Xoapi_orig_mok Api_size() {return api_size;} private Xoapi_orig_mok api_size = Xoapi_orig_mok._;
 	public Xof_repo_itm Src_commons_repo() {return src_commons_repo;} private Xof_repo_itm src_commons_repo;
 	public Xof_repo_itm Src_en_wiki_repo() {return src_en_wiki_repo;} private Xof_repo_itm src_en_wiki_repo;
 	@gplx.Virtual public void Clear(boolean src_repo_is_wmf) {
@@ -35,10 +36,10 @@ public class Xof_xfer_queue_base_fxt {
 			file_mgr.Img_mgr().Wkr_query_img_size_(new Xof_img_wkr_query_img_size_test());
 			file_mgr.Download_mgr().Api_size_wkr_(api_size);
 
-			byte[] src_commons = ByteAry_.new_ascii_("src_commons");
-			byte[] src_en_wiki = ByteAry_.new_ascii_("src_en_wiki");
-			byte[] trg_commons = ByteAry_.new_ascii_("trg_commons");
-			byte[] trg_en_wiki = ByteAry_.new_ascii_("trg_en_wiki");
+			byte[] src_commons = Bry_.new_ascii_("src_commons");
+			byte[] src_en_wiki = Bry_.new_ascii_("src_en_wiki");
+			byte[] trg_commons = Bry_.new_ascii_("trg_commons");
+			byte[] trg_en_wiki = Bry_.new_ascii_("trg_en_wiki");
 			src_commons_repo = Ini_repo_add(file_mgr, src_commons, "mem/src/commons.wikimedia.org/", Xow_wiki_.Domain_commons_str, false);
 			src_en_wiki_repo = Ini_repo_add(file_mgr, src_en_wiki, "mem/src/en.wikipedia.org/"		, Xow_wiki_.Domain_enwiki_str, false);
 			Ini_repo_add(file_mgr, trg_commons, "mem/trg/commons.wikimedia.org/", Xow_wiki_.Domain_commons_str, true).Primary_(true);
@@ -67,16 +68,16 @@ public class Xof_xfer_queue_base_fxt {
 	public void ini_page_create_en_wiki(String ttl)								{Init_page_create(en_wiki, ttl, "");}
 	public void ini_page_create_en_wiki_redirect(String ttl, String redirect)	{Init_page_create(en_wiki, ttl, "#REDIRECT [[" + redirect + "]]");}
 	public void Init_page_create(Xow_wiki wiki, String ttl, String txt) {
-		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(ttl));
-		byte[] page_raw = ByteAry_.new_utf8_(txt);
+		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, Bry_.new_utf8_(ttl));
+		byte[] page_raw = Bry_.new_utf8_(txt);
 		wiki.Db_mgr().Save_mgr().Data_create(page_ttl, page_raw);
 	}
 	Xof_repo_itm Ini_repo_add(Xof_file_mgr file_mgr, byte[] key, String root, String wiki, boolean trg) {
 		Xof_repo_itm repo = file_mgr.Repo_mgr().Set(String_.new_utf8_(key), root, wiki).Ext_rules_(Xoft_rule_grp.Grp_app_default).Dir_depth_(2);
 		if (trg) {
 			byte[][] ary = repo.Mode_names();
-			ary[0] = ByteAry_.new_ascii_("raw");
-			ary[1] = ByteAry_.new_ascii_("fit");
+			ary[0] = Bry_.new_ascii_("raw");
+			ary[1] = Bry_.new_ascii_("fit");
 		}
 		return repo;
 	}

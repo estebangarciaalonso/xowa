@@ -23,9 +23,9 @@ public class Xop_mylanguage_page implements Xows_page {
 		byte[] page_bry = ttl.Leaf_txt_wo_qarg(); 					// EX: Help:A
 		byte[] lang_key = wiki.App().User().Lang().Key_bry();		// EX: fr
 		byte[] trg_bry = page_bry;
-		boolean lang_is_english = ByteAry_.Eq(lang_key, Xol_lang_.Key_en); 
+		boolean lang_is_english = Bry_.Eq(lang_key, Xol_lang_.Key_en); 
 		if (!lang_is_english)
-			trg_bry = ByteAry_.Add_w_dlm(Xoa_ttl.Subpage_spr, page_bry, lang_key);
+			trg_bry = Bry_.Add_w_dlm(Xoa_ttl.Subpage_spr, page_bry, lang_key);
 		Xoa_page found_page = wiki.Data_mgr().Redirect(page, trg_bry);
 		if (found_page.Missing() && !lang_is_english)	// foreign lang does not exist; default to english
 			wiki.Data_mgr().Redirect(page, page_bry);

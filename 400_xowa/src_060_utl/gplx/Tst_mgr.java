@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.strings.*;
 public class Tst_mgr {
 	public Tst_mgr ThrowError_n_() {throwError = false; return this;} private boolean throwError = true;
 	public ListAdp Results() {return results;} ListAdp results = ListAdp_.new_();
@@ -24,7 +25,7 @@ public class Tst_mgr {
 	public String Vars_get_bry_as_str(String key, int bgn, int end) {
 		byte[] bry = (byte[])vars.FetchValOr(key, null); if (bry == null) return String_.Empty;
 		if (bgn < 0 || end > bry.length || end < bgn || end < 0) return "<<OUT OF BOUNDS>>";
-		return String_.new_utf8_(ByteAry_.Mid(bry, bgn, end));
+		return String_.new_utf8_(Bry_.Mid(bry, bgn, end));
 	}
 	public int Tst_val(boolean skip, String path, String name, Object expd, Object actl) {
 		Tst_itm itm = Tst_itm.eq_(skip, path, name, expd, actl);
@@ -50,7 +51,7 @@ public class Tst_mgr {
 		int max_len = expd_ary_len > actl_ary_len ? expd_ary_len : actl_ary_len;
 		int err = 0;
 		for (int i = 0; i < max_len; i++) {
-			String path = ownerPath + Int_.XtoStr(i);
+			String path = ownerPath + Int_.Xto_str(i);
 			Tst_chkr expd_obj = i < expd_ary_len ? expd_ary[i] : Tst_mgr.Null_chkr;
 			Object actl_obj = i < actl_ary_len ? actl_ary[i] : "<NULL OBJ>";
 			String actl_type = i < actl_ary_len ? ClassAdp_.NameOf_obj(actl_obj) : "<NULL TYPE>";
@@ -72,7 +73,7 @@ public class Tst_mgr {
 		if (actl_obj == null || !ClassAdp_.IsAssignableFrom(expd_obj.TypeOf(), actl_obj.getClass())) {
 			results.Add(Tst_itm.fail_("!=", path, "<cast type>", ClassAdp_.NameOf_type(expd_obj.TypeOf()), actl_type));
 			return 1;
-//				results.Add(Tst_itm.fail_("!=", path, "<cast value>", Object_.XtoStr_OrNull(expd_obj.ValueOf()), Object_.XtoStr_OrNull(actl_obj)));
+//				results.Add(Tst_itm.fail_("!=", path, "<cast value>", Object_.Xto_str_strict_or_null(expd_obj.ValueOf()), Object_.Xto_str_strict_or_null(actl_obj)));
 		}
 		else {
 			return expd_obj.Chk(this, path, actl_obj);
@@ -83,9 +84,9 @@ public class Tst_mgr {
 		int len = Array_.Len(ary);
 		for (int i = 0; i < len; i++) {
 			Object itm = Array_.FetchAt(ary, i);
-			ary_sb.Add(Object_.XtoStr_OrNullStr(itm)).Add(",");
+			ary_sb.Add(Object_.Xto_str_strict_or_null_mark(itm)).Add(",");
 		}
-		return ary_sb.XtoStrAndClear();
+		return ary_sb.Xto_str_and_clear();
 	}	String_bldr ary_sb = String_bldr_.new_();
 	String Build() {
 		String_bldr sb = String_bldr_.new_();
@@ -103,7 +104,7 @@ public class Tst_mgr {
 			if (!itm.Pass())
 				sb.Add_fmt("\n{0}  {1}  {2}  '{3}'", String_.PadEnd("", comp_max, " "), " " + String_.PadEnd("", path_max, " "), " " + String_.PadEnd("", name_max, " ") + " ", itm.Actl());
 		}
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}
 	int Max(int max, String s) {int len = String_.Len(s); return len > max ? len : max;}
 	public static final Tst_chkr Null_chkr = new Tst_chkr_null();
@@ -119,8 +120,8 @@ class Tst_itm {
 	public static Tst_itm eq_(boolean skip, String path, String name, Object expd, Object actl) {
 		boolean pass = skip ? true : Object_.Eq(expd, actl);
 		String comp = pass ? "==" : "!=";
-		String expd_str = Object_.XtoStr_OrNullStr(expd);
-		String actl_str = Object_.XtoStr_OrNullStr(actl);
+		String expd_str = Object_.Xto_str_strict_or_null_mark(expd);
+		String actl_str = Object_.Xto_str_strict_or_null_mark(actl);
 		if (skip) expd_str = actl_str;
 		return new_(skip, pass, comp, path, name, expd_str, actl_str);
 	}

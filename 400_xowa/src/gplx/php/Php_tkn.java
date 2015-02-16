@@ -23,7 +23,7 @@ public interface Php_tkn {
 }
 class Php_tkn_ {
 	public static final byte Tid_txt = 1, Tid_declaration = 2, Tid_ws = 3, Tid_comment = 4, Tid_var = 5, Tid_eq = 6, Tid_eq_kv = 7, Tid_semic = 8, Tid_comma = 9, Tid_paren_bgn = 10, Tid_paren_end = 11, Tid_null = 12, Tid_false = 13, Tid_true = 14, Tid_ary = 15, Tid_num = 16, Tid_quote = 17, Tid_brack_bgn = 18, Tid_brack_end = 19;
-	public static String Xto_str(byte tid) {return Byte_.XtoStr(tid);}
+	public static String Xto_str(byte tid) {return Byte_.Xto_str(tid);}
 }
 abstract class Php_tkn_base implements Php_tkn {
 	public abstract byte Tkn_tid();
@@ -54,18 +54,18 @@ class Php_tkn_comment extends Php_tkn_base {
 class Php_tkn_var extends Php_tkn_base {
 	public Php_tkn_var(int src_bgn, int src_end) {this.Src_rng_(src_bgn, src_end);}
 	@Override public byte Tkn_tid() {return Php_tkn_.Tid_var;}
-	public byte[] Var_name(byte[] src) {return ByteAry_.Mid(src, this.Src_bgn() + 1, this.Src_end());}	// NOTE: assume vars are of form $abc; +1 to skip first $
+	public byte[] Var_name(byte[] src) {return Bry_.Mid(src, this.Src_bgn() + 1, this.Src_end());}	// NOTE: assume vars are of form $abc; +1 to skip first $
 }
 class Php_tkn_num extends Php_tkn_base {
 	public Php_tkn_num(int src_bgn, int src_end) {this.Src_rng_(src_bgn, src_end);}
 	@Override public byte Tkn_tid() {return Php_tkn_.Tid_num;}
-	public int Num_val_int(byte[] src) {return ByteAry_.X_to_int_or(src, this.Src_bgn(), this.Src_end(), Int_.MinValue);}
+	public int Num_val_int(byte[] src) {return Bry_.Xto_int_or(src, this.Src_bgn(), this.Src_end(), Int_.MinValue);}
 }
 class Php_tkn_quote extends Php_tkn_base {
 	public Php_tkn_quote(int src_bgn, int src_end, byte quote_tid) {this.Src_rng_(src_bgn, src_end); this.quote_tid = quote_tid;}
 	@Override public byte Tkn_tid() {return Php_tkn_.Tid_quote;}
 	public byte Quote_tid() {return quote_tid;} private byte quote_tid;
-	public byte[] Quote_text(byte[] src) {return ByteAry_.Mid(src, this.Src_bgn() + 1, this.Src_end() - 1);}	// NOTE: assume quote are of form 'abc'; +1, -1 to skip flanking chars
+	public byte[] Quote_text(byte[] src) {return Bry_.Mid(src, this.Src_bgn() + 1, this.Src_end() - 1);}	// NOTE: assume quote are of form 'abc'; +1, -1 to skip flanking chars
 	public static final byte Tid_null = 0, Tid_mult = 1, Tid_slash = 2, Tid_hash = 3;
 }
 class Php_tkn_declaration extends Php_tkn_base {

@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
+import gplx.core.primitives.*;
 import gplx.ios.*; /*IoStream*/
 import java.io.File;
 import java.io.FileInputStream;
@@ -105,13 +106,13 @@ class Gfui_svg_util {
 			// NOTE: not using XmlDoc b/c invalid doctypes can cause xml to hang; <?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"	"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd"><!-- Created with Inkscape (http://www.inkscape.org/) --> <svg xmlns="http://www.w3.org/2000/svg"
 			String xml = Io_mgr._.LoadFilStr(url);
 			int pos = String_.FindFwd(xml, "<svg", 0); if (pos == -1) return null;
-			IntRef pos_ref = IntRef.new_(pos);
+			Int_obj_ref pos_ref = Int_obj_ref.new_(pos);
 			double w = ParseAtr(xml, pos_ref, "width");
 			double h = ParseAtr(xml, pos_ref, "height");
 			return SizeAdp_.new_((int)w, (int)h);
 		} catch (Exception e) {Err_.Noop(e); return SizeAdp_.Null;}
 	}
-	static double ParseAtr(String xml, IntRef pos_ref, String atr) {
+	static double ParseAtr(String xml, Int_obj_ref pos_ref, String atr) {
 		int pos = String_.FindFwd(xml, atr, pos_ref.Val()); if (pos == -1) return -1;
 		int bgn = String_.FindFwd(xml, "\"", pos); if (bgn == -1) return -1;
 		++bgn; // place after quote

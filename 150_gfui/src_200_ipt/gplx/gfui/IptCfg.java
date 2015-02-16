@@ -81,7 +81,7 @@ class IptCfg_base implements IptCfg {
 		}
 		return this;
 	}	public static final String Invk_Add = "Add", Invk_set = "set";
-        public IptCfg_base(String cfgKey) {this.cfgKey = cfgKey;}
+	public IptCfg_base(String cfgKey) {this.cfgKey = cfgKey;}
 	OrderedHash hash = OrderedHash_.new_();
 	public Object NewByKey(Object o) {return new IptCfg_base((String)o);} @gplx.Internal protected static final IptCfg HashProto = new IptCfg_base(); @gplx.Internal protected IptCfg_base() {}
 }

@@ -155,7 +155,7 @@ public abstract class Xop_tkn_itm_base implements Xop_tkn_itm {
 		for (int i = 0; i < subs_len; i++)
 			subs[i].Tmpl_compile(ctx, src, prep_data);
 	}	boolean tmpl_static = false;
-	@gplx.Virtual public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr) {
+	@gplx.Virtual public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Bry_bfr bfr) {
 		if (tmpl_static) bfr.Add_mid(src, src_bgn, src_end);
 		for (int i = 0; i < subs_len; i++)
 			subs[i].Tmpl_evaluate(ctx, src, caller, bfr);

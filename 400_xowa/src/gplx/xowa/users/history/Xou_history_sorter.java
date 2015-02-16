@@ -21,7 +21,7 @@ public class Xou_history_sorter implements gplx.lists.ComparerAble {
 	public int Sort_fld() {return sort_fld;} public Xou_history_sorter Sort_fld_(int v) {sort_fld = v; return this;} private int sort_fld = Xou_history_itm.Fld_view_end;
 	public int compare(Object lhsObj, Object rhsObj) {
 		Xou_history_itm lhs = (Xou_history_itm)lhsObj, rhs = (Xou_history_itm)rhsObj;
-		int comp = CompareAble_.Compare_comp(lhs.Fld(sort_fld), rhs.Fld(sort_fld));
+		int comp = CompareAble_.Compare_obj(lhs.Fld(sort_fld), rhs.Fld(sort_fld));
 		if (!ascending) comp *= -1;
 		return comp;
 	}

@@ -56,6 +56,7 @@ class Xot_fmtr_prm implements Xot_fmtr {
 		--depth;
 		trg.Add(Xop_curly_end_lxr.Hook);
 	}
+	public void Write(byte b) {trg.Add_byte(b);}
 	public void Reg_arg(Xop_ctx ctx, byte[] src, int arg_idx, Arg_nde_tkn self_tkn) {
 		self_tkn.Key_tkn().Tmpl_fmt(ctx, src, this);
 		if (self_tkn.KeyTkn_exists()) {
@@ -68,7 +69,7 @@ class Xot_fmtr_prm implements Xot_fmtr {
 		}
 		self_tkn.Val_tkn().Tmpl_fmt(ctx, src, this);
 	}
-	public void Print(ByteAryBfr bb) {bb.Add_bfr(trg); trg.Clear(); depth = 0;}
-	ByteAryBfr trg = ByteAryBfr.new_(); int depth = 0;
+	public void Print(Bry_bfr bb) {bb.Add_bfr_and_preserve(trg); trg.Clear(); depth = 0;}
+	Bry_bfr trg = Bry_bfr.new_(); int depth = 0;
 	public static final Xot_fmtr_prm _ = new Xot_fmtr_prm();
 }

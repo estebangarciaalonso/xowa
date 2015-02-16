@@ -19,7 +19,7 @@ package gplx;
 import gplx.lists.*;
 public class CompareAble_ {
 	public static Comparable as_(Object obj) {return obj instanceof Comparable ? (Comparable)obj : null;}
-	public static int Compare_comp(Object lhsObj, Object rhsObj) {return CompareComparables(as_(lhsObj), as_(rhsObj));}
+	public static int Compare_obj(Object lhs, Object rhs) {return CompareComparables(as_(lhs), as_(rhs));}
 	public static int CompareComparables(Comparable lhs, Comparable rhs) {
 		if		(lhs == null && rhs == null)	return CompareAble_.Same;
 		else if (lhs == null)					return CompareAble_.More;

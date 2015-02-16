@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
+import gplx.xowa.parsers.amps.*;
 public class Xop_sanitizer_tst {
 	Xop_sanitizer_fxt fxt = new Xop_sanitizer_fxt();
 	@Before public void init() {fxt.Clear();}
@@ -34,10 +35,10 @@ class Xop_sanitizer_fxt {
 	public Xop_sanitizer sanitizer;
 	public void Clear() {
 		if (sanitizer != null) return;
-		sanitizer = new Xop_sanitizer(Xop_amp_trie._, new Gfo_msg_log(Xoa_app_.Name));
+		sanitizer = new Xop_sanitizer(new Xop_amp_mgr(), new Gfo_msg_log(Xoa_app_.Name));
 	}
 	public void tst_Escape_id(String raw, String expd)  {
-		byte[] raw_bry = ByteAry_.new_utf8_(raw);
+		byte[] raw_bry = Bry_.new_utf8_(raw);
 		Tfds.Eq(expd, String_.new_utf8_(sanitizer.Escape_id(raw_bry)));
 	}
 }

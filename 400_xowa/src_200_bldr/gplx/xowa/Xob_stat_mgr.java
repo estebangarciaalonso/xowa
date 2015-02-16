@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.core.strings.*;
 public class Xob_stat_mgr {
 	public Xob_stat_type GetOrNew(byte tid) {
 		Xob_stat_type rv = (Xob_stat_type)regy.Fetch(tid);
@@ -37,7 +38,7 @@ public class Xob_stat_mgr {
 			for (int i = 0; i < regy.Count(); i++) {
 				Xob_stat_type typ = (Xob_stat_type)regy.FetchAt(i);
 				Xob_stat_itm itm = (Xob_stat_itm)typ.GetOrNew(ns);
-				sb.Add(Int_.XtoStr_PadBgn(itm.Fils, 5)).Add(" ");
+				sb.Add(Int_.Xto_str_pad_bgn(itm.Fils, 5)).Add(" ");
 			}
 			sb.Add_str_w_crlf(ns);
 		}
@@ -61,7 +62,7 @@ public class Xob_stat_mgr {
 					nsRegy.AddKeyVal(itm.Ns());
 			}
 		}
-		return (String[])nsRegy.XtoAry(String.class);
+		return (String[])nsRegy.Xto_ary(String.class);
 	}
 	OrderedHash regy = OrderedHash_.new_();
 }

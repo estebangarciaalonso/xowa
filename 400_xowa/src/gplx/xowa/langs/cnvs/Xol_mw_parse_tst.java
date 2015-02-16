@@ -32,8 +32,8 @@ public class Xol_mw_parse_tst {
 		));
 	}
 //		@Test   public void Run() {
-//			Io_url src_dir = Io_url_.new_dir_("C:\\xowa\\user\\anonymous\\lang\\mediawiki\\converts\\");
-//			Io_url trg_dir = Io_url_.new_dir_("C:\\xowa\\user\\anonymous\\");
+//			Io_url src_dir = Io_url_.new_dir_("C:\\xowa\\bin\\any\\xowa\\lang\\mediawiki\\converts\\");
+//			Io_url trg_dir = Io_url_.new_dir_("C:\\xowa\\bin\\any\\xowa\\lang\\");
 //			fxt.Test_run(src_dir, trg_dir);
 //		}
 }
@@ -41,7 +41,7 @@ class Xol_mw_parse_grp {
 	public byte[] Lng() {return lng;} public Xol_mw_parse_grp Lng_(byte[] v) {lng = v; return this;} private byte[] lng;
 	public byte[] Vnt() {return vnt;} public Xol_mw_parse_grp Vnt_(byte[] v) {vnt = v; return this;} private byte[] vnt;
 	public Xol_mw_parse_itm[] Itms() {return itms;} public Xol_mw_parse_grp Itms_(Xol_mw_parse_itm[] v) {itms = v; return this;} private Xol_mw_parse_itm[] itms;
-	public void Write_as_gfs(ByteAryBfr bfr) {
+	public void Write_as_gfs(Bry_bfr bfr) {
 		int itms_len = itms.length;
 		Write_bgn(bfr);
 		for (int i = 0; i < itms_len; i++) {
@@ -50,7 +50,7 @@ class Xol_mw_parse_grp {
 		}
 		Write_end(bfr);
 	}
-	private void Write_bgn(ByteAryBfr bfr) {
+	private void Write_bgn(Bry_bfr bfr) {
 		bfr.Add_str("// ").Add(lng).Add_str("_").Add(vnt).Add_byte_nl();
 		bfr.Add_str("app.langs.get('");
 		bfr.Add(lng);
@@ -59,13 +59,13 @@ class Xol_mw_parse_grp {
 		bfr.Add_str("').add_bulk(");
 		bfr.Add_byte_nl().Add_str("<:['").Add_byte_nl();
 	}
-	private void Write_itm(ByteAryBfr bfr, Xol_mw_parse_itm itm) {
+	private void Write_itm(Bry_bfr bfr, Xol_mw_parse_itm itm) {
 		bfr.Add(itm.Src());
 		bfr.Add_byte_pipe();
 		bfr.Add(itm.Trg());
 		bfr.Add_byte_nl();
 	}
-	private void Write_end(ByteAryBfr bfr) {
+	private void Write_end(Bry_bfr bfr) {
 		bfr.Add_str("']:>").Add_byte_nl();
 		bfr.Add_str(");").Add_byte_nl();
 	}
@@ -77,13 +77,13 @@ class Xol_mw_parse_itm {
 }
 class Xol_mw_parse_fxt {
 	public void Test_convert(String mw, String expd) {
-		Xol_mw_parse_grp[] actl_ary = Parse(ByteAry_.new_utf8_(mw));
-		ByteAryBfr bfr = ByteAryBfr.new_();
+		Xol_mw_parse_grp[] actl_ary = Parse(Bry_.new_utf8_(mw));
+		Bry_bfr bfr = Bry_bfr.new_();
 		actl_ary[0].Write_as_gfs(bfr);
-		Tfds.Eq_str_lines(expd, bfr.XtoStr());
+		Tfds.Eq_str_lines(expd, bfr.Xto_str());
 	}
 	public void Test_run(Io_url src_dir, Io_url trg_dir) {
-		ByteAryBfr bfr = ByteAryBfr.new_();
+		Bry_bfr bfr = Bry_bfr.new_();
 		Io_url[] fils = Io_mgr._.QueryDir_fils(src_dir);
 		int fils_len = fils.length;
 		for (int i = 0; i < fils_len; i++) {
@@ -97,7 +97,7 @@ class Xol_mw_parse_fxt {
 				itm.Write_as_gfs(bfr);
 			}
 			Io_url trg_fil = Xol_cnv_mgr.Bld_url(trg_dir, lang_name);
-			Io_mgr._.SaveFilBry(trg_fil, bfr.XtoAryAndClear());
+			Io_mgr._.SaveFilBry(trg_fil, bfr.Xto_bry_and_clear());
 		}
 	}
 	public Xol_mw_parse_grp[] Parse(byte[] src) {
@@ -106,23 +106,23 @@ class Xol_mw_parse_fxt {
 		Gfo_msg_log msg_log = new Gfo_msg_log("xowa");
 		Php_evaluator evaluator = new Php_evaluator(msg_log);
 		parser.Parse_tkns(src, evaluator);
-		Php_line[] lines = (Php_line[])evaluator.List().XtoAry(Php_line.class);
+		Php_line[] lines = (Php_line[])evaluator.List().Xto_ary(Php_line.class);
 		int lines_len = lines.length;
 		for (int i = 0; i < lines_len; i++) {
 			Php_line_assign line = (Php_line_assign)lines[i];
 			Xol_mw_parse_grp grp = Parse_grp(line);
 			list.Add(grp);
 		}
-		return (Xol_mw_parse_grp[])list.XtoAry(Xol_mw_parse_grp.class);
+		return (Xol_mw_parse_grp[])list.Xto_ary(Xol_mw_parse_grp.class);
 	}
 	private ListAdp tmp_itm_list = ListAdp_.new_();
 	private Xol_mw_parse_grp Parse_grp(Php_line_assign line) {
 		Xol_mw_parse_grp grp = new Xol_mw_parse_grp();
-		byte[] key =  line.Key().Val_obj_bry();					// EX: "zh2Hant"
-		key = ByteAry_.Lower_ascii(key);						// EX: "zh2hant"
-		byte[][] parts = ByteAry_.Split(key, Byte_ascii.Num_2);	// EX: "zh", "hant"
+		byte[] key =  line.Key().Val_obj_bry();				// EX: "zh2Hant"
+		key = Bry_.Lower_ascii(key);						// EX: "zh2hant"
+		byte[][] parts = Bry_.Split(key, Byte_ascii.Num_2);	// EX: "zh", "hant"
 		byte[] src = parts[0];
-		byte[] trg = ByteAry_.Add(parts[0], new byte[] {Byte_ascii.Dash}, parts[1]);
+		byte[] trg = Bry_.Add(parts[0], new byte[] {Byte_ascii.Dash}, parts[1]);
 		grp.Lng_(src).Vnt_(trg);
 		Parse_itms(line, grp);
 		return grp;
@@ -136,6 +136,6 @@ class Xol_mw_parse_fxt {
 			Xol_mw_parse_itm itm = new Xol_mw_parse_itm(kv.Key().Val_obj_bry(), kv.Val().Val_obj_bry());
 			tmp_itm_list.Add(itm);
 		}
-		grp.Itms_((Xol_mw_parse_itm[])tmp_itm_list.XtoAry(Xol_mw_parse_itm.class));
+		grp.Itms_((Xol_mw_parse_itm[])tmp_itm_list.Xto_ary(Xol_mw_parse_itm.class));
 	}
 }

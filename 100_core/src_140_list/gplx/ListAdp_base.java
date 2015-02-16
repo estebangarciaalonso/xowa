@@ -16,13 +16,19 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
-import gplx.lists.*;
+import gplx.core.strings.*; import gplx.lists.*;
 public abstract class ListAdp_base implements ListAdp, GfoInvkAble {
-	public Object XtoAryAndClear(Class<?> memberType) {Object rv = XtoAry(memberType); this.Clear(); return rv;}
-	public Object XtoAry(Class<?> memberType) {
+	public Object Xto_ary_and_clear(Class<?> memberType) {Object rv = Xto_ary(memberType); this.Clear(); return rv;}
+	public Object Xto_ary(Class<?> memberType) {
 		Object rv = Array_.Create(memberType, count);
 		for (int i = 0; i < count; i++)
 			Array_.Set(rv, i, list[i]);
+		return rv;
+	}
+	public Object[] Xto_obj_ary() {
+		Object[] rv = new Object[count];
+		for (int i = 0; i < count; ++i)
+			rv[i] = list[i];
 		return rv;
 	}
 	public java.util.Iterator iterator() {
@@ -119,7 +125,7 @@ public abstract class ListAdp_base implements ListAdp, GfoInvkAble {
 		for (int i = 0; i < count; i++) {
 			if (i != 0) sb.Add_char_crlf();
 			Object val = list[i];
-			sb.Add_obj(Object_.XtoStr_OrEmpty(val));
+			sb.Add_obj(Object_.Xto_str_strict_or_empty(val));
 		}
 		return sb.XtoStr();
 	}
@@ -144,7 +150,7 @@ public abstract class ListAdp_base implements ListAdp, GfoInvkAble {
 			list[i-1] = tmp;
 		}
 	}
-	public String[] XtoStrAry() {return (String[])XtoAry(String.class);}
+	public String[] XtoStrAry() {return (String[])Xto_ary(String.class);}
 	public Object FetchAt(int i) {return FetchAt_base(i);}
 	public Object FetchAtLast() {if (count == 0) throw Err_.invalid_op_("cannot call FetchAtLast on empty list"); return FetchAt_base(count - 1);}
 	public Object FetchAtOr(int i, Object or) {return (i >= count) ? or : FetchAt(i);}

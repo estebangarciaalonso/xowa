@@ -19,23 +19,7 @@ package gplx.xowa.xtns.scores; import gplx.*; import gplx.xowa.*; import gplx.xo
 import org.junit.*;
 public class Score_xnde_tst {
 	@Test  public void Version() {
-		Tfds.Eq_bry(ByteAry_.new_ascii_("2.16.2"), Score_xnde.Get_lilypond_version("GNU LilyPond 2.16.2\nline1\nline2"));
-		Tfds.Eq_bry(ByteAry_.new_ascii_("2.16.2"), Score_xnde.Get_lilypond_version("GNU LilyPond 2.16.2\r\nline1\r\nline2"));
-	}
-	@Test  public void Tab() {
-		Xop_fxt fxt = new Xop_fxt();
-		fxt.Test_parse_page_wiki_str("<score>a&#09;b</score>", String_.Concat_lines_nl
-			(	""
-			,	"<div id=\"xowa_score_0_pre\" class=\"xowa-score-lilypond\">"
-			,	"  <pre style=\"overflow:auto\">a	b"	// NOTE: embedded tab
-			,	"</pre>"
-			,	"</div>"
-			,	""
-			,	"<p>"
-			,	"  <a id=\"xowa_score_0_a\" href=\"\" xowa_title=\"\">"
-			,	"    <img id=\"xowa_score_0_img\" src=\"\"  />"
-			,	"  </a>"
-			,	"</p>"
-			));
+		Tfds.Eq_bry(Bry_.new_ascii_("2.16.2"), Score_xnde.Get_lilypond_version("GNU LilyPond 2.16.2\nline1\nline2"));
+		Tfds.Eq_bry(Bry_.new_ascii_("2.16.2"), Score_xnde.Get_lilypond_version("GNU LilyPond 2.16.2\r\nline1\r\nline2"));
 	}
 }

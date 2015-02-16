@@ -22,7 +22,7 @@ class Xobl_regy_itm {
 	public byte[] Bgn() {return bgn;} private byte[] bgn;
 	public byte[] End() {return end;} private byte[] end;
 	public int Count() {return count;} private int count;
-	public void Srl_save(ByteAryBfr bfr) {
+	public void Srl_save(Bry_bfr bfr) {
 		bfr	.Add_int_variable(id)	.Add_byte_pipe()
 			.Add(bgn)				.Add_byte_pipe()
 			.Add(end)				.Add_byte_pipe()
@@ -35,7 +35,7 @@ class Xobl_search_ttl implements Xobl_data_itm {
 	public Xobl_search_ttl(byte[] word, Xobl_search_ttl_page[] pages) {this.word = word; this.pages = pages;}
 	public byte[] Word() {return word;} private byte[] word;
 	public Xobl_search_ttl_page[] Pages() {return pages;} private Xobl_search_ttl_page[] pages;
-	public void Srl_save(ByteAryBfr bfr) {
+	public void Srl_save(Bry_bfr bfr) {
 		bfr.Add(word);
 		int pages_len = pages.length;
 		for (int i = 0; i < pages_len; i++) {
@@ -49,7 +49,7 @@ class Xobl_search_ttl_page {
 	public Xobl_search_ttl_page(int id, int len) {this.id = id; this.len = len;}
 	public int Id() {return id;} private int id;
 	public int Len() {return len;} private int len;
-	public void Srl_save(ByteAryBfr bfr) {
+	public void Srl_save(Bry_bfr bfr) {
 		bfr	.Add_base85_len_5(id).Add_byte(Byte_ascii.Semic)
 			.Add_base85_len_5(len)
 		;

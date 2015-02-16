@@ -18,21 +18,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.parsers.lnkis.redlinks; import gplx.*; import gplx.xowa.*; import gplx.xowa.parsers.*; import gplx.xowa.parsers.lnkis.*;
 import gplx.xowa.dbs.tbls.*;
 public class Xop_lnki_logger_redlinks_mgr {
-	private int lnki_idx;
+	private Xoa_page page;
+	private int lnki_idx = gplx.xowa.html.lnkis.Xoh_lnki_wtr.Lnki_id_min;	// NOTE: default to 1, not 0, b/c 0 is ignored by wtr; DATE:2014-10-09
 	private boolean disabled = false;
+	public Xop_lnki_logger_redlinks_mgr(Xoa_page page) {this.page = page;}
 	public int Request_idx() {return request_idx;} private int request_idx = 1;
 	public ListAdp Lnki_list() {return lnki_list;} private ListAdp lnki_list = ListAdp_.new_();
 	public boolean Log_enabled() {return log_enabled;} private boolean log_enabled = false;
 	public Gfo_usr_dlg Usr_dlg() {return usr_dlg;} private Gfo_usr_dlg usr_dlg = null;
-	public void Page_bgn(Xop_ctx ctx) {
+	public void Clear() {
 		request_idx++;
-		log_enabled = ctx.App().User().Cfg_mgr().Log_mgr().Log_redlinks();
-		usr_dlg = log_enabled ? ctx.App().Usr_dlg() : Gfo_usr_dlg_.Null;
+		Xoa_app app = page.App();
+		log_enabled = app.User().Cfg_mgr().Log_mgr().Log_redlinks();
+		usr_dlg = log_enabled ? app.Usr_dlg() : Gfo_usr_dlg_.Null;
 		lnki_idx = 1;	// NOTE: must start at 1; html_wtr checks for > 0
 		lnki_list.Clear();
-		disabled = ctx.Page().Ttl().Ns().Id_module();		// never redlink in Module ns; particularly since Lua has multi-line comments for [[ ]]
+		disabled = page.Ttl().Ns().Id_module();		// never redlink in Module ns; particularly since Lua has multi-line comments for [[ ]]
 	}
-	public void Lnki_add(Xop_ctx ctx, Xop_lnki_tkn lnki) {
+	public void Lnki_add(Xop_lnki_tkn lnki) {
 		if (disabled) return;
 		Xoa_ttl ttl = lnki.Ttl();
 		if (ttl == null) return; // occurs for invalid links

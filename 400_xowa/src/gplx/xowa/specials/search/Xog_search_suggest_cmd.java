@@ -16,10 +16,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.specials.search; import gplx.*; import gplx.xowa.*; import gplx.xowa.specials.*;
+import gplx.core.primitives.*;
 class Xog_search_suggest_cmd implements GfoInvkAble, Cancelable {
 	public Xog_search_suggest_cmd(Xoa_app app, Xog_search_suggest_mgr mgr) {
 		this.app = app; this.mgr = mgr;
-	}	private Xoa_app app; Xog_search_suggest_mgr mgr; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); ListAdp rslts_1 = ListAdp_.new_(), rslts_2 = ListAdp_.new_();
+	}	private Xoa_app app; Xog_search_suggest_mgr mgr; Bry_bfr tmp_bfr = Bry_bfr.reset_(255); ListAdp rslts_1 = ListAdp_.new_(), rslts_2 = ListAdp_.new_();
 	public void Init(Xow_wiki wiki, byte[] search_bry, int max_results, byte search_mode, int all_pages_extend, int all_pages_min) {
 		this.wiki = wiki; this.search_bry = search_bry; this.max_results = max_results;
 		this.search_mode = search_mode; this.all_pages_extend = all_pages_extend; this.all_pages_min = all_pages_min;
@@ -64,13 +65,13 @@ class Xog_search_suggest_cmd implements GfoInvkAble, Cancelable {
 		Xoa_ttl search_ttl = Xoa_ttl.parse_(wiki, search_bry); if (search_ttl == null) return false;
 		byte[] search_ttl_bry = search_ttl.Page_db();
 		ListAdp page_list = ListAdp_.new_();
-		wiki.Db_mgr().Load_mgr().Load_ttls_for_all_pages(this, page_list, rslt_nxt, rslt_prv, IntRef.zero_(), wiki.Ns_mgr().Ns_main(), search_ttl_bry, max_results, all_pages_min, all_pages_extend, true, false);
-		Xodb_page[] page_ary = (Xodb_page[])page_list.XtoAryAndClear(Xodb_page.class);
+		wiki.Db_mgr().Load_mgr().Load_ttls_for_all_pages(this, page_list, rslt_nxt, rslt_prv, Int_obj_ref.zero_(), wiki.Ns_mgr().Ns_main(), search_ttl_bry, max_results, all_pages_min, all_pages_extend, true, false);
+		Xodb_page[] page_ary = (Xodb_page[])page_list.Xto_ary_and_clear(Xodb_page.class);
 		int idx = 0, page_ary_len = page_ary.length;
 		for (int i = 0; i < page_ary_len; i++) {
 			Xodb_page page = page_ary[i];
 			if (page != null) {
-				if (!ByteAry_.HasAtBgn(page.Ttl_wo_ns(), search_ttl_bry)) continue;	// look-ahead may return other titles that don't begin with search; ignore
+				if (!Bry_.HasAtBgn(page.Ttl_wo_ns(), search_ttl_bry)) continue;	// look-ahead may return other titles that don't begin with search; ignore
 				if (page.Text_len() > all_pages_min) {
 					rslts_2.Add(page);
 					idx++;

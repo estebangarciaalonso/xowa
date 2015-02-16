@@ -39,7 +39,7 @@ class IoStream_mem extends IoStream_base {
 		// expand buffer if needed; necessary to emulate fileStream writing; ex: FileStream fs = new FileStream(); fs.Write(data); where data may be unknown length
 		int length = (int)position + count + -offset;
 		int bufLen = Array_.Len(buffer);
-		if (bufLen < length) buffer = ByteAry_.Resize_manual(buffer, length);
+		if (bufLen < length) buffer = Bry_.Resize_manual(buffer, length);
 		for (int i = 0; i < count; i++)
 			buffer[position + i] = array[offset + i];
 		position += count +-offset;
@@ -53,7 +53,7 @@ class IoStream_mem extends IoStream_base {
 	@Override public void Flush() {}
 	@Override public void Rls() {}
 
-	public static IoStream_mem rdr_txt_(Io_url url, String v) {return rdr_ary_(url, Encoding_.XtoByteAry(v));}
+	public static IoStream_mem rdr_txt_(Io_url url, String v) {return rdr_ary_(url, Bry_.new_utf8_(v));}
 	public static IoStream_mem rdr_ary_(Io_url url, byte[] v) {
 		IoStream_mem rv = new IoStream_mem();
 		rv.buffer = v;

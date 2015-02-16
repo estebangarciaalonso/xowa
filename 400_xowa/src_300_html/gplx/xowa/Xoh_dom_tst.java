@@ -34,12 +34,12 @@ public class Xoh_dom_tst {
 	}
 	private void tst_Find(String src, String where_nde, String where_key, String where_val, String select_key, String expd) {
 		Xoh_find rv = new Xoh_find();
-		byte[] actl = Xoh_dom_.Query_val_by_where(rv, ByteAry_.new_utf8_(src), ByteAry_.new_utf8_(where_nde), ByteAry_.new_utf8_(where_key), ByteAry_.new_utf8_(where_val), ByteAry_.new_utf8_(select_key), 0);
+		byte[] actl = Xoh_dom_.Query_val_by_where(rv, Bry_.new_utf8_(src), Bry_.new_utf8_(where_nde), Bry_.new_utf8_(where_key), Bry_.new_utf8_(where_val), Bry_.new_utf8_(select_key), 0);
 		Tfds.Eq(expd, String_.new_utf8_(actl));
 	}
 	private void Title_by_href_tst(String href, String html_src, String expd) {
-		ByteAryBfr bfr = ByteAryBfr.reset_(255);
-		String actl = Xoh_dom_.Title_by_href(encoder, bfr, ByteAry_.new_utf8_(href), ByteAry_.new_utf8_(html_src));
+		Bry_bfr bfr = Bry_bfr.reset_(255);
+		String actl = Xoh_dom_.Title_by_href(encoder, bfr, Bry_.new_utf8_(href), Bry_.new_utf8_(html_src));
 		Tfds.Eq(expd, actl);
 	}	static final Url_encoder encoder = Url_encoder.url_comma();
 }

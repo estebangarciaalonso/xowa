@@ -23,7 +23,7 @@ public class Xop_xnde_wkr__li_tst {
 	@Test  public void Inside_tblx() {	// PURPOSE: auto-close <li> (EX: "<li>a<li>") was causing 3rd <li> to close incorrectly
 		fxt.Test_parse_page_wiki_str
 			(	"<table><tr><td><ul><li>a</li><li>b</li><li>c</li></ul></td></tr></table>"
-			,	String_.Concat_lines_nl_skipLast
+			,	String_.Concat_lines_nl_skip_last
 			(	"<table>"
 			,	"  <tr>"
 			,	"    <td><ul>"
@@ -39,21 +39,21 @@ public class Xop_xnde_wkr__li_tst {
 	@Test   public void Li_nested_inside_ul() {	// PURPOSE: nested li in ul should not be escaped; DATE:2013-12-04
 		fxt.Test_parse_page_wiki_str
 		(	"<ul><li>a<ul><li>b</li></ul></li></ul>"
-		,	String_.Concat_lines_nl_skipLast
+		,	String_.Concat_lines_nl_skip_last
 		(	"<ul>"
 		,	"<li>a<ul>"
 		,	"<li>b</li></ul></li></ul>"	// note that <li><li>b becomes <li>&lt;li>b but <li><ul><li>b should stay the same
 		));
 	}
 	@Test  public void Empty_ignored() {
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
 			(	"<ul>"
 			,	"<li>a"
 			,	"</li><li>"
 			,	"</li><li>b"
 			,	"</li>"
 			,	"</ul>"
-			), String_.Concat_lines_nl_skipLast
+			), String_.Concat_lines_nl_skip_last
 			(	"<ul>"
 			,	"<li>a"
 			,	"</li>"
@@ -62,30 +62,23 @@ public class Xop_xnde_wkr__li_tst {
 			,	"</ul>"
 			));
 	}
-	@Test  public void Empty_ignored_error() { // EX:WP:Sukhoi Su-47; "* </li>" causes error b/c </li> tries to close non-existent node
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
-			(	"* a"
-			,	"* </li>"
-			), String_.Concat_lines_nl_skipLast
-			(	"<ul>"
-			,	"  <li> a"
-			,	"  </li>"
-			,	"  <li> "
-			,	"  </li>"
-			,	"</ul>"
-			));
-	}
-	@Test  public void Ul_implied() {
-		fxt.Test_parse_page_wiki_str
-			(	"<li>a</li>", String_.Concat_lines_nl_skipLast
-			(	"<ul>"
-			,	"<li>a</li></ul>"
-			));
+	@Test  public void Empty_ignored_error() { // PAGE:en.w:Sukhoi_Su-47; "* </li>" causes error b/c </li> tries to close non-existent node
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
+		(	"* a"
+		,	"* </li>"
+		), String_.Concat_lines_nl_skip_last
+		(	"<ul>"
+		,	"  <li> a"
+		,	"  </li>"
+		,	"  <li> </li>" // TIDY.dangling: tidy will correct dangling node; DATE:2014-07-22
+		,	"  </li>"
+		,	"</ul>"
+		));
 	}
 	@Test  public void Insert_nl() {// PURPOSE: <li> should always be separated by nl, or else items will merge, creating long horizontal scroll bar; EX:w:Music
 		fxt.Init_para_y_();
 		fxt.Test_parse_page_all_str("<ul><li>a</li><li>b</li></ul>"
-			,	String_.Concat_lines_nl_skipLast
+			,	String_.Concat_lines_nl_skip_last
 			(	"<ul>"
 			,	"<li>a</li>"
 			,	"<li>b</li></ul>"
@@ -93,13 +86,19 @@ public class Xop_xnde_wkr__li_tst {
 			));
 		fxt.Init_para_n_();
 	}
-	@Test  public void Dupe_list() {	// PURPOSE: ignore redundant li; EX: "* <li>"; http://it.wikipedia.org/wiki/Milano#Bibliographie; DATE:2013-07-23
-		fxt.Test_parse_page_all_str("* <li>x</li>", String_.Concat_lines_nl_skipLast
+	@Test  public void Duplicate() {	// PURPOSE: redundant li; EX: "* <li>"; PAGE:it.w:Milano#Bibliographie; DATE:2013-07-23
+		fxt.Test_parse_page_all_str("* <li>x</li>", String_.Concat_lines_nl_skip_last
 		(	"<ul>"
 		,	"  <li> "
-		,	"x"
+		,	"<li>x</li>"	// TIDY: duplicate li will be stripped out; DATE:2014-06-26
 		,	"  </li>"
 		,	"</ul>"
 		));
+	}
+	@Test  public void Dangling_inside_xnde() {	// PURPOSE.TIDY: handle "<li><span>a<li><span>b"; PAGE:ro.w:Pagina principala; DATE:2014-06-26
+		fxt.Test_parse_page_all_str("<li><span>a<li><span>b", String_.Concat_lines_nl_skip_last
+		(	"<li><span>a"
+		,	"<li><span>b</span></li></span></li>"	// TIDY: will (a) move </span></li> to 1st line
+		));	
 	}
 }

@@ -19,31 +19,24 @@ package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx
 import gplx.xowa.xtns.scribunto.lib.*;
 import gplx.xowa.xtns.scribunto.engines.process.*;
 public class Scrib_invoke_func_fxt {
-	public void Clear() {
-		if (fxt == null)  {
-			fxt = new Xop_fxt();
-			core_fxt = new Scrib_core_fxt();
-			core_fxt.Clear();
-			core_fxt.Init_lib_mw();
-			core = core_fxt.Core();
-			server = core_fxt.Server();
-			core.Interpreter().Server_(server);
-		}
-		Io_mgr._.InitEngine_mem();
-		fxt.Reset();
-		core_fxt.Clear();
-		fxt.Wiki().Ctx().Tab().Clear_mgrs();	// NOTE: must clear page_regy else module is missing
-		core.When_page_changed(fxt.Wiki().Ctx().Page());
-		init_tmpl = init_page = null;
-		fxt.Init_page_create("Module:Mod_0");
-		this.Init_lua_rcvd_loadModule(); 
-	}	private Xop_fxt fxt; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); Scrib_core core; Process_server_mock server; Scrib_lua_rsp_bldr rsp_bldr = new Scrib_lua_rsp_bldr();
+	private Xop_fxt fxt; Bry_bfr tmp_bfr = Bry_bfr.reset_(255); Scrib_core core; Process_server_mock server; Scrib_lua_rsp_bldr rsp_bldr = new Scrib_lua_rsp_bldr();
 	public Xop_fxt Parser_fxt() {return fxt;}
 	public Scrib_core_fxt Core_fxt() {return core_fxt;} Scrib_core_fxt core_fxt;
 	public Scrib_core Core() {return core;}
-	public Scrib_invoke_func_fxt Init_module(String ttl, String text) {
-		fxt.Init_page_create("Module:" + ttl, text);
-		return this;
+	public void Clear_for_invoke() {
+		fxt = new Xop_fxt();	// NOTE: don't try to cache fxt on func_fxt level; causes errors in Language_lib
+		core_fxt = new Scrib_core_fxt();
+		core_fxt.Clear();
+		core_fxt.Init_lib_mw();
+		core = core_fxt.Core();
+		server = core_fxt.Server();
+		core.Interpreter().Server_(server);
+		Io_mgr._.InitEngine_mem();
+		fxt.Reset();
+		core.When_page_changed(fxt.Page());
+		init_tmpl = init_page = null;
+		fxt.Init_page_create("Module:Mod_0");
+		this.Init_lua_rcvd_loadModule(); 
 	}
 	public Scrib_invoke_func_fxt Init_cbk(String lib_name, Scrib_lib lib, String... proc_names) {
 		int len = proc_names.length;
@@ -54,7 +47,6 @@ public class Scrib_invoke_func_fxt {
 		}
 		return this;
 	}
-	public Scrib_invoke_func_fxt Init_lua_module() {this.Init_lua_rcvd_executeModule(); return this;}
 	public Scrib_invoke_func_fxt Init_tmpl(String v) {init_tmpl = v; return this;} private String init_tmpl;
 	public Scrib_invoke_func_fxt Init_page(String v) {init_page = v; return this;} private String init_page;
 	public Scrib_invoke_func_fxt Init_server_print_key_y_() {server.Print_key_(true); return this;}
@@ -64,16 +56,12 @@ public class Scrib_invoke_func_fxt {
 		server.Prep_add(rsp_bldr.Bld_mw_cbk(cbk_name, ary));
 		return this;
 	}
-	public Scrib_invoke_func_fxt Init_lua_rcvd_loadModule() {
+	public Scrib_invoke_func_fxt Init_lua_module() {
+		server.Prep_add("a:3:{s:2:\"op\";s:6:\"return\";s:7:\"nvalues\";i:1;s:6:\"values\";a:2:{i:1;b:1;i:2;O:42:\"Scribunto_LuaStandaloneInterpreterFunction\":1:{s:2:\"id\";i:14;}}}");
+		return this;
+	}
+	private Scrib_invoke_func_fxt Init_lua_rcvd_loadModule() {
 		server.Prep_add("a:3:{s:2:\"op\";s:6:\"return\";s:7:\"nvalues\";i:1;s:6:\"values\";a:1:{i:1;i:1;}}");
-		return this;
-	}
-	public Scrib_invoke_func_fxt Init_lua_rcvd_executeModule() {
-		server.Prep_add("a:3:{s:2:\"op\";s:6:\"return\";s:7:\"nvalues\";i:1;s:6:\"values\";a:1:{i:1;a:1:{s:5:\"Prc_0\";O:42:\"Scribunto_LuaStandaloneInterpreterFunction\":1:{s:2:\"id\";i:14;}}}}");
-		return this;
-	}
-	public Scrib_invoke_func_fxt Init_lua_rcvd_executeFunctionChunk() {
-		server.Prep_add("a:3:{s:2:\"op\";s:6:\"return\";s:7:\"nvalues\";i:1;s:6:\"values\";a:1:{i:1;s:11:\"arg_0,arg_1\";}}");
 		return this;
 	}
 	public Scrib_invoke_func_fxt Init_lua_rcvd_preprocess(String frame, String cmd) {
@@ -91,35 +79,19 @@ public class Scrib_invoke_func_fxt {
 		server.Prep_add_dynamic_val();
 		return this;
 	}
-	public Scrib_invoke_func_fxt Expd_lua_send(String v) {
-		expd_lua_send = v;
-		return this;
-	}	String expd_lua_send;
 	public void Test_invoke(String expd) {
 		if (init_tmpl != null) fxt.Init_defn_add("test", init_tmpl);
 		fxt.Test_parse_tmpl_str(init_page, expd);
 	}
 	public void Test_parse_err(String raw, String expd_err_type) {
 		Scrib_invoke_func.Error(tmp_bfr, fxt.Wiki().Msg_mgr(), expd_err_type);
-		byte[] expd_err = tmp_bfr.XtoAryAndClear();
+		byte[] expd_err = tmp_bfr.Xto_bry_and_clear();
 		fxt.Test_parse_page_tmpl_str(raw, String_.new_utf8_(expd_err));
-	}
-	public Object Test_lib_proc_direct(Scrib_lib lib, String proc_key, Object[] args_ary) {
-		int proc_id = lib.Procs().Get_by_key(proc_key).Proc_id();
-		Scrib_proc_args args = new Scrib_proc_args(Scrib_kv_utl_.base1_many_(args_ary));
-		Scrib_proc_rslt rslt = new Scrib_proc_rslt();
-		lib.Procs_exec(proc_id, args, rslt);
-		return rslt.Ary()[0].Val();
 	}
 	public void Test_lib_proc(Scrib_lib lib, String func_name, Object[] args, String expd) {Test_lib_proc_kv(lib, func_name, Scrib_kv_utl_.base1_many_(args), expd);}
 	public void Test_lib_proc_kv(Scrib_lib lib, String func_name, KeyVal[] args, String expd) {
 		Test_lib_proc_internal(lib, func_name, args);
 		this.Test_invoke(expd);
-	}
-	public byte[] Test_lib_proc_rv(Scrib_lib lib, String func_name, Object[] args) {
-		Test_lib_proc_internal(lib, func_name, Scrib_kv_utl_.base1_many_(args));
-		if (init_tmpl != null) fxt.Init_defn_add("test", init_tmpl);
-		return fxt.Test_parse_tmpl_str_rv(init_page);
 	}
 	private void Test_lib_proc_internal(Scrib_lib lib, String func_name, KeyVal[] args) {
 		Init_lua_module();
@@ -130,10 +102,74 @@ public class Scrib_invoke_func_fxt {
 	public void Test_log_rcvd(int i, String expd) {
 		Tfds.Eq(expd, (String)server.Log_rcvd().FetchAt(i));
 	}
-	public static final String Null_rslt = "null";	// NOTE: Scrib procs will return null, which will show up in tests as "null"
+	public void Init_frame_parent(String ttl, KeyVal... ary) {
+		core.Frame_parent_(Xot_invk_mock.test_(Bry_.new_utf8_(ttl), ary));
+	}
+	public void Init_frame_current(KeyVal... ary) {
+		core.Frame_current_(Xot_invk_mock.test_(Bry_.new_ascii_("Module:Mod_0"), ary));
+	}
+	public void Clear_for_lib() {
+		fxt = new Xop_fxt();	// NOTE: don't try to cache fxt on func_fxt level; causes errors in Language_lib
+		core_fxt = new Scrib_core_fxt(fxt);
+		core = core_fxt.Core();
+		Xot_invk parent_frame = new Xot_invk_temp(true); parent_frame.Frame_tid_(Scrib_frame_.Tid_null); 
+		Xot_invk current_frame = Xot_invk_mock.test_(Bry_.new_ascii_("Module:Mod_0"));
+		core.Invoke_init(core.Wiki(), core.Ctx(), Bry_.Empty, parent_frame, current_frame);
+		core.When_page_changed(fxt.Page());
+	}
+	public void Test_scrib_proc_str(Scrib_lib lib, String proc_name, Object[] args, String expd) {Test_scrib_proc_str(lib, proc_name, Scrib_kv_utl_.base1_many_(args), expd);}
+	public void Test_scrib_proc_str(Scrib_lib lib, String proc_name, KeyVal[] args, String expd) {
+		KeyVal[] actl = Test_scrib_proc_rv(lib, proc_name, args);
+		Tfds.Eq(Object_.Xto_str_strict_or_null_mark(expd), Object_.Xto_str_strict_or_null_mark(actl[0].Val()));
+	}
+	public void Test_scrib_proc_kv_vals(Scrib_lib lib, String proc_name, Object[] args, String expd) {Test_scrib_proc_kv_vals(lib, proc_name, Scrib_kv_utl_.base1_many_(args), expd);}
+	public void Test_scrib_proc_kv_vals(Scrib_lib lib, String proc_name, KeyVal[] args, String expd) {
+		KeyVal[] actl_ary = Test_scrib_proc_rv(lib, proc_name, args);
+		Tfds.Eq(expd, Kv_ary_to_kv_vals_str(actl_ary));
+	}
+	private String Kv_ary_to_kv_vals_str(KeyVal[] ary) {
+		Bry_bfr bfr = Bry_bfr.new_();
+		int len = ary.length;
+		for (int i = 0; i < len; ++i) {
+			if (i != 0) bfr.Add_byte(Byte_ascii.Semic);
+			KeyVal kv = ary[i];
+			bfr.Add_str(Object_.Xto_str_strict_or_null_mark(kv.Val()));
+		}
+		return bfr.Xto_str_and_clear();
+	}
+	public void Test_scrib_proc_bool(Scrib_lib lib, String proc_name, Object[] args, boolean expd) {Test_scrib_proc_obj(lib, proc_name, Scrib_kv_utl_.base1_many_(args), expd);}
+	public void Test_scrib_proc_int(Scrib_lib lib, String proc_name, Object[] args, int expd) {Test_scrib_proc_obj(lib, proc_name, Scrib_kv_utl_.base1_many_(args), expd);}
+	public void Test_scrib_proc_obj(Scrib_lib lib, String proc_name, Object[] args, Object expd) {Test_scrib_proc_obj(lib, proc_name, Scrib_kv_utl_.base1_many_(args), expd);}
+	public void Test_scrib_proc_obj(Scrib_lib lib, String proc_name, KeyVal[] args, Object expd) {
+		KeyVal[] actl = Test_scrib_proc_rv(lib, proc_name, args);
+		Tfds.Eq(expd, actl[0].Val());
+	}
+	public void Test_scrib_proc_empty(Scrib_lib lib, String proc_name, Object[] args) {Test_scrib_proc_empty(lib, proc_name, Scrib_kv_utl_.base1_many_(args));}
+	public void Test_scrib_proc_empty(Scrib_lib lib, String proc_name, KeyVal[] args) {
+		KeyVal[] actl = Test_scrib_proc_rv(lib, proc_name, args);
+		Tfds.Eq(0, actl.length);
+	}
+	public void Test_scrib_proc_str_ary(Scrib_lib lib, String proc_name, Object[] args, String expd) {Test_scrib_proc_str_ary(lib, proc_name, Scrib_kv_utl_.base1_many_(args), expd);}
+	public void Test_scrib_proc_str_ary(Scrib_lib lib, String proc_name, KeyVal[] args, String expd) {
+		KeyVal[] actl_ary = Test_scrib_proc_rv(lib, proc_name, args);
+		String actl = KeyVal_.Ary_xto_str_nested(actl_ary);
+		Tfds.Eq_str_lines(expd, actl);
+	}
+	public KeyVal[] Test_scrib_proc_rv_as_kv_ary(Scrib_lib lib, String proc_name, Object[] args) {
+		KeyVal[] actl = Test_scrib_proc_rv(lib, proc_name, Scrib_kv_utl_.base1_many_(args));
+		return (KeyVal[])actl[0].Val();
+	}
+	private KeyVal[] Test_scrib_proc_rv(Scrib_lib lib, String proc_name, KeyVal[] args) {
+		Scrib_proc proc = lib.Procs().Get_by_key(proc_name);
+		Scrib_proc_rslt proc_rslt = new Scrib_proc_rslt();
+		proc.Proc_exec(new Scrib_proc_args(args), proc_rslt);
+		return proc_rslt.Ary();
+	}
+	public static final String Null_rslt		= "<<NULL>>";
+	public static final String Null_rslt_ary	= "1=<<NULL>>";
 }
 class Scrib_lua_rsp_bldr {
-	ByteAryBfr bfr = ByteAryBfr.reset_(255);
+	Bry_bfr bfr = Bry_bfr.reset_(255);
 	public String Bld_mw_cbk(String cbk_name, KeyVal... ary) {
 		cbk_name = "mw_interface-" + cbk_name;
 		bfr.Add_str("a:4:{s:2:\"id\";");
@@ -141,24 +177,24 @@ class Scrib_lua_rsp_bldr {
 		bfr.Add_str("s:2:\"op\";s:4:\"call\";s:5:\"nargs\";i:3;s:4:\"args\";");
 		Bld_kv_ary(bfr, ary);
 		bfr.Add_str("}");
-		return bfr.XtoStrAndClear();
+		return bfr.Xto_str_and_clear();
 	}
-	private void Bld_obj(ByteAryBfr bfr, Object v) {
+	private void Bld_obj(Bry_bfr bfr, Object v) {
 		Class<?> v_type = v.getClass();
-		if		(Object_.Eq(v_type, Int_.ClassOf))				Bld_int(bfr, Int_.cast_(v));
-		else if	(Object_.Eq(v_type, String_.ClassOf))			Bld_str(bfr, String_.as_or_fail_(v));
-		else if	(Object_.Eq(v_type, Bool_.ClassOf))				Bld_bool(bfr, Bool_.cast_(v));
-		else if	(Object_.Eq(v_type, Double_.ClassOf))			Bld_double(bfr, Double_.cast_(v));
+		if		(Object_.Eq(v_type, Int_.Cls_ref_type))				Bld_int(bfr, Int_.cast_(v));
+		else if	(Object_.Eq(v_type, String_.Cls_ref_type))			Bld_str(bfr, String_.cast_(v));
+		else if	(Object_.Eq(v_type, Bool_.Cls_ref_type))				Bld_bool(bfr, Bool_.cast_(v));
+		else if	(Object_.Eq(v_type, Double_.Cls_ref_type))			Bld_double(bfr, Double_.cast_(v));
 		else if	(Object_.Eq(v_type, KeyVal[].class))			Bld_kv_ary(bfr, (KeyVal[])v);
 		else if	(Object_.Eq(v_type, Scrib_lua_proc.class))	Bld_fnc(bfr, (Scrib_lua_proc)v);
 		else													throw Err_.unhandled(ClassAdp_.NameOf_obj(v));
 	}
-	private void Bld_bool(ByteAryBfr bfr, boolean v)		{bfr.Add_str("b:").Add_int_fixed(v ? 1 : 0, 1).Add_byte(Byte_ascii.Semic);}
-	private void Bld_int(ByteAryBfr bfr, int v)			{bfr.Add_str("i:").Add_int_variable(v).Add_byte(Byte_ascii.Semic);}
-	private void Bld_double(ByteAryBfr bfr, double v)	{bfr.Add_str("d:").Add_double(v).Add_byte(Byte_ascii.Semic);}
-	private void Bld_str(ByteAryBfr bfr, String v)		{bfr.Add_str("s:").Add_int_variable(ByteAry_.new_utf8_(v).length).Add_str(":\"").Add_str(v).Add_str("\";");}	// NOTE: must use ByteAry_.new_utf8_(v).length to calculate full bry len
-	private void Bld_fnc(ByteAryBfr bfr, Scrib_lua_proc v)	{bfr.Add_str("O:42:\"Scribunto_LuaStandaloneInterpreterFunction\":1:{s:2:\"id\";i:").Add_int_variable(v.Id()).Add_byte(Byte_ascii.Semic).Add_byte(Byte_ascii.Curly_end);}
-	private void Bld_kv_ary(ByteAryBfr bfr, KeyVal[] ary) {
+	private void Bld_bool(Bry_bfr bfr, boolean v)		{bfr.Add_str("b:").Add_int_fixed(v ? 1 : 0, 1).Add_byte(Byte_ascii.Semic);}
+	private void Bld_int(Bry_bfr bfr, int v)			{bfr.Add_str("i:").Add_int_variable(v).Add_byte(Byte_ascii.Semic);}
+	private void Bld_double(Bry_bfr bfr, double v)	{bfr.Add_str("d:").Add_double(v).Add_byte(Byte_ascii.Semic);}
+	private void Bld_str(Bry_bfr bfr, String v)		{bfr.Add_str("s:").Add_int_variable(Bry_.new_utf8_(v).length).Add_str(":\"").Add_str(v).Add_str("\";");}	// NOTE: must use Bry_.new_utf8_(v).length to calculate full bry len
+	private void Bld_fnc(Bry_bfr bfr, Scrib_lua_proc v)	{bfr.Add_str("O:42:\"Scribunto_LuaStandaloneInterpreterFunction\":1:{s:2:\"id\";i:").Add_int_variable(v.Id()).Add_byte(Byte_ascii.Semic).Add_byte(Byte_ascii.Curly_end);}
+	private void Bld_kv_ary(Bry_bfr bfr, KeyVal[] ary) {
 		int len = ary.length;
 		bfr.Add_str("a:").Add_int_variable(len).Add_str(":{");
 		for (int i = 0; i < len; i++) {

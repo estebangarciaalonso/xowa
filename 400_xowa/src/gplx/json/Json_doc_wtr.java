@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.json; import gplx.*;
 public class Json_doc_wtr {
 	private int indent = -2;
-	private ByteAryBfr bfr = ByteAryBfr.reset_(255);
+	private Bry_bfr bfr = Bry_bfr.reset_(255);
 	public Json_doc_wtr Indent() {return Indent(indent);}
 	private Json_doc_wtr Indent(int v) {if (v > 0) bfr.Add_byte_repeat(Byte_ascii.Space, v); return this;}
 	public Json_doc_wtr Indent_add() {indent += 2; return this;}
@@ -34,7 +34,7 @@ public class Json_doc_wtr {
 		else
 			bfr.Add_byte(Byte_ascii.Quote).Add(v).Add_byte(Byte_ascii.Quote);
 		return this;
-	}	private static final byte[] Bry_null = ByteAry_.new_ascii_("null");
+	}	private static final byte[] Bry_null = Bry_.new_ascii_("null");
 	public Json_doc_wtr Int(int v) {bfr.Add_int_variable(v); return this;}
 	public Json_doc_wtr Double(double v) {bfr.Add_double(v); return this;}
 	public Json_doc_wtr Comma() {Indent(); bfr.Add_byte(Byte_ascii.Comma).Add_byte_nl(); return this;}
@@ -93,6 +93,6 @@ public class Json_doc_wtr {
 		bfr.Add_byte(Byte_ascii.Colon);
 		return this;
 	}
-	public byte[] Bld() {return bfr.XtoAryAndClear();}
-	public String Bld_as_str() {return bfr.XtoStrAndClear();}
+	public byte[] Bld() {return bfr.Xto_bry_and_clear();}
+	public String Bld_as_str() {return bfr.Xto_str_and_clear();}
 }

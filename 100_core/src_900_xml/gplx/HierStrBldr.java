@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.strings.*;
 public class HierStrBldr {
 	public String Root() {return root;} public HierStrBldr Root_(String v) {root = v; return this;} private String root;
 	public Io_url RootAsIoUrl() {return Io_url_.new_dir_(root);}
@@ -41,8 +42,8 @@ public class HierStrBldr {
 			multipleAry[i] = (idx / multiple) * multiple;	// NOTE: rounds down to multiple; EX: 11 -> 10
 		}
 		for (int i = 0; i < multipleAry.length; i++)
-			sb.Add_fmt(dirFmt, Int_.XtoStr_fmt(multipleAry[i], numFmt));
-		sb.Add_fmt(filFmt, Int_.XtoStr_fmt(idx, numFmt));
+			sb.Add_fmt(dirFmt, Int_.Xto_str_fmt(multipleAry[i], numFmt));
+		sb.Add_fmt(filFmt, Int_.Xto_str_fmt(idx, numFmt));
 		return sb.XtoStr();
 	}
 	public HierStrBldr Ctor_io(Io_url root, String dirFmt, String filFmt, String numFmt, int... filCountMaxs) {

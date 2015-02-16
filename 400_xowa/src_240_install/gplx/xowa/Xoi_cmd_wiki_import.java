@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.thread_cmds.*;
+import gplx.threads.*; import gplx.xowa.gui.views.*;
 class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 	public Xoi_cmd_wiki_import(Xoi_setup_mgr install_mgr, String wiki_key, String wiki_date, String dump_type) {this.install_mgr = install_mgr; this.Owner_(install_mgr); this.wiki_key = wiki_key; this.wiki_date = wiki_date; this.dump_type = dump_type;} private Xoi_setup_mgr install_mgr; String wiki_key, wiki_date, dump_type;
 	public static final String KEY = "wiki.import";
@@ -70,7 +70,7 @@ class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 		Xoa_app app = install_mgr.App();
 		app.Usr_dlg().Prog_one("", "", "preparing import: ~{0}", wiki_key);
 		Xob_bldr bldr = app.Bldr();
-		wiki = app.Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_(wiki_key));
+		wiki = app.Wiki_mgr().Get_by_key_or_make(Bry_.new_ascii_(wiki_key));
 		wiki.Init_assert();
 		bldr.Cmd_mgr().Clear();
 		bldr.Pause_at_end_(false);
@@ -84,7 +84,7 @@ class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 		app.Gui_wtr().Note_none(GRP_KEY, "clear", "");
 		app.User().Available_from_fsys();
 		wiki.Init_needed_(true);
-		wiki.Html_mgr().Output_mgr().Init_(true);
+		wiki.Html_mgr().Page_wtr_mgr().Init_(true);
 		wiki.Init_assert();
 		if		(String_.Eq(src_url.Ext(), ".xml")) {
 			if (app.Setup_mgr().Dump_mgr().Delete_xml_file())
@@ -100,10 +100,10 @@ class Xoi_cmd_wiki_import implements Gfo_thread_cmd {
 		app.Gui_mgr().Kit().New_cmd_sync(this).Invk(GfsCtx.new_(), 0, Invk_open_wiki, GfoMsg_.Null);
 	}	private Xow_wiki wiki;
 	private void Open_wiki(String wiki_key) {
-		Xog_win main_win = install_mgr.App().Gui_mgr().Main_win();
-		if (main_win.Page() == null) return; // will be null when invoked through cmd-line
-		byte[] url = ByteAry_.Add(wiki.Domain_bry(), Xoh_href_parser.Href_wiki_bry, wiki.Props().Main_page());
-		main_win.Exec_url_exec(String_.new_utf8_(url));
+		Xog_win_itm main_win = install_mgr.App().Gui_mgr().Browser_win();
+		if (main_win.Active_page() == null) return; // will be null when invoked through cmd-line
+		byte[] url = Bry_.Add(wiki.Domain_bry(), Xoh_href_parser.Href_wiki_bry, wiki.Props().Main_page());
+		main_win.Page__navigate_by_url_bar(String_.new_utf8_(url));
 	}	
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_process_async))			Process_async();

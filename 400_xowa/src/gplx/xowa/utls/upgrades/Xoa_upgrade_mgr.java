@@ -24,7 +24,7 @@ public class Xoa_upgrade_mgr {
 	public static void Check(Xow_wiki wiki) {
 		if (wiki.Domain_tid() == Xow_wiki_domain_.Tid_home) return;	// home wiki never needs to be migrated
 		try {
-			if (ByteAry_.Eq(wiki.Props().Bldr_version(), ByteAry_.Empty)) {	// version is ""; wiki must be created prior to v0.2.1; create wiki_core.gfs
+			if (Bry_.Eq(wiki.Props().Bldr_version(), Bry_.Empty)) {	// version is ""; wiki must be created prior to v0.2.1; create wiki_core.gfs
 				Upgrader_v00_02_01 mgr = new Upgrader_v00_02_01();
 				mgr.Run(wiki);
 			}

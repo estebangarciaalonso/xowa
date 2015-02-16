@@ -35,20 +35,20 @@ class Xosrh_page_mgr_fxt {
 		if (app == null) {
 			app = Xoa_app_fxt.app_();
 			wiki = Xoa_app_fxt.wiki_tst_(app);
-			tmp_bfr = ByteAryBfr.reset_(255);
+			tmp_bfr = Bry_bfr.reset_(255);
 			page_mgr = new Xosrh_page_mgr();
 			hive_mgr = new Xowd_hive_mgr(wiki, Xow_dir_info_.Tid_id);
 		}
 		return this;
-	}	private Xoa_app app; Xow_wiki wiki; ByteAryBfr tmp_bfr; Xosrh_page_mgr page_mgr; Xowd_hive_mgr hive_mgr;
+	}	private Xoa_app app; Xow_wiki wiki; Bry_bfr tmp_bfr; Xosrh_page_mgr page_mgr; Xowd_hive_mgr hive_mgr;
 	public Xosrh_page_mgr_fxt Init_site_ids(int bgn, int end) {
 		Xodb_page tmp_itm = new Xodb_page();
 		for (int i = bgn; i < end; i++) {
 			byte[] id_bry = new byte[5];	// NOTE: do not reuse; will break hive_mgr
 			Base85_utl.XtoStrByAry(i, id_bry, 0, 5);
-			tmp_itm.Ns_id_(Xow_ns_.Id_main).Set_all_(i, 0, i - bgn, false, 10, ByteAry_.XtoStrBytesByInt(i, 0));
+			tmp_itm.Ns_id_(Xow_ns_.Id_main).Set_all_(i, 0, i - bgn, false, 10, Bry_.XtoStrBytesByInt(i, 0));
 			Xodb_page_.Txt_id_save(tmp_bfr, tmp_itm);
-			hive_mgr.Create(id_bry, tmp_bfr.XtoAryAndClear(), null);
+			hive_mgr.Create(id_bry, tmp_bfr.Xto_bry_and_clear(), null);
 		}
 		return this;
 	}
@@ -67,7 +67,7 @@ class Xosrh_page_mgr_fxt {
 		return new Xosrh_page_mgr_searcher_mok(rv);
 	}
 	public void Test_search(String search_str, Xosrh_page_mgr_searcher searcher, int page_idx, int[] expd) {
-		byte[] search_bry = ByteAry_.new_ascii_(search_str);		
+		byte[] search_bry = Bry_.new_ascii_(search_str);		
 		Xosrh_rslt_grp page = page_mgr.Search(tmp_bfr, wiki, search_bry, page_idx, searcher);
 		Tfds.Eq_ary(expd, Xto_int_ary(page));
 	}
@@ -82,5 +82,5 @@ class Xosrh_page_mgr_fxt {
 }
 class Xosrh_page_mgr_searcher_mok implements Xosrh_page_mgr_searcher {
 	public Xosrh_page_mgr_searcher_mok(ListAdp list) {this.list = list;} ListAdp list;
-	public ListAdp Parse_search_and_load_ids(Cancelable cancelable, ByteAryBfr bfr, Xosrh_ns_mgr ns_mgr, byte[] search) {return list;}
+	public ListAdp Parse_search_and_load_ids(Cancelable cancelable, Bry_bfr bfr, Xosrh_ns_mgr ns_mgr, byte[] search) {return list;}
 }

@@ -69,9 +69,9 @@ public class Xof_xfer_queue_html_wmf_api_tst {
 			.Html_size_(777, 600)
 			.tst();
 	}
-	@Test  public void Upright_defect() {	// PURPOSE.fix: upright not working;  EX: w:Beethoven; [[File:Rudolf-habsburg-olmuetz.jpg|thumb|upright|]]
+	@Test  public void Upright_defect() {	// PURPOSE.fix: upright not working;  PAGE:en.w:Beethoven; [[File:Rudolf-habsburg-olmuetz.jpg|thumb|upright|]]; changed upright to = Upright_default; DATE:2014-05-23
 		fxt	.ini_page_api("en_wiki", "A.png", "", 1378, 1829);
-		fxt	.Lnki_("A.png", true, 220, -1, 1, Xof_doc_thumb.Null_as_int)
+		fxt	.Lnki_("A.png", true, -1, -1, Xof_img_size.Upright_default_marker, Xof_doc_thumb.Null_as_int)
 			.Src(	fxt.img_("mem/src/en.wikipedia.org/thumb/7/70/A.png/170px-A.png", 170, 226))
 			.Trg(	fxt.img_("mem/trg/en.wikipedia.org/fit/7/0/A.png/170px.png", 170, 226)
 				,	fxt.reg_("mem/xowa/file/#meta/en.wikipedia.org/7/70.csv"		, "A.png|y||2?1378,1829|1?170,226")
@@ -156,5 +156,16 @@ public class Xof_xfer_queue_html_wmf_api_tst {
 		.Html_size_(85, 120)
 		.tst();
 	}
+	@Test  public void Imap() { // PURPOSE: check that imap downloads orig, even when thumb is requested; DATE:2014-08-08
+		fxt	.ini_page_create_commons("File:A.png");
+		fxt	.ini_page_api("commons", "A.png", "", 180, 160);
+		fxt	.Lnki_("A.png", true, 90, Xof_img_size.Size_null_deprecated, Xof_img_size.Size_null_deprecated, Xof_doc_thumb.Null_as_int);	// thumbtime of 2 specified; will be ignored below
+		fxt	.Xfer_itm().Html_elem_tid_(Xof_html_elem.Tid_imap);
+		fxt	.Src(	fxt.img_("mem/src/commons.wikimedia.org/thumb/7/70/A.png/90px-A.png", 90, 80))
+			.Trg(	fxt.img_("mem/trg/commons.wikimedia.org/fit/7/0/A.png/90px.png", 90, 80)
+				,	fxt.reg_("mem/xowa/file/#meta/en.wikipedia.org/7/70.csv", "A.png|0||2?180,160|1?90,80")	// check that orig has 180,160, not 0,0
+				);
+		fxt.tst();
+	}
 }
-// Tfds.Write_bry(Xof_xfer_itm_.Md5_calc(ByteAry_.new_ascii_("A~.png")));
+// Tfds.Write_bry(Xof_xfer_itm_.Md5_calc(Bry_.new_ascii_("A~.png")));

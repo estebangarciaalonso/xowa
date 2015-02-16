@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.intl.*; import gplx.xowa.langs.numFormats.*;
+import gplx.intl.*; import gplx.xowa.langs.numbers.*;
 public class Xol_lang_srl {
 	public static Xow_ns[] Load_ns_grps(byte[] src) {
 		int src_len = src.length, pos = 0, fld_bgn = 0;
@@ -27,7 +27,7 @@ public class Xol_lang_srl {
 			byte b = last ? Byte_ascii.NewLine : src[pos];
 			switch (b) {
 				case Byte_ascii.Pipe:
-					cur_id = ByteAry_.X_to_int_or(src, fld_bgn, pos, Int_.MinValue);
+					cur_id = Bry_.Xto_int_or(src, fld_bgn, pos, Int_.MinValue);
 					if (cur_id == Int_.MinValue) throw Err_mgr._.fmt_(GRP_KEY, "invalid_id", "invalid_id: ~{0}", String_.new_utf8_(src, fld_bgn, pos));					
 					fld_bgn = pos + 1;
 					break;
@@ -44,11 +44,11 @@ public class Xol_lang_srl {
 			if (last) break;
 			++pos;
 		}
-		return (Xow_ns[])rv.XtoAry(Xow_ns.class);
+		return (Xow_ns[])rv.Xto_ary(Xow_ns.class);
 	}	private static final String GRP_KEY = "xowa.lang.srl";
 	public static void Load_keywords(Xol_kwd_mgr keyword_mgr, byte[] src) {
 		int src_len = src.length, pos = 0, fld_bgn = 0, fld_idx = 0;
-		boolean cur_cs = false; byte[] cur_key = ByteAry_.Empty;
+		boolean cur_cs = false; byte[] cur_key = Bry_.Empty;
 		ListAdp cur_words = ListAdp_.new_();
 		Xol_csv_parser csv_parser = Xol_csv_parser._;
 		while (true) {
@@ -65,7 +65,7 @@ public class Xol_lang_srl {
 							switch (cs_byte) {
 								case Byte_ascii.Num_0: cur_cs = false; break;
 								case Byte_ascii.Num_1: cur_cs = true; break;
-								default: throw Err_mgr._.fmt_(GRP_KEY, "invalid_cs", "case sensitive should be 0 or 1: ~{0}", Byte_.XtoStr(cs_byte)); 
+								default: throw Err_mgr._.fmt_(GRP_KEY, "invalid_cs", "case sensitive should be 0 or 1: ~{0}", Byte_.Xto_str(cs_byte)); 
 							}
 							break;
 					}
@@ -81,7 +81,7 @@ public class Xol_lang_srl {
 					if (cur_words.Count() > 0) {	// guard against blank line wiping out entries; EX: "toc|0|toc1\n\n"; 2nd \n will get last grp and make 0 entries
 						int cur_id = Xol_kwd_grp_.Id_by_bry(cur_key); if (cur_id == -1) throw Err_mgr._.fmt_(GRP_KEY, "invalid_keyword", "key does not have id: ~{0}", cur_id);
 						Xol_kwd_grp grp = keyword_mgr.Get_or_new(cur_id);
-						grp.Srl_load(cur_cs, (byte[][])cur_words.XtoAry(byte[].class));
+						grp.Srl_load(cur_cs, (byte[][])cur_words.Xto_ary(byte[].class));
 					}
 					fld_bgn = pos + 1;
 					fld_idx = 0;
@@ -93,11 +93,11 @@ public class Xol_lang_srl {
 			if (last) break;
 			++pos;
 		}
-//			return (Xol_kwd_grp[])rv.XtoAry(typeof(Xol_kwd_grp));
+//			return (Xol_kwd_grp[])rv.Xto_ary(typeof(Xol_kwd_grp));
 	}
 	public static void Load_messages(Xol_msg_mgr msg_mgr, byte[] src) {
 		int src_len = src.length, pos = 0, fld_bgn = 0;
-		byte[] cur_key = ByteAry_.Empty;
+		byte[] cur_key = Bry_.Empty;
 		Xol_csv_parser csv_parser = Xol_csv_parser._;
 		while (true) {
 			boolean last = pos == src_len;	// NOTE: logic occurs b/c of \n}~-> dlm which gobbles up last \n
@@ -123,7 +123,7 @@ public class Xol_lang_srl {
 	}
 	public static void Load_specials(Xol_specials_mgr special_mgr, byte[] src) {
 		int src_len = src.length, pos = 0, fld_bgn = 0;
-		byte[] cur_key = ByteAry_.Empty;
+		byte[] cur_key = Bry_.Empty;
 		Xol_csv_parser csv_parser = Xol_csv_parser._;
 		while (true) {
 			boolean last = pos == src_len;	// NOTE: logic occurs b/c of \n}~-> dlm which gobbles up last \n
@@ -135,7 +135,7 @@ public class Xol_lang_srl {
 					break;
 				case Byte_ascii.NewLine:
 					byte[] cur_val_raw = csv_parser.Load(src, fld_bgn, pos);
-					byte[][] cur_vals = ByteAry_.Split(cur_val_raw, Byte_ascii.Tilde);
+					byte[][] cur_vals = Bry_.Split(cur_val_raw, Byte_ascii.Tilde);
 					special_mgr.Add(cur_key, cur_vals);
 					fld_bgn = pos + 1;
 					break;
@@ -146,20 +146,42 @@ public class Xol_lang_srl {
 			++pos;
 		}
 	}
-	public static void Save_num_fmt(Gfs_bldr bldr, Xol_num_fmtr_base num_fmt_mgr) {
-		if (num_fmt_mgr.Standard()) return;
-		bldr.Add_proc_init_many(Xol_lang.Invk_num_fmt, Xol_num_fmtr_base.Invk_clear).Add_nl();
-		bldr.Add_proc_cont_one(Xol_num_fmtr_base.Invk_dec_dlm_).Add_parens_str(num_fmt_mgr.Dec_dlm()).Add_nl();
-		Xol_num_grp itm = num_fmt_mgr.Grps_len() == 0 ? Xol_num_grp.Default : num_fmt_mgr.Grps_get(0);
-		bldr.Add_proc_cont_one(Xol_num_fmtr_base.Invk_grps_add).Add_paren_bgn()
-			.Add_arg_str(itm.Dlm()).Add_comma().Add_arg_int(itm.Digits()).Add_comma().Add_arg_yn(true)
-			.Add_paren_end().Add_nl();
-		bldr.Add_term_nl();
+	public static void Save_num_mgr(Gfs_bldr bldr, Xol_num_mgr num_mgr) {
+		Xol_transform_mgr separators_mgr = num_mgr.Separators_mgr(); int separators_len = separators_mgr.Len();
+		Xol_transform_mgr digits_mgr = num_mgr.Digits_mgr(); int digits_len = digits_mgr.Len();
+		byte[] digit_grouping_pattern = num_mgr.Num_grp_fmtr().Digit_grouping_pattern();
+		if (separators_len > 0 || digits_len > 0 || digit_grouping_pattern != null) {
+			bldr.Add_proc_init_one(Xol_lang.Invk_numbers).Add_curly_bgn_nl();													// numbers {
+			if (digit_grouping_pattern != null) {
+				bldr.Add_indent(1).Add_eq_str(Xol_num_mgr.Invk_digit_grouping_pattern, digit_grouping_pattern);
+			}
+			if (separators_len > 0) {
+				bldr.Add_indent(1).Add_proc_init_one(Xol_num_mgr.Invk_separators).Add_curly_bgn_nl();							//   separators {
+				bldr.Add_indent(2).Add_proc_init_one(Xol_num_mgr.Invk_clear).Add_term_nl();										//     clear;
+				for (int i = 0; i < separators_len; i++) {
+					KeyVal kv = separators_mgr.Get_at(i);
+					String k = kv.Key(), v = kv.Val_to_str_or_empty();
+					bldr.Add_indent(2).Add_proc_init_many(Xol_transform_mgr.Invk_set).Add_parens_str_many(k, v).Add_term_nl();	//     set('k', 'v');
+				}
+				bldr.Add_indent(1).Add_curly_end_nl();																			//   }
+			}
+			if (digits_len > 0) {
+				bldr.Add_indent(1).Add_proc_init_one(Xol_num_mgr.Invk_digits).Add_curly_bgn_nl();								//   digits {
+				bldr.Add_indent(2).Add_proc_init_one(Xol_num_mgr.Invk_clear).Add_term_nl();										//     clear;
+				for (int i = 0; i < digits_len; i++) {
+					KeyVal kv = digits_mgr.Get_at(i);
+					String k = kv.Key(), v = kv.Val_to_str_or_empty();
+					bldr.Add_indent(2).Add_proc_init_many(Xol_transform_mgr.Invk_set).Add_parens_str_many(k, v).Add_term_nl();	//     set('k', 'v');
+				}
+				bldr.Add_indent(1).Add_curly_end_nl();																			//   }
+			}
+			bldr.Add_curly_end_nl();																							// }
+		}
 	}
 	public static void Save_ns_grps(Gfs_bldr bldr, Xol_ns_grp ns_grp, String proc_invk) {
 		int ns_grp_len = ns_grp.Len(); Xol_csv_parser csv_parser = Xol_csv_parser._;
 		if (ns_grp_len == 0) return;
-		ByteAryBfr bfr = bldr.Bfr();
+		Bry_bfr bfr = bldr.Bfr();
 		bldr.Add_proc_cont_one(proc_invk).Add_nl();
 		bldr.Add_indent().Add_proc_cont_one(Invk_load_text).Add_paren_bgn().Add_nl();		//   .load_text(\n
 		bldr.Add_quote_xtn_bgn();															//	<~{\n'
@@ -175,7 +197,7 @@ public class Xol_lang_srl {
 	public static void Save_specials(Gfs_bldr bldr, Xol_specials_mgr specials_mgr) {
 		int specials_len = specials_mgr.Count(); Xol_csv_parser csv_parser = Xol_csv_parser._;
 		if (specials_len == 0) return;
-		ByteAryBfr bfr = bldr.Bfr();
+		Bry_bfr bfr = bldr.Bfr();
 		bldr.Add_proc_cont_one(Xol_lang.Invk_specials).Add_nl();
 		bldr.Add_indent().Add_proc_cont_one(Xol_specials_mgr.Invk_clear).Add_nl();
 		bldr.Add_indent().Add_proc_cont_one(Invk_load_text).Add_paren_bgn().Add_nl();		//   .load_text(\n
@@ -201,7 +223,7 @@ public class Xol_lang_srl {
 			++count;
 		}
 		if (count == 0) return;
-		ByteAryBfr bfr = bldr.Bfr();
+		Bry_bfr bfr = bldr.Bfr();
 		bldr.Add_proc_cont_one(Xol_lang.Invk_keywords).Add_nl();							// .keywords\n
 		bldr.Add_indent().Add_proc_cont_one(Invk_load_text).Add_paren_bgn().Add_nl();		//   .load_text(\n
 		bldr.Add_quote_xtn_bgn();															//	<~{\n'
@@ -213,7 +235,7 @@ public class Xol_lang_srl {
 			int word_len = grp.Itms().length;
 			for (int j = 0; j < word_len; j++) {
 				Xol_kwd_itm word = grp.Itms()[j];
-				csv_parser.Save(bfr, word.Bry());											// word
+				csv_parser.Save(bfr, word.Val());											// word
 				bfr.Add_byte(Byte_ascii.Tilde);												// ~
 			}
 			bldr.Add_nl();																	// \n
@@ -230,7 +252,7 @@ public class Xol_lang_srl {
 			++count;
 		}
 		if (count == 0) return;
-		ByteAryBfr bfr = bldr.Bfr();
+		Bry_bfr bfr = bldr.Bfr();
 		bldr.Add_proc_cont_one(Xol_lang.Invk_messages).Add_nl();							// .keywords\n
 		bldr.Add_indent().Add_proc_cont_one(Invk_load_text).Add_paren_bgn().Add_nl();		//   .load_text(\n
 		bldr.Add_quote_xtn_bgn();															//	<~{\n'

@@ -16,14 +16,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto.engines.process; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*; import gplx.xowa.xtns.scribunto.engines.*;
-import gplx.php.*;
+import gplx.core.primitives.*; import gplx.php.*;
 public class Process_recv_msg {
 	private Php_srl_parser parser = new Php_srl_parser();
 	public Process_recv_msg() {
-		arg_keys.Add("op"			, ByteVal.new_(Arg_op));
-		arg_keys.Add("values"		, ByteVal.new_(Arg_values));
-		arg_keys.Add("id"			, ByteVal.new_(Arg_id));
-		arg_keys.Add("args"			, ByteVal.new_(Arg_args));
+		arg_keys.Add("op"			, Byte_obj_val.new_(Arg_op));
+		arg_keys.Add("values"		, Byte_obj_val.new_(Arg_values));
+		arg_keys.Add("id"			, Byte_obj_val.new_(Arg_id));
+		arg_keys.Add("args"			, Byte_obj_val.new_(Arg_args));
 	}	private HashAdp arg_keys = HashAdp_.new_(); private static final byte Arg_op = 0, Arg_values = 1, Arg_id = 2, Arg_args = 3;
 	public String Op() {return op;} private String op;
 	public String Call_id() {return call_id;} private String call_id;
@@ -40,7 +40,7 @@ public class Process_recv_msg {
 			for (int i = 0; i < len; i++) {
 				KeyVal kv = rslt_ary[i];
 				String kv_key = kv.Key();
-				ByteVal bv = (ByteVal)arg_keys.Fetch(kv_key);
+				Byte_obj_val bv = (Byte_obj_val)arg_keys.Fetch(kv_key);
 				if	(bv != null) {
 					switch (bv.Val()) {
 						case Arg_op:		op = kv.Val_to_str_or_empty(); break;

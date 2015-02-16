@@ -16,7 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-class Xot_defn_trace_dbg implements Xot_defn_trace {
+import gplx.xowa.xtns.pfuncs.*;
+public class Xot_defn_trace_dbg implements Xot_defn_trace {
 	public void Trace_bgn(Xop_ctx ctx, byte[] src, byte[] name, Xot_invk caller, Xot_invk invk, Xot_defn defn) {
 		if (count++ != 0) bfr.Add_byte_nl();	// do not add new line for 1st template
 		indent += 2;
@@ -45,7 +46,7 @@ class Xot_defn_trace_dbg implements Xot_defn_trace {
 //					raw_fmtr.Print(bfr);
 //				}
 			byte[] val_dat_ary = nde.Val_tkn().Dat_ary();
-			if (val_dat_ary == ByteAry_.Empty) {
+			if (val_dat_ary == Bry_.Empty) {
 				Xot_fmtr_prm raw_fmtr = prm_fmtr;
 				nde.Val_tkn().Tmpl_fmt(ctx, src, raw_fmtr);
 				raw_fmtr.Print(bfr);
@@ -72,7 +73,7 @@ class Xot_defn_trace_dbg implements Xot_defn_trace {
 			for (int i = 0; i < caller_args; i++) {
 				Arg_nde_tkn arg = invk.Args_get_by_idx(i);
 				int digits = Int_.DigitCount(i + 1);
-//					byte[] val_ary = ByteAry_.Mid(src, arg.ValTkn().Dat_bgn(), arg.ValTkn().Dat_end());
+//					byte[] val_ary = Bry_.Mid(src, arg.ValTkn().Dat_bgn(), arg.ValTkn().Dat_end());
 				bfr	.Add_byte_repeat(Byte_ascii.Space, indent + 2)
 					.Add_byte_repeat(Byte_ascii.Space, 4 - digits)
 					.Add_int_fixed(i + 1, digits)
@@ -81,7 +82,7 @@ class Xot_defn_trace_dbg implements Xot_defn_trace {
 //						.Add(val_ary).Add_byte_nl()
 					;
 				if (arg.KeyTkn_exists()) {
-//						byte[] key_ary = ByteAry_.Mid(src, arg.KeyTkn().Dat_bgn(), arg.KeyTkn().Dat_end());
+//						byte[] key_ary = Bry_.Mid(src, arg.KeyTkn().Dat_bgn(), arg.KeyTkn().Dat_end());
 					String key_str = String_.new_utf8_(arg.Key_tkn().Dat_ary());
 					int key_str_len = String_.Len(key_str);
 					if (key_str_len > key_max) key_max = key_str_len;
@@ -106,7 +107,7 @@ class Xot_defn_trace_dbg implements Xot_defn_trace {
 //				Fmt(ctx, defn_tmpl.Src(), root, Ary_fmt_lbl , invk, true);
 			Fmt(ctx, defn_tmpl.Data_raw(), root, Ary_eval_lbl, invk, false);
 		}
-	}	private ByteAryBfr bfr = new ByteAryBfr(128); ListAdp argKeys = ListAdp_.new_(); Xot_fmtr_prm prm_fmtr = new Xot_fmtr_prm();
+	}	private Bry_bfr bfr = Bry_bfr.new_(128); ListAdp argKeys = ListAdp_.new_(); Xot_fmtr_prm prm_fmtr = new Xot_fmtr_prm();
 	private void Fmt(Xop_ctx ctx, byte[] src, Xop_tkn_itm root, byte[] lbl, Xot_invk caller, boolean newLineArgs) {
 		bfr.Add_byte_repeat(Byte_ascii.Space, indent).Add(lbl);
 		bfr.Add_byte_repeat(Byte_ascii.Space, indent);
@@ -115,26 +116,26 @@ class Xot_defn_trace_dbg implements Xot_defn_trace {
 		prm_fmtr.Print(bfr);
 		bfr.Add_byte_nl();
 	}
-	public void Trace_end(int trg_bgn, ByteAryBfr trg) {
+	public void Trace_end(int trg_bgn, Bry_bfr trg) {
 		indent -= 2;
 		bfr	.Add_byte_repeat(Byte_ascii.Space, indent).Add(Ary_result_lbl);
 		if (trg_bgn < trg.Len())
-			bfr	.Add_byte_repeat(Byte_ascii.Space, indent).Add_mid(trg.Bry(), trg_bgn, trg.Len())
+			bfr	.Add_byte_repeat(Byte_ascii.Space, indent).Add_mid(trg.Bfr(), trg_bgn, trg.Len())
 				.Add_byte_nl();
 	}
-	public void Print(byte[] src, ByteAryBfr bb) {
+	public void Print(byte[] src, Bry_bfr bb) {
 		if (bfr.Len() == 0) return;
 		if (bb.Len() != 0) bb.Add_byte_nl();	// only add newLine if something in bb; needed for tests
 		bb	.Add(Ary_source_lbl)
 			.Add(src).Add_byte_nl();
-		bb.Add_bfr(bfr);
+		bb.Add_bfr_and_preserve(bfr);
 		bfr.Clear();
 	}
 	public void Clear() {bfr.Clear(); indent = 0; count = 0;}
 	int indent = 0, count = 0;
 	public static final Xot_defn_trace_dbg _ = new Xot_defn_trace_dbg(); Xot_defn_trace_dbg() {}
-	private static final byte[] Ary_invk_lbl = ByteAry_.new_ascii_("*invk\n"), Ary_lnk_lbl = ByteAry_.new_ascii_("*lnk: "), Ary_args_lbl = ByteAry_.new_ascii_("*args\n")
-		, Ary_result_lbl = ByteAry_.new_ascii_("*result\n")
-		, Ary_eval_lbl = ByteAry_.new_ascii_("*eval\n")
-		, Ary_source_lbl = ByteAry_.new_ascii_("*source\n");
+	private static final byte[] Ary_invk_lbl = Bry_.new_ascii_("*invk\n"), Ary_lnk_lbl = Bry_.new_ascii_("*lnk: "), Ary_args_lbl = Bry_.new_ascii_("*args\n")
+		, Ary_result_lbl = Bry_.new_ascii_("*result\n")
+		, Ary_eval_lbl = Bry_.new_ascii_("*eval\n")
+		, Ary_source_lbl = Bry_.new_ascii_("*source\n");
 }

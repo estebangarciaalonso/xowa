@@ -23,7 +23,7 @@ class Io_sort_filCmd_reg implements Io_sort_filCmd { // 123|bgn|end|1
 	public void Bfr_add(Io_line_rdr stream) {
 		++itm_count;
 		int key_bgn = stream.Key_pos_bgn(), key_end = stream.Key_pos_end();
-		ByteAry_.Copy_by_pos(stream.Bfr(), key_bgn, key_end, prv_key, 0); prv_key_len = key_end - key_bgn; 
+		Bry_.Copy_by_pos(stream.Bfr(), key_bgn, key_end, prv_key, 0); prv_key_len = key_end - key_bgn; 
 	}	byte[] prv_key = new byte[1024]; int prv_key_len = 0;
 	public void Fil_bgn(Io_line_rdr stream) {
 		bfr.Add_int_variable(fil_idx++).Add_byte(Byte_ascii.Pipe);
@@ -35,8 +35,8 @@ class Io_sort_filCmd_reg implements Io_sort_filCmd { // 123|bgn|end|1
 		itm_count = 0;
 	}
 	public void Flush(Io_url fil) {
-		Io_mgr._.SaveFilBry(fil, bfr.Bry(), bfr.Len());
-	}	private ByteAryBfr bfr = ByteAryBfr.new_(); int fil_idx = 0; int itm_count = 0;
+		Io_mgr._.SaveFilBry(fil, bfr.Bfr(), bfr.Len());
+	}	private Bry_bfr bfr = Bry_bfr.new_(); int fil_idx = 0; int itm_count = 0;
 }
 class Io_url_gen_nest implements gplx.ios.Io_url_gen {
 	public Io_url Cur_url() {return cur_url;} Io_url cur_url;
@@ -49,5 +49,5 @@ class Io_url_gen_nest implements gplx.ios.Io_url_gen {
 		return rv;
 	}
 	public void Del_all() {if (Io_mgr._.ExistsDir(root_dir)) Io_mgr._.DeleteDirDeep(root_dir);}
-	public Io_url_gen_nest(Io_url root_dir, String ext) {this.root_dir = root_dir; this.ext = ByteAry_.new_utf8_(ext);} Io_url root_dir; byte[] ext; int fil_idx;
+	public Io_url_gen_nest(Io_url root_dir, String ext) {this.root_dir = root_dir; this.ext = Bry_.new_utf8_(ext);} Io_url root_dir; byte[] ext; int fil_idx;
 }

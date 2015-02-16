@@ -36,19 +36,19 @@ public class GfoRegy implements GfoInvkAble {
 		if (filUrls.length == 0 && !Io_mgr._.ExistsDir(dirUrl)) {UsrDlg_._.Stop(UsrMsg.new_("dirUrl does not exist").Add("dirUrl", dirUrl.Xto_api())); return;}
 		for (Io_url filUrl : filUrls) {
 			String key = filUrl.NameAndExt();
-			int pos = String_.NotFound;
+			int pos = String_.Find_none;
 			if (String_.EqNot(chopBgn, "")) {
 				pos = String_.FindFwd(key, chopBgn);
 				if		(pos == String_.Len(key) - 1)
 					throw Err_.new_(Err_ChopBgn).Add("key", key).Add("chopBgn", chopBgn);
-				else if (pos != String_.NotFound)
+				else if (pos != String_.Find_none)
 					key = String_.Mid(key, pos + 1);
 			}
 			if (String_.EqNot(chopEnd, "")) {
 				pos = String_.FindBwd(key, chopEnd);
 				if		(pos == 0)
 					throw Err_.new_(Err_ChopEnd).Add("key", key).Add("chopEnd", chopEnd);
-				else if (pos != String_.NotFound)
+				else if (pos != String_.Find_none)
 					key = String_.MidByLen(key, 0, pos);
 			}
 			if (hash.Has(key)) throw Err_.new_(Err_Dupe).Add("key", key).Add("filUrl", filUrl);

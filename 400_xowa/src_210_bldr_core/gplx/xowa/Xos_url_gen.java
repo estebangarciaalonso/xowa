@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 import gplx.ios.*;
 public class Xos_url_gen implements Io_url_gen {
 	public Xos_url_gen(Io_url root) {this.root = root;} Io_url root; int idx = 0;
-	public byte[] Ext() {return ext;} public Xos_url_gen Ext_(byte[] v) {ext = v; return this;} private byte[] ext = ByteAry_.new_utf8_(".csv");
+	public byte[] Ext() {return ext;} public Xos_url_gen Ext_(byte[] v) {ext = v; return this;} private byte[] ext = Bry_.new_utf8_(".csv");
 	public Io_url Cur_url() {return cur_url;} Io_url cur_url;
 	public Io_url Nxt_url() {cur_url = bld_fil_(root, idx++, ext); return cur_url;}
 	public Io_url[] Prv_urls() {
@@ -42,7 +42,7 @@ public class Xos_url_gen implements Io_url_gen {
 		}
 		tmp_bfr.Add_int_fixed(idx, 10);
 		tmp_bfr.Add(ext);
-		return Io_url_.new_fil_(tmp_bfr.XtoStrAndClear());
+		return Io_url_.new_fil_(tmp_bfr.Xto_str_and_clear());
 	}
-	private static ByteAryBfr tmp_bfr = ByteAryBfr.reset_(256);
+	private static Bry_bfr tmp_bfr = Bry_bfr.reset_(256);
 }

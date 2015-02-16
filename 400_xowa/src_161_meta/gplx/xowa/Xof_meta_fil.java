@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.core.flds.*;
 public class Xof_meta_fil {
 	public Xof_meta_fil(Xof_meta_mgr meta_mgr, byte[] md5) {this.meta_mgr = meta_mgr; this.md5 = md5;}
 	public Xof_meta_mgr Owner_mgr() {return meta_mgr;}  Xof_meta_mgr meta_mgr;
@@ -39,9 +40,9 @@ public class Xof_meta_fil {
 	}
 	public Xof_meta_fil Load(Gfo_fld_rdr rdr, Xof_meta_thumb_parser parser) {
 		itms.Clear();
-		int bry_len = rdr.Bry().length;
+		int bry_len = rdr.Data().length;
 		while (rdr.Pos() < bry_len) {
-			Xof_meta_itm itm = new Xof_meta_itm(this, ByteAry_.Empty);
+			Xof_meta_itm itm = new Xof_meta_itm(this, Bry_.Empty);
 			itm.Load(rdr, parser);
 			itms.Add(itm.Ttl(), itm);
 		}
@@ -54,6 +55,6 @@ public class Xof_meta_fil {
 		for (int i = 0; i < depth; i++)
 			Bld_url_bfr.Add_byte(md5[i]);
 		Bld_url_bfr.Add(Bry_url_ext);
-		return Io_url_.new_fil_(Bld_url_bfr.XtoStrAndClear());
-	}	static final byte[] Bry_url_ext = ByteAry_.new_ascii_(".csv"); static ByteAryBfr Bld_url_bfr = new ByteAryBfr(260);	// 260 is max path of url
+		return Io_url_.new_fil_(Bld_url_bfr.Xto_str_and_clear());
+	}	static final byte[] Bry_url_ext = Bry_.new_ascii_(".csv"); static Bry_bfr Bld_url_bfr = Bry_bfr.new_(260);	// 260 is max path of url
 }

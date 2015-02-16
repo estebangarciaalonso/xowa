@@ -33,7 +33,7 @@ class GfmlFld_mok {
 	public GfmlFld_mok ini_ndk_(String name, String typKey) {this.name = name; this.typeKey = typKey; this.keyed = true; return this;}
 	public static GfmlFld_mok new_() {return new GfmlFld_mok();} GfmlFld_mok() {}
 	public static String XtoRaw(GfmlObj gobj) {
-		if (gobj == null) return String_.NullStr;
+		if (gobj == null) return String_.Null_mark;
 		GfmlTkn tkn = GfmlTkn_.as_(gobj);
 		if (tkn != null) return tkn.Raw();
 		GfmlNde nde = GfmlNde.as_(gobj);

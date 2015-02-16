@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.ios; import gplx.*;
+import gplx.brys.*;
 public class Io_download_fmt {
 	public long Time_bgn() {return time_bgn;} long time_bgn;
 	public long Time_now() {return time_now;} long time_now;
@@ -32,8 +33,8 @@ public class Io_download_fmt {
 	public int Prog_num_units() {return prog_num_units;} int prog_num_units = Io_mgr.Len_kb;
 	public String Prog_num_fmt() {return prog_num_fmt;} private String prog_num_fmt = "#,##0";
 	public String Prog_msg() {return prog_msg;} private String prog_msg;
-	Io_size_fmtr_arg size_fmtr_arg = new Io_size_fmtr_arg(), rate_fmtr_arg = new Io_size_fmtr_arg().Suffix_(ByteAry_.new_ascii_("ps"));
-	Time_fmtr_arg prog_left_fmtr_arg = new Time_fmtr_arg(); Int_decimal_fmtr_arg prog_pct_fmtr_arg = new Int_decimal_fmtr_arg().Places_(2);
+	Io_size_fmtr_arg size_fmtr_arg = new Io_size_fmtr_arg(), rate_fmtr_arg = new Io_size_fmtr_arg().Suffix_(Bry_.new_ascii_("ps"));
+	Bry_fmtr_arg_time prog_left_fmtr_arg = new Bry_fmtr_arg_time(); Bry_fmtr_arg_decimal_int prog_pct_fmtr_arg = new Bry_fmtr_arg_decimal_int().Places_(2);
 	public void Ctor(Gfo_usr_dlg usr_dlg) {
 		this.usr_dlg = usr_dlg;
 	}	Gfo_usr_dlg usr_dlg;
@@ -76,10 +77,10 @@ public class Io_download_fmt {
 		,	rate_fmtr_arg.Val_(prog_rate)
 		,	prog_left_fmtr_arg.Seconds_(prog_left / 1000)
 		);
-		prog_msg = prog_bfr.XtoStrAndClear();
+		prog_msg = prog_bfr.Xto_str_and_clear();
 		if (usr_dlg != null)
 			usr_dlg.Prog_none(GRP_KEY, "prog", prog_msg);
-	}	private ByteAryBfr prog_bfr = ByteAryBfr.new_(); ByteAryFmtr prog_fmtr = ByteAryFmtr.new_().Fail_when_invalid_escapes_(false); // NOTE: prog_fmtr can be passed file_names with ~ which are not easy to escape; DATE:2013-02-19
+	}	private Bry_bfr prog_bfr = Bry_bfr.new_(); Bry_fmtr prog_fmtr = Bry_fmtr.new_().Fail_when_invalid_escapes_(false); // NOTE: prog_fmtr can be passed file_names with ~ which are not easy to escape; DATE:2013-02-19
 	public void Term() {
 		time_end = Env_.TickCount();
 //			prog_rate = (prog_done * 1000) / (time_dif);

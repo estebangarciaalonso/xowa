@@ -19,9 +19,6 @@ package gplx.gfui; import gplx.*;
 class IptKeyStrMgr {
 	public IptKey FetchByKeyPress(int charVal) {
 		if (literals == null) Init();
-//			if (charVal == 10 || charVal == 13) {
-////                Tfds.Write(charVal);
-//			}
 		IptKey rv = charKeys[charVal];
 		return (rv == null) ? IptKey_.None : rv;
 	}

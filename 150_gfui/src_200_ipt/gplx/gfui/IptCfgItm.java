@@ -20,5 +20,5 @@ public class IptCfgItm {
 	public String Key() {return key;} public IptCfgItm Key_(String v) {key = v; return this;} private String key;
 	public ListAdp Ipt() {return ipt;} public IptCfgItm Ipt_(ListAdp v) {ipt = v; return this;} ListAdp ipt;
 	public GfoMsg Msg() {return msg;} public IptCfgItm Msg_(GfoMsg v) {msg = v; return this;} GfoMsg msg;
-        public static IptCfgItm new_() {return new IptCfgItm();} IptCfgItm() {}
+	public static IptCfgItm new_() {return new IptCfgItm();} IptCfgItm() {}
 }

@@ -20,13 +20,13 @@ public class Pft_func_date_int extends Pf_func_base {
 	public Pft_func_date_int(int id, int date_tid) {this.id = id; this.date_tid = date_tid;} private int date_tid;
 	@Override public int Id() {return id;} private int id;
 	@Override public Pf_func New(int id, byte[] name) {return new Pft_func_date_int(id, date_tid).Name_(name);}
-	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {
+	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, Bry_bfr bfr) {
 		DateAdp date = DateAdp_.MinValue;
 		Xow_wiki wiki = ctx.Wiki(); Xol_lang lang = ctx.Lang();
 	    switch (date_tid) {
 	        case Date_tid_lcl: date = DateAdp_.Now(); break;
 	        case Date_tid_utc: date = DateAdp_.Now().XtoUtc(); break;
-	        case Date_tid_rev: date = ctx.Page().Modified_on(); break;
+	        case Date_tid_rev: date = ctx.Cur_page().Revision_data().Modified_on(); break;
 			default: throw Err_.unhandled(date_tid);
 	    }
 		switch (id) {

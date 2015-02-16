@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
-import gplx.xowa.files.qrys.*;
+import gplx.xowa.files.fsdb.qrys.*;
 import gplx.xowa.files.bins.*;
 import gplx.xowa.files.fsdb.fs_roots.*;
 public interface Xof_fsdb_wkr extends GfoInvkAble {

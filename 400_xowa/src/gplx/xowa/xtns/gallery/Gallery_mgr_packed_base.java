@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.xowa.files.*; import gplx.xowa.html.modules.*;
-class Gallery_mgr_packed_base extends Gallery_mgr_base {
+public class Gallery_mgr_packed_base extends Gallery_mgr_base {
 	@Override public byte Tid() {return Gallery_mgr_base_.Packed_tid;}
 	@Override public byte[] Tid_bry() {return Gallery_mgr_base_.Packed_bry;}
 	@Override public void Init(int itms_per_row, int itm_default_w, int itm_default_h) {
@@ -26,7 +26,9 @@ class Gallery_mgr_packed_base extends Gallery_mgr_base {
 		this.itm_default_h = itm_default_h;
 	}
 	@Override public void Itms_per_row_(int v) {}
-	@Override public void Get_modules(Xoh_module_list modules) {modules.Add(Module_packed);}
+	@Override public void Get_modules(Xoa_page page) {
+		page.Html_data().Module_mgr().Itm_gallery().Enabled_y_();
+	}
 	@Override public int Get_thumb_padding()				{return 0;}
 	@Override public int Get_gb_padding()				{return 2;}
 	@Override public int Get_vpad(int itm_h, int thm_h)	{
@@ -47,7 +49,7 @@ class Gallery_mgr_packed_base extends Gallery_mgr_base {
 	@Override public void Adjust_image_parameters(Xof_xfer_itm xfer_itm) {
 		int w = (int)(xfer_itm.Html_w() / Scale_factor);
 		int h = (int)(xfer_itm.Html_h() / Scale_factor);
-		xfer_itm.Init_xfer_html_size(w, h);
+		xfer_itm.Set__html_size(w, h);
 	}
 	public static final double Scale_factor = 1.5d;	// We artificially have 1.5 the resolution neccessary so that we can scale it up by that much on the client side, without worrying about requesting a new image.
 	private static final int Scale_factor_x_60 = (int)(Scale_factor * 60);
@@ -60,11 +62,10 @@ class Gallery_mgr_packed_base extends Gallery_mgr_base {
 		lnki.Lnki_w_((int)(Scale_factor * w));
 		lnki.Lnki_h_((int)(Scale_factor * itm_default_h));
 	}
-	public static final Xoh_module_itm Module_packed = new Xoh_module_itm("mediawiki.page.gallery").Scripts_init("\n  xowa_gallery_packed = true;");
 }
 class Gallery_mgr_packed_overlay extends Gallery_mgr_packed_base {
 	@Override public byte[] Tid_bry() {return Gallery_mgr_base_.Packed_overlay_bry;}
-	@Override public void Wrap_gallery_text(ByteAryBfr bfr, byte[] gallery_text, int thm_w, int thm_h) {
+	@Override public void Wrap_gallery_text(Bry_bfr bfr, byte[] gallery_text, int thm_w, int thm_h) {
 		if (gallery_text.length == 0) return; // If we have no text, do not output anything to avoid ugly white overlay.
 		int img_w = this.Get_gb_width(thm_w, thm_h) - this.Get_thumb_padding() - this.Get_gb_padding();
 		int caption_w = (img_w - 20);
@@ -74,9 +75,9 @@ class Gallery_mgr_packed_overlay extends Gallery_mgr_packed_base {
 			;
 	}
 	private static final byte[] 
-	  Wrap_gallery_text_0 = ByteAry_.new_ascii_("\n      <div class=\"gallerytextwrapper\" style=\"width: ")
-	, Wrap_gallery_text_1 = ByteAry_.new_ascii_("px\"><div class=\"gallerytext\">\n") // NOTE: The newline after <div class="gallerytext"> is needed to accommodate htmltidy
-	, Wrap_gallery_text_2 = ByteAry_.new_ascii_("\n      </div></div>")	// NOTE: 2nd </div> is not part of MW, but needed to close div
+	  Wrap_gallery_text_0 = Bry_.new_ascii_("\n      <div class=\"gallerytextwrapper\" style=\"width: ")
+	, Wrap_gallery_text_1 = Bry_.new_ascii_("px\"><div class=\"gallerytext\">\n") // NOTE: The newline after <div class="gallerytext"> is needed to accommodate htmltidy
+	, Wrap_gallery_text_2 = Bry_.new_ascii_("\n      </div></div>")	// NOTE: 2nd </div> is not part of MW, but needed to close div
 	;
 }
 class Gallery_mgr_packed_hover extends Gallery_mgr_packed_overlay {		@Override public byte[] Tid_bry() {return Gallery_mgr_base_.Packed_hover_bry;}

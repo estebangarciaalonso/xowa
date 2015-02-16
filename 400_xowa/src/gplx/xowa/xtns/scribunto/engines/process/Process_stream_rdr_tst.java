@@ -35,13 +35,13 @@ class Process_stream_rdr_fxt {
 	public Process_stream_rdr_fxt Init() {
 		if (process == null) {
 			bry_header = new byte[16];
-			bry_body = ByteAry_.Empty;
+			bry_body = Bry_.Empty;
 			rdr = new IoStream_mock().Read_limit_(5);
 			process = new Process_stream_rdr(new byte[16], new byte[16]);
 		}
 		return this;
 	}	byte[] bry_header, bry_body; Process_stream_rdr process; IoStream_mock rdr;
-	public Process_stream_rdr_fxt Init_src_str_(String v) {this.src_bry = ByteAry_.new_ascii_(v); src_len = src_bry.length; expd_str = v; return this;} private byte[] src_bry;
+	public Process_stream_rdr_fxt Init_src_str_(String v) {this.src_bry = Bry_.new_ascii_(v); src_len = src_bry.length; expd_str = v; return this;} private byte[] src_bry;
 	public Process_stream_rdr_fxt Init_src_len_(int v) {this.src_len = v; return this;} private int src_len;
 	public Process_stream_rdr_fxt Expd_str_(String v) {this.expd_str = v; return this;} private String expd_str;
 	public Process_stream_rdr_fxt Init_src_str_w_nl_(String v) {
@@ -65,9 +65,9 @@ class Process_stream_rdr_fxt {
 					break;
 			}
 		}
-		expd_str = bfr.XtoStrAndClear();
+		expd_str = bfr.Xto_str_and_clear();
 		return this;
-	} 	ByteAryBfr bfr = ByteAryBfr.reset_(128);
+	} 	Bry_bfr bfr = Bry_bfr.reset_(128);
 	public void Test_read_body() {
 		rdr.Data_bry_(src_bry);
 		byte[] bry_body = new byte[src_len];

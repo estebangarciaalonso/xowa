@@ -20,14 +20,14 @@ import org.junit.*;
 public class Xop_xnde_wkr__include_uncommon_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void init()							{fxt.Reset();}
-	@Test  public void Ex_Tmpl_io_oi()		{		// PURPOSE: <includeonly> not parsing internals; EX.WP: [[Template:MONTHNAME]]
+	@Test  public void Ex_Tmpl_io_oi()		{		// PURPOSE: <includeonly> not parsing internals; PAGE:en.w:[[Template:MONTHNAME]]
 		fxt.Test_parse_tmpl_str_test("<includeonly>{{#if:{{{1}}}|a|b}}</includeonly><noinclude>c</noinclude>", "{{test|1}}", "a");
 	}
-	@Test  public void Ex_Tmpl_io_subst()		{	// PURPOSE: <includeonly> and @gplx.Internal protected subst; EX.WP: [[Template:Dubious]]
+	@Test  public void Ex_Tmpl_io_subst()		{	// PURPOSE: <includeonly> and @gplx.Internal protected subst; PAGE:en.w:[[Template:Dubious]]
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("mwo_print", "{{{1}}}");
 		fxt.Init_defn_add("substcheck", "SUBST");
-		fxt.Test_parse_tmpl_str_test(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_tmpl_str_test(String_.Concat_lines_nl_skip_last
 			(	"{{mwo_print"
 			,	"|<includeonly>{{subst:</includeonly><includeonly>substcheck}}</includeonly>"
 			,	"}}"
@@ -35,7 +35,7 @@ public class Xop_xnde_wkr__include_uncommon_tst {
 			,	"{{subst:substcheck}}\n"
 			);
 		fxt.Reset();
-		fxt.Test_parse_tmpl_str_test(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_tmpl_str_test(String_.Concat_lines_nl_skip_last
 			(	"{{mwo_print"
 			,	"|<includeonly>{{safesubst:</includeonly><includeonly>substcheck}}</includeonly>"
 			,	"}}"
@@ -43,7 +43,7 @@ public class Xop_xnde_wkr__include_uncommon_tst {
 			,	"SUBST\n");
 		fxt.Init_defn_clear();
 	}
-	@Test  public void Ex_Tmpl_noinclude_prm_1() {	// PURPOSE: <noinclude> should not process @gplx.Internal protected tkns; EX.WP: [[Template:See]]
+	@Test  public void Ex_Tmpl_noinclude_prm_1() {	// PURPOSE: <noinclude> should not process @gplx.Internal protected tkns; PAGE:en.w:[[Template:See]]
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("mwo_print", "{{{1}}}{{{2}}}");
 		fxt.Test_parse_tmpl_str_test
@@ -98,13 +98,13 @@ public class Xop_xnde_wkr__include_uncommon_tst {
 			,	"a<noinclude/a/>bcde"
 			);
 	}
-	@Test  public void Defect_onlyinclude_inside_template() {	// PURPOSE: was eating up next template; EX.WP:Wikipedia:Featured_articles
+	@Test  public void Defect_onlyinclude_inside_template() {	// PURPOSE: was eating up next template; PAGE:en.w:Wikipedia:Featured_articles
 		fxt.Test_parse_page_all_str
 			(	"{{formatnum: <onlyinclude>1</onlyinclude>}} {{formatnum:2}}"
 			,	"1 2"
 			);
 	}
-	@Test  public void Only_include_preserves_nl() {	// PURPOSE: given "a\n<onlyinclude>{|\n", "{|" should be table; EX:en.w:Wikipedia:Reference_desk
+	@Test  public void Only_include_preserves_nl() {	// PURPOSE: given "a\n<onlyinclude>{|\n", "{|" should be table; PAGE:en.w:Wikipedia:Reference_desk
 		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
 			(	"a"
 			,	"<onlyinclude>==b==</onlyinclude>"
@@ -137,9 +137,12 @@ public class Xop_xnde_wkr__include_uncommon_tst {
 		fxt.Init_defn_add("test", "abc");
 		fxt.Test_parse_page_all_str("{{<includeonly></includeonly>test}}", "abc");
 	}
-	@Test  public void Include_only_in_transcluded_page() {// PURPOSE: include only int transcluded page should be ignored; EX:de.w:Wikipedia:Projektdiskussion; DATE:2014-01-24
+	@Test  public void Include_only_in_transcluded_page() {// PURPOSE: include only in transcluded page should be ignored; EX:de.w:Wikipedia:Projektdiskussion; DATE:2014-01-24; DATE:2014-05-10
 		fxt.Init_page_create("page", "abc");	// create page in main ns
-		fxt.Test_parse_page_all_str("{{<includeonly>safesubst:</includeonly>page}}", "abc");	// will become {{safesubst:page}} which should then transclude page
+		fxt.Test_parse_page_all_str("{{:<includeonly>safesubst:</includeonly>page}}", "abc");	// will become {{:page}} which should then transclude page
+	}
+	@Test  public void Include_only_subst_in_function() {// PURPOSE: includeonly and subst inside function should be ignored; PAGE:en.w:WikiProject_Articles_for_creation/BLD_Preload; DATE:2014-04-29
+		fxt.Test_parse_page_all_str("{{<includeonly>subst:</includeonly>#expr:0}}", "0");
 	}
 	@Test  public void Hdr() {	// PURPOSE: includeonly should be evaluated during template parse; EX: es.b:Billar/T�cnica/Clases_de_puentes; DATE:2014-02-12
 		fxt.Test_parse_page_all_str("=<includeonly>=</includeonly>A=<includeonly>=</includeonly>", "<h1>A</h1>\n");
@@ -151,14 +154,41 @@ public class Xop_xnde_wkr__include_uncommon_tst {
 //		}
 
 //		@Test  public void Wiki_includeonly_ignore() {fxt.Test_parse_wiki_text("[[a<includeonly>b</includeonly>c]]", "[[ac]]");}	// FUTURE: ttl parses by idx, and ignores includeonly: WHEN: upon encountering; may need to redo in other parsers?
-//		@Test  public void Defect_noinclude_inside_main() {		// PURPOSE: <onlyinclude> inside main was not returning content; EX.WP:Wikipedia:Featured_articles
-//			fxt.Init_defn_clear();
-//			fxt.Init_defn_add("Test_tmpl", "{{:Test_page}}");
-//			fxt.Data_create("Test_page", "a{{#expr:<onlyinclude>1</onlyinclude>}}c");
+	@Test  public void Defect_noinclude_inside_main() {		// PURPOSE: <onlyinclude> inside main was not returning content; PAGE:en.w:Wikipedia:Featured_articles
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("Test_tmpl", "{{:Test_page}}");
+		fxt.Data_create("Test_page", "a{{#expr:<onlyinclude>1</onlyinclude>}}c");
+		fxt.Test_parse_page_all_str
+			(	"{{Test_tmpl}}"
+			,	"1"
+			);
+		fxt.Init_defn_clear();
+	}
+	@Test  public void Pre_and_includeonly() {	// PAGE:https://en.wikipedia.org/wiki/BSD_licenses DATE:2014-05-23
+		fxt.Init_defn_add("pre2", "<pre<includeonly></includeonly>>{{{1}}}</pre>");
+		fxt.Test_parse_page_all_str
+			(	"{{pre2|a}}"
+			,	String_.Concat_lines_nl_skip_last
+			(	"<pre>a</pre>"
+			));
+	}
+//		@Test  public void Pre_and_includeonly2() {
+//			fxt.Init_defn_add("pre2", "<pre<includeonly></includeonly>><nowiki>{{{1}}}</nowiki></pre>");
 //			fxt.Test_parse_page_all_str
-//				(	"{{Test_tmpl}}"
-//				,	"1"
-//				);
-//			fxt.Init_defn_clear();
+//				(	"{{pre2|a}}"
+//				,	String_.Concat_lines_nl_skip_last
+//				(	"<pre>a</pre>"
+//				));
 //		}
+	@Test  public void Noinclude_inline_w_space_inside_safesubst() {	// PURPOSE: "<noinclude />" did not work with safesubst b/c of space; PAGE:en.w:Wikipedia:Featured_picture_candidates; DATE:2014-06-24
+		fxt.Test_parse_tmpl_str_test("{{SAFESUBST:<noinclude />#if:val_exists|y|n}}", "{{test}}", "y");
+	}
+	@Test  public void Subst() {// PURPOSE: handle subst-includeonly-subst combination; PAGE:pt.w:Argentina DATE:2014-09-24
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("test", "{{<includeonly>subst:</includeonly>#switch:1|1=y|default=n}}");
+		//fxt.Init_defn_add("test", "{{subst:#switch:1|1=y|default=n}}");	// keeping around for debugging purposes
+		//fxt.Init_defn_add("test", "{{<includeonly>#switch:</includeonly>1|1=y|default=n}}"); // keeping around for debugging purposes
+		fxt.Test_parse_page_all_str("{{test}}", "{{subst:#switch:1|1=y|default=n}}");	// note that subst is preserved b/c of <includeonly>
+		fxt.Test_parse_page_all_str("{{subst:test}}", "y");								// note that expression is evaluated b/c of subst:
+	}
 }

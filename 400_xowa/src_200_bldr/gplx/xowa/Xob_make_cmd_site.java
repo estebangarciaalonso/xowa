@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.ios.*;
 public class Xob_make_cmd_site implements Io_make_cmd {
-	Xob_xdat_file_wtr fil_wtr; ByteAryBfr cur_bfr = ByteAryBfr.new_(), reg_bfr = ByteAryBfr.new_(), reg_key_0 = new ByteAryBfr(512), reg_key_n = new ByteAryBfr(512);
+	Xob_xdat_file_wtr fil_wtr; Bry_bfr cur_bfr = Bry_bfr.new_(), reg_bfr = Bry_bfr.new_(), reg_key_0 = Bry_bfr.new_(512), reg_key_n = Bry_bfr.new_(512);
 	int make_fil_max = 65 * Io_mgr.Len_kb, fil_count = 0, itm_count = 0, itm_key_end = 0; Io_url reg_url;
 	public Xob_make_cmd_site(Gfo_usr_dlg usr_dlg, Io_url make_dir, int make_fil_max) {this.usr_dlg = usr_dlg; this.make_dir = make_dir; this.make_fil_max = make_fil_max;} Gfo_usr_dlg usr_dlg;
 	public Io_sort_cmd Make_dir_(Io_url v) {make_dir = v; return this;} Io_url make_dir;
@@ -33,7 +33,7 @@ public class Xob_make_cmd_site implements Io_make_cmd {
 		int rdr_key_bgn = rdr.Key_pos_bgn(), rdr_key_end = rdr.Key_pos_end();
 		int rdr_key_len = rdr_key_end - rdr_key_bgn;
 		int rdr_val_bgn = rdr_key_end, /* NOTE: no +1: want to include fld_dlm for below*/ rdr_val_end = rdr.Itm_pos_end() - 1; // -1: ignore rdr_dlm
-		if (ByteAry_.Match(cur_bfr.Bry(), 0, itm_key_end, rdr.Bfr(), rdr_key_bgn, rdr_key_end))	// key is same; add rest of line as val
+		if (Bry_.Match(cur_bfr.Bfr(), 0, itm_key_end, rdr.Bfr(), rdr_key_bgn, rdr_key_end))	// key is same; add rest of line as val
 			cur_bfr.Add_mid(rdr.Bfr(), rdr_val_bgn, rdr_val_end);
 		else {
 			if (fil_wtr.FlushNeeded(cur_bfr.Len() + rdr_key_len)) Flush();
@@ -42,10 +42,10 @@ public class Xob_make_cmd_site implements Io_make_cmd {
 				if (cur_bfr.Len() == 0)
 					reg_key_0.Add_mid(bfr, rdr_key_bgn, rdr_key_end);
 				else
-					reg_key_0.Add_mid(cur_bfr.Bry(), 0, itm_key_end);
+					reg_key_0.Add_mid(cur_bfr.Bfr(), 0, itm_key_end);
 			}
 			if (cur_bfr.Len() > 0) {
-				reg_key_n.Clear().Add_mid(cur_bfr.Bry(), 0, itm_key_end);
+				reg_key_n.Clear().Add_mid(cur_bfr.Bfr(), 0, itm_key_end);
 				fil_wtr.Bfr().Add_bfr_and_clear(cur_bfr);
 				fil_wtr.Add_idx(line_dlm);
 			}
@@ -56,7 +56,7 @@ public class Xob_make_cmd_site implements Io_make_cmd {
 	}
 	public void Do_bry(byte[] bry, int key_bgn, int key_end, int itm_bgn, int itm_end) {
 		int val_bgn = key_end, /* NOTE: no +1: want to include fld_dlm for below*/ val_end = itm_end - 1; // -1: ignore rdr_dlm
-		if (ByteAry_.Match(cur_bfr.Bry(), 0, itm_key_end, bry, key_bgn, key_end))	// key is same; add rest of line as val
+		if (Bry_.Match(cur_bfr.Bfr(), 0, itm_key_end, bry, key_bgn, key_end))	// key is same; add rest of line as val
 			cur_bfr.Add_mid(bry, val_bgn, val_end);
 		else {																		// key changed;
 			int itm_len = itm_end - itm_bgn;
@@ -79,7 +79,7 @@ public class Xob_make_cmd_site implements Io_make_cmd {
 		}
 	}
 	public void Sort_end() {
-		reg_key_n.Clear().Add_mid(cur_bfr.Bry(), 0, itm_key_end);
+		reg_key_n.Clear().Add_mid(cur_bfr.Bfr(), 0, itm_key_end);
 		fil_wtr.Bfr().Add_bfr_and_clear(cur_bfr);
 		fil_wtr.Add_idx(line_dlm);
 		Flush();
@@ -123,8 +123,8 @@ public class Xob_make_cmd_site implements Io_make_cmd {
 	private void Flush_reg() {
 		reg_bfr
 			.Add_int_variable(fil_count++).Add_byte(Byte_ascii.Pipe)
-			.Add_bfr(reg_key_0).Add_byte(Byte_ascii.Pipe)
-			.Add_bfr(reg_key_n).Add_byte(Byte_ascii.Pipe)
+			.Add_bfr_and_preserve(reg_key_0).Add_byte(Byte_ascii.Pipe)
+			.Add_bfr_and_preserve(reg_key_n).Add_byte(Byte_ascii.Pipe)
 			.Add_int_variable(itm_count).Add_byte(Byte_ascii.NewLine);
 		itm_count = 0;
 		reg_key_0.Clear();

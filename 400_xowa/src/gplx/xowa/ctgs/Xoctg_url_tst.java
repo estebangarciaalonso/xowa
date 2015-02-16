@@ -31,23 +31,23 @@ class Xoctg_url_fxt {
 	public void Clear() {
 		if (parser == null) {
 			parser = new Xoa_url_parser();
-			page_url = new Xoa_url();
+			page_url = Xoa_url.blank_();
 			ctg_url = new Xoctg_url();
 			expd = new Xoctg_url_chkr();
 		}
 	}	private Xoa_url_parser parser; Xoa_url page_url; Xoctg_url ctg_url;
 	public void Test_parse(String url_str, Xoctg_url_chkr expd) {
-		parser.Parse(page_url, ByteAry_.new_utf8_(url_str));
-		ctg_url.Parse(Gfo_usr_dlg_xowa.test_(), page_url);
+		parser.Parse(page_url, Bry_.new_utf8_(url_str));
+		ctg_url.Parse(Gfo_usr_dlg_base.test_(), page_url);
 		expd.Chk(ctg_url);
 		expd.Clear();
 	}
 }
 class Xoctg_url_chkr {
 	public Xoctg_url_chkr Grp_idxs_(String subc, String file, String page) {
-		grp_idxs[Xoa_ctg_mgr.Tid_subc] = ByteAry_.new_ascii_(subc);
-		grp_idxs[Xoa_ctg_mgr.Tid_file] = ByteAry_.new_ascii_(file);
-		grp_idxs[Xoa_ctg_mgr.Tid_page] = ByteAry_.new_ascii_(page);
+		grp_idxs[Xoa_ctg_mgr.Tid_subc] = Bry_.new_ascii_(subc);
+		grp_idxs[Xoa_ctg_mgr.Tid_file] = Bry_.new_ascii_(file);
+		grp_idxs[Xoa_ctg_mgr.Tid_page] = Bry_.new_ascii_(page);
 		return this;
 	}	byte[][] grp_idxs = new byte[Xoa_ctg_mgr.Tid__max][];
 	public Xoctg_url_chkr Grp_fwds_(byte subc, byte file, byte page) {

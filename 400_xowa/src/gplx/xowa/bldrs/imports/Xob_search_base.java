@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
+import gplx.core.primitives.*;
 import gplx.ios.*;
 import gplx.xowa.dbs.*;
 public abstract class Xob_search_base extends Xob_itm_dump_base implements Xobd_wkr, GfoInvkAble {
@@ -59,21 +60,21 @@ public abstract class Xob_search_base extends Xob_itm_dump_base implements Xobd_
 		if (delete_temp) Io_mgr._.DeleteDirDeep(temp_dir);
 		if (wiki.Db_mgr().Tid() == Xodb_mgr_sql.Tid_sql) {
 			Xodb_fsys_mgr db_fs = wiki.Db_mgr_as_sql().Fsys_mgr();
-			wiki.Db_mgr_as_sql().Tbl_xowa_db().Commit_all(db_fs.Core_provider(), db_fs.Ary());	// always save files now; need to commit created search_db_idx to xowa_db, else will be reused by ctg v2; DATE:2014-02-07
+			wiki.Db_mgr_as_sql().Tbl_xowa_db().Commit_all(db_fs.Conn_core(), db_fs.Files_ary());	// always save files now; need to commit created search_db_idx to xowa_db, else will be reused by ctg v2; DATE:2014-02-07
 		}
 	}
 	public void Wkr_print() {}
 	OrderedHash list = OrderedHash_.new_(); Xol_lang lang;
 	static final int row_fixed_len = 5 + 1 + 1 + 1;	// 5=rowId; 1=|; 1=NmsOrd; 1=|		
-	public static byte[][] Split(Xol_lang lang, OrderedHash list, ByteAryBfr bfr, byte[] ttl) {
+	public static byte[][] Split(Xol_lang lang, OrderedHash list, Bry_bfr bfr, byte[] ttl) {
 		if (lang != null)	// null lang passed in by searcher
 			ttl = lang.Case_mgr().Case_build_lower(ttl);
-		int ttl_len = ttl.length; ByteAryRef word_ref = ByteAryRef.new_(ByteAry_.Empty);
+		int ttl_len = ttl.length; Bry_obj_ref word_ref = Bry_obj_ref.new_(Bry_.Empty);
 		int i = 0; boolean word_done = false;
 		while (true) {
 			if (word_done || i == ttl_len) {
 				if (bfr.Len() > 0) {
-					byte[] word = bfr.XtoAry();
+					byte[] word = bfr.Xto_bry();
 					word_ref.Val_(word);
 					if (!list.Has(word_ref)) list.Add(word_ref, word);
 					bfr.ClearAndReset();
@@ -104,7 +105,7 @@ public abstract class Xob_search_base extends Xob_itm_dump_base implements Xobd_
 			}
 		}
 		bfr.ClearAndReset();
-		byte[][] rv = (byte[][])list.XtoAry(byte[].class);
+		byte[][] rv = (byte[][])list.Xto_ary(byte[].class);
 		list.Clear(); list.ResizeBounds(16);
 		return rv;
 	}

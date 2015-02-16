@@ -65,7 +65,7 @@ public class GxwCheckListBox_lang extends JScrollPane implements GxwCheckListBox
 	public void Host_set(GxwCbkHost host) {
 		this.host = host;
 		listBox.Host_set(host);
-	} GxwCbkHost host = GxwCbkHost_.Null;
+	} 	private GxwCbkHost host = GxwCbkHost_.Null;
 //	@Override public boolean requestFocusInWindow() {
 //		return listBox.requestFocusInWindow();
 ////		return super.requestFocusInWindow();
@@ -197,5 +197,5 @@ class CheckListItem {
     public Object Data() {return data;} Object data;       
     public boolean Selected() {return selected;} public void Selected_set(boolean selected) {this.selected = selected;}	protected boolean selected;
     public void Selected_toggle() {selected = !selected;}
-    public String toString() {return Object_.XtoStr_OrNullStr(data);}
+    public String toString() {return Object_.Xto_str_strict_or_null_mark(data);}
 }

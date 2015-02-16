@@ -16,16 +16,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.core.primitives.*;
 public class Xof_mime_minor_ {
 	public static Xof_ext ext_(byte[] minor_mime) {
-		IntVal id_obj = (IntVal)mime_hash.Fetch(minor_mime);
+		Int_obj_val id_obj = (Int_obj_val)mime_hash.Fetch(minor_mime);
 		int id = id_obj == null ? Xof_ext_.Id_unknown : id_obj.Val();
 		return Xof_ext_.new_by_id_(id);
 	}
 	private static final byte[] 
-	  Mime_svg = ByteAry_.new_ascii_("svg+xml"), Mime_djvu = ByteAry_.new_ascii_("vnd.djvu"), Mime_midi = ByteAry_.new_ascii_("midi")
-	, Mime_xcf = ByteAry_.new_ascii_("x-xcf"), Mime_flac = ByteAry_.new_ascii_("x-flac")
-	, Mime_bmp = ByteAry_.new_ascii_("x-bmp"), Mime_bmp_2 = ByteAry_.new_ascii_("x-ms-bmp");
+	  Mime_svg = Bry_.new_ascii_("svg+xml"), Mime_djvu = Bry_.new_ascii_("vnd.djvu"), Mime_midi = Bry_.new_ascii_("midi")
+	, Mime_xcf = Bry_.new_ascii_("x-xcf"), Mime_flac = Bry_.new_ascii_("x-flac")
+	, Mime_bmp = Bry_.new_ascii_("x-bmp"), Mime_bmp_2 = Bry_.new_ascii_("x-ms-bmp");
 	private static final HashAdp mime_hash = mime_hash_();
 	private static HashAdp mime_hash_() {
 		HashAdp rv = HashAdp_.new_bry_();
@@ -49,5 +50,5 @@ public class Xof_mime_minor_ {
 		mime_hash_itm_(rv, Mime_xcf, Xof_ext_.Id_xcf);
 		return rv;
 	}
-	private static void mime_hash_itm_(HashAdp hash, byte[] key, int val) {hash.Add(key, IntVal.new_(val));}
+	private static void mime_hash_itm_(HashAdp hash, byte[] key, int val) {hash.Add(key, Int_obj_val.new_(val));}
 }

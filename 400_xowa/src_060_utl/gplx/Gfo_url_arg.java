@@ -23,6 +23,19 @@ public class Gfo_url_arg {
 	public Gfo_url_arg Val_bry_(byte[] v) {val_bry = v; return this;}
 	public static final Gfo_url_arg[] Ary_empty = new Gfo_url_arg[0];
 	public static Gfo_url_arg new_key_(String key) {
-		return new Gfo_url_arg(ByteAry_.new_utf8_(key), ByteAry_.Empty);
+		return new Gfo_url_arg(Bry_.new_utf8_(key), Bry_.Empty);
+	}
+	public static Gfo_url_arg[] Ary(String... kvs) {
+		int len = kvs.length;
+		Gfo_url_arg[] rv = new Gfo_url_arg[len / 2];
+		String key = null;
+		for (int i = 0; i < len; ++i) {
+			String s = kvs[i];
+			if (i % 2 == 0)
+				key = s;
+			else
+				rv[i / 2] = new Gfo_url_arg(Bry_.new_utf8_(key), Bry_.new_utf8_(s));
+		}
+		return rv;
 	}
 }

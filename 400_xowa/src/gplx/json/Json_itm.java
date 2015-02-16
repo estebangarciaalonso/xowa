@@ -22,16 +22,16 @@ public interface Json_itm {
 	int Src_end();
 	Object Data();
 	byte[] Data_bry();
-	void Print_as_json(ByteAryBfr bfr, int depth);
+	void Print_as_json(Bry_bfr bfr, int depth);
 	boolean Data_eq(byte[] comp);
 }
 class Json_itm_null extends Json_itm_base {
 	Json_itm_null() {this.Ctor(-1, -1);}
 	@Override public byte Tid() {return Json_itm_.Tid_null;}
 	@Override public Object Data() {return null;}
-	@Override public void Print_as_json(ByteAryBfr bfr, int depth) {bfr.Add(Bry_null);}
+	@Override public void Print_as_json(Bry_bfr bfr, int depth) {bfr.Add(Bry_null);}
 	@Override public byte[] Data_bry() {return Bry_null;}
-	private static final byte[] Bry_null = ByteAry_.new_ascii_("null");
+	private static final byte[] Bry_null = Bry_.new_ascii_("null");
 	public static Json_itm_null Null = new Json_itm_null();
 }
 class Json_itm_bool extends Json_itm_base {
@@ -39,7 +39,7 @@ class Json_itm_bool extends Json_itm_base {
 	@Override public byte Tid() {return Json_itm_.Tid_bool;}
 	@Override public Object Data() {return data;}
 	@Override public byte[] Data_bry() {return data ? Json_itm_.Const_true : Json_itm_.Const_false;}
-	@Override public void Print_as_json(ByteAryBfr bfr, int depth) {bfr.Add(data ? Json_itm_.Const_true: Json_itm_.Const_false);}
+	@Override public void Print_as_json(Bry_bfr bfr, int depth) {bfr.Add(data ? Json_itm_.Const_true: Json_itm_.Const_false);}
 	public static Json_itm_bool Bool_n = new Json_itm_bool(false), Bool_y = new Json_itm_bool(true);
 }
 class Json_itm_decimal extends Json_itm_base {
@@ -51,17 +51,17 @@ class Json_itm_decimal extends Json_itm_base {
 		return data;
 	}	DecimalAdp data;
 	@Override public byte[] Data_bry() {
-		if (data_bry == null) data_bry = ByteAry_.Mid(doc.Src(), this.Src_bgn(), this.Src_end());
+		if (data_bry == null) data_bry = Bry_.Mid(doc.Src(), this.Src_bgn(), this.Src_end());
 		return data_bry;
 	}	byte[] data_bry;
-	@Override public void Print_as_json(ByteAryBfr bfr, int depth) {bfr.Add_mid(doc.Src(), this.Src_bgn(), this.Src_end());}
+	@Override public void Print_as_json(Bry_bfr bfr, int depth) {bfr.Add_mid(doc.Src(), this.Src_bgn(), this.Src_end());}
 }
 class Json_itm_str extends Json_itm_base {
 	public Json_itm_str(Json_doc doc, int src_bgn, int src_end, boolean exact) {this.Ctor(src_bgn + 1, src_end - 1); this.doc = doc; this.exact = exact;} private boolean exact; Json_doc doc;
 	@Override public byte Tid() {return Json_itm_.Tid_string;}
-	@Override public void Print_as_json(ByteAryBfr bfr, int depth) {
+	@Override public void Print_as_json(Bry_bfr bfr, int depth) {
 		bfr.Add_byte(Byte_ascii.Quote);
-		gplx.html.Html_utl.Escape_html_to_bfr(bfr, doc.Src(), this.Src_bgn(), this.Src_end(), true, true, true, true);
+		gplx.html.Html_utl.Escape_html_to_bfr(bfr, doc.Src(), this.Src_bgn(), this.Src_end(), true, true, true, true, false);	// false to apos for backwards compatibility
 		bfr.Add_byte(Byte_ascii.Quote);
 	}
 	@Override public Object Data() {
@@ -71,32 +71,39 @@ class Json_itm_str extends Json_itm_base {
 			data_str = String_.new_utf8_(data_bry);
 		}
 		return data_str;
-	}	String data_str;
+	}	private String data_str;
 	@Override public byte[] Data_bry() {if (data_bry == null) data_bry = Data_make_bry(); return data_bry;}
 	@Override public boolean Data_eq(byte[] comp) {
-		if (exact) return ByteAry_.Eq(comp, doc.Src(), this.Src_bgn(), this.Src_end());
+		if (exact) return Bry_.Eq(comp, doc.Src(), this.Src_bgn(), this.Src_end());
 		if (data_bry == null) data_bry = Data_make_bry();
-		return ByteAry_.Match(data_bry, comp);
+		return Bry_.Match(data_bry, comp);
 	}	byte[] data_bry = null;
 	private byte[] Data_make_bry() {
 		byte[] src = doc.Src(); int bgn = this.Src_bgn(), end = this.Src_end();
-		if (exact) return ByteAry_.Mid(src, bgn, end);
-		ByteAryBfr bfr = doc.Bfr();
+		if (exact) return Bry_.Mid(src, bgn, end);
+		Bry_bfr bfr = doc.Bfr();
 		byte[] utf8_bry = doc.Str_utf8_bry();
 		for (int i = bgn; i < end; i++) {
 			byte b = src[i];
 			switch (b) {
 				case Byte_ascii.Backslash:
 					b = src[++i];
-					switch (b) {
-						default:
-							bfr.Add_byte(b);	break;	// \?		" \ / b f n r t
+					switch (b) {	// NOTE: must properly unescape chars; EX:wd.q:2; DATE:2014-04-23
+						case Byte_ascii.Ltr_t:				bfr.Add_byte(Byte_ascii.Tab); break;
+						case Byte_ascii.Ltr_n:				bfr.Add_byte(Byte_ascii.NewLine); break;
+						case Byte_ascii.Ltr_r:				bfr.Add_byte(Byte_ascii.CarriageReturn); break;
+						case Byte_ascii.Ltr_b:				bfr.Add_byte(Byte_ascii.Backfeed); break;
+						case Byte_ascii.Ltr_f:				bfr.Add_byte(Byte_ascii.Formfeed); break;
 						case Byte_ascii.Ltr_u:
 							int utf8_val = gplx.texts.HexDecUtl.parse_or_(src, i + 1, i + 5, -1);
 							int len = gplx.intl.Utf16_.Encode_int(utf8_val, utf8_bry, 0);
 							bfr.Add_mid(utf8_bry, 0, len);
 							i += 4;
 							break;	// \uFFFF	4 hex-dec
+						case Byte_ascii.Backslash:
+						case Byte_ascii.Slash:
+						default:
+							bfr.Add_byte(b);	break;	// \?		" \ / b f n r t
 					}
 					break;
 				default:
@@ -104,6 +111,6 @@ class Json_itm_str extends Json_itm_base {
 					break;
 			}		
 		}
-		return bfr.XtoAryAndClear();
+		return bfr.Xto_bry_and_clear();
 	}
 }

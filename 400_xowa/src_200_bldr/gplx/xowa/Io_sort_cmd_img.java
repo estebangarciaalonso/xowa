@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.ios.*;
 class Io_sort_cmd_img implements Io_sort_cmd {
-	ByteAryBfr fil_bfr = ByteAryBfr.new_();
+	Bry_bfr fil_bfr = Bry_bfr.new_();
 	int prv_itm_bgn, prv_itm_end;
 	public int Make_fil_max() {return make_fil_max;} public Io_sort_cmd_img Make_fil_max_(int v) {make_fil_max = v; return this;} private int make_fil_max = 65 * Io_mgr.Len_kb;
 	public Io_url_gen Make_url_gen() {return make_url_gen;} public Io_sort_cmd_img Make_url_gen_(Io_url_gen v) {make_url_gen = v; return this;} Io_url_gen make_url_gen;
@@ -28,7 +28,7 @@ class Io_sort_cmd_img implements Io_sort_cmd {
 	public void Sort_do(Io_line_rdr rdr) {
 		if (line_dlm == Byte_ascii.Nil) line_dlm = rdr.Line_dlm();
 		int rdr_key_bgn = rdr.Key_pos_bgn(), rdr_key_end = rdr.Key_pos_end();
-		if (prv_itm_end == 0 || !ByteAry_.Match(rdr.Bfr(), rdr_key_bgn, rdr_key_end, fil_bfr.Bry(), prv_itm_bgn, prv_itm_end)) {
+		if (prv_itm_end == 0 || !Bry_.Match(rdr.Bfr(), rdr_key_bgn, rdr_key_end, fil_bfr.Bfr(), prv_itm_bgn, prv_itm_end)) {
 			int fil_bfr_len = fil_bfr.Len();
 			int rdr_key_len = rdr_key_end - rdr_key_bgn;
 			if (fil_bfr_len + rdr_key_len > make_fil_max) Flush();
@@ -42,7 +42,7 @@ class Io_sort_cmd_img implements Io_sort_cmd {
 		//fil_wtr.Rls(); itm_bfr.Rls(); fil_wtr.Rls(); reg_bfr.Rls(); key_bfr_0.Rls(); key_bfr_n.Rls();
 	}
 	private void Flush() {
-		Io_mgr._.SaveFilBry(make_url_gen.Nxt_url(), fil_bfr.Bry(), fil_bfr.Len());
+		Io_mgr._.SaveFilBry(make_url_gen.Nxt_url(), fil_bfr.Bfr(), fil_bfr.Len());
 		fil_bfr.Clear();
 	}
 }
@@ -51,7 +51,7 @@ class Io_line_rdr_key_gen_img implements Io_line_rdr_key_gen {
 		int itm_bgn = rdr.Itm_pos_bgn();
 		int itm_end = rdr.Itm_pos_end();
 		rdr.Key_pos_bgn_(itm_bgn);
-		int key_end = Byte_ary_finder.Find_bwd(rdr.Bfr(), Byte_ascii.Pipe, itm_end - 2, itm_bgn); // NOTE: -2 to skip terminating |\n
+		int key_end = Bry_finder.Find_bwd(rdr.Bfr(), Byte_ascii.Pipe, itm_end - 2, itm_bgn); // NOTE: -2 to skip terminating |\n
 		rdr.Key_pos_end_(key_end + 1); // NOTE: +1 to include terminating |; enforces every field terminating with |; EX: A.png|0|220|120|.8|\n
 	}
 }

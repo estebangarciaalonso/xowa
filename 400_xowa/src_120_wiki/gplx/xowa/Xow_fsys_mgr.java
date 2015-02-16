@@ -22,12 +22,15 @@ public class Xow_fsys_mgr {
 		ns_dir		= root_dir.GenSubDir(Xow_dir_info_.Name_ns);
 		site_dir	= root_dir.GenSubDir(Xow_dir_info_.Name_site);
 		tmp_dir		= root_dir.GenSubDir("tmp");
+		file_dir	= wiki.App().Fsys_mgr().File_dir().GenSubDir_nest(wiki.Domain_str());
+		file_dir_bry_len = file_dir.To_http_file_bry().length;
 	}	private Xow_wiki wiki;
-	public Io_url Root_dir()	{return root_dir;}	Io_url root_dir;
-	public Io_url Ns_dir()		{return ns_dir;}	Io_url ns_dir;
-	public Io_url Site_dir()	{return site_dir;}	Io_url site_dir;
-	public Io_url File_dir()	{return wiki.App().Fsys_mgr().File_dir().GenSubDir_nest(wiki.Domain_str());}
-	public Io_url Tmp_dir()		{return tmp_dir;}	public void Tmp_dir_(Io_url v) {tmp_dir = v;} Io_url tmp_dir;		
+	public Io_url Root_dir()		{return root_dir;}	private Io_url root_dir;
+	public Io_url Ns_dir()			{return ns_dir;}	private Io_url ns_dir;
+	public Io_url Site_dir()		{return site_dir;}	private Io_url site_dir;
+	public Io_url File_dir()		{return file_dir;}	private Io_url file_dir;
+	public int File_dir_bry_len()	{return file_dir_bry_len;} private int file_dir_bry_len;
+	public Io_url Tmp_dir()			{return tmp_dir;}	public void Tmp_dir_(Io_url v) {tmp_dir = v;} Io_url tmp_dir;		
 	public Io_url Cfg_wiki_core_fil()	{return root_dir.GenSubFil_nest(Const_url_cfg, "wiki_core.gfs");}
 	public Io_url Cfg_wiki_stats_fil()	{return root_dir.GenSubFil_nest(Const_url_cfg, "wiki_stats.gfs");}
 	public Xow_dir_info[] Dir_regy() {return dir_regy;} private Xow_dir_info[] dir_regy = Xow_dir_info_.regy_();
@@ -36,7 +39,7 @@ public class Xow_fsys_mgr {
 	public Io_url Url_ns_fil(byte tid, int ns_id, int fil_idx) {
 		Xow_dir_info dir_info = dir_regy[tid];
 		String dir_name = dir_info.Name() + Xow_fsys_mgr.Wtr_dir(dir_info.Ext_tid());
-		return Xow_fsys_mgr.Url_fil(ns_dir.GenSubDir_nest(Int_.XtoStr_PadBgn(ns_id, 3), dir_name), fil_idx, dir_regy[tid].Ext_bry());
+		return Xow_fsys_mgr.Url_fil(ns_dir.GenSubDir_nest(Int_.Xto_str_pad_bgn(ns_id, 3), dir_name), fil_idx, dir_regy[tid].Ext_bry());
 	}
 	public Io_url Url_site_fil(byte tid, int fil_idx)	{return Xow_fsys_mgr.Url_fil(Url_site_dir(tid), fil_idx, Xow_dir_info_.Bry_xdat);}
 	public Io_url Url_site_reg(byte tid)				{return Url_site_dir(tid).GenSubFil(Xow_dir_info_.Name_reg_fil);}
@@ -111,5 +114,5 @@ public class Xow_fsys_mgr {
 		}
 	}
 	public static final String Wtr_xdat_str = ".xdat", Wtr_zip_str = ".zip", Wtr_gz_str = ".gz", Wtr_bz2_str = ".bz2";
-	public static final byte[] Wtr_xdat_bry = ByteAry_.new_ascii_(Wtr_xdat_str), Wtr_zip_bry = ByteAry_.new_ascii_(Wtr_zip_str), Wtr_gz_bry = ByteAry_.new_ascii_(Wtr_gz_str), Wtr_bz2_bry = ByteAry_.new_ascii_(Wtr_bz2_str);
+	public static final byte[] Wtr_xdat_bry = Bry_.new_ascii_(Wtr_xdat_str), Wtr_zip_bry = Bry_.new_ascii_(Wtr_zip_str), Wtr_gz_bry = Bry_.new_ascii_(Wtr_gz_str), Wtr_bz2_bry = Bry_.new_ascii_(Wtr_bz2_str);
 }

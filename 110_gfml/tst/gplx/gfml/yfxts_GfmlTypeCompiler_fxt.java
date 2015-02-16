@@ -57,7 +57,7 @@ class GfmlTypeCompiler_fxt {
 		for (int i = 0; i < max; i++) {
 			GfmlFld_mok expdFld = (GfmlFld_mok)tstr.List_FetchAtOrNull(expd.Subs(), i);
 			GfmlFld_mok actlFld = (GfmlFld_mok)tstr.List_FetchAtOrNull(actl.Subs(), i);
-			tstr.SubName_push(Int_.XtoStr(i) + " fld");
+			tstr.SubName_push(Int_.Xto_str(i) + " fld");
 			tst(tstr, expdFld, actlFld);
 			tstr.SubName_pop();
 		}
@@ -68,7 +68,7 @@ class GfmlTypeCompiler_fxt {
 		if (expd.TypeKey() != null) tstr.Eq_str(expd.TypeKey(), actl.TypeKey(), "typekey");
 		if (expd.DefaultTkn() != null) tstr.Eq_str(expd.DefaultTknRaw(), actl.DefaultTknRaw(), "default");
 	}
-	static GfmlFld_mok NullObj(GfmlFld_mok v) {return (v == null) ? GfmlFld_mok.new_().ini_ndk_(String_.NullStr, "") : v;}
+	static GfmlFld_mok NullObj(GfmlFld_mok v) {return (v == null) ? GfmlFld_mok.new_().ini_ndk_(String_.Null_mark, "") : v;}
 	public void tst_Resolve(GfmlTyp_mok typ, GfmlNde_mok nde, GfmlNde_mok expd) {
 		typBldr.TypeRegy().Add(typ.XtoGfmlType());
 		tst_Resolve(nde, expd);

@@ -73,15 +73,15 @@ class Xoctg_pagelist_mgr_fxt {
 			Xodb_page page = new Xodb_page();
 			Xodb_category_itm ctg_xtn = Xodb_category_itm.load_(0, 0, hidden, 0, 0, 0);
 			page.Xtn_(ctg_xtn);
-			page.Ttl_wo_ns_(ByteAry_.new_ascii_(ttl));
+			page.Ttl_wo_ns_(Bry_.new_ascii_(ttl));
 			init_ctgs.AddMany(page);
 		}
 	}	private ListAdp init_ctgs = ListAdp_.new_();
 	public void Test_print_hidden(String expd) {
-		ByteAryBfr bfr = ByteAryBfr.new_();
-		Xodb_page[] page_ary = (Xodb_page[])init_ctgs.XtoAryAndClear(Xodb_page.class);
+		Bry_bfr bfr = Bry_bfr.new_();
+		Xodb_page[] page_ary = (Xodb_page[])init_ctgs.Xto_ary_and_clear(Xodb_page.class);
 		hidden_wtr.Print_hidden(bfr, fxt.Wiki(), page_ary);
-		Tfds.Eq_str_lines(expd, bfr.XtoStrAndClear());
-//		Tfds.Write(bfr.XtoAryAndClear());
+		Tfds.Eq_str_lines(expd, bfr.Xto_str_and_clear());
+//		Tfds.Write(bfr.Xto_bry_and_clear());
 	}
 }

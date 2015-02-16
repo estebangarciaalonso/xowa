@@ -28,4 +28,5 @@ public class Gfui_kit_ {
 		else											throw Err_.unhandled(key);
 	}
 	public static final String Cfg_HtmlBox = "HtmlBox";
+	public static final byte File_dlg_type_open = 0, File_dlg_type_save = 1;
 }

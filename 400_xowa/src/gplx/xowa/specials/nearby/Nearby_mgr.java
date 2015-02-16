@@ -18,23 +18,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.specials.nearby; import gplx.*; import gplx.xowa.*; import gplx.xowa.specials.*;
 public class Nearby_mgr implements Xows_page {
 	Xow_wiki wiki; byte[] trg;
-	Hash_adp_bry excluded = Hash_adp_bry.ci_();
-	Hash_adp_bry visited = Hash_adp_bry.ci_();
+	private Hash_adp_bry excluded = Hash_adp_bry.ci_ascii_();
+	private Hash_adp_bry visited = Hash_adp_bry.ci_ascii_();
 	ListAdp trail = ListAdp_.new_();
 	ListAdp results = ListAdp_.new_();	
 	int results_cur = 0;
 //		int depth_max = 5;
 //		int pages_count = 0;
-	ByteAryBfr tmp_bfr = ByteAryBfr.new_();
+	Bry_bfr tmp_bfr = Bry_bfr.new_();
 	public int Results_max() {return results_max;} public Nearby_mgr Results_max_(int v) {results_max = v; return this;} private int results_max = 1;
 	public void Special_gen(Xoa_url calling_url, Xoa_page page, Xow_wiki wiki, Xoa_ttl ttl) {
 		page.Data_raw_(Bld_html(wiki));
-		page.Html_data().Restricted_n_();		// [[Special:]] pages allow all HTML
+		page.Html_data().Html_restricted_n_();		// [[Special:]] pages allow all HTML
 //			wiki.ParsePage(page, false);	// do not clear else previous Search_text will be lost		
 	}
 	byte[] Bld_html(Xow_wiki wiki) {
 		form_fmtr.Bld_bfr_many(tmp_bfr);
-		ListAdp list = Find_from_to(wiki, ByteAry_.new_ascii_("Earth"), ByteAry_.new_ascii_("Atom"), excluded);
+		ListAdp list = Find_from_to(wiki, Bry_.new_ascii_("Earth"), Bry_.new_ascii_("Atom"), excluded);
 		tmp_bfr.Add_str("<table>");
 		int len = list.Count();
 		for (int i = 0; i < len; i++) {
@@ -50,9 +50,9 @@ public class Nearby_mgr implements Xows_page {
 			tmp_bfr.Add_str("</tr>");
 		}
 		tmp_bfr.Add_str("</table>");
-		return tmp_bfr.XtoAryAndClear();
+		return tmp_bfr.Xto_bry_and_clear();
 	}
-	ByteAryFmtr form_fmtr = ByteAryFmtr.new_(String_.Concat_lines_nl
+	Bry_fmtr form_fmtr = Bry_fmtr.new_(String_.Concat_lines_nl
 		(	"<form id='xowa_nearby_form' action='/wiki/Special:XowaNearby'>"
 		,	"<table>"
 		,	"  <tr><td>From:</td><td><input name='xowa_bgn' value='Earth' /></td></tr>"
@@ -117,7 +117,7 @@ public class Nearby_mgr implements Xows_page {
 //			for (int i = 0; i < len; i++) {
 //				Xoa_ttl lnki_ttl = (Xoa_ttl)lnkis.FetchAt(i);
 //				if (!lnki_ttl.Ns().Id_main()) continue;
-//				if (ByteAry_.Eq(lnki_ttl.Page_db(), trg)) continue;	// skip trg page 
+//				if (Bry_.Eq(lnki_ttl.Page_db(), trg)) continue;	// skip trg page 
 //				trail.Add(lnki_ttl);
 //				Examine_page(wiki, lnki_ttl, trail);
 //				ListAdp_.DelAt_last(trail);
@@ -144,7 +144,7 @@ public class Nearby_mgr implements Xows_page {
 //			for (int i = 0; i < len; i++) {
 //				Xoa_ttl lnki_ttl = (Xoa_ttl)lnkis.FetchAt(i);
 //				if (!lnki_ttl.Ns().Id_main()) continue;
-//				if (ByteAry_.Eq(lnki_ttl.Page_db(), trg)) continue;	// skip trg page 
+//				if (Bry_.Eq(lnki_ttl.Page_db(), trg)) continue;	// skip trg page 
 //				trail.Add(lnki_ttl);
 //				Examine_page(wiki, lnki_ttl, trail);
 //				ListAdp_.DelAt_last(trail);
@@ -166,7 +166,7 @@ public class Nearby_mgr implements Xows_page {
 			}
 		}
 	}
-	public static final byte[] Ttl_name = ByteAry_.new_ascii_("XowaNearby");
+	public static final byte[] Ttl_name = Bry_.new_ascii_("XowaNearby");
 }
 class Nearby_rslt {
 	public Nearby_rslt(ListAdp trail, Xoa_ttl trg_ttl) {

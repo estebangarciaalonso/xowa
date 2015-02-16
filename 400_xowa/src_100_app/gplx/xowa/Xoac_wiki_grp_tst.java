@@ -48,7 +48,7 @@ class Xoac_wiki_grp_fxt {
 	public Xoac_wiki_itm_chkr itm_(String key) {return new Xoac_wiki_itm_chkr(key);}
 	public Xoac_wiki_grp_chkr grp_(String key) {return new Xoac_wiki_grp_chkr(key);}
 	public Xoac_wiki_grp_fxt Define_bulk(String raw, Xoac_wiki_grp_chkr... expd) {
-		wiki_mgr.Groups().Set_bulk(ByteAry_.new_utf8_(raw));
+		wiki_mgr.Groups().Set_bulk(Bry_.new_utf8_(raw));
 		tst_mgr.Tst_ary("", expd, Xto_ary(wiki_mgr.Groups()));
 		return this;
 	}

@@ -24,7 +24,7 @@ public class XmlFileSplitter {
 	public void Clear() {hdr = null;}
 	public void Split(Io_url xmlUrl) {
 		Io_url partDir = opts.PartDir();
-		byte[] xmlEndTagAry = Encoding_.XtoByteAry(opts.XmlEnd());
+		byte[] xmlEndTagAry = Bry_.new_utf8_(opts.XmlEnd());
 		byte[][] nameAry = XtoByteAry(opts.XmlNames());
 		int partIdx = 0;
 
@@ -33,13 +33,13 @@ public class XmlFileSplitter {
 
 		// split hdr: includes <root>, xmlNamespaces, and any DTD headers; will be prepended to each partFile
 		rdr.Read();
-		int findPos = FindMatchPos(rdr.CurAry(), nameAry); if (findPos == String_.NotFound) throw Err_.new_("could not find any names in first segment");
+		int findPos = FindMatchPos(rdr.CurAry(), nameAry); if (findPos == String_.Find_none) throw Err_.new_("could not find any names in first segment");
 		byte[] dataAry = SplitHdr(rdr.CurAry(), findPos);
 		if (opts.XmlBgn() != null)
-			hdr = Encoding_.XtoByteAry(opts.XmlBgn());
+			hdr = Bry_.new_utf8_(opts.XmlBgn());
 		byte[] tempAry = new byte[0];
 		int newFindPos = FindMatchPosRev(dataAry, nameAry);
-		findPos = (newFindPos <= findPos) ? String_.NotFound : newFindPos;
+		findPos = (newFindPos <= findPos) ? String_.Find_none : newFindPos;
 		boolean first = true;
 
 		// split files
@@ -57,7 +57,7 @@ public class XmlFileSplitter {
 				first = false;
 
 			// find last closing node
-			while (findPos == String_.NotFound) {
+			while (findPos == String_.Find_none) {
 				if (rdr.Done())  {
 					findPos = rdr.CurRead();
 					break;
@@ -134,7 +134,7 @@ public class XmlFileSplitter {
 	byte[][] XtoByteAry(String[] names) {
 		byte[][] rv = new byte[names.length][];
 		for (int i = 0; i < names.length; i++)
-			rv[i] = Encoding_.XtoByteAry(names[i]);
+			rv[i] = Bry_.new_utf8_(names[i]);
 		return rv;
 	}
 }

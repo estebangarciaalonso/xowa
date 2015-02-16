@@ -16,10 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.dbs.tbls; import gplx.*; import gplx.xowa.*; import gplx.xowa.dbs.*;
-import gplx.xowa.ctgs.*;
+import gplx.core.primitives.*; import gplx.xowa.ctgs.*;
 public class Xodb_category_itm {
 	public int Id() {return id;} private int id;
-	public IntVal Id_val() {if (id_val == null) id_val = IntVal.new_(id); return id_val;} IntVal id_val;
+	public Int_obj_val Id_val() {if (id_val == null) id_val = Int_obj_val.new_(id); return id_val;} Int_obj_val id_val;
 	public int File_idx() {return file_idx;} private int file_idx;
 	public boolean Hidden() {return hidden;} private boolean hidden;
 	public int Count_all() {return count_subcs + count_files + count_pages;}

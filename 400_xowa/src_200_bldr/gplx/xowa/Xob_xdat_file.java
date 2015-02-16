@@ -20,7 +20,7 @@ import gplx.ios.*;
 public class Xob_xdat_file {
 	public byte[] Src() {return src;} private byte[] src;
 	public int Src_len() {return src_len;} public Xob_xdat_file Src_len_(int v) {src_len = v; return this;} private int src_len;	// NOTE: src_len can be different than src.length (occurs when reusing brys)
-	public Xob_xdat_file Update(ByteAryBfr bfr, Xob_xdat_itm itm, byte[] v) {
+	public Xob_xdat_file Update(Bry_bfr bfr, Xob_xdat_itm itm, byte[] v) {
 		int ary_len = itm_ends.length;
 		int itm_idx = itm.Itm_idx(); 
 		int prv = itm_idx == 0 ? 0 : itm_ends[itm_idx - 1];
@@ -35,7 +35,7 @@ public class Xob_xdat_file {
 		bfr.Add_mid(src, itm_0_bgn, itm.Itm_bgn());
 		bfr.Add(v);
 		bfr.Add_mid(src, itm.Itm_end() + 1, src.length);	// NOTE: + 1 to skip nl
-		src = bfr.XtoAryAndClear();
+		src = bfr.Xto_bry_and_clear();
 		return this;
 	}
 	byte[][] Src_extract_brys(int ary_len) {
@@ -43,12 +43,12 @@ public class Xob_xdat_file {
 		int itm_bgn = this.itm_0_bgn;
 		for (int i = 0; i < ary_len; i++) {
 			int itm_end = itm_ends[i] + itm_0_bgn;
-			rv[i] = ByteAry_.Mid(src, itm_bgn, itm_end);
+			rv[i] = Bry_.Mid(src, itm_bgn, itm_end);
 			itm_bgn = itm_end;
 		}
 		return rv;
 	}
-	public void Sort(ByteAryBfr bfr, gplx.lists.ComparerAble comparer) {
+	public void Sort(Bry_bfr bfr, gplx.lists.ComparerAble comparer) {
 		int ary_len = itm_ends.length;
 		byte[][] brys = Src_extract_brys(ary_len);
 		Array_.Sort(brys, comparer);
@@ -63,16 +63,16 @@ public class Xob_xdat_file {
 			itm_bgn = itm_end;
 			bfr.Add(bry);
 		}
-		src = bfr.XtoAryAndClear(); 		
+		src = bfr.Xto_bry_and_clear(); 		
 	}
-	public void Insert(ByteAryBfr bfr, byte[] itm) {
+	public void Insert(Bry_bfr bfr, byte[] itm) {
 		int ary_len = itm_ends.length;
 		itm_ends = (int[])Array_.Resize(itm_ends, ary_len + 1);
 		int prv_pos = ary_len == 0 ? 0 : itm_ends[ary_len - 1];
 		itm_ends[ary_len] = prv_pos + itm.length;
 		Src_rebuild(bfr, ary_len + 1, itm);
 	}
-	private void Src_rebuild_hdr(ByteAryBfr bfr, int ary_len) {
+	private void Src_rebuild_hdr(Bry_bfr bfr, int ary_len) {
 		int bgn = 0;
 		for (int i = 0; i < ary_len; i++) {
 			int end = itm_ends[i];
@@ -82,11 +82,11 @@ public class Xob_xdat_file {
 		}
 		bfr.Add_byte(Dlm_row);		
 	}
-	private void Src_rebuild(ByteAryBfr bfr, int ary_len, byte[] new_itm) {
+	private void Src_rebuild(Bry_bfr bfr, int ary_len, byte[] new_itm) {
 		Src_rebuild_hdr(bfr, ary_len);
 		Src_rebuild_brys(bfr, ary_len, new_itm);
 	}
-	private void Src_rebuild_brys(ByteAryBfr bfr, int ary_len, byte[] new_itm) {
+	private void Src_rebuild_brys(Bry_bfr bfr, int ary_len, byte[] new_itm) {
 		int bgn = itm_0_bgn;
 		boolean insert = new_itm != null;
 		int ary_end = insert ? ary_len - 1 : ary_len;
@@ -97,15 +97,15 @@ public class Xob_xdat_file {
 		}
 		if (insert) bfr.Add(new_itm);
 		itm_0_bgn = (ary_len * Len_idx_itm) + Len_itm_dlm;
-		src = bfr.XtoAryAndClear(); 
+		src = bfr.Xto_bry_and_clear(); 
 	}	static final byte Dlm_hdr_fld = Byte_ascii.Pipe, Dlm_row = Byte_ascii.NewLine;		
 	public void Save(Io_url url) {
-		ByteAryBfr bfr = ByteAryBfr.new_();
+		Bry_bfr bfr = Bry_bfr.new_();
 		Srl_save_bry(bfr);
 		Io_stream_wtr wtr = Io_stream_wtr_.new_by_url_(url);
 		try {
 			wtr.Open();
-			wtr.Write(bfr.Bry(), 0, bfr.Len());
+			wtr.Write(bfr.Bfr(), 0, bfr.Len());
 			wtr.Flush();
 		}
 		catch (Exception e) {throw Err_.err_(e, "failed to save file: {0}", url.Xto_api());}
@@ -113,7 +113,7 @@ public class Xob_xdat_file {
 			wtr.Rls();
 		}
 	}
-	public void Srl_save_bry(ByteAryBfr bfr) {
+	public void Srl_save_bry(Bry_bfr bfr) {
 		int itm_ends_len = itm_ends.length;
 		int prv_bgn = 0;
 		for (int i = 0; i < itm_ends_len; i++) {
@@ -127,7 +127,7 @@ public class Xob_xdat_file {
 	public byte[] Get_bry(int i) {
 		int bgn = i == 0 ? itm_0_bgn : itm_0_bgn + itm_ends[i - 1];
 		int end = itm_0_bgn + itm_ends[i];
-		return ByteAry_.Mid(src, bgn, end);
+		return Bry_.Mid(src, bgn, end);
 	}
 	public int Count() {return itm_ends.length;}
 	public Xob_xdat_file GetAt(Xob_xdat_itm itm, int idx) {
@@ -139,7 +139,7 @@ public class Xob_xdat_file {
 	}
 	public Xob_xdat_file Find(Xob_xdat_itm itm, byte[] lkp, int lkp_bgn, byte lkp_dlm, boolean exact) {
 		itm.Clear();
-		int itm_idx = Xob_xdat_file_.BinarySearch(itm_0_bgn, src, itm_ends, lkp, lkp_bgn, lkp_dlm, 1, exact, itm); if (itm_idx == String_.NotFound) {return this;}
+		int itm_idx = Xob_xdat_file_.BinarySearch(itm_0_bgn, src, itm_ends, lkp, lkp_bgn, lkp_dlm, 1, exact, itm); if (itm_idx == String_.Find_none) {return this;}
 		GetAt(itm, itm_idx);
 		return this;
 	}
@@ -170,16 +170,16 @@ public class Xob_xdat_file {
 			for (int i = 0; i < itm_count; i++)
 				itm_ends[i] = tmp[i];
 			itm_0_bgn = slot_bgn + Len_itm_dlm;
-			this.src = ByteAry_.Mid(src, 0, itm_ends_last + itm_0_bgn);
+			this.src = Bry_.Mid(src, 0, itm_ends_last + itm_0_bgn);
 		} catch (Exception e) {throw Err_mgr._.fmt_(GRP_KEY, "parse.fail", "failed to parse idx: ~{0} ~{1} ~{2}", itm_count, url.Raw(), Err_.Message_gplx_brief(e));}
 		return this;
 	}	private static final int Parse_tmp_len = 8 * 1024; static int[] Parse_tmp = new int[Parse_tmp_len];
 	static final int Len_itm_dlm = 1, Len_idx_itm = 6, Offset_base85 = 4;	// 6 = 5 (base85_int) + 1 (new_line/pipe)
 	static final String GRP_KEY = "xowa.xdat_fil";
 	public static byte[] Rebuid_header(byte[] orig, byte[] dlm) {
-		byte[][] rows = ByteAry_.Split(orig, dlm);
+		byte[][] rows = Bry_.Split(orig, dlm);
 		int rows_len = rows.length;
-		ByteAryBfr bfr = ByteAryBfr.new_();
+		Bry_bfr bfr = Bry_bfr.new_();
 		int dlm_len = dlm.length;
 		for (int i = 1; i < rows_len; i++) {	// i=1; skip 1st row (which is empty header)
 			byte[] row = rows[i];
@@ -192,7 +192,7 @@ public class Xob_xdat_file {
 			bfr.Add(row);
 			bfr.Add(dlm);
 		}
-		return bfr.XtoAryAndClear();
+		return bfr.Xto_bry_and_clear();
 	}
 }
 class Xob_xdat_file_ {
@@ -228,19 +228,19 @@ class Xob_xdat_file_ {
 			int itm_dif = hi - lo;
 //				if (itm_end - 1 > fld_bgn) Tfds.Write(comp, itm_dif, String_.new_utf8_(src, fld_bgn, itm_end - 1));
 			switch (itm_dif) {
-				case 0:						return exact ? String_.NotFound : hi;	// NOTE: can be 0 when src.length == 1 || 2; also, sometimes 0 in some situations
+				case 0:						return exact ? String_.Find_none : hi;	// NOTE: can be 0 when src.length == 1 || 2; also, sometimes 0 in some situations
 				case -1:
-					if (flagged)			return exact ? String_.NotFound : lo;
+					if (flagged)			return exact ? String_.Find_none : lo;
 					else {
 						itm_idx--;
 						flagged = true;
 					}
 					break;
 				case 1:
-					if (flagged)			return exact ? String_.NotFound : hi;
+					if (flagged)			return exact ? String_.Find_none : hi;
 					else {
 						itm_idx++;	// ++ to always take higher value when !exact???; EX: "ab,ad,af"
-						if (itm_idx >= itm_ends_len) return String_.NotFound;	// NOTE: occurs when there is only 1 item
+						if (itm_idx >= itm_ends_len) return String_.Find_none;	// NOTE: occurs when there is only 1 item
 						flagged = true;
 					}
 					break;

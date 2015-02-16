@@ -65,7 +65,7 @@ class Luaj_value_ {
 			++len;
 		}
 		if (len == 0) return KeyVal_.Ary_empty;
-		return (KeyVal[])temp.XtoAry(KeyVal.class);
+		return (KeyVal[])temp.Xto_ary(KeyVal.class);
 	}
 	private static Object X_val_to_obj(Luaj_server server, LuaValue v) {
 		switch (v.type()) {
@@ -86,10 +86,10 @@ class Luaj_value_ {
 	public static LuaValue X_obj_to_val(Luaj_server server, Object o) {
 		if (o == null) return LuaValue.NIL;
 		Class<?> c = ClassAdp_.ClassOf_obj(o);
-		if		(Object_.Eq(c, Bool_.ClassOf))				return LuaValue.valueOf((Boolean)o);
-		else if	(Object_.Eq(c, Int_.ClassOf))				return LuaValue.valueOf((Integer)o);
-		else if	(Object_.Eq(c, Double_.ClassOf))			return LuaValue.valueOf((Double)o);
-		else if	(Object_.Eq(c, String.class))				return LuaValue.valueOf((String)o);
+		if		(Object_.Eq(c, Bool_.Cls_ref_type))			return LuaValue.valueOf((Boolean)o);
+		else if	(Object_.Eq(c, Int_.Cls_ref_type))			return LuaValue.valueOf((Integer)o);
+		else if	(Object_.Eq(c, Double_.Cls_ref_type))		return LuaValue.valueOf((Double)o);
+		else if	(Object_.Eq(c, String_.Cls_ref_type))		return LuaValue.valueOf((String)o);
 		else if	(Object_.Eq(c, byte[].class))				return LuaValue.valueOf(String_.new_utf8_((byte[])o));
 		else if	(Object_.Eq(c, KeyVal.class))				return X_kv_ary_to_tbl(server, (KeyVal)o);
 		else if	(Object_.Eq(c, KeyVal[].class))				return X_kv_ary_to_tbl(server, (KeyVal[])o);

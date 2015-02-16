@@ -68,9 +68,9 @@ class Xowd_regy_mgr_fxt {
 			mgr.Clear();
 		}
 	}
-	public Xowd_regy_mgr_fxt Create(String key) {mgr.Create(ByteAry_.new_ascii_(key)); return this;}
-	public Xowd_regy_mgr_fxt Update_add(int fil_idx, String key) {mgr.Update_add(fil_idx, ByteAry_.new_ascii_(key)); return this;}
-	public Xowd_regy_mgr_fxt Update_change(int fil_idx, String old_key, String new_key) {mgr.Update_change(fil_idx, ByteAry_.new_ascii_(old_key), ByteAry_.new_ascii_(new_key)); return this;}
+	public Xowd_regy_mgr_fxt Create(String key) {mgr.Create(Bry_.new_ascii_(key)); return this;}
+	public Xowd_regy_mgr_fxt Update_add(int fil_idx, String key) {mgr.Update_add(fil_idx, Bry_.new_ascii_(key)); return this;}
+	public Xowd_regy_mgr_fxt Update_change(int fil_idx, String old_key, String new_key) {mgr.Update_change(fil_idx, Bry_.new_ascii_(old_key), Bry_.new_ascii_(new_key)); return this;}
 	public Xowd_regy_mgr_fxt Load(String lines) {
 		Io_mgr._.SaveFilStr(mgr_url, lines);
 		mgr = new Xowd_regy_mgr(mgr_url);
@@ -82,7 +82,7 @@ class Xowd_regy_mgr_fxt {
 		return this;
 	}
 	public Xowd_regy_mgr_fxt Tst_find(String find, int expd) {
-		Tfds.Eq(expd, mgr.Files_find(ByteAry_.new_ascii_(find)));
+		Tfds.Eq(expd, mgr.Files_find(Bry_.new_ascii_(find)));
 		return this;
 	}
 }

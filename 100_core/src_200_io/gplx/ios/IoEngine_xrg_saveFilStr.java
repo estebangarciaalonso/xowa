@@ -21,7 +21,6 @@ public class IoEngine_xrg_saveFilStr {
 	public Io_url Url() {return url;} public IoEngine_xrg_saveFilStr Url_(Io_url val) {url = val; return this;} Io_url url;
 	public String Text() {return text;} public IoEngine_xrg_saveFilStr Text_(String val) {text = val; return this;} private String text = "";
 	public boolean Append() {return append;}  public IoEngine_xrg_saveFilStr Append_() {return Append_(true);} public IoEngine_xrg_saveFilStr Append_(boolean val) {append = val; return this;} private boolean append = false;
-	public EncodingAdp EncodingType() {return encodingType;} public IoEngine_xrg_saveFilStr EncodingType_Utf8_() {return EncodingType_(EncodingAdp.Utf8);} public IoEngine_xrg_saveFilStr EncodingType_(EncodingAdp val) {encodingType = val; return this;} EncodingAdp encodingType = EncodingAdp.Utf8;
 	public void Exec() {
 		if (String_.Eq(text, "") && append) return;	// no change; don't bother writing to disc
 		IoEnginePool._.Fetch(url.Info().EngineKey()).SaveFilText_api(this);

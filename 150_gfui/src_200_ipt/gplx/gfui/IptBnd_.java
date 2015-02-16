@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
+import gplx.core.strings.*;
 public class IptBnd_ {
 	public static void msg_(IptCfg cfg, IptBndsOwner box, String bndKey, GfoMsg m, IptArg... ipt) {bld_(cfg, box, GfoInvkAble_.as_(box), bndKey, m, ipt);}
 	public static void msg_to_(IptCfg cfg, IptBndsOwner box, GfoInvkAble invk, String bndKey, GfoMsg m, IptArg... ipt) {
@@ -26,10 +27,10 @@ public class IptBnd_ {
 	public static void ipt_to_(IptCfg cfg, IptBndsOwner box, GfoInvkAble invk, String key, IptEventType eventType, IptArg... ipt) {bld_(cfg, box, invk, key, GfoMsg_.new_cast_(key), eventType, ipt);}
 
 	static void bld_(IptCfg cfg, IptBndsOwner box, GfoInvkAble invk, String bndKey, GfoMsg m, IptArg... ipt) {bld_(cfg, box, invk, bndKey, m, IptEventType_.default_(ipt), ipt);}
-	static void bld_(IptCfg cfg, IptBndsOwner box, GfoInvkAble invk, String bndKey, GfoMsg m, IptEventType evType, IptArg... ipt) {
-		IptCfgItm itm = cfg.GetOrDefaultArgs(bndKey, m, ipt);
-		IptBnd bnd = IptBnd_invk.new_(box, invk, itm, evType);
-		cfg.Owners_add(bndKey, box);
+	static void bld_(IptCfg cfg, IptBndsOwner box, GfoInvkAble invk, String bnd_key, GfoMsg m, IptEventType ev_type, IptArg... ipt) {
+		IptCfgItm itm = cfg.GetOrDefaultArgs(bnd_key, m, ipt);
+		IptBnd bnd = IptBnd_invk.new_(box, invk, itm, ev_type);
+		cfg.Owners_add(bnd_key, box);
 		box.IptBnds().Add(bnd);
 	}
 	public static Object Srl(GfoMsg owner, IptBnd bnd) {GfoMsg_.srl_(owner, "bnd").Add("key", bnd.Key()).Add("ipt", AryXtoStr(bnd.Ipts())); return bnd;}

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.files.fsdb.fs_roots; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
 import org.junit.*;
 import gplx.dbs.*;
-import gplx.fsdb.*;
+import gplx.fsdb.meta.*;
 public class Fs_root_dir_tst {
 	@Before public void init() {fxt.Reset();} private Fs_root_dir_fxt fxt = new Fs_root_dir_fxt();
 	@Test   public void Basic() {
@@ -41,22 +41,23 @@ class Fs_root_dir_fxt {
 	private Orig_fil_tbl orig_fil_tbl;
 	private Io_url url;
 	public void Reset() {
+		Db_conn_bldr.I.Reg_default_mem();
 		Io_mgr._.InitEngine_mem();
 		url = Io_url_.mem_dir_("mem/dir/");
 		root_dir = new Fs_root_dir();
-		Fsdb_cfg_tbl cfg_tbl = Fsdb_cfg_tbl_.new_mem_();
-		orig_fil_tbl = new Orig_fil_tbl_mem();
+		Fsm_cfg_tbl cfg_tbl = new Fsm_cfg_tbl();
+		orig_fil_tbl = new Orig_fil_tbl();
 		Xof_img_wkr_query_img_size img_size_wkr = new Xof_img_wkr_query_img_size_test();
-		root_dir.Init(url, Db_provider_mkr_.Mem_create_y, cfg_tbl, orig_fil_tbl, Gfo_usr_dlg_.Null, img_size_wkr);
+		root_dir.Init(url, cfg_tbl, orig_fil_tbl, Gfo_usr_dlg_.Null, img_size_wkr);
 	}
 	public Orig_fil_mok itm_() {return new Orig_fil_mok();}
 	public void Init_fs(String url, int w, int h) {Save_img(url, w, h);}
 	public void Test_get(String name, Orig_fil_mok expd) {
-		Orig_fil_itm actl = root_dir.Get_by_ttl(ByteAry_.new_utf8_(name));
+		Orig_fil_itm actl = root_dir.Get_by_ttl(Bry_.new_utf8_(name));
 		expd.Test(actl);
 	}
 	public void Test_db(String ttl, Orig_fil_mok expd) {
-		Orig_fil_itm actl = orig_fil_tbl.Select_itm(ByteAry_.new_utf8_(ttl));
+		Orig_fil_itm actl = orig_fil_tbl.Select_itm(Bry_.new_utf8_(ttl));
 		expd.Test(actl);
 	}
 	public static void Save_img(String url, int w, int h) {
@@ -80,7 +81,7 @@ class Orig_fil_mok {
 		this.uid = uid;
 		this.url = url; this.w = w; this.h = h;
 		this.name = Io_url_.new_any_(url).NameAndExt();
-		this.ext_id = Xof_ext_.new_by_ttl_(ByteAry_.new_utf8_(name)).Id();
+		this.ext_id = Xof_ext_.new_by_ttl_(Bry_.new_utf8_(name)).Id();
 		return this;
 	}
 	public void Test(Orig_fil_itm actl) {

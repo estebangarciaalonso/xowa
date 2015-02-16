@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.strings.*;
 public class HierPosAryBldr {
 	public void Init() {
 		int ary_max = ary.length;
@@ -52,7 +53,7 @@ public class HierPosAryBldr {
 	public String XtoStr() {
 		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < aryIdx; i++)
-			sb.Add_spr_unless_first(Int_.XtoStr(ary[i]), " ", i);
+			sb.Add_spr_unless_first(Int_.Xto_str(ary[i]), " ", i);
 		return sb.XtoStr();
 	}
 	int[] ary; int aryIdx = -1; int root = -1;

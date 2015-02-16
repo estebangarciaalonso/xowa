@@ -31,31 +31,28 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 class Swt_text implements GxwTextFld, Swt_control {
-	@Override public Control Under_control() {return textBox;}
-	@Override public int SelBgn() {return textBox.getCaretPosition();} 	@Override public void SelBgn_set(int v) {textBox.setSelection(v);}
-	@Override public int SelLen() {return textBox.getSelectionCount();} @Override public void SelLen_set(int v) {textBox.setSelection(this.SelBgn(), this.SelBgn() + v);}	
-	@Override public String TextVal() {return textBox.getText();} @Override public void TextVal_set(String v) {textBox.setText(v);}
+	private Text text_box;
+	public Swt_text(Swt_control owner_control, KeyValHash ctorArgs) {
+		int text_box_args = ctorArgs.Has(GfuiTextBox_.Ctor_Memo)
+			? SWT.MULTI | SWT.WRAP | SWT.V_SCROLL
+			: SWT.NONE
+			;
+		text_box = new Text(owner_control.Under_composite(), text_box_args); 
+		core = new Swt_core_cmds(text_box);
+		text_box.addKeyListener(new Swt_lnr_key(this));
+		text_box.addMouseListener(new Swt_lnr_mouse(this));
+	}
+	@Override public Control Under_control() {return text_box;}
+	@Override public Composite Under_composite() {return null;}
+	@Override public Control Under_menu_control() {return text_box;}
+	@Override public int SelBgn() {return text_box.getCaretPosition();} 	@Override public void SelBgn_set(int v) {text_box.setSelection(v);}
+	@Override public int SelLen() {return text_box.getSelectionCount();} @Override public void SelLen_set(int v) {text_box.setSelection(this.SelBgn(), this.SelBgn() + v);}	
+	@Override public String TextVal() {return text_box.getText();} @Override public void TextVal_set(String v) {text_box.setText(v);}
 	@Override public GxwCore_base Core() {return core;} GxwCore_base core;
 	@Override public GxwCbkHost Host() {return host;} @Override public void Host_set(GxwCbkHost host) {this.host = host;} GxwCbkHost host;
 	@Override public void EnableDoubleBuffering() {}
-	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		return null;
-	}
+	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {return null;}
 	public void Margins_set(int left, int top, int right, int bot) {}
-	Text textBox;
-	public Swt_text(GxwElem ownerElem, KeyValHash ctorArgs) {
-		Composite owner = ((Swt_win)ownerElem).UnderShell();
-		if (ctorArgs.Has(GfuiTextBox_.Ctor_Memo)) {
-			textBox = new Text(owner, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		}
-		else {
-			textBox = new Text(owner, SWT.NONE);
-		}
-		core = new Swt_core_cmds(textBox);
-		textBox.addKeyListener(new Swt_KeyLnr(this));
-		textBox.addMouseListener(new Swt_MouseLnr(this));
-	}
-
 	@Override public boolean Border_on() {return false;} @Override public void Border_on_(boolean v) {} // SWT_TODO:borderWidth doesn't seem mutable
 	@Override public void CreateControlIfNeeded() {}
 	@Override public boolean OverrideTabKey() {return false;} @Override public void OverrideTabKey_(boolean v) {}

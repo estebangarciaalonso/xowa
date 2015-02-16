@@ -44,10 +44,10 @@ class Xop_randomRootPage_page_fxt {
 		Tfds.Eq(expd, String_.new_ascii_(page.Data_raw()));
 	}
 	public static Xoa_page Test_special_open(Xow_wiki wiki, Xows_page special_page, String special_url) {
-		Xoa_page page = wiki.Ctx().Page();
+		Xoa_page page = wiki.Ctx().Cur_page();
 		Xoa_url url = Xoa_url_parser.Parse_url(wiki.App(), wiki, special_url);
 		page.Url_(url);
-		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_ascii_(special_url));
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, Bry_.new_ascii_(special_url));
 		page.Ttl_(ttl);
 		special_page.Special_gen(url, page, wiki, ttl);
 		return page;

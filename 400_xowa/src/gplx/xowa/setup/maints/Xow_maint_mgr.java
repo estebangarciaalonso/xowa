@@ -34,18 +34,18 @@ public class Xow_maint_mgr implements GfoInvkAble {
 	}	private DateAdp wiki_dump_date;
 	public boolean Wiki_update_needed() {
 		if (this.Wiki_dump_date() == null) return false;	// will be null if a custom wiki (i.e.: not on http://dumps.wikimedia.org/backup-index.html)
-		return this.Wmf_dump_date().Diff(this.Wiki_dump_date()).Total_days().XtoDouble() > 1;
+		return this.Wmf_dump_date().Diff(this.Wiki_dump_date()).Total_days().Xto_double() > 1;
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_wmf_dump_date)) 			return DateAdp_.Xto_str_fmt_or(Wmf_dump_date(), "yyyy-MM-dd", "");
 		else if	(ctx.Match(k, Invk_wmf_dump_date_)) 		Wmf_dump_date_(m.ReadDate("v"));
-		else if	(ctx.Match(k, Invk_wmf_dump_done)) 			return Yn.X_to_str(wmf_dump_done);
+		else if	(ctx.Match(k, Invk_wmf_dump_done)) 			return Yn.Xto_str(wmf_dump_done);
 		else if	(ctx.Match(k, Invk_wmf_dump_done_)) 		wmf_dump_done = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_wmf_dump_status)) 		return String_.new_utf8_(wmf_dump_status);
 		else if	(ctx.Match(k, Invk_wmf_dump_status_)) 		wmf_dump_status = m.ReadBry("v");
 		else if	(ctx.Match(k, Invk_wiki_dump_date)) 		return DateAdp_.Xto_str_fmt_or(Wiki_dump_date(), "yyyy-MM-dd", "");
 		else if	(ctx.Match(k, Invk_wiki_dump_date_)) 		wiki_dump_date = m.ReadDate("v");
-		else if	(ctx.Match(k, Invk_wiki_update_needed)) 	return Yn.X_to_str(Wiki_update_needed());
+		else if	(ctx.Match(k, Invk_wiki_update_needed)) 	return Yn.Xto_str(Wiki_update_needed());
 		else if	(ctx.Match(k, Invk_wiki_dump_date_)) 		wiki_dump_date = m.ReadDate("v");
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;

@@ -17,15 +17,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.ios; import gplx.*;
 public class Io_stream_zip_mgr {
-	ByteAryBfr bfr = ByteAryBfr.reset_(256);
-	Io_stream_wtr wtr_gzip, wtr_zip, wtr_bzip2;
-	Io_stream_rdr rdr_gzip, rdr_zip, rdr_bzip2;
+	private Bry_bfr bfr = Bry_bfr.reset_(256);
+	private Io_stream_wtr wtr_gzip, wtr_zip, wtr_bzip2;
+	private Io_stream_rdr rdr_gzip, rdr_zip, rdr_bzip2;
 	public byte[] Zip(byte type, byte[] val) {
 		if (type == Io_stream_.Tid_file) return val;
 		Io_stream_wtr wtr = Wtr(type);
 		wtr.Write(val, 0, val.length);
 		wtr.Flush();
-		return bfr.XtoAryAndClear();
+		return wtr.Xto_ary_and_clear();
 	}
 	public byte[] Unzip(byte type, byte[] val) {
 		if (type == Io_stream_.Tid_file) return val;
@@ -33,7 +33,7 @@ public class Io_stream_zip_mgr {
 		rdr.Open_mem(val);
 		return Io_stream_rdr_.Load_all_as_bry(bfr, rdr);
 	}
-	Io_stream_wtr Wtr(byte type) {
+	private Io_stream_wtr Wtr(byte type) {
 		switch (type) {
 			case Io_stream_.Tid_gzip	: if (wtr_gzip	== null) wtr_gzip	= Io_stream_wtr_.new_by_mem(bfr, Io_stream_.Tid_gzip)	; return wtr_gzip.Open();
 			case Io_stream_.Tid_zip		: if (wtr_zip	== null) wtr_zip	= Io_stream_wtr_.new_by_mem(bfr, Io_stream_.Tid_zip)	; return wtr_zip.Open(); 
@@ -42,7 +42,7 @@ public class Io_stream_zip_mgr {
 			default						: throw Err_.unhandled(type);
 		}
 	}
-	Io_stream_rdr Rdr(byte type) {
+	private Io_stream_rdr Rdr(byte type) {
 		switch (type) {
 			case Io_stream_.Tid_gzip	: if (rdr_gzip	== null) rdr_gzip	= Io_stream_rdr_.new_by_tid_(Io_stream_.Tid_gzip)	; return rdr_gzip;
 			case Io_stream_.Tid_zip		: if (rdr_zip	== null) rdr_zip	= Io_stream_rdr_.new_by_tid_(Io_stream_.Tid_zip)	; return rdr_zip; 

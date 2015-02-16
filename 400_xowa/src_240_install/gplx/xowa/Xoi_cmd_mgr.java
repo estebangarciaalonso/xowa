@@ -16,13 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.thread_cmds.*;
+import gplx.threads.*;
 public class Xoi_cmd_mgr implements GfoInvkAble {
 	ListAdp cmds = ListAdp_.new_();
 	public Xoi_cmd_mgr(Xoi_setup_mgr install_mgr) {this.app = install_mgr.App(); this.install_mgr = install_mgr;} private Xoa_app app; Xoi_setup_mgr install_mgr;
 	public Xoa_app App() {return app;}
 	public void Canceled_y_() {canceled = true;} private boolean canceled = false;
-	public boolean Working() {return working;} private boolean working;
+	public boolean Working() {return working;} public void Working_n_() {working = false;} private boolean working;		
 	private void Process_async(Gfo_thread_cmd cmd) {
 		byte init_rslt = cmd.Async_init();
 		if (init_rslt == Gfo_thread_cmd_.Init_ok) {
@@ -90,7 +90,7 @@ public class Xoi_cmd_mgr implements GfoInvkAble {
 			if (dumpfile_cmd) {
 				if		(String_.Eq(cmd.Async_key(), Xoi_cmd_wiki_download.Key_wiki_download)) continue;	// skip download if wiki.dump_file
 				else if	(String_.Eq(cmd.Async_key(), Xoi_cmd_wiki_unzip.KEY_dump)) {
-					Xow_wiki wiki = app.Wiki_mgr().Get_by_key_or_make(ByteAry_.new_utf8_(wiki_key));
+					Xow_wiki wiki = app.Wiki_mgr().Get_by_key_or_make(Bry_.new_utf8_(wiki_key));
 					if (wiki.Import_cfg().Src_fil_xml()  != null) continue;	// skip unzip if xml exists
 				}
 				else if (String_.Eq(cmd.Async_key(), Xoi_cmd_wiki_import.KEY)) {
@@ -117,14 +117,14 @@ public class Xoi_cmd_mgr implements GfoInvkAble {
 	public Gfo_thread_cmd Cmd_add(GfoMsg m) {Gfo_thread_cmd rv = Cmd_new(m); cmds.Add(rv); return rv;}
 	Gfo_thread_cmd Cmd_new(GfoMsg m) {
 		String cmd_key = m.ReadStr("v");
-		if		(String_.Eq(cmd_key, Gfo_thread_cmd_download.KEY))						return new Gfo_thread_cmd_download().Init("downloading", m.ReadStr("src"), ByteAryFmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("trg"))).Url_eval_mgr_(app.Url_cmd_eval()).Owner_(this).Ctor(app.Usr_dlg(), app.Gui_mgr().Kit());
-		else if	(String_.Eq(cmd_key, Gfo_thread_cmd_unzip.KEY))							return new Gfo_thread_cmd_unzip().Url_eval_mgr_(app.Url_cmd_eval()).Owner_(this).Init(app.Usr_dlg(), app.Gui_mgr().Kit(), app.Fsys_mgr().App_mgr().App_decompress_bz2(), app.Fsys_mgr().App_mgr().App_decompress_zip(), app.Fsys_mgr().App_mgr().App_decompress_gz(), ByteAryFmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("src")), ByteAryFmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("trg")));
-		else if	(String_.Eq(cmd_key, Gfo_thread_cmd_replace.KEY))						return new Gfo_thread_cmd_replace().Url_eval_mgr_(app.Url_cmd_eval()).Owner_(this).Init(app.Usr_dlg(), app.Gui_mgr().Kit(), ByteAryFmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("fil")));
-		else if	(String_.Eq(cmd_key, Xoi_cmd_wiki_image_cfg.KEY_dump))					return new Xoi_cmd_wiki_image_cfg(app, ByteAryFmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("fil"))).Owner_(this);
+		if		(String_.Eq(cmd_key, Gfo_thread_cmd_download.KEY))						return new Gfo_thread_cmd_download().Init("downloading", m.ReadStr("src"), Bry_fmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("trg"))).Url_eval_mgr_(app.Url_cmd_eval()).Owner_(this).Ctor(app.Usr_dlg(), app.Gui_mgr().Kit());
+		else if	(String_.Eq(cmd_key, Gfo_thread_cmd_unzip.KEY))							return new Gfo_thread_cmd_unzip().Url_eval_mgr_(app.Url_cmd_eval()).Owner_(this).Init(app.Usr_dlg(), app.Gui_mgr().Kit(), app.Launcher().App_decompress_bz2(), app.Launcher().App_decompress_zip(), app.Launcher().App_decompress_gz(), Bry_fmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("src")), Bry_fmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("trg")));
+		else if	(String_.Eq(cmd_key, Gfo_thread_cmd_replace.KEY))						return new Gfo_thread_cmd_replace().Url_eval_mgr_(app.Url_cmd_eval()).Owner_(this).Init(app.Usr_dlg(), app.Gui_mgr().Kit(), Bry_fmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("fil")));
+		else if	(String_.Eq(cmd_key, Xoi_cmd_wiki_image_cfg.KEY_dump))					return new Xoi_cmd_wiki_image_cfg(app, Bry_fmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("fil"))).Owner_(this);
 		else if	(String_.Eq(cmd_key, Xoi_cmd_wiki_goto_page.KEY))						return new Xoi_cmd_wiki_goto_page(app, m.ReadStr("v")).Owner_(this);
 		else if	(String_.Eq(cmd_key, Xoi_cmd_msg_ok.KEY))								return new Xoi_cmd_msg_ok(app.Usr_dlg(), app.Gui_mgr().Kit(), m.ReadStr("v")).Owner_(this);
-//			else if	(String_.Eq(cmd_key, Gfo_thread_exec_sync.KEY))							return new Gfo_thread_exec_sync(app.Usr_dlg(), app.Gui_mgr().Kit(), ByteAryFmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("url")), m.ReadStr("args")).Owner_(this);
-		else if	(String_.Eq(cmd_key, Xoi_cmd_imageMagick_download.KEY_imageMagick))		return new Xoi_cmd_imageMagick_download(app.Usr_dlg(), app.Gui_mgr().Kit(), ByteAryFmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("trg"))).Owner_(this);
+//			else if	(String_.Eq(cmd_key, Gfo_thread_exec_sync.KEY))							return new Gfo_thread_exec_sync(app.Usr_dlg(), app.Gui_mgr().Kit(), Bry_fmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("url")), m.ReadStr("args")).Owner_(this);
+		else if	(String_.Eq(cmd_key, Xoi_cmd_imageMagick_download.KEY_imageMagick))		return new Xoi_cmd_imageMagick_download(app.Usr_dlg(), app.Gui_mgr().Kit(), Bry_fmtr_eval_mgr_.Eval_url(app.Url_cmd_eval(), m.ReadBry("trg"))).Owner_(this);
 		else if	(String_.Eq(cmd_key, Wiki_cmd_dump_file))								return Wiki_cmd_dump_file_make(m);
 		else																			throw Err_mgr._.unhandled_(cmd_key);
 	}

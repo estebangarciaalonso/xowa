@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto.lib; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*;
+import gplx.xowa.xtns.pfuncs.ttls.*;
 public class Scrib_lib_uri implements Scrib_lib {
 	public Scrib_lib_uri(Scrib_core core) {this.core = core;} private Scrib_core core;
 	public Scrib_lua_mod Mod() {return mod;} private Scrib_lua_mod mod;
@@ -31,9 +32,9 @@ public class Scrib_lib_uri implements Scrib_lib {
 	public boolean Procs_exec(int key, Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		switch (key) {
 			case Proc_anchorEncode:							return AnchorEncode(args, rslt);
-			case Proc_localUrl:								return Url_func(args, rslt, Pf_url_urlfunc.Tid_local);
-			case Proc_fullUrl:								return Url_func(args, rslt, Pf_url_urlfunc.Tid_full);
-			case Proc_canonicalUrl:							return Url_func(args, rslt, Pf_url_urlfunc.Tid_canonical);
+			case Proc_localUrl:								return Url_func(args, rslt, Pfunc_urlfunc.Tid_local);
+			case Proc_fullUrl:								return Url_func(args, rslt, Pfunc_urlfunc.Tid_full);
+			case Proc_canonicalUrl:							return Url_func(args, rslt, Pfunc_urlfunc.Tid_canonical);
 			case Proc_init_uri_for_page:					return Init_uri_for_page(args, rslt);
 			default: throw Err_.unhandled(key);
 		}
@@ -43,12 +44,12 @@ public class Scrib_lib_uri implements Scrib_lib {
 	private static final String[] Proc_names = String_.Ary(Invk_anchorEncode, Invk_localUrl, Invk_fullUrl, Invk_canonicalUrl, Invk_init_uri_for_page);
 	public boolean AnchorEncode(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		byte[] raw_bry = args.Pull_bry(0);
-		ByteAryBfr bfr = core.App().Utl_bry_bfr_mkr().Get_b512();
-		ByteAryBfr tmp_bfr = core.App().Utl_bry_bfr_mkr().Get_b512();
-		Pf_url_anchorencode.Func_init(core.Ctx());
-		Pf_url_anchorencode.Anchor_encode(raw_bry, bfr, tmp_bfr);
+		Bry_bfr bfr = core.App().Utl_bry_bfr_mkr().Get_b512();
+		Bry_bfr tmp_bfr = core.App().Utl_bry_bfr_mkr().Get_b512();
+		Pfunc_anchorencode.Func_init(core.Ctx());
+		Pfunc_anchorencode.Anchor_encode(raw_bry, bfr, tmp_bfr);
 		tmp_bfr.Mkr_rls().Clear();
-		return rslt.Init_obj(bfr.Mkr_rls().XtoStrAndClear());
+		return rslt.Init_obj(bfr.Mkr_rls().Xto_str_and_clear());
 	}
 	public boolean Url_func(Scrib_proc_args args, Scrib_proc_rslt rslt, byte url_tid) {
 		Xow_wiki wiki = core.Wiki();
@@ -56,20 +57,20 @@ public class Scrib_lib_uri implements Scrib_lib {
 		byte[] qry_bry = args.Extract_qry_args(wiki, 1);
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
 		if (ttl == null) return rslt.Init_null();
-		ByteAryBfr bfr = core.App().Utl_bry_bfr_mkr().Get_b512();
+		Bry_bfr bfr = core.App().Utl_bry_bfr_mkr().Get_b512();
 		if (ttl.Ns().Id() == Xow_ns_.Id_media) {	// change "Media:" -> "File:"
 			bfr.Add(wiki.Ns_mgr().Ns_file().Name_db_w_colon());
 			bfr.Add(ttl.Page_db());
-			ttl_bry = bfr.XtoAryAndClear();
+			ttl_bry = bfr.Xto_bry_and_clear();
 		}				
-		Pf_url_urlfunc.UrlString(core.Ctx(), url_tid, false, ttl_bry, bfr, qry_bry);
-		return rslt.Init_obj(bfr.Mkr_rls().XtoStrAndClear());
+		Pfunc_urlfunc.UrlString(core.Ctx(), url_tid, false, ttl_bry, bfr, qry_bry);
+		return rslt.Init_obj(bfr.Mkr_rls().Xto_str_and_clear());
 	}
 	private boolean Init_uri_for_page(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		Xop_ctx ctx = core.Ctx();
-		byte[] ttl_bry = ctx.Page().Ttl().Raw();
-		ByteAryBfr tmp_bfr = ctx.Wiki().Utl_bry_bfr_mkr().Get_b512();
-		Pf_url_urlfunc.UrlString(ctx, Pf_url_urlfunc.Tid_full, false, ttl_bry, tmp_bfr, ByteAry_.Empty);
-		return rslt.Init_obj(tmp_bfr.Mkr_rls().XtoAryAndClear());
+		byte[] ttl_bry = ctx.Cur_page().Ttl().Raw();
+		Bry_bfr tmp_bfr = ctx.Wiki().Utl_bry_bfr_mkr().Get_b512();
+		Pfunc_urlfunc.UrlString(ctx, Pfunc_urlfunc.Tid_full, false, ttl_bry, tmp_bfr, Bry_.Empty);
+		return rslt.Init_obj(tmp_bfr.Mkr_rls().Xto_bry_and_clear());
 	}
 }

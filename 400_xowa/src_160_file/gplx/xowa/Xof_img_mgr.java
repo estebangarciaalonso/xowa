@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.apps.*; import gplx.xowa.files.cnvs.*; import gplx.xowa.files.*;
+import gplx.xowa.apps.fsys.*; import gplx.xowa.files.cnvs.*; import gplx.xowa.files.*;
 public class Xof_img_mgr {
 	public Xof_img_wkr_query_img_size			Wkr_query_img_size() {return wkr_query_img_size;} public Xof_img_mgr Wkr_query_img_size_(Xof_img_wkr_query_img_size v) {wkr_query_img_size = v; return this;} private Xof_img_wkr_query_img_size wkr_query_img_size;
 	public Xof_img_wkr_resize_img				Wkr_resize_img() {return wkr_resize_img;} public Xof_img_mgr Wkr_resize_img_(Xof_img_wkr_resize_img v) {wkr_resize_img = v; return this;} private Xof_img_wkr_resize_img wkr_resize_img;
@@ -24,7 +24,7 @@ public class Xof_img_mgr {
 	public int Thumb_w_img() {return thumb_w_img;} private int thumb_w_img = Xof_img_size.Thumb_width_img;
 	public int Thumb_w_ogv() {return thumb_w_ogv;} private int thumb_w_ogv = Xof_img_size.Thumb_width_ogv;
 	public void Init_app(Xoa_app app) {
-		Apps_app_mgr app_mgr = app.Fsys_mgr().App_mgr();
+		Launcher_app_mgr app_mgr = app.Launcher();
 		wkr_query_img_size = new Xof_img_wkr_query_img_size_imageMagick(app, app_mgr.App_query_img_size());
 		wkr_resize_img = new Xof_img_wkr_resize_img_imageMagick(app, app_mgr.App_resize_img(), app_mgr.App_convert_svg_to_png());
 		wkr_convert_djvu_to_tiff = new Xof_img_wkr_convert_djvu_to_tiff_app(app_mgr.App_convert_djvu_to_tiff());

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
 import java.lang.reflect.Array;
+import gplx.core.strings.*;
 public class Array_ {
 	public static void Sort(Object[] obj) {ListAdp_Sorter.new_().Sort(obj, obj.length);}
 	public static void Sort(Object[] obj, gplx.lists.ComparerAble comparer) {ListAdp_Sorter.new_().Sort(obj, obj.length, true, comparer);}
@@ -47,8 +48,6 @@ public class Array_ {
 			rv[i + curReplacePos] = add[i];
 		for (int i = curReplacePos + addInsertPos; i < curLen; i++)		// copy old after curReplacePos
 			rv[i + newLen] = cur[i];
-//			tst_ReplaceInsert(ary_obj(0, 1, 4, 5)   , ary_obj(1, 2, 3), 1, 1, ary_obj(0, 1, 2, 3, 4, 5));
-//			tst_ReplaceInsert(ary_obj(0, 1, 2, 4, 5), ary_obj(1, 2, 3), 1, 2, ary_obj(0, 1, 2, 3, 4, 5));//3,4 -> 4,5
 		return rv;
 	}
 	public static Object Resize(Object src, int trgLen) {		

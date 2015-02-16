@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.gfui.*;
-import gplx.thread_cmds.*;
+import gplx.threads.*;
 class Xoi_cmd_wiki_download extends Gfo_thread_cmd_download implements Gfo_thread_cmd {	private Xoi_setup_mgr install_mgr; private String wiki_key, dump_date, dump_type;
 	public Xoi_cmd_wiki_download Ctor_download_(Xoi_setup_mgr install_mgr, String wiki_key, String dump_date, String dump_type) {
 		this.install_mgr = install_mgr;
@@ -41,7 +41,7 @@ class Xoi_cmd_wiki_download extends Gfo_thread_cmd_download implements Gfo_threa
 				Dump_servers_offline_msg_shown = true;
 			}
 		}
-		Xow_wiki wiki = app.Wiki_mgr().Get_by_key_or_make(dump_file.Wiki_type().Raw());
+		Xow_wiki wiki = app.Wiki_mgr().Get_by_key_or_make(dump_file.Wiki_type().Domain_bry());
 		Io_url root_dir = wiki.Fsys_mgr().Root_dir();
 		Io_url[] trg_fil_ary = Io_mgr._.QueryDir_args(root_dir).FilPath_("*." + dump_type + Download_file_ext() + "*").ExecAsUrlAry();
 		Io_url trg = trg_fil_ary.length == 0 ? root_dir.GenSubFil(dump_file.File_name()) : trg_fil_ary[0];
@@ -56,7 +56,7 @@ class Xoi_cmd_wiki_unzip extends Gfo_thread_cmd_unzip implements Gfo_thread_cmd 
 	@Override public String Async_key() {return KEY_dump;}
 	@Override public byte Async_init() {
 		Xoa_app app = install_mgr.App(); Gfui_kit kit = app.Gui_mgr().Kit();
-		Xow_wiki wiki = app.Wiki_mgr().Get_by_key_or_make(ByteAry_.new_utf8_(wiki_key));
+		Xow_wiki wiki = app.Wiki_mgr().Get_by_key_or_make(Bry_.new_utf8_(wiki_key));
 		Io_url wiki_dir = wiki.Import_cfg().Src_dir();
 		Io_url[] urls = Io_mgr._.QueryDir_args(wiki_dir).Recur_(false).FilPath_("*.xml.bz2").ExecAsUrlAry();
 		if (urls.length == 0) {
@@ -65,7 +65,7 @@ class Xoi_cmd_wiki_unzip extends Gfo_thread_cmd_unzip implements Gfo_thread_cmd 
 		}
 		Io_url src = urls[urls.length - 1];
 		Io_url trg = app.Fsys_mgr().Wiki_dir().GenSubFil_nest(wiki_key, src.NameOnly());	// NOTE: NameOnly() will strip trailing .bz2; EX: a.xml.bz2 -> a.xml
-		super.Init(app.Usr_dlg(), app.Gui_mgr().Kit(), app.Fsys_mgr().App_mgr().App_decompress_bz2(), app.Fsys_mgr().App_mgr().App_decompress_zip(), app.Fsys_mgr().App_mgr().App_decompress_gz(), src, trg);
+		super.Init(app.Usr_dlg(), app.Gui_mgr().Kit(), app.Launcher().App_decompress_bz2(), app.Launcher().App_decompress_zip(), app.Launcher().App_decompress_gz(), src, trg);
 		this.Term_cmd_for_src_(Term_cmd_for_src_move);
 		this.Term_cmd_for_src_url_(app.Fsys_mgr().Wiki_dir().GenSubFil_nest("#dump", "done", src.NameAndExt()));
 		if (Io_mgr._.ExistsFil(trg)) {
@@ -93,7 +93,7 @@ class Xoi_cmd_wiki_image_cfg extends Gfo_thread_cmd_replace implements Gfo_threa
 class Xoi_cmd_wiki_goto_page extends Gfo_thread_cmd_base implements Gfo_thread_cmd {
 	public Xoi_cmd_wiki_goto_page(Xoa_app app, String page) {this.app = app; this.page = page; this.Ctor(app.Usr_dlg(), app.Gui_mgr().Kit());} private Xoa_app app; String page;
 	@Override public void Async_run()	{kit.New_cmd_sync(this).Invk(GfsCtx.new_(), 0, Invk_goto_page, GfoMsg_.Null);}
-	private void Goto_page(String page)			{app.Gui_mgr().Main_win().Exec_url_exec(page);}
+	private void Goto_page(String page)			{app.Gui_mgr().Browser_win().Page__navigate_by_url_bar(page);}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_goto_page))				Goto_page(page);
 		else	return super.Invk(ctx, ikey, k, m);
@@ -101,16 +101,16 @@ class Xoi_cmd_wiki_goto_page extends Gfo_thread_cmd_base implements Gfo_thread_c
 	}	private static final String Invk_goto_page = "goto_page";
 	public static final String KEY = "wiki.goto_page";
 }
-class Xoi_cmd_imageMagick_download extends Gfo_thread_cmd_download implements Gfo_thread_cmd {//		private static final byte[] Bry_windows_zip = ByteAry_.new_ascii_("-windows.zip");
+class Xoi_cmd_imageMagick_download extends Gfo_thread_cmd_download implements Gfo_thread_cmd {//		private static final byte[] Bry_windows_zip = Bry_.new_ascii_("-windows.zip");
 //		static final String Src_imageMagick = "ftp://ftp.sunet.se/pub/multimedia/graphics/ImageMagick/binaries/";
 	public Xoi_cmd_imageMagick_download(Gfo_usr_dlg usr_dlg, Gfui_kit kit, Io_url trg) {this.Ctor(usr_dlg, kit); this.trg = trg;} Io_url trg;
 	@Override public byte Async_init() {	// <a href="ImageMagick-6.8.1-9-Q16-x86-windows.zip">
 //			byte[] raw = xrg.Exec_as_bry(Src_imageMagick);
-//			int find_pos = Byte_ary_finder.Find_fwd(raw, Bry_windows_zip);				if (find_pos == ByteAry_.NotFound) return Fail();
-//			int bgn_pos = Byte_ary_finder.Find_bwd(raw, Byte_ascii.Quote, find_pos);	if (bgn_pos == ByteAry_.NotFound) return Fail();
+//			int find_pos = Bry_finder.Find_fwd(raw, Bry_windows_zip);				if (find_pos == Bry_.NotFound) return Fail();
+//			int bgn_pos = Bry_finder.Find_bwd(raw, Byte_ascii.Quote, find_pos);	if (bgn_pos == Bry_.NotFound) return Fail();
 //			++bgn_pos;
-//			int end_pos = Byte_ary_finder.Find_fwd(raw, Byte_ascii.Quote, bgn_pos);		if (end_pos == ByteAry_.NotFound) return Fail();
-//			String src = Src_imageMagick + String_.new_ascii_(ByteAry_.Mid(raw, bgn_pos, end_pos));
+//			int end_pos = Bry_finder.Find_fwd(raw, Byte_ascii.Quote, bgn_pos);		if (end_pos == Bry_.NotFound) return Fail();
+//			String src = Src_imageMagick + String_.new_ascii_(Bry_.Mid(raw, bgn_pos, end_pos));
 		String src = "http://ftp.sunet.se/pub/multimedia/graphics/ImageMagick/binaries/ImageMagick-6.8.8-1-Q16-x86-windows.zip";
 		this.Init("downloading", src, trg);
 		return super.Async_init();
@@ -177,7 +177,7 @@ class Xoi_cmd_wiki_zip implements Gfo_thread_cmd {
 	private void Process_async() {
 		Xoa_app app = install_mgr.App();
 		Xob_bldr bldr = app.Bldr();
-		wiki = app.Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_(wiki_key));
+		wiki = app.Wiki_mgr().Get_by_key_or_make(Bry_.new_ascii_(wiki_key));
 		wiki.Init_assert();
 		bldr.Cmd_mgr().Clear();
 		bldr.Pause_at_end_(false);

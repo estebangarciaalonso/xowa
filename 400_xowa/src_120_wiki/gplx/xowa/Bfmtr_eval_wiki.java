@@ -16,11 +16,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-public class Bfmtr_eval_wiki implements ByteAryFmtr_eval_mgr {
+public class Bfmtr_eval_wiki implements Bry_fmtr_eval_mgr {
 	public Bfmtr_eval_wiki(Xow_wiki wiki) {this.wiki = wiki;} private Xow_wiki wiki;
 	public boolean Enabled() {return enabled;} public void Enabled_(boolean v) {enabled = v;} private boolean enabled = true;
 	public byte[] Eval(byte[] cmd) {
 		Object rslt = GfsCore._.Exec_bry(cmd, wiki);
-		return ByteAry_.new_utf8_(Object_.XtoStr_OrNullStr(rslt));
+		return Bry_.new_utf8_(Object_.Xto_str_strict_or_null_mark(rslt));
+	}
+	public void Eval_mgr_(Bry_fmtr... fmtrs) {
+		int fmtrs_len = fmtrs.length;
+		for (int i = 0; i < fmtrs_len; i++)
+			fmtrs[i].Eval_mgr_(this);
 	}
 }

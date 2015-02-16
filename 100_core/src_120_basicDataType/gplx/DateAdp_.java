@@ -25,6 +25,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 public class DateAdp_ implements GfoInvkAble {
+	public static final Class<?> Cls_ref_type = DateAdp.class;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_Now))		return Now();
 		else									return GfoInvkAble_.Rv_unhandled;			
@@ -72,6 +73,7 @@ public class DateAdp_ implements GfoInvkAble {
 		else if (year % 100 == 0)	return false;
 		else						return true;
 	}
+	public static DateAdp unixtime_utc_seconds_(long v) {return unixtime_utc_ms_(v * 1000);}
 		public static DateAdp db_(Object v) {
 		Timestamp ts = (Timestamp)v;		
 		Calendar gc = Calendar.getInstance();
@@ -98,7 +100,8 @@ public class DateAdp_ implements GfoInvkAble {
 		cal.setTime(d);
 		return dateTime_(cal);
 	}
-	public static DateAdp dateTime_long(long v) {
+	public static DateAdp unixtime_utc_ms_(long v) {return unixtime_lcl_ms_(v).XtoUtc();}
+	public static DateAdp unixtime_lcl_ms_(long v) {
 		GregorianCalendar c = new GregorianCalendar();
 		c.setTimeInMillis(v);
 		return new DateAdp(c);

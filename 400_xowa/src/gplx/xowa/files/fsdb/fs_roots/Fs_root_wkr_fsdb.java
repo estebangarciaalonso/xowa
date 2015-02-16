@@ -16,13 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb.fs_roots; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
-import gplx.dbs.*;
-import gplx.fsdb.*;
+import gplx.core.primitives.*; import gplx.dbs.*;
+import gplx.fsdb.meta.*;
 public class Fs_root_wkr_fsdb {
 	private Xow_wiki wiki;
 	private Io_url orig_dir, thumb_dir;
 	private Fs_root_dir orig_dir_mgr = new Fs_root_dir();
-	private StringRef tmp_resize_result = StringRef.null_();
+	private String_obj_ref tmp_resize_result = String_obj_ref.null_();
 	private Xof_img_size img_size = new Xof_img_size();
 	public Fs_root_wkr_fsdb(Xow_wiki wiki) {this.wiki = wiki;}
 	public boolean Find_file(byte exec_tid, Xof_fsdb_itm fsdb_itm) {
@@ -37,9 +37,10 @@ public class Fs_root_wkr_fsdb {
 		}
 		else {
 			String thumb_rel = orig_url.GenRelUrl_orEmpty(orig_dir);
-			img_size.Html_size_calc(exec_tid, fsdb_itm.Lnki_w(), fsdb_itm.Lnki_h(), fsdb_itm.Lnki_type(), fsdb_itm.Lnki_upright(), fsdb_itm.Lnki_ext().Id(), orig_itm.Fil_w(), orig_itm.Fil_h(), Xof_img_size.Thumb_width_img);
+			int upright_patch = wiki.File_mgr().Fsdb_mgr().Patch_upright();
+			img_size.Html_size_calc(exec_tid, fsdb_itm.Lnki_w(), fsdb_itm.Lnki_h(), fsdb_itm.Lnki_type(), upright_patch, fsdb_itm.Lnki_upright(), fsdb_itm.Lnki_ext().Id(), orig_itm.Fil_w(), orig_itm.Fil_h(), Xof_img_size.Thumb_width_img);
 			int html_w = img_size.Html_w(), html_h = img_size.Html_h();
-			String thumb_name = Int_.XtoStr(html_w) + orig_url.Ext();
+			String thumb_name = Int_.Xto_str(html_w) + orig_url.Ext();
 			Io_url thumb_url = thumb_dir.GenSubFil_ary(thumb_rel + orig_url.Info().DirSpr(), thumb_name);
 			if (!Io_mgr._.ExistsFil(thumb_url)) {
 				if (!wiki.App().File_mgr().Img_mgr().Wkr_resize_img().Exec(orig_url, thumb_url, html_w, html_h, fsdb_itm.Lnki_ext().Id(), tmp_resize_result))
@@ -61,7 +62,7 @@ public class Fs_root_wkr_fsdb {
 		orig_dir_mgr_init(orig_dir);
 	}
 	private void orig_dir_mgr_init(Io_url orig_dir) {
-		orig_dir_mgr.Init(orig_dir, Db_provider_mkr_.Sqlite, Fsdb_cfg_tbl_.new_sql_(), new Orig_fil_tbl_sql(), wiki.App().Usr_dlg(), wiki.App().File_mgr().Img_mgr().Wkr_query_img_size());
+		orig_dir_mgr.Init(orig_dir, new Fsm_cfg_tbl(), new Orig_fil_tbl(), wiki.App().Usr_dlg(), wiki.App().File_mgr().Img_mgr().Wkr_query_img_size());
 	}
 	public void Thumb_dir_(Io_url v) {
 		thumb_dir = v;

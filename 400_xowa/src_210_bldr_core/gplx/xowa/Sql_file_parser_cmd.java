@@ -16,8 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.core.strings.*;
 public interface Sql_file_parser_cmd {
-	void Exec(byte[] src, byte[] fld_key, int fld_idx, int fld_bgn, int fld_end, ByteAryBfr file_bfr, Sql_file_parser_data data);
+	void Exec(byte[] src, byte[] fld_key, int fld_idx, int fld_bgn, int fld_end, Bry_bfr file_bfr, Sql_file_parser_data data);
 }
 class Sql_file_parser_cmd_max_len implements Sql_file_parser_cmd {
 	public void Log_len_(int v) {log_len = v;} private int log_len = 141;
@@ -30,7 +31,7 @@ class Sql_file_parser_cmd_max_len implements Sql_file_parser_cmd {
 		Io_mgr._.SaveFilStr(url, sb.XtoStr());
 	}
 	public int Max_len() {return max_len;} private int max_len; 
-	public void Exec(byte[] src, byte[] fld_key, int fld_idx, int fld_bgn, int fld_end, ByteAryBfr file_bfr, Sql_file_parser_data data) {
+	public void Exec(byte[] src, byte[] fld_key, int fld_idx, int fld_bgn, int fld_end, Bry_bfr file_bfr, Sql_file_parser_data data) {
 		int fld_len = fld_end - fld_bgn;
 		if (fld_len > max_len) max_len = fld_len;
 		if (fld_len > log_len) {

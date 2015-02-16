@@ -17,14 +17,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
 public class IptMouseBtn_ {
+	public static final int 
+	  Tid_none		= 0x00000000
+	, Tid_left		= 0x00100000
+	, Tid_right		= 0x00200000
+	, Tid_middle	= 0x00400000
+	, Tid_x1		= 0x00400000
+	, Tid_x2		= 0x01000000
+	;
 	public static final IptMouseBtn	// REF: System.Windows.Forms.MouseButtons
-		  None		= new IptMouseBtn(0x00000000, "mouse.none")
-		, Left		= new IptMouseBtn(0x00100000, "mouse.left")
-		, Right		= new IptMouseBtn(0x00200000, "mouse.right")
-		, Middle	= new IptMouseBtn(0x00400000, "mouse.middle")
-		, X1		= new IptMouseBtn(0x00800000, "mouse.x1")
-		, X2		= new IptMouseBtn(0x01000000, "mouse.x2")
-		;
+	  None		= new IptMouseBtn(Tid_none		, "mouse.none")
+	, Left		= new IptMouseBtn(Tid_left		, "mouse.left")
+	, Right		= new IptMouseBtn(Tid_right		, "mouse.right")
+	, Middle	= new IptMouseBtn(Tid_middle	, "mouse.middle")
+	, X1		= new IptMouseBtn(Tid_x1		, "mouse.x1")
+	, X2		= new IptMouseBtn(Tid_x2		, "mouse.x2")
+	;
 	public static IptMouseBtn parse_(String raw) {
 		if		(String_.Eq(raw, None.Key())) return None;
 		else if	(String_.Eq(raw, Left.Key())) return Left;

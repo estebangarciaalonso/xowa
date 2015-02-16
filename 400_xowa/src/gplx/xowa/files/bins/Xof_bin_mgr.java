@@ -16,13 +16,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
+import gplx.core.primitives.*;
 import gplx.xowa.files.fsdb.*; import gplx.xowa.files.cnvs.*; import gplx.ios.*;
 public class Xof_bin_mgr implements GfoInvkAble {
 	private Xof_bin_wkr[] wkrs; private int wkrs_len;
 	private Xof_url_bldr url_bldr = Xof_url_bldr.new_v2_();
 	private Xof_fsdb_mgr_sql fsdb_mgr;
 	private Xow_wiki wiki;
-	private StringRef resize_warning = StringRef.null_(); private Xof_img_size tmp_size = new Xof_img_size();
+	private String_obj_ref resize_warning = String_obj_ref.null_(); private Xof_img_size tmp_size = new Xof_img_size();
 	public Xof_bin_mgr(Xow_wiki wiki, Xof_fsdb_mgr_sql fsdb_mgr, Xow_repo_mgr repo_mgr) {this.Clear(); this.wiki = wiki; this.fsdb_mgr = fsdb_mgr; this.repo_mgr = repo_mgr;}
 	public Xow_repo_mgr Repo_mgr() {return repo_mgr;} private Xow_repo_mgr repo_mgr;
 	public void Resizer_(Xof_img_wkr_resize_img v) {resizer = v;} private Xof_img_wkr_resize_img resizer;
@@ -66,8 +67,12 @@ public class Xof_bin_mgr implements GfoInvkAble {
 					itm.Rslt_bin_(wkr.Bin_wkr_tid());
 					return rv;
 				}
+				wiki.App().Usr_dlg().Log_direct(String_.Format("thumb not found; ttl={0} w={1} ", String_.new_utf8_(itm.Lnki_ttl()), itm.Lnki_w()));
 				rv = wkr.Bin_wkr_get_as_rdr(temp_files, itm, Bool_.N, itm.Orig_w());		// thumb missing; get orig;
-				if (rv == Io_stream_rdr_.Null) continue;									// nothing found; continue;
+				if (rv == Io_stream_rdr_.Null) {
+					wiki.App().Usr_dlg().Log_direct(String_.Format("orig not found; "));
+					continue;									// nothing found; continue;
+				}
 				if (!wkr.Bin_wkr_resize()) continue;
 				Io_url orig = Get_url(itm, Xof_repo_itm.Mode_orig, Bool_.N);				// get orig url
 				Io_stream_wtr_.Save_rdr(orig, rv);
@@ -82,8 +87,8 @@ public class Xof_bin_mgr implements GfoInvkAble {
 		}
 		return Io_stream_rdr_.Null;
 	}
-	private boolean Resize(byte exec_tid, Xof_fsdb_itm itm, boolean file_is_orig, Io_url src, Io_url trg) {
-		tmp_size.Html_size_calc(exec_tid, itm.Lnki_w(), itm.Lnki_h(), itm.Lnki_type(), itm.Lnki_upright(), itm.Lnki_ext().Id(), itm.Orig_w(), itm.Orig_h(), Xof_img_size.Thumb_width_img);
+	private boolean Resize(byte exec_tid, Xof_fsdb_itm itm, boolean file_is_orig, Io_url src, Io_url trg) {			
+		tmp_size.Html_size_calc(exec_tid, itm.Lnki_w(), itm.Lnki_h(), itm.Lnki_type(), fsdb_mgr.Patch_upright(), itm.Lnki_upright(), itm.Lnki_ext().Id(), itm.Orig_w(), itm.Orig_h(), Xof_img_size.Thumb_width_img);
 		boolean rv = resizer.Exec(src, trg, tmp_size.Html_w(), tmp_size.Html_h(), itm.Lnki_ext().Id(), resize_warning);
 		itm.Rslt_cnv_(rv ? Xof_cnv_wkr_.Tid_y : Xof_cnv_wkr_.Tid_n);
 		return rv;
@@ -91,14 +96,15 @@ public class Xof_bin_mgr implements GfoInvkAble {
 	private Io_url Get_url(Xof_fsdb_itm itm, byte mode, boolean src) {
 		Xof_repo_pair repo = repo_mgr.Repos_get_by_wiki(itm.Orig_wiki());
 		return src 
-			? url_bldr.Set_src_file_(mode, repo.Src(), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), itm.Html_w(), itm.Lnki_thumbtime(), itm.Lnki_page()).Xto_url()
-			: url_bldr.Set_trg_file_(mode, repo.Trg(), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), itm.Html_w(), itm.Lnki_thumbtime(), itm.Lnki_page()).Xto_url()
+			? url_bldr.Init_for_src_file(mode, repo.Src(), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), itm.Html_w(), itm.Lnki_thumbtime(), itm.Lnki_page()).Xto_url()
+			: url_bldr.Init_for_trg_file(mode, repo.Trg(), itm.Lnki_ttl(), itm.Lnki_md5(), itm.Lnki_ext(), itm.Html_w(), itm.Lnki_thumbtime(), itm.Lnki_page()).Xto_url()
 			;
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_add))		return Get_or_new(m.ReadStr("type"), m.ReadStrOr("key", null));
 		else	return GfoInvkAble_.Rv_unhandled;
 	}	private static final String Invk_add = "add";
+	public Xof_bin_wkr Get_or_new(String type) {return Get_or_new(type, null);}
 	public Xof_bin_wkr Get_or_new(String type, String key) {
 		if (key == null) key = type;	// default empty key to type; EX: add('xowa.http.wmf') -> add('xowa.http.wmf', 'xowa.http.wmf')
 		Xof_bin_wkr rv = Get_or_null(key);

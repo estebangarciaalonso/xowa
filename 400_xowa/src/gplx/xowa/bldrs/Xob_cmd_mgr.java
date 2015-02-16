@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs; import gplx.*; import gplx.xowa.*;
+import gplx.core.primitives.*;
 import gplx.xowa.wikis.*; import gplx.xowa.xtns.wdatas.imports.*; import gplx.xowa.bldrs.imports.ctgs.*; import gplx.xowa.bldrs.imports.*; import gplx.xowa.bldrs.oimgs.*;
 import gplx.xowa.bldrs.wikis.redirects.*; import gplx.xowa.bldrs.wikis.images.*; import gplx.xowa.files.wiki_orig.*;
 import gplx.xowa.bldrs.files.*;
@@ -53,11 +54,14 @@ public class Xob_cmd_mgr implements GfoInvkAble {
 		else if	(String_.Eq(cmd_key, Xob_xfer_regy_cmd.KEY_oimg))			return Add(new Xob_xfer_regy_cmd(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_xfer_regy_update_cmd.KEY_oimg))	return Add(new Xob_xfer_regy_update_cmd(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_xfer_update_cmd.KEY_oimg))			return Add(new Xob_xfer_update_cmd(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_diff_regy_exec_cmd.KEY_oimg))		return Add(new Xob_diff_regy_exec_cmd(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_diff_regy_make_cmd.KEY_oimg))		return Add(new Xob_diff_regy_make_cmd(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xof_wiki_orig_cmd.KEY_oimg))			return Add(new Xof_wiki_orig_cmd(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_download_wkr.KEY_oimg))			return Add(new Xob_download_wkr(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_page_regy_cmd.KEY_oimg))			return Add(new Xob_page_regy_cmd(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_cmd_exec_sql.KEY))					return Add(new Xob_cmd_exec_sql(bldr, wiki));
 
-		else if	(String_.Eq(cmd_key, Xob_wiki_redirect_cmd.KEY_redirect))	return Add(new Xob_wiki_redirect_cmd(bldr, wiki));
+		else if	(String_.Eq(cmd_key, Xob_redirect_cmd.KEY_redirect))		return Add(new Xob_redirect_cmd(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xob_wiki_image_sql.KEY))				return Add(new Xob_wiki_image_sql(bldr, wiki));
 
 		else if	(String_.Eq(cmd_key, Xob_fsdb_make.KEY_oimg))				return Add(new Xob_fsdb_make(bldr, wiki));
@@ -72,13 +76,6 @@ public class Xob_cmd_mgr implements GfoInvkAble {
 		else if	(String_.Eq(cmd_key, Xobc_core_decompress_bz.KEY))			return Add(new Xobc_core_decompress_bz(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_deploy_zip.KEY))					return Add(new Xobc_deploy_zip(bldr, wiki));
 		else if	(String_.Eq(cmd_key, Xobc_deploy_copy.KEY))					return Add(new Xobc_deploy_copy(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xobc_parse_dump_templates.KEY))		return Xml_rdr_direct_add(wiki, new Xobc_parse_dump_templates(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xobc_parse_run.KEY))					return Add(new Xobc_parse_run(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xobc_img_dump_ttl.KEY))				return Xml_rdr_direct_add(wiki, new Xobc_img_dump_ttl(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xobc_img_merge_ttl_sql.KEY))			return Add(new Xobc_img_merge_ttl_sql(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xobc_img_prep_xfer.KEY))				return Add(new Xobc_img_prep_xfer(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xobc_img_run_xfer.KEY))				return Add(new Xobc_img_run_xfer(bldr, wiki));
-		else if	(String_.Eq(cmd_key, Xobc_math_run.KEY))					return Add(new Xobc_math_run(bldr, wiki));
 		else 																throw Err_.unhandled(cmd_key);
 	}
 	private Xobd_wkr Xml_rdr_direct_add(Xow_wiki wiki, Xobd_wkr wkr) {
@@ -96,12 +93,12 @@ public class Xob_cmd_mgr implements GfoInvkAble {
 		Xobd_rdr rv = (Xobd_rdr)dump_rdrs.Fetch(dump_rdrs_ref.Val_(wiki_key));
 		if (rv == null) {
 			rv = new Xobd_rdr(bldr, wiki);
-			dump_rdrs.Add(ByteAryRef.new_(wiki_key), rv);
+			dump_rdrs.Add(Bry_obj_ref.new_(wiki_key), rv);
 			this.Add(rv);
 		}
 		return rv;
 	}
-	private HashAdp dump_rdrs = HashAdp_.new_(); private ByteAryRef dump_rdrs_ref = ByteAryRef.null_();
+	private HashAdp dump_rdrs = HashAdp_.new_(); private Bry_obj_ref dump_rdrs_ref = Bry_obj_ref.null_();
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if			(ctx.Match(k, Invk_add))				return Add_cmd(Wiki_get_or_make(m), m.ReadStr("v"));
 		else if		(ctx.Match(k, Invk_add_many))			return Add_many(m);

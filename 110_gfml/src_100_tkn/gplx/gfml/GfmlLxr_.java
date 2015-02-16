@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfml; import gplx.*;
+import gplx.core.strings.*;
 import gplx.texts.*; /*CharStream*/	
 public class GfmlLxr_ {
 	public static GfmlLxr general_(String key, GfmlTkn protoTkn) {return GfmlLxr_general.new_(key, protoTkn);}
@@ -84,12 +85,12 @@ class GfmlLxr_group implements GfmlLxr {
 				sb.Add_mid(stream.Ary(), stream.Pos(), hookLength);
 			stream.MoveNextBy(hookLength);
 
-			String found = String_.as_or_fail_(trie.FindMatch(stream));
+			String found = String_.cast_(trie.FindMatch(stream));
 			if (found == null) break;
 			hookLength = trie.LastMatchCount;
 		}
 		if (ignoreOutput) return GfmlTkn_.IgnoreOutput;
-		String raw = sb.XtoStrAndClear();
+		String raw = sb.Xto_str_and_clear();
 		return outputTkn.MakeNew(raw, raw);
 	}
 	public GfmlLxr SubLxr() {throw Err_sublxr();}

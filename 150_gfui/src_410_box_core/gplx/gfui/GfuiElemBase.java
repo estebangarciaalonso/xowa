@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
+import gplx.core.strings.*;
 public class GfuiElemBase implements GfuiElem {
 	//% Layout
 	public GfoEvMgr EvMgr() {if (evMgr == null) evMgr = GfoEvMgr.new_(this); return evMgr;} GfoEvMgr evMgr;
@@ -68,7 +69,7 @@ public class GfuiElemBase implements GfuiElem {
 	public GfuiElem Border_off_() {border.All_(null); return this;}
 	public GfxStringData TextMgr() {return textMgr;} GfxStringData textMgr;
 	public String Text() {return textMgr.Val();}
-	public GfuiElem Text_any_(Object obj) {return Text_(Object_.XtoStr_OrNullStr(obj));}
+	public GfuiElem Text_any_(Object obj) {return Text_(Object_.Xto_str_strict_or_null_mark(obj));}
 	@gplx.Virtual public GfuiElem Text_(String v) {
 		this.TextMgr().Text_set(v);
 		Click_key_set_(v);
@@ -258,9 +259,10 @@ public class GfuiElemBase implements GfuiElem {
 		public void Invoke(GfoInvkAbleCmd cmd) {
 		cmd.Invk();
 	}
-		public Gfui_kit Kit() {return kit;} private Gfui_kit kit = Gfui_kit_.Swing();
+		public Gfui_kit Kit() {return kit;} private Gfui_kit kit = Gfui_kit_.Mem();
 
 	@gplx.Virtual public void ctor_GfuiBox_base(KeyValHash ctorArgs) {
+		this.kit = Swing_kit._;	// NOTE: assume that callers want Swing; SWT / Mem should be calling ctor_kit_GfuiElemBase
 		underElem = UnderElem_make(ctorArgs);
 		underElem.Host_set(this);
 		underMgr = underElem.Core();

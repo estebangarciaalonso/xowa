@@ -16,25 +16,25 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.dbs.tbls; import gplx.*; import gplx.xowa.*; import gplx.xowa.dbs.*;
-import gplx.dbs.*;
+import gplx.core.primitives.*; import gplx.dbs.*; import gplx.dbs.qrys.*; import gplx.dbs.engines.sqlite.*;
 public class Xodb_search_title_word_tbl {
-	public static void Create_table(Db_provider p)						{Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
-	public static void Create_index(Gfo_usr_dlg usr_dlg, Db_provider p)	{Sqlite_engine_.Idx_create(usr_dlg, p, "search", Indexes_main);}
-	public static Db_stmt Insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_stw_word_id, Fld_stw_word);}
+	public static void Create_table(Db_conn p)						{Sqlite_engine_.Tbl_create(p, Tbl_name, Tbl_sql);}
+	public static void Create_index(Gfo_usr_dlg usr_dlg, Db_conn p)	{Sqlite_engine_.Idx_create(usr_dlg, p, "search", Indexes_main);}
+	public static Db_stmt Insert_stmt(Db_conn p) {return Db_stmt_.new_insert_(p, Tbl_name, Fld_stw_word_id, Fld_stw_word);}
 	public static void Insert(Db_stmt stmt, int word_id, byte[] word) {
 		stmt.Clear()
-		.Val_int_(word_id)
-		.Val_str_by_bry_(word)
+		.Val_int(word_id)
+		.Val_bry_as_str(word)
 		.Exec_insert();
 	}	
-	public static void Select_by_word(Cancelable cancelable, ListAdp rv, byte[] search, int results_max, Db_provider p) {
+	public static void Select_by_word(Cancelable cancelable, ListAdp rv, Xodb_ctx db_ctx, byte[] search, int results_max, Db_conn p) {
 		Db_qry_select qry = Db_qry_.select_()
 			.Cols_(Xodb_search_title_word_tbl.Fld_stw_word_id)
 			.From_(Xodb_search_title_word_tbl.Tbl_name, "w")
 			;
-		gplx.criterias.Criteria crt = null; 
-		if (ByteAry_.Has(search, Byte_ascii.Asterisk)) {
-			search = ByteAry_.Replace(search, Byte_ascii.Asterisk, Byte_ascii.Percent);
+		gplx.core.criterias.Criteria crt = null; 
+		if (Bry_.Has(search, Byte_ascii.Asterisk)) {
+			search = Bry_.Replace(search, Byte_ascii.Asterisk, Byte_ascii.Percent);
 			crt = Db_crt_.like_	(Xodb_search_title_word_tbl.Fld_stw_word, String_.new_utf8_(search));
 		}
 		else
@@ -47,14 +47,14 @@ public class Xodb_search_title_word_tbl {
 			rdr = qry.Exec_qry_as_rdr(p);
 			while (rdr.MoveNextPeer()) {
 				int word_id = rdr.ReadInt(Xodb_search_title_word_tbl.Fld_stw_word_id);
-				words.Add(IntVal.new_(word_id));
+				words.Add(Int_obj_val.new_(word_id));
 			}
 		}
 		finally {rdr.Rls();}
 
 		Xodb_in_wkr_search_title_id wkr = new Xodb_in_wkr_search_title_id();
 		wkr.Init(words, rv);
-		wkr.Select_in(p, cancelable, 0, words.Count());
+		wkr.Select_in(p, cancelable, db_ctx, 0, words.Count());
 	}
 	public static final String Tbl_name = "search_title_word", Fld_stw_word_id = "stw_word_id", Fld_stw_word = "stw_word";
 	private static final String Tbl_sql = String_.Concat_lines_nl
@@ -70,7 +70,7 @@ class Xodb_in_wkr_search_title_id extends Xodb_in_wkr_base {
 	private ListAdp words, pages;
 	@Override public int Interval() {return 990;}
 	public void Init(ListAdp words, ListAdp pages) {this.words = words; this.pages = pages;}
-	@Override public Db_qry Build_qry(int bgn, int end) {
+	@Override public Db_qry Build_qry(Xodb_ctx db_ctx, int bgn, int end) {
 		Object[] part_ary = Xodb_in_wkr_base.In_ary(end - bgn);
 		String in_fld_name = Xodb_search_title_page_tbl.Fld_stp_word_id; 
 		return Db_qry_.select_cols_
@@ -81,11 +81,11 @@ class Xodb_in_wkr_search_title_id extends Xodb_in_wkr_base {
 	}
 	@Override public void Fill_stmt(Db_stmt stmt, int bgn, int end) {
 		for (int i = bgn; i < end; i++) {
-			IntVal word_id = (IntVal)words.FetchAt(i);
-			stmt.Val_int_(word_id.Val());		
+			Int_obj_val word_id = (Int_obj_val)words.FetchAt(i);
+			stmt.Val_int(word_id.Val());		
 		}
 	}
-	@Override public void Eval_rslts(Cancelable cancelable, DataRdr rdr) {
+	@Override public void Eval_rslts(Cancelable cancelable, Xodb_ctx db_ctx, DataRdr rdr) {
 		while (rdr.MoveNextPeer()) {
 			if (cancelable.Canceled()) return;
 			int page_id = rdr.ReadInt(Xodb_search_title_page_tbl.Fld_stp_page_id);

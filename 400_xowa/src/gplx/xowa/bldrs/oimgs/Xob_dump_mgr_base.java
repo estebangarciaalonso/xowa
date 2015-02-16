@@ -37,22 +37,22 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 	public void Cmd_bgn(Xob_bldr bldr) {
 		parser = wiki.Parser();
 		ctx = wiki.Ctx();
-		root = ctx.Tkn_mkr().Root(ByteAry_.Empty);			
+		root = ctx.Tkn_mkr().Root(Bry_.Empty);			
 		wiki.Init_assert();	// NOTE: must init wiki for db_mgr_as_sql
-		wiki.Db_mgr_as_sql().Init_load(Db_connect_.sqlite_(Xodb_mgr_sql.Find_core_url(wiki)));	// NOTE: must reinit providers as previous steps may have rls'd (and left member variable provider which is closed)
+		wiki.Db_mgr_as_sql().Init_load(Db_url_.sqlite_(Xodb_mgr_sql.Find_core_url(wiki)));	// NOTE: must reinit providers as previous steps may have rls'd (and left member variable conn which is closed)
 		db_fsys_mgr = wiki.Db_mgr_as_sql().Fsys_mgr();
 		db_ary = Xob_dump_src_ttl.Init_text_files_ary(db_fsys_mgr);
 		poll_interval = poll_mgr.Poll_interval();
 
 		page_src = new Xob_dump_src_id().Init(wiki, this.Init_redirect(), select_size);
 		ns_ary = Init_ns_ary();						
-		Db_provider provider = Init_db_file();
+		Db_conn conn = Init_db_file();
 		Io_url wiki_dir = wiki.Fsys_mgr().Root_dir();
 		bmk_mgr.Cfg_url_(wiki_dir.GenSubFil("xowa.file.make.cfg.gfs"));
 		rate_mgr.Log_file_(wiki_dir.GenSubFil("xowa.file.make.log.csv"));
 		if (reset_db) {
 			bmk_mgr.Reset();
-			Init_reset(provider);
+			Init_reset(conn);
 		}
 		bmk_mgr.Load(wiki.App(), this);
 		Cmd_bgn_end();
@@ -60,8 +60,8 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 	protected abstract void Cmd_bgn_end();
 	public abstract byte Init_redirect();
 	public abstract int[] Init_ns_ary();
-	protected abstract void Init_reset(Db_provider p);
-	protected abstract Db_provider Init_db_file();
+	protected abstract void Init_reset(Db_conn p);
+	protected abstract Db_conn Init_db_file();
 	private long time_bgn;
 	public void Cmd_run() {Exec_ns_ary();}
 	private void Exec_ns_ary() {
@@ -84,7 +84,7 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 			if (ns_id == ns_end) exit_now = true;		// ns_end set; exit
 			if (exit_now) break;						// exit_now b/c of pg_bgn, db_bgn or something else
 		}
-		Exec_commit(dump_bmk.Ns_id(), dump_bmk.Db_id(), dump_bmk.Pg_id(), ByteAry_.Empty);
+		Exec_commit(dump_bmk.Ns_id(), dump_bmk.Db_id(), dump_bmk.Pg_id(), Bry_.Empty);
 	}
 	private void Exec_db_ary(Xob_dump_bmk dump_bmk, int ns_id) {
 		int db_ary_len = db_ary.length;
@@ -137,8 +137,8 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 			ctx.Clear();
 			Exec_pg_itm_hook(ns, page, page.Text());
 			ctx.App().Utl_bry_bfr_mkr().Clear_fail_check();	// make sure all bfrs are released
-			if (ctx.App().Tmpl_result_cache().Count() > 50000) 
-				ctx.App().Tmpl_result_cache().Clear();
+			if (ctx.Wiki().Cache_mgr().Tmpl_result_cache().Count() > 50000) 
+				ctx.Wiki().Cache_mgr().Tmpl_result_cache().Clear();
 			++exec_count;
 			rate_mgr.Increment();
 			if ((exec_count % poll_interval) == 0)
@@ -168,10 +168,10 @@ public abstract class Xob_dump_mgr_base extends Xob_itm_basic_base implements Xo
 	public void Cmd_end() {
 		if (!exit_now)
 			pg_bgn = Int_.MaxValue;
-		Exec_commit(-1, -1, -1, ByteAry_.Empty);
+		Exec_commit(-1, -1, -1, Bry_.Empty);
 		Exec_end_hook();
 		Free();
-		usr_dlg.Note_many("", "", "done: ~{0} ~{1}", exec_count, DecimalAdp_.divide_safe_(exec_count, Env_.TickCount_elapsed_in_sec(time_bgn)).XtoStr("#,###.000"));
+		usr_dlg.Note_many("", "", "done: ~{0} ~{1}", exec_count, DecimalAdp_.divide_safe_(exec_count, Env_.TickCount_elapsed_in_sec(time_bgn)).Xto_str("#,###.000"));
 	}
 	private void Free() {
 		ctx.App().Free_mem(true);
@@ -240,7 +240,7 @@ class Xob_dump_mgr_base_ {
 	}
 }
 class Xob_dump_bmk_mgr {
-	private ByteAryBfr save_bfr = ByteAryBfr.reset_(1024);
+	private Bry_bfr save_bfr = Bry_bfr.reset_(1024);
 	public Io_url Cfg_url() {return cfg_url;} public Xob_dump_bmk_mgr Cfg_url_(Io_url v) {cfg_url = v; return this;} private Io_url cfg_url;
 	public void Reset() {Io_mgr._.DeleteFil(cfg_url);}
 	public void Load(Xoa_app app, Xob_dump_mgr_base dump_mgr) {
@@ -252,7 +252,7 @@ class Xob_dump_bmk_mgr {
 		Save_itm(save_bfr, Xob_dump_mgr_base.Invk_pg_bgn_, pg_id);
 		Io_mgr._.SaveFilBfr(cfg_url, save_bfr);
 	}
-	private void Save_itm(ByteAryBfr save_bfr, String key, int val) {
+	private void Save_itm(Bry_bfr save_bfr, String key, int val) {
 		String fmt = "{0}('{1}');\n";
 		String str = String_.Format(fmt, key, val);
 		save_bfr.Add_str(str);
@@ -261,7 +261,7 @@ class Xob_dump_bmk_mgr {
 class Xob_rate_mgr {
 	private long time_bgn;
 	private int item_len;
-	private ByteAryBfr save_bfr = ByteAryBfr.reset_(255);
+	private Bry_bfr save_bfr = Bry_bfr.reset_(255);
 	public int Reset_interval() {return reset_interval;} public Xob_rate_mgr Reset_interval_(int v) {reset_interval = v; return this;} private int reset_interval = 10000;
 	public Io_url Log_file() {return log_file;} public Xob_rate_mgr Log_file_(Io_url v) {log_file = v; return this;} private Io_url log_file;
 	public void Init() {time_bgn = Env_.TickCount();}
@@ -278,13 +278,13 @@ class Xob_rate_mgr {
 		int dif = (int)(end - bgn) / 1000;
 		DecimalAdp rate = DecimalAdp_.divide_safe_(count, dif);
 		save_bfr
-			.Add_str(rate.XtoStr("#,##0.000")).Add_byte_pipe()
+			.Add_str(rate.Xto_str("#,##0.000")).Add_byte_pipe()
 			.Add_int_variable(count).Add_byte_pipe()
 			.Add_int_variable(dif).Add_byte_nl()
 			;
-		Io_mgr._.AppendFilByt(log_file, save_bfr.XtoAryAndClear());
+		Io_mgr._.AppendFilByt(log_file, save_bfr.Xto_bry_and_clear());
 	}
-	public String Rate_as_str() {return Int_.XtoStr(Rate());}
+	public String Rate_as_str() {return Int_.Xto_str(Rate());}
 	public int Rate() {
 		int elapsed = Env_.TickCount_elapsed_in_sec(time_bgn);
 		return Math_.Div_safe_as_int(item_len, elapsed);

@@ -30,7 +30,7 @@ public class TxtFindMgr {
 		rv[0] = selBgn; rv[1] = selLen;					// make newSel = curSel
 		int adj = keyIsEnter ? 1 : 0;					// if enter, search next, else search from cur; else will add to selLen if at match; ex: ab->c at abc will keep same selBgn, but increase selLen to 3
 		int findPos = FindNext(findText, selBgn + adj);
-		if (findPos == String_.NotFound) {				// nothing found; set selLen to 0 and return
+		if (findPos == String_.Find_none) {				// nothing found; set selLen to 0 and return
 			rv[1] = 0;
 			return rv;
 		}
@@ -41,7 +41,7 @@ public class TxtFindMgr {
 	public int FindNext(String find, int guiPos) {
 		if (!caseSensitive) find = String_.Lower(find);
 		int findPos = String_.FindFwd(text, find, guiPos);
-		if (findPos == String_.NotFound && guiPos != 0)
+		if (findPos == String_.Find_none && guiPos != 0)
 			findPos = String_.FindFwd(text, find, 0);
 		return findPos;
 	}

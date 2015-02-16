@@ -42,7 +42,7 @@ public class Php_srl_parser {
 				val = Xto_kv_ary(ary);
 				break;
 			case Php_srl_itm_.Tid_function:
-				val = new gplx.xowa.xtns.scribunto.Scrib_lua_proc(Object_.XtoStr_OrNullStr(key), Int_.cast_(itm_val.Val()));	// NOTE: in most cases, key is a STRING (name of ScribFunction); however, for gsub it is an INT (arg_idx) b/c it is passed as a parameter
+				val = new gplx.xowa.xtns.scribunto.Scrib_lua_proc(Object_.Xto_str_strict_or_null_mark(key), Int_.cast_(itm_val.Val()));	// NOTE: in most cases, key is a STRING (name of ScribFunction); however, for gsub it is an INT (arg_idx) b/c it is passed as a parameter
 				break;
 			default:
 				val = itm_val.Val();
@@ -106,7 +106,7 @@ public class Php_srl_parser {
 				break;
 			case Byte_ascii.Ltr_d:		// EX: 'd:1.23;'
 				pos = Chk(raw, pos + 1, Byte_ascii.Colon);
-				int double_end = Byte_ary_finder.Find_fwd(raw, Byte_ascii.Semic, pos, raw_len);
+				int double_end = Bry_finder.Find_fwd(raw, Byte_ascii.Semic, pos, raw_len);
 				String double_str = String_.new_ascii_(raw, pos, double_end);
 				double double_val = 0;
 				if		(String_.Eq(double_str, "INF")) double_val = Double_.Inf_pos;
@@ -142,12 +142,12 @@ public class Php_srl_parser {
 			default: throw err_(raw, pos, "unexpected type: {0}", Char_.XtoStr(b));
 		}
 		return rv;
-	}	static final byte[] CONST_funct_bgn = ByteAry_.new_ascii_("O:42:\"Scribunto_LuaStandaloneInterpreterFunction\":1:{s:2:\"id\";i:"), CONST_funct_end = ByteAry_.new_ascii_(";}");
+	}	static final byte[] CONST_funct_bgn = Bry_.new_ascii_("O:42:\"Scribunto_LuaStandaloneInterpreterFunction\":1:{s:2:\"id\";i:"), CONST_funct_end = Bry_.new_ascii_(";}");
 	int Parse_int_val(int bgn) {
 		pos = bgn;
 		pos = Chk(raw, pos + 1, Byte_ascii.Colon);
 		int int_end = Skip_while_num(raw, raw_len, pos, true);
-		int int_val = ByteAry_.X_to_int_or(raw, pos, int_end, Int_.MinValue);
+		int int_val = Bry_.Xto_int_or(raw, pos, int_end, Int_.MinValue);
 		pos = int_end;
 		return int_val;		
 	}
@@ -155,7 +155,7 @@ public class Php_srl_parser {
 		pos = bgn;
 		pos = Chk(raw, pos + 1, Byte_ascii.Colon);
 		int int_end = Skip_while_num(raw, raw_len, pos, true);
-		int int_val = ByteAry_.X_to_int_or(raw, pos, int_end, Int_.MinValue);
+		int int_val = Bry_.Xto_int_or(raw, pos, int_end, Int_.MinValue);
 		Php_srl_itm_int rv = factory.Int(pos, int_end, int_val);
 		pos = int_end;
 		return rv;
@@ -190,7 +190,7 @@ public class Php_srl_parser {
 	}
 	Err err_(byte[] raw, int bgn, String fmt, Object... args) {return err_(raw, bgn, raw.length, fmt, args);}
 	Err err_(byte[] raw, int bgn, int raw_len, String fmt, Object... args) {
-		String msg = String_.Format(fmt, args) + " " + Int_.XtoStr(bgn) + " " + String_.new_utf8_len_safe_(raw, bgn, 20);
+		String msg = String_.Format(fmt, args) + " " + Int_.Xto_str(bgn) + " " + String_.new_utf8_len_safe_(raw, bgn, 20);
 		return Err_.new_(msg);
 	}
 }

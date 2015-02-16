@@ -30,13 +30,16 @@ public class Xof_fsdb_itm {
 	public double		Lnki_upright() {return lnki_upright;} private double lnki_upright;
 	public double		Lnki_thumbtime() {return lnki_thumbtime;} public Xof_fsdb_itm Lnki_thumbtime_(double v) {lnki_thumbtime = v; return this;} private double lnki_thumbtime = Xof_doc_thumb.Null;
 	public int			Lnki_page() {return lnki_page;} public Xof_fsdb_itm Lnki_page_(int v) {lnki_page = v; return this;} private int lnki_page = Xof_doc_page.Null;
-	public Xof_fsdb_itm	Init_by_lnki(byte[] lnki_ttl, Xof_ext ext, byte[] md5, byte lnki_type, int lnki_w, int lnki_h, double lnki_upright, double lnki_thumbtime, int lnki_page) {
+	public Xof_fsdb_itm	Init_by_lnki(byte[] lnki_ttl, Xof_ext ext, byte[] md5, byte lnki_type, int lnki_w, int lnki_h, int lnki_upright_patch, double lnki_upright, double lnki_thumbtime, int lnki_page) {
 		this.lnki_ttl = lnki_ttl; this.lnki_ext = ext; this.lnki_md5 = md5;
-		this.lnki_w = lnki_w; this.lnki_h = lnki_h; this.lnki_upright = lnki_upright; this.lnki_thumbtime = lnki_thumbtime; this.lnki_page = lnki_page;
+		this.lnki_w = lnki_w; this.lnki_h = lnki_h;
+		this.lnki_upright_patch = lnki_upright_patch;
+		this.lnki_upright = lnki_upright; this.lnki_thumbtime = lnki_thumbtime; this.lnki_page = lnki_page;
 		this.Lnki_type_(lnki_type);
 		this.orig_ttl = lnki_ttl;
 		return this;
 	}
+	private int lnki_upright_patch;
 	public void Lnki_type_(byte v) {
 		this.lnki_type = v;
 		if (lnki_ext.Id_is_audio_strict())
@@ -63,7 +66,7 @@ public class Xof_fsdb_itm {
 	public Xof_fsdb_itm Orig_size_(int w, int h) {orig_w = w; orig_h = h; return this;} 
 	public byte[]		Orig_wiki() {return orig_wiki;} public Xof_fsdb_itm Orig_wiki_(byte[] v) {orig_wiki = v; return this;} private byte[] orig_wiki;
 	public byte[]		Orig_ttl() {return orig_ttl;} public Xof_fsdb_itm Orig_ttl_(byte[] v) {orig_ttl = v; return this;} private byte[] orig_ttl;
-	public byte[]		Orig_redirect() {return orig_redirect;} public Xof_fsdb_itm Orig_redirect_(byte[] v) {orig_redirect = v; return this;} private byte[] orig_redirect = ByteAry_.Empty;
+	public byte[]		Orig_redirect() {return orig_redirect;} public Xof_fsdb_itm Orig_redirect_(byte[] v) {orig_redirect = v; return this;} private byte[] orig_redirect = Bry_.Empty;
 	public byte			Orig_repo() {return orig_repo;} public Xof_fsdb_itm Orig_repo_(byte v) {orig_repo = v; return this;} private byte orig_repo = Xof_repo_itm.Repo_null;
 	public boolean			File_is_orig() {return file_is_orig;} public Xof_fsdb_itm File_is_orig_(boolean v) {file_is_orig = v; return this;} private boolean file_is_orig;
 	public int			File_w() {return file_w;} private int file_w;
@@ -76,18 +79,20 @@ public class Xof_fsdb_itm {
 	public Js_img_wkr	Html_img_wkr() {return html_img_wkr;} public void Html_img_wkr_(Js_img_wkr v) {html_img_wkr = v;} private Js_img_wkr html_img_wkr;
 	public void			Html_size_calc(Xof_img_size img_size, byte exec_tid) {
 		if (!lnki_ext.Id_is_audio_strict()) {	// audio does not have html size calculated; everything else does
-			img_size.Html_size_calc(exec_tid, lnki_w, lnki_h, lnki_type, lnki_upright, lnki_ext.Id(), orig_w, orig_h, Xof_img_size.Thumb_width_img);
+			img_size.Html_size_calc(exec_tid, lnki_w, lnki_h, lnki_type, lnki_upright_patch, lnki_upright, lnki_ext.Id(), orig_w, orig_h, Xof_img_size.Thumb_width_img);
 			html_w = img_size.Html_w(); html_h = img_size.Html_h(); file_w = img_size.File_w();
 			file_is_orig = img_size.File_is_orig();
 			lnki_type_as_mode = file_is_orig ? Xof_repo_itm.Mode_orig : Xof_repo_itm.Mode_thumb;
 		}
 	}
-	public void			Html__init(Xow_repo_mgr repo_mgr, Xof_url_bldr url_bldr, Xof_img_size img_size, byte exec_tid) {
+	public void			Html__init(Xow_repo_mgr repo_mgr, Xof_url_bldr url_bldr, Xof_img_size img_size, byte exec_tid) {this.Html__init(repo_mgr.Repos_get_by_wiki(orig_wiki).Trg(), url_bldr, img_size, exec_tid);}
+	public void			Html__init(Xof_repo_itm repo, Xof_url_bldr url_bldr, Xof_img_size img_size, byte exec_tid) {
 		Html_size_calc(img_size, exec_tid);
-		Xof_repo_itm repo = repo_mgr.Repos_get_by_wiki(orig_wiki).Trg();
-		byte[] name_bry = ByteAry_.Len_eq_0(orig_redirect) ? lnki_ttl : orig_redirect; 
-		html_url = url_bldr.Set_trg_file_(lnki_type_as_mode, repo, name_bry, lnki_md5, lnki_ext, html_w, lnki_thumbtime, lnki_page).Xto_url();
-		html_orig_url = url_bldr.Set_trg_file_(Xof_repo_itm.Mode_orig, repo, name_bry, lnki_md5, lnki_ext, Xof_img_size.Size_null_deprecated, Xof_doc_thumb.Null, Xof_doc_page.Null).Xto_url();
+		byte[] name_bry = Bry_.Len_eq_0(orig_redirect) ? lnki_ttl : orig_redirect; 
+		if (!lnki_ext.Id_is_media() && lnki_thumbtime != Xof_doc_thumb.Null)	// file is not media, but has thumbtime; this check can't be moved to Lnki_thumbtime_() b/c it needs ext
+			lnki_thumbtime = Xof_doc_thumb.Null;								// set thumbtime to null; needed else url will reference thumbtime; PAGE:en.w:Moon; EX:[[File:Lunar libration with phase Oct 2007 450px.gif|thumbtime=0:02]]; DATE:2014-07-20
+		html_url = url_bldr.Init_for_trg_file(lnki_type_as_mode, repo, name_bry, lnki_md5, lnki_ext, html_w, lnki_thumbtime, lnki_page).Xto_url();
+		html_orig_url = url_bldr.Init_for_trg_file(Xof_repo_itm.Mode_orig, repo, name_bry, lnki_md5, lnki_ext, Xof_img_size.Size_null_deprecated, Xof_doc_thumb.Null, Xof_doc_page.Null).Xto_url();
 	}
 	public Io_url Html_orig_url() {return html_orig_url;} public Xof_fsdb_itm Html_orig_url_(Io_url v) {this.html_orig_url = v; return this;} private Io_url html_orig_url = Io_url_.Null;
 	public int Gallery_mgr_h() {return gallery_mgr_h;} public Xof_fsdb_itm Gallery_mgr_h_(int v) {gallery_mgr_h = v; return this;} private int gallery_mgr_h = Int_.Neg1;
@@ -96,4 +101,14 @@ public class Xof_fsdb_itm {
 	public byte Rslt_bin() {return rslt_bin;} public Xof_fsdb_itm Rslt_bin_(byte v) {this.rslt_bin = v; return this;} private byte rslt_bin;
 	public byte Rslt_cnv() {return rslt_cnv;} public Xof_fsdb_itm Rslt_cnv_(byte v) {this.rslt_cnv = v; return this;} private byte rslt_cnv;
 	public boolean Rslt_fil_created() {return rslt_fil_created;} public Xof_fsdb_itm Rslt_fil_created_(boolean v) {rslt_fil_created = v; return this;} private boolean rslt_fil_created;
+	public static byte[] Bld_key_to_bry(Bry_bfr bfr, byte[] dir_name, byte[] fil_name, boolean fil_is_orig, int fil_w, double fil_thumbtime, int fil_page) {
+		bfr	.Add(dir_name).Add_byte_pipe()
+			.Add(fil_name).Add_byte_pipe()
+			.Add_int_bool(fil_is_orig).Add_byte_pipe()
+			.Add_int_variable(fil_w).Add_byte_pipe()
+			.Add_double(fil_thumbtime).Add_byte_pipe()
+			.Add_int_variable(fil_page).Add_byte_pipe()
+			;
+		return bfr.Xto_bry_and_clear();
+	}
 }

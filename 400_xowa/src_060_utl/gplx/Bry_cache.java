@@ -16,19 +16,20 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.primitives.*;
 public class Bry_cache {
-	public byte[] Get_or_new(String v) {return Get_or_new(ByteAry_.new_utf8_(v));}
+	public byte[] Get_or_new(String v) {return Get_or_new(Bry_.new_utf8_(v));}
 	public byte[] Get_or_new(byte[] v) {
-		if (v.length == 0) return ByteAry_.Empty;
+		if (v.length == 0) return Bry_.Empty;
 		Object rv = hash.Fetch(hash_ref.Val_(v));
 		if (rv == null) {
-			ByteAryRef bry = ByteAryRef.new_(v);
+			Bry_obj_ref bry = Bry_obj_ref.new_(v);
 			hash.AddKeyVal(bry);
 			return v;
 		}
 		else
-			return ((ByteAryRef)rv).Val();
+			return ((Bry_obj_ref)rv).Val();
 	}
-	HashAdp hash = HashAdp_.new_(); ByteAryRef hash_ref = ByteAryRef.null_();
+	HashAdp hash = HashAdp_.new_(); Bry_obj_ref hash_ref = Bry_obj_ref.null_();
 	public static final Bry_cache _ = new Bry_cache(); Bry_cache() {}
 }

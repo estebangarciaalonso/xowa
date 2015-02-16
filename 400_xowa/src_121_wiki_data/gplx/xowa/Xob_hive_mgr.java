@@ -52,7 +52,7 @@ public class Xob_hive_mgr {
 			int rows_len = xdat_file.Count();
 			for (; row_idx < rows_len; row_idx++) {
 				xdat_file.GetAt(xdat_itm, row_idx);
-				Xodb_page ttl_itm = Xodb_page_.Txt_ttl_load(ByteAry_.Mid(xdat_itm.Src(), xdat_itm.Itm_bgn(), xdat_itm.Itm_end()));
+				Xodb_page ttl_itm = Xodb_page_.Txt_ttl_load(Bry_.Mid(xdat_itm.Src(), xdat_itm.Itm_bgn(), xdat_itm.Itm_end()));
 				if (!include_redirects && ttl_itm.Type_redirect()) continue;
 				++count;
 				nxt_itm = ttl_itm;
@@ -87,7 +87,7 @@ public class Xob_hive_mgr {
 				row_idx = xdat_file.Count() - 1;
 			for (; row_idx > -1; row_idx--) {
 				xdat_file.GetAt(xdat_itm, row_idx);
-				Xodb_page ttl_itm = Xodb_page_.Txt_ttl_load(ByteAry_.Mid(xdat_itm.Src(), xdat_itm.Itm_bgn(), xdat_itm.Itm_end()));
+				Xodb_page ttl_itm = Xodb_page_.Txt_ttl_load(Bry_.Mid(xdat_itm.Src(), xdat_itm.Itm_bgn(), xdat_itm.Itm_end()));
 				if (!include_redirects && ttl_itm.Type_redirect()) continue;
 //				list.Add(ttl_itm);
 				++count;
@@ -133,7 +133,7 @@ public class Xob_hive_mgr {
 //				first = false;
 //				for (; row_idx > -1; row_idx--) {
 //					xdat.GetAt(xdat_itm, row_idx);
-//					Xodb_page ttl_itm = Xodb_page_.Txt_ttl_load(ByteAry_.Mid(xdat_itm.Src(), xdat_itm.Itm_bgn(), xdat_itm.Itm_end()));
+//					Xodb_page ttl_itm = Xodb_page_.Txt_ttl_load(Bry_.Mid(xdat_itm.Src(), xdat_itm.Itm_bgn(), xdat_itm.Itm_end()));
 //					if (!include_redirects && ttl_itm.Type_redirect()) continue;
 //					list.Add(ttl_itm);
 //					if (++count == total) {loop = false; break;}
@@ -157,7 +157,7 @@ public class Xob_hive_mgr {
 			first = false;
 			for (; row_idx < rows_len; row_idx++) {
 				xdat.GetAt(xdat_itm, row_idx);
-				Xodb_page ttl_itm = Xodb_page_.Txt_ttl_load(ByteAry_.Mid(xdat_itm.Src(), xdat_itm.Itm_bgn(), xdat_itm.Itm_end()));
+				Xodb_page ttl_itm = Xodb_page_.Txt_ttl_load(Bry_.Mid(xdat_itm.Src(), xdat_itm.Itm_bgn(), xdat_itm.Itm_end()));
 				if (!include_redirects && ttl_itm.Type_redirect()) continue;
 				list.Add(ttl_itm);
 				if (++count == total) {loop = false; break;}
@@ -185,7 +185,7 @@ public class Xob_hive_mgr {
 		Xob_xdat_file xdat_fil = new Xob_xdat_file();
 		if (xdat_bry.length > 0)	// if file is not empty, load it and parse it
 			xdat_fil.Parse(xdat_bry, xdat_bry.length, xdat_url);
-		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
+		Bry_bfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
 		xdat_fil.Insert(tmp_bfr, row);
 		xdat_fil.Save(xdat_url);
 		tmp_bfr.Mkr_rls();

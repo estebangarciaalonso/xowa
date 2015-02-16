@@ -37,7 +37,7 @@ class Int_rng_mgr_base implements Int_rng_mgr {
 		return false;
 	}
 	public boolean Parse(byte[] src) {
-		byte[][] lines = ByteAry_.Split(src, Byte_ascii.Comma);
+		byte[][] lines = Bry_.Split(src, Byte_ascii.Comma);
 		int lines_len = lines.length;
 		for (int i = 0; i < lines_len; i++) {
 			if (!Parse_line(lines[i])) {
@@ -59,14 +59,14 @@ class Int_rng_mgr_base implements Int_rng_mgr {
 					if (pos == -1) pos = i;
 					break;
 				case Byte_ascii.Dash:
-					val_bgn = ByteAry_.X_to_int_or(src, pos, i, -1); if (val_bgn == -1) return false;
+					val_bgn = Bry_.Xto_int_or(src, pos, i, -1); if (val_bgn == -1) return false;
 					pos = -1;
 					break;
 				default:	// invalid char;
 					return false;
 			}
 		}
-		int val_end = ByteAry_.X_to_int_or(src, pos, src_len, -1); if (val_end == -1) return false;
+		int val_end = Bry_.Xto_int_or(src, pos, src_len, -1); if (val_end == -1) return false;
 		if (val_bgn == -1)
 			itms.Add(new Int_where_val(val_end));
 		else

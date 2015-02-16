@@ -30,6 +30,11 @@ public class ListAdp_ {
 		list.DelAt(lastIdx);
 		return rv;
 	}
+	public static Object Pop_first(ListAdp list) {	// NOTE: dirty way of implementing FIFO queue; should not be used with lists with many members
+		Object rv = list.FetchAt(0);
+		list.DelAt(0);
+		return rv;
+	}
 	public static void DisposeAll(ListAdp list) {
 		for (int i = 0; i < list.Count(); i++)
 			((RlsAble)list.FetchAt(i)).Rls();
@@ -68,10 +73,11 @@ class ListAdp_null implements ListAdp {
 	public void MoveTo(int elemPos, int newPos) {}
 	public boolean RangeCheck(int v) {return false;}
 	public void ResizeBounds(int i) {}
-	public Object XtoAry(Class<?> memberType) {return Object_.Ary_empty;}
-	public Object XtoAryAndClear(Class<?> memberType) {return Object_.Ary_empty;}
+	public Object Xto_ary(Class<?> memberType) {return Object_.Ary_empty;}
+	public Object Xto_ary_and_clear(Class<?> memberType) {return Object_.Ary_empty;}
 	public String XtoStr() {return "< NULL LIST >";}
 	public String[] XtoStrAry() {return new String[0];}
+	public Object[] Xto_obj_ary() {return Object_.Ary_empty;}
 	public java.util.Iterator iterator() {return Iterator_null._;}
 	public void Reverse() {}
 	public void SetAt(int i, Object o) {}

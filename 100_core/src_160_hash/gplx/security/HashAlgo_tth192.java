@@ -20,7 +20,7 @@ import gplx.ios.*; /*IoStream*/
 public class HashAlgo_tth192 implements HashAlgo {
 	public String Key() {return KEY;} public static final String KEY = "tth192";
 	public int BlockSize() {return blockSize;} public void BlockSize_set(int v) {blockSize = v;} int blockSize = 1024;
-	public byte[] Calc_hash_bry(byte[] v) {return ByteAry_.new_ascii_(CalcHash(ConsoleDlg_.Null, gplx.ios.IoStream_.ary_(v)));}
+	public byte[] Calc_hash_bry(byte[] v) {return Bry_.new_ascii_(CalcHash(ConsoleDlg_.Null, gplx.ios.IoStream_.ary_(v)));}
 	public String CalcHash(ConsoleDlg dialog, IoStream stream) {
 		int leafCount = (int)(stream.Len() / blockSize);
 		HashDlgWtr dialogWtr = HashDlgWtr_.Current;
@@ -159,7 +159,7 @@ class HashDlgWtrDefault implements HashDlgWtr {
 		current += increment;
 		int percentage = (current * 100) / total;
 		if (percentage <= lastPercentage) return;
-		dialog.WriteTempText(String_.LimitToFirst(p, dialog.CharsPerLineMax()) + Int_.XtoStr(percentage) + "%");
+		dialog.WriteTempText(String_.LimitToFirst(p, dialog.CharsPerLineMax()) + Int_.Xto_str(percentage) + "%");
 		lastPercentage = percentage;			
 	}
 	public void End() {}

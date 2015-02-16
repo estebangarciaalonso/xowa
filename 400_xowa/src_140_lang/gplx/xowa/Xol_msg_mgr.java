@@ -37,10 +37,10 @@ public class Xol_msg_mgr implements GfoInvkAble {
 		Itms_reg(rv);
 		return rv;
 	}
-	public Xol_msg_itm Itm_by_key_or_new(String key, String val) {return Itm_by_key_or_new(key, val, false);}
+	public Xol_msg_itm Itm_by_key_or_new(String key, String val) {return Itm_by_key_or_new(key, val, false);}	// TEST:
 	public Xol_msg_itm Itm_by_key_or_new(String key, String val, boolean has_fmt_arg) {	// TEST:
-		Xol_msg_itm rv = Itm_by_key_or_new(ByteAry_.new_utf8_(key));
-		rv.Atrs_set(ByteAry_.new_utf8_(val), has_fmt_arg, false);
+		Xol_msg_itm rv = Itm_by_key_or_new(Bry_.new_utf8_(key));
+		Xol_msg_itm_.update_val_(rv, Bry_.new_utf8_(val));
 		return rv;
 	}
 	public Xol_msg_itm Itm_by_key_or_new(byte[] key) {
@@ -63,12 +63,13 @@ public class Xol_msg_mgr implements GfoInvkAble {
 		Xol_msg_itm itm = Itm_by_id_or_null(id);
 		if (itm == null) return null;
 		byte[] rv = itm.Val();
-		if (itm.Has_tmpl_txt()) rv = Xop_parser_.Parse_fragment(wiki, rv);
+		if (itm.Has_tmpl_txt()) rv = wiki.Parser().Parse_text_to_wtxt(rv);
 		return rv;
 	}
-	public byte[] Val_by_id_args(int id, ByteAryBfr bfr, Object... args) {
-		Xol_msg_itm itm = Itm_by_id_or_null(id); if (itm == null) return null;
-		return itm.Fmt(bfr, args);
+	public byte[] Val_by_str_or_empty(String str) {return Val_by_bry_or(Bry_.new_utf8_(str), Bry_.Empty);}
+	public byte[] Val_by_bry_or(byte[] bry, byte[] or) {
+		Xol_msg_itm itm = Itm_by_key_or_null(bry);
+		return itm == null ? or : itm.Val();
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_lang))					return owner;
@@ -93,7 +94,7 @@ public class Xol_msg_mgr implements GfoInvkAble {
 		return rv;
 	}
 	private static HashAdp Hash_new(Xol_msg_itm[] ary) {
-		HashAdp rv = Hash_adp_bry.ci_();
+		HashAdp rv = Hash_adp_bry.ci_ascii_();	// ASCII:MW messages are currently all ASCII
 		for (int i = 0; i < Xol_msg_itm_.Id__max; i++) {
 			Xol_msg_itm itm = ary[i]; if (itm == null) continue;	// NOTE: can be null when msg_mgr is owned by wiki
 			rv.Add(itm.Key(), itm);

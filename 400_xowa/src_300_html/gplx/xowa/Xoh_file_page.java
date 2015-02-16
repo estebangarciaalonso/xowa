@@ -21,11 +21,11 @@ public class Xoh_file_page implements GfoInvkAble {
 	public Int_2_ref[]	Size_alts() {return size_alts;} Int_2_ref[] size_alts;
 	public byte[] Html_alt_dlm_default() {return html_alt_dlm_dflt;} private byte[] html_alt_dlm_dflt;
 	public byte[] Html_alt_dlm_last() {return html_alt_dlm_last;} private byte[] html_alt_dlm_last;
-	public ByteAryFmtr	Html_main() {return html_main;} ByteAryFmtr html_main = ByteAryFmtr.new_("", "media");
-	public ByteAryFmtr	Html_main_img() {return html_main_img;} ByteAryFmtr html_main_img = ByteAryFmtr.new_("", "orig_width", "orig_height", "orig_href", "orig_file_size", "orig_mime_type", "elem_id", "thumb_width", "thumb_height", "thumb_href", "thumb_ttl", "thumb_name", "section_alts");
-	public ByteAryFmtr	Html_main_aud() {return html_main_aud;} ByteAryFmtr html_main_aud = ByteAryFmtr.new_("", "lnki_url", "lnki_title", "play_width", "play_max_width", "play_icon");
-	public ByteAryFmtr	Html_main_vid() {return html_main_vid;} ByteAryFmtr html_main_vid = ByteAryFmtr.new_("", "elem_id", "lnki_href", "lnki_class", "lnki_title", "lnki_src", "lnki_width", "lnki_height", "lnki_alt", "lnki_url", "play_width", "play_max_width", "play_icon");
-	public ByteAryFmtr	Html_alts() {return html_alts;} ByteAryFmtr html_alts = ByteAryFmtr.new_("", "thumb_width", "thumb_height", "thumb_href", "thumb_dlm");
+	public Bry_fmtr	Html_main() {return html_main;} Bry_fmtr html_main = Bry_fmtr.new_("", "media");
+	public Bry_fmtr	Html_main_img() {return html_main_img;} Bry_fmtr html_main_img = Bry_fmtr.new_("", "orig_width", "orig_height", "orig_href", "orig_file_size", "orig_mime_type", "elem_id", "thumb_width", "thumb_height", "thumb_href", "thumb_ttl", "thumb_name", "section_alts");
+	public Bry_fmtr	Html_main_aud() {return html_main_aud;} Bry_fmtr html_main_aud = Bry_fmtr.new_("", "lnki_url", "lnki_title", "play_width", "play_max_width", "play_icon");
+	public Bry_fmtr	Html_main_vid() {return html_main_vid;} Bry_fmtr html_main_vid = Bry_fmtr.new_("", "elem_id", "lnki_href", "lnki_class", "lnki_title", "lnki_src", "lnki_width", "lnki_height", "lnki_alt", "lnki_url", "play_width", "play_max_width", "play_icon");
+	public Bry_fmtr	Html_alts() {return html_alts;} Bry_fmtr html_alts = Bry_fmtr.new_("", "thumb_width", "thumb_height", "thumb_href", "thumb_dlm");
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_html_main_))				html_main.Fmt_(m.ReadStr("v"));
 		else if	(ctx.Match(k, Invk_html_main_img_))			html_main_img.Fmt_(m.ReadStr("v"));
@@ -43,9 +43,9 @@ public class Xoh_file_page implements GfoInvkAble {
 	public Xoh_file_page() {
 		size_main = new Int_2_ref(800, 600);
 		size_alts = new Int_2_ref[] {new Int_2_ref(320, 240), new Int_2_ref(640, 480), new Int_2_ref(800, 600), new Int_2_ref(1024, 768), new Int_2_ref(1280, 1024)};
-		html_alt_dlm_dflt = ByteAry_.new_ascii_("|");
-		html_alt_dlm_last = ByteAry_.new_ascii_(".");
-		html_main.Fmt_(String_.Concat_lines_nl_skipLast
+		html_alt_dlm_dflt = Bry_.new_ascii_("|");
+		html_alt_dlm_last = Bry_.new_ascii_(".");
+		html_main.Fmt_(String_.Concat_lines_nl_skip_last
 			(	"<ul id=\"filetoc\">"
 			,	"  <li>"
 			,	"    <a href=\"#file\">"
@@ -70,7 +70,7 @@ public class Xoh_file_page implements GfoInvkAble {
 			,	"</ul>"
 			,	"~{media}"
 			));
-		html_main_img.Fmt_(String_.Concat_lines_nl_skipLast
+		html_main_img.Fmt_(String_.Concat_lines_nl_skip_last
 			(	"<div class=\"fullImageLink\" id=\"file\">"
 			,	"  <a href=\"~{orig_href}\" xowa_title=\"~{thumb_name}\">"
 			,	"    <img id=\"xowa_file_img_~{elem_id}\" alt=\"~{thumb_ttl}\" src=\"~{thumb_href}\" width=\"~{thumb_width}\" height=\"~{thumb_height}\" />"
@@ -97,7 +97,7 @@ public class Xoh_file_page implements GfoInvkAble {
 			,	"</div>"
 			,	""
 			));
-		html_main_aud.Fmt_(String_.Concat_lines_nl_skipLast
+		html_main_aud.Fmt_(String_.Concat_lines_nl_skip_last
 			(	"<div class=\"fullImageLink\" id=\"file\">"
 			,	"  <div>" 
 			,	"    <a href=\"~{lnki_url}\" xowa_title=\"~{lnki_title}\" class=\"xowa_anchor_button\" style=\"width:~{play_width}px;max-width:~{play_max_width}px;\">"
@@ -107,7 +107,7 @@ public class Xoh_file_page implements GfoInvkAble {
 			,	"</div>"
 			,	""
 			));
-		html_main_vid.Fmt_(String_.Concat_lines_nl_skipLast
+		html_main_vid.Fmt_(String_.Concat_lines_nl_skip_last
 			(	"<div class=\"fullImageLink\" id=\"file\">"
 			,	"  <div>" 
 			,	"    <a href=\"~{lnki_href}\" class=\"~{lnki_class}\" title=\"~{lnki_title}\">"
@@ -122,7 +122,7 @@ public class Xoh_file_page implements GfoInvkAble {
 			,	"</div>"
 			,	""
 			));
-		html_alts.Fmt_(String_.Concat_lines_nl_skipLast
+		html_alts.Fmt_(String_.Concat_lines_nl_skip_last
 			(	"      <a href=\"~{thumb_href}\" class=\"mw-thumbnail-link\">"
 			,	"        ~{thumb_width} × ~{thumb_height}"
 			,	"      </a>"

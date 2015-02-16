@@ -169,24 +169,6 @@ public class Xot_invk_wkr_basic_tst {
 	@Test  public void Err_tmp_empty() {	// PURPOSE: {{{{R from misspelling}} }}
 		fxt.Init_log_(Xop_ttl_log.Invalid_char).Test_parse_tmpl_str_test("{{{1}}}"										, "{{ {{a}} }}"					, "{{[[:Template:a]]}}");
 	}
-	@Test  public void Prepend_nl() {	// PURPOSE: if {| : ; # *, auto add new_line REF.MW:Parser.php|braceSubstitution
-		fxt.Init_defn_clear();
-		fxt.Init_defn_add("test_inner", "# a");
-		fxt.Test_parse_tmpl_str_test("{{test_inner}}"	, "z {{test}}"				, "z \n# a");
-		fxt.Init_defn_clear();
-	}
-	@Test  public void Prepend_nl_skip_if_nl_exists() {
-		fxt.Init_defn_clear();
-		fxt.Init_defn_add("test_inner", "# a");
-		fxt.Test_parse_tmpl_str_test("{{test_inner}}"	, "z \n{{test}}"			, "z \n# a");		// NOTE: no \n
-		fxt.Init_defn_clear();
-	}
-	@Test  public void Prepend_nl_pf() {// PURPOSE: if {| : ; # *, auto add new_line; parser_function variant; EX.WP:Soviet Union; Infobox former country
-		fxt.Test_parse_tmpl_str_test(""					, "z {{#if:true|#a|n}}"		, "z \n#a");
-	}
-	@Test  public void Prepend_nl_always() {	// PURPOSE: function should expand "*a" to "\n*a" even if "*a" is bos; SEE:NOTE_1 EX.WP: Rome and Panoramas;
-		fxt.Test_parse_page_tmpl_str("{{#if:x|*a}}", "\n*a");
-	}
 	@Test  public void Mismatch_bgn() {	// PURPOSE: handle {{{ }}; WP:Paris Commune; Infobox Former Country
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("!", "|");
@@ -195,7 +177,7 @@ public class Xot_invk_wkr_basic_tst {
 	@Test  public void Mismatch_tblw() {	// PURPOSE: handle {{{!}}; WP:Soviet Union
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("!", "|");
-		fxt.Test_parse_page_all_str("a\n{{{!}}\n|b\n|}", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str("a\n{{{!}}\n|b\n|}", String_.Concat_lines_nl_skip_last
 			(	"a"
 			,	"<table>"
 			,	"  <tr>"
@@ -228,7 +210,7 @@ public class Xot_invk_wkr_basic_tst {
 	@Test  public void Missing_foreign() {
 		Xow_ns ns = fxt.Wiki().Ns_mgr().Ns_template();
 		byte[] old_ns = ns.Name_bry();
-		ns.Name_bry_(ByteAry_.new_ascii_("Template_foreign"));
+		ns.Name_bry_(Bry_.new_ascii_("Template_foreign"));
 		fxt.Test_parse_tmpl_str("{{Missing}}", "[[:Template_foreign:Missing]]");
 		ns.Name_bry_(old_ns);
 	}
@@ -261,7 +243,7 @@ public class Xot_invk_wkr_basic_tst {
 		fxt.Test_parse_tmpl_str("{{test_1| a }}", "a");
 		fxt.Init_defn_clear();
 	}
-	@Test  public void Ws_trimmed_key_2() {	// PURPOSE: trim prm; note that 1 is key not idx; EX.WP:Coord in Chernobyl disaster, Sahara
+	@Test  public void Ws_trimmed_key_2() {	// PURPOSE: trim prm; note that 1 is key not idx; PAGE:en.w:Coord in Chernobyl disaster, Sahara
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("test_1", "{{test_2|1={{{1}}}}}");
 		fxt.Init_defn_add("test_2", "{{{1}}}");
@@ -277,13 +259,13 @@ public class Xot_invk_wkr_basic_tst {
 	}
 	@Test  public void Ws_eval_prm() {	// PURPOSE: skip ws in prm_idx; EX:it.w:Portale:Giochi_da_tavolo; it.w:Template:Alternate; DATE:2014-02-09
 		fxt.Init_defn_clear();
-		fxt.Init_defn_add("test_1", String_.Concat_lines_nl_skipLast
+		fxt.Init_defn_add("test_1", String_.Concat_lines_nl_skip_last
 		(	"{{{ {{#expr: 1}} }}}"
 		));
 		fxt.Test_parse_tmpl_str("{{test_1|a}}", "a");
 		fxt.Init_defn_clear();
 	}
-	@Test  public void Keyd_arg_is_trimmed() { // PURPOSE: trim entire arg only, not individual prm; EX.WP: William Shakespeare; {{Relatebardtree}}
+	@Test  public void Keyd_arg_is_trimmed() { // PURPOSE: trim entire arg only, not individual prm; PAGE:en.w:William Shakespeare; {{Relatebardtree}}
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("test_1", "{{test_2|1={{{{{{1}}}}}}}}");
 		fxt.Init_defn_add("test_2", "{{{1}}}");
@@ -296,7 +278,7 @@ public class Xot_invk_wkr_basic_tst {
 		fxt.Test_parse_tmpl_str("{{test_1| }}", "(? [[dynamic is blank]] ?)");
 		fxt.Init_defn_clear();
 	}
-	@Test  public void Xnde_xtn_ref_not_arg() {	// PURPOSE: <ref name= should not be interpreted as arg; EX: {{tmp|a<ref name="b"/>}}; arg1 is a<ref name="b"/> not "b"; EX.WP: WWI
+	@Test  public void Xnde_xtn_ref_not_arg() {	// PURPOSE: <ref name= should not be interpreted as arg; EX: {{tmp|a<ref name="b"/>}}; arg1 is a<ref name="b"/> not "b"; PAGE:en.w:WWI
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("test_1", "{{{1}}}");
 		fxt.Test_parse_page_tmpl_str("{{test_1|a<ref name=b />}}", "a<ref name=b />");
@@ -310,30 +292,8 @@ public class Xot_invk_wkr_basic_tst {
 			)
 			);
 	}
-	@Test  public void Raw() { // PURPOSE: {{raw:A}} is same as {{A}}; EX.WIKT:android; {{raw:ja/script}}
-		fxt.Init_defn_clear();
-		fxt.Init_defn_add("Test 1", "{{#if:|y|{{{1}}}}}");
-		fxt.Test_parse_tmpl_str("{{raw:Test 1|a}}", "a");
-		fxt.Init_defn_clear();
-	}
-	@Test  public void Raw_spanish() { // PURPOSE.fix: {{raw}} should not fail; EX:es.s:Carta_a_Silvia; DATE:2014-02-11
-		fxt.Test_parse_tmpl_str("{{raw}}", "[[:Template:raw]]");	// used to fail; now tries to get Template:Raw which doesn't exist
-	}
-	@Test  public void Special() { // PURPOSE: {{Special:Whatlinkshere}} is same as [[:Special:Whatlinkshere]]; EX.WIKT:android; isValidPageName
-		fxt.Test_parse_page_tmpl_str("{{Special:Whatlinkshere}}", "[[:Special:Whatlinkshere]]");
-	}
-	@Test  public void Special_arg() { // PURPOSE: make sure Special still works with {{{1}}}
-		fxt.Init_defn_clear();
-		fxt.Init_defn_add("Test1", "{{Special:Whatlinkshere/{{{1}}}}}");
-		fxt.Test_parse_tmpl_str("{{Test1|-1}}", "[[:Special:Whatlinkshere/-1]]");
-		fxt.Init_defn_clear();
-	}
-	@Test  public void Raw_special() { // PURPOSE: {{raw:A}} is same as {{A}}; EX.WIKT:android; {{raw:ja/script}}
-		fxt.Test_parse_tmpl_str("{{raw:Special:Whatlinkshere}}", "[[:Special:Whatlinkshere]]");
-		fxt.Init_defn_clear();
-	}
 	@Test  public void Lnki_has_invk_end() {// PURPOSE: [[A|bcd}}]] should not break enclosing templates; EX.CM:Template:Protect
-		fxt.Test_parse_page_tmpl_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_tmpl_str(String_.Concat_lines_nl_skip_last
 			(	"{{#switch:y"
 			,	"  |y=[[A|b}}]]"
 			,	"  |#default=n"
@@ -341,7 +301,7 @@ public class Xot_invk_wkr_basic_tst {
 			),	"[[A|b}}]]");		
 	}
 	@Test  public void Lnki_has_prm_end() {// PURPOSE: [[A|bcd}}}]] should not break enclosing templates; EX.CM:Template:Protect
-		fxt.Test_parse_page_tmpl_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_tmpl_str(String_.Concat_lines_nl_skip_last
 			(	"{{#switch:y"
 			,	"  |y=[[A|b}}}]]"
 			,	"  |#default=n"
@@ -391,12 +351,12 @@ public class Xot_invk_wkr_basic_tst {
 //			fxt.Init_defn_clear();
 //		}
 	@Test   public void Nowiki_tblw() {	// PURPOSE: nowiki does not exclude sections with pipe; will cause tables to fail; EX: de.wikipedia.org/wiki/Hilfe:Vorlagenprogrammierung
-		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skip_last
 		(	"{|"
 		,	"|-"
 		,	"|<nowiki>{{ #time:M|Jan}}</nowiki>"
 		,	"|}"
-		), String_.Concat_lines_nl_skipLast
+		), String_.Concat_lines_nl_skip_last
 		(	"<table>"
 		,	"  <tr>"	
 		,	"    <td>{{ #time:M|Jan}}"	
@@ -420,19 +380,56 @@ public class Xot_invk_wkr_basic_tst {
 	@Test  public void Ignore_hdr() {	// PURPOSE: hdr-like tkns inside tmpl should not be treated as "=" in tmpl_prm; EX: key_1\n==a==; EX:it.b:Wikibooks:Vetrina; DATE:2014-02-09
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("test_1", "{{{key_1|null_key_1}}}");
-		fxt.Test_parse_tmpl_str(String_.Concat_lines_nl_skipLast		// == a === should be treated as hdr;
+		fxt.Test_parse_tmpl_str(String_.Concat_lines_nl_skip_last		// == a === should be treated as hdr;
 		(	"{{test_1|key_1"
 		,	"== a =="
 		,	"}}"
 		)
 		,	"null_key_1"
 		);
-		fxt.Test_parse_tmpl_str(String_.Concat_lines_nl_skipLast		// = a = should not be treated as hdr; 
+		fxt.Test_parse_tmpl_str(String_.Concat_lines_nl_skip_last		// = a = should not be treated as hdr; 
 		(	"{{test_1|key_1"
 		,	"= a ="
 		,	"}}"
 		)
 		,	"a ="
+		);
+		fxt.Init_defn_clear();
+	}
+	@Test  public void Ignore_hdr_2() {	// PURPOSE: hdr-like logic did not work for "== \n"; PAGE:nl.q:Geert_Wilders; DATE:2014-06-05
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("Hdr_w_space", String_.Concat_lines_nl_skip_last
+		( "{{#if:{{{key|}}} | "
+		, "==={{{key}}}=== "	// NOTE " " after "==="
+		, "|}}"
+		));
+		fxt.Test_parse_page_tmpl_str(String_.Concat_lines_nl_skip_last
+		( "{{Hdr_w_space"
+		, "|key=A"
+		, "}}"
+		), "===A==="
+		);
+		fxt.Init_defn_clear();
+	}
+	@Test  public void Ignore_hdr_3() {	// PURPOSE: tkn with multiple eq should have be treated as value, not header; PAGE:zh.w:Wikipedia:条目评选; DATE:2014-08-27
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("test_1", "{{{key_1|null_key_1}}}");
+		fxt.Test_parse_page_tmpl_str(String_.Concat_lines_nl_skip_last
+		( "{{test_1"
+		, "|key_1===A=="	// note that this is not "===A==", but "=","===A=="
+		, "}}"
+		), "==A=="
+		);
+		fxt.Init_defn_clear();
+	}
+	@Test  public void Ignore_hdr_4() {	// PURPOSE: variation of above; make sure 2nd "==" doesn't trigger another key; DATE:2014-08-27
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("test_1", "{{{key_1|null_key_1}}}");
+		fxt.Test_parse_page_tmpl_str(String_.Concat_lines_nl_skip_last
+		( "{{test_1"
+		, "|key_1===A===B"	// = should be at "==A", not "==B"
+		, "}}"
+		), "==A===B"
 		);
 		fxt.Init_defn_clear();
 	}
@@ -443,13 +440,14 @@ public class Xot_invk_wkr_basic_tst {
 		fxt.Test_parse_tmpl_str("{{cASE_MATCH}}",	"found");				// Xot_invk_tkn will do 2 searches: "tEST" and "TEST"
 		fxt.Init_defn_clear();
 	}
+	@Test  public void Kv_same() {	// PURPOSE: multiple identical keys should retrieve last, not first; EX: {{A|1=a|1=b}}; PAGE:el.d:ἔχω DATE:2014-07-23
+		fxt.Init_defn_clear();
+		fxt.Init_defn_add("tmpl_1", "{{{1}}}");
+		fxt.Test_parse_tmpl_str_test("{{tmpl_1|1=a|1=b}}"	, "{{test}}"		, "b");	// duplicate "1"; use last
+		fxt.Test_parse_tmpl_str_test("{{tmpl_1|a|1=b}}"		, "{{test}}"		, "b");	// "a" has implicit key of "1"; overwritten by "1=b"; verified against MW
+		fxt.Test_parse_tmpl_str_test("{{tmpl_1|1=a|b}}"		, "{{test}}"		, "b");	// "b" has implicit key of "1"; overwritten by "1=b"; verified against MW
+	}
+	@Test  public void Bang() {	// PURPOSE: support new bang keyword; DATE:2014-08-05
+		fxt.Test_parse_tmpl_str("{{!}}", "|");
+	}
 }
-/*
-NOTE_1: function should expand "*a" to "\n*a" even if "*a" is bos
-consider following
-Template:Test with text of "#a"
-a) "a{{test}}" would return "a\n#a" b/c of rule for auto-adding \n
-b) bug was that "{{test}}" would return "#a" b/c "#a" was at bos which would expand to list later
-   however, needs to be "\n#a" b/c appended to other strings wherein bos would be irrelevant.
-Actual situation was very complicated. EX.WP:Rome
-*/

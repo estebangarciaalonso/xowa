@@ -17,12 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
 import org.junit.*;
+import gplx.xowa.net.*;
 public class Gfo_url_parser_tst {
 	Gfo_url_parser_chkr fxt = new Gfo_url_parser_chkr();
 	@Before public void init() {fxt.Reset();}
 	@Test  public void All() {
 		fxt.Raw_("http://en.wikipedia.org/wiki/mock/Page 0#a?b=c&d=e")
-			.Protocol_tid_(Gfo_url_parser.Protocol_http_tid)
+			.Protocol_tid_(Xoo_protocol_itm.Tid_http)
 			.Site_("en.wikipedia.org")
 			.Site_sub_("en")
 			.Site_name_("wikipedia")
@@ -36,13 +37,13 @@ public class Gfo_url_parser_tst {
 			.tst_();
 	}
 	@Test  public void Site_slash_none() {
-		fxt.Raw_("http:en.wikipedia.org").Protocol_tid_(Gfo_url_parser.Protocol_http_tid).Site_("en.wikipedia.org").tst_();
+		fxt.Raw_("http:en.wikipedia.org").Protocol_tid_(Xoo_protocol_itm.Tid_http).Site_("en.wikipedia.org").tst_();
 	}
 	@Test  public void Site_slash_many() {
-		fxt.Raw_("http:////en.wikipedia.org").Protocol_tid_(Gfo_url_parser.Protocol_http_tid).Site_("en.wikipedia.org").tst_();
+		fxt.Raw_("http:////en.wikipedia.org").Protocol_tid_(Xoo_protocol_itm.Tid_http).Site_("en.wikipedia.org").tst_();
 	}
 	@Test  public void Site_slash_trailing() {
-		fxt.Raw_("http://en.wikipedia.org/").Protocol_tid_(Gfo_url_parser.Protocol_http_tid).Site_("en.wikipedia.org").tst_();
+		fxt.Raw_("http://en.wikipedia.org/").Protocol_tid_(Xoo_protocol_itm.Tid_http).Site_("en.wikipedia.org").tst_();
 	}
 	@Test  public void Site_dot_1() {
 		fxt.Raw_("http://wikipedia.org").Site_("wikipedia.org").Site_name_("wikipedia").Site_domain_("org").tst_();
@@ -78,7 +79,7 @@ public class Gfo_url_parser_tst {
 		fxt.Reset().Raw_("http://en.wikipedia.org/w/index.php?title=A").Args_("title", "A").tst_();
 	}
 	@Test  public void Relative() {
-		fxt.Raw_("//en.wikipedia.org").Protocol_tid_(Gfo_url_parser.Protocol_http_tid).Site_("en.wikipedia.org").tst_();
+		fxt.Raw_("//en.wikipedia.org").Protocol_tid_(Xoo_protocol_itm.Tid_http).Site_("en.wikipedia.org").tst_();
 	}
 	@Test  public void Parse_site_fast() {
 		fxt.Parse_site_fast_tst("http://a.org/B"		, "a.org");
@@ -100,7 +101,7 @@ class Gfo_url_parser_chkr implements Tst_chkr {
 	public Gfo_url_parser_chkr Args_(String k, String v) 	{args.Add(new Gfo_url_arg_chkr(k, v)); return this;} ListAdp args = ListAdp_.new_();
 	public Gfo_url_parser_chkr Err_(byte v) 				{err = v; return this;} private byte err;
 	public Gfo_url_parser_chkr Reset() {
-		protocol_tid = Gfo_url_parser.Protocol_null_tid;
+		protocol_tid = Xoo_protocol_itm.Tid_null;
 		site = site_sub = site_name = site_domain = page = anchor = null;
 		err = Gfo_url.Err_none;
 		segs.Clear();
@@ -112,28 +113,28 @@ class Gfo_url_parser_chkr implements Tst_chkr {
 		Gfo_url actl = (Gfo_url)actl_obj;
 		int rv = 0;
 		rv += mgr.Tst_val(err == Gfo_url.Err_none, path, "err", err, actl.Err());
-		rv += mgr.Tst_val(protocol_tid == Gfo_url_parser.Protocol_null_tid, path, "protocol_tid", protocol_tid, actl.Protocol_tid());
+		rv += mgr.Tst_val(protocol_tid == Xoo_protocol_itm.Tid_null, path, "protocol_tid", protocol_tid, actl.Protocol_tid());
 		rv += mgr.Tst_val(site == null, path, "site", site, String_.new_utf8_(actl.Site()));
 		rv += mgr.Tst_val(site_sub == null, path, "site_sub", site_sub, String_.new_utf8_(actl.Site_sub()));
 		rv += mgr.Tst_val(site_name == null, path, "site_name", site_name, String_.new_utf8_(actl.Site_name()));
 		rv += mgr.Tst_val(site_domain == null, path, "site_domain", site_domain, String_.new_utf8_(actl.Site_domain()));
-		bry_ary_chkr.Val_(ByteAry_.Ary(segs.XtoStrAry()));
+		bry_ary_chkr.Val_(Bry_.Ary(segs.XtoStrAry()));
 		rv += bry_ary_chkr.Chk(mgr, "segs", actl.Segs());
 		rv += mgr.Tst_val(page == null, path, "page", page, String_.new_utf8_(actl.Page()));
 		rv += mgr.Tst_val(anchor == null, path, "anchor", anchor, String_.new_utf8_(actl.Anchor()));
-		mgr.Tst_sub_ary((Gfo_url_arg_chkr[])args.XtoAry(Gfo_url_arg_chkr.class), actl.Args(), "args", rv);
+		mgr.Tst_sub_ary((Gfo_url_arg_chkr[])args.Xto_ary(Gfo_url_arg_chkr.class), actl.Args(), "args", rv);
 		return rv;
 	}
 	public Gfo_url_parser_chkr Raw_(String v) 				{this.raw = v; return this;} private String raw;
 	public void tst_() {			
-		byte[] bry = ByteAry_.new_utf8_(raw);
+		byte[] bry = Bry_.new_utf8_(raw);
 		Gfo_url url = new Gfo_url();
 		parser.Parse(url, bry, 0, bry.length);
 		Tst_mgr tst_mgr = new Tst_mgr();
 		tst_mgr.Tst_obj(this, url);
 	}	Gfo_url_parser parser = new Gfo_url_parser();
 	public void Parse_site_fast_tst(String raw, String expd) 	{
-		byte[] raw_bry = ByteAry_.new_utf8_(raw);
+		byte[] raw_bry = Bry_.new_utf8_(raw);
 		parser.Parse_site_fast(site_data, raw_bry, 0, raw_bry.length);
 		String actl = String_.new_utf8_(raw_bry, site_data.Site_bgn(), site_data.Site_end());
 		Tfds.Eq(expd, actl);

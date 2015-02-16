@@ -25,5 +25,5 @@ public class Xodb_page_tbl_tst {
 	}
 }
 class Xodb_page_tbl_fxt {
-	public void Test_find_search_end(String val, String expd) {Tfds.Eq(expd, String_.new_utf8_(Xodb_page_tbl.Find_search_end(ByteAry_.new_utf8_(val))));}
+	public void Test_find_search_end(String val, String expd) {Tfds.Eq(expd, String_.new_utf8_(Xodb_page_tbl.Find_search_end(Bry_.new_utf8_(val))));}
 }

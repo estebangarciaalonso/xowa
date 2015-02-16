@@ -19,8 +19,8 @@ package gplx.xowa; import gplx.*;
 public class Xop_xnde_tag_ {
 	public static final int EndNdeMode_normal = 0, EndNdeMode_inline = 1, EndNdeMode_escape = 2; // escape is for hr which does not support </hr>
 	public static final int BgnNdeMode_normal = 0, BgnNdeMode_inline = 1;
-	public static final byte[] Name_onlyinclude = ByteAry_.new_ascii_("onlyinclude");
-	public static final byte[] XtnEndTag_bgn = ByteAry_.new_ascii_("</");//, XtnEndTag_end = ByteAry_.new_ascii_(">");
+	public static final byte[] Name_onlyinclude = Bry_.new_ascii_("onlyinclude");
+	public static final byte[] XtnEndTag_bgn = Bry_.new_ascii_("</");//, XtnEndTag_end = Bry_.new_ascii_(">");
 	public static final byte
   Tid_b = 0
 , Tid_strong = 1
@@ -130,8 +130,13 @@ public class Xop_xnde_tag_ {
 , Tid_listing_see = 105
 , Tid_listing_sleep = 106
 , Tid_rss = 107
+, Tid_xowa_html = 108
+, Tid_xowa_tag_bgn = 109
+, Tid_xowa_tag_end = 110
+, Tid_quiz = 111
+, Tid_indicator = 112
 	;
-	public static final int _MaxLen = 108;
+	public static final int _MaxLen = 113;
 	public static final Xop_xnde_tag[] Ary = new Xop_xnde_tag[_MaxLen];
 	private static Xop_xnde_tag new_(int id, String name) {
 		Xop_xnde_tag rv = new Xop_xnde_tag(id, name);
@@ -146,27 +151,27 @@ public class Xop_xnde_tag_ {
 , Tag_cite = new_(Tid_cite, "cite").NoInline_()
 , Tag_dfn = new_(Tid_dfn, "dfn").NoInline_()
 , Tag_var = new_(Tid_var, "var").NoInline_()
-, Tag_u = new_(Tid_u, "u").NoInline_()
+, Tag_u = new_(Tid_u, "u").NoInline_().Repeat_ends_()	// PAGE:en.b:Textbook_of_Psychiatry/Alcoholism_and_Psychoactive_Substance_Use_Disorders; DATE:2014-09-05
 , Tag_ins = new_(Tid_ins, "ins").NoInline_()
 , Tag_abbr = new_(Tid_abbr, "abbr").NoInline_()
 , Tag_strike = new_(Tid_strike, "strike").NoInline_()
 , Tag_del = new_(Tid_del, "del").NoInline_()
 , Tag_s = new_(Tid_s, "s").NoInline_()
-, Tag_sub = new_(Tid_sub, "sub").NoInline_().Nest_()
-, Tag_sup = new_(Tid_sup, "sup").NoInline_().Nest_()
-, Tag_big = new_(Tid_big, "big").NoInline_().Nest_()
-, Tag_small = new_(Tid_small, "small").NoInline_().Nest_()
+, Tag_sub = new_(Tid_sub, "sub").NoInline_()
+, Tag_sup = new_(Tid_sup, "sup").NoInline_()
+, Tag_big = new_(Tid_big, "big").NoInline_()
+, Tag_small = new_(Tid_small, "small").NoInline_()
 , Tag_code = new_(Tid_code, "code").NoInline_().Repeat_ends_()
 , Tag_tt = new_(Tid_tt, "tt").NoInline_().Repeat_ends_()
 , Tag_kbd = new_(Tid_kbd, "kbd").NoInline_()
 , Tag_samp = new_(Tid_samp, "samp").NoInline_()
-, Tag_blockquote = new_(Tid_blockquote, "blockquote").NoInline_().Nest_().Section_().Block_open_bgn_().Block_close_end_()	// NOTE: should be open_end_, but leaving for now; DATE:2014-03-11
+, Tag_blockquote = new_(Tid_blockquote, "blockquote").NoInline_().Repeat_mids_().Section_().Block_open_bgn_().Block_close_end_()	// NOTE: should be open_end_, but leaving for now; DATE:2014-03-11; added Repeat_mids_(); PAGE:en.w:Ring_a_Ring_o'_Roses DATE:2014-06-26
 , Tag_pre = new_(Tid_pre, "pre").NoInline_().Section_().Xtn_().Raw_().Block_open_bgn_().Block_close_end_().Ignore_empty_().Xtn_skips_template_args_()
-, Tag_font = new_(Tid_font, "font").NoInline_().Nest_()
-, Tag_center = new_(Tid_center, "center").NoInline_().Nest_().Block_open_end_().Block_close_end_() // removed .Repeat_ends_(); added Nest_(); EX: w:Burr Truss; DATE:2012-12-12
+, Tag_font = new_(Tid_font, "font").NoInline_()
+, Tag_center = new_(Tid_center, "center").NoInline_().Block_open_end_().Block_close_end_() // removed .Repeat_ends_(); added Nest_(); EX: w:Burr Truss; DATE:2012-12-12
 , Tag_p = new_(Tid_p, "p").NoInline_().Section_().Block_open_bgn_().Block_close_end_()
-, Tag_span = new_(Tid_span, "span").Nest_().Section_()
-, Tag_div = new_(Tid_div, "div").Nest_().Section_().Block_open_end_().Block_close_end_()
+, Tag_span = new_(Tid_span, "span").Section_()
+, Tag_div = new_(Tid_div, "div").Section_().Block_open_end_().Block_close_end_()
 , Tag_hr = new_(Tid_hr, "hr").SingleOnly_().BgnNdeMode_inline_().Inline_by_backslash_().EndNdeMode_escape_().Section_().Block_close_end_()
 , Tag_br = new_(Tid_br, "br").SingleOnly_().BgnNdeMode_inline_().Inline_by_backslash_().EndNdeMode_inline_().Section_()
 , Tag_h1 = new_(Tid_h1, "h1").NoInline_().Section_().Block_open_bgn_().Block_close_end_()
@@ -178,13 +183,13 @@ public class Xop_xnde_tag_ {
 , Tag_li = new_(Tid_li, "li").Repeat_mids_().Empty_ignored_().Block_open_bgn_().Block_close_end_()
 , Tag_dt = new_(Tid_dt, "dt").Repeat_mids_()
 , Tag_dd = new_(Tid_dd, "dd").Repeat_mids_()
-, Tag_ol = new_(Tid_ol, "ol").NoInline_().Nest_().Block_open_bgn_().Block_close_end_()
-, Tag_ul = new_(Tid_ul, "ul").NoInline_().Nest_().Block_open_bgn_().Block_close_end_()
-, Tag_dl = new_(Tid_dl, "dl").NoInline_().Nest_()
-, Tag_table = new_(Tid_table, "table").NoInline_().Nest_().Block_open_bgn_().Block_close_end_()
-, Tag_tr = new_(Tid_tr, "tr").Nest_().TblSub_().Block_open_bgn_().Block_open_end_()
-, Tag_td = new_(Tid_td, "td").Nest_().TblSub_().Block_open_end_().Block_close_bgn_()
-, Tag_th = new_(Tid_th, "th").Nest_().TblSub_().Block_open_end_().Block_close_bgn_()
+, Tag_ol = new_(Tid_ol, "ol").NoInline_().Block_open_bgn_().Block_close_end_()
+, Tag_ul = new_(Tid_ul, "ul").NoInline_().Block_open_bgn_().Block_close_end_()
+, Tag_dl = new_(Tid_dl, "dl").NoInline_()
+, Tag_table = new_(Tid_table, "table").NoInline_().Block_open_bgn_().Block_close_end_()
+, Tag_tr = new_(Tid_tr, "tr").TblSub_().Block_open_bgn_().Block_open_end_()
+, Tag_td = new_(Tid_td, "td").TblSub_().Block_open_end_().Block_close_bgn_()
+, Tag_th = new_(Tid_th, "th").TblSub_().Block_open_end_().Block_close_bgn_()
 , Tag_thead = new_(Tid_thead, "thead")
 , Tag_tfoot = new_(Tid_tfoot, "tfoot")
 , Tag_tbody = new_(Tid_tbody, "tbody")
@@ -192,7 +197,7 @@ public class Xop_xnde_tag_ {
 , Tag_colgroup = new_(Tid_colgroup, "colgroup")
 , Tag_col = new_(Tid_col, "col")
 , Tag_a = new_(Tid_a, "a").Restricted_()
-, Tag_img = new_(Tid_img, "img").Xtn_().Restricted_()
+, Tag_img = new_(Tid_img, "img").Restricted_()	// NOTE: was .Xtn() DATE:2014-11-06
 , Tag_ruby = new_(Tid_ruby, "ruby").NoInline_()
 , Tag_rt = new_(Tid_rt, "rt").NoInline_()
 , Tag_rb = new_(Tid_rb, "rb").NoInline_()
@@ -204,17 +209,17 @@ public class Xop_xnde_tag_ {
 , Tag_xowa_cmd = new_(Tid_xowa_cmd, "xowa_cmd").Xtn_()
 , Tag_poem = new_(Tid_poem, "poem").Xtn_().Xtn_auto_close_()
 , Tag_math = new_(Tid_math, "math").Xtn_()
-, Tag_ref = new_(Tid_ref, "ref").Xtn_().Nest_()
-, Tag_references = new_(Tid_references, "references").Xtn_().Nest_()
-, Tag_source = new_(Tid_source, "source").Xtn_()
-, Tag_syntaxHighlight = new_(Tid_syntaxHighlight, "syntaxHighlight").Xtn_()
-, Tag_gallery = new_(Tid_gallery, "gallery").Xtn_().Block_open_bgn_().Block_close_end_()
+, Tag_ref = new_(Tid_ref, "ref").Xtn_()
+, Tag_references = new_(Tid_references, "references").Xtn_()
+, Tag_source = new_(Tid_source, "source").Xtn_().Block_open_bgn_().Block_close_end_()	// deactivate pre; pre; PAGE:en.w:Comment_(computer_programming); DATE:2014-06-23
+, Tag_syntaxHighlight = new_(Tid_syntaxHighlight, "syntaxHighlight").Xtn_().Block_open_bgn_().Block_close_end_()	// deactivate pre; pre; PAGE:en.w:Comment_(computer_programming); DATE:2014-06-23
+, Tag_gallery = new_(Tid_gallery, "gallery").Xtn_().Block_open_bgn_().Block_close_end_().Xtn_auto_close_()
 , Tag_imageMap = new_(Tid_imageMap, "imageMap").Xtn_()
 , Tag_timeline = new_(Tid_timeline, "timeline").Xtn_()
 , Tag_hiero = new_(Tid_hiero, "hiero").Xtn_()
 , Tag_inputBox = new_(Tid_inputBox, "inputBox").Xtn_()
 , Tag_pages = new_(Tid_pages, "pages").Xtn_()
-, Tag_section = new_(Tid_section, "section").Xtn_()
+, Tag_section = new_(Tid_section, "section").Xtn_().Langs_(Xol_lang_itm_.Id_de, "Abschnitt").Langs_(Xol_lang_itm_.Id_he, "קטע").Langs_(Xol_lang_itm_.Id_pt, "trecho") // DATE:2014-07-18
 , Tag_pagequality = new_(Tid_pagequality, "pagequality").Xtn_()
 , Tag_pagelist = new_(Tid_pagelist, "pagelist").Xtn_()
 , Tag_categoryList = new_(Tid_categoryList, "categoryList").Xtn_()
@@ -228,9 +233,9 @@ public class Xop_xnde_tag_ {
 , Tag_select = new_(Tid_select, "select").Restricted_()
 , Tag_option = new_(Tid_option, "option").Restricted_()
 , Tag_optgroup = new_(Tid_optgroup, "optgroup").Restricted_()
-, Tag_script = new_(Tid_script, "script").Restricted_().Block_open_bgn_().Block_close_end_()	// do not allow <p> tags;
-, Tag_style = new_(Tid_style, "style").Restricted_().Block_open_bgn_().Block_close_end_()		// do not allow <p> tags;
-, Tag_form = new_(Tid_form, "form").Restricted_().Block_open_bgn_().Block_close_end_()			// do not allow <p> tags;
+, Tag_script = new_(Tid_script, "script").Restricted_()	// NOTE: had ".Block_open_bgn_().Block_close_end_()"; PAGE:en.w:Cascading_Style_Sheets DATE:2014-06-23
+, Tag_style = new_(Tid_style, "style").Restricted_()	// NOTE: had ".Block_open_bgn_().Block_close_end_()"; PAGE:en.w:Cascading_Style_Sheets DATE:2014-06-23
+, Tag_form = new_(Tid_form, "form").Restricted_()		// NOTE: had ".Block_open_bgn_().Block_close_end_()"; PAGE:en.w:Cascading_Style_Sheets DATE:2014-06-23
 , Tag_translate = new_(Tid_translate, "translate").Xtn_()
 , Tag_languages = new_(Tid_languages, "languages").Xtn_()
 , Tag_templateData = new_(Tid_templateData, "templateData").Xtn_()
@@ -238,7 +243,7 @@ public class Xop_xnde_tag_ {
 , Tag_data = new_(Tid_data, "data")
 , Tag_mark = new_(Tid_mark, "mark")
 , Tag_wbr = new_(Tid_wbr, "wbr").SingleOnly_()
-, Tag_bdo = new_(Tid_bdo, "bdo").NoInline_().Nest_().Section_().Block_open_bgn_().Block_close_end_()
+, Tag_bdo = new_(Tid_bdo, "bdo").NoInline_().Section_().Block_open_bgn_().Block_close_end_()
 , Tag_listing_buy = new_(Tid_listing_buy, "buy").Xtn_()
 , Tag_listing_do = new_(Tid_listing_do, "do").Xtn_()
 , Tag_listing_drink = new_(Tid_listing_drink, "drink").Xtn_()
@@ -247,5 +252,10 @@ public class Xop_xnde_tag_ {
 , Tag_listing_see = new_(Tid_listing_see, "see").Xtn_()
 , Tag_listing_sleep = new_(Tid_listing_sleep, "sleep").Xtn_()
 , Tag_rss = new_(Tid_rss, "rss").Xtn_()
+, Tag_xowa_html = new_(Tid_xowa_html, "xowa_html").Xtn_()
+, Tag_xowa_tag_bgn = new_(Tid_xowa_tag_bgn, "xtag_bgn").Xtn_()
+, Tag_xowa_tag_end = new_(Tid_xowa_tag_end, "xtag_end").Xtn_()
+, Tag_quiz = new_(Tid_quiz, "quiz").Xtn_()
+, Tag_indicator = new_(Tid_indicator, "indicator").Xtn_()
 	;
 }

@@ -34,9 +34,13 @@ public class Xop_vnt_parser_tst {	// uses zh-hant as cur_vnt
 		fxt.Parser_fxt().Init_page_create("Template:A", "B");
 		fxt.Test_parse("-{{{A}}}-", "B");
 	}
-	@Test  public void Tmpl_arg() {
+	@Test  public void Tmpl_arg_4() {	// PURPOSE: handle "-{" + "{{{"
 		fxt.Parser_fxt().Init_page_create("Template:A", "-{{{{1}}}}-");
-		fxt.Test_parse("{{A|B}}", "B");
+		fxt.Test_parse("{{A|B}}", "B");	//  -{ {{{1}}} }- -> -{B}- -> B
+	}
+	@Test  public void Tmpl_arg_3() {	// PURPOSE: handle "-" + "{{{"; PAGE:sr.w:ДНК; EX:<span id="interwiki-{{{1}}}-fa"></span> DATE:2014-07-03
+		fxt.Parser_fxt().Init_page_create("Template:A", "-{{{1}}}-");
+		fxt.Test_parse("{{A|B}}", "-B-");
 	}
 	@Test  public void Parser_function() {
 		fxt.Test_parse("-{{{#expr:1}}}-", "1");
@@ -51,8 +55,15 @@ public class Xop_vnt_parser_tst {	// uses zh-hant as cur_vnt
 	@Test  public void Invalid() {	// PURPOSE: invalid flags should cause vnt to render text only; DATE:2014-04-10
 		fxt.Test_parse("-{:a|b}-", "b");
 	}
+	@Test  public void Macro_ignore() {	// PURPOSE: ignore macro (implement later); EX:zh.v:西安; Template:pagebanner; DATE:2014-05-03
+		fxt.Test_parse("-{H|zh-cn:亚琛; zh-tw:阿亨;}-", "");
+	}
+	@Test  public void Title() {	// PURPOSE: implement title; PAGE:zh.w:Help:進階字詞轉換處理 DATE:2014-08-29
+		fxt.Test_parse("-{T|zh-hant:A;zh-hans:B}-", "");
+		Tfds.Eq("A", String_.new_utf8_(fxt.Parser_fxt().Page().Html_data().Display_ttl_vnt()));
+	}
 }
-class Xop_vnt_parser_fxt {		
+class Xop_vnt_parser_fxt {
 	public Xop_fxt Parser_fxt() {return fxt;} private Xop_fxt fxt;
 	public Xop_vnt_parser_fxt Clear() {
 		Xoa_app app = Xoa_app_fxt.app_();
@@ -60,11 +71,11 @@ class Xop_vnt_parser_fxt {
 		fxt = new Xop_fxt(app, wiki);
 		Init_vnt_mgr(wiki.Lang().Vnt_mgr(), "zh-hans", "zh-hant");
 		Xop_vnt_lxr_.set_(wiki);
-		wiki.Lang().Vnt_mgr().Cur_vnt_(ByteAry_.new_ascii_("zh-hant"));
+		wiki.Lang().Vnt_mgr().Cur_vnt_(Bry_.new_ascii_("zh-hant"));
 		return this;
 	}
 	private static void Init_vnt_mgr(Xol_vnt_mgr vnt_mgr, String... vnts_str) {
-		byte[][] vnts_bry = ByteAry_.Ary(vnts_str);
+		byte[][] vnts_bry = Bry_.Ary(vnts_str);
 		int vnts_bry_len = vnts_bry.length;
 		for (int i = 0; i < vnts_bry_len; i++)
 			vnt_mgr.Get_or_new(vnts_bry[i]);

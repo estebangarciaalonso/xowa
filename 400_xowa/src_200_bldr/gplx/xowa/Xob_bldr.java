@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import gplx.xowa.bldrs.*; import gplx.xowa.apps.*; import gplx.xowa.bldrs.xmls.*;
-import gplx.xowa.bldrs.cfgs.*;
+import gplx.xowa.bldrs.cfgs.*; import gplx.xowa.bldrs.langs.*;
 public class Xob_bldr implements GfoInvkAble {
 	private boolean pause_at_end = false;
 	public Xob_bldr(Xoa_app app) {
@@ -33,6 +33,7 @@ public class Xob_bldr implements GfoInvkAble {
 	public int					Make_fil_len() {return make_fil_len;} public Xob_bldr Make_fil_len_(int v) {make_fil_len = v; return this;} private int make_fil_len = 64 * Io_mgr.Len_kb;
 	public Xob_xml_parser		Parser() {if (parser == null) parser = new Xob_xml_parser(); return parser;} private Xob_xml_parser parser;
 	public Xob_wiki_cfg_bldr	Wiki_cfg_bldr() {return wiki_cfg_bldr;} private Xob_wiki_cfg_bldr wiki_cfg_bldr;
+	public Xob_i18n_parser		I18n_parser() {return i18n_parser;} private Xob_i18n_parser	i18n_parser = new Xob_i18n_parser();
 	public void StatusMgr_prog_fmt(long cur, long end, int pct_idx, String fmt, Object... ary) {
 		long now = Env_.TickCount(); if (now - StatusMgr_prog_prv < 100) return;
 		StatusMgr_prog_prv = now;
@@ -65,7 +66,10 @@ public class Xob_bldr implements GfoInvkAble {
 			app.Usr_dlg().Note_many(GRP_KEY, "bldr_done", "bldr done: ~{0}", TimeSpanAdp_.from_(time_bgn).XtoStrUiAbbrv());
 			cmd_mgr.Clear();
 			if (pause_at_end && !Env_.Mode_testing()) {ConsoleAdp._.ReadLine("press enter to continue");}
-		}	catch (Exception e) {throw Err_.err_(e, "error during build: ~{0}", Err_.Message_gplx(e));}
+		}
+		catch (Exception e) {
+			throw Err_.err_(e, "error during build: ~{0}", Err_.Message_gplx(e));
+		}
 	}
 	private void Cancel() {
 		int cmd_mgr_len = cmd_mgr.Len();
@@ -97,7 +101,7 @@ public class Xob_bldr implements GfoInvkAble {
 . make_fil_len: max size of made file; EX: /id/..../0000000001.csv will have max len of 64 KB
 . dump_fil_len: max size of temp file; EX: /tmp/.../0000000001.csv will have max len of 1 MB
 . sort_mem_len: max size of memory for external merge process; note the following
-.. a continguous range of memory of that size will be needed: "new ByteAryBfr(sort_mem_len)" will be called
+.. a continguous range of memory of that size will be needed: "Bry_bfr.new_(sort_mem_len)" will be called
 .. large sort_mem_len will result in smaller number of merge files
 ... EX: 16 MB will take en.wikipedia.org's 640 MB title files and generate 40 temp files of 8 MB each
 .. number of merge files is number of open file channels during merge process

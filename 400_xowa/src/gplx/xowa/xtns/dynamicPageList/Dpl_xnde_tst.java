@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.dynamicPageList; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.strings.*;
 public class Dpl_xnde_tst {
 	private Dpl_xnde_fxt fxt = new Dpl_xnde_fxt();
 	@Before public void init() {fxt.Clear();}
@@ -56,7 +56,7 @@ public class Dpl_xnde_tst {
 	}
 	@Test  public void Ctg_ascending() {
 		fxt.Ctg_create("Ctg_0", "B", "A");
-		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		fxt.Ul_pages(String_.Concat_lines_nl_skip_last
 		(	"<DynamicPageList>"
 		,	"category=Ctg_0"
 		,	"order=ascending"
@@ -64,7 +64,7 @@ public class Dpl_xnde_tst {
 	}
 	@Test  public void Ctg_ws() {
 		fxt.Ctg_create("Ctg_0", "B", "A");
-		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		fxt.Ul_pages(String_.Concat_lines_nl_skip_last
 		(	"<DynamicPageList>"
 		,	"  category  =  Ctg_0  "
 		,	"  order  =  ascending  "
@@ -72,7 +72,7 @@ public class Dpl_xnde_tst {
 	}
 	@Test  public void Ctg_descending() {
 		fxt.Ctg_create("Ctg_0", "A", "B");
-		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		fxt.Ul_pages(String_.Concat_lines_nl_skip_last
 		(	"<DynamicPageList>"
 		,	"category=Ctg_0"
 		,	"order=descending"
@@ -80,7 +80,7 @@ public class Dpl_xnde_tst {
 	}
 	@Test  public void Nofollow() {
 		fxt.Ctg_create("Ctg_0", "A", "B");
-		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		fxt.Ul_pages(String_.Concat_lines_nl_skip_last
 		(	"<DynamicPageList>"
 		,	"category=Ctg_0"
 		,	"nofollow=true"
@@ -89,20 +89,20 @@ public class Dpl_xnde_tst {
 	@Test  public void Invalid_key() {
 		fxt.Ctg_create("Ctg_0", "A", "B");
 		fxt.Warns("unknown_key: page=Test page key=invalid_key");
-		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		fxt.Ul_pages(String_.Concat_lines_nl_skip_last
 		(	"<DynamicPageList>"
 		,	"invalid_key=invalid_val"
 		,	"category=Ctg_0"
 		,	"</DynamicPageList>"), fxt.Ul(Itm_html_null, "A", "B"));
 	}
 	@Test  public void No_results() {
-		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		fxt.Ul_pages(String_.Concat_lines_nl_skip_last
 		(	"<DynamicPageList>"
 		,	"category=Ctg_0"
 		,	"</DynamicPageList>"), "No pages meet these criteria.");
 	}
 	@Test  public void Suppress_errors() {
-		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		fxt.Ul_pages(String_.Concat_lines_nl_skip_last
 		(	"<DynamicPageList>"
 		,	"category=Ctg_0"
 		,	"suppresserrors=true"
@@ -110,7 +110,7 @@ public class Dpl_xnde_tst {
 	}
 	@Test  public void Count() {
 		fxt.Ctg_create("Ctg_0", "A", "B", "C");
-		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		fxt.Ul_pages(String_.Concat_lines_nl_skip_last
 		(	"<DynamicPageList>"
 		,	"category=Ctg_0"
 		,	"count=2"
@@ -118,7 +118,7 @@ public class Dpl_xnde_tst {
 	}
 	@Test  public void Offset() {
 		fxt.Ctg_create("Ctg_0", "A", "B", "C");
-		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		fxt.Ul_pages(String_.Concat_lines_nl_skip_last
 		(	"<DynamicPageList>"
 		,	"category=Ctg_0"
 		,	"offset=2"
@@ -127,7 +127,7 @@ public class Dpl_xnde_tst {
 	}
 	@Test  public void Ns() {
 		fxt.Ctg_create("Ctg_0", "Talk:A", "B");
-		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		fxt.Ul_pages(String_.Concat_lines_nl_skip_last
 		(	"<DynamicPageList>"
 		,	"category=Ctg_0"
 		,	"namespace=Talk"
@@ -135,12 +135,12 @@ public class Dpl_xnde_tst {
 	}
 	@Test  public void Showns() {
 		fxt.Ctg_create("Ctg_0", "Talk:A");
-		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		fxt.Ul_pages(String_.Concat_lines_nl_skip_last
 		(	"<DynamicPageList>"
 		,	"category=Ctg_0"
 		,	"shownamespace=true"
 		,	"</DynamicPageList>"), fxt.Ul(Itm_html_null, "Talk:A"));
-		fxt.Ul_pages(String_.Concat_lines_nl_skipLast
+		fxt.Ul_pages(String_.Concat_lines_nl_skip_last
 		(	"<DynamicPageList>"
 		,	"category=Ctg_0"
 		,	"shownamespace=false"
@@ -167,6 +167,12 @@ public class Dpl_xnde_tst {
 		,	"</DynamicPageList>"
 		), fxt.Ul(Itm_html_null, "B", "A"));
 	}
+	@Test  public void Err_page_ns_doesnt_exist() {// PURPOSE: check that <dpl> is not enabled if wiki does not have Page / Index ns; PAGE:fr.w:Wikipedia:Le_Bistro/novembre_2006 DATE:2014-11-28
+		fxt.Wiki().Ns_mgr_(Xow_ns_mgr_.default_(gplx.xowa.langs.cases.Xol_case_mgr_.Ascii()));
+		fxt.Wiki().Cfg_parser().Xtns().Itm_pages().Reset();	// must reset to clear cached valid ns_page from previous tests
+		fxt.Fxt().Test_parse_page_wiki_str("<dynamicpagelist>category=a</dynamicpagelist>", "No pages meet these criteria.");
+		fxt.Wiki().Cfg_parser().Xtns().Itm_pages().Reset();	// must reset to clear cached invalid ns_page for next tests
+	}
 	private static final String Itm_html_null = null;
 }
 class Dpl_page_mok {
@@ -185,8 +191,13 @@ class Dpl_xnde_fxt {
 		fxt.App().Usr_dlg().Ui_wkr().Clear();
 		fxt.Wiki().Hive_mgr().Clear();
 		fxt.Wiki().Db_mgr().Save_mgr().Clear();	// NOTE: must clear to reset next_id to 0; Ctg_create assumes clean slate from 0
+		fxt.Wiki().Xtn_mgr().Xtn_proofread().Enabled_y_();
+		fxt.Wiki().Db_mgr().Load_mgr().Clear(); // must clear; otherwise fails b/c files get deleted, but wiki.data_mgr caches the Xowd_regy_mgr (the .reg file) in memory;
+		fxt.Wiki().Ns_mgr().Add_new(Xowc_xtn_pages.Ns_page_id_default, "Page").Add_new(Xowc_xtn_pages.Ns_index_id_default, "Index").Init();
 		Io_mgr._.InitEngine_mem();
 	}
+	public Xow_wiki Wiki() {return fxt.Wiki();}
+	public Xop_fxt Fxt() {return fxt;}
 	public void Warns(String... v) {warns = v;} private String[] warns;
 	public void Page_create(String page) {fxt.Init_page_create(page);}
 	public void Ctg_create(String ctg, String... ttls) {
@@ -203,7 +214,7 @@ class Dpl_xnde_fxt {
 			Dpl_page_mok page = pages[i];
 			int id = page.Id();
 			String ttl = page.Ttl();
-			Xoa_ttl page_ttl = Xoa_ttl.parse_(fxt.Wiki(), ByteAry_.new_utf8_(ttl));
+			Xoa_ttl page_ttl = Xoa_ttl.parse_(fxt.Wiki(), Bry_.new_utf8_(ttl));
 			Xoa_page page_obj = fxt.Wiki().Data_mgr().Get_page(page_ttl, false);
 			if (page_obj.Missing()) {
 				fxt.Init_page_create(ttl);
@@ -223,7 +234,7 @@ class Dpl_xnde_fxt {
 			bfr.Add(">").Add(page).Add("</a></li>").Add_char_nl();
 		}
 		bfr.Add("</ul>").Add_char_nl();
-		return bfr.XtoStrAndClear();
+		return bfr.Xto_str_and_clear();
 	}
 	public void Ul_pages(String raw, String expd) {
 		fxt.Test_parse_page_wiki_str(raw, expd);

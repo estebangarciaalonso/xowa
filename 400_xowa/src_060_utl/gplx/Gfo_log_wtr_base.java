@@ -16,10 +16,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.strings.*;
 public class Gfo_log_wtr_base implements Gfo_log_wtr {
 	public boolean Queue_enabled() {return queue_enabled;} public void Queue_enabled_(boolean v) {queue_enabled = v; if (!v) this.Flush();} private boolean queue_enabled;
 	public boolean Enabled() {return enabled;} public void Enabled_(boolean v) {enabled = v;} private boolean enabled = true;
-	public Io_url Session_dir() {return session_dir;}
+	public Io_url Session_dir() {return session_dir;} private Io_url session_dir;
+	public Io_url Session_fil() {return session_fil;} private Io_url session_fil;
 	private void Flush() {
 		int queued_len = queued_list.Count();
 		for (int i = 0; i < queued_len; i++) {
@@ -36,7 +38,7 @@ public class Gfo_log_wtr_base implements Gfo_log_wtr {
 		session_dir = log_dir.GenSubDir(Dir_name_current);
 		session_fil = session_dir.GenSubFil("session.txt");
 		err_fil = session_dir.GenSubFil("err.txt");
-	}	Io_url log_dir, session_dir, session_fil, err_fil;
+	}	private Io_url log_dir, err_fil;
 	public void Init() {
 	}
 	public void Term() {
@@ -58,7 +60,7 @@ public class Gfo_log_wtr_base implements Gfo_log_wtr {
 		String msg = Bld_msg(String_.new_utf8_(fmtr.Fmt_(fmt).Bld_bry_many(tmp_bfr, args)));
 		Log_msg(url, msg);
 		Log_msg(session_fil, msg);
-	}	private ByteAryFmtr fmtr = ByteAryFmtr.tmp_(); ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	}	private Bry_fmtr fmtr = Bry_fmtr.tmp_(); Bry_bfr tmp_bfr = Bry_bfr.reset_(255);
 	public void Log_info(boolean warn, String s) {if (warn) Log_err(s); else Log_msg_to_session(s);}
 	public void Log_msg_to_session_fmt(String fmt, Object... args) {Log_msg_to_session(String_.new_utf8_(fmtr.Fmt_(fmt).Bld_bry_many(tmp_bfr, args)));}
 	public void Log_msg_to_session(String s) {
@@ -79,7 +81,7 @@ public class Gfo_log_wtr_base implements Gfo_log_wtr {
 		} 
 		catch (Exception e) {Err_.Noop(e);}			// java.lang.StringBuilder can throw exceptions in some situations when called on a different thread; ignore errors
 	}	private String_bldr sb = String_bldr_.new_thread();	// NOTE: use java.lang.StringBuffer to try to avoid random exceptions when called on a different thread
-	private String Bld_msg(String s) {return sb.Add(DateAdp_.Now().XtoUtc().XtoStr_fmt_yyyyMMdd_HHmmss_fff()).Add(" ").Add(s).Add_char_nl().XtoStrAndClear();}
+	private String Bld_msg(String s) {return sb.Add(DateAdp_.Now().XtoUtc().XtoStr_fmt_yyyyMMdd_HHmmss_fff()).Add(" ").Add(s).Add_char_nl().Xto_str_and_clear();}
 	private void Log_msg(Io_url url, String txt) {
 		if (queue_enabled) {
 			String url_raw = url == null ? "mem" : url.Raw();
@@ -110,7 +112,7 @@ class Usr_log_fil {
 	public void Flush() {
 		if (sb.Count() == 0) return;
 		try {
-			Io_mgr._.AppendFilStr(url, sb.XtoStrAndClear());
+			Io_mgr._.AppendFilStr(url, sb.Xto_str_and_clear());
 		}
 		catch (Exception e) {
 			ConsoleAdp._.WriteLine(Err_.Message_gplx_brief(e));

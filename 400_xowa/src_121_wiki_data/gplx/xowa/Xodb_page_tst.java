@@ -27,7 +27,7 @@ public class Xodb_page_tst {
 class Xodb_page_fxt {
 	public void Init() {
 		if (ns_mgr == null) {
-			ns_mgr = new Xow_ns_mgr();
+			ns_mgr = new Xow_ns_mgr(gplx.xowa.langs.cases.Xol_case_mgr_.Ascii());
 			ns_mgr.Add_new(Xow_ns_.Id_main, "");
 			ns_mgr.Add_new(Xow_ns_.Id_user_talk, "User talk");
 			ns_mgr.Init_w_defaults();
@@ -35,7 +35,7 @@ class Xodb_page_fxt {
 		}
 	}	private Xow_ns_mgr ns_mgr; Xodb_page tmp_page;
 	public void Test_ttl_(String ttl, int expd_ns, String expd_ttl) {
-		tmp_page.Ttl_(ByteAry_.new_ascii_(ttl), ns_mgr);
+		tmp_page.Ttl_(Bry_.new_ascii_(ttl), ns_mgr);
 	    Tfds.Eq(expd_ns, tmp_page.Ns_id());
 		Tfds.Eq(expd_ttl, String_.new_ascii_(tmp_page.Ttl_wo_ns()));
 	}

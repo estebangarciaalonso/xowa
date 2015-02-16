@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.users.history; import gplx.*; import gplx.xowa.*; import gplx.xowa.users.*;
 import gplx.xowa.specials.*;
-public class Xou_history_html implements ByteAryFmtrArg, Xows_page {
-	public ByteAryFmtr Html_grp() {return html_grp;} ByteAryFmtr html_grp = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
+public class Xou_history_html implements Bry_fmtr_arg, Xows_page {
+	public Bry_fmtr Html_grp() {return html_grp;} Bry_fmtr html_grp = Bry_fmtr.new_(String_.Concat_lines_nl_skip_last
 		(	"<table class='sortable'>"
 		,	"  <tr>"
 		,	"    <th>page</th>"
@@ -28,7 +28,7 @@ public class Xou_history_html implements ByteAryFmtrArg, Xows_page {
 		,	"  </tr>~{itms}"
 		,	"</table>"
 		), "itms");
-	public ByteAryFmtr Html_itm() {return html_itm;} ByteAryFmtr html_itm = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
+	public Bry_fmtr Html_itm() {return html_itm;} Bry_fmtr html_itm = Bry_fmtr.new_(String_.Concat_lines_nl_skip_last
 		(	""
 		,	"  <tr>"
 		,	"    <td>[[~{itm_wiki}:~{itm_page}|~{itm_page}]]</td>"
@@ -40,12 +40,12 @@ public class Xou_history_html implements ByteAryFmtrArg, Xows_page {
 	public void Special_gen(Xoa_url calling_url, Xoa_page page, Xow_wiki wiki, Xoa_ttl ttl) {
 		this.app = wiki.App(); this.mgr = app.User().History_mgr();
 		mgr.Sort();
-		ByteAryBfr bfr = app.Utl_bry_bfr_mkr().Get_m001(); 
+		Bry_bfr bfr = app.Utl_bry_bfr_mkr().Get_m001(); 
 		html_grp.Bld_bfr_many(bfr, this);
-		page.Data_raw_(bfr.Mkr_rls().XtoAryAndClear());
+		page.Data_raw_(bfr.Mkr_rls().Xto_bry_and_clear());
 	}
-	public void XferAry(ByteAryBfr bfr, int idx) {
-		int len = mgr.Count();
+	public void XferAry(Bry_bfr bfr, int idx) {
+		int len = mgr.Len();
 		for (int i = 0; i < len; i++) {
 			Xou_history_itm itm = mgr.Get_at(i);
 			html_itm.Bld_bfr_many(bfr, itm.Wiki(), itm.Page(), itm.View_count(), itm.View_end().XtoStr_fmt_yyyy_MM_dd_HH_mm());

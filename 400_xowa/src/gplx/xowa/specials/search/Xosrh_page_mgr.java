@@ -26,19 +26,19 @@ public class Xosrh_page_mgr implements Xosrh_page_mgr_searcher {
 		if (sort_tid == v) return this;
 		sort_tid = v;
 		sorter.Tid_(v);
-		prv_search_bry = ByteAry_.Empty;	// reset search			
+		prv_search_bry = Bry_.Empty;	// reset search			
 		return this;
 	} 	byte sort_tid;
-	private byte[] prv_search_bry = ByteAry_.Empty, prv_ns_bry = ByteAry_.Empty; 
+	private byte[] prv_search_bry = Bry_.Empty, prv_ns_bry = Bry_.Empty; 
 	public boolean Prv_search_is_same(byte[] cur_search_bry, byte[] cur_ns_bry) {
-		return ByteAry_.Eq(cur_ns_bry, prv_ns_bry) && ByteAry_.Eq(cur_search_bry, prv_search_bry);
+		return Bry_.Eq(cur_ns_bry, prv_ns_bry) && Bry_.Eq(cur_search_bry, prv_search_bry);
 	}
 	private Xosrh_rslt_grp[] pages_ary; ListAdp cur_ids = ListAdp_.new_();
 	private Xosrh_rslt_itm_sorter sorter = new Xosrh_rslt_itm_sorter();		
 	private Xow_wiki wiki;
 	public Xosrh_ns_mgr Ns_mgr() {return ns_mgr;} public void Ns_mgr_(Xosrh_ns_mgr v) {ns_mgr = v;} private Xosrh_ns_mgr ns_mgr = new Xosrh_ns_mgr();
-	public Xosrh_rslt_grp Search(ByteAryBfr bfr, Xow_wiki wiki, byte[] search, int page_idx, Xosrh_page_mgr_searcher searcher) {return Search(bfr, wiki, search, page_idx, searcher, Cancelable_.Never);}
-	public Xosrh_rslt_grp Search(ByteAryBfr bfr, Xow_wiki wiki, byte[] search, int page_idx, Xosrh_page_mgr_searcher searcher, Cancelable cancelable) {
+	public Xosrh_rslt_grp Search(Bry_bfr bfr, Xow_wiki wiki, byte[] search, int page_idx, Xosrh_page_mgr_searcher searcher) {return Search(bfr, wiki, search, page_idx, searcher, Cancelable_.Never);}
+	public Xosrh_rslt_grp Search(Bry_bfr bfr, Xow_wiki wiki, byte[] search, int page_idx, Xosrh_page_mgr_searcher searcher, Cancelable cancelable) {
 		this.wiki = wiki;
 		Xosrh_rslt_grp rv = null;
 		itms_bgn = page_idx * itms_per_page;
@@ -71,7 +71,7 @@ public class Xosrh_page_mgr implements Xosrh_page_mgr_searcher {
 		rv.Itms_total_(cur_ids.Count());
 		return rv;
 	}
-	public ListAdp Parse_search_and_load_ids(Cancelable cancelable, ByteAryBfr bfr, Xosrh_ns_mgr ns_mgr, byte[] search) {
+	public ListAdp Parse_search_and_load_ids(Cancelable cancelable, Bry_bfr bfr, Xosrh_ns_mgr ns_mgr, byte[] search) {
 		search = wiki.Lang().Case_mgr().Case_build_lower(search, 0, search.length);
 		Xosrh_qry_itm cur_root = Xosrh_parser._.Parse(search);
 		cur_root.Search(cancelable, bfr, search, wiki, itms_per_page, ns_mgr);

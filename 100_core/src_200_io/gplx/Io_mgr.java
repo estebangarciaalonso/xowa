@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
-import gplx.ios.*; /*IoItmFil, IoItmDir..*/
+import gplx.core.primitives.*; import gplx.ios.*; /*IoItmFil, IoItmDir..*/
 public class Io_mgr {	// exists primarily to gather all cmds under gplx namespace; otherwise need to use gplx.ios whenever copying/deleting file
 	public boolean							Exists(Io_url url) {return url.Type_dir() ? ExistsDir(url) : ExistsFil(url);}
 	public boolean							ExistsFil(Io_url url) {return IoEnginePool._.Fetch(url.Info().EngineKey()).ExistsFil_api(url);}
@@ -66,21 +66,20 @@ public class Io_mgr {	// exists primarily to gather all cmds under gplx namespac
 	}
 	public void AliasDir_sysEngine(String srcRoot, String trgRoot)			{AliasDir(srcRoot, trgRoot, IoEngine_.SysKey);}
 	public void AliasDir(String srcRoot, String trgRoot, String engineKey)	{IoUrlInfoRegy._.Reg(IoUrlInfo_.alias_(srcRoot, trgRoot, engineKey));}
-//		public IoStream						OpenStreamRead2(Io_url url)		{return IoEngine_xrg_openRead.new_(url).ExecAsIoStreamOrFail();}
 	public IoStream						OpenStreamRead(Io_url url)		{return OpenStreamRead_args(url).ExecAsIoStreamOrFail();}
 	public IoEngine_xrg_openRead		OpenStreamRead_args(Io_url url)	{return IoEngine_xrg_openRead.new_(url);}
 	public String						LoadFilStr(String url) {return LoadFilStr_args(Io_url_.new_fil_(url)).Exec();}
 	public String						LoadFilStr(Io_url url) {return LoadFilStr_args(url).Exec();}
 	public IoEngine_xrg_loadFilStr		LoadFilStr_args(Io_url url) {return IoEngine_xrg_loadFilStr.new_(url);}
-	public byte[]						LoadFilBry(String url) {return LoadFilBry_reuse(Io_url_.new_fil_(url), ByteAry_.Empty, IntRef.zero_());}
-	public byte[]						LoadFilBry(Io_url url) {return LoadFilBry_reuse(url, ByteAry_.Empty, IntRef.zero_());}
-	public void							LoadFilBryByBfr(Io_url url, ByteAryBfr bfr) {
-		IntRef len = IntRef.zero_();
-		byte[] bry = LoadFilBry_reuse(url, ByteAry_.Empty, len);
-		bfr.Bry_init(bry, len.Val());
+	public byte[]						LoadFilBry(String url) {return LoadFilBry_reuse(Io_url_.new_fil_(url), Bry_.Empty, Int_obj_ref.zero_());}
+	public byte[]						LoadFilBry(Io_url url) {return LoadFilBry_reuse(url, Bry_.Empty, Int_obj_ref.zero_());}
+	public void							LoadFilBryByBfr(Io_url url, Bry_bfr bfr) {
+		Int_obj_ref len = Int_obj_ref.zero_();
+		byte[] bry = LoadFilBry_reuse(url, Bry_.Empty, len);
+		bfr.Bfr_init(bry, len.Val());
 	}
-	public static final byte[] LoadFilBry_fail = ByteAry_.Empty;
-	public byte[]						LoadFilBry_reuse(Io_url url, byte[] ary, IntRef aryLen) {
+	public static final byte[] LoadFilBry_fail = Bry_.Empty;
+	public byte[]						LoadFilBry_reuse(Io_url url, byte[] ary, Int_obj_ref aryLen) {
 		if (!ExistsFil(url)) {aryLen.Val_(0); return LoadFilBry_fail;}
 		IoStream stream = IoStream_.Null;
 		try {
@@ -95,7 +94,7 @@ public class Io_mgr {	// exists primarily to gather all cmds under gplx namespac
 		catch (Exception e) {throw Err_.new_("failed to load file").Add("url", url.Xto_api()).Add("e", Err_.Message_lang(e));}
 		finally {stream.Rls();}
 	}
-	public void AppendFilBfr(Io_url url, ByteAryBfr bfr) {AppendFilByt(url, bfr.Bry(), 0, bfr.Len()); bfr.ClearAndReset();}
+	public void AppendFilBfr(Io_url url, Bry_bfr bfr) {AppendFilByt(url, bfr.Bfr(), 0, bfr.Len()); bfr.ClearAndReset();}
 	public void AppendFilByt(Io_url url, byte[] val) {AppendFilByt(url, val, 0, val.length);}
 	public void AppendFilByt(Io_url url, byte[] val, int len) {AppendFilByt(url, val, 0, len);}
 	public void AppendFilByt(Io_url url, byte[] val, int bgn, int len) {
@@ -105,7 +104,7 @@ public class Io_mgr {	// exists primarily to gather all cmds under gplx namespac
 			stream.Write(val, bgn, len);
 		}	finally {stream.Rls();}
 	}
-	public void SaveFilBfr(Io_url url, ByteAryBfr bfr) {SaveFilBry(url, bfr.Bry(), bfr.Len()); bfr.Clear();}
+	public void SaveFilBfr(Io_url url, Bry_bfr bfr) {SaveFilBry(url, bfr.Bfr(), bfr.Len()); bfr.Clear();}
 	public void SaveFilBry(String urlStr, byte[] val) {SaveFilBry(Io_url_.new_fil_(urlStr), val);}
 	public void SaveFilBry(Io_url url, byte[] val) {SaveFilBry(url, val, val.length);}
 	public void SaveFilBry(Io_url url, byte[] val, int len) {SaveFilBry(url, val, 0, len);}

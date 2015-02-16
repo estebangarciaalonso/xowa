@@ -18,6 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.scribunto; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import gplx.xowa.xtns.scribunto.engines.process.*;
 public class Scrib_core_fxt {
+	public Scrib_core_fxt() {}
+	public Scrib_core_fxt(Xop_fxt fxt) {
+		app = fxt.App();
+		wiki = fxt.Wiki();
+		core = Scrib_core.Core_new_(app, wiki.Ctx());
+	}
 	public Scrib_core_fxt Clear() {
 		if (core == null) {
 			app = Xoa_app_fxt.app_();
@@ -28,11 +34,11 @@ public class Scrib_core_fxt {
 		}
 		server.Clear();
 		core.Proc_mgr().Clear();
-		core.Cur_frame_owner_(null);
-		core.When_page_changed(wiki.Ctx().Page());
+		core.Frame_parent_(null);
+		core.When_page_changed(wiki.Ctx().Cur_page());
 		expd_server_rcvd_list.Clear();
 		return this;
-	}	private Xoa_app app; Xow_wiki wiki; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	}	private Xoa_app app; Xow_wiki wiki; Bry_bfr tmp_bfr = Bry_bfr.reset_(255);
 	public Scrib_core Core() {return core;} private Scrib_core core;
 	public Process_server_mock Server() {return server;} Process_server_mock server;
 	public KeyVal kv_(Object key, Object val) {return KeyVal_.obj_(key, val);}
@@ -114,29 +120,22 @@ public class Scrib_core_fxt {
 		else
 			this.Expd_server_rcvd_add("000000380000006F{[\"op\"]=\"return\",[\"nvalues\"]=1,[\"values\"]={[1]=\"" + expd + "\"}}");
 		this.Init_server_prep_add("a:2:{s:6:\"values\";a:1:{i:1;s:6:\"ignore\";}s:2:\"op\";s:6:\"return\";}");
-		core.Cur_frame_invoke_(Xot_invk_mock.new_(args));
+		core.Frame_current_(Xot_invk_mock.new_(Frame_ttl_test, args));
 		core.Interpreter().ExecuteModule(9);
 		Test_server_logs();
 		return this;
 	}
 	public Scrib_core_fxt Test_GetAllExpandedArguments(KeyVal... args) {
-		core.Cur_frame_invoke_(Xot_invk_mock.new_(args));
-		core.Interpreter().ExecuteModule(9);
-		Test_server_logs();
-		return this;
-	}
-	public Scrib_core_fxt Test_ParentFrameExists(boolean init_parent_frame) {
-		if (init_parent_frame)
-			core.Cur_frame_owner_(Xot_invk_mock.new_());
+		core.Frame_current_(Xot_invk_mock.new_(Frame_ttl_test, args));
 		core.Interpreter().ExecuteModule(9);
 		Test_server_logs();
 		return this;
 	}
 	public Scrib_core_fxt Test_Invoke(String mod_name, String mod_code, String prc_name, KeyVal... args) {
-		core.Invoke(wiki, wiki.Ctx(), ByteAry_.Empty, Xot_invk_mock.Null, Xot_invk_mock.new_(args), tmp_bfr, ByteAry_.new_utf8_(mod_name), ByteAry_.new_utf8_(mod_code), ByteAry_.new_utf8_(prc_name));
+		core.Invoke(wiki, core.Ctx(), Bry_.Empty, Xot_invk_mock.Null, Xot_invk_mock.new_(Frame_ttl_test, args), tmp_bfr, Bry_.new_utf8_(mod_name), Bry_.new_utf8_(mod_code), Bry_.new_utf8_(prc_name));
 		Test_server_logs();
 		return this;
-	}
+	}	private static final byte[] Frame_ttl_test = Bry_.new_ascii_("test");
 	private void Test_server_logs() {
 		if (expd_server_rcvd_list.Count() > 0) {
 			Tfds.Eq_ary_str(expd_server_rcvd_list.XtoStrAry(), server.Log_rcvd().XtoStrAry());

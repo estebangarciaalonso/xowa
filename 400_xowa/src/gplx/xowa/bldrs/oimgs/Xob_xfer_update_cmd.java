@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.oimgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*; import gplx.xowa.bldrs.files.*;
+import gplx.dbs.*; import gplx.dbs.engines.sqlite.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*; import gplx.xowa.bldrs.files.*;
 public class Xob_xfer_update_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	private Io_url prv_url;
 	public Xob_xfer_update_cmd(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
@@ -26,19 +26,19 @@ public class Xob_xfer_update_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	public void Cmd_run() {
 		// init vars
 		Xodb_db_file cur_file = Xodb_db_file.init__file_make(wiki.Fsys_mgr().Root_dir());
-		Db_provider provider = cur_file.Provider();
+		Db_conn conn = cur_file.Conn();
 		if (prv_url == null) {
 			prv_url = wiki.App().Fsys_mgr().File_dir().GenSubFil_nest(wiki.Domain_str(), "bldr", Xodb_db_file.Name__file_make);
 		}
 
 		// run sql
-		Sqlite_engine_.Tbl_rename(provider, "xfer_regy", "xfer_regy_old");
-		Xob_xfer_regy_tbl.Create_table(provider);
-		Sqlite_engine_.Db_attach(provider, "old_db", prv_url.Raw());
-		provider.Exec_sql(Sql_update);
-		Sqlite_engine_.Db_detach(provider, "old_db");
-		Sqlite_engine_.Tbl_delete(provider, "xfer_regy_old");
-		Xob_xfer_regy_tbl.Create_index(usr_dlg, provider);
+		Sqlite_engine_.Tbl_rename(conn, "xfer_regy", "xfer_regy_old");
+		Xob_xfer_regy_tbl.Create_table(conn);
+		Sqlite_engine_.Db_attach(conn, "old_db", prv_url.Raw());
+		conn.Exec_sql(Sql_update);
+		Sqlite_engine_.Db_detach(conn, "old_db");
+		Sqlite_engine_.Tbl_delete(conn, "xfer_regy_old");
+		Xob_xfer_regy_tbl.Create_index(usr_dlg, conn);
 
 //			// rotate db
 //			DateAdp wiki_date = wiki.Db_mgr().Dump_date_query();
@@ -50,7 +50,7 @@ public class Xob_xfer_update_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	public void Cmd_print() {}
 	public static final String Sql_update = String_.Concat_lines_nl
 	( "INSERT INTO xfer_regy"
-        , "SELECT  cur.lnki_id"
+	, "SELECT  cur.lnki_id"
 	, ",       cur.orig_page_id"
 	, ",       cur.orig_repo"
 	, ",       cur.lnki_ttl"
@@ -66,9 +66,9 @@ public class Xob_xfer_update_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	, ",       cur.lnki_count"
 	, ",       CASE"
 	, "          WHEN old.lnki_ttl IS NULL THEN"	// not in old table; mark todo
-	, "            " + Byte_.XtoStr(Xob_xfer_regy_tbl.Status_todo)
+	, "            " + Byte_.Xto_str(Xob_xfer_regy_tbl.Status_todo)
 	, "          ELSE"									// in old table; mark processed
-	, "            " + Byte_.XtoStr(Xob_xfer_regy_tbl.Status_ignore_processed)
+	, "            " + Byte_.Xto_str(Xob_xfer_regy_tbl.Status_ignore_processed)
 	, "        END"
 	, ",       cur.xfer_bin_tid"
 	, ",       cur.xfer_bin_msg"

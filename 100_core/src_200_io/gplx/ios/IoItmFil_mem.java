@@ -26,7 +26,7 @@ class IoItmFil_mem extends IoItmFil {		public static IoItmFil_mem as_(Object obj
 		byte[] buffer = new byte[len];
 		stream.Position_set(0);
 		stream.Read(buffer, 0, len);
-		return Encoding_.XtoStr(buffer);
+		return String_.new_utf8_(buffer);
 	}
 	public IoItmFil_mem Clone() {return new_(this.Url(), this.Size(), this.ModifiedTime(), this.Text());}
 	public static IoItmFil_mem new_(Io_url filPath, long size, DateAdp modified, String text) {

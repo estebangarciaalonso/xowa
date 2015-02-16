@@ -40,49 +40,36 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 class Swt_btn implements GxwElem, Swt_control {
+	private Button btn;
+	public Swt_btn(Swt_control owner, KeyValHash ctorArgs) {
+		btn = new Button(owner.Under_composite(), SWT.FLAT | SWT.PUSH);
+		core = new Swt_core_cmds(btn);
+		btn.addKeyListener(new Swt_lnr_key(this));
+		btn.addMouseListener(new Swt_lnr_mouse(this));
+	}
 	@Override public Control Under_control() {return btn;}
-//	@Override public int SelBgn() {return textBox.getCaretPosition();} 	@Override public void SelBgn_set(int v) {textBox.setSelection(v);}
-//	@Override public int SelLen() {return textBox.getSelectionCount();} @Override public void SelLen_set(int v) {textBox.setSelection(this.SelBgn(), this.SelBgn() + v);}	
+	@Override public Control Under_menu_control() {return btn;}
 	@Override public String TextVal() {return btn.getText();} @Override public void TextVal_set(String v) {btn.setText(v);}
 	@Override public GxwCore_base Core() {return core;} GxwCore_base core;
 	@Override public GxwCbkHost Host() {return host;} @Override public void Host_set(GxwCbkHost host) {this.host = host;} GxwCbkHost host;
+	@Override public Composite Under_composite() {return null;}
 	@Override public void EnableDoubleBuffering() {}
-	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		return null;
-	}
-//	Text textBox;
-	Button btn;
-	public Swt_btn(GxwElem ownerElem, KeyValHash ctorArgs) {
-		Composite owner = ((Swt_win)ownerElem).UnderShell();
-//		if (ctorArgs.Has(GfuiTextBox_.Ctor_Memo)) {
-//			textBox = new Text(owner, SWT.MULTI | SWT.WRAP);
-//		}
-//		else {
-//			textBox = new Text(owner, SWT.NONE);
-//		}	
-		btn = new Button(owner, SWT.FLAT | SWT.PUSH);
-		core = new Swt_core_cmds(btn);
-		btn.addKeyListener(new Swt_KeyLnr(this));
-		btn.addMouseListener(new Swt_MouseLnr(this));
-	}
-
-//	@Override public boolean Border_on() {return false;} @Override public void Border_on_(boolean v) {} // SWT_TODO:borderWidth doesn't seem mutable
-//	@Override public void CreateControlIfNeeded() {}
-//	@Override public boolean OverrideTabKey() {return false;} @Override public void OverrideTabKey_(boolean v) {}
+	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {return null;}
 }
-
 class Swt_btn_no_border implements GxwElem, Swt_control {
-	public Swt_btn_no_border(GxwElem owner_elem, KeyValHash ctorArgs) {
-		Composite owner = ((Swt_win)owner_elem).UnderShell();
+	public Swt_btn_no_border(Swt_control owner_control, KeyValHash ctorArgs) {
+		Composite owner = owner_control.Under_composite();
 		Make_btn_no_border(owner.getDisplay(), owner.getShell(), owner);
 		core = new Swt_core_cmds(box_btn);
-		box_btn.addKeyListener(new Swt_KeyLnr(this));
-		box_btn.addMouseListener(new Swt_MouseLnr(this));
+		box_btn.addKeyListener(new Swt_lnr_key(this));
+		box_btn.addMouseListener(new Swt_lnr_mouse(this));
 	}
 	@Override public Control Under_control() {return box_btn;}
+	@Override public Control Under_menu_control() {return box_btn;}
 	@Override public String TextVal() {return box_btn.getText();} @Override public void TextVal_set(String v) {box_btn.setText(v);}
 	@Override public GxwCore_base Core() {return core;} Swt_core_cmds core;
 	@Override public GxwCbkHost Host() {return host;} @Override public void Host_set(GxwCbkHost host) {this.host = host;} GxwCbkHost host;
+	@Override public Composite Under_composite() {return null;}
 	@Override public void EnableDoubleBuffering() {}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, GfuiBtn.Invk_btn_img))	return btn_img;

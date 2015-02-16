@@ -33,7 +33,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.servers.http; import gplx.*; import gplx.xowa.*; import gplx.xowa.servers.*;
-import gplx.ios.*; import gplx.json.*;
+import gplx.ios.*; import gplx.json.*; import gplx.xowa.gui.*; import gplx.xowa.pages.*;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.Console;
@@ -63,36 +63,35 @@ public class Http_server_mgr implements GfoInvkAble {
 	}
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public int Port() {return port;} public Http_server_mgr Port_(int v) {port = v; return this;} private int port = 8080;
+	public String Home() {return home;} public void Home_(String v) {home = v;} private String home = "home/wiki/Main_Page";
 	private boolean init_gui_done = false;
 	private void Init_gui() {	// create a shim gui to automatically handle default XOWA gui JS calls
 		if (init_gui_done) return;
 		init_gui_done = true;
-		Gxw_html_server html_box = new Gxw_html_server(this);
-		app.Gui_mgr().Kit_(gplx.gfui.Gfui_kit_.Mem());
-		app.Gui_mgr().Main_win().Html_box().Under_html_(html_box);
+		Gxw_html_server.Init_gui_for_server(app, null);
 	}
 	public String Parse_page_to_html(Xoa_app app, String wiki_domain_str, String page_ttl_str) {
 		Init_gui();
-		byte[] wiki_domain = ByteAry_.new_utf8_(wiki_domain_str);
-		byte[] page_ttl = ByteAry_.new_utf8_(page_ttl_str);
+		byte[] wiki_domain = Bry_.new_utf8_(wiki_domain_str);
+		byte[] page_ttl = Bry_.new_utf8_(page_ttl_str);
 		Xow_wiki wiki = app.Wiki_mgr().Get_by_key_or_make(wiki_domain);							// get the wiki
-		Xoa_url page_url = new Xoa_url(); app.Url_parser().Parse(page_url, page_ttl);			// get the url (needed for query args)
+		Xoa_url page_url = app.Url_parser().Parse(page_ttl);									// get the url (needed for query args)
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, page_ttl);											// get the ttl
 		Xoa_page page = wiki.GetPageByTtl(page_url, ttl);										// get page and parse it
-		app.Gui_mgr().Main_win().Page_(page);													// HACK: init gui_mgr's page for output (which server ordinarily doesn't need)
-		wiki.Ctx().Tab().Init(ttl);																// HACK: clear state
+		Gxw_html_server.Assert_tab(app, page);													// HACK: assert at least 1 tab
+		app.Gui_mgr().Browser_win().Active_page_(page);											// HACK: init gui_mgr's page for output (which server ordinarily doesn't need)
 		if (page.Missing()) {																	// if page does not exist, replace with message; else null_ref error; DATE:2014-03-08
-			page.Data_raw_(ByteAry_.new_ascii_("'''Page not found.'''"));
+			page.Data_raw_(Bry_.new_ascii_("'''Page not found.'''"));
 			wiki.ParsePage(page, false);			
 		}
-		byte[] output_html = wiki.Html_mgr().Output_mgr().Gen(page, Xog_view_mode.Id_read);		// write html from page data
+		byte[] output_html = wiki.Html_mgr().Page_wtr_mgr().Gen(page, Xopg_view_mode.Tid_read);		// write html from page data
 		switch (retrieve_mode) {
 			case File_retrieve_mode.Mode_skip:				break;	// noop
-			case File_retrieve_mode.Mode_async_server:		app.Gui_mgr().Main_win().Exec_reload_imgs(); break;
+			case File_retrieve_mode.Mode_async_server:		app.Gui_mgr().Browser_win().Page__async__bgn(page.Tab()); break;
 			case File_retrieve_mode.Mode_wait:
 				if (page.File_queue().Count() > 0) {
-					app.Gui_mgr().Main_win().Exec_page_reload_imgs(); 
-					output_html = wiki.Html_mgr().Output_mgr().Gen(page, Xog_view_mode.Id_read);
+					app.Gui_mgr().Browser_win().Active_tab().Async();
+					output_html = wiki.Html_mgr().Page_wtr_mgr().Gen(page, Xopg_view_mode.Tid_read);
 				}
 				break;
 		}
@@ -130,15 +129,15 @@ public class Http_server_mgr implements GfoInvkAble {
 		if (wkr == null)
 			wkr = new Http_server_wkr(this, port);
 				new Thread(wkr, "thread:xowa.http_server").start();
-				Note("HTTP Server started: Navigate to http://localhost:" + Int_.XtoStr(port));
+				Note("HTTP Server started: Navigate to http://localhost:" + Int_.Xto_str(port));
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_port))					return port;
 		else if	(ctx.Match(k, Invk_port_))					Port_(m.ReadInt("v"));
-		else if	(ctx.Match(k, Invk_running))				return Yn.X_to_str(running);
+		else if	(ctx.Match(k, Invk_running))				return Yn.Xto_str(running);
 		else if	(ctx.Match(k, Invk_running_))				Running_(m.ReadYn("v"));
-		else if	(ctx.Match(k, Invk_retrieve_mode))			return File_retrieve_mode.X_to_str(retrieve_mode);
-		else if	(ctx.Match(k, Invk_retrieve_mode_))			retrieve_mode = File_retrieve_mode.X_to_byte(m.ReadStr("v"));
+		else if	(ctx.Match(k, Invk_retrieve_mode))			return File_retrieve_mode.Xto_str(retrieve_mode);
+		else if	(ctx.Match(k, Invk_retrieve_mode_))			retrieve_mode = File_retrieve_mode.Xto_byte(m.ReadStr("v"));
 		else if	(ctx.Match(k, Invk_retrieve_mode_list))		return File_retrieve_mode.Options__list;
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
@@ -199,12 +198,14 @@ class Http_server_wkr implements Runnable {
 	}
 }
 class HttpRequest implements Runnable{
-	final static String CRLF = "\r\n";
-	Socket socket;
-	Xoa_app app;
+	private static final String CRLF = "\r\n";
+	private Socket socket;
+	private Xoa_app app;
+	private String app_root_dir;
 	public HttpRequest(Socket socket, Xoa_app app){
 		this.socket = socket;
 		this.app = app;
+		this.app_root_dir = app.Fsys_mgr().Root_dir().To_http_file_str();
 	}
 	public void run(){
 		try {
@@ -218,25 +219,35 @@ class HttpRequest implements Runnable{
 			String page_name = "Main_Page";
 			
 			if(!req.contains("%file%")){
-				if(req.equals("/")){
-					req+="home/wiki/Main_Page"; //Forward to main page
-					/*Maybe add here a address from a config file, so that a custom main page could be defined*/
+				if(req.equals("/")) {	// no page; EX:"localhost:8080" vs "localhost:8080/en.wikipedia.org/wiki/Earth"
+					String home_url = app.Http_server().Home();;
+					if (String_.HasAtBgn(home_url, "file://")) {
+						Io_url file_url = Io_url_.http_any_(home_url, Op_sys.Cur().Tid_is_wnt());
+						String page_html = Io_mgr._.LoadFilStr(file_url);
+						Write_page(dos, page_html, app_root_dir, wiki_domain);
+					}
+					else
+						req += app.Http_server().Home();
 				}
 				if(req.endsWith("wiki/")) req+="Main_Page";
 				if(req.endsWith("wiki")) req+="/Main_Page";
 			}
 			
-			if(req.contains("%xowa-cmd%")){
+			if(req.contains("%xowa-cmd%") || req.contains("/xowa-cmd:")){
 				System.out.println("Command output:");
-				String cmd = req.substring(req.indexOf("%xowa-cmd%")+20);
+				String cmd = "";
+				if (req.contains("%xowa-cmd%"))
+					cmd = req.substring(req.indexOf("%xowa-cmd%")+20);
+				else
+					cmd = req.substring(req.indexOf("/xowa-cmd:")+10);
 				System.out.println(cmd);
 				app.Http_server().Run_xowa_cmd(app, cmd);
 				dos.writeBytes("Command sent, see console log for more details.");
 				dos.close();
 			}else
 			if(req.contains("%file%")){
-				String path = req.replace("/%file%/", app.Fsys_mgr().Root_dir().To_http_file_str());
-				path = path.substring(path.indexOf(app.Fsys_mgr().Root_dir().To_http_file_str())+5);
+				String path = req.replace("/%file%/", app_root_dir);
+				path = path.substring(path.indexOf(app_root_dir)+5);
 				Url_encoder url_converter = Url_encoder.new_http_url_();
 				path = url_converter.Decode_str(path);
 				if(path.contains("?")){
@@ -268,22 +279,10 @@ class HttpRequest implements Runnable{
 					Url_encoder url_converter = Url_encoder.new_http_url_();
 					page_name = url_converter.Decode_str(page_name);
 					//page_name = app.Url_converter_url().Decode_str(page_name);
-
 				}
-				dos.writeBytes("HTTP/1.1 200 OK: ");
-				dos.writeBytes("Content-Type: text/html; charset=utf-8" + CRLF);
-				dos.writeBytes(CRLF);
-				
 				try{
 					String page_html = app.Http_server().Parse_page_to_html(app, wiki_domain, page_name);
-					page_html = page_html.replaceAll(app.Fsys_mgr().Root_dir().To_http_file_str(),"%file%/");
-					page_html = page_html.replaceAll("xowa-cmd", "%xowa-cmd%/xowa-cmd");
-					page_html = page_html.replaceAll("<a href=\"/wiki/","<a href=\"/"+wiki_domain+"/wiki/");
-					page_html = page_html.replaceAll("action=\"/wiki/", "action=\"/"+wiki_domain+"/wiki/");
-					page_html = page_html.replaceAll("/site","");
-
-					dos.write(page_html.getBytes(Charset.forName("UTF-8")));
-					dos.close();
+					Write_page(dos, page_html, app_root_dir, wiki_domain);
 				}catch(Exception err) {
 					dos.writeBytes("Site not found. Check address please, or see console log.\n"+err.getMessage());
 					dos.close();
@@ -296,6 +295,33 @@ class HttpRequest implements Runnable{
 			System.out.println("error retrieving page. Please make sure your url is of the form: http://localhost:8080/home/wiki/Main_Page");
 			e.printStackTrace();
 		}
+	}
+	private static void Write_page(DataOutputStream strm, String page_html, String app_file_dir, String wiki_domain) {
+		page_html = Convert_page(page_html, app_file_dir, wiki_domain);
+		Write_to_stream(strm, page_html);		
+	}
+	private static String Convert_page(String page_html, String app_file_dir, String wiki_domain) {
+		page_html = page_html.replaceAll(app_file_dir			, "%file%/");
+		page_html = page_html.replaceAll("xowa-cmd"				, "%xowa-cmd%/xowa-cmd");
+		page_html = page_html.replaceAll("<a href=\"/wiki/"		, "<a href=\"/"+wiki_domain+"/wiki/");
+		page_html = page_html.replaceAll("action=\"/wiki/"		, "action=\"/"+wiki_domain+"/wiki/");
+		page_html = page_html.replaceAll("/site"				, "");
+		return page_html;
+	}
+	private static void Write_to_stream(DataOutputStream strm, String page_html) {
+		try{
+			strm.writeBytes("HTTP/1.1 200 OK: ");
+			strm.writeBytes("Content-Type: text/html; charset=utf-8" + CRLF);
+			strm.writeBytes(CRLF);				
+			strm.write(page_html.getBytes(Charset.forName("UTF-8")));
+			strm.close();
+		} catch (Exception err) {
+			try {
+				strm.writeBytes("Site not found. Check address please, or see console log.\n"+err.getMessage());
+				strm.close();
+			}
+			catch (Exception io_err) {}
+		}		
 	}
 	private void sendBytes(FileInputStream fis, DataOutputStream dos) {
 		byte[] buffer = new byte[1024];

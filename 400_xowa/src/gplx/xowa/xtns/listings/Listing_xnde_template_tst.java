@@ -35,11 +35,20 @@ public class Listing_xnde_template_tst {
 		,	"&lt;sleep name='name_0' address='address_0'&gt;content_0&lt;/sleep&gt;"
 		);
 	}
-	@Test  public void Ignore_empty_values() {
+	@Test  public void Ignore_empty() {
 		Init_xtn_mgr();
 		fxt.Test_parse_page_all_str
 		(	"<sleep name='name_0' alt='' address='' directions='' phone='' url='' checkin='' checkout='' price='' lat='' long=''>  </sleep>"
 		,	"<strong>name_0</strong>. "
+		);
+	}
+	@Test  public void Ignore_invalid() {	// PURPOSE: invalid atrs were causing null reference exception; PAGE:nl.v:Rome;EX:<sleep phone='' "abc"/> DATE:2014-06-04
+		fxt.Init_page_create("Template:ListingsSample", "{{{name|nil_name}}};{{{address|nil_address}}};{{{1|nil_content}}}");
+		fxt.Init_page_create("MediaWiki:listings-template", "ListingsSample");
+		Init_xtn_mgr();
+		fxt.Test_parse_page_all_str
+		(	"<sleep name='name_0' 'invalid'></sleep>"
+		,	"name_0;nil_address;"
 		);
 	}
 	@Test  public void Template() {
@@ -49,6 +58,15 @@ public class Listing_xnde_template_tst {
 		fxt.Test_parse_page_all_str
 		(	"<sleep name='name_0' address='address_0'>content_0</sleep>"
 		,	"name_0;address_0;content_0"
+		);
+	}
+	@Test  public void Template_lat() {	// PURPOSE: lat / long was not being set for listings sample; PAGE:fr.v:Marrakech; DATE:2014-05-21
+		fxt.Init_page_create("Template:ListingsSample2", "{{{name|nil_name}}};{{{lat|nil_lat}}};{{{long|nil_long}}}");
+		fxt.Init_page_create("MediaWiki:listings-template", "ListingsSample2");
+		Init_xtn_mgr();
+		fxt.Test_parse_page_all_str
+		(	"<sleep name='name_0' lat='12' long=''></sleep>"
+		,	"name_0;12;"
 		);
 	}
 	@Test  public void Position_template_as_text() {

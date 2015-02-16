@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.primitives.*;
 public class Xol_kwd_parse_data_tst {
 	@Before public void init() {Clear();}
 	@Test  public void Basic()			{Key_("upright" ).Tst_strip("upright");}
@@ -29,9 +29,9 @@ public class Xol_kwd_parse_data_tst {
 	}
 	Xol_kwd_parse_data_tst Key_(String v) {this.key = v; return this;} private String key;
 	Xol_kwd_parse_data_tst Tst_strip(String v) {
-		ByteAryBfr tmp = ByteAryBfr.new_();
-		ByteRef rslt = ByteRef.zero_();
-		byte[] actl = Xol_kwd_parse_data.Strip(tmp, ByteAry_.new_ascii_(v), rslt);
+		Bry_bfr tmp = Bry_bfr.new_();
+		Byte_obj_ref rslt = Byte_obj_ref.zero_();
+		byte[] actl = Xol_kwd_parse_data.Strip(tmp, Bry_.new_ascii_(v), rslt);
 		Tfds.Eq(key, String_.new_ascii_(actl));
 		return this;
 	}

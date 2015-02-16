@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
+import gplx.xowa.apps.*;
 public class Xoa_app_eval_tst {
 	Xoa_app_eval_fxt fxt = new Xoa_app_eval_fxt();
 	@Before public void init() {fxt.Clear();}
@@ -28,14 +29,13 @@ class Xoa_app_eval_fxt {
 	public void Clear() {
 		if (app == null) {
 			app = Xoa_app_fxt.app_();
-			fmtr = ByteAryFmtr.new_();
+			fmtr = Bry_fmtr.new_();
 			eval = new Xoa_app_eval(app);
 			fmtr.Eval_mgr_(eval);
 			Xoa_gfs_mgr.Msg_parser_init();
 		}
-	}	private Xoa_app app; ByteAryFmtr fmtr; Xoa_app_eval eval;
+	}	private Xoa_app app; Bry_fmtr fmtr; Xoa_app_eval eval;
 	public void Eval_test(String raw, String expd) {
 		Tfds.Eq(fmtr.Fmt_(raw).Bld_str_many(), expd);
 	}
 }
-// msgs.get('searchbutton');

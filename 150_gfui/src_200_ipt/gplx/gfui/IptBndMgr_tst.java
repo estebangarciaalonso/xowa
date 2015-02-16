@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.strings.*;
 public class IptBndMgr_tst {
 	@Before public void setup() {
 		fx = new IptBndMgr_fx();
@@ -57,7 +57,7 @@ public class IptBndMgr_tst {
 			return this;
 		}
 		String_bldr output = String_bldr_.new_();
-            public IptBndMgr_fx() {}
+	    public IptBndMgr_fx() {}
 	}
 	class IptBnd_mok implements IptBnd {
 		public String Key() {return key;} public IptBnd_mok Key_(String v) {key = v; return this;} private String key;

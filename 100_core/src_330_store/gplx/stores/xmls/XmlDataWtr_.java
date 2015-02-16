@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.stores.xmls; import gplx.*; import gplx.stores.*;
+import gplx.core.strings.*;
 public class XmlDataWtr_ {
 	public static DataWtr new_() {return XmlDataWtr.new_();}
 }
@@ -23,7 +24,7 @@ class XmlDataWtr extends DataWtr_base implements DataWtr {
 	public void InitWtr(String key, Object val) {}
 	@Override public void WriteData(String name, Object val) {
 //			if (val == null) return;
-		String valString = Object_.XtoStr_OrEmpty(val);
+		String valString = Object_.Xto_str_strict_or_empty(val);
 		int valStringLen = String_.Len(valString);
 		sb.Add(" ").Add(name).Add("=\"");
 		for (int i = 0; i < valStringLen; i++) {

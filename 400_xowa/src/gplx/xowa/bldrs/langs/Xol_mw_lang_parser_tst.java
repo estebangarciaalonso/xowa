@@ -18,9 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.langs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
 import org.junit.*;
 import gplx.intl.*;
-public class Xol_mw_lang_parser_tst {
-	Xol_mw_lang_parser_fxt fxt = new Xol_mw_lang_parser_fxt();
-	@Before public void init() {fxt.Clear();}
+public class Xol_mw_lang_parser_tst {		
+	@Before public void init() {fxt.Clear();} private Xol_mw_lang_parser_fxt fxt = new Xol_mw_lang_parser_fxt();
 	@Test  public void Core_keywords() {
 		fxt.Parse_core("$magicWords = array('toc' => array(0, 'a1', 'a2', 'a3'), 'notoc' => array(1, 'b1', 'b2', 'b3'));")
 			.Tst_keyword(Xol_kwd_grp_.Id_toc, false, "a1", "a2", "a3")
@@ -79,7 +78,7 @@ public class Xol_mw_lang_parser_tst {
 			;
 	}
 	@Test  public void Xtn_keywords_fr() {fxt.Parse_xtn("$magicWords['fr'] = array('if' => array(0, 'si' ));").Tst_parse("{{si:|y|n}}", "n");}
-	@Test  public void Xtn_keywords_de() {fxt.Parse_xtn("$magicWords['de'] = array('if' => array(0, 'si' ));").Tst_parse("{{si:|y|n}}", "<a href=\"/wiki/Template:si:\">Template:si:</a>");}
+	@Test  public void Xtn_keywords_de() {fxt.Parse_xtn("$magicWords['de'] = array('if' => array(0, 'si' ));").Tst_parse("{{si:|y|n}}", "<a href=\"/wiki/Template:Si:\">Template:Si:</a>");}	// should be "Si", not "si"; ALSO, should probably be "{{si:|y|n}}" not "[[:Template:si:]]" DATE:2014-07-04
 	@Test  public void Core_messages() {
 		fxt.Parse_core("$messages = array('sunday' => 'dimanche');")
 			.Tst_message("sunday", 0, "dimanche", false)
@@ -90,62 +89,131 @@ public class Xol_mw_lang_parser_tst {
 		Tfds.Eq("zh-hans", String_.new_utf8_(fxt.Lang().Fallback_bry()));
 	}
 	@Test  public void Separator_transform_table() {
-//			fxt.Lang().Num_fmt_mgr().Clear().Dec_dlm_(ByteAry_.new_ascii_(".")).Grps_add(new Xol_num_grp(ByteAry_.new_utf8_(","), 3, true));
 		fxt.Parse_core("$separatorTransformTable = array( ',' => '.', '.' => ',' );");
 		fxt.Num_fmt_tst("1234,56", "1.234.56");	// NOTE: dot is repeated; confirmed with dewiki and {{formatnum:1234,56}}
 	}
 	@Test  public void Separator_transform_table_fr() {
-//			fxt.Lang().Num_fmt_mgr().Clear().Dec_dlm_(ByteAry_.new_ascii_(".")).Grps_add(new Xol_num_grp(ByteAry_.new_utf8_(","), 3, true));
 		fxt.Parse_core("$separatorTransformTable = array( ',' => '\\xc2\\xa0', '.' => ',' );");
 		fxt.Num_fmt_tst("1234,56", "1 234 56");	// NOTE: nbsp here; also, nbsp is repeated. see dewiki and {{formatnum:1234,56}}
 	}
-	@Test   public void Bld() {
-		//             mem/xowa/user/test_user/lang/mediawiki/messages/
-		fxt.Save_file("mem/xowa/user/test_user/lang/mediawiki/messages/MessagesFr.php"
-			,	"$fallback = 'zh-hans';"
-			,	"$rtl = true;"
-			,	"$namespaceNames = array(NS_FILE => 'Filex');"
-			,	"$namespaceAliases = array('File Discussion' => NS_FILE_TALK);"
-			,	"$magicWords = array('currentmonth' => array(0, 'CUR_MONTH'));"
-			,	"$messages = array('sunday' => 'sunday');"
-			);
-		fxt.Save_file("mem/xowa/user/test_user/lang/mediawiki/extensions/Test.il8n.php"
-			,	"$magicWords['fr'] = array('currentyear' => array(0, 'CUR_YEAR'));"
-			,	"$messages['fr'] = array('monday' => 'monday');"
-			);
+	@Test  public void Digit_transform_table() {
+		fxt.Save_file("mem/xowa/bin/any/xowa/cfg/lang/mediawiki/core_php/MessagesFr.php"
+		, "$digitTransformTable = array("
+		, "  '0' => 'nulla',"
+		, "  '1' => 'I',"
+		, "  '2' => 'II',"
+		, "  '3' => 'III',"
+		, "  '4' => 'IV',"
+		, "  '5' => 'V',"
+		, "  '6' => 'VI',"
+		, "  '7' => 'VII',"
+		, "  '8' => 'VIII',"
+		, "  '9' => 'IX',"
+		, ");"
+		);
 		fxt.Run_bld_all();
-		fxt.Tst_file("mem/xowa/user/test_user/lang/xowa/fr.gfs", String_.Concat_lines_nl
-			(	"this"
-			,	".fallback_load('zh-hans')"
-			,	".dir_rtl_('y')"
-			,	".ns_names"
-			,	"  .load_text("
-			,	"<:['"
-			,	"6|Filex"
-			,	"']:>"
-			,	").lang"
-			,	".ns_aliases"
-			,	"  .load_text("
-			,	"<:['"
-			,	"7|File Discussion"
-			,	"']:>"
-			,	").lang"
-			,	".keywords"
-			,	"  .load_text("
-			,	"<:['"
-			,	"currentmonth|0|CUR_MONTH~"
-			,	"currentyear|0|CUR_YEAR~"
-			,	"']:>"
-			,	").lang"
-			,	".messages"
-			,	"  .load_text("
-			,	"<:['"
-			,	"sunday|sunday"
-			,	"monday|monday"
-			,	"']:>"
-			,	").lang"
-			,	";"
-			));
+		fxt.Tst_file("mem/xowa/bin/any/xowa/cfg/lang/core/fr.gfs", String_.Concat_lines_nl
+		( "numbers {"
+		, "  digits {"
+		, "    clear;"
+		, "    set('0', 'nulla');"
+		, "    set('1', 'I');"
+		, "    set('2', 'II');"
+		, "    set('3', 'III');"
+		, "    set('4', 'IV');"
+		, "    set('5', 'V');"
+		, "    set('6', 'VI');"
+		, "    set('7', 'VII');"
+		, "    set('8', 'VIII');"
+		, "    set('9', 'IX');"
+		, "  }"
+		, "}"
+		, "this"
+		, ";"
+		));
+	}
+	@Test  public void Digit_grouping_pattern() {
+		fxt.Save_file("mem/xowa/bin/any/xowa/cfg/lang/mediawiki/core_php/MessagesFr.php"
+		, "$digitGroupingPattern = '##,##,###'"
+		, ");"
+		);
+		fxt.Run_bld_all();
+		fxt.Tst_file("mem/xowa/bin/any/xowa/cfg/lang/core/fr.gfs", String_.Concat_lines_nl
+		( "numbers {"
+		, "  digit_grouping_pattern = '##,##,###';"
+		, "}"
+		, "this"
+		, ";"
+		));
+	}
+	@Test   public void Bld() {
+		fxt.Save_file("mem/xowa/bin/any/xowa/cfg/lang/mediawiki/core_php/MessagesFr.php"
+		, "$fallback = 'zh-hans';"
+		, "$rtl = true;"
+		, "$namespaceNames = array(NS_FILE => 'Filex');"
+		, "$namespaceAliases = array('File Discussion' => NS_FILE_TALK);"
+		, "$magicWords = array('currentmonth' => array(0, 'CUR_MONTH'));"
+		, "$messages = array('sunday' => 'sunday');"
+		);
+		fxt.Save_file("mem/xowa/bin/any/xowa/cfg/lang/mediawiki/xtns_php/Test.il8n.php"
+		, "$magicWords['fr'] = array('currentyear' => array(0, 'CUR_YEAR'));"
+		, "$messages['fr'] = array('monday' => 'monday');"
+		);
+		fxt.Save_file("mem/xowa/bin/any/xowa/cfg/lang/mediawiki/core_json/Messages/fr.json"
+		, "{"
+		, "    \"@metadata\": {"
+		, "        \"authors\": []"
+		, "    },"
+		, "\"key_1\": \"val_1\","
+		, "\"key_2\": \"val $1\","
+		, "}"
+		);
+		fxt.Save_file("mem/xowa/bin/any/xowa/cfg/lang/mediawiki/xtns_json/Test2/fr.json"
+		, "{"
+		, "    \"@metadata\": {"
+		, "        \"authors\": []"
+		, "    },"
+		, "\"key_3\": \"val_3\","
+		, "\"key_4\": \"val $1\","
+		, "}"
+		);
+		fxt.Run_bld_all();
+		fxt.Tst_file("mem/xowa/bin/any/xowa/cfg/lang/core/fr.gfs", String_.Concat_lines_nl
+		( "this"
+		, ".fallback_load('zh-hans')"
+		, ".dir_rtl_('y')"
+		, ".ns_names"
+		, "  .load_text("
+		, "<:['"
+		, "6|Filex"
+		, "']:>"
+		, ").lang"
+		, ".ns_aliases"
+		, "  .load_text("
+		, "<:['"
+		, "7|File Discussion"
+		, "']:>"
+		, ").lang"
+		, ".keywords"
+		, "  .load_text("
+		, "<:['"
+		, "currentmonth|0|CUR_MONTH~"
+		, "currentyear|0|CUR_YEAR~"
+		, "']:>"
+		, ").lang"
+		, ".messages"
+		, "  .load_text("
+		, "<:['"
+		, "sunday|sunday"
+		, "monday|monday"
+		, "key_1|val_1"
+		, "key_2|val ~{0}"
+		, "key_3|val_3"
+		, "key_4|val ~{0}"
+		, "']:>"
+		, ").lang"
+		, ";"
+		));
 	}
 	@Test   public void Dir_ltr() {
 		fxt.Parse_core("$rtl = 'true';");
@@ -169,7 +237,7 @@ public class Xol_mw_lang_parser_tst {
 }
 class Xol_mw_lang_parser_fxt {
 	Xoa_app app; Xow_wiki wiki; private Xop_fxt fxt;
-	Xol_mw_lang_parser parser = new Xol_mw_lang_parser(new Gfo_msg_log("test")); ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	Xol_mw_lang_parser parser = new Xol_mw_lang_parser(Gfo_msg_log.Test()); Bry_bfr tmp_bfr = Bry_bfr.reset_(255);
 	public void Clear() {
 		if (app == null) {
 			app = Xoa_app_fxt.app_();
@@ -177,15 +245,12 @@ class Xol_mw_lang_parser_fxt {
 			fxt = new Xop_fxt(app, wiki);
 		}
 		app.Lang_mgr().Clear();// NOTE: always clear the lang
-		lang = app.Lang_mgr().Get_by_key_or_new(ByteAry_.new_ascii_("fr"));
-		GfoInvkAble_.InvkCmd_val(wiki, Xow_wiki.Invk_lang_, ByteAry_.new_ascii_("fr"));
+		lang = app.Lang_mgr().Get_by_key_or_new(Bry_.new_ascii_("fr"));
+		GfoInvkAble_.InvkCmd_val(wiki, Xow_wiki.Invk_lang_, Bry_.new_ascii_("fr"));
 	}
 	public Xol_lang Lang() {return lang;} private Xol_lang lang;
-	public void Run_smoke(Io_url user_root) {
-		parser.Bld_all(app, user_root);
-	}
-	public void Num_fmt_tst(String raw, String expd) {Tfds.Eq(expd, String_.new_utf8_(lang.Num_fmt_mgr().Fmt(ByteAry_.new_utf8_(raw))));}
-	public void Run_bld_all() {parser.Bld_all(app, app.User().Fsys_mgr().Root_dir());}
+	public void Num_fmt_tst(String raw, String expd) {Tfds.Eq(expd, String_.new_utf8_(lang.Num_mgr().Format_num(Bry_.new_utf8_(raw))));}
+	public void Run_bld_all() {parser.Bld_all(app);}
 	public void Save_file(String path, String... lines) {
 		Io_mgr._.SaveFilStr(Io_url_.mem_fil_(path), String_.Concat_lines_nl(lines));
 	}
@@ -202,12 +267,12 @@ class Xol_mw_lang_parser_fxt {
 		int actl_len = lst.Itms().length;
 		String[] actl = new String[actl_len];
 		for (int i = 0; i < actl_len; i++)
-			actl[i] = String_.new_utf8_(lst.Itms()[i].Bry());
+			actl[i] = String_.new_utf8_(lst.Itms()[i].Val());
 		Tfds.Eq_ary_str(words, actl);
 		return this;
 	}
 	public Xol_mw_lang_parser_fxt Tst_keyword_img(String key_str, byte tid) {
-		byte[] key = ByteAry_.new_utf8_(key_str);
+		byte[] key = Bry_.new_utf8_(key_str);
 		Tfds.Eq(tid, lang.Lnki_arg_parser().Identify_tid(key, 0, key.length));
 		return this;
 	}
@@ -217,14 +282,14 @@ class Xol_mw_lang_parser_fxt {
 		return this;
 	}
 	public Xol_mw_lang_parser_fxt Tst_ns_lkp(String key_str, int id) {
-		byte[] key = ByteAry_.new_utf8_(key_str);
+		byte[] key = Bry_.new_utf8_(key_str);
 		Xow_ns ns = (Xow_ns)wiki.Ns_mgr().Names_get_or_null(key, 0, key.length);
 		int actl = ns == null ? Xow_ns_.Id_null : ns.Id();
 		Tfds.Eq(id, actl);
 		return this;
 	}
 	public Xol_mw_lang_parser_fxt Test_specialPageAliases(String special, String... expd_aliases) {
-		Xol_specials_itm actl_aliases = lang.Specials_mgr().Get_by_key(ByteAry_.new_utf8_(special));
+		Xol_specials_itm actl_aliases = lang.Specials_mgr().Get_by_key(Bry_.new_utf8_(special));
 		Tfds.Eq_ary_str(expd_aliases, To_str_ary(actl_aliases));
 		return this;
 	}
@@ -241,7 +306,7 @@ class Xol_mw_lang_parser_fxt {
 		return this;
 	}
 	public Xol_mw_lang_parser_fxt Tst_message(String key, int id, String val, boolean fmt) {
-		Xol_msg_itm itm = lang.Msg_mgr().Itm_by_key_or_new(ByteAry_.new_ascii_(key));
+		Xol_msg_itm itm = lang.Msg_mgr().Itm_by_key_or_new(Bry_.new_ascii_(key));
 		Tfds.Eq(id, itm.Id());
 		Tfds.Eq(val, String_.new_utf8_(itm.Val()));
 		Tfds.Eq(fmt, itm.Has_fmt_arg());

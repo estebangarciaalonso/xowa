@@ -16,14 +16,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.dynamicPageList; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.core.primitives.*;
 class Dpl_itm_keys {
 	public static byte Parse(byte[] src, int bgn, int end, byte or) {
 		Object o = keys.Get_by_mid(src, bgn, end);
-		return o == null ? or : ((ByteVal)o).Val();
+		return o == null ? or : ((Byte_obj_val)o).Val();
 	}
 	public static byte Parse(byte[] bry, byte or) {
 		Object o = keys.Get_by_bry(bry);
-		return o == null ? or : ((ByteVal)o).Val();
+		return o == null ? or : ((Byte_obj_val)o).Val();
 	}
 	public static boolean Parse_as_bool(byte[] bry, boolean or) {
 		byte key = Dpl_itm_keys.Parse(bry, Key_null);
@@ -35,7 +36,7 @@ class Dpl_itm_keys {
 		}
 	}
 	public static final byte
-	  Key_null = Byte_.MaxValue_127
+	  Key_null = Byte_.Max_value_127
 	, Key_category = 1
 	, Key_notcategory = 2
 	, Key_ns = 3
@@ -78,7 +79,7 @@ class Dpl_itm_keys {
 	, Key_false = 40
 	, Key_true = 41
 	;
-	private static final Hash_adp_bry keys = Hash_adp_bry.ci_()
+	private static final Hash_adp_bry keys = Hash_adp_bry.ci_ascii_()
 	.Add_str_byte("category", Dpl_itm_keys.Key_category)
 	.Add_str_byte("notcategory", Dpl_itm_keys.Key_notcategory)
 	.Add_str_byte("namespace", Dpl_itm_keys.Key_ns)

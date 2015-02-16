@@ -16,12 +16,19 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.threads.*;
 public class Env_ {
 	public static void Init(String[] args, String appNameAndExt, Class<?> type) {
 		mode_testing = false;
 		mode_debug = String_.In("GPLX_DEBUG_MODE_ENABLED", args);
 		appArgs = args;
 		appUrl = JarAdp_.Url_type(type).OwnerDir().GenSubFil(appNameAndExt);
+	}
+	public static void Init_swt(String[] args, Class<?> type) {	// DATE:2014-06-23
+		mode_testing = false;
+		mode_debug = String_.In("GPLX_DEBUG_MODE_ENABLED", args);
+		appArgs = args;
+		appUrl = JarAdp_.Url_type(type);
 	}
 	public static void Init_drd(String[] args, Io_url url) {
 		mode_testing = mode_debug = false;
@@ -46,6 +53,9 @@ public class Env_ {
 	public static int TickCount_elapsed_in_frac(long time_bgn) {return (int)(Env_.TickCount() - time_bgn);}
 	public static long TickCount_Test = -1;	// in milliseconds
 	public static void TickCount_normal() {TickCount_Test = -1;}
+	public static long System_cpu_count() {return Runtime.getRuntime().availableProcessors();}	
+	public static long System_memory_max() {return Runtime.getRuntime().maxMemory();}	
+	public static long System_memory_total() {return Runtime.getRuntime().totalMemory();}	
 	public static long System_memory_free() {return Runtime.getRuntime().freeMemory();}	
 	public static final String LocalHost = "127.0.0.1";
 	public static String NewLine_lang() {return mode_testing ? "\n" : "\n";}	

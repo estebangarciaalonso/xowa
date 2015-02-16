@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xol_csv_parser {
-	public void Save(ByteAryBfr bfr, byte[] src) {
+	public void Save(Bry_bfr bfr, byte[] src) {
 		int len = src.length;
 		for (int i = 0; i < len; i++) {
 			byte b = src[i];
@@ -31,9 +31,9 @@ public class Xol_csv_parser {
 			}
 		}
 	}
-	public byte[] Load(byte[] src, int bgn, int end) {Load(tmp_bfr, src, bgn, end); return tmp_bfr.XtoAryAndClear();}
-	public void Load(ByteAryBfr bfr, byte[] src) {Load(bfr, src, 0, src.length);}
-	public void Load(ByteAryBfr bfr, byte[] src, int bgn, int end) {
+	public byte[] Load(byte[] src, int bgn, int end) {Load(tmp_bfr, src, bgn, end); return tmp_bfr.Xto_bry_and_clear();}
+	public void Load(Bry_bfr bfr, byte[] src) {Load(bfr, src, 0, src.length);}
+	public void Load(Bry_bfr bfr, byte[] src, int bgn, int end) {
 		for (int i = bgn; i < end; i++) {
 			byte b = src[i];
 			switch (b) {
@@ -77,7 +77,7 @@ public class Xol_csv_parser {
 		}
 	}
 	private static final String GRP_KEY = "Xol_csv_parser";
-	private static final byte[] Bry_pipe = ByteAry_.new_ascii_("\\u007C");
-	private static final ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	private static final byte[] Bry_pipe = Bry_.new_ascii_("\\u007C");
+	private static final Bry_bfr tmp_bfr = Bry_bfr.reset_(255);
 	public static final Xol_csv_parser _ = new Xol_csv_parser(); Xol_csv_parser() {}
 }

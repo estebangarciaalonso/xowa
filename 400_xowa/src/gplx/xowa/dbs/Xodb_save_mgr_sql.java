@@ -20,7 +20,7 @@ import gplx.dbs.*; import gplx.ios.*;
 public class Xodb_save_mgr_sql implements Xodb_save_mgr {
 	public Xodb_save_mgr_sql(Xodb_mgr_sql db_mgr) {
 		this.db_mgr = db_mgr; zip_mgr = db_mgr.Wiki().App().Zip_mgr();
-	} 	Xodb_mgr_sql db_mgr; Io_stream_zip_mgr zip_mgr;
+	} 	private Xodb_mgr_sql db_mgr; private Io_stream_zip_mgr zip_mgr;
 	public boolean Create_enabled() {return create_enabled;} public void Create_enabled_(boolean v) {create_enabled = v;} private boolean create_enabled;
 	public boolean Update_modified_on_enabled() {return update_modified_on_enabled;} public void Update_modified_on_enabled_(boolean v) {update_modified_on_enabled = v;} private boolean update_modified_on_enabled;
 	public int Page_id_next() {return page_id_next;} public void Page_id_next_(int v) {page_id_next = v;} private int page_id_next;
@@ -30,9 +30,9 @@ public class Xodb_save_mgr_sql implements Xodb_save_mgr {
 		String page_id = db_mgr.Tbl_xowa_cfg().Select_val_or("db", "page.id_nxt", null);
 		int page_id_int = -1;
 		if (page_id == null) {
-			DataRdr rdr = db_mgr.Tbl_page().Provider().Exec_sql_as_rdr("SELECT (Max(page_id) + 1) AS max_page_id FROM page;");
+			DataRdr rdr = db_mgr.Tbl_page().Conn().Exec_sql_as_rdr("SELECT (Max(page_id) + 1) AS max_page_id FROM page;");
 			if (rdr.MoveNextPeer()) {
-				page_id = Int_.XtoStr(rdr.ReadInt("max_page_id"));
+				page_id = Int_.Xto_str(rdr.ReadInt("max_page_id"));
 				page_id_int = Int_.parse_(page_id);
 				db_mgr.Tbl_xowa_cfg().Insert_int("db", "page.id_next", page_id_int);
 			}
@@ -44,8 +44,8 @@ public class Xodb_save_mgr_sql implements Xodb_save_mgr {
 		Xodb_fsys_mgr fsys_mgr = db_mgr.Fsys_mgr();
 		int file_idx = fsys_mgr.Tid_text_idx();
 		boolean redirect = db_mgr.Wiki().Redirect_mgr().Is_redirect(text, text.length);
-		Db_stmt page_stmt = db_mgr.Tbl_page().Insert_stmt(fsys_mgr.Page_provider());
-		Db_provider text_provider = db_mgr.Fsys_mgr().Get_by_db_idx(file_idx).Provider();
+		Db_stmt page_stmt = db_mgr.Tbl_page().Insert_stmt(fsys_mgr.Conn_page());
+		Db_conn text_provider = db_mgr.Fsys_mgr().Get_by_idx(file_idx).Conn();
 		Db_stmt text_stmt = db_mgr.Tbl_text().Insert_stmt(text_provider);
 		text = zip_mgr.Zip(db_mgr.Data_storage_format(), text);
 		try {
@@ -59,9 +59,9 @@ public class Xodb_save_mgr_sql implements Xodb_save_mgr {
 	}
 	public void Data_update(Xoa_page page, byte[] text) {
 		boolean redirect = db_mgr.Wiki().Redirect_mgr().Is_redirect(text, text.length);
-		DateAdp modified = update_modified_on_enabled ? DateAdp_.Now() : page.Modified_on();
+		DateAdp modified = update_modified_on_enabled ? DateAdp_.Now() : page.Revision_data().Modified_on();
 		boolean redirect_changed = redirect != db_mgr.Wiki().Redirect_mgr().Is_redirect(page.Data_raw(), page.Data_raw().length);
-		boolean modified_changed = !modified.Eq(page.Modified_on());
+		boolean modified_changed = !modified.Eq(page.Revision_data().Modified_on());
 		int kv_len = 0;
 		if (redirect_changed) ++kv_len;
 		if (modified_changed) ++kv_len;
@@ -71,29 +71,29 @@ public class Xodb_save_mgr_sql implements Xodb_save_mgr {
 			int kv_idx = 0;
 			if (redirect_changed) kv_ary[kv_idx++] = KeyVal_.new_("page_is_redirect", redirect_changed);
 			if (modified_changed) kv_ary[kv_idx++] = KeyVal_.new_("page_touched", Xto_touched_str(modified));
-			qry = Db_qry_.update_common_("page", Db_crt_.eq_("page_id", page.Id()), kv_ary);
-			Db_provider provider = db_mgr.Fsys_mgr().Core_provider();
-			provider.Txn_mgr().Txn_bgn_if_none();
-			provider.Exec_qry(qry);
-			provider.Txn_mgr().Txn_end_all();
+			qry = Db_qry_.update_common_("page", Db_crt_.eq_("page_id", page.Revision_data().Id()), kv_ary);
+			Db_conn conn = db_mgr.Fsys_mgr().Conn_core();
+			conn.Txn_mgr().Txn_bgn_if_none();
+			conn.Exec_qry(qry);
+			conn.Txn_mgr().Txn_end_all();
 		}
 		Xodb_page db_page = new Xodb_page();
-		db_mgr.Load_mgr().Load_by_id(db_page, page.Id());
+		db_mgr.Load_mgr().Load_by_id(db_page, page.Revision_data().Id());
 		text = zip_mgr.Zip(db_mgr.Data_storage_format(), text);
-		db_mgr.Tbl_text().Update(db_page.Db_file_idx(), page.Id(), text);
+		db_mgr.Tbl_text().Update(db_page.Text_db_id(), page.Revision_data().Id(), text);
 	}
 	public void Data_rename(Xoa_page page, int trg_ns, byte[] trg_ttl) {
-		Db_qry qry = Db_qry_.update_common_("page", Db_crt_.eq_("page_id", page.Id())
+		Db_qry qry = Db_qry_.update_common_("page", Db_crt_.eq_("page_id", page.Revision_data().Id())
 		, KeyVal_.new_("page_namespace", trg_ns)
 		, KeyVal_.new_("page_title", String_.new_utf8_(trg_ttl))
 		);
 		try {
-			db_mgr.Fsys_mgr().Core_provider().Exec_qry(qry);
+			db_mgr.Fsys_mgr().Conn_core().Exec_qry(qry);
 		} catch (Exception exc) {
 			if (String_.Has(Err_.Message_gplx_brief(exc), "columns page_namespace, page_random_int are not unique")) {	// HACK: terrible hack, but moving pages across ns will break UNIQUE index
-				db_mgr.Fsys_mgr().Core_provider().Exec_sql("DROP INDEX page__name_random;"); // is UNIQUE by default
-				db_mgr.Fsys_mgr().Core_provider().Exec_sql("CREATE INDEX page__name_random ON page (page_namespace, page_random_int);");
-				db_mgr.Fsys_mgr().Core_provider().Exec_qry(qry);
+				db_mgr.Fsys_mgr().Conn_core().Exec_sql("DROP INDEX page__name_random;"); // is UNIQUE by default
+				db_mgr.Fsys_mgr().Conn_core().Exec_sql("CREATE INDEX page__name_random ON page (page_namespace, page_random_int);");
+				db_mgr.Fsys_mgr().Conn_core().Exec_qry(qry);
 			}
 		}
 	}

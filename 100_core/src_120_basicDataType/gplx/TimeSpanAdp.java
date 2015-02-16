@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.strings.*;
 public class TimeSpanAdp implements CompareAble, EqAble {
 	public long Fracs() {return fracs;} long fracs; public int FracsAsInt() {return (int)fracs;}
 	public DecimalAdp TotalSecs() {
@@ -40,7 +41,7 @@ public class TimeSpanAdp implements CompareAble, EqAble {
 	}
 	public TimeSpanAdp Subtract(TimeSpanAdp val)	{return new TimeSpanAdp(fracs - val.fracs);}
 
-	public int compareTo(Object obj)				{TimeSpanAdp comp = TimeSpanAdp_.cast_(obj); return CompareAble_.Compare_comp(fracs, comp.fracs);}
+	public int compareTo(Object obj)				{TimeSpanAdp comp = TimeSpanAdp_.cast_(obj); return CompareAble_.Compare_obj(fracs, comp.fracs);}
 	public boolean Eq(Object o) {
 		TimeSpanAdp comp = TimeSpanAdp_.cast_(o); if (comp == null) return false;
 		return fracs == comp.fracs;
@@ -77,7 +78,7 @@ public class TimeSpanAdp implements CompareAble, EqAble {
 			case 1: return "s";
 			case 2: return "m";
 			case 3: return "h";
-			default: return "unknown:<" + Int_.XtoStr(i) + ">";
+			default: return "unknown:<" + Int_.Xto_str(i) + ">";
 		}
 	}
 	@gplx.Internal protected TimeSpanAdp(long fracs) {this.fracs = fracs;}

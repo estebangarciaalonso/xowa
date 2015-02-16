@@ -24,7 +24,7 @@ public class Xouc_startup_mgr implements GfoInvkAble {
 		byte v = Page_parse(page);
 		switch (v) {
 			case Page_home: return config.Pages_mgr().Home();
-			case Page_last: return String_.new_utf8_(config.User().App().Gui_mgr().Main_win().Page().Ttl().Raw());
+			case Page_last: return String_.new_utf8_(config.User().App().Gui_mgr().Browser_win().Active_page().Ttl().Raw());
 			case Page_xowa: return Xouc_pages_mgr.Page_xowa;
 			default: throw Err_.unhandled(page);
 		}
@@ -59,8 +59,8 @@ public class Xouc_startup_mgr implements GfoInvkAble {
 			return;
 		}
 		custom_config = v;
-		Io_url custom_config_url = config.User().Fsys_mgr().App_data_cfg_custom_fil();
-		Io_mgr._.SaveFilStr(custom_config_url, v);
+		// Io_url custom_config_url = config.User().Fsys_mgr().App_data_cfg_custom_fil();	// DELETE: no longer sync user_cfg to custom.gfs; already saved in user.gfs; DATE:2014-05-30
+		// Io_mgr._.SaveFilStr(custom_config_url, v);
 	}
 	public static final byte Page_home = 0, Page_last = 1, Page_xowa = 2;
 }

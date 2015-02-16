@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import gplx.ios.*; import gplx.xowa.bldrs.*; 
+import gplx.ios.*; import gplx.threads.*; import gplx.xowa.bldrs.*; 
 public class Xobc_core_decompress_bz extends Xob_itm_basic_base implements Xob_cmd {
 	public Xobc_core_decompress_bz(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}		
 	public String Cmd_key() {return KEY;} public static final String KEY = "core.decompress_bz2";
@@ -41,7 +41,7 @@ public class Xobc_core_decompress_bz extends Xob_itm_basic_base implements Xob_c
 	static final String GRP_KEY = "xowa.bldr.cmd.decompress_bz2";
 	public static boolean Decompress(Xoa_app app, String src_fil, Io_url trg_fil) {
 		Io_mgr._.CreateDirIfAbsent(trg_fil.OwnerDir());	// 7zip will fail if dir does not exist
-		ProcessAdp decompress = app.Fsys_mgr().App_mgr().App_decompress_bz2();
+		ProcessAdp decompress = app.Launcher().App_decompress_bz2();
 		decompress.Prog_dlg_(app.Usr_dlg()).Run_mode_(ProcessAdp.Run_mode_async);
 		decompress.Run(src_fil, trg_fil, trg_fil.OwnerDir().Xto_api());
 		while (decompress.Exit_code() == ProcessAdp.Exit_init) {

@@ -21,7 +21,7 @@ public class IptArgChainMgr_tst {
 	@Before public void setup() {
 		fx = new IptArgChainMgr_fx();
 	}	IptArgChainMgr_fx fx;
-	@Test public void Add() {
+	@Test  public void Add() {
 		fx.run_Add(IptKey_.A, IptKey_.B, IptKey_.C);
 		fx.tst_(IptKey_.A, 1);
 		fx.tst_(IptKey_.B, 1);
@@ -29,7 +29,7 @@ public class IptArgChainMgr_tst {
 		fx.tst_(IptKey_.B, 0);
 		fx.tst_(IptKey_.C, 0);
 	}
-	@Test public void Del() {
+	@Test  public void Del() {
 		fx.run_Add(IptKey_.A, IptKey_.B, IptKey_.C);
 		fx.run_Del(IptKey_.A, IptKey_.B, IptKey_.C);
 		fx.tst_(IptKey_.A, 0);
@@ -44,15 +44,15 @@ public class IptArgChainMgr_tst {
 			String process = under.Process(key);
 			String activeKey = under.ActiveKey();
 			String literal = key.Key();
-                if		(expd == 0) {
+	        if		(expd == 0) {
 				Tfds.Eq(process, "", "0:{0} should be empty:process", literal);
 				Tfds.Eq(activeKey, "", "0:{0} should be noop:activeKey", literal);
 			}
-                else if	(expd == 1) {
+	        else if	(expd == 1) {
 				Tfds.Eq(process, "", "1:{0} should be empty:process", literal);
 				Tfds.Eq_true(String_.HasAtEnd(activeKey, key.Key() + ","), "1:{0} should set key:activeKey,{1}", literal, activeKey);
 			}
-                else if	(expd == 2) {
+	        else if	(expd == 2) {
 				Tfds.Eq_true(String_.EqNot(process, ""), "2:{0} should not be empty;process,{1}", literal, process);
 				Tfds.Eq(activeKey, "", "2:{0} should be empty:activeKey", literal);
 			}

@@ -34,7 +34,7 @@ public class Xol_cnv_grp implements GfoInvkAble {
 	public static void Add_bulk(OrderedHash hash, byte[] raw) {	// COPY:add_bulk
 		int len = raw.length;
 		int pos = 0, fld_bgn = 0, fld_idx = 0;
-		byte[] src = ByteAry_.Empty, trg = ByteAry_.Empty;
+		byte[] src = Bry_.Empty, trg = Bry_.Empty;
 		Xol_csv_parser csv_parser = Xol_csv_parser._;
 		while (true) {
 			boolean last = pos == len;

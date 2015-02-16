@@ -40,10 +40,10 @@ public class Xowc_xtn_pages implements GfoInvkAble {
 		for (int i = 0; i < len; i++) {	// Page / Index ns_ids are variable per wiki; iterate over ns, and set ns_id
 			Xow_ns ns = ns_mgr.Ords_get_at(i); if (ns == null) continue;
 			byte[] ns_name = ns.Name_enc();
-			if		(ByteAry_.Eq(ns_name, page_name))		ns_page_id = ns.Id();
-			else if (ByteAry_.Eq(ns_name, page_talk_name))	ns_page_talk_id = ns.Id();
-			else if (ByteAry_.Eq(ns_name, index_name))		ns_index_id = ns.Id();
-			else if (ByteAry_.Eq(ns_name, index_talk_name))	ns_index_talk_id = ns.Id();
+			if		(Bry_.Eq(ns_name, page_name))		{ns_page_id = ns.Id(); ns_mgr.Ns_page_id_(ns_page_id);}
+			else if (Bry_.Eq(ns_name, page_talk_name))	ns_page_talk_id = ns.Id();
+			else if (Bry_.Eq(ns_name, index_name))		ns_index_id = ns.Id();
+			else if (Bry_.Eq(ns_name, index_talk_name))	ns_index_talk_id = ns.Id();
 		}
 		int aliases_added = 0;
 		aliases_added = Set_canonical(ns_mgr, aliases_added, ns_page_id			, Default_ns_page_name);
@@ -56,9 +56,9 @@ public class Xowc_xtn_pages implements GfoInvkAble {
 	private int Set_canonical(Xow_ns_mgr ns_mgr, int aliases_added, int id, byte[] name) {
 		Xow_ns ns =  ns_mgr.Ids_get_or_null(id);
 		if (	ns == null							// ns doesn't exist; should throw error;
-			||	!ByteAry_.Eq(ns.Name_bry(), name)	// ns exists, but name doesn't match canonical
+			||	!Bry_.Eq(ns.Name_bry(), name)		// ns exists, but name doesn't match canonical
 			) {
-			ns_mgr.Aliases_add(id, String_.new_ascii_(name));
+			ns_mgr.Aliases_add(id, String_.new_ascii_(name));					
 			++aliases_added;
 		}
 		return aliases_added;
@@ -68,13 +68,13 @@ public class Xowc_xtn_pages implements GfoInvkAble {
 		else return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}	private static final String Invk_ns_names_ = "ns_names_";
-	public static final byte[] Xtn_key = ByteAry_.new_ascii_("pages");
+	public static final byte[] Xtn_key = Bry_.new_ascii_("pages");
 	public static final int Ns_index_id_default = 102, Ns_page_id_default = 104;
 
 	private static final byte[]
-	  Default_ns_page_name			= ByteAry_.new_ascii_("Page")
-	, Default_ns_page_talk_name		= ByteAry_.new_ascii_("Page_talk")
-	, Default_ns_index_name			= ByteAry_.new_ascii_("Index")
-	, Default_ns_index_talk_name	= ByteAry_.new_ascii_("Index_talk")
+	  Default_ns_page_name			= Bry_.new_ascii_("Page")
+	, Default_ns_page_talk_name		= Bry_.new_ascii_("Page_talk")
+	, Default_ns_index_name			= Bry_.new_ascii_("Index")
+	, Default_ns_index_talk_name	= Bry_.new_ascii_("Index_talk")
 	;
 }

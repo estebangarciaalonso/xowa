@@ -19,6 +19,7 @@ package gplx;
 public interface Gfo_log_wtr extends GfoInvkAble {
 	Io_url Session_dir();
 	Io_url Log_dir(); void Log_dir_(Io_url v);
+	Io_url Session_fil();
 	boolean Enabled(); void Enabled_(boolean v);
 	boolean Queue_enabled(); void Queue_enabled_(boolean v);
 	void Log_msg_to_url_fmt(Io_url url, String fmt, Object... args);

@@ -31,19 +31,23 @@ public class Scrib_lib_text implements Scrib_lib {
 	public boolean Procs_exec(int key, Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		switch (key) {
 			case Proc_unstrip:							return Unstrip(args, rslt);
+			case Proc_unstripNoWiki:					return UnstripNoWiki(args, rslt);
+			case Proc_killMarkers:						return KillMarkers(args, rslt);
 			case Proc_getEntityTable:					return GetEntityTable(args, rslt);
 			case Proc_init_text_for_wiki:				return Init_text_for_wiki(args, rslt);
 			default: throw Err_.unhandled(key);
 		}
 	}
-	private static final int Proc_unstrip = 0, Proc_getEntityTable = 1, Proc_init_text_for_wiki = 2;
-	public static final String Invk_unstrip = "unstrip", Invk_getEntityTable = "getEntityTable", Invk_init_text_for_wiki = "init_text_for_wiki";
-	private static final String[] Proc_names = String_.Ary(Invk_unstrip, Invk_getEntityTable, Invk_init_text_for_wiki);
-	public boolean Unstrip(Scrib_proc_args args, Scrib_proc_rslt rslt) {return rslt.Init_obj(args.Pull_str(0));}
+	private static final int Proc_unstrip = 0, Proc_unstripNoWiki = 1, Proc_killMarkers = 2, Proc_getEntityTable = 3, Proc_init_text_for_wiki = 4;
+	public static final String Invk_unstrip = "unstrip", Invk_unstripNoWiki = "unstripNoWiki", Invk_killMarkers = "killMarkers", Invk_getEntityTable = "getEntityTable", Invk_init_text_for_wiki = "init_text_for_wiki";
+	private static final String[] Proc_names = String_.Ary(Invk_unstrip, Invk_unstripNoWiki, Invk_killMarkers, Invk_getEntityTable, Invk_init_text_for_wiki);
+	public boolean Unstrip(Scrib_proc_args args, Scrib_proc_rslt rslt)			{return rslt.Init_obj(args.Pull_str(0));}	// NOTE: XOWA does not use MediaWiki strip markers; just return original; DATE:2015-01-20
+	public boolean UnstripNoWiki(Scrib_proc_args args, Scrib_proc_rslt rslt)	{return rslt.Init_obj(args.Pull_str(0));}	// NOTE: XOWA does not use MediaWiki strip markers; just return original; DATE:2015-01-20
+	public boolean KillMarkers(Scrib_proc_args args, Scrib_proc_rslt rslt)		{return rslt.Init_obj(args.Pull_str(0));}	// NOTE: XOWA does not use MediaWiki strip markers; just return original; DATE:2015-01-20
 	public boolean GetEntityTable(Scrib_proc_args args, Scrib_proc_rslt rslt) {
-		if (Html_consts == null) Html_consts = Scrib_lib_text_html_entities.new_();
-		return rslt.Init_obj(Html_consts);
-	}	static KeyVal[] Html_consts;
+		if (Html_entity_ == null) Html_entity_ = Scrib_lib_text_html_entities.new_();
+		return rslt.Init_obj(Html_entity_);
+	}	private static KeyVal[] Html_entity_;
 	public void Notify_wiki_changed() {if (notify_wiki_changed_fnc != null) core.Interpreter().CallFunction(notify_wiki_changed_fnc.Id(), KeyVal_.Ary_empty);}
 	public boolean Init_text_for_wiki(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		Xow_msg_mgr msg_mgr = core.Wiki().Msg_mgr();
@@ -55,12 +59,12 @@ public class Scrib_lib_text implements Scrib_lib {
 		return rslt.Init_obj(rv);
 	}
 	private String Init_lib_text_get_msg(Xow_msg_mgr msg_mgr, String msg_key) {
-		return String_.new_utf8_(msg_mgr.Val_by_key_obj(ByteAry_.new_utf8_(msg_key)));
+		return String_.new_utf8_(msg_mgr.Val_by_key_obj(Bry_.new_utf8_(msg_key)));
 	}
 }
 class Scrib_lib_text_ {
 	public static KeyVal[] Init_nowiki_protocols(Xow_wiki wiki) {
-		ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
+		Bry_bfr bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
 		OrderedHash protocols = Xoo_protocol_itm.Regy;
 		int len = protocols.Count();
 		ListAdp rv = ListAdp_.new_();
@@ -72,10 +76,10 @@ class Scrib_lib_text_ {
 			}
 		}
 		bfr.Mkr_rls();
-		return (KeyVal[])rv.XtoAry(KeyVal.class);
+		return (KeyVal[])rv.Xto_ary(KeyVal.class);
 	}
-	private static KeyVal Init_nowiki_protocols_itm(ByteAryBfr bfr, Xoo_protocol_itm itm) {
-		byte[] key = itm.Key_bry();
+	private static KeyVal Init_nowiki_protocols_itm(Bry_bfr bfr, Xoo_protocol_itm itm) {
+		byte[] key = itm.Key_wo_colon_bry();
 		int end = key.length - 1;	// -1 to ignore final colon
 		for (int i = 0; i < end; i++) {
 			byte b = key[i];
@@ -103,6 +107,6 @@ class Scrib_lib_text_ {
 			}
 		}
 		bfr.Add(Colon_encoded);
-		return KeyVal_.new_(itm.Key_str(), bfr.XtoStrAndClear());
-	}	private static final byte[] Colon_encoded = ByteAry_.new_ascii_("&#58;");
+		return KeyVal_.new_(itm.Key_wo_colon_str(), bfr.Xto_str_and_clear());
+	}	private static final byte[] Colon_encoded = Bry_.new_ascii_("&#58;");
 }

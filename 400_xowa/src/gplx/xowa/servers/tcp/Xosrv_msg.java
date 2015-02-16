@@ -24,7 +24,7 @@ public class Xosrv_msg {
 	public byte[] Recipient() {return recipient;} private byte[] recipient;
 	public byte[] Msg_date() {return msg_date;} private byte[] msg_date;
 	public byte[] Msg_text() {return msg_text;} private byte[] msg_text;
-	public void Print(ByteAryBfr bfr) {
+	public void Print(Bry_bfr bfr) {
 		int body_len = cmd_name.length + msg_id.length + sender.length + recipient.length + msg_date.length + msg_text.length + 5;	// 5=5 pipes for 6 fields
 		int cksum = (body_len * 2) + 1; 
 		bfr.Add_int_fixed(this.Version_tid()	,  1).Add_byte_pipe();		// 0|
@@ -40,7 +40,7 @@ public class Xosrv_msg {
 	public static final Xosrv_msg Exit = new Xosrv_msg();
 	public static Xosrv_msg fail_(String fmt, Object... ary) {
 		Xosrv_msg rv = new Xosrv_msg();
-		rv.msg_text = ByteAry_.new_utf8_(String_.Format(fmt, ary));
+		rv.msg_text = Bry_.new_utf8_(String_.Format(fmt, ary));
 		return rv;
 	}
 	public static Xosrv_msg new_(byte[] cmd_name, byte[] msg_id, byte[] sender, byte[] recipient, byte[] msg_date, byte[] msg_text) {

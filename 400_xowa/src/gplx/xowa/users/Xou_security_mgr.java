@@ -17,14 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.users; import gplx.*; import gplx.xowa.*;
 public class Xou_security_mgr implements GfoInvkAble {
-	public boolean Web_access_enabled() {return web_access_enabled;} private boolean web_access_enabled = true;
-	private void Web_access_enabled_(boolean v) {
-		this.web_access_enabled = v;
-		gplx.ios.IoEngine_system.Web_access_enabled = v;
-	}
+	public Xou_security_mgr(Xoa_app app) {this.app = app;} private Xoa_app app;
+	public boolean Web_access_enabled() {return app.Api_root().Net().Enabled();}
+	public void Web_access_enabled_(boolean v) {app.Api_root().Net().Enabled_(v);}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_web_access_enabled))			return Yn.X_to_str(web_access_enabled);
-		else if	(ctx.Match(k, Invk_web_access_enabled_))			Web_access_enabled_(m.ReadYn("v"));
+		if		(ctx.Match(k, Invk_web_access_enabled))			return Yn.Xto_str(this.Web_access_enabled());
+		else if	(ctx.Match(k, Invk_web_access_enabled_))		Web_access_enabled_(m.ReadYn("v"));
 		return this;
 	}
 	public static final String 

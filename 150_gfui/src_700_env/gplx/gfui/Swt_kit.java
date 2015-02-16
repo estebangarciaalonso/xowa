@@ -41,14 +41,18 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
+import org.omg.PortableServer.THREAD_POLICY_ID;
 public class Swt_kit implements Gfui_kit {
+	private Shell shell;
 	private String xulRunnerPath = null;
-	private KeyValHash ctor_args = KeyValHash.new_(); private HashAdp kit_args = HashAdp_.new_();
+	private KeyValHash ctor_args = KeyValHash.new_(); private HashAdp kit_args = HashAdp_.new_(); private Swt_msg_wkr_stop msg_wkr_stop;
 	private KeyValHash nullArgs = KeyValHash.new_();
 	public byte Tid() {return Gfui_kit_.Swt_tid;}
 	public String Key() {return "swt";}
+	Display Swt_display() {return display;} private Display display;
 	public Gfui_clipboard Clipboard() {return clipboard;} private Swt_clipboard clipboard;
-	public Display Swt_display() {return display;} private Display display;
+	public boolean Mode_is_shutdown() {return mode_is_shutdown;} public void Mode_is_shutdown_y_() {mode_is_shutdown = true;} private boolean mode_is_shutdown = false;
+	public GfoInvkAbleCmd Kit_term_cbk() {return term_cbk;} public void Kit_term_cbk_(GfoInvkAbleCmd v) {this.term_cbk = v;} private GfoInvkAbleCmd term_cbk = GfoInvkAbleCmd.Null;
 	public Gfui_html_cfg Html_cfg() {return html_cfg;} private Gfui_html_cfg html_cfg = new Gfui_html_cfg();
 	public void Cfg_set(String type, String key, Object val) {
 		if 		(String_.Eq(type, Gfui_kit_.Cfg_HtmlBox)) {
@@ -67,20 +71,17 @@ public class Swt_kit implements Gfui_kit {
 	public boolean Kit_init_done() {return kit_init_done;} private boolean kit_init_done;  
 	public void Kit_init(Gfo_usr_dlg gui_wtr) {
 		this.gui_wtr = gui_wtr;
-		usrMsgWkr_Stop = new Swt_UsrMsgWkr_Stop(this, gui_wtr);
-		gui_wtr.Log_many("", "", "swt.kit_init.display");
+		msg_wkr_stop = new Swt_msg_wkr_stop(this, gui_wtr);
 		display = new Display();
-		UsrDlg_._.Reg(UsrMsgWkr_.Type_Warn, GfoConsoleWin._);
-		UsrDlg_._.Reg(UsrMsgWkr_.Type_Stop, usrMsgWkr_Stop);
-		gui_wtr.Log_many("", "", "swt.kit_init.clipboard");
 		clipboard = new Swt_clipboard(display);
+		UsrDlg_._.Reg(UsrMsgWkr_.Type_Warn, GfoConsoleWin._);
+		UsrDlg_._.Reg(UsrMsgWkr_.Type_Stop, msg_wkr_stop);
 		if (xulRunnerPath != null) System.setProperty("org.eclipse.swt.browser.XULRunnerPath", xulRunnerPath);
 		kit_init_done = true; 
-		gui_wtr.Log_many("", "", "swt.kit_init.done");
+		gui_wtr.Log_many("", "", "swt.kit.init.done");
 	}	private Gfo_usr_dlg gui_wtr;
-	public void	Kit_term_cbk_(GfoInvkAbleCmd v) {this.term_cbk = v;} GfoInvkAbleCmd term_cbk = GfoInvkAbleCmd.Null;
 	public void Kit_run() {
-	    shell.addListener(SWT.Close, new Swt_lnr_shell_close(this));
+	    shell.addListener(SWT.Close, new Swt_shell_close_lnr(this));
 		shell.open();
 		Cursor cursor = new Cursor(display, SWT.CURSOR_ARROW);
 		shell.setCursor(cursor);	// set cursor to hand else cursor defaults to Hourglass until mouse is moved; DATE: 2014-01-31
@@ -88,14 +89,14 @@ public class Swt_kit implements Gfui_kit {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-		cursor.dispose();
-		Kit_term();
+		gui_wtr.Log_many("", "", "swt.kit.term:bgn");
+		cursor.dispose(); gui_wtr.Log_many("", "", "swt.kit.term:cursor");
 	}
 	public void Kit_term() {
-		usrMsgWkr_Stop.Rls();
-		clipboard.Rls();
-		display.dispose();
-	}	private Swt_UsrMsgWkr_Stop usrMsgWkr_Stop;
+		clipboard.Rls(); gui_wtr.Log_many("", "", "swt.kit.term:clipboard");
+		msg_wkr_stop.Rls(); gui_wtr.Log_many("", "", "swt.kit.term:usrMsgWkr");
+		shell.close();
+	}	
 	public boolean Ask_yes_no(String grp_key, String msg_key, String fmt, Object... args) 		{
 		Swt_dlg_msg dlg = (Swt_dlg_msg)New_dlg_msg(ask_fmtr.Bld_str_many(ask_bfr, fmt, args)).Init_btns_(Gfui_dlg_msg_.Btn_yes, Gfui_dlg_msg_.Btn_no).Init_ico_(Gfui_dlg_msg_.Ico_question);
 		display.syncExec(dlg);
@@ -105,7 +106,7 @@ public class Swt_kit implements Gfui_kit {
 		Swt_dlg_msg dlg = (Swt_dlg_msg)New_dlg_msg(ask_fmtr.Bld_str_many(ask_bfr, fmt, args)).Init_btns_(Gfui_dlg_msg_.Btn_ok, Gfui_dlg_msg_.Btn_cancel).Init_ico_(Gfui_dlg_msg_.Ico_question);
 		display.syncExec(dlg);
 		return dlg.Ask_rslt == Gfui_dlg_msg_.Btn_ok;
-	}	ByteAryFmtr ask_fmtr = ByteAryFmtr.new_().Fail_when_invalid_escapes_(false); ByteAryBfr ask_bfr = ByteAryBfr.new_();
+	}	Bry_fmtr ask_fmtr = Bry_fmtr.new_().Fail_when_invalid_escapes_(false); Bry_bfr ask_bfr = Bry_bfr.new_();
 	public int Ask_yes_no_cancel(String grp_key, String msg_key, String fmt, Object... args) 	{
 		Swt_dlg_msg dlg = (Swt_dlg_msg)New_dlg_msg(ask_fmtr.Bld_str_many(ask_bfr, fmt, args)).Init_btns_(Gfui_dlg_msg_.Btn_yes, Gfui_dlg_msg_.Btn_no, Gfui_dlg_msg_.Btn_cancel).Init_ico_(Gfui_dlg_msg_.Ico_question);		
 		display.syncExec(dlg);
@@ -115,19 +116,18 @@ public class Swt_kit implements Gfui_kit {
 		Swt_dlg_msg dlg = (Swt_dlg_msg)New_dlg_msg(ask_fmtr.Bld_str_many(ask_bfr, fmt, args)).Init_btns_(Gfui_dlg_msg_.Btn_ok).Init_ico_(Gfui_dlg_msg_.Ico_information);
 		display.syncExec(dlg);
 	}
-	public GfuiInvkCmd New_cmd_sync(GfoInvkAble invk) 	{return new Swt_gui_cmd(gui_wtr, display, invk, Bool_.N);}
-	public GfuiInvkCmd New_cmd_async(GfoInvkAble invk) 	{return new Swt_gui_cmd(gui_wtr, display, invk, Bool_.Y);}
+	public GfuiInvkCmd New_cmd_sync(GfoInvkAble invk) 	{return new Swt_gui_cmd(this, gui_wtr, display, invk, Bool_.N);}
+	public GfuiInvkCmd New_cmd_async(GfoInvkAble invk) 	{return new Swt_gui_cmd(this, gui_wtr, display, invk, Bool_.Y);}
 	public GfuiWin New_win_utl(String key, GfuiWin owner, KeyVal... args) {return GfuiWin_.kit_(this, key, new Swt_win(shell), nullArgs);	}
 	public GfuiWin New_win_app(String key, KeyVal... args) {
 		Swt_win win = new Swt_win(display);
 		this.shell = win.UnderShell();
 		shell.setLayout(null);
 		GfuiWin rv = GfuiWin_.kit_(this, key, win, nullArgs);
-		main_win = rv;
 		return rv;
-	}	Shell shell; GfuiWin main_win;
+	}
 	public GfuiBtn New_btn(String key, GfuiElem owner, KeyVal... args) {
-		GfuiBtn rv = GfuiBtn_.kit_(this, key, new Swt_btn_no_border(owner.UnderElem(), ctor_args), ctor_args);
+		GfuiBtn rv = GfuiBtn_.kit_(this, key, new Swt_btn_no_border(Swt_control_.cast_or_fail(owner), ctor_args), ctor_args);
 		owner.SubElems().Add(rv);
 		return rv;
 	}
@@ -139,8 +139,19 @@ public class Swt_kit implements Gfui_kit {
 			KeyVal browser_type = htmlBox_args.FetchOrNull(Cfg_Html_BrowserType);
 			if (browser_type != null) ctor_args.Add(browser_type);
 		}
-		Gfui_html rv = Gfui_html.kit_(this, key, new Swt_html(this, owner.UnderElem(), ctor_args), ctor_args);
+		Swt_html html_control = new Swt_html(this, Swt_control_.cast_or_fail(owner), ctor_args);
+		Gfui_html rv = Gfui_html.kit_(this, key, html_control, ctor_args);
+		((Swt_html)rv.UnderElem()).Under_control().addMenuDetectListener(new Swt_lnr__menu_detect(rv));
 		rv.Owner_(owner);
+		html_control.Delete_elems_(owner, rv);
+		return rv;
+	}
+	public Gfui_tab_mgr New_tab_mgr(String key, GfuiElem owner, KeyVal... args) {
+		ctor_args.Clear();
+		Swt_tab_mgr rv_swt = new Swt_tab_mgr(this, Swt_control_.cast_or_fail(owner), ctor_args);
+		Gfui_tab_mgr rv = Gfui_tab_mgr.kit_(this, key, rv_swt, ctor_args);
+		rv.Owner_(owner);
+		rv_swt.EvMgr_(rv.EvMgr());
 		return rv;
 	}
 	public GfuiTextBox New_text_box(String key, GfuiElem owner, KeyVal... args) {
@@ -149,7 +160,7 @@ public class Swt_kit implements Gfui_kit {
 		for (int i = 0; i < args_len; i++)
 			ctor_args.Add(args[i]);
 		boolean border_on = Bool_.cast_(ctor_args.FetchValOr(GfuiTextBox.CFG_border_on_, true));
-		GxwTextFld under = new Swt_text_w_border(owner.UnderElem(), New_color(border_on ? ColorAdp_.LightGray : ColorAdp_.White), ctor_args);
+		GxwTextFld under = new Swt_text_w_border(Swt_control_.cast_or_fail(owner), New_color(border_on ? ColorAdp_.LightGray : ColorAdp_.White), ctor_args);
 		GfuiTextBox rv = GfuiTextBox_.kit_(this, key, under, ctor_args);
 		rv.Owner_(owner);
 		ctor_args.Clear();
@@ -157,11 +168,11 @@ public class Swt_kit implements Gfui_kit {
 	}
 	public GfuiStatusBox New_status_box(String key, GfuiElem owner, KeyVal... args) {
 		ctor_args.Clear();
-		GfuiStatusBox rv = GfuiStatusBox_.kit_(this, key, new Swt_text(owner.UnderElem(), ctor_args));
+		GfuiStatusBox rv = GfuiStatusBox_.kit_(this, key, new Swt_text(Swt_control_.cast_or_fail(owner), ctor_args));
 		rv.Owner_(owner);
 		return rv;
 	}
-	public Gfui_dlg_file New_dlg_file(String msg) {return new Swt_dlg_file(shell).Init_msg_(msg);}
+	public Gfui_dlg_file New_dlg_file(byte type, String msg) {return new Swt_dlg_file(type, shell).Init_msg_(msg);}
 	public Gfui_dlg_msg New_dlg_msg(String msg) {return new Swt_dlg_msg(shell).Init_msg_(msg);}
 	public ImageAdp New_img_load(Io_url url) {
 		if (url == Io_url_.Null) return ImageAdp_.Null;
@@ -171,15 +182,26 @@ public class Swt_kit implements Gfui_kit {
 	}
 	public Color New_color(ColorAdp v) {return (Color)New_color(v.Alpha(), v.Red(), v.Green(), v.Blue());}
 	public Object New_color(int a, int r, int g, int b) {return new Color(display, r, g, b);}
-	public Gfui_mnu_grp New_mnu_popup(GfuiElem owner) 	{return Swt_popup_grp.new_popup(owner);}
-	public Gfui_mnu_grp New_mnu_bar(GfuiWin owner) 		{return Swt_popup_grp.new_bar(owner);}
+	public Gfui_mnu_grp New_mnu_popup(String key, GfuiElem owner) 	{return Swt_popup_grp.new_popup(key, owner);}
+	public Gfui_mnu_grp New_mnu_bar(String key, GfuiWin owner) 		{return Swt_popup_grp.new_bar(key, owner);}
 	public float Calc_font_height(GfuiElem elem, String s) {
 		if (String_.Len_eq_0(s)) return 8;
-		String old_text = elem.Text();
-		elem.Text_(s);
-		float rv = ((Swt_text_w_border)(elem.UnderElem())).text_elem.getFont().getFontData()[0].height;
-		shell.setText(old_text);
-		return rv;
+		try {
+			String old_text = elem.Text();
+			elem.Text_(s);
+			float rv = ((Swt_text_w_border)(elem.UnderElem())).Under_text().getFont().getFontData()[0].height;
+			elem.Text_(old_text);	// was shell.setText(old_text); DATE:2014-07-25
+			return rv;
+		}
+		catch (Exception e) {
+			Gfo_usr_dlg_._.Warn_many("", "", "error while calculating font height; err=~{0}", Err_.Message_gplx_brief(e));
+			return 8;
+		}
+	}
+	public void Set_mnu_popup(GfuiElem owner, Gfui_mnu_grp grp) {
+		Control control = Swt_control_.cast_or_fail(owner).Under_menu_control();
+		Swt_popup_grp popup = (Swt_popup_grp)grp;
+		control.setMenu(popup.Under_menu());
 	}
 	public static final Swt_kit _ = new Swt_kit(); private Swt_kit() {}	// singleton b/c of following line "In particular, some platforms which SWT supports will not allow more than one active display" (http://help.eclipse.org/indigo/topic/org.eclipse.platform.doc.isv/reference/api/org/eclipse/swt/widgets/Display.html)
 	public static final String Cfg_Html_BrowserType = "BrowserType";
@@ -201,7 +223,7 @@ public class Swt_kit implements Gfui_kit {
 			}
 		}
 		else if	(String_.Eq(k, Invk_HtmlBox)) {return html_cfg;}
-		else if	(String_.Eq(k, Invk_ask_file)) return this.New_dlg_file(m.Args_getAt(0).Val_to_str_or_empty()).Ask();
+		else if	(String_.Eq(k, Invk_ask_file)) return this.New_dlg_file(Gfui_kit_.File_dlg_type_open, m.Args_getAt(0).Val_to_str_or_empty()).Ask();
 		return this;
 	}	public static final String Invk_Cfg_add = "Cfg_add", Invk_HtmlBox = "HtmlBox", Invk_ask_file = "ask_file";	
 	public static boolean Html_box_focus_automatically = false;
@@ -218,16 +240,18 @@ public class Swt_kit implements Gfui_kit {
 		control.setFont(rv);
 	}
 }
-class Swt_lnr_shell_close implements Listener {
-	public Swt_lnr_shell_close(Swt_kit kit) {this.kit = kit;} private Swt_kit kit;
-	@Override public void handleEvent(Event event) {		
-		boolean rslt = Bool_.cast_(kit.term_cbk.Invk());
-		if (!rslt) 
-			event.doit = false;
+class Swt_shell_close_lnr implements Listener {
+	public Swt_shell_close_lnr(Swt_kit kit) {this.kit = kit;} private Swt_kit kit;
+	@Override public void handleEvent(Event event) {
+		kit.Mode_is_shutdown_y_(); 									// NOTE: must mark kit as shutting down, else writing to status_bar will create stack overflow; DATE:2014-05-05
+		GfoInvkAbleCmd term_cbk = kit.Kit_term_cbk();
+		if (term_cbk.Cmd() == null) return; 						// term_cbk not defined; exit
+		boolean rslt = Bool_.cast_(term_cbk.Invk());				// term_cbk defined; call it
+		if (!rslt) event.doit = false;								// term_cbk canceled term; stop close
 	}
 }
-class Swt_UsrMsgWkr_Stop implements UsrMsgWkr, RlsAble {
-	public Swt_UsrMsgWkr_Stop(Swt_kit kit, Gfo_usr_dlg gui_wtr) {this.kit = kit; this.gui_wtr = gui_wtr;} Swt_kit kit; Gfo_usr_dlg gui_wtr;
+class Swt_msg_wkr_stop implements UsrMsgWkr, RlsAble {
+	public Swt_msg_wkr_stop(Swt_kit kit, Gfo_usr_dlg gui_wtr) {this.kit = kit; this.gui_wtr = gui_wtr;} private Swt_kit kit; private Gfo_usr_dlg gui_wtr;
 	@Override public void Rls() {this.kit = null;}
 	public void ExecUsrMsg(int type, UsrMsg umsg) {
 		String msg = umsg.XtoStr(); 
@@ -236,10 +260,10 @@ class Swt_UsrMsgWkr_Stop implements UsrMsgWkr, RlsAble {
 	}
 }
 class Swt_gui_cmd implements GfuiInvkCmd, Runnable {
-	private Gfo_usr_dlg usr_dlg; private GfoInvkAble target; private Display display; private boolean async;	
-	private GfsCtx invk_ctx; private int invk_ikey; private String invk_key; private GfoMsg invk_msg;	
-	public Swt_gui_cmd(Gfo_usr_dlg usr_dlg, Display display, GfoInvkAble target, boolean async) {
-		this.usr_dlg = usr_dlg; this.display = display; this.target = target; this.async = async;
+	private Swt_kit kit; private Gfo_usr_dlg usr_dlg; private GfoInvkAble target; private Display display; private boolean async;	
+	private GfsCtx invk_ctx; private int invk_ikey; private String invk_key; private GfoMsg invk_msg;
+	public Swt_gui_cmd(Swt_kit kit, Gfo_usr_dlg usr_dlg, Display display, GfoInvkAble target, boolean async) {
+		this.kit = kit; this.usr_dlg = usr_dlg; this.display = display; this.target = target; this.async = async;
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		this.invk_ctx = ctx; this.invk_ikey = ikey ; this.invk_key = k; this.invk_msg = m;
@@ -254,6 +278,7 @@ class Swt_gui_cmd implements GfuiInvkCmd, Runnable {
 			target.Invk(invk_ctx, invk_ikey, invk_key, invk_msg);
 		}
 		catch (Exception e) {
+			if (kit.Mode_is_shutdown()) return;	// NOTE: if shutting down, don't warn; warn will try to write to status.bar, which will fail b/c SWT is shutting down; failures will try to write to status.bar again, causing StackOverflow exception; DATE:2014-05-04
 			usr_dlg.Warn_many("", "", "fatal error while running; key=~{0} err=~{1}", invk_key, Err_.Message_gplx_brief(e));
 		}
 	} 

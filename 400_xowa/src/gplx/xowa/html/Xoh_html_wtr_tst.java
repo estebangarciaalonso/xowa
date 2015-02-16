@@ -51,27 +51,15 @@ public class Xoh_html_wtr_tst {
 //		@Test  public void Img_alt() {	// FUTURE: enable; WHEN: after fixing xnde to handle bad xnde; EX: France
 //			fxt.Test_parse_page_wiki_str("[[File:A.png|none|9x8px|alt=a<b>b</b>\"c\"d]]", Xop_fxt.html_img_none("File:A.png", "ab&quot;c&quot;d"));
 //		}
-	@Test  public void Url_encode()					{fxt.Test_parse_page_wiki_str("[[a;@$!*(),/ _^b|z]]"		, "<a href=\"/wiki/a;@$!*(),/__%5Eb\">z</a>");}
+	@Test  public void Url_encode()					{fxt.Test_parse_page_wiki_str("[[a;@$!*(),/ _^b|z]]"		, "<a href=\"/wiki/A;@$!*(),/_%5Eb\">z</a>");}	// NOTE: was "a" instead of "A"; "__" instead of "_" DATE:2014-09-07
+	@Test  public void Url_encode_space()			{fxt.Test_parse_page_wiki_str("[[a _b|z]]"					, "<a href=\"/wiki/A_b\">z</a>");}
 	@Test  public void Apos_i()						{fxt.Test_parse_page_wiki_str("''a''"						, "<i>a</i>");}
 	@Test  public void Apos_b()						{fxt.Test_parse_page_wiki_str("'''a'''"						, "<b>a</b>");}
 	@Test  public void Apos_ib()					{fxt.Test_parse_page_wiki_str("'''''a'''''"					, "<i><b>a</b></i>");}
-	@Test  public void Html_ent()					{fxt.Test_parse_page_wiki_str("&#33;"						, "!");}
+	@Test  public void Html_ent()					{fxt.Test_parse_page_wiki_str("&#33;"						, "&#33;");}	// PURPOSE:ncrs should be literal, not decoded (!);  DATE:2014-11-06
 	@Test  public void Html_ref()					{fxt.Test_parse_page_wiki_str("&gt;"						, "&gt;");}
-	@Test  public void Lnke_basic()					{fxt.Test_parse_page_wiki_str("[irc://a]"					, "<a href=\"irc://a\" class=\"external text\" rel=\"nofollow\">[1]</a>");}
-	@Test  public void Lnke_autonumber()			{fxt.Test_parse_page_wiki_str("[irc://a] [irc://b]"			, "<a href=\"irc://a\" class=\"external text\" rel=\"nofollow\">[1]</a> <a href=\"irc://b\" class=\"external text\" rel=\"nofollow\">[2]</a>");}
-	@Test  public void Lnke_caption()				{fxt.Test_parse_page_wiki_str("[irc://a b]"					, "<a href=\"irc://a\" class=\"external text\" rel=\"nofollow\">b</a>");}
-	@Test  public void Lnke_caption_fmt()			{fxt.Test_parse_page_wiki_str("[irc://a ''b'']"				, "<a href=\"irc://a\" class=\"external text\" rel=\"nofollow\"><i>b</i></a>");}
-	@Test  public void Lnke_xowa()	{
-		String img = "<img src=\"file:///mem/xowa/user/test_user/app/img/xowa/protocol.png\"/>";
-		fxt.Wiki().Sys_cfg().Xowa_proto_enabled_(true);
-		fxt.Test_parse_page_wiki_str("[xowa-cmd:\"a\" z]"			, "<a href=\"xowa-cmd:a\">z" + img + "</a>");
-		fxt.Test_parse_page_wiki_str("[xowa-cmd:\"a.b('c_d');\" z]"	, "<a href=\"xowa-cmd:a.b('c_d');\">z" + img + "</a>");
-		fxt.Test_parse_page_wiki_str("[xowa-cmd:*\"a\"b*c\"* z]"		, "<a href=\"xowa-cmd:a%22b%2Ac\">z" + img + "</a>");
-		fxt.Wiki().Sys_cfg().Xowa_proto_enabled_(false);
-		fxt.Test_parse_page_wiki_str("[xowa-cmd:\"a\" b]"			, "[xowa-cmd:&quot;a&quot; b]");	// protocol is disabled: literalize String (i.e.: don't make it an anchor)
-	}
 	@Test  public void List_1_itm()	{
-		fxt.Test_parse_page_wiki_str("*a", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("*a", String_.Concat_lines_nl_skip_last
 			( "<ul>"
 			, "  <li>a"
 			, "  </li>"
@@ -79,7 +67,7 @@ public class Xoh_html_wtr_tst {
 			));
 	}
 	@Test  public void List_2_itms()	{
-		fxt.Test_parse_page_wiki_str("*a\n*b", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("*a\n*b", String_.Concat_lines_nl_skip_last
 			( "<ul>"
 			, "  <li>a"
 			, "  </li>"
@@ -89,7 +77,7 @@ public class Xoh_html_wtr_tst {
 			));
 	}
 	@Test  public void List_nest_ul()	{
-		fxt.Test_parse_page_wiki_str("*a\n**b", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("*a\n**b", String_.Concat_lines_nl_skip_last
 			( "<ul>"
 			, "  <li>a"
 			, "    <ul>"
@@ -101,7 +89,7 @@ public class Xoh_html_wtr_tst {
 			));
 	}
 	@Test  public void List_dt_dd()	{
-		fxt.Test_parse_page_wiki_str(";a:b", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(";a:b", String_.Concat_lines_nl_skip_last
 			( "<dl>"
 			, "  <dt>a"
 			, "  </dt>"
@@ -111,7 +99,7 @@ public class Xoh_html_wtr_tst {
 			));
 	}
 	@Test  public void List_dd_nest2()	{
-		fxt.Test_parse_page_wiki_str("::a", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("::a", String_.Concat_lines_nl_skip_last
 			( "<dl>"
 			, "  <dd>"
 			, "    <dl>"
@@ -143,7 +131,7 @@ public class Xoh_html_wtr_tst {
 			));
 	}
 	@Test  public void Tblw_atrs() {
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
 			(	"{|style='z'"
 			,	"|+a"
 			,	"!style='y'|b||style='x'|c"
@@ -171,12 +159,12 @@ public class Xoh_html_wtr_tst {
 	}
 	@Test  public void Para_hdr_list() {
 		fxt.Init_para_y_();
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
 			( "==a=="
 			, ""
 			, "*b"
 			, "*c"
-			), String_.Concat_lines_nl_skipLast
+			), String_.Concat_lines_nl_skip_last
 			( "<h2>a</h2>"
 			, ""
 			, "<ul>"
@@ -190,10 +178,10 @@ public class Xoh_html_wtr_tst {
 	}
 	@Test  public void Para_nl_is_space() {
 		fxt.Init_para_y_();
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
 			( "a"
 			, "b"
-			), String_.Concat_lines_nl_skipLast
+			), String_.Concat_lines_nl_skip_last
 			( "<p>a"
 			, "b"
 			, "</p>"
@@ -203,13 +191,13 @@ public class Xoh_html_wtr_tst {
 	}
 	@Test  public void Para_nl_2_2() {
 		fxt.Init_para_y_();
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
 			( "a"
 			, ""
 			, "b"
 			, ""
 			, "c"
-			), String_.Concat_lines_nl_skipLast
+			), String_.Concat_lines_nl_skip_last
 			( "<p>a"
 			, "</p>"
 			, ""
@@ -224,11 +212,11 @@ public class Xoh_html_wtr_tst {
 	}
 	@Test  public void Div_2() {	// WP:[[Air]]#Density of air
 		fxt.Init_para_y_();
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
 			(	"<div>a</div>"
 			,	""
 			,	"<div>b</div>"
-			), String_.Concat_lines_nl_skipLast
+			), String_.Concat_lines_nl_skip_last
 			(	"<div>a</div>"
 			,	"<div>b</div>"
 			));
@@ -339,6 +327,9 @@ public class Xoh_html_wtr_tst {
 		fxt.Test_parse_page_all_str("<math>x + y</math>", "<span id='xowa_math_txt_0'>x + y</span>");	// mathjax has no img
 		fxt.App().File_mgr().Math_mgr().Renderer_is_mathjax_(false);
 	}
+	@Test  public void Timeline() {// PURPOSE: embed timeline contents in pre; DATE:2014-05-22
+		fxt.Test_parse_page_wiki_str("<timeline>a</timeline>", "<pre class='xowa-timeline'>a</pre>");
+	}
 	@Test  public void Amp_ncr_should_not_be_rendered_as_bytes() {	// PURPOSE: &#160; should be rendered as &#160; not as literal bytes {192,160}; DATE:2013-12-09
 		fxt.Test_parse_page_wiki_str("a&#160;b", "a&#160;b");
 	}
@@ -347,7 +338,7 @@ public class Xoh_html_wtr_tst {
 //			fxt.Test_parse_page_wiki_str("<span style=\"position:absolute;\"></span>", "<span style=\";\"></span>");
 //		}
 //		@Test  public void Xnde_nl()	{
-//			fxt.Test_parse_page_wiki_str("<div id='a'\nclass='b'>c</div>", String_.Concat_lines_nl_skipLast
+//			fxt.Test_parse_page_wiki_str("<div id='a'\nclass='b'>c</div>", String_.Concat_lines_nl_skip_last
 //					( "<div id='a' class='b'>c</div>"
 //					));
 //		}

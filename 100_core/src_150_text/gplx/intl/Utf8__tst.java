@@ -33,7 +33,7 @@ public class Utf8__tst {
 		fxt.Test_Increment_char_at_last_pos("€", "₭");	// len=3
 	}
 //		@Test  public void Increment_char_at_last_pos_exhaustive_check() {	// check all values; commented for perf
-//			ByteAryBfr bfr = ByteAryBfr.new_();
+//			Bry_bfr bfr = Bry_bfr.new_();
 //			int bgn = 32;
 //			while (true) {
 //				byte[] bgn_bry = Utf16_.Encode_int_to_bry(bgn);
@@ -42,7 +42,7 @@ public class Utf8__tst {
 ////				if (bgn > 1024 * 1024) break;
 //				byte[] end_by_codepoint_next = Utf16_.Encode_int_to_bry(end);
 //				byte[] end_by_increment_char = Utf8_.Increment_char_at_last_pos(bgn_bry);
-//				if (!ByteAry_.Eq(end_by_codepoint_next, end_by_increment_char)) {
+//				if (!Bry_.Eq(end_by_codepoint_next, end_by_increment_char)) {
 //					Tfds.Write(bgn);
 //				}				
 ////				bfr	.Add_int_variable(bgn).Add_byte(Byte_ascii.Tab)
@@ -54,16 +54,16 @@ public class Utf8__tst {
 //				bgn = end;
 //				bgn_bry = end_by_codepoint_next;
 //			}
-//			Tfds.WriteText(bfr.XtoStrAndClear());
+//			Tfds.WriteText(bfr.Xto_str_and_clear());
 //		}
 }
 class Utf8__fxt {
 	public void Test_Get_pos0_of_char_bwd(String str, int expd) {
-		byte[] bry = ByteAry_.new_utf8_(str);
+		byte[] bry = Bry_.new_utf8_(str);
 		int pos = bry.length - 1;	// always start from last char
 		Tfds.Eq(expd, Utf8_.Get_pos0_of_char_bwd(bry, pos));
 	}
 	public void Test_Increment_char_at_last_pos(String str, String expd) {
-		Tfds.Eq(expd, String_.new_utf8_(Utf8_.Increment_char_at_last_pos(ByteAry_.new_utf8_(str))));
+		Tfds.Eq(expd, String_.new_utf8_(Utf8_.Increment_char_at_last_pos(Bry_.new_utf8_(str))));
 	}
 }

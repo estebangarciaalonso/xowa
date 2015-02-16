@@ -27,7 +27,7 @@ public class Json_itm_int extends Json_itm_base {
 		return data;
 	}
 	@Override public Object Data() {return Data_as_int();}	int data; boolean data_is_null = true;
-	@Override public byte[] Data_bry() {if (data_bry == null) data_bry = ByteAry_.Mid(doc.Src(), this.Src_bgn(), this.Src_end()); return data_bry;} private byte[] data_bry;
-	@Override public void Print_as_json(ByteAryBfr bfr, int depth) {bfr.Add_mid(doc.Src(), this.Src_bgn(), this.Src_end());}
+	@Override public byte[] Data_bry() {if (data_bry == null) data_bry = Bry_.Mid(doc.Src(), this.Src_bgn(), this.Src_end()); return data_bry;} private byte[] data_bry;
+	@Override public void Print_as_json(Bry_bfr bfr, int depth) {bfr.Add_mid(doc.Src(), this.Src_bgn(), this.Src_end());}
 	public static Json_itm_int cast_(Json_itm v) {return v == null || v.Tid() != Json_itm_.Tid_int ? null : (Json_itm_int)v;}
 }

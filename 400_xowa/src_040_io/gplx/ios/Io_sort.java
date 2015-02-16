@@ -23,7 +23,7 @@ public class Io_sort {
 	public Io_url[] Split(Gfo_usr_dlg usr_dlg, Io_url_gen src_fil_gen, Io_url_gen trg_fil_gen, ComparerAble row_comparer, Io_line_rdr_key_gen key_gen) {
 		Io_line_rdr rdr = new Io_line_rdr(usr_dlg, src_fil_gen.Prv_urls()).Load_len_(4 * Io_mgr.Len_kb).Key_gen_(key_gen);	// NOTE: do not set load_len to memory_max; only want to load in increments
 		ListAdp rv = ListAdp_.new_();
-		ByteAryBfr bfr = ByteAryBfr.reset_(Const_bfr_max); int size_cur = 0;
+		Bry_bfr bfr = Bry_bfr.reset_(Const_bfr_max); int size_cur = 0;
 		ListAdp row_list = ListAdp_.new_();
 		while (true) {
 			boolean reading = rdr.Read_next(); 
@@ -43,7 +43,7 @@ public class Io_sort {
 			size_cur = size_new;
 		}
 		rdr.Rls(); bfr.Rls(); Env_.GarbageCollect();
-		return (Io_url[])rv.XtoAry(Io_url.class);
+		return (Io_url[])rv.Xto_ary(Io_url.class);
 	}
 	public void Merge(Gfo_usr_dlg usr_dlg, Io_url[] src_ary, ComparerAble comparer, Io_line_rdr_key_gen key_gen, Io_sort_cmd cmd) {
 		BinaryHeap_Io_line_rdr heap = load_(usr_dlg, src_ary, comparer, key_gen, memory_max); if (heap.Len() == 0) return;//throw Err_.new_(Array_.XtoStr(src_ary));
@@ -65,7 +65,7 @@ public class Io_sort {
 		cmd.Sort_end();
 		heap.Rls();
 	}
-	private static void Split_flush(Io_url url, ListAdp list, int max, ByteAryBfr tmp, ListAdp url_list) {
+	private static void Split_flush(Io_url url, ListAdp list, int max, Bry_bfr tmp, ListAdp url_list) {
 		int len = list.Count();
 		for (int i = 0; i < len; i++) {
 			Io_sort_split_itm itm = (Io_sort_split_itm)list.FetchAt(i);

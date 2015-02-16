@@ -18,15 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 public class Xol_lang_itm {
 	public Xol_lang_itm(int id, byte[] key, byte[] canonical_name) {this.id = id; this.key = key; this.canonical_name = canonical_name; this.local_name = canonical_name;}
-	public int Id() {return id;} private int id;
-	public byte[] Key() {return key;} private byte[] key;
+	public int Id() {return id;} private final int id;
+	public byte[] Key() {return key;} private final byte[] key;
 	public byte[] Canonical_name() {return canonical_name;} private byte[] canonical_name;
 	public byte[] Local_name() {return local_name;} private byte[] local_name;
-	public byte[] Local_grp() {return local_grp;} private byte[] local_grp = ByteAry_.Empty;
+	public byte[] Local_grp() {return local_grp;} private byte[] local_grp = Bry_.Empty;
 	public Xol_lang_itm Local_atrs_load(byte[] local_name, byte[] local_grp) {
-		if (ByteAry_.Len_gt_0(local_name)) this.local_name = local_name;
-		if (ByteAry_.Len_gt_0(local_grp)) this.local_grp = local_grp;
+		if (Bry_.Len_gt_0(local_name)) this.local_name = local_name;
+		if (Bry_.Len_gt_0(local_grp)) this.local_grp = local_grp;
 		return this;
 	}
-	public Xol_lang_itm Local_atrs_reset() {local_name = canonical_name; local_grp = ByteAry_.Empty; return this;}
+	public Xol_lang_itm Local_atrs_reset() {local_name = canonical_name; local_grp = Bry_.Empty; return this;}
 }

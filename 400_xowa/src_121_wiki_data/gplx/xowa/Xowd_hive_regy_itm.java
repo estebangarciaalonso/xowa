@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.core.primitives.*;
 public class Xowd_hive_regy_itm {// csv file with the format of "idx|bgn|end|count"; EX: "0|AA|AZ|120\n1|BA|BZ|110"
 	public Xowd_hive_regy_itm(int idx) {this.idx = idx;}
 	public int		Idx() {return idx;} private int idx;
@@ -26,13 +27,13 @@ public class Xowd_hive_regy_itm {// csv file with the format of "idx|bgn|end|cou
 		ListAdp rv = utl.Itms();
 		byte[] ary = utl.Raw_bry();
 		int ary_len = utl.Raw_len(); if (ary_len == 0) return Xowd_hive_regy_itm.Ary_empty; //throw Err_mgr._.fmt_("xowa.wiki.data", "title_registry_file_not_found", "title_registry file not found: ~{0}", utl.Fil().Xto_api());
-		IntRef pos = IntRef.zero_();
+		Int_obj_ref pos = Int_obj_ref.zero_();
 		while (pos.Val() < ary_len) {
 			Xowd_hive_regy_itm file = new Xowd_hive_regy_itm();
-			file.idx	= ByteAry_.ReadCsvInt(ary, pos, ByteAry_.Dlm_fld);
-			file.bgn 	= ByteAry_.ReadCsvBry(ary, pos, ByteAry_.Dlm_fld);	// skip bgn
-			file.end	= ByteAry_.ReadCsvBry(ary, pos, ByteAry_.Dlm_fld);
-			file.count	= ByteAry_.ReadCsvInt(ary, pos, ByteAry_.Dlm_row);
+			file.idx	= Bry_.ReadCsvInt(ary, pos, Bry_.Dlm_fld);
+			file.bgn 	= Bry_.ReadCsvBry(ary, pos, Bry_.Dlm_fld);	// skip bgn
+			file.end	= Bry_.ReadCsvBry(ary, pos, Bry_.Dlm_fld);
+			file.count	= Bry_.ReadCsvInt(ary, pos, Bry_.Dlm_row);
 			rv.Add(file);
 		}
 		return (Xowd_hive_regy_itm[])utl.Xto_itms(Xowd_hive_regy_itm.class);
@@ -41,7 +42,7 @@ public class Xowd_hive_regy_itm {// csv file with the format of "idx|bgn|end|cou
 	public Xowd_hive_regy_itm(int id, byte[] bgn, byte[] end, int count) {
 		this.idx = id; this.bgn = bgn; this.end = end; this.count = count;
 	}
-	public void Srl_save(ByteAryBfr bfr) {
+	public void Srl_save(Bry_bfr bfr) {
 		bfr	.Add_int_variable(idx).Add_byte_pipe()
 			.Add(bgn).Add_byte_pipe()
 			.Add(end).Add_byte_pipe()
@@ -53,9 +54,9 @@ public class Xowd_hive_regy_itm {// csv file with the format of "idx|bgn|end|cou
 class Xowd_ttl_file_comparer_end implements gplx.lists.ComparerAble {
 	public int compare(Object lhsObj, Object rhsObj) {
 		Xowd_hive_regy_itm lhs = (Xowd_hive_regy_itm)lhsObj, rhs = (Xowd_hive_regy_itm)rhsObj;
-		if 		(lhs.Count() == 0) 	return ByteAry_.Compare(rhs.End(), lhs.Bgn());
-		//else if (rhs.Count() == 0) 	return ByteAry_.Compare(lhs.End(), rhs.End());	// NOTE: this line mirrors the top, but is actually covered by below
-		else						return ByteAry_.Compare(lhs.End(), rhs.End());
+		if 		(lhs.Count() == 0) 	return Bry_.Compare(rhs.End(), lhs.Bgn());
+		//else if (rhs.Count() == 0) 	return Bry_.Compare(lhs.End(), rhs.End());	// NOTE: this line mirrors the top, but is actually covered by below
+		else						return Bry_.Compare(lhs.End(), rhs.End());
 	}
 	public static final Xowd_ttl_file_comparer_end _ = new Xowd_ttl_file_comparer_end(); Xowd_ttl_file_comparer_end() {}
 }

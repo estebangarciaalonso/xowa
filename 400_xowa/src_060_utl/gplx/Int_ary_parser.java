@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx;
 public class Int_ary_parser extends Obj_ary_parser_base {
 	NumberParser parser = new NumberParser(); int[] ary; int ary_idx;
-	public int[] Parse_ary(String str, byte dlm) {byte[] bry = ByteAry_.new_utf8_(str); return Parse_ary(bry, 0, bry.length, dlm);}
+	public int[] Parse_ary(String str, byte dlm) {byte[] bry = Bry_.new_utf8_(str); return Parse_ary(bry, 0, bry.length, dlm);}
 	public int[] Parse_ary(byte[] bry, int bgn, int end, byte dlm) {
 		Parse_core(bry, bgn, end, dlm, Byte_ascii.Nil);
 		return ary;

@@ -16,15 +16,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.specials.search; import gplx.*; import gplx.xowa.*; import gplx.xowa.specials.*;
-import gplx.gfui.*;
+import gplx.gfui.*; import gplx.threads.*; import gplx.xowa.gui.*; import gplx.xowa.gui.views.*;
 public class Xog_search_suggest_mgr implements GfoInvkAble {
 	public Xog_search_suggest_mgr(Xoa_gui_mgr gui_mgr) {
-		this.gui_mgr = gui_mgr;
 		this.app = gui_mgr.App();
-		this.main_win = gui_mgr.Main_win();
+		this.main_win = gui_mgr.Browser_win();
 		cur_cmd = new Xog_search_suggest_cmd(app, this);
-	}	private Xoa_app app; Xoa_gui_mgr gui_mgr; Xog_win main_win; Js_wtr wtr = new Js_wtr();
-	private boolean enabled = true; private int results_max = 10; private boolean log_enabled = false;
+	}	private Xoa_app app; private Xog_win_itm main_win; private Js_wtr wtr = new Js_wtr();
+	private int results_max = 10; private boolean log_enabled = false;
+	public boolean Enabled() {return enabled;} private boolean enabled = true;
 	public byte Search_mode() {return search_mode;} public Xog_search_suggest_mgr Search_mode_(byte v) {search_mode = v; return this;} private byte search_mode = Tid_search_mode_all_pages_v2;
 	public int All_pages_extend() {return all_pages_extend;} private int all_pages_extend = 1000;	// look ahead by 1000
 	public int All_pages_min() {return all_pages_min;} private int all_pages_min = 10000;			// only look at pages > 10 kb
@@ -32,7 +32,7 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 	public Gfo_url_arg[] Args_default() {return args_default;} private Gfo_url_arg[] args_default = Gfo_url_arg.Ary_empty;
 	public void Args_default_str_(String v) {
 		this.args_default_str = v;
-		byte[] bry = ByteAry_.new_utf8_("http://x.org/a?" + v);
+		byte[] bry = Bry_.new_utf8_("http://x.org/a?" + v);
 		Gfo_url tmp_url = new Gfo_url();
 		app.Url_parser().Url_parser().Parse(tmp_url, bry, 0, bry.length);
 		args_default = tmp_url.Args();
@@ -60,7 +60,7 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 		if (search_bry.length == 0) return;
 		this.Cancel();
 		synchronized (thread_guard) {
-			if (ByteAry_.Eq(search_bry , last_search_bry)) {
+			if (Bry_.Eq(search_bry , last_search_bry)) {
 				if (log_enabled) app.Usr_dlg().Log_many("", "", "search repeated?: word=~{0}", String_.new_utf8_(search_bry));
 				return;
 			}
@@ -71,33 +71,33 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 		}
 	}	private Xog_search_suggest_cmd cur_cmd; byte[] last_search_bry;
 	public void Notify() {// EX: receiveSuggestions('search_word', ['result_1', 'result_2']);
-			// synchronized (thread_guard) NOTE: never use synchronized here; will synchronized search; DATE:2013-09-24
-			byte[] search_bry = cur_cmd.Search_bry();
-			if (!ByteAry_.Eq(search_bry, last_search_bry)) {
-				if (log_enabled) app.Usr_dlg().Log_many("", "", "search does not match?: expd=~{0} actl=~{1}", String_.new_utf8_(last_search_bry), String_.new_utf8_(search_bry));
-				return;	// do not notify if search terms do not match
-			}
-			ListAdp found = cur_cmd.Results();
-			wtr.Add_str(cbk_func);
-			wtr.Add_paren_bgn();
-				wtr.Add_str_quote(search_bry).Add_comma();				
-				wtr.Add_brack_bgn();
-					int len = found.Count();
-					for (int i = 0; i < len; i++) {
-						Xodb_page p = (Xodb_page)found.FetchAt(i);
-						Xow_ns ns = wiki.Ns_mgr().Ids_get_or_null(p.Ns_id());
-						byte[] ttl = Xoa_ttl.Replace_unders(ns.Gen_ttl(p.Ttl_wo_ns()));
-						wtr.Add_str_arg(i, ttl);
-					}
-				wtr.Add_brack_end();
-			wtr.Add_paren_end_semic();
-			if (log_enabled) app.Usr_dlg().Log_many("", "", "search end: word=~{0}", String_.new_utf8_(search_bry));
-			main_win.Html_box().Html_js_eval_script(wtr.Xto_str_and_clear());
+		// synchronized (thread_guard) NOTE: never use synchronized here; will synchronized search; DATE:2013-09-24
+		byte[] search_bry = cur_cmd.Search_bry();
+		if (!Bry_.Eq(search_bry, last_search_bry)) {
+			if (log_enabled) app.Usr_dlg().Log_many("", "", "search does not match?: expd=~{0} actl=~{1}", String_.new_utf8_(last_search_bry), String_.new_utf8_(search_bry));
+			return;	// do not notify if search terms do not match
+		}
+		ListAdp found = cur_cmd.Results();
+		wtr.Add_str(cbk_func);
+		wtr.Add_paren_bgn();
+			wtr.Add_str_quote(search_bry).Add_comma();				
+			wtr.Add_brack_bgn();
+				int len = found.Count();
+				for (int i = 0; i < len; i++) {
+					Xodb_page p = (Xodb_page)found.FetchAt(i);
+					Xow_ns ns = wiki.Ns_mgr().Ids_get_or_null(p.Ns_id());
+					byte[] ttl = Xoa_ttl.Replace_unders(ns.Gen_ttl(p.Ttl_wo_ns()));
+					wtr.Add_str_arg(i, ttl);
+				}
+			wtr.Add_brack_end();
+		wtr.Add_paren_end_semic();
+		if (log_enabled) app.Usr_dlg().Log_many("", "", "search end: word=~{0}", String_.new_utf8_(search_bry));
+		main_win.Active_html_box().Html_js_eval_script(wtr.Xto_str_and_clear());
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_search_async))			Search_async();
 		else if	(ctx.Match(k, Invk_notify))					Notify();
-		else if	(ctx.Match(k, Invk_enabled))				return Yn.X_to_str(enabled);
+		else if	(ctx.Match(k, Invk_enabled))				return Yn.Xto_str(enabled);
 		else if	(ctx.Match(k, Invk_enabled_))				enabled = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_results_max))			return results_max;
 		else if	(ctx.Match(k, Invk_results_max_))			results_max = m.ReadInt("v");
@@ -108,9 +108,9 @@ public class Xog_search_suggest_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_all_pages_extend_))		all_pages_extend = m.ReadInt("v");
 		else if	(ctx.Match(k, Invk_all_pages_min))			return all_pages_min;
 		else if	(ctx.Match(k, Invk_all_pages_min_))			all_pages_min = m.ReadInt("v");
-		else if	(ctx.Match(k, Invk_auto_wildcard))			return Yn.X_to_str(auto_wildcard);
+		else if	(ctx.Match(k, Invk_auto_wildcard))			return Yn.Xto_str(auto_wildcard);
 		else if	(ctx.Match(k, Invk_auto_wildcard_))			auto_wildcard = m.ReadYn("v");
-		else if	(ctx.Match(k, Invk_log_enabled))			return Yn.X_to_str(log_enabled);
+		else if	(ctx.Match(k, Invk_log_enabled))			return Yn.Xto_str(log_enabled);
 		else if	(ctx.Match(k, Invk_log_enabled_))			log_enabled = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_args_default))			return args_default_str;
 		else if	(ctx.Match(k, Invk_args_default_))			Args_default_str_(m.ReadStr("v"));

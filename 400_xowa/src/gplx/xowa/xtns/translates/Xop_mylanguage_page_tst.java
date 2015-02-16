@@ -44,12 +44,12 @@ class Xop_mylanguage_page_fxt {
 		special_page = wiki.Special_mgr().Page_mylanguage();
 	}	private Xop_fxt parser_fxt; private Xoa_app app; private Xop_mylanguage_page special_page; private Xow_wiki wiki;
 	public void Init_create_page(String page) {parser_fxt.Init_page_create(page, page);}
-	public void Init_cur_lang(String lang) {app.Sys_cfg().Lang_(ByteAry_.new_ascii_(lang));}
+	public void Init_cur_lang(String lang) {app.Sys_cfg().Lang_(Bry_.new_ascii_(lang));}
 	public void Test_open(String link, String expd) {
-		Xoa_page page = wiki.Ctx().Page();
+		Xoa_page page = parser_fxt.Ctx().Cur_page();
 		Xoa_url url = Xoa_url_parser.Parse_url(app, wiki, link);
 		page.Url_(url);
-		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_ascii_(link));
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, Bry_.new_ascii_(link));
 		page.Ttl_(ttl);
 		special_page.Special_gen(url, page, wiki, ttl);
 		Tfds.Eq(expd, String_.new_ascii_(page.Url().Page_bry()));

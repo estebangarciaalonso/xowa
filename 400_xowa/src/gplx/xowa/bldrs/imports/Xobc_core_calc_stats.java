@@ -36,7 +36,7 @@ public class Xobc_core_calc_stats extends Xob_itm_basic_base implements Xob_cmd 
 		}
 		int count_main = Calc_count_articles(wiki.Ns_mgr().Ns_main());
 		int count_file = Calc_count_articles(wiki.Ns_mgr().Ns_file());
-		ByteAryBfr bfr = ByteAryBfr.new_();
+		Bry_bfr bfr = Bry_bfr.new_();
 		Gen_call(Bool_.Y, bfr, Xow_wiki.Invk_stats);
 		Gen_call(Bool_.N, bfr, Xow_wiki_stats.Invk_number_of_articles_, count_main);
 		Gen_call(Bool_.N, bfr, Xow_wiki_stats.Invk_number_of_files_, count_file);
@@ -45,13 +45,13 @@ public class Xobc_core_calc_stats extends Xob_itm_basic_base implements Xob_cmd 
 			Xow_ns ns = wiki.Ns_mgr().Ords_ary()[i];
 			if (ns.Id() < 0) continue;
 			bfr.Add_byte_nl();
-			Gen_call(Bool_.N, bfr, Xow_wiki_stats.Invk_number_of_articles_in_ns_, ns.Num_str(), Int_.XtoStr_PadBgn(ns.Count(), 10));
+			Gen_call(Bool_.N, bfr, Xow_wiki_stats.Invk_number_of_articles_in_ns_, ns.Num_str(), Int_.Xto_str_pad_bgn(ns.Count(), 10));
 		}
 		bfr.Add_byte_nl().Add_byte(Byte_ascii.Semic).Add_byte_nl();
 		Io_url wiki_gfs = Wiki_gfs_url(wiki);
 		Io_mgr._.SaveFilBfr(wiki_gfs, bfr);
 	}
-	private void Gen_call(boolean first, ByteAryBfr bfr, String key, Object... vals) {
+	private void Gen_call(boolean first, Bry_bfr bfr, String key, Object... vals) {
 		if (!first) bfr.Add_byte(Byte_ascii.Dot);
 		bfr.Add_str(key);
 		int len = vals.length;
@@ -60,7 +60,7 @@ public class Xobc_core_calc_stats extends Xob_itm_basic_base implements Xob_cmd 
 			for (int i = 0; i < len; i++) {
 				if (i != 0) bfr.Add_byte(Byte_ascii.Comma).Add_byte(Byte_ascii.Space);
 				Object val = vals[i];
-				bfr.Add_str(Object_.XtoStr_OrNullStr(val));
+				bfr.Add_str(Object_.Xto_str_strict_or_null_mark(val));
 			}
 			bfr.Add_byte(Byte_ascii.Paren_end);
 		}

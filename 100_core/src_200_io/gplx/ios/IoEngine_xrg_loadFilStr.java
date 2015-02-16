@@ -19,7 +19,6 @@ package gplx.ios; import gplx.*;
 import gplx.texts.*;
 public class IoEngine_xrg_loadFilStr {
 	public Io_url Url() {return url;} public IoEngine_xrg_loadFilStr Url_(Io_url val) {url = val; return this;} Io_url url;
-	public EncodingAdp EncodingType() {return encodingType;} public IoEngine_xrg_loadFilStr EncodingType_Utf8() {return EncodingType_(EncodingAdp.Utf8);} public IoEngine_xrg_loadFilStr EncodingType_(EncodingAdp val) {encodingType = val; return this;} EncodingAdp encodingType = EncodingAdp.Utf8;
 	public boolean MissingIgnored() {return missingIgnored;} public IoEngine_xrg_loadFilStr MissingIgnored_() {return MissingIgnored_(true);} public IoEngine_xrg_loadFilStr MissingIgnored_(boolean v) {missingIgnored = v; return this;} private boolean missingIgnored = false;
 	public boolean BomUtf8Convert() {return bomUtf8Convert;} public IoEngine_xrg_loadFilStr BomUtf8Convert_(boolean v) {bomUtf8Convert = v; return this;} private boolean bomUtf8Convert = true;
 	public String Exec() {

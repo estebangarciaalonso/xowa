@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.gfui;
 import gplx.Byte_ascii;
 import gplx.Enm_;
+import gplx.Err_;
 import gplx.GfoEvMgr_;
 import gplx.GfoInvkAble_;
 import gplx.GfoMsg_;
@@ -34,23 +35,23 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolItem;
-class Swt_ShowLnr implements Listener {
+class Swt_lnr_show implements Listener {
 	boolean shown = false;
 	@Override public void handleEvent(Event ev) {
 		if (shown) return;
 		win.Opened();
 	}
-	public Swt_ShowLnr(Swt_win win) {this.win = win;} Swt_win win;
+	public Swt_lnr_show(Swt_win win) {this.win = win;} Swt_win win;
 }
-class Swt_ResizeLnr implements Listener {
+class Swt_lnr_resize implements Listener {
 	@Override public void handleEvent(Event ev) {
 //		win.Host().SizeChangedCbk();
 		GfoEvMgr_.Pub((GfuiWin)win.Host(), Gfui_html.Evt_win_resized);
 	}
-	public Swt_ResizeLnr(Swt_win win) {this.win = win;} Swt_win win;
+	public Swt_lnr_resize(Swt_win win) {this.win = win;} Swt_win win;
 }
-class Swt_KeyLnr implements KeyListener {
-	public Swt_KeyLnr(GxwElem elem) {this.elem = elem;} GxwElem elem;
+class Swt_lnr_key implements KeyListener {
+	public Swt_lnr_key(GxwElem elem) {this.elem = elem;} GxwElem elem;
 //	static int counter = 0;
 	@Override public void keyPressed(KeyEvent ev) 	{
 		IptEvtDataKey data = XtoKeyData(ev);
@@ -92,24 +93,22 @@ class Swt_KeyLnr implements KeyListener {
 			case 16777235:	val = IptKey_.F10.Val(); break;
 			case 16777236:	val = IptKey_.F11.Val(); break;
 			case 16777237:	val = IptKey_.F12.Val(); break;
+			case 16777259:  val = IptKey_.Equal.Val(); break;
+			case 16777261:  val = IptKey_.Minus.Val(); break;
 			case 16777300:	val = IptKey_.ScrollLock.Val(); break;
 			case 16777301:	val = IptKey_.Pause.Val(); break;
 			case 327680: 	val = IptKey_.Insert.Val(); break;
 		}
-		if (Enm_.HasInt(ev.stateMask, IptKey_.KeyCode_Alt)) 	val |= IptKey_.KeyCode_Ctrl;
+		if (Has_ctrl(ev.stateMask)) 							val |= IptKey_.KeyCode_Ctrl;
 		if (Enm_.HasInt(ev.stateMask, IptKey_.KeyCode_Shift))	val |= IptKey_.KeyCode_Alt;
 		if (Enm_.HasInt(ev.stateMask, IptKey_.KeyCode_Ctrl))	val |= IptKey_.KeyCode_Shift;
-//		switch (ev.stateMask) {
-//			case IptKey_.KeyCode_Alt: 	val |= IptKey_.KeyCode_Ctrl;	break;	// NOTE: swt switches Ctrl and Alt vs .net/swing
-//			case IptKey_.KeyCode_Shift: val |= IptKey_.KeyCode_Alt;		break;	// NOTE: swt switches Ctrl and Alt vs .net/swing 
-//			case IptKey_.KeyCode_Ctrl: val |= IptKey_.KeyCode_Shift;	break;
-//		}
 //		Tfds.Write(String_.Format("val={4} keyCode={0} stateMask={1} keyLocation={2} character={3}", ev.keyCode, ev.stateMask, ev.keyLocation, ev.character, val));
 		return IptEvtDataKey.int_(val);		
 	}
+	public static boolean Has_ctrl(int val) {return Enm_.HasInt(val, IptKey_.KeyCode_Alt);}	// NOTE:SWT's ctrl constant is different from SWING's 
 }
-class Swt_MouseLnr implements MouseListener {
-	public Swt_MouseLnr(GxwElem elem) {this.elem = elem;} GxwElem elem;
+class Swt_lnr_mouse implements MouseListener {
+	public Swt_lnr_mouse(GxwElem elem) {this.elem = elem;} GxwElem elem;
 	@Override public void mouseDown(MouseEvent ev) {elem.Host().MouseDownCbk(XtoMouseData(ev));}
 	@Override public void mouseUp(MouseEvent ev) {elem.Host().MouseUpCbk(XtoMouseData(ev));}
 	@Override public void mouseDoubleClick(MouseEvent ev) {}
@@ -124,9 +123,17 @@ class Swt_MouseLnr implements MouseListener {
 		}
 		return IptEvtDataMouse.new_(btn, IptMouseWheel_.None, ev.x, ev.y);		
 	}
+//	private static int X_to_swing(int v) {
+//		switch (v) {
+//			case gplx.gfui.IptMouseBtn_.Tid_left	: return java.awt.event.InputEvent.BUTTON1_MASK;
+//			case gplx.gfui.IptMouseBtn_.Tid_middle	: return java.awt.event.InputEvent.BUTTON2_MASK;
+//			case gplx.gfui.IptMouseBtn_.Tid_right	: return java.awt.event.InputEvent.BUTTON3_MASK;
+//			default									: throw Err_.unhandled(v);
+//		}
+//	}
 }
-class Swt_toolitem_lnr implements Listener {
-	public Swt_toolitem_lnr(ToolItem itm, GxwElem elem) {this.itm = itm; this.elem = elem;} ToolItem itm; GxwElem elem;
+class Swt_lnr_toolitem implements Listener {
+	public Swt_lnr_toolitem(ToolItem itm, GxwElem elem) {this.itm = itm; this.elem = elem;} ToolItem itm; GxwElem elem;
 	@Override public void handleEvent(Event arg0) {
 		Rectangle rect = itm.getBounds();
 		elem.Host().MouseUpCbk(IptEvtDataMouse.new_(IptMouseBtn_.Left, IptMouseWheel_.None, rect.x, rect.y));

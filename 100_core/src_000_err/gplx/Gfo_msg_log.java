@@ -28,10 +28,10 @@ public class Gfo_msg_log {
 	}
 	public Gfo_msg_log Add_str_warn_key_none(String grp, String itm, byte[] src, int pos)								{return Add_str(Gfo_msg_itm_.Cmd_warn, grp, itm, null, src, pos, pos + 1, null);}
 	public Gfo_msg_log Add_str_warn_key_none(String grp, String itm, byte[] src, int bgn, int end)						{return Add_str(Gfo_msg_itm_.Cmd_warn, grp, itm, null, src, bgn, end, null);}
-	public Gfo_msg_log Add_str_warn_fmt_none(String grp, String itm, String fmt)										{return Add_str(Gfo_msg_itm_.Cmd_warn, grp, itm, fmt , ByteAry_.Empty, -1, -1, null);}
+	public Gfo_msg_log Add_str_warn_fmt_none(String grp, String itm, String fmt)										{return Add_str(Gfo_msg_itm_.Cmd_warn, grp, itm, fmt , Bry_.Empty, -1, -1, null);}
 	public Gfo_msg_log Add_str_warn_fmt_none(String grp, String itm, String fmt, byte[] src, int pos)					{return Add_str(Gfo_msg_itm_.Cmd_warn, grp, itm, fmt , src, pos, pos + 1, null);}
 	public Gfo_msg_log Add_str_warn_fmt_none(String grp, String itm, String fmt, byte[] src, int bgn, int end)			{return Add_str(Gfo_msg_itm_.Cmd_warn, grp, itm, fmt , src, bgn, end, null);}
-	public Gfo_msg_log Add_str_warn_fmt_many(String grp, String itm, String fmt, Object... vals)					{return Add_str(Gfo_msg_itm_.Cmd_warn, grp, itm, fmt , ByteAry_.Empty, -1, -1, vals);}
+	public Gfo_msg_log Add_str_warn_fmt_many(String grp, String itm, String fmt, Object... vals)					{return Add_str(Gfo_msg_itm_.Cmd_warn, grp, itm, fmt , Bry_.Empty, -1, -1, vals);}
 	Gfo_msg_log Add_str(byte cmd, String owner_key, String itm, String fmt, byte[] src, int bgn, int end, Object[] vals) {
 		if (ary_idx >= ary_max) ary_expand();
 		ary[ary_idx++] = root.Data_new_many(cmd, src, bgn, end, owner_key, itm, fmt, vals);
@@ -50,4 +50,5 @@ public class Gfo_msg_log {
 		ary_max = new_max;			
 	}
 	Gfo_msg_data[] ary = Gfo_msg_data.Ary_empty; int ary_idx, ary_max;
+        public static Gfo_msg_log Test() {return new Gfo_msg_log("test");}
 }

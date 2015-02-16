@@ -25,4 +25,8 @@ import org.junit.*;
 	@Test  public void Missing_end() {
 		fxt.Test_parse_page_all_str("<tvar|1>''a''</tvar>", "&lt;tvar|1&gt;<i>a</i>&lt;/tvar&gt;");
 	}
+	@Test  public void Templates() {
+		fxt.Init_defn_add("A", "a");
+		fxt.Test_parse_page_all_str("<tvar|1>{{A}}</>", "a");
+	}
 }

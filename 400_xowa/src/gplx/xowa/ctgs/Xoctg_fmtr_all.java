@@ -25,10 +25,10 @@ class Xoctg_fmtr_all {
 	public boolean Grps_enabled() {return grps_enabled;} private boolean grps_enabled;
 	public Xoctg_fmtr_itm Fmtr_itm() {return fmtr_itm;} private Xoctg_fmtr_itm fmtr_itm;
 	public int Grp_max() {return grp_max;} public Xoctg_fmtr_all Grp_max_(int v) {grp_max = v; return this;} private int grp_max = Xoctg_html_mgr.Grp_max_default;
-	public ByteAryFmtr Html_all() {return html_all;} ByteAryFmtr html_all = ByteAryFmtr.new_();
-	public ByteAryFmtr Html_nav() {return html_nav;} ByteAryFmtr html_nav = ByteAryFmtr.new_();
-	public ByteAryFmtr Html_itm() {return html_itm;} ByteAryFmtr html_itm = ByteAryFmtr.new_();
-	public ByteAryFmtr Html_itm_missing() {return html_itm_missing;} ByteAryFmtr html_itm_missing = ByteAryFmtr.new_();
+	public Bry_fmtr Html_all() {return html_all;} Bry_fmtr html_all = Bry_fmtr.new_();
+	public Bry_fmtr Html_nav() {return html_nav;} Bry_fmtr html_nav = Bry_fmtr.new_();
+	public Bry_fmtr Html_itm() {return html_itm;} Bry_fmtr html_itm = Bry_fmtr.new_();
+	public Bry_fmtr Html_itm_missing() {return html_itm_missing;} Bry_fmtr html_itm_missing = Bry_fmtr.new_();
 	public byte[] Url_arg_bgn() {return url_arg_bgn;} private byte[] url_arg_bgn = null;
 	public byte[] Url_arg_end() {return url_arg_end;} private byte[] url_arg_end = null;
 	private void Ctor(byte tid) {
@@ -39,7 +39,7 @@ class Xoctg_fmtr_all {
 			case Xoa_ctg_mgr.Tid_file: grps_enabled = Bool_.Y; msg_id_label = Xol_msg_itm_.Id_ctg_file_header; msg_id_stats = Xol_msg_itm_.Id_ctg_file_count; div_id = Div_id_file; url_arg_bgn = Url_arg_file_bgn; url_arg_end = Url_arg_file_end; this.fmtr_itm = Xoctg_fmtr_itm_file._; break;
 			default: throw Err_.unhandled(tid);
 		}
-		html_all.Fmt_(String_.Concat_lines_nl_skipLast
+		html_all.Fmt_(String_.Concat_lines_nl_skip_last
 		(	""
 		,	"<div id=\"~{div_id}\">"
 		,	"  <h2>~{all_label}</h2>"
@@ -54,24 +54,24 @@ class Xoctg_fmtr_all {
 		))
 		.Keys_
 		("div_id", "all_label", "all_stats", "all_navs", "lang_key", "lang_ltr", "grps");
-		html_nav.Fmt_(String_.Concat_lines_nl_skipLast
+		html_nav.Fmt_(String_.Concat_lines_nl_skip_last
 		(	""
 		,	"  (<a class=\"xowa_nav\" href=\"~{nav_href}\" title=\"~{nav_title}\">~{nav_text}</a>)"
 		))
 		.Keys_("nav_href", "nav_title", "nav_text");
-		html_itm.Fmt_(String_.Concat_lines_nl_skipLast
+		html_itm.Fmt_(String_.Concat_lines_nl_skip_last
 		(	""
 		,	"            <li><a~{itm_atr_cls} href=\"~{itm_href}\" title=\"~{itm_title}\">~{itm_text}</a></li>"
 		))
 		.Keys_("itm_href", "itm_title", "itm_text", "itm_id", "itm_atr_cls");
-		html_itm_missing.Fmt_(String_.Concat_lines_nl_skipLast
+		html_itm_missing.Fmt_(String_.Concat_lines_nl_skip_last
 		(	""
 		,	"            <li class=\"xowa-missing-category-entry\"><span title=\"id not found: #~{itm_id} might be talk/user page\">~{itm_text} (missing)</li>"
 		))
 		.Keys_("itm_href", "itm_title", "itm_text", "itm_id");
 		switch (tid) {
 			case Xoa_ctg_mgr.Tid_subc:
-				html_itm.Fmt_(String_.Concat_lines_nl_skipLast
+				html_itm.Fmt_(String_.Concat_lines_nl_skip_last
 				(	""
 				,	"            <li>"
 				,	"              <div class=\"CategoryTreeSection\">"
@@ -93,7 +93,7 @@ class Xoctg_fmtr_all {
 			case Xoa_ctg_mgr.Tid_page:
 				break;
 			case Xoa_ctg_mgr.Tid_file:
-//					html_all.Fmt_(String_.Concat_lines_nl_skipLast
+//					html_all.Fmt_(String_.Concat_lines_nl_skip_last
 //					(	""
 //					,	"<div id=\"~{div_id}\">"
 //					,	"  <h2>~{all_label}</h2>"
@@ -107,15 +107,15 @@ class Xoctg_fmtr_all {
 		}
 	}
 	public byte[] Bld_bwd_fwd(Xow_wiki wiki, Xoa_ttl ttl, Xoctg_view_grp view_grp) {
-		if (view_grp.Total() < grp_max) return ByteAry_.Empty;
-		ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_k004();
+		if (view_grp.Total() < grp_max) return Bry_.Empty;
+		Bry_bfr bfr = wiki.Utl_bry_bfr_mkr().Get_k004();
 		Html_nav_bry(bfr, wiki, ttl, view_grp, Bool_.N);
 		Html_nav_bry(bfr, wiki, ttl, view_grp, Bool_.Y);
-		return bfr.Mkr_rls().XtoAryAndClear();
+		return bfr.Mkr_rls().Xto_bry_and_clear();
 	}
-	private void Html_nav_bry(ByteAryBfr bfr, Xow_wiki wiki, Xoa_ttl ttl, Xoctg_view_grp view_grp, boolean fill_at_bgn) {
-		ByteAryBfr href_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
-		wiki.App().Href_parser().Build_to_bfr(ttl, wiki, href_bfr);
+	private void Html_nav_bry(Bry_bfr bfr, Xow_wiki wiki, Xoa_ttl ttl, Xoctg_view_grp view_grp, boolean fill_at_bgn) {
+		Bry_bfr href_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
+		wiki.App().Href_parser().Build_to_bfr(href_bfr, wiki, ttl);
 		byte[] arg_idx_lbl = null; byte[] arg_sortkey = null;
 		if (fill_at_bgn) {
 			arg_idx_lbl = url_arg_bgn;
@@ -130,27 +130,27 @@ class Xoctg_fmtr_all {
 		href_bfr.Add_byte(Byte_ascii.Question).Add(arg_idx_lbl).Add_byte(Byte_ascii.Eq);		// filefrom=
 		href_bfr.Add(arg_sortkey);																// Abc
 		href_bfr.Add_byte(Byte_ascii.Hash).Add(div_id);											// #mw-subcategories
-		byte[] nav_href = href_bfr.Mkr_rls().XtoAryAndClear();
+		byte[] nav_href = href_bfr.Mkr_rls().Xto_bry_and_clear();
 		byte[] nav_ttl = ttl.Full_url();
 		int nav_text_id = fill_at_bgn ? Xol_msg_itm_.Id_next_results : Xol_msg_itm_.Id_prev_results;
 		byte[] nav_text = wiki.Msg_mgr().Val_by_id_args(nav_text_id, grp_max);					// fill_at_bgn 200 / previous 200
 		html_nav.Bld_bfr(bfr, nav_href, nav_ttl, nav_text);
 	}
 	public static final byte[]
-			Url_arg_from		= ByteAry_.new_ascii_("from")
-		,	Url_arg_until 		= ByteAry_.new_ascii_("until")
-		,	Url_arg_subc_bgn 	= ByteAry_.new_ascii_("subcatfrom")
-		,	Url_arg_subc_end	= ByteAry_.new_ascii_("subcatuntil")
-		,	Url_arg_page_bgn 	= ByteAry_.new_ascii_("pagefrom")
-		,	Url_arg_page_end 	= ByteAry_.new_ascii_("pageuntil")
-		,	Url_arg_file_bgn 	= ByteAry_.new_ascii_("filefrom")
-		,	Url_arg_file_end	= ByteAry_.new_ascii_("fileuntil")
-		,	Div_id_subc			= ByteAry_.new_ascii_("mw-subcategories")
-		,	Div_id_page			= ByteAry_.new_ascii_("mw-pages")
-		,	Div_id_file			= ByteAry_.new_ascii_("mw-category-media")
-		;
+		Url_arg_from		= Bry_.new_ascii_("from")
+	,	Url_arg_until 		= Bry_.new_ascii_("until")
+	,	Url_arg_subc_bgn 	= Bry_.new_ascii_("subcatfrom")
+	,	Url_arg_subc_end	= Bry_.new_ascii_("subcatuntil")
+	,	Url_arg_page_bgn 	= Bry_.new_ascii_("pagefrom")
+	,	Url_arg_page_end 	= Bry_.new_ascii_("pageuntil")
+	,	Url_arg_file_bgn 	= Bry_.new_ascii_("filefrom")
+	,	Url_arg_file_end	= Bry_.new_ascii_("fileuntil")
+	,	Div_id_subc			= Bry_.new_ascii_("mw-subcategories")
+	,	Div_id_page			= Bry_.new_ascii_("mw-pages")
+	,	Div_id_file			= Bry_.new_ascii_("mw-category-media")
+	;
 }
-interface Xoctg_fmtr_itm extends ByteAryFmtrArg {
+interface Xoctg_fmtr_itm extends Bry_fmtr_arg {
 	int Grp_end_idx();
 	boolean Grp_end_at_col();
 	int Col_idx(); void Col_idx_(int col_idx, int col_bgn);

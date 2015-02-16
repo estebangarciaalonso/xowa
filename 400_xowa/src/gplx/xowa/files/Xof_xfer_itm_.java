@@ -30,8 +30,7 @@ public class Xof_xfer_itm_ {
 			if (lnki_thumb)		rv_w = thumb_default_w;		// do not default to thumb if only height is set; EX: x900px should have w=0 h=900
 			else				rv_w = file_w;
 		}
-		if (lnki_upright > 0)
-			rv_w = Xof_img_size.Upright_calc(lnki_upright, rv_w);
+		rv_w = Xof_img_size.Upright_calc(Xof_patch_upright_tid_.Tid_all, lnki_upright, rv_w, lnki_w, lnki_h, lnki_type);	// only v1 calls Calc_xfer_size
 		if (file_w < 1)				rv.Val_all_(rv_w, rv_h);
 		else						Xof_xfer_itm_.Calc_view(rv, lnki_type, rv_w, rv_h, file_w, file_h, thumb_width_must_be_lt_file_width);
 	}
@@ -62,7 +61,7 @@ public class Xof_xfer_itm_ {
 			: (int)Math_.Round(((double)lnki_w * file_h) / file_w, 0);	// NOTE: (double) needed else result will be int and decimal will be automatically truncated
 	}
 	public static final Url_encoder Md5_decoder = Url_encoder.new_http_url_().Itms_raw_same_many(Byte_ascii.Plus);
-	public static byte[] Md5_calc(byte[] v) {return ByteAry_.new_ascii_(gplx.security.HashAlgo_.Md5.CalcHash(ConsoleDlg_.Null, gplx.ios.IoStream_.ary_(v)));}
+	public static byte[] Md5_calc(byte[] v) {return Bry_.new_ascii_(gplx.security.HashAlgo_.Md5.CalcHash(ConsoleDlg_.Null, gplx.ios.IoStream_.ary_(v)));}
 	public static byte[] Md5_(byte[] ttl) {
 		ttl = Md5_decoder.Decode_lax(Ttl_standardize(ttl));	// NOTE: this line is repeated in member above
 		return Xof_xfer_itm_.Md5_calc(ttl);				// NOTE: md5 is calculated off of url_decoded ttl; EX: A%2Cb is converted to A,b and then md5'd. note that A%2Cb still remains the title
@@ -109,13 +108,4 @@ EX_1: view is 120,40 (3:1)
 EX_2: view is 120,80 (1.5:1)
 - (a) 120,60 or (b) 160,80
 - (a) 120,60
-
-NOTE_3:Lnki_thumbable
-. false only if following form
-[[A.png]]		-> must get orig
-. true in almost all other cases, especially if (a) type is thumb; (b) size exists; (c) upright;
-. basically, indicates that image will be stored on wmf server as "/thumb/" url
-[[A.png|thumb]] -> default to 220 and check for 220px
-[[A.png|40px]]  -> check for 40px
-[[A.png|x40px]] -> calc n width and check for npx
 */

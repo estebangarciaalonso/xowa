@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfml; import gplx.*;
-import gplx.criterias.*;
+import gplx.core.strings.*; import gplx.core.criterias.*;
 public class SqlDoc {
 	public static GfmlDoc XtoDoc(String raw) {
 		GfmlBldr bldr = GfmlBldr_.new_();
@@ -82,7 +82,7 @@ class SqlCmd_quote_end implements GfmlBldrCmd {
 			GfmlTkn pnd = (GfmlTkn)list.FetchAt(i);
 			sb.Add(pnd.Val());
 		}
-		//Int_.XtoStr(bldr.CurNdeFrame().Nde().SubTkns().length)
+		//Int_.Xto_str(bldr.CurNdeFrame().Nde().SubTkns().length)
 		GfmlAtr atr = GfmlAtr.new_(GfmlTkn_.raw_("word"), GfmlTkn_.raw_(sb.XtoStr()), GfmlType_.String);
 		bldr.CurNdeFrame().CurNde().SubObjs_Add(atr);
 		bldr.Frames_end();

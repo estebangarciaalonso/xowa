@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
+import gplx.core.primitives.*;
 public class FontStyleAdp_ implements ParseAble {
 	public static final FontStyleAdp 
 		  Plain			= new FontStyleAdp(0)
@@ -31,9 +32,9 @@ public class FontStyleAdp_ implements ParseAble {
 		FontStyleAdp rv = parse_internal_(raw); if (rv == null) return or;
 		return rv;
 	}
-	public static FontStyleAdp parts_(BoolVal bold, BoolVal italic) {
-		int v = bold == BoolVal.True ? 1 : 0;
-		v += italic == BoolVal.True ? 2 : 0;
+	public static FontStyleAdp parts_(Bool_obj_val bold, Bool_obj_val italic) {
+		int v = bold == Bool_obj_val.True ? 1 : 0;
+		v += italic == Bool_obj_val.True ? 2 : 0;
 		return lang_(v);
 	}
 	public static FontStyleAdp parse_(String raw) {

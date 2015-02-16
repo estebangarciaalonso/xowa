@@ -17,12 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.xowa_cmds; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 import org.junit.*;
+import gplx.xowa.apps.*;
 public class Xop_xowa_func_tst {
 	@Before public void init() {
 		Xoa_gfs_mgr.Msg_parser_init();
 	} private Xop_fxt fxt = new Xop_fxt();
 	@Test  public void Template() {
-		GfsCore._.AddCmd(fxt.App(), Xoa_gfs_mgr.Invk_app);
+		GfsCore._.AddCmd(fxt.App(), Xoa_app.Invk_app);
 		fxt.Wiki().Sys_cfg().Xowa_cmd_enabled_(true);
 		fxt.Init_defn_add("A", "{{#xowa|{{{1}}}}}");
 		fxt.Test_parse_page_all_str("{{A|app.users.get('anonymous').name;}}", "anonymous");

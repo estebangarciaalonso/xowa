@@ -151,11 +151,11 @@ public class Php_evaluator implements Php_tkn_wkr {
 						break;
 					case Php_tkn_.Tid_var:
 						Php_tkn_var tkn_var = (Php_tkn_var)tkn; 
-						Ary_add_itm(new Php_itm_var(ByteAry_.Mid(src, tkn_var.Src_bgn(), tkn_var.Src_end())));
+						Ary_add_itm(new Php_itm_var(Bry_.Mid(src, tkn_var.Src_bgn(), tkn_var.Src_end())));
 						break;
 					case Php_tkn_.Tid_txt:
 						Php_tkn_txt tkn_txt = (Php_tkn_txt)tkn; 
-						Ary_add_itm(new Php_itm_var(ByteAry_.Mid(src, tkn_txt.Src_bgn(), tkn_txt.Src_end())));
+						Ary_add_itm(new Php_itm_var(Bry_.Mid(src, tkn_txt.Src_bgn(), tkn_txt.Src_end())));
 						break;
 					case Php_tkn_.Tid_ary:
 						Expect(Php_tkn_.Tid_paren_bgn, Mode_ary_subs);

@@ -66,7 +66,7 @@ public class Process_stream_rdr {
 			src_pos += read_len;
 			trg_bgn += read_len;
 		}
-		return ByteAry_.Mid(trg_bry, 0, src_len);
+		return Bry_.Mid(trg_bry, 0, src_len);
 	}
 }
 /*

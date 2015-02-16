@@ -20,18 +20,17 @@ import gplx.xowa.langs.vnts.*;
 public class Xop_parser_ {
 	public static final byte Parse_tid_null = 0, Parse_tid_tmpl = 1, Parse_tid_page_tmpl = 2, Parse_tid_page_wiki = 3;
 	public static final int Doc_bgn_bos = -1, Doc_bgn_char_0 = 0;
-	public static byte[] Parse_fragment(Xow_wiki wiki, byte[] bry) {
-		Xop_ctx sub_ctx = Xop_ctx.new_sub_(wiki);
-		Xop_root_tkn sub_root = sub_ctx.Tkn_mkr().Root(bry);
-		return wiki.Parser().Parse_page_tmpl(sub_root, sub_ctx, sub_ctx.Tkn_mkr(), bry);
-	}
-	public static void Parse_to_html(ByteAryBfr trg, Xow_wiki wiki, Xoa_page page, boolean para_enabled, byte[] bry) {
+	public static byte[] Parse_text_to_html(Xow_wiki wiki, Xoa_page page, Xoa_ttl ttl, byte[] src, boolean para_enabled) {	// NOTE: must pass in same page instance; do not do Xoa_page_.new_(), else img_idx will get reset to 0; DATE:2015-02-08
+		Bry_bfr bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
 		Xop_ctx ctx = Xop_ctx.new_sub_(wiki, page);
-		Xop_root_tkn root = new Xop_root_tkn();
-		byte[] mid = wiki.Parser().Parse_page_tmpl(root, ctx, ctx.Tkn_mkr(), bry);
+		Xop_tkn_mkr tkn_mkr = ctx.Tkn_mkr();
+		Xop_root_tkn root = tkn_mkr.Root(src);
+		Xop_parser parser = wiki.Parser();
+		byte[] wtxt = parser.Parse_text_to_wtxt(root, ctx, tkn_mkr, src);
 		root.Reset();
 		ctx.Para().Enabled_(para_enabled);
-		wiki.Parser().Parse_page_wiki(root, ctx, ctx.Tkn_mkr(), mid, Xop_parser_.Doc_bgn_bos);
-		wiki.Html_wtr().Write_all(trg, ctx, mid, root);
+		parser.Parse_wtxt_to_wdom(root, ctx, ctx.Tkn_mkr(), wtxt, Xop_parser_.Doc_bgn_bos);
+		wiki.Html_mgr().Html_wtr().Write_all(bfr, ctx, wtxt, root);
+		return bfr.Mkr_rls().Xto_bry_and_clear();
 	}
 }

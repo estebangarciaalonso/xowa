@@ -17,11 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xop_bry_tkn extends Xop_tkn_itm_base {
-	public Xop_bry_tkn(int bgn, int end, byte[] bry) {this.bry = bry; this.Tkn_ini_pos(false, bgn, end);}
+	public Xop_bry_tkn(int bgn, int end, byte[] val) {this.val = val; this.Tkn_ini_pos(false, bgn, end);}
 	@Override public byte Tkn_tid() {return Xop_tkn_itm_.Tid_bry;}
-	@Override public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr) {
-		bfr.Add(bry);
+	public byte[] Val() {return val;} private byte[] val;
+	@Override public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Bry_bfr bfr) {
+		bfr.Add(val);
 		return true;
 	}
-	public byte[] Bry() {return bry;} private byte[] bry;
 }

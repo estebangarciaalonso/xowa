@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.bldrs.imports.ctgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.imports.*;
 import org.junit.*; import gplx.xowa.ctgs.*;
 public class Xoctg_link_idx_wkr_tst {		
-	@Before public void init() {fxt.Clear();} private Xobc_base_fxt fxt = new Xobc_base_fxt();
+	@Before public void init() {fxt.Clear();} private Xob_base_fxt fxt = new Xob_base_fxt();
 	@Test   public void Basic() {
 		fxt
 		.Init_fil("mem/xowa/wiki/en.wikipedia.org/tmp/ctg.link_sql/make/0000000000.csv", String_.Concat_lines_nl
@@ -53,7 +53,7 @@ public class Xoctg_link_idx_wkr_tst {
 		(	"0|Ctg_1|Ctg_2|2"
 		))
 		;
-		byte[] ctg_name = ByteAry_.new_ascii_("Ctg_1");
+		byte[] ctg_name = Bry_.new_ascii_("Ctg_1");
 		Xoctg_data_ctg main = new Xoctg_data_ctg(ctg_name);
 		fxt.Wiki().Db_mgr().Load_mgr().Load_ctg_v2(main, ctg_name);
 		Tfds.Eq(1, main.Grp_by_tid(Xoa_ctg_mgr.Tid_subc).Total());

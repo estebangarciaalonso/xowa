@@ -16,24 +16,21 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.proofreadPage; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-import gplx.xowa.parsers.logs.*;
+import gplx.core.primitives.*; import gplx.xowa.parsers.logs.*;
 class Pp_index_parser {
 	public static Pp_index_page Parse(Xow_wiki wiki, Xop_ctx ctx, Xoa_ttl index_ttl, int ns_page_id) {
 		byte[] src = wiki.Cache_mgr().Page_cache().Get_or_load_as_src(index_ttl);
 		if (src == null) return Pp_index_page.Null;
-		if (ctx.Wiki().View_data().Pages_recursed()) return Pp_index_page.Null;
-		ctx.Wiki().View_data().Pages_recursed_(true);
-		Xop_parser sub_parser = new Xop_parser(wiki.Parser().Tmpl_lxr_mgr(), wiki.Parser().Wiki_lxr_mgr());
+		Xop_parser sub_parser = new Xop_parser(wiki, wiki.Parser().Tmpl_lxr_mgr(), wiki.Parser().Wtxt_lxr_mgr());
 		Xop_ctx sub_ctx = Xop_ctx.new_sub_(wiki);
 		Xop_tkn_mkr tkn_mkr = sub_ctx.Tkn_mkr();
 		Xop_root_tkn index_root = tkn_mkr.Root(src);
-		byte[] mid_text = sub_parser.Parse_page_tmpl(index_root, sub_ctx, tkn_mkr, src);
+		byte[] mid_text = sub_parser.Parse_text_to_wtxt(index_root, sub_ctx, tkn_mkr, src);
 		Pp_index_page rv = new Pp_index_page();
 		Inspect_tmpl(rv, src, index_root, index_root.Subs_len(), ns_page_id, 1);
-		sub_parser.Parse_page_wiki(index_root, sub_ctx, tkn_mkr, mid_text, Xop_parser_.Doc_bgn_bos);
-		ctx.Wiki().View_data().Pages_recursed_(false);
+		sub_parser.Parse_wtxt_to_wdom(index_root, sub_ctx, tkn_mkr, mid_text, Xop_parser_.Doc_bgn_bos);
 		rv.Src_(mid_text);
-		Inspect_wiki(rv, src, index_root, index_root.Subs_len(), ns_page_id, 1);
+		Inspect_wiki(rv, mid_text, index_root, index_root.Subs_len(), ns_page_id, 1);	// changed from src to mid_text; DATE:2014-07-14
 		return rv;
 	}
 	private static void Inspect_tmpl(Pp_index_page rv, byte[] src, Xop_tkn_itm_base owner, int owner_len, int ns_page_id, int depth) {
@@ -85,7 +82,7 @@ class Pp_index_parser {
 		}
 	}
 	private static byte[] Get_bry(byte[] src, Arg_itm_tkn itm) {
-		return ByteAry_.Mid(src, itm.Dat_bgn(), itm.Dat_end());
+		return Bry_.Mid(src, itm.Dat_bgn(), itm.Dat_end());
 	}
 }
 class Pp_index_page {
@@ -95,7 +92,7 @@ class Pp_index_page {
 	public ListAdp		Page_ttls()			{return page_ttls;} private ListAdp page_ttls = ListAdp_.new_();
 	public ListAdp		Main_lnkis()		{return main_lnkis;} private ListAdp main_lnkis = ListAdp_.new_();
 	public ListAdp		Invk_args()			{return invk_args;} private ListAdp invk_args = ListAdp_.new_();
-	public Xoa_ttl[] Get_ttls_rng(Xow_wiki wiki, int ns_page_id, byte[] bgn_page_bry, byte[] end_page_bry, IntRef bgn_page_ref, IntRef end_page_ref) {
+	public Xoa_ttl[] Get_ttls_rng(Xow_wiki wiki, int ns_page_id, byte[] bgn_page_bry, byte[] end_page_bry, Int_obj_ref bgn_page_ref, Int_obj_ref end_page_ref) {
 		int list_len = page_ttls.Count(); if (list_len == 0) return Pp_pages_nde.Ttls_null;
 		ListAdp rv = ListAdp_.new_();
 		Xoa_ttl bgn_page_ttl = new_ttl_(wiki, ns_page_id, bgn_page_bry), end_page_ttl = new_ttl_(wiki, ns_page_id, end_page_bry);
@@ -108,8 +105,10 @@ class Pp_index_page {
 				&&	ttl.Eq_page_db(end_page_ttl)
 				)									{add = Bool_.N; end_page_ref.Val_(i);}
 		}
+		if (bgn_page_ref.Val() == -1) bgn_page_ref.Val_(0);				// NOTE: set "from" which will be passed to {{MediaWiki:Proofreadpage_header_template}}; DATE:2014-05-21
+		if (end_page_ref.Val() == -1) end_page_ref.Val_(list_len - 1);  // NOTE: set "to"   which will be passed to {{MediaWiki:Proofreadpage_header_template}}; DATE:2014-05-21
 		if (rv.Count() == 0) return Pp_pages_nde.Ttls_null;
-		return (Xoa_ttl[])rv.XtoAry(Xoa_ttl.class);
+		return (Xoa_ttl[])rv.Xto_ary(Xoa_ttl.class);
 	}
 	private static Xoa_ttl new_ttl_(Xow_wiki wiki, int ns_page_id, byte[] bry) {return bry == null ? Xoa_ttl.Null : Xoa_ttl.parse_(wiki, ns_page_id, bry);}
 	public static final Pp_index_page Null = new Pp_index_page();

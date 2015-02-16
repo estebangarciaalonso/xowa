@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.primitives.*;
 public class GfoInvkCmdMgr {
 	public GfoInvkCmdMgr Add_cmd_many(GfoInvkAble invk, String... keys) {
 		for (String key : keys)
@@ -50,7 +51,7 @@ public class GfoInvkCmdMgr {
 		}
 		return Unhandled;
 	}
-	public static final StringVal Unhandled = StringVal.new_("GfoInvkCmdMgr Unhandled");
+	public static final String_obj_val Unhandled = String_obj_val.new_("GfoInvkCmdMgr Unhandled");
 	ListAdp list = ListAdp_.new_();
         public static GfoInvkCmdMgr new_() {return new GfoInvkCmdMgr();} GfoInvkCmdMgr() {}
 }

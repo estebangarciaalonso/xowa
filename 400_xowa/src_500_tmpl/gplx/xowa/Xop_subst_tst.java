@@ -37,7 +37,7 @@ public class Xop_subst_tst {
 	@Test  public void Tmpl_txt_subst_pf()			{fxt.Test_parse_tmpl_str_test("{{subst:#expr:0}}"					, "{{test}}"					, "0");}
 	@Test  public void Tmpl_txt_safesubst_prm()		{fxt.Test_parse_tmpl_str_test("{{{{{|safesubst:}}}#if:{{{1|}}}{{{{{|safesubst:}}}!}}c1|c2}}"	, "{{test}}"					, "c2");}
 	@Test  public void Exc_tmpl_prm_safesubst_ns()	{fxt.Test_parse_tmpl_str_test("{{{{{|safesubst}}}:NAMESPACE}}"		, "{{test}}"					, "");}
-	@Test  public void Unreferenced() {	// PURPOSE: if subst, but in tmpl stage, do not actually subst; EX.WP:Unreferenced; DATE:2013-01-31
+	@Test  public void Unreferenced() {	// PURPOSE: if subst, but in tmpl stage, do not actually subst; PAGE:en.w:Unreferenced; DATE:2013-01-31
 		fxt.Init_defn_clear();
 		fxt.Init_defn_add("substcheck", "SUBST");
 		fxt.Init_defn_add("ifsubst", String_.Concat_lines_nl
@@ -65,10 +65,15 @@ public class Xop_subst_tst {
 		fxt.Init_log_(Xop_ttl_log.Invalid_char);
 		fxt.Test_parse_page_tmpl_str("{{test|Template:[xyz]}}", "%7B%7BTemplate%3ATemplate%3A%5Bxyz%5D%7D%7D");	// url-encoded version of {{safesubst:Template:xyz}}
 	}
+	@Test   public void Nowiki() {	// PURPOSE: stack overflow; PAGE:Близкие_друзья_(Сезон_2) DATE:2014-10-21
+		fxt.Init_defn_add("ET", "");
+		fxt.Init_defn_add("ds", "<includeonly>{{subst:</includeonly><includeonly>ET|<nowiki>{{subst:ds}}</nowiki>}}</includeonly>");
+		fxt.Test_parse_page_tmpl_str("{{subst:ds}}", "");	// {{subst:ds}} causes stack overflow; {{ds}} does not
+	}
 
 	// NOTE: these are actually not good tests; MW does subst just before save; it doesn't do subst on load; in this case, the tests are testing load (which will noop); they need to test save (which xowa doesn't do)
-//		@Test  public void Tmpl_txt_subst()				{fxt.Test_parse_tmpl_str_test("{{subst:xo_print|a}}"				, "{{test}}"					, "a");}
-//		@Test  public void Tmpl_txt_subst_prm()			{fxt.Test_parse_tmpl_str_test("{{subst:xo_print|{{{1}}}}}"			, "{{test|a}}"					, "a");}
+	// @Test  public void Tmpl_txt_subst()				{fxt.Test_parse_tmpl_str_test("{{subst:xo_print|a}}"				, "{{test}}"					, "a");}
+	// @Test  public void Tmpl_txt_subst_prm()			{fxt.Test_parse_tmpl_str_test("{{subst:xo_print|{{{1}}}}}"			, "{{test|a}}"					, "a");}
 
 	//@Test  public void Tmpl_txt_safesubst_prm()		{fxt.Test_parse_tmpl_str_test("{{{{{|safesubst:}}}ns:Category}}"	, "{{test}}"					, "Category");}
 	//@Test  public void Tmpl_txt_subst_immed()		{fxt.Test_parse_tmpl_str_test("{{xo_print{{subst:!}}a}}"			, "{{test}}"					, "a");}

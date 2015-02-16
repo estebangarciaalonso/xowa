@@ -26,18 +26,18 @@ public class Xodb_page_sorter implements ComparerAble {
 		switch (compareType) {
 			case Tid_ns_ttl:	{
 				int rv = Int_.Compare(lhs.Ns_id(), rhs.Ns_id());
-				return rv == CompareAble_.Same ? ByteAry_.Compare(lhs.Ttl_wo_ns(), rhs.Ttl_wo_ns()) : rv;
+				return rv == CompareAble_.Same ? Bry_.Compare(lhs.Ttl_wo_ns(), rhs.Ttl_wo_ns()) : rv;
 			}
 			case Tid_itm_len:	return Int_.Compare(lhs.Text_len(), rhs.Text_len());
 			case Tid_id:		return Int_.Compare(lhs.Id(), rhs.Id());
-			case Tid_ttl:		return ByteAry_.Compare(lhs.Ttl_wo_ns(), rhs.Ttl_wo_ns());
+			case Tid_ttl:		return Bry_.Compare(lhs.Ttl_wo_ns(), rhs.Ttl_wo_ns());
 			case Tid_ctg_tid_sortkey:
 				gplx.xowa.ctgs.Xoctg_page_xtn lhs_xtn = (gplx.xowa.ctgs.Xoctg_page_xtn)lhs.Xtn();
 				gplx.xowa.ctgs.Xoctg_page_xtn rhs_xtn = (gplx.xowa.ctgs.Xoctg_page_xtn)rhs.Xtn();
 				if (lhs_xtn == null || rhs_xtn == null) return CompareAble_.Same;
 				int tid_comparable = Byte_.Compare(lhs_xtn.Tid(), rhs_xtn.Tid());
 				if (tid_comparable != CompareAble_.Same) return tid_comparable;
-				return ByteAry_.Compare(lhs_xtn.Sortkey(), rhs_xtn.Sortkey());
+				return Bry_.Compare(lhs_xtn.Sortkey(), rhs_xtn.Sortkey());
 			default:			throw Err_.unhandled(compareType);
 		}
 	}

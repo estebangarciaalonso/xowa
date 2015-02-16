@@ -79,19 +79,19 @@ class Xowd_hive_mgr_fxt {
 		return this;
 	}
 	public Xowd_hive_mgr_fxt Update(String key, String data) {
-		mgr.Update(wiki.Ns_mgr().Ns_main(), ByteAry_.new_ascii_(key), null, ByteAry_.new_ascii_(data), 0, Byte_ascii.Pipe, true, true);
+		mgr.Update(wiki.Ns_mgr().Ns_main(), Bry_.new_ascii_(key), null, Bry_.new_ascii_(data), 0, Byte_ascii.Pipe, true, true);
 		return this;
 	}
 	public Xowd_hive_mgr_fxt Create(String key, String data) {
-		mgr.Create(wiki.Ns_mgr().Ns_main(), ByteAry_.new_ascii_(key), ByteAry_.new_ascii_(data), null);		
+		mgr.Create(wiki.Ns_mgr().Ns_main(), Bry_.new_ascii_(key), Bry_.new_ascii_(data), null);		
 		return this;
 	}
 	public Xowd_hive_mgr_fxt Create_and_sort(String key, String data) {
-		mgr.Create(wiki.Ns_mgr().Ns_main(), ByteAry_.new_ascii_(key), ByteAry_.new_ascii_(data), new Bry_comparer_bgn_eos(0));		
+		mgr.Create(wiki.Ns_mgr().Ns_main(), Bry_.new_ascii_(key), Bry_.new_ascii_(data), new Bry_comparer_bgn_eos(0));		
 		return this;
 	}
 //	public void Get(String ttl_str, boolean exists) {
-//		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(ttl_str));
+//		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, Bry_.new_utf8_(ttl_str));
 //		Xodb_page row = mgr.Get(ttl.Ns(), ttl.Full_txt());
 //		Tfds.Eq(exists, row != null);
 //	}

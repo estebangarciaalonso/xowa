@@ -16,8 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.dynamicPageList; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-import gplx.html.*;
-import gplx.xowa.html.*;
+import gplx.core.primitives.*;
+import gplx.html.*; import gplx.xowa.html.*;
 class Dpl_itm {
 	public ListAdp Ctg_includes() {return ctg_includes;} private ListAdp ctg_includes;
 	public ListAdp Ctg_excludes() {return ctg_excludes;} private ListAdp ctg_excludes;
@@ -42,7 +42,7 @@ class Dpl_itm {
 	public void Parse(Xow_wiki wiki, Xop_ctx ctx, byte[] page_ttl, byte[] src, Xop_xnde_tkn xnde) {	// parse kvs in node; EX:<dpl>category=abc\nredirects=y\n</dpl>
 		sub_ctx = Xop_ctx.new_sub_(wiki);
 		sub_tkn_mkr = sub_ctx.Tkn_mkr();
-		sub_root = sub_tkn_mkr.Root(ByteAry_.Empty);
+		sub_root = sub_tkn_mkr.Root(Bry_.Empty);
 		int content_bgn = xnde.Tag_open_end(), content_end = xnde.Tag_close_bgn();
 		int pos = content_bgn;
 		int fld_bgn = content_bgn;
@@ -64,8 +64,8 @@ class Dpl_itm {
 					key_id = Dpl_itm_keys.Parse(src, fld_bgn, fld_end, Dpl_itm_keys.Key_null);
 					if (key_id == Dpl_itm_keys.Key_null) {	// unknown key; warn and set pos to end of line; EX: "unknown=";
 						Parse_missing_key(usr_dlg, page_ttl, src, fld_bgn, fld_end);
-						fld_bgn = Byte_ary_finder.Find_fwd(src, Byte_ascii.NewLine, pos);
-						if (fld_bgn == ByteAry_.NotFound) loop = false;
+						fld_bgn = Bry_finder.Find_fwd(src, Byte_ascii.NewLine, pos);
+						if (fld_bgn == Bry_.NotFound) loop = false;
 					}
 					else {									// known key; set pos to val_bgn
 						fld_bgn = pos + Int_.Const_dlm_len;
@@ -77,7 +77,7 @@ class Dpl_itm {
 					if (fld_bgn != pos) {					// ignores blank lines
 						if (ws_bgn_idx != -1) fld_bgn = ws_bgn_idx + 1;	// +1 to position after last known ws
 						int fld_end = ws_end_idx == -1 ? pos : ws_end_idx;
-						byte[] val = ByteAry_.Mid(src, fld_bgn, fld_end);
+						byte[] val = Bry_.Mid(src, fld_bgn, fld_end);
 						Parse_cmd(wiki, key_id, val);
 					}
 					fld_bgn = pos + Int_.Const_dlm_len;
@@ -95,7 +95,7 @@ class Dpl_itm {
 	private static final byte Dlm_fld = Byte_ascii.Eq, Dlm_row = Byte_ascii.NewLine;
 	public void Parse_cmd(Xow_wiki wiki, byte key_id, byte[] val) {
 		sub_root.Clear();
-		val = wiki.Parser().Parse_page_tmpl(sub_root, sub_ctx, sub_tkn_mkr, val);
+		val = wiki.Parser().Parse_text_to_wtxt(sub_root, sub_ctx, sub_tkn_mkr, val);
 		switch (key_id) {
 			case Dpl_itm_keys.Key_category: 			if (ctg_includes == null) ctg_includes = ListAdp_.new_(); ctg_includes.Add(Xoa_ttl.Replace_spaces(val)); break;
 			case Dpl_itm_keys.Key_notcategory:		 	if (ctg_excludes == null) ctg_excludes = ListAdp_.new_(); ctg_excludes.Add(Xoa_ttl.Replace_spaces(val)); break;
@@ -108,11 +108,11 @@ class Dpl_itm {
 			case Dpl_itm_keys.Key_stablepages:			stable_pages = Dpl_stable_tid.Parse(val); break;
 			case Dpl_itm_keys.Key_qualitypages:			quality_pages = Dpl_redirect.Parse(val); break;
 			case Dpl_itm_keys.Key_addfirstcategorydate:	Parse_ctg_date(val); break;
-			case Dpl_itm_keys.Key_count:				count = ByteAry_.X_to_int_or(val, Int_.MinValue); break;
-			case Dpl_itm_keys.Key_offset:				offset = ByteAry_.X_to_int_or(val, Int_.MinValue); break;
-			case Dpl_itm_keys.Key_imagesperow:			gallery_imgs_per_row = ByteAry_.X_to_int_or(val, Int_.MinValue); break;
-			case Dpl_itm_keys.Key_imagewidth:			gallery_img_w = ByteAry_.X_to_int_or(val, Int_.MinValue); break;
-			case Dpl_itm_keys.Key_imageheight:			gallery_img_h = ByteAry_.X_to_int_or(val, Int_.MinValue); break;
+			case Dpl_itm_keys.Key_count:				count = Bry_.Xto_int_or(val, Int_.MinValue); break;
+			case Dpl_itm_keys.Key_offset:				offset = Bry_.Xto_int_or(val, Int_.MinValue); break;
+			case Dpl_itm_keys.Key_imagesperow:			gallery_imgs_per_row = Bry_.Xto_int_or(val, Int_.MinValue); break;
+			case Dpl_itm_keys.Key_imagewidth:			gallery_img_w = Bry_.Xto_int_or(val, Int_.MinValue); break;
+			case Dpl_itm_keys.Key_imageheight:			gallery_img_h = Bry_.Xto_int_or(val, Int_.MinValue); break;
 			case Dpl_itm_keys.Key_gallerycaption:		gallery_caption = val; break;	// FUTURE: parse for {{int:}}?
 			case Dpl_itm_keys.Key_galleryshowfilesize:	gallery_filesize = Dpl_itm_keys.Parse_as_bool(val, true); break;
 			case Dpl_itm_keys.Key_galleryshowfilename:	gallery_filename = Dpl_itm_keys.Parse_as_bool(val, true); break;
@@ -129,7 +129,7 @@ class Dpl_itm {
 //					ctg_date_fmt = val;
 //					if (ctg_date_fmt.length == 2) {
 //						ctg_date_strip = true;
-//						ctg_date_fmt = ByteAry_.Add(ctg_date_fmt, new byte[] {Byte_ascii.Ltr_y});
+//						ctg_date_fmt = Bry_.Add(ctg_date_fmt, new byte[] {Byte_ascii.Ltr_y});
 //					}
 //				}
 //				else
@@ -137,10 +137,10 @@ class Dpl_itm {
 //			}
 	}
 	private void Parse_missing_key(Gfo_usr_dlg usr_dlg, byte[] page_ttl, byte[] src, int fld_bgn, int fld_end) {
-		byte[] key_bry = ByteAry_.Mid(src, fld_bgn, fld_end);
+		byte[] key_bry = Bry_.Mid(src, fld_bgn, fld_end);
 		boolean log = 
 			(	Known_invalid_keys.Get_by_mid(src, fld_bgn, fld_end) != null
-			||	ByteAry_.HasAtBgn(key_bry, Html_consts.Comm_bgn)			// ignore comment-like keys; EX: <!--category=Ctg_0--> will have key of "<!--category="
+			||	Bry_.HasAtBgn(key_bry, Html_tag_.Comm_bgn)			// ignore comment-like keys; EX: <!--category=Ctg_0--> will have key of "<!--category="
 			);
 		String err_msg = String_.Format("unknown_key: page={0} key={1}", String_.new_utf8_(page_ttl), String_.new_utf8_(key_bry));
 		if (log)
@@ -148,21 +148,21 @@ class Dpl_itm {
 		else
 			usr_dlg.Warn_many("", "", err_msg);
 	}
-	private static final Hash_adp_bry Known_invalid_keys = Hash_adp_bry.ci_()
-	.Add_str_obj("orcer"						, BoolVal.True)	// ignore as per http://en.wikinews.org/wiki/Template_talk:United_States; (Note it doesn't make a difference, as categoryadd is the default order method.)
-	.Add_str_obj("addcategorydatefirst"			, BoolVal.True)
-	.Add_str_obj("mainspace"					, BoolVal.True)
-	.Add_str_obj("showcurid"					, BoolVal.True)
-	.Add_str_obj("sort"							, BoolVal.True)	// fr.n
-	.Add_str_obj("supresserror"					, BoolVal.True)	// fr.n
-	.Add_str_obj("supresserrors"				, BoolVal.True)	// frequency: 3 - 10
-	.Add_str_obj("addlasteditor"				, BoolVal.True)
-	.Add_str_obj("noresultsheader"				, BoolVal.True)
-	.Add_str_obj("catergory"					, BoolVal.True)
-	.Add_str_obj("catrgory"						, BoolVal.True)
-	.Add_str_obj("allrevisionssince"			, BoolVal.True)	// frequency: 1
-	.Add_str_obj("limit"						, BoolVal.True)
-	.Add_str_obj("namespacename"				, BoolVal.True)
+	private static final Hash_adp_bry Known_invalid_keys = Hash_adp_bry.ci_ascii_()
+	.Add_str_obj("orcer"						, Bool_obj_val.True)	// ignore as per http://en.wikinews.org/wiki/Template_talk:United_States; (Note it doesn't make a difference, as categoryadd is the default order method.)
+	.Add_str_obj("addcategorydatefirst"			, Bool_obj_val.True)
+	.Add_str_obj("mainspace"					, Bool_obj_val.True)
+	.Add_str_obj("showcurid"					, Bool_obj_val.True)
+	.Add_str_obj("sort"							, Bool_obj_val.True)	// fr.n
+	.Add_str_obj("supresserror"					, Bool_obj_val.True)	// fr.n
+	.Add_str_obj("supresserrors"				, Bool_obj_val.True)	// frequency: 3 - 10
+	.Add_str_obj("addlasteditor"				, Bool_obj_val.True)
+	.Add_str_obj("noresultsheader"				, Bool_obj_val.True)
+	.Add_str_obj("catergory"					, Bool_obj_val.True)
+	.Add_str_obj("catrgory"						, Bool_obj_val.True)
+	.Add_str_obj("allrevisionssince"			, Bool_obj_val.True)	// frequency: 1
+	.Add_str_obj("limit"						, Bool_obj_val.True)
+	.Add_str_obj("namespacename"				, Bool_obj_val.True)
 	;
 	public static final int Ns_filter_null = Int_.MinValue;
 	// boolean ctg_date = false, ctg_date_strip = false;

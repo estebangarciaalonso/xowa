@@ -25,7 +25,7 @@ public class Json_itm_kv extends Json_itm_base {
 	public boolean Key_eq(byte[] comp) {return ((Json_itm_str)key).Data_eq(comp);}
 	@Override public Object Data() {return null;}
 	@Override public byte[] Data_bry() {return null;}
-	@Override public void Print_as_json(ByteAryBfr bfr, int depth) {
+	@Override public void Print_as_json(Bry_bfr bfr, int depth) {
 		key.Print_as_json(bfr, depth);
 		bfr.Add_byte(Byte_ascii.Colon);
 		val.Print_as_json(bfr, depth);

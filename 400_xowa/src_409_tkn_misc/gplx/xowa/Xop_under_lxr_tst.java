@@ -98,25 +98,41 @@ public class Xop_under_lxr_tst {
 		fxt.Test_parse_page_all_str("__DISAMBIG__", "");
 	}
 	@Test  public void Nocontentconvert() {	 // simple test; test for flag only; DATE:2014-02-06
-		Tfds.Eq(fxt.Page().Lang_convert_content(), true);
-		Tfds.Eq(fxt.Page().Lang_convert_title(), true);
+		gplx.xowa.pages.Xopg_html_data html_data = fxt.Page().Html_data();
+		Tfds.Eq(html_data.Lang_convert_content(), true);
+		Tfds.Eq(html_data.Lang_convert_title(), true);
 		fxt.Test_parse_page_all_str("__NOCONTENTCONVERT__ __NOTITLECONVERT__", " ");
-		Tfds.Eq(fxt.Page().Lang_convert_content(), false);
-		Tfds.Eq(fxt.Page().Lang_convert_title(), false);
+		Tfds.Eq(html_data.Lang_convert_content(), false);
+		Tfds.Eq(html_data.Lang_convert_title(), false);
 	}
 	@Test  public void Eos() {	// PURPOSE: check that __ at eos doesn't fail; es.s:Luisa de Bustamante: 3; DATE:2014-02-15
 		fxt.Test_parse_page_all_str("__", "__");
 	}
-	@Test  public void Ws_preserve() {	// preserve ws; DATE:2014-04-07
+	@Test  public void Pre_toc() {				// PURPOSE: make sure that "\n\s__TOC" does not create pre; PAGE:de.w:Main_Page; DATE:2014-04-07
 		fxt.Init_para_y_();
-		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skip_last
 		(	"a"
-		,	" __TOC__ "
+		,	" __TOC__ "							// NOTE: this should not be a pre; DATE:2014-07-05
 		,	"b"
 		), String_.Concat_lines_nl
 		(	"<p>a"
 		,	"</p>"
-		,	" "
+		,	" "									// NOTE: \s should not be captured, but leaving for now
+		,	""
+		,	"<p>b"
+		,	"</p>"
+		));
+		fxt.Init_para_n_();
+	}
+	@Test  public void Pre_notoc() {			// PURPOSE: make sure that "\n\s__NOTOC" does not create pre. note that mechanism is different from TOC; DATE:2014-07-05
+		fxt.Init_para_y_();
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skip_last
+		(	"a"
+		,	" __NOTOC__ "						// NOTE: does not capture " "; confirmed against MW
+		,	"b"
+		), String_.Concat_lines_nl
+		(	"<p>a"
+		,	"</p>"
 		,	""
 		,	"<p>b"
 		,	"</p>"
@@ -125,9 +141,47 @@ public class Xop_under_lxr_tst {
 	}
 	@Test  public void Hook_alt() {	// PURPOSE: ja wikis use alternate __; DATE:2014-03-04
 		Xow_wiki wiki = fxt.Wiki(); Xol_lang lang = wiki.Lang();
-		Xol_kwd_grp kwd_grp = lang.Kwd_mgr().Get_or_new(Xol_kwd_grp_.Id_toc);
-		kwd_grp.Srl_load(true, new byte[][] {ByteAry_.new_utf8_("＿＿TOC＿＿")});
+		fxt.Init_lang_kwds(lang, Xol_kwd_grp_.Id_toc, true, "＿＿TOC＿＿");
 		wiki.Parser().Init_by_lang(lang);
 		fxt.Test_parse_page_all_str("a＿＿TOC＿＿b", "ab");
+	}
+	@Test  public void Ascii_ci() {	// PURPOSE: case-insensitive ascii; DATE:2014-07-10
+		Xow_wiki wiki = fxt.Wiki(); Xol_lang lang = wiki.Lang();
+		fxt.Init_lang_kwds(lang, Xol_kwd_grp_.Id_toc, false, "__TOC__");
+		wiki.Parser().Init_by_lang(lang);
+		fxt.Test_parse_page_all_str("a__TOC__b", "ab");
+		fxt.Test_parse_page_all_str("a__toc__b", "ab");
+	}
+	@Test  public void Utf8_ci() {	// PURPOSE: case-insensitive UTF8; DATE:2014-07-10
+		Xow_wiki wiki = fxt.Wiki(); Xol_lang lang = wiki.Lang();
+		lang.Case_mgr_utf8_();
+		fxt.Init_lang_kwds(lang, Xol_kwd_grp_.Id_toc, false, "__AÉI__");
+		wiki.Parser().Init_by_lang(lang);
+		fxt.Test_parse_page_all_str("a__AÉI__b", "ab");
+		fxt.Test_parse_page_all_str("a__aéi__b", "ab");
+	}
+	@Test  public void Utf8_ci_asymmetric() {	// PURPOSE: case-insensitive UTF8; asymmetric; DATE:2014-07-10
+		Xow_wiki wiki = fxt.Wiki(); Xol_lang lang = wiki.Lang();
+		lang.Case_mgr_utf8_();
+		fxt.Init_lang_kwds(lang, Xol_kwd_grp_.Id_toc, false, "__İÇİNDEKİLER__");	// __TOC__ for tr.w
+		wiki.Parser().Init_by_lang(lang);
+		fxt.Test_parse_page_all_str("a__İçindekiler__b", "ab");
+	}
+	@Test  public void Cs() {	// PURPOSE: cs (ascii / utf8 doesn't matter); DATE:2014-07-11
+		Xow_wiki wiki = fxt.Wiki(); Xol_lang lang = wiki.Lang();
+		fxt.Init_lang_kwds(lang, Xol_kwd_grp_.Id_toc	, Bool_.Y, "__TOC__");
+		wiki.Parser().Init_by_lang(lang);
+		fxt.Test_parse_page_all_str("a__TOC__b"		, "ab");			// ci.pass
+		fxt.Test_parse_page_all_str("a__toc__b"		, "a__toc__b");		// ci.pass
+	}
+	@Test  public void Ascii_cs_ci() {	// PURPOSE: test simultaneous cs and ci; DATE:2014-07-11
+		Xow_wiki wiki = fxt.Wiki(); Xol_lang lang = wiki.Lang();
+		fxt.Init_lang_kwds(lang, Xol_kwd_grp_.Id_toc	, Bool_.N, "__TOC__");
+		fxt.Init_lang_kwds(lang, Xol_kwd_grp_.Id_notoc	, Bool_.Y, "__NOTOC__");
+		wiki.Parser().Init_by_lang(lang);
+		fxt.Test_parse_page_all_str("a__TOC__b"		, "ab");			// ci.pass
+		fxt.Test_parse_page_all_str("a__toc__b"		, "ab");			// ci.pass
+		fxt.Test_parse_page_all_str("a__NOTOC__b"	, "ab");			// cs.pass
+		fxt.Test_parse_page_all_str("a__notoc__b"	, "a__notoc__b");	// cs.fail
 	}
 }

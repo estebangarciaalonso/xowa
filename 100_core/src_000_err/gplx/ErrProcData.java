@@ -45,21 +45,21 @@ class ErrProcData {
 			if (String_.HasAtBgn(md.signatureRaw, "gplx.Err_") || String_.HasAtBgn(md.signatureRaw, "gplx.Err.")) continue;	// java includes entire stackTrace from point of creation; only care about point of throw
 			list.Add(md);
 		}			
-		return (ErrProcData[])list.XtoAry(ErrProcData.class);
+		return (ErrProcData[])list.Xto_ary(ErrProcData.class);
 			}
 	public static ErrProcData parse_(String raw) {
 		ErrProcData rv = new ErrProcData().Raw_(raw);
 				// ex:'gplx.Err.new_(Err.java:92)'
-		int sigEnd = String_.FindFwd(raw, "("); if (sigEnd == String_.NotFound) return rv;
+		int sigEnd = String_.FindFwd(raw, "("); if (sigEnd == String_.Find_none) return rv;
 		rv.signatureRaw = String_.Mid(raw, 0, sigEnd);
 		int filBgn = sigEnd + 1; // 1="("
-		int filEnd = String_.FindFwd(raw, ":", filBgn); if (filEnd == String_.NotFound) return rv;
+		int filEnd = String_.FindFwd(raw, ":", filBgn); if (filEnd == String_.Find_none) return rv;
 		rv.sourceFileRaw = String_.Mid(raw, filBgn, filEnd);
 		int linBgn = filEnd + 1; // 1=":"
-		int linEnd = String_.FindFwd(raw, ")", linBgn); if (linEnd == String_.NotFound) return rv;
+		int linEnd = String_.FindFwd(raw, ")", linBgn); if (linEnd == String_.Find_none) return rv;
 		String linRaw = String_.Mid(raw, linBgn, linEnd);
 		rv.sourceLine = Int_.parse_(linRaw);
-		rv.ideAddress = String_.Concat("(", rv.sourceFileRaw, ":", Int_.XtoStr(rv.sourceLine), ")");
+		rv.ideAddress = String_.Concat("(", rv.sourceFileRaw, ":", Int_.Xto_str(rv.sourceLine), ")");
 				return rv;
 	}
 	public static ErrProcData new_() {return new ErrProcData();} ErrProcData() {}

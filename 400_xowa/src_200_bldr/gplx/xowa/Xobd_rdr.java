@@ -16,19 +16,19 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.xmls.*;
+import gplx.ios.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.xmls.*;
 public class Xobd_rdr implements Xob_cmd {
 	public Xobd_rdr(Xob_bldr bldr, Xow_wiki wiki) {this.bldr = bldr; this.wiki = wiki;} private Xob_bldr bldr; Xow_wiki wiki;
 	public String Cmd_key() {return KEY;} public static final String KEY = "dump_mgr";
 	public void Cmd_ini(Xob_bldr bldr) {
-		Xobd_wkr[] wkr_ary = (Xobd_wkr[])wkrs.XtoAry(Xobd_wkr.class); int wkr_ary_len = wkr_ary.length;
+		Xobd_wkr[] wkr_ary = (Xobd_wkr[])wkrs.Xto_ary(Xobd_wkr.class); int wkr_ary_len = wkr_ary.length;
 		for (int i = 0; i < wkr_ary_len; i++)
 			wkr_ary[i].Wkr_ini(bldr);			
 	}
 	public void Cmd_bgn(Xob_bldr bldr) {}
 	public void Cmd_end() {}
 	public void Cmd_run() {
-		Xobd_wkr[] wkr_ary = (Xobd_wkr[])wkrs.XtoAry(Xobd_wkr.class); int wkr_ary_len = wkr_ary.length;
+		Xobd_wkr[] wkr_ary = (Xobd_wkr[])wkrs.Xto_ary(Xobd_wkr.class); int wkr_ary_len = wkr_ary.length;
 		for (int i = 0; i < wkr_ary_len; i++)
 			wkr_ary[i].Wkr_bgn(bldr);
 		Io_buffer_rdr fil = Io_buffer_rdr.Null; Xodb_page page = new Xodb_page(); Xow_ns_mgr ns_mgr = wiki.Ns_mgr();
@@ -43,9 +43,9 @@ public class Xobd_rdr implements Xob_cmd {
 			// fil.Seek(bldr.Opts().ResumeAt());
 			int prv_pos = 0;
 			while (true) {
-				int cur_pos = parser.Parse_page(page, usr_dlg, fil, fil.Bfr(), prv_pos, ns_mgr); if (cur_pos == ByteAry_.NotFound) break;
+				int cur_pos = parser.Parse_page(page, usr_dlg, fil, fil.Bfr(), prv_pos, ns_mgr); if (cur_pos == Bry_.NotFound) break;
 				if (cur_pos < prv_pos)
-					bldr.StatusMgr_prog_fmt(fil.Fil_pos(), fil_len, 1, optRdrFillFmt, Int_.XtoStr_PadBgn((int)(fil.Fil_pos() / Io_mgr.Len_mb), Int_.DigitCount((int)(fil.Fil_len() / Io_mgr.Len_mb))), "", String_.new_utf8_(page.Ttl_w_ns())); // ;
+					bldr.StatusMgr_prog_fmt(fil.Fil_pos(), fil_len, 1, optRdrFillFmt, Int_.Xto_str_pad_bgn((int)(fil.Fil_pos() / Io_mgr.Len_mb), Int_.DigitCount((int)(fil.Fil_len() / Io_mgr.Len_mb))), "", String_.new_utf8_(page.Ttl_w_ns())); // ;
 				prv_pos = cur_pos;
 				try {
 					for (int i = 0; i < wkr_ary_len; i++)
@@ -73,7 +73,7 @@ public class Xobd_rdr implements Xob_cmd {
 			wkr_ary[i].Wkr_end();
 	}
 	public void Cmd_print() {
-		Xobd_wkr[] wkr_ary = (Xobd_wkr[])wkrs.XtoAry(Xobd_wkr.class); int wkr_ary_len = wkr_ary.length;
+		Xobd_wkr[] wkr_ary = (Xobd_wkr[])wkrs.Xto_ary(Xobd_wkr.class); int wkr_ary_len = wkr_ary.length;
 		for (int i = 0; i < wkr_ary_len; i++)
 			wkr_ary[i].Wkr_print();
 	}

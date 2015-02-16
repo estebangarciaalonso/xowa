@@ -16,15 +16,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.math; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.core.btries.*;
 public class Xof_math_subst_regy {
-	ByteAryBfr bfr = ByteAryBfr.new_();
+	Bry_bfr bfr = Bry_bfr.new_();
 	public byte[] Subst(byte[] src) {
 		if (!init) Init();
 		int src_len = src.length;
 		int dollarSignCount = 0;
 		for (int i = 0; i < src_len; i++) {
 			byte b = src[i];
-			Object o = trie.Match(b, src, i, src_len);
+			Object o = trie.Match_bgn_w_byte(b, src, i, src_len);
 			if (o == null)
 				bfr.Add_byte(b);
 			else {
@@ -55,7 +56,7 @@ public class Xof_math_subst_regy {
 		}
 		for (int i = 0; i < dollarSignCount; i++)
 			bfr.Add_byte(Byte_ascii.Dollar);
-		return bfr.XtoAryAndClearAndTrim();
+		return bfr.Xto_bry_and_clear_and_trim();
 	}	boolean init = false;
 	public Xof_math_subst_regy Init() {
 		if (init) return this;
@@ -159,11 +160,11 @@ public class Xof_math_subst_regy {
 	}
 	private void Reg(String src_str, String trg_str) {Reg(src_str, trg_str, false, true);}
 	private void Reg(String src_str, String trg_str, boolean dollarSign, boolean wholeWord) {
-		byte[] src_bry = ByteAry_.new_ascii_(src_str);
-		Xof_math_subst_itm itm = new Xof_math_subst_itm(src_bry, ByteAry_.new_ascii_(trg_str), dollarSign, wholeWord);
-		trie.Add(src_bry, itm);
+		byte[] src_bry = Bry_.new_ascii_(src_str);
+		Xof_math_subst_itm itm = new Xof_math_subst_itm(src_bry, Bry_.new_ascii_(trg_str), dollarSign, wholeWord);
+		trie.Add_obj(src_bry, itm);
 	}
-	ByteTrieMgr_slim trie = ByteTrieMgr_slim.cs_();
+	private Btrie_slim_mgr trie = Btrie_slim_mgr.cs_();
 }
 class Xof_math_subst_itm {
 	public int SrcLen() {return src_len;} private int src_len;

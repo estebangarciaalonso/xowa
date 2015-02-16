@@ -28,7 +28,7 @@ public class Xob_hive_mgr_tst {
 	}
 }
 class Xob_reg_wtr {
-	ByteAryBfr bfr = ByteAryBfr.new_(); int fil_count = 0;
+	Bry_bfr bfr = Bry_bfr.new_(); int fil_count = 0;
 	public void Add(byte[] bgn, byte[] end, int itm_count) {
 		bfr
 		.Add_int_variable(fil_count++).Add_byte(Byte_ascii.Pipe)

@@ -16,8 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.dbs;
-import gplx.*;
-
+import gplx.*; import gplx.dbs.engines.sqlite.*;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -25,6 +24,7 @@ import java.sql.*;
 public class SqliteDbMain {
 	public static void main(String[] args) throws Exception {
 		SqliteDbMain main = new SqliteDbMain();
+//		main.JdbcInit(args);
 //		main.Read();
 //		main.Mass_upload(Io_url_.new_dir_("J:\\gplx\\xowl\\file\\all#meta\\en.wikipedia.org\\"));
 //		main.CreateMany(20, 0);
@@ -38,9 +38,18 @@ public class SqliteDbMain {
 '5719' '174'  
 '5766' '173' 
 */
+
+//	private void JdbcInit(String[] args) {
+//		try {
+//        Class.forName("SQLite.JDBCDriver");
+//		}
+//		catch (Exception e) {
+//			ConsoleAdp._.WriteLine(e.getMessage());
+//		}		
+//	}
 	private void CreateMany(int number, int base_val) {
 		long time_bgn = Env_.TickCount();
-		Db_provider provider = Sqlite_engine_.Provider_load_or_make_(Io_url_.new_fil_("E:\\test.sqlite3"));		
+		Db_conn provider = Db_conn_pool.I.Get_or_new__sqlite(Io_url_.new_fil_("E:\\test.sqlite3"));		
 		String tbl_sql = String_.Concat_lines_nl
 		( "CREATE TABLE fsdb_xtn_thm"
 		, "( thm_id            integer             NOT NULL    PRIMARY KEY"
@@ -59,20 +68,20 @@ public class SqliteDbMain {
 		Db_stmt stmt = Db_stmt_.new_insert_(provider, "fsdb_xtn_thm", "thm_id", "thm_owner_id", "thm_w", "thm_h", "thm_thumbtime", "thm_bin_db_id", "thm_size", "thm_modified", "thm_hash");
 		for (int i = 0; i < number; i++) {
 			stmt.Clear()
-				.Val_int_(base_val + i)
-				.Val_int_(base_val + i)
-				.Val_int_(220)
-				.Val_int_(200)
-				.Val_int_(-1)
-				.Val_int_(15)
-				.Val_long_(23456)
-				.Val_str_("")
-				.Val_str_("")
+				.Val_int(base_val + i)
+				.Val_int(base_val + i)
+				.Val_int(220)
+				.Val_int(200)
+				.Val_int(-1)
+				.Val_int(15)
+				.Val_long(23456)
+				.Val_str("")
+				.Val_str("")
 				.Exec_insert();
 		}
 		long time_elapsed = (Env_.TickCount() - time_bgn);	
 //		provider.Txn_mgr().Txn_end();
-		provider.Rls();
+		provider.Conn_term();
 		Tfds.Write(time_elapsed, number / time_elapsed);
 		// 250; 260
 		Tfds.Write("");
@@ -216,12 +225,12 @@ public class SqliteDbMain {
 		if (flds_len == 4)
 			stmt.setString(2, flds[3]);
 		if (flds_len > 4) {
-			stmt.setInt(3, ByteAry_.new_ascii_(flds[3])[0] - 32);
-			byte[] orig = ByteAry_.new_ascii_(flds[4]);
+			stmt.setInt(3, Bry_.new_ascii_(flds[3])[0] - 32);
+			byte[] orig = Bry_.new_ascii_(flds[4]);
 			int orig_mode = orig[0] - Byte_ascii.Num_0;
-			int comma_pos = Byte_ary_finder.Find_fwd(orig, Byte_ascii.Comma);
-			int orig_w = ByteAry_.X_to_int_or(orig, 2, comma_pos, -1);
-			int orig_h = ByteAry_.X_to_int_or(orig, comma_pos + 1, orig.length, -1);
+			int comma_pos = Bry_finder.Find_fwd(orig, Byte_ascii.Comma);
+			int orig_w = Bry_.Xto_int_or(orig, 2, comma_pos, -1);
+			int orig_h = Bry_.Xto_int_or(orig, comma_pos + 1, orig.length, -1);
 			stmt.setInt(4, orig_mode);			
 			stmt.setInt(5, orig_w);			
 			stmt.setInt(6, orig_h);

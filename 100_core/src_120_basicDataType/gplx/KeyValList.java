@@ -16,12 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.strings.*;
 public class KeyValList {//20101217
 	public int Count() {return list.Count();} ListAdp list = ListAdp_.new_();
 	public void Clear() {list.Clear();}
 	public KeyVal GetAt(int i) {return (KeyVal)list.FetchAt(i);}
 	public KeyValList Add(String key, Object val) {list.Add(KeyVal_.new_(key, val)); return this;}
-	public KeyVal[] XtoAry() {return (KeyVal[])list.XtoAry(KeyVal.class);}
+	public KeyVal[] Xto_bry() {return (KeyVal[])list.Xto_ary(KeyVal.class);}
 	public String XtoStr() {
 		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < list.Count(); i++) {

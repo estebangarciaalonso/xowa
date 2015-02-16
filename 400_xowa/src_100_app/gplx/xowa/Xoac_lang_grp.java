@@ -26,8 +26,8 @@ public class Xoac_lang_grp implements Cfg_nde_obj, Xoac_lang_obj {
 	public boolean Nde_typ_is_grp() {return true;}
 	public Cfg_nde_obj Nde_subs_make(byte[] itm_type, byte[] itm_key, byte[][] itm_atrs) {
 		Cfg_nde_obj rv = null;
-		if		(ByteAry_.Eq(itm_type, Make_grp))		rv = new Xoac_lang_grp(itm_key);
-		else if (ByteAry_.Eq(itm_type, Make_itm))		rv = new Xoac_lang_itm(itm_key);
+		if		(Bry_.Eq(itm_type, Make_grp))		rv = new Xoac_lang_grp(itm_key);
+		else if (Bry_.Eq(itm_type, Make_itm))		rv = new Xoac_lang_itm(itm_key);
 		else											throw Err_mgr._.unhandled_(itm_type);
 		rv.Nde_atrs_set(itm_atrs);
 		return rv;
@@ -55,9 +55,9 @@ public class Xoac_lang_grp implements Cfg_nde_obj, Xoac_lang_obj {
 	public void Nde_atrs_set(byte[][] ary) {
 		int ary_len = ary.length;
 		if (ary_len > 0) name_bry = ary[0];
-		if (ary_len > 1) sort_idx = ByteAry_.X_to_int_or(ary[1], -1);
+		if (ary_len > 1) sort_idx = Bry_.Xto_int_or(ary[1], -1);
 	}
-	public static final byte[] Make_grp = ByteAry_.new_utf8_("grp"), Make_itm = ByteAry_.new_utf8_("itm");
+	public static final byte[] Make_grp = Bry_.new_utf8_("grp"), Make_itm = Bry_.new_utf8_("itm");
 	public int Itms_len() {return itms.Count();}
 	public Cfg_nde_obj Itms_get_at(int i) {return (Cfg_nde_obj)itms.FetchAt(i);}
 	OrderedHash itms = OrderedHash_.new_bry_();

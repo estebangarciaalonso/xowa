@@ -52,4 +52,17 @@ public class Xop_lnki_type {
 				return !Enm_.HasInt(id, Xop_lnki_type.Id_none);
 		}
 	}
+	public static boolean Id_supports_upright(byte id) {// REF:Linker.php|makeImageLink;if ( isset( $fp['thumbnail'] ) || isset( $fp['manualthumb'] ) || isset( $fp['framed'] ) || isset( $fp['frameless'] ) || !$hp['width'] )  DATE:2014-05-22
+		switch (id) {
+			case Id_thumb:
+			case Id_frame:
+			case Id_frameless:
+				return true;
+			case Id_null:
+			case Id_none:
+				return false;
+			default:			// TODO: deprecate
+				return Enm_.HasInt(id, Xop_lnki_type.Id_thumb) || Enm_.HasInt(id, Xop_lnki_type.Id_frameless);
+		}
+	}
 }

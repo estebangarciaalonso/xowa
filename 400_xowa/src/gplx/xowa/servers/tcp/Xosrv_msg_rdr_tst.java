@@ -33,13 +33,13 @@ class Xosrv_msg_rdr_fxt {
 	public Xosrv_msg_rdr_fxt Clear() {
 		if (msg_rdr == null) {
 			msg_rdr_stream = new IoStream_mock();
-			msg_rdr = new Xosrv_msg_rdr(ByteAry_.Empty, msg_rdr_stream);
+			msg_rdr = new Xosrv_msg_rdr(Bry_.Empty, msg_rdr_stream);
 		}
 		msg_rdr_stream.Reset();
 		return this;
 	}	private Xosrv_msg_rdr msg_rdr; private IoStream_mock msg_rdr_stream;
 	public Xosrv_msg Test_parse_msg(String raw, String expd_cmd, String expd_id, String expd_sender, String expd_recipient, String expd_date, String expd_text) {
-		byte[] raw_bry = ByteAry_.new_ascii_(raw);
+		byte[] raw_bry = Bry_.new_ascii_(raw);
 		msg_rdr_stream.Data_bry_(raw_bry).Read_limit_(raw_bry.length);
 		Xosrv_msg msg = msg_rdr.Read();
 		Tfds.Eq(String_.new_ascii_(msg.Cmd_name())		, expd_cmd);
@@ -51,15 +51,15 @@ class Xosrv_msg_rdr_fxt {
 		return msg;
 	}
 	public void Test_parse_err(String raw, String expd_err) {
-		byte[] raw_bry = ByteAry_.new_ascii_(raw);
+		byte[] raw_bry = Bry_.new_ascii_(raw);
 		msg_rdr_stream.Data_bry_(raw_bry).Read_limit_(raw_bry.length);
 		Xosrv_msg msg = msg_rdr.Read();
 		String msg_text = String_.new_ascii_(msg.Msg_text());
 		Tfds.Eq_true(String_.HasAtBgn(msg_text, expd_err), msg_text);
 	}
 	public void Test_print(Xosrv_msg msg, String expd) {
-		ByteAryBfr bfr = ByteAryBfr.new_();
+		Bry_bfr bfr = Bry_bfr.new_();
 		msg.Print(bfr);
-		Tfds.Eq(expd, bfr.XtoStrAndClear());
+		Tfds.Eq(expd, bfr.Xto_str_and_clear());
 	}
 }

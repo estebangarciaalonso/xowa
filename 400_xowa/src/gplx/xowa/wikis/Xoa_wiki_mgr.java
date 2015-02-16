@@ -17,27 +17,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.wikis; import gplx.*; import gplx.xowa.*;
 import gplx.xowa.xtns.wdatas.*;
-public class Xoa_wiki_mgr implements GfoInvkAble {		
+public class Xoa_wiki_mgr implements GfoInvkAble {
+	private Xoa_app app;
+	private ListAdp list = ListAdp_.new_(); private Hash_adp_bry hash = Hash_adp_bry.ci_ascii_();	// ASCII:url_domain; EX:en.wikipedia.org
 	public Xoa_wiki_mgr(Xoa_app app) {
 		this.app = app;
 		wiki_regy = new Xoa_wiki_regy(app);
 		wdata_mgr = new Wdata_wiki_mgr(app);
-	}	private Xoa_app app;
+	}
 	public Xoa_wiki_regy Wiki_regy() {return wiki_regy;} private Xoa_wiki_regy wiki_regy;
-	public Cfg_nde_root Groups() {return groups;} Cfg_nde_root groups = new Cfg_nde_root().Root_(new Xoac_wiki_grp(ByteAry_.Empty), Xoac_lang_grp.Make_grp, ByteAry_.Ary_empty);
+	public Cfg_nde_root Groups() {return groups;} Cfg_nde_root groups = new Cfg_nde_root().Root_(new Xoac_wiki_grp(Bry_.Empty), Xoac_lang_grp.Make_grp, Bry_.Ary_empty);
 	public Xow_script_mgr Scripts() {return scripts;} private Xow_script_mgr scripts = new Xow_script_mgr();
 	public Wdata_wiki_mgr Wdata_mgr() {return wdata_mgr;} Wdata_wiki_mgr wdata_mgr;
 	public Xoa_css_extractor Css_installer() {return css_installer;} private Xoa_css_extractor css_installer = new Xoa_css_extractor();
 	public void Init_by_app() {
 		css_installer.Init_by_app(app);
+		wdata_mgr.Init_by_app();
 	}
-	public int Count() {return hash.Count();} Hash_adp_bry hash = Hash_adp_bry.ci_(); ListAdp list = ListAdp_.new_();
+	public int Count() {return hash.Count();}
+	public void Del(byte[] key) {hash.Del(key);}
 	public Xow_wiki Get_at(int i) {return Int_.Between(i, 0, this.Count() - 1) ? (Xow_wiki)list.FetchAt(i) : null;}
-	public Xow_wiki Get_by_key_or_null(byte[] key) {return ByteAry_.Len_eq_0(key) ? null : (Xow_wiki)hash.Fetch(key);}
+	public Xow_wiki Get_by_key_or_null(byte[] key) {return Bry_.Len_eq_0(key) ? null : (Xow_wiki)hash.Fetch(key);}
 	public Xow_wiki Get_by_key_or_null(byte[] src, int bgn, int end) {return (Xow_wiki)hash.Get_by_mid(src, bgn, end);}
 	public Xow_wiki Get_by_key_or_make(byte[] key) {
 		Xow_wiki rv = this.Get_by_key_or_null(key);
 		if (rv == null) rv = New_wiki(key);
+		return rv;
+	}
+	public Xow_wiki Wiki_commons() {
+		Xow_wiki rv = this.Get_by_key_or_null(Xow_wiki_domain_.Url_commons);
+		if (rv != null) rv.Init_assert();
 		return rv;
 	}
 	public Xow_wiki Add(Xow_wiki wiki) {
@@ -56,6 +65,7 @@ public class Xoa_wiki_mgr implements GfoInvkAble {
 //				wiki.Defn_cache().ReduceCache();
 			if (clear_ctx) wiki.Ctx().Clear();	// NOTE: clear_ctx will reset toc and refs
 			wiki.Cache_mgr().Page_cache().Free_mem_all();
+			wiki.Cache_mgr().Tmpl_result_cache().Clear();
 		}
 	}
 	public void Clear() {hash.Clear(); list.Clear();}
@@ -77,10 +87,10 @@ public class Xoa_wiki_mgr implements GfoInvkAble {
 	}	private static final String Invk_get = "get", Invk_groups = "groups", Invk_scripts = "scripts", Invk_wdata = "wdata";
 	private static final String Invk_len = "len", Invk_get_at = "get_at";
 	private Xow_wiki New_wiki(byte[] key) {
-		Xow_ns_mgr ns_mgr = Xow_ns_mgr_.default_();
 		Xow_wiki_domain wiki_type = Xow_wiki_domain_.parse_by_domain(key);
-		byte[] lang_key = wiki_type.Lang(); if (lang_key == Xol_lang_itm_.Key__unknown) lang_key = Xol_lang_.Key_en;
+		byte[] lang_key = wiki_type.Lang_key(); if (lang_key == Xol_lang_itm_.Key__unknown) lang_key = Xol_lang_.Key_en;
 		Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(lang_key);
+		Xow_ns_mgr ns_mgr = Xow_ns_mgr_.default_(lang.Case_mgr());
 		Io_url wiki_dir = app.Fsys_mgr().Wiki_dir().GenSubDir(String_.new_utf8_(key));
 		Xow_wiki rv = new Xow_wiki(app, wiki_dir, ns_mgr, lang);
 		Add(rv);

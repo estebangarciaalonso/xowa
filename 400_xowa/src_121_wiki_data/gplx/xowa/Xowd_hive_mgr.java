@@ -36,9 +36,9 @@ public class Xowd_hive_mgr {
 		Io_url url = fsys_mgr.Url_ns_fil(dir_tid, ns.Id(), fil_idx);
 		byte[] bry = Io_mgr._.LoadFilBry(url);
 		Xob_xdat_file xdat = new Xob_xdat_file();
-		if (bry != ByteAry_.Empty)
+		if (bry != Bry_.Empty)
 			xdat.Parse(bry, bry.length, url);
-		ByteAryBfr tmp = wiki.Utl_bry_bfr_mkr().Get_m001();
+		Bry_bfr tmp = wiki.Utl_bry_bfr_mkr().Get_m001();
 		xdat.Insert(tmp, data);
 		if (comparer != null)
 			xdat.Sort(tmp, comparer);
@@ -60,9 +60,9 @@ public class Xowd_hive_mgr {
 		Io_url url = fsys_mgr.Url_site_fil(dir_tid, fil_idx);
 		byte[] bry = Io_mgr._.LoadFilBry(url);
 		Xob_xdat_file xdat = new Xob_xdat_file();
-		if (bry != ByteAry_.Empty)
+		if (bry != Bry_.Empty)
 			xdat.Parse(bry, bry.length, url);
-		ByteAryBfr tmp = wiki.Utl_bry_bfr_mkr().Get_m001();
+		Bry_bfr tmp = wiki.Utl_bry_bfr_mkr().Get_m001();
 		xdat.Insert(tmp, data);
 		if (comparer != null)
 			xdat.Sort(tmp, comparer);
@@ -79,9 +79,9 @@ public class Xowd_hive_mgr {
 		Io_url url = fsys_mgr.Url_ns_fil(dir_tid, ns.Id(), fil_idx);
 		byte[] bry = Io_mgr._.LoadFilBry(url);
 		Xob_xdat_file xdat = new Xob_xdat_file();
-		if (bry != ByteAry_.Empty)
+		if (bry != Bry_.Empty)
 			xdat.Parse(bry, bry.length, url);
-		ByteAryBfr tmp = wiki.Utl_bry_bfr_mkr().Get_m001();
+		Bry_bfr tmp = wiki.Utl_bry_bfr_mkr().Get_m001();
 		Xob_xdat_itm itm = new Xob_xdat_itm(); 
 		xdat.Find(itm, old_key, lkp_bgn, lkp_dlm, exact);
 		if (itm.Missing()) return;

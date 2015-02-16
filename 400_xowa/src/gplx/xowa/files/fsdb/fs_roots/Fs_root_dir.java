@@ -16,17 +16,18 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb.fs_roots; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
-import gplx.dbs.*; import gplx.gfui.*; import gplx.fsdb.*;
+import gplx.core.primitives.*;
+import gplx.dbs.*; import gplx.gfui.*;
 import gplx.xowa.files.wiki_orig.*;
+import gplx.fsdb.meta.*;
 class Fs_root_dir {
 	private Gfo_usr_dlg usr_dlg; private Xof_img_wkr_query_img_size img_size_wkr;
 	private Io_url url; private boolean recurse = true;
 	private Orig_fil_mgr cache = new Orig_fil_mgr(), fs_fil_mgr;
-	private Db_provider_mkr provider_mkr;
-	private Db_provider provider; private Fsdb_cfg_tbl cfg_tbl; private Orig_fil_tbl fil_tbl;
+	private Db_conn conn; private Fsm_cfg_tbl cfg_tbl; private Orig_fil_tbl fil_tbl;
 	private int fil_id_next = 0;
-	public void Init(Io_url url, Db_provider_mkr provider_mkr, Fsdb_cfg_tbl cfg_tbl, Orig_fil_tbl fil_tbl, Gfo_usr_dlg usr_dlg, Xof_img_wkr_query_img_size img_size_wkr) {
-		this.url = url; this.provider_mkr = provider_mkr;
+	public void Init(Io_url url, Fsm_cfg_tbl cfg_tbl, Orig_fil_tbl fil_tbl, Gfo_usr_dlg usr_dlg, Xof_img_wkr_query_img_size img_size_wkr) {
+		this.url = url;
 		this.cfg_tbl = cfg_tbl; this.fil_tbl = fil_tbl; this.usr_dlg = usr_dlg; this.img_size_wkr = img_size_wkr;
 	}
 	public Orig_fil_itm Get_by_ttl(byte[] lnki_ttl) {
@@ -42,7 +43,7 @@ class Fs_root_dir {
 		return rv;
 	}
 	private Orig_fil_itm Get_from_db(byte[] lnki_ttl) {
-		if (provider == null) provider = Init_db_fil_mgr();
+		if (conn == null) conn = Init_db_fil_mgr();
 		Orig_fil_itm rv = fil_tbl.Select_itm(lnki_ttl);
 		if (rv == null) return Orig_fil_itm.Null;		// not in db
 		return rv;
@@ -55,7 +56,7 @@ class Fs_root_dir {
 		if (Xof_ext_.Id_is_image(rv.Fil_ext_id()))
 			img_size = img_size_wkr.Exec(rv.Fil_url());
 		rv.Init_by_size(++fil_id_next, img_size.Width(), img_size.Height());
-		cfg_tbl.Update(Cfg_grp_root_dir, Cfg_key_fil_id_next, Int_.XtoStr(fil_id_next));
+		cfg_tbl.Update(Cfg_grp_root_dir, Cfg_key_fil_id_next, Int_.Xto_str(fil_id_next));
 		fil_tbl.Insert(rv);
 		return rv;
 	}
@@ -77,19 +78,23 @@ class Fs_root_dir {
 		}
 		return rv;
 	}
-	private Db_provider Init_db_fil_mgr() {
+	private static final String Db_conn_bldr_type = "gplx.xowa.fs_root";
+	private Db_conn Init_db_fil_mgr() {
 		Io_url db_url = url.GenSubFil("^orig_regy.sqlite3");
-		BoolRef created_ref = BoolRef.n_();
-		provider = provider_mkr.Load_or_make_(db_url, created_ref);
-		boolean created = created_ref.Val();
-		cfg_tbl.Ctor(provider, created);
-		fil_tbl.Ctor(provider, created);
+		boolean created = false;
+		Db_conn conn = Db_conn_bldr.I.Get(Db_conn_bldr_type, db_url);
+		if (conn == null) {
+			conn = Db_conn_bldr.I.New(Db_conn_bldr_type, db_url);
+			created = true;
+		}
+		cfg_tbl.Conn_(conn, 0, true, created);
+		fil_tbl.Conn_(conn, 0, true, created);
 		if (created)
-			cfg_tbl.Insert(Cfg_grp_root_dir, Cfg_key_fil_id_next, Int_.XtoStr(fil_id_next));
+			cfg_tbl.Insert(Cfg_grp_root_dir, Cfg_key_fil_id_next, Int_.Xto_str(fil_id_next));
 		else {
 			fil_id_next = cfg_tbl.Select_as_int_or_fail(Cfg_grp_root_dir, Cfg_key_fil_id_next);
 		}
-		return provider;
+		return conn;
 	}
 	public void Rls() {
 		cfg_tbl.Rls();
@@ -97,9 +102,9 @@ class Fs_root_dir {
 	}
 	private static final String Cfg_grp_root_dir = "xowa.root_dir", Cfg_key_fil_id_next = "fil_id_next";
 	public static byte[] Xto_fil_bry(Io_url url) {
-		byte[] rv = ByteAry_.new_utf8_(url.NameAndExt());
-		rv = ByteAry_.Replace(rv, Byte_ascii.Space, Byte_ascii.Underline);
-		rv = ByteAry_.Upper_1st(rv);
+		byte[] rv = Bry_.new_utf8_(url.NameAndExt());
+		rv = Bry_.Replace(rv, Byte_ascii.Space, Byte_ascii.Underline);
+		rv = Bry_.Upper_1st(rv);
 		return rv;
 	}
 }

@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
 public class IptMouseBtn implements IptArg {
-	public String Key()					{return key;} private String key;
-	public boolean Eq(IptArg comp)			{return String_.Eq(key, comp.Key());}
-	@gplx.Internal protected int Val()					{return val;} int val;
 	@gplx.Internal protected IptMouseBtn(int val, String key) {this.val = val; this.key = key;}
+	public String Key()					{return key;} private String key;
+	@gplx.Internal protected int Val()					{return val;} int val;
+	public boolean Eq(IptArg comp)			{return String_.Eq(key, comp.Key());}
 }

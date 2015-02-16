@@ -16,9 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.bins; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*;
+import gplx.core.primitives.*;
 interface Bin_fetcher {
 	boolean Save_as_url(Io_url trg);
-	boolean Save_as_bry(ByteAryRef bry);
+	boolean Save_as_bry(Bry_obj_ref bry);
 }
 class Bin_fetcher_fsys implements Bin_fetcher {
 	public void Init_src_url(Io_url src) {this.src = src;} private Io_url src;
@@ -26,7 +27,7 @@ class Bin_fetcher_fsys implements Bin_fetcher {
 		try {Io_mgr._.CopyFil(src, trg, true); return true;}
 		catch (Exception exc) {Err_.Noop(exc); return false;}
 	}
-	public boolean Save_as_bry(ByteAryRef bry_ref) {
+	public boolean Save_as_bry(Bry_obj_ref bry_ref) {
 		try {
 			byte[] bry = Io_mgr._.LoadFilBry(src);
 			bry_ref.Val_(bry);
@@ -41,7 +42,7 @@ class Bin_fetcher_http implements Bin_fetcher {
 	public boolean Save_as_url(Io_url trg) {
 		return download.Src_(src).Trg_(trg).Exec();
 	}
-	public boolean Save_as_bry(ByteAryRef bry_ref) {
+	public boolean Save_as_bry(Bry_obj_ref bry_ref) {
 		try {
 			byte[] rv = download.Exec_as_bry(src);
 			bry_ref.Val_(rv);

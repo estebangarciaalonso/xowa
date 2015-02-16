@@ -16,14 +16,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.imports.ctgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.imports.*;
-import org.junit.*; import gplx.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.ctgs.*;
+import org.junit.*; import gplx.core.primitives.*; import gplx.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.ctgs.*;
 public class Xob_categorylinks_sql_tst {
 	@Before public void init() {if (Xoa_test_.Db_skip()) return; fxt.Ctor_fsys();} Db_mgr_fxt fxt = new Db_mgr_fxt();
 	@After public void term() {if (Xoa_test_.Db_skip()) return; fxt.Rls();} 
 	@Test   public void Basic() {
 		if (Xoa_test_.Db_skip()) return;
 		fxt.Init_db_sqlite();
-		fxt.Init_page_insert(IntRef.new_(1), Xow_ns_.Id_category, String_.Ary("Ctg_1", "Ctg_2"));
+		fxt.Init_page_insert(Int_obj_ref.new_(1), Xow_ns_.Id_category, String_.Ary("Ctg_1", "Ctg_2"));
 		fxt.Init_fil(Xoa_test_.Url_wiki_enwiki().GenSubFil("xowa_categorylinks.sql"), String_.Concat
 		(	Xob_categorylinks_sql.Tbl_categorylinks
 		,	"INSERT INTO `categorylinks` VALUES"
@@ -34,18 +34,18 @@ public class Xob_categorylinks_sql_tst {
 		));
 		fxt.Exec_run(new Xob_category_registry_sql(fxt.Bldr(), fxt.Wiki()));
 		fxt.Exec_run(new Xob_categorylinks_sql(fxt.Bldr(), fxt.Wiki()));
-		Db_provider provider = fxt.Wiki().Db_mgr_as_sql().Fsys_mgr().Category_provider();
+		Db_conn conn = fxt.Wiki().Db_mgr_as_sql().Fsys_mgr().Conn_ctg();
 		Db_tst_qry.tbl_(Xodb_category_tbl.Tbl_name, Xodb_category_tbl.Fld_cat_id)
 			.Cols_(Xodb_category_tbl.Fld_cat_id, Xodb_category_tbl.Fld_cat_subcats, Xodb_category_tbl.Fld_cat_files, Xodb_category_tbl.Fld_cat_pages)
 			.Rows_add_vals(1, 0, 0, 2)
 			.Rows_add_vals(2, 0, 1, 0)
-			.Test(provider);
+			.Test(conn);
 		Db_tst_qry.tbl_(Xodb_categorylinks_tbl.Tbl_name, Xodb_categorylinks_tbl.Fld_cl_from)
 			.Cols_(Xodb_categorylinks_tbl.Fld_cl_from, Xodb_categorylinks_tbl.Fld_cl_to_id, Xodb_categorylinks_tbl.Fld_cl_sortkey, Xodb_categorylinks_tbl.Fld_cl_type_id)
 			.Rows_add_vals(3, 2, "File:2a"	, Xoa_ctg_mgr.Tid_file)
 			.Rows_add_vals(4, 1, "1b"		, Xoa_ctg_mgr.Tid_page)
 			.Rows_add_vals(5, 1, "1a"		, Xoa_ctg_mgr.Tid_page)
-			.Test(provider);		
+			.Test(conn);		
 	}
 }
 class Db_tst_val {
@@ -92,11 +92,11 @@ class Db_tst_qry {
 		rows.Add(row);
 		return this;
 	}
-	public void Test(Db_provider provider) {
+	public void Test(Db_conn conn) {
 		DataRdr rdr = DataRdr_.Null;
-		ByteAryBfr bfr = ByteAryBfr.new_();
+		Bry_bfr bfr = Bry_bfr.new_();
 		try {
-			rdr = provider.Exec_qry_as_rdr(qry);
+			rdr = conn.Exec_qry_as_rdr(qry);
 			int expd_row_idx = 0, expd_row_max = rows.Count();
 			while (rdr.MoveNextPeer()) {
 				if (expd_row_idx == expd_row_max) break;
@@ -106,7 +106,7 @@ class Db_tst_qry {
 			}
 		}	finally {rdr.Rls();}
 	}
-	private void Test_row(ByteAryBfr bfr, int expd_row_idx, Db_tst_row expd_row, DataRdr rdr) {
+	private void Test_row(Bry_bfr bfr, int expd_row_idx, Db_tst_row expd_row, DataRdr rdr) {
 		Db_tst_val[] expd_vals = expd_row.Vals_ary();
 		int len = expd_vals.length;
 		int pad_max = 16;
@@ -115,8 +115,8 @@ class Db_tst_qry {
 		for (int i = 0; i < len; i++) {
 			Db_tst_val expd_val = expd_vals[i];
 			String expd_key = expd_val.Key();
-			String expd_str = Object_.XtoStr_OrEmpty(expd_val.Val());
-			String actl_str = Object_.XtoStr_OrEmpty(rdr.Read(expd_key));
+			String expd_str = Object_.Xto_str_strict_or_empty(expd_val.Val());
+			String actl_str = Object_.Xto_str_strict_or_empty(rdr.Read(expd_key));
 			boolean eq = String_.Eq(expd_str, actl_str);	// NOTE: always compare strings, not objs; problems with comparing byte to int
 			bfr.Add_str_pad_space_end(expd_key, pad_max);
 			bfr.Add_str_pad_space_bgn(expd_str, pad_max);
@@ -127,10 +127,10 @@ class Db_tst_qry {
 		}
 		if (!pass) {
 			bfr.Add(Lbl_row_hdr).Add_int_variable(expd_row_idx).Add_byte_nl();
-			bfr.Add_str(qry.XtoSql()).Add_byte(Byte_ascii.Semic);
-			throw Err_.new_(bfr.XtoStrAndClear());
+			bfr.Add_str(qry.Xto_sql()).Add_byte(Byte_ascii.Semic);
+			throw Err_.new_(bfr.Xto_str_and_clear());
 		}
-	}	static final byte[] Lbl_row_hdr = ByteAry_.new_ascii_("row: "), Lbl_eq_y = ByteAry_.new_ascii_(" == "), Lbl_eq_n = ByteAry_.new_ascii_(" != ");
+	}	static final byte[] Lbl_row_hdr = Bry_.new_ascii_("row: "), Lbl_eq_y = Bry_.new_ascii_(" == "), Lbl_eq_n = Bry_.new_ascii_(" != ");
 	public static Db_tst_qry tbl_(String tbl_name, String order_by) {return new_(Db_qry_.select_tbl_(tbl_name).OrderBy_asc_(order_by));}
 	public static Db_tst_qry new_(Db_qry qry) {
 		Db_tst_qry rv = new Db_tst_qry();

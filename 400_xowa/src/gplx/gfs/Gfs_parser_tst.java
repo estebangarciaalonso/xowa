@@ -134,15 +134,15 @@ public class Gfs_parser_tst {
 }
 class Gfs_parser_fxt {
 	public void Clear() {}
-	public Gfs_nde nde_(String v) {return new Gfs_nde().Name_(ByteAry_.new_ascii_(v));}
-	public Gfs_nde val_(String v) {return new Gfs_nde().Name_(ByteAry_.new_ascii_(v));}
+	public Gfs_nde nde_(String v) {return new Gfs_nde().Name_(Bry_.new_ascii_(v));}
+	public Gfs_nde val_(String v) {return new Gfs_nde().Name_(Bry_.new_ascii_(v));}
 	public void Test_parse(String src_str, Gfs_nde... expd) {
-		byte[] src_bry = ByteAry_.new_utf8_(src_str);
+		byte[] src_bry = Bry_.new_utf8_(src_str);
 		Gfs_nde root = parser.Parse(src_bry);
 		Tfds.Eq_str_lines(To_str(null, expd), To_str(src_bry, root.Subs_to_ary()));
-	}	private ByteAryBfr tmp_bfr = ByteAryBfr.new_(), path_bfr = ByteAryBfr.new_(); Gfs_parser parser = new Gfs_parser();
+	}	private Bry_bfr tmp_bfr = Bry_bfr.new_(), path_bfr = Bry_bfr.new_(); Gfs_parser parser = new Gfs_parser();
 	public void Test_parse_fail(String src_str, String expd_err) {
-		byte[] src_bry = ByteAry_.new_utf8_(src_str);
+		byte[] src_bry = Bry_.new_utf8_(src_str);
 		try {parser.Parse(src_bry);}
 		catch (Exception e) {
 			String actl_err = Err_.Message_gplx_brief(e);
@@ -159,9 +159,9 @@ class Gfs_parser_fxt {
 			path_bfr.Clear().Add_int_variable(i);
 			To_str(tmp_bfr, path_bfr, src, expd[i]);
 		}	
-		return tmp_bfr.XtoStrAndClear();
+		return tmp_bfr.Xto_str_and_clear();
 	}
-	public void To_str(ByteAryBfr bfr, ByteAryBfr path, byte[] src, Gfs_nde nde) {
+	public void To_str(Bry_bfr bfr, Bry_bfr path, byte[] src, Gfs_nde nde) {
 		To_str_atr(bfr, path, src, Atr_name, nde.Name(), nde.Name_bgn(), nde.Name_end());
 		int atrs_len = nde.Atrs_len();
 		for (int i = 0; i < atrs_len; i++) {
@@ -182,9 +182,9 @@ class Gfs_parser_fxt {
 			path.Del_by(path_len_new - path_len_old);
 		}
 	}
-	private void To_str_atr(ByteAryBfr bfr, ByteAryBfr path_bfr, byte[] src, byte[] name, byte[] val, int val_bgn, int val_end) {
+	private void To_str_atr(Bry_bfr bfr, Bry_bfr path_bfr, byte[] src, byte[] name, byte[] val, int val_bgn, int val_end) {
 		if (val == null && val_bgn == -1 && val_end == -1) return;
-		bfr.Add_bfr(path_bfr).Add_byte(Byte_ascii.Colon);
+		bfr.Add_bfr_and_preserve(path_bfr).Add_byte(Byte_ascii.Colon);
 		bfr.Add(name);
 		if (val == null)
 			bfr.Add_mid(src, val_bgn, val_end);
@@ -192,5 +192,5 @@ class Gfs_parser_fxt {
 			bfr.Add(val);
 		bfr.Add_byte_nl();		
 	}
-	private static final byte[] Atr_name = ByteAry_.new_ascii_("name=");
+	private static final byte[] Atr_name = Bry_.new_ascii_("name=");
 }

@@ -16,10 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import org.junit.*;
-import gplx.intl.*; import gplx.xowa.langs.numFormats.*;
+import org.junit.*; import gplx.core.strings.*;
+import gplx.intl.*; import gplx.xowa.apps.*; import gplx.xowa.langs.numbers.*;
 public class Xol_lang_srl_tst {
-	Xol_lang_srl_fxt fxt = new Xol_lang_srl_fxt();
+	private Xol_lang_srl_fxt fxt = new Xol_lang_srl_fxt();
 	@Before public void init() {fxt.Clear();}
 	@Test  public void Ns_names() {
 		String raw = String_.Concat_lines_nl
@@ -164,77 +164,97 @@ public class Xol_lang_srl_tst {
 	@Test  public void Fallback_circular() {	// PURPOSE: pt and pt-br cite each other as fallback in Messages*.php; DATE:2013-02-18
 		Io_mgr._.SaveFilStr(Xol_lang_.xo_lang_fil_(fxt.App(), "pt")		, "fallback_load('pt-br');");
 		Io_mgr._.SaveFilStr(Xol_lang_.xo_lang_fil_(fxt.App(), "pt-br")	, "fallback_load('pt');");
-		Xol_lang lang = new Xol_lang(fxt.App(), ByteAry_.new_ascii_("pt"));
+		Xol_lang lang = new Xol_lang(fxt.App(), Bry_.new_ascii_("pt"));
 		lang.Init_by_load();
 	}
 	@Test  public void Num_fmt() {
 		String raw = String_.Concat_lines_nl
-			(	"num_fmt.clear"
-			,	".dec_dlm_(',')"
-			,	".grps_add('.', 3, 'y')"
-			,	";"
-			);
-		fxt.Invk(raw);
+		( "numbers {"
+		, "  separators {"
+		, "    clear;"
+		, "    set(',', '.');"
+		, "    set('.', ',');"
+		, "  }"
+		, "}"
+		);
+		fxt.Invk_no_semic(raw);
 		fxt.Tst_num_fmt("1234,56", "1.234.56"); // NOTE: dot is repeated; confirmed with dewiki and {{formatnum:1234,56}}
-		fxt.Run_save_num_fmt(fxt.Lang().Num_fmt_mgr(), Xol_lang.Invk_keywords, raw);
+		fxt.Run_save_num_mgr(fxt.Lang().Num_mgr(), raw);
 	}
 	@Test  public void Num_fmt_apos() {	// PURPOSE:de.ch has apos which breaks gfs
-		fxt.Lang().Num_fmt_mgr().Clear().Dec_dlm_(ByteAry_.new_ascii_("'")).Grps_add(new Xol_num_grp(ByteAry_.new_utf8_(","), 3, true));
-		fxt.Run_save_num_fmt(fxt.Lang().Num_fmt_mgr(), Xol_lang.Invk_keywords, String_.Concat_lines_nl
-		(	"num_fmt.clear"
-		,	".dec_dlm_('''')"
-		,	".grps_add(',', 3, 'y')"
-		,	";"
+		fxt	.Init_clear()
+			.Init_separators(",", "'")
+			.Init_separators(".", ",")
+			;
+		fxt.Run_save_num_mgr(fxt.Lang().Num_mgr(), String_.Concat_lines_nl
+		( "numbers {"
+		, "  separators {"
+		, "    clear;"
+		, "    set(',', '''');"
+		, "    set('.', ',');"
+		, "  }"
+		, "}"
 		));
 	}
 }
 class Xol_lang_srl_fxt {
 	public void Clear() {
 		app = Xoa_app_fxt.app_();
-		lang = new Xol_lang(app, ByteAry_.new_utf8_("fr"));
+		lang = new Xol_lang(app, Bry_.new_utf8_("fr"));
 		Xoa_gfs_mgr.Msg_parser_init();	// required by fallback_load
-	}	GfsCtx ctx = GfsCtx.new_(); Gfs_bldr bldr = new Gfs_bldr(); //ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	}	GfsCtx ctx = GfsCtx.new_(); Gfs_bldr bldr = new Gfs_bldr(); //Bry_bfr tmp_bfr = Bry_bfr.reset_(255);
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public Xol_lang Lang() {return lang;} private Xol_lang lang;
-	public Xow_ns ns_(int id, String s) {return new Xow_ns(id, Xow_ns_case_.Id_1st, ByteAry_.new_utf8_(s), false);}
-	public Xol_specials_itm special_(String key, String... words) {return new Xol_specials_itm(ByteAry_.new_utf8_(key), ByteAry_.Ary(words));}
+	public Xow_ns ns_(int id, String s) {return new Xow_ns(id, Xow_ns_case_.Id_1st, Bry_.new_utf8_(s), false);}
+	public Xol_specials_itm special_(String key, String... words) {return new Xol_specials_itm(Bry_.new_utf8_(key), Bry_.Ary(words));}
 	public Xol_kwd_grp kwd_(String key, boolean case_match, String... words) {
-		Xol_kwd_grp rv = new Xol_kwd_grp(ByteAry_.new_utf8_(key));
-		rv.Srl_load(case_match, ByteAry_.Ary(words));
+		Xol_kwd_grp rv = new Xol_kwd_grp(Bry_.new_utf8_(key));
+		rv.Srl_load(case_match, Bry_.Ary(words));
 		return rv;
 	}
 	public Xol_msg_itm msg_(String key, String val) {
-		Xol_msg_itm rv = lang.Msg_mgr().Itm_by_key_or_new(ByteAry_.new_utf8_(key));
-		rv.Atrs_set(ByteAry_.new_utf8_(val), false, false);
+		Xol_msg_itm rv = lang.Msg_mgr().Itm_by_key_or_new(Bry_.new_utf8_(key));
+		rv.Atrs_set(Bry_.new_utf8_(val), false, false);
 		return rv;
+	}
+	public Xol_lang_srl_fxt Init_clear() {
+		lang.Num_mgr().Clear();
+		return this;
+	}
+	public Xol_lang_srl_fxt Init_separators(String k, String v) {
+		lang.Num_mgr().Separators_mgr().Set(Bry_.new_utf8_(k), Bry_.new_utf8_(v));
+		return this;
 	}
 	public void Invk(String raw) {
 		app.Gfs_mgr().Run_str_for(lang, raw + ";");
+	}
+	public void Invk_no_semic(String raw) {
+		app.Gfs_mgr().Run_str_for(lang, raw);
 	}
 	public void Tst_ns_grp(Xol_ns_grp grp, Xow_ns... expd_ns) {
 		Tfds.Eq_str_lines(Xto_str(expd_ns), Xto_str(Xto_ary(grp)));
 	}
 	public void Run_save_ns_grp(Xol_ns_grp grp, String invk, String raw) {
 		Xol_lang_srl.Save_ns_grps(bldr, grp, invk);
-		Tfds.Eq_str_lines("." + raw, bldr.Bfr().XtoStrAndClear());
+		Tfds.Eq_str_lines("." + raw, bldr.Bfr().Xto_str_and_clear());
 	}
 	public void Run_save_kwd_mgr(Xol_kwd_mgr kwd_mgr, String invk, String raw) {
 		Xol_lang_srl.Save_keywords(bldr, kwd_mgr);
-		Tfds.Eq_str_lines("." + raw, bldr.Bfr().XtoStrAndClear());
+		Tfds.Eq_str_lines("." + raw, bldr.Bfr().Xto_str_and_clear());
 	}
 	public void Run_save_msg_mgr(Xol_msg_mgr msg_mgr, String invk, String raw) {
 		Xol_lang_srl.Save_messages(bldr, msg_mgr, true);
-		Tfds.Eq_str_lines("." + raw, bldr.Bfr().XtoStrAndClear());
+		Tfds.Eq_str_lines("." + raw, bldr.Bfr().Xto_str_and_clear());
 	}
-	public void Run_save_num_fmt(Xol_num_fmtr_base num_fmt, String invk, String raw) {
-		Xol_lang_srl.Save_num_fmt(bldr, num_fmt);
-		Tfds.Eq_str_lines(raw, bldr.Bfr().XtoStrAndClear());
+	public void Run_save_num_mgr(Xol_num_mgr num_mgr, String raw) {
+		Xol_lang_srl.Save_num_mgr(bldr, num_mgr);
+		Tfds.Eq_str_lines(raw, bldr.Bfr().Xto_str_and_clear());
 	}
 	public void Run_save_specials_mgr(Xol_specials_mgr specials_mgr, String invk, String raw) {
 		Xol_lang_srl.Save_specials(bldr, specials_mgr);
-		Tfds.Eq_str_lines("." + raw, bldr.Bfr().XtoStrAndClear());
+		Tfds.Eq_str_lines("." + raw, bldr.Bfr().Xto_str_and_clear());
 	}
-	public void Tst_num_fmt(String raw, String expd) {Tfds.Eq(expd, String_.new_utf8_(lang.Num_fmt_mgr().Fmt(ByteAry_.new_utf8_(raw))));}
+	public void Tst_num_fmt(String raw, String expd) {Tfds.Eq(expd, String_.new_utf8_(lang.Num_mgr().Format_num(Bry_.new_utf8_(raw))));}
 	public void Tst_keywords(Xol_kwd_mgr kwd_mgr, Xol_kwd_grp... ary) {
 		Tfds.Eq_str_lines(Xto_str(ary), Xto_str(Xto_ary(kwd_mgr)));
 	}
@@ -255,7 +275,7 @@ class Xol_lang_srl_fxt {
 				sb.Add(itm.Aliases()[j]).Add_char_nl();
 			}
 		}
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}
 	private Xol_specials_itm[] Xto_ary(Xol_specials_mgr specials_mgr) {
 		int len = specials_mgr.Count();
@@ -270,7 +290,7 @@ class Xol_lang_srl_fxt {
 			Xow_ns ns = ary[i];
 			sb.Add(ns.Id()).Add("|").Add(ns.Name_str()).Add_char_nl();
 		}
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}
 	Xow_ns[] Xto_ary(Xol_ns_grp ary) {
 		int len = ary.Len();			
@@ -287,7 +307,7 @@ class Xol_lang_srl_fxt {
 			if (kwd_grp == null) continue;
 			rv.Add(kwd_grp);
 		}
-		return (Xol_kwd_grp[])rv.XtoAry(Xol_kwd_grp.class);
+		return (Xol_kwd_grp[])rv.Xto_ary(Xol_kwd_grp.class);
 	}
 	String Xto_str(Xol_kwd_grp[] ary) {
 		int len = ary.length;			
@@ -297,11 +317,11 @@ class Xol_lang_srl_fxt {
 			Xol_kwd_itm[] itms = grp.Itms();
 			int itms_len = itms.length;
 			for (int j = 0; j < itms_len; j++) {
-				sb.Add(itms[i].Bry()).Add(";");
+				sb.Add(itms[i].Val()).Add(";");
 			}
 			sb.Add_char_nl();
 		}
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}
 	Xol_msg_itm[] Xto_ary(Xol_msg_mgr msg_mgr) {
 		int len = msg_mgr.Itms_max();
@@ -311,7 +331,7 @@ class Xol_lang_srl_fxt {
 			if (itm == null || !itm.Dirty()) continue;
 			rv.Add(itm);
 		}
-		return (Xol_msg_itm[])rv.XtoAry(Xol_msg_itm.class);
+		return (Xol_msg_itm[])rv.Xto_ary(Xol_msg_itm.class);
 	}
 	String Xto_str(Xol_msg_itm[] ary) {
 		int len = ary.length;			
@@ -319,7 +339,7 @@ class Xol_lang_srl_fxt {
 			Xol_msg_itm itm = ary[i];
 			sb.Add(itm.Key()).Add("|").Add(itm.Val()).Add_char_nl();
 		}
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}
 	private static String_bldr sb = String_bldr_.new_();
 }

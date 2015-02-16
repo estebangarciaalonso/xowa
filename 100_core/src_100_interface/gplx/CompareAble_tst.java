@@ -33,6 +33,6 @@ public class CompareAble_tst implements ComparerAble {
 		tst_FindSlot(slotAry, "v", "v");
 		tst_FindSlot(slotAry, "w", null);
 	}
-	public int compare(Object lhsObj, Object rhsObj) {return CompareAble_.Compare_comp(lhsObj, rhsObj);}
+	public int compare(Object lhsObj, Object rhsObj) {return CompareAble_.Compare_obj(lhsObj, rhsObj);}
 	void tst_FindSlot(String[] slotAry, String s, String expd) {Tfds.Eq(expd, slotAry[CompareAble_.FindSlot(this, slotAry, s)]);}
 }

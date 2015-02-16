@@ -111,29 +111,64 @@ public class Xtn_syntaxHighlight_nde_tst {
 		,	"</pre>"
 		));
 	}
-	@Test  public void EndTag_has_ws() {	// PURPOSE: </syntaxhighlight > not being closed correctly; EX.WP:Mergesort
+	@Test  public void EndTag_has_ws() {	// PURPOSE: </syntaxhighlight > not being closed correctly; PAGE:en.w:Mergesort; updated; DATE:2014-06-24
 		fxt.Init_para_y_();
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
-			(	"a"
-			,	"<syntaxhighlight>"
-			,	"b"
-			,	"</syntaxhighlight >"
-			,	"c"
-			,	"<syntaxhighlight>"
-			,	"d"
-			,	"</syntaxhighlight>"
-			), String_.Concat_lines_nl_skipLast
-			(	"<p>a"
-			,	"<pre style=\"overflow:auto;\">"
-			,	"b"
-			,	"</pre>"
-			,	"c"
-			,	"<pre style=\"overflow:auto;\">"
-			,	"d"
-			,	"</pre>"
-			,   "</p>"
-			,	""
-			));
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
+		(	"a"
+		,	"<syntaxhighlight>"
+		,	"b"
+		,	"</syntaxhighlight >"
+		,	"c"
+		,	"<syntaxhighlight>"
+		,	"d"
+		,	"</syntaxhighlight>"
+		), String_.Concat_lines_nl_skip_last
+		(	"<p>a"
+		,	"</p>"
+		,	"<pre style=\"overflow:auto;\">"
+		,	"b"
+		,	"</pre>"
+		,	""
+		,	"<p>c"
+		,	"</p>"
+		,	"<pre style=\"overflow:auto;\">"
+		,	"d"
+		,	"</pre>"
+		,	""
+		));
+		fxt.Init_para_n_();
+	}
+	@Test   public void Trim_ws_from_end_tab() {// PURPOSE: trim ws between "abc" and "</syntaxhighlight"; PAGE:en.w:Comment_(computer_programming); DATE:2014-06-23
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
+		(	"<syntaxHighlight>"
+		,	"abc"
+		,	"  </syntaxHighlight>"	// trim ws here
+		), String_.Concat_lines_nl
+		(	"<pre style=\"overflow:auto;\">"
+		,	"abc"
+		,	"</pre>"
+		));
+	}
+ 		@Test   public void Pre() {// PURPOSE: handle pre; PAGE:en.w:Comment_(computer_programming); DATE:2014-06-23
+		fxt.Init_para_y_();
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl
+		(	"a"
+		,   ""
+		,	" <syntaxHighlight>"
+		,	" b"
+		,	" </syntaxHighlight>"	// trim ws here
+		,   ""
+		,	"c"
+		), String_.Concat_lines_nl
+		(	"<p>a"
+		,	"</p>"
+		,	" <pre style=\"overflow:auto;\">"
+		,	" b"
+		,	"</pre>"
+		,	""
+		,	"<p>c"
+		,	"</p>"
+		));
 		fxt.Init_para_n_();
 	}
 }

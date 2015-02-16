@@ -30,11 +30,12 @@ public class Xoctg_html_mgr_tst {
 		fxt	.Test_html_page(Xoa_ctg_mgr.Tid_page, Byte_ascii.Ltr_A, "\n            <li class=\"xowa-missing-category-entry\"><span title=\"id not found: #0 might be talk/user page\">A1 (missing)</li>");
 	}
 	@Test   public void Visited_doesnt_work_for_space() {// PURPOSE: xowa-visited not inserted for pages with space
-		byte[] page_bry = ByteAry_.new_ascii_("A 1");
-		Xoa_url url = Xoa_url.new_(ByteAry_.new_ascii_("en.wikipedia.org"), page_bry);
-		fxt.Wiki().App().User().History_mgr().Add(url, page_bry);
+		byte[] page_bry = Bry_.new_ascii_("A 1");
+		Xoa_url url = Xoa_url.new_(Bry_.new_ascii_("en.wikipedia.org"), page_bry);
+		Xoa_ttl ttl = Xoa_ttl.parse_(fxt.Wiki(), page_bry);
+		fxt.Wiki().App().User().History_mgr().Add(url, ttl, page_bry);
 		fxt	.Init_itm_page("A_1").Init_ctg_name_("Ctg_1").Init_ctg_pages_(0, 1)
-			.Test_html_all(Xoa_ctg_mgr.Tid_page, String_.Concat_lines_nl_skipLast
+			.Test_html_all(Xoa_ctg_mgr.Tid_page, String_.Concat_lines_nl_skip_last
 			(	""
 			,	"<div id=\"mw-pages\">"
 			,	"  <h2>Pages in category \"Ctg_1\"</h2>"
@@ -56,7 +57,7 @@ public class Xoctg_html_mgr_tst {
 	}
 	@Test   public void Page_all() {
 		fxt	.Init_itm_page("A1").Init_ctg_name_("Ctg_1").Init_ctg_pages_(0, 1)
-			.Test_html_all(Xoa_ctg_mgr.Tid_page, String_.Concat_lines_nl_skipLast
+			.Test_html_all(Xoa_ctg_mgr.Tid_page, String_.Concat_lines_nl_skip_last
 			(	""
 			,	"<div id=\"mw-pages\">"
 			,	"  <h2>Pages in category \"Ctg_1\"</h2>"
@@ -78,7 +79,7 @@ public class Xoctg_html_mgr_tst {
 	}
 	@Test   public void File_all() {
 		fxt	.Init_itm_file("File:A1.png").Init_ctg_name_("Ctg_1").Init_ctg_files_(0, 1)
-			.Test_html_all(Xoa_ctg_mgr.Tid_file, String_.Concat_lines_nl_skipLast
+			.Test_html_all(Xoa_ctg_mgr.Tid_file, String_.Concat_lines_nl_skip_last
 			(	""
 			,	"<div id=\"mw-category-media\">"
 			,	"  <h2>Media in category \"Ctg_1\"</h2>"
@@ -116,7 +117,7 @@ public class Xoctg_html_mgr_tst {
 	}
 	@Test   public void Subc_all() {
 		fxt	.Init_itm_ctg("Category:Subc_1").Init_ctg_name_("Ctg_1").Init_ctg_files_(0, 1)
-			.Test_html_all(Xoa_ctg_mgr.Tid_subc, String_.Concat_lines_nl_skipLast
+			.Test_html_all(Xoa_ctg_mgr.Tid_subc, String_.Concat_lines_nl_skip_last
 			(	""
 			,	"<div id=\"mw-subcategories\">"
 			,	"  <h2>Subcategories</h2>"
@@ -152,7 +153,7 @@ public class Xoctg_html_mgr_tst {
 	}
 	@Test   public void Page_all_cols() {
 		fxt	.Init_itm_page("A1", "A2", "A3", "B1", "C1").Init_ctg_name_("Ctg_1").Init_ctg_pages_(0, 5)
-			.Test_html_all(Xoa_ctg_mgr.Tid_page, String_.Concat_lines_nl_skipLast
+			.Test_html_all(Xoa_ctg_mgr.Tid_page, String_.Concat_lines_nl_skip_last
 			(	""
 			,	"<div id=\"mw-pages\">"
 			,	"  <h2>Pages in category \"Ctg_1\"</h2>"
@@ -222,10 +223,10 @@ class Xoh_ctg_page_fxt {
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki; 
 	public Xoctg_view_ctg Ctg() {return ctg;} private Xoctg_view_ctg ctg;
 	public void Test_bld_rslts_lnk(boolean next, String ctg_str, String expd) {			
-		byte[] actl = ctg_html.Fmtr(Xoa_ctg_mgr.Tid_page).Grp_max_(0).Bld_bwd_fwd(wiki, Xoa_ttl.parse_(wiki, ByteAry_.new_ascii_(ctg_str)), ctg.Grp_by_tid(Xoa_ctg_mgr.Tid_page));
+		byte[] actl = ctg_html.Fmtr(Xoa_ctg_mgr.Tid_page).Grp_max_(0).Bld_bwd_fwd(wiki, Xoa_ttl.parse_(wiki, Bry_.new_ascii_(ctg_str)), ctg.Grp_by_tid(Xoa_ctg_mgr.Tid_page));
 		Tfds.Eq_str_lines(expd, String_.new_utf8_(actl));
 	}
-	public Xoh_ctg_page_fxt Init_ctg_name_(String v) {ctg.Name_(ByteAry_.new_utf8_(v)); return this;}
+	public Xoh_ctg_page_fxt Init_ctg_name_(String v) {ctg.Name_(Bry_.new_utf8_(v)); return this;}
 	public Xoh_ctg_page_fxt Init_ctg_pages_(int bgn, int count) {ctg.Pages().Bgn_(bgn).All_(count).End_(count); return this;}
 	public Xoh_ctg_page_fxt Init_ctg_files_(int bgn, int count) {ctg.Files().Bgn_(bgn).All_(count).End_(count); return this;}
 	public Xoh_ctg_page_fxt Init_itm_page(String... titles) {ctg.Pages().Itms_(itms_(titles)).End_(titles.length); return this;}
@@ -236,7 +237,7 @@ class Xoh_ctg_page_fxt {
 		Xoctg_view_itm[] rv = new Xoctg_view_itm[len];
 		for (int i = 0; i < len; i++) {
 			String title = titles[i];
-			byte[] title_bry = ByteAry_.new_utf8_(title);
+			byte[] title_bry = Bry_.new_utf8_(title);
 			Xoa_ttl ttl = Xoa_ttl.parse_(wiki, title_bry);
 			rv[i] = new Xoctg_view_itm().Ttl_(ttl).Sortkey_(ttl.Page_txt());
 		}
@@ -249,21 +250,21 @@ class Xoh_ctg_page_fxt {
 		fmtr_itm.Init_from_all(wiki, wiki.Lang(), ctg, list_mgr, list, list.Len());
 		fmtr_itm.Init_from_grp(new byte[] {grp_char_0}, 0);
 		fmtr_itm.Col_idx_(0, 0);
-		ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
+		Bry_bfr bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
 		fmtr_itm.XferAry(bfr, 0);
-		Tfds.Eq_str_lines(expd, bfr.Mkr_rls().XtoStrAndClear());
+		Tfds.Eq_str_lines(expd, bfr.Mkr_rls().Xto_str_and_clear());
 	}
 	public void Test_html_grp(byte tid, String expd) {
 		Xoctg_fmtr_all list_mgr = ctg_html.Fmtr(tid);
 		Xoctg_fmtr_grp fmtr_grp = ctg_html.Fmtr_grp();
 		fmtr_grp.Init_from_all(wiki, wiki.Lang(), ctg, list_mgr, ctg.Grp_by_tid(tid));
-		ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
+		Bry_bfr bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
 		fmtr_grp.XferAry(bfr, 0);
-		Tfds.Eq_str_lines(expd, bfr.Mkr_rls().XtoStrAndClear());
+		Tfds.Eq_str_lines(expd, bfr.Mkr_rls().Xto_str_and_clear());
 	}
 	public void Test_html_all(byte tid, String expd) {
-		ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
+		Bry_bfr bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
 		ctg_html.Bld_all(bfr, wiki, wiki.Lang(), ctg, tid);
-		Tfds.Eq_str_lines(expd, bfr.Mkr_rls().XtoStrAndClear());
+		Tfds.Eq_str_lines(expd, bfr.Mkr_rls().Xto_str_and_clear());
 	}
 }

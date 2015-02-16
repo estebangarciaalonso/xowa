@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.specials.movePage; import gplx.*; import gplx.xowa.*; import gplx.xowa.specials.*;
+import gplx.core.primitives.*;
 public class Move_page implements Xows_page {
 	private Move_trg_ns_list_fmtr ns_list_fmtr = new Move_trg_ns_list_fmtr();
 	private Move_url_args args = new Move_url_args();
@@ -29,7 +30,7 @@ public class Move_page implements Xows_page {
 			return;
 		}
 		byte[] html = Bld_html(page);
-		page.Html_data().Restricted_n_();	// [[Special:]] pages allow all HTML
+		page.Html_data().Html_restricted_n_();	// [[Special:]] pages allow all HTML
 		page.Data_raw_(html);
 	}
 	private void Exec_rename(Xow_wiki wiki, Xoa_page page) {
@@ -40,8 +41,8 @@ public class Move_page implements Xows_page {
 		Xoa_ttl trg_ttl = Xoa_ttl.parse_(wiki, trg_ns_id, trg_ttl_bry);
 		Xodb_page src_page = new Xodb_page();
 		wiki.Db_mgr().Load_mgr().Load_by_ttl(src_page, src_ttl.Ns(), src_ttl.Page_db());
-		page.Id_(src_page.Id());
-		page.Modified_on_(src_page.Modified_on());
+		page.Revision_data().Id_(src_page.Id());
+		page.Revision_data().Modified_on_(src_page.Modified_on());
 		page.Data_raw_(src_page.Text());
 		if (args.Create_redirect()) {	// NOTE: not tested; DATE:2014-02-27
 			save_mgr.Data_update(page, Xop_redirect_mgr.Make_redirect_text(trg_ttl.Full_db()));
@@ -58,13 +59,13 @@ public class Move_page implements Xows_page {
 	}
 	private byte[] Bld_html(Xoa_page page) {
 		Xow_wiki wiki = page.Wiki(); Xow_msg_mgr msg_mgr = wiki.Msg_mgr();
-		if (src_ttl == null) return ByteAry_.Empty;
+		if (src_ttl == null) return Bry_.Empty;
 		ns_list_fmtr.Init_by_page(wiki, page, src_ttl);
-		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
-		Xop_parser_.Parse_to_html(tmp_bfr, wiki, page, true, msg_mgr.Val_by_key_obj("movepagetext"));
+		Bry_bfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
+		wiki.Parser().Parse_text_to_html(tmp_bfr, page, true, msg_mgr.Val_by_key_obj("movepagetext"));
 		fmtr_all.Bld_bfr_many(tmp_bfr
 		, msg_mgr.Val_by_key_obj("move-page-legend")
-		, ByteAry_.Add(Xoh_href_parser.Href_wiki_bry, src_ttl.Full_db())
+		, Bry_.Add(Xoh_href_parser.Href_wiki_bry, src_ttl.Full_db())
 		, gplx.html.Html_utl.Escape_html_as_bry(src_ttl.Full_txt())
 		, src_ttl.Full_txt()
 		, msg_mgr.Val_by_key_obj("newtitle")
@@ -73,9 +74,9 @@ public class Move_page implements Xows_page {
 		, msg_mgr.Val_by_key_obj("move-leave-redirect")
 		, msg_mgr.Val_by_key_obj("movepagebtn")
 		);
-		return tmp_bfr.Mkr_rls().XtoAryAndClear();
+		return tmp_bfr.Mkr_rls().Xto_bry_and_clear();
 	}
-	private ByteAryFmtr fmtr_all = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
+	private Bry_fmtr fmtr_all = Bry_fmtr.new_(String_.Concat_lines_nl_skip_last
 	( "<form action='/wiki/Special:MovePage' id='movepage'>"
 	, "  <fieldset>"
 	, "  <legend>~{move-page-legend}</legend>"
@@ -114,24 +115,24 @@ public class Move_page implements Xows_page {
 	, "</form>"
 	), "move-page-legend", "src_href", "src_title", "src_text", "newtitle", "trg_ns_list", "trg_title", "move-leave-redirect", "movepagebtn");
 }
-class Move_trg_ns_list_fmtr implements ByteAryFmtrArg {
+class Move_trg_ns_list_fmtr implements Bry_fmtr_arg {
 	private Xow_wiki wiki; private Xoa_ttl ttl;
 	public void Init_by_page(Xow_wiki wiki, Xoa_page page, Xoa_ttl ttl) {
 		this.wiki = wiki;
 		this.ttl = ttl;
 	}
-	public void XferAry(ByteAryBfr bfr, int idx) {
+	public void XferAry(Bry_bfr bfr, int idx) {
 		Xow_ns_mgr ns_mgr = wiki.Ns_mgr();
 		int ns_len = ns_mgr.Ids_len();
 		for (int i = 0; i < ns_len; i++) {
 			Xow_ns ns = ns_mgr.Ids_get_at(i);
 			if (ns.Is_meta()) continue;	// ignore [[Special:]] and [[Media:]]
-			byte[] bry_selected = ttl.Ns().Id() == ns.Id() ? Bry_selected : ByteAry_.Empty;
+			byte[] bry_selected = ttl.Ns().Id() == ns.Id() ? Bry_selected : Bry_.Empty;
 			fmtr.Bld_bfr_many(bfr, ns.Id(), bry_selected, ns.Name_ui());
 		}
 	}
-	private static final byte[] Bry_selected = ByteAry_.new_ascii_(" selected=''");
-	private ByteAryFmtr fmtr = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
+	private static final byte[] Bry_selected = Bry_.new_ascii_(" selected=''");
+	private Bry_fmtr fmtr = Bry_fmtr.new_(String_.Concat_lines_nl_skip_last
 	(	""
 	,	"  <option value='~{ns_id}' ~{ns_selected}>~{ns_name}</option>"
 	), "ns_id", "ns_selected", "ns_name");
@@ -151,12 +152,12 @@ class Move_url_args {
 			Object tid_obj = arg_keys.Fetch(arg.Key_bry());
 			byte[] val_bry = arg.Val_bry();
 			if (tid_obj != null) {
-				switch (((ByteVal)tid_obj).Val()) {
+				switch (((Byte_obj_val)tid_obj).Val()) {
 					case Key_submitted:				submitted = true; break;	// wpMove will only be in query_args if move button is pressed
 					case Key_src_ttl:				src_ttl = val_bry; break;
-					case Key_trg_ns:				trg_ns = ByteAry_.X_to_int_or_fail(val_bry); break;
+					case Key_trg_ns:				trg_ns = Bry_.Xto_int_or_fail(val_bry); break;
 					case Key_trg_ttl:				trg_ttl = val_bry; break;
-					case Key_create_redirect:		create_redirect = ByteAry_.X_to_bool_by_int_or_fail(val_bry); break;
+					case Key_create_redirect:		create_redirect = Bry_.Xto_bool_by_int_or_fail(val_bry); break;
 				}
 			}
 		}
@@ -168,7 +169,7 @@ class Move_url_args {
 		create_redirect = false;
 	}
 	private static final byte Key_submitted = 1, Key_src_ttl = 2, Key_trg_ns = 3, Key_trg_ttl = 4, Key_create_redirect = 5;
-	private static final Hash_adp_bry arg_keys = Hash_adp_bry.ci_()
+	private static final Hash_adp_bry arg_keys = Hash_adp_bry.ci_ascii_()
 	.Add_str_byte("wpMove"			, Key_submitted)
 	.Add_str_byte("wpOldTitle"		, Key_src_ttl)
 	.Add_str_byte("wpNewTitleNs"	, Key_trg_ns)

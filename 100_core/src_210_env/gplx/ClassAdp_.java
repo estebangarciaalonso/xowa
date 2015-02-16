@@ -40,6 +40,6 @@ public class ClassAdp_ {
 	public static String FullNameOf_obj(Object o) {return FullNameOf_type(o.getClass());}	
 	public static String FullNameOf_type(Class<?> type) {return type.getCanonicalName();}	
 	public static String NameOf_type(Class<?> type) {return type.getName();}	
-	public static String NameOf_obj(Object obj) {return obj == null ? String_.NullStr : obj.getClass().getName();}	
+	public static String NameOf_obj(Object obj) {return obj == null ? String_.Null_mark : obj.getClass().getName();}	
 	public static final byte Tid_bool = 1, Tid_byte = 2, Tid_int = 3, Tid_long = 4, Tid_float = 5, Tid_double = 6, Tid_char = 7, Tid_str = 8, Tid_date = 9, Tid_decimal = 10;
 }

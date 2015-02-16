@@ -22,8 +22,8 @@ class Cache_dir_mgr {
 	private OrderedHash name_hash = OrderedHash_.new_bry_(); private HashAdp id_hash = HashAdp_.new_();
 	private Cache_dir_tbl dir_tbl = new Cache_dir_tbl();
 	public Cache_dir_mgr(Cache_mgr v) {this.cache_mgr = v;}
-	public void Db_init(Db_provider p) {dir_tbl.Db_init(p);}
-	public void Db_when_new(Db_provider p) {dir_tbl.Db_when_new(p);}
+	public void Db_init(Db_conn p) {dir_tbl.Db_init(p);}
+	public void Db_when_new(Db_conn p) {dir_tbl.Db_when_new(p);}
 	public void Db_save() {
 		int len = name_hash.Count();
 		boolean err_seen = false;
@@ -31,10 +31,10 @@ class Cache_dir_mgr {
 			Cache_dir_itm dir_itm = (Cache_dir_itm)name_hash.FetchAt(i);
 			if (err_seen)
 				dir_itm.Uid_(cache_mgr.Next_id());
-			if (dir_itm.Cmd_mode() == Db_cmd_mode.Create) {		// create; check if in db;
+			if (dir_itm.Cmd_mode() == Db_cmd_mode.Tid_create) {		// create; check if in db;
 				Cache_dir_itm tbl_itm = dir_tbl.Select(dir_itm.Dir_bry());
 				if (tbl_itm != Cache_dir_itm.Null)				// tbl_itm found
-					dir_itm.Cmd_mode_(Db_cmd_mode.Update);		// change dir_itm to update
+					dir_itm.Cmd_mode_(Db_cmd_mode.Tid_update);		// change dir_itm to update
 			}
 			String err = dir_tbl.Db_save(dir_itm);
 			if (err != null) {

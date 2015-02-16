@@ -28,7 +28,7 @@ public class Io_stream_wtr_ {
 		else if	(String_.Eq(ext, Io_stream_.Ext_bz2)) 	return gplx.ios.Io_stream_wtr_.bzip2_(url);
 		else 											return gplx.ios.Io_stream_wtr_.file_(url);
 	}
-	public static Io_stream_wtr new_by_mem(ByteAryBfr bfr, byte tid) {
+	public static Io_stream_wtr new_by_mem(Bry_bfr bfr, byte tid) {
 		Io_stream_wtr wtr = new_by_tid_(tid).Url_(Io_url_.Null);
 		wtr.Trg_bfr_(bfr);
 		return wtr;
@@ -69,7 +69,8 @@ public class Io_stream_wtr_ {
 abstract class Io_stream_wtr_base implements Io_stream_wtr {
 	java.io.OutputStream zip_stream;
 	public Io_url Url() {return url;} public Io_stream_wtr Url_(Io_url v) {url = v; trg_bfr = null; return this;} Io_url url;
-	public void Trg_bfr_(ByteAryBfr v) {trg_bfr = v;} ByteAryBfr trg_bfr; java.io.ByteArrayOutputStream mem_stream;
+	public void Trg_bfr_(Bry_bfr v) {trg_bfr = v;} Bry_bfr trg_bfr; java.io.ByteArrayOutputStream mem_stream;
+	public byte[] Xto_ary_and_clear() {return trg_bfr.Xto_bry_and_clear();}
 	@SuppressWarnings("resource") // rely on OutputStream to close bry_stream
 	public Io_stream_wtr Open() {
 		java.io.OutputStream bry_stream = null;
@@ -120,11 +121,10 @@ class Io_stream_wtr_gzip extends Io_stream_wtr_base {
 	}
 }
 class Io_stream_wtr_zip implements Io_stream_wtr {
-	java.util.zip.ZipOutputStream zip_stream;
-	
+	private  java.util.zip.ZipOutputStream zip_stream;	
 	@Override public byte Tid() {return Io_stream_.Tid_zip;}
-	public Io_url Url() {return url;} public Io_stream_wtr Url_(Io_url v) {url = v; trg_bfr = null; return this;} Io_url url = Io_url_.Null;
-	public void Trg_bfr_(ByteAryBfr v) {trg_bfr = v;} ByteAryBfr trg_bfr; java.io.ByteArrayOutputStream mem_stream;
+	public Io_url Url() {return url;} public Io_stream_wtr Url_(Io_url v) {url = v; trg_bfr = null; return this;} private Io_url url = Io_url_.Null;
+	public void Trg_bfr_(Bry_bfr v) {trg_bfr = v;} private Bry_bfr trg_bfr; private java.io.ByteArrayOutputStream mem_stream;
 	@SuppressWarnings("resource") // rely on zip_stream to close bry_stream 
 	public Io_stream_wtr Open() {
 		java.io.OutputStream bry_stream;
@@ -147,11 +147,13 @@ class Io_stream_wtr_zip implements Io_stream_wtr {
 		try {zip_stream.write(bry, bgn, len);}
 		catch (Exception exc) {throw Err_.new_fmt_("write failed: url={0} bgn={1} len={2}", url.Raw(), bgn, len);}
 	}
-	public void Flush() {
+	public void Flush() {// fixed as of DATE:2014-04-15
 		try {
-			zip_stream.flush();
+			zip_stream.closeEntry();
+			zip_stream.close();
 			if (trg_bfr != null)
 				trg_bfr.Add(mem_stream.toByteArray());
+			zip_stream.flush();
 		}
 		catch (Exception e) {throw Err_.new_fmt_("flush failed: url={0}", url.Raw());}
 	}
@@ -162,12 +164,17 @@ class Io_stream_wtr_zip implements Io_stream_wtr {
 		}
 		catch (Exception e) {throw Err_.new_fmt_("close failed: url={0}", url.Raw());}
 	}
+	public byte[] Xto_ary_and_clear() {
+		byte[] rv = trg_bfr.Xto_bry_and_clear();
+		this.Rls();
+		return rv;
+	}
 }
 class Io_stream_wtr_file implements Io_stream_wtr {
 	IoStream bry_stream; 
 	@Override public byte Tid() {return Io_stream_.Tid_file;}
 	public Io_url Url() {return url;} public Io_stream_wtr Url_(Io_url v) {url = v; return this;} Io_url url;
-	public void Trg_bfr_(ByteAryBfr v) {trg_bfr = v;} ByteAryBfr trg_bfr; java.io.ByteArrayOutputStream mem_stream;
+	public void Trg_bfr_(Bry_bfr v) {trg_bfr = v;} private Bry_bfr trg_bfr; java.io.ByteArrayOutputStream mem_stream;
 	public Io_stream_wtr Open() {
 		try {
 			if (trg_bfr == null)
@@ -183,6 +190,9 @@ class Io_stream_wtr_file implements Io_stream_wtr {
 		}
 		else
 			trg_bfr.Add_mid(bry, bgn, bgn + len);
+	}
+	public byte[] Xto_ary_and_clear() {		 
+		return trg_bfr == null ? Io_mgr._.LoadFilBry(url) : trg_bfr.Xto_bry_and_clear();
 	}
 	public void Flush() {
 		if (trg_bfr == null)

@@ -55,7 +55,7 @@ class GfmlTkn_mok {
 			}
 		}
 	}
-	public static GfmlTkn_mok[] XtoAry(String... ary) {
+	public static GfmlTkn_mok[] Xto_bry(String... ary) {
 		GfmlTkn_mok[] rv = new GfmlTkn_mok[ary.length];
 		for (int i = 0; i < rv.length; i++) 
 			rv[i] = GfmlTkn_mok.new_().Raw_(ary[i]);
@@ -68,10 +68,10 @@ class GfmlTkn_mok {
 		for (int i = 0; i < max; i++) {
 			GfmlTkn_mok expdSub = (GfmlTkn_mok)tstr.List_FetchAtOrNull(expd.Subs(), i);
 			GfmlTkn_mok actlSub = (GfmlTkn_mok)tstr.List_FetchAtOrNull(actl.Subs(), i);
-			tstr.SubName_push(Int_.XtoStr(i));
+			tstr.SubName_push(Int_.Xto_str(i));
 			tst(tstr, expdSub, actlSub);
 			tstr.SubName_pop();
 		}
 	}
-	static GfmlTkn_mok NullObj(GfmlTkn_mok v) {return v == null ? GfmlTkn_mok.new_().Raw_(String_.NullStr) : v;}
+	static GfmlTkn_mok NullObj(GfmlTkn_mok v) {return v == null ? GfmlTkn_mok.new_().Raw_(String_.Null_mark) : v;}
 }

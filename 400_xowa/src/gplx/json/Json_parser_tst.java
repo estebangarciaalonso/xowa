@@ -40,8 +40,8 @@ public class Json_parser_tst {
 	@Test   public void Subs_empty()			{fxt.Test_parse("{'k0':{}}", fxt.itm_nde_().Subs_add_many(fxt.itm_kv_("k0", fxt.itm_nde_())));}
 	@Test   public void Subs_ws()				{fxt.Test_parse("{'k0': { 'k00' : 1 } }", fxt.itm_nde_().Subs_add_many(fxt.itm_kv_("k0", fxt.itm_nde_().Subs_add_many(fxt.itm_kv_("k00", 1)))));}
 	@Test   public void Ws()					{fxt.Test_parse(" { 'k0' : 'v0' } ", fxt.itm_nde_().Subs_add_many(fxt.itm_kv_("k0", "v0")));}
-	public static String Replace_apos_as_str(String v) {return String_.new_utf8_(Replace_apos(ByteAry_.new_utf8_(v)));}
-	public static byte[] Replace_apos(byte[] v) {return ByteAry_.Replace(v, Byte_ascii.Apos, Byte_ascii.Quote);}
+	public static String Replace_apos_as_str(String v) {return String_.new_utf8_(Replace_apos(Bry_.new_utf8_(v)));}
+	public static byte[] Replace_apos(byte[] v) {return Bry_.Replace(v, Byte_ascii.Apos, Byte_ascii.Quote);}
 }
 class Json_parser_fxt {
 	public void Clear() {
@@ -49,7 +49,7 @@ class Json_parser_fxt {
 			parser = new Json_parser();
 			factory = parser.Factory();
 		}
-	}	Json_parser parser; Json_factory factory; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	}	Json_parser parser; Json_factory factory; Bry_bfr tmp_bfr = Bry_bfr.reset_(255);
 	Json_itm itm_int_(int v)								{return Json_itm_tmp.new_int_(v);}
 	Json_itm itm_str_(String v)								{return Json_itm_tmp.new_str_(v);}
 	public Json_itm_ary itm_ary_()							{return factory.Ary(-1, -1);}
@@ -75,15 +75,15 @@ class Json_parser_fxt {
 		return factory.Kv(itm_str_(k), ary);
 	}
 	public void Test_parse(String raw_str, Json_itm... expd_ary) {
-		byte[] raw = Json_parser_tst.Replace_apos(ByteAry_.new_utf8_(raw_str));
+		byte[] raw = Json_parser_tst.Replace_apos(Bry_.new_utf8_(raw_str));
 		Json_doc doc = parser.Parse(raw);
 		doc.Root().Print_as_json(tmp_bfr, 0);
-		String actl = tmp_bfr.XtoStrAndClear();
+		String actl = tmp_bfr.Xto_str_and_clear();
 		String expd = Xto_str(raw, doc, expd_ary, 0, expd_ary.length);
 		Tfds.Eq_str_lines(expd, actl, actl);
 	}
 	public void Test_parse_val0(String raw_str, Object expd) {
-		byte[] raw = Json_parser_tst.Replace_apos(ByteAry_.new_utf8_(raw_str));
+		byte[] raw = Json_parser_tst.Replace_apos(Bry_.new_utf8_(raw_str));
 		Json_doc doc = parser.Parse(raw);
 		Json_itm_kv kv = Json_itm_kv.cast_(doc.Root().Subs_get_at(0));	// assume root has kv as first sub; EX: {"a":"b"}
 		Object actl = kv.Val().Data();	 // NOTE: Data_bry is escaped val; EX: a\"b has DataBry of a"b
@@ -94,6 +94,6 @@ class Json_parser_fxt {
 			Json_itm itm = ary[i];
 			itm.Print_as_json(tmp_bfr, 0);
 		}
-		return tmp_bfr.XtoStrAndClear();
+		return tmp_bfr.Xto_str_and_clear();
 	}
 }

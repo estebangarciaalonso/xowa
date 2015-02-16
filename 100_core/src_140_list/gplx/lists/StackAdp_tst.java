@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.lists; import gplx.*;
 import org.junit.*;
 public class StackAdp_tst {
-	@Test public void XtoList() {
+	@Test  public void XtoList() {
 		tst_XtoList(1, 2, 3);
 	}
 	void tst_XtoList(int... ary) {
@@ -26,7 +26,7 @@ public class StackAdp_tst {
 		for (int i : ary)
 			stack.Push(i);
 		ListAdp list = stack.XtoList();
-		int[] actl = (int[])list.XtoAry(int.class);
+		int[] actl = (int[])list.Xto_ary(int.class);
 		for (int i = 0; i < ary.length; i++)
 			Tfds.Eq(ary[i], actl[i]);
 	}

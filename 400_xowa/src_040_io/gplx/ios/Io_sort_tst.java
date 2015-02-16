@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.ios; import gplx.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.strings.*;
 public class Io_sort_tst {
 	Io_sort_fxt fxt = new Io_sort_fxt();
 	@Test  public void ExternalSort() {
@@ -50,17 +50,17 @@ class Io_sort_fxt {
 	public String GenRandom(int rows, int pad) {
 		ListAdp list = ListAdp_.new_();
 		for (int i = 0; i < rows; i++)
-			list.Add(Int_.XtoStr_PadBgn(i, pad) + "|");
+			list.Add(Int_.Xto_str_pad_bgn(i, pad) + "|");
 		list.Shuffle();
 		for (int i = 0; i < rows; i++) {
 			String itm = (String)list.FetchAt(i);
 			sb.Add(itm).Add_char_nl();
 		}		
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}
 	public String GenOrdered(int rows, int pad) {
 		for (int i = 0; i < rows; i++)
-			sb.Add(Int_.XtoStr_PadBgn(i, pad) + "|" + "\n");
-		return sb.XtoStrAndClear();
+			sb.Add(Int_.Xto_str_pad_bgn(i, pad) + "|" + "\n");
+		return sb.Xto_str_and_clear();
 	}	
 }

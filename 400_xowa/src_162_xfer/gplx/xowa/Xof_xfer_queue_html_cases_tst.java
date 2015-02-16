@@ -191,23 +191,12 @@ public class Xof_xfer_queue_html_cases_tst {
 	}
 	@Test  public void Upright_size_incorrect() {// PURPOSE.fix: incorrect image size being brought down; EX: w:ASCII; [[Image:ASCII Code Chart.svg|thumb|right|upright=1.6]]; 264, but should be 350 
 		fxt	.ini_page_create_en_wiki			("File:A.png");
-		fxt	.Lnki_("A.png", true, -1, -1, 1.6, Xof_doc_thumb.Null_as_int)											// height-only request
+		fxt	.Lnki_("A.png", true, -1, -1, 1.6, Xof_doc_thumb.Null_as_int)											// upright
 			.Src(	fxt.img_("mem/src/en.wikipedia.org/7/70/A.png", 830, 328)
 				,	fxt.img_("mem/src/en.wikipedia.org/thumb/7/70/A.png/350px-A.png", 350, 138)	
 				)
 			.Trg(	fxt.img_("mem/trg/en.wikipedia.org/fit/7/0/A.png/350px.png"		, 350, 138)
-				,	fxt.reg_("mem/xowa/file/#meta/en.wikipedia.org/7/70.csv"		, "A.png|y||2?0,0|1?350,138")	// note that orig does not exist
-				);
-		fxt.tst();
-	}
-	@Test  public void Ogg_saves_wrong_tid() {// PURPOSE.fix: ogg saves wrong tid; EX: w:ASCII; [[Image:ASCII Code Chart.svg|thumb|right|upright=1.6]]; 264, but should be 350 
-		fxt	.ini_page_create_en_wiki			("File:A.png");
-		fxt	.Lnki_("A.png", true, -1, -1, 1.6, Xof_doc_thumb.Null_as_int)											// height-only request
-			.Src(	fxt.img_("mem/src/en.wikipedia.org/7/70/A.png", 830, 328)
-				,	fxt.img_("mem/src/en.wikipedia.org/thumb/7/70/A.png/350px-A.png", 350, 138)	
-				)
-			.Trg(	fxt.img_("mem/trg/en.wikipedia.org/fit/7/0/A.png/350px.png"		, 350, 138)
-				,	fxt.reg_("mem/xowa/file/#meta/en.wikipedia.org/7/70.csv"		, "A.png|y||2?0,0|1?350,138")	// note that orig does not exist
+				,	fxt.reg_("mem/xowa/file/#meta/en.wikipedia.org/7/70.csv"		, "A.png|y||2?0,0|1?350,138")
 				);
 		fxt.tst();
 	}
@@ -241,7 +230,7 @@ public class Xof_xfer_queue_html_cases_tst {
 		.Html_size_(220, 200)
 		.tst();
 	}
-	@Test  public void Ogv_width_seek_again_should_dirty() { // PURPOSE: outlier case wherein (a) downloading thumb then (b) downloading thumb seek; (b) does not dirty file since (a) exists; EX.WP: Wikipedia
+	@Test  public void Ogv_width_seek_again_should_dirty() { // PURPOSE: outlier case wherein (a) downloading thumb then (b) downloading thumb seek; (b) does not dirty file since (a) exists; PAGE:en.w:Wikipedia
 		fxt.Src_en_wiki_repo().Ext_rules().Get_or_new(Xof_ext_.Bry_ogv).View_max_(0);
 		Io_mgr._.SaveFilStr("mem/xowa/file/#meta/en.wikipedia.org/d/d0.csv", "A.ogv|0||2?0,0|1?300,40\n");	// simulate (a)
 		fxt	.Lnki_("A.ogv", true, -1, -1, -1, 5)															
@@ -277,6 +266,15 @@ public class Xof_xfer_queue_html_cases_tst {
 		.Html_src_("file:///mem/trg/commons.wikimedia.org/fit/d/0/A.ogv/300px.jpg")
 		.Html_size_(300, 40)
 		.tst();
+	}
+	@Test  public void Thumbtime_ignored_if_non_media() { // PURPOSE: ignore thumbtime if not media; PAGE:en.w:Moon; EX:[[File:A.png|thumbtime=0.02]] DATE:2014-07-22
+		fxt	.ini_page_create_en_wiki("File:A.png");
+		fxt	.Lnki_("A.png", true, 90, Xof_img_size.Size_null_deprecated, Xof_img_size.Size_null_deprecated, 2)	// thumbtime of 2 specified; will be ignored below
+			.Src(	fxt.img_("mem/src/en.wikipedia.org/thumb/7/70/A.png/90px-A.png", 90, 80))
+			.Trg(	fxt.img_("mem/trg/en.wikipedia.org/fit/7/0/A.png/90px.png", 90, 80)
+				,	fxt.reg_("mem/xowa/file/#meta/en.wikipedia.org/7/70.csv", "A.png|y||2?0,0|1?90,80")
+				);
+		fxt.tst();
 	}
 
 //		@Test  public void Ogg_full_skip() {	// DISABLED: 2012-12-03; not sure about logic

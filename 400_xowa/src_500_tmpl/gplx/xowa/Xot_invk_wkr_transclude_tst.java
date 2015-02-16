@@ -37,9 +37,4 @@ public class Xot_invk_wkr_transclude_tst {
 		fxt.Page_ttl_("Test_Page");
 		fxt.Test_parse_tmpl_str("{{/Sub}}", "[[Test_Page/Sub]]");
 	}
-	@Test  public void MediaWiki() {	// PURPOSE: lang suffix should be ignored if same as wiki's lang; EX: {{MediaWiki:Msg/en}} -> {{MediaWiki:Msg}}; DATE:2014-02-22
-		fxt.Init_page_create("MediaWiki:A", "a");
-		fxt.Test_parse_tmpl_str("{{MediaWiki:A}}", "a");
-		fxt.Test_parse_tmpl_str("{{MediaWiki:A/en}}", "a");
-	}
 }

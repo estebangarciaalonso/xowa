@@ -33,11 +33,11 @@ public class Xobc_utl_make_lang_kwds implements GfoInvkAble, Xol_lang_transform 
 		if (!Hash_itm_applies(trailing_colons, lang_key, kwd_key, kwd_word)) {
 			int kwd_last = rv.length - 1;
 			if (kwd_last > 0 && rv[kwd_last] == Byte_ascii.Colon)
-				rv = ByteAry_.Mid(rv, 0, rv.length - 1);
+				rv = Bry_.Mid(rv, 0, rv.length - 1);
 		}
 		if (Hash_itm_applies(prepend_hash, lang_key, kwd_key, kwd_word)) {
 			if (rv.length > 0 && rv[0] != Byte_ascii.Hash)
-				rv = ByteAry_.Add(Byte_ascii.Hash, rv);
+				rv = Bry_.Add(Byte_ascii.Hash, rv);
 		}
 		return rv;
 	}
@@ -57,11 +57,11 @@ public class Xobc_utl_make_lang_kwds implements GfoInvkAble, Xol_lang_transform 
 				tmp.Clear();
 				if (kwd_grp == null) {
 					kwd_grp = lang.Kwd_mgr().Get_or_new(kwd_id);
-					kwd_grp.Srl_load(false, ByteAry_.Ary_empty);	// ASSUME: kwd explicitly added, but does not exist in language; default to !case_match
+					kwd_grp.Srl_load(Bool_.N, Bry_.Ary_empty);	// ASSUME: kwd explicitly added, but does not exist in language; default to !case_match
 				}
 
 				for (Xol_kwd_itm itm : kwd_grp.Itms())
-					tmp.Add(itm.Bry(), itm.Bry());
+					tmp.Add(itm.Val(), itm.Val());
 				if (cfg_grp.Itms().length == 0) {
 					if (!tmp.Has(cfg_grp.Key())) tmp.Add(cfg_grp.Key(), cfg_grp.Key());
 				}
@@ -70,7 +70,7 @@ public class Xobc_utl_make_lang_kwds implements GfoInvkAble, Xol_lang_transform 
 						if (!tmp.Has(itm)) tmp.Add(itm, itm);
 					}
 				}
-				byte[][] words = (byte[][])tmp.XtoAry(byte[].class);
+				byte[][] words = (byte[][])tmp.Xto_ary(byte[].class);
 				kwd_grp.Srl_load(kwd_grp.Case_match(), words);
 			}
 		}
@@ -111,7 +111,7 @@ public class Xobc_utl_make_lang_kwds implements GfoInvkAble, Xol_lang_transform 
 	}
 	public static Xobcl_kwd_row[] Parse(byte[] src) {
 		int src_len = src.length, pos = 0, fld_bgn = 0;
-		byte[] cur_key = ByteAry_.Empty;
+		byte[] cur_key = Bry_.Empty;
 		Xol_csv_parser csv_parser = Xol_csv_parser._;
 		ListAdp rv = ListAdp_.new_(); int fld_idx = 0;
 		while (true) {
@@ -126,7 +126,7 @@ public class Xobc_utl_make_lang_kwds implements GfoInvkAble, Xol_lang_transform 
 				case Byte_ascii.NewLine:
 					if (pos - fld_bgn > 0 || fld_idx == 1) {
 						byte[] cur_val = csv_parser.Load(src, fld_bgn, pos);
-						Xobcl_kwd_row row = new Xobcl_kwd_row(cur_key, ByteAry_.Split(cur_val, Byte_ascii.Tilde));
+						Xobcl_kwd_row row = new Xobcl_kwd_row(cur_key, Bry_.Split(cur_val, Byte_ascii.Tilde));
 						rv.Add(row);
 					}
 					fld_bgn = pos + 1;
@@ -138,7 +138,7 @@ public class Xobc_utl_make_lang_kwds implements GfoInvkAble, Xol_lang_transform 
 			if (last) break;
 			++pos;
 		}		
-		return (Xobcl_kwd_row[])rv.XtoAry(Xobcl_kwd_row.class);
+		return (Xobcl_kwd_row[])rv.Xto_ary(Xobcl_kwd_row.class);
 	}
 }
 class Xobcl_kwd_lang {

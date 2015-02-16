@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.strings.*;
 import gplx.lists.*; /*EnumerAble,ComparerAble*/
 public class OrderedHash_base extends HashAdp_base implements OrderedHash, GfoInvkAble {
 	@Override protected void Add_base(Object key, Object val) {
@@ -37,7 +38,7 @@ public class OrderedHash_base extends HashAdp_base implements OrderedHash, GfoIn
 		super.Clear();
 		ordered.Clear();
 	}
-	public Object XtoAry(Class<?> type)			{return ordered.XtoAry(type);}
+	public Object Xto_ary(Class<?> type)			{return ordered.Xto_ary(type);}
 	@gplx.Virtual public void Sort()						{if (locked) Lock_fail(); ordered.Sort();}	// NOTE: uses item's .compareTo
 	public void SortBy(ComparerAble comparer)		{if (locked) Lock_fail(); ordered.SortBy(comparer);}
 	@Override public java.util.Iterator iterator() {return ordered.iterator();}
@@ -62,9 +63,9 @@ public class OrderedHash_base extends HashAdp_base implements OrderedHash, GfoIn
 	public String XtoStr_ui() {
 		String_bldr sb = String_bldr_.new_();
 		int count = ordered.Count();
-		int pad = String_.Len(Int_.XtoStr(count));
+		int pad = String_.Len(Int_.Xto_str(count));
 		for (int i = 0; i < count; i++) {
-			sb	.Add(Int_.XtoStr_PadBgn(i, pad))
+			sb	.Add(Int_.Xto_str_pad_bgn(i, pad))
 				.Add(":").Add(ordered.FetchAt(i).toString())
 				.Add(Op_sys.Cur().Nl_str());
 		}

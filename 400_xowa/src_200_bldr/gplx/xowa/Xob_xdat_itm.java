@@ -25,5 +25,5 @@ public class Xob_xdat_itm {
 	public boolean Found_exact() {return found_exact;} private boolean found_exact;
 	public Xob_xdat_itm Found_exact_y_() {found_exact = true; return this;}
 	public boolean Missing() {return itm_bgn == -1;}
-	public byte[] Itm_bry() {return ByteAry_.Mid(src, itm_bgn, itm_end);}
+	public byte[] Itm_bry() {return Bry_.Mid(src, itm_bgn, itm_end);}
 }

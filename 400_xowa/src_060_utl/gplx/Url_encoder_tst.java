@@ -26,10 +26,10 @@ public class Url_encoder_tst {
 	@Test  public void Id_foreign() 		{fxt.Encoder_id().Test_encode_decode("aéb", "a.C3.A9b");}
 	@Test  public void Id_space() 			{fxt.Encoder_id().Test_encode_decode("a b", "a_b");}
 	@Test  public void Id_err() 			{
-		byte[] raw = ByteAry_.new_ascii_("0%.jpg");
-		ByteAryBfr tmp_bfr = ByteAryBfr.new_();
+		byte[] raw = Bry_.new_ascii_("0%.jpg");
+		Bry_bfr tmp_bfr = Bry_bfr.new_();
 		fxt.Encoder_id().Encoder().Decode(raw, 0, raw.length, tmp_bfr, false);
-		Tfds.Eq("0%.jpg", tmp_bfr.XtoStrAndClear()); 
+		Tfds.Eq("0%.jpg", tmp_bfr.Xto_str_and_clear()); 
 	}
 	@Test  public void Id_nbsp() 			{fxt.Encoder_id().Test_encode("a&nbsp;b", "a.C2.A0b");}	// NOTE: not just .A0 (160) but utf8-encoded .C2.A0
 	@Test  public void Url_syms() 			{fxt.Encoder_url().Test_encode_decode("!?^~", "%21%3F%5E%7E");}
@@ -62,11 +62,11 @@ class Url_encoder_fxt {
 		tst_decode(encoded, raw);
 	}	
 	public void Test_encode(String raw, String expd) {
-		byte[] bry = encoder.Encode(ByteAry_.new_utf8_(raw));
+		byte[] bry = encoder.Encode(Bry_.new_utf8_(raw));
 		Tfds.Eq(expd, String_.new_utf8_(bry));		
 	}
 	public void tst_decode(String raw, String expd) {
-		byte[] bry = encoder.Decode(ByteAry_.new_utf8_(raw));
+		byte[] bry = encoder.Decode(Bry_.new_utf8_(raw));
 		Tfds.Eq(expd, String_.new_utf8_(bry));		
 	}
 }

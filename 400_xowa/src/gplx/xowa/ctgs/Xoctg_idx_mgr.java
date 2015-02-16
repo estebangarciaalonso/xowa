@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.ctgs; import gplx.*; import gplx.xowa.*;
+import gplx.core.primitives.*; import gplx.core.flds.*;
 public class Xoctg_idx_mgr implements GfoInvkAble {
 	ListAdp itms = ListAdp_.new_();
 	public int Block_len() {return block_len;} public Xoctg_idx_mgr Block_len_(int v) {this.block_len = v; return this;} private int block_len = Io_mgr.Len_mb;
@@ -28,26 +29,26 @@ public class Xoctg_idx_mgr implements GfoInvkAble {
 		int len = src.length;
 		// if (len < block_len) return; NOTE: do not exit early; need at least one entry or Itms_binary_search will fail
 		itms.Clear();
-		fld_rdr.Bry_(src);
+		fld_rdr.Data_(src);
 		int pipe_pos_cur = -1, pipe_pos_prv = -1;
 		for (int i = block_len; i < len; i += block_len) {
 			usr_dlg.Prog_many("", "", "indexing ~{0} ~{1}", i, len);
-			pipe_pos_cur = Byte_ary_finder.Find_fwd(src, Byte_ascii.Pipe, i, len); if (pipe_pos_cur == ByteAry_.NotFound) throw Err_.new_fmt_("ctg_idx_mgr could not find pipe.next; ctg={0} pos={1}", String_.new_ascii_(ctg), i);
+			pipe_pos_cur = Bry_finder.Find_fwd(src, Byte_ascii.Pipe, i, len); if (pipe_pos_cur == Bry_.NotFound) throw Err_.new_fmt_("ctg_idx_mgr could not find pipe.next; ctg={0} pos={1}", String_.new_ascii_(ctg), i);
 			if (pipe_pos_cur == len - 1) break;
 			Index_itm(ctg, src, pipe_pos_cur + 1, len);	// +1 to skip pipe
 			pipe_pos_prv = pipe_pos_cur;
 		}
-		pipe_pos_cur = Byte_ary_finder.Find_bwd(src, Byte_ascii.Pipe, len - 1, 0); if (pipe_pos_cur == ByteAry_.NotFound) pipe_pos_cur = 0; // 1 entry only; will not have preceding pipe
+		pipe_pos_cur = Bry_finder.Find_bwd(src, Byte_ascii.Pipe, len - 1, 0); if (pipe_pos_cur == Bry_.NotFound) pipe_pos_cur = 0; // 1 entry only; will not have preceding pipe
 		if (pipe_pos_cur != pipe_pos_prv)	// if last itm was not indexed, index it
 			Index_itm(ctg, src, pipe_pos_cur + 1, len);
 	}
 	private void Index_itm(byte[] ctg, byte[] src, int bgn, int len) {
-		int end = Byte_ary_finder.Find_fwd(src, Byte_ascii.Pipe, bgn, len); if (end == ByteAry_.NotFound) throw Err_.new_fmt_("Ctg_idx_mgr could not find pipe.end; ctg={0} pos={1}", String_.new_ascii_(ctg), bgn);
+		int end = Bry_finder.Find_fwd(src, Byte_ascii.Pipe, bgn, len); if (end == Bry_.NotFound) throw Err_.new_fmt_("Ctg_idx_mgr could not find pipe.end; ctg={0} pos={1}", String_.new_ascii_(ctg), bgn);
 		fld_rdr.Pos_(bgn);
 		Xoctg_idx_itm itm = new Xoctg_idx_itm().Parse(fld_rdr, bgn);
 		itms.Add(itm);
 	}
-	public Xoctg_idx_itm Itms_binary_search(byte[] find, IntRef comp_rslt) {
+	public Xoctg_idx_itm Itms_binary_search(byte[] find, Int_obj_ref comp_rslt) {
 		int max = itms.Count() - 1;
 		int dif = max / 2;
 		int pos = dif;
@@ -55,7 +56,7 @@ public class Xoctg_idx_mgr implements GfoInvkAble {
 		int comp_prv = Int_.MinValue, comp_cur = 0;
 		while (true) {
 			rv = (Xoctg_idx_itm)itms.FetchAt(pos);
-			comp_cur = ByteAry_.Compare(find, rv.Sortkey());
+			comp_cur = Bry_.Compare(find, rv.Sortkey());
 			// Tfds.Write(dif, pos, comp_cur, comp_prv, String_.new_ascii_(find), String_.new_ascii_(rv.Sortkey()));
 			if (comp_cur == CompareAble_.Same) break;		// exact match; stop
 			dif /= 2;
@@ -78,12 +79,12 @@ public class Xoctg_idx_mgr implements GfoInvkAble {
 		. if find < idx.key, search bwd until find > idx; EX: A50 is find; A51A is idx; search fwd; A51 (still <); A52 (> break); take prv
 		*/
 		boolean dir_fwd = bmk_comp == CompareAble_.More;		// bmk is > than find; move forward			
-		fld_rdr.Bry_(src);
+		fld_rdr.Data_(src);
 		int comp_prv = bmk_comp, comp_cur = Int_.MinValue; int pos_cur = bmk_bgn;
 		tmp_prv_itm.Parse(fld_rdr.Pos_(pos_cur), pos_cur);	// fill prv_itm to whatever binary search found
 		while (true) {
-			int itm_bgn = dir_fwd ? Byte_ary_finder.Find_fwd(src, Byte_ascii.Pipe, pos_cur, src_len) : Byte_ary_finder.Find_bwd(src, Byte_ascii.Pipe, pos_cur);
-			if (itm_bgn == ByteAry_.NotFound) {			// stop: at first && searched bwd; note that at last && searched fwd will never return ByteAry_.NotFound b/c all srcs are terminated with |
+			int itm_bgn = dir_fwd ? Bry_finder.Find_fwd(src, Byte_ascii.Pipe, pos_cur, src_len) : Bry_finder.Find_bwd(src, Byte_ascii.Pipe, pos_cur);
+			if (itm_bgn == Bry_.NotFound) {			// stop: at first && searched bwd; note that at last && searched fwd will never return Bry_.NotFound b/c all srcs are terminated with |
 				if (!arg_is_from)	return null;		// arg is until and nothing found; return null: EX: range of B-Y and find of until=A; no results
 				else				break;				// arg is from; stop loop; (will use first item)
 			}
@@ -93,7 +94,7 @@ public class Xoctg_idx_mgr implements GfoInvkAble {
 				else				break;				// arg is until; stop loop; (will use last item)
 			}
 			tmp_cur_itm.Parse(fld_rdr.Pos_(itm_bgn), itm_bgn);
-			comp_cur = ByteAry_.Compare(find, tmp_cur_itm.Sortkey());
+			comp_cur = Bry_.Compare(find, tmp_cur_itm.Sortkey());
 			if (comp_cur != comp_prv) break;			// stop: comp_val switched; see note above
 			pos_cur = dir_fwd ? itm_bgn : itm_bgn - 1;	// -1 to position at pipe (note that -1 in FindBwd will position before)
 			tmp_prv_itm.Copy(tmp_cur_itm);
@@ -112,20 +113,20 @@ public class Xoctg_idx_mgr implements GfoInvkAble {
 				if (itm_0 == null) return;	// itm out of range; EX: pages are B-Y and find is A or Z
 			}
 			tmp_pos = itm_0.Pos();
-			if (!arg_is_from && ByteAry_.Compare(find, itm_0.Sortkey()) != CompareAble_.More) {	// "until" means do *not* include last; go back one more; note: only do this logic if find is either < or == to slot; EX: find=AM && slot=AL; do not go back one more
-				tmp_pos = Byte_ary_finder.Find_bwd(src, Byte_ascii.Pipe, tmp_pos - 1);	// -1 to position before pipe
-				if (tmp_pos == ByteAry_.NotFound) return;	// already 1st and nothing found
+			if (!arg_is_from && Bry_.Compare(find, itm_0.Sortkey()) != CompareAble_.More) {	// "until" means do *not* include last; go back one more; note: only do this logic if find is either < or == to slot; EX: find=AM && slot=AL; do not go back one more
+				tmp_pos = Bry_finder.Find_bwd(src, Byte_ascii.Pipe, tmp_pos - 1);	// -1 to position before pipe
+				if (tmp_pos == Bry_.NotFound) return;	// already 1st and nothing found
 				else tmp_pos++;
 			}
 		}
-		fld_rdr.Bry_(src);
+		fld_rdr.Data_(src);
 		for (int i = 0; i < find_count; i++) {
 			fld_rdr.Pos_(tmp_pos);
 			Xoctg_view_itm itm = new Xoctg_view_itm().Parse(fld_rdr.Pos_(tmp_pos), tmp_pos);
 			rv.Add(itm);
 			if (!arg_is_from && tmp_pos == 0) break;	// 1st item and moving bwd; stop; note that 1st item does not have preceding |
-			tmp_pos = arg_is_from ? Byte_ary_finder.Find_fwd(src, Byte_ascii.Pipe, tmp_pos, src_len) : Byte_ary_finder.Find_bwd(src, Byte_ascii.Pipe, tmp_pos - 1);	// -1 to position before pipe
-			if (tmp_pos == ByteAry_.NotFound) {
+			tmp_pos = arg_is_from ? Bry_finder.Find_fwd(src, Byte_ascii.Pipe, tmp_pos, src_len) : Bry_finder.Find_bwd(src, Byte_ascii.Pipe, tmp_pos - 1);	// -1 to position before pipe
+			if (tmp_pos == Bry_.NotFound) {
 				if (arg_is_from)	// moving fwd and no pipe found; exit;
 					break;
 				else				// moving bwd and no pipe found; position at 1st item (which doesn't have a pipe); note that -1 will become 0
@@ -140,13 +141,13 @@ public class Xoctg_idx_mgr implements GfoInvkAble {
 		if (rv_count > 0) {
 			Xoctg_view_itm last_itm = (Xoctg_view_itm)rv.FetchAt(rv_count - 1);
 			int last_itm_pos = last_itm.Pos();
-			tmp_pos = Byte_ary_finder.Find_fwd(src, Byte_ascii.Pipe, last_itm_pos);
-			if (tmp_pos != ByteAry_.NotFound && tmp_pos < src_len - 1) {
+			tmp_pos = Bry_finder.Find_fwd(src, Byte_ascii.Pipe, last_itm_pos);
+			if (tmp_pos != Bry_.NotFound && tmp_pos < src_len - 1) {
 				++tmp_pos;	// position after pipe
 				last_plus_one.Parse(fld_rdr.Pos_(tmp_pos), tmp_pos);
 			}
 		}
-	}	IntRef find_rslt = IntRef.zero_();
+	}	Int_obj_ref find_rslt = Int_obj_ref.zero_();
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_block_len)) 		return block_len;
 		else if	(ctx.Match(k, Invk_block_len_)) 	block_len = m.ReadInt("v");

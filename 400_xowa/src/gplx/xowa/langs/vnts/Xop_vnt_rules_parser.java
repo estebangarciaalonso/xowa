@@ -16,12 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.langs.vnts; import gplx.*; import gplx.xowa.*; import gplx.xowa.langs.*;
+import gplx.core.btries.*;
 class Xop_vnt_rules_parser {
 	private byte mode;
 	private Xop_vnt_tkn vnt_tkn;		
 	private boolean loop_vnt_subs; private int vnt_subs_cur, vnt_subs_bgn, vnt_subs_len;
 	private int rule_texts_bgn;
-	private ByteTrieMgr_slim trie;
+	private Btrie_slim_mgr trie;
 	private ListAdp rules_list = ListAdp_.new_();
 	private ListAdp text_tkns_list = ListAdp_.new_();
 	private int text_tkns_ws_end_idx;
@@ -32,15 +33,15 @@ class Xop_vnt_rules_parser {
 	private byte[] cur_macro_bry = null;
 	private byte[] cur_lang_bry = null;
 	public Xop_vnt_rules_parser(Xol_vnt_mgr vnt_mgr) {
-		trie = ByteTrieMgr_slim.ci_();
+		trie = Btrie_slim_mgr.ci_ascii_();	// NOTE:ci.ascii:MW_const.en; lang variant name; EX:zh-hans
 		Xol_vnt_converter[] ary = vnt_mgr.Converter_ary();
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++) {
 			Xol_vnt_converter itm = ary[i];
 			byte[] itm_lang = itm.Owner_key();
-			trie.Add(itm_lang, Xop_vnt_rule_trie_itm.lang_(itm_lang));
+			trie.Add_obj(itm_lang, Xop_vnt_rule_trie_itm.lang_(itm_lang));
 		}
-		trie.Add(";", Xop_vnt_rule_trie_itm.Dlm_semic);
+		trie.Add_obj(";", Xop_vnt_rule_trie_itm.Dlm_semic);
 //			trie.Add("=>", Xop_vnt_rule_trie_itm.Dlm_eqgt);
 	}
 	public void Clear_all() {
@@ -67,7 +68,7 @@ class Xop_vnt_rules_parser {
 		Make_rule();	// make rules for any pending items; EX: "-{A|text}-"; "text" is unclosed by semic and would need to be processed
 		if (mode == Mode_key && rules_list.Count() == 0)
 			Make_rule_literal();
-		return (Xop_vnt_rule[])rules_list.XtoAryAndClear(Xop_vnt_rule.class);
+		return (Xop_vnt_rule[])rules_list.Xto_ary_and_clear(Xop_vnt_rule.class);
 	}
 	private boolean text_tkns_ws_bgn = false;
 	private void Parse_sub() {
@@ -83,13 +84,13 @@ class Xop_vnt_rules_parser {
 				break;
 			case Xop_tkn_itm_.Tid_bry:
 				Xop_bry_tkn bry_tkn = (Xop_bry_tkn)sub;
-				byte[] bry = bry_tkn.Bry();
+				byte[] bry = bry_tkn.Val();
 				Parse_key(sub, bry, 0, bry.length);
 				break;
 			case Xop_tkn_itm_.Tid_colon:
 				if (	mode == Mode_lang						// colon should only follow lang; EX: zh-hant:text
 					&&	cur_lang_bry == null) {					// if pending lang, ignore; assume part of text
-					cur_lang_bry = ByteAry_.Trim(ByteAry_.Mid(src, cur_key_bgn, sub.Src_bgn()));
+					cur_lang_bry = Bry_.Trim(Bry_.Mid(src, cur_key_bgn, sub.Src_bgn()));
 					mode = Mode_text;
 					rule_texts_bgn = vnt_subs_cur + 1;
 					text_tkns_list_add = false;
@@ -104,7 +105,7 @@ class Xop_vnt_rules_parser {
 				break;
 			case Xop_tkn_itm_.Tid_vnt_eqgt:
 				if (mode == Mode_key) {
-					cur_macro_bry = ByteAry_.Trim(ByteAry_.Mid(src, cur_key_bgn, sub.Src_bgn()));
+					cur_macro_bry = Bry_.Trim(Bry_.Mid(src, cur_key_bgn, sub.Src_bgn()));
 					text_tkns_list_add = false;
 				}
 				break;
@@ -128,7 +129,7 @@ class Xop_vnt_rules_parser {
 			if (pos == src_end) break;
 			if (cur_key_bgn == -1) cur_key_bgn = pos;
 			byte b = src[pos];
-			Object itm_obj = trie.Match(b, src, pos, src_end);
+			Object itm_obj = trie.Match_bgn_w_byte(b, src, pos, src_end);
 			if (itm_obj == null) {			// not a lang, semic, or eqgt; treat rest of vnt as one rule tkn
 //					if (mode == Mode_key)
 //						loop_key_bry = Make_rule_literal();
@@ -141,7 +142,7 @@ class Xop_vnt_rules_parser {
 				switch (itm.Tid()) {
 					case Xop_vnt_rule_trie_itm.Tid_lang:
 						if (mode == Mode_key) {
-							int next_char_pos = Byte_ary_finder.Find_fwd_while_space_or_tab(src, new_pos, src_end);
+							int next_char_pos = Bry_finder.Find_fwd_while_space_or_tab(src, new_pos, src_end);
 							if (next_char_pos == src_end) {	// eos;	EX: "zh-hant  :a"
 								cur_key_bgn = pos;
 								mode = Mode_lang;
@@ -154,7 +155,7 @@ class Xop_vnt_rules_parser {
 					case Xop_vnt_rule_trie_itm.Tid_semic:
 						switch (mode) {
 							case Mode_text:
-								text_tkns_list.Add(tkn_mkr.Bry(src_bgn, pos, ByteAry_.Trim(ByteAry_.Mid(src, src_bgn, pos))));
+								text_tkns_list.Add(tkn_mkr.Bry_raw(src_bgn, pos, Bry_.Trim(Bry_.Mid(src, src_bgn, pos))));
 								Make_rule();
 								cur_lang_bry = null;
 								mode = Mode_key;
@@ -167,7 +168,7 @@ class Xop_vnt_rules_parser {
 						break;
 //						case Xop_vnt_rule_trie_itm.Tid_eqgt:
 //							if (	mode == Mode_key) {					// if pending lang, ignore; assume part of text
-//								cur_macro_bry = ByteAry_.Mid(src, cur_key_bgn, sub.Src_bgn());
+//								cur_macro_bry = Bry_.Mid(src, cur_key_bgn, sub.Src_bgn());
 //								cur_key_bgn = new_pos + 1;
 //							}
 //							break;
@@ -199,7 +200,7 @@ class Xop_vnt_rules_parser {
 			if (text_tkns_ws_end_idx != -1) {	// trailing ws
 				text_tkns_list.Del_range(text_tkns_ws_end_idx, text_tkns_list.Count() - 1);
 			}
-			Xop_tkn_itm[] rule_subs = (Xop_tkn_itm[])text_tkns_list.XtoAryAndClear(Xop_tkn_itm.class);
+			Xop_tkn_itm[] rule_subs = (Xop_tkn_itm[])text_tkns_list.Xto_ary_and_clear(Xop_tkn_itm.class);
 			Xop_vnt_rule rule = new Xop_vnt_rule(cur_macro_bry, cur_lang_bry, rule_subs);
 			rules_list.Add(rule);
 		}

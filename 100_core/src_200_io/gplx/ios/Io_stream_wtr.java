@@ -19,8 +19,9 @@ package gplx.ios; import gplx.*;
 public interface Io_stream_wtr extends RlsAble {
 	byte Tid();
 	Io_url Url(); Io_stream_wtr Url_(Io_url v);
-	void Trg_bfr_(ByteAryBfr v);
+	void Trg_bfr_(Bry_bfr v);
 	Io_stream_wtr Open();
+	byte[] Xto_ary_and_clear();
 
 	void Write(byte[] bry, int bgn, int len);
 	void Flush();

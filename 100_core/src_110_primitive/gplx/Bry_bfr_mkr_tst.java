@@ -55,7 +55,7 @@ class Bry_bfr_mkr_fxt {
 		return this;
 	}
 	public Bry_bfr_mkr_fxt Rls(int i) {
-		ByteAryBfr bfr = mkr.Ary()[i];
+		Bry_bfr bfr = mkr.Ary()[i];
 		mkr.Rls(bfr);
 		return this;
 	}
@@ -63,7 +63,7 @@ class Bry_bfr_mkr_fxt {
 		int actl_len = mkr.Nxt_idx();
 		int[] actl = new int[actl_len];
 		for (int i = 0; i < actl_len; i++) {
-			ByteAryBfr bfr = mkr.Ary()[i];
+			Bry_bfr bfr = mkr.Ary()[i];
 			int actl_val = Bry_bfr_mkr_tst.Int_null;
 			if (bfr != null) actl_val =  bfr.Mkr_itm();
 			actl[i] = actl_val;

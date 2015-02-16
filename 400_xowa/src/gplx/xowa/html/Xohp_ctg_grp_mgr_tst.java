@@ -44,13 +44,13 @@ class Xoh_ctg_mgr_fxt {
 		wiki = Xoa_app_fxt.wiki_tst_(app);
 		ctg_grp_mgr = new Xohp_ctg_grp_mgr();
 		return this;
-	}	private Xohp_ctg_grp_mgr ctg_grp_mgr; Xoa_app app; Xow_wiki wiki; ByteAryBfr tmp_bfr = ByteAryBfr.new_();
+	}	private Xohp_ctg_grp_mgr ctg_grp_mgr; Xoa_app app; Xow_wiki wiki; Bry_bfr tmp_bfr = Bry_bfr.new_();
 	public Xoh_ctg_mgr_fxt Init_ctgs(String... v) {init_ctgs = v; return this;} private String[] init_ctgs; 
 	public void Test_html(String expd) {		
-		byte[][] ctgs_bry_ary = ByteAry_.Ary(init_ctgs);
-		Xoa_page page = wiki.Ctx().Page();
+		byte[][] ctgs_bry_ary = Bry_.Ary(init_ctgs);
+		Xoa_page page = wiki.Ctx().Cur_page();
 		page.Category_list_(ctgs_bry_ary);
 		ctg_grp_mgr.Bld(tmp_bfr, page, ctgs_bry_ary.length);
-		Tfds.Eq_str_lines(expd, tmp_bfr.XtoStrAndClear());
+		Tfds.Eq_str_lines(expd, tmp_bfr.Xto_str_and_clear());
 	}
 }

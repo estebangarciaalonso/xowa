@@ -29,7 +29,7 @@ public class Cfg_nde_root implements GfoInvkAble {
 	public void Root_subs_add(byte[] grp_key, byte[] itm_typ, byte[] itm_key, byte[][] itm_atrs) {
 		Cfg_nde_obj grp = (Cfg_nde_obj)grps.Fetch(grp_key);
 		if (grp == null) {
-			if (ByteAry_.Len_eq_0(grp_key))
+			if (Bry_.Len_eq_0(grp_key))
 				grp = root;
 			else {
 				grp = (Cfg_nde_obj)root.Nde_subs_make(grp_type, grp_key, grp_atrs);
@@ -89,10 +89,10 @@ public class Cfg_nde_root implements GfoInvkAble {
 						Cfg_nde_cmd cmd = null;
 						switch (cur_cmd) {
 							case Cfg_nde_cmd.Cmd_add:
-								byte[][] cur_itm_atrs = ByteAry_.Ary_empty;
+								byte[][] cur_itm_atrs = Bry_.Ary_empty;
 								if		(fld_idx == 4) {
 									byte[] cur_itm_atrs_raw = csv_parser.Load(src, fld_bgn, src_pos);
-									cur_itm_atrs = ByteAry_.Split(cur_itm_atrs_raw, Byte_ascii.Tilde);
+									cur_itm_atrs = Bry_.Split(cur_itm_atrs_raw, Byte_ascii.Tilde);
 								}
 								else if (fld_idx == 3) {
 									cur_itm_key = csv_parser.Load(src, fld_bgn, src_pos);
@@ -101,7 +101,7 @@ public class Cfg_nde_root implements GfoInvkAble {
 								break;
 							case Cfg_nde_cmd.Cmd_del:
 								cur_itm_key = csv_parser.Load(src, fld_bgn, src_pos);
-								cmd = new Cfg_nde_cmd(cur_cmd, cur_grp_key, ByteAry_.Empty, cur_itm_key, ByteAry_.Ary_empty);
+								cmd = new Cfg_nde_cmd(cur_cmd, cur_grp_key, Bry_.Empty, cur_itm_key, Bry_.Ary_empty);
 								break;
 						}
 						cmds.Add(cmd);

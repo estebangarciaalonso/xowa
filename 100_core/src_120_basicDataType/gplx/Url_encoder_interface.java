@@ -18,4 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx;
 public interface Url_encoder_interface {
 	String Encode_str(String v);
+	byte[] Encode_bry(String v);
+}
+class Url_encoder_interface_same implements Url_encoder_interface {
+	public String Encode_str(String v) {return v;}
+	public byte[] Encode_bry(String v) {return Bry_.new_utf8_(v);}
+        public static final Url_encoder_interface_same _ = new Url_encoder_interface_same(); Url_encoder_interface_same() {}
 }

@@ -39,19 +39,19 @@ public class Html_nde {
 	public int Name_bgn() {return name_bgn;} public Html_nde Name_bgn_(int v) {name_bgn = v; return this;} private int name_bgn;
 	public int Name_end() {return name_end;} public Html_nde Name_end_(int v) {name_end = v; return this;} private int name_end;
 	public void Clear() {tag_lhs_bgn = tag_rhs_bgn = -1;}
-	public String Atrs_val_by_key_str(String find_key_str) {return String_.new_utf8_(Atrs_val_by_key_bry(ByteAry_.new_utf8_(find_key_str)));}
+	public String Atrs_val_by_key_str(String find_key_str) {return String_.new_utf8_(Atrs_val_by_key_bry(Bry_.new_utf8_(find_key_str)));}
 	public byte[] Atrs_val_by_key_bry(byte[] find_key_bry) {
 		for (int i = 0; i < atrs_len; i ++) {
 			int atrs_idx = i * 5;
 			int atr_key_bgn = atrs[atrs_idx + 1];
 			int atr_key_end = atrs[atrs_idx + 2];
-			if (ByteAry_.Match(src, atr_key_bgn, atr_key_end, find_key_bry))
+			if (Bry_.Match(src, atr_key_bgn, atr_key_end, find_key_bry))
 				return Atrs_vals_by_pos(src, atrs[atrs_idx + 0], atrs[atrs_idx + 3], atrs[atrs_idx + 4]);
 		}
 		return null;
 	}
 	byte[] Atrs_vals_by_pos(byte[] src, int quote_byte, int bgn, int end) {
-		ByteAryBfr tmp_bfr = ByteAryBfr.new_();
+		Bry_bfr tmp_bfr = Bry_bfr.new_();
 		boolean dirty = false;
 		for (int i = bgn; i < end; i++) {
 			byte b = src[i];
@@ -77,10 +77,10 @@ public class Html_nde {
 					break;
 			}
 		}
-		return dirty ? tmp_bfr.XtoAryAndClear() : ByteAry_.Mid(src, bgn, end);
+		return dirty ? tmp_bfr.Xto_bry_and_clear() : Bry_.Mid(src, bgn, end);
 	}
 	public byte[] Data(byte[] src) {
-		return ByteAry_.Mid(src, tag_lhs_end, tag_rhs_bgn);
+		return Bry_.Mid(src, tag_lhs_end, tag_rhs_bgn);
 	}
 }
 //	class Xoh_atr {

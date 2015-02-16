@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
+import gplx.xowa.net.*;
 public class Xoh_href_parser_tst {		
 	@Before public void init() {fxt.Clear();} private Xoh_href_parser_fxt fxt = new Xoh_href_parser_fxt();
 	@Test   public void Parse_full_wiki() {
@@ -134,7 +135,7 @@ public class Xoh_href_parser_tst {
 	@Test   public void Parse_brief_wiki()				{fxt.Init_hover_full_n_().Test_parse("file:///wiki/A"						, "A");}
 	@Test   public void Parse_brief_http()				{fxt.Init_hover_full_n_().Test_parse("http://a.org/b"						, "http://a.org/b");}
 	@Test   public void Parse_brief_file()				{fxt.Init_hover_full_n_().Test_parse("file:///C/xowa/file/a.png"			, "file:///C/xowa/file/a.png");}
-	@Test   public void Parse_brief_anchor()				{fxt.Init_hover_full_n_().Test_parse("#a"									, "#a");}
+	@Test   public void Parse_brief_anchor()			{fxt.Init_hover_full_n_().Test_parse("#a"									, "#a");}
 	@Test   public void Parse_brief_anchor_file()		{fxt.Init_hover_full_n_().Test_parse("file:///#a"							, "#a");}
 	@Test   public void Parse_brief_xwiki()				{fxt.Init_hover_full_n_().Test_parse("file:///site/en.wikt.org/wiki/Page"	, "en.wikt.org/Page");}
 	@Test   public void Parse_brief_xwiki_2()			{fxt.Init_hover_full_n_().Expd_page_("a").Test_parse("/wiki/wikt:a"			, "en.wiktionary.org/a");}
@@ -144,7 +145,7 @@ public class Xoh_href_parser_tst {
 	//@Test   public void Parse_site_anchor()				{fxt.Prep_raw_("/site/en.wikt.org/wiki/A#b_c"		).Expd_tid_(Xoh_href.Tid_site).Expd_full_("en.wikt.org/wiki/A#b_c").Expd_page_("A").Expd_anch_("b_c").Test_parse();}
 	@Test   public void Build_xwiki_enc()				{fxt.Test_build("wikt:abc?d"				, "/site/en.wiktionary.org/wiki/abc%3Fd");}	
 	@Test   public void Build_page_quote()				{fxt.Test_build("a\"b\"c"					, "/wiki/A%22b%22c");}
-	@Test   public void Build_page()						{fxt.Test_build("abc"						, "/wiki/Abc");}
+	@Test   public void Build_page()					{fxt.Test_build("abc"						, "/wiki/Abc");}
 	@Test   public void Build_page_ns()					{fxt.Test_build("Image:A.png"				, "/wiki/Image:A.png");}
 	@Test   public void Build_anchor()					{fxt.Test_build("#abc"						, "#abc");}
 	@Test   public void Build_page_anchor()				{fxt.Test_build("Abc#def"					, "/wiki/Abc#def");}
@@ -163,7 +164,7 @@ public class Xoh_href_parser_tst {
 	@Test   public void Parse_xwiki_cases_correctly() {	// PURPOSE: xwiki links should use case_match of xwiki (en.wiktionary.org) not cur_wiki (en.wikipedia.org); EX:w:Alphabet
 		fxt	.Prep_raw_("/site/en.wiktionary.org/wiki/alphabet")
 			.Init_xwiki_alias("en.wiktionary.org", "en.wiktionary.org");
-		Xow_wiki en_wiktionary_org = fxt.App().Wiki_mgr().Get_by_key_or_make(ByteAry_.new_ascii_("en.wiktionary.org"));
+		Xow_wiki en_wiktionary_org = fxt.App().Wiki_mgr().Get_by_key_or_make(Bry_.new_ascii_("en.wiktionary.org"));
 		en_wiktionary_org.Ns_mgr().Ns_main().Case_match_(Xow_ns_case_.Id_all);
 		fxt	.Expd_tid_(Xoh_href.Tid_site)
 			.Expd_full_("en.wiktionary.org/wiki/alphabet")
@@ -178,20 +179,24 @@ public class Xoh_href_parser_tst {
 			.Expd_page_("Main Page")
 			.Test_parse();
 	}
+	@Test   public void Parse_protocol() {	// PURPOSE: check that urls with form of "ftp://" return back Tid_ftp; DATE:2014-04-25
+		fxt	.Test_parse_protocol("ftp://a.org", Xoo_protocol_itm.Tid_ftp);
+	}
 //		@Test   public void Parse_question_ttl()				{fxt.Prep_raw_("/wiki/%3F").Expd_tid_(Xoh_href.Tid_wiki).Expd_full_("en.wikipedia.org/wiki/?").Expd_page_("?").Test_parse();}
 //		@Test   public void Parse_question_w_arg()			{fxt.Prep_raw_("/wiki/A%3F?action=edit").Expd_tid_(Xoh_href.Tid_wiki).Expd_full_("en.wikipedia.org/wiki/A??action=edit").Expd_page_("A??action=edit").Test_parse();}
 }
 class Xoh_href_parser_fxt {
-	private Xow_wiki wiki; private Xoh_href_parser href_parser; private ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); private Xoh_href href = new Xoh_href();
+	private Xow_wiki wiki; private Xoh_href_parser href_parser; private Bry_bfr tmp_bfr = Bry_bfr.reset_(255); private Xoh_href href = new Xoh_href();
+	private static final byte[] Page_1_ttl = Bry_.new_ascii_("Page 1");
 	public void Clear() {
 		expd_tid = Xoh_href.Tid_null;
 		prep_raw = expd_full = expd_wiki = expd_page = expd_anch = null;
 		if (app != null) return;
 		app = Xoa_app_fxt.app_();
 		wiki = Xoa_app_fxt.wiki_tst_(app);
-		wiki.Xwiki_mgr().Add_bulk(ByteAry_.new_ascii_("wikt|en.wiktionary.org"));
-		app.User().Wiki().Xwiki_mgr().Add_bulk(ByteAry_.new_ascii_("en.wiktionary.org|en.wiktionary.org"));
-		href_parser = new Xoh_href_parser(app.Url_converter_href(), app.Url_parser().Url_parser());
+		wiki.Xwiki_mgr().Add_bulk(Bry_.new_ascii_("wikt|en.wiktionary.org"));
+		app.User().Wiki().Xwiki_mgr().Add_bulk(Bry_.new_ascii_("en.wiktionary.org|en.wiktionary.org"));
+		href_parser = new Xoh_href_parser(app.Encoder_mgr().Href(), app.Url_parser().Url_parser());
 	}
 	public Xoa_app App() {return app;} private Xoa_app app;
 	public Xoh_href_parser_fxt Init_xwiki_alias(String alias, String domain) {
@@ -208,24 +213,28 @@ class Xoh_href_parser_fxt {
 	public Xoh_href_parser_fxt Expd_page_(String v)	{this.expd_page = v; return this;} private String expd_page;
 	public Xoh_href_parser_fxt Expd_anch_(String v)	{this.expd_anch = v; return this;} private String expd_anch;
 	public void Test_parse() {
-		href_parser.Parse(href, prep_raw, wiki, ByteAry_.new_ascii_("Page 1"));
+		href_parser.Parse(href, prep_raw, wiki, Page_1_ttl);
 		if (expd_tid != Xoh_href.Tid_null) 	Tfds.Eq(expd_tid, href.Tid());
 		if (expd_wiki != null) 				Tfds.Eq(expd_wiki, String_.new_utf8_(href.Wiki()));
 		if (expd_page != null) 				Tfds.Eq(expd_page, String_.new_utf8_(href.Page()));
 		if (expd_anch != null) 				Tfds.Eq(expd_anch, String_.new_utf8_(href.Anchor()));
 		if (expd_full != null) {
 			href.Print_to_bfr(tmp_bfr, true);
-			Tfds.Eq(expd_full, tmp_bfr.XtoStrAndClear());
+			Tfds.Eq(expd_full, tmp_bfr.Xto_str_and_clear());
 		}
 	}
 	public void Test_parse(String raw, String expd) {
-		href_parser.Parse(href, raw, wiki, ByteAry_.new_ascii_("Page 1"));
+		href_parser.Parse(href, raw, wiki, Page_1_ttl);
 		href.Print_to_bfr(tmp_bfr, wiki.Gui_mgr().Cfg_browser().Link_hover_full());
-		Tfds.Eq(expd, tmp_bfr.XtoStrAndClear());
+		Tfds.Eq(expd, tmp_bfr.Xto_str_and_clear());
 	}
 	public void Test_build(String raw, String expd) {
-		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ByteAry_.new_utf8_(raw));
-		href_parser.Build_to_bfr(ttl, wiki, tmp_bfr);
-		Tfds.Eq(expd, tmp_bfr.XtoStrAndClear());
+		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, Bry_.new_utf8_(raw));
+		href_parser.Build_to_bfr(tmp_bfr, wiki, ttl);
+		Tfds.Eq(expd, tmp_bfr.Xto_str_and_clear());
+	}
+	public void Test_parse_protocol(String raw, byte expd_tid) {
+		href_parser.Parse(href, raw, wiki, Page_1_ttl);
+	    Tfds.Eq(expd_tid, href.Protocol_tid());
 	}
 }

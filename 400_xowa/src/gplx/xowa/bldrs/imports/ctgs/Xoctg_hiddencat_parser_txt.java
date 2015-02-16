@@ -23,7 +23,7 @@ public class Xoctg_hiddencat_parser_txt extends Xoctg_hiddencat_parser_base {
 	@Override public void Cmd_bgn_hook(Xob_bldr bldr, Sql_file_parser parser) {
 		super.Cmd_bgn_hook(bldr, parser);
 	}
-	@Override public void Exec_hook(ByteAryBfr file_bfr, int cur_id, boolean cur_is_hiddencat) {
+	@Override public void Exec_hook(Bry_bfr file_bfr, int cur_id, boolean cur_is_hiddencat) {
 		fld_wtr.Bfr_(file_bfr);
 		fld_wtr.Write_int_base85_len5_fld(cur_id);
 	}

@@ -44,8 +44,8 @@ class Upgrader_v00_02_01 {
 			Io_mgr._.CopyFil(old_wikistats_url, new_wikistats_url, false);
 		}
 		byte[] old_wikistats_bry = Io_mgr._.LoadFilBry(new_wikistats_url);
-		byte[] new_wikistats_bry = ByteAry_.Replace_between(old_wikistats_bry, ByteAry_.new_ascii_("props.main_page_('"), ByteAry_.new_ascii_("');\n"), ByteAry_.Empty);
-		if (!ByteAry_.Eq(old_wikistats_bry, new_wikistats_bry)) {
+		byte[] new_wikistats_bry = Bry_.Replace_between(old_wikistats_bry, Bry_.new_ascii_("props.main_page_('"), Bry_.new_ascii_("');\n"), Bry_.Empty);
+		if (!Bry_.Eq(old_wikistats_bry, new_wikistats_bry)) {
 			usr_dlg.Note_many(GRP_KEY, "wiki_stats.remove_mainpage", "removing mainpages");
 			Io_mgr._.SaveFilBry(new_wikistats_url, new_wikistats_bry);
 		}

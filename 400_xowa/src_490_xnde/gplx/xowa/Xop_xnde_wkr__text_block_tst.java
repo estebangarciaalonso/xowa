@@ -29,17 +29,30 @@ public class Xop_xnde_wkr__text_block_tst {
 	@Test  public void Source_escape() {
 		fxt.Test_parse_page_wiki_str("<source><b></source>", "<pre>&lt;b&gt;</pre>");
 	}
-	@Test  public void Source_escape_amp() {	// PURPOSE: &lt; should be rendered as &amp;lt; EX:uk.b:HTML; DATE:2014-03-11
+	@Test  public void Source_escape_amp() {	// PURPOSE: &lt; should be rendered as &amp;lt; PAGE:uk.b:HTML; DATE:2014-03-11
 		fxt.Test_parse_page_wiki_str("<source>&lt;</source>", "<pre>&amp;lt;</pre>");
 	}
-	@Test  public void Code_dangling() {	// EX.WP: HTML; <code>&lt;i&gt;<code> and <code>&lt;center&gt;<code> tags. There are
+	@Test  public void Source_pre() {	// PURPOSE: handle pre; PAGE:en.w:Comment_(computer_programming); DATE:2014-06-23
+		fxt.Init_para_y_();
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
+		( "  <source>"
+		, "  a"
+		, "  </source>"
+		), String_.Concat_lines_nl_skip_last
+		( "  <pre>"
+		, "  a"
+		, "</pre>"
+		));
+		fxt.Init_para_n_();
+	}
+	@Test  public void Code_dangling() {	// PAGE:en.w:HTML; <code>&lt;i&gt;<code> and <code>&lt;center&gt;<code> tags. There are
 		fxt.Test_parse_page_wiki_str("a<code>b<code>c", "a<code>b</code>c");
 	}
-	@Test  public void Code_do_not_escape() { // PURPOSE: <code> was mistakenly marked as escape, causing inner tags to be rendered incorrectly; EX.WP:UTF8
+	@Test  public void Code_do_not_escape() { // PURPOSE: <code> was mistakenly marked as escape, causing inner tags to be rendered incorrectly; PAGE:en.w:UTF8
 		fxt.Test_parse_page_all_str
-			(	"<code><span style=\"color:red;\">0100100</span></code>"
-			,	"<code><span style=\"color:red;\">0100100</span></code>"
-			);
+		( "<code><span style=\"color:red;\">0100100</span></code>"
+		, "<code><span style=\"color:red;\">0100100</span></code>"
+		);
 	}
 	@Test  public void Pre_and_html_chars() {// PURPOSE: <pre> should handle '"<> according to context
 		fxt.Test_parse_page_all_str("<pre>a&#09;b</pre>"			, "<pre>a&#09;b</pre>");					// known ncr/dec; embed and depend on browser transforming; EX: de.w:Wikipedia:Technik/Skin/Werkstatt
@@ -48,33 +61,19 @@ public class Xop_xnde_wkr__text_block_tst {
 		fxt.Test_parse_page_all_str("<pre>a&#x9;b</pre>"			, "<pre>a&#x9;b</pre>");					// known ncr/hex
 		fxt.Test_parse_page_all_str("<pre>a&apos;b</pre>"			, "<pre>a&apos;b</pre>");					// known name; embed
 		fxt.Test_parse_page_all_str("<pre>a&apox;b</pre>"			, "<pre>a&amp;apox;b</pre>");				// unknown name; escape
-		fxt.Test_parse_page_all_str("<pre>&\"<></pre>"				, "<pre>&amp;&quot;&lt;&gt;</pre>");		// no ncr or name; escape; needed for <pre><img ...></pre>; EX.WP: Alt attribute
+		fxt.Test_parse_page_all_str("<pre>&\"<></pre>"				, "<pre>&amp;&quot;&lt;&gt;</pre>");		// no ncr or name; escape; needed for <pre><img ...></pre>; PAGE:en.w:Alt attribute
 	}
 	@Test  public void Pre_and_space() {// PURPOSE: make sure pre does not careate <p></p> around it; also, make sure " a" is preserved; DATE:2014-02-20
 		fxt.Init_para_y_();
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
-			(	"<pre>"
-			,	" a"
-			,	"</pre>"
-			), String_.Concat_lines_nl_skipLast
-			(	"<pre>"
-			,	" a"
-			,	"</pre>"
-			));
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
+		( "<pre>"
+		, " a"
+		, "</pre>"
+		), String_.Concat_lines_nl_skip_last
+		( "<pre>"
+		, " a"
+		, "</pre>"
+		));
 		fxt.Init_para_n_();
 	}
-	@Test  public void Pre_disabled_in_blockquote() { // EX.WP: Tenerife airport disaster
-		fxt.Init_para_y_();
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
-			(	"<blockquote>"
-			,	" a"
-			,	"</blockquote>"
-			), String_.Concat_lines_nl_skipLast
-			(	"<blockquote>"
-			,	" a"
-			,	"</blockquote>"
-			));
-		fxt.Init_para_n_();
-	}
-
 }

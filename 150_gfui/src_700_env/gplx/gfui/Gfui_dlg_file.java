@@ -29,5 +29,5 @@ class Gfui_dlg_file_null implements Gfui_dlg_file {
 	public Gfui_dlg_file Init_dir_(Io_url v) {return this;}
 	public Gfui_dlg_file Init_exts_(String... v) {return this;}
 	public String Ask() {return "";}
-        public static final Gfui_dlg_file_null _ = new Gfui_dlg_file_null(); Gfui_dlg_file_null() {}
+	public static final Gfui_dlg_file_null _ = new Gfui_dlg_file_null(); Gfui_dlg_file_null() {}
 }

@@ -16,10 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.langs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import org.junit.*;
-public class Xobc_utl_make_lang_tst {
-	Xobc_utl_make_lang_fxt fxt = new Xobc_utl_make_lang_fxt();
-	@Before public void init() {fxt.Clear();}
+import org.junit.*; import gplx.core.strings.*;
+public class Xobc_utl_make_lang_tst {		
+	@Before public void init() {fxt.Clear();} private Xobc_utl_make_lang_fxt fxt = new Xobc_utl_make_lang_fxt();
 	@Test  public void Parse() {
 		fxt.Parse_rows(String_.Concat_lines_nl
 			(	""
@@ -35,7 +34,7 @@ public class Xobc_utl_make_lang_tst {
 			);
 	}
 	@Test  public void Trailing_colon() {
-		fxt.Kwd_mgr().Parse_keep_trailing_colon(ByteAry_.new_utf8_("fr"), ByteAry_.new_utf8_(String_.Concat_lines_nl
+		fxt.Kwd_mgr().Parse_keep_trailing_colon(Bry_.new_utf8_("fr"), Bry_.new_utf8_(String_.Concat_lines_nl
 			(	"if|if:~si:~"
 			,	"ifeq|"
 			)));
@@ -62,7 +61,7 @@ public class Xobc_utl_make_lang_tst {
 			));
 	}
 	@Test  public void Prepend_hash() {
-		fxt.Kwd_mgr().Parse_prepend_hash(ByteAry_.new_utf8_("fr"), ByteAry_.new_utf8_(String_.Concat_lines_nl
+		fxt.Kwd_mgr().Parse_prepend_hash(Bry_.new_utf8_("fr"), Bry_.new_utf8_(String_.Concat_lines_nl
 			(	"if|if:~si:~"
 			,	"ifeq|"
 			,	"tag|tag~"
@@ -92,7 +91,7 @@ public class Xobc_utl_make_lang_tst {
 			));
 	}
 	@Test  public void Add_words_hash() {
-		fxt.Kwd_mgr().Parse_add_words(ByteAry_.new_utf8_("fr"), ByteAry_.new_utf8_(String_.Concat_lines_nl
+		fxt.Kwd_mgr().Parse_add_words(Bry_.new_utf8_("fr"), Bry_.new_utf8_(String_.Concat_lines_nl
 			(	"if|if_new:~if~"
 			,	"ifeq|"
 			)));
@@ -117,7 +116,7 @@ public class Xobc_utl_make_lang_tst {
 			));
 	}
 	@Test  public void Manual_text() {
-		fxt.Mgr().Parse_manual_text(ByteAry_.new_utf8_("fr"), ByteAry_.new_utf8_(String_.Concat_lines_nl
+		fxt.Mgr().Parse_manual_text(Bry_.new_utf8_("fr"), Bry_.new_utf8_(String_.Concat_lines_nl
 			(	"app;"
 			))
 			, fxt.Mgr().Manual_text_end_hash());
@@ -149,19 +148,16 @@ class Xobc_utl_make_lang_fxt {
 		mgr = new Xobc_utl_make_lang(app);
 		return this;
 	}	private String_bldr sb = String_bldr_.new_(); private Xoa_app app;
-	public Xobcl_kwd_row row_(String key, String... itms) {return new Xobcl_kwd_row(ByteAry_.new_ascii_(key), ByteAry_.Ary(itms));} 
-	public void Parse_rows(String raw, Xobcl_kwd_row... expd) {Tfds.Eq_str_lines(Xto_str(expd), Xto_str(Xobc_utl_make_lang_kwds.Parse(ByteAry_.new_ascii_(raw))));}
+	public Xobcl_kwd_row row_(String key, String... itms) {return new Xobcl_kwd_row(Bry_.new_ascii_(key), Bry_.Ary(itms));} 
+	public void Parse_rows(String raw, Xobcl_kwd_row... expd) {Tfds.Eq_str_lines(Xto_str(expd), Xto_str(Xobc_utl_make_lang_kwds.Parse(Bry_.new_ascii_(raw))));}
 	public void Ini_file_mw_core(String lang, String raw) {
-		Io_url fil = app.User().Fsys_mgr().Root_dir().GenSubFil_nest("lang", "mediawiki", "messages", "Messages" + String_.UpperFirst(lang) + ".php");
+		Io_url fil = app.Fsys_mgr().Cfg_lang_core_dir().OwnerDir().GenSubFil_nest("mediawiki", "core_php", "Messages" + String_.UpperFirst(lang) + ".php");
 		Io_mgr._.SaveFilStr(fil, raw);
 	}
 	public void Tst_file_xo(String lang, String expd) {
 		Io_url fil = Xol_lang_.xo_lang_fil_(app, lang);
 		Tfds.Eq_str_lines(expd, Io_mgr._.LoadFilStr(fil));
 	}
-//		public void Parse_trailing_colon(String raw, String[] langs, params Xobcl_kwd_row[] expd) {
-//			Tfds.Eq_str_lines(Xto_str(expd), Xto_str(Xobc_utl_make_lang_kwds.Parse(ByteAry_.new_ascii_(raw))));
-//		}
 	private String Xto_str(Xobcl_kwd_row[] expd) {
 		int len = expd.length;
 		for (int i = 0; i < len; i++) {
@@ -178,6 +174,6 @@ class Xobc_utl_make_lang_fxt {
 			}
 			sb.Add_char_nl();
 		}
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}
 }

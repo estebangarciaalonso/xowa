@@ -19,7 +19,7 @@ package gplx.xowa.xtns.pfuncs.times; import gplx.*; import gplx.xowa.*; import g
 import org.junit.*;
 public class Pft_func_date_rev_tst {
 	private Xop_fxt fxt = new Xop_fxt();
-	@Before	public void setup()						{fxt.Reset(); fxt.Ctx().Page().Modified_on_(DateAdp_.new_(2012, 1, 2, 3, 4, 5, 6));}
+	@Before	public void setup()						{fxt.Reset(); fxt.Page().Revision_data().Modified_on_(DateAdp_.new_(2012, 1, 2, 3, 4, 5, 6));}
 	@After public void teardown()				{}
 	@Test   public void Rev_year()					{fxt.Test_parse_tmpl_str_test("{{REVISIONYEAR}}"		, "{{test}}", "2012");}
 	@Test   public void Rev_month_int()				{fxt.Test_parse_tmpl_str_test("{{REVISIONMONTH1}}"		, "{{test}}", "1");}

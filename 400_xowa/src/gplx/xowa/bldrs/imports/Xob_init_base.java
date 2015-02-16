@@ -23,6 +23,7 @@ public abstract class Xob_init_base implements Xob_cmd, GfoInvkAble {
 	public abstract void Cmd_ini_wdata(Xob_bldr bldr, Xow_wiki wiki);
 	public abstract void Cmd_run_end(Xow_wiki wiki);
 	public void Cmd_ini(Xob_bldr bldr) {		// add other cmds; EX: wikidata
+		Xob_import_marker.Import_bgn(wiki);
 		if (wdata_enabled == Bool_.__byte) wdata_enabled = wiki.Domain_tid() == Xow_wiki_domain_.Tid_wikidata ? Bool_.Y_byte : Bool_.N_byte;	// if wdata_enabled not explicitly set, set it to y if wiki is "www.wikidata.org"
 		if (wdata_enabled == Bool_.Y_byte)		// if wdata_enabled, auto-add wdata_wkrs bldr
 			this.Cmd_ini_wdata(bldr, wiki);
@@ -35,7 +36,7 @@ public abstract class Xob_init_base implements Xob_cmd, GfoInvkAble {
 		this.Cmd_run_end(wiki);					// save site info
 	}
 	public void Cmd_end() {
-		wiki.App().Gui_mgr().Html_mgr().Portal_mgr().Wikis().Itms_refresh();	// dirty wiki list so that next refresh will load itm
+		wiki.App().Gui_mgr().Html_mgr().Portal_mgr().Wikis().Itms_reset();	// dirty wiki list so that next refresh will load itm
 		if (wiki.App().Setup_mgr().Dump_mgr().Css_wiki_update()) {
 			Io_url url = wiki.App().User().Fsys_mgr().Wiki_html_dir(wiki.Domain_str()).GenSubFil(Xoa_css_extractor.Css_wiki_name);
 			usr_dlg.Log_many("", "", "deleting css: ~{0}", url.Raw());

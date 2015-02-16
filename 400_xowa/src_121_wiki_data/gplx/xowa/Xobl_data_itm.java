@@ -17,5 +17,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public interface Xobl_data_itm {
-	void Srl_save(ByteAryBfr bfr);
+	void Srl_save(Bry_bfr bfr);
 }

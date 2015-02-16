@@ -35,7 +35,7 @@ class IoStream_mock_fxt {
 		rdr.Reset();
 		trg_bgn = 0;
 	}	IoStream_mock rdr; byte[] trg_bry;
-	public IoStream_mock_fxt Init_src_str_(String v) {rdr.Data_bry_(ByteAry_.new_ascii_(v)); return this;}
+	public IoStream_mock_fxt Init_src_str_(String v) {rdr.Data_bry_(Bry_.new_ascii_(v)); return this;}
 	public IoStream_mock_fxt Init_trg_len_(int v) {trg_bry = new byte[v]; return this;} 
 	public IoStream_mock_fxt Init_read_len_(int v) {read_len = v; return this;} int read_len; 
 	public IoStream_mock_fxt Init_rdr_limit_(int v) {rdr.Read_limit_(v); return this;} 

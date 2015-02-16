@@ -20,11 +20,19 @@ import org.junit.*;
 import gplx.xowa.xtns.wdatas.*;
 public class Scrib_lib_wikibase_entity_tst {
 	@Before public void init() {
-		fxt.Clear();
-		fxt.Init_page("{{#invoke:Mod_0|Func_0}}");
-		lib = fxt.Core().Lib_wikibase().Init();
+		fxt.Clear_for_lib();
+		lib = fxt.Core().Lib_wikibase_entity().Init();
 	}	private Scrib_invoke_func_fxt fxt = new Scrib_invoke_func_fxt(); private Scrib_lib lib;
 	@Test  public void GetGlobalSiteId() {
-		fxt.Test_lib_proc(lib, Scrib_lib_wikibase_entity.Invk_getGlobalSiteId, Object_.Ary_empty, "enwiki");
+		fxt.Test_scrib_proc_str(lib, Scrib_lib_wikibase_entity.Invk_getGlobalSiteId, Object_.Ary_empty, "enwiki");
+	}
+	@Test  public void FormatPropertyValues() {
+		Wdata_wiki_mgr_fxt wdata_fxt = new Wdata_wiki_mgr_fxt().Init(fxt.Parser_fxt(), false);
+		wdata_fxt.Init_pages_add(wdata_fxt.Wdoc_bldr("Q2").Add_claims(wdata_fxt.Make_claim_str(3, "P3_val")).Xto_wdoc());
+		wdata_fxt.Init_pids_add("en", "P3", 3);
+		fxt.Test_scrib_proc_str(lib, Scrib_lib_wikibase_entity.Invk_formatPropertyValues, Object_.Ary("Q2", "P3"), "P3_val");
+	}
+	@Test  public void FormatPropertyValues__not_found() {	// PURPOSE: should return "" not null; PAGE:fr.s:Auteur:Henri_Bergson; DATE:2014-08-13
+		fxt.Test_scrib_proc_str(lib, Scrib_lib_wikibase_entity.Invk_formatPropertyValues, Object_.Ary("Q2", "P3"), "");
 	}
 }	

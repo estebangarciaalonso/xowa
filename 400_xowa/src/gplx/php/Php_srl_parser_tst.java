@@ -82,7 +82,7 @@ class Php_srl_parser_fxt {
 	public void Clear() {
 		parser = new Php_srl_parser();
 		factory = parser.Factory();				
-	}	Php_srl_parser parser; Php_srl_factory factory; ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	}	Php_srl_parser parser; Php_srl_factory factory; Bry_bfr tmp_bfr = Bry_bfr.reset_(255);
 	public Php_srl_itm itm_nil_()						{return factory.Nil();}
 	public Php_srl_itm itm_bool_n_()					{return factory.Bool_n();}
 	public Php_srl_itm itm_bool_y_()					{return factory.Bool_y();}
@@ -94,11 +94,11 @@ class Php_srl_parser_fxt {
 	public Php_srl_itm_kv itm_kvi_(int k, Php_srl_itm v){return factory.Kv().Key_(itm_int_(k)).Val_(v);}
 	public Php_srl_itm_kv itm_kvs_(String k, Php_srl_itm v){return factory.Kv().Key_(itm_str_(k)).Val_(v);}
 	public void Test_parse(String raw_str, Php_srl_itm... expd_ary) {
-		byte[] raw = ByteAry_.new_utf8_(raw_str);
+		byte[] raw = Bry_.new_utf8_(raw_str);
 		Php_srl_itm_ary root = parser.Parse(raw);
 		Php_srl_itm root_sub = root.Subs_get_at(0).Val();
 		root_sub.Xto_bfr(tmp_bfr, 0);
-		String actl = tmp_bfr.XtoStrAndClear();
+		String actl = tmp_bfr.Xto_str_and_clear();
 		String expd = Xto_str(expd_ary, 0, expd_ary.length);
 		Tfds.Eq_str_lines(expd, actl, actl);
 	}
@@ -107,6 +107,6 @@ class Php_srl_parser_fxt {
 			Php_srl_itm itm = ary[i];
 			itm.Xto_bfr(tmp_bfr, 0);
 		}
-		return tmp_bfr.XtoStrAndClear();
+		return tmp_bfr.Xto_str_and_clear();
 	}
 }

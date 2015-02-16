@@ -16,24 +16,25 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.core.primitives.*;
 public interface Xot_defn_trace {
 	void Clear();
 	void Trace_bgn(Xop_ctx ctx, byte[] src, byte[] name, Xot_invk caller, Xot_invk self, Xot_defn defn);
-	void Trace_end(int trg_bgn, ByteAryBfr trg);
-	void Print(byte[] src, ByteAryBfr bb);
+	void Trace_end(int trg_bgn, Bry_bfr trg);
+	void Print(byte[] src, Bry_bfr bb);
 }
 class Xot_defn_trace_null implements Xot_defn_trace {
 	public void Clear() {}
 	public void Trace_bgn(Xop_ctx ctx, byte[] src, byte[] name, Xot_invk caller, Xot_invk self, Xot_defn defn) {}
-	public void Trace_end(int trg_bgn, ByteAryBfr trg) {}
-	public void Print(byte[] src, ByteAryBfr bb) {}
+	public void Trace_end(int trg_bgn, Bry_bfr trg) {}
+	public void Print(byte[] src, Bry_bfr bb) {}
 	public static final Xot_defn_trace_null _ = new Xot_defn_trace_null(); Xot_defn_trace_null() {}
 }
 class Xot_defn_trace_brief implements Xot_defn_trace {
 	public int Count() {return hash.Count();}
 	public Xot_defn_trace_itm_brief GetAt(int i) {return (Xot_defn_trace_itm_brief)hash.FetchAt(i);}
 	public void Trace_bgn(Xop_ctx ctx, byte[] src, byte[] name, Xot_invk caller, Xot_invk self, Xot_defn defn) {
-		int hashKey = ByteAryRef.CalcHashCode(name, 0, name.length);
+		int hashKey = Bry_obj_ref.CalcHashCode(name, 0, name.length);
 		Object o = hash.Fetch(hashKey);
 		Xot_defn_trace_itm_brief itm = null;
 		if (o == null) {
@@ -44,8 +45,8 @@ class Xot_defn_trace_brief implements Xot_defn_trace {
 			itm = (Xot_defn_trace_itm_brief)o;
 		itm.Count_add();
 	}	private OrderedHash hash = OrderedHash_.new_();
-	public void Trace_end(int trg_bgn, ByteAryBfr trg) {}
-	public void Print(byte[] src, ByteAryBfr bb) {
+	public void Trace_end(int trg_bgn, Bry_bfr trg) {}
+	public void Print(byte[] src, Bry_bfr bb) {
 		int count = hash.Count(); if (count == 0) return;
 		if (bb.Len() != 0) bb.Add_byte_nl();	// only add newLine if something in bb; needed for tests
 		for (int i = 0; i < count; i++) {
@@ -57,6 +58,6 @@ class Xot_defn_trace_brief implements Xot_defn_trace {
 	public void Clear() {hash.Clear();}
 }
 class Xot_defn_trace_itm_brief {// name,count,depth,args,
-	public byte[] Name() {return name;} public Xot_defn_trace_itm_brief Name_(byte[] v) {name = v; return this;} private byte[] name = ByteAry_.Empty;
+	public byte[] Name() {return name;} public Xot_defn_trace_itm_brief Name_(byte[] v) {name = v; return this;} private byte[] name = Bry_.Empty;
 	public int Count() {return count;} public Xot_defn_trace_itm_brief Count_(int v) {count = v; return this;} public void Count_add() {++count;} private int count;
 }

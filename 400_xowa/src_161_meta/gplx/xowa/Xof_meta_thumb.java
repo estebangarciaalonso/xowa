@@ -33,7 +33,7 @@ public class Xof_meta_thumb {
 		seeks[seeks_len] = v;
 		return this;
 	}
-	public void Save(ByteAryBfr bfr) {
+	public void Save(Bry_bfr bfr) {
 		bfr		.Add_int_fixed(exists, 1)	.Add_byte(Xof_meta_thumb_parser.Dlm_exists)
 				.Add_int_variable(width)	.Add_byte(Xof_meta_thumb_parser.Dlm_width)
 				.Add_int_variable(height);

@@ -26,16 +26,16 @@ public class Xol_lnki_trail_mgr_tst {
 class Xol_lnki_trail_mgr_fxt {
 	public void Clear() {
 		app = Xoa_app_fxt.app_();
-		lang = new Xol_lang(app, ByteAry_.new_utf8_("fr"));
+		lang = new Xol_lang(app, Bry_.new_utf8_("fr"));
 		lnki_trail_mgr = lang.Lnki_trail_mgr();
 	}	private Xoa_app app; Xol_lang lang; Xol_lnki_trail_mgr lnki_trail_mgr;
 	public void Test_add_bulk(String raw, String... expd_ary) {
-		lnki_trail_mgr.Add_bulk(ByteAry_.new_utf8_(raw));
+		lnki_trail_mgr.Add_bulk(Bry_.new_utf8_(raw));
 		int expd_len = expd_ary.length;
 		Tfds.Eq(expd_len, lang.Lnki_trail_mgr().Count());
 		for (int i = 0; i < expd_len; i++) {
-			byte[] expd_bry = ByteAry_.new_utf8_(expd_ary[i]);
-			byte[] actl_bry = (byte[])lnki_trail_mgr.Trie().MatchAtCur(expd_bry, 0, expd_bry.length);
+			byte[] expd_bry = Bry_.new_utf8_(expd_ary[i]);
+			byte[] actl_bry = (byte[])lnki_trail_mgr.Trie().Match_bgn(expd_bry, 0, expd_bry.length);
 			Tfds.Eq_bry(expd_bry, actl_bry);
 		}
 	}

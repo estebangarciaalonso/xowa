@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.ctgs; import gplx.*; import gplx.xowa.*;
+import gplx.core.flds.*;
 public class Xoctg_idx_itm {
 	public int Pos() {return pos;} public Xoctg_idx_itm Pos_(int v) {pos = v; return this;} private int pos = -1;
 	public int Id() {return id;} private int id;
@@ -43,7 +44,7 @@ class Xoctg_idx_itm_sorter_sortkey implements gplx.lists.ComparerAble {
 	public int compare(Object lhsObj, Object rhsObj) {
 		Xoctg_idx_itm lhs = (Xoctg_idx_itm)lhsObj;
 		Xoctg_idx_itm rhs = (Xoctg_idx_itm)rhsObj;
-		return ByteAry_.Compare(lhs.Sortkey(), rhs.Sortkey());
+		return Bry_.Compare(lhs.Sortkey(), rhs.Sortkey());
 	}
 	public static final Xoctg_idx_itm_sorter_sortkey _ = new Xoctg_idx_itm_sorter_sortkey();
 }

@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.files; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.files.fsdb.*; import gplx.xowa.files.qrys.*;
+import gplx.dbs.*; import gplx.dbs.qrys.*; import gplx.xowa.dbs.*; import gplx.xowa.files.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.files.fsdb.*; import gplx.xowa.files.fsdb.qrys.*;
 import gplx.xowa.bldrs.oimgs.*;
 public class Xob_orig_qry_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	public Xob_orig_qry_cmd(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
@@ -24,14 +24,14 @@ public class Xob_orig_qry_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_bgn(Xob_bldr bldr) {
 //			Xof_qry_mgr qry_mgr = new Xof_qry_mgr();
-		Db_provider provider = Xodb_db_file.init__file_make(wiki.Fsys_mgr().Root_dir()).Provider();
+		Db_conn conn = Xodb_db_file.init__file_make(wiki.Fsys_mgr().Root_dir()).Conn();
 		Xob_bmk_mgr bmk = new Xob_bmk_mgr();
-		bmk.Init(provider, this.Cmd_key(), true, false, true);
+		bmk.Init(conn, this.Cmd_key(), true, false, true);
 		bmk.Load();
 		Xof_fsdb_itm itm = new Xof_fsdb_itm();
 		DataRdr rdr = DataRdr_.Null;
 		try {
-			// rdr = Select(provider, bmk.Repo_prv(), bmk.Ttl_prv());
+			// rdr = Select(conn, bmk.Repo_prv(), bmk.Ttl_prv());
 			while (rdr.MoveNextPeer()) {
 				Load_itm(itm, rdr);
 				// QueryItm
@@ -51,11 +51,11 @@ public class Xob_orig_qry_cmd extends Xob_itm_basic_base implements Xob_cmd {
 	private void Load_itm(Xof_fsdb_itm itm, DataRdr rdr) {
 		itm.Lnki_ttl_(null);
 	}
-	public DataRdr Select(Db_provider p, byte prv_repo_id, byte[] prv_ttl) {
-		String sql = String_.Concat_lines_nl_skipLast
+	public DataRdr Select(Db_conn p, byte prv_repo_id, byte[] prv_ttl) {
+		String sql = String_.Concat_lines_nl_skip_last
 			(	"SELECT	lnki_ttl"
 			,	"FROM	orig_regy"	
-			,	"WHERE	lnki_repo >= '" + Byte_.XtoStr(prv_repo_id) + "'"
+			,	"WHERE	lnki_repo >= '" + Byte_.Xto_str(prv_repo_id) + "'"
 			,	"AND    lnki_ttl > '" + prv_ttl + "'"
 			,	"AND	oimg_orig_page_id = -1;"
 			);

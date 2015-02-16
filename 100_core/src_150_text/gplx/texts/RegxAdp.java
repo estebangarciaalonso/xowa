@@ -29,8 +29,8 @@ public class RegxAdp {
 	public RegxMatch Match(String input, int bgn) {
 		Matcher match = under.matcher(input);
 		boolean success = match.find(bgn);
-		int match_bgn = success ? match.start() : String_.NotFound; 
-		int match_end = success ? match.end() : String_.NotFound;
+		int match_bgn = success ? match.start() : String_.Find_none; 
+		int match_end = success ? match.end() : String_.Find_none;
 		RegxGroup[] ary = RegxGroup.Ary_empty;
 		int groups_len = match.groupCount();
 		if (success && groups_len > 0) {
@@ -47,14 +47,18 @@ public class RegxAdp {
 		int idx = bgn;
 		ListAdp rv = ListAdp_.new_();
 		int len = String_.Len(text);
-		while (idx < len)  {
+		while (idx <= len) {				// NOTE: must be <= not < else "a?" will return null instead of ""; PAGE:en.d:民; DATE:2015-01-30
 			RegxMatch match = this.Match(text, idx);
 			if (match.Rslt_none()) break;
 			rv.Add(match);
 			int find_bgn = match.Find_bgn();
-			idx = find_bgn + match.Find_len();
+			int find_len = match.Find_len();
+			idx = find_len == 0				// find_bgn == find_end
+				? find_bgn + 1				// add 1 to resume search from next char; DATE:2014-09-02
+				: find_bgn + find_len		// otherwise search after find_end
+				;
 		}
-		return (RegxMatch[])rv.XtoAry(RegxMatch.class);
+		return (RegxMatch[])rv.Xto_ary(RegxMatch.class);
 	}
 	@gplx.Internal protected RegxAdp(String regx) {Pattern_(regx);}
 }

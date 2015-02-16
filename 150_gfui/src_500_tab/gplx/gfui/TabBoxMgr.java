@@ -53,5 +53,5 @@ public class TabBoxMgr implements GfoEvMgrOwner {
 		TabBoxEvt_tabSelect.Send(this, oldTab, newTab);
 	}		
 	OrderedHash itms = OrderedHash_.new_();
-        @gplx.Internal protected static TabBoxMgr new_() {return new TabBoxMgr();} TabBoxMgr() {}
+	@gplx.Internal protected static TabBoxMgr new_() {return new TabBoxMgr();} TabBoxMgr() {}
 }

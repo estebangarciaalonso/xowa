@@ -16,25 +16,42 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.gui.cmds; import gplx.*; import gplx.xowa.*; import gplx.xowa.gui.*;
-public class Xog_cmd_mgr implements GfoInvkAble {
+import gplx.xowa.apis.xowa.*; import gplx.xowa.langs.msgs.*;
+public class Xog_cmd_mgr {
 	public void Init_by_kit(Xoa_app app) {
-		cmds_file.Init_by_kit(app);
-		cmds_edit.Init_by_kit(app);
-		cmds_view.Init_by_kit(app);
-		cmds_history.Init_by_kit(app);
-		cmds_bookmarks.Init_by_kit(app);
+		invk_mgr.Ctor(app, this);
+		Load_ctg_msgs(app);
+		Load_cmd_msgs(app);
 	}
-	public Xog_cmds_file Cmds_file() {return cmds_file;} private Xog_cmds_file cmds_file = new Xog_cmds_file();
-	public Xog_cmds_edit Cmds_edit() {return cmds_edit;} private Xog_cmds_edit cmds_edit = new Xog_cmds_edit();
-	public Xog_cmds_view Cmds_view() {return cmds_view;} private Xog_cmds_view cmds_view = new Xog_cmds_view();
-	public Xog_cmds_history Cmds_history() {return cmds_history;} private Xog_cmds_history cmds_history = new Xog_cmds_history();
-	public Xog_cmds_bookmarks Cmds_bookmarks() {return cmds_bookmarks;} private Xog_cmds_bookmarks cmds_bookmarks = new Xog_cmds_bookmarks();
-	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_file)) 		return cmds_file;
-		else if	(ctx.Match(k, Invk_edit)) 		return cmds_edit;
-		else if	(ctx.Match(k, Invk_view)) 		return cmds_view;
-		else if	(ctx.Match(k, Invk_history)) 	return cmds_history;
-		else if	(ctx.Match(k, Invk_bookmarks)) 	return cmds_bookmarks;
-		return this;
-	}	private static final String Invk_file = "file", Invk_edit = "edit", Invk_view = "view", Invk_history = "history", Invk_bookmarks = "bookmarks";
+	public Xog_cmd_mgr_invk Invk_mgr() {return invk_mgr;} private Xog_cmd_mgr_invk invk_mgr = new Xog_cmd_mgr_invk();
+	private void Load_ctg_msgs(Xoa_app app) {
+		Xog_cmd_ctg[] ary = Xog_ctg_itm_.Ary;
+		int len = ary.length;
+		Xol_lang lang = app.User().Lang();
+		for (int i = 0; i < len; i++) {
+			Xog_cmd_ctg itm = ary[i];
+			itm.Name_(Xol_msg_mgr_.Get_msg_val_gui_or_null(lang, Xog_cmd_itm_.Msg_pre_ctg, itm.Key_bry(), Xog_cmd_itm_.Msg_suf_name));
+		}
+	}
+	private void Load_cmd_msgs(Xoa_app app) {
+		int len = this.Len();
+		Xol_lang lang = app.User().Lang();
+		for (int i = 0; i < len; i++) {
+			Xog_cmd_itm itm = this.Get_at(i);
+			itm.Name_(Xol_msg_mgr_.Get_msg_val_gui_or_null(lang, Xog_cmd_itm_.Msg_pre_api, itm.Key_bry(), Xog_cmd_itm_.Msg_suf_name));
+			itm.Tip_(Xol_msg_mgr_.Get_msg_val_gui_or_null(lang, Xog_cmd_itm_.Msg_pre_api, itm.Key_bry(), Xog_cmd_itm_.Msg_suf_tip));
+		}
+	}
+	public int Len() {return Xog_cmd_itm_.Regy_len();}
+	public Xog_cmd_itm Get_at(int i) {return Xog_cmd_itm_.Regy_get_at(i);}
+	public Xog_cmd_itm Get_or_null(String key) {return Xog_cmd_itm_.Regy_get_or_null(key);}
+	public Xog_cmd_itm Get_or_make(String key) {
+		Xog_cmd_itm rv = Xog_cmd_itm_.Regy_get_or_null(key);
+		if (rv == null) {
+			rv = new Xog_cmd_itm(key, Xog_ctg_itm_.Itm_custom, null);	// pass null for cmd; will be filled in
+			Xog_cmd_itm_.Regy_add(rv);
+		}
+		return rv;
+	}
+//		public Xog_cmd_regy Regy() {return regy;} private Xog_cmd_regy regy = new Xog_cmd_regy();
 }

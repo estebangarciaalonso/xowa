@@ -43,7 +43,7 @@ public class Base85_utl {
 	public static byte XtoByteChar(int v) {return (byte)(v + AsciiOffset);}
 	public static int XtoInt(byte v) {return v - AsciiOffset;}
 	public static int XtoIntByStr(String s) {
-		byte[] ary = ByteAry_.new_utf8_(s);
+		byte[] ary = Bry_.new_utf8_(s);
 		return XtoIntByAry(ary, 0, ary.length - 1);
 	}
 	public static int XtoIntByAry(byte[] ary, int bgn, int end) {

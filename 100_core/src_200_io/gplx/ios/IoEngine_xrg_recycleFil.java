@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.ios; import gplx.*;
+import gplx.core.strings.*;
 public class IoEngine_xrg_recycleFil extends IoEngine_xrg_fil_affects1_base {
 	public IoEngine_xrg_recycleFil MissingFails_off() {return MissingFails_(false);} public IoEngine_xrg_recycleFil MissingFails_(boolean v) {MissingFails_set(v); return this;}
 
@@ -38,7 +39,7 @@ public class IoEngine_xrg_recycleFil extends IoEngine_xrg_fil_affects1_base {
 		for (int i = 0; i < aryLen; i++) {
 			if (i != 0) sb.Add(separator);
 			Object val = ary.FetchAt(i);
-			sb.Add_obj(Object_.XtoStr_OrEmpty(val));
+			sb.Add_obj(Object_.Xto_str_strict_or_empty(val));
 		}
 		return sb.XtoStr();			
 	}

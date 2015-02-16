@@ -41,7 +41,7 @@ class Xob_xfer_temp_itm {
 	public int Lnki_page() {return lnki_page;} private int lnki_page;
 	public void Clear() {		
 		lnki_ext = lnki_type = lnki_src_tid
-				= orig_repo = orig_media_type_tid = Byte_.MaxValue_127;
+				= orig_repo = orig_media_type_tid = Byte_.Max_value_127;
 		chk_tid = Chk_tid_none;
 		lnki_id = lnki_w = lnki_h = lnki_count =  lnki_page_id
 				= orig_w = orig_h = orig_page_id = Int_.Neg1;
@@ -73,17 +73,18 @@ class Xob_xfer_temp_itm {
 		orig_ext_id		= rdr.ReadInt(Xob_orig_regy_tbl.Fld_orig_file_ext);
 	}
 	public static final byte 
-		  Chk_tid_none = 0
-		, Chk_tid_orig_page_id_is_null = 1
-		, Chk_tid_orig_media_type_is_audio = 2
-		, Chk_tid_ns_is_media = 3
+	  Chk_tid_none = 0
+	, Chk_tid_orig_page_id_is_null = 1
+	, Chk_tid_orig_media_type_is_audio = 2
+	, Chk_tid_ns_is_media = 3
+	, Chk_tid_orig_w_is_0 = 4
 	;
 	public byte Chk_tid() {return chk_tid;} private byte chk_tid;
 	public boolean Chk(Xof_img_size img_size) {
 		if (String_.Eq(join_ttl, redirect_src)) // join_ttl is same as redirect_src; not a redirect; EX:(direct) join="A.png";redirect_src="A.png"; (redirect) join="A.png";redirect_src="B.png" (i.e.: B redirects to A)
 			redirect_src = "";
 //			else {	// redirect; make sure extension matches; EX: A.png redirects to B.png; lnki_ext will be .png (the lnki's ext); should be .png (the actual file's ext)
-//				Xof_ext join_ext = Xof_ext_.new_by_ttl_(ByteAry_.new_utf8_(join_ttl));
+//				Xof_ext join_ext = Xof_ext_.new_by_ttl_(Bry_.new_utf8_(join_ttl));
 //				lnki_ext = join_ext.Id();
 //			}
 		lnki_ext = orig_ext_id;
@@ -103,6 +104,10 @@ class Xob_xfer_temp_itm {
 			chk_tid = Chk_tid_orig_media_type_is_audio;
 			return false;
 		}
+		if (orig_w <= 0) {	// ignore files that have an orig_w of 0; note that ogg files that are sometimes flagged as VIDEO; EX:2009_10_08_Marc_Randazza_interview.ogg; DATE:2014-08-20
+			chk_tid = Chk_tid_orig_w_is_0;
+			return false;
+		}
 		if (lnki_ext == Xof_ext_.Id_mid) {	// NOTE: .mid does not have orig_media_type of "AUDIO"
 			chk_tid = Chk_tid_orig_media_type_is_audio;
 			return false;
@@ -111,7 +116,8 @@ class Xob_xfer_temp_itm {
 			chk_tid = Chk_tid_ns_is_media;
 			return false;
 		}
-		img_size.Html_size_calc(Xof_exec_tid.Tid_wiki_page, lnki_w, lnki_h, lnki_type, lnki_upright, lnki_ext, orig_w, orig_h, Xof_img_size.Thumb_width_img);
+		int upright_patch = Xof_patch_upright_tid_.Tid_all;	// all future blds will have upright_patch
+		img_size.Html_size_calc(Xof_exec_tid.Tid_wiki_page, lnki_w, lnki_h, lnki_type, upright_patch, lnki_upright, lnki_ext, orig_w, orig_h, Xof_img_size.Thumb_width_img);
 		return true;
 	}
 	public void Insert(Db_stmt stmt, Xof_img_size img_size) {

@@ -27,9 +27,9 @@ class Xosrh_qry_itm {
 	public ListAdp Ids() {return ids;} public void Ids_(ListAdp v) {this.ids = v;} ListAdp ids = ListAdp_.Null;
 	public byte[] Word() {return word;} private byte[] word;
 	public String Xto_str(byte[] src) {
-		ByteAryBfr bfr = ByteAryBfr.new_();
+		Bry_bfr bfr = Bry_bfr.new_();
 		Xto_str_bld(src, bfr);
-		return bfr.XtoStrAndClear();
+		return bfr.Xto_str_and_clear();
 	}
 	public Xosrh_qry_ids Matches(byte[] src) {
 		switch (tid) {
@@ -45,15 +45,15 @@ class Xosrh_qry_itm {
 			default: throw Err_.unhandled(tid);
 		}
 	}
-	private static ListAdp Search_word(Xow_wiki wiki, Cancelable cancelable, ByteAryBfr tmp_bfr, Xosrh_ns_mgr ns_mgr, byte[] search_word, int results_max) {
+	private static ListAdp Search_word(Xow_wiki wiki, Cancelable cancelable, Bry_bfr tmp_bfr, Xosrh_ns_mgr ns_mgr, byte[] search_word, int results_max) {
 		ListAdp found = ListAdp_.new_();
 		byte wiki_db_tid = wiki.Db_mgr().Tid();
 		if (wiki_db_tid == Xodb_mgr_sql.Tid_sql
 			&& wiki.App().Gui_mgr().Search_suggest_mgr().Auto_wildcard()) {	// HACK: auto-asterisk words for sqlite; DATE:2013-09-05
-			if (!ByteAry_.HasAtEnd(search_word, new byte[] {Byte_ascii.Asterisk}))
-				search_word = ByteAry_.Add(search_word, Byte_ascii.Asterisk);
-			if (!ByteAry_.HasAtBgn(search_word, new byte[] {Byte_ascii.Asterisk}))
-				search_word = ByteAry_.Add(Byte_ascii.Asterisk, search_word);
+			if (!Bry_.HasAtEnd(search_word, new byte[] {Byte_ascii.Asterisk}))
+				search_word = Bry_.Add(search_word, Byte_ascii.Asterisk);
+			if (!Bry_.HasAtBgn(search_word, new byte[] {Byte_ascii.Asterisk}))
+				search_word = Bry_.Add(Byte_ascii.Asterisk, search_word);
 		}
 		wiki.Db_mgr().Load_mgr().Load_search(cancelable, found, search_word, results_max);
 		ListAdp rv = ListAdp_.new_();
@@ -66,7 +66,7 @@ class Xosrh_qry_itm {
 		}
 		return rv;
 	}
-	public void Search(Cancelable cancelable, ByteAryBfr tmp_bfr, byte[] src, Xow_wiki wiki, int results_max, Xosrh_ns_mgr ns_mgr) {
+	public void Search(Cancelable cancelable, Bry_bfr tmp_bfr, byte[] src, Xow_wiki wiki, int results_max, Xosrh_ns_mgr ns_mgr) {
 		if (cancelable.Canceled()) return;
 		switch (tid) {
 			case Xosrh_qry_itm.Tid_null: return;
@@ -98,8 +98,8 @@ class Xosrh_qry_itm {
 					Xodb_page itm = (Xodb_page)tmp_ids.FetchAt(i);
 					byte[] itm_ttl = itm.Ttl_wo_ns();
 					itm_ttl = wiki.Lang().Case_mgr().Case_build_lower(itm_ttl, 0, itm_ttl.length);	// lowercase ttl (since all search words are lower-cased)
-					itm_ttl = ByteAry_.Replace(itm_ttl, Byte_ascii.Underline, Byte_ascii.Space);	// replace _ with " " (assume user will use spaces in search term)
-					if (Byte_ary_finder.Find_fwd(itm_ttl, word) != ByteAry_.NotFound)
+					itm_ttl = Bry_.Replace(itm_ttl, Byte_ascii.Underline, Byte_ascii.Space);	// replace _ with " " (assume user will use spaces in search term)
+					if (Bry_finder.Find_fwd(itm_ttl, word) != Bry_.NotFound)
 						ids.Add(itm);
 				}
 				break;
@@ -186,7 +186,7 @@ class Xosrh_qry_itm {
 	ListAdp Evaluate_not_found(String msg, Object... args) {
 		return null;
 	}
-	public void Xto_str_bld(byte[] src, ByteAryBfr bfr) {
+	public void Xto_str_bld(byte[] src, Bry_bfr bfr) {
 		switch (tid) {
 			case Xosrh_qry_itm.Tid_word: 	bfr.Add(word); break;
 			case Xosrh_qry_itm.Tid_not:	bfr.Add(Bry_not); rhs.Xto_str_bld(src, bfr); break;
@@ -203,7 +203,7 @@ class Xosrh_qry_itm {
 		}
 	}
 	public static final byte Tid_null = 0, Tid_root = 1, Tid_word = 2, Tid_word_quote = 3, Tid_not = 4, Tid_or = 5, Tid_and = 6;
-	public static byte[] Bry_not = ByteAry_.new_ascii_("NOT "), Bry_and = ByteAry_.new_ascii_(" AND "), Bry_or = ByteAry_.new_ascii_(" OR ");
+	public static byte[] Bry_not = Bry_.new_ascii_("NOT "), Bry_and = Bry_.new_ascii_(" AND "), Bry_or = Bry_.new_ascii_(" OR ");
 	public static final Xosrh_qry_itm Null = new Xosrh_qry_itm(Tid_null, null, null, null);
 	public static Xosrh_qry_itm nde_(byte tid, Xosrh_qry_itm lhs, Xosrh_qry_itm rhs) {return new Xosrh_qry_itm(tid, null, lhs, rhs);}
 	public static Xosrh_qry_itm word_(byte[] src, Xosrh_qry_tkn word_tkn) {

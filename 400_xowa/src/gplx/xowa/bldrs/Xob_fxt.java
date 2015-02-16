@@ -38,9 +38,9 @@ public class Xob_fxt {
 	public Io_url fil_site_ctg(int idx)				{return wiki.Fsys_mgr().Url_site_fil(Xow_dir_info_.Tid_category, idx);}
 	public Io_url fil_site_id(int idx)				{return wiki.Fsys_mgr().Url_site_fil(Xow_dir_info_.Tid_id, idx);}
 	public Io_url fil_reg(byte tid) 				{return wiki.Fsys_mgr().Url_site_reg(tid);}
-	public Io_url fil_reg(int ns_id, byte tid) 		{return wiki.Fsys_mgr().Url_ns_reg(Int_.XtoStr_PadBgn(ns_id, 3), tid);}
+	public Io_url fil_reg(int ns_id, byte tid) 		{return wiki.Fsys_mgr().Url_ns_reg(Int_.Xto_str_pad_bgn(ns_id, 3), tid);}
 	public Xob_fxt Fil_expd(Io_url url, String... expd) {
-		String text = String_.Concat_lines_nl_skipLast(expd);	// skipLast b/c if trailing line wanted, easier to pass in extra argument for ""
+		String text = String_.Concat_lines_nl_skip_last(expd);	// skipLast b/c if trailing line wanted, easier to pass in extra argument for ""
 		expd_list.Add(new Io_fil_chkr(url, text));
 		return this;
 	} ListAdp expd_list = ListAdp_.new_();
@@ -52,7 +52,7 @@ public class Xob_fxt {
 	public Xob_fxt doc_ary_(Xodb_page... v) {doc_ary = v; return this;} private Xodb_page[] doc_ary;
 	public Xodb_page doc_wo_date_(int id, String title, String text) {return doc_(id, "2012-01-02 13:14", title, text);}
 	public Xodb_page doc_(int id, String date, String title, String text) {
-		Xodb_page rv = new Xodb_page().Id_(id).Ttl_(ByteAry_.new_utf8_(title), wiki.Ns_mgr()).Text_(ByteAry_.new_utf8_(text));
+		Xodb_page rv = new Xodb_page().Id_(id).Ttl_(Bry_.new_utf8_(title), wiki.Ns_mgr()).Text_(Bry_.new_utf8_(text));
 		int[] modified_on = new int[7];
 		dateParser.Parse_iso8651_like(modified_on, date);
 		rv.Modified_on_(DateAdp_.seg_(modified_on));
@@ -61,7 +61,7 @@ public class Xob_fxt {
 	public Xob_fxt Run_ctg() {
 		Xobd_parser parser = new Xobd_parser();
 		gplx.xowa.bldrs.imports.ctgs.Xob_ctg_v1_base ctg_wkr = new gplx.xowa.bldrs.imports.ctgs.Xob_ctg_v1_txt().Ctor(bldr, wiki);
-		byte[] bry = ByteAry_.new_utf8_("[[Category:");
+		byte[] bry = Bry_.new_utf8_("[[Category:");
 		ctg_wkr.Wkr_hooks().Add(bry, bry);
 		parser.Wkr_add(ctg_wkr);
 		return Run(parser);
@@ -69,30 +69,6 @@ public class Xob_fxt {
 	public Xob_fxt Run_id() {
 		gplx.xowa.bldrs.imports.Xobc_core_make_id wkr = new gplx.xowa.bldrs.imports.Xobc_core_make_id(bldr, wiki);
 		Run(wkr);
-		return this;
-	}
-	public Xob_fxt Run_img(String expd) {
-		Xobc_parse_run wkr = new Xobc_parse_run(bldr, wiki).Load_len_(Io_mgr.Len_kb);
-		wkr.Tmpl_on_(true).Cmd_bgn(bldr);
-		for (int i = 0; i < doc_ary.length; i++) {
-			Xodb_page page = doc_ary[i];
-			wkr.Parse_page(page);
-		}
-		wkr.Cmd_end();
-		String actl = Io_mgr._.LoadFilStr(Io_url_.mem_fil_("mem/xowa/wiki/en.wikipedia.org/tmp/img.dump_link/make/0000000000.csv"));
-		Tfds.Eq_str_lines(expd, actl);
-		return this;
-	}
-	public Xob_fxt Run_math(String expd) {
-		Xobc_parse_run wkr = new Xobc_parse_run(bldr, wiki).Load_len_(Io_mgr.Len_kb);
-		wkr.Tmpl_on_(true).Cmd_bgn(bldr);
-		for (int i = 0; i < doc_ary.length; i++) {
-			Xodb_page page = doc_ary[i];
-			wkr.Parse_page(page);
-		}
-		wkr.Cmd_end();
-		String actl = Io_mgr._.LoadFilStr(Io_url_.mem_fil_("mem/xowa/wiki/en.wikipedia.org/tmp/math.text/make/0000000000.csv"));
-		Tfds.Eq_str_lines(expd, actl);
 		return this;
 	}
 	private void Run_wkr(Xobd_wkr wkr) {
@@ -105,7 +81,7 @@ public class Xob_fxt {
 	}
 	private void tst_fils(Io_url[] ary) {
 		Io_fil[] actls = Get_actl(ary);
-		Io_fil_chkr[] expds = (Io_fil_chkr[])expd_list.XtoAry(Io_fil_chkr.class);
+		Io_fil_chkr[] expds = (Io_fil_chkr[])expd_list.Xto_ary(Io_fil_chkr.class);
 		tst_mgr.Tst_ary("all", expds, actls);		
 	}
 	Io_fil[] Get_actl(Io_url[] ary) {
@@ -159,7 +135,7 @@ public class Xob_fxt {
 	}
 	private void Test_expd_files() {
 		if (expd_list.Count() > 0) {
-			Io_fil_chkr[] expd = (Io_fil_chkr[])expd_list.XtoAry(Io_fil_chkr.class);
+			Io_fil_chkr[] expd = (Io_fil_chkr[])expd_list.Xto_ary(Io_fil_chkr.class);
 			Io_fil[] actl = wiki_();
 			tst_mgr.Tst_ary("all", expd, actl);
 		}
@@ -169,7 +145,7 @@ public class Xob_fxt {
 		wiki_fil_add(rv, wiki.Fsys_mgr().Ns_dir());
 		wiki_fil_add(rv, wiki.Fsys_mgr().Site_dir());
 		rv.Sort();
-		return (Io_fil[])rv.XtoAry(Io_fil.class);
+		return (Io_fil[])rv.Xto_ary(Io_fil.class);
 	}
 	private void wiki_fil_add(ListAdp list, Io_url root_dir) {
 		Io_url[] ary = Io_mgr._.QueryDir_args(root_dir).Recur_().ExecAsUrlAry();

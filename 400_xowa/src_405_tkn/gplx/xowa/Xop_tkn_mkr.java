@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.xtns.refs.*;
+import gplx.xowa.parsers.apos.*; import gplx.xowa.parsers.amps.*; import gplx.xowa.parsers.lnkes.*; import gplx.xowa.parsers.hdrs.*; import gplx.xowa.parsers.lists.*; import gplx.xowa.xtns.cite.*; import gplx.xowa.parsers.tblws.*; import gplx.xowa.parsers.paras.*;
 public class Xop_tkn_mkr {
 	Xop_space_tkn space_tkn_immutable = new Xop_space_tkn(true, -1, -1);
 	public Xop_root_tkn Root(byte[] raw)													{return new Xop_root_tkn().Root_src_(raw);}
@@ -25,16 +25,17 @@ public class Xop_tkn_mkr {
 	public Xop_space_tkn Space(Xop_tkn_grp grp, int bgn, int end)							{Xop_space_tkn rv = new Xop_space_tkn(false, bgn, end); grp.Subs_src_pos_(grp.Subs_len(), bgn, end); return rv;}
 	public Xop_space_tkn Space_mutable(int bgn, int end)									{return new Xop_space_tkn(false, bgn, end);}
 	public Xop_apos_tkn Apos(int bgn, int end
-		, int aposLen, int typ, int cmd, int lit_apos, byte cur_tkn_tid)					{return new Xop_apos_tkn(bgn, end, aposLen, typ, cmd, lit_apos, cur_tkn_tid);}
-	public Xop_tkn_itm HtmlRef(int bgn, int end, Xop_amp_trie_itm itm)						{return new Xop_html_ref_tkn(bgn, end, itm);}
-	public Xop_tkn_itm HtmlNcr(int bgn, int end, int val_int, byte[] val_bry)				{return new Xop_html_ncr_tkn(bgn, end, val_int, val_bry);}
-	public Xop_tkn_itm HtmlNcr(int bgn, int end, int val_int)								{return new Xop_html_ncr_tkn(bgn, end, val_int, gplx.intl.Utf16_.Encode_int_to_bry(val_int));}
+		, int aposLen, int typ, int cmd, int lit_apos)										{return new Xop_apos_tkn(bgn, end, aposLen, typ, cmd, lit_apos);}
+	public Xop_tkn_itm Amp_txt(int bgn, int end, Xop_amp_trie_itm itm)						{return new Xop_amp_tkn_txt(bgn, end, itm);}
+	public Xop_tkn_itm Amp_num(int bgn, int end, int val_int, byte[] val_bry)				{return new Xop_amp_tkn_num(bgn, end, val_int, val_bry);}
+	public Xop_tkn_itm Amp_num(int bgn, int end, int val_int)								{return new Xop_amp_tkn_num(bgn, end, val_int, gplx.intl.Utf16_.Encode_int_to_bry(val_int));}
 	public Xop_nl_tkn NewLine(int bgn, int end, byte nl_typ, int nl_len)					{return new Xop_nl_tkn(bgn, end, nl_typ, nl_len);}
 	public Xop_lnki_tkn Lnki(int bgn, int end)												{return (Xop_lnki_tkn)new Xop_lnki_tkn().Tkn_ini_pos(false, bgn, end);}
 	public Xop_list_tkn List_bgn(int bgn, int end, byte listType, int symLen)				{return Xop_list_tkn.bgn_(bgn, end, listType, symLen);}
 	public Xop_list_tkn List_end(int pos, byte listType)									{return Xop_list_tkn.end_(pos, listType);}
 	public Xop_tkn_itm Pipe(int bgn, int end)												{return new Xop_pipe_tkn(bgn, end);}
 	public Xop_tkn_itm Colon(int bgn, int end)												{return new Xop_colon_tkn(bgn, end);}
+	public Xop_eq_tkn Eq(int bgn, int end)													{return new Xop_eq_tkn(bgn, end, end - bgn);}
 	public Xop_eq_tkn Eq(int bgn, int end, int eq_len)										{return new Xop_eq_tkn(bgn, end, eq_len);}
 	public Xot_invk_tkn Tmpl_invk(int bgn, int end)											{return new Xot_invk_tkn(bgn, end);}
 	public Arg_nde_tkn ArgNde(int arg_idx, int bgn)											{return new Arg_nde_tkn(arg_idx, bgn);}
@@ -59,16 +60,17 @@ public class Xop_tkn_mkr {
 	public Xop_pre_tkn Para_pre_bgn(int pos)												{return new Xop_pre_tkn(pos, pos, Xop_pre_tkn.Pre_tid_bgn, null);}
 	public Xop_pre_tkn Para_pre_end(int pos, Xop_tkn_itm bgn)								{return new Xop_pre_tkn(pos, pos, Xop_pre_tkn.Pre_tid_end, bgn);}
 	public Xop_ignore_tkn Ignore(int bgn, int end, byte ignore_type)						{return new Xop_ignore_tkn(bgn, end, ignore_type);}
-	public Xop_bry_tkn Bry(int bgn, int end, byte[] bry)									{return new Xop_bry_tkn(bgn, end, bry);}
-	public Xop_bry_tkn Bry(byte[] src, int bgn, int end)									{return new Xop_bry_tkn(bgn, end, ByteAry_.Mid(src, bgn, end));}
+	public Xop_bry_tkn Bry_raw(int bgn, int end, byte[] bry)								{return new Xop_bry_tkn(bgn, end, bry);}
+	public Xop_bry_tkn Bry_mid(byte[] src, int bgn, int end)								{return new Xop_bry_tkn(bgn, end, Bry_.Mid(src, bgn, end));}
 	public Xop_under_tkn Under(int bgn, int end, int v)										{return new Xop_under_tkn(bgn, end, v);}
 	public gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd Xnde_xowa_cmd()							{return new gplx.xowa.xtns.xowa_cmds.Xop_xowa_cmd();}
 	public gplx.xowa.xtns.poems.Poem_nde Xnde_poem()										{return new gplx.xowa.xtns.poems.Poem_nde();}
-	public Ref_nde Xnde_ref()															{return new Ref_nde();}
-	public References_nde Xnde_references()												{return new References_nde();}
+	public Ref_nde Xnde_ref()																{return new Ref_nde();}
+	public References_nde Xnde_references()													{return new References_nde();}
+	public gplx.xowa.xtns.math.Math_nde Xnde_math()											{return new gplx.xowa.xtns.math.Math_nde();}
 	public gplx.xowa.xtns.gallery.Gallery_xnde Xnde_gallery()								{return new gplx.xowa.xtns.gallery.Gallery_xnde();}
-	public gplx.xowa.xtns.imageMap.Xop_imageMap_xnde Xnde_imageMap()						{return new gplx.xowa.xtns.imageMap.Xop_imageMap_xnde();}
-	public gplx.xowa.xtns.hiero.Hiero_nde Xnde_hiero()									{return new gplx.xowa.xtns.hiero.Hiero_nde();}
+	public gplx.xowa.xtns.imaps.Imap_xnde Xnde_imageMap()									{return new gplx.xowa.xtns.imaps.Imap_xnde();}
+	public gplx.xowa.xtns.hieros.Hiero_xnde Xnde_hiero()									{return new gplx.xowa.xtns.hieros.Hiero_xnde();}
 	public gplx.xowa.xtns.proofreadPage.Pp_pages_nde Xnde_pages()							{return new gplx.xowa.xtns.proofreadPage.Pp_pages_nde();}
 	public gplx.xowa.xtns.proofreadPage.Pp_pagelist_nde Xnde_pagelist()						{return new gplx.xowa.xtns.proofreadPage.Pp_pagelist_nde();}
 	public gplx.xowa.xtns.proofreadPage.Pp_pagequality_nde Xnde_pagequality()				{return new gplx.xowa.xtns.proofreadPage.Pp_pagequality_nde();}
@@ -78,12 +80,16 @@ public class Xop_tkn_mkr {
 	public gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde Xnde_syntaxHighlight()	{return new gplx.xowa.xtns.syntaxHighlight.Xtn_syntaxHighlight_nde();}
 	public gplx.xowa.xtns.templateData.Xtn_templateData_nde Xnde_templateData()				{return new gplx.xowa.xtns.templateData.Xtn_templateData_nde();}
 	public gplx.xowa.xtns.rss.Rss_xnde Xnde_rss()											{return new gplx.xowa.xtns.rss.Rss_xnde();}
+	public gplx.xowa.xtns.quiz.Quiz_xnde Xnde_quiz()										{return new gplx.xowa.xtns.quiz.Quiz_xnde();}
+	public gplx.xowa.xtns.indicators.Indicator_xnde Xnde_indicator()						{return new gplx.xowa.xtns.indicators.Indicator_xnde();}
+	public gplx.xowa.xtns.xowa_cmds.Xox_xowa_html_cmd Xnde_xowa_html()						{return new gplx.xowa.xtns.xowa_cmds.Xox_xowa_html_cmd();}
 	public gplx.xowa.xtns.listings.Listing_xnde Xnde_listing(int tag_id)					{return new gplx.xowa.xtns.listings.Listing_xnde(tag_id);}
 	public gplx.xowa.xtns.scores.Score_xnde Xnde_score()									{return new gplx.xowa.xtns.scores.Score_xnde();}
 	public gplx.xowa.xtns.inputBox.Xtn_inputbox_nde Xnde_inputbox()							{return new gplx.xowa.xtns.inputBox.Xtn_inputbox_nde();}
 	public gplx.xowa.xtns.translates.Xop_translate_xnde Xnde_translate()					{return new gplx.xowa.xtns.translates.Xop_translate_xnde();}
 	public gplx.xowa.xtns.translates.Xop_languages_xnde Xnde_languages()					{return new gplx.xowa.xtns.translates.Xop_languages_xnde();}
-	public gplx.xowa.xtns.translates.Xop_tvar_tkn Tvar(int tkn_bgn, int tkn_end, int key_bgn, int key_end, int txt_bgn, int txt_end) {return new gplx.xowa.xtns.translates.Xop_tvar_tkn(tkn_bgn, tkn_end, key_bgn, key_end, txt_bgn, txt_end);}
+	public gplx.xowa.xtns.translates.Xop_tvar_tkn Tvar(int tkn_bgn, int tkn_end, int key_bgn, int key_end, int txt_bgn, int txt_end, byte[] wikitext) 
+																							{return new gplx.xowa.xtns.translates.Xop_tvar_tkn(tkn_bgn, tkn_end, key_bgn, key_end, txt_bgn, txt_end, wikitext);}
 	public gplx.xowa.langs.vnts.Xop_vnt_tkn Vnt(int bgn_lhs, int bgn_rhs)					{return new gplx.xowa.langs.vnts.Xop_vnt_tkn(bgn_lhs, bgn_rhs);}
 	public gplx.xowa.langs.vnts.Xop_vnt_eqgt_tkn Vnt_eqgt(int bgn, int end)					{return new gplx.xowa.langs.vnts.Xop_vnt_eqgt_tkn(bgn, end);}
 

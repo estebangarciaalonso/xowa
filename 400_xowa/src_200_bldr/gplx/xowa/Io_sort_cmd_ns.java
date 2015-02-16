@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa; import gplx.*;
 import gplx.ios.*;
 public class Io_sort_cmd_ns implements Io_make_cmd {
-	Xob_xdat_file_wtr fil_wtr; ByteAryBfr reg_bfr = ByteAryBfr.new_(), key_bfr_0 = new ByteAryBfr(512), key_bfr_n = new ByteAryBfr(512);
+	Xob_xdat_file_wtr fil_wtr; Bry_bfr reg_bfr = Bry_bfr.new_(), key_bfr_0 = Bry_bfr.new_(512), key_bfr_n = Bry_bfr.new_(512);
 	int fil_count = 0, itm_count = 0;
 	public Io_sort_cmd_ns(Gfo_usr_dlg usr_dlg) {this.usr_dlg = usr_dlg;} Gfo_usr_dlg usr_dlg;
 	public int Trg_fil_max() {return trg_fil_max;} public Io_sort_cmd_ns Trg_fil_max_(int v) {trg_fil_max = v; return this;} private int trg_fil_max = 65 * Io_mgr.Len_kb;
@@ -48,8 +48,8 @@ public class Io_sort_cmd_ns implements Io_make_cmd {
 	private void Flush() {
 		reg_bfr
 			.Add_int_variable(fil_count++).Add_byte(Byte_ascii.Pipe)
-			.Add_bfr(key_bfr_0).Add_byte(Byte_ascii.Pipe)
-			.Add_bfr(key_bfr_n).Add_byte(Byte_ascii.Pipe)
+			.Add_bfr_and_preserve(key_bfr_0).Add_byte(Byte_ascii.Pipe)
+			.Add_bfr_and_preserve(key_bfr_n).Add_byte(Byte_ascii.Pipe)
 			.Add_int_variable(itm_count).Add_byte(Byte_ascii.NewLine);
 		itm_count = 0;
 		key_bfr_0.Clear();

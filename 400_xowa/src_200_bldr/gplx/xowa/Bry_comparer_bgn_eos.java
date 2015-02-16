@@ -20,6 +20,6 @@ class Bry_comparer_bgn_eos implements gplx.lists.ComparerAble {
 	public Bry_comparer_bgn_eos(int bgn) {this.bgn = bgn;} private int bgn;
 	public int compare(Object lhsObj, Object rhsObj) {
 		byte[] lhs = (byte[])lhsObj, rhs = (byte[])rhsObj;
-		return ByteAry_.Compare(lhs, bgn, lhs.length, rhs, bgn, rhs.length);
+		return Bry_.Compare(lhs, bgn, lhs.length, rhs, bgn, rhs.length);
 	}
 }

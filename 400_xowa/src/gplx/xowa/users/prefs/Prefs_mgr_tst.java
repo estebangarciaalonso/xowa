@@ -17,8 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.users.prefs; import gplx.*; import gplx.xowa.*; import gplx.xowa.users.*;
 import org.junit.*;
+import gplx.gfui.*; import gplx.xowa.apps.*;
 public class Prefs_mgr_tst {
-	Prefs_mgr_fxt fxt = new Prefs_mgr_fxt();
+	private Prefs_mgr_fxt fxt = new Prefs_mgr_fxt();
 	@Before public void init() {fxt.Clear();}	
 	@Test   public void Get_basic_pass() {
 		fxt.Exec_get("<input xowa_prop='app.user.name'></input> text", "<input xowa_prop='app.user.name' id='xowa_prop_0' value='test_user'></input> text");
@@ -55,10 +56,20 @@ public class Prefs_mgr_tst {
 	@Test   public void Get_textarea() {
 		fxt.Exec_get("<textarea xowa_prop='app.user.name'></textarea>", "<textarea xowa_prop='app.user.name' id='xowa_prop_0'>test_user</textarea>");
 	}
+	@Test   public void Get_textarea_escaped() {
+		fxt.App().User().Key_str_("<b>a</b>");
+		fxt.Exec_get("<textarea xowa_prop='app.user.name'></textarea>", "<textarea xowa_prop='app.user.name' id='xowa_prop_0'>&lt;b&gt;a&lt;/b&gt;</textarea>");
+		fxt.App().User().Key_str_("test_user");
+	}
 	@Test   public void Set_textarea() {
 		fxt.Init_elem_atr_val("xowa_prop_0", "abc");
 		fxt.Test_set("<textarea xowa_prop='app.gui.html.auto_focus_id' id='xowa_prop_0'>abc</textarea>");
 		Tfds.Eq("abc", fxt.App().Gui_mgr().Html_mgr().Auto_focus_id());
+	}
+	@Test   public void Set_textarea_escaped() {
+		fxt.Init_elem_atr_val("xowa_prop_0", "&lt;b&gt;a&lt;/b&gt;");
+		fxt.Test_set("<textarea xowa_prop='app.gui.html.auto_focus_id' id='xowa_prop_0'>&lt;b&gt;a&lt;/b&gt;</textarea>");
+		Tfds.Eq("<b>a</b>", fxt.App().Gui_mgr().Html_mgr().Auto_focus_id());
 	}
 	@Test   public void Get_select() {
 		fxt.Exec_get
@@ -84,6 +95,14 @@ public class Prefs_mgr_tst {
 		,	"<button id='xowa_prop_0_io' class='options_button' onclick='xowa_io_select(\"file\", \"xowa_prop_0\", \"Select program for Web Browser\");'>...</button>"
 		));
 	}
+	@Test  public void Scrub_tidy_trailing_nl_in_textarea() {
+		fxt.Test_Scrub_tidy_trailing_nl_in_textarea(Bool_.Y, Bool_.Y, "a\n", "a");
+		fxt.Test_Scrub_tidy_trailing_nl_in_textarea(Bool_.Y, Bool_.Y, "a\n\n", "a\n");
+		fxt.Test_Scrub_tidy_trailing_nl_in_textarea(Bool_.Y, Bool_.Y, "", "");
+		fxt.Test_Scrub_tidy_trailing_nl_in_textarea(Bool_.N, Bool_.N, "a\n", "a\n");
+		fxt.Test_Scrub_tidy_trailing_nl_in_textarea(Bool_.N, Bool_.Y, "a\n", "a\n");
+		fxt.Test_Scrub_tidy_trailing_nl_in_textarea(Bool_.Y, Bool_.N, "a\n", "a\n");
+	}
 }
 class Prefs_mgr_fxt {
 	public Xoa_app App() {return app;} private Xoa_app app; 
@@ -93,10 +112,10 @@ class Prefs_mgr_fxt {
 			Xoa_gfs_mgr.Msg_parser_init();
 			app = Xoa_app_fxt.app_();
 			prefs_mgr = new Prefs_mgr(app);	
-			html_box = new Gfui_box_html_mok(null, null);
-			prefs_mgr.Html_box_(html_box);
+			html_box = new Gfui_html_mok();
+			prefs_mgr.Html_box_mok_(html_box);
 		}
-	}	Prefs_mgr prefs_mgr; Gfui_box_html_mok html_box;
+	}	Prefs_mgr prefs_mgr; Gfui_html_mok html_box;
 	public Prefs_mgr_fxt Init_elem_atr_val(String elem_id, String atr_val) {
 		html_box.Html_elem_atr_add(elem_id, gplx.gfui.Gfui_html.Atr_value, atr_val);
 		return this;
@@ -110,12 +129,21 @@ class Prefs_mgr_fxt {
 		return this;
 	}
 	public Prefs_mgr_fxt Exec_get(String src_str, String expd) {
-		String actl = String_.new_utf8_(prefs_mgr.Props_get(ByteAry_.new_utf8_(src_str)));
+		String actl = String_.new_utf8_(prefs_mgr.Props_get(Bry_.new_utf8_(src_str)));
 		Tfds.Eq_str_lines(expd, actl);
 		return this;
 	}
 	public Prefs_mgr_fxt Test_set(String src_str) {
-		prefs_mgr.Props_set(ByteAry_.new_utf8_(src_str));
+		prefs_mgr.Props_set(Bry_.new_utf8_(src_str));
 		return this;
 	}
+	public void Test_Scrub_tidy_trailing_nl_in_textarea(boolean tidy_enabled, boolean elem_is_textarea, String val, String expd) {
+		String actl = Prefs_mgr.Scrub_tidy_trailing_nl_in_textarea(tidy_enabled, elem_is_textarea ? Prefs_mgr.Elem_tid_textarea : Prefs_mgr.Elem_tid_input_text, val);
+		Tfds.Eq(expd, actl);
+	}
+}
+class Gfui_html_mok extends Gfui_html {	private HashAdp elem_atrs = HashAdp_.new_();
+	public void Html_elem_atr_add(String elem_id, String atr_key, Object atr_val) {elem_atrs.AddReplace(elem_id + "." + atr_key, atr_val);}
+	@Override public String Html_elem_atr_get_str(String elem_id, String atr_key) {return (String)elem_atrs.Fetch(elem_id + "." + atr_key);}
+	@Override public boolean Html_elem_atr_get_bool(String elem_id, String atr_key) {return Bool_.parse_((String)elem_atrs.Fetch(elem_id + "." + atr_key));}
 }

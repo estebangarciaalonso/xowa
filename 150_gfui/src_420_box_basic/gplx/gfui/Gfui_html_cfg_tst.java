@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.primitives.*;
 public class Gfui_html_cfg_tst {
 	private Gfui_html_cfg_fxt fxt = new Gfui_html_cfg_fxt();
 	@Before public void init() {fxt.Reset();}
@@ -26,7 +26,7 @@ public class Gfui_html_cfg_tst {
 	}
 }
 class Gfui_html_cfg_fxt {
-	private StringRef scroll_top = StringRef.null_(), node_path = StringRef.null_();
+	private String_obj_ref scroll_top = String_obj_ref.null_(), node_path = String_obj_ref.null_();
 	public void Reset() {}
 	public void Test_Html_window_vpos_parse(String raw, String expd_scroll_top, String expd_node_path) {
 		scroll_top.Val_null_(); node_path.Val_null_();

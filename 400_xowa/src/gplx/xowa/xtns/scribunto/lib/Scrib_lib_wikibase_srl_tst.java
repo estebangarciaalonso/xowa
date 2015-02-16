@@ -17,8 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto.lib; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*;
 import org.junit.*;
-import gplx.xowa.xtns.wdatas.*;
-import gplx.json.*;
+import gplx.json.*; import gplx.xowa.xtns.wdatas.*; import gplx.xowa.xtns.wdatas.core.*; import gplx.xowa.xtns.wdatas.parsers.*;	
 public class Scrib_lib_wikibase_srl_tst {
 	@Before public void init() {fxt.Clear();} private Scrib_lib_wikibase_srl_fxt fxt = new Scrib_lib_wikibase_srl_fxt();
 	@Test   public void Label() {
@@ -60,12 +59,15 @@ public class Scrib_lib_wikibase_srl_tst {
 		,	"  enwiki:"
 		,	"    site:'enwiki'"
 		,	"    title:'Earth'"
+		,	"    badges:"
 		,	"  frwiki:"
 		,	"    site:'frwiki'"
 		,	"    title:'Terre'"
+		,	"    badges:"
 		,	"  dewiki:"
 		,	"    site:'dewiki'"
 		,	"    title:'Erde'"
+		,	"    badges:"
 		,	""
 		);
 	}
@@ -75,20 +77,23 @@ public class Scrib_lib_wikibase_srl_tst {
 		,	", 'links':"
 		,	"  {"
 		,	"    'enwiki':'Earth'"							// old format
-		,	"  , 'frwiki':{'name':'Terre','badges':[]}"		// new format
+		,	"  , 'frwiki':{'name':'Terre','badges':['Q3']}"	// new format
 		,	"  }"
 		,	"}"
 		);
-		Wdata_doc wdoc = new Wdata_doc(ByteAry_.new_ascii_("q2"), fxt.Wdata_fxt().App().Wiki_mgr().Wdata_mgr(), jdoc);
+		Wdata_doc wdoc = new Wdata_doc(Bry_.new_ascii_("q2"), fxt.Wdata_fxt().App().Wiki_mgr().Wdata_mgr(), jdoc);
 		fxt.Test
 		(	wdoc
 		,	"sitelinks:"
 		,	"  enwiki:"
 		,	"    site:'enwiki'"
 		,	"    title:'Earth'"
+		,	"    badges:"
 		,	"  frwiki:"
 		,	"    site:'frwiki'"
 		,	"    title:'Terre'"
+		,	"    badges:"
+		,	"      1:'Q3'"
 		,	""
 		);
 	}
@@ -97,41 +102,41 @@ public class Scrib_lib_wikibase_srl_tst {
 		fxt.Test
 		(	"aliases:"
 		,	"  en:"
-		,	"    0:"
-		,	"      language:'en'"
-		,	"      value:'en_0'"
 		,	"    1:"
 		,	"      language:'en'"
-		,	"      value:'en_1'"
+		,	"      value:'en_0'"
 		,	"    2:"
+		,	"      language:'en'"
+		,	"      value:'en_1'"
+		,	"    3:"
 		,	"      language:'en'"
 		,	"      value:'en_2'"
 		,	"  fr:"
-		,	"    0:"
+		,	"    1:"
 		,	"      language:'fr'"
 		,	"      value:'fr_0'"
 		,	"  de:"
-		,	"    0:"
+		,	"    1:"
 		,	"      language:'de'"
 		,	"      value:'de_0'"
-		,	"    1:"
+		,	"    2:"
 		,	"      language:'de'"
 		,	"      value:'de_1'"
 		,	""
 		);
-	}	
+	}
 	@Test   public void Claims_str() {
-		fxt.Init_prop(fxt.Wdata_fxt().prop_str_(2, "Moon"));
+		fxt.Init_prop(fxt.Wdata_fxt().Make_claim_str(2, "Moon"));
 		fxt.Test
 		(	"claims:"
-		,	"  p2:"
-		,	"    0:"
-		,	"      id:null"
+		,	"  P2:"
+		,	"    1:"
+		,	"      id:'P2'"
 		,	"      mainsnak:"
 		,	"        datavalue:"
 		,	"          type:'string'"
 		,	"          value:'Moon'"
-		,	"        property:'p2'"
+		,	"        property:'P2'"
 		,	"        snaktype:'value'"
 		,	"      rank:'normal'"
 		,	"      type:'statement'"        
@@ -139,17 +144,17 @@ public class Scrib_lib_wikibase_srl_tst {
 		);
 	}
 	@Test   public void Claims_somevalue() {	// PURPOSE: somevalue should always return value node; EX:w:Joseph-François_Malgaigne; DATE:2014-04-07
-		fxt.Init_prop(fxt.Wdata_fxt().prop_somevalue_(2));
+		fxt.Init_prop(fxt.Wdata_fxt().Make_claim_somevalue(2));
 		fxt.Test
 		(	"claims:"
-		,	"  p2:"
-		,	"    0:"
-		,	"      id:null"
+		,	"  P2:"
+		,	"    1:"
+		,	"      id:'P2'"
 		,	"      mainsnak:"
 		,	"        datavalue:"
 		,	"          type:''"
 		,	"          value:''"
-		,	"        property:'p2'"
+		,	"        property:'P2'"
 		,	"        snaktype:'somevalue'"
 		,	"      rank:'normal'"
 		,	"      type:'statement'"        
@@ -157,19 +162,52 @@ public class Scrib_lib_wikibase_srl_tst {
 		);
 	}
 	@Test   public void Claims_entity() {
-		fxt.Init_prop(fxt.Wdata_fxt().prop_entity_(2, 3));
+		fxt.Init_prop(fxt.Wdata_fxt().Make_claim_entity(2, 3));
 		fxt.Test
 		(	"claims:"
-		,	"  p2:"
-		,	"    0:"
-		,	"      id:null"
+		,	"  P2:"
+		,	"    1:"
+		,	"      id:'P2'"
 		,	"      mainsnak:"
 		,	"        datavalue:"
 		,	"          type:'wikibase-entityid'"
 		,	"          value:"
 		,	"            entity-type:'item'"
 		,	"            numeric-id:'3'"
-		,	"        property:'p2'"
+		,	"        property:'P2'"
+		,	"        snaktype:'value'"
+		,	"      rank:'normal'"
+		,	"      type:'statement'"        
+		,	""
+		);
+	}
+	@Test   public void Claims_base_0() {	// PURPOSE: test for legacyStyle (aka base_0); used by pl.w:Module:Wikidane; DATE:2014-05-09
+		fxt.Init_prop(fxt.Wdata_fxt().Make_claim_entity(2, 3));
+		fxt.Test(true
+		,	"claims:"
+		,	"  P2:"
+		,	"    0:"
+		,	"      id:'P2'"
+		,	"      mainsnak:"
+		,	"        datavalue:"
+		,	"          type:'wikibase-entityid'"
+		,	"          value:"
+		,	"            entity-type:'item'"
+		,	"            numeric-id:'3'"
+		,	"        property:'P2'"
+		,	"        snaktype:'value'"
+		,	"      rank:'normal'"
+		,	"      type:'statement'"        
+		,	"  p2:"
+		,	"    0:"
+		,	"      id:'P2'"
+		,	"      mainsnak:"
+		,	"        datavalue:"
+		,	"          type:'wikibase-entityid'"
+		,	"          value:"
+		,	"            entity-type:'item'"
+		,	"            numeric-id:'3'"
+		,	"        property:'P2'"
 		,	"        snaktype:'value'"
 		,	"      rank:'normal'"
 		,	"      type:'statement'"        
@@ -177,12 +215,12 @@ public class Scrib_lib_wikibase_srl_tst {
 		);
 	}
 	@Test   public void Claims_time() {
-		fxt.Init_prop(fxt.Wdata_fxt().prop_time_(2, "2001-02-03 04:05:06"));
+		fxt.Init_prop(fxt.Wdata_fxt().Make_claim_time(2, "2001-02-03 04:05:06"));
 		fxt.Test
 		(	"claims:"
-		,	"  p2:"
-		,	"    0:"
-		,	"      id:null"
+		,	"  P2:"
+		,	"    1:"
+		,	"      id:'P2'"
 		,	"      mainsnak:"
 		,	"        datavalue:"
 		,	"          type:'time'"
@@ -193,30 +231,30 @@ public class Scrib_lib_wikibase_srl_tst {
 		,	"            after:'0'"
 		,	"            timezone:'0'"
 		,	"            calendarmodel:'http://www.wikidata.org/entity/Q1985727'"
-		,	"        property:'p2'"
+		,	"        property:'P2'"
 		,	"        snaktype:'value'"
 		,	"      rank:'normal'"
 		,	"      type:'statement'"        
 		,	""
 		);
 	}
-	@Test   public void Claims_geocoordinate() {
-		fxt.Init_prop(fxt.Wdata_fxt().prop_geodata_(2, "1.2345", "6.789"));
+	@Test   public void Claims_globecoordinate() {
+		fxt.Init_prop(fxt.Wdata_fxt().Make_claim_geo(2, "6.789", "1.2345"));
 		fxt.Test
 		(	"claims:"
-		,	"  p2:"
-		,	"    0:"
-		,	"      id:null"
+		,	"  P2:"
+		,	"    1:"
+		,	"      id:'P2'"
 		,	"      mainsnak:"
 		,	"        datavalue:"
-		,	"          type:'geocoordinate'"
+		,	"          type:'globecoordinate'"
 		,	"          value:"
 		,	"            latitude:'1.2345'"
 		,	"            longitude:'6.789'"
 		,	"            altitude:null"
 		,	"            globe:'http:\\/\\/www.wikidata.org\\/entity\\/Q2'"
 		,	"            precision:'1.0E-5'"	
-		,	"        property:'p2'"
+		,	"        property:'P2'"
 		,	"        snaktype:'value'"
 		,	"      rank:'normal'"
 		,	"      type:'statement'"
@@ -224,12 +262,12 @@ public class Scrib_lib_wikibase_srl_tst {
 		);
 	}
 	@Test   public void Claims_quantity() {
-		fxt.Init_prop(fxt.Wdata_fxt().prop_quantity_(2, "+1,234", "2", "+1,236", "+1232"));
+		fxt.Init_prop(fxt.Wdata_fxt().Make_claim_quantity(2, "+1,234", "2", "+1,236", "+1232"));
 		fxt.Test
 		(	"claims:"
-		,	"  p2:"
-		,	"    0:"
-		,	"      id:null"
+		,	"  P2:"
+		,	"    1:"
+		,	"      id:'P2'"
 		,	"      mainsnak:"
 		,	"        datavalue:"
 		,	"          type:'quantity'"
@@ -238,67 +276,120 @@ public class Scrib_lib_wikibase_srl_tst {
 		,	"            unit:'2'"
 		,	"            upperBound:'+1,236'"
 		,	"            lowerBound:'+1232'"
-		,	"        property:'p2'"
+		,	"        property:'P2'"
 		,	"        snaktype:'value'"
 		,	"      rank:'normal'"
 		,	"      type:'statement'"        
 		,	""
 		);
 	}
+	@Test   public void Claims_monolingualtext() {// PURPOSE.fix: type was mistakenly "language" instead of "monolingualtext" DATE:2014-10-21
+		fxt.Init_prop(fxt.Wdata_fxt().Make_claim_monolingual(2, "en", "en_text"));
+		fxt.Test
+		(	"claims:"
+		,	"  P2:"
+		,	"    1:"
+		,	"      id:'P2'"
+		,	"      mainsnak:"
+		,	"        datavalue:"
+		,	"          type:'monolingualtext'"
+		,	"          value:"
+		,	"            text:'en_text'"
+		,	"            language:'en'"
+		,	"        property:'P2'"
+		,	"        snaktype:'value'"
+		,	"      rank:'normal'"
+		,	"      type:'statement'"        
+		,	""
+		);
+	}
+	@Test   public void Qualifiers() {
+		Wdata_wiki_mgr_fxt wdata_fxt = fxt.Wdata_fxt();
+		fxt.Init_prop(wdata_fxt.Make_claim_str(2, "Earth").Qualifiers_(wdata_fxt.Make_qualifiers(wdata_fxt.Make_qualifiers_grp(3, wdata_fxt.Make_claim_time(3, "2001-02-03 04:05:06")))));
+		fxt.Test
+		(	"claims:"
+		,	"  P2:"
+		,	"    1:"
+		,	"      id:'P2'"
+		,	"      mainsnak:"
+		,	"        datavalue:"
+		,	"          type:'string'"
+		,	"          value:'Earth'"
+		,	"        property:'P2'"
+		,	"        snaktype:'value'"
+		,	"      rank:'normal'"
+		,	"      type:'statement'"
+		,	"      qualifiers:"
+		,	"        P3:"
+		,	"          1:"
+		,	"            datavalue:"
+		,	"              type:'time'"
+		,	"              value:"
+		,	"                time:'+00000002001-02-03T04:05:06Z'"
+		,	"                precision:'11'"
+		,	"                before:'0'"
+		,	"                after:'0'"
+		,	"                timezone:'0'"
+		,	"                calendarmodel:'http://www.wikidata.org/entity/Q1985727'"
+		,	"            property:'P3'"
+		,	"            snaktype:'value'"
+		,	""
+		);
+	}
 }	
 class Scrib_lib_wikibase_srl_fxt {
+	private Wdata_doc_bldr wdoc_bldr;
 	public void Clear() {
 		wdata_fxt = new Wdata_wiki_mgr_fxt();
 		wdata_fxt.Init();
-		doc_bldr = wdata_fxt.page_bldr_("q2");
+		wdoc_bldr = wdata_fxt.Wdoc_bldr("q2");
 		header_enabled = false;
-		parser = new Wdata_doc_parser(wdata_fxt.App().Usr_dlg());
 	}
 	public Wdata_wiki_mgr_fxt Wdata_fxt() {return wdata_fxt;} private Wdata_wiki_mgr_fxt wdata_fxt;
-	private Wdata_doc_bldr doc_bldr;
 	private boolean header_enabled;
-	private Wdata_doc_parser parser;
 	public Scrib_lib_wikibase_srl_fxt Init_header_enabled_y_() {header_enabled = true; return this;}
 	public Scrib_lib_wikibase_srl_fxt Init_label(String lang, String label) {
-		doc_bldr.Label_add(lang, label);
+		wdoc_bldr.Add_label(lang, label);
 		return this;
 	}
 	public Scrib_lib_wikibase_srl_fxt Init_description(String lang, String description) {
-		doc_bldr.Description_add(lang, description);
+		wdoc_bldr.Add_description(lang, description);
 		return this;
 	}
 	public Scrib_lib_wikibase_srl_fxt Init_link(String xwiki, String val) {
-		doc_bldr.Link_add(xwiki, val);
+		wdoc_bldr.Add_sitelink(xwiki, val);
 		return this;
 	}
 	public Scrib_lib_wikibase_srl_fxt Init_alias(String lang, String... ary) {
-		doc_bldr.Alias_add(lang, ary);
+		wdoc_bldr.Add_alias(lang, ary);
 		return this;
 	}
-	public Scrib_lib_wikibase_srl_fxt Init_prop(Wdata_prop_itm_core prop) {doc_bldr.Props_add(prop); return this;}
-	public Scrib_lib_wikibase_srl_fxt Test(String... expd) {
-		KeyVal[] actl = Scrib_lib_wikibase_srl.Srl(parser, doc_bldr.Xto_page_doc(), header_enabled);
+	public Scrib_lib_wikibase_srl_fxt Init_prop(Wdata_claim_itm_core prop) {wdoc_bldr.Add_claims(prop); return this;}
+	public Scrib_lib_wikibase_srl_fxt Test(String... expd) {return Test(false, expd);}
+	public Scrib_lib_wikibase_srl_fxt Test(boolean base0, String... expd) {
+		KeyVal[] actl = Scrib_lib_wikibase_srl.Srl(wdoc_bldr.Xto_wdoc(), header_enabled, base0);
 		Tfds.Eq_ary_str(expd, String_.SplitLines_nl(Xto_str(actl)));
 		return this;
 	}
-	public Scrib_lib_wikibase_srl_fxt Test(Wdata_doc wdoc, String... expd) {
-		KeyVal[] actl = Scrib_lib_wikibase_srl.Srl(parser, wdoc, header_enabled);
+	public Scrib_lib_wikibase_srl_fxt Test(Wdata_doc wdoc, String... expd) {return Test(false, wdoc, expd);}
+	public Scrib_lib_wikibase_srl_fxt Test(boolean base0, Wdata_doc wdoc, String... expd) {
+		KeyVal[] actl = Scrib_lib_wikibase_srl.Srl(wdoc, header_enabled, base0);
 		Tfds.Eq_ary_str(expd, String_.SplitLines_nl(Xto_str(actl)));
 		return this;
 	}
 	private String Xto_str(KeyVal[] ary) {
-		ByteAryBfr bfr = ByteAryBfr.new_();
+		Bry_bfr bfr = Bry_bfr.new_();
 		Xto_str(bfr, ary, 0);
-		return bfr.XtoStrAndClear();
+		return bfr.Xto_str_and_clear();
 	}
-	private void Xto_str(ByteAryBfr bfr, KeyVal[] ary, int depth) {
+	private void Xto_str(Bry_bfr bfr, KeyVal[] ary, int depth) {
 		int len = ary.length;
 		for (int i = 0; i < len; i++) {
 			KeyVal kv = ary[i];
 			Xto_str(bfr, kv, depth);
 		}
 	}
-	private void Xto_str(ByteAryBfr bfr, KeyVal kv, int depth) {
+	private void Xto_str(Bry_bfr bfr, KeyVal kv, int depth) {
 		bfr.Add_byte_repeat(Byte_ascii.Space, depth * 2);
 		bfr.Add_str(kv.Key()).Add_byte(Byte_ascii.Colon);
 		Object kv_val = kv.Val();
@@ -306,6 +397,6 @@ class Scrib_lib_wikibase_srl_fxt {
 		Class<?> kv_val_cls = kv_val.getClass();
 		if 	(ClassAdp_.Eq(kv_val_cls, KeyVal[].class)) 	{bfr.Add_byte_nl(); Xto_str(bfr, (KeyVal[])kv_val, depth + 1);}
 		else if (ClassAdp_.Eq(kv_val_cls, KeyVal[].class)) 	{bfr.Add_byte_nl(); Xto_str(bfr, (KeyVal)kv_val, depth + 1);}
-		else bfr.Add_byte(Byte_ascii.Apos).Add_str(Object_.XtoStr_OrEmpty(kv_val)).Add_byte(Byte_ascii.Apos).Add_byte_nl();
+		else bfr.Add_byte(Byte_ascii.Apos).Add_str(Object_.Xto_str_strict_or_empty(kv_val)).Add_byte(Byte_ascii.Apos).Add_byte_nl();
 	}
 }

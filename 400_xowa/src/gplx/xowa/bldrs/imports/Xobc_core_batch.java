@@ -16,20 +16,21 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
+import gplx.xowa.wikis.*;
 public class Xobc_core_batch implements GfoInvkAble {
 	public Xobc_core_batch(Xob_bldr bldr, byte[] raw) {this.bldr = bldr; fmtr.Fmt_(raw);} private Xob_bldr bldr;
-	ByteAryFmtr fmtr = ByteAryFmtr.keys_("bz2_fil", "wiki_key");
+	Bry_fmtr fmtr = Bry_fmtr.keys_("bz2_fil", "wiki_key");
 	private void Run() {
 		Io_url[] bz2_fils = Io_mgr._.QueryDir_fils(bldr.App().Fsys_mgr().Wiki_dir().GenSubDir_nest(Dir_dump, "todo"));
-		ByteAryBfr bfr = ByteAryBfr.reset_(Io_mgr.Len_kb);
+		Bry_bfr bfr = Bry_bfr.reset_(Io_mgr.Len_kb);
 		int bz2_fils_len = bz2_fils.length;
-		Xob_bz2_file bz2_fil = new Xob_bz2_file();
+		Xow_wiki_alias bz2_fil = new Xow_wiki_alias();
 		for (int i = 0; i < bz2_fils_len; i++) {
 			Io_url bz2_fil_url = bz2_fils[i];
 			bz2_fil.Fil_(bz2_fil_url).Parse(bz2_fil_url.NameOnly());
 			fmtr.Bld_bfr_many(bfr, bz2_fil_url.Raw(), bz2_fil.Domain());
 			bldr.Usr_dlg().Note_many(GRP_KEY, "bgn", "starting script for ~{0}", String_.new_utf8_(bz2_fil.Domain()));
-			bldr.App().Gfs_mgr().Run_str(bfr.XtoStrAndClear());
+			bldr.App().Gfs_mgr().Run_str(bfr.Xto_str_and_clear());
 		}
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {

@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.users; import gplx.*; import gplx.xowa.*;
-import gplx.gfui.*;
+import gplx.core.primitives.*; import gplx.gfui.*;
 public class Xoc_layout_mgr implements GfoInvkAble {
 	public Xoc_layout_mgr(Xoa_app app) {
 		this.app = app;
@@ -33,7 +33,7 @@ public class Xoc_layout_mgr implements GfoInvkAble {
 		return this;
 	}
 	private void Refresh_window() {
-		app.Gui_mgr().Main_win().Refresh_win_size();
+		app.Gui_mgr().Browser_win().Refresh_win_size();
 	}
 	public static final String 
 	  Invk_html_box_adj_type = "html_box_adj_type", Invk_html_box_adj_type_ = "html_box_adj_type_", Invk_html_box_adj_type_list = "html_box_adj_type_list"
@@ -49,9 +49,9 @@ public class Xoc_layout_mgr implements GfoInvkAble {
 }
 class Enm_mgr {
 	private OrderedHash str_hash = OrderedHash_.new_(); private HashAdp val_hash = HashAdp_.new_();
-	private IntRef tmp_val_ref = IntRef.zero_(); 
+	private Int_obj_ref tmp_val_ref = Int_obj_ref.zero_(); 
 	public Enm_mgr Add(byte val, String str) {
-		IntRef val_ref = IntRef.new_(val);
+		Int_obj_ref val_ref = Int_obj_ref.new_(val);
 		KeyVal kv = KeyVal_.new_(str, val_ref);
 		str_hash.Add(str, kv);
 		val_hash.Add(val_ref, kv);

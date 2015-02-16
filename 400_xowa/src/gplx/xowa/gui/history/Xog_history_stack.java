@@ -17,67 +17,53 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.gui.history; import gplx.*; import gplx.xowa.*; import gplx.xowa.gui.*;
 public class Xog_history_stack {
-	private ListAdp list = ListAdp_.new_();
-	public int Stack_pos() {return list_pos;} private int list_pos = 0;
-	public int Count() {return list.Count();}
-	public void Clear() {list.Clear(); list_pos = 0;}
-	public Xog_history_itm Cur_itm() {return list.Count() == 0 ? Xog_history_itm.Null : (Xog_history_itm)list.FetchAt(list_pos);}
-	public Xog_history_itm Add(Xoa_page page) {
-		byte[] wiki_key = page.Wiki().Domain_bry();
-		byte[] page_key = page.Ttl().Full_url();	// get page_name only (no anchor; no query args)
-		byte[] anch_key = page.Url().Anchor_bry();
-		byte[] qarg_key = page.Url().Args_all_as_bry();
-		byte[] redirect_force = page.Url().Redirect_force() ? Bool_.Y_bry : Bool_.N_bry;
-		byte[] key = Xog_history_itm.Build_key(wiki_key, page_key, anch_key, qarg_key, redirect_force);
+	private final ListAdp list = ListAdp_.new_();
+	public int Len() {return list.Count();}
+	public void Clear() {list.Clear(); cur_pos = 0;}
+	public Xog_history_itm Get_at(int i) {return (Xog_history_itm)list.FetchAt(i);}
+	public int Cur_pos() {return cur_pos;} private int cur_pos = 0;
+	public Xog_history_itm Cur_itm() {return list.Count() == 0 ? Xog_history_itm.Null : (Xog_history_itm)list.FetchAt(cur_pos);}
+	public void Add(Xog_history_itm new_itm) {
 		Xog_history_itm cur_itm = this.Cur_itm(); 
-		if (	cur_itm != Xog_history_itm.Null
-			&&	ByteAry_.Eq(wiki_key, cur_itm.Wiki_key())	// do not add if last itm is same;
-			&&	ByteAry_.Eq(page_key, cur_itm.Page_key())
-			&&	ByteAry_.Eq(anch_key, cur_itm.Anch_key())
-			&&	ByteAry_.Eq(qarg_key, cur_itm.Qarg_key())
-			&&	ByteAry_.Eq(redirect_force, cur_itm.Redirect_force())
-			)
-			return Xog_history_itm.Null;
-		Xog_history_itm itm = new Xog_history_itm(key, wiki_key, page_key, anch_key, qarg_key, redirect_force, page.Html_data().Bmk_pos());
-		itm.Display_ttl_(page.Wiki().Ctx().Tab().Display_ttl());
-		Del_all_from(list_pos + 1);
-		list.Add(itm);
-		list_pos = list.Count() - 1;
-		return itm;
-	}
-	public void Update_html_doc_pos(Xoa_page page, byte nav_type) {
-		Xog_history_itm itm = Get_recent(page, nav_type);
-		if (itm != null) itm.Html_doc_pos_(page.Html_data().Bmk_pos());
-	}
-	private Xog_history_itm Get_recent(Xoa_page page, byte nav_type) {
-		int pos = -1;
-		switch (nav_type) {
-			case Xog_history_stack.Nav_fwd:			pos = list_pos - 1; break;
-			case Xog_history_stack.Nav_bwd:			pos = list_pos + 1; break;
-			case Xog_history_stack.Nav_by_anchor:	pos = list_pos; break;
-		}
-		return (pos < 0 || pos >= list.Count())
-			? null
-			: (Xog_history_itm)list.FetchAt(pos)
-			;
+		if (cur_itm != Xog_history_itm.Null && cur_itm.Eq_wo_bmk_pos(new_itm)) return;		// do not add if last itm is same;
+		this.Del_from(cur_pos + 1);
+		list.Add(new_itm);
+		cur_pos = list.Count() - 1;
 	}
 	public Xog_history_itm Go_bwd() {
 		if (list.Count() == 0) return Xog_history_itm.Null;
-		--list_pos;
-		if (list_pos < 0) list_pos = 0; 
+		if (cur_pos == 0) return Xog_history_itm.Null;
+		--cur_pos;
 		return this.Cur_itm();
 	}
 	public Xog_history_itm Go_fwd() {
 		int list_count = list.Count();
 		if (list_count == 0) return Xog_history_itm.Null;
-		++list_pos;
-		if (list_pos == list_count) list_pos = list_count - 1;
+		if (cur_pos == list_count - 1) return Xog_history_itm.Null;
+		++cur_pos;
 		return this.Cur_itm();
 	}
-	private void Del_all_from(int from) {
-		int list_count = list.Count();
-		if (from <= list_count - 1)
-			list.Del_range(from, list_count - 1);
+	private void Del_from(int from) {
+		int len = list.Count();
+		if (from <= len - 1)
+			list.Del_range(from, len - 1);
+	}
+	public void Srl_save(Bry_bfr bfr) {
+		int len = list.Count();
+		for (int i = 0; i < len; ++i) {
+			Xog_history_itm itm = (Xog_history_itm)list.FetchAt(i);
+			itm.Srl_save(bfr);
+		}
+	}
+	public void Srl_load(byte[] bry) {
+		list.Clear();
+		byte[][] lines = Bry_.Split_lines(bry);
+		int len = lines.length;
+		for (int i = 0; i < len; ++i) {
+			byte[] line = lines[i];
+			Xog_history_itm itm = Xog_history_itm.Srl_load(line);
+			this.Add(itm);
+		}
 	}
 	public static final byte Nav_fwd = 1, Nav_bwd = 2, Nav_by_anchor = 3;
 }

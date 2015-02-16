@@ -28,6 +28,6 @@ public class IptCfgRegy implements GfoInvkAble {
 		return this;
 	}	public static final String Invk_Get = "Get", Invk_get = "get";
 	OrderedHash hash = OrderedHash_.new_();
-        public static final IptCfgRegy _ = new IptCfgRegy();
+	public static final IptCfgRegy _ = new IptCfgRegy();
 	public IptCfgRegy() {}
 }

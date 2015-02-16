@@ -16,10 +16,22 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
-public interface Gfui_mnu_itm {		
+public interface Gfui_mnu_itm {
+	int Tid();
+	String Uid();
+	boolean Enabled(); void Enabled_(boolean v);
+	String Text(); void Text_(String v);
+	ImageAdp Img(); void Img_(ImageAdp v);
+	boolean Selected(); void Selected_(boolean v);
 	Object Under();
 }
 class Gfui_mnu_itm_null implements Gfui_mnu_itm {
+	public String Uid() {return "";}
+	public int Tid() {return Gfui_mnu_itm_.Tid_btn;}
+	public boolean Enabled() {return true;} public void Enabled_(boolean v) {}
+	public String Text() {return text;} public void Text_(String v) {text = v;} private String text;
+	public ImageAdp Img() {return img;} public void Img_(ImageAdp v) {img = v;} private ImageAdp img;
+	public boolean Selected() {return true;} public void Selected_(boolean v) {}
 	public Object Under() {return null;}
-        public static final Gfui_mnu_itm_null Null = new Gfui_mnu_itm_null(); Gfui_mnu_itm_null() {}
+	public static final Gfui_mnu_itm_null Null = new Gfui_mnu_itm_null(); Gfui_mnu_itm_null() {}
 }

@@ -20,9 +20,9 @@ import org.junit.*;
 public class Xop_xnde_wkr__basic_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@After public void term() {fxt.Init_para_n_();}
-	@Test  public void Escape_lt() {	// PURPOSE: some templates have unknown tags; EX.WP:PHP
+	@Test  public void Escape_lt() {	// PURPOSE: some templates have unknown tags; PAGE:en.w:PHP
 		fxt.Init_para_y_();
-		fxt.Test_parse_page_wiki_str("a<code><?</code>b", String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str("a<code><?</code>b", String_.Concat_lines_nl_skip_last
 			(	"<p>a<code>&lt;?</code>b"
 			,	"</p>"
 			,	""
@@ -66,16 +66,7 @@ public class Xop_xnde_wkr__basic_tst {
 		fxt.Test_parse_page_wiki("<ref name=a/b/>", fxt.tkn_xnde_(0, 15).Atrs_rng_(5, 13));
 	}
 	@Test  public void Escaped() {
-		fxt.Init_log_(Xop_xnde_log.Escaped_xnde).Test_parse_page_wiki("<div></span></div>", fxt.tkn_xnde_(0, 18).Subs_(fxt.tkn_ignore_(5, 12, Xop_ignore_tkn.Ignore_tid_xnde_dangling)));
-	}
-	@Test  public void Nest() {// REVISIT: 2nd <b> should be converted to </b>; other </b> ignored; WHEN: with example
-		fxt.Init_log_(Xop_xnde_log.Invalid_nest, Xop_xnde_log.Escaped_xnde).Test_parse_page_wiki("a<b>b<b>c</b>d</b>e"
-			, fxt.tkn_txt_	( 0,  1)
-			, fxt.tkn_xnde_	( 1, 13).Subs_(fxt.tkn_txt_(4, 9))
-			, fxt.tkn_txt_	(13, 14)
-			, fxt.tkn_ignore_(14, 18, Xop_ignore_tkn.Ignore_tid_xnde_dangling)
-			, fxt.tkn_txt_	(18, 19)
-			);
+		fxt.Init_log_(Xop_xnde_log.Escaped_xnde).Test_parse_page_wiki("<div></span></div>", fxt.tkn_xnde_(0, 18).Subs_(fxt.tkn_bry_(5, 12)));// TIDY.dangling: tidy will correct dangling node; DATE:2014-07-22
 	}
 	@Test  public void Xtn() {
 		fxt.Test_parse_page_wiki("<math><div></math>", fxt.tkn_xnde_(0, 18).Subs_(fxt.tkn_txt_(6, 11)));	// NOTE: no dangling nde b/c .Xtn skips

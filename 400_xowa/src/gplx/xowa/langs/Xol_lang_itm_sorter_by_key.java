@@ -20,7 +20,7 @@ public class Xol_lang_itm_sorter_by_key implements gplx.lists.ComparerAble {
 	public int compare(Object lhsObj, Object rhsObj) {
 		Xol_lang_itm lhs = (Xol_lang_itm)lhsObj;
 		Xol_lang_itm rhs = (Xol_lang_itm)rhsObj;
-		return ByteAry_.Compare(lhs.Key(), rhs.Key());
+		return Bry_.Compare(lhs.Key(), rhs.Key());
 	}
 	public static final Xol_lang_itm_sorter_by_key _ = new Xol_lang_itm_sorter_by_key(); 
 }

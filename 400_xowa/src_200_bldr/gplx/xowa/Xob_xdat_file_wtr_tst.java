@@ -26,9 +26,9 @@ public class Xob_xdat_file_wtr_tst {
 		tst_Write(wtr, ">a", "<1>a");
 		tst_Write(wtr, ">b", "<1>a>b");
 		tst_Add_idx(wtr, 7);
-		wtr.Bfr().Add(ByteAry_.new_utf8_("<2>b>cc"));
+		wtr.Bfr().Add(Bry_.new_utf8_("<2>b>cc"));
 		tst_Add_idx(wtr, 15);
-		wtr.Bfr().Add(ByteAry_.new_utf8_("<3>c>dd"));
+		wtr.Bfr().Add(Bry_.new_utf8_("<3>c>dd"));
 		tst_Add_idx(wtr, 23);
 		tst_Flush(wtr, String_.Concat
 			( "!!!!(|!!!!)|!!!!)|\n"
@@ -38,8 +38,8 @@ public class Xob_xdat_file_wtr_tst {
 			));
 	}
 	private void tst_Write(Xob_xdat_file_wtr wtr, String val, String expd) {
-		wtr.Bfr().Add(ByteAry_.new_utf8_(val));
-		Tfds.Eq(expd, String_.new_utf8_len_(wtr.Bfr().Bry(), 0, wtr.Bfr().Len()));
+		wtr.Bfr().Add(Bry_.new_utf8_(val));
+		Tfds.Eq(expd, String_.new_utf8_(wtr.Bfr().Bfr(), 0, wtr.Bfr().Len()));
 	}
 	private void tst_Add_idx(Xob_xdat_file_wtr wtr, int expd) {
 		wtr.Add_idx(Byte_ascii.NewLine);

@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import org.junit.*;
+import org.junit.*; import gplx.xowa.langs.*;
 public class Xoac_lang_grp_tst {
 	Xoac_lang_grp_fxt fxt = new Xoac_lang_grp_fxt();
 	@Before public void init() {fxt.Clear();}
@@ -89,7 +89,7 @@ class Xoac_lang_grp_fxt {
 	public Xoac_lang_itm_chkr itm_(String key) {return new Xoac_lang_itm_chkr(key);}
 	public Xoac_lang_grp_chkr grp_(String key) {return new Xoac_lang_grp_chkr(key);}
 	public Xoac_lang_grp_fxt Define_bulk(String raw, Xoac_lang_grp_chkr... expd) {
-		lang_mgr.Groups().Set_bulk(ByteAry_.new_utf8_(raw));
+		lang_mgr.Groups().Set_bulk(Bry_.new_utf8_(raw));
 		tst_mgr.Tst_ary("", expd, Xto_ary(lang_mgr.Groups()));
 		return this;
 	}

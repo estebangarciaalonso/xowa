@@ -24,19 +24,19 @@ public class Xow_ns implements GfoInvkAble {
 	public void Name_bry_(byte[] v) {
 		if (id == Xow_ns_.Id_main) {	// NOTE: Main will never prefix titles; EX: "Test" vs "Category:Test"
 			this.name_str			= "";
-			this.name_bry			= ByteAry_.Empty;
-			this.name_db_w_colon	= ByteAry_.Empty;
+			this.name_bry			= Bry_.Empty;
+			this.name_db_w_colon	= Bry_.Empty;
 		}
 		else {
 			this.name_bry			= v;
-			this.name_db_w_colon	= ByteAry_.Add(v, Byte_ascii.Colon);
+			this.name_db_w_colon	= Bry_.Add(v, Byte_ascii.Colon);
 			this.name_str			= String_.new_utf8_(v);
 		}
-		this.num_str = Int_.XtoStr_PadBgn(id, 3);
-		this.num_bry = ByteAry_.new_ascii_(num_str);
+		this.num_str = Int_.Xto_str_pad_bgn(id, 3);
+		this.num_bry = Bry_.new_ascii_(num_str);
 		this.name_enc = Xoa_url_encoder._.Encode(name_bry);
-		this.name_txt = ByteAry_.Replace(name_enc, Byte_ascii.Underline, Byte_ascii.Space);
-		this.name_txt_w_colon = ByteAry_.Replace(name_db_w_colon, Byte_ascii.Underline, Byte_ascii.Space);
+		this.name_txt = Bry_.Replace(name_enc, Byte_ascii.Underline, Byte_ascii.Space);
+		this.name_txt_w_colon = Bry_.Replace(name_db_w_colon, Byte_ascii.Underline, Byte_ascii.Space);
 	}
 	public byte[]	Name_bry()				{return name_bry;} private byte[] name_bry;
 	public String	Name_str()				{return name_str;} private String name_str;
@@ -75,7 +75,7 @@ public class Xow_ns implements GfoInvkAble {
 	public boolean		Is_meta()				{return id < Xow_ns_.Id_main;}									// ASSUME: only Special, Media
 	public boolean		Is_alias()				{return is_alias;} private boolean is_alias;
 	public int		Count()					{return count;} public Xow_ns Count_(int v) {count = v; return this;} private int count;
-	public byte[]	Gen_ttl(byte[] page)	{return id == Xow_ns_.Id_main ? page : ByteAry_.Add(name_db_w_colon, page);}
+	public byte[]	Gen_ttl(byte[] page)	{return id == Xow_ns_.Id_main ? page : Bry_.Add(name_db_w_colon, page);}
 	public void		Aliases_add(String alias) {
 		if (String_.Eq(alias, name_str)) return;
 		if (aliases == null) aliases = OrderedHash_.new_();

@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.strings.*;
 public class UsrMsg {
 	public int VisibilityDuration() {return visibilityDuration;} public UsrMsg VisibilityDuration_(int v) {visibilityDuration = v; return this;} int visibilityDuration = 3000;
 	public String Hdr() {return hdr;} public UsrMsg Hdr_(String val) {hdr = val; return this;} private String hdr;
@@ -37,7 +38,7 @@ public class UsrMsg {
 				KeyVal kv = (KeyVal)args.FetchAt(i);
 				m.Add(kv.Key(), kv.Val());
 			}
-			return Object_.XtoStr_OrNullStr(invk.Invk(GfsCtx._, 0, cmd, m));
+			return Object_.Xto_str_strict_or_null_mark(invk.Invk(GfsCtx._, 0, cmd, m));
 		}
 		String_bldr sb = String_bldr_.new_();
 		sb.Add(hdr).Add(spr);

@@ -16,7 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -27,20 +30,25 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
 public class Swt_text_w_border implements GxwTextFld, Swt_control {
-	public Swt_text_w_border(GxwElem ownerElem, Color color, KeyValHash ctorArgs) {
-		Composite owner = ((Swt_win)ownerElem).UnderShell();
+	private Composite text_host;
+	private Composite text_margin;
+	private Text text_elem;
+	public Swt_text_w_border(Swt_control owner_control, Color color, KeyValHash ctorArgs) {
+		Composite owner = owner_control.Under_composite();
 		int text_elem_style = ctorArgs.Has(GfuiTextBox_.Ctor_Memo) ? SWT.MULTI | SWT.WRAP | SWT.V_SCROLL : SWT.FLAT;
 		New_box_text_w_border(owner.getDisplay(), owner.getShell(), text_elem_style, color);
 		core = new Swt_core_cmds_frames(text_host, new Swt_core_cmds_frames_itm[]
 				{	new Swt_core_cmds_frames_itm_manual(text_margin, 1, 1, -2, -2)
 				,	new Swt_core_cmds_frames_itm_center_v(text_elem, this)
 				});
-		text_elem.addKeyListener(new Swt_KeyLnr(this));
-		text_elem.addMouseListener(new Swt_MouseLnr(this));
+		text_elem.addKeyListener(new Swt_lnr_key(this));
+		text_elem.addMouseListener(new Swt_lnr_mouse(this));
 	}
 	@Override public Control Under_control() {return text_host;}
+	@Override public Composite Under_composite() {return null;}
+	@Override public Control Under_menu_control() {return text_elem;}
+	public Text Under_text() {return text_elem;}
 	@Override public int SelBgn() {return text_elem.getCaretPosition();} 	@Override public void SelBgn_set(int v) {text_elem.setSelection(v);}
 	@Override public int SelLen() {return text_elem.getSelectionCount();} @Override public void SelLen_set(int v) {text_elem.setSelection(this.SelBgn(), this.SelBgn() + v);}	
 	@Override public String TextVal() {return text_elem.getText();} @Override public void TextVal_set(String v) {text_elem.setText(v);}
@@ -60,13 +68,11 @@ public class Swt_text_w_border implements GxwTextFld, Swt_control {
 	@Override public boolean Border_on() {return false;} @Override public void Border_on_(boolean v) {} // SWT_TODO:borderWidth doesn't seem mutable
 	@Override public void CreateControlIfNeeded() {}
 	@Override public boolean OverrideTabKey() {return false;} @Override public void OverrideTabKey_(boolean v) {}
-	Composite text_host;
-	Composite text_margin;
-	Text text_elem;
 	void New_box_text_w_border(Display display, Shell shell, int style, Color color) {
 		text_host = new Composite(shell, SWT.FLAT);
 		text_margin = new Composite(text_host, SWT.FLAT);
 		text_elem = new Text(text_margin, style);
+		text_elem .addTraverseListener(Swt_lnr_traverse_ignore_ctrl._);	// do not allow ctrl+tab to change focus when pressed in text box; allows ctrl+tab to be used by other bindings; DATE:2014-04-30  
 		text_host.setSize(20, 20);
 		text_host.setBackground(color);
 		text_margin.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
@@ -74,4 +80,10 @@ public class Swt_text_w_border implements GxwTextFld, Swt_control {
 		text_elem.setSize(20 - 2, 20 - 2);
 		text_elem.setLocation(1, 1);
 	}
+}
+class Swt_lnr_traverse_ignore_ctrl implements TraverseListener {
+    public void keyTraversed(TraverseEvent e) {
+  	  if (Swt_lnr_key.Has_ctrl(e.stateMask)) e.doit = false;
+    }
+    public static final Swt_lnr_traverse_ignore_ctrl _ = new Swt_lnr_traverse_ignore_ctrl();	
 }

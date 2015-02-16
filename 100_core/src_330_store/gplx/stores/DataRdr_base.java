@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.stores; import gplx.*;
+import gplx.core.strings.*;
 public abstract class DataRdr_base implements SrlMgr {
 	public boolean Parse() {return parse;} public void Parse_set(boolean v) {parse = v;} private boolean parse;
 	public Io_url Uri() {return uri;} public void Uri_set(Io_url s) {uri = s;} Io_url uri = Io_url_.Null;
@@ -37,10 +38,10 @@ public abstract class DataRdr_base implements SrlMgr {
 		try {return (String)val;} 
 		catch (Exception exc) {Err_dataRdr_ReadFailed_useOr(exc, String.class, key, val, or); return or;}
 	}
-	public byte[] ReadBryByStr(String key) {return ByteAry_.new_utf8_(ReadStr(key));}	
+	public byte[] ReadBryByStr(String key) {return Bry_.new_utf8_(ReadStr(key));}	
 	public byte[] ReadBryByStrOr(String key, byte[] or) {
 		Object val = Read(key); if (val == null) return or;
-		try {return ByteAry_.new_utf8_((String)val);}
+		try {return Bry_.new_utf8_((String)val);}
 		catch (Exception exc) {Err_dataRdr_ReadFailed_useOr(exc, byte[].class, key, val, or); return or;}
 	}
 	@gplx.Virtual public void SrlList(String key, ListAdp list, SrlObj proto, String itmKey) {

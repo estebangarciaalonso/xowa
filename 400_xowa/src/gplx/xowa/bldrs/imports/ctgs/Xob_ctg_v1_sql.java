@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.imports.ctgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.imports.*;
-import gplx.ios.*; import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.ctgs.*;
+import gplx.core.flds.*; import gplx.ios.*; import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.ctgs.*;
 public class Xob_ctg_v1_sql extends Xob_ctg_v1_base {
 	@Override public String Wkr_key() {return KEY;} public static final String KEY = "import.sql.category_v1";
 	@Override public Io_sort_cmd Make_sort_cmd() {return new Xob_ctg_v1_sql_make(wiki);}
@@ -32,14 +32,14 @@ class Xob_ctg_v1_sql_make implements Io_make_cmd {
 		sql_wtr.Bfr().Add_str(Xob_categorylinks_sql.Tbl_categorylinks).Add(Sql_hdr);
 	}	Gfo_fld_rdr fld_rdr = Gfo_fld_rdr.xowa_(); Gfo_fld_wtr fld_wtr = Gfo_fld_wtr.xowa_(); Xob_tmp_wtr sql_wtr; Gfo_usr_dlg usr_dlg; boolean is_first = true;
 	public byte Line_dlm() {return line_dlm;} public Xob_ctg_v1_sql_make Line_dlm_(byte v) {line_dlm = v; return this;} private byte line_dlm = Byte_ascii.Nil;
-	private byte[] prv_ctg_name = ByteAry_.Empty; int prv_page_id = 0;
+	private byte[] prv_ctg_name = Bry_.Empty; int prv_page_id = 0;
 	public void Sort_do(Io_line_rdr rdr) {
 		if (line_dlm == Byte_ascii.Nil) line_dlm = rdr.Line_dlm();
 		fld_rdr.Ini(rdr.Bfr(), rdr.Itm_pos_bgn());
 		byte[] ctg_name = fld_rdr.Read_bry_escape();
 		ctg_name = Escape_for_sql(wiki, ctg_name);
 		int page_id = fld_rdr.Read_int_base85_len5();
-		if (ByteAry_.Eq(prv_ctg_name, ctg_name) && page_id == prv_page_id) return; 
+		if (Bry_.Eq(prv_ctg_name, ctg_name) && page_id == prv_page_id) return; 
 		if (sql_wtr.FlushNeeded(5 + 2 + ctg_name.length)) sql_wtr.Flush(usr_dlg);	// 5=base85; 2=dlms
 		byte row_dlm = is_first ? Byte_ascii.Space : Byte_ascii.Comma;	// handle " (" or ",("
 		is_first = false;
@@ -53,11 +53,11 @@ class Xob_ctg_v1_sql_make implements Io_make_cmd {
 		sql_wtr.Flush(usr_dlg);
 		db_mgr.Category_version_update(true);
 	}
-	private static final byte[] Sql_hdr = ByteAry_.new_ascii_("INSERT INTO 'categorylinks' VALUES");	
-	ByteAryFmtr fmtr = ByteAryFmtr.new_("(~{page_id},'~{cat_name}','','','','','~{cat_type}')\n", "page_id", "cat_name", "cat_type");
+	private static final byte[] Sql_hdr = Bry_.new_ascii_("INSERT INTO 'categorylinks' VALUES");	
+	Bry_fmtr fmtr = Bry_fmtr.new_("(~{page_id},'~{cat_name}','','','','','~{cat_type}')\n", "page_id", "cat_name", "cat_type");
 	public static final String Url_sql = "xowa_categorylinks.sql";
 	private static byte[] Escape_for_sql(Xow_wiki wiki, byte[] bry) {
-		ByteAryBfr bfr = wiki.App().Utl_bry_bfr_mkr().Get_b512();
+		Bry_bfr bfr = wiki.App().Utl_bry_bfr_mkr().Get_b512();
 		int len = bry.length;
 		boolean dirty = false;
 		for (int i = 0; i < len; i++) {
@@ -71,6 +71,6 @@ class Xob_ctg_v1_sql_make implements Io_make_cmd {
 			}
 		}
 		bfr.Mkr_rls();
-		return dirty ? bfr.XtoAryAndClear() : bry;
+		return dirty ? bfr.Xto_bry_and_clear() : bry;
 	}
 }

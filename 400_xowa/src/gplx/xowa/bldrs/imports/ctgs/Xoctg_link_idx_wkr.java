@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.imports.ctgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.imports.*;
-import gplx.ios.*; import gplx.xowa.ctgs.*;
+import gplx.core.flds.*; import gplx.ios.*; import gplx.xowa.ctgs.*;
 public class Xoctg_link_idx_wkr extends Xob_idx_base {	// NOTE: similar functionality to Xob_make_cmd_site, but more complicated due to p,f,s; not inheriting
 	Io_url src_link_dir; int make_fil_max = Int_.MinValue;
 	public Xoctg_link_idx_wkr(Xob_bldr bldr, Xow_wiki wiki) {this.Cmd_ctor(bldr, wiki);}
@@ -32,14 +32,14 @@ public class Xoctg_link_idx_wkr extends Xob_idx_base {	// NOTE: similar function
 	@Override public void Cmd_run() {
 		Xoctg_make_link_grp cur_grp = null;
 		Io_line_rdr link_rdr = rdr_(src_link_dir);
-		byte[] prv_name = ByteAry_.Empty; byte prv_tid = Xoa_ctg_mgr.Tid_null;
+		byte[] prv_name = Bry_.Empty; byte prv_tid = Xoa_ctg_mgr.Tid_null;
 		make_link_mgr.Write_bgn();
 		make_main_mgr.Write_bgn();
 		while (link_rdr.Read_next()) {
 			link_data.Parse_from_sql_dump(fld_rdr, link_rdr);
 			byte[] cur_name = link_data.Name();
-			if (!ByteAry_.Eq(cur_name, prv_name)) {	// grp changed
-				if (prv_name != ByteAry_.Empty)		// ignore change from 1st row
+			if (!Bry_.Eq(cur_name, prv_name)) {	// grp changed
+				if (prv_name != Bry_.Empty)		// ignore change from 1st row
 					Write_grp(prv_name, make_link_mgr);
 				prv_name = cur_name;
 			}
@@ -77,11 +77,11 @@ class Xoctg_make_link_mgr {
 		subc_grp = new Xoctg_make_link_grp(Xoa_ctg_mgr.Tid_subc, make_fil_max);
 		file_grp = new Xoctg_make_link_grp(Xoa_ctg_mgr.Tid_file, make_fil_max);
 		page_grp = new Xoctg_make_link_grp(Xoa_ctg_mgr.Tid_page, make_fil_max);
-		make_fil_bfr = ByteAryBfr.reset_(make_fil_max);
+		make_fil_bfr = Bry_bfr.reset_(make_fil_max);
 		make_fld_wtr = Gfo_fld_wtr.xowa_().Bfr_(make_fil_bfr); 
 		make_dir = fsys_mgr.Url_site_dir(Xow_dir_info_.Tid_category2_link);
 		make_cmd = new Xob_make_cmd_site(usr_dlg, make_dir, make_fil_max);
-	}	Gfo_fld_wtr make_fld_wtr; ByteAryBfr make_fil_bfr; int make_fil_max; Xob_make_cmd_site make_cmd;
+	}	Gfo_fld_wtr make_fld_wtr; Bry_bfr make_fil_bfr; int make_fil_max; Xob_make_cmd_site make_cmd;
 	public Io_url Make_dir() {return make_dir;} Io_url make_dir;
 	public Xoctg_make_link_grp Subc_grp() {return subc_grp;} private Xoctg_make_link_grp subc_grp;
 	public Xoctg_make_link_grp File_grp() {return file_grp;} private Xoctg_make_link_grp file_grp;
@@ -101,7 +101,7 @@ class Xoctg_make_link_mgr {
 		make_fld_wtr.Write_int_base85_len5_fld(subc_grp.Bfr_len()).Write_int_base85_len5_fld(file_grp.Bfr_len()).Write_int_base85_len5_fld(page_grp.Bfr_len());
 		Write_grp(make_fil_bfr, subc_grp); Write_grp(make_fil_bfr, file_grp); Write_grp(make_fil_bfr, page_grp);
 		make_fil_bfr.Add_byte_nl();
-		byte[] bry = make_fld_wtr.Bfr().Bry();
+		byte[] bry = make_fld_wtr.Bfr().Bfr();
 		make_cmd.Do_bry(bry, 0, cur_name.length, 0, make_fld_wtr.Bfr().Len());
 		make_fil_bfr.Clear();
 		this.Grps_reset();
@@ -113,7 +113,7 @@ class Xoctg_make_link_mgr {
 	public void Flush() {
 		make_cmd.Sort_end();
 	}
-	private void Write_grp(ByteAryBfr make_fil_bfr, Xoctg_make_link_grp grp) {
+	private void Write_grp(Bry_bfr make_fil_bfr, Xoctg_make_link_grp grp) {
 		if (grp.Bfr_len() == 0) return;
 		make_fil_bfr.Add_bfr_and_clear(grp.Bfr());		// NOTE: should have trailing pipe
 	}
@@ -125,10 +125,10 @@ class Xoctg_make_link_mgr {
 		;
 }
 class Xoctg_make_link_grp {
-	public Xoctg_make_link_grp(byte tid, int bfr_max) {this.tid = tid; bfr = ByteAryBfr.reset_(bfr_max);} Gfo_fld_wtr fld_wtr = Gfo_fld_wtr.xowa_();
+	public Xoctg_make_link_grp(byte tid, int bfr_max) {this.tid = tid; bfr = Bry_bfr.reset_(bfr_max);} Gfo_fld_wtr fld_wtr = Gfo_fld_wtr.xowa_();
 	public byte Tid() {return tid;} private byte tid;
 	public int Bfr_len() {return bfr.Len();}
-	public ByteAryBfr Bfr() {return bfr;} ByteAryBfr bfr;
+	public Bry_bfr Bfr() {return bfr;} Bry_bfr bfr;
 	public int Count() {return count;} private int count;
 	public void Reset() {count = 0;}
 	public void Add_itm(Xoctg_idx_data_link link_data) {
@@ -156,13 +156,13 @@ class Xoctg_idx_data_link {
 class Xoctg_make_main_mgr {
 	public Xoctg_make_main_mgr(Gfo_usr_dlg usr_dlg, int make_fil_max, Xow_fsys_mgr fsys_mgr) {
 		this.make_fil_max = make_fil_max;
-		make_fil_bfr = ByteAryBfr.reset_(make_fil_max);
+		make_fil_bfr = Bry_bfr.reset_(make_fil_max);
 		make_fld_wtr = Gfo_fld_wtr.xowa_().Bfr_(make_fil_bfr); 
 		make_dir = fsys_mgr.Url_site_dir(Xow_dir_info_.Tid_category2_main);
 		make_cmd = new Xob_make_cmd_site(usr_dlg, make_dir, make_fil_max);
 		src_dir = fsys_mgr.Tmp_dir().GenSubDir_nest(Xoctg_hiddencat_ttl_wkr.KEY, "make");
 		hidden_rdr = new Io_line_rdr(usr_dlg, Io_mgr._.QueryDir_fils(src_dir));
-	}	Gfo_fld_wtr make_fld_wtr; ByteAryBfr make_fil_bfr; int make_fil_max; Xob_make_cmd_site make_cmd; Io_line_rdr hidden_rdr;
+	}	Gfo_fld_wtr make_fld_wtr; Bry_bfr make_fil_bfr; int make_fil_max; Xob_make_cmd_site make_cmd; Io_line_rdr hidden_rdr;
 	public Io_url Src_dir() {return src_dir;} Io_url src_dir;
 	public Io_url Make_dir() {return make_dir;} Io_url make_dir;
 	public void Grps_write(byte[] cur_name, int count_subc, int count_file, int count_page) {
@@ -171,7 +171,7 @@ class Xoctg_make_main_mgr {
 		make_fld_wtr.Write_byte_fld(hidden ? Byte_ascii.Ltr_y : Byte_ascii.Ltr_n);
 		make_fld_wtr.Write_int_base85_len5_fld(count_subc).Write_int_base85_len5_fld(count_file).Write_int_base85_len5_fld(count_page);
 		make_fil_bfr.Add_byte_nl();
-		byte[] bry = make_fld_wtr.Bfr().Bry();
+		byte[] bry = make_fld_wtr.Bfr().Bfr();
 		make_cmd.Do_bry(bry, 0, cur_name.length, 0, make_fld_wtr.Bfr().Len());
 		make_fil_bfr.Clear();
 	}

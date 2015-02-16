@@ -16,11 +16,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.users.history; import gplx.*; import gplx.xowa.*; import gplx.xowa.users.*;
-class Xou_history_itm {
+import gplx.core.primitives.*;
+public class Xou_history_itm {
 	public Xou_history_itm(byte[] wiki, byte[] page) {
 		this.wiki = wiki;
 		this.page = page;
-		this.key =  key_(wiki, page);
+		this.key = key_(wiki, page);
 		this.view_bgn = DateAdp_.Now();
 	}	private Xou_history_itm() {}
 	public byte[] Key() {return key;} private byte[] key;
@@ -49,23 +50,23 @@ class Xou_history_itm {
 		if (merge.View_bgn().compareTo(view_bgn) < CompareAble_.Same) view_bgn = merge.View_bgn();
 		if (merge.View_end().compareTo(view_end) > CompareAble_.Same) view_end = merge.View_end();
 	}
-	public static Xou_history_itm csv_(byte[] ary, IntRef pos) {
+	public static Xou_history_itm csv_(byte[] ary, Int_obj_ref pos) {
 		Xou_history_itm rv = new Xou_history_itm();
-		rv.view_bgn		= ByteAry_.ReadCsvDte(ary, pos, ByteAry_.Dlm_fld);
-		rv.view_end		= ByteAry_.ReadCsvDte(ary, pos, ByteAry_.Dlm_fld);
-		rv.view_count	= ByteAry_.ReadCsvInt(ary, pos, ByteAry_.Dlm_fld);
-		rv.wiki			= ByteAry_.ReadCsvBry(ary, pos, ByteAry_.Dlm_fld);
-		rv.page			= ByteAry_.ReadCsvBry(ary, pos, ByteAry_.Dlm_row);
+		rv.view_bgn		= Bry_.ReadCsvDte(ary, pos, Bry_.Dlm_fld);
+		rv.view_end		= Bry_.ReadCsvDte(ary, pos, Bry_.Dlm_fld);
+		rv.view_count	= Bry_.ReadCsvInt(ary, pos, Bry_.Dlm_fld);
+		rv.wiki			= Bry_.ReadCsvBry(ary, pos, Bry_.Dlm_fld);
+		rv.page			= Bry_.ReadCsvBry(ary, pos, Bry_.Dlm_row);
 		rv.key			= key_(rv.wiki, rv.page);
 		return rv;
 	}
-	public void Save(ByteAryBfr bb) {
-		bb	.Add_dte(view_bgn)				.Add_byte(ByteAry_.Dlm_fld)
-			.Add_dte(view_end)				.Add_byte(ByteAry_.Dlm_fld)
-			.Add_int_variable(view_count)	.Add_byte(ByteAry_.Dlm_fld)
-			.Add(wiki)						.Add_byte(ByteAry_.Dlm_fld)
-			.Add(page)						.Add_byte(ByteAry_.Dlm_row);
+	public void Save(Bry_bfr bb) {
+		bb	.Add_dte(view_bgn)				.Add_byte(Bry_.Dlm_fld)
+			.Add_dte(view_end)				.Add_byte(Bry_.Dlm_fld)
+			.Add_int_variable(view_count)	.Add_byte(Bry_.Dlm_fld)
+			.Add(wiki)						.Add_byte(Bry_.Dlm_fld)
+			.Add(page)						.Add_byte(Bry_.Dlm_row);
 	}
-	public static byte[] key_(byte[] wiki, byte[] page) {return ByteAry_.Add(wiki, Key_dlm, page);} static final byte[] Key_dlm = Xoa_consts.Pipe_bry;
+	public static byte[] key_(byte[] wiki, byte[] page) {return Bry_.Add(wiki, Key_dlm, page);} private static final byte[] Key_dlm = Xoa_consts.Pipe_bry;
 	public static final byte Fld_key = 0, Fld_wiki = 1, Fld_page = 2, Fld_view_count = 3, Fld_view_bgn = 4, Fld_view_end = 5;
 }

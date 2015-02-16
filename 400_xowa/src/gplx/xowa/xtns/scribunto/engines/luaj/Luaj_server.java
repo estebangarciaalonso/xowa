@@ -27,7 +27,7 @@ public class Luaj_server implements Scrib_server {
 		Globals_singleton = JsePlatform.standardGlobals();
 		Globals_singleton.load(new DebugLib());
 		Globals_singleton.load(new MWClient());
-
+		Globals_singleton.set("dbg", Luaj_server_func_dbg._);
 		String root_str = init_args[2];
 		if (Op_sys.Cur().Tid_is_wnt())
 			root_str = String_.Replace(root_str, Op_sys.Wnt.Fsys_dir_spr_str(), Op_sys.Lnx.Fsys_dir_spr_str());
@@ -56,9 +56,9 @@ public class Luaj_server implements Scrib_server {
 	public int Server_timeout() {return server_timeout;} public Scrib_server Server_timeout_(int v) {server_timeout = v; return this;} private int server_timeout;
 	public int Server_timeout_polling() {return server_timeout_polling;} public Scrib_server Server_timeout_polling_(int v) {server_timeout_polling = v; return this;} private int server_timeout_polling;
 	public int Server_timeout_busy_wait() {return server_timeout_busy_wait;} public Scrib_server Server_timeout_busy_wait_(int v) {server_timeout_busy_wait = v; return this;} private int server_timeout_busy_wait;
-	public byte[] Server_comm(byte[] cmd, Object[] cmd_objs) {return ByteAry_.Empty;}
+	public byte[] Server_comm(byte[] cmd, Object[] cmd_objs) {return Bry_.Empty;}
 	public void Server_send(byte[] cmd, Object[] cmd_objs) {}
-	public byte[] Server_recv() {return ByteAry_.Empty;}
+	public byte[] Server_recv() {return Bry_.Empty;}
 	public void Term() {}	
 	private static final LuaValue
 	  Val_server_recv 		= LuaValue.valueOf("server_recv")

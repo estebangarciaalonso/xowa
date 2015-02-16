@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scores; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
 public class Score_xtn_mgr extends Xox_mgr_base {
-	@Override public byte[] Xtn_key() {return XTN_KEY;} public static final byte[] XTN_KEY = ByteAry_.new_ascii_("score");
+	@Override public byte[] Xtn_key() {return XTN_KEY;} public static final byte[] XTN_KEY = Bry_.new_ascii_("score");
 	@Override public Xox_mgr Clone_new() {return new Score_xtn_mgr();}
-	public ByteAryFmtr Html_img() {return html_img;} private ByteAryFmtr html_img = ByteAryFmtr.new_(String_.Concat_lines_nl
+	public Bry_fmtr Html_img() {return html_img;} private Bry_fmtr html_img = Bry_fmtr.new_(String_.Concat_lines_nl
 		(	""
 		,	"<p>"
 		,	"  <a id=\"~{a_id}\" href=\"~{a_href}\" xowa_title=\"~{a_xowa_title}\">"
@@ -27,14 +27,14 @@ public class Score_xtn_mgr extends Xox_mgr_base {
 		,	"  </a>"
 		,	"</p>"
 		), "a_id", "a_href", "a_xowa_title", "img_id", "img_src", "img_alt");
-	public ByteAryFmtr Html_txt() {return html_txt;} private ByteAryFmtr html_txt = ByteAryFmtr.new_(String_.Concat_lines_nl
+	public Bry_fmtr Html_txt() {return html_txt;} private Bry_fmtr html_txt = Bry_fmtr.new_(String_.Concat_lines_nl
 		(	""
 		,	"<div id=\"~{div_id}\" class=\"~{div_class}\">"
 		,	"  <pre style=\"overflow:auto\">~{code}"
 		,	"</pre>"
 		,	"</div>"
 		), "div_id", "div_class", "code");
-	public ByteAryFmtr Lilypond_fmtr() {return lilypond_fmtr;} private ByteAryFmtr lilypond_fmtr = ByteAryFmtr.new_(String_.Concat_lines_nl
+	public Bry_fmtr Lilypond_fmtr() {return lilypond_fmtr;} private Bry_fmtr lilypond_fmtr = Bry_fmtr.new_(String_.Concat_lines_nl
 		(	"\\header {"
 		,	"  tagline = ##f"
 		,	"}"

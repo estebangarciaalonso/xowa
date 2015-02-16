@@ -36,7 +36,7 @@ public interface Xop_tkn_itm extends Xop_tkn_grp {
 	void Clear();
 	void Tmpl_fmt(Xop_ctx ctx, byte[] src, Xot_fmtr fmtr);
 	void Tmpl_compile(Xop_ctx ctx, byte[] src, Xot_compile_data prep_data); // SEE:NOTE_1:Tmpl_compile
-	boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr);
+	boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Bry_bfr bfr);
 }
 /*
 NOTE_1: Tmpl_compile

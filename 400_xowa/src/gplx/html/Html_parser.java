@@ -16,12 +16,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.html; import gplx.*;
-import gplx.core.bytes.*;
+import gplx.core.brys.*;
 public class Html_parser {
 	public Html_parser() {
 		Bry_bldr bry_bldr = new Bry_bldr();
-		bry_xnde_name = bry_bldr.New_256().Set_rng_xml_identifier(Scan_valid).Set_rng_ws(Scan_stop).Bry();
-		bry_atr_key = bry_bldr.New_256().Set_rng_xml_identifier(Scan_valid).Set_rng_ws(Scan_stop).Set_many(Scan_stop, Byte_ascii.Eq).Bry();
+		bry_xnde_name = bry_bldr.New_256().Set_rng_xml_identifier(Scan_valid).Set_rng_ws(Scan_stop).Val();
+		bry_atr_key = bry_bldr.New_256().Set_rng_xml_identifier(Scan_valid).Set_rng_ws(Scan_stop).Set_many(Scan_stop, Byte_ascii.Eq).Val();
 	}
 	byte[] src; int pos, end; byte[] bry_xnde_name, bry_atr_key;
 	int cur_atrs_idx = 0; int[] cur_atrs = new int[250];// define max of 50 atrs;	
@@ -53,7 +53,7 @@ public class Html_parser {
 					break;
 			}
 		}
-		return (Html_nde[])rv.XtoAry(Html_nde.class);
+		return (Html_nde[])rv.Xto_ary(Html_nde.class);
 	}
 	int cur_lhs_bgn, cur_lhs_end, cur_name_bgn, cur_name_end, cur_rhs_bgn; boolean xnde_init = true, tag_tid_is_inline = false;
 	private boolean Parse_xnde_rhs() {
@@ -63,7 +63,7 @@ public class Html_parser {
 		++pos;
 		int name_len = cur_name_end - cur_name_bgn;
 		if (pos + name_len >= end) return false;
-		if (!ByteAry_.Match(src, pos, pos + name_len, src, cur_name_bgn,  cur_name_end)) return false;
+		if (!Bry_.Match(src, pos, pos + name_len, src, cur_name_bgn,  cur_name_end)) return false;
 		pos += name_len;
 		if (src[pos] != Byte_ascii.Gt) return false;
 		++pos;

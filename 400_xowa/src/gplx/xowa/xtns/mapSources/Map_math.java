@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.mapSources; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.primitives.*; import gplx.core.btries.*;
 class Map_math {// REF.MW:MapSources_math.php
 	private int word_idx_nsew;
 	private double[] rv = new double[4];
@@ -42,13 +42,21 @@ class Map_math {// REF.MW:MapSources_math.php
 		}
 		return error == 0;
 	}
-	public void Fail(Xop_ctx ctx, byte[] src, Xot_invk self, ByteAryBfr bfr, byte[] pfunc_name) {
-		byte[] self_src = ByteAry_.Mid(src, self.Src_bgn(), self.Src_end()); 
-		if (error != -1)	// -1 indicates empty coord; don't log, b/c it.v: often omits; it.v:Sami; DATE:2014-03-02
-			ctx.App().Usr_dlg().Warn_many("", "", "mapSources failed: page=~{0} src=~{1} err=~{2}", String_.new_utf8_(ctx.Page().Ttl().Full_db()), String_.new_utf8_(self_src), error);
-		bfr.Add(pfunc_name).Add(Bry_failed);
-		return;
-	}	private static final byte[] Bry_failed = ByteAry_.new_ascii_(" failed.");
+	public void Fail(Xop_ctx ctx, byte[] src, Xot_invk self, Bry_bfr bfr, byte[] pfunc_name) {
+		String page_str = ctx.Cur_page().Url().Xto_full_str_safe();
+		String pfunc_name_str = String_.new_utf8_(pfunc_name);
+		String self_str = String_.new_utf8_(src, self.Src_bgn(), self.Src_end()); 
+		switch (error) {
+			case  -1:	// empty coord; EX: {{#deg2dd:|precision=6}}}} PAGE:it.v:Sami; DATE:2014-03-02
+			case  -2:	// words > 4; EX:{{#geoLink: $1 $2 $3 $4 $5 $6|lat=51°20′00″19°55′50″}}; PAGE:pl.v:Rezerwat_przyrody_Jaksonek DATE:2014-08-14
+			case  -3:	// invalid delim; EX:{{#geoLink: $1 $2 $3 $4 $5 $6|lat=51°31′37″|long=20°13′17'}}; PAGE:pl.v:Rezerwat_przyrody_Ciosny DATE:2014-08-14
+				ctx.App().Usr_dlg().Log_many("", "", "mapSources failed: page=~{0} pfunc=~{1} err=~{2} src=~{3}", page_str, pfunc_name_str, error, self_str); // don't warn b/c there are many
+				break;
+			default:
+				ctx.App().Usr_dlg().Warn_many("", "", "mapSources failed: page=~{0} pfunc=~{1} err=~{2} src=~{3}", page_str, pfunc_name_str, error, self_str);
+				break;
+		}
+	}
 	private void New_coord(byte[] input, byte[] dir, int prec) {	// REF.MW:newCoord
 		this.error = 0; this.word_idx_nsew = -1;
 		coord_dec = coord_deg = coord_min = coord_sec = 0;
@@ -103,12 +111,12 @@ class Map_math {// REF.MW:MapSources_math.php
 		}
 		step = 2;
 	}
-	private static final byte[] Bry_deg = ByteAry_.new_utf8_("°"), Bry_quot = ByteAry_.new_ascii_("&quot;");
+	private static final byte[] Bry_deg = Bry_.new_utf8_("°"), Bry_quot = Bry_.new_ascii_("&quot;");
 	public byte[] Get_dms(byte[] plus, byte[] minus) { // REF.MW: getDMSString
 		if (step < 2) Set_coord();
 		double deg = coord_deg;
 		if (	dec < 0 
-			&& (ByteAry_.Len_gt_0(plus) || ByteAry_.Len_gt_0(minus))) {
+			&& (Bry_.Len_gt_0(plus) || Bry_.Len_gt_0(minus))) {
 			deg = Math_.Abs_double(deg);
 		}
 		tmp_bfr.Add_double(deg).Add(Bry_deg);
@@ -121,13 +129,13 @@ class Map_math {// REF.MW:MapSources_math.php
 			letter = coord_dir_ns;
 		if (dir_id == Dir_long_id)
 			letter = coord_dir_ew;
-		if (dec > 0 && ByteAry_.Len_gt_0(plus))
+		if (dec > 0 && Bry_.Len_gt_0(plus))
 			letter = plus;
-		if (dec < 0 && ByteAry_.Len_gt_0(minus))
+		if (dec < 0 && Bry_.Len_gt_0(minus))
 			letter = minus;
 		if (letter != null)
 			tmp_bfr.Add_byte_space().Add(letter);
-		return tmp_bfr.XtoAryAndClear();
+		return tmp_bfr.Xto_bry_and_clear();
 	}
 	private void Parse_input(byte[] src) {	// REF.MW: toDec
 		src = Parse_input_normalize(tmp_bfr, src);
@@ -142,15 +150,15 @@ class Map_math {// REF.MW:MapSources_math.php
 				case Byte_ascii.Space:
 					Parse_input_word(rv, src, ++word_idx, word_bgn, i);
 					++words_len;
-					i = Byte_ary_finder.Find_fwd_while_space_or_tab(src, i, src_len);
+					i = Bry_finder.Find_fwd_while_space_or_tab(src, i, src_len);
 					word_bgn = i;
 					break;
 			}
 			if (is_last) break;
 			i++;
 		}
-		if (word_idx_nsew != -1 && word_idx_nsew != words_len - 1) {error = -10; return;}
 		if (words_len < 1 || words_len > 4) {error = -2; return;}
+		if (word_idx_nsew != -1 && word_idx_nsew != words_len - 1) {error = -10; return;}
 		if (rv[0] >= 0)
 			dec = (rv[0] + rv[1] / 60 + rv[2] / 3600 ) * rv[3];
 		else
@@ -171,12 +179,12 @@ class Map_math {// REF.MW:MapSources_math.php
 	private void Parse_input_word(double[] rv, byte[] input, int word_idx, int word_bgn, int word_end) {
 		if (word_idx >= Input_units_len) return;
 		byte unit_dlm = Input_units[word_idx];
-		int pos = Byte_ary_finder.Find_fwd(input, unit_dlm, word_bgn, word_end);
-		if (pos != ByteAry_.NotFound)	// remove dlms from end of bry; EX: "123'"  -> "123"
+		int pos = Bry_finder.Find_fwd(input, unit_dlm, word_bgn, word_end);
+		if (pos != Bry_.NotFound)	// remove dlms from end of bry; EX: "123'" -> "123"
 			word_end = pos;
 		if (!Parse_input_word_is_compass(input[word_bgn])) {	// if ( is_numeric( $v ) ) {
-			double word_val = ByteAry_.XtoDoubleByPosOr(input, word_bgn, word_end, Double_.NaN);
-			if (word_val != Double_.NaN) {
+			double word_val = Bry_.XtoDoubleByPosOr(input, word_bgn, word_end, Double_.NaN);
+			if (!Double_.IsNaN(word_val)) {
 				if (word_idx > 2) {error = -4; return;}
 				switch (word_idx) {
 					case 0:
@@ -195,7 +203,10 @@ class Map_math {// REF.MW:MapSources_math.php
 						break;
 				}
 			}
-			else {error = -3; return;}
+			else {
+				error = -3;
+				return;
+			}
 		}
 		else {	// 'NSEW'
 			word_idx_nsew = word_idx;
@@ -223,28 +234,28 @@ class Map_math {// REF.MW:MapSources_math.php
 		}
 	}
 	private static byte Parse_dir(byte[] dir) {
-		if (ByteAry_.Len_eq_0(dir)) return Dir_unknown_id;
-		Object dir_obj = Dir_trie.MatchAtCur(dir, 0, dir.length);
-		return dir_obj == null ? Dir_unknown_id : ((ByteVal)dir_obj).Val();
+		if (Bry_.Len_eq_0(dir)) return Dir_unknown_id;
+		Object dir_obj = Dir_trie.Match_bgn(dir, 0, dir.length);
+		return dir_obj == null ? Dir_unknown_id : ((Byte_obj_val)dir_obj).Val();
 	}
 	private static int Parse_precision(int val) {	// REF.MW: MapSourcesMath.php|newCoord
 		if		(val > -1 && val < 10)		return val;
 		else if	(val == -1)					return 9;
 		else								return 4;
 	}
-	private ByteAryBfr tmp_bfr = ByteAryBfr.reset_(32);
-	private static byte[] Parse_input_normalize(ByteAryBfr bfr, byte[] input) {
+	private Bry_bfr tmp_bfr = Bry_bfr.reset_(32);
+	private static byte[] Parse_input_normalize(Bry_bfr bfr, byte[] input) {
 		int input_end = input.length; if (input_end == 0) return null;
 		int i = 0;
 		while (i < input_end) {
 			byte b = input[i];
-			Object o = Input_trie.Match(b, input, i, input_end);
+			Object o = Input_trie.Match_bgn_w_byte(b, input, i, input_end);
 			if (o == null) {
 				bfr.Add_byte(b);
 				++i;
 			}
 			else {
-				byte tid = ((ByteVal)o).Val();
+				byte tid = ((Byte_obj_val)o).Val();
 				switch (tid) {
 					case Input_tid_apos:			bfr.Add_byte(Byte_ascii.Apos).Add_byte_space(); break;				// EX: "'" -> "' "
 					case Input_tid_quote:			bfr.Add_byte(Byte_ascii.Quote).Add_byte_space(); break;				// EX: '"' -> '" '
@@ -256,11 +267,11 @@ class Map_math {// REF.MW:MapSources_math.php
 				i = Input_trie.Match_pos();
 			}
 		}
-		return bfr.XtoAryAndClearAndTrim();
+		return bfr.Xto_bry_and_clear_and_trim();
 	}
 	private static final byte Dir_unknown_id = 0, Dir_lat_id = 1, Dir_long_id = 2;
-	public static final byte[] Dir_lat_bry = ByteAry_.new_ascii_("lat"), Dir_long_bry = ByteAry_.new_ascii_("long");
-	private static final ByteTrieMgr_slim Dir_trie = ByteTrieMgr_slim.ci_()
+	public static final byte[] Dir_lat_bry = Bry_.new_ascii_("lat"), Dir_long_bry = Bry_.new_ascii_("long");
+	private static final Btrie_slim_mgr Dir_trie = Btrie_slim_mgr.ci_ascii_()	// NOTE:ci.ascii:MW_const.en
 	.Add_bry_bval(Dir_lat_bry			, Dir_lat_id)
 	.Add_bry_bval(Dir_long_bry			, Dir_long_id)
 	;
@@ -274,8 +285,8 @@ class Map_math {// REF.MW:MapSources_math.php
 	private static final byte Input_byte_degree = Byte_ascii.Slash;	// NOTE: ugly cheat to avoid using multi-byte char; note that all "/" are swapped out to " ", so any remaining "/" was added by the normalizer; EX:  "123° 4/5" -> "123/ 4 5"
 	private static final byte[] Input_units = new byte[] {Input_byte_degree, Byte_ascii.Apos, Byte_ascii.Quote, Byte_ascii.Space};
 	private static final int Input_units_len = Input_units.length;
-	private static final byte[] Input_bry_degree = ByteAry_.new_utf8_("°");
-	private static final ByteTrieMgr_slim Input_trie = ByteTrieMgr_slim.cs_()
+	private static final byte[] Input_bry_degree = Bry_.new_utf8_("°");
+	private static final Btrie_slim_mgr Input_trie = Btrie_slim_mgr.cs_()
 	.Add_str_byte("'"					, Input_tid_apos)		// NOTE: must add ' so that "'" -> "' "
 	.Add_str_byte("‘"					, Input_tid_apos)
 	.Add_str_byte("’"					, Input_tid_apos)
@@ -303,5 +314,5 @@ class Map_math {// REF.MW:MapSources_math.php
 	.Add_str_byte("e"					, Input_tid_compass)
 	.Add_str_byte("w"					, Input_tid_compass)
 	;
-        public static final Map_math _ = new Map_math();
+	public static final Map_math _ = new Map_math();
 }

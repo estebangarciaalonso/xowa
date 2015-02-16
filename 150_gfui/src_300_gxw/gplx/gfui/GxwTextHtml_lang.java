@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
+import gplx.core.strings.*;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -119,6 +120,15 @@ public class GxwTextHtml_lang extends JScrollPane implements GxwTextHtml {
 }
 
 class GxwTextHtml_editor extends JEditorPane implements GxwTextHtml {
+	public GxwTextHtml_editor ctor() {
+		styledKit = new StyledEditorKit();
+		htmlKit = new HTMLEditorKit();
+		this.setEditorKit(htmlKit);
+//		this.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE); this.setFont(new Font("Courier New", 6, Font.PLAIN)); // force jeditorpane to take font 
+		core = GxwCore_lang.new_(this);
+		this.setCaret(new javax.swing.text.DefaultCaret() {public void setSelectionVisible(boolean vis) {super.setSelectionVisible(true);}});// else highlighted selection will not be visible when text box loses focus 		
+		return this;
+	}
 //	public HTMLEditorKit HtmlKit() {return htmlKit;} HTMLEditorKit htmlKit;
 	@Override public GxwCore_base Core() {return core;} GxwCore_base core;
 	public GxwCbkHost Host() {return host;} public void Host_set(GxwCbkHost host) {this.host = host;} GxwCbkHost host;
@@ -136,15 +146,6 @@ class GxwTextHtml_editor extends JEditorPane implements GxwTextHtml {
 	@Override public void OverrideTabKey_(boolean v) {}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {return null;}
 	StyledEditorKit styledKit; HTMLEditorKit htmlKit;
-	public GxwTextHtml_editor ctor() {
-		styledKit = new StyledEditorKit();
-		htmlKit = new HTMLEditorKit();
-		this.setEditorKit(htmlKit);
-//		this.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE); this.setFont(new Font("Courier New", 6, Font.PLAIN)); // force jeditorpane to take font 
-		core = GxwCore_lang.new_(this);
-		this.setCaret(new javax.swing.text.DefaultCaret() {public void setSelectionVisible(boolean vis) {super.setSelectionVisible(true);}});// else highlighted selection will not be visible when text box loses focus 		
-		return this;
-	}
 	
 	public void Html_enabled(boolean v) {
 //		String contentType = v ? "text/html" : "text/rtf";
@@ -158,8 +159,8 @@ class GxwTextHtml_editor extends JEditorPane implements GxwTextHtml {
 	}
 	public String Html_print() {
 		String_bldr sb = String_bldr_.new_();
-		sb.Add("selBgn=").Add(Int_.XtoStr(Html_sel_bgn())).Add_char_crlf();
-		sb.Add("selEnd=").Add(Int_.XtoStr(Html_sel_end())).Add_char_crlf();
+		sb.Add("selBgn=").Add(Int_.Xto_str(Html_sel_bgn())).Add_char_crlf();
+		sb.Add("selEnd=").Add(Int_.Xto_str(Html_sel_end())).Add_char_crlf();
 		sb.Add("selTxt=").Add(Html_sel_text()).Add_char_crlf();
 		KeyVal[] atrs = Html_sel_atrs();
 		for (int i = 0; i < atrs.length; i++) {
@@ -215,7 +216,7 @@ class GxwTextHtml_editor extends JEditorPane implements GxwTextHtml {
 		Element elm = Html_sel_elm(); if (elm == null) return KeyVal_.Ary_empty;
 		ListAdp sel_atrs_list = ListAdp_.new_();
 		Html_sel_atrs(elm.getAttributes(), sel_atrs_list, null, ".");
-		return (KeyVal[])sel_atrs_list.XtoAry(KeyVal.class);
+		return (KeyVal[])sel_atrs_list.Xto_ary(KeyVal.class);
 	}
 
 	@Override public void processKeyEvent(KeyEvent e) 					{

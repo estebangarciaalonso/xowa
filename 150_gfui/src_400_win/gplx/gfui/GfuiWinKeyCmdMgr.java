@@ -50,12 +50,12 @@ class GfuiWinKeyCmdMgr implements GfuiWinOpenAble, GfoInvkAble, GfoEvObj {
 	public static GfuiWinKeyCmdMgr new_() {return new GfuiWinKeyCmdMgr();} GfuiWinKeyCmdMgr() {}
 	public static int ExtractPosFromText(String raw) {
 		int pos = String_.FindFwd(raw, "&");
-		if (pos == String_.NotFound || pos == String_.Len(raw) - 1) return String_.NotFound;	// & notFound or last char; return;				
+		if (pos == String_.Find_none || pos == String_.Len(raw) - 1) return String_.Find_none;	// & notFound or last char; return;				
 		char nextChar = String_.CharAt(raw, pos + 1);			
-		return Char_.IsLetterEnglish(nextChar) ? pos : String_.NotFound; // NOTE: .IsLetter checks against space; EX: "me & you" shouldn't bring back space
+		return Char_.IsLetterEnglish(nextChar) ? pos : String_.Find_none; // NOTE: .IsLetter checks against space; EX: "me & you" shouldn't bring back space
 	}
 	public static IptKey ExtractKeyFromText(String raw) {
-		int pos = ExtractPosFromText(raw); if (pos == String_.NotFound) return IptKey_.None;
+		int pos = ExtractPosFromText(raw); if (pos == String_.Find_none) return IptKey_.None;
 		return IptKey_.parse_("key." + String_.Lower(Char_.XtoStr(String_.CharAt(raw, pos + 1))));	// pos=& pos; + 1 to get next letter
 	}
 }

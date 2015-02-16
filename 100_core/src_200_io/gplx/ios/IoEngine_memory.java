@@ -187,7 +187,7 @@ public class IoEngine_memory extends IoEngine_base {
 			xrg.Rslt_(IoEngine_xrg_downloadFil.Rslt_fail_file_not_found);
 			return Io_stream_rdr_.Null;
 		}
-		byte[] bry = ByteAry_.new_utf8_(FetchFil(Io_url_.mem_fil_(xrg.Src())).Text());
+		byte[] bry = Bry_.new_utf8_(FetchFil(Io_url_.mem_fil_(xrg.Src())).Text());
 		return Io_stream_rdr_.mem_(bry);
 	}
 	IoItmHash dirs = IoItmHash.new_();

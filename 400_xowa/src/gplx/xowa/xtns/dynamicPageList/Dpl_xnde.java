@@ -16,18 +16,19 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.dynamicPageList; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.core.primitives.*;
 import gplx.xowa.html.*;
 import gplx.xowa.dbs.*; import gplx.xowa.ctgs.*;
 public class Dpl_xnde implements Xox_xnde, Xop_xnde_atr_parser {
 	private Dpl_itm itm = new Dpl_itm(); private ListAdp pages = ListAdp_.new_();
 	public void Xatr_parse(Xow_wiki wiki, byte[] src, Xop_xatr_itm xatr, Object xatr_key_obj) {} // NOTE: <dynamicPageList> has no attributes
 	public void Xtn_parse(Xow_wiki wiki, Xop_ctx ctx, Xop_root_tkn root, byte[] src, Xop_xnde_tkn xnde) {
-		itm.Parse(wiki, ctx, ctx.Page().Ttl().Full_txt(), src, xnde);
+		itm.Parse(wiki, ctx, ctx.Cur_page().Ttl().Full_txt(), src, xnde);
 		Dpl_page_finder.Find_pages(pages, wiki, itm);
 		if (itm.Sort_ascending() != Bool_.__byte)
 			pages.SortBy(new Dpl_page_sorter(itm));
 	}
-	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_html_wtr_ctx opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_write(Bry_bfr bfr, Xoa_app app, Xop_ctx ctx, Xoh_html_wtr html_wtr, Xoh_wtr_ctx hctx, Xop_xnde_tkn xnde, byte[] src) {
 		Xow_wiki wiki = ctx.Wiki();
 		Dpl_html_data html_mode = Dpl_html_data.new_(Dpl_itm_keys.Key_unordered);
 		int itms_len = pages.Count();
@@ -67,7 +68,7 @@ public class Dpl_xnde implements Xox_xnde, Xop_xnde_atr_parser {
 		}
 		bfr.Add(html_mode.Grp_end()).Add_byte_nl();
 	}
-	private static byte[] Bry_nofollow = ByteAry_.new_ascii_(" rel=\"nofollow\"");  
+	private static byte[] Bry_nofollow = Bry_.new_ascii_(" rel=\"nofollow\"");  
 }
 class Dpl_page_finder {
 	public static void Find_pages(ListAdp rv, Xow_wiki wiki, Dpl_itm itm) {
@@ -77,7 +78,7 @@ class Dpl_page_finder {
 		OrderedHash old_regy = OrderedHash_.new_(), new_regy = OrderedHash_.new_(), cur_regy = OrderedHash_.new_();
 		Xodb_load_mgr load_mgr = wiki.Db_mgr().Load_mgr();
 		Xodb_page tmp_page = new Xodb_page();
-		IntRef tmp_id = IntRef.zero_();
+		Int_obj_ref tmp_id = Int_obj_ref.zero_();
 		ListAdp del_list = ListAdp_.new_();
 		int ns_filter = itm.Ns_filter();
 		OrderedHash exclude_pages = OrderedHash_.new_();
@@ -94,13 +95,13 @@ class Dpl_page_finder {
 		}			
 		int pages_len = old_regy.Count();
 		for (int i = 0; i < pages_len; i++) {		// loop over old and create pages
-			IntRef old_id = (IntRef)old_regy.FetchAt(i);
+			Int_obj_ref old_id = (Int_obj_ref)old_regy.FetchAt(i);
 			rv.Add(new Xodb_page().Id_(old_id.Val()));
 		}			
 		wiki.Db_mgr().Load_mgr().Load_by_ids(Cancelable_.Never, rv, 0, pages_len);
 		rv.SortBy(Xodb_page_sorter.IdAsc);
 	}
-	private static void Find_excludes(OrderedHash exclude_pages, Xodb_load_mgr load_mgr, Xodb_page tmp_page, IntRef tmp_id, ListAdp exclude_ctgs) {
+	private static void Find_excludes(OrderedHash exclude_pages, Xodb_load_mgr load_mgr, Xodb_page tmp_page, Int_obj_ref tmp_id, ListAdp exclude_ctgs) {
 		if (exclude_ctgs == null) return;
 		int exclude_ctgs_len = exclude_ctgs.Count();
 		for (int i = 0; i < exclude_ctgs_len; i++) {
@@ -108,7 +109,7 @@ class Dpl_page_finder {
 			Find_pages_in_ctg(exclude_pages, load_mgr, tmp_page, tmp_id, exclude_ctg);
 		}
 	}
-	private static void Find_pages_in_ctg(OrderedHash list, Xodb_load_mgr load_mgr, Xodb_page tmp_page, IntRef tmp_id, byte[] ctg_ttl) {
+	private static void Find_pages_in_ctg(OrderedHash list, Xodb_load_mgr load_mgr, Xodb_page tmp_page, Int_obj_ref tmp_id, byte[] ctg_ttl) {
 		Xoctg_view_ctg ctg = new Xoctg_view_ctg().Name_(ctg_ttl);
 		load_mgr.Load_ctg_v1(ctg, ctg_ttl);
 
@@ -119,7 +120,7 @@ class Dpl_page_finder {
 				Xoctg_view_itm ctg_itm = ctg_mgr.Itms()[i];					
 				int ctg_itm_id = ctg_itm.Id();
 				if (list.Has(tmp_id.Val_(ctg_itm_id))) continue;
-				list.Add(IntRef.new_(ctg_itm_id), ctg_itm);
+				list.Add(Int_obj_ref.new_(ctg_itm_id), ctg_itm);
 //					if (ctg_tid == Xoa_ctg_mgr.Tid_subc) {	// recurse subcategories
 //						load_mgr.Load_by_id(tmp_page, ctg_itm_id);
 //						Find_pages_in_ctg(list, load_mgr, tmp_page, tmp_id, tmp_page.Ttl_wo_ns());
@@ -127,21 +128,21 @@ class Dpl_page_finder {
 			}
 		}
 	}
-	private static void Del_old_pages_not_in_cur(int i, IntRef tmp_id, OrderedHash old_regy, OrderedHash cur_regy, ListAdp del_list) {
+	private static void Del_old_pages_not_in_cur(int i, Int_obj_ref tmp_id, OrderedHash old_regy, OrderedHash cur_regy, ListAdp del_list) {
 		if (i == 0) return;						// skip logic for first ctg (which doesn't have a predecessor)
 		int old_len = old_regy.Count();
 		for (int j = 0; j < old_len; j++) {		// if cur is not in new, del it
-			IntRef old_id = (IntRef)old_regy.FetchAt(j);
+			Int_obj_ref old_id = (Int_obj_ref)old_regy.FetchAt(j);
 			if (!cur_regy.Has(tmp_id.Val_(old_id.Val())))	// old_itm does not exist in cur_regy
 				del_list.Add(old_id);						// remove; EX: (A,B) in old; B only in cur; old should now be (A) only				
 		}
 		int del_len = del_list.Count();
 		for (int j = 0; j < del_len; j++) {
-			IntRef old_itm = (IntRef)del_list.FetchAt(j);
+			Int_obj_ref old_itm = (Int_obj_ref)del_list.FetchAt(j);
 			old_regy.Del(tmp_id.Val_(old_itm.Val()));
 		}
 	}
-	private static void Add_cur_pages_also_in_old(int i, IntRef tmp_id, OrderedHash old_regy, OrderedHash cur_regy, OrderedHash new_regy, OrderedHash exclude_pages, int ns_filter) {
+	private static void Add_cur_pages_also_in_old(int i, Int_obj_ref tmp_id, OrderedHash old_regy, OrderedHash cur_regy, OrderedHash new_regy, OrderedHash exclude_pages, int ns_filter) {
 		int found_len = cur_regy.Count();
 		for (int j = 0; j < found_len; j++) {			// if new_page is in cur, add it
 			Xoctg_view_itm cur_itm = (Xoctg_view_itm)cur_regy.FetchAt(j);
@@ -151,7 +152,7 @@ class Dpl_page_finder {
 			if (i != 0) {								// skip logic for first ctg (which doesn't have a predecessor)
 				if (!old_regy.Has(tmp_id)) continue;	// cur_itm not in old_regy; ignore
 			}
-			new_regy.AddKeyVal(IntRef.new_(cur_itm.Id()));
+			new_regy.AddKeyVal(Int_obj_ref.new_(cur_itm.Id()));
 		}
 	}
 }

@@ -22,7 +22,7 @@ public class Xoh_file_main_tst {
 	@Before public void init() {fxt.Reset();}
 	@Test  public void Image() {
 		fxt.Ttl_str_("Test.png").Html_src_("mem/file/cur.png").Html_orig_src_("mem/file/orig.png").Html_w_(300).Html_h_(200).Html_file_size_(100)
-		.tst(String_.Concat_lines_nl_skipLast
+		.tst(String_.Concat_lines_nl_skip_last
 		(	Xoh_fil_main_fxt.Hdr
 		,	"<div class=\"fullImageLink\" id=\"file\">"
 		,	"  <a href=\"mem/file/orig.png\" xowa_title=\"Test.png\">"
@@ -53,7 +53,7 @@ public class Xoh_file_main_tst {
 	}
 	@Test  public void Audio() {
 		fxt.Ttl_str_("Test.oga").Html_src_("mem/file/cur.oga").Html_orig_src_("mem/file/orig.oga").Html_w_(300).Html_h_(200).Html_file_size_(100)
-		.tst(String_.Concat_lines_nl_skipLast
+		.tst(String_.Concat_lines_nl_skip_last
 		(	Xoh_fil_main_fxt.Hdr
 		,	"<div class=\"fullImageLink\" id=\"file\">"
 		,	"  <div>"
@@ -67,7 +67,7 @@ public class Xoh_file_main_tst {
 	}
 	@Test  public void Video() {
 		fxt.Ttl_str_("Test.ogv").Html_src_("mem/file/thumb.png").Html_orig_src_("mem/file/orig.ogv").Html_w_(300).Html_h_(200).Html_file_size_(100)
-		.tst(String_.Concat_lines_nl_skipLast
+		.tst(String_.Concat_lines_nl_skip_last
 		(	Xoh_fil_main_fxt.Hdr
 		,	"<div class=\"fullImageLink\" id=\"file\">"
 		,	"  <div>"
@@ -89,7 +89,7 @@ class Xoh_fil_main_fxt {
 	Xoh_file_main_wkr wkr = new Xoh_file_main_wkr();
 	Xoa_app app; Xow_wiki wiki; Xoh_file_page opt;
 	Xof_xfer_itm file = new Xof_xfer_itm();
-	ByteAryBfr bfr = ByteAryBfr.new_();	
+	Bry_bfr bfr = Bry_bfr.new_();	
 	public Xoh_fil_main_fxt Ttl_str_(String v) {this.ttl_str = v; return this;} private String ttl_str;
 	public Xoh_fil_main_fxt Html_src_(String v) {this.html_src = v; return this;} private String html_src;
 	public Xoh_fil_main_fxt Html_orig_src_(String v) {this.html_orig_src = v; return this;} private String html_orig_src;
@@ -103,14 +103,14 @@ class Xoh_fil_main_fxt {
 		opt = new Xoh_file_page();
 	}
 	public void tst(String expd) {
-		byte[] ttl_bry = ByteAry_.new_utf8_(ttl_str);
+		byte[] ttl_bry = Bry_.new_utf8_(ttl_str);
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
-		file.Atrs_by_html_for_tests(html_w, html_h, ByteAry_.new_utf8_(html_src), ByteAry_.new_utf8_(html_orig_src));
-		file.Atrs_by_ttl(ttl_bry, ByteAry_.Empty);
-		wkr.Bld_html(wiki, bfr, file, ttl, opt, ByteAry_.XtoStrBytesByInt(html_file_size, 0), play_btn_icon, 0);	// TEST: must pass in elem_val b/c test only uses 2nd Bld_html while app uses 1st
-		Tfds.Eq_str_lines(expd, bfr.XtoStrAndClear());
-	}	static final byte[] play_btn_icon = ByteAry_.new_ascii_("file:///mem/xowa/user/test_user/app/img/file/play.png");
-	public static final String Hdr = String_.Concat_lines_nl_skipLast
+		file.Init_for_test__img(html_w, html_h, Bry_.new_utf8_(html_src), Bry_.new_utf8_(html_orig_src));
+		file.Set__ttl(ttl_bry, Bry_.Empty);
+		wkr.Bld_html(wiki, bfr, file, ttl, opt, Bry_.XtoStrBytesByInt(html_file_size, 0), play_btn_icon, 0);	// TEST: must pass in elem_val b/c test only uses 2nd Bld_html while app uses 1st
+		Tfds.Eq_str_lines(expd, bfr.Xto_str_and_clear());
+	}	static final byte[] play_btn_icon = Bry_.new_ascii_("file:///mem/xowa/user/test_user/app/img/file/play.png");
+	public static final String Hdr = String_.Concat_lines_nl_skip_last
 		(	"<ul id=\"filetoc\">"
 		,	"  <li>"
 		,	"    <a href=\"#file\">"

@@ -21,6 +21,7 @@ public class Xot_defn_tmpl implements Xot_defn {
 	public boolean Defn_require_colon_arg() {return false;}
 	public int Cache_size() {return data_raw.length;}
 	public byte[] Name() {return name;} private byte[] name; private byte[] full_name;
+	public byte[] Frame_ttl() {return frame_ttl;} public void Frame_ttl_(byte[] v) {frame_ttl = v;} private byte[] frame_ttl;
 	public byte[] Data_raw() {return data_raw;} private byte[] data_raw;
 	public byte[] Data_mid() {return data_mid;} public Xot_defn_tmpl Data_mid_(byte[] v) {data_mid = v; return this;} private byte[] data_mid;
 	public Xop_ctx Ctx() {return ctx;} public Xot_defn_tmpl Ctx_(Xop_ctx v) {ctx = v; return this;} private Xop_ctx ctx;
@@ -34,34 +35,35 @@ public class Xot_defn_tmpl implements Xot_defn {
 		this.root = root; this.onlyInclude_exists = onlyInclude_exists;
 	}
 	byte[] Extract_onlyinclude(byte[] src, Bry_bfr_mkr bfr_mkr) {
-		ByteAryBfr bfr = bfr_mkr.Get_m001();
+		Bry_bfr bfr = bfr_mkr.Get_m001();
 		int pos = 0;
 		int src_len = src.length;
 		while (true) {
-			int find_bgn = Byte_ary_finder.Find_fwd(src, Bry_onlyinclude_bgn, pos, src_len);
-			if (find_bgn == ByteAry_.NotFound) {
+			int find_bgn = Bry_finder.Find_fwd(src, Bry_onlyinclude_bgn, pos, src_len);
+			if (find_bgn == Bry_.NotFound) {
 				break;
 			}
 			int find_bgn_lhs = find_bgn + Bry_onlyinclude_bgn_len;
-			int find_end = Byte_ary_finder.Find_fwd(src, Bry_onlyinclude_end, find_bgn_lhs, src_len);
-			if (find_end == ByteAry_.NotFound) {
+			int find_end = Bry_finder.Find_fwd(src, Bry_onlyinclude_end, find_bgn_lhs, src_len);
+			if (find_end == Bry_.NotFound) {
 				break;
 			}
 			bfr.Add_mid(src, find_bgn_lhs, find_end);
 			pos = find_end + Bry_onlyinclude_end_len;
 		}
-		return bfr.Mkr_rls().XtoAryAndClear();
+		return bfr.Mkr_rls().Xto_bry_and_clear();
 	}
-	private static final byte[] Bry_onlyinclude_bgn = ByteAry_.new_ascii_("<onlyinclude>"), Bry_onlyinclude_end = ByteAry_.new_ascii_("</onlyinclude>");
+	private static final byte[] Bry_onlyinclude_bgn = Bry_.new_ascii_("<onlyinclude>"), Bry_onlyinclude_end = Bry_.new_ascii_("</onlyinclude>");
 	private static int Bry_onlyinclude_bgn_len = Bry_onlyinclude_bgn.length, Bry_onlyinclude_end_len = Bry_onlyinclude_end.length;
 	public void Rls() {
 		if (root != null) root.Clear();
 		root = null;
 	}
-	public void Parse_tmpl(Xop_ctx ctx) {ctx.Wiki().Parser().Parse_tmpl(this, ctx, ctx.Tkn_mkr(), ns, name, data_raw);}	boolean onlyinclude_parsed = false;
-	public boolean Tmpl_evaluate(Xop_ctx ctx, Xot_invk caller, ByteAryBfr bfr) {
+	public void Parse_tmpl(Xop_ctx ctx) {ctx.Wiki().Parser().Parse_text_to_defn(this, ctx, ctx.Tkn_mkr(), ns, name, data_raw);}	boolean onlyinclude_parsed = false;
+	public boolean Tmpl_evaluate(Xop_ctx ctx, Xot_invk caller, Bry_bfr bfr) {
 		if (root == null) Parse_tmpl(ctx);
-		if (!ctx.Wiki().View_data().Tmpl_stack_add(full_name)) {
+		Xoa_page page = ctx.Cur_page();
+		if (!page.Tmpl_stack_add(full_name)) {
 			bfr.Add_str("<span class=\"error\">Template loop detected:" + String_.new_utf8_(name) + "</span>");
 			return false;
 		}
@@ -72,7 +74,7 @@ public class Xot_defn_tmpl implements Xot_defn {
 				onlyinclude_parsed = true;
 				byte[] new_data = Extract_onlyinclude(data_raw, wiki.Utl_bry_bfr_mkr());
 				Xop_ctx new_ctx = Xop_ctx.new_sub_(wiki);
-				Xot_defn_tmpl tmpl = wiki.Parser().Parse_tmpl(new_ctx, new_ctx.Tkn_mkr(), wiki.Ns_mgr().Ns_template(), ByteAry_.Empty, new_data);
+				Xot_defn_tmpl tmpl = wiki.Parser().Parse_text_to_defn_obj(new_ctx, new_ctx.Tkn_mkr(), wiki.Ns_mgr().Ns_template(), Bry_.Empty, new_data);
 				tmpl.Root().Tmpl_compile(new_ctx, new_data, Xot_compile_data.Null);
 				data_raw = new_data;
 				root = tmpl.Root();
@@ -83,7 +85,7 @@ public class Xot_defn_tmpl implements Xot_defn {
 			boolean result = root.Subs_get(i).Tmpl_evaluate(ctx, data_raw, caller, bfr);
 			if (!result) rv = false;
 		}
-		ctx.Wiki().View_data().Tmpl_stack_del();
+		page.Tmpl_stack_del();
 		return rv;
 	}
 	public Xot_defn Clone(int id, byte[] name) {throw Err_mgr._.not_implemented_();}

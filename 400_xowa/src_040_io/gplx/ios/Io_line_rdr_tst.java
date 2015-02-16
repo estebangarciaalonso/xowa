@@ -48,20 +48,20 @@ public class Io_line_rdr_tst {
 }
 class Io_line_rdr_fxt {
 	Io_line_rdr rdr;
-	ListAdp lines = ListAdp_.new_(); ByteAryBfr tmp = ByteAryBfr.new_();
+	ListAdp lines = ListAdp_.new_(); Bry_bfr tmp = Bry_bfr.new_();
 	public Io_line_rdr_fxt(Io_url... urls) {rdr = new Io_line_rdr(Gfo_usr_dlg_base.test_(), urls);}
 	public Io_line_rdr_fxt Load_len_lines_(int v) {return Load_len_(v * 3);}	// 3: 2=##, 1=\n
 	public Io_line_rdr_fxt Load_len_(int v) {rdr.Load_len_(v); return this;}
 	public Io_line_rdr_fxt File_lines_(int count) {
 		for (int i = 0; i < count; i++)
 			tmp.Add_int_fixed(i, 2).Add_byte_nl();
-		Io_mgr._.SaveFilBry(rdr.Urls()[0], tmp.XtoAryAndClear());
+		Io_mgr._.SaveFilBry(rdr.Urls()[0], tmp.Xto_bry_and_clear());
 		return this;
 	}
 //	public Io_url[] Src_fils() {return src_fils;} public Io_line_rdr_fxt Src_fils_(Io_url[] v) {src_fils = v; return this;} Io_url[] src_fils;
 	public Io_line_rdr_fxt tst_Match(String match, String expd) {
 		rdr.Key_gen_(Io_line_rdr_key_gen_.first_pipe);
-		boolean match_v = rdr.Match(ByteAry_.new_utf8_(match));
+		boolean match_v = rdr.Match(Bry_.new_utf8_(match));
 		String actl = match_v ? String_.new_utf8_(rdr.Bfr(), rdr.Key_pos_bgn(), rdr.Key_pos_end()) : "";
 		Tfds.Eq(expd, actl);
 		return this;
@@ -69,14 +69,14 @@ class Io_line_rdr_fxt {
 	public Io_line_rdr_fxt File_lines_pipe_(int count) {
 		for (int i = 0; i < count; i++)
 			tmp.Add_int_fixed(i, 2).Add_byte(Byte_ascii.Pipe).Add_byte_nl();
-		Io_mgr._.SaveFilBry(rdr.Urls()[0], tmp.XtoAryAndClear());
+		Io_mgr._.SaveFilBry(rdr.Urls()[0], tmp.Xto_bry_and_clear());
 		return this;
 	}
 
 	public Io_line_rdr_fxt File_lines_(int fil_idx, int bgn, int end) {
 		for (int i = bgn; i < end; i++)
 			tmp.Add_int_fixed(i, 2).Add_byte_nl();
-		Io_mgr._.SaveFilBry(rdr.Urls()[fil_idx], tmp.XtoAryAndClear());
+		Io_mgr._.SaveFilBry(rdr.Urls()[fil_idx], tmp.Xto_bry_and_clear());
 		return this;
 	}
 	public Io_line_rdr_fxt Clear() {rdr.Clear(); return this;}

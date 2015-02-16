@@ -16,11 +16,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.primitives.*;
 public class GfoInvkAble_ {
 	public static GfoInvkAble as_(Object obj) {return obj instanceof GfoInvkAble ? (GfoInvkAble)obj : null;}
 	public static GfoInvkAble cast_(Object obj) {try {return (GfoInvkAble)obj;} catch(Exception exc) {throw Err_.type_mismatch_exc_(exc, GfoInvkAble.class, obj);}}
-	public static final StringVal Rv_unhandled = StringVal.new_("Unhandled"), Rv_handled = StringVal.new_("Handled"), Rv_host = StringVal.new_("Host")
-		, Rv_cancel = StringVal.new_("Cancel"), Rv_error = StringVal.new_("Error");
+	public static final String_obj_val Rv_unhandled = String_obj_val.new_("Unhandled"), Rv_handled = String_obj_val.new_("Handled"), Rv_host = String_obj_val.new_("Host")
+		, Rv_cancel = String_obj_val.new_("Cancel"), Rv_error = String_obj_val.new_("Error");
 
 	public static Object InvkCmd(GfoInvkAble invk, String k)				{return InvkCmd_msg(invk, k, GfoMsg_.Null);}
 	public static Object InvkCmd_val(GfoInvkAble invk, String k, Object v)	{return InvkCmd_msg(invk, k, GfoMsg_.new_cast_(k).Add("v", v));}

@@ -32,7 +32,7 @@ public class Arg_nde_tkn extends Xop_tkn_itm_base {
 		eq_tkn.Tmpl_compile(ctx, src, prep_data);
 		val_tkn.Tmpl_compile(ctx, src, prep_data);
 	}
-	@Override public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr) {
+	@Override public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Bry_bfr bfr) {
 		key_tkn.Tmpl_evaluate(ctx, src, caller, bfr);
 		eq_tkn.Tmpl_evaluate(ctx, src, caller, bfr);
 		val_tkn.Tmpl_evaluate(ctx, src, caller, bfr);

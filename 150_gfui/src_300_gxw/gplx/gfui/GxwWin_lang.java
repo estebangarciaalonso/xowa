@@ -157,7 +157,7 @@ class GxwWin_jdialog extends JDialog implements GxwWin, WindowListener  {
 		GxwBoxListener lnr = new GxwBoxListener(this);
 		this.addComponentListener(lnr);
 		this.addFocusListener(lnr);	
-	}	
+	}
 }
 class GxwWin_jwindow extends JWindow implements GxwWin, WindowListener  {
 	public void ShowWin() {this.setVisible(true);}

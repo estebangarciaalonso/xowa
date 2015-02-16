@@ -17,6 +17,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.intl; import gplx.*;
 public class Utf8_ {
+	public static int Len_of_bry(byte[] ary) {
+		if (ary == null) return 0;
+		int rv = 0;
+		int pos = 0, len = ary.length;
+		while (pos < len) {
+			int char_len = Len_of_char_by_1st_byte(ary[pos]);
+			++rv;
+			pos += char_len;
+		}
+		return rv;
+	}
 	public static int Len_of_char_by_1st_byte(byte b) {// SEE:w:UTF-8
 		int i = b & 0xff;	// PATCH.JAVA:need to convert to unsigned byte
 		switch (i) {
@@ -45,7 +56,7 @@ public class Utf8_ {
 	}
 	public static byte[] Get_char_at_pos_as_bry(byte[] bry, int pos) {
 		int len = Len_of_char_by_1st_byte(bry[pos]);
-		return ByteAry_.Mid(bry, pos, pos + len);
+		return Bry_.Mid(bry, pos, pos + len);
 	}
 	public static byte[] Increment_char_at_last_pos(byte[] bry) {	// EX: abc -> abd; complexity is for multi-byte chars
 		int bry_len = bry.length; if (bry_len == 0) return bry;
@@ -57,7 +68,7 @@ public class Utf8_ {
 			if (cur_char_len == 1) {								// len=1; just change 1 byte
 				nxt_char = Increment_char(bry[cur_char_pos0]);		// get next char
 				if (nxt_char < 128) {								// single-byte char; just change pos
-					bry = ByteAry_.Copy(bry);						// always return new bry; never reuse existing
+					bry = Bry_.Copy(bry);						// always return new bry; never reuse existing
 					bry[cur_char_pos0] = (byte)nxt_char;
 					return bry;
 				}
@@ -66,14 +77,14 @@ public class Utf8_ {
 			nxt_char = Increment_char(cur_char);
 			if (nxt_char != Int_.MinValue) {
 				byte[] nxt_char_as_bry = Utf16_.Encode_int_to_bry(nxt_char);
-				bry = ByteAry_.Add(ByteAry_.Mid(bry, 0, cur_char_pos0), nxt_char_as_bry);
+				bry = Bry_.Add(Bry_.Mid(bry, 0, cur_char_pos0), nxt_char_as_bry);
 				return bry;
 			}
 			pos = cur_char_pos0 - 1;
 			if (pos < 0) return null;
 		}
 	}
-	@gplx.Internal protected static int Get_pos0_of_char_bwd(byte[] bry, int pos) {	// find pos0 of char while moving bwd through bry; see test
+	public static int Get_pos0_of_char_bwd(byte[] bry, int pos) {	// find pos0 of char while moving bwd through bry; see test
 		int stop = pos - 4;						// UTF8 char has max of 4 bytes
 		if (stop < 0) stop = 0;					// if at pos 0 - 3, stop at 0
 		for (int i = pos - 1; i >= stop; i--) {	// start at pos - 1, and move bwd; NOTE: pos - 1 to skip pos, b/c pos will never definitively yield any char_len info

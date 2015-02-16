@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.json; import gplx.*;
 public class Json_doc {
 	public void Ctor(byte[] src, Json_itm_nde root) {this.src = src; this.root = root;}
-	public ByteAryBfr Bfr() {return bfr;} ByteAryBfr bfr = ByteAryBfr.new_();
+	public Bry_bfr Bfr() {return bfr;} Bry_bfr bfr = Bry_bfr.new_();
 	public NumberParser Utl_num_parser() {return utl_num_parser;} NumberParser utl_num_parser = new NumberParser();
 	public byte[] Str_utf8_bry() {return str_utf8_bry;} private byte[] str_utf8_bry = new byte[6];
 	public byte[] Src() {return src;} private byte[] src;
@@ -37,7 +37,7 @@ public class Json_doc {
 		tmp_qry_bry[0] = qry_bry;
 		Json_itm rv = Find_nde(root, tmp_qry_bry, 0, 0); if (rv == null) return null;
 		return (Json_grp)rv;
-	}	byte[][] tmp_qry_bry = new byte[1][];
+	}	private byte[][] tmp_qry_bry = new byte[1][];
 	public Json_grp Get_grp(byte[][] qry_bry) {
 		Json_itm rv = Find_nde(root, qry_bry, qry_bry.length - 1, 0); if (rv == null) return null;
 		return (Json_grp)rv;
@@ -59,7 +59,7 @@ public class Json_doc {
 		return null;
 	}
 	public static Json_doc new_apos_concat_nl(String... ary) {return new_apos_(String_.Concat_lines_nl(ary));}
-	public static Json_doc new_apos_(String v) {return new_(ByteAry_.Replace(ByteAry_.new_utf8_(v), Byte_ascii.Apos, Byte_ascii.Quote));}
-	public static Json_doc new_(String v) {return new_(ByteAry_.new_utf8_(v));}
+	public static Json_doc new_apos_(String v) {return new_(Bry_.Replace(Bry_.new_utf8_(v), Byte_ascii.Apos, Byte_ascii.Quote));}
+	public static Json_doc new_(String v) {return new_(Bry_.new_utf8_(v));}
 	public static Json_doc new_(byte[] v) {return parser.Parse(v);}	static Json_parser parser = new Json_parser();
 }

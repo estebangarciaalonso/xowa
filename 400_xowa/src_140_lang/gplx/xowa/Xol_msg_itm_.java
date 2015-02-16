@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.core.btries.*;
 public class Xol_msg_itm_ {
 public static final int
   Id_dte_dow_name_sunday = 0
@@ -251,17 +252,26 @@ public static final int
 , Id_xowa_wikidata_links_special = 230
 ;
 	public static final int Id__max = 231;
-	public static Xol_msg_itm new_(int id, String key, String val) {return new_(id, ByteAry_.new_utf8_(key), ByteAry_.new_utf8_(val));}
+	public static Xol_msg_itm new_(int id, String key, String val) {return new_(id, Bry_.new_utf8_(key), Bry_.new_utf8_(val));}
 	public static Xol_msg_itm new_(int id, byte[] key, byte[] val) {
 		Xol_msg_itm rv = new Xol_msg_itm(id, key);
 		update_val_(rv, val);
 		return rv;
-	}	static ByteAryFmtr tmp_fmtr = ByteAryFmtr.tmp_().Fail_when_invalid_escapes_(false);
+	}
+	private static final Bry_fmtr tmp_fmtr = Bry_fmtr.tmp_().Fail_when_invalid_escapes_(false);
+	private static final Bry_bfr tmp_bfr = Bry_bfr.reset_(255);
 	public static void update_val_(Xol_msg_itm itm, byte[] val) {
 		boolean has_fmt_arg = tmp_fmtr.Fmt_(val).Compile().Fmt_args_exist();
-		boolean has_tmpl_txt = Byte_ary_finder.Find_fwd(val, Xop_curly_bgn_lxr.Hook, 0) != -1;
+		boolean has_tmpl_txt = Bry_finder.Find_fwd(val, Xop_curly_bgn_lxr.Hook, 0) != -1;
+		val = trie_space.Replace(tmp_bfr, val, 0, val.length);
 		itm.Atrs_set(val, has_fmt_arg, has_tmpl_txt);
 	}
+	public static final byte[] Bry_nbsp = Byte_.Ary_by_ints(194, 160);
+	private static final Btrie_slim_mgr trie_space = Btrie_slim_mgr.cs_()	// MW:cache/MessageCache.php|get|Fix for trailing whitespace, removed by textarea|DATE:2014-04-29
+		.Add_bry("&#32;"	, " ")
+		.Add_bry("&nbsp;"	, Bry_nbsp)
+		.Add_bry("&#160;"	, Bry_nbsp)
+		;
 	public static Xol_msg_itm new_(int id) {
 		switch (id) {
 			case Xol_msg_itm_.Id_dte_dow_name_sunday: return new_(Xol_msg_itm_.Id_dte_dow_name_sunday, "sunday", "Sunday");
@@ -498,36 +508,8 @@ case Xol_msg_itm_.Id_xowa_wikidata_links_special: return new_(Xol_msg_itm_.Id_xo
 			default: throw Err_.unhandled(id);
 		}
 	}
-	public static Xol_msg_itm find_or_(ByteAryBfr tmp_bfr, Xow_wiki wiki, Xol_lang lang, Xol_msg_mgr msg_mgr, byte[] msg_key, boolean return_null) {
-		// bld title
-		Xow_ns ns = wiki.Ns_mgr().Ns_mediawiki();
-		tmp_bfr	.Add(ns.Name_db_w_colon())												// "MediaWiki:"
-				.Add(msg_key);															// "message_key"
-		byte[] wiki_lang_key = wiki.Lang().Key_bry();
-		if (ByteAry_.Len_eq_0(wiki_lang_key)) wiki_lang_key = Xol_lang_.Key_en;			// if no lang, default to en (handles commons)
-		if (!ByteAry_.Eq(wiki_lang_key, lang.Key_bry()))								// only add lang code if page != wiki;
-			tmp_bfr.Add_byte(Xoa_ttl.Subpage_spr).Add(lang.Key_bry());					// "/fr"
-		byte[] ttl_bry = tmp_bfr.XtoAryAndClear();
-		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
-
-		// search for itm
-		byte[] msg_val = ByteAry_.Empty;
-		Xoa_page msg_page = ttl == null ? Xoa_page.Null : wiki.Data_mgr().Get_page(ttl, false);	// find page with ttl of "MediaWiki:message_name/lang_code"
-		if (msg_page.Missing()) {														// page not found; check lang
-			Xol_msg_itm msg_itm_in_lang = lang.Msg_mgr().Itm_by_key_or_null(msg_key);
-			if (msg_itm_in_lang != null) return msg_itm_in_lang;						// msg found; return it;
-			msg_itm_in_lang = wiki.App().Lang_mgr().Lang_en().Msg_mgr().Itm_by_key_or_null(msg_key);
-			if (msg_itm_in_lang != null) return msg_itm_in_lang;
-			if (return_null) return null;
-		}
-		else																			// page found; dump entire contents; also translate php to gfs (for $1 -> ~{0})
-			msg_val = Pf_msg_mgr.Convert_php_to_gfs(msg_page.Data_raw(), tmp_bfr);
-		Xol_msg_itm msg_itm = wiki.Msg_mgr().Get_or_make(msg_key);
-		update_val_(msg_itm, msg_val);
-		return msg_itm;
-	}
-	public static byte[] eval_(ByteAryBfr bfr, Xol_msg_itm tmp_msg_itm, byte[] val, Object... args) {
-		val = Pf_msg_mgr.Convert_php_to_gfs(val, bfr);
+	public static byte[] eval_(Bry_bfr bfr, Xol_msg_itm tmp_msg_itm, byte[] val, Object... args) {
+		val = gplx.xowa.apps.Xoa_gfs_php_mgr.Xto_gfs(bfr, val);
 		update_val_(tmp_msg_itm, val);
 		return tmp_fmtr.Bld_bry_many(bfr, args);
 	}

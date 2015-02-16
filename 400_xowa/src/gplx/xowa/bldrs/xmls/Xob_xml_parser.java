@@ -16,8 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.xmls; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
+import gplx.core.btries.*; import gplx.ios.*;
 public class Xob_xml_parser {
-	ByteTrieMgr_fast trie = Xob_xml_parser_.trie_(); ByteAryBfr data_bfr = ByteAryBfr.new_(); DateAdp_parser date_parser = DateAdp_parser.new_();
+	Btrie_fast_mgr trie = Xob_xml_parser_.trie_(); Bry_bfr data_bfr = Bry_bfr.new_(); DateAdp_parser date_parser = DateAdp_parser.new_();
 	public Xob_xml_parser Tag_len_max_(int v) {tag_len_max = v; return this;} private int tag_len_max = 255; // max size of any (a) xml tag, (b) int or (c) date; everything else goes into a data_bfr
 	public Xob_xml_parser Data_bfr_len_(int v) {data_bfr.Resize(v); return this;} // PERF: resize data_bfr once to large size, rather than grow incremently to it
 	public Xob_xml_parser Trie_tab_del_() {trie.Del(Xob_xml_parser_.Bry_tab); return this;}
@@ -42,9 +43,9 @@ public class Xob_xml_parser {
 				fil.Bfr_load_from(refill_pos);		// refill src from pos; 
 				src_len = fil.Bfr_len();
 			}
-			if (pos >= src_len) return ByteAry_.NotFound;	// no more src left; should only happen at end of file
+			if (pos >= src_len) return Bry_.NotFound;	// no more src left; should only happen at end of file
 			byte b = src[pos];
-			Object o = trie.Match(b, src, pos, src_len);
+			Object o = trie.Match_bgn_w_byte(b, src, pos, src_len);
 			if (o == null) {								// text_data; not an xml_nde (<id>), xml_escape (&lt;), or tab
 				if (data_bfr_add) data_bfr.Add_byte(b);		// add to src if data_bfr_add is on (only happens for <title>, <text>)
 				++pos;
@@ -58,7 +59,7 @@ public class Xob_xml_parser {
 					case Xob_xml_parser_.Id_id_bgn:			if (page_id_needed) data_bgn = pos; break;	// only flag if first <id>; note that 1st <id> always belongs to <page>;
 					case Xob_xml_parser_.Id_id_end:	
 						if (page_id_needed) {
-							int page_id = ByteAry_.X_to_int_or(src, data_bgn, hook_bgn, -1); if (page_id == -1) usr_dlg.Warn_many(GRP_KEY, "page_id_invalid", "page_id_is_invalid: ~{0}", String_.new_utf8_(src, data_bgn, hook_bgn));
+							int page_id = Bry_.Xto_int_or(src, data_bgn, hook_bgn, -1); if (page_id == -1) usr_dlg.Warn_many(GRP_KEY, "page_id_invalid", "page_id_is_invalid: ~{0}", String_.new_utf8_(src, data_bgn, hook_bgn));
 							rv.Id_(page_id);
 							page_id_needed = false;		// turn off for other <id> tags (<contributor>; <revision>)
 						}
@@ -73,13 +74,13 @@ public class Xob_xml_parser {
 					case Xob_xml_parser_.Id_title_end:
 						if (title_needed) {
 							data_bfr_add = false;
-							byte[] ttl = data_bfr.XtoAryAndClear();
-							ByteAry_.Replace_reuse(ttl, Byte_ascii.Space, Byte_ascii.Underline);
+							byte[] ttl = data_bfr.Xto_bry_and_clear();
+							Bry_.Replace_reuse(ttl, Byte_ascii.Space, Byte_ascii.Underline);
 							rv.Ttl_(ttl, ns_mgr);
 							title_needed = false;
 						}
 						break;
-					case Xob_xml_parser_.Id_text_end:		data_bfr_add = false; rv.Text_(data_bfr.XtoAryAndClear()); break;
+					case Xob_xml_parser_.Id_text_end:		data_bfr_add = false; rv.Text_(data_bfr.Xto_bry_and_clear()); break;
 					case Xob_xml_parser_.Id_amp: case Xob_xml_parser_.Id_quot: case Xob_xml_parser_.Id_lt: case Xob_xml_parser_.Id_gt:
 					case Xob_xml_parser_.Id_cr_nl: case Xob_xml_parser_.Id_cr:
 						if (data_bfr_add) data_bfr.Add_byte(itm.Subst_byte());

@@ -42,8 +42,18 @@ public abstract class Gfui_kit_base implements Gfui_kit {
 		return rv;
 	}
 	public GfuiWin New_win_utl(String key, GfuiWin owner, KeyVal... args) {return GfuiWin_.kit_(this, key, this.Factory().win_tool_(ctor_args), ctor_args);}
-	public Gfui_html New_html(String key, GfuiElem owner, KeyVal... args) {
+	@gplx.Virtual public Gfui_html New_html(String key, GfuiElem owner, KeyVal... args) {
 		Gfui_html rv = Gfui_html.kit_(this, key, this.New_html_impl(), ctor_args);
+		owner.SubElems().Add(rv);
+		return rv;
+	}
+	public Gfui_tab_mgr New_tab_mgr(String key, GfuiElem owner, KeyVal... args) {
+		Gfui_tab_mgr rv = Gfui_tab_mgr.kit_(this, key, this.New_tab_mgr_impl(), ctor_args);
+		owner.SubElems().Add(rv);
+		return rv;
+	}
+	public Gfui_tab_itm New_tab_itm(String key, Gfui_tab_mgr owner, KeyVal... args) {
+		Gfui_tab_itm rv = Gfui_tab_itm.kit_(this, key, this.New_tab_itm_impl(), ctor_args);
 		owner.SubElems().Add(rv);
 		return rv;
 	}
@@ -62,12 +72,15 @@ public abstract class Gfui_kit_base implements Gfui_kit {
 		owner.SubElems().Add(rv);
 		return rv;
 	}
+	public void Set_mnu_popup(GfuiElem owner, Gfui_mnu_grp grp) {}
 	protected abstract Gxw_html New_html_impl();
+	protected abstract Gxw_tab_mgr New_tab_mgr_impl();
+	protected abstract Gxw_tab_itm New_tab_itm_impl();
 	protected abstract GxwElem New_btn_impl();
-	@gplx.Virtual public Gfui_dlg_file New_dlg_file(String msg) {return Gfui_dlg_file_null._;}
+	@gplx.Virtual public Gfui_dlg_file New_dlg_file(byte type, String msg) {return Gfui_dlg_file_null._;}
 	@gplx.Virtual public Gfui_dlg_msg New_dlg_msg(String msg) {return Gfui_dlg_msg_null._;}
-	@gplx.Virtual public Gfui_mnu_grp New_mnu_popup(GfuiElem owner) {return Gfui_mnu_grp_null.Null;}
-	@gplx.Virtual public Gfui_mnu_grp New_mnu_bar(GfuiWin owner) {return Gfui_mnu_grp_null.Null;}
+	@gplx.Virtual public Gfui_mnu_grp New_mnu_popup(String key, GfuiElem owner) {return Gfui_mnu_grp_null.Null;}
+	@gplx.Virtual public Gfui_mnu_grp New_mnu_bar(String key, GfuiWin owner) {return Gfui_mnu_grp_null.Null;}
 	public abstract ImageAdp New_img_load(Io_url url);
 	public Object New_color(int a, int r, int g, int b) {return null;}
 	public float Calc_font_height(GfuiElem elem, String s) {return 13;}

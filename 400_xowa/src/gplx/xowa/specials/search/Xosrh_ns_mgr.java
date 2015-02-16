@@ -16,11 +16,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.specials.search; import gplx.*; import gplx.xowa.*; import gplx.xowa.specials.*;
+import gplx.core.primitives.*;
 public class Xosrh_ns_mgr {
 	private OrderedHash ns_hash = OrderedHash_.new_();
 	private boolean ns_all, ns_main;
-	private IntRef tmp_ns_id = IntRef.neg1_();
-	private ByteAryBfr tmp_bfr = ByteAryBfr.reset_(32);
+	private Int_obj_ref tmp_ns_id = Int_obj_ref.neg1_();
+	private Bry_bfr tmp_bfr = Bry_bfr.reset_(32);
 	public void Clear() {
 		ns_hash.Clear();
 		ns_all = ns_main = false;
@@ -34,7 +35,7 @@ public class Xosrh_ns_mgr {
 	public void Add_by_id(int ns_id) {
 		if (ns_hash.Has(tmp_ns_id.Val_(ns_id)))
 			ns_hash.Del(tmp_ns_id);
-		ns_hash.AddKeyVal(IntRef.new_(ns_id));
+		ns_hash.AddKeyVal(Int_obj_ref.new_(ns_id));
 	}
 	public void Add_by_name(byte[] ns_name) {
 		int id = Xow_ns_.Canonical_id(ns_name);
@@ -45,13 +46,13 @@ public class Xosrh_ns_mgr {
 		ns_all = true;
 	}
 	public void Add_by_parse(byte[] key, byte[] val) {
-		int ns_enabled = ByteAry_.X_to_int(val);
+		int ns_enabled = Bry_.Xto_int(val);
 		if (ns_enabled == 1) {										// make sure set to 1; EX: ignore &ns0=0
 			int key_len = key.length;
 			if (key_len == 3 && key[2] == Byte_ascii.Asterisk)		// translate ns* as ns_all
 				ns_all = true;
 			else {
-				int ns_id = ByteAry_.X_to_int_or(key, 2, key_len, -1);
+				int ns_id = Bry_.Xto_int_or(key, 2, key_len, -1);
 				if (ns_id != -1) {									// ignore invalid ints; EX: &nsabc=1;
 					Add_by_id(ns_id);
 					ns_main = ns_all = false;
@@ -72,10 +73,10 @@ public class Xosrh_ns_mgr {
 			int ns_hash_len = ns_hash.Count();
 			for (int i = 0; i < ns_hash_len; i++) {
 				if (i != 0) tmp_bfr.Add_byte_pipe();
-				IntRef ns_id_ref = (IntRef)ns_hash.FetchAt(i);
+				Int_obj_ref ns_id_ref = (Int_obj_ref)ns_hash.FetchAt(i);
 				tmp_bfr.Add_int_variable(ns_id_ref.Val());
 			}
-			return tmp_bfr.XtoAryAndClear();
+			return tmp_bfr.Xto_bry_and_clear();
 		}
 	}
 	private static final byte[] Hash_key_all = new byte[] {Byte_ascii.Asterisk}, Hash_key_main = new byte[] {Byte_ascii.Num_0};

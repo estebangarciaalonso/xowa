@@ -29,7 +29,7 @@ public class Json_itm_nde extends Json_itm_base implements Json_grp {
 			Json_itm itm = subs[i];
 			if (itm.Tid() == Json_itm_.Tid_kv) {
 				Json_itm_kv itm_as_kv = (Json_itm_kv)itm;
-				if (ByteAry_.Eq(key, itm_as_kv.Key().Data_bry()))
+				if (Bry_.Eq(key, itm_as_kv.Key().Data_bry()))
 					return itm;
 			}
 		}
@@ -52,7 +52,7 @@ public class Json_itm_nde extends Json_itm_base implements Json_grp {
 		subs[subs_len] = (Json_itm)itm;
 		subs_len = new_len;
 	}
-	@Override public void Print_as_json(ByteAryBfr bfr, int depth) {
+	@Override public void Print_as_json(Bry_bfr bfr, int depth) {
 		if (bfr.Len() != 0)
 			bfr.Add_byte_nl();
 		Json_grp_.Print_indent(bfr, depth);
@@ -67,6 +67,6 @@ public class Json_itm_nde extends Json_itm_base implements Json_grp {
 		Json_grp_.Print_nl(bfr); Json_grp_.Print_indent(bfr, depth);
 		bfr.Add_byte(Byte_ascii.Curly_end).Add_byte_nl();
 	}
-	Json_itm[] subs = Json_itm_.Ary_empty;
+	private Json_itm[] subs = Json_itm_.Ary_empty;
 	public static Json_itm_nde cast_(Json_itm v) {return v == null || v.Tid() != Json_itm_.Tid_nde ? null : (Json_itm_nde)v;}
 }

@@ -20,22 +20,18 @@ import org.junit.*;
 public class Xop_statistics_page_tst {
 @Before public void init() {fxt.Clear();} private Xop_statistics_page_fxt fxt = new Xop_statistics_page_fxt();
 	@Test   public void Basic() {
-		fxt.Test_html(String_.Concat_lines_nl_skipLast
+		fxt.Test_html(String_.Concat_lines_nl_skip_last
 		(  "<div id=\"mw-content-text\">"
 		,	"<table class=\"wikitable mw-statistics-table\">"
 		,	"  <tr>"
 		,	"    <th colspan=\"2\">Page statistics</th>"
 		,	"  </tr>"
 		,	"  <tr class=\"mw-statistics-articles\">"
-		,	"    <td>"
-		,	"      Content pages"
-		,	"    </td>"
+		,	"    <td>Content pages</td>"
 		,	"    <td class=\"mw-statistics-numbers\" style='text-align:right'>0</td>"
 		,	"  </tr>"
 		,	"  <tr class=\"mw-statistics-pages\">"
-		,	"    <td>Pages<br />"
-		,	"      <small class=\"mw-statistic-desc\"> All pages in the wiki, including talk pages, redirects, etc.</small>"
-		,	"    </td>"
+		,	"    <td>Pages<br /><small class=\"mw-statistic-desc\"> All pages in the wiki, including talk pages, redirects, etc.</small></td>"
 		,	"    <td class=\"mw-statistics-numbers\" style='text-align:right'>0</td>"
 		,	"  </tr>"
 		,	"  <tr>"

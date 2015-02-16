@@ -34,7 +34,7 @@ public interface IoUrlInfo {
 	String XtoRootName(String raw, int rawLen);
 }
 class IoUrlInfo_nil implements IoUrlInfo {
-	public String Key() {return KeyConst;} public static final String KeyConst = String_.NullStr;
+	public String Key() {return KeyConst;} public static final String KeyConst = String_.Null_mark;
 	public String EngineKey() {return "<<INVALID>>";}
 	public String DirSpr() {return "<<INVALID>>";}
 	public byte DirSpr_byte() {return Byte_ascii.Slash;}
@@ -99,7 +99,7 @@ abstract class IoUrlInfo_base implements IoUrlInfo {
 				: rootName;
 		}
 		int pos = String_.FindBwd(nameAndExt, IoUrlInfo_base.ExtSeparator);
-		return pos == String_.NotFound
+		return pos == String_.Find_none
 			? nameAndExt									// Ext not found; return entire NameAndExt
 			: String_.MidByLen(nameAndExt, 0, pos);
 	}
@@ -107,7 +107,7 @@ abstract class IoUrlInfo_base implements IoUrlInfo {
 		if (IsDir(raw)) return this.DirSpr();
 		String nameAndExt = NameAndExt(raw);
 		int pos = String_.FindBwd(nameAndExt, IoUrlInfo_base.ExtSeparator);
-		return pos == String_.NotFound ? "" : String_.DelBgn(nameAndExt, pos);
+		return pos == String_.Find_none ? "" : String_.DelBgn(nameAndExt, pos);
 	}
 	int OwnerDirPos(String raw, int rawLen) {
 		if		(rawLen == 0)						return OwnerDirPos_isNull;

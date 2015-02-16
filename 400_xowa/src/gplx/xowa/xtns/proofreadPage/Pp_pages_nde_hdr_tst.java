@@ -21,6 +21,7 @@ public class Pp_pages_nde_hdr_tst {
 	private Xop_fxt fxt = new Xop_fxt();
 	@Before public void Init() {
 		Io_mgr._.InitEngine_mem();
+		fxt.Wiki().Xtn_mgr().Xtn_proofread().Enabled_y_();
 		fxt.Wiki().Cache_mgr().Page_cache().Free_mem_all();
 		fxt.Wiki().Db_mgr().Load_mgr().Clear(); // must clear; otherwise fails b/c files get deleted, but wiki.data_mgr caches the Xowd_regy_mgr (the .reg file) in memory;
 		fxt.Wiki().Ns_mgr().Add_new(Xowc_xtn_pages.Ns_page_id_default, "Page").Add_new(Xowc_xtn_pages.Ns_index_id_default, "Index").Init();
@@ -49,7 +50,7 @@ public class Pp_pages_nde_hdr_tst {
 		fxt.Init_page_create("Page:A/1", "A/1");
 		// from specified; don't add toc
 		fxt.Test_parse_page_wiki_str("<pages index='A' from='1'/>", String_.Concat_lines_nl
-		(	"<p>A/1 "
+		(	"<p>A/1&#32;"
 		,	"</p>"
 		));
 	}
@@ -62,12 +63,12 @@ public class Pp_pages_nde_hdr_tst {
 		(	"<p>value=toc;from=2;to=2;"
 		,	"</p>"
 		,	""
-		,	"<p>a2 "
+		,	"<p>a2&#32;"
 		,	"</p>"
 		));
 	}
 	@Test  public void Mainspace_toc() {	// PURPOSE: Mainspace links should be sent to toc; DATE:2014-01-27
-		fxt.Init_page_create("Index:A" , String_.Concat_lines_nl_skipLast
+		fxt.Init_page_create("Index:A" , String_.Concat_lines_nl_skip_last
 		( "[[Page/1]]"
 		, "[[Page/2]]"
 		, "[[Page/3]]"
@@ -122,7 +123,7 @@ public class Pp_pages_nde_hdr_tst {
 		));
 	}
 	@Test  public void Mainspace_caption() {	// PURPOSE: extract caption; DATE:2014-01-27
-		fxt.Init_page_create("Index:A" , String_.Concat_lines_nl_skipLast
+		fxt.Init_page_create("Index:A" , String_.Concat_lines_nl_skip_last
 		( "[[Page/1|Caption_1]]"
 		, "[[Page/2]]"
 		, "[[Page/3]]"
@@ -131,6 +132,22 @@ public class Pp_pages_nde_hdr_tst {
 		fxt.Page_ttl_("Page/2");
 		fxt.Test_parse_page_wiki_str("<pages index='A' />", String_.Concat_lines_nl
 		(	"<p>value=toc;current=<b>Page/2</b>;prev=<a href=\"/wiki/Page/1\">Caption_1</a>;next=<a href=\"/wiki/Page/3\">Page/3</a>;"
+		,	"</p>"
+		,	""
+		,	"<p><br/>"
+		,	"</p>"
+		));
+	}
+	@Test  public void Xwiki() {	// PURPOSE: Mainspace links should be sent to toc; DATE:2014-01-27
+		fxt.Init_xwiki_add_wiki_and_user_("commons", "commons.wikimedia.org");
+		fxt.Init_page_create("Index:A" , String_.Concat_lines_nl_skip_last
+		( "[[Page/1]]"
+		, "[[:commons:File:A.png]]"
+		));
+		// next only
+		fxt.Page_ttl_("Page/1");
+		fxt.Test_parse_page_wiki_str("<pages index='A' />", String_.Concat_lines_nl
+		(	"<p>value=toc;current=<b>Page/1</b>;next=<a href=\"/site/commons.wikimedia.org/wiki/File:A.png\">File:A.png</a>;"
 		,	"</p>"
 		,	""
 		,	"<p><br/>"

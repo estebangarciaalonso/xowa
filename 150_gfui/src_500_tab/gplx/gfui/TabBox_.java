@@ -24,4 +24,10 @@ public class TabBox_ {
 		rv.ctor_GfuiBox_base(GfuiElem_.init_focusAble_false_());
 		return rv;
 	}
+	public static int Cycle(boolean fwd, int val, int max) {
+		if (fwd)
+			return val == max - 1 ? 0 : val + 1;
+		else
+			return val == 0 ? max - 1 : val - 1;
+	}
 }

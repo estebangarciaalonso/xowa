@@ -70,11 +70,11 @@ class Xof_file_regy_fxt {
 	}
 	public Xof_file_regy_fxt Save_fil(String url, String... data) {Io_mgr._.SaveFilStr(Io_url_.mem_fil_(url), String_.Concat_lines_nl(data)); return this;}
 	public Xof_file_regy_fxt Set(String name_str, int w, int h, boolean orig_exists, String... thumbs) {
-		byte[] name = ByteAry_.new_utf8_(name_str);		
+		byte[] name = Bry_.new_utf8_(name_str);		
 		byte[] md5 = md5_(name);
 		Xof_meta_itm itm = regy_mgr.Get_itm_or_new(name, md5);
 		itm.Vrtl_repo_(Xof_meta_itm.Repo_same);	// all tests above assume this is main
-		itm.Update_all(ByteAry_.Empty, w, h, orig_exists ? Xof_meta_itm.Exists_y : Xof_meta_itm.Exists_unknown, Xto_ary(thumbs));
+		itm.Update_all(Bry_.Empty, w, h, orig_exists ? Xof_meta_itm.Exists_y : Xof_meta_itm.Exists_unknown, Xto_ary(thumbs));
 		return this;
 	}
 	Xof_meta_thumb[] Xto_ary(String[] ary) {

@@ -16,10 +16,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.imports.ctgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.imports.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.primitives.*;
 public class Xob_category_registry_sql_tst {
-	@Before public void init() {fxt.Clear();} private Xob_category_registry_sql_fxt fxt = new Xob_category_registry_sql_fxt();
+	@Before public void init() {if (Xoa_test_.Db_skip()) return; fxt.Clear();} private Xob_category_registry_sql_fxt fxt = new Xob_category_registry_sql_fxt();
 	@Test   public void Basic() {
+		if (Xoa_test_.Db_skip()) return;
 		fxt.Init_page_insert(String_.Ary("Ctg3", "Ctg2", "Ctg1"));
 		fxt.Exec_category_registry_cmd();
 		fxt.Test_ids(Int_.Ary(3, 2, 1));	// note that Ctg1 is page_id 3
@@ -33,7 +34,7 @@ class Xob_category_registry_sql_fxt {
 			wiki = fxt.Wiki();
 			app = wiki.App();
 		}
-	}	Db_mgr_fxt fxt; Xow_wiki wiki; Xoa_app app; IntRef page_id_next = IntRef.new_(1);
+	}	Db_mgr_fxt fxt; Xow_wiki wiki; Xoa_app app; Int_obj_ref page_id_next = Int_obj_ref.new_(1);
 	public void Init_page_insert(String[] ttls) {
 		fxt.Init_page_insert(page_id_next, Xow_ns_.Id_category, ttls);
 	}
@@ -57,6 +58,6 @@ class Xob_category_registry_sql_fxt {
 			String[] flds = String_.Split(line, '|');
 			list.Add(Base85_utl.XtoIntByStr(flds[1]));
 		}
-		return (int[])list.XtoAryAndClear(int.class);
+		return (int[])list.Xto_ary_and_clear(int.class);
 	}
 }

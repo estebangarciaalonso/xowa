@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.imports.ctgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*; import gplx.xowa.bldrs.imports.*;
-import gplx.ios.*; import gplx.dbs.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.dbs.*;
+import gplx.ios.*; import gplx.dbs.*; import gplx.dbs.qrys.*; import gplx.xowa.dbs.tbls.*; import gplx.xowa.dbs.*;
 public class Xob_category_registry_sql implements Xob_cmd {
 	public Xob_category_registry_sql(Xob_bldr bldr, Xow_wiki wiki) {this.wiki = wiki;} private Xow_wiki wiki;
 	public String Cmd_key() {return KEY;} public static final String KEY = "import.sql.category_registry";
@@ -24,12 +24,13 @@ public class Xob_category_registry_sql implements Xob_cmd {
 	public void Cmd_bgn(Xob_bldr bldr) {}
 	public void Cmd_run() {}
 	public void Cmd_end() {	// NOTE: placing in end, b/c must run *after* page_sql
+		wiki.Html_mgr().Importing_ctgs_(Bool_.Y);
 		Io_url rslt_dir = Xob_category_registry_sql.Get_dir_output(wiki);
 		Io_mgr._.DeleteDirDeep(rslt_dir);
 		Xob_tmp_wtr rslt_wtr = Xob_tmp_wtr.new_wo_ns_(Io_url_gen_.dir_(rslt_dir), Io_mgr.Len_mb);
 		
 		Xodb_mgr_sql db_mgr = Xodb_mgr_sql.Get_or_load(wiki);
-		Db_provider provider = db_mgr.Fsys_mgr().Core_provider();
+		Db_conn conn = db_mgr.Fsys_mgr().Conn_core();
 		Db_qry_select qry = Db_qry_select.new_()
 			.Cols_(Xodb_page_tbl.Fld_page_title, Xodb_page_tbl.Fld_page_id)
 			.From_(Xodb_page_tbl.Tbl_name)
@@ -38,7 +39,7 @@ public class Xob_category_registry_sql implements Xob_cmd {
 		DataRdr rdr = DataRdr_.Null;
 		Gfo_usr_dlg usr_dlg = wiki.App().Usr_dlg();
 		try {
-			rdr = qry.Exec_qry_as_rdr(provider);
+			rdr = qry.Exec_qry_as_rdr(conn);
 			while (rdr.MoveNextPeer()) {
 				byte[] page_ttl = rdr.ReadBryByStr(Xodb_page_tbl.Fld_page_title);
 				int page_id = rdr.ReadInt(Xodb_page_tbl.Fld_page_id);
@@ -47,6 +48,7 @@ public class Xob_category_registry_sql implements Xob_cmd {
 			}
 		}	finally {rdr.Rls();}
 		rslt_wtr.Flush(usr_dlg);
+		wiki.Html_mgr().Importing_ctgs_(Bool_.N);
 	}
 	public void Cmd_print() {}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {

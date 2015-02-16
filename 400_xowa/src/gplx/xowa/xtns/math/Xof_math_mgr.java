@@ -16,13 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.math; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
-import gplx.xowa.apps.*;
+import gplx.core.strings.*; import gplx.xowa.apps.fsys.*;
 public class Xof_math_mgr implements GfoInvkAble {
 	public Xof_math_mgr(Xoa_app app) {this.app = app; html_wtr = new Xof_math_html_wtr();} private Xoa_app app;
 	public ProcessAdp Cmd_convert_tex_to_dvi() {return cmd_convert_tex_to_dvi;} private ProcessAdp cmd_convert_tex_to_dvi = new ProcessAdp();
 	public ProcessAdp Cmd_convert_dvi_to_png() {return cmd_convert_dvi_to_png;} private ProcessAdp cmd_convert_dvi_to_png = new ProcessAdp();
 	public void Init(Xoa_app app) {
-		Apps_app_mgr app_mgr = app.Fsys_mgr().App_mgr();
+		Launcher_app_mgr app_mgr = app.Launcher();
 		cmd_convert_tex_to_dvi = app_mgr.App_convert_tex_to_dvi();
 		cmd_convert_dvi_to_png = app_mgr.App_convert_dvi_to_png();
 	}
@@ -48,11 +48,11 @@ public class Xof_math_mgr implements GfoInvkAble {
 			.Add(String_.CharAt(hash, 2)).Add(Math_dir_spr)
 			.Add(hash).Add(".png")
 			;
-		return Io_url_.new_fil_(tmp_sb.XtoStrAndClear());
+		return Io_url_.new_fil_(tmp_sb.Xto_str_and_clear());
 	}
 	public boolean MakePng(byte[] math, String hash, Io_url png_url, String prog_fmt) {
 		if (!enabled) return false;
-		Io_url tmp_dir = app.Fsys_mgr().Temp_dir().GenSubDir("math"); // cmd_convert_tex_to_dvi.Tmp_dir();
+		Io_url tmp_dir = app.User().Fsys_mgr().App_temp_dir().GenSubDir("math"); // cmd_convert_tex_to_dvi.Tmp_dir();
 		Io_url tex_url = tmp_dir.GenSubFil("xowa_math_temp.tex");
 		String latex = Latex_wrap(math);
 		prog_fmt = String_.Replace(prog_fmt, "~", "~~");	// double-up ~ or else will break in progress bar
@@ -72,9 +72,9 @@ public class Xof_math_mgr implements GfoInvkAble {
 		return pass;
 	}
 	private String_bldr tmp_sb = String_bldr_.new_();
-	private String Latex_wrap(byte[] math) {return Latex_doc_fmtr.Bld_str_many(String_.Replace(String_.new_utf8_(math), "\n\n", "\n"));}	// NOTE: remove lines that are completely blank; not sure if this is right; EX.WP: Standard Model (mathematical formulation); <math>(\mathbf{1},\mathbf\n\n{1},0)</math>
-	private static ByteAryFmtr Latex_doc_fmtr = new ByteAryFmtr()
-	.Fmt_(String_.Concat_lines_nl_skipLast
+	private String Latex_wrap(byte[] math) {return Latex_doc_fmtr.Bld_str_many(String_.Replace(String_.new_utf8_(math), "\n\n", "\n"));}	// NOTE: remove lines that are completely blank; not sure if this is right; PAGE:en.w:Standard Model (mathematical formulation); <math>(\mathbf{1},\mathbf\n\n{1},0)</math>
+	private static Bry_fmtr Latex_doc_fmtr = new Bry_fmtr()
+	.Fmt_(String_.Concat_lines_nl_skip_last
 	(	"\\documentclass{article}"
 	,	"\\usepackage{amsmath}"
 	,	"\\usepackage{amsfonts}"
@@ -92,7 +92,7 @@ public class Xof_math_mgr implements GfoInvkAble {
 	));
 	public boolean Enabled() {return enabled;} public Xof_math_mgr Enabled_(boolean v) {enabled = v; return this;} private boolean enabled = true;
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_enabled))		return Yn.X_to_str(enabled);
+		if		(ctx.Match(k, Invk_enabled))		return Yn.Xto_str(enabled);
 		else if	(ctx.Match(k, Invk_enabled_))		enabled = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_renderer))		return renderer_is_mathjax ? "mathjax" : "latex";
 		else if	(ctx.Match(k, Invk_renderer_))		renderer_is_mathjax = String_.Eq(m.ReadStr("v"), "mathjax");

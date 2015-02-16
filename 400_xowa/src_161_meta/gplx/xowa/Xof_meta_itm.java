@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.core.flds.*;
 import gplx.xowa.files.*;
 public class Xof_meta_itm {
 	public Xof_meta_itm(Xof_meta_fil owner_fil, byte[] ttl) {this.owner_fil = owner_fil; this.ttl = ttl;}
@@ -123,7 +124,7 @@ public class Xof_meta_itm {
 	private void Dirty() {if (owner_fil != null) owner_fil.Dirty_();}
 	public void Save(Gfo_fld_wtr wtr) {
 		wtr.Write_bry_escape_fld(ttl);
-		byte vrtl_repo_byte = Byte_.MaxValue_127;
+		byte vrtl_repo_byte = Byte_.Max_value_127;
 		switch (vrtl_repo) {
 			case Repo_unknown:		vrtl_repo_byte = Byte_ascii.Ltr_z; break;
 			case Repo_same:			vrtl_repo_byte = Byte_ascii.Ltr_y; break;
@@ -136,7 +137,7 @@ public class Xof_meta_itm {
 					.Add_int_variable(orig_w)		.Add_byte(Xof_meta_thumb_parser.Dlm_width)
 					.Add_int_variable(orig_h)		.Add_byte_pipe();
 		int thumbs_len = thumbs.length;
-		ByteAryBfr bfr = wtr.Bfr();
+		Bry_bfr bfr = wtr.Bfr();
 		for (int i = 0; i < thumbs_len; i++) {
 			if (i != 0) bfr.Add_byte(Byte_ascii.Semic);
 			Xof_meta_thumb thumb = thumbs[i];
@@ -157,12 +158,12 @@ public class Xof_meta_itm {
 		}
 		ptr_ttl = rdr.Read_bry_escape();
 		rdr.Move_next_simple_fld();
-		Xof_meta_thumb orig_itm = parser.Parse_one(rdr.Bry(), rdr.Fld_bgn(), rdr.Fld_end());
+		Xof_meta_thumb orig_itm = parser.Parse_one(rdr.Data(), rdr.Fld_bgn(), rdr.Fld_end());
 		orig_exists = orig_itm.Exists();
 		orig_w		= orig_itm.Width();
 		orig_h		= orig_itm.Height();
 		rdr.Move_next_simple_fld();
-		parser.Parse_ary(rdr.Bry(), rdr.Fld_bgn(), rdr.Fld_end());
+		parser.Parse_ary(rdr.Data(), rdr.Fld_bgn(), rdr.Fld_end());
 		int thumbs_len = parser.Len();
 		thumbs = new Xof_meta_thumb[thumbs_len];
 		for (int i = 0; i < thumbs_len; i++)
@@ -176,7 +177,7 @@ public class Xof_meta_itm {
 		  Tid_main		= 0
 		, Tid_ptr		= 1
 		, Tid_vrtl		= 2
-		, Tid_null		= Byte_.MaxValue_127
+		, Tid_null		= Byte_.Max_value_127
 		;
-	public static final byte[] Ptr_ttl_null = ByteAry_.Empty;
+	public static final byte[] Ptr_ttl_null = Bry_.Empty;
 }

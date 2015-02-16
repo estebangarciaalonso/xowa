@@ -18,21 +18,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.users.prefs; import gplx.*; import gplx.xowa.*; import gplx.xowa.users.*;
 import gplx.xowa.cfgs.*;
 public class Prefs_converter {
-	ByteAryBfr bfr = ByteAryBfr.new_();
-	ListAdp list = ListAdp_.new_();
+	private Bry_bfr bfr = Bry_bfr.new_();
+	private ListAdp list = ListAdp_.new_();
 	public void Check(Xoa_app app) {
 		int options_version = app.Sys_cfg().Options_version();
 		if (options_version == 1) {
 			Io_url cfg_dir = app.User().Fsys_mgr().App_data_cfg_dir();
 			Io_url cfg_fil = cfg_dir.GenSubFil("user_system_cfg.gfs");
 			Io_url trg_fil = cfg_fil.GenNewNameAndExt(gplx.xowa.cfgs.Xoa_cfg_db_txt.File_name);
-			if (Io_mgr._.ExistsFil(trg_fil)) return;	// do not overwrite file if it is there (i.e.: it's already converted); needed when running in app_mode = cmd (see HACK in Xob_bldr.Run)
-			String old_str = Io_mgr._.LoadFilStr_args(cfg_fil).MissingIgnored_(true).Exec();
-			String new_str = Convert(old_str);
-			Io_mgr._.SaveFilStr(trg_fil, new_str);
-			app.Cfg_mgr().Db_load_txt();
-			app.Cfg_mgr().Set_by_app("app.setup.dumps.wiki_storage_type", "sqlite");
-			app.Log_wtr().Log_msg_to_session_fmt("converted options to v2");
+			if (!Io_mgr._.ExistsFil(trg_fil)) {	// do not overwrite file if it is there (i.e.: it's already converted); needed when running in app_mode = cmd (see HACK in Xob_bldr.Run)
+				String old_str = Io_mgr._.LoadFilStr_args(cfg_fil).MissingIgnored_(true).Exec();
+				String new_str = Convert(old_str);
+				Io_mgr._.SaveFilStr(trg_fil, new_str);
+				app.Cfg_mgr().Db_load_txt();
+				app.Cfg_mgr().Set_by_app("app.setup.dumps.wiki_storage_type", "sqlite");
+				app.Log_wtr().Log_msg_to_session_fmt("converted options to v2");
+			}
 		}
 	}
 	public String Convert(String raw) {
@@ -57,10 +58,10 @@ public class Prefs_converter {
 			Write_escaped_str(bfr, itm.Val());
 			bfr.Add_str("';\n");
 		}
-		return bfr.XtoStrAndClear();
+		return bfr.Xto_str_and_clear();
 	} 
-	private void Write_escaped_str(ByteAryBfr bfr, String str) {
-		byte[] bry = ByteAry_.new_utf8_(str);
+	private void Write_escaped_str(Bry_bfr bfr, String str) {
+		byte[] bry = Bry_.new_utf8_(str);
 		int len = bry.length;
 		for (int i = 0; i < len; i++) {
 			byte b = bry[i];
@@ -74,13 +75,13 @@ public class Prefs_converter {
 		int subs_len = m.Subs_count();
 		if (subs_len == 0) {	
 			bfr.Add_byte(Byte_ascii.Dot);
-			byte[] prop_set_key = ByteAry_.new_utf8_(m.Key());
+			byte[] prop_set_key = Bry_.new_utf8_(m.Key());
 			int prop_set_key_len = prop_set_key.length;
 			if (prop_set_key_len == 0) return; // empty key; return now, else error			
 			if (prop_set_key[prop_set_key_len - 1] != Byte_ascii.Underline) return; // doesn't end with _
 			bfr.Add_mid(prop_set_key, 0, prop_set_key_len - 1);
 			Prefs_converter_itm itm = new Prefs_converter_itm();
-			itm.Key_(bfr.XtoStrAndClear());
+			itm.Key_(bfr.Xto_str_and_clear());
 			String prop_val = m.Args_getAt(0).Val_to_str_or_empty();
 			itm.Val_(prop_val);
 			list.Add(itm);

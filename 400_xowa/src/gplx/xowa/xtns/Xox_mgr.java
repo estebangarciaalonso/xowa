@@ -20,6 +20,7 @@ public interface Xox_mgr extends GfoInvkAble {
 	byte[] Xtn_key();
 	void Xtn_ctor_by_app(Xoa_app app);
 	void Xtn_ctor_by_wiki(Xow_wiki wiki);
+	void Xtn_init_by_app(Xoa_app app);
 	void Xtn_init_by_wiki(Xow_wiki wiki);
 	Xox_mgr Clone_new();
 }

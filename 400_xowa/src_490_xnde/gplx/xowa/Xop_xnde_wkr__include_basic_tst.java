@@ -32,13 +32,16 @@ public class Xop_xnde_wkr__include_basic_tst {
 		fxt.Init_page_create("Transclude_2", "a<onlyinclude>b<includeonly>c</includeonly>d</onlyinclude>e<pre>f</pre>g");
 		fxt.Test_parse_tmpl_str_test("{{:Transclude_2}}"		, "{{test}}", "bcd");
 	}
+	@Test  public void Tmpl_noinclude_unmatched() {	// PURPOSE.fix: ignore unmatched </noinclude>; EX:fi.w:Sergio_Leone; DATE:2014-05-02
+		fxt.Test_parse_tmpl_str_test("{{{1|</noinclude>}}}", "{{test|a}}", "a");	// was "{{{test|"
+	}
 
 	@Test  public void Wiki_includeonly()	{fxt.Test_parse_page_all_str("a<includeonly>b</includeonly>c"								, "ac");}
 	@Test  public void Wiki_noinclude()		{fxt.Test_parse_page_all_str("a<noinclude>b</noinclude>c"									, "abc");}
 	@Test  public void Wiki_onlyinclude()	{fxt.Test_parse_page_all_str("a<onlyinclude>b</onlyinclude>c"								, "abc");}
 	@Test  public void Wiki_oi_io()			{fxt.Test_parse_page_all_str("a<onlyinclude>b<includeonly>c</includeonly>d</onlyinclude>e"	, "abde");}
 	@Test  public void Wiki_oi_io_tblw() {
-		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skip_last
 			(	"<onlyinclude>"
 			,	"{|"
 			,	"|-"
@@ -47,7 +50,7 @@ public class Xop_xnde_wkr__include_basic_tst {
 			,	"|-"
 			,	"|b"
 			,	"|}"
-			),	String_.Concat_lines_nl_skipLast
+			),	String_.Concat_lines_nl_skip_last
 			(	"<table>"
 			,	"  <tr>"
 			,	"    <td>a"
@@ -66,15 +69,15 @@ public class Xop_xnde_wkr__include_basic_tst {
 <includeonly>-({{{1}}}={{{1}}}round-5)-({{{1}}}={{{1}}}round-4)-({{{1}}}={{{1}}}round-3)-({{{1}}}={{{1}}}round-2)-({{{1}}}={{{1}}}round-1)</includeonly><noinclude>
 {{pp-template}}Called by {{lt|precision/0}}</noinclude>
 
-==includeonly==
+==includeonly -- aka: do not eval in template ==
 main: a<includeonly>b</includeonly>c<br/>
 tmpl: {{mwo_include_only|a|b|c}}
 
-==noinclude==
+==noinclude   -- aka: eval in template only==
 main: a<noinclude>b</noinclude>c<br/>
 tmpl: {{mwo_no_include|a|b|c}}
 
-==onlyinclude==
+==onlyinclude -- aka: only include in template only (ignore everything else) ==
 main: a<onlyinclude>b</onlyinclude>c<br/>
 tmpl: {{mwo_only_include|a|b|c}}
 */

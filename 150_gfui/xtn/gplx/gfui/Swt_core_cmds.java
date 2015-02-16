@@ -25,9 +25,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-interface Swt_control {
-	Control Under_control();
-}
 class Swt_core_cmds extends GxwCore_base {
 	public Swt_core_cmds(Control control) {
 		compositeAble = control instanceof Composite;
@@ -95,21 +92,6 @@ class Swt_core_cmds extends GxwCore_base {
 	}
 	@Override public void Invalidate() {control.redraw(); control.update();}
 	@Override public void Dispose() {control.dispose();}
-}
-class Swt_control_ {
-	public static void X_set(Control c, int v) {Point point = c.getLocation(); 	c.setLocation(v, point.y);}	
-	public static void Y_set(Control c, int v) {Point point = c.getLocation(); 	c.setLocation(point.x, v);}
-	public static void W_set(Control c, int v) {Point point = c.getSize();		c.setSize(v, point.y);}
-	public static void H_set(Control c, int v) {Point point = c.getSize();		c.setSize(point.x, v);}
-	public static void Pos_set(Control c, PointAdp v) 		{c.setLocation(v.X(), v.Y());}
-	public static void Pos_set(Control c, int x, int y) 	{c.setLocation(x, y);}
-	public static void Size_set(Control c, SizeAdp v) 		{c.setSize(v.Width(), v.Height());}
-	public static void Size_set(Control c, int w, int h) 	{c.setSize(w, h);}
-	public static void Rect_set(Control c, RectAdp v) 		{c.setBounds(Xto_rectangle(v));}
-	public static void Rect_set(Control c, int x, int y, int w, int h) {c.setBounds(Xto_rectangle(x, y, w, h));}
-	public static void Rect_add(Control c, RectAdp v, int x, int y, int w, int h) {c.setBounds(Xto_rectangle(v.X() + x, v.Y() + y, v.Width() + w, v.Height()+ h));}
-	public static org.eclipse.swt.graphics.Rectangle Xto_rectangle(int x, int y, int w, int h) 	{return new Rectangle(x, y, w, h);}
-	public static org.eclipse.swt.graphics.Rectangle Xto_rectangle(RectAdp v) 					{return new Rectangle(v.X(), v.Y(), v.Width(), v.Height());}
 }
 class Swt_core_cmds_dual extends GxwCore_base {
 	public Swt_core_cmds_dual(Composite outer, Control inner, int inner_adj_x, int inner_adj_y, int inner_adj_w, int inner_adj_h) {

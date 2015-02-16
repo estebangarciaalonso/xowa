@@ -20,19 +20,19 @@ public class Pft_func_time extends Pf_func_base {
 	Pft_func_time(boolean utc) {this.utc = utc;} private boolean utc;
 	@Override public int Id() {return Xol_kwd_grp_.Id_xtn_time;}
 	@Override public Pf_func New(int id, byte[] name) {return new Pft_func_time(utc).Name_(name);}
-	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, ByteAryBfr bfr) {// REF.MW:ParserFunctions_body.php
+	@Override public void Func_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Xot_invk self, Bry_bfr bfr) {// REF.MW:ParserFunctions_body.php
 		int self_args_len = self.Args_len();
 		byte[] arg_fmt = Eval_argx(ctx, src, caller, self);
 		Pft_fmt_itm[] fmt_ary = Pft_fmt_itm_.Parse(ctx, arg_fmt);
 		byte[] arg_date = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 0);
 		byte[] arg_lang = Pf_func_.Eval_arg_or_empty(ctx, src, caller, self, self_args_len, 1);
-		ByteAryBfr error_bfr = ByteAryBfr.new_();
+		Bry_bfr error_bfr = Bry_bfr.new_();
 		DateAdp date = ParseDate(arg_date, utc, error_bfr);
 		if (date == null || error_bfr.Len() > 0)
 			bfr.Add_str("<strong class=\"error\">").Add_bfr_and_clear(error_bfr).Add_str("</strong>");
 		else {
 			Xol_lang lang = ctx.Lang();
-			if (ByteAry_.Len_gt_0(arg_lang)) {
+			if (Bry_.Len_gt_0(arg_lang)) {
 				Xol_lang_itm specified_lang_itm = Xol_lang_itm_.Get_by_key(arg_lang);
 				if (specified_lang_itm != null) {	// NOTE: if lang_code is bad, then ignore (EX:bad_code)
 					Xol_lang specified_lang = ctx.Wiki().App().Lang_mgr().Get_by_key_or_new(arg_lang);
@@ -42,8 +42,8 @@ public class Pft_func_time extends Pf_func_base {
 			Pft_func_formatdate.Date_bldr().Format(bfr, ctx.Wiki(), lang, date, fmt_ary);
 		}
 	}
-	public static DateAdp ParseDate(byte[] date, boolean utc, ByteAryBfr error_bfr) {
-		if (date == ByteAry_.Empty) return utc ? DateAdp_.Now().XtoUtc() : DateAdp_.Now();
+	public static DateAdp ParseDate(byte[] date, boolean utc, Bry_bfr error_bfr) {
+		if (date == Bry_.Empty) return utc ? DateAdp_.Now().XtoUtc() : DateAdp_.Now();
 		try {
 			DateAdp rv = new Pxd_parser().Parse(date, error_bfr);
 			return rv;
@@ -57,14 +57,14 @@ public class Pft_func_time extends Pf_func_base {
 	public static final Pft_func_time _Lcl = new Pft_func_time(false), _Utc = new Pft_func_time(true);
 }
 class DateAdpTranslator_xapp {
-	public static void Translate(Xow_wiki wiki, Xol_lang lang, int type, int val, ByteAryBfr bb) {
+	public static void Translate(Xow_wiki wiki, Xol_lang lang, int type, int val, Bry_bfr bb) {
 		lang.Init_by_load_assert();
 		byte[] itm_val = lang.Msg_mgr().Val_by_id(type + val); if (itm_val == null) return;
 		bb.Add(itm_val);
 	}
 }
 class Pfxtp_roman {
-	public static void ToRoman(int num, ByteAryBfr bfr) {
+	public static void ToRoman(int num, Bry_bfr bfr) {
 		if (num > 3000 || num <= 0) {
 			bfr.Add_int_variable(num);
 			return;
@@ -88,7 +88,7 @@ class Pfxtp_roman {
 		int len = names.length;
 		byte[][] rv = new byte[len][];
 		for (int i = 0; i < len; i++)
-			rv[i] = ByteAry_.new_utf8_(names[i]);
+			rv[i] = Bry_.new_utf8_(names[i]);
 		return rv;
 	}
 }

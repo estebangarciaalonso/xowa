@@ -22,7 +22,7 @@ public class Xof_lnki_file_mgr {
 	private boolean page_init_needed = true;
 	private ListAdp fsdb_list = ListAdp_.new_();
 	private OrderedHash xfer_list = OrderedHash_.new_bry_();
-	private Xof_url_bldr url_bldr = new Xof_url_bldr().Thumbtime_dlm_dash_();
+	private Xof_url_bldr url_bldr = Xof_url_bldr.new_v2_();
 	private Xof_img_size tmp_img_size = new Xof_img_size();
 	public void Clear() {
 		page_init_needed = true;
@@ -34,10 +34,10 @@ public class Xof_lnki_file_mgr {
 	public boolean Find(Xow_wiki wiki, Xoa_page page, byte exec_tid, Xof_xfer_itm xfer_itm) {
 		try {
 			if (page_init_needed) {
-				page_init_needed = false;
-				Create_xfer_itms(page.Lnki_list());
+				page_init_needed = false;					
 				wiki.File_mgr().Fsdb_mgr().Init_by_wiki__add_bin_wkrs(wiki);	// NOTE: fsdb_mgr may not be init'd for wiki; assert that that it is
-				wiki.File_mgr().Fsdb_mgr().Reg_select_only(wiki.App().Gui_wtr(), exec_tid, fsdb_list, orig_regy);
+				Create_xfer_itms(page.Lnki_list(), wiki.File_mgr().Fsdb_mgr().Patch_upright());	// NOTE: Patch_upright check must occur after Init_by_wiki; DATE:2014-05-31
+				wiki.File_mgr().Fsdb_mgr().Orig_select_by_list(page, exec_tid, fsdb_list, orig_regy);
 				Hash_xfer_itms();
 			}
 			Xof_fsdb_itm fsdb_itm = (Xof_fsdb_itm)xfer_list.Fetch(xfer_itm.Lnki_ttl());
@@ -48,12 +48,25 @@ public class Xof_lnki_file_mgr {
 				xfer_itm.Lnki_ext_(fsdb_itm.Lnki_ext());			// WORKAROUND: hacky, but fsdb_itm knows when ogg is ogv whereas xfer_itm does not; so, always override xfer_itm.ext with fsdb's; DATE:2014-02-02
 				xfer_itm.Url_bldr_(url_bldr);						// default Url_bldr for xfer_itm uses @ for thumbtime; switch to -; DATE:2014-02-02
 				Init_fsdb_by_xfer(fsdb_itm, xfer_itm);				// copy xfer itm props to fsdb_itm;
-				fsdb_itm.Html__init(wiki.File_mgr().Repo_mgr(), url_bldr, tmp_img_size, exec_tid);
-				xfer_itm.Html_orig_src_(ByteAry_.new_utf8_(fsdb_itm.Html_orig_url().To_http_file_str()));	// always set orig_url; note that w,h are not necessary for orig url; orig url needed for [[Media:]] links; DATE:2014-01-19
-				if (Io_mgr._.ExistsFil(fsdb_itm.Html_url())) {
-					xfer_itm.Atrs_calc_by_fsdb(fsdb_itm.Html_w(), fsdb_itm.Html_h(), fsdb_itm.Html_url(), fsdb_itm.Html_orig_url());
-					return true;
+				xfer_itm.Set__orig(fsdb_itm.Orig_w(), fsdb_itm.Orig_h(), xfer_itm.Orig_file_len());	// copy orig props from orig_itm to xfer_itm
+				Xof_repo_itm repo = wiki.File_mgr().Repo_mgr().Repos_get_by_wiki(fsdb_itm.Orig_wiki()).Trg();
+				fsdb_itm.Html__init(repo, url_bldr, tmp_img_size, exec_tid);
+				xfer_itm.Trg_repo_(repo);
+				xfer_itm.Html_orig_src_(Bry_.new_utf8_(fsdb_itm.Html_orig_url().To_http_file_str()));	// always set orig_url; note that w,h are not necessary for orig url; orig url needed for [[Media:]] links; DATE:2014-01-19
+				gplx.ios.IoItmFil fil = Io_mgr._.QueryFil(fsdb_itm.Html_url());
+				if (fil.Exists()) {
+					if  (fil.Size() == 0)	// NOTE: fix; XOWA used to write 0 byte files if file was missing, delete them and do not return true; DATE:2014-06-21
+						Io_mgr._.DeleteFil(fsdb_itm.Html_url());
+					else {
+						xfer_itm.Calc_by_fsdb(fsdb_itm.Html_w(), fsdb_itm.Html_h(), fsdb_itm.Html_url(), fsdb_itm.Html_orig_url());
+						return true;
+					}
 				}
+				// TODO: replace above with this block; WHEN: mocking file database tests; DATE:2014-05-03
+				// boolean found = Io_mgr._.ExistsFil(fsdb_itm.Html_url());
+				// Io_url html_url = found ? fsdb_itm.Html_url() : null;
+				// xfer_itm.Atrs_calc_by_fsdb(fsdb_itm.Html_w(), fsdb_itm.Html_h(), html_url, fsdb_itm.Html_orig_url());
+				// return found;
 			}
 			return false;
 		} catch (Exception e) {
@@ -61,12 +74,12 @@ public class Xof_lnki_file_mgr {
 			return false;
 		}
 	}
-	private void Create_xfer_itms(ListAdp lnki_list) {
+	private void Create_xfer_itms(ListAdp lnki_list, int upright_patch) {
 		int len = lnki_list.Count();
 		for (int i = 0; i < len; i++) {
 			Xop_lnki_tkn lnki_tkn = (Xop_lnki_tkn)lnki_list.FetchAt(i);
 			Xof_fsdb_itm fsdb_itm = new Xof_fsdb_itm();
-			Init_fsdb_by_lnki(fsdb_itm, lnki_tkn);
+			Init_fsdb_by_lnki(fsdb_itm, lnki_tkn, upright_patch);
 			fsdb_list.Add(fsdb_itm);
 		}
 	}
@@ -79,21 +92,21 @@ public class Xof_lnki_file_mgr {
 		}
 	}
 	private void Hash_xfer_itms_add(byte[] key, Xof_fsdb_itm itm) {
-		if (	ByteAry_.Len_gt_0(key)	// ignore null / empty itms; needed for redirects
+		if (	Bry_.Len_gt_0(key)		// ignore null / empty itms; needed for redirects
 			&&	!xfer_list.Has(key)		// don't add if already there
 			&&	orig_regy.Has(key)		// add if found in orig_regy
 			)
 			xfer_list.Add(key, itm);
 	}
-	private void Init_fsdb_by_lnki(Xof_fsdb_itm fsdb_itm, Xop_lnki_tkn lnki_tkn) {
+	private void Init_fsdb_by_lnki(Xof_fsdb_itm fsdb_itm, Xop_lnki_tkn lnki_tkn, int lnki_upright_patch) {
 		byte[] lnki_ttl = lnki_tkn.Ttl().Page_db();
 		Xof_ext lnki_ext = Xof_ext_.new_by_ttl_(lnki_ttl);
 		byte[] lnki_md5 = Xof_xfer_itm_.Md5_(lnki_ttl);
-		fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, lnki_tkn.Lnki_type(), lnki_tkn.Lnki_w(), lnki_tkn.Lnki_h(), lnki_tkn.Upright(), lnki_tkn.Thumbtime(), lnki_tkn.Page());
+		fsdb_itm.Init_by_lnki(lnki_ttl, lnki_ext, lnki_md5, lnki_tkn.Lnki_type(), lnki_tkn.Lnki_w(), lnki_tkn.Lnki_h(), lnki_upright_patch, lnki_tkn.Upright(), lnki_tkn.Thumbtime(), lnki_tkn.Page());
 	}
 	private void Init_fsdb_by_xfer(Xof_fsdb_itm fsdb_itm, Xof_xfer_itm xfer_itm) {	// DELETE: DATE:2014-02-04
 		fsdb_itm.Lnki_size_(xfer_itm.Lnki_w(), xfer_itm.Lnki_h());	// NOTE: must overwrite fsdb_itm.size with xfer_itm.size when the same image shows up in multiple sizes on a page; (only one item in wiki_orig); EX: w:Portal:Canada; [[File:Flag of Canada.svg|300x150px]]; [[File:Flag of Canada.svg|23px]]; DATE:2014-02-14
-		fsdb_itm.Lnki_type_(xfer_itm.Lnki_type());					// NOTE: must overwrite lnki_type, else multiple images on same page with different type wont show; EX:en.w:History_of_painting; DATE:2014-03-06
+		fsdb_itm.Lnki_type_(xfer_itm.Lnki_type());					// NOTE: must overwrite lnki_type, else multiple images on same page with different type wont show; PAGE:en.w:History_of_painting; DATE:2014-03-06
 		fsdb_itm.Lnki_page_(xfer_itm.Lnki_page());
 		fsdb_itm.Lnki_thumbtime_(xfer_itm.Lnki_thumbtime());
 //			byte[] lnki_ttl = xfer_itm.Lnki_ttl();

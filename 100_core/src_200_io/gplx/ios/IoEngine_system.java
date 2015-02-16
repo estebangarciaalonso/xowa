@@ -27,7 +27,7 @@ import java.util.Date;
 
 import javax.print.FlavorException;
 import javax.tools.JavaCompiler;
-import gplx.criterias.*;
+import gplx.core.criterias.*;
 public class IoEngine_system extends IoEngine_base {
 	@Override public String Key() {return IoEngine_.SysKey;}
 	@Override public void DeleteDirDeep(IoEngine_xrg_deleteDir args) {utl.DeleteDirDeep(this, args.Url(), args);}
@@ -53,12 +53,8 @@ public class IoEngine_system extends IoEngine_base {
 		Io_url url = mpo.Url();
 
 		// encode string
-		String encodingName = mpo.EncodingType().Name();
 		byte[] textBytes = null;
-		try		{textBytes = mpo.Text().getBytes(encodingName);}
-		catch	(UnsupportedEncodingException e) {
-			throw Err_Text_UnsupportedEncoding(encodingName, mpo.Text(), url, e);
-			}
+		textBytes = Bry_.new_utf8_(mpo.Text());
 
 		FileChannel fc = null; FileOutputStream fos = null;
 		if (!ExistsDir(url.OwnerDir())) CreateDir(url.OwnerDir());
@@ -159,7 +155,8 @@ public class IoEngine_system extends IoEngine_base {
 	}
 	IoItmFil QueryMkr_fil(IoUrlInfo urlInfo, File apiFil) {
 		Io_url filUrl = Io_url_.new_inf_(apiFil.getPath(), urlInfo);	// NOTE: may throw PathTooLongException when url is > 248 (exception messages states 260)
-		IoItmFil rv = IoItmFil_.new_(filUrl, apiFil.length(), DateAdp_.MinValue, DateAdp_.dateTime_long(apiFil.lastModified()));
+		long fil_len = apiFil.exists() ? apiFil.length() : IoItmFil.Size_Invalid;	// NOTE: if file doesn't exist, set len to -1; needed for "boolean Exists() {return size != Size_Invalid;}"; DATE:2014-06-21
+		IoItmFil rv = IoItmFil_.new_(filUrl, fil_len, DateAdp_.MinValue, DateAdp_.unixtime_lcl_ms_(apiFil.lastModified()));
 		rv.ReadOnly_(!apiFil.canWrite());
 		return rv;
 	}
@@ -395,8 +392,10 @@ public class IoEngine_system extends IoEngine_base {
 		Io_download_fmt xfer_fmt = xrg.Download_fmt();
 		prog_dlg = xfer_fmt.usr_dlg;
 		if (!Web_access_enabled) {
-			if (session_fil == null) session_fil = prog_dlg.Log_wtr().Session_dir().GenSubFil("internet.txt");
-			if (prog_dlg != null) prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download disabled: src='~{0}' trg='~{1}'", xrg.Src(), xrg.Trg().Raw());
+			if (prog_dlg != null) {
+				if (session_fil == null) session_fil = prog_dlg.Log_wtr().Session_dir().GenSubFil("internet.txt");
+				prog_dlg.Log_wtr().Log_msg_to_url_fmt(session_fil, "download disabled: src='~{0}' trg='~{1}'", xrg.Src(), xrg.Trg().Raw());				
+			}
 			return false;
 		}
 		try {
@@ -405,10 +404,10 @@ public class IoEngine_system extends IoEngine_base {
 			src_conn = (HttpURLConnection)src_url.openConnection();
 //			src_conn.setReadTimeout(5000);	// do not set; if file does not exist, will wait 5 seconds before timing out; want to fail immediately
 			String user_agent = xrg.User_agent(); if (user_agent != null) src_conn.setRequestProperty("User-Agent", user_agent);
-			long content_length = Long_.parse_or_(src_conn.getHeaderField("Content-Length"), Int_.Neg1);
+			long content_length = Long_.parse_or_(src_conn.getHeaderField("Content-Length"), IoItmFil.Size_Invalid_int);
 			xrg.Src_content_length_(content_length);
 			if (xrg.Src_last_modified_query())	// NOTE: only files will have last modified (api calls will not); if no last_modified, then src_conn will throw get nullRef; avoid nullRef 
-				xrg.Src_last_modified_(DateAdp_.dateTime_long(src_conn.getLastModified()));
+				xrg.Src_last_modified_(DateAdp_.unixtime_lcl_ms_(src_conn.getLastModified()));
 			if (xrg.Exec_meta_only()) return true;
 	        src_stream = new java.io.BufferedInputStream(src_conn.getInputStream());
 	        if (!exists) {
@@ -456,12 +455,13 @@ public class IoEngine_system extends IoEngine_base {
     		try {
     			if (src_stream != null) src_stream.close();
     			if (src_conn != null) src_conn.disconnect();
+    			src_conn.getInputStream().close();
     		} 	catch (Exception exc) {
     			Err_.Noop(exc);
     		}
     		if (trg_stream != null) trg_stream.Rls();
     	}
-	}	Io_url session_fil; ByteAryBfr prog_fmt_bfr;
+	}	Io_url session_fil; Bry_bfr prog_fmt_bfr;
 		byte[] download_bfr; static final int Download_bfr_len = Io_mgr.Len_kb * 128;
 	public static Err Err_Fil_NotFound(Io_url url) {
 		return Err_.new_key_(IoEngineArgs._.Err_FileNotFound, "file not found").Add("url", url.Xto_api()).CallLevel_1_();
@@ -535,7 +535,7 @@ class Io_stream_rdr_http implements Io_stream_rdr {
 	}	private IoEngine_xrg_downloadFil xrg;
 	public byte Tid() {return Io_stream_.Tid_file;}
 	public Io_url Url() {return url;} public Io_stream_rdr Url_(Io_url v) {url = v; return this;} private Io_url url;
-	public long Len() {return len;} public Io_stream_rdr Len_(long v) {len = v; return this;} private long len;	
+	public long Len() {return len;} public Io_stream_rdr Len_(long v) {len = v; return this;} private long len = IoItmFil.Size_Invalid;	// NOTE: must default size to -1; DATE:2014-06-21	
 	private String src_str; private HttpURLConnection src_conn; private java.io.BufferedInputStream src_stream;
 	private Io_download_fmt xfer_fmt; private Gfo_usr_dlg prog_dlg;
 	private boolean read_done = true, read_failed = false;
@@ -555,11 +555,11 @@ class Io_stream_rdr_http implements Io_stream_rdr {
 			if (user_agent != null)
 				src_conn.setRequestProperty("User-Agent", user_agent);
 //			src_conn.setReadTimeout(5000);	// do not set; if file does not exist, will wait 5 seconds before timing out; want to fail immediately
-			long content_length = Long_.parse_or_(src_conn.getHeaderField("Content-Length"), Int_.Neg1);
+			long content_length = Long_.parse_or_(src_conn.getHeaderField("Content-Length"), IoItmFil.Size_Invalid_int);
 			xrg.Src_content_length_(content_length);
 			this.len = content_length;
 			if (xrg.Src_last_modified_query())	// NOTE: only files will have last modified (api calls will not); if no last_modified, then src_conn will throw get nullRef; avoid nullRef
-				xrg.Src_last_modified_(DateAdp_.dateTime_long(src_conn.getLastModified()));
+				xrg.Src_last_modified_(DateAdp_.unixtime_lcl_ms_(src_conn.getLastModified()));
 			if (xrg.Exec_meta_only()) {
 				read_done = true;
 				return this;

@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.cfgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
+import gplx.core.strings.*;
 public class Xob_wiki_cfg_bldr implements GfoInvkAble {
 	public Xob_wiki_cfg_bldr(Xob_bldr bldr) {this.app = bldr.App();} private Xoa_app app;
 	public void Exec() {
@@ -27,7 +28,7 @@ public class Xob_wiki_cfg_bldr implements GfoInvkAble {
 	}
 	private void Exec_fil(Xoac_wiki_cfg_bldr_fil fil) {
 		String wiki_key = fil.Wiki();
-		Io_url cfg_file = app.User().Fsys_mgr().Wiki_root_dir().GenSubFil_nest("#cfg", "system", wiki_key + ".gfs");
+		Io_url cfg_file = app.Fsys_mgr().Cfg_wiki_core_dir().GenSubFil(wiki_key + ".gfs");
 		String cfg_text = Io_mgr._.LoadFilStr_args(cfg_file).MissingIgnored_().Exec();
 		int len = fil.Itms_count();
 		String_bldr sb = String_bldr_.new_();

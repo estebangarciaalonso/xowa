@@ -65,8 +65,8 @@ class IoItmBase_comparer_nest implements ComparerAble {
 		IoItm_base lhsItm = (IoItm_base)lhsObj, rhsItm = (IoItm_base)rhsObj;
 		Io_url lhsUrl = lhsItm.Url(), rhsUrl = rhsItm.Url();
 		return String_.Eq(lhsUrl.OwnerDir().Raw(), rhsUrl.OwnerDir().Raw())								// is same dir
-			? CompareAble_.Compare_comp(lhsUrl.NameAndExt(), rhsUrl.NameAndExt())	// same dir: compare name
-			: CompareAble_.Compare_comp(DepthOf(lhsItm), DepthOf(rhsItm));			// diff dir: compare by depth; ex: c:\fil.txt < c:\dir\fil.txt
+			? CompareAble_.Compare_obj(lhsUrl.NameAndExt(), rhsUrl.NameAndExt())	// same dir: compare name
+			: CompareAble_.Compare_obj(DepthOf(lhsItm), DepthOf(rhsItm));			// diff dir: compare by depth; ex: c:\fil.txt < c:\dir\fil.txt
 	}
 	int DepthOf(IoItm_base itm) {
 		Io_url url = itm.Url();

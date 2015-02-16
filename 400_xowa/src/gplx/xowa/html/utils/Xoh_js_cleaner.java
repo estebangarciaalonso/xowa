@@ -16,18 +16,29 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.html.utils; import gplx.*; import gplx.xowa.*; import gplx.xowa.html.*;
+import gplx.core.btries.*;
 public class Xoh_js_cleaner {
-	boolean ctor = true;
+	private Xoa_app app; private boolean ctor = true;
+	public Xoh_js_cleaner(Xoa_app app) {this.app = app;}
+	public void Clean_bfr(Xow_wiki wiki, Xoa_ttl ttl, Bry_bfr bfr, int bgn) {
+		int end = bfr.Len();
+		byte[] cleaned = this.Clean(wiki, bfr.Bfr(), bgn, end);
+		if (cleaned != null) {
+			bfr.Del_by(end - bgn);
+			bfr.Add(cleaned);
+			app.Usr_dlg().Warn_many("", "", "javascript detected: wiki=~{0} ~{1}", wiki.Domain_str(), String_.new_utf8_(ttl.Full_txt()));
+		}
+	}
 	public byte[] Clean(Xow_wiki wiki, byte[] src, int bgn, int end) {
 		if (ctor) Ctor();
-		ByteAryBfr bfr = null;
+		Bry_bfr bfr = null;
 		boolean dirty = false;
 		try {
 			bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
 			int pos = bgn;
 			while (pos < end) {
 				byte b = src[pos];
-				Object o = trie.Match(b, src, pos, end);
+				Object o = trie.Match_bgn_w_byte(b, src, pos, end);
 				if (o == null) {
 					if (dirty)
 						bfr.Add_byte(b);
@@ -38,7 +49,7 @@ public class Xoh_js_cleaner {
 					int frag_len = frag.length;
 					if (frag[0] == Byte_ascii.Lt) {	// jscript node; EX: <script
 						if (!dirty) {bfr.Add_mid(src, bgn, pos); dirty = true;}
-						bfr.Add(gplx.html.Html_consts.Lt);
+						bfr.Add(gplx.html.Html_entity_.Lt_bry);
 						bfr.Add_mid(frag, 1, frag.length);
 						pos += frag_len; 
 					}
@@ -49,14 +60,14 @@ public class Xoh_js_cleaner {
 						else {
 							if (!dirty) {bfr.Add_mid(src, bgn, pos); dirty = true;}
 							bfr.Add(frag);
-							bfr.Add(gplx.html.Html_consts.Eq);
+							bfr.Add(gplx.html.Html_entity_.Eq_bry);
 							pos = atr_pos;
 						}
 					}
 				}
 			}
 		}	finally {if (bfr != null) bfr.Mkr_rls();}
-		return dirty ? bfr.XtoAryAndClear() : null;
+		return dirty ? bfr.Xto_bry_and_clear() : null;
 	}
 	private int Get_pos_eq(byte[] src, int pos, int end, int frag_len) {
 		if (	pos > 0								// bounds check
@@ -188,5 +199,5 @@ public class Xoh_js_cleaner {
 		Reg_itm("seekSegmentTime");
 		ctor = false;
 	}
-	private void Reg_itm(String s) {trie.Add_bry(ByteAry_.new_ascii_(s));} ByteTrieMgr_slim trie = new ByteTrieMgr_slim(false);
+	private void Reg_itm(String s) {trie.Add_bry(Bry_.new_ascii_(s));} Btrie_slim_mgr trie = Btrie_slim_mgr.ci_ascii_();	// NOTE:ci.ascii:javascript event name
 }

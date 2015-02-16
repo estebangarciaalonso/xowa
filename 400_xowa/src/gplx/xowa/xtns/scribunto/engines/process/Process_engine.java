@@ -40,16 +40,19 @@ public class Process_engine implements Scrib_engine {
 	public void RegisterLibrary(KeyVal[] functions_ary) {
 		this.Dispatch("op", "registerLibrary", "name", Scrib_core.Key_mw_interface, "functions", functions_ary);
 	}
+	public void CleanupChunks(KeyVal[] ids) {
+		this.Dispatch("op", "cleanupChunks", "ids", ids);
+	}
 	public KeyVal[] ExecuteModule(int mod_id) {
 		return this.CallFunction(core.Lib_mw().Mod().Fncs_get_id("executeModule"), Scrib_kv_utl_.base1_obj_(new Scrib_lua_proc("", mod_id)));
 	}
 	private KeyVal[] Dispatch(Object... ary) {
-		ByteAryBfr bfr = app.Utl_bry_bfr_mkr().Get_k004().Clear();
+		Bry_bfr bfr = app.Utl_bry_bfr_mkr().Get_k004().Clear();
 		while (true) {
 			Dispatch_bld_send(bfr, ary);
 			boolean log_enabled = scrib_opts.Lua_log_enabled();
-			if (log_enabled) app.Usr_dlg().Log_direct("sent:" + bfr.XtoStr() + "\n");
-			byte[] rsp_bry = server.Server_comm(bfr.XtoAryAndClear(), ary);
+			if (log_enabled) app.Usr_dlg().Log_direct("sent:" + bfr.Xto_str() + "\n");
+			byte[] rsp_bry = server.Server_comm(bfr.Xto_bry_and_clear(), ary);
 			if (log_enabled) app.Usr_dlg().Log_direct("rcvd:" + String_.new_utf8_(rsp_bry) + "\n\n");
 			String op = rsp.Extract(rsp_bry);
 			if		(String_.Eq(op, "return")) {
@@ -78,12 +81,12 @@ public class Process_engine implements Scrib_engine {
 			}
 			else {
 				bfr.Mkr_rls();
-//					app.Usr_dlg().Warn_many("", "", "invalid dispatch: op=~{0} page=~{1}", op, String_.new_utf8_(core.Ctx().Page().Page_ttl().Page_db()));
+//					app.Usr_dlg().Warn_many("", "", "invalid dispatch: op=~{0} page=~{1}", op, String_.new_utf8_(core.Ctx().Cur_page().Page_ttl().Page_db()));
 				return KeyVal_.Ary_empty;
 			}
 		}
-	}	private static final byte[] Dispatch_hdr = ByteAry_.new_ascii_("0000000000000000");	// itm_len + itm_chk in 8-len HexDec
-	private void Dispatch_bld_send(ByteAryBfr bfr, Object[] ary) {
+	}	private static final byte[] Dispatch_hdr = Bry_.new_ascii_("0000000000000000");	// itm_len + itm_chk in 8-len HexDec
+	private void Dispatch_bld_send(Bry_bfr bfr, Object[] ary) {
 		int len = ary.length; if (len % 2 != 0) throw Err_.new_fmt_("arguments must be factor of 2: {0}", len);
 		bfr.Add(Dispatch_hdr);
 		bfr.Add_byte(Byte_ascii.Curly_bgn);
@@ -99,7 +102,7 @@ public class Process_engine implements Scrib_engine {
 		bfr.Add_byte(Byte_ascii.Curly_end);
 		int msg_len = bfr.Len() - 16;		// 16 for Dispatch_hdr_len
 		int chk_len = (msg_len * 2) -1;		// defined by Scribunto
-		HexDecUtl.Write(bfr.Bry(), 0,  8, msg_len);
-		HexDecUtl.Write(bfr.Bry(), 9, 16, chk_len);
+		HexDecUtl.Write(bfr.Bfr(), 0,  8, msg_len);
+		HexDecUtl.Write(bfr.Bfr(), 9, 16, chk_len);
 	}
 }

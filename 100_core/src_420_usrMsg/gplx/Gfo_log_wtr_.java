@@ -20,6 +20,7 @@ public class Gfo_log_wtr_ {
         public static final Gfo_log_wtr Null = new Gfo_log_wtr_null();
 }
 class Gfo_log_wtr_null implements Gfo_log_wtr {
+	public Io_url Session_fil() {return Io_url_.Null;}
 	public Io_url Session_dir() {return Io_url_.Null;}
 	public Io_url Log_dir() {return Io_url_.Null;} public void Log_dir_(Io_url v) {}
 	public boolean Enabled() {return enabled;} public void Enabled_(boolean v) {enabled = v;} private boolean enabled;

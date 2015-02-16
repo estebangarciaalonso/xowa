@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
 import java.math.BigDecimal;import java.math.MathContext;import java.math.RoundingMode;public class DecimalAdp_ {
+	public static final Class<?> Cls_ref_type = DecimalAdp.class;
 	public static DecimalAdp as_(Object obj) {return obj instanceof DecimalAdp ? (DecimalAdp)obj : null;}
 	public static final DecimalAdp Zero = new DecimalAdp(0);
 	public static final DecimalAdp One = new DecimalAdp(1);
@@ -46,7 +47,7 @@ import java.math.BigDecimal;import java.math.MathContext;import java.math.Roun
 	}
 	public static String CalcPctStr(long dividend, long divisor, String fmt) {
 		if (divisor == 0) return "%ERR";
-		return DecimalAdp_.float_(Float_.Div(dividend, divisor) * 100).XtoStr(fmt) + "%";
+		return DecimalAdp_.float_(Float_.Div(dividend, divisor) * 100).Xto_str(fmt) + "%";
 	}
 	public static DecimalAdp divide_safe_(long lhs, long rhs) {return rhs == 0 ? Zero : divide_(lhs, rhs);}
 		public static DecimalAdp divide_(long lhs, long rhs) {		return new DecimalAdp(new BigDecimal(lhs).divide(new BigDecimal(rhs), Gplx_rounding_context));	}	public static DecimalAdp int_(int v) {return new DecimalAdp(new BigDecimal(v));}	public static DecimalAdp long_(long v) {return new DecimalAdp(new BigDecimal(v));}

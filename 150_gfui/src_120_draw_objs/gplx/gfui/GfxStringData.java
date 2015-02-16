@@ -37,7 +37,7 @@ public class GfxStringData {
 	public AttributedString MnemonicString() {return mnemonicString;} AttributedString mnemonicString;
 	String drawn = "";
 	public void MnemonicString_sync() {
-		int pos = GfuiWinKeyCmdMgr.ExtractPosFromText(this.Val()); if (pos == String_.NotFound) return;
+		int pos = GfuiWinKeyCmdMgr.ExtractPosFromText(this.Val()); if (pos == String_.Find_none) return;
 		drawn = String_.MidByLen(this.Val(), 0, pos) + String_.Mid(this.Val(), pos + 1);	// rebuild string without &
 		mnemonicString = new AttributedString(drawn);
 		mnemonicString.addAttribute(TextAttribute.FONT, font.UnderFont());

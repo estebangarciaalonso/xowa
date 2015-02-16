@@ -20,7 +20,6 @@ public class GxwElem_mock_base implements GxwElem {
 	public GxwCore_base Core() {return ctrlMgr;} final GxwCore_mock ctrlMgr = new GxwCore_mock();
 	public GxwCbkHost Host() {return host;} public void Host_set(GxwCbkHost host) {this.host = host;} GxwCbkHost host = GxwCbkHost_.Null;
 	public String TextVal() {return text;} public void TextVal_set(String v) {text = v;} private String text = "";
-	public Object UnderElem() {return this;}
 			public void SendKeyDown(IptKey key) {}
 	public void EnableDoubleBuffering() {}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {

@@ -16,28 +16,32 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.core.btries.*; import gplx.xowa.parsers.amps.*;
 public class Xop_sanitizer {
-	public Xop_sanitizer(ByteTrieMgr_slim amp_trie, Gfo_msg_log msg_log) {
-		this.amp_trie = amp_trie; this.msg_log = msg_log;
+	private Btrie_slim_mgr trie = Btrie_slim_mgr.cs_(), amp_trie;
+	private Xop_amp_mgr amp_mgr;
+	private Bry_bfr tmp_bfr = Bry_bfr.reset_(255);
+	public Xop_sanitizer(Xop_amp_mgr amp_mgr, Gfo_msg_log msg_log) {
+		this.amp_mgr = amp_mgr; this.amp_trie = amp_mgr.Amp_trie();
 		trie_add("&"	, Tid_amp);
 		trie_add(" "	, Tid_space);
 		trie_add("%3A"	, Tid_colon);
 		trie_add("%3a"	, Tid_colon);
 		trie_add("%"	, Tid_percent);
-	}	private ByteTrieMgr_slim trie = ByteTrieMgr_slim.cs_(), amp_trie; private ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255); private Gfo_msg_log msg_log; private IntRef ncr_val = IntRef.zero_(); private BoolRef fail = BoolRef.n_();
+	}
 	private void trie_add(String hook, byte tid) {trie.Add_stub(hook, tid);}
 	public byte[] Escape_id(byte[] src) {
 		boolean dirty = Escape_id(src, 0, src.length, tmp_bfr);
-		return dirty ? tmp_bfr.XtoAryAndClear() : src;
+		return dirty ? tmp_bfr.Xto_bry_and_clear() : src;
 	}
-	public boolean Escape_id(byte[] src, int bgn, int end, ByteAryBfr bfr) {
+	public boolean Escape_id(byte[] src, int bgn, int end, Bry_bfr bfr) {
 		boolean dirty = false;
 		int pos = bgn;
 		boolean loop = true;
 		while (loop) {
 			if (pos == end) break;
 			byte b = src[pos];
-			Object o = trie.Match(b, src, pos, end);
+			Object o = trie.Match_bgn_w_byte(b, src, pos, end);
 			if (o == null) {
 				if (dirty) bfr.Add_byte(b);
 				++pos;
@@ -47,7 +51,7 @@ public class Xop_sanitizer {
 					bfr.Add_mid(src, bgn, pos);
 					dirty = true;
 				}
-				ByteTrie_stub stub = (ByteTrie_stub)o;
+				Btrie_itm_stub stub = (Btrie_itm_stub)o;
 				switch (stub.Tid()) {
 					case Tid_space:		bfr.Add_byte(Byte_ascii.Underline)	; ++pos		; break;
 					case Tid_percent:	bfr.Add_byte(Byte_ascii.Percent)	; ++pos		; break;
@@ -60,7 +64,7 @@ public class Xop_sanitizer {
 							continue;
 						}
 						b = src[pos];
-						Object amp_obj = amp_trie.Match(b, src, pos, end);
+						Object amp_obj = amp_trie.Match_bgn_w_byte(b, src, pos, end);
 						if (amp_obj == null) {
 							bfr.Add_byte(Byte_ascii.Amp);
 							bfr.Add_byte(b);
@@ -70,20 +74,19 @@ public class Xop_sanitizer {
 							Xop_amp_trie_itm itm = (Xop_amp_trie_itm)amp_obj;
 							byte itm_tid = itm.Tid();
 							switch (itm_tid) {
-								case Xop_amp_trie_itm.Tid_name:
+								case Xop_amp_trie_itm.Tid_name_std:
+								case Xop_amp_trie_itm.Tid_name_xowa:
 									bfr.Add(itm.Utf8_bry());
 									pos += itm.Key_name_len() + 1;	// 1 for trailing ";"; EX: for "&nbsp; ", (a) pos is at "&", (b) "nbsp" is Key_name_len, (c) ";" needs + 1 
 									break;
 								case Xop_amp_trie_itm.Tid_num_dec:
 								case Xop_amp_trie_itm.Tid_num_hex:
-									boolean ncr_is_hex = itm_tid == Xop_amp_trie_itm.Tid_num_hex;
-									fail = fail.Val_n_();
-									int pos_new = Xop_amp_wkr.CalcNcr(msg_log, ncr_is_hex, src, end, pos - 1, pos + itm.Xml_name_bry().length, ncr_val, fail);
-									if (fail.Val())
-										bfr.Add_byte(Byte_ascii.Amp);
+									boolean pass = amp_mgr.Parse_as_int(itm_tid == Xop_amp_trie_itm.Tid_num_hex, src, end, pos - 1, pos + itm.Xml_name_bry().length);
+									if (pass)
+										bfr.Add_utf8_int(amp_mgr.Rslt_val());
 									else
-										bfr.Add(gplx.intl.Utf16_.Encode_int_to_bry(ncr_val.Val()));
-									pos = pos_new;
+										bfr.Add_byte(Byte_ascii.Amp);
+									pos = amp_mgr.Rslt_pos();
 									break;
 							}
 						}

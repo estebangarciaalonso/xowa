@@ -16,36 +16,24 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
-import gplx.ios.*; /*IoUrlInfo*/
+import gplx.core.strings.*; import gplx.ios.*; /*IoUrlInfo*/
 public class Io_url implements CompareAble, EqAble, ParseAble, GfoInvkAble {	//_20101005 URL:doc/Io_url.txt
 	public IoUrlInfo Info() {return info;} IoUrlInfo info;
 	public String Raw() {return raw;} final String raw;
-	public byte[] RawBry() {return ByteAry_.new_utf8_(raw);}
+	public byte[] RawBry() {return Bry_.new_utf8_(raw);}
 //		public byte[] Http_file_bry() {
-//			try {return ByteAry_.new_utf8_(String_.Concat(http_file_str, java.net.URLEncoder.encode(raw, "UTF-8")));}	
+//			try {return Bry_.new_utf8_(String_.Concat(http_file_str, java.net.URLEncoder.encode(raw, "UTF-8")));}	
 //			catch (Exception e) {throw Err_.err_(e, "Http_file_bry");}
 //		}
-	public String To_http_file_str() {
-		return http_file_str + Http_file_str_encoder.Encode_str(raw);
-	} static final String http_file_str = "file:///";
-	public static Url_encoder_interface Http_file_str_encoder;
-	
-	static final int http_file_len = String_.Len(http_file_str);
-	public static final byte[] Http_file_bry = ByteAry_.new_ascii_(http_file_str);
-	public static String parse_http_file(String v, boolean wnt) {
-		byte[] v_bry = ByteAry_.new_utf8_(v);
-		int v_len = v_bry.length;
-		if (ByteAry_.HasAtBgn(v_bry, Http_file_bry, 0, v_len)) {
-			byte[] rv = new byte[v_len - http_file_len];
-			for (int i = 0; i < rv.length; i++) {
-				byte b = v_bry[i + http_file_len];
-				if (wnt && b == Byte_ascii.Slash) b = Byte_ascii.Backslash;
-				rv[i] = b;
-			}
-			return String_.new_utf8_(rv);
-		}
-		return v;
+	public String To_http_file_str() {return Http_file_str + Http_file_str_encoder.Encode_str(raw);}
+	public byte[] To_http_file_bry() {
+		return Bry_.Add(Http_file_bry, Http_file_str_encoder.Encode_bry(raw));
 	}
+	public static Url_encoder_interface Http_file_str_encoder = Url_encoder_interface_same._;
+	
+	public static final String Http_file_str = "file:///";
+	public static final int Http_file_len = String_.Len(Http_file_str);
+	public static final byte[] Http_file_bry = Bry_.new_ascii_(Http_file_str);
 	public boolean Type_dir() {return info.IsDir(raw);} public boolean Type_fil() {return !info.IsDir(raw);}
 	public Io_url OwnerDir() {return Io_url_.new_inf_(info.OwnerDir(raw), info);}
 	public Io_url OwnerRoot() {return Io_url_.new_inf_(info.OwnerRoot(raw), info);}
@@ -98,7 +86,7 @@ public class Io_url implements CompareAble, EqAble, ParseAble, GfoInvkAble {	//_
 	}
 	public Object ParseAsObj(String raw) {return Io_url_.new_any_(raw);}
 	@Override public String toString()	{return raw;}
-	public int compareTo(Object obj)	{return CompareAble_.Compare_comp(raw, ((Io_url)obj).raw);}
+	public int compareTo(Object obj)	{return CompareAble_.Compare_obj(raw, ((Io_url)obj).raw);}
 	@Override public boolean equals(Object obj) {return String_.Eq(raw, Io_url_.as_(obj).raw);}
 	@Override public int hashCode() {return raw.hashCode();}
 	@gplx.Internal protected Io_url(String raw, IoUrlInfo info) {this.raw = raw; this.info = info;}

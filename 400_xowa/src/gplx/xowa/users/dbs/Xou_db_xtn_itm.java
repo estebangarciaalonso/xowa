@@ -24,14 +24,14 @@ class Xou_db_xtn_itm {
 	public Xou_db_xtn_itm Init_by_load(DataRdr rdr) {
 		key = rdr.ReadStr(Xou_db_xtn_tbl.Fld_xtn_key);
 		version = rdr.ReadStr(Xou_db_xtn_tbl.Fld_xtn_version);
-		cmd_mode = Db_cmd_mode.Ignore;
+		cmd_mode = Db_cmd_mode.Tid_ignore;
 		return this;
 	}
 	public Xou_db_xtn_itm Init_by_make(String key, String version) {
 		this.key = key;
 		this.version = version;
-		cmd_mode = Db_cmd_mode.Create;
+		cmd_mode = Db_cmd_mode.Tid_create;
 		return this;
 	}
-        public static final Xou_db_xtn_itm Null = new Xou_db_xtn_itm(); public Xou_db_xtn_itm() {}
+	public static final Xou_db_xtn_itm Null = new Xou_db_xtn_itm(); public Xou_db_xtn_itm() {}
 }

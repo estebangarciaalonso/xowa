@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfml; import gplx.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.strings.*;
 public class z901_perf_tst {
 	TimerWatch tmr = TimerWatch.new_();
 	@Test  public void EmptyTestSoJunitWillNotFail() {}
@@ -108,7 +108,7 @@ class TimerWatch {
 		this.End();
 		Tfds.Write(XtoStr_ms() + " " + text);
 	}
-	public String XtoStr_ms() {return Long_.XtoStr(duration);}
+	public String XtoStr_ms() {return Long_.Xto_str(duration);}
         public static TimerWatch new_() {
 		TimerWatch rv = new TimerWatch();
 		rv.Bgn();

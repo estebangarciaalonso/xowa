@@ -18,10 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.json; import gplx.*;
 public class Json_doc_srl {
 	private int indent = -1;
-	private ByteAryBfr bfr = ByteAryBfr.reset_(255);
+	private Bry_bfr bfr = Bry_bfr.reset_(255);
 	public boolean Ws_enabled() {return ws_enabled;} public void Ws_enabled_(boolean v) {ws_enabled = v;} private boolean ws_enabled = false;
-	public byte[] Bld() {return bfr.XtoAryAndClear();}
-	public String Bld_as_str() {return bfr.XtoStrAndClear();}
+	public byte[] Bld() {return bfr.Xto_bry_and_clear();}
+	public String Bld_as_str() {return bfr.Xto_str_and_clear();}
 	public Json_doc_srl Write_root(byte[] key, Object val) {
 		Write_nde_bgn();
 		Write_obj(false, key, val);
@@ -33,7 +33,7 @@ public class Json_doc_srl {
 		if	(ClassAdp_.Is_array(t))
 			Write_kv_ary(comma, key, (Object[])val);
 		else
-			Write_kv_str(comma, key, Object_.XtoStr_OrEmpty(val));
+			Write_kv_str(comma, key, Object_.Xto_str_strict_or_empty(val));
 	}
 	private void Write_kv_ary(boolean comma, byte[] key, Object[] val) {
 		Write_key(comma, key); Write_new_line();	// '"key":\n'
@@ -42,7 +42,7 @@ public class Json_doc_srl {
 		int len = val.length;
 		for (int i = 0; i < len; i++) {
 			Write_itm_hdr(i != 0);					// ', '
-			Write_str(ByteAry_.new_utf8_(Object_.XtoStr_OrNull(val[i])));
+			Write_str(Bry_.new_utf8_(Object_.Xto_str_strict_or_null(val[i])));
 			Write_new_line();
 		}
 		Indent_del();
@@ -50,7 +50,7 @@ public class Json_doc_srl {
 	}
 	private void Write_kv_str(boolean comma, byte[] key, String val) {
 		Write_key(comma, key);							// "key":
-		Write_str(ByteAry_.new_utf8_(val));				// "val"
+		Write_str(Bry_.new_utf8_(val));				// "val"
 		Write_new_line();								// \n
 	}
 	private void Write_key(boolean comma, byte[] key) {	// "key":
@@ -64,7 +64,7 @@ public class Json_doc_srl {
 			bfr.Add(Bry_null);
 		else
 			bfr.Add_byte(Byte_ascii.Quote).Add(v).Add_byte(Byte_ascii.Quote);
-	}	private static final byte[] Bry_null = ByteAry_.new_ascii_("null");
+	}	private static final byte[] Bry_null = Bry_.new_ascii_("null");
 	private void Write_comma(boolean comma) {
 		if (comma)
 			bfr.Add_byte(Byte_ascii.Comma);

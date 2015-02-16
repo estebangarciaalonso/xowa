@@ -54,7 +54,7 @@ public class Xop_vnt_lxr_tst {
 //		}
 //		@Test  public void Enabled() {
 //			Xoa_app app = Xoa_app_fxt.app_();
-//			Xol_lang lang = new Xol_lang(app, ByteAry_.new_ascii_("zh"));
+//			Xol_lang lang = new Xol_lang(app, Bry_.new_ascii_("zh"));
 //			Xow_wiki wiki = Xoa_app_fxt.wiki_(app, "zh.wikipedia.org", lang);
 //			Xop_fxt fxt = new Xop_fxt(app, wiki);
 //			fxt.Test_parse_page_all_str("a-{b}-c", "ac");
@@ -65,34 +65,34 @@ class Xop_vnt_tkn_mok {
 	private ListAdp rules_list = ListAdp_.new_();
 	private ListAdp flags_list = ListAdp_.new_();
 	public Xop_vnt_flag[] Flags() {
-		if (flags == null) flags = (Xop_vnt_flag[])flags_list.XtoAry(Xop_vnt_flag.class);
+		if (flags == null) flags = (Xop_vnt_flag[])flags_list.Xto_ary(Xop_vnt_flag.class);
 		return flags;
 	}	private Xop_vnt_flag[] flags;
 	public Xop_vnt_tkn_mok Flags_none_()					{flags_list.Clear(); return this;}
 	public Xop_vnt_tkn_mok Flags_unknown_(String... v) {flags_list.Add(Xop_vnt_flag_.Flag_unknown); return this;}
-	public Xop_vnt_tkn_mok Flags_langs_(String... v) {flags_list.Add(Xop_vnt_flag_.new_langs_(ByteAry_.Ary(v))); return this;}
+	public Xop_vnt_tkn_mok Flags_langs_(String... v) {flags_list.Add(Xop_vnt_flag_.new_langs_(Bry_.Ary(v))); return this;}
 	public Xop_vnt_tkn_mok Flags_codes_(String... ary) {
 		int len = ary.length;
 		for (int i = 0; i < len; i++) {
-			byte[] bry = ByteAry_.new_ascii_(ary[i]);
-			Xop_vnt_flag flag = (Xop_vnt_flag)Xop_vnt_flag_.Trie.MatchAtCur(bry, 0, bry.length);
+			byte[] bry = Bry_.new_ascii_(ary[i]);
+			Xop_vnt_flag flag = (Xop_vnt_flag)Xop_vnt_flag_.Trie.Match_bgn(bry, 0, bry.length);
 			flags_list.Add(flag);
 		}
 		return this;
 	}
 	public Xop_vnt_rule[] Rules() {
-		if (rules == null) rules = (Xop_vnt_rule[])rules_list.XtoAry(Xop_vnt_rule.class);
+		if (rules == null) rules = (Xop_vnt_rule[])rules_list.Xto_ary(Xop_vnt_rule.class);
 		return rules;
 	}	private Xop_vnt_rule[] rules;
 	public Xop_vnt_tkn_mok Rule_(String rule)											{return Rule_(Xop_vnt_rule.Null_lang, rule);}
-	public Xop_vnt_tkn_mok Rule_(byte[] lang, String rule)								{return Rule_(Xop_vnt_rule.Null_macro, lang, new Xop_bry_tkn(-1, -1, ByteAry_.new_utf8_(rule)));}
-	public Xop_vnt_tkn_mok Rule_(String lang, String rule)								{return Rule_(Xop_vnt_rule.Null_macro, ByteAry_.new_ascii_(lang), new Xop_bry_tkn(-1, -1, ByteAry_.new_utf8_(rule)));}
-	public Xop_vnt_tkn_mok Rule_(String macro, String lang, String rule)				{return Rule_(ByteAry_.new_ascii_(macro), ByteAry_.new_ascii_(lang), new Xop_bry_tkn(-1, -1, ByteAry_.new_utf8_(rule)));}
+	public Xop_vnt_tkn_mok Rule_(byte[] lang, String rule)								{return Rule_(Xop_vnt_rule.Null_macro, lang, new Xop_bry_tkn(-1, -1, Bry_.new_utf8_(rule)));}
+	public Xop_vnt_tkn_mok Rule_(String lang, String rule)								{return Rule_(Xop_vnt_rule.Null_macro, Bry_.new_ascii_(lang), new Xop_bry_tkn(-1, -1, Bry_.new_utf8_(rule)));}
+	public Xop_vnt_tkn_mok Rule_(String macro, String lang, String rule)				{return Rule_(Bry_.new_ascii_(macro), Bry_.new_ascii_(lang), new Xop_bry_tkn(-1, -1, Bry_.new_utf8_(rule)));}
 	public Xop_vnt_tkn_mok Rule_(byte[] macro, byte[] lang, Xop_tkn_itm... tkns)	{rules_list.Add(new Xop_vnt_rule(macro, lang, tkns)); return this;}
 }
 class Xop_vnt_lxr_fxt {
 	private Xop_fxt fxt;
-	private ByteAryBfr tmp_bfr = ByteAryBfr.new_();
+	private Bry_bfr tmp_bfr = Bry_bfr.new_();
 	public Xop_vnt_lxr_fxt Clear() {
 		Xoa_app app = Xoa_app_fxt.app_();
 		Xow_wiki wiki = Xoa_app_fxt.wiki_(app, "zh.wikipedia.org");
@@ -103,14 +103,14 @@ class Xop_vnt_lxr_fxt {
 	}
 	public Xop_vnt_tkn_mok vnt_() {return new Xop_vnt_tkn_mok();}
 	public static void Init_vnt_mgr(Xol_vnt_mgr vnt_mgr, String... vnts_str) {
-		byte[][] vnts_bry = ByteAry_.Ary(vnts_str);
+		byte[][] vnts_bry = Bry_.Ary(vnts_str);
 		int vnts_bry_len = vnts_bry.length;
 		for (int i = 0; i < vnts_bry_len; i++)
 			vnt_mgr.Get_or_new(vnts_bry[i]);
 		vnt_mgr.Convert_ttl_init();
 	}
 	public Xop_vnt_lxr_fxt Test_parse(String raw, Xop_vnt_tkn_mok expd) {
-		byte[] raw_bry = ByteAry_.new_utf8_(raw);
+		byte[] raw_bry = Bry_.new_utf8_(raw);
 		Xop_root_tkn root = fxt.Exec_parse_page_all_as_root(raw_bry);
 		Xop_vnt_tkn actl = (Xop_vnt_tkn)root.Subs_get(0);
 		Test_vnt_tkn(raw_bry, expd, actl);
@@ -120,7 +120,7 @@ class Xop_vnt_lxr_fxt {
 		Tfds.Eq(Vnt_flag_ary_to_str(tmp_bfr, expd.Flags()), Vnt_flag_ary_to_str(tmp_bfr, actl.Vnt_flags()), "flags");
 		Tfds.Eq(Vnt_rule_ary_to_str(tmp_bfr, raw_bry, expd.Rules()), Vnt_rule_ary_to_str(tmp_bfr, raw_bry, actl.Vnt_rules()), "rules");
 	}
-	private String Vnt_flag_ary_to_str(ByteAryBfr bfr, Xop_vnt_flag[] ary) {
+	private String Vnt_flag_ary_to_str(Bry_bfr bfr, Xop_vnt_flag[] ary) {
 		int len = ary.length;
 		for (int i = 0; i < len; i++) {
 			Xop_vnt_flag itm = ary[i];
@@ -128,17 +128,17 @@ class Xop_vnt_lxr_fxt {
 			if (itm_tid == Xop_vnt_flag_.Tid_lang)
 				Vnt_flag_lang_to_bfr(bfr, itm);
 			else
-				bfr.Add_str(Xop_vnt_flag_.X_to_name(itm_tid)).Add_byte(Byte_ascii.Semic);
+				bfr.Add_str(Xop_vnt_flag_.Xto_name(itm_tid)).Add_byte(Byte_ascii.Semic);
 		}
-		return bfr.XtoStrAndClear();
+		return bfr.Xto_str_and_clear();
 	}
-	private void Vnt_flag_lang_to_bfr(ByteAryBfr bfr, Xop_vnt_flag itm) {
+	private void Vnt_flag_lang_to_bfr(Bry_bfr bfr, Xop_vnt_flag itm) {
 		byte[][] ary = itm.Langs();
 		int len = ary.length;
 		for (int i = 0; i < len; i++)
 			bfr.Add(ary[i]).Add_byte(Byte_ascii.Semic);
 	}
-	private String Vnt_rule_ary_to_str(ByteAryBfr bfr, byte[] src, Xop_vnt_rule[] ary) {
+	private String Vnt_rule_ary_to_str(Bry_bfr bfr, byte[] src, Xop_vnt_rule[] ary) {
 		if (ary == null) return "";
 		int len = ary.length;
 		for (int i = 0; i < len; i++) {
@@ -152,12 +152,12 @@ class Xop_vnt_lxr_fxt {
 			for (int j = 0; j < subs_len; j++) {
 				Xop_tkn_itm sub = subs[j];
 				if (sub.Tkn_tid() == Xop_tkn_itm_.Tid_bry)		// tests uses Xop_tkn_bry
-					bfr.Add(((Xop_bry_tkn)sub).Bry());
+					bfr.Add(((Xop_bry_tkn)sub).Val());
 				else
 					bfr.Add_mid(src, sub.Src_bgn(), sub.Src_end());
 			}
 			bfr.Add_byte(Byte_ascii.Semic);
 		}
-		return bfr.XtoStrAndClear();
+		return bfr.Xto_str_and_clear();
 	}
 }

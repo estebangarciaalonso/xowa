@@ -79,36 +79,18 @@ class Gallery_itm_parser_fxt {
 	public String[] Expd(String ttl, String caption)									{return new String[] {ttl, caption, null, null, null};}
 	public String[] Expd(String ttl, String caption, String alt)						{return new String[] {ttl, caption, alt, null, null};}
 	public String[] Expd(String ttl, String caption, String alt, String link)			{return new String[] {ttl, caption, alt, link, null};}
-	public String[] Expd(String ttl, String caption, String alt, String link, int page)	{return new String[] {ttl, caption, alt, link, Int_.XtoStr(page)};}
+	public String[] Expd(String ttl, String caption, String alt, String link, int page)	{return new String[] {ttl, caption, alt, link, Int_.Xto_str(page)};}
 	public void Init_kwd_set(int kwd_id, String kwd_val) {
-		wiki.Lang().Kwd_mgr().Get_or_new(kwd_id).Itms()[0].Bry_set(ByteAry_.new_ascii_(kwd_val));
+		wiki.Lang().Kwd_mgr().Get_or_new(kwd_id).Itms()[0].Val_(Bry_.new_ascii_(kwd_val));
 		parser.Init_by_wiki(wiki);
 	}
 	public void Test_parse(String raw, String[]... expd) {
 		ListAdp actl = ListAdp_.new_();
-		byte[] src = ByteAry_.new_ascii_(raw);
+		byte[] src = Bry_.new_ascii_(raw);
 		parser.Parse_all(actl, Gallery_mgr_base_.New_by_mode(Gallery_mgr_base_.Traditional_tid), new Gallery_xnde(), src, 0, src.length);
-		Tfds.Eq_ary(Ary_flatten(expd), Ary_flatten(X_to_str_ary(src, actl)));
+		Tfds.Eq_ary(String_.Ary_flatten(expd), String_.Ary_flatten(Xto_str_ary(src, actl)));
 	}
-	private String[] Ary_flatten(String[][] src_ary) {
-		int trg_len = 0;
-		int src_len = src_ary.length;
-		for (int i = 0; i < src_len; i++) {
-			String[] itm = src_ary[i];
-			if (itm != null) trg_len += itm.length;
-		}
-		String[] trg_ary = new String[trg_len];
-		trg_len = 0;
-		for (int i = 0; i < src_len; i++) {
-			String[] itm = src_ary[i];
-			if (itm == null) continue;
-			int itm_len = itm.length;
-			for (int j = 0; j < itm_len; j++)
-				trg_ary[trg_len++] = itm[j];
-		}
-		return trg_ary;
-	}
-	private String[][] X_to_str_ary(byte[] src, ListAdp list) {
+	private String[][] Xto_str_ary(byte[] src, ListAdp list) {
 		int len = list.Count();
 		String[][] rv = new String[len][];
 		for (int i = 0; i < len; i++) {
@@ -116,15 +98,15 @@ class Gallery_itm_parser_fxt {
 			String[] ary = new String[5];
 			rv[i] = ary;
 			ary[0] = String_.new_utf8_(itm.Ttl().Full_txt());
-			ary[2] = X_to_str_ary_itm(src, itm.Alt_bgn(), itm.Alt_end());
-			ary[3] = X_to_str_ary_itm(src, itm.Link_bgn(), itm.Link_end());
-			ary[4] = X_to_str_ary_itm(src, itm.Page_bgn(), itm.Page_end());
+			ary[2] = Xto_str_ary_itm(src, itm.Alt_bgn(), itm.Alt_end());
+			ary[3] = Xto_str_ary_itm(src, itm.Link_bgn(), itm.Link_end());
+			ary[4] = Xto_str_ary_itm(src, itm.Page_bgn(), itm.Page_end());
 			byte[] caption = itm.Caption_bry();
 			ary[1] =  caption == null ? null : String_.new_utf8_(caption);
 		}
 		return rv;
 	}
-	private String X_to_str_ary_itm(byte[] src, int bgn, int end) {
-		return bgn == ByteAry_.NotFound && end == ByteAry_.NotFound ? null : String_.new_utf8_(src, bgn, end);
+	private String Xto_str_ary_itm(byte[] src, int bgn, int end) {
+		return bgn == Bry_.NotFound && end == Bry_.NotFound ? null : String_.new_utf8_(src, bgn, end);
 	}
 }

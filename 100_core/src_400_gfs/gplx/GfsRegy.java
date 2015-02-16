@@ -33,7 +33,7 @@ class GfsRegy implements GfoInvkAble {
 		if (hash.Has(key)) return;
 		GfsRegyItm regyItm = new GfsRegyItm().Key_(key).InvkAble_(invk).IsCmd_(typeCmd).TypeKey_(ClassAdp_.FullNameOf_obj(invk));
 		hash.Add(key, regyItm);
-		typeHash.Add(regyItm.TypeKey(), regyItm);
+		typeHash.Add_if_new(regyItm.TypeKey(), regyItm);	// NOTE: changed to allow same Object to be added under different aliases (app, xowa) DATE:2014-06-09;
 	}
 	public void Del(String k) {
 		GfsRegyItm itm =(GfsRegyItm)hash.Fetch(k);

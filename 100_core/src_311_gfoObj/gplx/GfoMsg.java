@@ -20,6 +20,7 @@ public interface GfoMsg {
 	String	Key();
 	GfoMsg	CloneNew();
 	String	XtoStr();
+	GfoMsg	Clear();
 	GfoMsg  Parse_(boolean v);
 
 	int		Args_count();
@@ -58,10 +59,12 @@ public interface GfoMsg {
 	byte	ReadByte(String k);
 	byte[]	ReadBry(String k);
 	byte[]	ReadBryOr(String k, byte[] or);
+	Object	ReadObj(String k);
 	Object	ReadObj(String k, ParseAble parseAble);
 	Object	ReadObjOr(String k, ParseAble parseAble, Object or);
 	String[]ReadStrAry(String k, String spr);
 	String[]ReadStrAryIgnore(String k, String spr, String ignore);
+	byte[][]ReadBryAry(String k, byte spr);
 	Object  ReadValAt(int i);
 	Object	CastObj(String k);
 	Object	CastObjOr(String k, Object or);

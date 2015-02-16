@@ -16,22 +16,38 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import java.lang.*;
+import gplx.core.strings.*;
 public class String_ implements GfoInvkAble {
-	public static final Class<?> ClassOf = String.class;
-	public static final int NotFound = -1, Neg1_pos = -1, Pos_after_char = 1;
-	public static final String Empty = "", NullStr = "<<NULL>>", CrLf = "\r\n", Lf = "\n", Tab = "\t";
-	public static final String NullPtr = null;
+	public static final Class<?> Cls_ref_type = String.class;
+	public static final String Cls_val_name = "str" + "ing";
+	public static final int Find_none = -1, Pos_neg1 = -1;
+	public static final String Null = null, Empty = "", Null_mark = "<<NULL>>", Tab = "\t", Lf = "\n", CrLf = "\r\n";
 	public static String cast_(Object v) {return (String)v;}
 	public static String as_(Object obj) {return obj instanceof String ? (String)obj : null;}
-	public static String as_or_fail_(Object v) {
-		String rv = as_(v);
-		if (rv == null && v != null) throw Err_.type_mismatch_(String.class, v); // NOTE: v != null needed; EX: cast_(null) --> null
-		return rv;
+	public static String new_ascii_(byte[] v) {return v == null ? null : new_ascii_(v, 0, v.length);}
+	public static String new_ascii_(byte[] v, int bgn, int end) {
+		try {
+			return v == null 
+				? null
+				: new String(v, bgn, end - bgn, "ASCII");		
+		}
+		catch (Exception e) {throw Err_.err_(e, "unsupported encoding");}
+	}	
+	public static String new_utf8_(byte[] v)							{return v == null ? null : new_utf8_(v, 0, v.length);}
+	public static String new_utf8_mid_safe_(byte[] v, int bgn, int end)	{return v == null ? null : new_utf8_(v, bgn, end);}
+	public static String new_utf8_(byte[] v, int bgn, int end) {
+		try {
+			return v == null
+				? null
+				: new String(v, bgn, end - bgn, "UTF-8");		
+		}
+		catch (Exception e) {throw Err_.err_(e, "unsupported encoding");}
 	}
-	public static String read_(Object obj) {// NOTE: same as cast_; for consistent readability only
-		String rv = as_(obj);
-		if (rv == null && obj != null) throw Err_.type_mismatch_(String.class, obj); // NOTE: obj != null needed; EX: cast_(null) --> null
-		return rv;
+	public static String new_utf8_len_safe_(byte[] v, int bgn, int len)	{
+		int v_len = v.length;
+		if (bgn + len > v_len) len = v_len - bgn;
+		return new_utf8_(v, bgn, bgn + len);
 	}
 	public static String[] Ary_add(String[]... arys) {
 		if (arys == null) return String_.Ary_empty;
@@ -51,75 +67,44 @@ public class String_ implements GfoInvkAble {
 		}
 		return rv;
 	}
-	public static String[] Ary(byte[]... ary) {
-		if (ary == null) return String_.Ary_empty;
-		int ary_len = ary.length;
-		String[] rv = new String[ary_len];
-		for (int i = 0; i < ary_len; i++)
-			rv[i] = String_.new_utf8_(ary[i]);
-		return rv;
-	}
-	public static String [] Ary_filter(String[] src, String[] filter) {
-		HashAdp hash = HashAdp_.new_();
-		int len = filter.length;
-		for (int i = 0; i < len; i++) {
-			String itm = filter[i];
-			hash.AddReplace(itm, itm);				
-		}
-		ListAdp rv = ListAdp_.new_();
-		len = src.length;
-		for (int i = 0; i < len; i++) {
-			String itm = src[i];
-			if (hash.Has(itm)) rv.Add(itm);
-		}
-		return rv.XtoStrAry();
-	}
-	public static int Len(String s)											{return s.length();}					
-	public static int FindFwd(String s, String find)						{return s.indexOf(find);}			
-	public static int FindFwd(String s, String find, int pos)				{return s.indexOf(find, pos);}		
-	public static int FindBwd(String s, String find)						{return s.lastIndexOf(find);}		
+	public static boolean Len_gt_0(String s)									{return s != null && s.length() >  0;}	
+	public static boolean Len_eq_0(String s)									{return s == null || s.length() == 0;}	
+	public static int Len(String s)											{return s.length();}						
+	public static String Lower(String s)									{return s.toLowerCase();}					
+	public static String Upper(String s)									{return s.toUpperCase();}					
+	public static String CaseNormalize(boolean caseSensitive, String s)		{return caseSensitive ? s : String_.Lower(s);}
+	public static String Trim(String s)										{return s.trim();}						
+	public static String Mid(String s, int bgn)								{return s.substring(bgn);}				
+	public static String Replace(String s, String find, String replace)		{return s.replace(find, replace);}		
+	public static char[] XtoCharAry(String s)								{return s.toCharArray();}				
+	public static char CharAt(String s, int i)								{return s.charAt(i);}							
+	public static int CodePointAt(String s, int i)							{return s.codePointAt(i);}
+	public static boolean Has(String s, String find)							{return s.indexOf(find) != String_.Find_none;}	
+	public static boolean HasAtBgn(String s, String v)							{return s.startsWith(v);}				
+	public static boolean HasAtEnd(String s, String v)							{return s.endsWith(v);}					
+	public static int FindFwd(String s, String find)						{return s.indexOf(find);}				
+	public static int FindFwd(String s, String find, int pos)				{return s.indexOf(find, pos);}			
+	public static int FindBwd(String s, String find)						{return s.lastIndexOf(find);}			
 	public static int FindBwd(String s, String find, int pos)				{
 				return s.lastIndexOf(find, pos);
-			}	
-	public static boolean HasAtBgn(String s, String v)							{return s.startsWith(v);}			
-	public static boolean HasAtEnd(String s, String v)							{return s.endsWith(v);}				
-	public static String Lower(String s)									{return s.toLowerCase();}				
-	public static String Upper(String s)									{return s.toUpperCase();}				
-	public static String Trim(String s)										{return s.trim();}					
-	public static String Mid(String s, int bgn)								{return s.substring(bgn);}			
-	public static String Replace(String s, String find, String replace)		{return s.replace(find, replace);}	
-	public static char[] XtoCharAry(String s)								{return s.toCharArray();}			
-	public static char CharAt(String s, int i)								{return s.charAt(i);}						
-	public static int CodePointAt(String s, int i)							{return s.codePointAt(i);}
-	public static boolean Has(String s, String find)							{return s.indexOf(find) != String_.NotFound;}	
+			}
 	public static int FindBetween(String s, String find, int bgn, int end) {
 		int rv = FindFwd(s, find, bgn);
-		return (rv > end) ? String_.NotFound : rv;
+		return (rv > end) ? String_.Find_none : rv;
 	}
 	public static int FindAfter(String s, String find, int bgn) {
 		int rv = FindFwd(s, find, bgn);
-		return rv == String_.NotFound ? String_.NotFound : rv + Len(find);
+		return rv == String_.Find_none ? String_.Find_none : rv + Len(find);
 	}
 	public static int FindAfterRev(String s, String find, int pos) {
 		int rv = FindBwd(s, find, pos);
-		return rv == String_.NotFound ? String_.NotFound : rv + Len(find);
+		return rv == String_.Find_none ? String_.Find_none : rv + Len(find);
 	}
-	public static String new_ascii_(byte[] bry)						{return bry == null ? null : gplx.texts.Encoding_.XtoStrAscii(bry, 0, bry.length);}
-	public static String new_ascii_(byte[] bry, int bgn, int end)	{return gplx.texts.Encoding_.XtoStrAscii(bry, bgn, end - bgn);}
-	public static String new_utf8_(byte[] bry)						{return gplx.texts.Encoding_.XtoStr(bry);}
-	public static String new_utf8_(byte[] bry, int bgn, int end)	{return gplx.texts.Encoding_.XtoStr(bry, bgn, end - bgn);}
-	public static String new_utf8_null_safe_(byte[] bry)			{return bry == null ? null : gplx.texts.Encoding_.XtoStr(bry, 0, bry.length);}
-	public static String new_utf8_len_safe_(byte[] ary, int bgn, int len) {
-		if (bgn + len > ary.length) len = ary.length - bgn;
-		return gplx.texts.Encoding_.XtoStr(ary, bgn, len);
-	}
-	public static String new_utf8_len_(byte[] ary, int bgn, int len) {return gplx.texts.Encoding_.XtoStr(ary, bgn, len);}
-	public static String new_utf8_safe_(byte[] bry, int bgn, int end){try {return gplx.texts.Encoding_.XtoStr(bry, bgn, end - bgn);} catch (Exception e) {return Err_.Message_gplx(e);}}
 	public static int Count(String s, String part) {
 		int count = 0, pos = -1;	// -1 b/c first pass must be 0 (see pos + 1 below)
 		do {
 			pos = FindFwd(s, part, pos + 1);
-			if (pos == String_.NotFound) break;
+			if (pos == String_.Find_none) break;
 			count++;
 		}	while (true);
 		return count;
@@ -132,8 +117,6 @@ public class String_ implements GfoInvkAble {
 	}
 	public static boolean EqNot(String lhs, String rhs) {return !Object_.Eq(lhs, rhs);}
 	public static boolean EqEmpty(String lhs, String rhs) {return lhs.equals("");} 
-	public static boolean Len_gt_0(String s) {return s != null && s.length() >  0;}	
-	public static boolean Len_eq_0(String s) {return s == null || s.length() == 0;}	
 	public static String IfNullOrEmpty(String s, String or) {return s == null || s.length() == 0 ? or : s;}	
 	public static int Compare(String lhs, String rhs) {return lhs.compareTo(rhs);} // NOTE: Compare instead of compareTo b/c javafy lowercases compareTo
 	public static int Compare_ignoreCase(String lhs, String rhs) {
@@ -171,7 +154,7 @@ public class String_ implements GfoInvkAble {
 			rv[i] = (int)s.charAt(i);		
 		return rv;
 	}
-	public static String Coalesce(String s, String alt) {return Len(s) == 0 ? alt : s;}
+	public static String Coalesce(String s, String alt) {return Len_eq_0(s) ? alt : s;}
 	public static boolean In(String s, String... ary) {
 		for (String itm : ary)
 			if (String_.Eq(s, itm)) return true;
@@ -197,11 +180,11 @@ public class String_ implements GfoInvkAble {
 	}
 	public static String MidByLen(String s, int bgn, int len) {return Mid_lang(s, bgn, len);}
 	public static String GetStrBefore(String s, String spr) {
-		int sprPos = String_.FindFwd(s, spr); if (sprPos == String_.NotFound) throw Err_.new_("could not find spr").Add("s", s).Add("spr", spr);
+		int sprPos = String_.FindFwd(s, spr); if (sprPos == String_.Find_none) throw Err_.new_("could not find spr").Add("s", s).Add("spr", spr);
 		return Mid(s, 0, sprPos);
 	}
 	public static String GetStrAfter(String s, String spr) {
-		int sprPos = String_.FindFwd(s, spr); if (sprPos == String_.NotFound) throw Err_.new_("could not find spr").Add("s", s).Add("spr", spr);
+		int sprPos = String_.FindFwd(s, spr); if (sprPos == String_.Find_none) throw Err_.new_("could not find spr").Add("s", s).Add("spr", spr);
 		return Mid(s, sprPos + 1);
 	}
 	public static String LimitToFirst(String s, int len) {
@@ -234,7 +217,6 @@ public class String_ implements GfoInvkAble {
 		if (s == null) throw Err_arg.null_("s"); if (find == null) throw Err_arg.null_("find");
 		return HasAtEnd(s, find) ? Mid_lang(s, 0, Len(s) - Len(find)) : s;
 	}
-	public static String CaseNormalize(boolean caseSensitive, String s) {return caseSensitive ? s : String_.Lower(s);}
 	public static String LowerFirst(String s) {
 		int len = Len(s); if (len == 0) return String_.Empty;
 		String char0 = Lower(Mid_lang(s, 0, 1));
@@ -303,7 +285,7 @@ public class String_ implements GfoInvkAble {
 		for (int i = 0; i < aryLen; i++) {
 			if (i != 0) sb.Add(separator);
 			Object val = ary[i];
-			sb.Add_obj(Object_.XtoStr_OrEmpty(val));
+			sb.Add_obj(Object_.Xto_str_strict_or_empty(val));
 		}
 		return sb.XtoStr();			
 	}
@@ -336,7 +318,7 @@ public class String_ implements GfoInvkAble {
 			sb.Add(val).Add("\n");
 		return sb.XtoStr();
 	}
-	public static String Concat_lines_nl_skipLast(String... ary) {
+	public static String Concat_lines_nl_skip_last(String... ary) {
 		String_bldr sb = String_bldr_.new_();
 		int ary_len = ary.length; int ary_end = ary_len - 1;
 		for (int i = 0; i < ary_len; i++) {
@@ -347,6 +329,16 @@ public class String_ implements GfoInvkAble {
 	}
 
 	public static String[] Ary(String... ary) {return ary;}
+	public static String[] Ary_wo_null(String... ary) {
+		ListAdp list = ListAdp_.new_();
+		int len = ary.length;
+		for (int i = 0; i < len; ++i) {
+			String itm = ary[i];
+			if (itm == null) continue;
+			list.Add(itm);
+		}
+		return list.XtoStrAry();
+	}
 	public static String AryXtoStr(String... ary) {
 		String_bldr sb = String_bldr_.new_();
 		for (String s : ary)
@@ -362,13 +354,13 @@ public class String_ implements GfoInvkAble {
 			c = String_.CharAt(raw, i);
 			if (c == dlm) {
 				if (!addEmptyIfDlmIsLast && sb.Count() == 0 && i == rawLen - 1) {}
-				else list.Add(sb.XtoStrAndClear());
+				else list.Add(sb.Xto_str_and_clear());
 			}
 			else
 				sb.Add(c);
 		}
 		if (sb.Count() > 0)
-			list.Add(sb.XtoStrAndClear());
+			list.Add(sb.Xto_str_and_clear());
 		return list.XtoStrAry();
 	}
 	public static String[] Split(String s, String separator) {return Split_do(s, separator, false);}
@@ -393,7 +385,7 @@ public class String_ implements GfoInvkAble {
 				else if (c == bracketEnd) {
 					int aryIdx = Int_.parse_or_(numberStr, Int_.MinValue);
 					if (aryIdx != Int_.MinValue && Int_.Between(aryIdx, 0, aryLength - 1))	// check (a) aryIdx is num; (b) aryIdx is in bounds
-						aryVal = Object_.XtoStr_OrEmpty(ary[aryIdx]);
+						aryVal = Object_.Xto_str_strict_or_empty(ary[aryIdx]);
 					else
 						aryVal = String_.Concat_any(bracketBgn, numberStr, bracketEnd);		// not valid, just add String
 					sb.Add(aryVal);
@@ -437,7 +429,7 @@ public class String_ implements GfoInvkAble {
 		while (true) {
 			if (sprMatched
 				|| i == textLength) {	// last pass; add whatever's in sb to list
-				list.Add(sb.XtoStrAndClear());
+				list.Add(sb.Xto_str_and_clear());
 				if (sprMatched && i == textLength) list.Add(""); // if s ends with spr and last pass, add emptyString as last
 				sprMatched = false;
 			}
@@ -464,7 +456,7 @@ public class String_ implements GfoInvkAble {
 				i++;
 			}
 		}		
-		return (String[])list.XtoAry(String.class);
+		return (String[])list.Xto_ary(String.class);
 	}
 	static String Mid_lang(String s, int bgn, int len) {return s.substring(bgn, bgn + len);}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
@@ -487,11 +479,57 @@ public class String_ implements GfoInvkAble {
 	}	public static final String Invk_Replace = "Replace", Invk_Len = "Len", Invk_PadBgn = "PadBgn";
         public static final String_ Gfs = new String_();
 	public static String Extract_after_bwd(String src, String dlm) {
-		int dlm_pos = String_.FindBwd(src, dlm); if (dlm_pos == String_.NotFound) return String_.Empty;
+		int dlm_pos = String_.FindBwd(src, dlm); if (dlm_pos == String_.Find_none) return String_.Empty;
 		int src_len = String_.Len(src); if (dlm_pos == src_len - 1) return String_.Empty;
 		return String_.Mid(src, dlm_pos + 1, src_len);
 	}
 	public static String Replace_by_pos(String v, int del_bgn, int del_end, String repl) {
 		return String_.Mid(v, 0, del_bgn) + repl + String_.Mid(v, del_end, String_.Len(v));
+	}
+	public static String read_(Object obj) {// NOTE: same as cast_; for consistent readability only
+		String rv = as_(obj);
+		if (rv == null && obj != null) throw Err_.type_mismatch_(String.class, obj); // NOTE: obj != null needed; EX: cast_(null) --> null
+		return rv;
+	}
+	public static String[] Ary(byte[]... ary) {
+		if (ary == null) return String_.Ary_empty;
+		int ary_len = ary.length;
+		String[] rv = new String[ary_len];
+		for (int i = 0; i < ary_len; i++)
+			rv[i] = String_.new_utf8_(ary[i]);
+		return rv;
+	}
+	public static String [] Ary_filter(String[] src, String[] filter) {
+		HashAdp hash = HashAdp_.new_();
+		int len = filter.length;
+		for (int i = 0; i < len; i++) {
+			String itm = filter[i];
+			hash.AddReplace(itm, itm);				
+		}
+		ListAdp rv = ListAdp_.new_();
+		len = src.length;
+		for (int i = 0; i < len; i++) {
+			String itm = src[i];
+			if (hash.Has(itm)) rv.Add(itm);
+		}
+		return rv.XtoStrAry();
+	}
+	public static String[] Ary_flatten(String[][] src_ary) {
+		int trg_len = 0;
+		int src_len = Array_.Len(src_ary);
+		for (int i = 0; i < src_len; i++) {
+			String[] itm = src_ary[i];
+			if (itm != null) trg_len += Array_.Len(itm);
+		}
+		String[] trg_ary = new String[trg_len];
+		trg_len = 0;
+		for (int i = 0; i < src_len; i++) {
+			String[] itm = src_ary[i];
+			if (itm == null) continue;
+			int itm_len = Array_.Len(itm);
+			for (int j = 0; j < itm_len; j++)
+				trg_ary[trg_len++] = itm[j];
+		}
+		return trg_ary;
 	}
 }

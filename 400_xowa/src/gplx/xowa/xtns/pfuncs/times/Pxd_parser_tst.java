@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gplx.xowa.xtns.pfuncs.times; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.pfuncs.*;
 import org.junit.*;
 public class Pxd_parser_tst {
-	ByteAryBfr bfr = new ByteAryBfr(16); Pxd_parser parser = new Pxd_parser();
+	Bry_bfr bfr = Bry_bfr.new_(16); Pxd_parser parser = new Pxd_parser();
 	@Before public void init() {Tfds.Now_enabled_y_(); Tfds.Now_set(test_date);} DateAdp test_date = DateAdp_.parse_fmt("2012-02-27", "yyyy-MM-dd");
 	@After public void teardown() {Tfds.Now_enabled_n_();}
 	@Test  public void Month_name_0__day__year()					{tst_date_("Mar 2 2001"				, "2001-03-02");}			// y:Mar-02-2001;Mar.02.2001;Mar 02, 2001 n:Mar/02/2001;Feb,05,2011 
@@ -53,35 +53,35 @@ public class Pxd_parser_tst {
 	@Test  public void Time_all()									{tst_both_("04-03-05 06:07:08"		, "2005-03-04 06:07:08.000");}
 	@Test  public void Unit_day_pos()								{tst_date_("+ 3 days"				, "2012-03-01");}
 	@Test  public void Unit_day_neg()								{tst_date_("- 3 days"				, "2012-02-24");}
-	@Test  public void Unit_day_neg_w_day()							{tst_date_("30 May 2012 -1 days"	, "2012-05-29");}	// EX.WP: Main Page
+	@Test  public void Unit_day_neg_w_day()							{tst_date_("30 May 2012 -1 days"	, "2012-05-29");}	// PAGE:en.w:Main Page
 	@Test  public void Unit_week()									{tst_date_("- 1 week"				, "2012-02-26");}  // PURPOSE.FIX: "week" was not being handled; error on main Page; EX:da.wikipedia.org/Main_Page
 	@Test  public void Time_len_6()									{tst_time_("041526"					, "04:15:26.000");}
-	@Test  public void Err_one_num()								{tst_time_("2"						, "Invalid year: 2");}	// occurs on some templates; EX.WP: Voyager 1 and {{date}}
+	@Test  public void Err_one_num()								{tst_time_("2"						, "Invalid year: 2");}	// occurs on some templates; PAGE:en.w:Voyager 1 and {{date}}
 	@Test  public void Dmy_at_y_dot()								{tst_date_("1.2.70"					, "1970-02-01");}	// PURPOSE: dmy when delimiter is dot
 	@Test  public void Mdy_at_y_slash()								{tst_date_("1/2/70"					, "1970-01-02");}	// PURPOSE: mdy when delimiter is slash
 	@Test  public void Ago()										{tst_date_("1 month ago"			, "2012-01-27");}
 
 	private void tst_date_(String raw, String expd) {
-		byte[] raw_ary = ByteAry_.new_utf8_(raw);
+		byte[] raw_ary = Bry_.new_utf8_(raw);
 		DateAdp date = parser.Parse(raw_ary, bfr);
 		if (date == DateAdp_.MinValue)
-			Tfds.Eq(expd, bfr.XtoStrAndClear(), raw);
+			Tfds.Eq(expd, bfr.Xto_str_and_clear(), raw);
 		else
 			Tfds.Eq(expd, date.XtoStr_fmt_yyyy_MM_dd());
 	}
 	private void tst_time_(String raw, String expd) {
-		byte[] raw_ary = ByteAry_.new_utf8_(raw);
+		byte[] raw_ary = Bry_.new_utf8_(raw);
 		DateAdp date = parser.Parse(raw_ary, bfr);
 		if (date == DateAdp_.MinValue)
-			Tfds.Eq(expd, bfr.XtoStrAndClear(), raw);
+			Tfds.Eq(expd, bfr.Xto_str_and_clear(), raw);
 		else
 			Tfds.Eq(expd, date.XtoStr_fmt("HH:mm:ss.fff"));
 	}
 	private void tst_both_(String raw, String expd) {
-		byte[] raw_ary = ByteAry_.new_utf8_(raw);
+		byte[] raw_ary = Bry_.new_utf8_(raw);
 		DateAdp date = parser.Parse(raw_ary, bfr);
 		if (date == DateAdp_.MinValue)
-			Tfds.Eq(expd, bfr.XtoStrAndClear(), raw);
+			Tfds.Eq(expd, bfr.Xto_str_and_clear(), raw);
 		else
 			Tfds.Eq(expd, date.XtoStr_fmt("yyyy-MM-dd HH:mm:ss.fff"));
 	}

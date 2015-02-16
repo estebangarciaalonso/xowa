@@ -22,7 +22,7 @@ public class Xow_lang_grp implements GfoInvkAble {
 	public byte[] Name() {return name;} public Xow_lang_grp Name_(byte[] v) {name = v; return this;} private byte[] name;
 	public int Sort_idx() {return sort_idx;} public Xow_lang_grp Sort_idx_(int v) {sort_idx = v; return this;} private int sort_idx = 0;
 	public byte Sort_mode() {return sort_mode;} public Xow_lang_grp Sort_mode_(byte v) {sort_mode = v; return this;} private byte sort_mode = Sort_mode_page_name;
-	public Xow_lang_itm[] Itms() {if (itms == null) itms = (Xow_lang_itm[])itm_list.XtoAry(Xow_lang_itm.class); return itms;} private Xow_lang_itm[] itms;
+	public Xow_lang_itm[] Itms() {if (itms == null) itms = (Xow_lang_itm[])itm_list.Xto_ary(Xow_lang_itm.class); return itms;} private Xow_lang_itm[] itms;
 	public int Itms_len() {return this.Itms().length;}
 	public Xow_lang_itm Itms_get(int i) {return this.Itms()[i];}
 	public void Itms_add(Xow_lang_itm itm) {itms = null; itm_list.Add(itm);} ListAdp itm_list = ListAdp_.new_();
@@ -32,14 +32,14 @@ public class Xow_lang_grp implements GfoInvkAble {
 		Xow_lang_itm[] itms_ary = this.Itms();
 		int itms_len = itms_ary.length;
 		for (int i = 0; i < itms_len; i++)
-			itms_ary[i].Atrs_set(null, false);	// clear out pre-existing page names; needed b/c this struct is a singleton for entire wiki
+			itms_ary[i].Atrs_set(null, false, null);	// clear out pre-existing page names; needed b/c this struct is a singleton for entire wiki
 		itms_active_len = 0;
 	}
-	public ByteAryFmtr Html_all() {return html_all;} ByteAryFmtr html_all; public Xow_lang_grp Html_all_(String s) {html_all = ByteAryFmtr.new_(s, "all_name", "grps"); return this;}
-	public byte[] Html_grp_bgn() {return html_grp_bgn;} private byte[] html_grp_bgn = ByteAry_.new_ascii_("\n    <tr>");
-	public byte[] Html_grp_end() {return html_grp_end;} private byte[] html_grp_end = ByteAry_.new_ascii_("\n    </tr>");
-	public ByteAryFmtr Html_itm() {return html_itm;} ByteAryFmtr html_itm; public Xow_lang_grp Html_itm_(String s) {html_itm = ByteAryFmtr.new_(s, "lang_code", "lang_domain", "lang_name", "lang_href", "pagename_translation"); return this;}
-	public void Html_bld(ByteAryBfr bfr, Xow_wiki wiki) {
+	public Bry_fmtr Html_all() {return html_all;} Bry_fmtr html_all; public Xow_lang_grp Html_all_(String s) {html_all = Bry_fmtr.new_(s, "all_name", "grps"); return this;}
+	public byte[] Html_grp_bgn() {return html_grp_bgn;} private byte[] html_grp_bgn = Bry_.new_ascii_("\n    <tr>");
+	public byte[] Html_grp_end() {return html_grp_end;} private byte[] html_grp_end = Bry_.new_ascii_("\n    </tr>");
+	public Bry_fmtr Html_itm() {return html_itm;} Bry_fmtr html_itm; public Xow_lang_grp Html_itm_(String s) {html_itm = Bry_fmtr.new_(s, "lang_code", "lang_domain", "lang_name", "lang_href", "pagename_translation", "page_badge"); return this;}
+	public void Html_bld(Bry_bfr bfr, Xow_wiki wiki) {
 		Xow_lang_itm[] itms_ary = this.Itms();
 		if (sort_mode == Xow_lang_grp.Sort_mode_page_name)
 			Array_.Sort(itms_ary, Xow_lang_itm_sorter_page_name._);
@@ -61,22 +61,22 @@ public class Xow_lang_grp implements GfoInvkAble {
 	public static Xow_lang_grp dflt_(Xow_lang_mgr lang_mgr, int id, byte[] key) {
 		Xow_lang_grp rv = new Xow_lang_grp();
 		rv.lang_mgr = lang_mgr; rv.id = id; rv.key = key; rv.name = key;
-		rv.Html_all_(String_.Concat_lines_nl_skipLast
-			(	""
-			,	"  <h4>~{all_name}</h4>"
-			,	"  <table style='width: 100%;'>~{grps}"
-			,	"  </table>"
-			));
-		rv.Html_itm_(String_.Concat_lines_nl_skipLast
-			(	""
-			,	"      <td style='width: 10%; padding-bottom: 5px;'>~{lang_name}</td><td style='width: 20%; padding-bottom: 5px;'><a hreflang=\"~{lang_code}\" title=\"~{pagename_translation}\" href=\"~{lang_href}\">~{pagename_translation}</a></td><td style='width: 3%; padding-bottom: 5px;'></td>"
-			));
+		rv.Html_all_(String_.Concat_lines_nl_skip_last
+		( ""
+		, "  <h4>~{all_name}</h4>"
+		, "  <table style='width: 100%;'>~{grps}"
+		, "  </table>"
+		));
+		rv.Html_itm_(String_.Concat_lines_nl_skip_last
+		( ""
+		, "      <td style='width: 10%; padding-bottom: 5px;'>~{lang_name}</td><td style='width: 20%; padding-bottom: 5px;'><li~{page_badge}><a hreflang=\"~{lang_code}\" title=\"~{pagename_translation}\" href=\"~{lang_href}\">~{pagename_translation}</a></li></td><td style='width: 3%; padding-bottom: 5px;'></td>"
+		));
 		return rv;
 	}	private Xow_lang_grp() {}
 	Xow_lang_mgr lang_mgr;
 }
 class Xow_lang_itm_sorter_page_name implements gplx.lists.ComparerAble {
-	public int compare(Object lhsObj, Object rhsObj) {return ByteAry_.Compare(((Xow_lang_itm)lhsObj).Page_name(), ((Xow_lang_itm)rhsObj).Page_name());}
+	public int compare(Object lhsObj, Object rhsObj) {return Bry_.Compare(((Xow_lang_itm)lhsObj).Page_name(), ((Xow_lang_itm)rhsObj).Page_name());}
 	public static final Xow_lang_itm_sorter_page_name _ = new Xow_lang_itm_sorter_page_name(); Xow_lang_itm_sorter_page_name() {}
 }
 class Xow_lang_grp_sorter_sort_idx implements gplx.lists.ComparerAble {

@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.cfgs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.strings.*;
 public class Xob_wiki_cfg_bldr_tst {
 	Xob_wiki_cfg_bldr_fxt fxt = new Xob_wiki_cfg_bldr_fxt();
 	@Before public void init() {fxt.Clear();}
@@ -70,7 +70,7 @@ public class Xob_wiki_cfg_bldr_tst {
 //				String line = lines[1];
 //				line = String_.Replace(line, "/** ", "");
 //				int pos = String_.FindBwd(line, " (");
-//				if (pos == String_.NotFound) continue;	// en; en_rtl have no "language" line
+//				if (pos == String_.Find_none) continue;	// en; en_rtl have no "language" line
 //				if (	String_.HasAtBgn(lang_code, "be_")
 //					|| 	String_.HasAtBgn(lang_code, "crh_")
 //					|| 	String_.HasAtBgn(lang_code, "kk_")
@@ -79,7 +79,7 @@ public class Xob_wiki_cfg_bldr_tst {
 //					|| 	String_.In(lang_code, "de_formal", "nb", "nl_informal", "nn", "no")
 //					) {
 //					int new_pos = String_.FindBwd(line, " (", pos - 1);
-//					if (new_pos != String_.NotFound)
+//					if (new_pos != String_.Find_none)
 //						pos = new_pos;
 //				}
 //				line = Replace_by_pos(line, pos, pos + 2, "|");
@@ -89,7 +89,7 @@ public class Xob_wiki_cfg_bldr_tst {
 //				String[] terms = String_.Split(line, '|');
 //				sb.Add(lang_code).Add("|").Add(String_.Trim(terms[0])).Add("|").Add(String_.Trim(terms[1])).Add("\n");
 //			}
-//			Tfds.Write(sb.XtoStrAndClear());
+//			Tfds.Write(sb.Xto_str_and_clear());
 //		}
 	@Test  public void Ns_aliases() {
 		Io_mgr._.InitEngine_mem();
@@ -111,7 +111,7 @@ public class Xob_wiki_cfg_bldr_tst {
 		));
 		String[] wikis = new String[] {"en.wikipedia.org"}; String protocol = "mem/";
 		Tfds.Eq_str_lines(Query_ns(protocol, gplx.ios.IoEngine_.MemKey, wikis), String_.Concat_lines_nl
-		(	"app.wiki_cfg_bldr.get('en.wikipedia.org').new_cmd_('wiki.ns_mgr.aliases', 'ns_mgr.add_alias_bulk(\""
+		(	"app.bldr.wiki_cfg_bldr.get('en.wikipedia.org').new_cmd_('wiki.ns_mgr.aliases', 'ns_mgr.add_alias_bulk(\""
 		,	"4|WP"
 		,	"5|WT"
 		,	"6|Image"
@@ -131,20 +131,20 @@ public class Xob_wiki_cfg_bldr_tst {
 			if (xml == null) continue;	// not found
 			gplx.xmls.XmlDoc xdoc = gplx.xmls.XmlDoc_.parse_(xml);
 			gplx.xmls.XmlNde xnde = gplx.xmls.Xpath_.SelectFirst(xdoc.Root(), "query/namespacealiases");
-			sb.Add("app.wiki_cfg_bldr.get('").Add(wiki).Add("').new_cmd_('wiki.ns_mgr.aliases', 'ns_mgr.add_alias_bulk(\"\n");
+			sb.Add("app.bldr.wiki_cfg_bldr.get('").Add(wiki).Add("').new_cmd_('wiki.ns_mgr.aliases', 'ns_mgr.add_alias_bulk(\"\n");
 			int xndes_len = xnde.SubNdes().Count();
 			for (int j = 0; j < xndes_len; j++) {
 				gplx.xmls.XmlNde ns_nde = xnde.SubNdes().FetchAt(j);
 				if (!String_.Eq(ns_nde.Name(), "ns")) continue;
 				int id = Int_.parse_(ns_nde.Atrs().FetchValOr("id", "-1"));
 				String name = String_.Replace(String_.Replace(ns_nde.Text_inner(), " ", "_"), "'", "''");
-				sb.Add(Int_.XtoStr(id)).Add("|").Add(String_.Trim(name)).Add_char_nl();
+				sb.Add(Int_.Xto_str(id)).Add("|").Add(String_.Trim(name)).Add_char_nl();
 			}
 			sb.Add("\");');\n");
 			}
 			catch(Exception e) {sb.Add("// fail: " + wiki + " " + Err_.Message_gplx_brief(e)).Add_char_nl();}
 		}
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}
 }
 class Xob_wiki_cfg_bldr_fxt {
@@ -172,7 +172,7 @@ class Xob_wiki_cfg_bldr_fxt {
 			KeyVal kv = (KeyVal)hash.FetchAt(i);
 			String wiki = kv.Key();
 			String expd = (String)kv.Val();
-			String actl = Io_mgr._.LoadFilStr(app.User().Fsys_mgr().Wiki_root_dir().GenSubFil_nest("#cfg", "system", wiki + ".gfs"));
+			String actl = Io_mgr._.LoadFilStr(app.Fsys_mgr().Cfg_wiki_core_dir().GenSubFil(wiki + ".gfs"));
 			Tfds.Eq_str_lines(expd, actl);
 		}
 	}

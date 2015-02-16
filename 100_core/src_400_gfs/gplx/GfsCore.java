@@ -116,10 +116,10 @@ class GfsCore_ {
 			Object primitive = null;
 			if (invk == null) {								// rv is primitive; find appropriate mgr
 				Class<?> type = rv.getClass();
-				if		(type == String.class)	invk = String_.Gfs;
-				else if (Int_.TypeMatch(type))		invk = Int_.Gfs;
-				else if (Bool_.TypeMatch(type))		invk = Bool_.Gfs;
-				else throw Err_.new_("unknown primitive").Add("type", ClassAdp_.NameOf_type(type)).Add("obj", Object_.XtoStr_OrNullStr(rv));
+				if		(type == String.class)					invk = String_.Gfs;
+				else if (Int_.TypeMatch(type))						invk = Int_.Gfs;
+				else if (ClassAdp_.Eq(type, Bool_.Cls_ref_type))	invk = Bool_.Gfs;
+				else throw Err_.new_("unknown primitive").Add("type", ClassAdp_.NameOf_type(type)).Add("obj", Object_.Xto_str_strict_or_null_mark(rv));
 				primitive = rv;
 			}
 			Object exec_rv = null;

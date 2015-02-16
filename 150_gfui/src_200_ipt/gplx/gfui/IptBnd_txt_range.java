@@ -86,7 +86,7 @@ public class IptBnd_txt_range implements InjectAble, GfoInvkAble, GfoEvObj {
 		}
 		return Int_.MinValue;
 	}
-        public static IptBnd_txt_range new_(GfoEvObj propSrc) {
+	public static IptBnd_txt_range new_(GfoEvObj propSrc) {
 		IptBnd_txt_range rv = new IptBnd_txt_range();
 		rv.propSrc = propSrc; rv.propInvk = GfoInvkAble_.as_(propSrc);
 		rv.initSrc = propSrc;

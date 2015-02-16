@@ -16,10 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.html.sidebar; import gplx.*; import gplx.xowa.*; import gplx.xowa.html.*;
-import org.junit.*;	
+import org.junit.*; import gplx.core.strings.*;
 public class Xowh_sidebar_mgr_tst {
-	Xowh_sidebar_mgr_fxt fxt = new Xowh_sidebar_mgr_fxt();
-	@Before public void init() {fxt.Clear();}
+	@Before public void init() {fxt.Clear();} private Xowh_sidebar_mgr_fxt fxt = new Xowh_sidebar_mgr_fxt();
 	@Test  public void Grp() {
 		fxt
 		.Init_msg_grp("key", "text", "title")
@@ -154,29 +153,51 @@ public class Xowh_sidebar_mgr_tst {
 		);
 	}
 	@Test  public void Itm_template_key() {
-		fxt
-		.Test_parse(String_.Concat_lines_nl
+		fxt.Test_parse(String_.Concat_lines_nl
 		(	"** {{ns:Special}}:Random|main"
 		)
 		,	fxt.nav_itm_("main", Null_str, Null_str, "/wiki/Special:Random")
 		);
 	}
+	@Test  public void Popups() {
+		fxt.Init_popups_enabled_(true)
+		.Test_parse(String_.Concat_lines_nl
+		(	"* navigation"
+		,	"** mainpage|mainpage-description"
+		)
+		, 	fxt.nav_grp_("navigation", "").Itms_add
+		(		fxt.nav_itm_("mainpage-description", Null_str, Null_str, "/wiki/Mainpage")
+		)
+		);
+		fxt.Test_html(String_.Concat_lines_nl
+		(	"<div class=\"portal\" id='n-navigation'>"
+		,	"  <h3>navigation</h3>"
+		,	"  <div class=\"body\">"
+		,	"    <ul>"
+		,	"      <li id=\"n-mainpage-description\"><a href=\"/wiki/Mainpage\" class='xowa-hover-off' title=\"\">mainpage-description</a></li>"
+		,	"    </ul>"
+		,	"  </div>"
+		,	"</div>"
+		));
+	}
 }
 class Xowh_sidebar_mgr_fxt {
-	private Xoa_app app; private Xow_wiki wiki; private Xowh_sidebar_mgr sidebar_mgr; private ByteAryBfr bfr, comment_bfr;
+	private Xoa_app app; private Xow_wiki wiki; private Xowh_sidebar_mgr sidebar_mgr; private Bry_bfr bfr, comment_bfr;
 	public Xowh_sidebar_mgr_fxt Clear() {
 //			if (app == null) {
 			app = Xoa_app_fxt.app_();
 			wiki = Xoa_app_fxt.wiki_tst_(app);
 			sidebar_mgr = wiki.Html_mgr().Portal_mgr().Sidebar_mgr();
-			bfr = ByteAryBfr.reset_(Io_mgr.Len_kb);
-			comment_bfr = ByteAryBfr.reset_(Io_mgr.Len_kb);
+			bfr = Bry_bfr.reset_(Io_mgr.Len_kb);
+			comment_bfr = Bry_bfr.reset_(Io_mgr.Len_kb);
+			Init_popups_enabled_(false);
 //			}
 		return this;
 	}
 	public Xow_wiki Wiki() {return wiki;}
-	public Xowh_sidebar_itm nav_grp_(String text, String title, Xowh_sidebar_itm... itms) {return new Xowh_sidebar_itm(Xowh_sidebar_itm.Tid_grp).Text_(ByteAry_.new_ascii_(text)).Title_(ByteAry_.new_ascii_(title));}
-	public Xowh_sidebar_itm nav_itm_(String text, String title, String accesskey, String href) {return new Xowh_sidebar_itm(Xowh_sidebar_itm.Tid_itm).Text_(ByteAry_.new_ascii_(text)).Title_(ByteAry_.new_ascii_(title)).Accesskey_(ByteAry_.new_ascii_(accesskey)).Href_(ByteAry_.new_ascii_(href));}
+	public Xowh_sidebar_itm nav_grp_(String text, String title, Xowh_sidebar_itm... itms) {return new Xowh_sidebar_itm(Xowh_sidebar_itm.Tid_grp).Text_(Bry_.new_ascii_(text)).Title_(Bry_.new_ascii_(title));}
+	public Xowh_sidebar_itm nav_itm_(String text, String title, String accesskey, String href) {return new Xowh_sidebar_itm(Xowh_sidebar_itm.Tid_itm).Text_(Bry_.new_ascii_(text)).Title_(Bry_.new_ascii_(title)).Accesskey_(Bry_.new_ascii_(accesskey)).Href_(Bry_.new_ascii_(href));}
+	public Xowh_sidebar_mgr_fxt Init_popups_enabled_(boolean v) {app.Api_root().Html().Modules().Popups().Enabled_(v); return this;}
 	public Xowh_sidebar_mgr_fxt Init_msg_grp(String key, String text, String title) {
 		Init_msg(key, text);
 		Init_msg("tooltip-n-" + key, title);
@@ -191,17 +212,17 @@ class Xowh_sidebar_mgr_fxt {
 	}
 	public Xowh_sidebar_mgr_fxt Init_msg(String key, String val) {
 		Xol_msg_mgr msg_mgr = wiki.Lang().Msg_mgr();
-		Xol_msg_itm msg_itm = msg_mgr.Itm_by_key_or_new(ByteAry_.new_ascii_(key));
-		msg_itm.Atrs_set(ByteAry_.new_ascii_(val), false, String_.Has(val, "{{"));
+		Xol_msg_itm msg_itm = msg_mgr.Itm_by_key_or_new(Bry_.new_ascii_(key));
+		msg_itm.Atrs_set(Bry_.new_ascii_(val), false, String_.Has(val, "{{"));
 		return this;
 	}
 	public void Test_parse(String raw, Xowh_sidebar_itm... expd) {
-		sidebar_mgr.Parse(bfr, comment_bfr, ByteAry_.new_ascii_(raw));
+		sidebar_mgr.Parse(bfr, comment_bfr, Bry_.new_ascii_(raw));
 		Tfds.Eq_str_lines(Xto_str(expd), Xto_str_grps(sidebar_mgr));
 	}
 	public void Test_html(String expd) {
 		sidebar_mgr.Bld_html(bfr);
-		Tfds.Eq_str_lines(expd, bfr.XtoStrAndClear());
+		Tfds.Eq_str_lines(expd, bfr.Xto_str_and_clear());
 	}
 	String Xto_str_grps(Xowh_sidebar_mgr mgr) {
 		int len = mgr.Grps_len();
@@ -216,7 +237,7 @@ class Xowh_sidebar_mgr_fxt {
 		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < ary_len; i++)
 			sb.Add(Xto_str(ary[i]));
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}
 	String Xto_str(Xowh_sidebar_itm cur) {
 		String_bldr sb = String_bldr_.new_();
@@ -232,6 +253,6 @@ class Xowh_sidebar_mgr_fxt {
 		int itms_len = cur.Itms_len();
 		for (int i = 0; i< itms_len; i++)
 			sb.Add(Xto_str(cur.Itms_get_at(i)));
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}
 }

@@ -16,7 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs; import gplx.*; import gplx.xowa.*;
-import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.xowa.specials.search.*; import gplx.xowa.ctgs.*; import gplx.xowa.dbs.tbls.*;
+import gplx.core.primitives.*; import gplx.core.strings.*;
+import gplx.dbs.*; import gplx.dbs.qrys.*; import gplx.xowa.dbs.*; import gplx.xowa.specials.search.*; import gplx.xowa.ctgs.*; import gplx.xowa.dbs.tbls.*;
 public class Db_mgr_fxt {
 	public Db_mgr_fxt Ctor_fsys()	{bldr_fxt = new Xob_fxt().Ctor(Xoa_test_.Url_root().GenSubDir("root")); return this;} 
 	public Db_mgr_fxt Ctor_mem()	{bldr_fxt = new Xob_fxt().Ctor_mem(); return this;} private Xob_fxt bldr_fxt;
@@ -32,18 +33,18 @@ public class Db_mgr_fxt {
 	public Db_mgr_fxt Exec_run(Xobd_wkr wkr)		{bldr_fxt.Run(wkr); return this;}
 	public Db_mgr_fxt Exec_run(Xob_cmd cmd)			{bldr_fxt.Run_cmds(cmd); return this;}
 	public Db_mgr_fxt Exec_run(Xobd_parser_wkr wkr) {bldr_fxt.Run(wkr); return this;}
-	public void Init_page_insert(IntRef page_id_next, int ns_id, String[] ttls) {
+	public void Init_page_insert(Int_obj_ref page_id_next, int ns_id, String[] ttls) {
 		Xow_wiki wiki = this.Wiki();
 		Xodb_page_tbl tbl_page = wiki.Db_mgr_as_sql().Tbl_page();
 		Db_stmt stmt = Db_stmt_.Null;
 		try {
-			stmt = tbl_page.Insert_stmt(wiki.Db_mgr_as_sql().Fsys_mgr().Page_provider());
+			stmt = tbl_page.Insert_stmt(wiki.Db_mgr_as_sql().Fsys_mgr().Conn_page());
 			int len = ttls.length;
 			DateAdp modified_on = Tfds.Now_time0_add_min(0);
 			for (int i = 0; i < len; i++) {
 				String ttl = ttls[i];
 				int page_id = page_id_next.Val();
-				tbl_page.Insert(stmt, page_id, ns_id, ByteAry_.new_utf8_(ttl), false, modified_on, 0, page_id, 0);
+				tbl_page.Insert(stmt, page_id, ns_id, Bry_.new_utf8_(ttl), false, modified_on, 0, page_id, 0, 0);
 				page_id_next.Val_add(1);
 			}
 		} finally {stmt.Rls();}
@@ -51,7 +52,7 @@ public class Db_mgr_fxt {
 	public void Test_load_ttl(int ns_id, String ttl_str, Xodb_page expd) {
 		Xow_wiki wiki = bldr_fxt.Wiki();
 		Xow_ns ns = wiki.Ns_mgr().Ids_get_or_null(ns_id);
-		byte[] ttl_bry = ByteAry_.new_ascii_(ttl_str);
+		byte[] ttl_bry = Bry_.new_ascii_(ttl_str);
 		wiki.Db_mgr_as_sql().Load_mgr().Load_by_ttl(actl, ns, ttl_bry);
 		Tfds.Eq(expd.Id(), actl.Id());
 		Tfds.Eq_date(expd.Modified_on(), actl.Modified_on());
@@ -67,7 +68,7 @@ public class Db_mgr_fxt {
 	public void Test_search(String search_word_str, int... expd) {
 		Xow_wiki wiki = bldr_fxt.Wiki();
 		ListAdp rv = ListAdp_.new_();
-		byte[] search_word_bry = ByteAry_.new_ascii_(search_word_str);
+		byte[] search_word_bry = Bry_.new_ascii_(search_word_str);
 		wiki.Db_mgr_as_sql().Load_mgr().Load_search(Cancelable_.Never, rv, search_word_bry, 100);
 		Tfds.Eq_ary(expd, Xto_int_ary(rv));
 	}
@@ -82,7 +83,7 @@ public class Db_mgr_fxt {
 	}
 	public void Test_category_v1(String ctg_name_str, int... expd) {
 		Xow_wiki wiki = bldr_fxt.Wiki();
-		byte[] ctg_name_bry = ByteAry_.new_ascii_(ctg_name_str);
+		byte[] ctg_name_bry = Bry_.new_ascii_(ctg_name_str);
 		Xoctg_view_ctg ctg = new Xoctg_view_ctg();
 		wiki.Db_mgr_as_sql().Load_mgr().Load_ctg_v1(ctg, ctg_name_bry);
 		Tfds.Eq_ary(expd, Xto_int_ary(ctg));
@@ -98,11 +99,11 @@ public class Db_mgr_fxt {
 				list.Add(itm.Id());
 			}
 		}
-		return (int[])list.XtoAryAndClear(int.class);
+		return (int[])list.Xto_ary_and_clear(int.class);
 	}
 	public void Test_category_v2(String ctg_name_str, int... expd) {
 		Xow_wiki wiki = bldr_fxt.Wiki();
-		byte[] ctg_name_bry = ByteAry_.new_ascii_(ctg_name_str);
+		byte[] ctg_name_bry = Bry_.new_ascii_(ctg_name_str);
 		Xoctg_data_ctg ctg = new Xoctg_data_ctg(ctg_name_bry);
 		wiki.Db_mgr_as_sql().Load_mgr().Load_ctg_v2(ctg, ctg_name_bry);
 		Tfds.Eq_ary(expd, Xto_int_ary(ctg));
@@ -122,23 +123,23 @@ public class Db_mgr_fxt {
 				list.Add(itm.Id());
 			}
 		}
-		return (int[])list.XtoAryAndClear(int.class);
+		return (int[])list.Xto_ary_and_clear(int.class);
 	}
 	public void Init_db_sqlite() {Init_db_sqlite(Xoa_test_.Url_wiki_enwiki().GenSubFil_nest("en.wikipedia.org.sqlite3"));}
 	public void Init_db_sqlite(Io_url url) {
 		Xow_wiki wiki = this.Wiki();
-		Db_provider_pool._.Clear();
+		Db_conn_pool.I.Clear();
 		Xodb_mgr_sql db_mgr = wiki.Db_mgr_create_as_sql();
 		db_mgr.Data_storage_format_(gplx.ios.Io_stream_.Tid_file);
-		db_mgr.Init_make("");
-		Db_provider provider = db_mgr.Fsys_mgr().Core_provider();
-		provider.Exec_qry(Db_qry_delete.new_all_("xowa_cfg"));
-		provider.Exec_qry(Db_qry_delete.new_all_("xowa_db"));
-		provider.Exec_qry(Db_qry_delete.new_all_("xowa_ns"));
-		provider.Exec_qry(Db_qry_delete.new_all_("page"));
-		provider.Exec_qry(Db_qry_delete.new_all_("text"));
-		provider.Exec_qry(Db_qry_delete.new_all_("category"));
-		provider.Exec_qry(Db_qry_delete.new_all_("categorylinks"));
+		db_mgr.Init_by_ns_map("");
+		Db_conn conn = db_mgr.Fsys_mgr().Conn_core();
+		conn.Exec_qry(Db_qry_delete.new_all_("xowa_cfg"));
+		conn.Exec_qry(Db_qry_delete.new_all_("xowa_db"));
+		conn.Exec_qry(Db_qry_delete.new_all_("xowa_ns"));
+		conn.Exec_qry(Db_qry_delete.new_all_("page"));
+		conn.Exec_qry(Db_qry_delete.new_all_("text"));
+		conn.Exec_qry(Db_qry_delete.new_all_("category"));
+		conn.Exec_qry(Db_qry_delete.new_all_("categorylinks"));
 	}	String dsv_db;
 	public void Init_db_tdb() {
 		Io_mgr._.InitEngine_mem();
@@ -150,7 +151,7 @@ public class Db_mgr_fxt {
 		Io_url url2 = Io_url_.mem_fil_("mem/xowa/bin/any/sql/xowa/xowa.sqlite3");
 		Io_mgr._.SaveFilStr(url2, dsv_db);
 		this.Wiki().Db_mgr_create_as_sql();// .("gplx_key=tdb;url=" + url.Raw());
-		this.Wiki().Db_mgr_as_sql().Init_make("");
+		this.Wiki().Db_mgr_as_sql().Init_by_ns_map("");
 	}
 	private static String dsv_db_() {
 		String_bldr sb = String_bldr_.new_();
@@ -163,7 +164,7 @@ public class Db_mgr_fxt {
 		dsv_tbl_text(sb);
 		dsv_tbl_category(sb);
 		dsv_tbl_categorylinks(sb);
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}
 	private static void Add_lines_w_crlf(String_bldr sb, String... ary) {
 		int len = ary.length;

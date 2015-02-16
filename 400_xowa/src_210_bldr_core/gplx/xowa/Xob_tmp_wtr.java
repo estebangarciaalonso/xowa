@@ -22,9 +22,9 @@ public class Xob_tmp_wtr {
 		this.ns_itm = ns_itm;
 		this.url_gen = url_gen;
 		this.fil_max = fil_max; 
-		bfr = ByteAryBfr.reset_(fil_max);
+		bfr = Bry_bfr.reset_(fil_max);
 	}	int fil_max;
-	public ByteAryBfr Bfr() {return bfr;} ByteAryBfr bfr;
+	public Bry_bfr Bfr() {return bfr;} Bry_bfr bfr;
 	public Io_url_gen Url_gen() {return url_gen;} Io_url_gen url_gen;
 	public void Clear() {bfr.ClearAndReset();}
 	public boolean FlushNeeded(int writeLen) {return bfr.Len() + writeLen > fil_max;} //int bfr_len;

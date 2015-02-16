@@ -27,24 +27,29 @@ import gplx.Io_url_;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-class Swt_win implements GxwWin {
+class Swt_win implements GxwWin, Swt_control {
 	public Display UnderDisplay() {return display;} private Display display;
 	public Shell UnderShell() {return shell;} private Shell shell;
+	@Override public Control Under_control() {return shell;}
+	@Override public Composite Under_composite() {return shell;}
+	@Override public Control Under_menu_control() {return shell;}
 	public Swt_win(Shell owner) 		{ctor(new Shell(owner, SWT.RESIZE | SWT.DIALOG_TRIM), owner.getDisplay());}
 	public Swt_win(Display display) 	{ctor(new Shell(display), display);	}
-	Swt_ShowLnr showLnr;	// use ptr to dispose later
+	Swt_lnr_show showLnr;	// use ptr to dispose later
 	void ctor(Shell shell, Display display) {
 		this.shell = shell;		
 		this.display = display;
 		ctrlMgr = new Swt_core_cmds(shell);
-		showLnr = new Swt_ShowLnr(this);
-		resizeLnr = new Swt_ResizeLnr(this);
+		showLnr = new Swt_lnr_show(this);
+		resizeLnr = new Swt_lnr_resize(this);
 		shell.addListener(SWT.Show, showLnr);
 		shell.addListener(SWT.Resize, resizeLnr);
 	}
-	Swt_ResizeLnr resizeLnr;
+	Swt_lnr_resize resizeLnr;
 	public void ShowWin() 		{shell.setVisible(true);}
 	public void HideWin() 		{shell.setVisible(false);}
 	public boolean Maximized() 	{return shell.getMaximized();} public void Maximized_(boolean v) {shell.setMaximized(v);}

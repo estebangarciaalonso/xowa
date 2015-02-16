@@ -39,7 +39,26 @@ public class Yn {
 		if (v_int == Bool_.__int) Err_mgr._.unhandled_(v);
 		return v_int == Bool_.Y_int;
 	}
-	public static String X_to_str(boolean v) {return v ? "y" : "n";}
+	public static String Xto_str(boolean v) {return v ? "y" : "n";}
+	public static String Xto_nullable_str(byte v) {
+		switch (v) {
+			case Bool_.Y_byte:		return "y";
+			case Bool_.N_byte:		return "n";
+			case Bool_.__byte:		return "?";
+			default:				throw Err_.unhandled(v);
+		}
+	}
+	public static byte Xto_nullable_byte(String v) {
+		if (v != null && String_.Len(v) == 1) {
+			char c = String_.CharAt(v, 0);
+			switch (c) {
+				case 'y':			return Bool_.Y_byte;
+				case 'n':			return Bool_.N_byte;
+				case '?':			return Bool_.__byte;
+			}
+		}
+		throw Err_.unhandled(v);
+	}
 	public static boolean store_bool_or(SrlMgr mgr, String key, boolean or) {
 		String v = mgr.SrlStrOr(key, "");
 		return mgr.Type_rdr() ? parse_or_(v, or) : or;

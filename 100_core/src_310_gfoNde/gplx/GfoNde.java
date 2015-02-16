@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.strings.*;
 public class GfoNde implements GfoInvkAble {
 	public GfoFldList Flds() {return flds;} GfoFldList flds;
 	public HashAdp EnvVars() {return envVars;} HashAdp envVars = HashAdp_.new_();
@@ -33,7 +34,7 @@ public class GfoNde implements GfoInvkAble {
 		String_bldr sb = String_bldr_.new_();
 		for (int i = 0; i < aryLen; i++) {
 			String key = i >= flds.Count()	? "<< NULL " + i + " >>" : flds.FetchAt(i).Key();
-			String val = i >= aryLen		? "<< NULL " + i + " >>" : Object_.XtoStr_OrNullStr(ary[i]);
+			String val = i >= aryLen		? "<< NULL " + i + " >>" : Object_.Xto_str_strict_or_null_mark(ary[i]);
 			sb.Add(key).Add("=").Add(val);
 		}
 		return sb.XtoStr();

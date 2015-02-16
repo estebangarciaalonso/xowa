@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.setup.addons; import gplx.*; import gplx.xowa.*; import gplx.xowa.setup.*;
-import gplx.xowa.apps.*;
+import gplx.xowa.apps.fsys.*;
 public class Xoi_firefox_installer implements GfoInvkAble {
 	private Io_url src_xpi, trg_xpi;
 	private Io_url trg_xpi_package;
@@ -25,7 +25,7 @@ public class Xoi_firefox_installer implements GfoInvkAble {
 		src_xpi = app.Fsys_mgr().Bin_any_dir().GenSubFil_nest("firefox", "xowa_viewer", "default", "xowa_viewer@piotrex.xpi");
 		trg_xpi = app.Fsys_mgr().Bin_any_dir().GenSubFil_nest("firefox", "xowa_viewer", "install", "xowa_viewer@piotrex.xpi");
 		trg_xpi_package = trg_xpi.OwnerDir().GenSubDir("package");
-		Apps_app_mgr_eval cmd_eval = app.Url_cmd_eval();
+		Xoa_fsys_eval cmd_eval = app.Url_cmd_eval();
 		ProcessAdp.ini_(this, app.Gui_wtr(), program, cmd_eval, ProcessAdp.Run_mode_async,  0, "firefox", "\"~{url}\"", "url");
 	}
 	public void Install_via_process() {
@@ -47,9 +47,9 @@ public class Xoi_firefox_installer implements GfoInvkAble {
 	public static String Pref_update(String src, String key, String val) {		
 		String find = String_.Format("pref(\"{0}\"", key); // EX: 'pref("key"'
 		int bgn = String_.FindFwd(src, find);								// look for 'pref...'
-		if (bgn == String_.NotFound) return src;	// key not found; return;
+		if (bgn == String_.Find_none) return src;	// key not found; return;
 		int end = String_.FindFwd(src, "\n", bgn + String_.Len(find));	// look for '\n'; note that this will trim any comments; EX: pref("key", "val"); // comment will be lost
-		if (end == String_.NotFound) return src;	// nl not found; return;
+		if (end == String_.Find_none) return src;	// nl not found; return;
 		String repl = String_.Format("{0}, \"{1}\");", find, val);	// EX: 'pref("key", "val");'
 		return 		String_.Mid(src, 0, bgn)
 				+	repl

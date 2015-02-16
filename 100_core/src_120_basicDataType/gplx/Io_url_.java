@@ -45,6 +45,23 @@ public class Io_url_ {
 	public static Io_url new_dir_(String raw) {return new_any_(raw);}	// NOTE: for now, same as new_fil; stack overflow when doing new_dir
 	public static Io_url new_any_(String raw) {return new_inf_(raw, IoUrlInfoRegy._.Match(raw));}
 	public static Io_url new_inf_(String raw, IoUrlInfo info) {return String_.Eq(raw, "") ? Io_url_.Null : new Io_url(raw, info);}
+	public static Io_url http_any_(String src, boolean wnt) {
+		return new_any_(parse_http_file(src, wnt));
+	}
+	private static String parse_http_file(String v, boolean wnt) {
+		byte[] v_bry = Bry_.new_utf8_(v);
+		int v_len = v_bry.length;
+		if (Bry_.HasAtBgn(v_bry, Io_url.Http_file_bry, 0, v_len)) {
+			byte[] rv = new byte[v_len - Io_url.Http_file_len];
+			for (int i = 0; i < rv.length; i++) {
+				byte b = v_bry[i + Io_url.Http_file_len];
+				if (wnt && b == Byte_ascii.Slash) b = Byte_ascii.Backslash;
+				rv[i] = b;
+			}
+			return String_.new_utf8_(rv);
+		}
+		return v;
+	}
 
 	public static Io_url store_orFail_(SrlMgr mgr, String key, Io_url v) {
 		String s = mgr.SrlStrOr(key, v.Raw());

@@ -29,7 +29,7 @@ public class Xoh_rtl_utl_tst {
 		fxt.Test_reverse_li("<ul><li>a</li></ul>", "<ul><li>a</li></ul>");
 	}
 	@Test  public void Example() {
-		fxt.Test_reverse_li(String_.Concat_lines_nl_skipLast
+		fxt.Test_reverse_li(String_.Concat_lines_nl_skip_last
 		( "<div>"
 		, "  <ul>"
 		, "    <li>a"
@@ -40,7 +40,7 @@ public class Xoh_rtl_utl_tst {
 		, "    </li>"
 		, "  </ul>"
 		, "</div>"
-		), String_.Concat_lines_nl_skipLast
+		), String_.Concat_lines_nl_skip_last
 		( "<div>"
 		, "  <ul>"
 		, "    <li>c"
@@ -58,7 +58,7 @@ class Xoh_rtl_utl_fxt {
 	public void Init() {
 	}
 	public void Test_reverse_li(String raw, String expd) {
-		byte[] actl = Xoh_rtl_utl.Reverse_li(ByteAry_.new_utf8_(raw));
+		byte[] actl = Xoh_rtl_utl.Reverse_li(Bry_.new_utf8_(raw));
 		Tfds.Eq_str_lines(expd, String_.new_utf8_(actl));
 	}
 }

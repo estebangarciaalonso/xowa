@@ -20,19 +20,22 @@ import gplx.xowa.xtns.wdatas.*;
 public class Xow_page_tid {
 	public static byte Identify(byte wiki_tid, int ns_id, byte[] ttl) {
 		switch (ns_id) {
-			case Xow_ns_.Id_mediaWiki:
+			case Xow_ns_.Id_mediawiki:
 			case Xow_ns_.Id_user:
-				if		(ByteAry_.HasAtEnd(ttl, Ext_css))	return Tid_css;
-				else if (ByteAry_.HasAtEnd(ttl, Ext_js))	return Tid_js;
-				else										return Tid_wikitext;
+				return Identify_by_ttl(ttl);
 			case gplx.xowa.xtns.scribunto.Scrib_xtn_mgr.Ns_id_module:
-				return	(ByteAry_.HasAtEnd(ttl, Ext_doc))
+				return	(Bry_.HasAtEnd(ttl, Ext_doc))
 					? Tid_wikitext : Tid_lua;
 			default:
 				return Wdata_wiki_mgr.Wiki_page_is_json(wiki_tid, ns_id)
 					? Tid_json : Tid_wikitext;
 		}
 	}
-	private static final byte[] Ext_js = ByteAry_.new_ascii_(".js"), Ext_css = ByteAry_.new_ascii_(".css"), Ext_doc= ByteAry_.new_ascii_("/doc");
+	public static byte Identify_by_ttl(byte[] ttl) {
+		if		(Bry_.HasAtEnd(ttl, Ext_css))	return Tid_css;
+		else if (Bry_.HasAtEnd(ttl, Ext_js))	return Tid_js;
+		else									return Tid_wikitext;
+	}
+	private static final byte[] Ext_js = Bry_.new_ascii_(".js"), Ext_css = Bry_.new_ascii_(".css"), Ext_doc= Bry_.new_ascii_("/doc");
 	public static final byte Tid_wikitext = 1, Tid_json = 2, Tid_js = 3, Tid_css = 4, Tid_lua = 5;
 }

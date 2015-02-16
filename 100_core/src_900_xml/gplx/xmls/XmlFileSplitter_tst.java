@@ -71,10 +71,10 @@ public class XmlFileSplitter_tst {
 			Tfds.Eq(expd[i], Io_mgr._.LoadFilStr(tmpFil));
 		}
 	}
-	byte[] byte_(String s) {return Encoding_.XtoByteAry(s);}
+	byte[] byte_(String s) {return Bry_.new_utf8_(s);}
 	byte[][] byteAry_(String s) {
 		byte[][] rv = new byte[1][];
-		rv[0] = Encoding_.XtoByteAry(s);
+		rv[0] = Bry_.new_utf8_(s);
 		return rv;
 	}
 	void tst_ExtractHdr(String src, String find, String expdHdr, String expdSrc) {
@@ -82,7 +82,7 @@ public class XmlFileSplitter_tst {
 		byte[] srcAry = byte_(src);
 		int findPos = splitter.FindMatchPos(srcAry, byteAry_(find));
 		srcAry = splitter.SplitHdr(srcAry, findPos);
-            Tfds.Eq(Encoding_.XtoStr(splitter.Hdr()), expdHdr);
-		Tfds.Eq(Encoding_.XtoStr(srcAry), expdSrc);
+            Tfds.Eq(String_.new_utf8_(splitter.Hdr()), expdHdr);
+		Tfds.Eq(String_.new_utf8_(srcAry), expdSrc);
 	}
 }

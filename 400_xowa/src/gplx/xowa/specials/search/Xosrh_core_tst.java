@@ -95,15 +95,15 @@ public class Xosrh_core_tst {
 	}
 }
 class Xos_search_mgr_fxt {
-	Xoa_app app; Xow_wiki wiki; ByteAryBfr bfr = ByteAryBfr.reset_(500); Xosrh_core search_mgr;
+	Xoa_app app; Xow_wiki wiki; Bry_bfr bfr = Bry_bfr.reset_(500); Xosrh_core search_mgr;
 	public Xoa_app App() {return app;}
 	public Xow_wiki Wiki() {return wiki;}
-	public Xobl_regy_itm 	regy_itm_(int id, String bgn, String end, int count) {return new Xobl_regy_itm(id, ByteAry_.new_utf8_(bgn), ByteAry_.new_utf8_(end), count);}
+	public Xobl_regy_itm 	regy_itm_(int id, String bgn, String end, int count) {return new Xobl_regy_itm(id, Bry_.new_utf8_(bgn), Bry_.new_utf8_(end), count);}
 	public Xodb_page 	data_ttl_(int id, String ttl) {return data_ttl_(id, 0, 0, false, 0, ttl);}
-	public Xodb_page 	data_ttl_(int id, int fil, int row, boolean redirect, int len, String ttl) {return new Xodb_page().Set_all_(id, fil, row, redirect, len, ByteAry_.new_utf8_(ttl));}
+	public Xodb_page 	data_ttl_(int id, int fil, int row, boolean redirect, int len, String ttl) {return new Xodb_page().Set_all_(id, fil, row, redirect, len, Bry_.new_utf8_(ttl));}
 	public Xodb_page 		data_id_(int id, String ttl) {return data_id_(id, Xow_ns_.Id_main, ttl);} 
-	public Xodb_page 		data_id_(int id, int ns, String ttl) {return new Xodb_page().Id_(id).Ns_id_(ns).Ttl_wo_ns_(ByteAry_.new_utf8_(ttl)).Db_file_idx_(0).Text_len_(0);}
-	public Xobl_search_ttl 	data_sttl_(String word, int... ids) {return new Xobl_search_ttl(ByteAry_.new_utf8_(word), data_ttl_word_page_ary_(ids));}
+	public Xodb_page 		data_id_(int id, int ns, String ttl) {return new Xodb_page().Id_(id).Ns_id_(ns).Ttl_wo_ns_(Bry_.new_utf8_(ttl)).Text_db_id_(0).Text_len_(0);}
+	public Xobl_search_ttl 	data_sttl_(String word, int... ids) {return new Xobl_search_ttl(Bry_.new_utf8_(word), data_ttl_word_page_ary_(ids));}
 	public Xobl_search_ttl_page[] data_ttl_word_page_ary_(int... ids) {
 		int ids_len = ids.length;
 		Xobl_search_ttl_page[] rv = new Xobl_search_ttl_page[ids_len];
@@ -122,14 +122,14 @@ class Xos_search_mgr_fxt {
 			itm.Srl_save(tmp_bfr);
 		}
 		Io_mgr._.SaveFilBfr(url, tmp_bfr);
-	}	private ByteAryBfr tmp_bfr = ByteAryBfr.reset_(255);
+	}	private Bry_bfr tmp_bfr = Bry_bfr.reset_(255);
 	public void Init_data(Io_url fil, Xobl_data_itm... ary) {
 		Xob_xdat_file xdat_file = new Xob_xdat_file();
 		int ary_len = ary.length;
 		for (int i = 0; i < ary_len; i++) {
 			Xobl_data_itm itm = ary[i];
 			itm.Srl_save(tmp_bfr);
-			xdat_file.Insert(bfr, tmp_bfr.XtoAryAndClear());
+			xdat_file.Insert(bfr, tmp_bfr.Xto_bry_and_clear());
 		}
 		xdat_file.Save(fil);
 	}
@@ -179,31 +179,29 @@ class Xos_search_mgr_fxt {
 	public void Test_search_exact(String ttl_str, String... expd_ary) {Test_search(ttl_str, 0, expd_ary);}
 	public void Test_search_match_bgn(String ttl_str, String... expd_ary) {Test_search(ttl_str, 0, expd_ary);}
 	public void Test_search(String ttl_str, int page_idx, String... expd_ary) {
-		byte[] ttl_bry = ByteAry_.new_ascii_(ttl_str);
-		ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
+		byte[] ttl_bry = Bry_.new_ascii_(ttl_str);
+		Bry_bfr bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
 		Xosrh_rslt_grp page = search_mgr.Page_mgr().Search(bfr, wiki, ttl_bry, page_idx, search_mgr.Page_mgr());
 		bfr.Mkr_rls();
 		Tfds.Eq_ary(expd_ary, Search_itms_to_int_ary(page));
 	}
 	public void Test_html_by_url(String ttl_str, String args_str, String expd_html) {
 		wiki.Init_needed_(false);
-		byte[] ttl_bry = ByteAry_.new_ascii_(ttl_str);
+		byte[] ttl_bry = Bry_.new_ascii_(ttl_str);
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
-		Xoa_page page = new Xoa_page(wiki, ttl);
-		Xoa_url url = new Xoa_url();
-		byte[] url_bry = ByteAry_.new_utf8_("http://en.wikipedia.org/wiki/Special:Search/" + ttl_str + args_str);
-		wiki.App().Url_parser().Parse(url, url_bry, 0, url_bry.length);
+		Xoa_page page = Xoa_page.test_(wiki, ttl);
+		byte[] url_bry = Bry_.new_utf8_("http://en.wikipedia.org/wiki/Special:Search/" + ttl_str + args_str);
+		Xoa_url url = wiki.App().Url_parser().Parse(url_bry);
 		search_mgr.Special_gen(url, page, wiki, ttl);
 		Tfds.Eq_str_lines(expd_html, String_.new_utf8_(page.Root().Data_htm()));
 	}
 	public void Test_search2(byte match_tid, String ttl_str, int page_idx, byte sort_tid, String... expd_ary) {
-		ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
-		Xoa_url url = new Xoa_url();
+		Bry_bfr bfr = wiki.Utl_bry_bfr_mkr().Get_b128();
 		Xoa_url_parser url_parser = new Xoa_url_parser();			
-		byte[] url_raw = ByteAry_.new_ascii_("Special:Search/" + ttl_str + ((match_tid == Xosrh_core.Match_tid_all) ? "" : "*")  + "?fulltext=y" + Xosrh_rslt_itm_sorter.Xto_url_arg(sort_tid) + "&xowa_page_size=1&xowa_page_index=" + page_idx);
-		url_parser.Parse(url, url_raw);
+		byte[] url_raw = Bry_.new_ascii_("Special:Search/" + ttl_str + ((match_tid == Xosrh_core.Match_tid_all) ? "" : "*")  + "?fulltext=y" + Xosrh_rslt_itm_sorter.Xto_url_arg(sort_tid) + "&xowa_page_size=1&xowa_page_index=" + page_idx);
+		Xoa_url url = url_parser.Parse(url_raw);
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, url_raw);
-		Xoa_page page = wiki.Ctx().Page();
+		Xoa_page page = wiki.Ctx().Cur_page();
 		search_mgr.Special_gen(url, page, wiki, ttl);
 		Xosrh_rslt_grp cur_grp = search_mgr.Cur_grp();
 		bfr.Mkr_rls();

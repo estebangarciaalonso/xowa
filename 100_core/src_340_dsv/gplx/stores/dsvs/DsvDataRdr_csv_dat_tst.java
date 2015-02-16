@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.stores.dsvs; import gplx.*; import gplx.stores.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.strings.*;
 public class DsvDataRdr_csv_dat_tst {
 	@Before public void setup() {
 		fx.Parser_(DsvParser.csv_(false, GfoFldList_.Null));
@@ -161,7 +161,7 @@ class DsvDataRdr_fxt {
 		for (int i = 0; i < flds.Count(); i++) {
 			GfoFld fld = flds.FetchAt(i);
 			sb.Add(fld.Key()).Add(",").Add(fld.Type().Key());
-			list.Add(sb.XtoStrAndClear());
+			list.Add(sb.Xto_str_and_clear());
 		}
 	}
 	public DsvDataRdr_fxt tst_Tbls(String... expdNames) {
@@ -190,9 +190,9 @@ class DsvDataRdr_fxt {
 			GfoNde row = tbl.Subs().FetchAt_asGfoNde(i);
 			for (int j = 0; j < row.Flds().Count(); j++)  {
 				if (j != 0) sb.Add("~");
-				sb.Add_obj(Object_.XtoStr_OrNullStr(row.ReadAt(j)));
+				sb.Add_obj(Object_.Xto_str_strict_or_null_mark(row.ReadAt(j)));
 			}
-			expdList.Add(sb.XtoStrAndClear());
+			expdList.Add(sb.Xto_str_and_clear());
 		}
 		for (Object[] expdRow : expdRows) {
 			if (expdRow == null) {
@@ -201,9 +201,9 @@ class DsvDataRdr_fxt {
 			}
 			for (int j = 0; j < expdRow.length; j++) {
 				if (j != 0) sb.Add("~");
-				sb.Add_obj(Object_.XtoStr_OrNullStr(expdRow[j]));
+				sb.Add_obj(Object_.Xto_str_strict_or_null_mark(expdRow[j]));
 			}
-			actlList.Add(sb.XtoStrAndClear());
+			actlList.Add(sb.Xto_str_and_clear());
 		}
 		Tfds.Eq_list(expdList, actlList);
 		return this;

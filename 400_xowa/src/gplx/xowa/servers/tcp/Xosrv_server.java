@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.servers.tcp; import gplx.*; import gplx.xowa.*; import gplx.xowa.servers.*;
-import gplx.ios.*; import gplx.json.*;
+import gplx.core.primitives.*; import gplx.ios.*; import gplx.json.*; import gplx.threads.*;
 public class Xosrv_server implements GfoInvkAble {
 	private long last_cmd;
 	public Xosrv_socket_rdr Rdr() {return rdr;} private Xosrv_socket_rdr rdr = new Xosrv_socket_rdr();
@@ -25,21 +25,14 @@ public class Xosrv_server implements GfoInvkAble {
 	public int Wtr_port() {return wtr_port;} public Xosrv_server Wtr_port_(int v) {wtr_port = v; return this;} private int wtr_port = 55001;
 	public int Shutdown_interval() {return shutdown_interval;} public Xosrv_server Shutdown_interval_(int v) {shutdown_interval = v; return this;} private int shutdown_interval = -1;
 	public String Wtr_host() {return wtr_host;} private String wtr_host = "localhost";
-	public boolean Running() {return running;} public Xosrv_server Running_(boolean v) {running = v; running_str = Bool_.XtoStr_lower(running); return this;} private boolean running = false;
+	public boolean Running() {return running;} public Xosrv_server Running_(boolean v) {running = v; running_str = Bool_.Xto_str_lower(running); return this;} private boolean running = false;
 	public String Running_str() {return running_str;} String running_str = "false";
 	public void App_ctor(Xoa_app app) {this.app = app;}
 	public Xoa_app App() {return app;} private Xoa_app app;
-	private Gxw_html_server html_box;
 	public void Run() {
 		rdr.Init(this, rdr_port);
 		wtr.Init(wtr_host, wtr_port);
-
-		html_box = new Gxw_html_server(this);
-		Gfo_usr_dlg_ui usr_dlg_ui = app.Usr_dlg().Ui_wkr();
-		app.Gui_mgr().Kit_(gplx.gfui.Gfui_kit_.Mem());
-		app.Usr_dlg().Ui_wkr_(usr_dlg_ui);
-		app.Gui_mgr().Main_win().Html_box().Under_html_(html_box);
-
+		Gxw_html_server.Init_gui_for_server(app, wtr);
 		ThreadAdp_.invk_(rdr, Xosrv_socket_rdr.Invk_start).Start();
 		app.Usr_dlg().Note_many("", "", "server started: listening on ~{0}. Press Ctrl+C to exit", rdr_port);
 		last_cmd = Env_.TickCount();
@@ -55,16 +48,16 @@ public class Xosrv_server implements GfoInvkAble {
 	public void Msg_rcvd(Xosrv_msg msg) {
 		try {
 			byte[] cmd_name = msg.Cmd_name();
-			byte[] rsp_name = ByteAry_.Empty;
+			byte[] rsp_name = Bry_.Empty;
 			long time_bgn = Env_.TickCount();
 			last_cmd = time_bgn;
 			byte[] msg_bry = msg.Msg_text();
 			String msg_str = String_.new_utf8_(msg_bry);
 			app.Usr_dlg().Note_many("", "", "processing cmd: ~{0}", msg_str);
 			String rsp_str = null;
-			if		(ByteAry_.Eq(cmd_name, Xosrv_cmd_types.Cmd_exec)) 	{rsp_name = Xosrv_cmd_types.Cmd_pass; rsp_str = Exec_cmd(msg_str);}
-			else if	(ByteAry_.Eq(cmd_name, Xosrv_cmd_types.Js_exec)) 	{rsp_name = Xosrv_cmd_types.Js_pass;  rsp_str = Exec_js(msg.Sender(), msg_bry);}
-			Xosrv_msg rsp_msg = Xosrv_msg.new_(rsp_name, msg.Msg_id(), msg.Recipient(), msg.Sender(), msg.Msg_date(), ByteAry_.new_utf8_(rsp_str));
+			if		(Bry_.Eq(cmd_name, Xosrv_cmd_types.Cmd_exec)) 	{rsp_name = Xosrv_cmd_types.Cmd_pass; rsp_str = Exec_cmd(msg_str);}
+			else if	(Bry_.Eq(cmd_name, Xosrv_cmd_types.Js_exec)) 	{rsp_name = Xosrv_cmd_types.Js_pass;  rsp_str = Exec_js(msg.Sender(), msg_bry);}
+			Xosrv_msg rsp_msg = Xosrv_msg.new_(rsp_name, msg.Msg_id(), msg.Recipient(), msg.Sender(), msg.Msg_date(), Bry_.new_utf8_(rsp_str));
 			app.Usr_dlg().Note_many("", "", "sending rsp: bytes=~{0}", String_.Len(rsp_str));
 			wtr.Write(rsp_msg);		
 			app.Usr_dlg().Note_many("", "", "rsp sent: elapsed=~{0}", TimeSpanAdp_.fracs_(Env_.TickCount() - time_bgn).XtoStrUiAbbrv());
@@ -72,21 +65,21 @@ public class Xosrv_server implements GfoInvkAble {
 	}
 	private String Exec_cmd(String msg_text) {
 		Object rv_obj = app.Gfs_mgr().Run_str(msg_text);
-		String rv = ClassAdp_.Eq_typeSafe(rv_obj, String_.ClassOf) ? (String)rv_obj : Object_.XtoStr_OrNull(rv_obj);
+		String rv = ClassAdp_.Eq_typeSafe(rv_obj, String_.Cls_ref_type) ? (String)rv_obj : Object_.Xto_str_strict_or_null(rv_obj);
 		return rv;
 	}
 	public String Exec_js(byte[] sender, byte[] msg_text) {
-		StringRef trace = StringRef.new_("exec_js");
+		String_obj_ref trace = String_obj_ref.new_("exec_js");
 		try {
 			Object[] xowa_exec_args = xowa_exec_parser.Parse_xowa_exec(msg_text);
 			trace.Val_("js_args");
 //				xowa_exec_args = (Object[])Array_.Resize(xowa_exec_args, xowa_exec_args.length + 1);
 //				xowa_exec_args[xowa_exec_args.length - 1] = sender;
-			Object rv_obj = gplx.gfui.Gfui_html.Js_args_exec(app.Gui_mgr().Main_win().Js_cbk(), xowa_exec_args);
-			trace.Val_("json_write: " + Object_.XtoStr_OrNullStr(rv_obj));
+			Object rv_obj = gplx.gfui.Gfui_html.Js_args_exec(app.Gui_mgr().Browser_win().Active_html_itm().Js_cbk(), xowa_exec_args);
+			trace.Val_("json_write: " + Object_.Xto_str_strict_or_null_mark(rv_obj));
 			return json_wtr.Write_root(Bry_xowa_js_result, rv_obj).Bld_as_str();
 		} catch (Exception e) {throw Err_.err_(e, "exec_js error: {0} {1} {2}", trace, msg_text, Err_.Message_gplx(e));}
-	}	private Xosrv_xowa_exec_parser xowa_exec_parser = new Xosrv_xowa_exec_parser(); private Json_doc_srl json_wtr = new Json_doc_srl(); private static final byte[] Bry_xowa_js_result = ByteAry_.new_ascii_("xowa_js_result");
+	}	private Xosrv_xowa_exec_parser xowa_exec_parser = new Xosrv_xowa_exec_parser(); private Json_doc_srl json_wtr = new Json_doc_srl(); private static final byte[] Bry_xowa_js_result = Bry_.new_ascii_("xowa_js_result");
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		if		(ctx.Match(k, Invk_rdr_port))				return rdr_port;
 		else if	(ctx.Match(k, Invk_rdr_port_))				rdr_port = m.ReadInt("v");

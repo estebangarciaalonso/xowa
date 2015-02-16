@@ -36,5 +36,5 @@ public class Xol_plural_ru implements Xol_plural {
 			}
 		}
 	}
-        public static final Xol_plural_ru _ = new Xol_plural_ru(); Xol_plural_ru() {}
+	public static final Xol_plural_ru _ = new Xol_plural_ru(); Xol_plural_ru() {}
 }

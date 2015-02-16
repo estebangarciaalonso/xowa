@@ -16,8 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.cfgs; import gplx.*; import gplx.xowa.*;
+import gplx.xowa.apps.*;
 public class Xoa_cfg_db_txt implements Xoa_cfg_db {
-	private ByteAryFmtr fmtr = ByteAryFmtr.new_("app.cfgs.get('~{msg}', '~{wiki}').val = '~{val}';\n", "msg", "wiki", "val");
+	private Bry_fmtr fmtr = Bry_fmtr.new_("app.cfgs.get('~{msg}', '~{wiki}').val = '~{val}';\n", "msg", "wiki", "val");
 	public void Cfg_reset_all(Xoa_cfg_mgr cfg_mgr) {
 		Io_url src_url = this.Cfg_url(cfg_mgr);
 		Io_url trg_url = src_url.GenNewNameAndExt("xowa_user_cfg." + DateAdp_.Now().XtoStr_fmt_yyyyMMdd_HHmmss() + ".gfs");
@@ -30,7 +31,7 @@ public class Xoa_cfg_db_txt implements Xoa_cfg_db {
 	}
 	public void Cfg_save_bgn(Xoa_cfg_mgr cfg_mgr) {
 		bfr.ClearAndReset();
-	} 	private ByteAryBfr bfr = ByteAryBfr.new_();
+	} 	private Bry_bfr bfr = Bry_bfr.new_();
 	public void Cfg_save_end(Xoa_cfg_mgr cfg_mgr) {
 		cfg_mgr.App().Usr_dlg().Log_many("", "", "shutting down app; saving cfg: len=~{0}", bfr.Len());
 		Io_mgr._.SaveFilBfr(Cfg_url(cfg_mgr), bfr);

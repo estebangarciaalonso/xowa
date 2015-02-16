@@ -29,22 +29,22 @@ public class Xob_dump_file {
 	public byte[] Wiki_alias()			{return wiki_alias;} private byte[] wiki_alias;
 	public Xob_dump_file Ctor(String wiki_domain, String dump_date, String dump_file_type) {
 		this.dump_date = dump_date; this.dump_file_type = dump_file_type;
-		this.wiki_type = Xow_wiki_domain_.parse_by_domain(ByteAry_.new_ascii_(wiki_domain));
-		this.wiki_alias = Xob_bz2_file.Build_alias(wiki_type);
-		byte[] dump_file_bry = ByteAry_.new_utf8_(dump_file_type);
-		byte dump_file_tid = Xob_bz2_file.Parse__tid(dump_file_bry);
+		this.wiki_type = Xow_wiki_domain_.parse_by_domain(Bry_.new_ascii_(wiki_domain));
+		this.wiki_alias = Xow_wiki_alias.Build_alias(wiki_type);
+		byte[] dump_file_bry = Bry_.new_utf8_(dump_file_type);
+		byte dump_file_tid = Xow_wiki_alias.Parse__tid(dump_file_bry);
 		byte[] ext = Xob_dump_file_.Ext_xml_bz2;
 		switch (dump_file_tid) {
-			case Xob_bz2_file.Tid_page_props: case Xob_bz2_file.Tid_categorylinks: case Xob_bz2_file.Tid_image:
+			case Xow_wiki_alias.Tid_page_props: case Xow_wiki_alias.Tid_categorylinks: case Xow_wiki_alias.Tid_image:
 				ext = Xob_dump_file_.Ext_sql_gz;
 				break;
 		}
-		this.file_name = String_.new_utf8_(Xob_dump_file_.Bld_dump_file_name(wiki_alias, ByteAry_.new_utf8_(dump_date), dump_file_bry, ext));
+		this.file_name = String_.new_utf8_(Xob_dump_file_.Bld_dump_file_name(wiki_alias, Bry_.new_utf8_(dump_date), dump_file_bry, ext));
 		return this;
 	}
 	public void Server_url_(String server_url) {
 		this.server_url = server_url;
-		String dump_dir_url = String_.new_utf8_(Xob_dump_file_.Bld_dump_dir_url(ByteAry_.new_utf8_(server_url), wiki_alias, ByteAry_.new_utf8_(dump_date)));
+		String dump_dir_url = String_.new_utf8_(Xob_dump_file_.Bld_dump_dir_url(Bry_.new_utf8_(server_url), wiki_alias, Bry_.new_utf8_(dump_date)));
 		this.file_url = dump_dir_url + file_name;
 	}
 	public boolean Connect() {

@@ -27,6 +27,7 @@ public class Luaj_engine implements Scrib_engine {
 		server = new Luaj_server(core, debug_enabled);
 		proc_mgr = core.Proc_mgr();
 		Luaj_server_func_recv._.Engine_(this);
+		Luaj_server_func_dbg._.Core_(core);
 	}
 	public Scrib_server Server() {return server;} public void Server_(Scrib_server v) {server = (Luaj_server)v;} 
 	public boolean Dbg_print() {return dbg_print;} public void Dbg_print_(boolean v) {dbg_print = v;} private boolean dbg_print;
@@ -58,6 +59,12 @@ public class Luaj_engine implements Scrib_engine {
 	}
 	public KeyVal[] ExecuteModule(int mod_id) {
 		return this.CallFunction(core.Lib_mw().Mod().Fncs_get_id("executeModule"), Scrib_kv_utl_.base1_obj_(new Scrib_lua_proc("", mod_id)));
+	}
+	public void CleanupChunks(KeyVal[] ids) {
+		LuaTable msg = LuaValue.tableOf();
+		msg.set("op", "cleanupChunks");
+		msg.set("ids", Luaj_value_.X_obj_to_val(server, ids));
+		this.Dispatch_as_kv_ary(msg);		
 	}
 	public KeyVal[] Dispatch_as_kv_ary(LuaTable msg) {
 		while (true) {

@@ -23,7 +23,7 @@ public class Xob_xml_parser_tst {
 		Io_mgr._.InitEngine_mem();
 		Xoa_app app = Xoa_app_fxt.app_();
 		bldr = new Xob_bldr(app);
-	}	private Xow_ns_mgr ns_mgr = Xow_ns_mgr_.default_();
+	}	private Xow_ns_mgr ns_mgr = Xow_ns_mgr_.default_(gplx.xowa.langs.cases.Xol_case_mgr_.Ascii());
 	@Test  public void Basic_docs_1() {
 		Xodb_page doc = doc_(1, "a", "a a", Date_1);
 		fil = page_bldr.Add(doc).XtoByteStreamRdr();
@@ -44,28 +44,28 @@ public class Xob_xml_parser_tst {
 	@Test  public void Xml() {
 		Xodb_page doc = doc_(1, "a", "&quot;a &amp; b &lt;&gt; a | b&quot;", Date_1);
 		fil = page_bldr.Add(doc).XtoByteStreamRdr();
-		tst_parse(fil, doc.Text_(ByteAry_.new_utf8_("\"a & b <> a | b\"")), 0);
+		tst_parse(fil, doc.Text_(Bry_.new_utf8_("\"a & b <> a | b\"")), 0);
 	}
 	@Test  public void Tab() {
 		Xodb_page doc = doc_(1, "a", "a \t b", Date_1);
 		fil = page_bldr.Add(doc).XtoByteStreamRdr();
-		tst_parse(fil, doc.Text_(ByteAry_.new_utf8_("a &#09; b")), 0);
+		tst_parse(fil, doc.Text_(Bry_.new_utf8_("a &#09; b")), 0);
 	}
 	@Test  public void Tab_disable() {
 		Xodb_page doc = doc_(1, "a", "a \t b", Date_1);
 		page_parser.Trie_tab_del_();
 		fil = page_bldr.Add(doc).XtoByteStreamRdr();
-		tst_parse(fil, doc.Text_(ByteAry_.new_utf8_("a \t b")), 0);
+		tst_parse(fil, doc.Text_(Bry_.new_utf8_("a \t b")), 0);
 	}
 	@Test  public void Cr_nl() {
 		Xodb_page doc = doc_(1, "a", "a \r\n b", Date_1);
 		fil = page_bldr.Add(doc).XtoByteStreamRdr();
-		tst_parse(fil, doc.Text_(ByteAry_.new_utf8_("a \n b")), 0);
+		tst_parse(fil, doc.Text_(Bry_.new_utf8_("a \n b")), 0);
 	}
 	@Test  public void Cr() {
 		Xodb_page doc = doc_(1, "a", "a \r b", Date_1);
 		fil = page_bldr.Add(doc).XtoByteStreamRdr();
-		tst_parse(fil, doc.Text_(ByteAry_.new_utf8_("a \n b")), 0);
+		tst_parse(fil, doc.Text_(Bry_.new_utf8_("a \n b")), 0);
 	}
 	@Test  public void Text_long() {
 		String s = String_.Repeat("a", 1024);
@@ -115,9 +115,9 @@ public class Xob_xml_parser_tst {
 		tst_parse(fil, doc, 0);
 	}
 	private static final String Date_1 = "2012-01-01T01:01:01Z", Date_2 = "2012-02-02T02:02:02Z"; DateAdp_parser dateParser = DateAdp_parser.new_();
-	ByteAryBfr bfr = ByteAryBfr.new_();
+	Bry_bfr bfr = Bry_bfr.new_();
 	Xob_xml_page_bldr page_bldr = new Xob_xml_page_bldr(); Io_buffer_rdr fil; Xob_xml_parser page_parser = new Xob_xml_parser(); Xob_bldr bldr;
-	Gfo_usr_dlg usr_dlg = Gfo_usr_dlg_xowa.test_();
+	Gfo_usr_dlg usr_dlg = Gfo_usr_dlg_base.test_();
 	int tst_parse(Io_buffer_rdr fil, Xodb_page expd, int cur_pos) {
 		Xodb_page actl = new Xodb_page();
 		int rv = page_parser.Parse_page(actl, usr_dlg, fil, fil.Bfr(), cur_pos, ns_mgr);
@@ -128,7 +128,7 @@ public class Xob_xml_parser_tst {
 		return rv;
 	}
 	Xodb_page doc_(int id, String title, String text, String date) {
-		Xodb_page rv = new Xodb_page().Id_(id).Ttl_(ByteAry_.new_ascii_(title), ns_mgr).Text_(ByteAry_.new_ascii_(text));
+		Xodb_page rv = new Xodb_page().Id_(id).Ttl_(Bry_.new_ascii_(title), ns_mgr).Text_(Bry_.new_ascii_(text));
 		int[] modified_on = new int[7];
 		dateParser.Parse_iso8651_like(modified_on, date);
 		rv.Modified_on_(DateAdp_.seg_(modified_on));

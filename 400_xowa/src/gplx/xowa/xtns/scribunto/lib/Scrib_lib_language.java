@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.scribunto.lib; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.scribunto.*;
-import gplx.xowa.xtns.pfuncs.times.*; import gplx.xowa.langs.numFormats.*;
+import gplx.xowa.xtns.pfuncs.times.*; import gplx.xowa.langs.numbers.*; import gplx.xowa.xtns.pfuncs.numbers.*; import gplx.xowa.langs.durations.*;
 public class Scrib_lib_language implements Scrib_lib {
 	public Scrib_lib_language(Scrib_core core) {this.core = core;} private Scrib_core core;
 	public Scrib_lua_mod Mod() {return mod;} private Scrib_lua_mod mod;
@@ -45,8 +45,8 @@ public class Scrib_lib_language implements Scrib_lib {
 			case Proc_caseFold:										return CaseFold(args, rslt);
 			case Proc_formatNum:									return FormatNum(args, rslt);
 			case Proc_formatDate:									return FormatDate(args, rslt);
-			case Proc_formatDuration:								return formatDuration(args, rslt);
-			case Proc_getDurationIntervals:							return getDurationIntervals(args, rslt);
+			case Proc_formatDuration:								return FormatDuration(args, rslt);
+			case Proc_getDurationIntervals:							return GetDurationIntervals(args, rslt);
 			case Proc_parseFormattedNumber:							return ParseFormattedNumber(args, rslt);
 			case Proc_convertPlural:								return ConvertPlural(args, rslt);
 			case Proc_convertGrammar:								return ConvertGrammar(args, rslt);
@@ -85,7 +85,7 @@ public class Scrib_lib_language implements Scrib_lib {
 		boolean exists = false;
 		if (	lang_code != null									// null check; protecting against Module passing in nil from lua
 			&&	String_.Eq(lang_code, String_.Lower(lang_code))		// must be lower-case; REF.MW: $code === strtolower( $code )
-			&&	Xol_lang_itm_.Exists(ByteAry_.new_ascii_(lang_code))
+			&&	Xol_lang_itm_.Exists(Bry_.new_ascii_(lang_code))
 			)
 			exists = true;
 		return rslt.Init_obj(exists);
@@ -149,7 +149,7 @@ public class Scrib_lib_language implements Scrib_lib {
 	private boolean Case_1st(Scrib_proc_args args, Scrib_proc_rslt rslt, boolean upper) {
 		Xol_lang lang = lang_(args);
 		byte[] word = args.Pull_bry(1);
-		ByteAryBfr bfr = core.Wiki().App().Utl_bry_bfr_mkr().Get_b128().Mkr_rls();
+		Bry_bfr bfr = core.Wiki().App().Utl_bry_bfr_mkr().Get_b128().Mkr_rls();
 		return rslt.Init_obj(lang.Case_mgr().Case_build_1st(bfr, upper, word, 0, word.length));
 	}
 	public boolean Lc(Scrib_proc_args args, Scrib_proc_rslt rslt) {return Case_all(args, rslt, Bool_.N);}
@@ -162,41 +162,63 @@ public class Scrib_lib_language implements Scrib_lib {
 	public boolean CaseFold(Scrib_proc_args args, Scrib_proc_rslt rslt) {return Uc(args, rslt);}	// REF.MW:Language.php!caseFold; http://www.w3.org/International/wiki/Case_folding
 	public boolean FormatNum(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		Xol_lang lang = lang_(args);
-		byte[] num = args.Form_bry_or_null(1);
-		// boolean commafy = args.Get_bool_from_tableor_fail(1); // TODO: WHEN: when encountered
-		byte[] rv = Pf_str_formatnum.Format_num(lang, num, ByteAry_.Empty);
+		byte[] num = args.Xstr_bry_or_null(1);
+		boolean skip_commafy = false;
+		if (num != null) {	// MW: if num present, check options table for noCommafy arg;
+			KeyVal[] kv_ary = args.Cast_kv_ary_or_null(2);
+			if (kv_ary != null) {
+				Object skip_commafy_obj = KeyVal_.Ary_get_by_key_or_null(kv_ary, "noCommafy");
+				if (skip_commafy_obj != null)
+					skip_commafy = Bool_.cast_(skip_commafy_obj);
+			}
+		}
+		byte[] rv = lang.Num_mgr().Format_num(num, skip_commafy);
 		return rslt.Init_obj(rv);
 	}
 	public boolean FormatDate(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		Xol_lang lang = lang_(args);
 		byte[] fmt_bry = args.Pull_bry(1);
-		byte[] date_bry = args.Cast_bry_or_empty(2);	// NOTE: optional empty is required b/c date is sometimes null; use ByteAry_.Empty b/c this is what Pft_func_time.ParseDate takes; DATE:2013-04-05
+		byte[] date_bry = args.Cast_bry_or_empty(2);	// NOTE: optional empty is required b/c date is sometimes null; use Bry_.Empty b/c this is what Pft_func_time.ParseDate takes; DATE:2013-04-05
 		boolean utc = args.Cast_bool_or_n(3);
-		ByteAryBfr tmp_bfr = core.App().Utl_bry_bfr_mkr().Get_b512();
-		Pft_fmt_itm[] fmt_ary = Pft_fmt_itm_.Parse(core.Wiki().Ctx(), fmt_bry);
+		Bry_bfr tmp_bfr = core.App().Utl_bry_bfr_mkr().Get_b512();
+		Pft_fmt_itm[] fmt_ary = Pft_fmt_itm_.Parse(core.Ctx(), fmt_bry);
 		DateAdp date 
-			= ByteAry_.Len_eq_0(date_bry)
+			= Bry_.Len_eq_0(date_bry)
 			? DateAdp_.Now()
 			: Pft_func_time.ParseDate(date_bry, utc, tmp_bfr)
 			;	// NOTE: MW is actually more strict about date; however, not sure about PHP's date parse, so using more lax version
 		if (date == null || tmp_bfr.Len() > 0) {tmp_bfr.Mkr_rls(); return rslt.Init_fail("bad argument #2 to 'formatDate' (not a valid timestamp)");}
 		Pft_func_formatdate.Date_bldr().Format(tmp_bfr, core.Wiki(), lang, date, fmt_ary);
-		byte[] rv = tmp_bfr.Mkr_rls().XtoAryAndClear();
+		byte[] rv = tmp_bfr.Mkr_rls().Xto_bry_and_clear();
 		return rslt.Init_obj(rv);
 	}
 	public boolean ParseFormattedNumber(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		Xol_lang lang = lang_(args);
-		byte[] num = args.Form_bry_or_null(1);
+		byte[] num = args.Xstr_bry_or_null(1);
 		if (num == null) return rslt.Init_null(); // ParseFormattedNumber can sometimes take 1 arg ({'en'}), or null arg ({'en', null}); return null (not ""); DATE:2014-01-07
-		byte[] rv = lang.Num_fmt_mgr().Raw(Xol_num_fmtr_base.Tid_raw, num);
+		byte[] rv = lang.Num_mgr().Raw(num);
 		return rslt.Init_obj(rv);
 	}
-	public boolean formatDuration(Scrib_proc_args args, Scrib_proc_rslt rslt) {throw Err_.not_implemented_();}
-	public boolean getDurationIntervals(Scrib_proc_args args, Scrib_proc_rslt rslt) {throw Err_.not_implemented_();}
+	public boolean FormatDuration(Scrib_proc_args args, Scrib_proc_rslt rslt) {
+		Xol_lang lang = lang_(args);
+		long seconds = args.Pull_long(1);
+		KeyVal[] intervals_kv_ary = args.Cast_kv_ary_or_null(2);
+		Xol_duration_itm[] intervals = Xol_duration_itm_.Xto_itm_ary(intervals_kv_ary);
+		byte[] rv = lang.Duration_mgr().Format_durations(core.Ctx(), seconds, intervals);
+		return rslt.Init_obj(rv);
+	}
+	public boolean GetDurationIntervals(Scrib_proc_args args, Scrib_proc_rslt rslt) {
+		Xol_lang lang = lang_(args);
+		long seconds = args.Pull_long(1);
+		KeyVal[] intervals_kv_ary = args.Cast_kv_ary_or_null(2);
+		Xol_duration_itm[] intervals = Xol_duration_itm_.Xto_itm_ary(intervals_kv_ary);
+		Xol_interval_itm[] rv = lang.Duration_mgr().Get_duration_intervals(seconds, intervals);
+		return rslt.Init_obj(Xol_interval_itm.Xto_kv_ary(rv));
+	}
 	public boolean ConvertPlural(Scrib_proc_args args, Scrib_proc_rslt rslt) {
 		Xol_lang lang = lang_(args);
 		int count = args.Pull_int(1);
-		byte[][] words = args.Cast_params_as_bry_ary_or_empty(2);
+		byte[][] words = args.Cast_params_as_bry_ary_or_rest_of_ary(2);
 		byte[] rv = lang.Plural().Plural_eval(lang, count, words);
 		return rslt.Init_obj(rv);
 	}
@@ -204,9 +226,9 @@ public class Scrib_lib_language implements Scrib_lib {
 		Xol_lang lang = lang_(args);
 		byte[] word = args.Pull_bry(1);
 		byte[] type = args.Pull_bry(2);
-		ByteAryBfr bfr = core.Wiki().Utl_bry_bfr_mkr().Get_b512();
+		Bry_bfr bfr = core.Wiki().Utl_bry_bfr_mkr().Get_b512();
 		lang.Grammar().Grammar_eval(bfr, lang, word, type);
-		return rslt.Init_obj(bfr.Mkr_rls().XtoStrAndClear());
+		return rslt.Init_obj(bfr.Mkr_rls().Xto_str_and_clear());
 	}
 	public boolean gender(Scrib_proc_args args, Scrib_proc_rslt rslt) {throw Err_.not_implemented_();}
 	public boolean IsRTL(Scrib_proc_args args, Scrib_proc_rslt rslt) {

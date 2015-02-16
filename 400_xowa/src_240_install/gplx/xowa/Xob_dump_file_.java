@@ -36,7 +36,7 @@ public class Xob_dump_file_ {
 			){
 			Xoi_mirror_parser mirror_parser = new Xoi_mirror_parser();
 			String dump_wiki_url = dump_server + String_.new_ascii_(rv.Wiki_alias()) + "/";
-			byte[] dump_url_wiki_html = gplx.ios.IoEngine_xrg_downloadFil.new_("", Io_url_.Null).Exec_as_bry(dump_wiki_url); if (ByteAry_.Len_eq_0(dump_url_wiki_html)) return;
+			byte[] dump_url_wiki_html = gplx.ios.IoEngine_xrg_downloadFil.new_("", Io_url_.Null).Exec_as_bry(dump_wiki_url); if (Bry_.Len_eq_0(dump_url_wiki_html)) return;
 			String[] dump_available_dates = mirror_parser.Parse(String_.new_utf8_(dump_url_wiki_html));
 			String dump_dates_latest = Xoi_mirror_parser.Find_last_lte(dump_available_dates, dump_date);
 			if (String_.Eq(dump_dates_latest, "")) return;	// nothing found
@@ -44,23 +44,23 @@ public class Xob_dump_file_ {
 		}
 	}
 	public static byte[] Bld_dump_dir_url(byte[] server_url, byte[] alias, byte[] date) {
-		return ByteAry_.Add
+		return Bry_.Add
 			(	server_url																	// "http://dumps.wikimedia.org/"
-			,	ByteAry_.Replace(alias, Byte_ascii.Dash, Byte_ascii.Underline), Bry_slash	// "simplewiki/"
+			,	Bry_.Replace(alias, Byte_ascii.Dash, Byte_ascii.Underline), Bry_slash	// "simplewiki/"
 			,	date, Bry_slash																// "latest/"
 			);
 	}
 	public static byte[] Bld_dump_file_name(byte[] alias, byte[] date, byte[] dump_file_type, byte[] ext) {
-		return ByteAry_.Add
-			(	ByteAry_.Replace(alias, Byte_ascii.Dash, Byte_ascii.Underline), Bry_dash	// "simplewiki-"
+		return Bry_.Add
+			(	Bry_.Replace(alias, Byte_ascii.Dash, Byte_ascii.Underline), Bry_dash	// "simplewiki-"
 			,	date, Bry_dash																// "latest-"
 			,	dump_file_type																// "pages-articles"
 			,	ext																			// ".xml.bz2"
 			);
 	}
 	private static final byte[] Bry_dash = new byte[] {Byte_ascii.Dash}, Bry_slash = new byte[] {Byte_ascii.Slash};
-	public static final byte[] Ext_xml_bz2 = ByteAry_.new_ascii_(".xml.bz2");
-	public static final byte[] Ext_sql_gz  = ByteAry_.new_ascii_(".sql.gz");
+	public static final byte[] Ext_xml_bz2 = Bry_.new_ascii_(".xml.bz2");
+	public static final byte[] Ext_sql_gz  = Bry_.new_ascii_(".sql.gz");
 	public static final String 
 		  Server_wmf			= "http://dumps.wikimedia.org/"
 		, Server_your_org		= "http://dumps.wikimedia.your.org/"

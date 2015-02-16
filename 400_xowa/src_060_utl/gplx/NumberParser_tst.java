@@ -59,24 +59,24 @@ public class NumberParser_tst {
 		Hex_tst("d"		, 0, false);	// PURPOSE: d was being converted to 13; no.w:Hovedbanen; DATE:2014-04-13
 	}
 	private void tst_Int(String raw, int expd) {
-		byte[] raw_bry = ByteAry_.new_ascii_(raw);
+		byte[] raw_bry = Bry_.new_ascii_(raw);
 		int actl = parser.Parse(raw_bry, 0, raw_bry.length).AsInt(); 
 		Tfds.Eq(expd, actl, raw);
 	}
 	private void tst_Dec(String raw, DecimalAdp expd) {
-		byte[] raw_bry = ByteAry_.new_ascii_(raw);
+		byte[] raw_bry = Bry_.new_ascii_(raw);
 		DecimalAdp actl = parser.Parse(raw_bry, 0, raw_bry.length).AsDec(); 
-		Tfds.Eq(expd.XtoDecimal(), actl.XtoDecimal(), raw);
+		Tfds.Eq(expd.Xto_decimal(), actl.Xto_decimal(), raw);
 	}
 	private void tst_Err(String raw, boolean expd) {
-		byte[] raw_bry = ByteAry_.new_ascii_(raw);
+		byte[] raw_bry = Bry_.new_ascii_(raw);
 		boolean actl = parser.Parse(raw_bry, 0, raw_bry.length).HasErr(); 
 		Tfds.Eq(expd, actl, raw);
 	}
 	private void Hex_tst(String raw, int expd_val) {Hex_tst(raw, expd_val, true);}
 	private void Hex_tst(String raw, int expd_val, boolean expd_pass) {
 		parser.Hex_enabled_(true);
-		byte[] raw_bry = ByteAry_.new_ascii_(raw);
+		byte[] raw_bry = Bry_.new_ascii_(raw);
 		int actl = parser.Parse(raw_bry, 0, raw_bry.length).AsInt();
 		if (expd_pass) {
 			Tfds.Eq(expd_val, actl, raw);

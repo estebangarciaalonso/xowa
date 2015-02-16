@@ -79,7 +79,7 @@ public class GfuiMenuBar implements GfoInvkAble {
 			GfuiMenuBarItm itm = GfuiMenuBarItm.sub_(curOwnerItm);
 			itm.Type_(GfuiMenuBarItmType.Spr);
 			itm.Text_(text);
-			itm.Key_(curOwnerItm.Key() + "." + text + Int_.XtoStr(separatorIdx++));
+			itm.Key_(curOwnerItm.Key() + "." + text + Int_.Xto_str(separatorIdx++));
 			itm.ExecProps();
 		}
 		else if (ctx.Match(k, Invk_RegCmd)) {
@@ -107,7 +107,7 @@ public class GfuiMenuBar implements GfoInvkAble {
 		if (mnemonicPrefix == null) return ipt;
 		String text = itm.Text();
 		int pos = String_.FindFwd(text, mnemonicPrefix);
-		if (pos == String_.NotFound || pos == String_.Len(text) - 1) return ipt;	// mnemonic not found
+		if (pos == String_.Find_none || pos == String_.Len(text) - 1) return ipt;	// mnemonic not found
 		String keyChar = String_.MidByLen(text, pos + 1, 1);
 		if (!Char_.IsLetterEnglish(String_.CharAt(keyChar, 0))) return ipt;	// keyChar is not a character; EX: 'A & B' (keyChar = space)
 		String keyCharRaw = "key." + String_.Lower(keyChar);
@@ -135,7 +135,7 @@ public class GfuiMenuBar implements GfoInvkAble {
 	}
 	HashAdp itms = HashAdp_.new_(); GfuiWin win;
 	public static final String SubItms_key = "menuBar";
-        public static GfuiMenuBar new_(GfuiWin win) {
+	public static GfuiMenuBar new_(GfuiWin win) {
 		GfuiMenuBar rv = new GfuiMenuBar();
 		rv.Init(win);
 		return rv;
@@ -221,8 +221,8 @@ class GfuiMenuBarItm {
 		if (itm.cmd == null) throw Err_.null_("cmd was null for menu").Add("key", itm.key).Add("text", itm.text);
 		return gplx.gfml.GfmlDataNde.XtoMsgNoRoot(itm.cmd);
 	}
-        public static GfuiMenuBarItm new_() {return new GfuiMenuBarItm();}
-        public static GfuiMenuBarItm sub_(GfuiMenuBarItm owner) {
+	public static GfuiMenuBarItm new_() {return new GfuiMenuBarItm();}
+	public static GfuiMenuBarItm sub_(GfuiMenuBarItm owner) {
 		GfuiMenuBarItm rv = new_();
 		rv.ownerItm = owner;
 		rv.foreColor = owner.foreColor;
@@ -232,7 +232,7 @@ class GfuiMenuBarItm {
 		rv.fontStyle = owner.fontStyle;
 		return rv;
 	}
-        public static GfuiMenuBarItm root_(Object underMenuBar) {
+	public static GfuiMenuBarItm root_(Object underMenuBar) {
 		GfuiMenuBarItm rv = new GfuiMenuBarItm().Type_(GfuiMenuBarItmType.Root).Key_("root").Under_(underMenuBar);
 		return rv;
 	}	GfuiMenuBarItm() {}

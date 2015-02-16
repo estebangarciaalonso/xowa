@@ -19,7 +19,7 @@ package gplx.xowa; import gplx.*;
 public class Xop_ttl_log {
 	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "ttl");
 	public static final Gfo_msg_itm
-		Len_0								= Gfo_msg_itm_.new_warn_(owner, "Len_0")
+	  Len_0								= Gfo_msg_itm_.new_warn_(owner, "Len_0")
 	, Len_max							= Gfo_msg_itm_.new_warn_(owner, "Len_max")
 	, Ttl_has_ns_but_no_page			= Gfo_msg_itm_.new_warn_(owner, "Ttl_has_ns_but_no_page")			
 	, Ttl_is_ns_only					= Gfo_msg_itm_.new_warn_(owner, "Ttl_is_ns_only")
@@ -28,35 +28,10 @@ public class Xop_ttl_log {
 	, Invalid_char						= Gfo_msg_itm_.new_warn_(owner, "Invalid_char")
 	;
 }
-class Xop_lnke_log {
-	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "lnke");
-	public static final Gfo_msg_itm Dangling = Gfo_msg_itm_.new_note_(owner, "dangling");	// NOTE: WP.BOT:YOBOT;EX.WP: Pan_flute
-}
 class Xop_comment_log {		
 	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "comment");
 	public static final Gfo_msg_itm
 		  Eos								= Gfo_msg_itm_.new_warn_(owner, "eos")
-		;
-}
-class Xop_amp_log {		
-	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "amp");
-	public static final Gfo_msg_itm
-		  Invalid_hex						= Gfo_msg_itm_.new_warn_(owner, "invalid_hex")
-		, Invalid_dec						= Gfo_msg_itm_.new_warn_(owner, "invalid_dec")
-		, Eos								= Gfo_msg_itm_.new_warn_(owner, "eos")
-		;
-}
-class Xop_hr_log {
-	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "hr");
-	public static final Gfo_msg_itm Len_5_or_more = Gfo_msg_itm_.new_warn_(owner, "len_5_or_more");
-}
-class Xop_hdr_log {
-	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "hdr");
-	public static final Gfo_msg_itm
-		  Dangling_hdr						= Gfo_msg_itm_.new_warn_(owner, "dangling_hdr")
-		, Mismatched						= Gfo_msg_itm_.new_warn_(owner, "mismatched")
-		, Len_1								= Gfo_msg_itm_.new_warn_(owner, "len_1")
-		, Len_7_or_more						= Gfo_msg_itm_.new_warn_(owner, "len_7_or_more")
 		;
 }
 class Xop_lnki_log {		
@@ -69,37 +44,6 @@ class Xop_lnki_log {
 	, Invalid_ttl						= Gfo_msg_itm_.new_warn_(owner, "invalid_ttl")
 	;
 }
-class Xop_xnde_log {
-	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "xnde");
-	public static final Gfo_msg_itm
-		  Dangling_xnde						= Gfo_msg_itm_.new_warn_(owner, "dangling_xnde")
-		, End_tag_not_allowed				= Gfo_msg_itm_.new_note_(owner, "end_tag_not_allowed")
-		, Escaped_xnde						= Gfo_msg_itm_.new_warn_(owner, "escaped_xnde")
-		, Invalid_char						= Gfo_msg_itm_.new_warn_(owner, "invalid_char")
-		, Xtn_end_not_found					= Gfo_msg_itm_.new_warn_(owner, "xtn_end_not_found")
-		, Invalid_tbl_sub					= Gfo_msg_itm_.new_warn_(owner, "invalid_tbl_sub")
-		, Invalid_nest						= Gfo_msg_itm_.new_warn_(owner, "invalid_nest")
-		, No_inline							= Gfo_msg_itm_.new_warn_(owner, "no_inline")
-		, Tbl_sub_already_opened			= Gfo_msg_itm_.new_warn_(owner, "tbl_sub_already_opened")
-		, Auto_closing_section				= Gfo_msg_itm_.new_warn_(owner, "auto_closing_section")
-		, Eos_while_closing_tag				= Gfo_msg_itm_.new_warn_(owner, "eos_while_closing_tag")
-		, Sub_sup_swapped					= Gfo_msg_itm_.new_warn_(owner, "sub_sup_swapped")
-		, Restricted_tag					= Gfo_msg_itm_.new_warn_(owner, "restricted_tag")
-		;
-}
-class Xop_tblw_log {		
-	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "tblw");
-	public static final Gfo_msg_itm
-		  Dangling							= Gfo_msg_itm_.new_warn_(owner, "dangling_tblw")
-		, Elem_without_tbl					= Gfo_msg_itm_.new_warn_(owner, "elem_without_tbl")
-//			, Row_trailing						= Gfo_msg_itm_.new_warn_(owner, "Row_trailing")
-		, Caption_after_tr					= Gfo_msg_itm_.new_warn_(owner, "caption_after_tr")
-		, Caption_after_td					= Gfo_msg_itm_.new_warn_(owner, "caption_after_td")
-		, Caption_after_tc					= Gfo_msg_itm_.new_warn_(owner, "caption_after_tc")
-		, Hdr_after_cell					= Gfo_msg_itm_.new_warn_(owner, "hdr_after_cell")
-		, Tbl_empty							= Gfo_msg_itm_.new_warn_(owner, "tbl_empty")
-		;
-}
 class Xop_tmpl_log {
 	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "tmpl");
 	public static final Gfo_msg_itm
@@ -110,18 +54,6 @@ class Xop_tmpl_log {
 		, Tmpl_end_autoCloses_something		= Gfo_msg_itm_.new_note_(owner, "Tmpl_end_autoCloses_something")
 		, Tmpl_is_empty						= Gfo_msg_itm_.new_note_(owner, "Tmpl_is_empty")
 		;
-}
-
-class Xop_apos_log {
-	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "apos");
-	public static final Gfo_msg_itm
-		  Bold_converted_to_ital			= Gfo_msg_itm_.new_note_(owner, "Bold_converted_to_ital")
-		, Dangling_apos						= Gfo_msg_itm_.new_note_(owner, "Dangling_apos")
-		, Multiple_apos						= Gfo_msg_itm_.new_note_(owner, "Multiple_apos")
-		;
-//		public final RscStrItm_arg
-//			  Dangling_apos_typ					= new RscStrItm_arg(_mgr, "closing_typ")
-//			;
 }
 class Xop_misc_log {
 	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "super");
@@ -160,13 +92,6 @@ class Xop_tag_log {
 	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "tag");
 	public static final Gfo_msg_itm
 		  Invalid							= Gfo_msg_itm_.new_warn_(owner, "Invalid")
-		;
-}
-class Pf_xtn_titleparts_log {
-	private static final Gfo_msg_grp owner = Gfo_msg_grp_.new_(Xoa_app_.Nde, "tmpl_func_titleparts");
-	public static final Gfo_msg_itm
-		  Len_is_invalid					= Gfo_msg_itm_.new_warn_(owner, "Len_is_invalid")
-		, Bgn_is_invalid					= Gfo_msg_itm_.new_warn_(owner, "Bgn_is_invalid")
 		;
 }
 //	class Pf_func_lang_log {

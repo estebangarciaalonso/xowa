@@ -46,7 +46,7 @@ public class Xot_invk_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 	}
 	public boolean Args_add(Xop_ctx ctx, byte[] src, Xop_tkn_itm tkn, Arg_nde_tkn nde, int nde_idx) {
 		Xot_invk_tkn invk = (Xot_invk_tkn)tkn;
-		if (nde_idx == 0)
+		if (nde_idx == 0)	// 1st arg; name_tkn
 			AddNameArg(ctx, src, invk, nde);
 		else
 			invk.Args_add(ctx, nde);
@@ -71,11 +71,13 @@ public class Xot_invk_wkr implements Xop_ctx_wkr, Xop_arg_wkr {
 			case Xot_defn_.Tid_safesubst:
 				int subst_bgn = finder.Subst_bgn(), subst_end = finder.Subst_end();
 				invk.Tmpl_subst_props_(finder_typeId, subst_bgn, subst_end);
-				if ((ctx.Parse_tid() == Xop_parser_.Parse_tid_tmpl && finder_typeId == Xot_defn_.Tid_subst)	// NOTE: if subst, but in tmpl stage, do not actually subst; EX.WP:Unreferenced; DATE:2013-01-31
-					|| ctx.Page().Ttl().Ns().Id_tmpl()) {												// also, if on tmpl page, never evaluate (questionable, but seems to be needed)
+				if ((ctx.Parse_tid() == Xop_parser_.Parse_tid_tmpl && finder_typeId == Xot_defn_.Tid_subst)	// NOTE: if subst, but in tmpl stage, do not actually subst; PAGE:en.w:Unreferenced; DATE:2013-01-31
+					|| ctx.Cur_page().Ttl().Ns().Id_tmpl()) {												// also, if on tmpl page, never evaluate (questionable, but seems to be needed)
 				}	
-				else
+				else {
 					key_tkn.Dat_rng_ary_(src, subst_end, txt_end);	// redo txt_rng to ignore subst
+					key_tkn.Dat_ary_had_subst_y_();
+				}
 				if (finder_func != Xot_defn_.Null) {
 					colon_pos = finder.Colon_pos();
 					txt_bgn = subst_end;

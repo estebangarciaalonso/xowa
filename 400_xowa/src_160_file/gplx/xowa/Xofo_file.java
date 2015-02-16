@@ -16,20 +16,20 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.ios.*; import gplx.gfui.*;
+import gplx.core.flds.*; import gplx.ios.*; import gplx.gfui.*;
 class Xofo_file {
-	public byte[] Name() {return name;} public Xofo_file Name_(byte[] v) {name = v; return this;}  byte[] name = ByteAry_.Empty;
-	public byte[] Redirect() {return redirect;} private byte[] redirect = ByteAry_.Empty; public boolean Redirect_exists() {return redirect.length > 0;}
+	public byte[] Name() {return name;} public Xofo_file Name_(byte[] v) {name = v; return this;}  byte[] name = Bry_.Empty;
+	public byte[] Redirect() {return redirect;} private byte[] redirect = Bry_.Empty; public boolean Redirect_exists() {return redirect.length > 0;}
 	public int Orig_w() {return orig_w;} private int orig_w;
 	public int Orig_h() {return orig_h;} private int orig_h;
 	public int Orig_size() {return orig_size;} private int orig_size;
 	public int Bits() {return bits;} private int bits;
 	public int Repo_id() {return repo_id;} public Xofo_file Repo_id_(int v) {this.repo_id = v; return this;} private int repo_id = -1;
-	public byte[] Status_msg() {return status_msg;} public Xofo_file Status_msg_(byte[] v) {status_msg = v; return this;} private byte[] status_msg = ByteAry_.Empty;
-	public int[] Thumbs() {return (int[])thumbs.XtoAry(int.class);} private OrderedHash thumbs = OrderedHash_.new_();
+	public byte[] Status_msg() {return status_msg;} public Xofo_file Status_msg_(byte[] v) {status_msg = v; return this;} private byte[] status_msg = Bry_.Empty;
+	public int[] Thumbs() {return (int[])thumbs.Xto_ary(int.class);} private OrderedHash thumbs = OrderedHash_.new_();
 	public Xofo_lnki[] Links() {return lnkis;} private Xofo_lnki[] lnkis = Xofo_lnki.Ary_empty; int links_len;
 	public void Links_(ListAdp list) {
-		lnkis = (Xofo_lnki[])list.XtoAry(Xofo_lnki.class);
+		lnkis = (Xofo_lnki[])list.Xto_ary(Xofo_lnki.class);
 		links_len = lnkis.length;
 		list.Clear();
 	}
@@ -43,7 +43,7 @@ class Xofo_file {
 		wtr.Write_bry_escape_fld(status_msg);
 		Xofo_lnki[] lnkis = this.Links();
 		int links_len = lnkis.length;
-		ByteAryBfr bfr = wtr.Bfr();
+		Bry_bfr bfr = wtr.Bfr();
 		for (int i = 0; i < links_len; i++) {
 			if (i != 0) bfr.Add_byte(Byte_ascii.Semic);
 			Xofo_lnki lnki = lnkis[i];
@@ -77,7 +77,7 @@ class Xofo_file {
 		Load_sql_atrs(fld_parser);
 		repo_id = fld_parser.Read_int();
 		status_msg = fld_parser.Read_bry_escape();
-		lnkis = lnki_parser.Parse_ary(fld_parser.Bry(), fld_parser.Pos(), rdr.Itm_pos_end() - 1);	// -1 to ignore closing \n
+		lnkis = lnki_parser.Parse_ary(fld_parser.Data(), fld_parser.Pos(), rdr.Itm_pos_end() - 1);	// -1 to ignore closing \n
 		return this;
 	}
 	public void Load_by_name_rdr(Gfo_fld_rdr fld_parser, Io_line_rdr rdr) {
@@ -105,5 +105,5 @@ class Xofo_file {
 		orig_w = fld_parser.Read_int();
 		orig_h = fld_parser.Read_int();
 		bits = fld_parser.Read_int();
-	}	byte[] name_ext = ByteAry_.Empty;
+	}	byte[] name_ext = Bry_.Empty;
 }

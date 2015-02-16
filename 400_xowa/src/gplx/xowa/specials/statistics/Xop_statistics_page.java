@@ -16,75 +16,73 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.specials.statistics; import gplx.*; import gplx.xowa.*; import gplx.xowa.specials.*;
+import gplx.xowa.langs.numbers.*;
 public class Xop_statistics_page implements Xows_page {
 	private Xop_statistics_stats_page_grp stats_page = new Xop_statistics_stats_page_grp();
 //		private Xop_statistics_stats_wiki_grp stats_wiki = new Xop_statistics_stats_wiki_grp();
 	private Xop_statistics_stats_ns_grp stats_ns = new Xop_statistics_stats_ns_grp();
 	public void Special_gen(Xoa_url calling_url, Xoa_page page, Xow_wiki wiki, Xoa_ttl ttl) {
 		byte[] html = Build_html(wiki);
-		page.Html_data().Restricted_n_();	// [[Special:]] pages allow all HTML
+		page.Html_data().Html_restricted_n_();	// [[Special:]] pages allow all HTML
 		page.Data_raw_(html);
 	}
 	public byte[] Build_html(Xow_wiki wiki) {
-		ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
+		Bry_bfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_m001();
 		stats_page.Wiki_(wiki);
 //			stats_wiki.Wiki_(wiki);
 		stats_ns.Wiki_(wiki);
 		fmtr_all.Bld_bfr_many(tmp_bfr, stats_page, stats_ns);
-		return tmp_bfr.Mkr_rls().XtoAryAndClear();
+		return tmp_bfr.Mkr_rls().Xto_bry_and_clear();
 	}
-	private ByteAryFmtr fmtr_all = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
+	private Bry_fmtr fmtr_all = Bry_fmtr.new_(String_.Concat_lines_nl_skip_last
 	(	"<div id=\"mw-content-text\">"
 	,	"<table class=\"wikitable mw-statistics-table\">~{page_stats}~{ns_stats}"
 	,	"</table>"
 	,	"</div>"
 	), "page_stats", "ns_stats");
 }
-class Xop_statistics_stats_page_grp implements ByteAryFmtrArg {
+class Xop_statistics_stats_page_grp implements Bry_fmtr_arg {
 	public void Wiki_(Xow_wiki v) {this.wiki = v;} private Xow_wiki wiki;
-	public void XferAry(ByteAryBfr bfr, int idx) {			
+	public void XferAry(Bry_bfr bfr, int idx) {			
 		byte[] lbl_header_pages = wiki.Msg_mgr().Val_by_id(Xol_msg_itm_.Id_statistics_header_pages);
 		byte[] lbl_articles = wiki.Msg_mgr().Val_by_id(Xol_msg_itm_.Id_statistics_articles);
 		byte[] lbl_pages = wiki.Msg_mgr().Val_by_id(Xol_msg_itm_.Id_statistics_pages);
 		byte[] lbl_pages_desc = wiki.Msg_mgr().Val_by_id(Xol_msg_itm_.Id_statistics_pages_desc);
-		fmtr_page.Bld_bfr_many(bfr, lbl_header_pages, lbl_articles, lbl_pages, lbl_pages_desc , wiki.Lang().Num_fmt_mgr().Fmt(wiki.Stats().NumArticles()), wiki.Lang().Num_fmt_mgr().Fmt(wiki.Stats().NumPages()));
+		Xol_num_mgr num_mgr = wiki.Lang().Num_mgr();
+		fmtr_page.Bld_bfr_many(bfr, lbl_header_pages, lbl_articles, lbl_pages, lbl_pages_desc , num_mgr.Format_num(wiki.Stats().NumArticles()), num_mgr.Format_num(wiki.Stats().NumPages()));
 	}
-	private ByteAryFmtr fmtr_page = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
+	private Bry_fmtr fmtr_page = Bry_fmtr.new_(String_.Concat_lines_nl_skip_last
 	(	""
 	,	"  <tr>"
 	,	"    <th colspan=\"2\">~{lbl_header_pages}</th>"
 	,	"  </tr>"
 	,	"  <tr class=\"mw-statistics-articles\">"
-	,	"    <td>"
-	,	"      ~{lbl_articles}"
-	,	"    </td>"
+	,	"    <td>~{lbl_articles}</td>"
 	,	"    <td class=\"mw-statistics-numbers\" style='text-align:right'>~{page_count_main}</td>"
 	,	"  </tr>"
 	,	"  <tr class=\"mw-statistics-pages\">"
-	,	"    <td>~{lbl_pages}<br />"
-	,	"      <small class=\"mw-statistic-desc\"> ~{lbl_pages_desc}</small>"
-	,	"    </td>"
+	,	"    <td>~{lbl_pages}<br /><small class=\"mw-statistic-desc\"> ~{lbl_pages_desc}</small></td>"
 	,	"    <td class=\"mw-statistics-numbers\" style='text-align:right'>~{page_count_all}</td>"
 	,	"  </tr>"
 	), "lbl_header_pages", "lbl_articles", "lbl_pages", "lbl_pages_desc", "page_count_main", "page_count_all");
 }
-class Xop_statistics_stats_ns_grp implements ByteAryFmtrArg {
+class Xop_statistics_stats_ns_grp implements Bry_fmtr_arg {
 	private Xop_statistics_stats_ns_itm ns_itm_fmtr = new Xop_statistics_stats_ns_itm();
 	public void Wiki_(Xow_wiki v) {this.wiki = v; ns_itm_fmtr.Wiki_(v);} private Xow_wiki wiki;
-	public void XferAry(ByteAryBfr bfr, int idx) {
+	public void XferAry(Bry_bfr bfr, int idx) {
 		byte[] lbl_header_ns = wiki.Msg_mgr().Val_by_id(Xol_msg_itm_.Id_statistics_header_ns);
 		fmtr_ns_grp.Bld_bfr_many(bfr, lbl_header_ns, ns_itm_fmtr);
 	}
-	private ByteAryFmtr fmtr_ns_grp = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
+	private Bry_fmtr fmtr_ns_grp = Bry_fmtr.new_(String_.Concat_lines_nl_skip_last
 	(	""
 	,	"  <tr>"
 	,	"    <th colspan=\"2\">~{lbl_header_ns}</th>"
 	,	"  </tr>~{ns_itms}"
 	), "lbl_header_ns", "ns_itms");
 }
-class Xop_statistics_stats_ns_itm implements ByteAryFmtrArg {
+class Xop_statistics_stats_ns_itm implements Bry_fmtr_arg {
 	public void Wiki_(Xow_wiki v) {this.wiki = v;} private Xow_wiki wiki;
-	public void XferAry(ByteAryBfr bfr, int idx) {
+	public void XferAry(Bry_bfr bfr, int idx) {
 		Xow_ns_mgr ns_mgr = wiki.Ns_mgr();
 		int ns_len = ns_mgr.Count();
 		for (int i = 0; i < ns_len; i++) {
@@ -92,10 +90,10 @@ class Xop_statistics_stats_ns_itm implements ByteAryFmtrArg {
 			if (ns.Is_meta()) continue;
 			if (ns.Count() == 0) continue;
 			byte[] ns_name = ns.Id_main() ? wiki.Msg_mgr().Val_by_id(Xol_msg_itm_.Id_ns_blankns) : ns.Name_txt();
-			fmtr_ns_itm.Bld_bfr_many(bfr, ns_name, wiki.Lang().Num_fmt_mgr().Fmt(ns.Count()));
+			fmtr_ns_itm.Bld_bfr_many(bfr, ns_name, wiki.Lang().Num_mgr().Format_num(ns.Count()));
 		}
 	}
-	private ByteAryFmtr fmtr_ns_itm = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
+	private Bry_fmtr fmtr_ns_itm = Bry_fmtr.new_(String_.Concat_lines_nl_skip_last
 	(	""
 	,	"  <tr>"
 	,	"    <td>~{ns_name}</td>"
@@ -103,12 +101,12 @@ class Xop_statistics_stats_ns_itm implements ByteAryFmtrArg {
 	,	"  </tr>"
 	), "ns_name", "ns_count");
 }
-class Xop_statistics_stats_wiki_grp implements ByteAryFmtrArg {
+class Xop_statistics_stats_wiki_grp implements Bry_fmtr_arg {
 	public void Wiki_(Xow_wiki v) {this.wiki = v;} private Xow_wiki wiki;
-	public void XferAry(ByteAryBfr bfr, int idx) {
-		fmtr_wiki.Bld_bfr_many(bfr, wiki.Db_mgr().Tid_name(), wiki.Fsys_mgr().Root_dir().Raw(), Byte_.XtoStr(wiki.Db_mgr().Category_version()), wiki.Maint_mgr().Wiki_dump_date().XtoStr_fmt_iso_8561());
+	public void XferAry(Bry_bfr bfr, int idx) {
+		fmtr_wiki.Bld_bfr_many(bfr, wiki.Db_mgr().Tid_name(), wiki.Fsys_mgr().Root_dir().Raw(), Byte_.Xto_str(wiki.Db_mgr().Category_version()), wiki.Maint_mgr().Wiki_dump_date().XtoStr_fmt_iso_8561());
 	}
-	private ByteAryFmtr fmtr_wiki = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
+	private Bry_fmtr fmtr_wiki = Bry_fmtr.new_(String_.Concat_lines_nl_skip_last
 	(	""	
 	,	"  <tr>"
 	,	"    <th colspan=\"2\">Wiki statistics</th>"

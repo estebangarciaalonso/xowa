@@ -23,15 +23,15 @@ public class Wmf_dump_itm implements gplx.CompareAble {
 	public byte[] Status_msg() {return status_msg;}																								// EX: Dump in progress / Dump complete
 	public void Status_msg_(byte[] v) {
 		this.status_msg = v;
-		if 		(ByteAry_.Eq(status_msg, Status_msg_dump_complete))
+		if 		(Bry_.Eq(status_msg, Status_msg_dump_complete))
 			status_tid = Status_tid_complete;
-		else if (ByteAry_.Eq(status_msg, Status_msg_dump_in_progress))
+		else if (Bry_.Eq(status_msg, Status_msg_dump_in_progress))
 			status_tid = Status_tid_working;
 		else
 			status_tid = Status_tid_error;
 	} 	private byte[] status_msg;
 	public byte Status_tid() {return status_tid;} private byte status_tid;
-	public int compareTo(Object obj) {Wmf_dump_itm comp = (Wmf_dump_itm)obj; return ByteAry_.Compare(wiki_abrv, comp.wiki_abrv);}
-	private static byte[] Status_msg_dump_complete = ByteAry_.new_ascii_("Dump complete"), Status_msg_dump_in_progress = ByteAry_.new_ascii_("Dump in progress");
+	public int compareTo(Object obj) {Wmf_dump_itm comp = (Wmf_dump_itm)obj; return Bry_.Compare(wiki_abrv, comp.wiki_abrv);}
+	private static byte[] Status_msg_dump_complete = Bry_.new_ascii_("Dump complete"), Status_msg_dump_in_progress = Bry_.new_ascii_("Dump in progress");
 	public static final byte Status_tid_complete = 0, Status_tid_working = 1, Status_tid_error = 2;
 }

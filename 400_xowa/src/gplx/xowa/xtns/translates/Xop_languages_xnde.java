@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.translates; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.core.primitives.*;
 import gplx.xowa.html.*;
 import gplx.xowa.langs.*;
 public class Xop_languages_xnde implements Xox_xnde {
@@ -28,15 +29,15 @@ public class Xop_languages_xnde implements Xox_xnde {
 	public Xoa_ttl Root_ttl() {return root_ttl;} private Xoa_ttl root_ttl;
 	private Xoa_ttl Root_ttl_of(Xow_wiki wiki, Xoa_ttl ttl) {
 		byte[] page_bry = ttl.Page_db();
-		int slash_pos = Byte_ary_finder.Find_bwd(page_bry, Xoa_ttl.Subpage_spr);
-		if (slash_pos == ByteAry_.NotFound) return ttl;
-		byte[] root_bry = ByteAry_.Mid(page_bry, 0, slash_pos);
+		int slash_pos = Bry_finder.Find_bwd(page_bry, Xoa_ttl.Subpage_spr);
+		if (slash_pos == Bry_.NotFound) return ttl;
+		byte[] root_bry = Bry_.Mid(page_bry, 0, slash_pos);
 		return Xoa_ttl.parse_(wiki, ttl.Ns().Id(), root_bry);
 	}
 	private ListAdp Find_lang_pages(Xop_ctx ctx, Xow_wiki wiki) {
-		this.root_ttl = Root_ttl_of(wiki, ctx.Page().Ttl());
+		this.root_ttl = Root_ttl_of(wiki, ctx.Cur_page().Ttl());
 		ListAdp rslts = ListAdp_.new_(); 
-		IntRef rslt_count = IntRef.new_(0);
+		Int_obj_ref rslt_count = Int_obj_ref.new_(0);
 		Xow_ns page_ns = root_ttl.Ns();
 		wiki.Db_mgr().Load_mgr().Load_ttls_for_all_pages(Cancelable_.Never, rslts, null, null, rslt_count, page_ns, root_ttl.Page_db(), Int_.MaxValue, 0, Int_.MaxValue, true, false);
 		int len = rslt_count.Val();
@@ -49,12 +50,12 @@ public class Xop_languages_xnde implements Xox_xnde {
 			Xodb_page page = (Xodb_page)rslts.FetchAt(i);
 			byte[] page_ttl_bry = page.Ttl_wo_ns();
 			int page_ttl_bry_len = page_ttl_bry.length;
-			if 		(ByteAry_.Eq(root_ttl_bry, page_ttl_bry)) continue; 	// ignore self; EX: "page"
+			if 		(Bry_.Eq(root_ttl_bry, page_ttl_bry)) continue; 	// ignore self; EX: "page"
 			if 		(lang_bgn < page_ttl_bry_len 							// guard against out of bounds
 				&& 	page_ttl_bry[lang_bgn - 1] == Xoa_ttl.Subpage_spr		// prv char must be /; EX: "Page/fr"
 				) {
-				byte[] lang_key = ByteAry_.Mid(page_ttl_bry, lang_bgn, page_ttl_bry_len);
-				if (ByteAry_.Eq(lang_key, Xol_lang_.Key_en))			// lang is english; mark english found;
+				byte[] lang_key = Bry_.Mid(page_ttl_bry, lang_bgn, page_ttl_bry_len);
+				if (Bry_.Eq(lang_key, Xol_lang_.Key_en))			// lang is english; mark english found;
 					english_needed = false;
 				Xol_lang_itm lang_itm = Xol_lang_itm_.Get_by_key(lang_key);
 				if (lang_itm == null) continue; // not a known lang
@@ -67,13 +68,13 @@ public class Xop_languages_xnde implements Xox_xnde {
 		rv.SortBy(Xol_lang_itm_sorter_by_key._);
 		return rv;
 	}
-	public void Xtn_write(Xoa_app app, Xoh_html_wtr html_wtr, Xoh_html_wtr_ctx opts, Xop_ctx ctx, ByteAryBfr bfr, byte[] src, Xop_xnde_tkn xnde) {
+	public void Xtn_write(Bry_bfr bfr, Xoa_app app, Xop_ctx ctx, Xoh_html_wtr html_wtr, Xoh_wtr_ctx hctx, Xop_xnde_tkn xnde, byte[] src) {
 		if (langs.Count() == 0) return; // no langs; don't write anything;
-		fmtr_mgr_itms.Init(langs, ctx.Wiki(), root_ttl, ctx.Page().Lang().Key_bry());
+		fmtr_mgr_itms.Init(langs, ctx.Wiki(), root_ttl, ctx.Cur_page().Lang().Key_bry());
 		fmtr_all.Bld_bfr_many(bfr, "Other languages", fmtr_mgr_itms);
 	}
 	private static final Xop_languages_fmtr fmtr_mgr_itms = new Xop_languages_fmtr();
-	public static final ByteAryFmtr fmtr_all = ByteAryFmtr.new_(String_.Concat_lines_nl
+	public static final Bry_fmtr fmtr_all = Bry_fmtr.new_(String_.Concat_lines_nl
 	(	"<table>"
 	,	"  <tbody>"
 	,	"    <tr valign=\"top\">"
@@ -84,30 +85,29 @@ public class Xop_languages_xnde implements Xox_xnde {
 	,	"  </tbody>"
 	,	"</table>"
 	), "other_languages_hdr", "language_itms")
-	,	fmtr_itm_basic = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
+	,	fmtr_itm_basic = Bry_fmtr.new_(String_.Concat_lines_nl_skip_last
 	(	""
 	,	"         <a href=\"~{anchor_href}\" title=\"~{anchor_title}\">~{anchor_text}</a>&#160;•"		
 	), "anchor_href", "anchor_title", "anchor_text")
-	,	fmtr_itm_english = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
+	,	fmtr_itm_english = Bry_fmtr.new_(String_.Concat_lines_nl_skip_last
 	(	""
 	,	"         <a href=\"~{anchor_href}\" title=\"~{anchor_title}\"><span class=\"mw-pt-languages-ui\">~{anchor_text}</span></a>&#160;•"
 	), "anchor_href", "anchor_title", "anchor_text")
-	,	fmtr_itm_selected = ByteAryFmtr.new_(String_.Concat_lines_nl_skipLast
+	,	fmtr_itm_selected = Bry_fmtr.new_(String_.Concat_lines_nl_skip_last
 	(	""
 	,	"         <span class=\"mw-pt-languages-selected\">~{anchor_text}</span>&#160;•"
 	), "anchor_href", "anchor_title", "anchor_text")
 	;
-	// "<img src=\"//bits.wikimedia.org/static-1.22wmf9/extensions/Translate/resources/images/prog-1.png\" alt=\"~{img_alt}\" title=\"~{img_title}\" width=\"9\" height=\"9\" />&#160;•&#160;‎"
-	// , "img_alt", "img_title"
+	// "<img src=\"//bits.wikimedia.org/static-1.22wmf9/extensions/Translate/res/images/prog-1.png\" alt=\"~{img_alt}\" title=\"~{img_title}\" width=\"9\" height=\"9\" />&#160;•&#160;‎"
 }
-class Xop_languages_fmtr implements ByteAryFmtrArg {
+class Xop_languages_fmtr implements Bry_fmtr_arg {
 	public void Init(ListAdp langs, Xow_wiki wiki, Xoa_ttl root_ttl, byte[] cur_lang) {
 		this.langs = langs;
 		this.wiki = wiki;
 		this.root_ttl = root_ttl;
 		this.cur_lang = cur_lang;
 	}	private ListAdp langs; private Xow_wiki wiki; private Xoa_ttl root_ttl; private byte[] cur_lang;
-	public void XferAry(ByteAryBfr bfr, int idx) {
+	public void XferAry(Bry_bfr bfr, int idx) {
 		int len = langs.Count();
 		Xoh_href_parser parser = wiki.App().Href_parser();
 		int ns_id = root_ttl.Ns().Id();
@@ -115,14 +115,14 @@ class Xop_languages_fmtr implements ByteAryFmtrArg {
 		for (int i = 0; i < len; i++) {
 			Xol_lang_itm lang = (Xol_lang_itm)langs.FetchAt(i);
 			byte[] lang_key = lang.Key();
-			boolean lang_is_en = ByteAry_.Eq(lang_key, Xol_lang_.Key_en);
-			byte[] lang_ttl_bry = lang_is_en ? root_ttl_bry : ByteAry_.Add_w_dlm(Xoa_ttl.Subpage_spr, root_ttl_bry, lang_key);
+			boolean lang_is_en = Bry_.Eq(lang_key, Xol_lang_.Key_en);
+			byte[] lang_ttl_bry = lang_is_en ? root_ttl_bry : Bry_.Add_w_dlm(Xoa_ttl.Subpage_spr, root_ttl_bry, lang_key);
 			Xoa_ttl lang_ttl = Xoa_ttl.parse_(wiki, ns_id, lang_ttl_bry);
-			byte[] lang_href = parser.Build_to_bry(lang_ttl, wiki);
+			byte[] lang_href = parser.Build_to_bry(wiki, lang_ttl);
 			byte[] lang_title = Xoh_html_wtr.Ttl_to_title(lang_ttl.Full_txt());
-			ByteAryFmtr fmtr = null;
-			if		(ByteAry_.Eq(lang_key, Xol_lang_.Key_en)) 	fmtr = Xop_languages_xnde.fmtr_itm_english;
-			else if	(ByteAry_.Eq(lang_key, cur_lang))			fmtr = Xop_languages_xnde.fmtr_itm_selected;
+			Bry_fmtr fmtr = null;
+			if		(Bry_.Eq(lang_key, Xol_lang_.Key_en)) 	fmtr = Xop_languages_xnde.fmtr_itm_english;
+			else if	(Bry_.Eq(lang_key, cur_lang))			fmtr = Xop_languages_xnde.fmtr_itm_selected;
 			else 												fmtr = Xop_languages_xnde.fmtr_itm_basic;
 			fmtr.Bld_bfr_many(bfr, lang_href, lang_title, lang.Local_name());
 		}

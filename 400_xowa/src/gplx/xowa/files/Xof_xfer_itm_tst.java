@@ -48,7 +48,6 @@ public class Xof_xfer_itm_tst {
 	@Test 	public void Thumb_w_is_wrong() 					{fxt.Lnki_( 20,  20).File_( 80, 100).tst( 16,  20);}
 	@Test 	public void Thumb_w_is_wrong_2() 				{fxt.Lnki_( 65,  50).File_(160, 160).tst( 50,  50);}
 	@Test 	public void Thumb_size_is_wrong() 				{fxt.Lnki_(128,  80).File_(720, 194).tst(128,  34);}
-	@Test 	public void Thumb_upright() 					{fxt.Lnki_(300, 200).Lnki_upright_(1).tst(230, 200);}			// w=.(75*300) ROUND 10; is 200 right???
 }
 class Xof_xfer_itm_fxt {
 	public Xof_xfer_itm_fxt ini() {lnki_img_type = Xop_lnki_type.Id_thumb; lnki_upright = -1; file_w = file_h = lnki_w = lnki_h = -1; return this;}

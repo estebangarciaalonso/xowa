@@ -22,14 +22,14 @@ public class Xop_xnde_wkr__err_misc_tst {
 	@After public void term() {fxt.Init_para_n_();}
 	@Test  public void Error_br_removed() {
 		fxt.Init_para_y_();
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
 			(	"<table>"
 			,	"  <tr>"
 			,	"    <th><span>a</span><br/><span>b</span>"
 			,	"    </th>"
 			,	"  </tr>"
 			,	"</table>"
-			), String_.Concat_lines_nl_skipLast
+			), String_.Concat_lines_nl_skip_last
 			(	"<table>"
 			,	"  <tr>"
 			,	"    <th><span>a</span><br/><span>b</span>"
@@ -40,9 +40,9 @@ public class Xop_xnde_wkr__err_misc_tst {
 			));
 		fxt.Init_para_n_();
 	}
-	@Test  public void Div_should_not_pop_past_td() {	// PURPOSE: extra </div> should not close <div> that is outside of <td>; EX.WP:Rome and Ankara
+	@Test  public void Div_should_not_pop_past_td() {	// PURPOSE: extra </div> should not close <div> that is outside of <td>; PAGE:en.w:Rome en.w:Ankara
 		fxt.Init_para_y_();
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
 			(	"<table>"
 			,		"<tr>"
 			,			"<td>"
@@ -72,7 +72,7 @@ public class Xop_xnde_wkr__err_misc_tst {
 			,			"</td>"
 			,		"</tr>"
 			,	"</table>"
-			), String_.Concat_lines_nl_skipLast
+			), String_.Concat_lines_nl_skip_last
 			(	"<table>"
 			,	"  <tr>"
 			,	"    <td>"
@@ -94,6 +94,7 @@ public class Xop_xnde_wkr__err_misc_tst {
 			,	"<p>b"
 			,	"</p>"
 			,	"</div>"
+			,	"</div>"				// TIDY.dangling: tidy will correct dangling node; DATE:2014-07-22
 			,	"          </td>"
 			,	"          <td>"
 			,	"<div>"
@@ -112,15 +113,15 @@ public class Xop_xnde_wkr__err_misc_tst {
 			));
 		fxt.Init_para_n_();
 	}
-	@Test  public void Xnde_pops() {	// PURPOSE: somehow xnde pops upper nde; EX.WP: Greek government debt crisis; "History of government debt"
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+	@Test  public void Xnde_pops() {	// PURPOSE: somehow xnde pops upper nde; PAGE:en.w:Greek government debt crisis; "History of government debt"
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
 			(	"<i>"
 			,	"{|"
 			,	"|-"
 			,	"|<i>a</i>"
 			,	"|}"
 			,	"</i>"
-			), String_.Concat_lines_nl_skipLast
+			), String_.Concat_lines_nl_skip_last
 			(	"<i>"
 			,	"<table>"
 			,	"  <tr>"
@@ -137,24 +138,8 @@ public class Xop_xnde_wkr__err_misc_tst {
 			,	""
 			);
 	}
-	@Test  public void Li_xatrs_repeated() {	// PURPOSE: inserted ul somehow getting attributes of li; EX.WP:Main Page
-		fxt.Test_parse_page_all_str(String_.Concat_lines_nl_skipLast
-			(	"<div>"
-			,	"<li style=\"-moz-float-edge: content-box\">"
-			,	"test"
-			,	"</li>"
-			,	"</div>"
-			), String_.Concat_lines_nl_skipLast
-			(	"<div>"
-			,	"<ul>"
-			,	"<li style=\"-moz-float-edge: content-box\">"
-			,	"test"
-			,	"</li>"
-			,	"</ul></div>"
-			));
-	}
 	@Test  public void Xnde_para() {	// PURPOSE: buggy code caused </p> to close everything; keeping test b/c of <p> logic
-		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_page_wiki_str(String_.Concat_lines_nl_skip_last
 			(	"<table>"
 			,	"<tr>"
 			,	"<td>"
@@ -167,7 +152,7 @@ public class Xop_xnde_wkr__err_misc_tst {
 			,	"</td>"
 			,	"</tr>"
 			,	"</table>"
-			), String_.Concat_lines_nl_skipLast
+			), String_.Concat_lines_nl_skip_last
 			(	"<table>"
 			,	"  <tr>"
 			,	"    <td>"
@@ -198,5 +183,8 @@ public class Xop_xnde_wkr__err_misc_tst {
 	}
 	@Test   public void Anchor_nested() {
 		fxt.Test_parse_page_all_str("b<a>c<a>d [[e]] f", "b&lt;a>c&lt;a>d <a href=\"/wiki/E\">e</a> f");
+	}
+	@Test   public void Img_should_not_be_xtn() {	// PURPOSE:<img> marked as .xtn; unclosed <img> was escaping rest of text; PAGE:de.w:Wikipedia:Technik/Archiv/2014 DATE:2014-11-06
+		fxt.Test_parse_page_all_str("<img>''a''", "&lt;img><i>a</i>");
 	}
 }

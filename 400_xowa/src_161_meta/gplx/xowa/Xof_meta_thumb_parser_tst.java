@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.strings.*;
 public class Xof_meta_thumb_parser_tst {
 	Xof_meta_thumb_parser parser = new Xof_meta_thumb_parser();
 	@Test  public void Exists_y()		{Tst_parse("1?45,40", itm_y_(45, 40));}
@@ -24,7 +24,7 @@ public class Xof_meta_thumb_parser_tst {
 	@Test  public void Many()			{Tst_parse("1?45,40;0?90,80", itm_y_(45, 40), itm_n_(90, 80));}
 	@Test  public void Seek()			{Tst_parse("1?45,40@2,3,4", itm_y_(45, 40, 2, 3, 4));}
 	private void Tst_parse(String raw_str, Xof_meta_thumb... expd) {
-		byte[] raw = ByteAry_.new_ascii_(raw_str);
+		byte[] raw = Bry_.new_ascii_(raw_str);
 		parser.Parse_ary(raw, 0, raw.length);
 		Tfds.Eq_str_lines(Xto_str(expd, 0, expd.length), Xto_str(parser.Ary(), 0, parser.Len()));
 	}
@@ -42,7 +42,7 @@ public class Xof_meta_thumb_parser_tst {
 			}
 			sb.Add_char_nl();
 		}
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}	String_bldr sb = String_bldr_.new_();
 //		Xof_meta_img_chkr img_(int w, int h, params int[] seeks) {return new Xof_meta_img_chkr().Width_(w).Height_(h).Seeks_(seeks);}
 	Xof_meta_thumb itm_y_(int w, int h, int... seeks) {return new Xof_meta_thumb(Xof_meta_itm.Exists_y, w, h, seeks);}

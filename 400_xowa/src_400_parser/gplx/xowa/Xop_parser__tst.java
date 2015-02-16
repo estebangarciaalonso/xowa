@@ -20,11 +20,11 @@ import org.junit.*;
 public class Xop_parser__tst {
 	@Before public void init() {fxt.Clear();} private Xop_parser__fxt fxt = new Xop_parser__fxt();
 	@Test  public void Para_y() {
-		fxt.Test_parse_to_html(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_to_html(String_.Concat_lines_nl_skip_last
 		( "a"
 		, ""
 		, "b"
-		), true, String_.Concat_lines_nl_skipLast
+		), true, String_.Concat_lines_nl_skip_last
 		( "<p>a"
 		, "</p>"
 		, ""
@@ -34,11 +34,11 @@ public class Xop_parser__tst {
 		));
 	}
 	@Test  public void Para_n() {
-		fxt.Test_parse_to_html(String_.Concat_lines_nl_skipLast
+		fxt.Test_parse_to_html(String_.Concat_lines_nl_skip_last
 		( "a"
 		, ""
 		, "b"
-		), false, String_.Concat_lines_nl_skipLast
+		), false, String_.Concat_lines_nl_skip_last
 		( "a"
 		, "b"
 		));
@@ -46,13 +46,13 @@ public class Xop_parser__tst {
 }
 class Xop_parser__fxt {
 	private Xop_fxt fxt = new Xop_fxt();
-	private ByteAryBfr bfr = ByteAryBfr.reset_(255);
+	private Bry_bfr bfr = Bry_bfr.reset_(255);
 	public void Clear() {
 		fxt.Reset();
 	}
 	public void Test_parse_to_html(String raw, boolean para_enabled, String expd)  {
-		byte[] raw_bry = ByteAry_.new_utf8_(raw);
-		Xop_parser_.Parse_to_html(bfr, fxt.Wiki(), fxt.Page(), para_enabled, raw_bry);
-		Tfds.Eq(expd, bfr.XtoStrAndClear());
+		byte[] raw_bry = Bry_.new_utf8_(raw);
+		fxt.Wiki().Parser().Parse_text_to_html(bfr, fxt.Page(), para_enabled, raw_bry);
+		Tfds.Eq(expd, bfr.Xto_str_and_clear());
 	}
 }

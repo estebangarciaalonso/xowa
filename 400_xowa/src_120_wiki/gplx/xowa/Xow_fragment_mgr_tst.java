@@ -17,25 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 import org.junit.*;
+import gplx.xowa.langs.numbers.*;
 public class Xow_fragment_mgr_tst {
 	Xow_fragment_mgr_fxt fxt = new Xow_fragment_mgr_fxt();
 	@Before public void init()	{fxt.Clear();}
-	@Test   public void Html_js_table_fmt() {
-		fxt.Test_fragment(Xow_fragment_mgr.Invk_html_js_table, String_.Concat_lines_nl
-		(	"  var xowa_global_values = {"
-		,	"    'collapsible-collapse'         : 'Collapse',"
-		,	"    'collapsible-expand'           : 'Expand',"
-		,	"    'sort-descending'              : 'Sort descending',"
-		,	"    'sort-ascending'               : 'Sort ascending',"
-		,	"    'wgContentLanguage'            : 'en',"
-		,	"    'wgSeparatorTransformTable'    : ['.\t.', ',\t,'],"
-		,	"    'wgDigitTransformTable'        : ['', ''],"
-		,	"    'wgDefaultDateFormat'          : 'dmy',"
-		,	"    'wgMonthNames'                 : ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],"
-		,	"    'wgMonthNamesShort'            : ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']"
-		,	"  };"
-		));
-	}
 	@Test   public void Html_js_edit_toolbar_fmt() {
 		fxt.Test_fragment(Xow_fragment_mgr.Invk_html_js_edit_toolbar, String_.Concat_lines_nl
 		(	"  var xowa_edit_i18n = {"
@@ -62,8 +47,10 @@ class Xow_fragment_mgr_fxt {
 			wiki = Xoa_app_fxt.wiki_tst_(app);
 		}
 	}	private Xow_wiki wiki;
-	public void Test_fragment(String key, String expd) {
-		wiki.Fragment_mgr().Evt_lang_changed(wiki.Lang());
+	public Xol_lang Make_lang(String key) {return wiki.App().Lang_mgr().Get_by_key_or_new(Bry_.new_ascii_(key));}
+	public void Test_fragment(String key, String expd) {Test_fragment(wiki.Lang(), key, expd);}
+	public void Test_fragment(Xol_lang lang, String key, String expd) {
+		wiki.Fragment_mgr().Evt_lang_changed(lang);
 		byte[] actl = (byte[])GfoInvkAble_.InvkCmd(wiki.Fragment_mgr(), key);
 		Tfds.Eq_str_lines(expd, String_.new_utf8_(actl));
 	}

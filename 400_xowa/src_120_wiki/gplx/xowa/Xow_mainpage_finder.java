@@ -16,20 +16,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-class Xow_mainpage_finder {
-	public static byte[] Find(Xow_wiki wiki) {
-		byte[] rv = Find_by_mediawiki_page(wiki); if (rv != null) return rv;
-		rv = Find_by_lang(wiki.Lang()); if (rv != null) return rv;
-		return wiki.Props().Main_page();	// siteinfo
+import gplx.xowa.langs.msgs.*;
+public class Xow_mainpage_finder {
+	public static byte[] Find_or(Xow_wiki wiki, byte[] or) {
+		Bry_bfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_b512();
+		Xol_msg_itm msg_itm = Xol_msg_mgr_.Get_msg_itm(tmp_bfr, wiki, wiki.Lang(), Msg_mainpage);
+		byte[] rv = msg_itm.Src_is_missing()
+			? or
+			: Xol_msg_mgr_.Get_msg_val(tmp_bfr, wiki, msg_itm, Bry_.Ary_empty)
+			;
+		tmp_bfr.Mkr_rls();
+		return rv;
 	}
-	private static byte[] Find_by_mediawiki_page(Xow_wiki wiki) {
-		byte[] rv = wiki.Msg_mgr().Val_by_key_args(Msg_mainpage);
-		return ByteAry_.Len_eq_0(rv) ? null : rv;	// NOTE: msg returns "" by default; return null instead
-	}	
-	public static final byte[] Ttl_mainpage = ByteAry_.new_ascii_("MediaWiki:Mainpage");
-	private static byte[] Find_by_lang(Xol_lang lang) {
-		Xol_msg_itm itm = lang.Msg_mgr().Itm_by_key_or_null(Msg_mainpage);
-		return itm == null ? null : itm.Val();
-	}
-	public static final byte[] Msg_mainpage = ByteAry_.new_ascii_("mainpage");
+	public static final byte[] Msg_mainpage = Bry_.new_ascii_("mainpage");
 }

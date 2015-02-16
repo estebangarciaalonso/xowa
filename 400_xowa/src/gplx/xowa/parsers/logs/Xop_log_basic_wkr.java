@@ -36,7 +36,7 @@ public class Xop_log_basic_wkr implements GfoInvkAble {
 			( log_tid
 			, log_msg == Xop_log_basic_wkr.Null_log_msg ? "" : String_.new_utf8_(log_msg)
 			, save_log_time ?  Env_.TickCount_elapsed_in_frac(log_bgn) : Xop_log_basic_wkr.Null_log_time
-			, page.Id()
+			, page.Revision_data().Id()
 			, save_page_ttl ? String_.new_utf8_(page.Ttl().Full_db()) : Xop_log_basic_wkr.Null_page_ttl
 			, save_args_len ? args_len : Xop_log_basic_wkr.Null_args_len
 			, save_args_str ? String_.new_utf8_(src, args_bgn, args_end) : Xop_log_basic_wkr.Null_args_str

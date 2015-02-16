@@ -39,20 +39,20 @@ public class Xowd_regy_mgr {
 	public Xowd_hive_regy_itm Update_add(int fil_idx, byte[] key) {
 		Xowd_hive_regy_itm rv = files_ary[fil_idx];
 		rv.Count_(rv.Count() + 1);
-		if 		(ByteAry_.Compare(key, rv.Bgn()) < CompareAble_.Same)
+		if 		(Bry_.Compare(key, rv.Bgn()) < CompareAble_.Same)
 			rv.Bgn_(key);
-		else if (ByteAry_.Compare(key, rv.End()) > CompareAble_.Same)
+		else if (Bry_.Compare(key, rv.End()) > CompareAble_.Same)
 			rv.End_(key);
 		return rv;
 	}
 	public boolean Update_change(int fil_idx, byte[] old_key, byte[] new_key) {
 		Xowd_hive_regy_itm rv = files_ary[fil_idx];
 		boolean changed = false;
-		if 		(ByteAry_.Eq(old_key, rv.Bgn())) {
+		if 		(Bry_.Eq(old_key, rv.Bgn())) {
 			rv.Bgn_(new_key);
 			changed = true;
 		}
-		else if (ByteAry_.Eq(old_key, rv.End())) {
+		else if (Bry_.Eq(old_key, rv.End())) {
 			rv.End_(new_key);
 			changed = true;
 		}
@@ -64,7 +64,7 @@ public class Xowd_regy_mgr {
 		throw Err_.not_implemented_();	// FUTURE: note that deletes are harder; rng ends could be deleted, so would need to open file and get new rng end
 	}
 	public void Save() {
-		ByteAryBfr bfr = ByteAryBfr.new_();
+		Bry_bfr bfr = Bry_bfr.new_();
 		int len = files_ary.length;
 		for (int i = 0; i < len; i++) {
 			Xowd_hive_regy_itm itm = files_ary[i];

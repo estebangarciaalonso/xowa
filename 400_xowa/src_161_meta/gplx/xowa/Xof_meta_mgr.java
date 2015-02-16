@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.core.flds.*;
 public class Xof_meta_mgr implements GfoInvkAble {
 	Object[] root = new Object[16]; OrderedHash dirty_fils = OrderedHash_.new_bry_();
 	public Xof_meta_mgr(Xow_wiki wiki) {this.wiki = wiki; this.root_dir = wiki.App().Fsys_mgr().File_dir().GenSubDir_nest("#meta", wiki.Domain_str());}
@@ -35,6 +36,7 @@ public class Xof_meta_mgr implements GfoInvkAble {
 		}
 		return rv;
 	}
+	public Xof_meta_itm Get_itm_or_new(byte[] ttl) {return Get_itm_or_new(ttl, gplx.xowa.files.Xof_xfer_itm_.Md5_(ttl));}
 	public Xof_meta_itm Get_itm_or_new(byte[] ttl, byte[] md5) {
 		Xof_meta_fil fil = this.Get_fil_or_new(md5);
 		return fil.Get_or_new(ttl);
@@ -48,7 +50,7 @@ public class Xof_meta_mgr implements GfoInvkAble {
 	public void Save() {Save(false);}
 	public void Save(boolean clear) {
 		int dirty_len = dirty_fils.Count();
-		ByteAryBfr tmp_bfr = ByteAryBfr.new_();
+		Bry_bfr tmp_bfr = Bry_bfr.new_();
 		wtr.Bfr_(tmp_bfr);
 		for (int i = 0; i < dirty_len; i++) {
 			Xof_meta_fil fil = (Xof_meta_fil)dirty_fils.FetchAt(i);
@@ -64,7 +66,7 @@ public class Xof_meta_mgr implements GfoInvkAble {
 	}	Gfo_fld_wtr wtr = Gfo_fld_wtr.xowa_();
 	Xof_meta_fil Load(byte[] md5) {
 		Io_url fil_url = Xof_meta_fil.Bld_url(root_dir, md5, depth);
-		byte[] bry = Io_mgr._.LoadFilBry(fil_url); if (bry == ByteAry_.Empty) return null;
+		byte[] bry = Io_mgr._.LoadFilBry(fil_url); if (bry == Bry_.Empty) return null;
 		rdr.Ini(bry, 0);
 		Xof_meta_fil rv = Bld_new(root, depth - 1, this, md5, 0);	// NOTE: need to register file before loading it; defect wherein 2 files with same hash prefix would skip one b/c Loaded file was not registered; EX.WS: en.wikiquote.org/The Hitchhiker's Guide to the Galaxy; NMMP_dolphin_with_locator.jpeg, da6f95736ed249f371f30bf5f1205fbd; Hoags_object.jpg, daed4a54e48e4266bd2f2763b7c4018c
 		rv.Load(rdr, parser);

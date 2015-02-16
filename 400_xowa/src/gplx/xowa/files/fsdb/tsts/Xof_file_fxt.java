@@ -16,13 +16,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.files.fsdb.tsts; import gplx.*; import gplx.xowa.*; import gplx.xowa.files.*; import gplx.xowa.files.fsdb.*;
-import gplx.fsdb.*; import gplx.dbs.*; import gplx.xowa.files.wiki_orig.*; import gplx.xowa.files.qrys.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.cnvs.*;
+import gplx.fsdb.*; import gplx.dbs.*; import gplx.xowa.files.wiki_orig.*; import gplx.xowa.files.fsdb.qrys.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.cnvs.*;
+import gplx.fsdb.data.*;
 class Xof_file_fxt {		
-	private Fsdb_xtn_thm_itm tmp_thm = Fsdb_xtn_thm_itm.new_(); private Fsdb_xtn_img_itm tmp_img = new Fsdb_xtn_img_itm();
+	private Fsd_thm_itm tmp_thm = Fsd_thm_itm.new_(); private Fsd_img_itm tmp_img = new Fsd_img_itm();
 	private Xof_fsdb_mgr fsdb_mgr; private Xof_qry_wrk_mock qry_wkr_mock = new Xof_qry_wrk_mock();
 	public boolean Db_skip() {return Xoa_test_.Db_skip();}
 	public void Reset() {this.Reset(Bool_.__byte);}
 	public void Reset(byte mem_tid) {
+		if (!Xoa_test_.Db_skip()) Db_conn_bldr.I.Reg_default_sqlite();
 		Xoa_app app = Xoa_app_fxt.app_();
 		Xow_wiki wiki = Xoa_app_fxt.wiki_tst_(app);
 		Xof_repo_fxt.Repos_init(app.File_mgr(), true, wiki);
@@ -68,7 +70,7 @@ class Xof_file_fxt {
 		Xof_fsdb_itm itm = itm_(String_.new_utf8_(arg.Ttl()), arg.Lnki_type(), arg.Lnki_w(), arg.Lnki_h(), arg.Lnki_upright(), arg.Lnki_thumbtime());
 		ListAdp itms_list = ListAdp_.new_();
 		itms_list.Add(itm);
-		fsdb_mgr.Reg_select(Xog_win_wtr_.Null, arg.Exec_tid(), itms_list);
+		fsdb_mgr.Fsdb_search_by_list(Xoa_page.Empty, arg.Exec_tid(), itms_list);
 		if (arg.Rslt_reg() != Xof_wiki_orig_wkr_.Tid_null) Tfds.Eq(arg.Rslt_reg(), itm.Rslt_reg(), "rslt_reg");
 		if (arg.Rslt_qry() != Xof_qry_wkr_.Tid_null) Tfds.Eq(arg.Rslt_qry(), itm.Rslt_qry(), "rslt_qry");
 		if (arg.Rslt_bin() != Xof_bin_wkr_.Tid_null) Tfds.Eq(arg.Rslt_bin(), itm.Rslt_bin(), "rslt_bin");
@@ -93,10 +95,10 @@ class Xof_file_fxt {
 	public void Test_regy_missing_qry(String key)		{Tfds.Eq(Xof_wiki_orig_wkr_.Tid_missing_qry, Exec_reg_select_itm(key).Rslt_reg());}
 	public void Test_regy_missing_bin(String key)		{Tfds.Eq(Xof_wiki_orig_wkr_.Tid_missing_bin, Exec_reg_select_itm(key).Rslt_reg());}
 	private Xof_fsdb_itm itm_(String ttl_str, byte type, int w, int h, double upright, int thumbtime) {
-		byte[] ttl_bry = ByteAry_.new_ascii_(ttl_str);
+		byte[] ttl_bry = Bry_.new_ascii_(ttl_str);
 		byte[] md5 = Xof_xfer_itm_.Md5_(ttl_bry);
 		Xof_ext ext = Xof_ext_.new_by_ttl_(ttl_bry);
-		return new Xof_fsdb_itm().Init_by_lnki(ttl_bry, ext, md5, type, w, h, upright, thumbtime, Xof_doc_page.Null);
+		return new Xof_fsdb_itm().Init_by_lnki(ttl_bry, ext, md5, type, w, h, Xof_patch_upright_tid_.Tid_all, upright, thumbtime, Xof_doc_page.Null);
 	}
 	public void Test_itm_ext(Xof_fsdb_itm itm, int expd_ext_id) {Tfds.Eq(expd_ext_id, itm.Lnki_ext().Id());}
 	public void Rls() {fsdb_mgr.Rls();}
@@ -104,7 +106,7 @@ class Xof_file_fxt {
 		Xof_fsdb_itm itm = itm_(ttl, Xop_lnki_type.Id_null, Xop_lnki_tkn.Width_null, Xop_lnki_tkn.Height_null, Xop_lnki_tkn.Upright_null, Xof_doc_thumb.Null_as_int);
 		ListAdp list = ListAdp_.new_();
 		list.Add(itm);
-		fsdb_mgr.Reg_select(Xog_win_wtr_.Null, Xof_exec_tid.Tid_wiki_page, list);
+		fsdb_mgr.Fsdb_search_by_list(Xoa_page.Empty, Xof_exec_tid.Tid_wiki_page, list);
 		return itm;
 	}
 	public static String file_img_(int w, int h) {return String_.Format("{0},{1}", w, h);}
@@ -118,16 +120,16 @@ class Xof_fsdb_arg_init_bin {
 	public double Thumbtime() {return thumbtime;} public Xof_fsdb_arg_init_bin Thumbtime_(double v) {thumbtime = v; return this;} private double thumbtime = Xof_doc_thumb.Null;
 	public int Page() {return page;} public Xof_fsdb_arg_init_bin Page_(int v) {page = v; return this;} private int page = Xof_doc_page.Null;
 	public int H() {return h;} public Xof_fsdb_arg_init_bin H_(int v) {h = v; return this;} private int h = H_default;
-	public DateAdp Modified() {return modified;} public Xof_fsdb_arg_init_bin Modified_(DateAdp v) {modified = v; return this;} private DateAdp modified = Fsdb_xtn_thm_tbl.Modified_null;
-	public String Hash() {return hash;} public Xof_fsdb_arg_init_bin Hash_(String v) {hash = v; return this;} private String hash = Fsdb_xtn_thm_tbl.Hash_null;
+	public DateAdp Modified() {return modified;} public Xof_fsdb_arg_init_bin Modified_(DateAdp v) {modified = v; return this;} private DateAdp modified = Fsd_thm_tbl.Modified_null;
+	public String Hash() {return hash;} public Xof_fsdb_arg_init_bin Hash_(String v) {hash = v; return this;} private String hash = Fsd_thm_tbl.Hash_null;
 	public byte[] Bin() {return bin;} public Xof_fsdb_arg_init_bin Bin_(byte[] v) {bin = v; return this;} private byte[] bin;
 	public boolean Is_thumb() {return is_thumb;} public Xof_fsdb_arg_init_bin Is_thumb_(boolean v) {is_thumb = v; return this;} private boolean is_thumb;
-	public Xof_fsdb_arg_init_bin Ttl_(String v) {ttl = ByteAry_.new_utf8_(v); return this;}
+	public Xof_fsdb_arg_init_bin Ttl_(String v) {ttl = Bry_.new_utf8_(v); return this;}
 	public Xof_fsdb_arg_init_bin Ext_id_() {ext_id = Xof_ext_.new_by_ttl_(ttl).Id(); return this;}
-	public Xof_fsdb_arg_init_bin Bin_(String v) {return Bin_(ByteAry_.new_ascii_(v));} 
+	public Xof_fsdb_arg_init_bin Bin_(String v) {return Bin_(Bry_.new_ascii_(v));} 
 	public Xof_fsdb_arg_init_bin Bin_by_size_() {
 		String bin_str = ext_id == Xof_ext_.Id_svg ? Xof_file_fxt.file_svg_(w, h) : Xof_file_fxt.file_img_(w, h);
-		return Bin_(ByteAry_.new_ascii_(bin_str));
+		return Bin_(Bry_.new_ascii_(bin_str));
 	}
 	public Xof_fsdb_arg_init_bin Init_commons_file(String ttl)						{return Init(Xow_wiki_.Domain_commons_bry, Bool_.N, ttl, Xof_img_size.Null, Xof_img_size.Null, Xof_doc_thumb.Null_as_int);}
 	public Xof_fsdb_arg_init_bin Init_commons_thumb(String ttl)						{return Init(Xow_wiki_.Domain_commons_bry, Bool_.Y, ttl, W_default, H_default, Xof_doc_thumb.Null_as_int);}
@@ -152,11 +154,11 @@ class Xof_fsdb_arg_init_qry {
 	public byte[] Redirect_trg() {return redirect_trg;} private byte[] redirect_trg;
 	public int W() {return w;} private int w = W_default;
 	public int H() {return h;} private int h = H_default;
-	public Xof_fsdb_arg_init_qry Init_commons_file(String ttl)					{this.wiki = Xow_wiki_.Domain_commons_bry; this.ttl = ByteAry_.new_ascii_(ttl); this.w = Xof_img_size.Size_null; this.h = Xof_img_size.Size_null; return this;}
-	public Xof_fsdb_arg_init_qry Init_commons(String ttl, int w, int h)			{this.wiki = Xow_wiki_.Domain_commons_bry; this.ttl = ByteAry_.new_ascii_(ttl); this.w = w; this.h = h; return this;}
-	public Xof_fsdb_arg_init_qry Init_en_wiki(String ttl, int w, int h)			{this.wiki = Xow_wiki_.Domain_en_wiki_bry; this.ttl = ByteAry_.new_ascii_(ttl); this.w = w; this.h = h; return this;}
-	public Xof_fsdb_arg_init_qry Init_en_wiki_redirect(String src, String trg)	{this.wiki = Xow_wiki_.Domain_en_wiki_bry; this.ttl = ByteAry_.new_ascii_(src); this.redirect_trg = ByteAry_.new_ascii_(trg); return this;}
-	public Xof_fsdb_arg_init_qry Init_commons_redirect(String src, String trg)	{this.wiki = Xow_wiki_.Domain_commons_bry; this.ttl = ByteAry_.new_ascii_(src); this.redirect_trg = ByteAry_.new_ascii_(trg); return this;}
+	public Xof_fsdb_arg_init_qry Init_commons_file(String ttl)					{this.wiki = Xow_wiki_.Domain_commons_bry; this.ttl = Bry_.new_ascii_(ttl); this.w = Xof_img_size.Size_null; this.h = Xof_img_size.Size_null; return this;}
+	public Xof_fsdb_arg_init_qry Init_commons(String ttl, int w, int h)			{this.wiki = Xow_wiki_.Domain_commons_bry; this.ttl = Bry_.new_ascii_(ttl); this.w = w; this.h = h; return this;}
+	public Xof_fsdb_arg_init_qry Init_en_wiki(String ttl, int w, int h)			{this.wiki = Xow_wiki_.Domain_en_wiki_bry; this.ttl = Bry_.new_ascii_(ttl); this.w = w; this.h = h; return this;}
+	public Xof_fsdb_arg_init_qry Init_en_wiki_redirect(String src, String trg)	{this.wiki = Xow_wiki_.Domain_en_wiki_bry; this.ttl = Bry_.new_ascii_(src); this.redirect_trg = Bry_.new_ascii_(trg); return this;}
+	public Xof_fsdb_arg_init_qry Init_commons_redirect(String src, String trg)	{this.wiki = Xow_wiki_.Domain_commons_bry; this.ttl = Bry_.new_ascii_(src); this.redirect_trg = Bry_.new_ascii_(trg); return this;}
 	public static Xof_fsdb_arg_init_qry new_() {return new Xof_fsdb_arg_init_qry();} Xof_fsdb_arg_init_qry() {}
 	public static final int W_default = 440, H_default = 400;
 }
@@ -179,7 +181,7 @@ class Xof_fsdb_arg_exec_get {
 	public Xof_fsdb_arg_exec_get Init_thumb(String ttl, int w, int h)	{return Init(ttl, Xop_lnki_type.Id_thumb, w, h);}
 	public Xof_fsdb_arg_exec_get Init_orig(String ttl)					{return Init(ttl, Xop_lnki_type.Id_null, Xop_lnki_tkn.Width_null, Xop_lnki_tkn.Height_null);}
 	public Xof_fsdb_arg_exec_get Init(String ttl, byte type, int w, int h) {
-		this.ttl = ByteAry_.new_utf8_(ttl);
+		this.ttl = Bry_.new_utf8_(ttl);
 		this.lnki_type = type;
 		this.lnki_w = w;
 		this.lnki_h = h;
@@ -202,10 +204,10 @@ class Xof_fsdb_arg_exec_get {
 }
 class Xof_repo_fxt {
 	public static void Repos_init(Xof_file_mgr file_mgr, boolean src_repo_is_wmf, Xow_wiki wiki) {
-		byte[] src_commons = ByteAry_.new_ascii_("src_commons");
-		byte[] src_en_wiki = ByteAry_.new_ascii_("src_en_wiki");
-		byte[] trg_commons = ByteAry_.new_ascii_("trg_commons");
-		byte[] trg_en_wiki = ByteAry_.new_ascii_("trg_en_wiki");
+		byte[] src_commons = Bry_.new_ascii_("src_commons");
+		byte[] src_en_wiki = Bry_.new_ascii_("src_en_wiki");
+		byte[] trg_commons = Bry_.new_ascii_("trg_commons");
+		byte[] trg_en_wiki = Bry_.new_ascii_("trg_en_wiki");
 		Ini_repo_add(file_mgr, src_commons, "mem/src/commons.wikimedia.org/", Xow_wiki_.Domain_commons_str, false);
 		Ini_repo_add(file_mgr, src_en_wiki, "mem/src/en.wikipedia.org/"		, Xow_wiki_.Domain_enwiki_str, false);
 		Ini_repo_add(file_mgr, trg_commons, "mem/root/common/", Xow_wiki_.Domain_commons_str, true).Primary_(true);
@@ -236,7 +238,7 @@ class Xof_fsdb_arg_reg_get {
 	public Xof_fsdb_arg_reg_get Init_en_wiki(int w, int h)					{return Init(Xof_repo_itm.Repo_local, w, h, String_.Empty);}
 	public Xof_fsdb_arg_reg_get Init_en_wiki(int w, int h, String redirect) {return Init(Xof_repo_itm.Repo_local, w, h, redirect);}
 	public Xof_fsdb_arg_reg_get Init(byte repo_id, int w, int h, String redirect) {
-		this.repo_id = repo_id; this.orig_w = w; this.orig_h = h; this.redirect = ByteAry_.new_utf8_(redirect);
+		this.repo_id = repo_id; this.orig_w = w; this.orig_h = h; this.redirect = Bry_.new_utf8_(redirect);
 		return this;
 	}
 	public static Xof_fsdb_arg_reg_get new_() {return new Xof_fsdb_arg_reg_get();}

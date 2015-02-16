@@ -22,13 +22,13 @@ class Cache_dir_itm {
 	public byte[] Dir_bry() {return dir_bry;} private byte[] dir_bry;
 	public byte Cmd_mode() {return cmd_mode;} public Cache_dir_itm Cmd_mode_(byte v) {cmd_mode = v; return this;} private byte cmd_mode;
 	public Cache_dir_itm Init_by_load(DataRdr rdr) {
-		cmd_mode = Db_cmd_mode.Ignore;
+		cmd_mode = Db_cmd_mode.Tid_ignore;
 		uid = rdr.ReadInt(Cache_dir_tbl.Fld_dir_id);
 		dir_bry = rdr.ReadBryByStr(Cache_dir_tbl.Fld_dir_name);
 		return this;
 	}
 	public Cache_dir_itm Init_by_make(int uid, byte[] dir_bry) {
-		cmd_mode = Db_cmd_mode.Create;
+		cmd_mode = Db_cmd_mode.Tid_create;
 		this.uid = uid;
 		this.dir_bry = dir_bry;
 		return this;

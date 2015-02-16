@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.specials.search; import gplx.*; import gplx.xowa.*; import gplx.xowa.specials.*;
-import gplx.xowa.wikis.*;
+import gplx.core.primitives.*; import gplx.xowa.wikis.*;
 public class Xosrh_core implements GfoInvkAble, Xows_page {
 	public Xosrh_core(Xow_wiki wiki) {this.wiki = wiki;} 
 	public Xow_wiki Wiki() {return wiki;} private Xow_wiki wiki;
@@ -38,24 +38,24 @@ public class Xosrh_core implements GfoInvkAble, Xows_page {
 		}
 		if (	search_suggest_mgr.Auto_wildcard()
 			&&	wiki.Db_mgr().Tid() == gplx.xowa.dbs.Xodb_mgr_sql.Tid_sql	// only apply to sql
-			&&	Byte_ary_finder.Find_fwd(search_bry, Byte_ascii.Asterisk) == -1		// search term does not have asterisk
+			&&	Bry_finder.Find_fwd(search_bry, Byte_ascii.Asterisk) == -1		// search term does not have asterisk
 			)
-			search_bry = ByteAry_.Add_w_dlm(Byte_ascii.Asterisk, search_bry, ByteAry_.Empty);
-		url.Page_bry_(ByteAry_.Add(ByteAry_.new_ascii_("Special:Search/"), search_bry));	// HACK: need to re-set Page b/c href_parser does not eliminate qargs; DATE:2013-02-08
+			search_bry = Bry_.Add_w_dlm(Byte_ascii.Asterisk, search_bry, Bry_.Empty);
+		url.Page_bry_(Bry_.Add(Bry_.new_ascii_("Special:Search/"), search_bry));	// HACK: need to re-set Page b/c href_parser does not eliminate qargs; DATE:2013-02-08
 		Xoa_ttl page_ttl = Xoa_ttl.parse_(wiki, search_bry); 
 		Xoa_page find_page = page;
-		if (!ByteAry_.Eq(search_bry, Bry_page_name))				// do not lookup page else stack overflow; happens when going directly to Special:Search (from history)
+		if (!Bry_.Eq(search_bry, Bry_page_name))				// do not lookup page else stack overflow; happens when going directly to Special:Search (from history)
 			find_page = wiki.Data_mgr().Get_page(page_ttl, false);	// lookup page
 		if (find_page.Missing() || url.Search_fulltext()) {	// page not found, or explicit_search invoked
-			ByteAryBfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_k004();
+			Bry_bfr tmp_bfr = wiki.Utl_bry_bfr_mkr().Get_k004();
 			int page_idx = args_mgr.Page_idx();
 			Sort_tid(args_mgr.Sort_tid());
 			page_mgr.Ns_mgr_(args_mgr.Ns_mgr());
 			cur_grp = page_mgr.Search(tmp_bfr, wiki, search_bry, page_idx, page_mgr);
 			html_mgr.Bld_html(tmp_bfr, this, cur_grp, search_bry, page_idx, page_mgr.Pages_len());
-			page.Data_raw_(tmp_bfr.Mkr_rls().XtoAryAndClear());
+			page.Data_raw_(tmp_bfr.Mkr_rls().Xto_bry_and_clear());
 			wiki.ParsePage(page, false);	// do not clear else previous Search_text will be lost
-			page.Search_text_(search_bry);
+			page.Html_data().Xtn_search_text_(search_bry);
 		}
 		else {														// page found; return it;
 			wiki.ParsePage(find_page, true);
@@ -64,7 +64,7 @@ public class Xosrh_core implements GfoInvkAble, Xows_page {
 				page.Root().Data_htm_(find_page.Root().Data_htm());
 			page.Ttl_(page_ttl).Url_(Xoa_url.new_(wiki.Domain_bry(), page_ttl.Full_txt())).Redirected_(true);
 		}
-	}	static final byte[] Bry_page_name = ByteAry_.new_ascii_("Special:Search");
+	}	static final byte[] Bry_page_name = Bry_.new_ascii_("Special:Search");
 	private void Sort_tid(byte v) {
 		switch (v) {
 			case Xosrh_rslt_itm_sorter.Tid_none:
@@ -105,22 +105,22 @@ class Xosrh_args_mgr {
 			byte[] key = arg.Key_bry();
 			Object tid = url_args.Fetch(key);
 			if (tid != null) {
-				switch (((ByteVal)tid).Val()) {
-					case Arg_search: 		search_bry 	= ByteAry_.Replace(arg.Val_bry(), Byte_ascii.Plus, Byte_ascii.Space); break;
-					case Arg_page_idx: 		page_idx 	= ByteAry_.X_to_int_or(arg.Val_bry(), 0); break;
+				switch (((Byte_obj_val)tid).Val()) {
+					case Arg_search: 		search_bry 	= Bry_.Replace(arg.Val_bry(), Byte_ascii.Plus, Byte_ascii.Space); break;
+					case Arg_page_idx: 		page_idx 	= Bry_.Xto_int_or(arg.Val_bry(), 0); break;
 					case Arg_sort: 			sort_tid	= Xosrh_rslt_itm_sorter.parse_(String_.new_ascii_(arg.Val_bry())); break;			
 					default:				break;
 				}
 			}
 			else {
-				if (ByteAry_.HasAtBgn(key, Ns_bry))		// check for ns*; EX: &ns0=1&ns8=1; NOTE: lowercase only
+				if (Bry_.HasAtBgn(key, Ns_bry))		// check for ns*; EX: &ns0=1&ns8=1; NOTE: lowercase only
 					ns_mgr.Add_by_parse(key, arg.Val_bry());
 			}
 		}
 		ns_mgr.Add_main_if_empty();
 	}	private static final byte Arg_search = 0, Arg_page_idx = 1, Arg_sort = 2;
-	private static byte[] Ns_bry = ByteAry_.new_ascii_("ns");
-	private static final Hash_adp_bry url_args = Hash_adp_bry.ci_()
+	private static byte[] Ns_bry = Bry_.new_ascii_("ns");
+	private static final Hash_adp_bry url_args = Hash_adp_bry.ci_ascii_()
 		.Add_str_byte("xowa_page_index", Arg_page_idx)
 		.Add_str_byte("xowa_sort", Arg_sort)
 		.Add_str_byte("search", Arg_search)

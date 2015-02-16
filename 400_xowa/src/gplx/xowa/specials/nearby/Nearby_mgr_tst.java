@@ -46,18 +46,18 @@ class Nearby_mgr_fxt {
 		if (fxt == null) {
 			fxt = new Xop_fxt();
 			nearby_mgr = new Nearby_mgr();
-			excluded = Hash_adp_bry.ci_();
-			tmp_bfr = ByteAryBfr.new_();
+			excluded = Hash_adp_bry.ci_ascii_();
+			tmp_bfr = Bry_bfr.new_();
 		}
 		fxt.Reset();
 		Io_mgr._.InitEngine_mem();
 		nearby_mgr.Results_max_(1);
 		return this;
-	} 	private Xop_fxt fxt; Nearby_mgr nearby_mgr; Hash_adp_bry excluded; ByteAryBfr tmp_bfr;
+	} 	private Xop_fxt fxt; Nearby_mgr nearby_mgr; Hash_adp_bry excluded; Bry_bfr tmp_bfr;
 	public void Init_page(String ttl, String text) {fxt.Init_page_create(ttl, text);}
 	public Nearby_mgr_fxt Init_results_max(int v) {nearby_mgr.Results_max_(v); return this;}
 	public void Test_find(String src, String trg, String... expd) {
-		ListAdp actl = nearby_mgr.Find_from_to(fxt.Wiki(), ByteAry_.new_ascii_(src), ByteAry_.new_ascii_(trg), excluded);
+		ListAdp actl = nearby_mgr.Find_from_to(fxt.Wiki(), Bry_.new_ascii_(src), Bry_.new_ascii_(trg), excluded);
 		Tfds.Eq_ary(String_.SplitLines_nl(Xto_str(actl)), expd);
 	}
 	String Xto_str(ListAdp list) {
@@ -72,6 +72,6 @@ class Nearby_mgr_fxt {
 				tmp_bfr.Add(ttl.Page_db());
 			}
 		}
-		return tmp_bfr.XtoStrAndClear();
+		return tmp_bfr.Xto_str_and_clear();
 	}
 }

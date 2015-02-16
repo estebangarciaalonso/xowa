@@ -19,7 +19,7 @@ package gplx.gfs; import gplx.*;
 public class Gfs_msg_bldr implements GfoMsgParser {
 	Gfs_parser parser = new Gfs_parser();
 	public GfoMsg ParseToMsg(String s) {return Bld(s);}
-	public GfoMsg Bld(String src) {return Bld(ByteAry_.new_utf8_(src));}
+	public GfoMsg Bld(String src) {return Bld(Bry_.new_utf8_(src));}
 	public GfoMsg Bld(byte[] src) {
 		Gfs_nde nde = parser.Parse(src);
 		return Bld_msg(src, nde);

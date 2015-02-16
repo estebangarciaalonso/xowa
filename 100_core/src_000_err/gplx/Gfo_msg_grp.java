@@ -24,7 +24,7 @@ public class Gfo_msg_grp implements Gfo_msg_obj {
 			path = Gfo_msg_grp_.Path(owner.path, key);
 		}
 		else
-			path = ByteAry_.Empty;
+			path = Bry_.Empty;
 	}
 	public void Subs_clear() {subs.Clear();}
 	public Gfo_msg_grp Owner() {return owner;} Gfo_msg_grp owner;

@@ -40,12 +40,12 @@ class TabBoxEvt_tabSelectByBtn {
 class TabBnd_selectTab implements InjectAble, GfoInvkAble {
 	public void Inject(Object obj) {
 		tabBox = TabBox_.cast_(obj);
-		IptBnd_.cmd_to_(IptCfg_.Null, tabBox, this, SelectNext_cmd, IptKey_.add_(IptKey_.Ctrl, IptKey_.Tab));
-		IptBnd_.cmd_to_(IptCfg_.Null, tabBox, this, SelectPrev_cmd, IptKey_.add_(IptKey_.Ctrl, IptKey_.Tab, IptKey_.Shift));
+		IptBnd_.cmd_to_(IptCfg_.Null, tabBox, this, SelectNext_cmd, IptKey_.add_(IptKey_.Ctrl, IptKey_.Tab), IptKey_.add_(IptKey_.Ctrl, IptKey_.PageDown));
+		IptBnd_.cmd_to_(IptCfg_.Null, tabBox, this, SelectPrev_cmd, IptKey_.add_(IptKey_.Ctrl, IptKey_.Tab, IptKey_.Shift), IptKey_.add_(IptKey_.Ctrl, IptKey_.PageUp));
 	}
 	void Select(GfoMsg msg, int delta) {
 		TabPnlItm curTab = tabBox.Mgr().CurTab();
-		int newIdx = Int_gfui_.Cycle(delta > 0, curTab.Idx(), tabBox.Mgr().Count());
+		int newIdx = TabBox_.Cycle(delta > 0, curTab.Idx(), tabBox.Mgr().Count());
 		tabBox.Tabs_Select(newIdx);
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
@@ -66,7 +66,7 @@ class TabBnd_reorderTab implements InjectAble, GfoInvkAble {
 	@gplx.Internal protected void MoveTab(GfuiBtn curBtn, int delta) {
 		TabPnlItm curItm = tabBox.Mgr().Fetch(curBtn.Key_of_GfuiElem());
 		int curIdx = curItm.Idx();
-		int newIdx = Int_gfui_.Cycle(delta > 0, curIdx, tabBox.Mgr().Count());
+		int newIdx = TabBox_.Cycle(delta > 0, curIdx, tabBox.Mgr().Count());
 
 		tabBox.Mgr().MoveTo(curIdx, newIdx);
 		tabBox.Mgr().Reorder(0); // reorder all; exchanging curIdx for newIdx does not work when going from last to first (17 -> 0, but 0 -> 1)

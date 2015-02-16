@@ -20,5 +20,5 @@ public class GfsLibIni_gfui implements GfsLibIni {
 	public void Ini(GfsCore core) {
 		core.AddCmd(IptCfgRegy._, "IptBndMgr_");
 	}
-        public static final GfsLibIni_gfui _ = new GfsLibIni_gfui(); GfsLibIni_gfui() {}
+	public static final GfsLibIni_gfui _ = new GfsLibIni_gfui(); GfsLibIni_gfui() {}
 }

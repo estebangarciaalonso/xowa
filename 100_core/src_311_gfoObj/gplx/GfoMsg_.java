@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.primitives.*; import gplx.core.strings.*;
 public class GfoMsg_ {
 	public static GfoMsg as_(Object obj) {return obj instanceof GfoMsg ? (GfoMsg)obj : null;}
 	public static final GfoMsg Null = new GfoMsg_base().ctor_("<<NULL MSG>>", false);
@@ -99,6 +100,12 @@ class GfoMsg_base implements GfoMsg {
 		counter = 0;
 		Args_reset(this);
 	}
+	public GfoMsg Clear() {
+		this.Args_reset();
+		if (subs != null) subs.Clear();
+		if (args != null) args.Clear();
+		return this;
+	}
 	static void Args_reset(GfoMsg owner) {
 		int len = owner.Subs_count();
 		for (int i = 0; i < len; i++) {
@@ -156,12 +163,14 @@ class GfoMsg_base implements GfoMsg {
 		String rv_str = (String)rv;
 		return (String_.Eq(rv_str, "!")) ? !cur : Yn.parse_(rv_str);
 	}
-	public byte[]	ReadBry(String k)						{Object rv = ReadOr(k,false); if (rv == Nil) ThrowNotFound(k); return parse ? ByteAry_.new_utf8_((String)rv) : (byte[])rv;}
-	public byte[]	ReadBryOr(String k, byte[] or)			{Object rv = ReadOr(k, or); if (rv == Nil) return or; return parse ? ByteAry_.new_utf8_((String)rv) : (byte[])rv;}
+	public byte[]	ReadBry(String k)						{Object rv = ReadOr(k,false); if (rv == Nil) ThrowNotFound(k); return parse ? Bry_.new_utf8_((String)rv) : (byte[])rv;}
+	public byte[]	ReadBryOr(String k, byte[] or)			{Object rv = ReadOr(k, or); if (rv == Nil) return or; return parse ? Bry_.new_utf8_((String)rv) : (byte[])rv;}
 	public Object	CastObjOr(String k, Object or)	{Object rv = ReadOr(k, or)	; if (rv == Nil) return or		; return rv;}
+	public Object	ReadObj(String k)									{Object rv = ReadOr(k, null); if (rv == Nil) ThrowNotFound(k); return rv;}
 	public Object	ReadObj(String k, ParseAble parseAble)				{Object rv = ReadOr(k, null); if (rv == Nil) ThrowNotFound(k); return parse ? parseAble.ParseAsObj((String)rv) : rv;}
-	public Object	ReadObjOr(String k, ParseAble parseAble, Object or) {Object rv = ReadOr(k, or); if (rv == Nil) return or		; return parse ? parseAble.ParseAsObj((String)rv) : rv;}
+	public Object	ReadObjOr(String k, ParseAble parseAble, Object or) {Object rv = ReadOr(k, or)	; if (rv == Nil) return or		; return parse ? parseAble.ParseAsObj((String)rv) : rv;}
 	public String[]	ReadStrAry(String k, String spr)		{return String_.Split(ReadStr(k), spr);}
+	public byte[][] ReadBryAry(String k, byte spr)			{return Bry_.Split(ReadBry(k), spr);}
 	public String[] ReadStrAryIgnore(String k, String spr, String ignore) {return String_.Split(String_.Replace(ReadStr(k), ignore, ""), spr);}
 	public Object   ReadValAt(int i) {return Args_getAt(i).Val();}
 	@gplx.Virtual protected Object ReadOr(String k, Object defaultOr) {
@@ -214,7 +223,7 @@ class GfoMsg_base implements GfoMsg {
 	public String XtoStr() {
 		String_bldr sb = String_bldr_.new_();
 		XtoStr(sb, new XtoStrWkr_gplx(), this);
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}
 	void XtoStr(String_bldr sb, XtoStrWkr wkr, GfoMsg m) {
 		sb.Add(m.Key());
@@ -241,7 +250,7 @@ class GfoMsg_base implements GfoMsg {
 
 	public GfoMsg_base ctor_(String key, boolean parse)  {this.key = key; this.parse = parse; return this;} private boolean parse;
 	@gplx.Internal protected GfoMsg_base(){}
-	static final StringVal Nil = StringVal.new_("<<NOT FOUND>>");
+	static final String_obj_val Nil = String_obj_val.new_("<<NOT FOUND>>");
 }
 interface XtoStrWkr {
 	String XtoStr(Object o);
@@ -251,11 +260,11 @@ class XtoStrWkr_gplx implements XtoStrWkr {
 		if (o == null) return "<<NULL>>";
 		Class<?> type = ClassAdp_.ClassOf_obj(o);
 		String rv = null;
-		if		(type == String.class)	rv = String_.as_or_fail_(o);
-		else if (Int_.TypeMatch(type))		return Int_.XtoStr(Int_.cast_(o));
-		else if (Bool_.TypeMatch(type))		return Yn.X_to_str(Bool_.cast_(o));
+		if		(type == String.class)	rv = String_.cast_(o);
+		else if (Int_.TypeMatch(type))		return Int_.Xto_str(Int_.cast_(o));
+		else if (ClassAdp_.Eq(type, Bool_.Cls_ref_type))		return Yn.Xto_str(Bool_.cast_(o));
 		else if (type == DateAdp.class)	return DateAdp_.cast_(o).XtoStr_gplx();
-		else								rv = Object_.XtoStr_OrEmpty(o);
+		else								rv = Object_.Xto_str_strict_or_empty(o);
 		return String_.Replace(rv, "'", "''");
 	}
 }

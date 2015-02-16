@@ -20,6 +20,7 @@ class Arg_bldr {
 	public boolean Bld(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_arg_wkr wkr, int wkr_typ, Xop_root_tkn root, Xop_tkn_itm tkn, int bgn_pos, int cur_pos, int loop_bgn, int loop_end, byte[] src) {
 		boolean ws_bgn_chk = true, colon_chk = false, itm_is_static = true, key_exists = false; int ws_bgn_idx = -1, ws_end_idx = -1, cur_itm_subs_len = 0, cur_nde_idx = -1; Arg_nde_tkn cur_nde = null; Arg_itm_tkn cur_itm = null;
 		int brack_count = 0;
+		Xop_tkn_itm eq_pending = null;
 		for (int i = loop_bgn; i < loop_end; i++) {	// loop over subs between bookends; if lnki, all tkns between [[ and ]]; if tmpl, {{ and }}
 			Xop_tkn_itm sub = root.Subs_get(i);
 			int sub_pos_bgn = sub.Src_bgn_grp(root, i);
@@ -30,6 +31,11 @@ class Arg_bldr {
 			if (cur_itm == null) {
 				cur_itm = tkn_mkr.ArgItm(sub_pos_bgn, -1);
 				itm_is_static = ws_bgn_chk = true; cur_itm_subs_len = 0; ws_bgn_idx = ws_end_idx = -1;
+				if (eq_pending != null) {											// something like  "A==B" encountered; zh.w:Wikipedia:条目评选; DATE:2014-08-27
+					eq_pending.Src_end_(eq_pending.Src_end() -1);					// remove an "=" EX:"A==B" -> "A","=","=B"
+					cur_itm.Subs_add_grp(eq_pending, root, i); cur_itm_subs_len++;	// add the tkn to cur_itm
+					eq_pending = null;
+				}
 			}
 			switch (sub.Tkn_tid()) {
 				case Xop_tkn_itm_.Tid_ignore:	// comment or *include* tkn; mark itm as non_static for tmpl (forces re-eval)
@@ -62,17 +68,29 @@ class Arg_bldr {
 					break;
 				case Xop_tkn_itm_.Tid_eq:
 					if		(wkr_typ == Xop_arg_wkr_.Typ_tmpl && brack_count > 0) {}
-					else if	(wkr_typ == Xop_arg_wkr_.Typ_prm) {}	// always ignore for prm
+					else if	(wkr_typ == Xop_arg_wkr_.Typ_prm) {}						// always ignore for prm
 					else {
 						if (	cur_nde_idx != 0										// if 1st arg, treat equal_tkn as txt_tkn; i.e.: eq should not be used to separate key/val
-							&&	cur_nde.Eq_tkn() == Xop_tkn_null.Null_tkn				// only mark key if not set; handle multiple-keys; EX: {{name|key1=b=c}}; DATE:2014-02-09
+							&&	cur_nde.Eq_tkn() == Xop_tkn_null.Null_tkn				// only mark key if key is not set; handle multiple-keys; EX: {{name|key1=b=c}}; DATE:2014-02-09
 							) {
-								cur_nde.Eq_tkn_(sub);
+							Xop_eq_tkn sub_as_eq = (Xop_eq_tkn)sub;
+							int sub_as_eq_len = sub_as_eq.Eq_len();
+							boolean eq_is_spr
+								=	sub_as_eq_len == 1									// eq with len of 1 are considered separators; MW.REF:Preprocessor_DOM.php|preprocessToXml; "if ( $count == 1 && $findEquals )" PAGE:en.w:Wikipedia:Picture_of_the_day/June_2014; DATE:2014-07-21
+								||  (	cur_itm.Subs_len() > 0							// or eq.len > 1 that occur later in itm; EX: a==b; zh.w:Wikipedia:条目评选; DATE:2014-08-27
+									&&	cur_itm.Subs_get(0).Tkn_tid() != Xop_tkn_itm_.Tid_eq // and 1st tkn is not ==; EX:==a==; 2nd == should not be eq b/c 1st == "deactivates" nde; DATE:2014-08-27
+									);
+							if (eq_is_spr)  {
+								if (sub_as_eq_len == 1)									// =.len == 1
+									cur_nde.Eq_tkn_(sub);								// set as eq tkn
+								else													// =.len  > 1
+									eq_pending = sub;									// do not set as eq tkn; note that Eq_tkn exists for bookkeeping and is not printed out, 
 								key_exists = true;
 								Arg_itm_end(ctx, cur_nde, cur_itm, ws_bgn_idx, ws_end_idx, cur_itm_subs_len, sub_pos_bgn, wkr_typ, key_exists, true, itm_is_static, src, cur_nde_idx);
 								cur_nde.Key_tkn_(cur_itm);
 								cur_itm = null;
 								continue;												// do not add tkn to cur_itm
+							}
 						}
 						if (ws_bgn_chk) ws_bgn_chk = false; else ws_end_idx = -1;		// INLINE: AdjustWsForTxtTkn
 					break;
@@ -90,7 +108,7 @@ class Arg_bldr {
 					else {
 						Arg_itm_end(ctx, cur_nde, cur_itm, ws_bgn_idx, ws_end_idx, cur_itm_subs_len, sub_pos_bgn, wkr_typ, key_exists, false, itm_is_static, src, cur_nde_idx);
 						cur_nde.Val_tkn_(cur_itm);
-						wkr.Args_add(ctx, src, tkn, cur_nde, cur_nde_idx);
+						if (!wkr.Args_add(ctx, src, tkn, cur_nde, cur_nde_idx)) return false; // NOTE: if invalid, exit now; lnki_wkr expects false if any argument is invalid; DATE:2014-06-06
 						cur_nde = null; cur_itm = null; key_exists = false;			// reset
 						continue;													// do not add tkn to cur_itm
 					}
@@ -168,7 +186,7 @@ class Arg_bldr {
 		itm.Dat_rng_(dat_bgn, dat_end);	// always set dat, even if itm has dynamic parts; EX: {{{ a{{{1}}}b }}} has 4,13, not 3,14 (ignore ws)
 
 //			if (itm_is_static)
-//				itm.Dat_ary_(dat_end == dat_bgn ? ByteAry_.Empty : ByteAry_.Mid(src, dat_bgn, dat_end));
+//				itm.Dat_ary_(dat_end == dat_bgn ? Bry_.Empty : Bry_.Mid(src, dat_bgn, dat_end));
 		itm.Itm_static_(itm_is_static);
 	}
 	public static final Arg_bldr _ = new Arg_bldr(); Arg_bldr() {}

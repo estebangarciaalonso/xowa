@@ -16,13 +16,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.primitives.*;
 public class OrderedHash_ {
 	public static OrderedHash new_()			{return new OrderedHash_base();}
 	public static OrderedHash new_bry_()		{return new OrderedHash_bry();}
 }
 class OrderedHash_bry extends OrderedHash_base {
-	private ByteAryRef lkp = ByteAryRef.null_();
-	@Override protected void Add_base(Object key, Object val)	{super.Add_base(ByteAryRef.new_((byte[])key), val);}
+	private Bry_obj_ref lkp = Bry_obj_ref.null_();
+	@Override protected void Add_base(Object key, Object val)	{super.Add_base(Bry_obj_ref.new_((byte[])key), val);}
 	@Override protected void Del_base(Object key)				{super.Del_base(lkp.Val_((byte[])key));}
 	@Override protected boolean Has_base(Object key)				{return super.Has_base(lkp.Val_((byte[])key));}
 	@Override protected Object Fetch_base(Object key)			{return super.Fetch_base(lkp.Val_((byte[])key));}

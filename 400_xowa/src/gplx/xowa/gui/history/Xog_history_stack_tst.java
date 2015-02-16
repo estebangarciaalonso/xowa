@@ -28,7 +28,7 @@ public class Xog_history_stack_tst {
 	@Test  public void Add_3_bwd_add()		{fxt.Exec_add_many("A", "B", "C").Exec_go_bwd().Exec_add_many("D").Test_len(3).Test_cur("D").Test_pos(2);}
 	@Test  public void Add_3_bwd_bwd_add()	{fxt.Exec_add_many("A", "B", "C").Exec_go_bwd().Exec_go_bwd().Exec_add_many("D").Test_len(2).Test_cur("D").Test_pos(1);}
 	@Test  public void Add_dif_ns()			{fxt.Exec_add_many("A", "Help:A").Test_cur("Help:A");}	// PURPOSE.fix: page_stack was only differtiating by Page_db, not Full; EX: Unicode -> Category:Unicode
-	@Test  public void Add_qargs() {// PURPOSE.fix: page_stack was only differtiating by qtxt args
+	@Test  public void Add_qargs() {// PURPOSE.fix: page_stack was only differentiating by qtxt args
 		fxt	.Exec_add_one("Special:AllPages", "?from=A")
 			.Exec_add_one("Special:AllPages", "?from=B")
 			.Exec_add_many("B")
@@ -50,13 +50,13 @@ class Xog_history_stack_fxt {
 	}	private Xoa_app app; private Xow_wiki wiki; private Xog_history_stack stack = new Xog_history_stack(); private Xoa_url_parser url_parser;
 	public Xog_history_stack_fxt Test_cur(String expd) {
 		Xog_history_itm page = stack.Cur_itm();
-		String actl = page == null ? null : String_.new_utf8_(page.Page_key());
+		String actl = page == null ? null : String_.new_utf8_(page.Page());
 		Tfds.Eq(expd, actl, "cur");
 		return this;
 	}
 	public Xog_history_stack_fxt Test_cur_qargs(String expd) {
 		Xog_history_itm page = stack.Cur_itm();
-		String actl = page == null ? null : String_.new_utf8_(page.Qarg_key());
+		String actl = page == null ? null : String_.new_utf8_(page.Qarg());
 		Tfds.Eq(expd, actl, "cur_qargs");
 		return this;
 	}
@@ -71,17 +71,16 @@ class Xog_history_stack_fxt {
 		return this;
 	}
 	public Xog_history_stack_fxt Exec_add_one(String ttl_str, String arg_str) {
-		byte[] ttl_bry = ByteAry_.new_utf8_(ttl_str);
+		byte[] ttl_bry = Bry_.new_utf8_(ttl_str);
 		Xoa_ttl ttl = Xoa_ttl.parse_(wiki, ttl_bry);
-		Xoa_page page = new Xoa_page(wiki, ttl);
+		Xoa_page page = Xoa_page.test_(wiki, ttl);
 		byte[] url_bry = ttl_bry;
-		if (arg_str != null) url_bry = ByteAry_.Add(url_bry, ByteAry_.new_utf8_(arg_str));
-		Xoa_url url = new Xoa_url();
-		url_parser.Parse(url, url_bry);
+		if (arg_str != null) url_bry = Bry_.Add(url_bry, Bry_.new_utf8_(arg_str));
+		Xoa_url url = url_parser.Parse(url_bry);
 		page.Url_(url);  // set url b/c history_mgr.Add uses url
-		stack.Add(page);
+		stack.Add(Xog_history_mgr.new_(page));
 		return this;
 	}
-	public Xog_history_stack_fxt Test_pos(int expd) {Tfds.Eq(expd, stack.Stack_pos(), "pos"); return this;}
-	public Xog_history_stack_fxt Test_len(int expd) {Tfds.Eq(expd, stack.Count(), "len"); return this;}
+	public Xog_history_stack_fxt Test_pos(int expd) {Tfds.Eq(expd, stack.Cur_pos(), "pos"); return this;}
+	public Xog_history_stack_fxt Test_len(int expd) {Tfds.Eq(expd, stack.Len(), "len"); return this;}
 }

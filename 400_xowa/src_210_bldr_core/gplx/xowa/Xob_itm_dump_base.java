@@ -23,7 +23,7 @@ public abstract class Xob_itm_dump_base extends Xob_itm_basic_base {
 	public Io_url Temp_dir() {return temp_dir;}
 	public boolean Delete_temp() {return delete_temp;} protected boolean delete_temp = true;
 	protected Io_url temp_dir, make_dir;
-	protected ByteAryBfr dump_bfr;
+	protected Bry_bfr dump_bfr;
 	public int Make_fil_len() {return make_fil_len;} public void Make_fil_len_(int v) {make_fil_len = v;}
 	public Io_url_gen Dump_url_gen() {return dump_url_gen;} protected Io_url_gen dump_url_gen;
 	public void Init_dump(String tmp_dir_key) {Init_dump(tmp_dir_key, null);}
@@ -31,7 +31,7 @@ public abstract class Xob_itm_dump_base extends Xob_itm_basic_base {
 		if (sort_mem_len == Int_.Neg1) sort_mem_len = bldr.Sort_mem_len();
 		if (dump_fil_len == Int_.Neg1) dump_fil_len = bldr.Dump_fil_len();
 		if (make_fil_len == Int_.Neg1) make_fil_len = bldr.Make_fil_len();
-		dump_bfr = new ByteAryBfr(dump_fil_len);
+		dump_bfr = Bry_bfr.new_(dump_fil_len);
 		temp_dir = wiki.Fsys_mgr().Tmp_dir().GenSubDir(tmp_dir_key);
 		if (make_dir_val == null)	make_dir = temp_dir.GenSubDir("make");
 		else						make_dir = make_dir_val;

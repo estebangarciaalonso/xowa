@@ -26,7 +26,7 @@ public class Xoa_repo_mgr implements GfoInvkAble {
 		int len = hash.Count();
 		for (int i = 0; i < len; i++) {
 			Xof_repo_itm repo = (Xof_repo_itm)hash.FetchAt(i);
-			if (ByteAry_.Eq(key, repo.Wiki_key()) && repo.Primary()) return repo;
+			if (Bry_.Eq(key, repo.Wiki_key()) && repo.Primary()) return repo;
 		}
 		return null;
 	}
@@ -34,7 +34,7 @@ public class Xoa_repo_mgr implements GfoInvkAble {
 		int len = hash.Count();
 		for (int i = 0; i < len; i++) {
 			Xof_repo_itm repo = (Xof_repo_itm)hash.FetchAt(i);
-			if (ByteAry_.Eq(key, repo.Wiki_key()) && repo.Wmf_fsys()) return repo;
+			if (Bry_.Eq(key, repo.Wiki_key()) && repo.Wmf_fsys()) return repo;
 		}
 		return null;
 	}
@@ -42,7 +42,7 @@ public class Xoa_repo_mgr implements GfoInvkAble {
 		int len = hash.Count();
 		for (int i = 0; i < len; i++) {
 			Xof_repo_itm repo = (Xof_repo_itm)hash.FetchAt(i);
-			if (ByteAry_.Eq(key, repo.Wiki_key())) return repo;
+			if (Bry_.Eq(key, repo.Wiki_key())) return repo;
 		}
 		return null;
 	}
@@ -52,13 +52,13 @@ public class Xoa_repo_mgr implements GfoInvkAble {
 		else	return GfoInvkAble_.Rv_unhandled;
 	}	private static final String Invk_set = "set";
 	public Xof_repo_itm Set(String key, String url_str, String wiki) {
-		byte[] key_bry = ByteAry_.new_utf8_(key);
+		byte[] key_bry = Bry_.new_utf8_(key);
 		Xof_repo_itm itm = (Xof_repo_itm)hash.Fetch(key_bry);
 		if (itm == null) {
 			itm = new Xof_repo_itm(this, key_bry);
 			this.Add(itm);
 		}
-		itm.Root_str_(url_str).Wiki_key_(ByteAry_.new_utf8_(wiki));
+		itm.Root_str_(url_str).Wiki_key_(Bry_.new_utf8_(wiki));
 		return itm;
 	}
 }

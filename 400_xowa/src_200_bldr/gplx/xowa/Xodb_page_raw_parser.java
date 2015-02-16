@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.ios.*;
+import gplx.core.brys.*; import gplx.ios.*;
 public class Xodb_page_raw_parser {
 	public void Init(Gfo_usr_dlg usr_dlg, Xow_wiki wiki, int load_len) {
 		this.wiki = wiki; ns_mgr = wiki.Ns_mgr();
@@ -34,7 +34,7 @@ public class Xodb_page_raw_parser {
 	}	Io_line_rdr rdr; Xow_wiki wiki; Xow_ns_mgr ns_mgr; Xow_ns ns_itm;
 	public void Skip_first_line() {
 		rdr.Read_next();
-		int pos = Byte_ary_finder.Find_fwd(rdr.Bfr(), Byte_ascii.NewLine);
+		int pos = Bry_finder.Find_fwd(rdr.Bfr(), Byte_ascii.NewLine);
 //			rdr.Move(pos + 1);
 		rdr.Truncate(pos + 1);
 	}
@@ -47,10 +47,10 @@ public class Xodb_page_raw_parser {
 		int timestamp = Base85_utl.XtoIntByAry(rdr.Bfr(), rdr.Key_pos_bgn(), rdr.Key_pos_end() - 1);
 		page.Modified_on_(Bit_.Xto_date_short(timestamp));
 		read = rdr.Read_next(); if (!read) throw Err_.new_("could not read ttl");
-		byte[] ttl = ByteAry_.Mid(rdr.Bfr(), rdr.Key_pos_bgn(), rdr.Key_pos_end() - 1);
+		byte[] ttl = Bry_.Mid(rdr.Bfr(), rdr.Key_pos_bgn(), rdr.Key_pos_end() - 1);
 		page.Ttl_(ttl, ns_mgr);
 		read = rdr.Read_next(); if (!read) throw Err_.new_("could not read text");
-		byte[] text = ByteAry_.Mid(rdr.Bfr(), rdr.Key_pos_bgn(), rdr.Key_pos_end() - 1);
+		byte[] text = Bry_.Mid(rdr.Bfr(), rdr.Key_pos_bgn(), rdr.Key_pos_end() - 1);
 		page.Text_(text);
 		rdr.Bfr_last_read_add(1);
 		return true;

@@ -25,19 +25,19 @@ public abstract class Xoctg_hiddencat_parser_base extends Xob_sql_dump_base impl
 	private boolean cur_is_hiddencat = false;
 	private int rows = 0;
 	@Override public void Cmd_bgn_hook(Xob_bldr bldr, Sql_file_parser parser) {
-		parser.Fld_cmd_(this).Flds_req_idx_(3, 0, 1, 2);
+		parser.Fld_cmd_(this).Flds_req_idx_(4, 0, 1, 2);	// NOTE: 4 b/c MW added fld_3:pp_sortkey; DATE:2014-04-28
 	}
-	public void Exec(byte[] src, byte[] fld_key, int fld_idx, int fld_bgn, int fld_end, ByteAryBfr file_bfr, Sql_file_parser_data data) {
+	public void Exec(byte[] src, byte[] fld_key, int fld_idx, int fld_bgn, int fld_end, Bry_bfr file_bfr, Sql_file_parser_data data) {
 		switch (fld_idx) {
-			case Fld_id:			cur_id = ByteAry_.X_to_int_or(src, fld_bgn, fld_end, -1); break;
-			case Fld_key:			cur_is_hiddencat = ByteAry_.Eq(Key_hiddencat, src, fld_bgn, fld_end); break;
+			case Fld_id:			cur_id = Bry_.Xto_int_or(src, fld_bgn, fld_end, -1); break;
+			case Fld_key:			cur_is_hiddencat = Bry_.Eq(Key_hiddencat, src, fld_bgn, fld_end); break;
 			case Fld_val:
 				if (!cur_is_hiddencat) {data.Cancel_row_y_(); return;}
 				Exec_hook(file_bfr, cur_id, cur_is_hiddencat);
-				if (++rows % 100000 == 0) usr_dlg.Prog_many("", "", "reading row ~{0}", Int_.XtoStr_fmt(rows, "#,##0"));
+				if (++rows % 100000 == 0) usr_dlg.Prog_many("", "", "reading row ~{0}", Int_.Xto_str_fmt(rows, "#,##0"));
 				break;
 		}
 	}
-	public abstract void Exec_hook(ByteAryBfr file_bfr, int cur_id, boolean cur_is_hiddencat);
-	public static final byte[] Key_hiddencat = ByteAry_.new_ascii_("hiddencat");
+	public abstract void Exec_hook(Bry_bfr file_bfr, int cur_id, boolean cur_is_hiddencat);
+	public static final byte[] Key_hiddencat = Bry_.new_ascii_("hiddencat");
 }

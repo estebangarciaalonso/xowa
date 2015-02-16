@@ -16,9 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.gallery; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*;
+import gplx.core.primitives.*;
 class Gallery_mgr_base_ {
 	public static byte Get_or_traditional(byte[] bry) {
-		ByteVal rv = (ByteVal)Hash.Fetch(bry);
+		Byte_obj_val rv = (Byte_obj_val)Hash.Fetch(bry);
 		return rv == null ? Traditional_tid : rv.Val();
 	}
 	public static Gallery_mgr_base New_by_mode(byte mode) {
@@ -47,13 +48,13 @@ class Gallery_mgr_base_ {
 	, Packed_overlay_tid	= 4
 	;
 	public static final byte[]
-	  Traditional_bry		= ByteAry_.new_ascii_("traditional")
-	, Nolines_bry			= ByteAry_.new_ascii_("nolines")
-	, Packed_bry			= ByteAry_.new_ascii_("packed")
-	, Packed_hover_bry		= ByteAry_.new_ascii_("packed_hover")
-	, Packed_overlay_bry	= ByteAry_.new_ascii_("packed_overlay")
+	  Traditional_bry		= Bry_.new_ascii_("traditional")
+	, Nolines_bry			= Bry_.new_ascii_("nolines")
+	, Packed_bry			= Bry_.new_ascii_("packed")
+	, Packed_hover_bry		= Bry_.new_ascii_("packed-hover")
+	, Packed_overlay_bry	= Bry_.new_ascii_("packed-overlay")
 	;
-	private static final Hash_adp_bry Hash = Hash_adp_bry.ci_()
+	private static final Hash_adp_bry Hash = Hash_adp_bry.ci_ascii_()
 	.Add_bry_byte(Traditional_bry		, Traditional_tid)
 	.Add_bry_byte(Nolines_bry			, Nolines_tid)
 	.Add_bry_byte(Packed_bry			, Packed_tid)

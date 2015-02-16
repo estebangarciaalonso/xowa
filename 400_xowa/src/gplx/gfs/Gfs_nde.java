@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfs; import gplx.*;
 public class Gfs_nde {
-	public byte[] Name_bry(byte[] src) {return name == null ? ByteAry_.Mid(src, name_bgn, name_end) : name;}
+	public byte[] Name_bry(byte[] src) {return name == null ? Bry_.Mid(src, name_bgn, name_end) : name;}
 	public byte[] Name() {return name;} public Gfs_nde Name_(byte[] v) {name = v; return this;} private byte[] name;
 	public int Name_bgn() {return name_bgn;} private int name_bgn = -1;
 	public int Name_end() {return name_end;} private int name_end = -1;

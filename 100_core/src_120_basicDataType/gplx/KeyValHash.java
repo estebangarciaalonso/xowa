@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
 public class KeyValHash {
+	private OrderedHash hash = OrderedHash_.new_();
 	public int Count() {return hash.Count();}
 	public KeyValHash Clear() {hash.Clear(); return this;}
 	public boolean Has(String key) {return hash.Has(key);}
@@ -28,7 +29,7 @@ public class KeyValHash {
 	public KeyValHash Add(String key, Object val) {hash.Add(key, KeyVal_.new_(key, val)); return this;}
 	public KeyValHash AddReplace(String key, Object val) {hash.AddReplace(key, KeyVal_.new_(key, val)); return this;}
 	public void Del(String key) {hash.Del(key);}
-	public KeyVal[] XtoAry() {
+	public KeyVal[] Xto_bry() {
 		KeyVal[] rv = new KeyVal[this.Count()];
 		for (int i = 0; i < rv.length; i++)
 			rv[i] = this.FetchAt(i);
@@ -43,7 +44,6 @@ public class KeyValHash {
 		return rv;
 	}
 	public KeyVal FetchOrNull(String key) {return KeyVal_.as_(hash.Fetch(key));}
-	OrderedHash hash = OrderedHash_.new_();
 	public static KeyValHash strAry_(String[] ary) {// needed for consoleLine
 		int aryLen = Array_.Len(ary); if (aryLen % 2 != 0) throw Err_.new_("array length must be divisible by 2").Add("aryLen", aryLen).Add("ary", String_.Concat_lines_crlf(ary));
 		KeyValHash rv = new KeyValHash();
@@ -56,4 +56,5 @@ public class KeyValHash {
 		}
 		return rv;
 	}
+	public static final KeyValHash Empty = new KeyValHash();
 }

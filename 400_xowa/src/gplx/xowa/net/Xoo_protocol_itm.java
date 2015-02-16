@@ -19,22 +19,26 @@ package gplx.xowa.net; import gplx.*; import gplx.xowa.*;
 public class Xoo_protocol_itm {
 	public Xoo_protocol_itm(byte tid, String text) {
 		this.tid = tid;
-		this.text_bry = ByteAry_.new_utf8_(text);
+		this.text_bry = Bry_.new_utf8_(text);
 		this.text_str = text;
 		int text_len = text_bry.length;
 		for (int i = 0; i < text_len; i++) {
 			if (text_bry[i] == Byte_ascii.Colon) {
-				key_bry = ByteAry_.Mid(text_bry, 0, i);
-				key_str = String_.new_utf8_(key_bry);
+				key_wo_colon_bry = Bry_.Mid(text_bry, 0, i);
+				key_w_colon_bry_len = i;
+				key_wo_colon_str = String_.new_utf8_(key_wo_colon_bry);
+				key_w_colon_bry = Bry_.Mid(text_bry, 0, i + 1);
 				text_ends_w_colon = i == text_len - 1;
 				break;
 			}
 		}
 	}
 	public byte Tid() {return tid;} private byte tid;
-	public byte[] Key_bry() {return key_bry;} private byte[] key_bry;			// http
-	public String Key_str() {return key_str;} private String key_str;
-	public byte[] Text_bry() {return text_bry;} private byte[] text_bry;		// http://
+	public byte[] Key_wo_colon_bry() {return key_wo_colon_bry;} private byte[] key_wo_colon_bry;			// http
+	public String Key_wo_colon_str() {return key_wo_colon_str;} private String key_wo_colon_str;
+	public byte[] Key_w_colon_bry() {return key_w_colon_bry;} private byte[] key_w_colon_bry;				// http:
+	public int Key_w_colon_bry_len() {return key_w_colon_bry_len;} private int key_w_colon_bry_len;
+	public byte[] Text_bry() {return text_bry;} private byte[] text_bry;									// http://
 	public String Text_str() {return text_str;} private String text_str;
 	public boolean Text_ends_w_colon() {return text_ends_w_colon;} private boolean text_ends_w_colon;
 	public static final byte // REF.MW:DefaultSettings|$wgUrlProtocols; NOTE: "news:" not included because it breaks alias "wikinews:"
@@ -63,9 +67,11 @@ public class Xoo_protocol_itm {
 	, Tid_magnet				= 22
 	, Tid_urn					= 23
 	, Tid_geo					= 24
-	, Tid_xowa					= 25
-	, Tid_relative_1			= 26		// [//a.org]
-	, Tid_relative_2			= 27		// [[//a.org]]
+	, Tid_null					= 25
+	, Tid_xowa					= 26
+	, Tid_file					= 27
+	, Tid_relative_1			= 28		// [//a.org]
+	, Tid_relative_2			= 29		// [[//a.org]]
 	;
 	public static final OrderedHash Regy = OrderedHash_.new_bry_();
 	public static final Xoo_protocol_itm 
@@ -95,6 +101,17 @@ public class Xoo_protocol_itm {
 	, Itm_urn					= new_(Tid_urn			, "urn:")
 	, Itm_geo					= new_(Tid_geo			, "geo:")
 	;
+	public static final String Str_file = "file:";
+	public static final byte[] Bry_file = Bry_.new_ascii_(Str_file);
+	public static Xoo_protocol_itm[] Ary() {
+		if (protocol_itm_ary == null) {
+			int len = Regy.Count();
+			protocol_itm_ary = new Xoo_protocol_itm[len];
+			for (int i = 0; i < len; i++)
+				protocol_itm_ary[i] = (Xoo_protocol_itm)Regy.FetchAt(i);
+		}
+		return protocol_itm_ary;
+	}	private static Xoo_protocol_itm[] protocol_itm_ary;
 	public static String[] Protocol_str_ary() {
 		if (protocol_str_ary == null) {
 			int len = Regy.Count();
@@ -106,7 +123,7 @@ public class Xoo_protocol_itm {
 	}	private static String[] protocol_str_ary;
 	private static Xoo_protocol_itm new_(byte tid, String text) {
 		Xoo_protocol_itm rv = new Xoo_protocol_itm(tid, text);
-		Regy.Add(rv.Key_bry(), rv);
+		Regy.Add(rv.Key_wo_colon_bry(), rv);
 		return rv;
 	}
 }

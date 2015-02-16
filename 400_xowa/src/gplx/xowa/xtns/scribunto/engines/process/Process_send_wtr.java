@@ -19,19 +19,19 @@ package gplx.xowa.xtns.scribunto.engines.process; import gplx.*; import gplx.xow
 public class Process_send_wtr {
 	public Process_send_wtr(Gfo_usr_dlg usr_dlg) {this.usr_dlg = usr_dlg;} private Gfo_usr_dlg usr_dlg;
 	public String Encode(Object o) {
-		ByteAryBfr tmp_bfr = ByteAryBfr.reset_(Io_mgr.Len_kb);
+		Bry_bfr tmp_bfr = Bry_bfr.reset_(Io_mgr.Len_kb);
 		Encode_obj(tmp_bfr, o);
-		return tmp_bfr.XtoStrAndClear();
+		return tmp_bfr.Xto_str_and_clear();
 	}
-	public void Encode_bool(ByteAryBfr bfr, boolean v)			{bfr.Add(v ? CONST_bool_true : CONST_bool_false);}
-	public void Encode_int(ByteAryBfr bfr, int v)			{bfr.Add_int_variable(v);}
-	public boolean Encode_double(ByteAryBfr bfr, double v)	{
+	public void Encode_bool(Bry_bfr bfr, boolean v)		{bfr.Add(v ? CONST_bool_true : CONST_bool_false);}
+	public void Encode_int(Bry_bfr bfr, int v)			{bfr.Add_int_variable(v);}
+	public boolean Encode_double(Bry_bfr bfr, double v)	{
 		if (Double_.IsNaN(v)) {usr_dlg.Warn_many(GRP_KEY, "fail_encode_double", "cannot convert non-finite number"); return false;}
 		bfr.Add_double(v);
 		return true;
 	}
-	public boolean Encode_str(ByteAryBfr bfr, String v) {return Encode_str(bfr, ByteAry_.new_utf8_(v));}
-	public boolean Encode_str(ByteAryBfr bfr, byte[] bry) {
+	public boolean Encode_str(Bry_bfr bfr, String v) {return Encode_str(bfr, Bry_.new_utf8_(v));}
+	public boolean Encode_str(Bry_bfr bfr, byte[] bry) {
 		int len = bry.length;
 		bfr.Add_byte(Byte_ascii.Quote);
 		for (int i = 0; i < len; i++) {
@@ -48,13 +48,13 @@ public class Process_send_wtr {
 		bfr.Add_byte(Byte_ascii.Quote);
 		return true;
 	}
-	public boolean Encode_prc(ByteAryBfr bfr, Scrib_lua_proc prc) {
+	public boolean Encode_prc(Bry_bfr bfr, Scrib_lua_proc prc) {
 		bfr.Add(Prc_bgn);
 		bfr.Add_int_variable(prc.Id());
 		bfr.Add_byte(Byte_ascii.Brack_end);
 		return true;		
-	}	static final byte[] Prc_bgn = ByteAry_.new_ascii_("chunks[");
-	private boolean Encode_ary(ByteAryBfr bfr, KeyVal[] ary) {
+	}	static final byte[] Prc_bgn = Bry_.new_ascii_("chunks[");
+	private boolean Encode_ary(Bry_bfr bfr, KeyVal[] ary) {
 		int len = ary.length;
 		bfr.Add_byte(Byte_ascii.Curly_bgn);
 		for (int i = 0; i < len; i++) {
@@ -66,33 +66,33 @@ public class Process_send_wtr {
 		bfr.Add_byte(Byte_ascii.Curly_end);
 		return true;
 	}
-	private boolean Encode_kv(ByteAryBfr bfr, KeyVal kv) {
+	private boolean Encode_kv(Bry_bfr bfr, KeyVal kv) {
 		bfr.Add_byte(Byte_ascii.Curly_bgn);
 		Encode_key(bfr, kv.Key_as_obj());
 		Encode_obj(bfr, kv.Val());
 		bfr.Add_byte(Byte_ascii.Curly_end);
 		return true;
 	}
-	public void Encode_key(ByteAryBfr bfr, Object key) {
+	public void Encode_key(Bry_bfr bfr, Object key) {
 		bfr.Add_byte(Byte_ascii.Brack_bgn);
 		Encode_obj(bfr, key);
 		bfr.Add_byte(Byte_ascii.Brack_end);
 		bfr.Add_byte(Byte_ascii.Eq);		
 	}
-	public boolean Encode_obj(ByteAryBfr bfr, Object o) {
+	public boolean Encode_obj(Bry_bfr bfr, Object o) {
 		if (o == null) {bfr.Add(CONST_nil); return true;}
 		Class<?> c = ClassAdp_.ClassOf_obj(o);
-		if		(Object_.Eq(c, Bool_.ClassOf))				Encode_bool(bfr, Bool_.cast_(o));
-		else if	(Object_.Eq(c, Int_.ClassOf))				Encode_int(bfr, Int_.cast_(o));
-		else if	(Object_.Eq(c, Double_.ClassOf))			{if (!Encode_double(bfr, Double_.cast_(o))) return false;}	
+		if		(Object_.Eq(c, Bool_.Cls_ref_type))				Encode_bool(bfr, Bool_.cast_(o));
+		else if	(Object_.Eq(c, Int_.Cls_ref_type))				Encode_int(bfr, Int_.cast_(o));
+		else if	(Object_.Eq(c, Double_.Cls_ref_type))			{if (!Encode_double(bfr, Double_.cast_(o))) return false;}	
 		else if	(Object_.Eq(c, String.class))				{if (!Encode_str(bfr, (String)o)) return false;}
 		else if	(Object_.Eq(c, byte[].class))				{if (!Encode_str(bfr, (byte[])o)) return false;}	// NOTE: not in Scribunto; added here for PERF of not re-creating a String Object
-		else if	(Object_.Eq(c, Scrib_lua_proc.class))			{if (!Encode_prc(bfr, (Scrib_lua_proc)o)) return false;}
+		else if	(Object_.Eq(c, Scrib_lua_proc.class))		{if (!Encode_prc(bfr, (Scrib_lua_proc)o)) return false;}
 		else if	(Object_.Eq(c, KeyVal.class))				{if (!Encode_kv(bfr, (KeyVal)o)) return false;}
 		else if	(Object_.Eq(c, KeyVal[].class))			{if (!Encode_ary(bfr, (KeyVal[])o)) return false;}
 		else												{throw Scrib_xtn_mgr.err_("Object cannot be serialized: {0}", ClassAdp_.NameOf_obj(o));}
 		return true;
 	}
-	private static final byte[] CONST_nil = ByteAry_.new_ascii_("nil"), CONST_bool_true = ByteAry_.new_ascii_("true"), CONST_bool_false = ByteAry_.new_ascii_("false"), CONST_escape_000 = ByteAry_.new_ascii_("\\000");
+	private static final byte[] CONST_nil = Bry_.new_ascii_("nil"), CONST_bool_true = Bry_.new_ascii_("true"), CONST_bool_false = Bry_.new_ascii_("false"), CONST_escape_000 = Bry_.new_ascii_("\\000");
 	private static final String GRP_KEY = "xowa-scribunto-lua-srl";
 }

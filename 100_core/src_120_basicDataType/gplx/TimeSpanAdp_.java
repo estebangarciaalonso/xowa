@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.strings.*;
 public class TimeSpanAdp_ {
 	public static final TimeSpanAdp Zero = new TimeSpanAdp(0);
 	public static final TimeSpanAdp Null = new TimeSpanAdp(-1);
@@ -25,7 +26,7 @@ public class TimeSpanAdp_ {
 		return new TimeSpanAdp(fracs);
 	}
 	public static TimeSpanAdp decimal_(DecimalAdp seconds)	{
-		return new TimeSpanAdp(seconds.XtoLong_Mult1000());
+		return new TimeSpanAdp(seconds.Xto_long_mult_1000());
 	}
 	public static TimeSpanAdp units_(int frc, int sec, int min, int hour) {
 		int[] units = new int[] {frc, sec, min, hour};
@@ -35,7 +36,7 @@ public class TimeSpanAdp_ {
 	public static TimeSpanAdp from_(long bgn) {return TimeSpanAdp_.fracs_(Env_.TickCount() - bgn);}
 	public static final long parse_null = Long_.MinValue;
 	public static TimeSpanAdp parse_(String raw) {
-		byte[] bry = ByteAry_.new_utf8_(raw);
+		byte[] bry = Bry_.new_utf8_(raw);
 		long fracs = parse_to_fracs(bry, 0, bry.length, false);
 		return fracs == parse_null ? null : TimeSpanAdp_.fracs_(fracs);
 	}
@@ -46,7 +47,7 @@ public class TimeSpanAdp_ {
 			switch (b) {
 				case Byte_ascii.Num_0: case Byte_ascii.Num_1: case Byte_ascii.Num_2: case Byte_ascii.Num_3: case Byte_ascii.Num_4:
 				case Byte_ascii.Num_5: case Byte_ascii.Num_6: case Byte_ascii.Num_7: case Byte_ascii.Num_8: case Byte_ascii.Num_9:
-					int unit_digit = Byte_ascii.X_to_digit(b);
+					int unit_digit = Byte_ascii.Xto_digit(b);
 					unit_val = (unit_multiple == 1) ? unit_digit : unit_val + (unit_digit * unit_multiple);
 					switch (colon_pos) {
 						case 0:		val_s = unit_val; break;
@@ -92,9 +93,9 @@ public class TimeSpanAdp_ {
 					sb.Add(Sprs[i]);
 				if (val < 10)	// zeroPad
 					sb.Add("0");
-				sb.Add(Int_.XtoStr(val));
+				sb.Add(Int_.Xto_str(val));
 			}
-			return sb.XtoStrAndClear();
+			return sb.Xto_str_and_clear();
 		}
 		boolean fmt_fracs = !String_.Eq(fmt, TimeSpanAdp_.Fmt_NoFractionals);
 		boolean fmt_padZeros = String_.Eq(fmt, TimeSpanAdp_.Fmt_PadZeros);
@@ -115,7 +116,7 @@ public class TimeSpanAdp_ {
 			zeros = first && !fmt_padZeros ? 1 : padZerosAry[i];	// if first, don't zero pad (avoid "01")
 			dlm = first ? "" : Sprs[i];						// if first, don't use dlm (avoid ":01")
 			sb.Add(dlm);
-			sb.Add(Int_.XtoStr_PadBgn(val, zeros));
+			sb.Add(Int_.Xto_str_pad_bgn(val, zeros));
 			first = false;
 		}
 		return sb.XtoStr();

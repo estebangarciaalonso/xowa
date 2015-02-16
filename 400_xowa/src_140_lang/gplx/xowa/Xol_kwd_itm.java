@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
 public class Xol_kwd_itm {// NOTE: keeping as separate class b/c may include fmt props later; EX: thumbnail=$1
-	public Xol_kwd_itm(byte[] bry) {this.bry = bry;}
-	public byte[] Bry() {return bry;} private byte[] bry;
-	public void Bry_set(byte[] v) {bry = v;}	// should only be called by lang
+	public Xol_kwd_itm(byte[] val) {this.val = val;}
+	public byte[] Val() {return val;} private byte[] val;
+	public void Val_(byte[] v) {val = v;}	// should only be called by lang
 }

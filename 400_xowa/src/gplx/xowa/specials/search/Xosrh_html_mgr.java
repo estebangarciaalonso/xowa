@@ -16,9 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.specials.search; import gplx.*; import gplx.xowa.*; import gplx.xowa.specials.*;
-import gplx.xowa.langs.numFormats.*;
+import gplx.xowa.langs.numbers.*;
 class Xosrh_html_mgr implements GfoInvkAble {
-	public ByteAryFmtr Html_all_bgn()	{return html_all_bgn;} ByteAryFmtr html_all_bgn = ByteAryFmtr.new_(String_.Concat_lines_nl
+	public Bry_fmtr Html_all_bgn()	{return html_all_bgn;} Bry_fmtr html_all_bgn = Bry_fmtr.new_(String_.Concat_lines_nl
 	(	"~{search_results_header}<br/>"
 	,	"{|"
 	,	"|-"
@@ -29,30 +29,30 @@ class Xosrh_html_mgr implements GfoInvkAble {
 	,	"| [[Special:Search/~{title}?fulltext=y&xowa_sort=title_asc|title]]"
 	), 	"search_results_header", "title", "page_index_prev", "page_index_next"
 	);
-	public ByteAryFmtr Html_itm()		{return html_itm;} ByteAryFmtr html_itm = ByteAryFmtr.new_(String_.Concat_lines_nl
+	public Bry_fmtr Html_itm()		{return html_itm;} Bry_fmtr html_itm = Bry_fmtr.new_(String_.Concat_lines_nl
 	(	"|-"
 	,	"| ~{length} || [[~{title}]]"
 	), "title", "length"
 	);
-	public ByteAryFmtr Html_all_end()	{return html_all_end;} ByteAryFmtr html_all_end = ByteAryFmtr.new_(String_.Concat_lines_nl
+	public Bry_fmtr Html_all_end()	{return html_all_end;} Bry_fmtr html_all_end = Bry_fmtr.new_(String_.Concat_lines_nl
 	(	"|-"
 	,	"| [[Special:Search/~{title}?fulltext=y&xowa_page_index=~{page_index_prev}|&lt;]]"
 	,	"| [[Special:Search/~{title}?fulltext=y&xowa_page_index=~{page_index_next}|&gt;]]"
 	,	"|}\n"
 	), "title", "page_index_prev", "page_index_next"
 	);
-	public void Bld_html(ByteAryBfr bfr, Xosrh_core core, Xosrh_rslt_grp grp, byte[] search_bry, int page_idx, int pages_len) {
+	public void Bld_html(Bry_bfr bfr, Xosrh_core core, Xosrh_rslt_grp grp, byte[] search_bry, int page_idx, int pages_len) {
 		int itms_len = grp.Itms_len();
 		int xowa_idx_bwd = (page_idx == 0) 			? 0 			: page_idx - 1;
 		int xowa_idx_fwd = (page_idx >= pages_len) 	? pages_len - 1 : page_idx + 1;
 		Xow_wiki wiki = core.Wiki();
-		Xol_num_fmtr_base num_fmt_mgr = wiki.Lang().Num_fmt_mgr();
+		Xol_num_mgr num_mgr = wiki.Lang().Num_mgr();
 		int itms_bgn = core.Page_mgr().Itms_bgn() + 1;
 		if (itms_len == 0) itms_bgn = 0;
-		byte[] search_results_header = wiki.Msg_mgr().Val_by_id_args(Xol_msg_itm_.Id_search_results_header, num_fmt_mgr.Fmt(itms_bgn), num_fmt_mgr.Fmt(core.Page_mgr().Itms_end()), num_fmt_mgr.Fmt(grp.Itms_total()), search_bry, pages_len);
+		byte[] search_results_header = wiki.Msg_mgr().Val_by_id_args(Xol_msg_itm_.Id_search_results_header, num_mgr.Format_num(itms_bgn), num_mgr.Format_num(core.Page_mgr().Itms_end()), num_mgr.Format_num(grp.Itms_total()), search_bry, pages_len);
 		html_all_bgn.Bld_bfr_many(bfr, search_results_header, search_bry, xowa_idx_bwd, xowa_idx_fwd);
 		Xow_ns_mgr ns_mgr = wiki.Ns_mgr();
-		ByteAryBfr tmp_ttl_bfr = core.Wiki().App().Utl_bry_bfr_mkr().Get_b512();
+		Bry_bfr tmp_ttl_bfr = core.Wiki().App().Utl_bry_bfr_mkr().Get_b512();
 		for (int i = 0; i < itms_len; i++) {
 			Xodb_page itm = grp.Itms_get_at(i);
 			byte[] itm_ttl = Xoa_ttl.Replace_unders(itm.Ttl_wo_ns());
@@ -62,7 +62,7 @@ class Xosrh_html_mgr implements GfoInvkAble {
 				tmp_ttl_bfr.Add_byte(Byte_ascii.Colon)	// NOTE: need to add : to literalize ns; EX: [[Category:A]] will get thrown into category list; [[:Category:A]] will print
 					.Add(itm_ns.Name_db_w_colon())
 					.Add(itm_ttl);
-				itm_ttl = tmp_ttl_bfr.XtoAryAndClear();
+				itm_ttl = tmp_ttl_bfr.Xto_bry_and_clear();
 			}
 			html_itm.Bld_bfr_many(bfr, itm_ttl, itm.Text_len());
 		}

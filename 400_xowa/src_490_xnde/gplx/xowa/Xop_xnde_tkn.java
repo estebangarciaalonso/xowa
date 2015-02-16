@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.xowa.xtns.*;
+import gplx.xowa.xtns.*; import gplx.xowa.parsers.tblws.*;
 public class Xop_xnde_tkn extends Xop_tkn_itm_base implements Xop_tblw_tkn {
 	@Override public byte Tkn_tid() {return Xop_tkn_itm_.Tid_xnde;}
 	public int Tblw_tid() {return tag.Id();}	// NOTE: tblw tkns actually return xnde as Tblw_tid
@@ -46,8 +46,8 @@ public class Xop_xnde_tkn extends Xop_tkn_itm_base implements Xop_tblw_tkn {
 	@Override public void Tmpl_compile(Xop_ctx ctx, byte[] src, Xot_compile_data prep_data) {
 		switch (tag.Id()) {
 			case Xop_xnde_tag_.Tid_noinclude:	// NOTE: prep_mode is false to force recompile; see Ex_Tmpl_noinclude and {{{1<ni>|a</ni>}}}
+			case Xop_xnde_tag_.Tid_includeonly:	// NOTE: changed to always ignore <includeonly>; DATE:2014-05-10
 				break;	
-			case Xop_xnde_tag_.Tid_includeonly:
 			case Xop_xnde_tag_.Tid_nowiki: {
 				int subs_len = this.Subs_len();
 				for (int i = 0; i < subs_len; i++) {
@@ -75,7 +75,7 @@ public class Xop_xnde_tkn extends Xop_tkn_itm_base implements Xop_tblw_tkn {
 			}
 		}
 	}
-	@Override public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr) {
+	@Override public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Bry_bfr bfr) {
 		int subs_len = this.Subs_len();
 		switch (tag.Id()) {
 			case Xop_xnde_tag_.Tid_noinclude:		// do not evaluate subs
@@ -105,6 +105,10 @@ public class Xop_xnde_tkn extends Xop_tkn_itm_base implements Xop_tblw_tkn {
 					for (int i = 0; i < subs_len; i++)				// always evaluate subs; handle <poem>{{{1}}}</poem>; DATE:2014-03-03
 						this.Subs_get(i).Tmpl_evaluate(ctx, src, caller, bfr);
 					bfr.Add_mid(src, tag_close_bgn, tag_close_end);	// write tag_end
+					if (tag_close_bgn == Int_.MinValue) {// xtn is unclosed; add a </xtn> else rest of page will be gobbled; PAGE:en.w:Provinces_and_territories_of_Canada DATE:2014-11-13
+						bfr.Add(tag.XtnEndTag());
+						bfr.Add(Byte_ascii.Gt_bry);
+					}
 				}
 				break;
 		}

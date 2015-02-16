@@ -16,8 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.xtns.wdatas.imports; import gplx.*; import gplx.xowa.*; import gplx.xowa.xtns.*; import gplx.xowa.xtns.wdatas.*;
-import gplx.dbs.*; import gplx.xowa.bldrs.*; import gplx.xowa.files.fsdb.*; import gplx.xowa.files.qrys.*;
-import gplx.json.*; import gplx.xowa.xtns.wdatas.*;
+import gplx.dbs.*; import gplx.dbs.engines.sqlite.*; import gplx.xowa.bldrs.*; import gplx.xowa.files.fsdb.*; import gplx.xowa.files.fsdb.qrys.*;
+import gplx.json.*; import gplx.xowa.xtns.wdatas.*; import gplx.xowa.xtns.wdatas.core.*;
 import gplx.xowa.bldrs.oimgs.*;
 public class Xob_wdata_db_cmd extends Xob_dump_mgr_base implements Xob_cmd {
 	private Wdata_tbl_mgr tbl_mgr = new Wdata_tbl_mgr();
@@ -27,19 +27,19 @@ public class Xob_wdata_db_cmd extends Xob_dump_mgr_base implements Xob_cmd {
 	@Override public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "wiki.wdata_db";
 	@Override public byte Init_redirect() {return Bool_.N_byte;}	// json will never be found in a redirect
 	@Override public int[] Init_ns_ary() {return Int_.Ary(Xow_ns_.Id_main, Wdata_wiki_mgr.Ns_property);}
-	@Override protected void Init_reset(Db_provider p) {
+	@Override protected void Init_reset(Db_conn p) {
 		p.Exec_sql("DELETE FROM " + gplx.xowa.dbs.tbls.Xodb_xowa_cfg_tbl.Tbl_name);
 	}
-	@Override protected Db_provider Init_db_file() {
+	@Override protected Db_conn Init_db_file() {
 		Xodb_db_file tbl_file = Xodb_db_file.init_(wiki.Fsys_mgr().Root_dir(), "wdata_db.sqlite3");
-		Db_provider provider = tbl_file.Provider();
-		tbl_mgr.Init(provider);
-		return provider;
+		Db_conn conn = tbl_file.Conn();
+		tbl_mgr.Init(conn);
+		return conn;
 	}
 	@Override protected void Cmd_bgn_end() {
 		wdata_mgr = bldr.App().Wiki_mgr().Wdata_mgr();
-		json_parser = wdata_mgr.Parser();
-		tbl_mgr.Provider().Txn_mgr().Txn_bgn_if_none();
+		json_parser = wdata_mgr.Jdoc_parser();
+		tbl_mgr.Conn().Txn_mgr().Txn_bgn_if_none();
 	}
 	@Override public void Exec_pg_itm_hook(Xow_ns ns, Xodb_page page, byte[] page_src) {
 		Json_doc jdoc = json_parser.Parse(page_src); if (jdoc == null) return; // not a json document
@@ -47,7 +47,7 @@ public class Xob_wdata_db_cmd extends Xob_dump_mgr_base implements Xob_cmd {
 		tbl_mgr.Exec_insert_by_wdoc(lang_key, wdata_mgr, page.Id(), wdoc);
 	}
 	@Override public void Exec_commit_hook() {
-		tbl_mgr.Provider().Txn_mgr().Txn_end_all_bgn_if_none();
+		tbl_mgr.Conn().Txn_mgr().Txn_end_all_bgn_if_none();
 	}
 	@Override public void Exec_end_hook() {
 		tbl_mgr.Term(usr_dlg);
@@ -59,7 +59,7 @@ class Wdata_tbl_mgr {
 		tbls = new Wdata_tbl_base[] {label_tbl, alias_tbl, description_tbl, link_tbl, claim_tbl, claim_time_tbl, claim_geo_tbl};
 		tbls_len = tbls.length;
 	}
-	public Db_provider Provider() {return provider;} private Db_provider provider;
+	public Db_conn Conn() {return conn;} private Db_conn conn;
 	public Wdata_label_tbl Label_tbl() {return label_tbl;} private Wdata_label_tbl label_tbl = new Wdata_label_tbl();
 	public Wdata_alias_tbl Alias_tbl() {return alias_tbl;} private Wdata_alias_tbl alias_tbl = new Wdata_alias_tbl();
 	public Wdata_description_tbl Description_tbl() {return description_tbl;} private Wdata_description_tbl description_tbl = new Wdata_description_tbl();
@@ -67,19 +67,19 @@ class Wdata_tbl_mgr {
 	public Wdata_claim_tbl Claim_tbl() {return claim_tbl;} private Wdata_claim_tbl claim_tbl = new Wdata_claim_tbl();
 	public Wdata_claim_time_tbl Claim_time_tbl() {return claim_time_tbl;} private Wdata_claim_time_tbl claim_time_tbl = new Wdata_claim_time_tbl();
 	public Wdata_claim_geo_tbl Claim_geo_tbl() {return claim_geo_tbl;} private Wdata_claim_geo_tbl claim_geo_tbl = new Wdata_claim_geo_tbl();
-	public void Init(Db_provider provider) {
-		this.provider = provider;
+	public void Init(Db_conn conn) {
+		this.conn = conn;
 		for (int i = 0; i < tbls_len; i++)
-			tbls[i].Init(provider);
+			tbls[i].Init(conn);
 	}
 	public void Exec_insert_by_wdoc(byte[] lang_key, Wdata_wiki_mgr wdata_mgr, int page_id, Wdata_doc wdoc) {
 		for (int i = 0; i < tbls_len; i++)
 			tbls[i].Exec_insert_by_wdoc(lang_key, wdata_mgr, page_id, wdoc);
 	}
 	public void Term(Gfo_usr_dlg usr_dlg) {
-		provider.Txn_mgr().Txn_end_all();
+		conn.Txn_mgr().Txn_end_all();
 		for (int i = 0; i < tbls_len; i++)
-			tbls[i].Make_idxs(usr_dlg, provider);
+			tbls[i].Make_idxs(usr_dlg, conn);
 	}
 }
 abstract class Wdata_tbl_base {
@@ -88,24 +88,24 @@ abstract class Wdata_tbl_base {
 	public abstract Db_idx_itm[] Idx_ary();
 	public abstract String[] Fld_ary();
 	@gplx.Virtual public void Exec_insert_by_wdoc(byte[] lang_key, Wdata_wiki_mgr wdata_mgr, int page_id, Wdata_doc wdoc) {}
-	public void Make_tbl(Db_provider p) {Sqlite_engine_.Tbl_create(p, this.Tbl_name(), this.Tbl_create_sql());}
-	public void Make_idxs(Gfo_usr_dlg usr_dlg, Db_provider p) {
+	public void Make_tbl(Db_conn p) {Sqlite_engine_.Tbl_create(p, this.Tbl_name(), this.Tbl_create_sql());}
+	public void Make_idxs(Gfo_usr_dlg usr_dlg, Db_conn p) {
 		Sqlite_engine_.Idx_create(usr_dlg, p, this.Tbl_name(), this.Idx_ary());
 	}
-	public Db_stmt Make_insert_stmt(Db_provider p) {return Db_stmt_.new_insert_(p, this.Tbl_name(), this.Fld_ary());}
+	public Db_stmt Make_insert_stmt(Db_conn p) {return Db_stmt_.new_insert_(p, this.Tbl_name(), this.Fld_ary());}
 	public Db_stmt Insert_stmt() {return insert_stmt;} private Db_stmt insert_stmt;
-	public void Init(Db_provider provider) {
-		this.Make_tbl(provider);
-		insert_stmt = this.Make_insert_stmt(provider);
+	public void Init(Db_conn conn) {
+		this.Make_tbl(conn);
+		insert_stmt = this.Make_insert_stmt(conn);
 	}
 	public static void Exec_insert_kvs(Db_stmt stmt, int page_id, OrderedHash hash) {
 		int len = hash.Count();
 		for (int i = 0; i < len; i++) {
 			Json_itm_kv kv = (Json_itm_kv)hash.FetchAt(i);
 			stmt.Clear()
-			.Val_int_(page_id)
-			.Val_str_by_bry_(kv.Key().Data_bry())
-			.Val_str_by_bry_(kv.Val().Data_bry())
+			.Val_int(page_id)
+			.Val_bry_as_str(kv.Key().Data_bry())
+			.Val_bry_as_str(kv.Val().Data_bry())
 			.Exec_insert();
 		}
 	}
@@ -150,16 +150,16 @@ class Wdata_alias_tbl extends Wdata_tbl_base {
 			int val_grp_len = val_grp.Subs_len();
 			for (int j = 0; j < val_grp_len; j++) {
 				Json_itm val_itm = val_grp.Subs_get_at(j);
-				byte[] val = ByteAry_.Empty;
+				byte[] val = Bry_.Empty;
 				if		(val_itm.Tid() == Json_itm_.Tid_string)
 					val = val_itm.Data_bry();
 				else if (val_itm.Tid() == Json_itm_.Tid_kv) {	// EX: q80 and de aliases
 					val = ((Json_itm_kv)val_itm).Val().Data_bry();
 				}
 				insert_stmt.Clear()
-				.Val_int_(page_id)
-				.Val_str_by_bry_(key)
-				.Val_str_by_bry_(val)
+				.Val_int(page_id)
+				.Val_bry_as_str(key)
+				.Val_bry_as_str(val)
 				.Exec_insert();
 			}
 		}
@@ -178,7 +178,7 @@ class Wdata_description_tbl extends Wdata_tbl_base {
 		);
 	}
 	@Override public Db_idx_itm[] Idx_ary() {return new Db_idx_itm[] {Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS wdata_description__main ON wdata_description (page_id, lang_key);")};}
-	@Override public void Exec_insert_by_wdoc(byte[] lang_key, Wdata_wiki_mgr wdata_mgr, int page_id, Wdata_doc wdoc) {Exec_insert_kvs(this.Insert_stmt(), page_id, wdoc.Description_list());}
+	@Override public void Exec_insert_by_wdoc(byte[] lang_key, Wdata_wiki_mgr wdata_mgr, int page_id, Wdata_doc wdoc) {Exec_insert_kvs(this.Insert_stmt(), page_id, wdoc.Descr_list());}
 	@Override public String[] Fld_ary() {return new String[] {Fld_page_id, Fld_lang_key, Fld_val};}
 	private static final String Fld_page_id = "page_id", Fld_lang_key  = "lang_key", Fld_val = "val";
 }
@@ -196,14 +196,14 @@ class Wdata_link_tbl extends Wdata_tbl_base {
 	@Override public Db_idx_itm[] Idx_ary() {return new Db_idx_itm[] {Db_idx_itm.sql_("CREATE INDEX IF NOT EXISTS wdata_link__main ON wdata_link (page_id, wiki_key);")};}
 	@Override public String[] Fld_ary() {return new String[] {Fld_page_id, Fld_wiki_key, Fld_val};}
 	@Override public void Exec_insert_by_wdoc(byte[] lang_key, Wdata_wiki_mgr wdata_mgr, int page_id, Wdata_doc wdoc) {
-		OrderedHash hash = wdoc.Link_list();
+		OrderedHash hash = wdoc.Slink_list();
 		int len = hash.Count();
 		Db_stmt insert_stmt = this.Insert_stmt();
 		for (int i = 0; i < len; i++) {
 			Json_itm_kv kv = (Json_itm_kv)hash.FetchAt(i);
 			byte[] key = kv.Key().Data_bry();
 			Json_itm kv_val = kv.Val();
-			byte[] val = ByteAry_.Empty;
+			byte[] val = Bry_.Empty;
 			if (kv_val.Tid() == Json_itm_.Tid_string)
 				val = kv_val.Data_bry();
 			else {
@@ -212,9 +212,9 @@ class Wdata_link_tbl extends Wdata_tbl_base {
 				val = val_name_kv.Val().Data_bry();
 			}
 			insert_stmt.Clear()
-			.Val_int_(page_id)
-			.Val_str_by_bry_(key)
-			.Val_str_by_bry_(val)
+			.Val_int(page_id)
+			.Val_bry_as_str(key)
+			.Val_bry_as_str(val)
 			.Exec_insert();
 		}
 	}
@@ -228,7 +228,7 @@ class Wdata_claim_tbl extends Wdata_tbl_base {
 			,	"( claim_id            integer             NOT NULL"
 			,	", page_id             integer             NOT NULL"
 			,	", prop_id             integer             NOT NULL"  // 60; P60
-			,	", val_tid             smallint            NOT NULL"  // String;wikibase-entity-id;time;geocoordinate
+			,	", val_tid             smallint            NOT NULL"  // String;wikibase-entity-id;time;globecoordinate
 			,	", entity_tid          smallint            NOT NULL"  // null;item
 			,	", entity_id           integer             NOT NULL"  // null;123
 			,	", val_text            varchar(255)        NOT NULL"
@@ -246,64 +246,40 @@ class Wdata_claim_tbl extends Wdata_tbl_base {
 	}
 	@Override public String[] Fld_ary() {return new String[] {Fld_claim_id, Fld_page_id, Fld_prop_id, Fld_val_tid, Fld_entity_tid, Fld_entity_id, Fld_val_text, Fld_guid, Fld_rank, Fld_ref_count, Fld_qual_count};}
 	private int next_claim_id = 0;
+	private Xob_wdata_db_visitor visitor;
 	@Override public void Exec_insert_by_wdoc(byte[] lang_key, Wdata_wiki_mgr wdata_mgr, int page_id, Wdata_doc wdoc) {
+		if (visitor == null) visitor = new Xob_wdata_db_visitor(wdata_mgr);
+		visitor.Init(lang_key);
 		OrderedHash list = wdoc.Claim_list();
 		int list_len = list.Count();
 		for (int i = 0; i < list_len; i++) {
-			Wdata_prop_grp claim_grp = (Wdata_prop_grp)list.FetchAt(i);
-			int itms_len = claim_grp.Itms_len();
+			Wdata_claim_grp claim_grp = (Wdata_claim_grp)list.FetchAt(i);
+			int itms_len = claim_grp.Len();
 			int entity_id = -1;
-			byte[] claim_val = ByteAry_.Empty;
+			byte[] claim_val = Bry_.Empty;
 			for (int j = 0; j < itms_len; j++) {
-				Wdata_prop_itm_core claim = claim_grp.Itms_get_at(j);
-				byte val_tid = claim.Val_tid_byte();
-				switch (val_tid) {
-					case Wdata_prop_itm_base_.Val_tid_string:
-					case Wdata_prop_itm_base_.Val_tid_time:
-						claim_val = claim.Val();
-						break;
-					case Wdata_prop_itm_base_.Val_tid_entity:
-						entity_id = ByteAry_.X_to_int_or(claim.Val(), -2);
-						Wdata_doc entity_doc = wdata_mgr.Pages_get(ByteAry_.Add(Wdata_wiki_mgr.Bry_q, claim.Val()));
-						if (entity_doc != null)	// NOTE: invalid document could be cited; EX: Q3235 cites prop p832 as Q14916523
-							claim_val = entity_doc.Label_list_get(lang_key);
-						break;
-					case Wdata_prop_itm_base_.Val_tid_globecoordinate:
-					case Wdata_prop_itm_base_.Val_tid_bad: {
-						byte[][] flds = ByteAry_.Split(claim.Val(),Wdata_prop_itm_core.Prop_dlm);
-						claim_val = ByteAry_.Add_w_dlm(Byte_ascii.Comma, flds[0], flds[1]);
-						break;
-					}
-					case Wdata_prop_itm_base_.Val_tid_quantity: {
-						claim_val = claim.Val();
-						break;
-					}
-					default: 
-						if (   claim.Snak_tid() == Wdata_prop_itm_base_.Snak_tid_somevalue		// somevalue has no val_tid; not sure why; see Q17 and prop 138
-							|| claim.Snak_tid() == Wdata_prop_itm_base_.Snak_tid_novalue) {}	// novalue has no val_tid; see q30 and official language
-						else
-							throw Err_.unhandled(val_tid);
-						break;
-				}
-				Exec_insert(++next_claim_id, page_id, claim_grp.Id(), val_tid, claim.Snak_tid(), entity_id, claim_val, claim.Wguid(), claim.Rank_tid(), 0, 0);
+				Wdata_claim_itm_core claim = claim_grp.Get_at(j);
+				claim.Welcome(visitor);
+				claim_val = visitor.Rv();
+				Exec_insert(++next_claim_id, page_id, claim_grp.Id(), claim.Val_tid(), claim.Snak_tid(), entity_id, claim_val, claim.Wguid(), claim.Rank_tid(), 0, 0);
 			}
 		}
 	}
 	public void Exec_insert(int claim_id, int page_id, int prop_id, byte val_tid, byte entity_tid, int entity_id, byte[] val_text, byte[] guid, int rank, int ref_count, int qual_count) {
-		if (val_text == null) val_text = ByteAry_.Empty;
-		if (guid == null) guid = ByteAry_.Empty;
+		if (val_text == null) val_text = Bry_.Empty;
+		if (guid == null) guid = Bry_.Empty;
 		this.Insert_stmt().Clear()
-		.Val_int_(claim_id)
-		.Val_int_(page_id)
-		.Val_int_(prop_id)
-		.Val_byte_(val_tid)
-		.Val_byte_(entity_tid)
-		.Val_int_(entity_id)
-		.Val_str_by_bry_(val_text)
-		.Val_str_by_bry_(guid)
-		.Val_int_(rank)
-		.Val_int_(ref_count)
-		.Val_int_(qual_count)
+		.Val_int(claim_id)
+		.Val_int(page_id)
+		.Val_int(prop_id)
+		.Val_byte(val_tid)
+		.Val_byte(entity_tid)
+		.Val_int(entity_id)
+		.Val_bry_as_str(val_text)
+		.Val_bry_as_str(guid)
+		.Val_int(rank)
+		.Val_int(ref_count)
+		.Val_int(qual_count)
 		.Exec_insert();
 	}
 	private static final String Fld_claim_id = "claim_id", Fld_page_id = "page_id", Fld_prop_id = "prop_id", Fld_val_tid = "val_tid", Fld_entity_tid = "entity_tid", Fld_entity_id = "entity_id", Fld_val_text = "val_text"
@@ -333,13 +309,13 @@ class Wdata_claim_time_tbl extends Wdata_tbl_base {
 	@Override public String[] Fld_ary() {return new String[] {Fld_claim_id, Fld_time_val, Fld_time_tz, Fld_time_before, Fld_time_after, Fld_time_precision, Fld_time_model};}
 	public void Insert(Db_stmt stmt, int claim_id, byte[] time_val, int tz, int before, int after, int precision, byte[] model) {
 		stmt.Clear()
-		.Val_int_(claim_id)
-		.Val_str_by_bry_(time_val)
-		.Val_int_(tz)
-		.Val_int_(before)
-		.Val_int_(after)
-		.Val_int_(precision)
-		.Val_str_by_bry_(model)
+		.Val_int(claim_id)
+		.Val_bry_as_str(time_val)
+		.Val_int(tz)
+		.Val_int(before)
+		.Val_int(after)
+		.Val_int(precision)
+		.Val_bry_as_str(model)
 		.Exec_insert();
 	}
 	private static final String Fld_claim_id = "claim_id", Fld_time_val = "time_val", Fld_time_tz = "time_tz", Fld_time_before = "time_before", Fld_time_after = "time_after", Fld_time_precision = "time_precision", Fld_time_model = "time_model";
@@ -365,12 +341,12 @@ class Wdata_claim_geo_tbl extends Wdata_tbl_base {
 	}
 	public void Insert(Db_stmt stmt, int claim_id, double latitude, double longitude, byte[] altitude, double precision, byte[] globe) {
 		stmt.Clear()
-		.Val_int_(claim_id)
-		.Val_double_(latitude)
-		.Val_double_(longitude)
-		.Val_str_by_bry_(altitude)
-		.Val_double_(precision)
-		.Val_str_by_bry_(globe)
+		.Val_int(claim_id)
+		.Val_double(latitude)
+		.Val_double(longitude)
+		.Val_bry_as_str(altitude)
+		.Val_double(precision)
+		.Val_bry_as_str(globe)
 		.Exec_insert();
 	}
 	@Override public String[] Fld_ary() {return new String[] {Fld_claim_id, Fld_geo_latitude, Fld_geo_longitude, Fld_geo_altitude, Fld_geo_precision, Fld_geo_globe};}
@@ -384,7 +360,7 @@ class Wdata_ref_tbl extends Wdata_tbl_base {
 			,	"( ref_id              integer             NOT NULL"
 			,	", page_id             integer             NOT NULL"
 			,	", prop_id             integer             NOT NULL"  // 60; P60
-			,	", val_tid             smallint            NOT NULL"  // String;wikibase-entity-id;time;geocoordinate
+			,	", val_tid             smallint            NOT NULL"  // String;wikibase-entity-id;time;globecoordinate
 			,	", entity_tid          smallint            NOT NULL"  // null;item
 			,	", entity_id           integer             NOT NULL"  // null;123
 			,	", val_text            varchar(255)        NOT NULL"
@@ -418,10 +394,26 @@ class Wdata_qual_tbl extends Wdata_tbl_base {
 	@Override public String[] Fld_ary() {return new String[] {Fld_qual_id, Fld_page_id, Fld_val_text};}
 	public void Insert(Db_stmt stmt, int qual_id, int page_id, byte[] val_text) {
 		stmt.Clear()
-		.Val_int_(qual_id)
-		.Val_int_(page_id)
-		.Val_str_by_bry_(val_text)
+		.Val_int(qual_id)
+		.Val_int(page_id)
+		.Val_bry_as_str(val_text)
 		.Exec_insert();
 	}
 	private static final String Fld_qual_id = "qual_id", Fld_page_id = "page_id", Fld_val_text = "val_text";
+}
+class Xob_wdata_db_visitor implements Wdata_claim_visitor {
+	private final  Wdata_wiki_mgr wdata_mgr; private byte[] lang_key;
+	public Xob_wdata_db_visitor(Wdata_wiki_mgr wdata_mgr) {this.wdata_mgr = wdata_mgr;}
+	public void Init(byte[] lang_key) {this.lang_key = lang_key;}
+	public byte[] Rv() {return rv;} private byte[] rv;
+	public void Visit_str(Wdata_claim_itm_str itm)							{rv = itm.Val_str();}
+	public void Visit_monolingualtext(Wdata_claim_itm_monolingualtext itm)	{rv = Bry_.Add_w_dlm(Byte_ascii.Pipe, itm.Lang(), itm.Text());}
+	public void Visit_quantity(Wdata_claim_itm_quantity itm)				{rv = itm.Amount();}
+	public void Visit_time(Wdata_claim_itm_time itm)						{rv = itm.Time();}
+	public void Visit_globecoordinate(Wdata_claim_itm_globecoordinate itm)	{rv = Bry_.Add_w_dlm(Byte_ascii.Comma, itm.Lat(), itm.Lng());}
+	public void Visit_system(Wdata_claim_itm_system itm)					{rv = Bry_.Empty;}
+	public void Visit_entity(Wdata_claim_itm_entity itm) {
+		Wdata_doc entity_doc = wdata_mgr.Pages_get(Bry_.Add(Wdata_wiki_mgr.Bry_q, itm.Entity_id_bry()));
+		rv = entity_doc == null ? Bry_.Empty : entity_doc.Label_list_get(lang_key);
+	}
 }

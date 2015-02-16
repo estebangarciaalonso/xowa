@@ -16,11 +16,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.intl; import gplx.*;
+import gplx.core.primitives.*;
 public class Utf16_ {		
 	public static int Surrogate_merge(int hi, int lo) { // REF: http://perldoc.perl.org/Encode/Unicode.html
 		return 0x10000 + (hi - 0xD800) * 0x400 + (lo - 0xDC00);
 	}
-	public static void Surrogate_split(int v, IntRef hi, IntRef lo) {
+	public static void Surrogate_split(int v, Int_obj_ref hi, Int_obj_ref lo) {
 		hi.Val_((v - 0x10000) / 0x400 + 0xD800);
 		lo.Val_((v - 0x10000) % 0x400 + 0xDC00);
 	}
@@ -49,7 +50,7 @@ public class Utf16_ {
 		}
 		else throw Err_.new_fmt_("invalid utf8 byte: byte={0}", b0);
 	}
-	public static byte[] Encode_hex_to_bry(String raw) {return Encode_hex_to_bry(ByteAry_.new_ascii_(raw));}
+	public static byte[] Encode_hex_to_bry(String raw) {return Encode_hex_to_bry(Bry_.new_ascii_(raw));}
 	public static byte[] Encode_hex_to_bry(byte[] raw) {
 		if (raw == null) return null;
 		int int_val = gplx.texts.HexDecUtl.parse_or_(raw, Int_.MinValue);

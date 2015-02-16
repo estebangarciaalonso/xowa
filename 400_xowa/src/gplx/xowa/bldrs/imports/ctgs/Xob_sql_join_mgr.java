@@ -27,7 +27,7 @@ class Xob_sql_join_mgr {
 		Io_line_rdr main_rdr = wkr.New_main_rdr();
 		Io_line_rdr join_rdr = wkr.New_join_rdr();
 		while (main_rdr.Read_next()) {
-			byte[] key_bry = ByteAry_.Mid(main_rdr.Bfr(), main_rdr.Key_pos_bgn(), main_rdr.Key_pos_end());
+			byte[] key_bry = Bry_.Mid(main_rdr.Bfr(), main_rdr.Key_pos_bgn(), main_rdr.Key_pos_end());
 			if (join_rdr.Match(key_bry)) {
 				wkr.Process_match(main_rdr, join_rdr, key_bry);
 			}

@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.ctgs; import gplx.*; import gplx.xowa.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.primitives.*;
 public class Xoctg_idx_mgr_tst {
 	@Before public void init() {fxt.Clear();} private Xoctg_idx_mgr_fxt fxt = new Xoctg_idx_mgr_fxt();
 	@Test   public void Index() {
@@ -74,9 +74,9 @@ class Xoctg_idx_mgr_fxt {
 			idx_mgr = new Xoctg_idx_mgr();
 		}
 		return this;
-	}	private Xoa_app app; Xow_wiki wiki; Xoctg_idx_mgr idx_mgr; static final byte[] Ctg_name = ByteAry_.new_ascii_("Ctg_test");
+	}	private Xoa_app app; Xow_wiki wiki; Xoctg_idx_mgr idx_mgr; static final byte[] Ctg_name = Bry_.new_ascii_("Ctg_test");
 	public byte[] Make_src(int len) {
-		ByteAryBfr bfr = wiki.Utl_bry_bfr_mkr().Get_k004().Mkr_rls();
+		Bry_bfr bfr = wiki.Utl_bry_bfr_mkr().Get_k004().Mkr_rls();
 		bfr.Add_byte_pipe(); // always have leading pipe
 		for (int i = 0; i < len; i++) {
 			bfr.Add_base85_len_5(i).Add_byte(Byte_ascii.Semic);	// idx.Id() = i
@@ -85,13 +85,13 @@ class Xoctg_idx_mgr_fxt {
 			if (i < 10) bfr.Add_byte(Byte_ascii.Num_0);
 			bfr.Add_int_variable(i).Add_byte_pipe();
 		}
-		return bfr.XtoAryAndClear();
+		return bfr.Xto_bry_and_clear();
 	}
-	public Xoctg_idx_mgr_fxt Init_itms(int block_len, byte[] src) {idx_mgr.Block_len_(block_len); idx_mgr.Index(Gfo_usr_dlg_xowa.test_(), Ctg_name, src); return this;}
+	public Xoctg_idx_mgr_fxt Init_itms(int block_len, byte[] src) {idx_mgr.Block_len_(block_len); idx_mgr.Index(Gfo_usr_dlg_base.test_(), Ctg_name, src); return this;}
 	public Xoctg_idx_mgr_fxt Init_block_len(int block_len) {idx_mgr.Block_len_(block_len); return this;}
 	public Xoctg_idx_mgr_fxt Init_src(byte[] v) {src = v; src_len = v.length; return this;} private byte[] src; int src_len;
 	public Xoctg_idx_mgr_fxt Test_index(byte[] src, String... expd) {
-		idx_mgr.Index(Gfo_usr_dlg_xowa.test_(), Ctg_name, src);
+		idx_mgr.Index(Gfo_usr_dlg_base.test_(), Ctg_name, src);
 		Tfds.Eq_ary_str(expd, Idx_mgr_itms(idx_mgr));
 		return this;
 	}
@@ -104,23 +104,23 @@ class Xoctg_idx_mgr_fxt {
 	}
 	public Xoctg_idx_mgr_fxt Test_itms_binary_search(String find, String expd, int expd_comp) {
 		comp_rslt.Val_zero_();
-		Xoctg_idx_itm rslt = idx_mgr.Itms_binary_search(ByteAry_.new_ascii_(find), comp_rslt);
+		Xoctg_idx_itm rslt = idx_mgr.Itms_binary_search(Bry_.new_ascii_(find), comp_rslt);
 		Tfds.Eq(expd, String_.new_ascii_(rslt.Sortkey()));
 		Tfds.Eq(expd_comp, comp_rslt.Val());
 		return this;		
-	}	IntRef comp_rslt = IntRef.zero_();
+	}	Int_obj_ref comp_rslt = Int_obj_ref.zero_();
 	public Xoctg_idx_mgr_fxt Test_find_itm_near_bmk(int idx_bgn, String find, int bmk_comp, boolean find_dir, String expd) {
 		int idx_pos = (idx_bgn * Xoctg_idx_mgr_tst.Itm_len) + (bmk_comp == CompareAble_.Less ? 1 : 0);
-		Xoctg_idx_itm rslt = idx_mgr.Find_itm_near_bmk(src, src_len, ByteAry_.new_ascii_(find), find_dir, bmk_comp, idx_pos);
+		Xoctg_idx_itm rslt = idx_mgr.Find_itm_near_bmk(src, src_len, Bry_.new_ascii_(find), find_dir, bmk_comp, idx_pos);
 		String actl = rslt == null ? null : String_.new_ascii_(rslt.Sortkey());
 		Tfds.Eq(expd, actl);
 		return this;		
 	}
 	public Xoctg_idx_mgr_fxt Test_find(String find, boolean fill_at_bgn, String[] expd_ary, String last_plus_one) {
 		if (tmp_list == null) tmp_list = ListAdp_.new_();
-		idx_mgr.Index(Gfo_usr_dlg_xowa.test_(), ByteAry_.Empty, src);
+		idx_mgr.Index(Gfo_usr_dlg_base.test_(), Bry_.Empty, src);
 		tmp_list.Clear();
-		idx_mgr.Find(tmp_list, src, fill_at_bgn, ByteAry_.new_ascii_(find), 3, tmp_last_plus_one);
+		idx_mgr.Find(tmp_list, src, fill_at_bgn, Bry_.new_ascii_(find), 3, tmp_last_plus_one);
 		Tfds.Eq_ary(expd_ary, To_str_ary(tmp_list));
 		Tfds.Eq(last_plus_one, String_.new_ascii_(tmp_last_plus_one.Sortkey()));
 		return this;

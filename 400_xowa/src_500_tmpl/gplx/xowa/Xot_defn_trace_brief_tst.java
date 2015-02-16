@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.strings.*;
 public class Xot_defn_trace_brief_tst {
 	Xot_defn_trace_fxt fxt = new Xot_defn_trace_fxt();
 	@Before public void init() {
@@ -37,20 +37,20 @@ class Xot_defn_trace_fxt {
 	public void tst_(String raw, String... expd_ary) {
 		Xop_ctx ctx = fxt.Ctx();
 		ctx.Defn_trace().Clear();
-		byte[] src = ByteAry_.new_utf8_(raw);
-		ctx.Page().Ttl_(Xoa_ttl.parse_(fxt.Wiki(), ByteAry_.new_ascii_("test")));
+		byte[] src = Bry_.new_utf8_(raw);
+		ctx.Cur_page().Ttl_(Xoa_ttl.parse_(fxt.Wiki(), Bry_.new_ascii_("test")));
 		Xop_root_tkn root = ctx.Tkn_mkr().Root(src);
 		fxt.Parser().Parse_page_all_clear(root, ctx, ctx.Tkn_mkr(), src);
 		ctx.Defn_trace().Print(src, tmp);
-		String[] actl_ary = String_.Split(tmp.XtoStrAndClear(), (char)Byte_ascii.NewLine);
+		String[] actl_ary = String_.Split(tmp.Xto_str_and_clear(), (char)Byte_ascii.NewLine);
 		Tfds.Eq_ary(expd_ary, actl_ary);
-	}	private ByteAryBfr tmp = ByteAryBfr.new_();
+	}	private Bry_bfr tmp = Bry_bfr.new_();
 	String[] XtoStr(Xot_defn_trace_itm_brief[] ary) {
 		String[] rv = new String[ary.length];
 		for (int i = 0; i < rv.length; i++) {
 			Xot_defn_trace_itm_brief itm = ary[i];
 			sb.Add(String_.new_utf8_(itm.Name())).Add("|").Add(itm.Count());
-			rv[i] = sb.XtoStrAndClear();
+			rv[i] = sb.Xto_str_and_clear();
 		}
 		return rv;
 	}

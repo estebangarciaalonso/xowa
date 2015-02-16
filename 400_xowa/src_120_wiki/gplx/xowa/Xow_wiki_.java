@@ -22,7 +22,7 @@ public class Xow_wiki_ {
 	, Domain_enwiki_str  = "en.wikipedia.org"
 	;
 	public static final byte[] 
-	  Domain_commons_bry = ByteAry_.new_ascii_(Domain_commons_str)
-	, Domain_en_wiki_bry  = ByteAry_.new_ascii_(Domain_enwiki_str)
+	  Domain_commons_bry = Bry_.new_ascii_(Domain_commons_str)
+	, Domain_en_wiki_bry  = Bry_.new_ascii_(Domain_enwiki_str)
 	;
 }

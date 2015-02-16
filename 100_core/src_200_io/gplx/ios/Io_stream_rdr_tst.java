@@ -38,7 +38,7 @@ class Io_stream_rdr_fxt {
 	}
 	public Io_stream_rdr_fxt Expd_bytes_read(int v) {expd_bytes_read = v; return this;} private int expd_bytes_read = Int_.MinValue;
 	public Io_stream_rdr_fxt Init_stream(String v) {
-		byte[] stream_bry = ByteAry_.new_ascii_(v);
+		byte[] stream_bry = Bry_.new_ascii_(v);
 		stream_bry_len = stream_bry.length;
 		stream = Io_stream_rdr_.Stream_new_mem(stream_bry);
 		return this;

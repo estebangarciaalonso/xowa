@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.xowa.net.*;
 public class Gfo_url {
 	public byte[] Raw() {return raw;} private byte[] raw;
 	public boolean Protocol_is_relative() {return protocol_is_relative;} public Gfo_url Protocol_is_relative_(boolean v) {protocol_is_relative = v; return this;} private boolean protocol_is_relative;
@@ -33,9 +34,9 @@ public class Gfo_url {
 	public byte Err() {return err;} public Gfo_url Err_(byte v) {err = v; return this;} private byte err;
 	public Gfo_url Ini_(byte[] v) {
 		raw = v;
-		protocol_tid = Gfo_url_parser.Protocol_null_tid; protocol_is_relative = false;
+		protocol_tid = Xoo_protocol_itm.Tid_null; protocol_is_relative = false;
 		protocol_bry = site = site_sub = site_name = site_domain = page = anchor = null;
-		segs = ByteAry_.Ary_empty;
+		segs = Bry_.Ary_empty;
 		args = Gfo_url_arg.Ary_empty;
 		err = Err_none;
 		args_bgn = -1;

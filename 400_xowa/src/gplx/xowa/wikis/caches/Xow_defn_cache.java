@@ -19,7 +19,7 @@ package gplx.xowa.wikis.caches; import gplx.*; import gplx.xowa.*; import gplx.x
 import gplx.intl.*;
 public class Xow_defn_cache {	// stores compiled Xot_defn
 	private Xol_lang lang;		// needed to lowercase names;
-	private ByteAryBfr upper_1st_bfr = ByteAryBfr.reset_(255);
+	private Bry_bfr upper_1st_bfr = Bry_bfr.reset_(255);
 	private Gfo_cache_mgr cache = new Gfo_cache_mgr().Max_size_(64 * 1024 * 1024).Reduce_by_(32 * 1024 * 1024);
 	public Xow_defn_cache(Xol_lang lang) {this.lang = lang;}
 	public Xot_defn Get_by_key(byte[] name) {return (Xot_defn)cache.Get_by_key(name);}

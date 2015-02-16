@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.texts; import gplx.*;
+import gplx.core.strings.*;
 public class StringTableBldr {
 	public void ClearRows() {rows.Clear();}
 	public StringTableCol Col_(int i) {return FetchAtOrNew(i);}		
@@ -46,7 +47,7 @@ public class StringTableBldr {
 			}
 			sb.Add(String_.CrLf);
 		}
-		return sb.XtoStrAndClear();
+		return sb.Xto_str_and_clear();
 	}
 	
 	public static StringTableBldr new_() {return new StringTableBldr();} StringTableBldr() {}

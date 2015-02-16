@@ -24,7 +24,7 @@ public class Xob_xdat_file_wtr {
 		this.fil_max = fil_max; 
 		this.root_dir = root_dir;
 		fil_ext = Xow_fsys_mgr.Wtr_ext(wtr_tid);
-		bfr = new ByteAryBfr(fil_max);
+		bfr = Bry_bfr.new_(fil_max);
 		idx = new int[fil_max / 8];	// ASSUME: any given row must at least be 8 bytes long
 		Url_gen(fil_idx);	// set 1st url
 		wtr = Io_stream_wtr_.new_by_tid_(wtr_tid);
@@ -34,7 +34,7 @@ public class Xob_xdat_file_wtr {
 	@gplx.Internal protected Io_url Fil_url() {return fil_url;}
 	@gplx.Internal protected int[] Idx() {return idx;} private int[] idx;
 	public int Idx_pos() {return idx_pos;} private int idx_pos;
-	public ByteAryBfr Bfr() {return bfr;} ByteAryBfr bfr;
+	public Bry_bfr Bfr() {return bfr;} Bry_bfr bfr;
 	public Xob_xdat_file_wtr Add_idx(byte data_dlm) {return Add_idx_direct(bfr.Len(), data_dlm);}
 	public Xob_xdat_file_wtr Add_idx_direct(int itm_len, byte data_dlm) {
 		if (data_dlm != Byte_ascii.Nil) {	// write closing dlm for data_eny, unless Byte_.Null passed in
@@ -55,7 +55,7 @@ public class Xob_xdat_file_wtr {
 			wtr.Url_(fil_url).Open();
 			if (idx_pos > 0)				// write idx; NOTE: if idx written, then .xdat; else .csv
 				FlushIdx(wtr);
-			wtr.Write(bfr.Bry(), 0, bfr.Len());	// write data;
+			wtr.Write(bfr.Bfr(), 0, bfr.Len());	// write data;
 			wtr.Flush();
 		}
 		finally {wtr.Rls();}
@@ -113,12 +113,6 @@ public class Xob_xdat_file_wtr {
 	private void Idx_resize(int newLen) {idx = (int[])Array_.Resize(idx, newLen);}
 	static final String GRP_KEY = "xowa.bldr.xdat_wtr";
 	private static final byte Dlm_fld = Byte_ascii.Pipe;		
-}
-class Xob_tmp_itm {
-	public byte[] Bry() {return bry;} private byte[] bry;
-	public int Key_bgn() {return key_bgn;} private int key_bgn;
-	public int Key_end() {return key_end;} private int key_end;
-	public Xob_tmp_itm(byte[] bry, int key_bgn, int key_end) {this.bry = bry; this.key_bgn = key_bgn; this.key_end = key_end;}
 }
 class SortAlgo_quick {// quicksort
 	Object[] ary; int ary_len; gplx.lists.ComparerAble comparer;

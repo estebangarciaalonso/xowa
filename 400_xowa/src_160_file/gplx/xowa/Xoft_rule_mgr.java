@@ -24,7 +24,7 @@ public class Xoft_rule_mgr implements GfoInvkAble {
 		hash.Add(Xoft_rule_grp.Grp_app_default, app_default);
 	}
 	public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
-		if		(ctx.Match(k, Invk_set))		return Get_or_new(ByteAry_.new_utf8_(m.ReadStr("v")));
+		if		(ctx.Match(k, Invk_set))		return Get_or_new(Bry_.new_utf8_(m.ReadStr("v")));
 		else	return GfoInvkAble_.Rv_unhandled;
 	}	private static final String Invk_set = "set";
 	Xoft_rule_grp Get_or_null(byte[] key) {return (Xoft_rule_grp)hash.Fetch(key);}

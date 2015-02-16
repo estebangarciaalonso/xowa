@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.specials.search; import gplx.*; import gplx.xowa.*; import gplx.xowa.specials.*;
+import gplx.core.primitives.*; import gplx.core.btries.*;
 class Xosrh_scanner {
 	ListAdp tkns = ListAdp_.new_(); byte[] src; int src_len; int pos; int txt_bgn;
 	public Xosrh_qry_tkn[] Scan(byte[] src) {			
@@ -23,14 +24,14 @@ class Xosrh_scanner {
 		tkns.Clear(); pos = 0; txt_bgn = -1; 
 		while (pos < src_len) {
 			byte cur_b = src[pos];
-			Object cur_obj = trie.Match(cur_b, src, pos, src_len);
+			Object cur_obj = trie.Match_bgn_w_byte(cur_b, src, pos, src_len);
 			if (cur_obj == null) {					// text character
 				if (txt_bgn == -1) txt_bgn = pos;	// 1st character not set; set it
 				++pos;
 			}	
 			else {									// AND, OR, (, ), -, \s, "
 				int pos_end = trie.Match_pos();
-				byte cur_tid = ((ByteVal)cur_obj).Val(); 
+				byte cur_tid = ((Byte_obj_val)cur_obj).Val(); 
 				if (Cur_join_is_word(cur_tid, pos_end)) continue;
 				if (txt_bgn != -1) {	// pending word; create
 					Tkns_add_word(Xosrh_qry_tkn.Tid_word, txt_bgn, pos);
@@ -38,12 +39,12 @@ class Xosrh_scanner {
 				}
 				switch (cur_tid) {
 					case Xosrh_qry_tkn.Tid_space:	// discard spaces
-						pos = Byte_ary_finder.Find_fwd_while(src, pos, src_len, Byte_ascii.Space);
+						pos = Bry_finder.Find_fwd_while(src, pos, src_len, Byte_ascii.Space);
 						break;
 					case Xosrh_qry_tkn.Tid_quote:	// find end quote and add as word
 						int quote_bgn = pos + 1;
-						int quote_end = Byte_ary_finder.Find_fwd(src, Byte_ascii.Quote, quote_bgn, src_len);
-						if (quote_end == ByteAry_.NotFound) throw Err_.new_fmt_("could not find end quote: {0}", String_.new_utf8_(src));
+						int quote_end = Bry_finder.Find_fwd(src, Byte_ascii.Quote, quote_bgn, src_len);
+						if (quote_end == Bry_.NotFound) throw Err_.new_fmt_("could not find end quote: {0}", String_.new_utf8_(src));
 						Tkns_add_word(Xosrh_qry_tkn.Tid_word_quoted, quote_bgn, quote_end);
 						pos = quote_end + 1;		// +1 to place after quote
 						break;
@@ -64,7 +65,7 @@ class Xosrh_scanner {
 			Tkns_add_word(Xosrh_qry_tkn.Tid_word, txt_bgn, pos);
 			txt_bgn = -1;
 		}
-		return (Xosrh_qry_tkn[])tkns.XtoAryAndClear(Xosrh_qry_tkn.class);
+		return (Xosrh_qry_tkn[])tkns.Xto_ary_and_clear(Xosrh_qry_tkn.class);
 	}
 	boolean Cur_join_is_word(byte cur_tid, int pos_end) {	// extra logic to handle and / or occuring in unquoted strings; EX: random; for
 		switch (cur_tid) {
@@ -76,11 +77,11 @@ class Xosrh_scanner {
 		if (txt_bgn == -1) {		// no pending word;
 			if (cur_tid == Xosrh_qry_tkn.Tid_not) return false;	// NOT is only operator if no pending tkn; EX: -abc -> NOT abc; a-b -> a-b
 			byte nxt_b = pos_end < src_len ? src[pos_end] : Byte_ascii.Nil;
-			Object nxt_obj = trie.Match(nxt_b, src, pos_end, src_len);
+			Object nxt_obj = trie.Match_bgn_w_byte(nxt_b, src, pos_end, src_len);
 			if (nxt_obj == null)	// next tkn is text; join must be word
 				join_is_word = true;
 			else {					// next tkn is tkn
-				byte nxt_tid = ((ByteVal)nxt_obj).Val(); 
+				byte nxt_tid = ((Byte_obj_val)nxt_obj).Val(); 
 				switch (nxt_tid) {
 					case Xosrh_qry_tkn.Tid_space: case Xosrh_qry_tkn.Tid_quote:
 					case Xosrh_qry_tkn.Tid_paren_bgn: case Xosrh_qry_tkn.Tid_paren_end:
@@ -114,10 +115,10 @@ class Xosrh_scanner {
 				tkns.Add(Xosrh_qry_tkn.new_bry_(Xosrh_qry_tkn.Tid_and, Bry_and));
 		}
 		if (tid == Xosrh_qry_tkn.Tid_word) {	// if word has symbol, convert to quoted; EX: a-b should become "a-b"; otherwise searcher would search for a single word a-b
-			byte[] cur_word = ByteAry_.Mid(src, src_bgn, src_end);
+			byte[] cur_word = Bry_.Mid(src, src_bgn, src_end);
 			byte[][] words = gplx.xowa.bldrs.imports.Xob_search_base.Split(null, tmp_list, tmp_bfr, cur_word);
 			int words_len = words.length;
-			if (words_len == 1 && !ByteAry_.Eq(words[0], cur_word) && Byte_ary_finder.Find_fwd(cur_word, Byte_ascii.Asterisk) == -1) {
+			if (words_len == 1 && !Bry_.Eq(words[0], cur_word) && Bry_finder.Find_fwd(cur_word, Byte_ascii.Asterisk) == -1) {
 				tkns.Add(Xosrh_qry_tkn.new_bry_(tid, words[0]));
 				return;
 			}
@@ -126,10 +127,17 @@ class Xosrh_scanner {
 		}
 		tkns.Add(new_tkn_(tid, src_bgn, src_end));
 	}
-	OrderedHash tmp_list = OrderedHash_.new_(); ByteAryBfr tmp_bfr = ByteAryBfr.new_();
+	OrderedHash tmp_list = OrderedHash_.new_(); Bry_bfr tmp_bfr = Bry_bfr.new_();
 	Xosrh_qry_tkn new_tkn_(byte tid, int val_bgn, int val_end) {return Xosrh_qry_tkn.new_pos_(tid, val_bgn, val_end);}
-	private static byte[] Bry_and = ByteAry_.new_ascii_("AND");
-	private static final ByteTrieMgr_slim trie = new ByteTrieMgr_slim(false).Add_str_byte(" ", Xosrh_qry_tkn.Tid_space).Add_str_byte("\"", Xosrh_qry_tkn.Tid_quote).Add_str_byte("-", Xosrh_qry_tkn.Tid_not).Add_str_byte("(", Xosrh_qry_tkn.Tid_paren_bgn).Add_str_byte(")", Xosrh_qry_tkn.Tid_paren_end).Add_str_byte("or", Xosrh_qry_tkn.Tid_or).Add_str_byte("and", Xosrh_qry_tkn.Tid_and);
+	private static byte[] Bry_and = Bry_.new_ascii_("AND");
+	private static final Btrie_slim_mgr trie = Btrie_slim_mgr.ci_ascii_()// NOTE:ci.ascii:OR / AND only
+	.Add_str_byte(" ", Xosrh_qry_tkn.Tid_space)
+	.Add_str_byte("\"", Xosrh_qry_tkn.Tid_quote)
+	.Add_str_byte("-", Xosrh_qry_tkn.Tid_not)
+	.Add_str_byte("(", Xosrh_qry_tkn.Tid_paren_bgn)
+	.Add_str_byte(")", Xosrh_qry_tkn.Tid_paren_end)
+	.Add_str_byte("or", Xosrh_qry_tkn.Tid_or)
+	.Add_str_byte("and", Xosrh_qry_tkn.Tid_and);
 	public static final Xosrh_scanner _ = new Xosrh_scanner(); Xosrh_scanner() {}
 }
 class Xosrh_qry_tkn {
@@ -138,7 +146,7 @@ class Xosrh_qry_tkn {
 	int val_bgn = -1;
 	int val_end = -1;
 	byte[] val_bry;
-	public byte[] Val(byte[] src) {return val_bry == null ? ByteAry_.Mid(src, val_bgn, val_end) : val_bry;}
+	public byte[] Val(byte[] src) {return val_bry == null ? Bry_.Mid(src, val_bgn, val_end) : val_bry;}
 	public static Xosrh_qry_tkn new_pos_(byte tid, int val_bgn, int val_end)		{return new Xosrh_qry_tkn(tid, val_bgn, val_end, null);}
 	public static Xosrh_qry_tkn new_bry_(byte tid, byte[] val_bry)					{return new Xosrh_qry_tkn(tid, -1, -1, val_bry);}
 	public static final byte Tid_root = 1, Tid_word = 2, Tid_word_quoted = 3, Tid_space = 4, Tid_quote = 5, Tid_not = 6, Tid_paren_bgn = 7, Tid_paren_end = 8, Tid_or = 9, Tid_and = 10, Tid_eos = 11;

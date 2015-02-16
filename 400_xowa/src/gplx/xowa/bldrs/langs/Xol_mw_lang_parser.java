@@ -16,16 +16,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.langs; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import gplx.intl.*; import gplx.php.*; import gplx.xowa.langs.numFormats.*;
+import gplx.core.primitives.*; import gplx.core.btries.*; import gplx.intl.*; import gplx.php.*;
+import gplx.xowa.langs.*; import gplx.xowa.langs.numbers.*;
 public class Xol_mw_lang_parser {
 	private Php_parser parser = new Php_parser(); private Php_evaluator evaluator;
 	public Xol_mw_lang_parser(Gfo_msg_log msg_log) {evaluator = new Php_evaluator(msg_log);}
-	public void Bld_all(Xoa_app app, Io_url user_root) {Bld_all(app, user_root, Xol_lang_transform_null._);}
-	public static final String Dir_name_xowa = Xoa_app_.Name;
-	public void Bld_all(Xoa_app app, Io_url user_root, Xol_lang_transform lang_transform) {
-		Io_url lang_root = user_root.GenSubDir("lang");
+	public void Bld_all(Xoa_app app) {Bld_all(app, Xol_lang_transform_null._);}
+	public static final String Dir_name_core = "core";
+	public void Bld_all(Xoa_app app, Xol_lang_transform lang_transform) {
+		Io_url lang_root = app.Fsys_mgr().Cfg_lang_core_dir().OwnerDir();
 		Parse_mediawiki(app, lang_root.GenSubDir("mediawiki"), lang_transform);
-		Save_langs(app, lang_root.GenSubDir(Xol_mw_lang_parser.Dir_name_xowa), OrderedHash_.new_bry_(), OrderedHash_.new_bry_());
+		Save_langs(app, lang_root.GenSubDir(Xol_mw_lang_parser.Dir_name_core), OrderedHash_.new_bry_(), OrderedHash_.new_bry_());
 	}
 	public void Save_langs(Xoa_app app, Io_url xowa_root, OrderedHash manual_text_bgn, OrderedHash manual_text_end) {
 		Xoa_lang_mgr lang_mgr = app.Lang_mgr();
@@ -37,12 +38,12 @@ public class Xol_mw_lang_parser {
 			Io_url lang_url = xowa_root.GenSubFil(lang_key + ".gfs");
 			Save_langs_by_manual_text(bldr, manual_text_bgn, lang_key);
 
-			Xol_lang_srl.Save_num_fmt(bldr, lang.Num_fmt_mgr());
+			Xol_lang_srl.Save_num_mgr(bldr, lang.Num_mgr());
 			bldr.Add_proc_init_many("this").Add_nl();
 			if (lang.Fallback_bry() != null)	// NOTE: fallback will often be null; EX: en
 				bldr.Add_proc_cont_one(Xol_lang.Invk_fallback_load).Add_parens_str(lang.Fallback_bry()).Add_nl();
 			if (!lang.Dir_ltr())				// NOTE: only save dir_ltr if false; EX: en
-				bldr.Add_proc_cont_one(Xol_lang.Invk_dir_rtl_).Add_parens_str(Yn.X_to_str(!lang.Dir_ltr())).Add_nl();
+				bldr.Add_proc_cont_one(Xol_lang.Invk_dir_rtl_).Add_parens_str(Yn.Xto_str(!lang.Dir_ltr())).Add_nl();
 			Xol_lang_srl.Save_ns_grps(bldr, lang.Ns_names(), Xol_lang.Invk_ns_names);
 			Xol_lang_srl.Save_ns_grps(bldr, lang.Ns_aliases(), Xol_lang.Invk_ns_aliases);
 			Xol_lang_srl.Save_specials(bldr, lang.Specials_mgr());
@@ -55,31 +56,33 @@ public class Xol_mw_lang_parser {
 		}
 	}
 	private void Save_langs_by_manual_text(Gfs_bldr bldr, OrderedHash manual_text_hash, String lang_key) {
-		byte[][] itm = (byte[][])manual_text_hash.Fetch(ByteAry_.new_utf8_(lang_key));
+		byte[][] itm = (byte[][])manual_text_hash.Fetch(Bry_.new_utf8_(lang_key));
 		if (itm != null) bldr.Bfr().Add(itm[1]);
 	}
 	public void Parse_mediawiki(Xoa_app app, Io_url mediawiki_root, Xol_lang_transform lang_transform) {
-		ByteAryBfr bfr = ByteAryBfr.new_();
-		Parse_file_messages(app, mediawiki_root, bfr, lang_transform);
-		Parse_file_extensions(app, mediawiki_root, bfr, lang_transform);
+		Bry_bfr bfr = Bry_bfr.new_();
+		Parse_file_core_php(app, mediawiki_root, bfr, lang_transform);
+		Parse_file_xtns_php(app, mediawiki_root, bfr, lang_transform);
+		Parse_file_json(app, bfr, lang_transform, mediawiki_root.GenSubDir("core_json"));
+		Parse_file_json(app, bfr, lang_transform, mediawiki_root.GenSubDir("xtns_json"));
 	}
-	private void Parse_file_messages(Xoa_app app, Io_url mediawiki_root, ByteAryBfr bfr, Xol_lang_transform lang_transform) {
-		Io_url dir = mediawiki_root.GenSubDir("messages");
+	private void Parse_file_core_php(Xoa_app app, Io_url mediawiki_root, Bry_bfr bfr, Xol_lang_transform lang_transform) {
+		Io_url dir = mediawiki_root.GenSubDir("core_php");
 		Io_url[] urls = Io_mgr._.QueryDir_fils(dir);
 		int len = urls.length;
 		for (int i = 0; i < len; i++) {
 			Io_url url = urls[i];
 			try {
 				String lang_key = String_.Replace(String_.Lower(String_.Mid(url.NameOnly(), 8)), "_", "-");	// 8=Messages.length; lower b/c format is MessagesEn.php (need "en")
-				if (String_.In(lang_key, "qqq", "enrtl", "bbc", "bbc-latn")) continue;
+				// if (String_.In(lang_key, "qqq", "enrtl", "bbc", "bbc-latn")) continue;
 				String text = Io_mgr._.LoadFilStr(url);
-				Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(ByteAry_.new_utf8_(lang_key));
+				Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(Bry_.new_utf8_(lang_key));
 				this.Parse_core(text, lang, bfr, lang_transform);
-			} catch (Exception exc) {Err_.Noop(exc); Tfds.WriteText("failed to parse " + url.Raw() + Err_.Message_gplx_brief(exc) + "\n");}
+			} catch (Exception exc) {Err_.Noop(exc); Tfds.WriteText("failed to parse " + url.NameOnly() + Err_.Message_gplx_brief(exc) + "\n");}
 		}
 	}
-	private void Parse_file_extensions(Xoa_app app, Io_url mediawiki_root, ByteAryBfr bfr, Xol_lang_transform lang_transform) {
-		Io_url dir = mediawiki_root.GenSubDir("extensions");
+	private void Parse_file_xtns_php(Xoa_app app, Io_url mediawiki_root, Bry_bfr bfr, Xol_lang_transform lang_transform) {
+		Io_url dir = mediawiki_root.GenSubDir("xtns_php");
 		Io_url[] urls = Io_mgr._.QueryDir_fils(dir);
 		int len = urls.length;
 		for (int i = 0; i < len; i++) {
@@ -88,13 +91,30 @@ public class Xol_mw_lang_parser {
 			String text = Io_mgr._.LoadFilStr(url);
 			boolean prepend_hash = String_.Eq("ParserFunctions.i18n.magic", url.NameOnly());
 			this.Parse_xtn(text, url, app, bfr, prepend_hash, lang_transform);
-			} catch (Exception exc) {Err_.Noop(exc); Tfds.WriteText("failed to parse " + url.Raw() + Err_.Message_gplx_brief(exc));}
+			} catch (Exception exc) {Err_.Noop(exc); Tfds.WriteText("failed to parse " + url.NameOnly() + Err_.Message_gplx_brief(exc));}
 		}
 	}
-	public void Parse_core(String text, Xol_lang lang, ByteAryBfr bfr, Xol_lang_transform lang_transform) {
+	private void Parse_file_json(Xoa_app app, Bry_bfr bfr, Xol_lang_transform lang_transform, Io_url root_dir) {
+		Io_url[] dirs = Io_mgr._.QueryDir_args(root_dir).DirOnly_().ExecAsUrlAry();
+		int dirs_len = dirs.length;
+		gplx.xowa.bldrs.langs.Xob_i18n_parser i18n_parser = app.Bldr().I18n_parser();
+		for (int i = 0; i < dirs_len; i++) {
+			Io_url dir = dirs[i];
+			Io_url[] fils = Io_mgr._.QueryDir_args(dir).ExecAsUrlAry();
+			int fils_len = fils.length;
+			for (int j = 0; j < fils_len; ++j) {
+				Io_url fil = fils[j];
+				try {
+					Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(Bry_.new_utf8_(fil.NameOnly()));
+					i18n_parser.Load_msgs(true, lang, fil);
+				}	catch (Exception exc) {Err_.Noop(exc); Tfds.WriteText(String_.Format("failed to parse json file; url={0} err={1}", fil.Raw(), Err_.Message_gplx_brief(exc)));}
+			}
+		}
+	}
+	public void Parse_core(String text, Xol_lang lang, Bry_bfr bfr, Xol_lang_transform lang_transform) {
 		evaluator.Clear();
 		parser.Parse_tkns(text, evaluator);
-		Php_line[] lines = (Php_line[])evaluator.List().XtoAry(Php_line.class);
+		Php_line[] lines = (Php_line[])evaluator.List().Xto_ary(Php_line.class);
 		int lines_len = lines.length;
 		ListAdp bry_list = ListAdp_.new_();
 		for (int i = 0; i < lines_len; i++) {
@@ -102,7 +122,7 @@ public class Xol_mw_lang_parser {
 			byte[] key = line.Key().Val_obj_bry();
 			Object o = Tid_hash.Get_by_bry(key);
 			if (o != null) {
-				ByteVal stub = (ByteVal)o;
+				Byte_obj_val stub = (Byte_obj_val)o;
 				switch (stub.Val()) {
 					case Tid_namespaceNames:
 						Parse_array_kv(bry_list, line);
@@ -112,43 +132,48 @@ public class Xol_mw_lang_parser {
 						Parse_array_kv(bry_list, line);
 						lang.Ns_aliases().Ary_set_(Parse_namespace_strings(bry_list, false));
 						break;
-					case Tid_messages:		
-						Parse_array_kv(bry_list, line);
-						Parse_messages(bry_list, lang, bfr);
+					case Tid_specialPageAliases:
+						Parse_specials(line, lang.Key_bry(), lang.Specials_mgr());
 						break;
 					case Tid_magicwords:
 						Parse_magicwords(line, lang.Key_bry(), lang.Kwd_mgr(), false, lang_transform);
 						break;
-					case Tid_specialPageAliases:
-						Parse_specials(line, lang.Key_bry(), lang.Specials_mgr());
-						break;
-					case Tid_dateFormats:
-//							Parse_array_kv(line);
+					case Tid_messages:		
+						Parse_array_kv(bry_list, line);
+						Parse_messages(bry_list, lang, bfr);
 						break;
 					case Tid_fallback:
-						byte[] fallback_bry = Parse_bry(line.Val());
-						if (!ByteAry_.Eq(fallback_bry, Bool_.True_bry))	// MessagesEn.php has fallback = false; ignore
+						byte[] fallback_bry = Php_itm_.Parse_bry(line.Val());
+						if (!Bry_.Eq(fallback_bry, Bool_.True_bry))	// MessagesEn.php has fallback = false; ignore
 							lang.Fallback_bry_(fallback_bry);
 						break;
-					case Tid_separatorTransformTable:
-						Parse_separatorTransformTable(line, lang.Num_fmt_mgr());
-						break;
 					case Tid_rtl:
-						byte[] rtl_bry = Parse_bry(line.Val());
-						boolean dir_rtl = ByteAry_.Eq(rtl_bry, Bool_.True_bry);
+						byte[] rtl_bry = Php_itm_.Parse_bry(line.Val());
+						boolean dir_rtl = Bry_.Eq(rtl_bry, Bool_.True_bry);
 						lang.Dir_ltr_(!dir_rtl);
+						break;
+					case Tid_separatorTransformTable:
+						Parse_separatorTransformTable(line, lang.Num_mgr());
+						break;
+					case Tid_digitTransformTable:
+						Parse_digitTransformTable(line, lang.Num_mgr());
+						break;
+					case Tid_digitGroupingPattern:
+						byte[] digitGroupingPattern = Php_itm_.Parse_bry(line.Val());
+						lang.Num_mgr().Num_grp_fmtr().Digit_grouping_pattern_(digitGroupingPattern);
 						break;
 				}
 			}
 		}
 		lang.Evt_lang_changed();
 	}
-	public static String[] Lang_skip = new String[] {"qqq", "enrtl", "akz", "sxu", "test", "mwv", "rup", "hu-formal", "tzm", "bbc", "bbc-latn", "lrc", "ttt", "gom", "gom-latn"};
-	public void Parse_xtn(String text, Io_url url, Xoa_app app, ByteAryBfr bfr, boolean prepend_hash, Xol_lang_transform lang_transform) {
+	// public static String[] Lang_skip = new String[] {"qqq", "enrtl", "akz", "sxu", "test", "mwv", "rup", "hu-formal", "tzm", "bbc", "bbc-latn", "lrc", "ttt", "gom", "gom-latn"};
+	public static String[] Lang_skip = String_.Ary_empty;
+	public void Parse_xtn(String text, Io_url url, Xoa_app app, Bry_bfr bfr, boolean prepend_hash, Xol_lang_transform lang_transform) {
 		evaluator.Clear();
 		parser.Parse_tkns(text, evaluator);
 		ListAdp bry_list = ListAdp_.new_();
-		Php_line[] lines = (Php_line[])evaluator.List().XtoAry(Php_line.class);
+		Php_line[] lines = (Php_line[])evaluator.List().Xto_ary(Php_line.class);
 		int lines_len = lines.length;
 		for (int i = 0; i < lines_len; i++) {
 			Php_line_assign line = (Php_line_assign)lines[i];
@@ -161,7 +186,7 @@ public class Xol_mw_lang_parser {
 				try {
 					if (String_.In(String_.new_utf8_(lang_key), Lang_skip)) continue;
 					Xol_lang lang = app.Lang_mgr().Get_by_key_or_new(lang_key);
-					ByteVal stub = (ByteVal)o;
+					Byte_obj_val stub = (Byte_obj_val)o;
 					switch (stub.Val()) {
 						case Tid_messages:		
 							Parse_array_kv(bry_list, line);
@@ -172,11 +197,11 @@ public class Xol_mw_lang_parser {
 							if (line.Key_subs().length > 1) throw Err_mgr._.fmt_(GRP_KEY, "parse_xtn", "magicWords in xtn must have only 1 accessor", line.Key_subs().length);
 							Php_key accessor = line.Key_subs()[0];
 							byte[] accessor_bry = accessor.Val_obj_bry();
-							if (ByteAry_.Eq(accessor_bry, lang_key))	// accessor must match lang_key
+							if (Bry_.Eq(accessor_bry, lang_key))	// accessor must match lang_key
 								Parse_magicwords(line, lang.Key_bry(), lang.Kwd_mgr(), prepend_hash, lang_transform); 
 							break;
 					}
-				} catch (Exception exc) {Err_.Noop(exc); Tfds.WriteText("failed to parse " + url.Raw() + Err_.Message_gplx_brief(exc) + "\n");}
+				} catch (Exception exc) {Err_.Noop(exc); Tfds.WriteText("failed to parse " + url.NameOnly() + Err_.Message_gplx_brief(exc) + "\n");}
 			}
 		}
 	}
@@ -186,12 +211,12 @@ public class Xol_mw_lang_parser {
 		int subs_len = ary.Subs_len();
 		for (int i = 0; i < subs_len; i++) {
 			Php_itm_kv kv = (Php_itm_kv)ary.Subs_get(i);
-			rv.Add(Parse_bry(kv.Key()));
-			rv.Add(Parse_bry(kv.Val()));
+			rv.Add(Php_itm_.Parse_bry(kv.Key()));
+			rv.Add(Php_itm_.Parse_bry(kv.Val()));
 		}		
 	}
 	public Xow_ns[] Parse_namespace_strings(ListAdp list, boolean ns_names) {
-		byte[][] brys = (byte[][])list.XtoAry(byte[].class);
+		byte[][] brys = (byte[][])list.Xto_ary(byte[].class);
 		int brys_len = brys.length;
 		Xow_ns[] rv = new Xow_ns[brys_len / 2];
 		int key_dif = ns_names ? 0 : 1;
@@ -199,18 +224,18 @@ public class Xol_mw_lang_parser {
 		for (int i = 0; i < brys_len; i+=2) {
 			byte[] kv_key = brys[i + key_dif];
 			byte[] kv_val = brys[i + val_dif];
-			ByteAry_.Replace_all_direct(kv_val, Byte_ascii.Underline, Byte_ascii.Space); // NOTE: siteInfo.xml names have " " not "_" (EX: "User talk"). for now, follow that convention
+			Bry_.Replace_all_direct(kv_val, Byte_ascii.Underline, Byte_ascii.Space); // NOTE: siteInfo.xml names have " " not "_" (EX: "User talk"). for now, follow that convention
 			int ns_id = Id_by_mw_name(kv_key);
 //				if (ns_id == Xow_ns_.Id_null) throw Err_mgr._.fmt_auto_(GRP_KEY, "namespace_names", String_.new_utf8_(kv_key));
 			rv[i / 2] = new Xow_ns(ns_id, Xow_ns_case_.Id_1st, kv_val, false);	// note that Xow_ns is being used as glorified id-name struct; case_match and alias values do not matter
 		}
 		return rv;
 	}
-	private void Parse_messages(ListAdp rv, Xol_lang lang, ByteAryBfr bfr) {
-		byte[][] brys = (byte[][])rv.XtoAry(byte[].class);
+	private void Parse_messages(ListAdp rv, Xol_lang lang, Bry_bfr bfr) {
+		byte[][] brys = (byte[][])rv.Xto_ary(byte[].class);
 		int brys_len = brys.length;
 		Xol_msg_mgr mgr = lang.Msg_mgr();
-		ListAdp quote_itm_list = ListAdp_.new_(); ByteRef quote_parse_result = ByteRef.zero_(); 
+		ListAdp quote_itm_list = ListAdp_.new_(); Byte_obj_ref quote_parse_result = Byte_obj_ref.zero_(); 
 		for (int i = 0; i < brys_len; i+=2) {
 			byte[] kv_key = brys[i];
 			Xol_msg_itm itm = mgr.Itm_by_key_or_new(kv_key);
@@ -220,7 +245,7 @@ public class Xol_mw_lang_parser {
 			Xol_msg_itm_.update_val_(itm, kv_val);
 			itm.Dirty_(true);
 		}
-	}	Php_text_itm_parser php_quote_parser = new Php_text_itm_parser();
+	}	private Php_text_itm_parser php_quote_parser = new Php_text_itm_parser();
 	private void Parse_magicwords(Php_line_assign line, byte[] lang_key, Xol_kwd_mgr mgr, boolean prepend_hash, Xol_lang_transform lang_transform) {
 		Php_itm_ary ary = (Php_itm_ary)line.Val();
 		int subs_len = ary.Subs_len();
@@ -232,7 +257,7 @@ public class Xol_mw_lang_parser {
 			int kv_ary_len = kv_ary.Subs_len();
 			boolean case_match = false;								// if 1 arg, default to false
 			int kv_ary_bgn = 0; int words_len = kv_ary_len;			// if 1 arg, default to entire kv_ary; words_len
-			int case_match_int = Parse_int_or(kv_ary.Subs_get(0), Int_.MinValue);
+			int case_match_int = Php_itm_.Parse_int_or(kv_ary.Subs_get(0), Int_.MinValue);
 			if (case_match_int != Int_.MinValue) {
 				case_match = Parse_int_as_bool(kv_ary.Subs_get(0));	// arg[0] is case_match
 				kv_ary_bgn = 1;										// arg[1] is 1st word
@@ -241,8 +266,8 @@ public class Xol_mw_lang_parser {
 			byte[][] words = new byte[words_len][];
 			for (int j = kv_ary_bgn; j < kv_ary_len; j++) {
 				Php_itm_sub kv_sub = kv_ary.Subs_get(j);
-				byte[] word = Parse_bry(kv_sub);
-//					if (prepend_hash && word[0] != Byte_ascii.Hash) word = ByteAry_.Add(Byte_ascii.Hash, word);
+				byte[] word = Php_itm_.Parse_bry(kv_sub);
+//					if (prepend_hash && word[0] != Byte_ascii.Hash) word = Bry_.Add(Byte_ascii.Hash, word);
 				words[j - kv_ary_bgn] = lang_transform.Kwd_transform(lang_key, kv_key, word);
 			}
 			int keyword_id = Xol_kwd_grp_.Id_by_bry(kv_key); if (keyword_id == -1) continue; //throw Err_mgr._.fmt_(Err_scope_keywords, "invalid_key", "key does not have id", String_.new_utf8_(kv_key));
@@ -263,89 +288,83 @@ public class Xol_mw_lang_parser {
 			byte[][] aliases = new byte[kv_ary_len][];
 			for (int j = 0; j < kv_ary_len; j++) {
 				Php_itm_sub kv_sub = kv_ary.Subs_get(j);
-				aliases[j] = Parse_bry(kv_sub);
+				aliases[j] = Php_itm_.Parse_bry(kv_sub);
 			}
 			specials_mgr.Add(kv_key, aliases);
 		}
 	}
 	private boolean Parse_int_as_bool(Php_itm itm) {
-		int rv = Parse_int_or(itm, Int_.MinValue);
+		int rv = Php_itm_.Parse_int_or(itm, Int_.MinValue);
 		if (rv == Int_.MinValue) throw Err_mgr._.fmt_(GRP_KEY, "parse_int_as_bool", "value must be 0 or 1", String_.new_utf8_(itm.Val_obj_bry()));
 		return rv == 1;
 	}
-	private int Parse_int_or(Php_itm itm, int or) {
-		int rv = -1;
-		switch (itm.Itm_tid()) {
-			case Php_itm_.Tid_int:
-				rv = ((Php_itm_int)itm).Val_obj_int();
-				return rv;
-			case Php_itm_.Tid_quote:
-				byte[] bry = ((Php_itm_quote)itm).Val_obj_bry();
-				rv = ByteAry_.X_to_int_or(bry, -1);
-				return (rv == -1) ? or : rv;
-			default:
-				return or;
-		}
-				}
-	private byte[] Parse_bry(Php_itm itm) {
-		switch (itm.Itm_tid()) {
-			case Php_itm_.Tid_kv:
-			case Php_itm_.Tid_ary:
-				throw Err_mgr._.unhandled_(itm.Itm_tid());
-			default:
-				return itm.Val_obj_bry();
-		}
-	}
-	private void Parse_separatorTransformTable(Php_line_assign line, Xol_num_fmtr_base num_fmt_mgr) {
+	private void Parse_separatorTransformTable(Php_line_assign line, Xol_num_mgr num_mgr) {
 		if (line.Val().Itm_tid() == Php_itm_.Tid_null) return;// en is null; $separatorTransformTable = null;
 		Php_itm_ary ary = (Php_itm_ary)line.Val();
 		int subs_len = ary.Subs_len();
-		byte[] dec_dlm = Bry_separatorTransformTable_dot;
-		byte[] grp_dlm = Bry_separatorTransformTable_comma;
-		ListAdp tmp_list = ListAdp_.new_(); ByteRef tmp_result = ByteRef.zero_(); ByteAryBfr tmp_bfr = ByteAryBfr.reset_(16); 
+		ListAdp tmp_list = ListAdp_.new_(); Byte_obj_ref tmp_result = Byte_obj_ref.zero_(); Bry_bfr tmp_bfr = Bry_bfr.reset_(16); 
 		for (int i = 0; i < subs_len; i++) {
 			Php_itm_kv kv = (Php_itm_kv)ary.Subs_get(i);
-			byte[] key_bry = Parse_bry(kv.Key()), val_bry = Parse_bry(kv.Val());
+			byte[] key_bry = Php_itm_.Parse_bry(kv.Key()), val_bry = Php_itm_.Parse_bry(kv.Val());
 			val_bry = php_quote_parser.Parse_as_bry(tmp_list, val_bry, tmp_result, tmp_bfr);
 			Xol_csv_parser._.Load(tmp_bfr, val_bry);
-			val_bry = tmp_bfr.XtoAryAndClear();
-			if 		(ByteAry_.Eq(key_bry, Bry_separatorTransformTable_dot)) 	dec_dlm = val_bry;
-			else if (ByteAry_.Eq(key_bry, Bry_separatorTransformTable_comma)) 	grp_dlm = val_bry;
-			else throw Err_mgr._.unhandled_(String_.new_utf8_(key_bry));
+			val_bry = tmp_bfr.Xto_bry_and_clear();
+			if 	(	Bry_.Eq(key_bry, Bry_separatorTransformTable_dot)
+				||	Bry_.Eq(key_bry, Bry_separatorTransformTable_comma)
+				)
+				num_mgr.Separators_mgr().Set(key_bry, val_bry);
+			else throw Err_mgr._.unhandled_(String_.new_utf8_(key_bry));	// NOTE: as of v1.22.2, all Messages only have a key of "." or "," DATE:2014-04-15
 		}
-		num_fmt_mgr.Clear().Dec_dlm_(dec_dlm).Grps_add(new Xol_num_grp(grp_dlm, 3, true));
 	}	private static final byte[] Bry_separatorTransformTable_comma = new byte[] {Byte_ascii.Comma}, Bry_separatorTransformTable_dot = new byte[] {Byte_ascii.Dot};
+	private void Parse_digitTransformTable(Php_line_assign line, Xol_num_mgr num_mgr) {
+		if (line.Val().Itm_tid() == Php_itm_.Tid_null) return;// en is null; $digitTransformTable = null;
+		Php_itm_ary ary = (Php_itm_ary)line.Val();
+		int subs_len = ary.Subs_len();
+		ListAdp tmp_list = ListAdp_.new_(); Byte_obj_ref tmp_result = Byte_obj_ref.zero_(); Bry_bfr tmp_bfr = Bry_bfr.reset_(16); 
+		for (int i = 0; i < subs_len; i++) {
+			Php_itm_kv kv = (Php_itm_kv)ary.Subs_get(i);
+			byte[] key_bry = Php_itm_.Parse_bry(kv.Key()), val_bry = Php_itm_.Parse_bry(kv.Val());
+			val_bry = php_quote_parser.Parse_as_bry(tmp_list, val_bry, tmp_result, tmp_bfr);
+			num_mgr.Digits_mgr().Set(key_bry, val_bry);
+		}
+	}
 	private static final String GRP_KEY = "xowa.lang.parser";
-	private static final byte Tid_messages = 0, Tid_magicwords = 1, Tid_namespaceNames = 2, Tid_namespaceAliases = 3, Tid_specialPageAliases = 4
-		, Tid_linkTrail = 5, Tid_dateFormats = 6, Tid_fallback = 7, Tid_separatorTransformTable = 8, Tid_rtl = 9;
+	private static final byte 
+	  Tid_namespaceNames = 0, Tid_namespaceAliases = 1, Tid_specialPageAliases = 2
+	, Tid_messages = 3, Tid_magicwords = 4
+	, Tid_fallback = 5, Tid_rtl = 6
+	, Tid_separatorTransformTable = 7, Tid_digitTransformTable = 8, Tid_digitGroupingPattern = 9
+	;
 	private static Hash_adp_bry Tid_hash = Hash_adp_bry.cs_()
-		.Add_str_byte("namespaceNames", Tid_namespaceNames).Add_str_byte("namespaceAliases", Tid_namespaceAliases).Add_str_byte("messages", Tid_messages)
-		.Add_str_byte("magicWords", Tid_magicwords).Add_str_byte("specialPageAliases", Tid_specialPageAliases)
-		.Add_str_byte("linkTrail", Tid_linkTrail).Add_str_byte("dateFormats", Tid_dateFormats).Add_str_byte("fallback", Tid_fallback)
-		.Add_str_byte("separatorTransformTable", Tid_separatorTransformTable).Add_str_byte("rtl", Tid_rtl);
+	.Add_str_byte("namespaceNames", Tid_namespaceNames).Add_str_byte("namespaceAliases", Tid_namespaceAliases).Add_str_byte("specialPageAliases", Tid_specialPageAliases)
+	.Add_str_byte("messages", Tid_messages).Add_str_byte("magicWords", Tid_magicwords)
+	.Add_str_byte("fallback", Tid_fallback).Add_str_byte("rtl", Tid_rtl)
+	.Add_str_byte("separatorTransformTable", Tid_separatorTransformTable)
+	.Add_str_byte("digitTransformTable", Tid_digitTransformTable).Add_str_byte("digitGroupingPattern", Tid_digitGroupingPattern)
+	;
 	public static int Id_by_mw_name(byte[] src) {
 		if (mw_names == null) {
-			mw_names = ByteTrieMgr_slim.cs_();
-			mw_names.Add("NS_MEDIA", IntVal.new_(Xow_ns_.Id_media));
-			mw_names.Add("NS_SPECIAL", IntVal.new_(Xow_ns_.Id_special));
-			mw_names.Add("NS_MAIN", IntVal.new_(Xow_ns_.Id_main));
-			mw_names.Add("NS_TALK", IntVal.new_(Xow_ns_.Id_talk));
-			mw_names.Add("NS_USER", IntVal.new_(Xow_ns_.Id_user));
-			mw_names.Add("NS_USER_TALK", IntVal.new_(Xow_ns_.Id_user_talk));
-			mw_names.Add("NS_PROJECT", IntVal.new_(Xow_ns_.Id_project));
-			mw_names.Add("NS_PROJECT_TALK", IntVal.new_(Xow_ns_.Id_project_talk));
-			mw_names.Add("NS_FILE", IntVal.new_(Xow_ns_.Id_file));
-			mw_names.Add("NS_FILE_TALK", IntVal.new_(Xow_ns_.Id_file_talk));
-			mw_names.Add("NS_MEDIAWIKI", IntVal.new_(Xow_ns_.Id_mediaWiki));
-			mw_names.Add("NS_MEDIAWIKI_TALK", IntVal.new_(Xow_ns_.Id_mediaWiki_talk));
-			mw_names.Add("NS_TEMPLATE", IntVal.new_(Xow_ns_.Id_template));
-			mw_names.Add("NS_TEMPLATE_TALK", IntVal.new_(Xow_ns_.Id_template_talk));
-			mw_names.Add("NS_HELP", IntVal.new_(Xow_ns_.Id_help));
-			mw_names.Add("NS_HELP_TALK", IntVal.new_(Xow_ns_.Id_help_talk));
-			mw_names.Add("NS_CATEGORY", IntVal.new_(Xow_ns_.Id_category));
-			mw_names.Add("NS_CATEGORY_TALK", IntVal.new_(Xow_ns_.Id_category_talk));
+			mw_names = Btrie_slim_mgr.cs_();
+			mw_names.Add_obj("NS_MEDIA", Int_obj_val.new_(Xow_ns_.Id_media));
+			mw_names.Add_obj("NS_SPECIAL", Int_obj_val.new_(Xow_ns_.Id_special));
+			mw_names.Add_obj("NS_MAIN", Int_obj_val.new_(Xow_ns_.Id_main));
+			mw_names.Add_obj("NS_TALK", Int_obj_val.new_(Xow_ns_.Id_talk));
+			mw_names.Add_obj("NS_USER", Int_obj_val.new_(Xow_ns_.Id_user));
+			mw_names.Add_obj("NS_USER_TALK", Int_obj_val.new_(Xow_ns_.Id_user_talk));
+			mw_names.Add_obj("NS_PROJECT", Int_obj_val.new_(Xow_ns_.Id_project));
+			mw_names.Add_obj("NS_PROJECT_TALK", Int_obj_val.new_(Xow_ns_.Id_project_talk));
+			mw_names.Add_obj("NS_FILE", Int_obj_val.new_(Xow_ns_.Id_file));
+			mw_names.Add_obj("NS_FILE_TALK", Int_obj_val.new_(Xow_ns_.Id_file_talk));
+			mw_names.Add_obj("NS_MEDIAWIKI", Int_obj_val.new_(Xow_ns_.Id_mediawiki));
+			mw_names.Add_obj("NS_MEDIAWIKI_TALK", Int_obj_val.new_(Xow_ns_.Id_mediaWiki_talk));
+			mw_names.Add_obj("NS_TEMPLATE", Int_obj_val.new_(Xow_ns_.Id_template));
+			mw_names.Add_obj("NS_TEMPLATE_TALK", Int_obj_val.new_(Xow_ns_.Id_template_talk));
+			mw_names.Add_obj("NS_HELP", Int_obj_val.new_(Xow_ns_.Id_help));
+			mw_names.Add_obj("NS_HELP_TALK", Int_obj_val.new_(Xow_ns_.Id_help_talk));
+			mw_names.Add_obj("NS_CATEGORY", Int_obj_val.new_(Xow_ns_.Id_category));
+			mw_names.Add_obj("NS_CATEGORY_TALK", Int_obj_val.new_(Xow_ns_.Id_category_talk));
 		}
-		Object o = mw_names.MatchAtCurExact(src, 0, src.length);
-		return o == null ? Xow_ns_.Id_null : ((IntVal)o).Val();
-	}	private static ByteTrieMgr_slim mw_names;
+		Object o = mw_names.Match_exact(src, 0, src.length);
+		return o == null ? Xow_ns_.Id_null : ((Int_obj_val)o).Val();
+	}	private static Btrie_slim_mgr mw_names;
 }

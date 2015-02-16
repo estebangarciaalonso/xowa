@@ -25,8 +25,8 @@ public class Xoi_wiki_props_api {
 	public byte[] Exec_api(String src) {
 		return download_args.Exec_as_bry(src);
 	}
-	public void Build_cfg(ByteAryBfr bfr, Xoi_wiki_props_wiki wiki) {
-		bfr.Add_str("app.wiki_cfg_bldr.get('").Add(wiki.Wiki_domain()).Add_str("').new_cmd_('wiki.ns_mgr.aliases', 'ns_mgr.add_alias_bulk(\"\n");
+	public void Build_cfg(Bry_bfr bfr, Xoi_wiki_props_wiki wiki) {
+		bfr.Add_str("app.bldr.wiki_cfg_bldr.get('").Add(wiki.Wiki_domain()).Add_str("').new_cmd_('wiki.ns_mgr.aliases', 'ns_mgr.add_alias_bulk(\"\n");
 		int len = 0;
 		len = wiki.Alias_ary().length;
 		for (int i = 0; i < len; i++) {
@@ -34,7 +34,7 @@ public class Xoi_wiki_props_api {
 			bfr.Add_int_variable(alias.Id()).Add_byte_pipe().Add_str(alias.Alias()).Add_byte_nl();
 		}
 		bfr.Add_str("\");');\n");
-		bfr.Add_str("app.wiki_cfg_bldr.get('").Add(wiki.Wiki_domain()).Add_str("').new_cmd_('wiki.ns_mgr.subpages', \"");
+		bfr.Add_str("app.bldr.wiki_cfg_bldr.get('").Add(wiki.Wiki_domain()).Add_str("').new_cmd_('wiki.ns_mgr.subpages', \"");
 		len = wiki.Ns_ary().length;
 		boolean first = true;
 		for (int i = 0; i < len; i++) {
@@ -69,7 +69,7 @@ public class Xoi_wiki_props_api {
 			sub_itm.Init_by_xml(sub_nde);
 			list.Add(sub_itm);
 		}
-		return (Xoi_wiki_props_alias[])list.XtoAryAndClear(Xoi_wiki_props_alias.class);
+		return (Xoi_wiki_props_alias[])list.Xto_ary_and_clear(Xoi_wiki_props_alias.class);
 	}
 	private Xoi_wiki_props_ns[] Parse_ns_ary(XmlNde xnde) {
 		int xndes_len = xnde.SubNdes().Count();
@@ -81,6 +81,6 @@ public class Xoi_wiki_props_api {
 			sub_itm.Init_by_xml(sub_nde);
 			list.Add(sub_itm);
 		}
-		return (Xoi_wiki_props_ns[])list.XtoAryAndClear(Xoi_wiki_props_ns.class);
+		return (Xoi_wiki_props_ns[])list.Xto_ary_and_clear(Xoi_wiki_props_ns.class);
 	}
 }

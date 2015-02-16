@@ -47,6 +47,6 @@ public class Xop_tkn_null implements Xop_tkn_itm {
 	public void Clear() {}
 	public void Tmpl_fmt(Xop_ctx ctx, byte[] src, Xot_fmtr fmtr) {}
 	public void Tmpl_compile(Xop_ctx ctx, byte[] src, Xot_compile_data prep_data) {}
-	public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr) {return true;}
+	public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Bry_bfr bfr) {return true;}
 	public static final Xop_tkn_null Null_tkn = new Xop_tkn_null();
 }

@@ -16,13 +16,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa.bldrs.files; import gplx.*; import gplx.xowa.*; import gplx.xowa.bldrs.*;
-import gplx.dbs.*; import gplx.xowa.dbs.*; import gplx.fsdb.*; import gplx.ios.*; import gplx.xowa.files.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.fsdb.*; import gplx.xowa.dbs.tbls.*;
+import gplx.dbs.*; import gplx.dbs.engines.sqlite.*;
+import gplx.xowa.dbs.*; import gplx.fsdb.*; import gplx.ios.*; import gplx.xowa.files.*; import gplx.xowa.files.bins.*; import gplx.xowa.files.fsdb.*; import gplx.xowa.dbs.tbls.*;
 import gplx.xowa.bldrs.oimgs.*;
+import gplx.fsdb.data.*; import gplx.fsdb.meta.*;
 public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 	private int select_interval = 2500, progress_interval = 1, commit_interval = 1, delete_interval = 5000;
 	private int exec_count, exec_count_max = Int_.MaxValue;
 	private int exec_fail, exec_fail_max = 2000; // 115 over 900k
-	private boolean exec_done;
+	private boolean exec_done, resume_enabled = false;
 	private int page_id_bmk = -1, lnki_id_bmk = -1;
 	private int page_id_val = -1, lnki_id_val = -1;
 	private int page_id_end = Int_.MaxValue;
@@ -30,31 +32,29 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 	private byte[] wiki_key;
 	private Xobu_poll_mgr poll_mgr; private int poll_interval;
 	private long time_bgn;
-	private Xodb_xowa_cfg_tbl tbl_cfg; private Db_provider provider; private Db_stmt db_select_stmt;
+	private Xodb_xowa_cfg_tbl tbl_cfg; private Db_conn conn; private Db_stmt db_select_stmt;
 	private Xof_bin_mgr src_mgr;
-	private Xof_fsdb_mgr_sql trg_fsdb_mgr; private Fsdb_mnt_mgr trg_mnt_mgr;
+	private Xof_fsdb_mgr_sql trg_fsdb_mgr; private Fsm_mnt_mgr trg_mnt_mgr;
 	private ListAdp temp_files = ListAdp_.new_();
-	private Fsdb_xtn_img_itm tmp_img_itm = new Fsdb_xtn_img_itm(); private Fsdb_xtn_thm_itm tmp_thm_itm = Fsdb_xtn_thm_itm.new_(); private Fsdb_fil_itm tmp_fil_itm = new Fsdb_fil_itm();
+	private Fsd_img_itm tmp_img_itm = new Fsd_img_itm(); private Fsd_thm_itm tmp_thm_itm = Fsd_thm_itm.new_(); private Fsd_fil_itm tmp_fil_itm = new Fsd_fil_itm();
 	private boolean app_restart_enabled = false;
+	private Xof_fsdb_mgr_sql src_fsdb_mgr;
 	public Xob_fsdb_make(Xob_bldr bldr, Xow_wiki wiki) {
 		this.Cmd_ctor(bldr, wiki);
 		trg_fsdb_mgr = new Xof_fsdb_mgr_sql(wiki);
 		trg_fsdb_mgr.Init_by_wiki(wiki);
-		Xof_fsdb_mgr_sql src_fsdb_mgr = new Xof_fsdb_mgr_sql(wiki);
+		src_fsdb_mgr = new Xof_fsdb_mgr_sql(wiki);
 		src_fsdb_mgr.Init_by_wiki(wiki);
 		src_mgr = src_fsdb_mgr.Bin_mgr();			
 		trg_mnt_mgr = trg_fsdb_mgr.Mnt_mgr();
-		trg_mnt_mgr.Insert_to_mnt_(Fsdb_mnt_mgr.Mnt_idx_main);
-		trg_mnt_mgr.Abc_mgr_at(Fsdb_mnt_mgr.Mnt_idx_main).Cfg_mgr()
-			.Update(gplx.xowa.xtns.gallery.Gallery_xnde.Fsdb_cfg_grp, gplx.xowa.xtns.gallery.Gallery_xnde.Fsdb_cfg_key_gallery_fix_defaults, "y")
-			.Update(gplx.xowa.xtns.gallery.Gallery_xnde.Fsdb_cfg_grp, gplx.xowa.xtns.gallery.Gallery_xnde.Fsdb_cfg_key_gallery_packed, "y")
-			;
-		// HACK: temporarily disable for ar.w; DATE:2014-03-23
+		trg_mnt_mgr.Insert_to_mnt_(Fsm_mnt_mgr.Mnt_idx_main);	// NOTE: do not delete; mnt_mgr default to Mnt_idx_user; DATE:2014-04-25
+		Fsm_mnt_mgr.Patch(trg_mnt_mgr);	// NOTE: always patch again; fsdb_make may be run separately without lnki_temp; DATE:2014-04-26
 		poll_mgr = new Xobu_poll_mgr(bldr.App());
 	}
 	public String Cmd_key() {return KEY_oimg;} public static final String KEY_oimg = "file.fsdb_make";
 	public void Cmd_ini(Xob_bldr bldr) {}
 	public void Cmd_bgn(Xob_bldr bldr) {
+		((Xof_bin_wkr_http_wmf)src_fsdb_mgr.Bin_mgr().Get_or_new(Xof_bin_wkr_.Key_http_wmf)).Fail_timeout_(1000);	// NOTE: set Fail_timeout here; DATE:2014-06-21; NOTE: do not put in ctor, or else will be 1st wkr; DATE:2014-06-28
 		this.wiki_key = wiki.Domain_bry();
 		wiki.Init_assert();
 		poll_interval = poll_mgr.Poll_interval();
@@ -65,12 +65,13 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 			page_id_bmk = Int_.MaxValue;
 			lnki_id_bmk = Int_.MaxValue;
 		}
-		usr_dlg.Note_many("", "", "done: ~{0} ~{1}", exec_count, DecimalAdp_.divide_safe_(exec_count, Env_.TickCount_elapsed_in_sec(time_bgn)).XtoStr("#,###.000"));
+		usr_dlg.Note_many("", "", "done: ~{0} ~{1}", exec_count, DecimalAdp_.divide_safe_(exec_count, Env_.TickCount_elapsed_in_sec(time_bgn)).Xto_str("#,###.000"));
 		this.Txn_save();
+		tbl_cfg.Delete(Cfg_fsdb_make, Cfg_page_id_bmk); tbl_cfg.Delete(Cfg_fsdb_make, Cfg_lnki_id_bmk);	// delete bmks if future reruns are needed; DATE:2014-08-20
 		trg_fsdb_mgr.Txn_save();
 		trg_fsdb_mgr.Rls();	// save changes and rls all connections
 		db_select_stmt.Rls();
-		provider.Rls();
+		conn.Conn_term();
 	}
 	public void Cmd_print() {}
 	private int db_reset_tries_count = 0, db_reset_tries_max = 5;
@@ -80,7 +81,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		ListAdp list = ListAdp_.new_();
 		boolean loop = true;
 		time_bgn = Env_.TickCount();
-		usr_dlg.Note_many("", "", "total pending: ~{0}", Xob_xfer_regy_tbl.Select_total_pending(provider));
+		usr_dlg.Note_many("", "", "total pending: ~{0}", Xob_xfer_regy_tbl.Select_total_pending(conn));
 		this.Txn_open();
 		while (loop) {
 			byte rslt = Select_ttls(list);
@@ -121,18 +122,22 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 	}
 	private void Init_db(boolean chk_reset) {
 		Xodb_db_file db_file = Xodb_db_file.init__file_make(wiki.Fsys_mgr().Root_dir());
-		provider = db_file.Provider();
-		tbl_cfg = new Xodb_xowa_cfg_tbl().Provider_(provider);
+		conn = db_file.Conn();
+		tbl_cfg = new Xodb_xowa_cfg_tbl().Conn_(conn);
 		if (reset_db && chk_reset) {
-			provider.Exec_qry(Db_qry_.delete_tbl_(Xodb_xowa_cfg_tbl.Tbl_name));
+			conn.Exec_qry(Db_qry_.delete_tbl_(Xodb_xowa_cfg_tbl.Tbl_name));
 		}
-		db_select_stmt = Xob_xfer_regy_tbl.Select_by_page_id_stmt(provider);
+		db_select_stmt = Xob_xfer_regy_tbl.Select_by_page_id_stmt(conn);
 	}
 	private boolean Init_bmk(Xodb_xowa_cfg_tbl tbl_cfg) {
+		if (!resume_enabled) {	// clear cfg entries if resume disabled; note that disabled by default; DATE:2014-10-24
+			tbl_cfg.Delete(Cfg_fsdb_make, Cfg_page_id_bmk);
+			tbl_cfg.Delete(Cfg_fsdb_make, Cfg_lnki_id_bmk);
+		}
 		String page_id_str = tbl_cfg.Select_val(Cfg_fsdb_make, Cfg_page_id_bmk);
 		if (page_id_str == null) {	// bmks not found; new db; insert;
-			tbl_cfg.Insert_str(Cfg_fsdb_make, Cfg_page_id_bmk	, Int_.XtoStr(page_id_bmk));
-			tbl_cfg.Insert_str(Cfg_fsdb_make, Cfg_lnki_id_bmk	, Int_.XtoStr(lnki_id_bmk));
+			tbl_cfg.Insert_str(Cfg_fsdb_make, Cfg_page_id_bmk	, Int_.Xto_str(page_id_bmk));
+			tbl_cfg.Insert_str(Cfg_fsdb_make, Cfg_lnki_id_bmk	, Int_.Xto_str(lnki_id_bmk));
 			if (page_id_bmk == -1)
 				page_id_bmk = 0;
 			if (lnki_id_bmk == -1)
@@ -159,7 +164,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		DataRdr rdr = DataRdr_.Null;
 		boolean pages_found = false, links_found = false;
 		try {
-			rdr = Xob_xfer_regy_tbl.Select_by_lnki_page_id(provider, page_id_val, select_interval);
+			rdr = Xob_xfer_regy_tbl.Select_by_lnki_page_id(conn, page_id_val, select_interval);
 			while (rdr.MoveNextPeer()) {
 				pages_found = true;	// at least one page found; set true
 				Xodb_tbl_oimg_xfer_itm itm = Xodb_tbl_oimg_xfer_itm.new_rdr_(rdr);
@@ -224,28 +229,37 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		usr_dlg.Warn_many("", "", "failed: ttl=~{0}", lnki_ttl);
 	}
 	private void Download_pass(Xodb_tbl_oimg_xfer_itm itm, Io_stream_rdr rdr) {
+		int db_uid = -1;
 		if (itm.File_is_orig()) {
-			if (itm.Lnki_ext().Id_is_image())
-				trg_fsdb_mgr.Img_insert(tmp_img_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), itm.Orig_w(), itm.Orig_h(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);
-			else
-				trg_fsdb_mgr.Fil_insert(tmp_fil_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);
+			if (itm.Lnki_ext().Id_is_image()) {
+				trg_fsdb_mgr.Img_insert(tmp_img_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), itm.Orig_w(), itm.Orig_h(), Sqlite_engine_.Date_null, Fsd_thm_tbl.Hash_null, rdr.Len(), rdr);
+				db_uid = tmp_img_itm.Id();
+			}
+			else {
+				trg_fsdb_mgr.Fil_insert(tmp_fil_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), Sqlite_engine_.Date_null, Fsd_thm_tbl.Hash_null, rdr.Len(), rdr);
+				db_uid = tmp_fil_itm.Id();
+			}
 		}
-		else
-			trg_fsdb_mgr.Thm_insert(tmp_thm_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), itm.Html_w(), itm.Html_h(), itm.Lnki_thumbtime(), itm.Lnki_page(), Sqlite_engine_.Date_null, Fsdb_xtn_thm_tbl.Hash_null, rdr.Len(), rdr);			
+		else {
+			trg_fsdb_mgr.Thm_insert(tmp_thm_itm, itm.Orig_wiki(), itm.Lnki_ttl(), itm.Lnki_ext_id(), itm.Html_w(), itm.Html_h(), itm.Lnki_thumbtime(), itm.Lnki_page(), Sqlite_engine_.Date_null, Fsd_thm_tbl.Hash_null, rdr.Len(), rdr);
+			db_uid = tmp_thm_itm.Id();
+		}
+		if (app.Mode() == Xoa_app_.Mode_gui)
+			app.Usr_dlg().Log_direct(String_.Format("download done; size={0} id={1}", rdr.Len(), db_uid));
 	}
 	private void Txn_renew() {
 		this.Txn_save();
 		this.Txn_open();
 	}
 	private void Txn_open() {
-		tbl_cfg.Provider().Txn_mgr().Txn_bgn_if_none();
+		tbl_cfg.Conn().Txn_mgr().Txn_bgn_if_none();
 		trg_mnt_mgr.Txn_open();
 	}
 	private void Txn_save() {
 		usr_dlg.Prog_many("", "", "committing data: count=~{0} failed=~{1}", exec_count, exec_fail);
 		tbl_cfg.Update(Cfg_fsdb_make, Cfg_page_id_bmk, page_id_val);
 		tbl_cfg.Update(Cfg_fsdb_make, Cfg_lnki_id_bmk, lnki_id_val);
-		tbl_cfg.Provider().Txn_mgr().Txn_end_all();
+		tbl_cfg.Conn().Txn_mgr().Txn_end_all();
 		trg_mnt_mgr.Txn_save();
 		if (exit_after_commit)
 			exit_now = true;
@@ -278,6 +292,7 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 		else if	(ctx.Match(k, Invk_app_restart_enabled_))	app_restart_enabled = m.ReadBool("v");
 		else if	(ctx.Match(k, Invk_db_restart_tries_max_))	db_reset_tries_max = m.ReadInt("v");
 		else if	(ctx.Match(k, Invk_trg_fsdb_mgr))			return trg_fsdb_mgr;
+		else if	(ctx.Match(k, Invk_resume_enabled_))		resume_enabled = m.ReadYn("v");
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}
@@ -290,7 +305,8 @@ public class Xob_fsdb_make extends Xob_itm_basic_base implements Xob_cmd {
 	, Invk_delete_interval_ = "delete_interval_"
 	, Invk_app_restart_enabled_ = "app_restart_enabled_"
 	, Invk_db_restart_tries_max_ = "db_restart_tries_max_"		
-	, Invk_trg_fsdb_mgr = "trg_fsdb_mgr"	
+	, Invk_trg_fsdb_mgr = "trg_fsdb_mgr"
+	, Invk_resume_enabled_ = "resume_enabled_"
 	;
 	public static byte Status_null = 0, Status_pass = 1, Status_fail = 2;
 }

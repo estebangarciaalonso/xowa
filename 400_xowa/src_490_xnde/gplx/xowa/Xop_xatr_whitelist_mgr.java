@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.core.primitives.*; import gplx.core.btries.*;
 public class Xop_xatr_whitelist_mgr {
 	public boolean Chk(int tag_id, byte[] src, Xop_xatr_itm xatr) {
 		byte[] key_bry = xatr.Key_bry();
@@ -31,7 +32,7 @@ public class Xop_xatr_whitelist_mgr {
 			chk_bgn = 0;
 			chk_end = key_bry.length;
 		}
-		Object o = key_trie.MatchAtCur(chk_bry, chk_bgn, chk_end);
+		Object o = key_trie.Match_bgn(chk_bry, chk_bgn, chk_end);
 		if (o == null) return false;// unknown atr_key; EX: <b unknown=1/>
 		Xop_xatr_whitelist_itm itm = (Xop_xatr_whitelist_itm)o;
 		byte itm_key_tid = itm.Key_tid();
@@ -44,7 +45,7 @@ public class Xop_xatr_whitelist_mgr {
 				if (!Scrub_style(xatr, src)) return false;
 				break;
 			case Xop_xatr_itm.Key_tid_role:
-				if (!ByteAry_.Eq(Val_role_presentation, xatr.Val_as_bry(src))) return false; // MW: For now we only support role="presentation"; DATE:2014-04-05
+				if (!Bry_.Eq(Val_role_presentation, xatr.Val_as_bry(src))) return false; // MW: For now we only support role="presentation"; DATE:2014-04-05
 				break;
 		}
 		return rv;
@@ -123,17 +124,17 @@ public class Xop_xatr_whitelist_mgr {
 	}
 	private Hash_adp_bry grp_hash = Hash_adp_bry.cs_();
 	private void Ini_grp(String key_str, String base_grp, String... cur_itms) {
-		byte[][] itms = ByteAry_.Ary(cur_itms);
+		byte[][] itms = Bry_.Ary(cur_itms);
 		if (base_grp != null)
-			itms = ByteAry_.Ary_add(itms, (byte[][])grp_hash.Get_by_bry(ByteAry_.new_ascii_(base_grp)));
-		byte[] key = ByteAry_.new_ascii_(key_str);
+			itms = Bry_.Ary_add(itms, (byte[][])grp_hash.Get_by_bry(Bry_.new_ascii_(base_grp)));
+		byte[] key = Bry_.new_ascii_(key_str);
 		grp_hash.Add_bry_obj(key, itms);
 	}
 	private void Ini_nde(int tag_tid, String... key_strs) {
 		ListAdp keys = ListAdp_.new_();
 		int len = key_strs.length;
 		for (int i = 0; i < len; i++) {
-			byte[] key = ByteAry_.new_ascii_(key_strs[i]);
+			byte[] key = Bry_.new_ascii_(key_strs[i]);
 			Object grp_obj = grp_hash.Get_by_bry(key);	// is the key a grp? EX: "common"
 			if (grp_obj == null)
 				keys.Add(key);
@@ -147,36 +148,36 @@ public class Xop_xatr_whitelist_mgr {
 		len = keys.Count();
 		for (int i = 0; i < len; i++) {
 			byte[] key_bry = (byte[])keys.FetchAt(i);
-			Xop_xatr_whitelist_itm itm = (Xop_xatr_whitelist_itm)key_trie.MatchAtCurExact(key_bry, 0, key_bry.length);
+			Xop_xatr_whitelist_itm itm = (Xop_xatr_whitelist_itm)key_trie.Match_exact(key_bry, 0, key_bry.length);
 			if (itm == null) {
 				itm = Ini_key_trie_add(key_bry, true);
-				key_trie.Add(key_bry, itm);
+				key_trie.Add_obj(key_bry, itm);
 			}
 			itm.Tags()[tag_tid] = 1;
 		}
 	}
 	private void Ini_all_loose(String key_str) {
-		byte[] key_bry = ByteAry_.new_ascii_(key_str);
+		byte[] key_bry = Bry_.new_ascii_(key_str);
 		Ini_key_trie_add(key_bry, false);
 		Xop_xatr_whitelist_itm itm = Ini_key_trie_add(key_bry, false);
-		key_trie.Add(key_bry, itm);
+		key_trie.Add_obj(key_bry, itm);
 		int len = Xop_xnde_tag_._MaxLen;
 		for (int i = 0; i < len; i++)
 			itm.Tags()[i] = 1;
 	}
 	private Xop_xatr_whitelist_itm  Ini_key_trie_add(byte[] key, boolean exact) {
 		Object key_tid_obj = tid_hash.Fetch(key);
-		byte key_tid = key_tid_obj == null ? Xop_xatr_itm.Key_tid_generic : ((ByteVal)key_tid_obj).Val();
+		byte key_tid = key_tid_obj == null ? Xop_xatr_itm.Key_tid_generic : ((Byte_obj_val)key_tid_obj).Val();
 		Xop_xatr_whitelist_itm rv = new Xop_xatr_whitelist_itm(key, key_tid, exact);
-		key_trie.Add(key, rv);
+		key_trie.Add_obj(key, rv);
 		return rv;
 	}
-	private Hash_adp_bry tid_hash = Hash_adp_bry.ci_()
+	private Hash_adp_bry tid_hash = Hash_adp_bry.ci_ascii_()
 	.Add_str_byte("id", Xop_xatr_itm.Key_tid_id)
 	.Add_str_byte("style", Xop_xatr_itm.Key_tid_style)
 	.Add_str_byte("role", Xop_xatr_itm.Key_tid_role)
 	;
-	ByteTrieMgr_slim key_trie = new ByteTrieMgr_slim(false);
+	private Btrie_slim_mgr key_trie = Btrie_slim_mgr.ci_ascii_();	// NOTE:ci.ascii:HTML.node_name
 	public boolean Scrub_style(Xop_xatr_itm xatr, byte[] raw) { // REF:Sanitizer.php|checkCss; '! expression | filter\s*: | accelerator\s*: | url\s*\( !ix'; NOTE: this seems to affect MS IE only; DATE:2013-04-01
 		byte[] val_bry = xatr.Val_bry();
 		byte[] chk_bry; int chk_bgn, chk_end;
@@ -193,20 +194,20 @@ public class Xop_xatr_whitelist_mgr {
 		}
 		int pos = chk_bgn;
 		while (pos < chk_end) {
-			Object o = style_trie.MatchAtCur(chk_bry, pos, chk_end);
+			Object o = style_trie.Match_bgn(chk_bry, pos, chk_end);
 			if (o == null)
 				++pos;
 			else {
 				pos = style_trie.Match_pos();
-				byte style_tid = ((ByteVal)o).Val();
+				byte style_tid = ((Byte_obj_val)o).Val();
 				switch (style_tid) {
 					case Style_expression:
-						xatr.Val_bry_(ByteAry_.Empty);
+						xatr.Val_bry_(Bry_.Empty);
 						return false;
 					case Style_filter: 
 					case Style_accelerator:
 						if (Next_non_ws_byte(chk_bry, pos, chk_end) == Byte_ascii.Colon) {
-							xatr.Val_bry_(ByteAry_.Empty);
+							xatr.Val_bry_(Bry_.Empty);
 							return false;						
 						}
 						break;
@@ -215,7 +216,7 @@ public class Xop_xatr_whitelist_mgr {
 					case Style_image:
 					case Style_image_set:
 						if (Next_non_ws_byte(chk_bry, pos, chk_end) == Byte_ascii.Paren_bgn) {
-							xatr.Val_bry_(ByteAry_.Empty);
+							xatr.Val_bry_(Bry_.Empty);
 							return false;
 						}
 						break;
@@ -240,7 +241,7 @@ public class Xop_xatr_whitelist_mgr {
 		return Byte_ascii.Nil; 
 	}
 	static final byte Style_expression = 0, Style_filter = 1, Style_accelerator = 2, Style_url = 3, Style_urls = 4, Style_comment = 5, Style_image = 6, Style_image_set = 7;
-	private static ByteTrieMgr_slim style_trie = ByteTrieMgr_slim.ci_()
+	private static Btrie_slim_mgr style_trie = Btrie_slim_mgr.ci_ascii_()	// NOTE:ci.ascii:Javascript
 	.Add_str_byte("expression"	, Style_expression)
 	.Add_str_byte("filter"		, Style_filter)
 	.Add_str_byte("accelerator"	, Style_accelerator)
@@ -250,7 +251,7 @@ public class Xop_xatr_whitelist_mgr {
 	.Add_str_byte("image-set"	, Style_image_set)
 	.Add_str_byte("/*"			, Style_comment)
 	;
-	private static final byte[] Val_role_presentation = ByteAry_.new_ascii_("presentation");
+	private static final byte[] Val_role_presentation = Bry_.new_ascii_("presentation");
 }
 class Xop_xatr_whitelist_itm {
 	public Xop_xatr_whitelist_itm(byte[] key, byte key_tid, boolean exact) {this.key = key; this.key_tid = key_tid; this.exact = exact;}

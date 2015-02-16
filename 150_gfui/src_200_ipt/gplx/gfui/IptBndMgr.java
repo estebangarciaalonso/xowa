@@ -73,8 +73,46 @@ public class IptBndMgr implements SrlAble {
 		if (old == null) return;
 		this.Del(old);
 		old.Ipts().Clear();
+		if (ary == IptArg_.Ary_empty) return;	// "unbind"; exit after deleting; DATE:2014-05-13
 		old.Ipts().AddMany((Object[])ary);
 		this.Add(old);
+	}
+	public void Del_by_key(String key) {Del_by(true, key);}
+	public void Del_by_ipt(IptArg ipt) {
+		if (IptArg_.Is_null_or_none(ipt)) return;
+		Del_by(false, ipt.Key());
+	}
+	private void Del_by(boolean del_by_key, String del_key) {
+		int regy_len = regy.length;
+		ListAdp deleted = ListAdp_.new_();
+		for (int i = 0; i < regy_len; i++) {
+			IptBndHash list = regy[i];
+			int list_len = list.Count();
+			for (int j = 0; j < list_len; j++) {
+				IptBndListItm bnds = list.GetAt(j);
+				int bnds_len = bnds.Count();
+				for (int k = 0; k < bnds_len; k++) {
+					IptBnd itm_bnd = bnds.FetchAt(k);
+					if (del_by_key) {
+						if (String_.Eq(del_key, itm_bnd.Key())) {
+							deleted.Add(itm_bnd);
+						}
+					}
+					else {
+						if (itm_bnd.Ipts().Count() != 1) continue;	// only delete if bnd has 1 ipt; should only be called by xowa which does 1 bnd per ipt 
+						IptArg itm_ipt = (IptArg)itm_bnd.Ipts().FetchAt(0);
+						if (String_.Eq(del_key, itm_ipt.Key()))
+							deleted.Add(itm_bnd);
+					}
+				}
+			}
+		}
+		int deleted_len = deleted.Count();
+		for (int i = 0; i < deleted_len; i++) {
+			IptBnd bnd = (IptBnd)deleted.FetchAt(i);
+			this.Del(bnd);
+			bnd.Ipts().Clear();
+		}
 	}
 	public void Del(IptBnd bnd) {
 		for (IptBndHash list : regy) {
@@ -111,7 +149,7 @@ public class IptBndMgr implements SrlAble {
 	}
 	IptArgChainMgr chainMgr = new IptArgChainMgr();
 	OrderedHash hash = OrderedHash_.new_(); IptEventType curTypes = IptEventType_.None;
-        public static IptBndMgr new_() {return new IptBndMgr();}
+	public static IptBndMgr new_() {return new IptBndMgr();}
 	IptBndHash[] regy = new IptBndHash[8];
 	IptBndMgr() {ClearLists();}
 	void ClearLists(){
@@ -162,7 +200,7 @@ class IptBndHash implements SrlAble {
 		return this;
 	}
 	OrderedHash hash = OrderedHash_.new_();
-        public IptBndHash(IptEventType eventType) {this.eventType = eventType;}
+	public IptBndHash(IptEventType eventType) {this.eventType = eventType;}
 }
 class IptBndListItm implements SrlAble {
 	public String IptKey() {return iptKey;} private String iptKey;
@@ -188,7 +226,7 @@ class IptBndListItm implements SrlAble {
 		return this;
 	}
 	ListAdp list = ListAdp_.new_();
-        public IptBndListItm(String iptKey) {this.iptKey = iptKey;}
+	public IptBndListItm(String iptKey) {this.iptKey = iptKey;}
 }
 class IptArgChainMgr {
 	public void Clear() {regy.Clear();}

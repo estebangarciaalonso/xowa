@@ -30,16 +30,16 @@ public class HexDecUtl {
 	public static int parse_or_(byte[] raw, int or) {return parse_or_(raw, 0, raw.length, or);}
 	public static int parse_or_(byte[] raw, int bgn, int end, int or) {
 		int rv = 0; int factor = 1;
-		byte b = Byte_.MaxValue_127;
+		byte b = Byte_.Max_value_127;
 		for (int i = end - 1; i >= bgn; i--) {
 			switch (raw[i]) {
 				case Byte_ascii.Num_0: b =  0; break; case Byte_ascii.Num_1: b =  1; break; case Byte_ascii.Num_2: b =  2; break; case Byte_ascii.Num_3: b =  3; break; case Byte_ascii.Num_4: b =  4; break;
 				case Byte_ascii.Num_5: b =  5; break; case Byte_ascii.Num_6: b =  6; break; case Byte_ascii.Num_7: b =  7; break; case Byte_ascii.Num_8: b =  8; break; case Byte_ascii.Num_9: b =  9; break;
 				case Byte_ascii.Ltr_A: b = 10; break; case Byte_ascii.Ltr_B: b = 11; break; case Byte_ascii.Ltr_C: b = 12; break; case Byte_ascii.Ltr_D: b = 13; break; case Byte_ascii.Ltr_E: b = 14; break; case Byte_ascii.Ltr_F: b = 15; break;
 				case Byte_ascii.Ltr_a: b = 10; break; case Byte_ascii.Ltr_b: b = 11; break; case Byte_ascii.Ltr_c: b = 12; break; case Byte_ascii.Ltr_d: b = 13; break; case Byte_ascii.Ltr_e: b = 14; break; case Byte_ascii.Ltr_f: b = 15; break;
-				default: b = Byte_.MaxValue_127; break;
+				default: b = Byte_.Max_value_127; break;
 			}
-			if (b == Byte_.MaxValue_127) return or;
+			if (b == Byte_.Max_value_127) return or;
 			rv += b * factor;
 			factor *= 16;
 		}
@@ -74,7 +74,7 @@ public class HexDecUtl {
 			case 0: return '0'; case 1: return '1'; case 2: return '2'; case 3: return '3'; case 4: return '4';
 			case 5: return '5'; case 6: return '6'; case 7: return '7'; case 8: return '8'; case 9: return '9';
 			case 10: return 'A'; case 11: return 'B'; case 12: return 'C'; case 13: return 'D'; case 14: return 'E'; case 15: return 'F';
-			default: throw Err_.parse_("hexstring", Int_.XtoStr(val));
+			default: throw Err_.parse_("hexstring", Int_.Xto_str(val));
 		}
 	}
 	static byte Xto_byte(int v) {
@@ -82,7 +82,7 @@ public class HexDecUtl {
 			case  0: return Byte_ascii.Num_0; case  1: return Byte_ascii.Num_1; case  2: return Byte_ascii.Num_2; case  3: return Byte_ascii.Num_3; case  4: return Byte_ascii.Num_4;
 			case  5: return Byte_ascii.Num_5; case  6: return Byte_ascii.Num_6; case  7: return Byte_ascii.Num_7; case  8: return Byte_ascii.Num_8; case  9: return Byte_ascii.Num_9;
 			case 10: return Byte_ascii.Ltr_A; case 11: return Byte_ascii.Ltr_B; case 12: return Byte_ascii.Ltr_C; case 13: return Byte_ascii.Ltr_D; case 14: return Byte_ascii.Ltr_E; case 15: return Byte_ascii.Ltr_F;
-			default: throw Err_.parse_("hexstring", Int_.XtoStr(v));
+			default: throw Err_.parse_("hexstring", Int_.Xto_str(v));
 		}
 	}
 	public static void Write(byte[] bry, int bgn, int end, int val) {

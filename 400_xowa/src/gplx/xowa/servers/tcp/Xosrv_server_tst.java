@@ -30,11 +30,12 @@ public class Xosrv_server_tst {
 class Xosrv_server_fxt {
 	public Xosrv_server_fxt Clear() {
 		app = Xoa_app_fxt.app_();
+		Xoa_app_fxt.Init_gui(app);
 		return this;
 	} 	private Xoa_app app;
 
 	public void Test_exec_js(String raw, String expd) {
-		String actl = app.Tcp_server().Exec_js(null, ByteAry_.new_ascii_(raw));
+		String actl = app.Tcp_server().Exec_js(null, Bry_.new_ascii_(raw));
 		Tfds.Eq(expd, actl);
 	}
 }

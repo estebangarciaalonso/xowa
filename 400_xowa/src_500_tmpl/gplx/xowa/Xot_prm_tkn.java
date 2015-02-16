@@ -34,26 +34,26 @@ public class Xot_prm_tkn extends Xop_tkn_itm_base {
 			if (find_tkn_static) {	// subs_are_static, so extract idx/key; EX: {{{a b}}} will have 3 subs which are all static; {{{a{{{1}}}b}}} will be dynamic
 				int find_tkn_bgn = find_tkn.Dat_bgn(), find_tkn_end = find_tkn.Dat_end();
 				if (find_tkn_end - find_tkn_bgn > 0) {	// NOTE: handles empty find_tkns; EX: {{{|safesubst:}}}
-					prm_idx = ByteAry_.X_to_int_or(src, find_tkn_bgn, find_tkn_end, -1);			// parse as number first; note that bgn,end should not include ws; EX: " 1 " will fail
-					if (prm_idx == -1) prm_key = ByteAry_.Mid(src, find_tkn_bgn, find_tkn_end);// not a number; parse as key
+					prm_idx = Bry_.Xto_int_or(src, find_tkn_bgn, find_tkn_end, -1);			// parse as number first; note that bgn,end should not include ws; EX: " 1 " will fail
+					if (prm_idx == -1) prm_key = Bry_.Mid(src, find_tkn_bgn, find_tkn_end);// not a number; parse as key
 				}
 			}
 		}
 		if (dflt_tkn != null) dflt_tkn.Tmpl_compile(ctx, src, prep_data);
 	}
-	@Override public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr) {
+	@Override public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Bry_bfr bfr) {
 		if (!find_tkn_static) {
 			int subs_len = find_tkn.Subs_len();
-			ByteAryBfr find_bfr = ByteAryBfr.new_();
+			Bry_bfr find_bfr = Bry_bfr.new_();
 			for (int i = 0; i < subs_len; i++)
 				find_tkn.Subs_get(i).Tmpl_evaluate(ctx, src, caller, find_bfr);
-			prm_idx = ByteAry_.X_to_int_or_trim(find_bfr.Bry(), 0, find_bfr.Len(), -1);	// parse as number first; NOTE: trim needed to transform "{{{ 1 }}}" to "1"; it.w:Portale:Giochi_da_tavolo; DATE:2014-02-09
+			prm_idx = Bry_.Xto_int_or_trim(find_bfr.Bfr(), 0, find_bfr.Len(), -1);	// parse as number first; NOTE: trim needed to transform "{{{ 1 }}}" to "1"; it.w:Portale:Giochi_da_tavolo; DATE:2014-02-09
 			if (prm_idx == -1)
-				prm_key = find_bfr.XtoAryAndClearAndTrim();									// not a number; parse as key; NOTE: must trim; EX.WP: William Shakespeare; {{Relatebardtree}}
+				prm_key = find_bfr.Xto_bry_and_clear_and_trim();									// not a number; parse as key; NOTE: must trim; PAGE:en.w:William Shakespeare; {{Relatebardtree}}
 		}
 		Arg_nde_tkn arg_nde = null;
 		if (prm_idx == -1) {	// prm is key; EX: "{{{key1}}}"
-			if (prm_key != ByteAry_.Empty)	// NOTE: handles empty find_tkns; EX: {{{|safesubst:}}}
+			if (prm_key != Bry_.Empty)	// NOTE: handles empty find_tkns; EX: {{{|safesubst:}}}
 				arg_nde = caller.Args_get_by_key(src, prm_key);
 			if (arg_nde == null) {Tmpl_write_missing(ctx, src, caller, bfr); return true;}
 		}
@@ -67,13 +67,13 @@ public class Xot_prm_tkn extends Xop_tkn_itm_base {
 		if (arg_val.Itm_static() == Bool_.Y_byte)
 			bfr.Add_mid(src, arg_val.Dat_bgn(), arg_val.Dat_end());
 		else {// compile arg if dynamic; EX: [[MESSENGER]] "{{About|the NASA space mission||Messenger (disambiguation){{!}}Messenger}}"; {{!}} causes {{{2}}} to be dynamic and its dat_ary will be an empty-String ("")
-			ByteAryBfr arg_val_bfr = ByteAryBfr.new_();
+			Bry_bfr arg_val_bfr = Bry_bfr.new_();
 			arg_val.Tmpl_evaluate(ctx, src, caller, arg_val_bfr);
 			bfr.Add_bfr_and_clear(arg_val_bfr);
 		}
 		return true;
 	}
-	private void Tmpl_write_missing(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr) {
+	private void Tmpl_write_missing(Xop_ctx ctx, byte[] src, Xot_invk caller, Bry_bfr bfr) {
 		if (dflt_tkn == null) {							// dflt absent; write orig; {{{1}}} or {{{key}}};
 			bfr.Add(Xop_curly_wkr.Hook_prm_bgn);
 			int subs_len = find_tkn.Subs_len();
@@ -82,7 +82,7 @@ public class Xot_prm_tkn extends Xop_tkn_itm_base {
 			bfr.Add(Xop_curly_wkr.Hook_prm_end);
 		} else dflt_tkn.Tmpl_evaluate(ctx, src, caller, bfr);	// dflt exists; write it
 	}
-	int prm_idx = -1; byte[] prm_key = ByteAry_.Empty; boolean find_tkn_static = true;
+	int prm_idx = -1; byte[] prm_key = Bry_.Empty; boolean find_tkn_static = true;
 	public Arg_itm_tkn Find_tkn() {return find_tkn;} public Xot_prm_tkn Find_tkn_(Arg_itm_tkn v) {find_tkn = v; return this;} Arg_itm_tkn find_tkn;
 	public Xot_prm_tkn Dflt_tkn_(Arg_itm_tkn v) {dflt_tkn = v; return this;} Arg_itm_tkn dflt_tkn;		
 	public Xot_prm_tkn(int bgn, int end) {this.Tkn_ini_pos(false, bgn, end);}

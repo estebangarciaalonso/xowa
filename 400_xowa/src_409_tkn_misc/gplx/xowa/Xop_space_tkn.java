@@ -16,13 +16,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
+import gplx.core.btries.*;
 public class Xop_space_tkn extends Xop_tkn_itm_base {
 	public Xop_space_tkn(boolean immutable, int bgn, int end) {this.Tkn_ini_pos(immutable, bgn, end);}
 	@Override public byte Tkn_tid() {return Xop_tkn_itm_.Tid_space;}
 	@Override public Xop_tkn_itm Tkn_clone(Xop_ctx ctx, int bgn, int end) {
 		return ctx.Tkn_mkr().Space_mutable(bgn, end);
 	}
-	@Override public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, ByteAryBfr bfr) {
+	@Override public boolean Tmpl_evaluate(Xop_ctx ctx, byte[] src, Xot_invk caller, Bry_bfr bfr) {
 		if (this.Tkn_immutable()) {
 			bfr.Add_byte(Byte_ascii.Space);
 			return true;
@@ -34,24 +35,12 @@ public class Xop_space_tkn extends Xop_tkn_itm_base {
 }
 class Xop_space_lxr implements Xop_lxr {
 	public byte Lxr_tid() {return Xop_lxr_.Tid_space;}
-	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Byte_ascii.Space, this);}
-	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
+	public void Init_by_wiki(Xow_wiki wiki, Btrie_fast_mgr core_trie) {core_trie.Add(Byte_ascii.Space, this);}
+	public void Init_by_lang(Xol_lang lang, Btrie_fast_mgr core_trie) {}
 	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
-		cur_pos = Byte_ary_finder.Find_fwd_while(src, cur_pos, src_len, Byte_ascii.Space);
+		cur_pos = Bry_finder.Find_fwd_while(src, cur_pos, src_len, Byte_ascii.Space);
 		ctx.Subs_add(root, tkn_mkr.Space(root, bgn_pos, cur_pos));
 		return cur_pos;
 	}
 	public static final Xop_space_lxr _ = new Xop_space_lxr();
-}
-class Xop_nbsp_lxr implements Xop_lxr {
-	public byte Lxr_tid() {return Xop_lxr_.Tid_nbsp;}
-	private static final byte[] Nbsp_0 = new byte[] {(byte)194, (byte)160};
-	public void Init_by_wiki(Xow_wiki wiki, ByteTrieMgr_fast core_trie) {core_trie.Add(Nbsp_0, this);}
-	public void Init_by_lang(Xol_lang lang, ByteTrieMgr_fast core_trie) {}
-	public int Make_tkn(Xop_ctx ctx, Xop_tkn_mkr tkn_mkr, Xop_root_tkn root, byte[] src, int src_len, int bgn_pos, int cur_pos) {
-//			cur_pos = Xop_lxr_.Find_fwd_while(src, src_len, cur_pos, (byte)160);
-		ctx.Subs_add(root, tkn_mkr.Space(root, bgn_pos, cur_pos));
-		return cur_pos;
-	}
-	public static final Xop_nbsp_lxr _ = new Xop_nbsp_lxr(); Xop_nbsp_lxr() {}
 }

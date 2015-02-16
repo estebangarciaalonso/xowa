@@ -36,7 +36,6 @@ public class GxwComboBox_lang extends JComboBox implements GxwComboBox, GxwElem,
 	public Object SelectedItm() {return this.getEditor().getItem();} public void SelectedItm_set(Object v) {
 		this.getEditor().setItem(v);
 	}
-
 	void ctor_() {
 		ctrlMgr = GxwCore_lang.new_(this);
 		this.enableEvents(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
@@ -58,7 +57,7 @@ public class GxwComboBox_lang extends JComboBox implements GxwComboBox, GxwElem,
 	@Override public void setBounds(Rectangle r) {super.setBounds(r); this.validate();}
 	@Override public void setSize(int w, int h) {super.setSize(w, h); this.validate();}
 	@Override public void setSize(Dimension d) {super.setSize(d); this.validate();}
-	public String TextVal() {return Object_.XtoStr_OrEmpty(this.SelectedItm());} public void TextVal_set(String v) {this.SelectedItm_set(v);}
+	public String TextVal() {return Object_.Xto_str_strict_or_empty(this.SelectedItm());} public void TextVal_set(String v) {this.SelectedItm_set(v);}
 	@Override public Object Invk(GfsCtx ctx, int ikey, String k, GfoMsg m) {
 		return this;
 	}

@@ -34,10 +34,10 @@ public class Xodb_ns_map_mgr_tst {
 	}
 }
 class Xodb_ns_map_mgr_fxt {
-	public void Clear() {} ByteAryBfr bfr = ByteAryBfr.new_();
+	public void Clear() {} Bry_bfr bfr = Bry_bfr.new_();
 	public Xodb_ns_map_itm itm_(int... ary) {return new Xodb_ns_map_itm(ary);}
 	public void Test_parse(String src_str, Xodb_ns_map_itm... expd) {
-		byte[] src_bry = ByteAry_.new_ascii_(src_str);
+		byte[] src_bry = Bry_.new_ascii_(src_str);
 		Xodb_ns_map_mgr actl_mgr = Xodb_ns_map_mgr.Parse(src_bry);
 		Tfds.Eq_str_lines(Xto_str(expd), Xto_str(actl_mgr.Itms()));
 	}
@@ -52,6 +52,6 @@ class Xodb_ns_map_mgr_fxt {
 			}
 			bfr.Add_byte_nl();
 		}
-		return bfr.XtoStrAndClear();
+		return bfr.Xto_str_and_clear();
 	}
 }

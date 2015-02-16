@@ -19,6 +19,13 @@ package gplx;
 public class GfoEvMgr_ {
 	public static void Sub(GfoEvMgrOwner pub, String pubEvt, GfoEvObj sub, String subEvt) {pub.EvMgr().AddSub(pub, pubEvt, sub, subEvt);}
 	public static void SubSame(GfoEvMgrOwner pub, String evt, GfoEvObj sub) {pub.EvMgr().AddSub(pub, evt, sub, evt);}
+	public static void SubSame_many(GfoEvMgrOwner pub, GfoEvObj sub, String... evts) {
+		int len = evts.length;
+		for (int i = 0; i < len; i++) {
+			String evt = evts[i];
+			pub.EvMgr().AddSub(pub, evt, sub, evt);
+		}
+	}
 	public static void Pub(GfoEvMgrOwner pub, String pubEvt) {pub.EvMgr().Pub(GfsCtx.new_(), pubEvt, GfoMsg_.new_cast_(pubEvt));}
 	public static void PubObj(GfoEvMgrOwner pub, String pubEvt, String key, Object v) {pub.EvMgr().Pub(GfsCtx.new_(), pubEvt, msg_(pubEvt, KeyVal_.new_(key, v)));}
 	public static void PubVal(GfoEvMgrOwner pub, String pubEvt, Object v) {pub.EvMgr().Pub(GfsCtx.new_(), pubEvt, msg_(pubEvt, KeyVal_.new_("v", v)));}

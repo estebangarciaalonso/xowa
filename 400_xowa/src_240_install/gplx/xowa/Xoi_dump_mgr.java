@@ -27,7 +27,7 @@ public class Xoi_dump_mgr implements GfoInvkAble {
 	public boolean Wiki_storage_type_is_sql()	{return wiki_storage_type == Wiki_storage_type_sqlite;}
 	public String Db_ns_map() {return db_ns_map;} private String db_ns_map = "Template~Module";
 	public boolean Css_wiki_update() {return css_wiki_update;} private boolean css_wiki_update = true;
-	public boolean Css_commons_download() {return css_commons_download;} private boolean css_commons_download = false;
+	public boolean Css_commons_download() {return css_commons_download;} private boolean css_commons_download = true; // changed from false to true; DATE:2014-10-19
 	public boolean Delete_xml_file() {return delete_xml_file;} private boolean delete_xml_file = true;
 	public byte Search_version() {return search_version;} private byte search_version = gplx.xowa.specials.search.Xosrh_core.Version_2;
 	public boolean Import_bz2_by_stdout() {return import_bz2_by_stdout;} private boolean import_bz2_by_stdout = true;
@@ -50,16 +50,16 @@ public class Xoi_dump_mgr implements GfoInvkAble {
 		else if	(ctx.Match(k, Invk_wiki_storage_type))					return Wiki_storage_type_str(wiki_storage_type);
 		else if	(ctx.Match(k, Invk_wiki_storage_type_))					wiki_storage_type = Wiki_storage_type_parse(m.ReadStr("v"));
 		else if	(ctx.Match(k, Invk_wiki_storage_type_list))				return Options_storage_type_list;
-		else if	(ctx.Match(k, Invk_css_wiki_update))					return Yn.X_to_str(css_wiki_update);
+		else if	(ctx.Match(k, Invk_css_wiki_update))					return Yn.Xto_str(css_wiki_update);
 		else if	(ctx.Match(k, Invk_css_wiki_update_))					css_wiki_update = m.ReadYn("v");
-		else if	(ctx.Match(k, Invk_css_commons_download))				return Yn.X_to_str(css_commons_download);
+		else if	(ctx.Match(k, Invk_css_commons_download))				return Yn.Xto_str(css_commons_download);
 		else if	(ctx.Match(k, Invk_css_commons_download_))				css_commons_download = m.ReadYn("v");
-		else if	(ctx.Match(k, Invk_delete_xml_file))					return Yn.X_to_str(delete_xml_file);
+		else if	(ctx.Match(k, Invk_delete_xml_file))					return Yn.Xto_str(delete_xml_file);
 		else if	(ctx.Match(k, Invk_delete_xml_file_))					delete_xml_file = m.ReadYn("v");
 		else if	(ctx.Match(k, Invk_search_version))						return Options_search_version_str(search_version);
 		else if	(ctx.Match(k, Invk_search_version_))					search_version = Options_search_version_parse(m.ReadStr("v"));
 		else if	(ctx.Match(k, Invk_search_version_list))				return Options_search_version_list;
-		else if	(ctx.Match(k, Invk_import_bz2_by_stdout))				return Yn.X_to_str(import_bz2_by_stdout);
+		else if	(ctx.Match(k, Invk_import_bz2_by_stdout))				return Yn.Xto_str(import_bz2_by_stdout);
 		else if	(ctx.Match(k, Invk_import_bz2_by_stdout_))				import_bz2_by_stdout = m.ReadYn("v");
 		else	return GfoInvkAble_.Rv_unhandled;
 		return this;
@@ -75,7 +75,7 @@ public class Xoi_dump_mgr implements GfoInvkAble {
 		, Invk_search_version = "search_version", Invk_search_version_ = "search_version_", Invk_search_version_list = "search_version_list"
 		, Invk_import_bz2_by_stdout = "import_bz2_by_stdout", Invk_import_bz2_by_stdout_ = "import_bz2_by_stdout_"
 		;
-	private static KeyVal[] Options_data_storage_format_list = KeyVal_.Ary(KeyVal_.new_(".xdat"), KeyVal_.new_(".gz"), KeyVal_.new_(".zip"), KeyVal_.new_(".bz2")); 
+	private static KeyVal[] Options_data_storage_format_list = KeyVal_.Ary(KeyVal_.new_(".xdat", "text"), KeyVal_.new_(".gz", "gzip"), KeyVal_.new_(".bz2", "bzip2"));	// removed .zip; DATE:2014-05-13; updated aliases; DATE:2014-06-20
 	public static String Wtr_tid_to_str(byte v) {
 		switch (v) {
 			case gplx.ios.Io_stream_.Tid_file	: return ".xdat";
@@ -107,6 +107,6 @@ public class Xoi_dump_mgr implements GfoInvkAble {
 		else										throw Err_.unhandled(v);
 	}
 	private static final KeyVal[] Options_search_version_list = KeyVal_.Ary(KeyVal_.new_("1"), KeyVal_.new_("2")); 
-	public static String Options_search_version_str(byte v)		{return Byte_.XtoStr(v);}
+	public static String Options_search_version_str(byte v)		{return Byte_.Xto_str(v);}
 	public static byte Options_search_version_parse(String v)	{return Byte_.parse_(v);}
 }

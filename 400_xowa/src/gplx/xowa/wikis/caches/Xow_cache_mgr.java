@@ -24,6 +24,7 @@ public class Xow_cache_mgr {
 		defn_cache = new Xow_defn_cache(wiki.Lang());
 		lst_cache = new Xow_defn_cache(wiki.Lang());
 	}
+	public HashAdp Tmpl_result_cache() {return tmpl_result_cache;} private HashAdp tmpl_result_cache = HashAdp_.new_bry_();
 	public Xow_page_cache Page_cache() {return page_cache;} private Xow_page_cache page_cache;
 	public Xow_defn_cache Defn_cache() {return defn_cache;} private Xow_defn_cache defn_cache;
 	public Xow_defn_cache Lst_cache() {return lst_cache;} private Xow_defn_cache lst_cache;
@@ -36,7 +37,7 @@ public class Xow_cache_mgr {
 				Cfg_nde_obj nde = root.Root_get_at(i);
 				Scrib_lang_names_grps(list, nde);
 			}
-			scrib_lang_names = (KeyVal[])list.XtoAry(KeyVal.class);
+			scrib_lang_names = (KeyVal[])list.Xto_ary(KeyVal.class);
 		}
 		return scrib_lang_names;
 	}	private static KeyVal[] scrib_lang_names;
@@ -54,6 +55,7 @@ public class Xow_cache_mgr {
 		}
 	}
 	public void Free_mem_all() {
+		tmpl_result_cache.Clear();
 		defn_cache.Free_mem_all();
 		page_cache.Free_mem_all();
 		lst_cache.Free_mem_all();

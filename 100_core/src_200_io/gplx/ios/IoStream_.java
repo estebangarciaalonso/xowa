@@ -86,7 +86,7 @@ class IoStream_base implements IoStream {
 		}
 		catch 	(IOException e) {throw Err_.err_key_(e, IoEngineArgs._.Err_IoException, "seek failed").Add("url", url);}
 	}
-	@gplx.Virtual public void Write(byte[] array, int offset, int count) {bfr.Add_mid(array, offset, offset + count); this.Flush();} ByteAryBfr bfr = ByteAryBfr.reset_(16);
+	@gplx.Virtual public void Write(byte[] array, int offset, int count) {bfr.Add_mid(array, offset, offset + count); this.Flush();} Bry_bfr bfr = Bry_bfr.reset_(16);
 	public void Write_and_flush(byte[] bry, int bgn, int end) {
 //		ConsoleAdp._.WriteLine(bry.length +" " + bgn + " " + end);
 		Flush();// flush anything already in buffer
@@ -127,7 +127,7 @@ class IoStream_base implements IoStream {
 //			else				under.seek(0);
 		}
 		catch 	(IOException e) {throw Err_.err_key_(e, IoEngineArgs._.Err_IoException, "seek failed").Add("url", url);}
-		try {under.write(bfr.Bry(), 0, bfr.Len());}
+		try {under.write(bfr.Bfr(), 0, bfr.Len());}
 		catch 	(IOException e) {throw Err_.err_key_(e, IoEngineArgs._.Err_IoException, "write failed").Add("url", url);}
 		bfr.Clear();
 	}

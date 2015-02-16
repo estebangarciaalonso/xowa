@@ -31,8 +31,8 @@ public class Xow_wiki_domain_tst {
 class Xow_wiki_domain_fxt {
 	public void Clear() {}
 	public void Test_parse(String domain, byte expd_tid, String expd_lang) {
-		Xow_wiki_domain actl = Xow_wiki_domain_.parse_by_domain(ByteAry_.new_ascii_(domain));
-		Tfds.Eq(expd_tid, actl.Tid());
-		Tfds.Eq(expd_lang, String_.new_ascii_((actl.Lang())));
+		Xow_wiki_domain actl = Xow_wiki_domain_.parse_by_domain(Bry_.new_ascii_(domain));
+		Tfds.Eq(expd_tid, actl.Wiki_tid());
+		Tfds.Eq(expd_lang, String_.new_ascii_((actl.Lang_key())));
 	}
 }

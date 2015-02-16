@@ -17,21 +17,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 //namespace gplx.xowa {
 //	public class Xoa_url_alias_mgr : GfoInvkAble {
-//		private Hash_adp_bry hash = Hash_adp_bry.cs_(); private ByteAryFmtr fmtr = ByteAryFmtr.new_("", "");
+//		private Hash_adp_bry hash = Hash_adp_bry.cs_(); private Bry_fmtr fmtr = Bry_fmtr.new_("", "");
 //		public Xoa_url_alias_mgr(Xoa_app app) {this.app = app;} private Xoa_app app;
 //		public byte[] Fmt_or_null(byte[] raw) {
-//			int colon_pos = Byte_ary_finder.Find_fwd(raw, Byte_ascii.Colon); if (colon_pos == ByteAry_.NotFound) return null;
+//			int colon_pos = Bry_finder.Find_fwd(raw, Byte_ascii.Colon); if (colon_pos == Bry_.NotFound) return null;
 //			byte[] fmt = (byte[])hash.Get_by_mid(raw, 0, colon_pos); if (fmt == null) return null;
-//			ByteAryBfr tmp_bfr = app.Utl_bry_bfr_mkr().Get_b512();
-//			fmtr.Fmt_(fmt).Bld_bfr_many(tmp_bfr, ByteAry_.Mid(raw, colon_pos + Int_.Const_dlm_len, raw.length));
-//			return tmp_bfr.Mkr_rls().XtoAryAndClear();
+//			Bry_bfr tmp_bfr = app.Utl_bry_bfr_mkr().Get_b512();
+//			fmtr.Fmt_(fmt).Bld_bfr_many(tmp_bfr, Bry_.Mid(raw, colon_pos + Int_.Const_dlm_len, raw.length));
+//			return tmp_bfr.Mkr_rls().Xto_bry_and_clear();
 //		}
 //		public void Clear() {hash.Clear();}
 //		public void Add_one(byte[] alias, byte[] wiki_key) {hash.Add_bry_obj(alias, wiki_key);}
 //		public void Add_bulk(byte[] src) {	// COPY:add_bulk
 //			int len = src.length;
 //			int pos = 0, fld_bgn = 0, fld_idx = 0;
-//			byte[] alias = ByteAry_.Empty, wiki = ByteAry_.Empty;
+//			byte[] alias = Bry_.Empty, wiki = Bry_.Empty;
 //			Xol_csv_parser csv_parser = Xol_csv_parser._;
 //			while (true) {
 //				boolean last = pos == len;

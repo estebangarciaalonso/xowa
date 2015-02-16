@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import gplx.thread_cmds.*;
+import gplx.threads.*;
 class Xoi_cmd_dumpfile {
 	public byte[] Domain() {return domain;} private byte[] domain;
 	public Io_url Bz2_url() {return bz2_url;} Io_url bz2_url;
@@ -26,7 +26,7 @@ class Xoi_cmd_dumpfile {
 	public Xoi_cmd_dumpfile Parse_msg(GfoMsg m) {
 		Io_url dump_url = m.ReadIoUrl("url");
 		domain = m.ReadBry("domain");
-		if (ByteAry_.Len_eq_0(domain)) domain = ByteAry_.new_utf8_(dump_url.OwnerDir().NameOnly());
+		if (Bry_.Len_eq_0(domain)) domain = Bry_.new_utf8_(dump_url.OwnerDir().NameOnly());
 		bz2_unzip = String_.Eq(m.ReadStr("args"), "unzip");
 		String dump_ext = dump_url.Ext();
 		if		(String_.Eq(dump_ext, ".bz2")) {

@@ -21,13 +21,13 @@ interface Php_srl_itm {
 	int Src_bgn();
 	int Src_end();
 	Object Val();
-	void Xto_bfr(ByteAryBfr bfr, int depth);
+	void Xto_bfr(Bry_bfr bfr, int depth);
 	void Clear();
 }
 class Php_srl_itm_ {
 	public static final Php_srl_itm[] Ary_empty = new Php_srl_itm[0];
 	public static final byte  Tid_unknown = 0, Tid_nil = 1, Tid_bool = 2, Tid_int = 3, Tid_double = 4, Tid_string = 5, Tid_array = 6, Tid_function = 7;
-	public static final byte[][] Names = ByteAry_.Ary("unknown", "nil", "boolean", "int", "double", "string", "array", "function");
+	public static final byte[][] Names = Bry_.Ary("unknown", "nil", "boolean", "int", "double", "string", "array", "function");
 	public static final Object Val_nil = null, Val_table = null;
 }
 abstract class Php_srl_itm_base implements Php_srl_itm {
@@ -36,10 +36,10 @@ abstract class Php_srl_itm_base implements Php_srl_itm {
 	public int Src_bgn() {return src_bgn;} private int src_bgn;
 	public int Src_end() {return src_end;} private int src_end;
 	public Object Val() {return val;} Object val;
-	@gplx.Virtual public void Xto_bfr(ByteAryBfr bfr, int depth) {
+	@gplx.Virtual public void Xto_bfr(Bry_bfr bfr, int depth) {
 		Php_srl_wtr.Indent(bfr, depth);
 		bfr.Add(Php_srl_itm_.Names[this.Tid()]).Add_byte(Byte_ascii.Colon);
-		bfr.Add_str(Object_.XtoStr_OrNullStr(this.Val())).Add_byte(Byte_ascii.Semic).Add_byte_nl();		
+		bfr.Add_str(Object_.Xto_str_strict_or_null_mark(this.Val())).Add_byte(Byte_ascii.Semic).Add_byte_nl();		
 	}
 	public void Clear() {}
 }
@@ -107,14 +107,14 @@ class Php_srl_itm_ary extends Php_srl_itm_base {
 		subs_len = new_len;
 		return this;
 	}
-	@Override public void Xto_bfr(ByteAryBfr bfr, int depth) {
+	@Override public void Xto_bfr(Bry_bfr bfr, int depth) {
 		Php_srl_wtr.Indent(bfr, depth);
 		bfr.Add_byte(Byte_ascii.Ltr_a).Add_byte(Byte_ascii.Brack_bgn).Add_int_variable(subs_len).Add(CONST_ary_bgn);
 		for (int i = 0; i < subs_len; i++)
 			subs[i].Xto_bfr(bfr, depth + 1);
 		Php_srl_wtr.Indent(bfr, depth);
 		bfr.Add_byte(Byte_ascii.Curly_end).Add_byte_nl();
-	}	static final byte[] CONST_ary_bgn = ByteAry_.new_ascii_("]{\n");
+	}	static final byte[] CONST_ary_bgn = Bry_.new_ascii_("]{\n");
 	Php_srl_itm_kv[] subs = Php_srl_itm_kv.Ary_empty;
 }
 class Php_srl_itm_kv {
@@ -125,14 +125,14 @@ class Php_srl_itm_kv {
 		key.Clear();
 		val.Clear();
 	}
-	public void Xto_bfr(ByteAryBfr bfr, int depth) {
+	public void Xto_bfr(Bry_bfr bfr, int depth) {
 		key.Xto_bfr(bfr, depth);
 		val.Xto_bfr(bfr, depth);
 	}
 	public static final Php_srl_itm_kv[] Ary_empty = new Php_srl_itm_kv[0];
 }
 class Php_srl_wtr {
-	public static void Indent(ByteAryBfr bfr, int depth) {
+	public static void Indent(Bry_bfr bfr, int depth) {
 		if (depth > 0) bfr.Add_byte_repeat(Byte_ascii.Space, depth * 2);	// indent
 	}
 }

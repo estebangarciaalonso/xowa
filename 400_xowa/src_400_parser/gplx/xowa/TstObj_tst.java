@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.xowa; import gplx.*;
-import org.junit.*;
+import org.junit.*; import gplx.core.strings.*;
 interface TstRuleMgr {
 	boolean SkipChkVal(String expdTypeKey, TstAtr expd);
 	boolean SkipChkObj(String expdTypeKey, String atrKey, TstObj expd);
@@ -136,7 +136,7 @@ public class TstObj_tst {
 			TstObj expdSub = i < expdSubsLen ? (TstObj)expd.Subs().FetchAt(i) : TstObj.Null;
 			TstObj actlSub = i < actlSubsLen ? (TstObj)actl.Subs().FetchAt(i) : TstObj.Null;
 //				if (ruleMgr != null) ruleMgr.Eval(expd.TypeKey(), expdSub.PropName(), expdAtr, actlAtr, skip);
-			String iAsStr = Int_.XtoStr(i);
+			String iAsStr = Int_.Xto_str(i);
 			String subId = String_.Eq(idx, "") ? iAsStr : idx + "." + iAsStr;
 			if (expdSub == TstObj.Null && actlSub != TstObj.Null) {
 				TstAtr mis = new TstAtr().Key_("idx").Val_(i).ValType_(IntClassXtn._);
@@ -166,7 +166,7 @@ public class TstObj_tst {
 		TstRslt rslt = new TstRslt().Expd_(expd).Actl_(actl)
 			.Id_(id).Key_(key)
 			.EvalType_(evalType).EvalPass_(evalPass).EvalStr_(evalStr)
-			.ExpdStr_(Object_.XtoStr_OrNullStr(expd.Val())).ActlStr_(Object_.XtoStr_OrNullStr(actl.Val()))
+			.ExpdStr_(Object_.Xto_str_strict_or_null_mark(expd.Val())).ActlStr_(Object_.Xto_str_strict_or_null_mark(actl.Val()))
 			;
 		rslts.Add(rslt);
 	}

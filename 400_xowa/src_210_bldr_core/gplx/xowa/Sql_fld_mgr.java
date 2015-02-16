@@ -19,37 +19,37 @@ package gplx.xowa; import gplx.*;
 import gplx.ios.*;
 class Sql_fld_mgr {
 	public int Count() {return hash.Count();}
-	public Sql_fld_itm Get_by_key(String fld) {return Get_by_key(ByteAry_.new_utf8_(fld));}
+	public Sql_fld_itm Get_by_key(String fld) {return Get_by_key(Bry_.new_utf8_(fld));}
 	public Sql_fld_itm Get_by_key(byte[] fld) {
 		return (Sql_fld_itm)hash.Fetch(fld);
 	}	private OrderedHash hash = OrderedHash_.new_bry_();
 	public Sql_fld_mgr Parse(byte[] raw) {
 		hash.Clear();
-		int bgn = Byte_ary_finder.Find_fwd(raw, Tkn_create_table); if (bgn == ByteAry_.NotFound) throw Err_.new_("could not find 'CREATE TABLE'");
-		bgn = Byte_ary_finder.Find_fwd(raw, Byte_ascii.NewLine, bgn); if (bgn == ByteAry_.NotFound) throw Err_.new_("could not find new line after 'CREATE TABLE'");
+		int bgn = Bry_finder.Find_fwd(raw, Tkn_create_table); if (bgn == Bry_.NotFound) throw Err_.new_("could not find 'CREATE TABLE'");
+		bgn = Bry_finder.Find_fwd(raw, Byte_ascii.NewLine, bgn); if (bgn == Bry_.NotFound) throw Err_.new_("could not find new line after 'CREATE TABLE'");
 		bgn += Int_.Const_position_after_char;
-		int end = Byte_ary_finder.Find_fwd(raw, Tkn_unique_index); if (end == ByteAry_.NotFound) throw Err_.new_("could not find 'UNIQUE KEY'");
-		end = Byte_ary_finder.Find_bwd(raw, Byte_ascii.NewLine, end); if (bgn == ByteAry_.NotFound) throw Err_.new_("could not find new line before 'UNIQUE KEY'");
-		Parse_lines(ByteAry_.Mid(raw, bgn, end));
+		int end = Bry_finder.Find_fwd(raw, Tkn_unique_index); if (end == Bry_.NotFound) throw Err_.new_("could not find 'UNIQUE KEY'");
+		end = Bry_finder.Find_bwd(raw, Byte_ascii.NewLine, end); if (bgn == Bry_.NotFound) throw Err_.new_("could not find new line before 'UNIQUE KEY'");
+		Parse_lines(Bry_.Mid(raw, bgn, end));
 		return this;
 	}
 	private void Parse_lines(byte[] raw) {
-		byte[][] lines = ByteAry_.Split(raw, Byte_ascii.NewLine);
+		byte[][] lines = Bry_.Split(raw, Byte_ascii.NewLine);
 		int lines_len = lines.length;
 		int fld_idx = 0;
 		for (int i = 0; i < lines_len; i++) {
 			byte[] line = lines[i];
-			int bgn = Byte_ary_finder.Find_fwd(line, Byte_ascii.Tick); if (bgn == ByteAry_.NotFound) continue;	// skip blank lines
+			int bgn = Bry_finder.Find_fwd(line, Byte_ascii.Tick); if (bgn == Bry_.NotFound) continue;	// skip blank lines
 			bgn += Int_.Const_position_after_char;
-			int end = Byte_ary_finder.Find_fwd(line, Byte_ascii.Tick, bgn); if (end == ByteAry_.NotFound) continue;	// skip blank lines
-			byte[] key = ByteAry_.Mid(line, bgn, end);
+			int end = Bry_finder.Find_fwd(line, Byte_ascii.Tick, bgn); if (end == Bry_.NotFound) continue;	// skip blank lines
+			byte[] key = Bry_.Mid(line, bgn, end);
 			Sql_fld_itm fld = new Sql_fld_itm(fld_idx++, key);
 			hash.Add(fld.Key(), fld);
 		}
 	}
 	private static final byte[] 
-		Tkn_create_table = ByteAry_.new_ascii_("CREATE TABLE")
-	,	Tkn_unique_index = ByteAry_.new_ascii_("UNIQUE KEY")
+		Tkn_create_table = Bry_.new_ascii_("CREATE TABLE")
+	,	Tkn_unique_index = Bry_.new_ascii_("UNIQUE KEY")
 	;
 	public static final int Not_found = -1;
 }

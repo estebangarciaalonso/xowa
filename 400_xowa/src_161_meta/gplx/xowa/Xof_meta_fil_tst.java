@@ -25,5 +25,5 @@ public class Xof_meta_fil_tst {
 class Xof_meta_fil_fxt {
 	byte[] md5_(byte[] name) {return Xof_xfer_itm_.Md5_(name);}
 	public void Ini() {}
-	public void Bld_url(String root, String md5, int depth, String expd) {Tfds.Eq(expd, Xof_meta_fil.Bld_url(Io_url_.new_dir_(root), ByteAry_.new_ascii_(md5), depth).Raw());}
+	public void Bld_url(String root, String md5, int depth, String expd) {Tfds.Eq(expd, Xof_meta_fil.Bld_url(Io_url_.new_dir_(root), Bry_.new_ascii_(md5), depth).Raw());}
 }

@@ -61,15 +61,15 @@ class Xosearch_searcher_fxt {
 			app = Xoa_app_fxt.app_();
 			wiki = Xoa_app_fxt.wiki_tst_(app);
 			mgr = new Xowd_hive_mgr(wiki, Xow_dir_info_.Tid_search_ttl);
-			tmp_bfr = ByteAryBfr.reset_(255);
+			tmp_bfr = Bry_bfr.reset_(255);
 			parser = Xosrh_parser._;
 		}
 		return this;
 	}
-	Xoa_app app; Xow_wiki wiki; Xowd_hive_mgr mgr; ByteAryBfr tmp_bfr;
+	Xoa_app app; Xow_wiki wiki; Xowd_hive_mgr mgr; Bry_bfr tmp_bfr;
 	Xosrh_parser parser;
 	public void Init_search(String ttl_str, int... ids) {		
-		byte[] ttl_bry = ByteAry_.new_ascii_(ttl_str);		
+		byte[] ttl_bry = Bry_.new_ascii_(ttl_str);		
 		tmp_bfr.Add(ttl_bry);
 		int len = ids.length;
 		for (int i = 0; i < len; i++) {
@@ -79,10 +79,10 @@ class Xosearch_searcher_fxt {
 			tmp_bfr.Add_byte(Byte_ascii.Semic);
 			tmp_bfr.Add_base85_len_5(0);
 		}
-		mgr.Create(wiki.Ns_mgr().Ns_main(), ttl_bry, tmp_bfr.XtoAryAndClear(), null);
+		mgr.Create(wiki.Ns_mgr().Ns_main(), ttl_bry, tmp_bfr.Xto_bry_and_clear(), null);
 	}
 	public void Test_search(String ttl_str, int... expd) {
-		byte[] ttl_bry = ByteAry_.new_ascii_(ttl_str);
+		byte[] ttl_bry = Bry_.new_ascii_(ttl_str);
 		Xosrh_qry_itm qry_root = parser.Parse(ttl_bry);
 		Xosrh_ns_mgr ns_mgr = new Xosrh_ns_mgr(); ns_mgr.Add_all(); // WORKAROUND: xdat fmt does not store ns with search data; pages will be retrieved with ns_id = null; force ns_all (instead of allowing ns_main default);
 		qry_root.Search(Cancelable_.Never, tmp_bfr, ttl_bry, wiki, 100, ns_mgr);
@@ -104,10 +104,10 @@ class Xosearch_parser_fxt {
 		ListAdp id_vals = ListAdp_.new_();
 		for (int i = 0; i < len; i++)
 			id_vals.Add(Xodb_page.srch_(ids[i], 0));
-		matches.Add(ByteAry_.new_ascii_(name), id_vals);
+		matches.Add(Bry_.new_ascii_(name), id_vals);
 	}
 	public void Test_match(String raw, int... expd) {
-		byte[] src = ByteAry_.new_ascii_(raw);
+		byte[] src = Bry_.new_ascii_(raw);
 		Xosrh_qry_itm qry_root = parser.Parse(src);
 		Test_match_assign_ids(src, qry_root);
 		Xosrh_qry_ids matches = qry_root.Matches(src);
@@ -133,12 +133,12 @@ class Xosearch_parser_fxt {
 		}
 	}
 	public void Test_scan(String raw, String... expd) {
-		byte[] src = ByteAry_.new_ascii_(raw);
+		byte[] src = Bry_.new_ascii_(raw);
 		Xosrh_qry_tkn[] actl_itms = Xosrh_scanner._.Scan(src);
 		Tfds.Eq_ary(expd, To_strings(src, actl_itms));
 	}
 	public void Test_scan_tids(String raw, byte... expd) {
-		byte[] src = ByteAry_.new_ascii_(raw);
+		byte[] src = Bry_.new_ascii_(raw);
 		Xosrh_qry_tkn[] actl_itms = Xosrh_scanner._.Scan(src);
 		Tfds.Eq_ary(expd, To_tids(actl_itms));
 	}
@@ -161,7 +161,7 @@ class Xosearch_parser_fxt {
 		return rv;
 	}
 	public void Test_parse(String raw, String expd) {
-		byte[] src = ByteAry_.new_ascii_(raw);
+		byte[] src = Bry_.new_ascii_(raw);
 		Xosrh_qry_itm qry_root = parser.Parse(src);
 		Tfds.Eq(expd, qry_root.Xto_str(src));
 	}

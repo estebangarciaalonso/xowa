@@ -16,14 +16,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx;
+import gplx.core.strings.*;
 public class Tfds {		// URL:doc/gplx.tfds/Tfds.txt
 	public static boolean SkipDb = false;
 	public static void Eq(Object expd, Object actl)											{Eq_wkr(expd, actl, true, EmptyStr);}
 	public static void Eq_able(EqAble expd, EqAble actl)									{Eq_able_wkr(expd, actl, true, EmptyStr);}
 	public static void Eq_able(EqAble expd, EqAble actl, String fmt, Object... args)	{Eq_able_wkr(expd, actl, true, String_.Format(fmt, args));}
+	public static void Eq_byte(byte expd, byte actl)										{Eq_wkr(expd, actl, true, EmptyStr);}
 	public static void Eq_long(long expd, long actl)										{Eq_wkr(expd, actl, true, EmptyStr);}
 	public static void Eq_float(float expd, float actl)										{Eq_wkr(expd, actl, true, EmptyStr);}
-	public static void Eq_decimal(DecimalAdp expd, DecimalAdp actl)							{Eq_wkr(expd.XtoDouble(), actl.XtoDouble(), true, EmptyStr);}
+	public static void Eq_decimal(DecimalAdp expd, DecimalAdp actl)							{Eq_wkr(expd.Xto_double(), actl.Xto_double(), true, EmptyStr);}
 	public static void Eq_date(DateAdp expd, DateAdp actl)									{Eq_wkr(expd.XtoStr_gplx(), actl.XtoStr_gplx(), true, EmptyStr);}
 	public static void Eq_date(DateAdp expd, DateAdp actl, String fmt, Object... args){Eq_wkr(expd.XtoStr_gplx(), actl.XtoStr_gplx(), true, String_.Format(fmt, args));}
 	public static void Eq_url(Io_url expd, Io_url actl)										{Eq_wkr(expd.Raw(), actl.Raw(), true, EmptyStr);}
@@ -164,13 +166,13 @@ public class Tfds {		// URL:doc/gplx.tfds/Tfds.txt
 		String_bldr sb = String_bldr_.new_();
 		int aryLen = Array_.Len(ary);
 		for (int i = 0; i < aryLen; i++)
-			sb.Add_many("'", Object_.XtoStr_OrNullStr(ary[i]), "'", " ");
+			sb.Add_many("'", Object_.Xto_str_strict_or_null_mark(ary[i]), "'", " ");
 		WriteText(sb.XtoStr() + String_.CrLf);
 	}
 }
 class TfdsEqListItmStr_cls_default implements TfdsEqListItmStr {
 	public String XtoStr(Object cur, Object actl) {
-		return Object_.XtoStr_OrNullStr(cur);
+		return Object_.Xto_str_strict_or_null_mark(cur);
 	}
 	public static final TfdsEqListItmStr_cls_default _ = new TfdsEqListItmStr_cls_default(); TfdsEqListItmStr_cls_default() {}
 }
@@ -205,14 +207,14 @@ class TfdsMsgBldr {
 		for (int i = 0; i < list.Count(); i++) {
 			TfdsEqAryItm itm = (TfdsEqAryItm)list.FetchAt(i);
 			sb.Add_fmt_line("{0}: {1} {2} {3}"
-				, Int_.XtoStr_PadBgn(itm.Idx(), 4)
+				, Int_.Xto_str_pad_bgn(itm.Idx(), 4)
 				, String_.PadBgn(itm.Lhs(), lhsLenMax, " ")
 				, itm.Eq() ? "==" : "!="
 				, String_.PadBgn(itm.Rhs(), rhsLenMax, " ")
 				);
 		}
 //			String compSym = isEq ? "  " : "!=";
-//			String result = String_.Format("{0}: {1}{2}  {3}  {4}", Int_.XtoStr_PadBgn(i, 4), lhsString, String_.CrLf + "\t\t", compSym, rhsString);
+//			String result = String_.Format("{0}: {1}{2}  {3}  {4}", Int_.Xto_str_pad_bgn(i, 4), lhsString, String_.CrLf + "\t\t", compSym, rhsString);
 //			foreach (Object obj in list) {
 //				String itmComparison = (String)obj;
 //				sb.Add_fmt_line("{0}{1}", "\t\t", itmComparison);
@@ -229,7 +231,7 @@ class TfdsMsgBldr {
 		if (s != null) return String_.Concat("'", s, "'"); // if Object is String, put quotes around it for legibility
 		XtoStrAble xtoStrAble = XtoStrAble_.as_(obj);
 		if (xtoStrAble != null) return xtoStrAble.XtoStr();
-		return Object_.XtoStr_OrNullStr(obj);
+		return Object_.Xto_str_strict_or_null_mark(obj);
 	}
 	String WrapMsg(String text) {
 		return String_.Concat(String_.CrLf

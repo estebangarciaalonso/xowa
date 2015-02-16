@@ -26,7 +26,14 @@ public class Io_size_ {
 		long div = (long)Math_.Pow((long)1024, (long)pow);
 		DecimalAdp valDecimal = DecimalAdp_.divide_(val, div);
 		String[] unit = Io_size_.Units[pow];
-		return valDecimal.XtoStr("#,###.000") + " " + String_.PadBgn(unit[0], 2, " ");
+		return valDecimal.Xto_str("#,###.000") + " " + String_.PadBgn(unit[0], 2, " ");
+	}
+	public static String Xto_str(long val, int exp_1024, String val_fmt, String unit_pad, boolean round_0_to_1) {
+		long exp_val = (long)Math_.Pow(1024, exp_1024);
+		DecimalAdp val_as_decimal = DecimalAdp_.divide_(val, exp_val);
+		if (round_0_to_1 && val_as_decimal.Comp_lt(1)) val_as_decimal = DecimalAdp_.One;
+		String[] unit = Io_size_.Units[exp_1024];
+		return val_as_decimal.Xto_str(val_fmt) + " " + String_.PadBgn(unit[0], 2, unit_pad);
 	}
 	public static long parse_or_(String raw, long or) {
 		if (raw == null || raw == String_.Empty) return or;
@@ -46,11 +53,12 @@ public class Io_size_ {
 			val = val.Op_mult(1024);
 			curPow--;
 		}
-		DecimalAdp comp = val.Op_truncate_decimal();
-		if (!val.Eq(comp)) return or;
-		return val.XtoLong();
+		// DELETED:do not check for fractional bytes; EX: 10.7 GB DATE:2015-01-06
+		// DecimalAdp comp = val.Op_truncate_decimal();
+		// if (!val.Eq(comp)) return or;
+		return val.Xto_long();
 	}
-	static int parse_unitPow_(String unitStr) {
+	private static int parse_unitPow_(String unitStr) {
 		int unitLen = Array_.Len(Units);
 		int unitPow = -1;
 		for (int i = 0; i < unitLen; i++) {
@@ -59,16 +67,7 @@ public class Io_size_ {
 		}
 		return unitPow;
 	}
-	static String UnitsXtoStr() {
-		String_bldr sb = String_bldr_.new_();
-		int len = Array_.Len(Units);
-		for (int i = 0; i < len; i++) {
-			String[] eny = Units[i];
-			sb.Add_fmt("{0},{1};", eny[0], eny[1]);
-		}
-		return sb.XtoStr();
-	}
-	static final String[][] Units = new String[][]
+	private static final String[][] Units = new String[][]
 	{	String_.Ary("B", "BYTE")
 	,	String_.Ary("KB", "KILOBYTE")
 	,	String_.Ary("MB", "MEGABYTE")
@@ -78,13 +77,13 @@ public class Io_size_ {
 	,	String_.Ary("EB", "EXABYTE")
 	};
 	public static final byte[][] Units_bry = new byte[][] 
-	{	ByteAry_.new_ascii_("B")
-	,	ByteAry_.new_ascii_("KB")
-	,	ByteAry_.new_ascii_("MB")
-	,	ByteAry_.new_ascii_("GB")
-	,	ByteAry_.new_ascii_("TB")
-	,	ByteAry_.new_ascii_("PB")
-	,	ByteAry_.new_ascii_("EB")
+	{	Bry_.new_ascii_("B")
+	,	Bry_.new_ascii_("KB")
+	,	Bry_.new_ascii_("MB")
+	,	Bry_.new_ascii_("GB")
+	,	Bry_.new_ascii_("TB")
+	,	Bry_.new_ascii_("PB")
+	,	Bry_.new_ascii_("EB")
 	};
 	public static int	Load_int_(GfoMsg m) {return (int)Load_long_(m);}
 	public static long	Load_long_(GfoMsg m) {
@@ -93,10 +92,10 @@ public class Io_size_ {
 		return rv;
 	}
 }
-class Io_size_fmtr_arg implements ByteAryFmtrArg {	
+class Io_size_fmtr_arg implements Bry_fmtr_arg {	
 	public long Val() {return val;} public Io_size_fmtr_arg Val_(long v) {val = v; return this;} long val;
 	public byte[] Suffix() {return suffix;} public Io_size_fmtr_arg Suffix_(byte[] v) {suffix = v; return this;} private byte[] suffix;
-	public void XferAry(ByteAryBfr bfr, int idx) {
+	public void XferAry(Bry_bfr bfr, int idx) {
 		long cur = val; int pow = 0;
 		while (cur >= 1024) {
 			cur /= 1024;
@@ -104,7 +103,7 @@ class Io_size_fmtr_arg implements ByteAryFmtrArg {
 		}
 		long div = (long)Math_.Pow((long)1024, (long)pow);		
 		DecimalAdp val_decimal = DecimalAdp_.divide_(val, div);
-		bfr.Add_str(val_decimal.XtoStr("#,###.000")).Add_byte(Byte_ascii.Space).Add(gplx.ios.Io_size_.Units_bry[pow]);
+		bfr.Add_str(val_decimal.Xto_str("#,###.000")).Add_byte(Byte_ascii.Space).Add(gplx.ios.Io_size_.Units_bry[pow]);
 		if (suffix != null) 
 			bfr.Add(suffix);
 	}

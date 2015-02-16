@@ -43,8 +43,9 @@ public class Xof_img_size_tst {
 	@Test   public void Lnki_missing_null()         {fxt.Lnki_( -1,  -1).Lnki_type_(Xop_lnki_type.Id_null)		.Test_html(400, 200, Bool_.Y);}	// default to orig width
 	@Test  	public void Lnki_missing__orig_missing(){fxt.Lnki_( -1,  -1).Orig_( -1,  -1).Test_html(220,  -1);}	// no lnki or orig size; default to 220 with unknown height
 	@Test   public void Prefer_height_over_width()	{fxt.Lnki_(200, 100).Test_html(200, 100);}					// prefer height; if width were preferred, size would be 200,134
-	@Test  	public void Upright() 					{fxt.Lnki_upright_(1).Lnki_(400, 200).Test_html(300, 150);}	
+	@Test  	public void Upright() 					{fxt.Lnki_upright_(1).Lnki_(-1, -1).Orig_(440, 400).Test_html(220, 200);}	
 	@Test  	public void Upright_w_thumb() 			{fxt.Lnki_type_(Xop_lnki_type.Id_thumb).Lnki_upright_(2).Lnki_(-1, -1).Orig_(1500, 1125).Test_html(440, 330);}
+	@Test  	public void Upright_ignored_by_w() 		{fxt.Lnki_type_(Xop_lnki_type.Id_thumb).Lnki_upright_(3.2).Lnki_(900, -1).Orig_(4653, 854).Test_html(900, 165);}// PAGE: fr.w:Bogota; DATE:2014-05-22
 
 	@Test   public void Explicit_ratio_large()		{fxt.Lnki_(120,  40).Test_html( 80,  40);}	// see NOTE_2: lnki_ratio > orig_ratio
 	@Test   public void Explicit_ratio_small()		{fxt.Lnki_(120,  80).Test_html(120,  60);}	// see NOTE_2: lnki_ratio > orig_ratio
@@ -63,6 +64,9 @@ public class Xof_img_size_tst {
 	}
 	@Test  	public void Svg_null_width() {	// PURPOSE: if svg and only height is specified, default width to 2048 (and recalc); DATE: 2013-11-26
 		fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_(-1, 40).Orig_(1, 1).Test_html(40, 40, Bool_.N);	// NOTE: used to be 1,1
+	}
+	@Test  	public void Svg_max_width() {	// PURPOSE: large width causes int overflow; vi.w:Danh_sách_quốc_kỳ DATE:2014-04-26
+		fxt.Lnki_ext_(Xof_ext_.Id_svg).Lnki_(Int_.MaxValue, 90).Orig_(900, 600).Test_html(135, 90, Bool_.N);	// NOTE: used to be Int_.MaxValue,90
 	}
 	@Test  	public void Pdf_none_defaults_to_thumb() {	// PURPOSE: if no width is specified, pdf uses thumb width default, not orig width); DATE: 2013-11-27
 		fxt.Lnki_type_(Xop_lnki_type.Id_none).Lnki_ext_(Xof_ext_.Id_pdf).Lnki_(-1, -1).Orig_(440, 220).Test_html(220, 110, Bool_.N);	// NOTE: used to be 1,1
@@ -87,7 +91,7 @@ class Xof_img_size_fxt {
 	public Xof_img_size_fxt Lnki_(int w, int h) {lnki_w = w; lnki_h = h; return this;} private int lnki_w, lnki_h;
 	public void Test_html(int expd_w, int expd_h) {Test_html(expd_w, expd_h, false);}
 	public void Test_html(int expd_html_w, int expd_html_h, boolean expd_file_is_orig) {
-		img_size.Html_size_calc(Xof_exec_tid.Tid_wiki_page, lnki_w, lnki_h, lnki_type, lnki_upright, lnki_ext, orig_w, orig_h, Xof_img_size.Thumb_width_img);
+		img_size.Html_size_calc(Xof_exec_tid.Tid_wiki_page, lnki_w, lnki_h, lnki_type, Xof_patch_upright_tid_.Tid_all, lnki_upright, lnki_ext, orig_w, orig_h, Xof_img_size.Thumb_width_img);
 		Tfds.Eq(expd_html_w, img_size.Html_w(), "html_w");
 		Tfds.Eq(expd_html_h, img_size.Html_h(), "html_h");
 		Tfds.Eq(expd_file_is_orig, img_size.File_is_orig(), "file_is_orig");

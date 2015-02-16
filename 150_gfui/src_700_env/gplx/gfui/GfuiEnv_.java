@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package gplx.gfui; import gplx.*;
 import gplx.gfml.*;
+import gplx.threads.*;
 import java.awt.AWTKeyStroke;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -69,8 +70,8 @@ public class GfuiEnv_ {
 		if (Io_mgr._.ExistsFil(iniFile))
 			GfsCore._.ExecFile(iniFile);
 	}
-	public static void Init_swt(String[] args, String appNameAndExt, Class<?> type) {
-		Env_.Init(args, appNameAndExt, type);
+	public static void Init_swt(String[] args, Class<?> type) {
+		Env_.Init_swt(args, type);
 		if (!Op_sys.Cur().Tid_is_drd()) GxwElemFactory_.winForms_();
 		GfsCore._.MsgParser_(GfoMsgParser_gfml._);
 	}

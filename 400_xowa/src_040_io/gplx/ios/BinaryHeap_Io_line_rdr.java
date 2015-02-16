@@ -73,7 +73,7 @@ class BinaryHeap_Io_line_rdr {
 		Io_line_rdr lhs = ary[lhs_idx], rhs = ary[rhs_idx];
 		lhs_itm.Set(lhs); rhs_itm.Set(rhs);
 		return comparer.compare(lhs_itm, rhs_itm); 
-//			return ByteAry_.Compare(lhs.Bfr(), lhs.Key_pos_bgn(), lhs.Key_pos_end(), rhs.Bfr(), rhs.Key_pos_bgn(), rhs.Key_pos_end());
+//			return Bry_.Compare(lhs.Bfr(), lhs.Key_pos_bgn(), lhs.Key_pos_end(), rhs.Bfr(), rhs.Key_pos_bgn(), rhs.Key_pos_end());
 	}	Io_sort_split_itm lhs_itm = new Io_sort_split_itm(), rhs_itm = new Io_sort_split_itm();
 	private void Swap(int lhs_idx, int rhs_idx) {
 		Io_line_rdr tmp = ary[lhs_idx];

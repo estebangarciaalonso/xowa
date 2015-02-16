@@ -27,7 +27,7 @@ class GfuiFocusXferBnd implements InjectAble, GfoInvkAble {
 		int curIdx = allElemsInOwnerWin.IndexOf(cur);
 		GfuiElem target = cur;
 		while (true) {	// find next visible elem
-			int cycle = Int_gfui_.Cycle(fwd, curIdx, allElemsInOwnerWin.Count());
+			int cycle = TabBox_.Cycle(fwd, curIdx, allElemsInOwnerWin.Count());
 			target = GfuiElem_.cast_(allElemsInOwnerWin.FetchAt(cycle));
 			if (target.Visible()) break;
 			if (cycle == curIdx) break;	// either (a) one elem in allElemsInOwnerWin or (b) n elems, and cycled back to start; break, else infinite loop
@@ -48,13 +48,5 @@ class GfuiFocusXferBnd implements InjectAble, GfoInvkAble {
 		else return GfoInvkAble_.Rv_unhandled;
 		return this;
 	}	public static final String Invk_FocusNext = "FocusNext", Invk_FocusPrev = "FocusPrev";
-        public static final GfuiFocusXferBnd _ = new GfuiFocusXferBnd(); GfuiFocusXferBnd() {}
-}
-class Int_gfui_ {
-	public static int Cycle(boolean fwd, int val, int max) {
-		if (fwd)
-			return val == max - 1 ? 0 : val + 1;
-		else
-			return val == 0 ? max - 1 : val - 1;
-	}
+	public static final GfuiFocusXferBnd _ = new GfuiFocusXferBnd(); GfuiFocusXferBnd() {}
 }
